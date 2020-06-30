@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C6C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E8C206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DaBoNegh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktsLrCTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388125AbgF3Ndg (ORCPT
+        id S2388155AbgF3Ndw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44832 "EHLO
+        Tue, 30 Jun 2020 09:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733308AbgF3NdN (ORCPT
+        with ESMTP id S1732724AbgF3NdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:13 -0400
+        Tue, 30 Jun 2020 09:33:10 -0400
 Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E866C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:13 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c16so20961997ioi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FCDC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:10 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id m81so21005074ioa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VivmetwM/ISybdgajhPoVZntM81ebOCgMDarkRt8jT4=;
-        b=DaBoNeghK4qZvxJiBWLlENnutQceqDV+6kJ1XLOz8412+b0u5Qy1XRve8/mnAzac+u
-         UJSQqcZLuZNEMOoMT6nIVzXAiXzRVAH0VrohiVwobdi70t/GSO3zygGkLgz1w+hnxc/S
-         JjqASpXngaMnTgatQhvT2TnwA7W1iQ+TVm3ZqRR8gcXpXuWmEJ/ZMu8foZsVp5ztMUpk
-         xHEIdmelad+E5thd6Wkt+4Flt9ScCkhalfdp9Lr3dhbGJ/1HVk+Kv9yfUOgq5xSO9nTW
-         YfyfMyCW1Z9CmjJeiCKVCqeLjjmKv6YFcYdAmwm10rGMzYg3Z6zs0yThONKbU7d9bqEK
-         U1ig==
+        bh=riisFCPpfIy+ddIeKemrrsU0BmBozz0Ml8rD1KyP5/o=;
+        b=ktsLrCTc/Su3iZGXae226c0RZ8TahBwtS3/Dt7AIozO9WfjMBKih7FkhSYt1fxrd0/
+         yR6k0TlCcG5GCV80FF+WW7HVUzzltC1l7tW5M8j+XiE9zZOjeetKjDQa4EQ8mGkSkaiO
+         RwmSvFCuXcrHLyTP+P6HiPUcdP+6hAILeqgXSYW5xbEKwr/rHsr8hNgCaF+DTVIbxPH+
+         gRDyLDtdmzzgX5tOfgdjiZRxrBHcZZmZ4mI1Sq3MMPfUW6OSWYlh8NA95WyOVCUI9eqX
+         7kWqrGc3XXVxxfsjnE1V58KffQMqI/taU7buHFFkVyuz+VGs0lxFJeeVQdj9pr0v7u5f
+         F2ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VivmetwM/ISybdgajhPoVZntM81ebOCgMDarkRt8jT4=;
-        b=cTuhvAgxt8IT3IKvKXpZIFV5V4JoEr29j+QT582T1AzQk/+Bz6rficXTgjBMgQpfKo
-         HCezDqPn5ABieq5wDgC/WKyKq4TT5I3zAT8AjOryRCQYJgzr35b5Jp7rYEAcPm96zw2Q
-         gmtpEKCCXVexELoJ+/hBsL2s70mzjIlYQUZPVf7GZrFyhPJPu15U1Fa6ccWrfYsXzbuF
-         3duPc6jqStrKwHLFn4ZuxEa/QQtPtcQZmiNpUl2pLGzY19Hc3kcno6yhOSLbT5JMuCAZ
-         kHz2lt/PrLpMwF34lF3W9rkyiX+2B243qfLfw8yVdv+/sRFBOOMYhuFBMyGS/dRqRnwi
-         RRUQ==
-X-Gm-Message-State: AOAM532wH6MnEcqghUJHOEQKtn/6d0VV89RA1NVbG7f1hrutp7bo9DQX
-        CV36anEWKtvZNp6UnpMcaBC1MA==
-X-Google-Smtp-Source: ABdhPJzvhcL+sR7MlsUoG0f6dLY298MCZ3igvYEHJ60D0QhQlOtDmMEx/3fYG/7gGDxMFk1XGCUcuw==
-X-Received: by 2002:a02:370b:: with SMTP id r11mr22384215jar.119.1593523992125;
-        Tue, 30 Jun 2020 06:33:12 -0700 (PDT)
+        bh=riisFCPpfIy+ddIeKemrrsU0BmBozz0Ml8rD1KyP5/o=;
+        b=QcaR3G5Bda8HIy9msOuGiY86yP0hoKcbFM8BUizMklTIeh8sEhZWw3mdAOjEZGCnxx
+         w0rWNBiozqU2O4bdzOxwuCjJXdWei8ryvKhEpjfrWkBRB49E20k9N+fGaxiO4pbsJ90G
+         mrQbquSDBt9qJ1PTxflMvglnB6M/8d1A6ms9OR/A5FN7cylUME7c8iR6oQFUeJb8KmgN
+         sI6ttMHW3DG2UU+z6Aw5Ptrw1m01f9iHTRLEEpS0aTjXcXEC2+l75QwiuVuaklB1KgO5
+         MMWeZRA4GZOyP5nxBVwySiY9ab3ggg4CFTYEJWioCwdSZTC9Mo+tgX5V4k8dNu7xNQpI
+         7q4g==
+X-Gm-Message-State: AOAM533rDTyL5TXKVliz5bSEc6iGiKxu5o4YwxRNcssx7ITWl58CoWQD
+        M8a1i0movwBpeB40z/GRDvGfWA==
+X-Google-Smtp-Source: ABdhPJyxkdvw3QKz0HMO2AiqGyCAIpBnZDMY5qytsopl8ajmuCMHUpnwfXppdlrX47I2lC/rIJPUmA==
+X-Received: by 2002:a6b:8e56:: with SMTP id q83mr21855491iod.61.1593523989803;
+        Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id u15sm1538776iog.18.2020.06.30.06.33.11
+        by smtp.gmail.com with ESMTPSA id u15sm1538776iog.18.2020.06.30.06.33.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:11 -0700 (PDT)
+        Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 4/5] net: ipa: clarify endpoint register macro constraints
-Date:   Tue, 30 Jun 2020 08:33:03 -0500
-Message-Id: <20200630133304.1331058-5-elder@linaro.org>
+Subject: [PATCH net-next v2 2/5] net: ipa: metadata_mask register is RX only
+Date:   Tue, 30 Jun 2020 08:33:01 -0500
+Message-Id: <20200630133304.1331058-3-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630133304.1331058-1-elder@linaro.org>
 References: <20200630133304.1331058-1-elder@linaro.org>
@@ -77,110 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A handful of registers are valid only for RX endpoints, and some
-others are valid only for TX endpoints.  For these endpoints, add
-a comment above their defined offset macro that indicates the
-endpoints to which they apply.
-
-Extend the endpoint parameter naming convention as well, to make
-these constraints more explicit.
+The INIT_HDR_METADATA_MASK endpoint configuration register is only
+valid for RX endpoints.  Rather than writing a zero to that register
+for TX endpoints, avoid writing the register at all.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
-v2: No change from version 1.
+v2: The commented call to assert() that was added is now gone.
 
- drivers/net/ipa/ipa_reg.h | 43 +++++++++++++++++++++++----------------
- 1 file changed, 25 insertions(+), 18 deletions(-)
+ drivers/net/ipa/ipa_endpoint.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
-index 0a688d8c1d7c..10e4ac9ead68 100644
---- a/drivers/net/ipa/ipa_reg.h
-+++ b/drivers/net/ipa/ipa_reg.h
-@@ -32,10 +32,12 @@ struct ipa;
-  * parameter is supplied to the offset macro.  The "ee" value is a member of
-  * the gsi_ee enumerated type.
-  *
-- * The offset of a register dependent on endpoint id is computed by a macro
-- * that is supplied a parameter "ep".  The "ep" value is assumed to be less
-- * than the maximum endpoint value for the current hardware, and that will
-- * not exceed IPA_ENDPOINT_MAX.
-+ * The offset of a register dependent on endpoint ID is computed by a macro
-+ * that is supplied a parameter "ep", "txep", or "rxep".  A register with an
-+ * "ep" parameter is valid for any endpoint; a register with a "txep" or
-+ * "rxep" parameter is valid only for TX or RX endpoints, respectively.  The
-+ * "*ep" value is assumed to be less than the maximum valid endpoint ID
-+ * for the current hardware, and that will not exceed IPA_ENDPOINT_MAX.
-  *
-  * The offset of registers related to filter and route tables is computed
-  * by a macro that is supplied a parameter "er".  The "er" represents an
-@@ -293,11 +295,13 @@ static inline u32 ipa_reg_idle_indication_cfg_offset(enum ipa_version version)
- #define HDR_TOTAL_LEN_OR_PAD_OFFSET_FMASK	GENMASK(9, 4)
- #define HDR_PAD_TO_ALIGNMENT_FMASK		GENMASK(13, 10)
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index 31afe282f347..1babcfc79360 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -530,7 +530,7 @@ static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
+ 	offset = IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(endpoint_id);
  
--#define IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(ep) \
--					(0x00000818 + 0x0070 * (ep))
-+/* Valid only for RX (IPA producer) endpoints */
-+#define IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(rxep) \
-+					(0x00000818 + 0x0070 * (rxep))
+ 	/* Note that HDR_ENDIANNESS indicates big endian header fields */
+-	if (!endpoint->toward_ipa && endpoint->data->qmap)
++	if (endpoint->data->qmap)
+ 		val = cpu_to_be32(IPA_ENDPOINT_QMAP_METADATA_MASK);
  
--#define IPA_REG_ENDP_INIT_MODE_N_OFFSET(ep) \
--					(0x00000820 + 0x0070 * (ep))
-+/* Valid only for TX (IPA consumer) endpoints */
-+#define IPA_REG_ENDP_INIT_MODE_N_OFFSET(txep) \
-+					(0x00000820 + 0x0070 * (txep))
- #define MODE_FMASK				GENMASK(2, 0)
- #define DEST_PIPE_INDEX_FMASK			GENMASK(8, 4)
- #define BYTE_THRESHOLD_FMASK			GENMASK(27, 12)
-@@ -316,19 +320,21 @@ static inline u32 ipa_reg_idle_indication_cfg_offset(enum ipa_version version)
- #define AGGR_FORCE_CLOSE_FMASK			GENMASK(22, 22)
- #define AGGR_HARD_BYTE_LIMIT_ENABLE_FMASK	GENMASK(24, 24)
- 
--#define IPA_REG_ENDP_INIT_HOL_BLOCK_EN_N_OFFSET(ep) \
--					(0x0000082c +  0x0070 * (ep))
-+/* Valid only for RX (IPA producer) endpoints */
-+#define IPA_REG_ENDP_INIT_HOL_BLOCK_EN_N_OFFSET(rxep) \
-+					(0x0000082c +  0x0070 * (rxep))
- #define HOL_BLOCK_EN_FMASK			GENMASK(0, 0)
- 
--/* The next register is valid only for RX (IPA producer) endpoints */
--#define IPA_REG_ENDP_INIT_HOL_BLOCK_TIMER_N_OFFSET(ep) \
--					(0x00000830 +  0x0070 * (ep))
-+/* Valid only for RX (IPA producer) endpoints */
-+#define IPA_REG_ENDP_INIT_HOL_BLOCK_TIMER_N_OFFSET(rxep) \
-+					(0x00000830 +  0x0070 * (rxep))
- /* The next fields are present for IPA v4.2 only */
- #define BASE_VALUE_FMASK			GENMASK(4, 0)
- #define SCALE_FMASK				GENMASK(12, 8)
- 
--#define IPA_REG_ENDP_INIT_DEAGGR_N_OFFSET(ep) \
--					(0x00000834 + 0x0070 * (ep))
-+/* Valid only for TX (IPA consumer) endpoints */
-+#define IPA_REG_ENDP_INIT_DEAGGR_N_OFFSET(txep) \
-+					(0x00000834 + 0x0070 * (txep))
- #define DEAGGR_HDR_LEN_FMASK			GENMASK(5, 0)
- #define PACKET_OFFSET_VALID_FMASK		GENMASK(7, 7)
- #define PACKET_OFFSET_LOCATION_FMASK		GENMASK(13, 8)
-@@ -338,8 +344,9 @@ static inline u32 ipa_reg_idle_indication_cfg_offset(enum ipa_version version)
- 					(0x00000838 + 0x0070 * (ep))
- #define RSRC_GRP_FMASK				GENMASK(1, 0)
- 
--#define IPA_REG_ENDP_INIT_SEQ_N_OFFSET(ep) \
--					(0x0000083c + 0x0070 * (ep))
-+/* Valid only for TX (IPA consumer) endpoints */
-+#define IPA_REG_ENDP_INIT_SEQ_N_OFFSET(txep) \
-+					(0x0000083c + 0x0070 * (txep))
- #define HPS_SEQ_TYPE_FMASK			GENMASK(3, 0)
- #define DPS_SEQ_TYPE_FMASK			GENMASK(7, 4)
- #define HPS_REP_SEQ_TYPE_FMASK			GENMASK(11, 8)
-@@ -353,7 +360,7 @@ static inline u32 ipa_reg_idle_indication_cfg_offset(enum ipa_version version)
- /* The next field is present for IPA v4.0 and above */
- #define STATUS_PKT_SUPPRESS_FMASK		GENMASK(9, 9)
- 
--/* "er" is either an endpoint id (for filters) or a route id (for routes) */
-+/* "er" is either an endpoint ID (for filters) or a route ID (for routes) */
- #define IPA_REG_ENDP_FILTER_ROUTER_HSH_CFG_N_OFFSET(er) \
- 					(0x0000085c + 0x0070 * (er))
- #define FILTER_HASH_MSK_SRC_ID_FMASK		GENMASK(0, 0)
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+@@ -1302,10 +1302,10 @@ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
+ 			(void)ipa_endpoint_program_suspend(endpoint, false);
+ 		ipa_endpoint_init_hdr_ext(endpoint);
+ 		ipa_endpoint_init_aggr(endpoint);
++		ipa_endpoint_init_hdr_metadata_mask(endpoint);
+ 	}
+ 	ipa_endpoint_init_cfg(endpoint);
+ 	ipa_endpoint_init_hdr(endpoint);
+-	ipa_endpoint_init_hdr_metadata_mask(endpoint);
+ 	ipa_endpoint_init_mode(endpoint);
+ 	ipa_endpoint_status(endpoint);
+ }
 -- 
 2.25.1
 
