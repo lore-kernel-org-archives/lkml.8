@@ -3,126 +3,225 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4088C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A76C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0AA206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98441206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gVLp5Z8j";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="whEEw8J5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbhmhW0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389471AbgF3Qpt (ORCPT
+        id S2389508AbgF3QrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:45:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57848 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgF3Qps (ORCPT
+        Tue, 30 Jun 2020 12:47:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728022AbgF3QrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:45:48 -0400
-Date:   Tue, 30 Jun 2020 18:45:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593535545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WKzUY+hmQUu/W4w+kArUyMIrhlys8QtCqB3RBXTws4o=;
-        b=gVLp5Z8jdAB/EZKmgGSiSlpoIpwwchn9I2vLKuZ9KKWJjuDpll4+SWIihzscdnxaDZMqN4
-        MZceui4yk56Opq+OdBkC8mD4uLVyaHV4fIGeI/hvopvJgOHan8GcTzZ8G8MED4z5mxR87j
-        tMFcoRGBUXy3rvvFkt1k5QYFcCTYioWqGDwQPRdpIYBmd1EmtorPkFyhbsjDPscvqhiR+j
-        kz4VU4vIyc4XnWSYIqB/4/hl2J1ZAuxb30P+zc77TOnpuQEHcAWLNoeLLsEaA0ST0n59zc
-        igoYQ/coSbgHjr4a7Qnv0hgxri7sntKVFu020M2Cv4hYIzQqAL/2uI4IpjbmkA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593535545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WKzUY+hmQUu/W4w+kArUyMIrhlys8QtCqB3RBXTws4o=;
-        b=whEEw8J5kOhJKqD0Lg6sELfcqODNNGzov72aoYNZiUGNWyKt7a7dsS8ttp2yBYb4OLe8ZP
-        aGZqRbaHEwEcnaDw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     paulmck@kernel.org, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
+        Tue, 30 Jun 2020 12:47:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD14C061755;
+        Tue, 30 Jun 2020 09:47:13 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc9so3216489pjb.2;
+        Tue, 30 Jun 2020 09:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YjTGvZoFn9Gr5f+ufVSqWbKLtKiqYnTgMSui3Jl24dg=;
+        b=AbhmhW0FcojEGsKBYgxR7fSDLdEmZIHxD1D6PsAJ6ezhxe6haZFOGdqcwtTOYqYnu8
+         csrp77Uvqm6t4IumS+BuU61yWOx70HoJ41gDFDYF8E+Zmw0AAoyfuQhgU/t+mqkKZsIC
+         vVhikQmUhVtik11wConsSXBOGyvUYPNOP/lzTbpybyPyry4tdraGAavYhELPywTAotso
+         bAuWqD0/PD0M7VqkuCWpV0b6jIHGoC8ycoC/G88LPswm8vS5xGaKsp6YW6Fv4PTcmLBe
+         WgbbqA+Jb55/agSHibk0rBoYDaCC4wiEvlOCFxzERjIl3GcYz/WxmmMIO3ieSKgJnCvp
+         Nx1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YjTGvZoFn9Gr5f+ufVSqWbKLtKiqYnTgMSui3Jl24dg=;
+        b=VYDyI/iOlySC8nb/Ebs0kCsCO3BI/4HOruzI/dB2IOQShqLeFJFimXHTMVNzYByP8a
+         OjzbWOPaDVXdSAnEa+kM4BJ7fRtN1QoW3kFEYxX/iXOHB6H0nYuwVvgmkdgeSzq/0WaP
+         ErhzFCSAfk6yYoMKeEKpVu57Z6HrPC7J3l8lE3rcUINKRGFSCPPk1urA2glYI1mbCeOW
+         iX0h4dsfw9D5W+SM6AcLle3mp0wHrr4rw4a+Iov2l6IAUTakldGotMBKJaka+KfanRyV
+         gtUiNNS0A/5emmkAzMSrLa5m9uqzZCbCiTO5457vmTz/NcClBHDNSHTU5HVdW6cgnKgq
+         zziQ==
+X-Gm-Message-State: AOAM530RbEKR99D6xLB4HG2uvO+ZwwsbgrD8cTmNoSyn8pI7+unO7cYy
+        Y29lsKTFN3MBH8POF0UCjmY=
+X-Google-Smtp-Source: ABdhPJzjpHaWFt/qmhE5T9q47jzJ9TE9edAwd+c9ayFlVVVk4E53qs0ThsG+1c9hkzQ01gj2/NvXeg==
+X-Received: by 2002:a17:90a:cc18:: with SMTP id b24mr23349815pju.89.1593535632810;
+        Tue, 30 Jun 2020 09:47:12 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e083])
+        by smtp.gmail.com with ESMTPSA id c188sm3203756pfc.143.2020.06.30.09.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 09:47:11 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 09:47:08 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Subject: Re: [PATCH 04/16] net: bpfilter: use 'userprogs' syntax to build
+ bpfilter_umh
+Message-ID: <20200630164708.aeuoq4ruhivu5o2d@ast-mbp.dhcp.thefacebook.com>
+References: <20200423073929.127521-1-masahiroy@kernel.org>
+ <20200423073929.127521-5-masahiroy@kernel.org>
+ <20200608115628.osizkpo76cgn2ci7@lion.mk-sys.cz>
+ <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624201226.21197-3-paulmck@kernel.org>
+In-Reply-To: <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 13:12:12 [-0700], paulmck@kernel.org wrote:
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+On Tue, Jun 30, 2020 at 03:30:04PM +0900, Masahiro Yamada wrote:
+> Hi Michal, Alexei,
 > 
-> To keep the kfree_rcu() code working in purely atomic sections on RT,
-> such as non-threaded IRQ handlers and raw spinlock sections, avoid
-> calling into the page allocator which uses sleeping locks on RT.
+> On Mon, Jun 8, 2020 at 8:56 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+> >
+> > On Thu, Apr 23, 2020 at 04:39:17PM +0900, Masahiro Yamada wrote:
+> > > The user mode helper should be compiled for the same architecture as
+> > > the kernel.
+> > >
+> > > This Makefile reuses the 'hostprogs' syntax by overriding HOSTCC with CC.
+> > >
+> > > Now that Kbuild provides the syntax 'userprogs', use it to fix the
+> > > Makefile mess.
+> > >
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > ---
+> > >
+> > >  net/bpfilter/Makefile | 11 ++++-------
+> > >  1 file changed, 4 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
+> > > index 36580301da70..6ee650c6badb 100644
+> > > --- a/net/bpfilter/Makefile
+> > > +++ b/net/bpfilter/Makefile
+> > > @@ -3,17 +3,14 @@
+> > >  # Makefile for the Linux BPFILTER layer.
+> > >  #
+> > >
+> > > -hostprogs := bpfilter_umh
+> > > +userprogs := bpfilter_umh
+> > >  bpfilter_umh-objs := main.o
+> > > -KBUILD_HOSTCFLAGS += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
+> > > -HOSTCC := $(CC)
+> > > +user-ccflags += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
+> > >
+> > > -ifeq ($(CONFIG_BPFILTER_UMH), y)
+> > > -# builtin bpfilter_umh should be compiled with -static
+> > > +# builtin bpfilter_umh should be linked with -static
+> > >  # since rootfs isn't mounted at the time of __init
+> > >  # function is called and do_execv won't find elf interpreter
+> > > -KBUILD_HOSTLDFLAGS += -static
+> > > -endif
+> > > +bpfilter_umh-ldflags += -static
+> > >
+> > >  $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
+> >
+> > Hello,
+> >
+> > I just noticed that this patch (now in mainline as commit 8a2cc0505cc4)
+> > drops the test if CONFIG_BPFILTER_UMH is "y" so that -static is now
+> > passed to the linker even if bpfilter_umh is built as a module which
+> > wasn't the case in v5.7.
+> >
+> > This is not mentioned in the commit message and the comment still says
+> > "*builtin* bpfilter_umh should be linked with -static" so this change
+> > doesn't seem to be intentional. Did I miss something?
+> >
+> > Michal Kubecek
 > 
-> In fact, even if the  caller is preemptible, the kfree_rcu() code is
-> not, as the krcp->lock is a raw spinlock.
+> I was away for a while from this because I saw long discussion in
+> "net/bpfilter: Remove this broken and apparently unmaintained"
 > 
-> Calling into the page allocator is optional and avoiding it should be
-> Ok, especially with the page pre-allocation support in future patches.
-> Such pre-allocation would further avoid the a need for a dynamically
-> allocated page in the first place.
 > 
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-> Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
-> Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  kernel/rcu/tree.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Please let me resume this topic now.
 > 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 64592b4..dbdd509 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3184,6 +3184,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
->  		if (!bnode) {
->  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
->  
-> +			/*
-> +			 * To keep this path working on raw non-preemptible
-> +			 * sections, prevent the optional entry into the
-> +			 * allocator as it uses sleeping locks. In fact, even
-> +			 * if the caller of kfree_rcu() is preemptible, this
-> +			 * path still is not, as krcp->lock is a raw spinlock.
-> +			 * With additional page pre-allocation in the works,
-> +			 * hitting this return is going to be much less likely.
-> +			 */
-> +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> +				return false;
+> 
+> The original behavior of linking umh was like this:
+>   - If CONFIG_BPFILTER_UMH=y, bpfilter_umh was linked with -static
+>   - If CONFIG_BPFILTER_UMH=m, bpfilter_umh was linked without -static
 
-This is not going to work together with the "wait context validator"
-(CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-printk() which is why it is still disabled by default.
+That was done to make sure both static and dynamic linking work.
+For production -static is necessary.
+For debugging of usermode blob dynamic is beneficial.
 
-So assume that this is fixed and enabled then on !PREEMPT_RT it will
-complain that you have a raw_spinlock_t acquired (the one from patch
-02/17) and attempt to acquire a spinlock_t in the memory allocator.
+> Restoring the original behavior will add more complexity because
+> now we have CONFIG_CC_CAN_LINK and CONFIG_CC_CAN_LINK_STATIC
+> since commit b1183b6dca3e0d5
+> 
+> If CONFIG_BPFILTER_UMH=y, we need to check CONFIG_CC_CAN_LINK_STATIC.
+> If CONFIG_BPFILTER_UMH=m, we need to check CONFIG_CC_CAN_LINK.
+> This would make the Kconfig dependency logic too complicated.
 
->  			bnode = (struct kfree_rcu_bulk_data *)
->  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
->  		}
+Currently I'm working on adding bpf_iter to use 'user mode driver'
+(old user mode blob) facility on top of Eric's patches.
+So there will be quite a bit more complexity to build system.
+Folks who don't want to deal with -static requirement should
+just disable the feature.
 
-Sebastian
+> To make it simpler, I'd like to suggest two options.
+> 
+> 
+> 
+> Idea 1:
+> 
+>   Always use -static irrespective of whether
+>   CONFIG_BPFILTER_UMH is y or m.
+
+I don't think it's making it much simpler.
+It's a tiny change to makefile.
+I could be missing something.
+Requiring -static for =y and =m is fine.
+
+>   Add two more lines to clarify this
+>   in the comment in net/bpfilter/Makefile:
+> 
+>   # builtin bpfilter_umh should be linked with -static
+>   # since rootfs isn't mounted at the time of __init
+>   # function is called and do_execv won't find elf interpreter.
+>   # Static linking is not required when bpfilter is modular, but
+>   # we always pass -static to keep the 'depends on' in Kconfig simple.
+> 
+> 
+> 
+> Idea 2:
+> 
+>    Allow umh to become only modular,
+>    and drop -static flag entirely.
+
+absolutely not.
+Both =y and =m are mandatory.
+
+> 
+>    If you look at net/bpfilter/Kconfig,
+>    BPFILTER_UMH already has 'default m'.
+>    So, I assume the most expected use-case
+>    is modular.
+
+The default for BPFILTER is =N.
+Distros should NOT be turning that to =y
+
+Same thing with upcoming bpf_iter. It will default to =n.
