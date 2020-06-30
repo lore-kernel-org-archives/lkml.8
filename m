@@ -2,131 +2,136 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA78C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE02D20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BFF2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="g9qa6/3v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IENVijjT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WQUwIr+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgF3IDC (ORCPT
+        id S1730741AbgF3ID7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:03:02 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39149 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728372AbgF3ICm (ORCPT
+        Tue, 30 Jun 2020 04:03:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15677 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729909AbgF3IDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:02:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B3F5C252;
-        Tue, 30 Jun 2020 04:02:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 30 Jun 2020 04:02:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=lu/WrihdsYQOer+w6h1sKVAQhhh
-        zpgn9ANfbrgSBg08=; b=g9qa6/3vky6RpenoRSFz45zMGoY4KA1E6jJ0ZUcRlEV
-        PQcFqd2AKRhgIaYvOf/xP29zscXyHpDGRrWtCl4WxMhPhmbQ+jRrNnBuMAcwCTdI
-        5f0s03IvSlUqq2Wsb0eyaFpZ4emls8T4KMikrDhjWaYDcU/jbhqkrvBTQ+j/SaDM
-        frRilLO1PAoEStRK4Tpa4AU8+Lird/mo7WTS8GWFDoofnPbkvgp1803YopTt61n6
-        VYaM2OsbJct65v3QU2aCKXAN7KQbZpUkB/2irR7fA7szGLuzIxb4u8eltpWdx8xi
-        J3TvQIqfNXYrIadNJUyVlUdBjgqNLVjBBkMx3dmyBGA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lu/Wri
-        hdsYQOer+w6h1sKVAQhhhzpgn9ANfbrgSBg08=; b=IENVijjTKHsAo29my84QNt
-        HY8lF7lDEOJ1kLi3ESudeyXEHRivnOWiNwwtK0hFN0ul7TjHAChlcJ9b/UzEhDHo
-        2eSoaardOH9Tki2+UbX0NcHp8T+t9rF6ldTEmBqXEeD0iRl/n+MqM88uGD/YexL0
-        i7rEqqodW1Nbz/TEu5c0Ktgyj2ZYvr5Sq8IKPiG+hAT4eIDXqbD+Df4RjhDxytpa
-        HQDi64fBZOLZPdGKuqhLFiD1D3ph99Tl74Payu2AtJc3oLcRgtinz2LfM2+qapUa
-        EhyIrnoGNF/cXhGkxJro55Kk40oA2hXYpU3L8v3v4EGPz5o64hxYzEowPxEE4gTw
-        ==
-X-ME-Sender: <xms:n_H6Xkl5STMdOqdfkt3UgUS68MEyZUSxq3JRCbrWivKFaQus7QqTjg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvddttddguddvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeefjeefkeduiefgkefgheefteekueetkeeiueekgedvvdevgfejgfduudei
-    veejieenucffohhmrghinhepshhuphgvrhhushgvrhdrtghomhdprghrmhgsihgrnhdrtg
-    homhenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:n_H6Xj1Wgj7m0IMsjDA-5IvL7RGLmM0Jnqca4MD3W9rSANjADEgZ0A>
-    <xmx:n_H6XirelRRngq7-TERnqrtXaDDByLZhYcxsz78xbouElrd66cwcXQ>
-    <xmx:n_H6XgnABOkXWd6TTqOF4FAFV72iOHSRpCk5Z-6-a0xY3kQAhUFRjA>
-    <xmx:ofH6XnydwAiBKEXYT_AJwIgA_erJoiMK9bYjJ5pqJUG8o5ThSUckXw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 04A033280066;
-        Tue, 30 Jun 2020 04:02:38 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 10:02:37 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: sun4i: hdmi: Remove extra HPD polling
-Message-ID: <20200630080237.dsg7umd6ju2oamg4@gilmour.lan>
-References: <20200629060032.24134-1-wens@kernel.org>
+        Tue, 30 Jun 2020 04:03:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efaf1a90002>; Tue, 30 Jun 2020 01:02:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 01:03:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 01:03:39 -0700
+Received: from [10.25.97.62] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 08:03:31 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 15/23] ASoC: soc-core: Identify 'no_pcm' DAI links for
+ DPCM
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+ <1593233625-14961-16-git-send-email-spujar@nvidia.com>
+ <87h7utytlx.wl-kuninori.morimoto.gx@renesas.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <9c7871ae-6649-7b0d-4780-c8389c299b04@nvidia.com>
+Date:   Tue, 30 Jun 2020 13:33:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f6hdlqsued72r5t5"
-Content-Disposition: inline
-In-Reply-To: <20200629060032.24134-1-wens@kernel.org>
+In-Reply-To: <87h7utytlx.wl-kuninori.morimoto.gx@renesas.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593504169; bh=DnKjNwH/guC7EJEpkXLjFlHpxsWMMzSc4XkpFzGQbAg=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WQUwIr+WF/GGwacJzN7rnd4pRjFlBamjWeqTONoPBOOZYgq7blpSZ87MHNdErkG/V
+         Bo5un9TEvghvrPYJtlgg/3/67mIK7K7OuME2UgysIJBrQsLscV7rPe5qsImS52vi+l
+         tBtyNEId8MOyf5+oALW7p+QzyXv+QJXTIyVzbhzhl3PV7l6YaQqkhjgk3lnk4FEvP2
+         Hwh38kn4IjXhwdJaI/HKbUZjmGQYG/YPm71jdjU6NGptDUih2eCD6TgFWKc6IhKRkX
+         G1nr50EASreeu9otzItyG9V/VzGXnbHR6oGij3dXYjDlW+ElcrOlMWu8e+AzFJ1YZa
+         d+zK2Z3ASZHUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---f6hdlqsued72r5t5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 6/30/2020 11:37 AM, Kuninori Morimoto wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sameer
+>
+>> PCM devices are created for dai links with 'no-pcm' flag as '0'.
+>> Such DAI links have CPU component which implement pcm_construct()
+>> and pcm_destruct() callbacks. Based on this, current patch exposes
+>> a helper function to identify such components and populate 'no_pcm'
+>> flag for DPCM DAI link.
+>>
+>> This helps to have BE<->BE component links where PCM devices need
+>> not be created for CPU components involved in the links.
+>>
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>> ---
+> (snip)
+>> +bool soc_component_is_pcm(struct snd_soc_dai_link_component *dlc)
+>> +{
+>> +     struct snd_soc_component *component;
+>> +     struct snd_soc_dai *dai;
+>> +
+>> +     for_each_component(component) {
+>> +             if (!component->driver)
+>> +                     continue;
+>> +
+>> +             for_each_component_dais(component, dai) {
+>> +                     if (!dai->name || !dlc->dai_name)
+>> +                             continue;
+>> +
+>> +                     if (strcmp(dai->name, dlc->dai_name))
+>> +                             continue;
+>> +
+>> +                     if (component->driver->pcm_construct)
+>> +                             return true;
+>> +             }
+>> +     }
+>> +
+>> +     return false;
+>> +}
+> At least my CPU driver doesn't use component:pcm_construct
+> but is using DAI:pcm_new for some reasons.
+> I'm not sure checking DAI:pcm here is enough, or not...
 
-On Mon, Jun 29, 2020 at 02:00:32PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->=20
-> The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
-> or less an input-only GPIO. Other GPIO-based HPD implementations
-> directly return the current state, instead of polling for a specific
-> state and returning the other if that times out.
->=20
-> Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
-> return a known state based on the current reading. This also gets rid
-> of excessive CPU usage by kworker as reported on Stack Exchange [1] and
-> Armbian forums [2].
->=20
->  [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietru=
-ck-with-bug-in-sun4i-drm-hdmi
->  [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm=
-_hdmi-a10a20/
->=20
-> Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+OK. If adding DAI:pcm_new above here is not sufficient, then a flag can 
+be used to describe FE component? or is there a better alternative?
+>
+> Thank you for your help !!
+>
+> Best regards
+> ---
+> Kuninori Morimoto
 
-Applied, thanks for figuring that out
-
-Maxime
-
---f6hdlqsued72r5t5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvrxnQAKCRDj7w1vZxhR
-xe0/AP9AfcSEFn4bwp+kbpsDasBM88jTsQJiznSvcxSJ4WCaWwEA/XSg2I9jaQuc
-Vrmg3HbVedQSShsVClRiJer2EomSNgY=
-=Tbdr
------END PGP SIGNATURE-----
-
---f6hdlqsued72r5t5--
