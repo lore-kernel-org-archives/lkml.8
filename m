@@ -2,120 +2,90 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CABC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C662C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0262065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFB620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CruyKFrh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HytoAQ3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbgF3LJE (ORCPT
+        id S1732889AbgF3LKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:09:04 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44873 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732666AbgF3LJD (ORCPT
+        Tue, 30 Jun 2020 07:10:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58355 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728534AbgF3LKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:09:03 -0400
-X-UUID: 13a1312f612746c6baad6853361ab0ad-20200630
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=39/WvHSlJfaFdr2D13fz2nqg2RkI5zVNbDVhi335aSs=;
-        b=CruyKFrhtCHKIxEwxVegZqp5ApeNXLIS/1KR07KpaemHNJSXWk2RLJUSAGu9JFxqOwQKl5lWiU0li9covL0TxtVwInJRwcluJmgv/apfMXW3hNVHctclb54MyLM80fvKYuPLb7VtLcpkDj5jOPKOqkye6x2IWSdazkPjPpIh/0A=;
-X-UUID: 13a1312f612746c6baad6853361ab0ad-20200630
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1858030806; Tue, 30 Jun 2020 19:08:58 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 30 Jun 2020 19:08:52 +0800
-Received: from [10.15.20.246] (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 30 Jun 2020 19:08:52 +0800
-Message-ID: <1593515273.26985.0.camel@mbjsdccf07>
-Subject: Re: [PATCH v5 06/10] iommu/mediatek: Add sub_comm id in translation
- fault
-From:   chao hao <Chao.Hao@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Evan Green <evgreen@chromium.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-Date:   Tue, 30 Jun 2020 19:07:53 +0800
-In-Reply-To: <1593514516.24171.25.camel@mhfsdcap03>
-References: <20200629071310.1557-1-chao.hao@mediatek.com>
-         <20200629071310.1557-7-chao.hao@mediatek.com>
-         <1593514516.24171.25.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 30 Jun 2020 07:10:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593515409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=msnFaJYZDu81wFuqZFTp1ZOR5QC4oyv6dPxquziRN8w=;
+        b=HytoAQ3l5t4/mzUdrDO+1cm6r5p4j9FTs+iOJXMGAtfWT7bvzmhuGh8N5rxbmjSU3jE+mT
+        qO1fuvk8/H7yjzVvex5h6Jkk1rLPAzpm02tar+MXSeaVXG/D5AoS7AxJKZxBqMYCxn0RZg
+        SQAeR0W0uvLd9C9tVh9/WaOVioOUIDI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-VBh_BiGdOGuDy8VESVo1Dw-1; Tue, 30 Jun 2020 07:10:07 -0400
+X-MC-Unique: VBh_BiGdOGuDy8VESVo1Dw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B4C28015F4;
+        Tue, 30 Jun 2020 11:10:06 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 171861001901;
+        Tue, 30 Jun 2020 11:10:06 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org, Nadav Amit <namit@vmware.com>
+Subject: [PATCH] KVM: x86: bit 8 of non-leaf PDPEs is not reserved
+Date:   Tue, 30 Jun 2020 07:10:05 -0400
+Message-Id: <20200630111005.457029-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTMwIGF0IDE4OjU1ICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiBPbiBN
-b24sIDIwMjAtMDYtMjkgYXQgMTU6MTMgKzA4MDAsIENoYW8gSGFvIHdyb3RlOg0KPiA+IFRoZSBt
-YXggbGFyYiBudW1iZXIgdGhhdCBhIGlvbW11IEhXIHN1cHBvcnQgaXMgOChsYXJiMH5sYXJiNyBp
-biB0aGUgYmVsb3cNCj4gPiBkaWFncmFtKS4NCj4gPiBJZiB0aGUgbGFyYidzIG51bWJlciBpcyBv
-dmVyIDgsIHdlIHVzZSBhIHN1Yl9jb21tb24gZm9yIG1lcmdpbmcNCj4gPiBzZXZlcmFsIGxhcmJz
-IGludG8gb25lIGxhcmIuIEF0IHRoaXMgY2FzZSwgd2Ugd2lsbCBleHRlbmQgbGFyYl9pZDoNCj4g
-PiBiaXRbMTE6OV0gbWVhbnMgY29tbW9uLWlkOw0KPiA+IGJpdFs4OjddIG1lYW5zIHN1YmNvbW1v
-bi1pZDsNCj4gPiBGcm9tIHRoZXNlIHR3byB2YXJpYWJsZXMsIHdlIGNvdWxkIGdldCB0aGUgcmVh
-bCBsYXJiIG51bWJlciB3aGVuDQo+ID4gdHJhbnNsYXRpb24gZmF1bHQgaGFwcGVuLg0KPiA+IFRo
-ZSBkaWFncmFtIGlzIGFzIGJlbG93Og0KPiA+IAkJIEVNSQ0KPiA+IAkJICB8DQo+ID4gCQlJT01N
-VQ0KPiA+IAkJICB8DQo+ID4gICAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IAkgICB8
-ICAgICAgICAgICAgICAgfA0KPiA+IAljb21tb24xICAgCWNvbW1vbjANCj4gPiAJICAgfAkJICAg
-fA0KPiA+IAkgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IAkJICB8DQo+ID4gICAgICAgICAgICAg
-IHNtaSBjb21tb24NCj4gPiAJCSAgfA0KPiA+ICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQo+ID4gICB8ICAgICAgIHwgICAgICAgfCAgICAgICB8ICAgICB8ICAgIHwNCj4g
-PiAgMydkMCAgICAzJ2QxICAgIDMnZDIgICAgMydkMyAgLi4uICAzJ2Q3ICAgPC1jb21tb25faWQo
-bWF4IGlzIDgpDQo+ID4gICB8ICAgICAgIHwgICAgICAgfCAgICAgICB8ICAgICB8ICAgIHwNCj4g
-PiBMYXJiMCAgIExhcmIxICAgICB8ICAgICBMYXJiMyAgLi4uIExhcmI3DQo+ID4gCQkgIHwNCj4g
-PiAJICAgIHNtaSBzdWIgY29tbW9uDQo+ID4gCQkgIHwNCj4gPiAgICAgIC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+ID4gICAgICB8ICAgICAgICB8ICAgICAgIHwgICAgICAgfA0KPiA+ICAg
-ICAyJ2QwICAgICAyJ2QxICAgIDInZDIgICAgMidkMyAgIDwtc3ViX2NvbW1vbl9pZChtYXggaXMg
-NCkNCj4gPiAgICAgIHwgICAgICAgIHwgICAgICAgfCAgICAgICB8DQo+ID4gICAgTGFyYjggICAg
-TGFyYjkgICBMYXJiMTAgIExhcmIxMQ0KPiA+IA0KPiA+IEluIHRoaXMgcGF0Y2ggd2UgZXh0ZW5k
-IGxhcmJfcmVtYXBbXSB0byBsYXJiX3JlbWFwWzhdWzRdIGZvciB0aGlzLg0KPiA+IGxhcmJfcmVt
-YXBbeF1beV06IHggbWVhbnMgY29tbW9uLWlkIGFib3ZlLCB5IG1lYW5zIHN1YmNvbW1vbl9pZCBh
-Ym92ZS4NCj4gPiANCj4gPiBXZSBjYW4gYWxzbyBkaXN0aW5ndWlzaCBpZiB0aGUgTTRVIEhXIGhh
-cyBzdWJfY29tbW9uIGJ5IEhBU19TVUJfQ09NTQ0KPiA+IG1hY3JvLg0KPiA+IA0KPiA+IENjOiBN
-YXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IENoYW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFlv
-bmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lvbW11
-L210a19pb21tdS5jICB8IDIwICsrKysrKysrKysrKystLS0tLS0tDQo+ID4gIGRyaXZlcnMvaW9t
-bXUvbXRrX2lvbW11LmggIHwgIDMgKystDQo+ID4gIGluY2x1ZGUvc29jL21lZGlhdGVrL3NtaS5o
-IHwgIDIgKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCA4IGRlbGV0
-aW9ucygtKQ0KPiANCj4gW3NuaXBdDQo+IA0KPiA+IEBAIC00OCw3ICs0OSw3IEBAIHN0cnVjdCBt
-dGtfaW9tbXVfcGxhdF9kYXRhIHsNCj4gPiAgCWVudW0gbXRrX2lvbW11X3BsYXQgbTR1X3BsYXQ7
-DQo+ID4gIAl1MzIgICAgICAgICAgICAgICAgIGZsYWdzOw0KPiA+ICAJdTMyICAgICAgICAgICAg
-ICAgICBpbnZfc2VsX3JlZzsNCj4gPiAtCXVuc2lnbmVkIGNoYXIgICAgICAgbGFyYmlkX3JlbWFw
-W01US19MQVJCX05SX01BWF07DQo+ID4gKwl1bnNpZ25lZCBjaGFyICAgICAgIGxhcmJpZF9yZW1h
-cFtNVEtfTEFSQl9DT01fTUFYXVtNVEtfTEFSQl9TVUJDT01fTUFYXTsNCj4gPiAgfTsNCj4gPiAg
-DQo+ID4gIHN0cnVjdCBtdGtfaW9tbXVfZG9tYWluOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRl
-L3NvYy9tZWRpYXRlay9zbWkuaCBiL2luY2x1ZGUvc29jL21lZGlhdGVrL3NtaS5oDQo+ID4gaW5k
-ZXggNWEzNGI4N2Q4OWUzLi5mYTY1YTU1NDY4ZTIgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9z
-b2MvbWVkaWF0ZWsvc21pLmgNCj4gPiArKysgYi9pbmNsdWRlL3NvYy9tZWRpYXRlay9zbWkuaA0K
-PiA+IEBAIC0xMiw2ICsxMiw4IEBADQo+ID4gICNpZmRlZiBDT05GSUdfTVRLX1NNSQ0KPiA+ICAN
-Cj4gPiAgI2RlZmluZSBNVEtfTEFSQl9OUl9NQVgJCTE2DQo+ID4gKyNkZWZpbmUgTVRLX0xBUkJf
-Q09NX01BWAk4DQo+ID4gKyNkZWZpbmUgTVRLX0xBUkJfU1VCQ09NX01BWAk0DQo+IA0KPiBCb3Ro
-IGFyZSBvbmx5IHVzZWQgaW4gbXRrX2lvbW11LmgsIGFuZCBJIGRvbid0IHRoaW5rIHNtaSBoYXMg
-cGxhbiB0byB1c2UNCj4gdGhlbS4gdGh1cyB3ZSBjb3VsZCBtb3ZlIHRoZW0gaW50byBtdGtfaW9t
-bXUuaA0KPiANCm9rLCBnb3QgaXQuIFRoYW5rcyBmb3IgeW91ciBhZHZpY2UuDQoNCj4gPiAgDQo+
-ID4gICNkZWZpbmUgTVRLX1NNSV9NTVVfRU4ocG9ydCkJQklUKHBvcnQpDQo+ID4gIA0KPiANCj4g
-DQoNCg==
+Bit 8 would be the "global" bit, which does not quite make sense for non-leaf
+page table entries.  Intel ignores it; AMD ignores it in PDEs and PDPEs, but
+reserves it in PML4Es.
+
+Probably, earlier versions of the AMD manual documented it as reserved in PDPEs
+as well, and that behavior made it into KVM as well as kvm-unit-tests; fix it.
+
+Cc: stable@vger.kernel.org
+Reported-by: Nadav Amit <namit@vmware.com>
+Fixes: a0c0feb57992 ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD", 2014-09-03)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 76817d13c86e..6d6a0ae7800c 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4449,7 +4449,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu *vcpu,
+ 			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][2] = exb_bit_rsvd |
+-			nonleaf_bit8_rsvd | gbpages_bit_rsvd |
++			gbpages_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+ 		rsvd_check->rsvd_bits_mask[0][1] = exb_bit_rsvd |
+ 			rsvd_bits(maxphyaddr, 51);
+-- 
+2.26.2
 
