@@ -2,118 +2,173 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB28C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA86EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 475E32073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HPGbQ8sI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G3epm60U"
+	by mail.kernel.org (Postfix) with ESMTP id B95AB2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593512148;
+	bh=AnrGPXZ0L3XFWcwycTfoFtiR62BIC4cXUJGTL2T6Ymk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nZe9LyggYv+e6clouaAlFuflVllUXpVpaKMcktE9ucs9Bc8Uke36ZrDGol33n5sim
+	 7moH/G361z/vSlbKTKt1MPhHKWevGbplhctx2eImZDK43xE7CQUwqsHillqM8bFDpc
+	 +9C+T0gnH+HU9OxAWQi/p08tgo8r10/DoBN+n62E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbgF3KME (ORCPT
+        id S1732346AbgF3KPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732261AbgF3KLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:11:53 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC944C03E979;
-        Tue, 30 Jun 2020 03:11:52 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 10:11:50 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593511911;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EoujhNZEUXnfVLu7O8Ad2WynRdcdYfgaBs6bK4tDNIc=;
-        b=HPGbQ8sIDpmJTG2t76BTTXj28h6D8oblKZIxMx5DRj5VERqSUIOC3+mfwIwN2mVyiBTRqp
-        yAQjsYteRwqoiIgVFxE2HzkDolNe6uYtSMLtdS43TAb1HbtGz87W4WY+Y3Kuh2TIrGKYHU
-        uhZcK+l9VSVP2KsuAHXV/b3xf4zKCezSFqtJiphUdgRXE1/M2COtlIt/yZe3P8Y5fX5MwI
-        sQPb3grucmx5KnFJLi3OQ9ii4MbkL5WXzRj28pkivqXqAEFVZHihDKj+prGkHabzeweE3S
-        R9Oi809pNcLRAfob7M8Z3aS0Lr54Df+AJhhJBRJlTCvw08t/OuzQS8NUPiotsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593511911;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EoujhNZEUXnfVLu7O8Ad2WynRdcdYfgaBs6bK4tDNIc=;
-        b=G3epm60UnWNDsOQX+9zDNdo0vMQpBEgxgqroWQ/NhYTt1eRocYTOfEkkUmiqOIW2PDQGQD
-        FCULZX065I5ZBuCg==
-From:   "tip-bot2 for Zenghui Yu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/gic-v4.1: Use readx_poll_timeout_atomic()
- to fix sleep in atomic
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200605052345.1494-1-yuzenghui@huawei.com>
-References: <20200605052345.1494-1-yuzenghui@huawei.com>
+        Tue, 30 Jun 2020 06:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731155AbgF3KPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:15:45 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310812073E;
+        Tue, 30 Jun 2020 10:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593512144;
+        bh=AnrGPXZ0L3XFWcwycTfoFtiR62BIC4cXUJGTL2T6Ymk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=poSpxfVsPFzdrIYdiHqRbaXPpyDLpWpyCa/T+q7RuCj//1Y90s/jNdAltWjoJqTv5
+         xU3qD4C0ZpR+CUSfhDjWssLQ3KHLbtjZGOx2lOH60RKvc23lPiTTD9CCbrkIX/bqvw
+         2YKqpUMLl4yxpzXAH3qYmxrRyes8clDAaQsKJYc4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqDIk-007i3h-O9; Tue, 30 Jun 2020 11:15:42 +0100
 MIME-Version: 1.0
-Message-ID: <159351191045.4006.6389349419327393336.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 11:15:42 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: Re: [PATCH v2 06/17] irqchip/gic-v3: Configure SGIs as standard
+ interrupts
+In-Reply-To: <jhjimffgfyt.mognet@arm.com>
+References: <20200624195811.435857-1-maz@kernel.org>
+ <20200624195811.435857-7-maz@kernel.org> <jhjimffgfyt.mognet@arm.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <f9502c41d941e56ffcc30c51f2d23ab9@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+On 2020-06-25 19:25, Valentin Schneider wrote:
+> On 24/06/20 20:58, Marc Zyngier wrote:
+>> Change the way we deal with GICv3 SGIs by turning them into proper
+>> IRQs, and calling into the arch code to register the interrupt range
+>> instead of a callback.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/irq-gic-v3.c | 81 
+>> +++++++++++++++++++-----------------
+>>  1 file changed, 43 insertions(+), 38 deletions(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-gic-v3.c 
+>> b/drivers/irqchip/irq-gic-v3.c
+>> index 19b294ed48ba..d275e9b9533d 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -36,6 +36,8 @@
+>>  #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
+>>  #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
+>> 
+>> +#define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
+>> +
+> 
+> Nit: this piqued my interest but ended up being just a define shuffle; 
+> As a
+> member of the git speleologists' guild, I'd be overjoyed with having a
+> small notion of that in the changelog.
 
-Commit-ID:     31dbb6b1d025506b3b8b8b74e9b697df47b9f696
-Gitweb:        https://git.kernel.org/tip/31dbb6b1d025506b3b8b8b74e9b697df47b9f696
-Author:        Zenghui Yu <yuzenghui@huawei.com>
-AuthorDate:    Fri, 05 Jun 2020 13:23:45 +08:00
-Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 21 Jun 2020 15:13:11 +01:00
+Fair enough.
 
-irqchip/gic-v4.1: Use readx_poll_timeout_atomic() to fix sleep in atomic
+> 
+>>  struct redist_region {
+>>       void __iomem		*redist_base;
+>>       phys_addr_t		phys_base;
+>> @@ -657,38 +659,14 @@ static asmlinkage void __exception_irq_entry 
+>> gic_handle_irq(struct pt_regs *regs
+>>       if ((irqnr >= 1020 && irqnr <= 1023))
+>>               return;
+>> 
+>> -	/* Treat anything but SGIs in a uniform way */
+>> -	if (likely(irqnr > 15)) {
+>> -		int err;
+>> -
+>> -		if (static_branch_likely(&supports_deactivate_key))
+>> -			gic_write_eoir(irqnr);
+>> -		else
+>> -			isb();
+>> -
+>> -		err = handle_domain_irq(gic_data.domain, irqnr, regs);
+>> -		if (err) {
+>> -			WARN_ONCE(true, "Unexpected interrupt received!\n");
+>> -			gic_deactivate_unhandled(irqnr);
+>> -		}
+>> -		return;
+>> -	}
+>> -	if (irqnr < 16) {
+>> +	if (static_branch_likely(&supports_deactivate_key))
+>>               gic_write_eoir(irqnr);
+>> -		if (static_branch_likely(&supports_deactivate_key))
+>> -			gic_write_dir(irqnr);
+>> -#ifdef CONFIG_SMP
+>> -		/*
+>> -		 * Unlike GICv2, we don't need an smp_rmb() here.
+>> -		 * The control dependency from gic_read_iar to
+>> -		 * the ISB in gic_write_eoir is enough to ensure
+>> -		 * that any shared data read by handle_IPI will
+>> -		 * be read after the ACK.
+>> -		 */
+> 
+> Isn't that still relevant?
 
-readx_poll_timeout() can sleep if @sleep_us is specified by the caller,
-and is therefore unsafe to be used inside the atomic context, which is
-this case when we use it to poll the GICR_VPENDBASER.Dirty bit in
-irq_set_vcpu_affinity() callback.
+It is. It is just that there is no really good place to put it.
+I may end-up just leaving it where it is.
 
-Let's convert to its atomic version instead which helps to get the v4.1
-board back to life!
+> Also, while staring at this it dawned on me that IPI's don't need the
+> eoimode=0 isb(): due to how the IPI flow-handler is structured, we'll 
+> get a
+> gic_eoi_irq() just before calling into the irqaction. Dunno how much we
+> care about it.
 
-Fixes: 96806229ca03 ("irqchip/gic-v4.1: Add support for VPENDBASER's Dirty+Valid signaling")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200605052345.1494-1-yuzenghui@huawei.com
----
- drivers/irqchip/irq-gic-v3-its.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+That's interesting. This ISB is a leftover from the loop we had before
+the pseudo-NMI code, where we had to make sure the write to EOIR was
+ordered with the read from IAR.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index cd685f5..6a5a87f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3797,10 +3797,10 @@ static void its_wait_vpt_parse_complete(void)
- 	if (!gic_rdists->has_vpend_valid_dirty)
- 		return;
- 
--	WARN_ON_ONCE(readq_relaxed_poll_timeout(vlpi_base + GICR_VPENDBASER,
--						val,
--						!(val & GICR_VPENDBASER_Dirty),
--						10, 500));
-+	WARN_ON_ONCE(readq_relaxed_poll_timeout_atomic(vlpi_base + GICR_VPENDBASER,
-+						       val,
-+						       !(val & GICR_VPENDBASER_Dirty),
-+						       10, 500));
- }
- 
- static void its_vpe_schedule(struct its_vpe *vpe)
+Given that we have an exception return right after the interrupt
+handling, I *think* we could get rid of it (but that would need
+mode checking on broken systems such as TX1...).  I don't think
+this is specific to IPIs though.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
