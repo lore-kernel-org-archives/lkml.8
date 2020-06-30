@@ -2,85 +2,164 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22635C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D389C20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593558351;
-	bh=7wvKYJjHegtiIXQCxjX/XdD8dbA7iI59ejeA+RBNcZw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=B6PJFm2ZK+ZY8kCmHkEnK925ZMEtJATv1ESxMcdol3SWcGTHFDx51Y9oUUA+EV6z9
-	 h0JPUSGp3sEn9AHOJjiCf4ivOHxTqxJPfm3ZJv5LNs5G7+FldrVt2ZkWOOdp3HyBO8
-	 oozV0sPA/j2hsonjr6CJ4VJ0qsrcjDBep6rdwTxo=
+	by mail.kernel.org (Postfix) with ESMTP id 061A320780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgF3XFu (ORCPT
+        id S1726268AbgF3XHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 19:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgF3XFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 19:05:50 -0400
-Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D0E20771;
-        Tue, 30 Jun 2020 23:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593558349;
-        bh=7wvKYJjHegtiIXQCxjX/XdD8dbA7iI59ejeA+RBNcZw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DDUzWrCnPY63PbbQqYUZI8eKXAHLsP8zU/LU/eNbhO6Sme8sE1IzsrtZ/ZW9M1SzL
-         kbAeXeXHtqp5PXiqPO5p3hMrunVLSDh1c2mFKiW8j3ojyGrczTue4/ANl/0pCpSx+p
-         eqfvDP6Fzig4QnY395uv/ApFiMVLqz52piRtx+jA=
-Date:   Tue, 30 Jun 2020 16:05:48 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 00/26] mm: Page fault accounting cleanups
-Message-Id: <20200630160548.fc8d1f93148e74e544850bf3@linux-foundation.org>
-In-Reply-To: <20200630211155.GA40675@xz-x1>
-References: <20200630204501.38468-1-peterx@redhat.com>
-        <20200630211155.GA40675@xz-x1>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Jun 2020 19:07:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13602 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725791AbgF3XHr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 19:07:47 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UN3KfM018224;
+        Tue, 30 Jun 2020 19:07:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s1bj33-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 19:07:36 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UN7ZPj033337;
+        Tue, 30 Jun 2020 19:07:35 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s1bj26-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 19:07:35 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UN5YoD022861;
+        Tue, 30 Jun 2020 23:07:33 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 31wwr8c7ka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 23:07:33 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UN7UGr42139754
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 23:07:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF3334203F;
+        Tue, 30 Jun 2020 23:07:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D19BD4204C;
+        Tue, 30 Jun 2020 23:07:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.162.223])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 23:07:29 +0000 (GMT)
+Message-ID: <1593558449.5057.12.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
+ conditional into ima_validate_rule()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Tue, 30 Jun 2020 19:07:29 -0400
+In-Reply-To: <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+         <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 cotscore=-2147483648 suspectscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 17:11:55 -0400 Peter Xu <peterx@redhat.com> wrote:
-
-> On Tue, Jun 30, 2020 at 04:45:01PM -0400, Peter Xu wrote:
-> > v4:
-> > - rebase to linux-next/akpm
-> > - picked one more r-b
+On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
+> Use ima_validate_rule() to ensure that the combination of a hook
+> function and the keyrings conditional is valid and that the keyrings
+> conditional is not specified without an explicit KEY_CHECK func
+> conditional. This is a code cleanup and has no user-facing change.
 > 
-> I fixed some stuff in the send scripts but definitely broke something else on
-> the chaining of the messages.  Andrew, please let me know if you want me to
-> resend...  Sorry for that.
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> ---
+> 
+> * v2
+>   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
+>     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
+>     present in the rule entry flags for non-buffer hook functions.
+> 
+>  security/integrity/ima/ima_policy.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 8cdca2399d59..43d49ad958fb 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  		case KEXEC_KERNEL_CHECK:
+>  		case KEXEC_INITRAMFS_CHECK:
+>  		case POLICY_CHECK:
+> +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
+> +					     IMA_PERMIT_DIRECTIO |
+> +					     IMA_MODSIG_ALLOWED |
+> +					     IMA_CHECK_BLACKLIST))
 
-Well, the words
+Other than KEYRINGS, this patch should continue to behave the same.
+ However, this list gives the impressions that all of these flags are
+permitted on all of the above flags, which isn't true.
 
-: Since v2 changed quite a lot from v1, changelog is omitted, and I also
-: didn't have a chance to pick up any r-b in previous version.  I really
-: appreciate anyone who has looked at v1.  V1 for reference:
+For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
+to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
+ Both should only be allowed on APPRAISE action rules.
 
-make me think "not yet".  But this patchset is v4, so all confused.
+IMA_PCR should be limited to MEASURE action rules.
 
-I'm thinking we give this v4 a week for people to check it over, gather
-up the revews and acks, incorporate the change suggested by David, redo
-and double-check the cover letter then shoot for a v5?
+IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
+
+> +				return false;
+> +
+>  			break;
+>  		case KEXEC_CMDLINE:
+>  			if (entry->action & ~(MEASURE | DONT_MEASURE))
+> @@ -1027,7 +1036,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  		default:
+>  			return false;
+>  		}
+> -	}
+> +	} else if (entry->flags & IMA_KEYRINGS)
+> +		return false;
+
+IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST need to be added here as
+well.
+
+Mimi
+
+>  
+>  	return true;
+>  }
+> @@ -1209,7 +1219,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  			keyrings_len = strlen(args[0].from) + 1;
+>  
+>  			if ((entry->keyrings) ||
+> -			    (entry->func != KEY_CHECK) ||
+>  			    (keyrings_len < 2)) {
+>  				result = -EINVAL;
+>  				break;
+
