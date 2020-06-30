@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E56C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D86C20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BDB207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593538673;
-	bh=ivdp4DyIOz0KjIoTpMgK/lgiIZRWs8DUEf3ELpoiDUw=;
+	s=default; t=1593538678;
+	bh=84SXcF4oIb3/rXxDMEtP86ZlEr6gq844EJ4We62Q7is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uf/4L9ZR8kqHl8dliIZSSK/ywJShiF+eRdxUBRO1w9+PzsFiBS1sN4sb7AlX+9dR
-	 tjLuPlAjphS7TTBqFDEGQxXeLeQ+ON/XD23DlqHkXJRu5st2KEXI/MZa/M/frTnvZR
-	 QRk2QY59n6j5A5nulhkCgKAGDzxatRyyydwFyvMY=
+	b=RB8LrGy1YqT2w4SQF/YdaeNGUsNz0aEF5KXhgX9cpuRq+CHKwRMu7kHBIcGb+8zQ3
+	 UmG0ARsg6OG27VeeF33mLoK0v2SP5PRMdpzFst9SPLgQ6kzLdlbWU5nDNAveSjVmDX
+	 U/sQI9WeB+ZBnkoMbNTa0QjnbXAj6bgA1dgSM5QI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbgF3Rhv (ORCPT
+        id S2388051AbgF3Rh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:37:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 13:37:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731150AbgF3Rhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:37:50 -0400
+        id S1731150AbgF3Rhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:37:54 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650E120768;
-        Tue, 30 Jun 2020 17:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDBBA207FB;
+        Tue, 30 Jun 2020 17:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593538669;
-        bh=ivdp4DyIOz0KjIoTpMgK/lgiIZRWs8DUEf3ELpoiDUw=;
+        s=default; t=1593538673;
+        bh=84SXcF4oIb3/rXxDMEtP86ZlEr6gq844EJ4We62Q7is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2crZcNU0lORMLVE92OCDxLbk8/eDF+KCPPgmVzTUAR85v2UUyQawMJE3Pz9kkxBZo
-         5lf+XSnGc9ZjgOGchlANAmbZ/qsxAZ9lfyLcnFjpN6FiZTmLE6lly0uo4tdz/Wz0BP
-         jRwvhwGS/FdMU36JhDS/dtdy3/uPhFf041b4oJHw=
+        b=ZHG5P3xoGuxlynaWyREiqXA29TS0oxVxBHNfubFC7MOKvh5laB415rvLgRFI6Uo5q
+         QcSf7tvxXkuAbYFDQ+8ZexFRAiQK8uP273GQczMucwu37vbXs5zCpIYy+kVNB0iLl3
+         Lzykp1iAOnNM4xenF65A+uWChUQxaI+HAhcvCbkM=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -60,14 +60,10 @@ Cc:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kernel-team@android.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Xiao Yang <ice_yangxiao@163.com>
-Subject: [PATCH 01/18] tools: bpf: Use local copy of headers including uapi/linux/filter.h
-Date:   Tue, 30 Jun 2020 18:37:17 +0100
-Message-Id: <20200630173734.14057-2-will@kernel.org>
+        virtualization@lists.linux-foundation.org, kernel-team@android.com
+Subject: [PATCH 02/18] compiler.h: Split {READ,WRITE}_ONCE definitions out into rwonce.h
+Date:   Tue, 30 Jun 2020 18:37:18 +0100
+Message-Id: <20200630173734.14057-3-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200630173734.14057-1-will@kernel.org>
 References: <20200630173734.14057-1-will@kernel.org>
@@ -78,154 +74,235 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pulling header files directly out of the kernel sources for inclusion in
-userspace programs is highly error prone, not least because it bypasses
-the kbuild infrastructure entirely and so may end up referencing other
-header files that have not been generated.
+In preparation for allowing architectures to define their own
+implementation of the READ_ONCE() macro, move the generic
+{READ,WRITE}_ONCE() definitions out of the unwieldy 'linux/compiler.h'
+file and into a new 'rwonce.h' header under 'asm-generic'.
 
-Subsequent patches will cause compiler.h to pull in the ungenerated
-asm/rwonce.h file via filter.h, breaking the build for tools/bpf:
-
-  | $ make -C tools/bpf
-  | make: Entering directory '/linux/tools/bpf'
-  |   CC       bpf_jit_disasm.o
-  |   LINK     bpf_jit_disasm
-  |   CC       bpf_dbg.o
-  | In file included from /linux/include/uapi/linux/filter.h:9,
-  |                  from /linux/tools/bpf/bpf_dbg.c:41:
-  | /linux/include/linux/compiler.h:247:10: fatal error: asm/rwonce.h: No such file or directory
-  |  #include <asm/rwonce.h>
-  |           ^~~~~~~~~~~~~~
-  | compilation terminated.
-  | make: *** [Makefile:61: bpf_dbg.o] Error 1
-  | make: Leaving directory '/linux/tools/bpf'
-
-Take a copy of the installed version of linux/filter.h  (i.e. the one
-created by the 'headers_install' target) into tools/include/uapi/linux/
-and adjust the BPF tool Makefile to reference the local include
-directories instead of those in the main source tree.
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
-Reported-by: Xiao Yang <ice_yangxiao@163.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- tools/bpf/Makefile                |  3 +-
- tools/include/uapi/linux/filter.h | 90 +++++++++++++++++++++++++++++++
- 2 files changed, 92 insertions(+), 1 deletion(-)
- create mode 100644 tools/include/uapi/linux/filter.h
+ include/asm-generic/Kbuild   |  1 +
+ include/asm-generic/rwonce.h | 91 ++++++++++++++++++++++++++++++++++++
+ include/linux/compiler.h     | 83 +-------------------------------
+ 3 files changed, 94 insertions(+), 81 deletions(-)
+ create mode 100644 include/asm-generic/rwonce.h
 
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 6df1850f8353..8a69258fd8aa 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -9,7 +9,8 @@ MAKE = make
- INSTALL ?= install
- 
- CFLAGS += -Wall -O2
--CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
-+CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/tools/include/uapi \
-+	  -I$(srctree)/tools/include
- 
- # This will work when bpf is built in tools env. where srctree
- # isn't set and when invoked from selftests build, where srctree
-diff --git a/tools/include/uapi/linux/filter.h b/tools/include/uapi/linux/filter.h
+diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
+index 44ec80e70518..74b0612601dd 100644
+--- a/include/asm-generic/Kbuild
++++ b/include/asm-generic/Kbuild
+@@ -45,6 +45,7 @@ mandatory-y += pci.h
+ mandatory-y += percpu.h
+ mandatory-y += pgalloc.h
+ mandatory-y += preempt.h
++mandatory-y += rwonce.h
+ mandatory-y += sections.h
+ mandatory-y += serial.h
+ mandatory-y += shmparam.h
+diff --git a/include/asm-generic/rwonce.h b/include/asm-generic/rwonce.h
 new file mode 100644
-index 000000000000..eaef459e7bd4
+index 000000000000..92cc2f223cb3
 --- /dev/null
-+++ b/tools/include/uapi/linux/filter.h
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++++ b/include/asm-generic/rwonce.h
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Linux Socket Filter Data Structures
++ * Prevent the compiler from merging or refetching reads or writes. The
++ * compiler is also forbidden from reordering successive instances of
++ * READ_ONCE and WRITE_ONCE, but only when the compiler is aware of some
++ * particular ordering. One way to make the compiler aware of ordering is to
++ * put the two invocations of READ_ONCE or WRITE_ONCE in different C
++ * statements.
++ *
++ * These two macros will also work on aggregate data types like structs or
++ * unions.
++ *
++ * Their two major use cases are: (1) Mediating communication between
++ * process-level code and irq/NMI handlers, all running on the same CPU,
++ * and (2) Ensuring that the compiler does not fold, spindle, or otherwise
++ * mutilate accesses that either do not require ordering or that interact
++ * with an explicit memory barrier or atomic instruction that provides the
++ * required ordering.
 + */
++#ifndef __ASM_GENERIC_RWONCE_H
++#define __ASM_GENERIC_RWONCE_H
 +
-+#ifndef __LINUX_FILTER_H__
-+#define __LINUX_FILTER_H__
++#ifndef __ASSEMBLY__
 +
++#include <linux/compiler_types.h>
++#include <linux/kasan-checks.h>
++#include <linux/kcsan-checks.h>
 +
-+#include <linux/types.h>
-+#include <linux/bpf_common.h>
-+
-+/*
-+ * Current version of the filter code architecture.
-+ */
-+#define BPF_MAJOR_VERSION 1
-+#define BPF_MINOR_VERSION 1
-+
-+/*
-+ *	Try and keep these values and structures similar to BSD, especially
-+ *	the BPF code definitions which need to match so you can share filters
-+ */
-+ 
-+struct sock_filter {	/* Filter block */
-+	__u16	code;   /* Actual filter code */
-+	__u8	jt;	/* Jump true */
-+	__u8	jf;	/* Jump false */
-+	__u32	k;      /* Generic multiuse field */
-+};
-+
-+struct sock_fprog {	/* Required for SO_ATTACH_FILTER. */
-+	unsigned short		len;	/* Number of filter blocks */
-+	struct sock_filter *filter;
-+};
-+
-+/* ret - BPF_K and BPF_X also apply */
-+#define BPF_RVAL(code)  ((code) & 0x18)
-+#define         BPF_A           0x10
-+
-+/* misc */
-+#define BPF_MISCOP(code) ((code) & 0xf8)
-+#define         BPF_TAX         0x00
-+#define         BPF_TXA         0x80
++#include <asm/barrier.h>
 +
 +/*
-+ * Macros for filter block array initializers.
++ * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
++ * atomicity or dependency ordering guarantees. Note that this may result
++ * in tears!
 + */
-+#ifndef BPF_STMT
-+#define BPF_STMT(code, k) { (unsigned short)(code), 0, 0, k }
-+#endif
-+#ifndef BPF_JUMP
-+#define BPF_JUMP(code, k, jt, jf) { (unsigned short)(code), jt, jf, k }
-+#endif
++#define __READ_ONCE(x)	(*(const volatile __unqual_scalar_typeof(x) *)&(x))
++
++#define __READ_ONCE_SCALAR(x)						\
++({									\
++	__unqual_scalar_typeof(x) __x = __READ_ONCE(x);			\
++	smp_read_barrier_depends();					\
++	(typeof(x))__x;							\
++})
++
++#define READ_ONCE(x)							\
++({									\
++	compiletime_assert_rwonce_type(x);				\
++	__READ_ONCE_SCALAR(x);						\
++})
++
++#define __WRITE_ONCE(x, val)						\
++do {									\
++	*(volatile typeof(x) *)&(x) = (val);				\
++} while (0)
++
++#define WRITE_ONCE(x, val)						\
++do {									\
++	compiletime_assert_rwonce_type(x);				\
++	__WRITE_ONCE(x, val);						\
++} while (0)
++
++static __no_sanitize_or_inline
++unsigned long __read_once_word_nocheck(const void *addr)
++{
++	return __READ_ONCE(*(unsigned long *)addr);
++}
 +
 +/*
-+ * Number of scratch memory words for: BPF_ST and BPF_STX
++ * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need to load a
++ * word from memory atomically but without telling KASAN/KCSAN. This is
++ * usually used by unwinding code when walking the stack of a running process.
 + */
-+#define BPF_MEMWORDS 16
++#define READ_ONCE_NOCHECK(x)						\
++({									\
++	unsigned long __x;						\
++	compiletime_assert(sizeof(x) == sizeof(__x),			\
++		"Unsupported access size for READ_ONCE_NOCHECK().");	\
++	__x = __read_once_word_nocheck(&(x));				\
++	smp_read_barrier_depends();					\
++	(typeof(x))__x;							\
++})
 +
-+/* RATIONALE. Negative offsets are invalid in BPF.
-+   We use them to reference ancillary data.
-+   Unlike introduction new instructions, it does not break
-+   existing compilers/optimizers.
-+ */
-+#define SKF_AD_OFF    (-0x1000)
-+#define SKF_AD_PROTOCOL 0
-+#define SKF_AD_PKTTYPE 	4
-+#define SKF_AD_IFINDEX 	8
-+#define SKF_AD_NLATTR	12
-+#define SKF_AD_NLATTR_NEST	16
-+#define SKF_AD_MARK 	20
-+#define SKF_AD_QUEUE	24
-+#define SKF_AD_HATYPE	28
-+#define SKF_AD_RXHASH	32
-+#define SKF_AD_CPU	36
-+#define SKF_AD_ALU_XOR_X	40
-+#define SKF_AD_VLAN_TAG	44
-+#define SKF_AD_VLAN_TAG_PRESENT 48
-+#define SKF_AD_PAY_OFFSET	52
-+#define SKF_AD_RANDOM	56
-+#define SKF_AD_VLAN_TPID	60
-+#define SKF_AD_MAX	64
++static __no_kasan_or_inline
++unsigned long read_word_at_a_time(const void *addr)
++{
++	kasan_check_read(addr, 1);
++	return *(unsigned long *)addr;
++}
 +
-+#define SKF_NET_OFF	(-0x100000)
-+#define SKF_LL_OFF	(-0x200000)
++#endif /* __ASSEMBLY__ */
++#endif	/* __ASM_GENERIC_RWONCE_H */
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 204e76856435..718b4357af32 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -230,28 +230,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ # define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __LINE__)
+ #endif
+ 
+-/*
+- * Prevent the compiler from merging or refetching reads or writes. The
+- * compiler is also forbidden from reordering successive instances of
+- * READ_ONCE and WRITE_ONCE, but only when the compiler is aware of some
+- * particular ordering. One way to make the compiler aware of ordering is to
+- * put the two invocations of READ_ONCE or WRITE_ONCE in different C
+- * statements.
+- *
+- * These two macros will also work on aggregate data types like structs or
+- * unions.
+- *
+- * Their two major use cases are: (1) Mediating communication between
+- * process-level code and irq/NMI handlers, all running on the same CPU,
+- * and (2) Ensuring that the compiler does not fold, spindle, or otherwise
+- * mutilate accesses that either do not require ordering or that interact
+- * with an explicit memory barrier or atomic instruction that provides the
+- * required ordering.
+- */
+-#include <asm/barrier.h>
+-#include <linux/kasan-checks.h>
+-#include <linux/kcsan-checks.h>
+-
+ /**
+  * data_race - mark an expression as containing intentional data races
+  *
+@@ -272,65 +250,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	__v;								\
+ })
+ 
+-/*
+- * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
+- * atomicity or dependency ordering guarantees. Note that this may result
+- * in tears!
+- */
+-#define __READ_ONCE(x)	(*(const volatile __unqual_scalar_typeof(x) *)&(x))
+-
+-#define __READ_ONCE_SCALAR(x)						\
+-({									\
+-	__unqual_scalar_typeof(x) __x = __READ_ONCE(x);			\
+-	smp_read_barrier_depends();					\
+-	(typeof(x))__x;							\
+-})
+-
+-#define READ_ONCE(x)							\
+-({									\
+-	compiletime_assert_rwonce_type(x);				\
+-	__READ_ONCE_SCALAR(x);						\
+-})
+-
+-#define __WRITE_ONCE(x, val)						\
+-do {									\
+-	*(volatile typeof(x) *)&(x) = (val);				\
+-} while (0)
+-
+-#define WRITE_ONCE(x, val)						\
+-do {									\
+-	compiletime_assert_rwonce_type(x);				\
+-	__WRITE_ONCE(x, val);						\
+-} while (0)
+-
+-static __no_sanitize_or_inline
+-unsigned long __read_once_word_nocheck(const void *addr)
+-{
+-	return __READ_ONCE(*(unsigned long *)addr);
+-}
+-
+-/*
+- * Use READ_ONCE_NOCHECK() instead of READ_ONCE() if you need to load a
+- * word from memory atomically but without telling KASAN/KCSAN. This is
+- * usually used by unwinding code when walking the stack of a running process.
+- */
+-#define READ_ONCE_NOCHECK(x)						\
+-({									\
+-	unsigned long __x;						\
+-	compiletime_assert(sizeof(x) == sizeof(__x),			\
+-		"Unsupported access size for READ_ONCE_NOCHECK().");	\
+-	__x = __read_once_word_nocheck(&(x));				\
+-	smp_read_barrier_depends();					\
+-	(typeof(x))__x;							\
+-})
+-
+-static __no_kasan_or_inline
+-unsigned long read_word_at_a_time(const void *addr)
+-{
+-	kasan_check_read(addr, 1);
+-	return *(unsigned long *)addr;
+-}
+-
+ #endif /* __KERNEL__ */
+ 
+ /*
+@@ -414,4 +333,6 @@ static inline void *offset_to_ptr(const int *off)
+  */
+ #define prevent_tail_call_optimization()	mb()
+ 
++#include <asm/rwonce.h>
 +
-+#define BPF_NET_OFF	SKF_NET_OFF
-+#define BPF_LL_OFF	SKF_LL_OFF
-+
-+#endif /* __LINUX_FILTER_H__ */
+ #endif /* __LINUX_COMPILER_H */
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
