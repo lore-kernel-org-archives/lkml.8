@@ -2,119 +2,84 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59502078D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499422074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593537974;
+	bh=UX4LNw0FS/ZhCgJ7Ajk3hHxhW/1ixDfkdXFZJJe+7K8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S+Texy3mQnSAdEhlrkC+lDduYrrenYa7a6B2/A7jUJyyIqYdp1WEDLh8Ur01DunWU
+	 C9PuZ4O+RAIFjjegZtbExXrs7ajPEoIITQhzV+8luf53MSh8Tg09ek1aGZ+PIyAN+y
+	 EUp0FcY8Gx35RCEhwT+Ev+jJZ4zUYJPA7GYWhDWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390292AbgF3RX3 (ORCPT
+        id S2388799AbgF3R0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:23:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62758 "EHLO mga12.intel.com"
+        Tue, 30 Jun 2020 13:26:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390282AbgF3RX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:23:28 -0400
-IronPort-SDR: RyxdjboNfOtYfgJ2tVyG41C5M8cXaIW7ZRoFcJqKR1uJUQjXNWiXPehUAQkZiNyYubfrYULwGF
- y6CbBMsR271A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="125950840"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="125950840"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:23:05 -0700
-IronPort-SDR: W+mmP8TYMf1/apOyssk6Ri4mYct5mOVaSAKhe3R5djAYh93yFp9VzXdXk3HMjAKgXjFgpD3mGz
- LZ+gZniJyIKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="481003583"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jun 2020 10:23:05 -0700
-Date:   Tue, 30 Jun 2020 10:23:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, "Xing, Cedric" <cedric.xing@intel.com>,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
-        Christian Ludloff <ludloff@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
-        puiterwijk@redhat.com, David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
- vDSO functions
-Message-ID: <20200630172305.GG7733@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
- <20200629171022.GC32176@zn.tnic>
- <20200630060055.GS12312@linux.intel.com>
- <20200630084128.GA1093@zn.tnic>
- <CALCETrWUHw2WSDaJrxrwVrXSGz-zR0N2R3cT06esKBCpqyoZaQ@mail.gmail.com>
+        id S1729892AbgF3R0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:26:12 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B23206C0;
+        Tue, 30 Jun 2020 17:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593537972;
+        bh=UX4LNw0FS/ZhCgJ7Ajk3hHxhW/1ixDfkdXFZJJe+7K8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xj7h0zP9RMlPnHrQlPpqjPoP2AuUHNpm6Sxon3Zx1UKQD9qSdJ78kE0TafXDLjra6
+         BBY24Vke4NflqXKSnfX6IkPaQS+qHb/jb2dR1cWyt/DNESxWKPKtW1Of4p6U3mwTgj
+         NCgPw2apFCYTE8kEs2sclKGO0mLcTyb4vMHJeTDE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqK1K-007oaL-GP; Tue, 30 Jun 2020 18:26:10 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>
+Cc:     wanghaibin.wang@huawei.com
+Subject: Re: [PATCH] irqchip/gic-v3: Remove the unused register definition
+Date:   Tue, 30 Jun 2020 18:26:04 +0100
+Message-Id: <159353791986.882710.14067280307027336552.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200630134126.880-1-yuzenghui@huawei.com>
+References: <20200630134126.880-1-yuzenghui@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWUHw2WSDaJrxrwVrXSGz-zR0N2R3cT06esKBCpqyoZaQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, yuzenghui@huawei.com, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:48:22AM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 30, 2020 at 1:41 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 11:00:55PM -0700, Sean Christopherson wrote:
-> > > E.g. the vDSO function should get the fixup even if userspace screws
-> > > up mmap() and invokes __vdso_sgx_enter_enclave() without being tagged
-> > > an SGX task.
-> >
-> > I sincerely hope you don't mean this seriously.
-> >
-> > Please add a member to task_struct which denotes that a task is an
-> > sgx task, test that member where needed and forget real quickly about
-> > running *any* *fixup* for unrelated tasks.
+On Tue, 30 Jun 2020 21:41:26 +0800, Zenghui Yu wrote:
+> As per the GICv3 specification, GIC{D,R}_SEIR are not assigned and the
+> locations (0x0068) are actually Reserved. GICR_MOV{LPI,ALL}R are two IMP
+> DEF registers and might be defined by some specific micro-architecture,
+> Linux doesn't use them.
 > 
-> I don't see the problem.  If you call this magic vDSO function and get
-> a fault, it gets handled.  What's the failure mode?
-> 
-> >
-> > > No hard dependency, it's normal kernel code.  My reasoning for dropping it
-> > > in .../vdso was largely to co-locate it with vdso/extable.h due to the
-> > > dependency on the format of 'struct vdso_exception_table_entry'.
-> >
-> > A struct which you defined instead of simply using struct
-> > exception_table_entry even if it has a handler member which would remain
-> > unused?
-> 
-> Don't forget the cross-arch issue.  We need that structure to have
-> constant layout so that the -m32 build from the vDSO has the same
-> layout as in the kernel.
-> 
-> So my only actual objection to the patch is that there should probably
-> be a comment above the structure reminding people that it needs to
-> have the same layout on 32-bit, x32, and x86_64.  So maybe the entries
-> should be s32 instead of int, although this doesn't really matter.
+> As they're not used anywhere in the kernel, just drop all of them.
 
-I highly doubt my past self thought about the cross-arch issue.  The main
-reason I created 'struct vdso_exception_table_entry' is that interpretation
-of the fields is different.  For the kernel, the fields contain offsets
-that are relative to the address of the field itself, i.e. of the fixup
-itself.  For vDSO, the offsets are relative to the base of the vDSO.
+Applied to irq/irqchip-5.9, thanks!
 
-Reusing exception_table_entry felt like it would be all kinds of confusing.
+[1/1] irqchip/gic-v3: Remove unused register definition
+      commit: c15c35a83c01fb25a995fbc4f58fe499f0493813
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
