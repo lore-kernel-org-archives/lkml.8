@@ -2,130 +2,100 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C51220672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0PNp5hsO"
+	by mail.kernel.org (Postfix) with ESMTP id 0222520672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbgF3Lsf (ORCPT
+        id S1733114AbgF3Lsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:48:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40398 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbgF3Lse (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:48:34 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UBgPfe196081;
-        Tue, 30 Jun 2020 11:48:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=uxq/cKx519UunETtqtXYq6fCE8XXU5EvXIx0epdZCQQ=;
- b=0PNp5hsOdKn/2ZW4WNcy+g0QBDBJFtgNvFg2QdwkyrVFYC00HITHoZC2+Ru7jzyzpjj7
- 02TYcGSIw8YNNP1HxahgRhEJBFUxJSeW/rpv0flsj56YnPmokDRU8D5QF6DTPCYlUk3Z
- QBTTwpF6ERCpZDJDVhUqs20Ej0M4L9GTQM095rcvjsSpnxmzgrwcRnj7BK0JLoSIu169
- YfW9wautb92/9mRca/RpT8MJJVz1Ij41RQ7o3A/cP8pjoehGwc2ebpct8Nh+3aZK9gJc
- Gh+YJN2WGtDIvQyeX5HHQ9rsRBj34qHzQf+WMCGFb9QWo/Ucx/8vcw64EgeGaStGyfkV Jg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31xx1dru06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jun 2020 11:48:25 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UBgYO4189853;
-        Tue, 30 Jun 2020 11:46:25 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31y52hrqxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 11:46:25 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05UBkMau003808;
-        Tue, 30 Jun 2020 11:46:23 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Jun 2020 11:46:22 +0000
-Date:   Tue, 30 Jun 2020 14:46:15 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>, Wang Wenhu <wenhu.wang@vivo.com>,
-        Wen Gong <wgong@codeaurora.org>,
-        Carl Huang <cjhuang@codeaurora.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [PATCH net] net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
-Message-ID: <20200630114615.GA21891@mwanda>
+        Tue, 30 Jun 2020 07:48:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38196 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728419AbgF3Lsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:48:55 -0400
+IronPort-SDR: g68+hleK2PBihtnis3D2iThpaLCWSXzz2pPSTs37mN1vKvAinIucUHE2cgsQRHbVwPbLpoGYb4
+ sqQoQKNpdPBw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144393104"
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="144393104"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 04:48:54 -0700
+IronPort-SDR: ihgcD26HSd3er82WHpBPNsTmfMXWuX0VTAgCQbXncFKlSOgMMooZOmtHqZSTtOqA03umGNVwON
+ cM8cyw3LULCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="386674833"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Jun 2020 04:48:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jqEkv-00Gpqe-Gf; Tue, 30 Jun 2020 14:48:53 +0300
+Date:   Tue, 30 Jun 2020 14:48:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Cengiz Can <cengiz@kernel.wtf>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3] kdb: remove unnecessary null check of dbg_io_ops
+Message-ID: <20200630114853.GS3703480@smile.fi.intel.com>
+References: <CAFA6WYNpCG2xPERd=NeKf+EthbX+1R4iieOL52kWnBp8y_+Nbw@mail.gmail.com>
+ <20200630082922.28672-1-cengiz@kernel.wtf>
+ <CAFA6WYPDTKQ4cm+TMmRt+qDiF+s3gggCsW1gfzCaaOdP9rJgdQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200628104623.GA3357@Mani-XPS-13-9360>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006300087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011 adultscore=0
- suspectscore=0 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006300087
+In-Reply-To: <CAFA6WYPDTKQ4cm+TMmRt+qDiF+s3gggCsW1gfzCaaOdP9rJgdQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code assumes that the user passed in enough data for a
-qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
-the buffer is too small then it will read beyond the end.
+On Tue, Jun 30, 2020 at 05:06:31PM +0530, Sumit Garg wrote:
+> On Tue, 30 Jun 2020 at 14:00, Cengiz Can <cengiz@kernel.wtf> wrote:
+> >
+> > `kdb_msg_write` operates on a global `struct kgdb_io *` called
+> > `dbg_io_ops`.
+> >
+> > It's initialized in `debug_core.c` and checked throughout the debug
+> > flow.
+> >
+> > There's a null check in `kdb_msg_write` which triggers static analyzers
+> > and gives the (almost entirely wrong) impression that it can be null.
+> >
+> > Coverity scanner caught this as CID 1465042.
+> >
+> > I have removed the unnecessary null check and eliminated false-positive
+> > forward null dereference warning.
 
-Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
-Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- net/qrtr/qrtr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> > -               while (len--) {
+> > -                       dbg_io_ops->write_char(*cp);
+> > -                       cp++;
+> > -               }
+> > +       while (len--) {
+> > +               dbg_io_ops->write_char(*cp);
+> > +               cp++;
+> >         }
 
-diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 2d8d6131bc5f..7eccbbf6f8ad 100644
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -427,7 +427,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
- 	unsigned int ver;
- 	size_t hdrlen;
- 
--	if (len & 3)
-+	if (len == 0 || len & 3)
- 		return -EINVAL;
- 
- 	skb = netdev_alloc_skb(NULL, len);
-@@ -441,6 +441,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
- 
- 	switch (ver) {
- 	case QRTR_PROTO_VER_1:
-+		if (len < sizeof(*v1))
-+			goto err;
- 		v1 = data;
- 		hdrlen = sizeof(*v1);
- 
-@@ -454,6 +456,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
- 		size = le32_to_cpu(v1->size);
- 		break;
- 	case QRTR_PROTO_VER_2:
-+		if (len < sizeof(*v2))
-+			goto err;
- 		v2 = data;
- 		hdrlen = sizeof(*v2) + v2->optlen;
- 
+Despite being in the original code this can be simple done in two lines:
+
+	while (len--)
+		dbg_io_ops->write_char(*cp++);
+
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
+
 
