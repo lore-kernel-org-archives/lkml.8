@@ -2,130 +2,131 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA78C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 653CC2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593504152;
-	bh=l9em1xuyarZs6WU6lGVQVTbwQfuLz7IEaQ69vwvjbR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WiOz+sqm7R2i26FQIbMlBbBdOo1iw4ZfcK0cuWssGD7FxSQl1ZpzKu87glz5V052d
-	 MYouNWyTCuXhcs2qcRof3MwKg10iy6C5GSJKDs6rf1GgnL3FNnjT/ZI+hgZkcp1wTC
-	 gngcK8DaWwRUm35YobJW65rnGYwn/kpXRmXSlZqU=
+	by mail.kernel.org (Postfix) with ESMTP id BE02D20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="g9qa6/3v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IENVijjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgF3ICb (ORCPT
+        id S1730692AbgF3IDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbgF3ICY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:02:24 -0400
-Received: from localhost (unknown [84.241.197.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D604B2067D;
-        Tue, 30 Jun 2020 08:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593504143;
-        bh=l9em1xuyarZs6WU6lGVQVTbwQfuLz7IEaQ69vwvjbR0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oKxVuVQjOlEV89XeGjZL+EsE+ssdpkUV5c1dxojW7lqFvXHdE3E11ratNJHAnBnMQ
-         zeCuWnHl/2+If7Tp5g3qPlSHj8wOwKEjZeaSuNw82UTwMiTXYQ7SO8ce8ixj5l/2yI
-         i/Qn7sOpT0LMWB/KPsX/pjQEeVZYwm82uqwScFWY=
-Date:   Tue, 30 Jun 2020 10:02:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 4/7] PCI: Add device even if driver attach failed
-Message-ID: <20200630080220.GC619174@kroah.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-5-rajatja@google.com>
+        Tue, 30 Jun 2020 04:03:02 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:39149 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728372AbgF3ICm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:02:42 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id B3F5C252;
+        Tue, 30 Jun 2020 04:02:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 30 Jun 2020 04:02:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=lu/WrihdsYQOer+w6h1sKVAQhhh
+        zpgn9ANfbrgSBg08=; b=g9qa6/3vky6RpenoRSFz45zMGoY4KA1E6jJ0ZUcRlEV
+        PQcFqd2AKRhgIaYvOf/xP29zscXyHpDGRrWtCl4WxMhPhmbQ+jRrNnBuMAcwCTdI
+        5f0s03IvSlUqq2Wsb0eyaFpZ4emls8T4KMikrDhjWaYDcU/jbhqkrvBTQ+j/SaDM
+        frRilLO1PAoEStRK4Tpa4AU8+Lird/mo7WTS8GWFDoofnPbkvgp1803YopTt61n6
+        VYaM2OsbJct65v3QU2aCKXAN7KQbZpUkB/2irR7fA7szGLuzIxb4u8eltpWdx8xi
+        J3TvQIqfNXYrIadNJUyVlUdBjgqNLVjBBkMx3dmyBGA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lu/Wri
+        hdsYQOer+w6h1sKVAQhhhzpgn9ANfbrgSBg08=; b=IENVijjTKHsAo29my84QNt
+        HY8lF7lDEOJ1kLi3ESudeyXEHRivnOWiNwwtK0hFN0ul7TjHAChlcJ9b/UzEhDHo
+        2eSoaardOH9Tki2+UbX0NcHp8T+t9rF6ldTEmBqXEeD0iRl/n+MqM88uGD/YexL0
+        i7rEqqodW1Nbz/TEu5c0Ktgyj2ZYvr5Sq8IKPiG+hAT4eIDXqbD+Df4RjhDxytpa
+        HQDi64fBZOLZPdGKuqhLFiD1D3ph99Tl74Payu2AtJc3oLcRgtinz2LfM2+qapUa
+        EhyIrnoGNF/cXhGkxJro55Kk40oA2hXYpU3L8v3v4EGPz5o64hxYzEowPxEE4gTw
+        ==
+X-ME-Sender: <xms:n_H6Xkl5STMdOqdfkt3UgUS68MEyZUSxq3JRCbrWivKFaQus7QqTjg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvddttddguddvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeefjeefkeduiefgkefgheefteekueetkeeiueekgedvvdevgfejgfduudei
+    veejieenucffohhmrghinhepshhuphgvrhhushgvrhdrtghomhdprghrmhgsihgrnhdrtg
+    homhenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:n_H6Xj1Wgj7m0IMsjDA-5IvL7RGLmM0Jnqca4MD3W9rSANjADEgZ0A>
+    <xmx:n_H6XirelRRngq7-TERnqrtXaDDByLZhYcxsz78xbouElrd66cwcXQ>
+    <xmx:n_H6XgnABOkXWd6TTqOF4FAFV72iOHSRpCk5Z-6-a0xY3kQAhUFRjA>
+    <xmx:ofH6XnydwAiBKEXYT_AJwIgA_erJoiMK9bYjJ5pqJUG8o5ThSUckXw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 04A033280066;
+        Tue, 30 Jun 2020 04:02:38 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 10:02:37 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: sun4i: hdmi: Remove extra HPD polling
+Message-ID: <20200630080237.dsg7umd6ju2oamg4@gilmour.lan>
+References: <20200629060032.24134-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f6hdlqsued72r5t5"
 Content-Disposition: inline
-In-Reply-To: <20200630044943.3425049-5-rajatja@google.com>
+In-Reply-To: <20200629060032.24134-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:49:40PM -0700, Rajat Jain wrote:
-> device_attach() returning failure indicates a driver error while trying to
-> probe the device. In such a scenario, the PCI device should still be added
-> in the system and be visible to the user.
-> 
-> This patch partially reverts:
-> commit ab1a187bba5c ("PCI: Check device_attach() return value always")
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v2: Cosmetic change in commit log.
->     Add Greg's "reviewed-by"
-> 
->  drivers/pci/bus.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 8e40b3e6da77d..3cef835b375fd 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *dev)
->  
->  	dev->match_driver = true;
->  	retval = device_attach(&dev->dev);
-> -	if (retval < 0 && retval != -EPROBE_DEFER) {
-> +	if (retval < 0 && retval != -EPROBE_DEFER)
->  		pci_warn(dev, "device attach failed (%d)\n", retval);
-> -		pci_proc_detach_device(dev);
-> -		pci_remove_sysfs_dev_files(dev);
-> -		return;
-> -	}
->  
->  	pci_dev_assign_added(dev, true);
->  }
 
-This should go first in the series, and cc: stable and get merged now.
-No need to tie it to this series at all.
+--f6hdlqsued72r5t5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Or just an independant patch, it doesn't have much to do with this
-series, it's a bugfix.
+Hi,
 
-thanks,
+On Mon, Jun 29, 2020 at 02:00:32PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>=20
+> The HPD sense mechanism in Allwinner's old HDMI encoder hardware is more
+> or less an input-only GPIO. Other GPIO-based HPD implementations
+> directly return the current state, instead of polling for a specific
+> state and returning the other if that times out.
+>=20
+> Remove the I/O polling from sun4i_hdmi_connector_detect() and directly
+> return a known state based on the current reading. This also gets rid
+> of excessive CPU usage by kworker as reported on Stack Exchange [1] and
+> Armbian forums [2].
+>=20
+>  [1] https://superuser.com/questions/1515001/debian-10-buster-on-cubietru=
+ck-with-bug-in-sun4i-drm-hdmi
+>  [2] https://forum.armbian.com/topic/14282-headless-systems-and-sun4i_drm=
+_hdmi-a10a20/
+>=20
+> Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-greg k-h
+Applied, thanks for figuring that out
+
+Maxime
+
+--f6hdlqsued72r5t5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvrxnQAKCRDj7w1vZxhR
+xe0/AP9AfcSEFn4bwp+kbpsDasBM88jTsQJiznSvcxSJ4WCaWwEA/XSg2I9jaQuc
+Vrmg3HbVedQSShsVClRiJer2EomSNgY=
+=Tbdr
+-----END PGP SIGNATURE-----
+
+--f6hdlqsued72r5t5--
