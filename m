@@ -2,153 +2,169 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A563C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3CB2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C282067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gDKmgaxn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SYycrEdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgF3Sta (ORCPT
+        id S1726705AbgF3SuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgF3St1 (ORCPT
+        Tue, 30 Jun 2020 14:50:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37917 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726577AbgF3SuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:49:27 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1EFC03E97B
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:49:27 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id m7so15791542pgv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=LEHppYXCQPcRgd0zlbLe7CmHbNbqX0AwBnt1nKT8kmo=;
-        b=gDKmgaxn/Cl6wcc1lPhuw4d+qqZAEQfqpIWDlxkB2OP7eOtiDx3WCaV9AFMCtBGcEW
-         6y4r4V13gqh1xMTARtmFL7ye+2ccgbPwchESgvOexvYAy6hhtgrGLCKG6QC3Vkrev2y+
-         IcxsPM4HEFx4vUl3Trmszcq2jN0HtzaH7vyAMM+/hVR7gCA6JLkndlLF4fRw/mi2fYa/
-         rqJwYliZI3TiCxV3OBUl6aFdha/b4dwy17RorxyAwRczDrSXGLV+oykGuVWj1ZNTPbvv
-         I1GjO7O7ckRnbMSSppCivAiy/2XvKnfWVijFknFlTXq65JbU2aUhnsfHnxvk6sQUTHLf
-         fWoQ==
+        Tue, 30 Jun 2020 14:50:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593543003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=ILNVKniPuWCOaWJSWnYpx92u7nfQ4dnGhDKgu/Th5Fo=;
+        b=SYycrEdB7ftJQ7h4oKhKYTBwhKDcgWmYzgH+2voTbYWDTEQSkl9AVeV2d+veXTKeHkuSwQ
+        TXhtVr5EzzOER7EZPZ7ihPqmLk8cGifNJDz9IhbLIg0oawCPZkPN1EULvUIZVavSON2K4A
+        yIC4/MWk2hhln6iTNe/6iSZ2nUpQMj8=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-uDV7wNVhN0utfhhN1TVrPg-1; Tue, 30 Jun 2020 14:50:00 -0400
+X-MC-Unique: uDV7wNVhN0utfhhN1TVrPg-1
+Received: by mail-qk1-f200.google.com with SMTP id s75so15292535qka.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:50:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=LEHppYXCQPcRgd0zlbLe7CmHbNbqX0AwBnt1nKT8kmo=;
-        b=m31xZ18NJgEvT3/yAa5fU4uvFNPDxfjDwvbeXjk9522dgAw4UbwAkXqDKw2Mpinamm
-         MejTPkNv3r7XPlApU36nKMJS9IDq9seWj6hpw9f7mu483nxINjU6hpxXoDQihz1ZXMEZ
-         Ru8fbXvzMmD7Vg4UJ1QlgF476ZqtGXyTpdTm4x7TVTZjkrAGjrfsk+IJG9GMViqf/PZp
-         umZqYnZZJowzwI/uxCz67r5rowovAmFhwvGyUOACtu1v7j9Ijqc68krv04relPe0reSw
-         rt/Ku+btR0oHFhiCbpHlHeyceBKeviyhZjel4l5+TPoeMI+nNbupu788zwXgg9bcaTxd
-         wcoQ==
-X-Gm-Message-State: AOAM533jRgUMOeR70/uXjQ79XmIIcAXTtRU3DZLgWOcboKhlMyrXMBcc
-        SNVl1j/U4s9PEIB2CXnDSsQPDmqUBbA=
-X-Google-Smtp-Source: ABdhPJwRys7ufIj6Wc7BHqYbfXPqG7SI1+88BKjiZMcxuVaaHmLS3yYhRz/blmSR7Scygm3uV5jRzePkDzQ=
-X-Received: by 2002:ad4:4105:: with SMTP id i5mr11143826qvp.170.1593542965986;
- Tue, 30 Jun 2020 11:49:25 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 11:49:22 -0700
-Message-Id: <20200630184922.455439-1-haoluo@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use hrtimer_range_start_ns.
-From:   Hao Luo <haoluo@google.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-kselftest@vger.kernel.org
-Cc:     sdf@google.com, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ILNVKniPuWCOaWJSWnYpx92u7nfQ4dnGhDKgu/Th5Fo=;
+        b=uDYOTx78bVSUPi7x33Ry8YexoR0idUMA8S17iraHFnJcu/3BMg5HO86Axxnqh03+4/
+         z5vi6FlRJwvxbuJmmuu9OzvcHMsIdX1sA+pvEGWvXdWkEJfCnrZZhou3sEukmPnFzcNJ
+         /CTk9M1QJzcFzWH+eaAM7UPFanMI74V+8nU3r1xBJlo0sOOT2zcjAfYvqEhf0v7FCNt+
+         EF1uYJ6VHVA2opRABS6rf882cTDLCJMzDFqyNO7ofOg5hfs49uXBWoYgSM8W9clsv3wk
+         POO6JZM3NvYEuwTYqlt0Ld6HanBD7sSxr6/B84alsScY+HEzVQV9N3sYQoiCG4+q1ad3
+         /EZw==
+X-Gm-Message-State: AOAM532EnU0E81def5fpXmgHM6toePMGuVCmW8hMd4vkllC8LWSpW3oi
+        SkZ8UT7H7lmd5evQBJHi6agSRysAF3+nQ+bM/ke+2MmfROegLn3QftlTXjtJGTDfcsHLDSdOghy
+        NBfMZ6lv1JXqEsPvTXfw2SOha
+X-Received: by 2002:ac8:774d:: with SMTP id g13mr21842270qtu.317.1593542999897;
+        Tue, 30 Jun 2020 11:49:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOfMipnw5vbBXdCY5Q+BjXTkajzbWmU1TAYr4mNpQfWkuqZDJBk6gfVOWRsXKjiG1BhXvUJQ==
+X-Received: by 2002:ac8:774d:: with SMTP id g13mr21842251qtu.317.1593542999620;
+        Tue, 30 Jun 2020 11:49:59 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b10sm3410280qkh.124.2020.06.30.11.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 11:49:59 -0700 (PDT)
+From:   trix@redhat.com
+To:     hao.wu@intel.com, mdf@kernel.org, corbet@lwn.net
+Cc:     linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [RFC v2] fpga: dfl: RFC PCI config
+Date:   Tue, 30 Jun 2020 11:49:50 -0700
+Message-Id: <20200630184950.950-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
-programs. But it seems Clang may have done an aggressive optimization,
-causing fentry and kprobe to not hook on this function properly on a
-Clang build kernel.
+From: Tom Rix <trix@redhat.com>
 
-A possible fix is switching to use a more reliable function, e.g. the
-ones exported to kernel modules such as hrtimer_range_start_ns. After
-we switch to using hrtimer_range_start_ns, the test passes again even
-on a clang build kernel.
+Create some top level configs the map to dfl pci cards.
 
-Tested:
- In a clang build kernel, the test fail even when the flags
- {fentry, kprobe}_called are set unconditionally in handle__kprobe()
- and handle__fentry(), which implies the programs do not hook on
- hrtimer_nanosleep() properly. This could be because clang's code
- transformation is too aggressive.
+Autoselect the parts of fpga that are needed to run these cards
+as well as the defining the other subsystem dependencies.
 
- test_vmlinux:PASS:skel_open 0 nsec
- test_vmlinux:PASS:skel_attach 0 nsec
- test_vmlinux:PASS:tp 0 nsec
- test_vmlinux:PASS:raw_tp 0 nsec
- test_vmlinux:PASS:tp_btf 0 nsec
- test_vmlinux:FAIL:kprobe not called
- test_vmlinux:FAIL:fentry not called
-
- After we switch to hrtimer_range_start_ns, the test passes.
-
- test_vmlinux:PASS:skel_open 0 nsec
- test_vmlinux:PASS:skel_attach 0 nsec
- test_vmlinux:PASS:tp 0 nsec
- test_vmlinux:PASS:raw_tp 0 nsec
- test_vmlinux:PASS:tp_btf 0 nsec
- test_vmlinux:PASS:kprobe 0 nsec
- test_vmlinux:PASS:fentry 0 nsec
-
-Signed-off-by: Hao Luo <haoluo@google.com>
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
- tools/testing/selftests/bpf/progs/test_vmlinux.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ v1 change subsystem selects to depends
 
-diff --git a/tools/testing/selftests/bpf/progs/test_vmlinux.c b/tools/testing/selftests/bpf/progs/test_vmlinux.c
-index 5611b564d3b1..29fa09d6a6c6 100644
---- a/tools/testing/selftests/bpf/progs/test_vmlinux.c
-+++ b/tools/testing/selftests/bpf/progs/test_vmlinux.c
-@@ -63,20 +63,20 @@ int BPF_PROG(handle__tp_btf, struct pt_regs *regs, long id)
- 	return 0;
- }
+ Documentation/fpga/dfl.rst | 30 ++++++++++++++++++++++++++++++
+ drivers/fpga/Kconfig       | 27 +++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
+
+diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+index d7648d7c7eee..c1ae6b539f08 100644
+--- a/Documentation/fpga/dfl.rst
++++ b/Documentation/fpga/dfl.rst
+@@ -500,6 +500,36 @@ Developer only needs to provide a sub feature driver with matched feature id.
+ FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
+ could be a reference.
  
--SEC("kprobe/hrtimer_nanosleep")
--int BPF_KPROBE(handle__kprobe,
--	       ktime_t rqtp, enum hrtimer_mode mode, clockid_t clockid)
-+SEC("kprobe/hrtimer_start_range_ns")
-+int BPF_KPROBE(handle__kprobe, struct hrtimer *timer, ktime_t tim, u64 delta_ns,
-+	       const enum hrtimer_mode mode)
- {
--	if (rqtp == MY_TV_NSEC)
-+	if (tim == MY_TV_NSEC)
- 		kprobe_called = true;
- 	return 0;
- }
++Kernel configuration
++====================
++
++While it is possible to manually setup a configuration to match your device,
++there are some top level configurations that collect configurations for
++some reference PCI cards.  Below describes these configuration as well as
++what other kernel configs are needed for proper configuration.
++
++FPGA_DFL_PAC10
++Intel Arria 10 GX PCI card, PCI id 0X09C4
++Depends on
++  SPI_ALTERA
++  MFD_INTEL_M10_BMC
++  SENSORS_INTEL_M10_BMC_HWMON
++
++FPGA_DFL_D5005
++Intel Stratix 10, D5005 PCI card, PCI id 0X0B2B
++Depends on
++  SPI_ALTERA
++  MFD_INTEL_M10_BMC
++  SENSORS_INTEL_M10_BMC_HWMON
++  INTEL_S10_PHY
++
++FPGA_DFL_N3000
++Intel Network Accelerator, N3000 PCI card, PCI id 0X0B30
++Depends on
++  SPI_ALTERA
++  MFD_INTEL_M10_BMC
++  SENSORS_INTEL_M10_BMC_HWMON
++  INTEL_LL_10G_MAC
  
--SEC("fentry/hrtimer_nanosleep")
--int BPF_PROG(handle__fentry,
--	     ktime_t rqtp, enum hrtimer_mode mode, clockid_t clockid)
-+SEC("fentry/hrtimer_start_range_ns")
-+int BPF_PROG(handle__fentry, struct hrtimer *timer, ktime_t tim, u64 delta_ns,
-+	     const enum hrtimer_mode mode)
- {
--	if (rqtp == MY_TV_NSEC)
-+	if (tim == MY_TV_NSEC)
- 		fentry_called = true;
- 	return 0;
- }
+ Open discussion
+ ===============
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 9d53bd9094e2..96603b1f6ff5 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -138,6 +138,33 @@ config OF_FPGA_REGION
+ 	  Support for loading FPGA images by applying a Device Tree
+ 	  overlay.
+ 
++config FPGA_DFL_PAC10
++	tristate "Intel Arria 10 GX PCI card"
++	depends on SPI_ALTERA
++	depends on SENSORS_INTEL_M10_BMC_HWMON
++	depends on MFD_INTEL_M10_BMC
++	select FPGA_DFL
++	select FPGA_DFL_FME
++	select FPGA_DFL_FME_MGR
++	select FPGA_DFL_FME_BRIDGE
++	select FPGA_DFL_FME_REGION
++	select FPGA_DFL_AFU
++	select FPGA_DFL_SPI_ALTERA
++	select FPGA_DFL_PCI
++	select IFPGA_SEC_MGR
++
++config FPGA_DFL_D5005
++	tristate "Intel Stratix 10, D5005 PCI card"
++	depends on INTEL_S10_PHY
++	select FPGA_DFL_PAC10
++	select FPGA_DFl_HSSI
++
++config FPGA_DFL_N3000
++	tristate "Intel Network Accelerator, N3000 PCI card"
++	depends on INTEL_LL_10G_MAC
++	select FPGA_DFL_PAC10
++	select FPGA_DFL_N3000_NIOS
++
+ config FPGA_DFL
+ 	tristate "FPGA Device Feature List (DFL) support"
+ 	select FPGA_BRIDGE
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.18.1
 
