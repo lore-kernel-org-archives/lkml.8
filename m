@@ -2,165 +2,181 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A61C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C6920722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284AD20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZU0yUL1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQCPK4Dl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgF3FQX (ORCPT
+        id S1728152AbgF3FRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
+        Tue, 30 Jun 2020 01:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgF3FQX (ORCPT
+        with ESMTP id S1725845AbgF3FRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:16:23 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E4BC061755;
-        Mon, 29 Jun 2020 22:16:23 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d10so8002973pls.5;
-        Mon, 29 Jun 2020 22:16:23 -0700 (PDT)
+        Tue, 30 Jun 2020 01:17:04 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3D8C061755;
+        Mon, 29 Jun 2020 22:17:04 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so7107736plm.10;
+        Mon, 29 Jun 2020 22:17:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=KRE9HsVlW2ijkl1bDdvucGdd1+JiCPkhH6g/2ZjIZAo=;
-        b=hZU0yUL1AN1k4PEsFBvtVzeLaj4e39AO8qO24WkHVfTj+4cSk+/I/gRZksRFSG0P5F
-         ct2PWPUBlKDpPzKRGDul3OMYXd0g7RDTDruf/E28UZb71mT5tfbUls8ysYiRT8G65UYH
-         WXr7i62LjidQPmb9tKyxxDCYw6/jEN+foXc0rarHW0s9FI9ntM4/09tLYurk9cIomrF6
-         iaytL1nO0crq0BiNqX/aY8kQMu9EyFLT9nGa3Sv7drPToQYKBcmLglC8YQL8jj0EQXze
-         sV0E0H43baIXcZvb10l3oMrx165I5YBkqUbl5R8JibP4SRnUYfRDOwJRIYqH+XxgHCt0
-         ZWOw==
+        bh=Hp+HnDhs/4eD0oclIHVQN7L3ud8iDGI74HhAm9juhsw=;
+        b=lQCPK4Dlt4VIzph2W3LXFszIK1ohIrBI7n9kuUNFAVxsLkM+WGDPqRzMDJi4kU42pY
+         wAKEHaywQgwb7/1s3AUx49llgM/iSlkAcmsVTgBLY3s4fQ9CsVPXW7qkHRBzCoiH7X7W
+         XVCcuSVNuiDZ35YY5dcGpegczFd4LlYGmB/yq5P8kMv+O3FtAscY7iDW30xKPXEcTIRN
+         biVsBtbIOOiNL0ExmRzx1i3fGdBjiA4OrtzQLMoP8faT4GGeFXEe5PcVRyCwulABVk63
+         f0M09Q3UIl7Da7ZcNh1o9X06jlyvFtdIF2CX7EV7vcf5n4WfPuH68OI23LdXUlZsoZVr
+         Q5dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=KRE9HsVlW2ijkl1bDdvucGdd1+JiCPkhH6g/2ZjIZAo=;
-        b=esL9aE/fJ9hNUt60vCbhaLei/gSPMWSuXD07D6WdMzZoQm33oqrnGoLaBmelM8sLwm
-         rDMepjM19ftytNOtu52naZvC24MHnBFQoAVNoMYHH6fFaiAhDpRyBRilsearq2wyaMtz
-         uTwrLQR5Y6THaBuxFjbHfxYyXj0hN+daz1jSDR8UYStRXBSWD3rWg19Ww+zTnB0cY++5
-         +w5Hvf0mwdxSy3Tw3ymXKVKy6IcYEN08rru+HOs3OPkTFTDKU13a//zBYhoMbv0eIQ+u
-         7wxUJhVH4fH45quNeEV6MZqaueHVUXM+Lj9Dpm5mKT89uf8WnsIUcvi0Kt9PwMn2+D4y
-         y17g==
-X-Gm-Message-State: AOAM531GtaYzO1ajJxuz+XiLFTaYW1kZXAbheGQ5JuhpT1jI8Fh4yybp
-        JtYVcjt5oIvgp0pOy8unGfnaNdqN
-X-Google-Smtp-Source: ABdhPJz5L6z5VGRh2LLZ5I+cwIBdPBP86ivSnmaciY39M5h8VH4ZPau1l7IsaW3SrtWjGT73gxu7mQ==
-X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr16732653plr.128.1593494181579;
-        Mon, 29 Jun 2020 22:16:21 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id u24sm1289938pga.47.2020.06.29.22.16.20
+        bh=Hp+HnDhs/4eD0oclIHVQN7L3ud8iDGI74HhAm9juhsw=;
+        b=mXoBEnFS0LpjnUHfm7Uxs9hHKKt6E9hdiojfc8Mhx1aoZDrLcCZWmjun5fE97HE5ZB
+         i3UmPjBBh/ZA1coxZN8VBu21ykSzDYs/UJe3DiNPojB29DaI1LIJDv2SHsU5B8/ALthO
+         mkV3GRVXamXTdrDqFAqNF5yL6WYFpSMK3HqkuGryg0fmBHefYEk51+pkJDP7l6x/ADVL
+         JvxxR8KuguEqCiP8K8a9nZdPCZrk9siwJqMPiP5TiltlspnWUvI9Chv2gmbdjeebI0OS
+         EesOhvEUAQstfMGVUN7HX/JfBYv0zCcvszmgI+AtSnVmU7XJiYCrI0MF/8oSUELOawwq
+         5eVg==
+X-Gm-Message-State: AOAM532gRZJ8IdbDwGFi98AJu061u0oFMc6Ow0FJldadU0ZgZmIxS/N4
+        +YS6VLeeYO2A4LZlNS016ew=
+X-Google-Smtp-Source: ABdhPJzaAWpAzzSp+Qi2HKKoLwoETD9wPt0PvMKWn9nVb71tk7lC9Zoq/oQIjSFLzcSIs0jlV4+n9g==
+X-Received: by 2002:a17:90a:8b91:: with SMTP id z17mr19898205pjn.151.1593494223497;
+        Mon, 29 Jun 2020 22:17:03 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:140c])
+        by smtp.gmail.com with ESMTPSA id r1sm952646pjd.47.2020.06.29.22.17.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 22:16:20 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 22:16:19 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Derek Basehore <dbasehore@chromium.org>
-Cc:     jiada_wang@mentor.com, jeffrey.l.hugo@gmail.com,
-        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: elan_i2c - only increment wakeup count on touch
-Message-ID: <20200630051619.GG248110@dtor-ws>
-References: <20200630005707.2181126-1-dbasehore@chromium.org>
+        Mon, 29 Jun 2020 22:17:02 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 22:16:59 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200630051659.uqnkkwaho3lvvnu7@ast-mbp.dhcp.thefacebook.com>
+References: <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+ <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
+ <20200626181455.155912d9@oasis.local.home>
+ <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
+ <20200628144616.52f09152@oasis.local.home>
+ <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
+ <20200628154331.2c69d43e@oasis.local.home>
+ <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
+ <20200628182842.2abb0de2@oasis.local.home>
+ <20200628194334.6238b933@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630005707.2181126-1-dbasehore@chromium.org>
+In-Reply-To: <20200628194334.6238b933@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 05:57:07PM -0700, Derek Basehore wrote:
-> This moves the wakeup increment for elan devices to the touch report.
-> This prevents the drivers from incorrectly reporting a wakeup when the
-> resume callback resets then device, which causes an interrupt to
-> occur. This also avoids error messages when these interrupts occur,
-> since this behavior is expected.
+On Sun, Jun 28, 2020 at 07:43:34PM -0400, Steven Rostedt wrote:
+> On Sun, 28 Jun 2020 18:28:42 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> > You create a bpf event just like you create any other event. When a bpf
+> > program that uses a bpf_trace_printk() is loaded, you can enable that
+> > event from within the kernel. Yes, there's internal interfaces to
+> > enabled and disable events just like echoing 1 into
+> > tracefs/events/system/event/enable. See trace_set_clr_event().
 > 
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> index cdbe6b38c73c1..6ad53a75f9807 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -49,6 +49,7 @@
->  
->  #define ETP_MAX_FINGERS		5
->  #define ETP_FINGER_DATA_LEN	5
-> +#define ETP_REPORT_LEN_OFFSET	0
->  #define ETP_REPORT_ID		0x5D
->  #define ETP_TP_REPORT_ID	0x5E
->  #define ETP_REPORT_ID_OFFSET	2
-> @@ -1018,6 +1019,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
->  	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
->  	bool contact_valid, hover_event;
->  
-> +	pm_wakeup_event(&data->client->dev, 0);
-> +
->  	hover_event = hover_info & 0x40;
->  	for (i = 0; i < ETP_MAX_FINGERS; i++) {
->  		contact_valid = tp_info & (1U << (3 + i));
-> @@ -1041,6 +1044,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
->  	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
->  	int x, y;
->  
-> +	pm_wakeup_event(&data->client->dev, 0);
-> +
->  	if (!data->tp_input) {
->  		dev_warn_once(&data->client->dev,
->  			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
-> @@ -1065,7 +1070,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
->  static irqreturn_t elan_isr(int irq, void *dev_id)
->  {
->  	struct elan_tp_data *data = dev_id;
-> -	struct device *dev = &data->client->dev;
->  	int error;
->  	u8 report[ETP_MAX_REPORT_LEN];
->  
-> @@ -1083,7 +1087,13 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
->  	if (error)
->  		goto out;
->  
-> -	pm_wakeup_event(dev, 0);
-> +	/*
-> +	 * Controllers may send a full length report on power on and reset
-> +	 * cases. There are only meaningless bytes in these reports except for
-> +	 * report[ETP_REPORT_LEN_OFFSET], which is 0.
-> +	 */
+> I just started playing with what the code would look like and have
+> this. It can be optimized with per-cpu sets of buffers to remove the
+> spin lock. I also didn't put in the enabling of the event, but I'm sure
+> you can figure that out.
+> 
+> Warning, not even compiled tested.
 
-Is this true for all versions of firmware? Also, should we pay attention
-to the value of this field for various types of reports?
+Thanks! I see what you mean now.
 
-> +	if (!report[ETP_REPORT_LEN_OFFSET])
-> +		goto out;
+> 
+> -- Steve
+> 
+> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> index 6575bb0a0434..aeba5ee7325a 100644
+> --- a/kernel/trace/Makefile
+> +++ b/kernel/trace/Makefile
+> @@ -31,6 +31,8 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
+>  GCOV_PROFILE := y
+>  endif
 >  
->  	switch (report[ETP_REPORT_ID_OFFSET]) {
->  	case ETP_REPORT_ID:
-> @@ -1093,7 +1103,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
->  		elan_report_trackpoint(data, report);
->  		break;
->  	default:
-> -		dev_err(dev, "invalid report id data (%x)\n",
-> +		dev_err(&data->client->dev, "invalid report id data (%x)\n",
->  			report[ETP_REPORT_ID_OFFSET]);
+> +CFLAGS_bpf_trace.o := -I$(src)
+
+not following. why this is needed?
+
+> +
+>  CFLAGS_trace_benchmark.o := -I$(src)
+>  CFLAGS_trace_events_filter.o := -I$(src)
+>  
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index dc05626979b8..01bedf335b2e 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -19,6 +19,9 @@
+>  #include "trace_probe.h"
+>  #include "trace.h"
+>  
+> +#define CREATE_TRACE_EVENTS
+
+CREATE_TRACE_POINTS ?
+
+> +#include "bpf_trace.h"
+> +
+>  #define bpf_event_rcu_dereference(p)					\
+>  	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
+>  
+> @@ -473,13 +476,29 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
+>  		fmt_cnt++;
 >  	}
 >  
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+> +static DEFINE_SPINLOCK(trace_printk_lock);
+> +#define BPF_TRACE_PRINTK_SIZE	1024
+> +
+> +static inline void do_trace_printk(const char *fmt, ...)
+> +{
+> +	static char buf[BPF_TRACE_PRINT_SIZE];
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&trace_printk_lock, flags);
+> +	va_start(ap, fmt);
+> +	vsnprintf(buf, BPF_TRACE_PRINT_SIZE, fmt, ap);
+> +	va_end(ap);
+> +
+> +	trace_bpf_trace_printk(buf);
+> +	spin_unlock_irqrestore(&trace_printk_lock, flags);
 
-Thanks.
-
--- 
-Dmitry
+interesting. I don't think anyone would care about spin_lock overhead.
+It's better because 'trace_bpf_trace_printk' would be a separate event
+that can be individually enabled/disabled?
+I guess it can work.
+Thanks!
