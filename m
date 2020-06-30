@@ -6,139 +6,136 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E033C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9602074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3939020760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593531511;
-	bh=+mq7WcFXbYo5431aLEmBieudqWsKg/kt/fvcWMZkCBE=;
+	s=default; t=1593531545;
+	bh=5ayWs9imhyx142bbxrkjgUqDHZEo9tanWvglgpNeTyw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F8VdzH2XMGyJehSsqRVtaX7csHLfe4pfCqvofByaIV/GwJcSpDJWtWu7/k/XKYuaq
-	 03c0HRQqCyY95xdjQQVsszyUjN67yUPHm6Yjq4uc1Gc70Vu2QhNIjwcq2KIeGcEndY
-	 ASoFEB165ttEuc4jnHT3N7my/EB8wcOAym0JaLFA=
+	b=ANyx//+SAPSIdw1cAbl9HulTjfDwwyMQ39AbY1dhCbdeDgezwHTZ3k3xqelIo4ywN
+	 ++i+DNrO/wS89Bz4kqar6bBVpgti+wNuYWVEs+m5l6WObdmvHY7bbLdYrmMytIKMfg
+	 XuoXOF2IrG9+qjyzCpKe7G4OI07RFmSn6e424opE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389574AbgF3Pia (ORCPT
+        id S2389585AbgF3PjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 11:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731107AbgF3Pi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:38:29 -0400
+        id S2389551AbgF3PjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:39:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC25A20675;
-        Tue, 30 Jun 2020 15:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D173E2074F;
+        Tue, 30 Jun 2020 15:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593531508;
-        bh=+mq7WcFXbYo5431aLEmBieudqWsKg/kt/fvcWMZkCBE=;
+        s=default; t=1593531542;
+        bh=5ayWs9imhyx142bbxrkjgUqDHZEo9tanWvglgpNeTyw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bl5RxFhCCwtZ5oZDGw16ns2h6Q1i3BvDgAiiZajr1R4bo3LNxd92zGKQulajPnAgr
-         r+LDhITZ9t4UD+Arr3ExbqZRI1I7z4PJOV36rG+wNmngm6kE6gmcaxGmW6D7xP69RV
-         T0U12bR/14EoCs2+2EM2angdXKN5GkhIQdYlIyCI=
-Date:   Tue, 30 Jun 2020 17:38:16 +0200
+        b=hIoVkegTJbblSoTaWmEWSOjjChWYsIljeAxfKj0C68W37DzgU+2dPK3VrudtDS50U
+         sSZQmrWNEf6yuGaV+SdPNAuEdUyGKB6NycC4g1MRydwtjKbV/6QjSgXHIKs7tm1p1r
+         Hm397WUXg/TZ1y4/sDoVPM/qEQuRDNdNYT0Ar5Po=
+Date:   Tue, 30 Jun 2020 17:38:50 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-Message-ID: <20200630153816.GD1785141@kroah.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com>
- <20200630125216.GA1109228@kroah.com>
- <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
+ deferred probe
+Message-ID: <20200630153850.GE1785141@kroah.com>
+References: <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
+ <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
+ <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
+ <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com>
+ <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
+ <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
+ <CAJZ5v0ju58LxvRckv2T=H0D=aDooGUoGfqFze5zWQ1ARAAJcag@mail.gmail.com>
+ <CAGETcx8KknvzZxfW4o=siswB__c9yeh=1wOVyvtM2112WEBizQ@mail.gmail.com>
+ <CAMuHMdXbzXnWQSaQ44p-cL9TA=ng20UB=vjscRDjpf7N=S4fjg@mail.gmail.com>
+ <CAJZ5v0joi2YDgAPrPhT8SMXTu-Va7s9DXVs7YDYf87JY_ntONQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0joi2YDgAPrPhT8SMXTu-Va7s9DXVs7YDYf87JY_ntONQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+On Tue, Jun 30, 2020 at 03:50:58PM +0200, Rafael J. Wysocki wrote:
+> On Fri, Jun 26, 2020 at 10:53 PM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
 > >
-> > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
-> > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> > > > Add a new (optional) field to denote the physical location of a device
-> > > > in the system, and expose it in sysfs. This was discussed here:
-> > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+> > Hi Saravana,
+> >
+> > On Fri, Jun 26, 2020 at 10:34 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > On Fri, Jun 26, 2020 at 4:27 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > On Thu, Jun 25, 2020 at 7:52 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > Note that deferred probing gets in the way here and so the problem is
+> > > > > > related to it.
+> > > > >
+> > > > > I mean, we officially support deferred probing. Shouldn't we fix it so
+> > > > > that it doesn't break suspend/resume?
 > > > >
-> > > > (The primary choice for attribute name i.e. "location" is already
-> > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> > > > that want to support this new attribute can opt-in by setting a flag in
-> > > > bus_type, and then populating the location of device while enumerating
-> > > > it.
+> > > > Yes, we should fix deferred probing.
+> >
+> > Please take into account that breakage is an actual regression.
+> >
+> > > > > Also, it's pretty easy to have
+> > > > > cases where one module probes multiple device instances and loading it
+> > > > > in one order would break dpm_list order for one device and loading it
+> > > > > in another order would break it for another device. And there would be
+> > > > > no "proper" order to load modules (because module order != device
+> > > > > order).
+> > > >
+> > > > I'm not saying that the current code is perfect.  I'm saying that the
+> > > > fix as proposed adds too much cost for everybody who may not care IMO.
 > > >
-> > > So why not just call it "physical_location"?
+> > > Ok, how about I don't do this reordering until we see the first
+> > > deferred probe request? Will that work for you? In that case, systems
+> > > with no deferred probing will not incur any reordering cost. Or if
+> > > reordering starts only towards the end, all the previous probes won't
+> > > incur reordering cost.
 > >
-> > That's better, and will allow us to put "3rd blue plug from the left,
-> > 4th row down" in there someday :)
-> >
-> > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
-> > are the systems with drawers of PCI and CPUs and memory that can be
-> > added/removed at any point in time being handled here?  What is
-> > "internal" and "external" for them?
-> >
-> > What exactly is the physical boundry here that is attempting to be
-> > described?
+> > That first deferred probe request is more or less as of the first probe,
+> > since commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing when
+> > adding all top level devices"), at least on DT systems.
 > 
-> Also, where is the "physical location" information going to come from?
+> The deferred probe reordering of devices to the end of dpm_list
+> started in 2012, so it is nothing new, and it demonstrably works for
+> devices where the dependencies are known to the driver core.
+> 
+> That said, in the cases when the dependencies are known to the driver
+> core, it is also unnecessary to reorder dpm_list in
+> deferred_probe_work_func(), because the right ordering of it is going
+> to be determined elsewhere.
+> 
+> Also commit 494fd7b7ad10 ("PM / core: fix deferred probe breaking
+> suspend resume order") is not the source of the problem here, because
+> the problem would have still been there without it, due to the
+> device_pm_move_last() that was there before, so the Fixes: tag
+> pointing to that commit is misleading.
+> 
+> Now, because 716a7a259690 ("driver core: fw_devlink: Add support for
+> batching fwnode parsing") is an optimization and the regression is
+> present because of it AFAICS, the best way to address it at that point
+> would be to revert commit 716a7a259690 for 5.8 and maybe do the
+> optimization more carefully.
+> 
+> Greg, what do you think?
 
-Who knows?  :)
+I've been ignoreing this and letting you all sort it out :)
 
-Some BIOS seem to provide this, but do you trust that?
+But if you think that patch should be reverted, I'll not object and will
+be glad to to it if this solves the issue.
 
-> If that is the platform firmware (which I suspect is the anticipated
-> case), there may be problems with reliability related to that.
-
-s/may/will/
-
-which means making the kernel inact a policy like this patch series
-tries to add, will result in a lot of broken systems, which is why I
-keep saying that it needs to be done in userspace.
-
-It's as if some of us haven't been down this road before and just keep
-being ignored...
-
-{sigh}
+thanks,
 
 greg k-h
