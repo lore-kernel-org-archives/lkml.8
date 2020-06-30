@@ -4,179 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A61C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38799C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 284AD20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135EB206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQCPK4Dl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rzrqz99p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgF3FRE (ORCPT
+        id S1728047AbgF3FWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
+        Tue, 30 Jun 2020 01:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgF3FRE (ORCPT
+        with ESMTP id S1726213AbgF3FWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:17:04 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3D8C061755;
-        Mon, 29 Jun 2020 22:17:04 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x8so7107736plm.10;
-        Mon, 29 Jun 2020 22:17:04 -0700 (PDT)
+        Tue, 30 Jun 2020 01:22:17 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95692C061755;
+        Mon, 29 Jun 2020 22:22:16 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so1548475pjb.0;
+        Mon, 29 Jun 2020 22:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Hp+HnDhs/4eD0oclIHVQN7L3ud8iDGI74HhAm9juhsw=;
-        b=lQCPK4Dlt4VIzph2W3LXFszIK1ohIrBI7n9kuUNFAVxsLkM+WGDPqRzMDJi4kU42pY
-         wAKEHaywQgwb7/1s3AUx49llgM/iSlkAcmsVTgBLY3s4fQ9CsVPXW7qkHRBzCoiH7X7W
-         XVCcuSVNuiDZ35YY5dcGpegczFd4LlYGmB/yq5P8kMv+O3FtAscY7iDW30xKPXEcTIRN
-         biVsBtbIOOiNL0ExmRzx1i3fGdBjiA4OrtzQLMoP8faT4GGeFXEe5PcVRyCwulABVk63
-         f0M09Q3UIl7Da7ZcNh1o9X06jlyvFtdIF2CX7EV7vcf5n4WfPuH68OI23LdXUlZsoZVr
-         Q5dA==
+        bh=Tt3UqAPgieXvuN/OSLBH2AI6nuwJPoB7pdEC5d7QwX0=;
+        b=Rzrqz99ppxo5woLhPtqLdo83mGv5KVmEw66TOPkppL1egUe59sVB3/IcFek/GV7r0b
+         QgZNmAafYUMPQOD5+eNOOAkt3miwJI30WA4aHZ12FqN8ef/jI+w8+7W0HMWRrzuTMVJ7
+         1f3rrRWLkEFz/Zms9Vkrzp8QkPN3ITB3B7nK+pKc+gyzibpHqpssZ1q/2INFyzF8aSYV
+         ZTLwnPTMCvaisQ+32nN0pSasOvOydSk0+d4abPOlIwlde74mVLnP7Pfcm4bZ31vyOhzg
+         75DsPNyEQyLSf5mth67qDwMUQe57PIJuRtHvqHA/ti+btfiS3BV2Zqd/HNeYK/M4xu0B
+         7f8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Hp+HnDhs/4eD0oclIHVQN7L3ud8iDGI74HhAm9juhsw=;
-        b=mXoBEnFS0LpjnUHfm7Uxs9hHKKt6E9hdiojfc8Mhx1aoZDrLcCZWmjun5fE97HE5ZB
-         i3UmPjBBh/ZA1coxZN8VBu21ykSzDYs/UJe3DiNPojB29DaI1LIJDv2SHsU5B8/ALthO
-         mkV3GRVXamXTdrDqFAqNF5yL6WYFpSMK3HqkuGryg0fmBHefYEk51+pkJDP7l6x/ADVL
-         JvxxR8KuguEqCiP8K8a9nZdPCZrk9siwJqMPiP5TiltlspnWUvI9Chv2gmbdjeebI0OS
-         EesOhvEUAQstfMGVUN7HX/JfBYv0zCcvszmgI+AtSnVmU7XJiYCrI0MF/8oSUELOawwq
-         5eVg==
-X-Gm-Message-State: AOAM532gRZJ8IdbDwGFi98AJu061u0oFMc6Ow0FJldadU0ZgZmIxS/N4
-        +YS6VLeeYO2A4LZlNS016ew=
-X-Google-Smtp-Source: ABdhPJzaAWpAzzSp+Qi2HKKoLwoETD9wPt0PvMKWn9nVb71tk7lC9Zoq/oQIjSFLzcSIs0jlV4+n9g==
-X-Received: by 2002:a17:90a:8b91:: with SMTP id z17mr19898205pjn.151.1593494223497;
-        Mon, 29 Jun 2020 22:17:03 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:140c])
-        by smtp.gmail.com with ESMTPSA id r1sm952646pjd.47.2020.06.29.22.17.01
+        bh=Tt3UqAPgieXvuN/OSLBH2AI6nuwJPoB7pdEC5d7QwX0=;
+        b=CVryoS+4S8qtpz5fRIm77TC9AFzTWaPDDEh5mzgi3brEFy9kES7Z1GaCWQg2q4yfJ+
+         4CTTPZrOclZMeNJHL+EmGYR6J33OPhoHP8CjiMIzFK2esOdEb15oLnL3frUftRSvUKXL
+         yOHJJX4tB0hQ8kUAEekLGim8We4W1C5HlwfIPF2lgRWqrVhILtyjdJX5gMUcQqW8jLg3
+         HSB+cJAXlVbisio4f2HDHiyXw0hoiFekANOLCaQS/sLeMEZYoEUlh4ug9A7UTq+Q1ISB
+         MgO8Yyxi4cRkGg2Tll9RFS195/XvXoKUbRcwlaklJdAt8xkw/BC/0GMHBTK8rTLvJTMN
+         5DNA==
+X-Gm-Message-State: AOAM5309cRLWxn8CchyL82mwaX3FsgH9wHdeR68e13lrSWDqtVb36f04
+        fAmUK5jXJ5qdlLBDYsxMuJs=
+X-Google-Smtp-Source: ABdhPJwfCW5LZPfE/UzUd7MgFaMBIy4hDHgBVs6mq7SKUyKUUXxIXUnSgYGWnXqerQtko0lmRisL9g==
+X-Received: by 2002:a17:90a:db8a:: with SMTP id h10mr4427274pjv.197.1593494535811;
+        Mon, 29 Jun 2020 22:22:15 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id 76sm1253502pfu.139.2020.06.29.22.22.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 22:17:02 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 22:16:59 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        Mon, 29 Jun 2020 22:22:14 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 22:22:12 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Merlijn Wajer <merlijn@wizzup.org>, jikos@suse.cz, vojtech@suse.cz,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Beno??t Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@suse.de>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200630051659.uqnkkwaho3lvvnu7@ast-mbp.dhcp.thefacebook.com>
-References: <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
- <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
- <20200626181455.155912d9@oasis.local.home>
- <20200628172700.5ea422tmw77otadn@ast-mbp.dhcp.thefacebook.com>
- <20200628144616.52f09152@oasis.local.home>
- <20200628192107.sa3ppfmxtgxh7sfs@ast-mbp.dhcp.thefacebook.com>
- <20200628154331.2c69d43e@oasis.local.home>
- <20200628220209.3oztcjnzsotlfria@ast-mbp.dhcp.thefacebook.com>
- <20200628182842.2abb0de2@oasis.local.home>
- <20200628194334.6238b933@oasis.local.home>
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mark Gross <mgross@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>
+Subject: Re: input maintainer -- are you there? was Re: [PATCH 1/2] Input:
+ add `SW_MACHINE_COVER`
+Message-ID: <20200630052212.GH248110@dtor-ws>
+References: <20200612125402.18393-1-merlijn@wizzup.org>
+ <20200612125402.18393-2-merlijn@wizzup.org>
+ <20200616105045.GB1718@bug>
+ <fef69c79-9943-7bd1-5c51-101f551cf2c8@wizzup.org>
+ <20200629133644.GA22227@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200628194334.6238b933@oasis.local.home>
+In-Reply-To: <20200629133644.GA22227@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 07:43:34PM -0400, Steven Rostedt wrote:
-> On Sun, 28 Jun 2020 18:28:42 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Jun 29, 2020 at 03:36:44PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> > You create a bpf event just like you create any other event. When a bpf
-> > program that uses a bpf_trace_printk() is loaded, you can enable that
-> > event from within the kernel. Yes, there's internal interfaces to
-> > enabled and disable events just like echoing 1 into
-> > tracefs/events/system/event/enable. See trace_set_clr_event().
+> > Looks like we're blocking on this input patch.
+> > 
+> > On 16/06/2020 12:50, Pavel Machek wrote:
+> > > On Fri 2020-06-12 14:53:58, Merlijn Wajer wrote:
+> > >> This event code represents the state of a removable cover of a device.
+> > >> Value 0 means that the cover is open or removed, value 1 means that the
+> > >> cover is closed.
+> > >>
+> > >> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com> Acked-by: Tony Lindgren 
+> > >> <tony@atomide.com> Signed-off-by: Merlijn Wajer <merlijn@wizzup.org> ---
+> > > 
+> > > Dmitry, can we get some kind of comment here, or better yet can we get you to apply this?
+> > 
+> > This is part of a patch series to resolve problems with the Nokia N900
+> > not booting when the cover is removed (making the cover be the card
+> > detect was also just weird IMHO). Just removing the card-detect from the
+> > DTS is fine, but it was suggested that we expose the data instead as
+> > input event. And that's gotten no response for about four months.
+> > 
+> > Should we just drop the feature and only remove the cd-gpios line from
+> > the DTS, assuming upstream doesn't want this SW_MACHINE_COVER code?
 > 
-> I just started playing with what the code would look like and have
-> this. It can be optimized with per-cpu sets of buffers to remove the
-> spin lock. I also didn't put in the enabling of the event, but I'm sure
-> you can figure that out.
+> I believe series is good, lets keep it. Changing now will only delay
+> it a bit more. Let me try to get Dmitry's attention...
 > 
-> Warning, not even compiled tested.
-
-Thanks! I see what you mean now.
-
+> If that does not work, we can get Linus' attention :-).
 > 
-> -- Steve
-> 
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 6575bb0a0434..aeba5ee7325a 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -31,6 +31,8 @@ ifdef CONFIG_GCOV_PROFILE_FTRACE
->  GCOV_PROFILE := y
->  endif
->  
-> +CFLAGS_bpf_trace.o := -I$(src)
+> If that does not work, umm, there are some other options.
 
-not following. why this is needed?
+Sorry, am really swamped the last couple months. I can pick up the input
+code, do you want me to pick up DTS as well?
 
-> +
->  CFLAGS_trace_benchmark.o := -I$(src)
->  CFLAGS_trace_events_filter.o := -I$(src)
->  
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index dc05626979b8..01bedf335b2e 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -19,6 +19,9 @@
->  #include "trace_probe.h"
->  #include "trace.h"
->  
-> +#define CREATE_TRACE_EVENTS
+Thanks.
 
-CREATE_TRACE_POINTS ?
 
-> +#include "bpf_trace.h"
-> +
->  #define bpf_event_rcu_dereference(p)					\
->  	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
->  
-> @@ -473,13 +476,29 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
->  		fmt_cnt++;
->  	}
->  
-> +static DEFINE_SPINLOCK(trace_printk_lock);
-> +#define BPF_TRACE_PRINTK_SIZE	1024
-> +
-> +static inline void do_trace_printk(const char *fmt, ...)
-> +{
-> +	static char buf[BPF_TRACE_PRINT_SIZE];
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&trace_printk_lock, flags);
-> +	va_start(ap, fmt);
-> +	vsnprintf(buf, BPF_TRACE_PRINT_SIZE, fmt, ap);
-> +	va_end(ap);
-> +
-> +	trace_bpf_trace_printk(buf);
-> +	spin_unlock_irqrestore(&trace_printk_lock, flags);
-
-interesting. I don't think anyone would care about spin_lock overhead.
-It's better because 'trace_bpf_trace_printk' would be a separate event
-that can be individually enabled/disabled?
-I guess it can work.
-Thanks!
+-- 
+Dmitry
