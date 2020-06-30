@@ -2,126 +2,76 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E28C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E426E206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4F520768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qwFpHH7Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YV4Bczfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgF3DsN (ORCPT
+        id S1729254AbgF3Dsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:48:13 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11419 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgF3DsN (ORCPT
+        Mon, 29 Jun 2020 23:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbgF3Dse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:48:13 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efab59a0000>; Mon, 29 Jun 2020 20:46:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jun 2020 20:48:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 29 Jun 2020 20:48:12 -0700
-Received: from [10.25.97.62] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 03:48:03 +0000
-CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
-        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v4 10/23] ASoC: simple-card: Wrong daifmt for CPU end of
- DPCM DAI link
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-11-git-send-email-spujar@nvidia.com>
- <877dvq1yhy.wl-kuninori.morimoto.gx@renesas.com>
- <6e27daa5-331e-968b-4027-2e30aeb7d382@nvidia.com>
- <87o8p1z81b.wl-kuninori.morimoto.gx@renesas.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <841ac69f-1c3f-2b13-17f9-6f196811ce52@nvidia.com>
-Date:   Tue, 30 Jun 2020 09:17:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 23:48:34 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2706C061755;
+        Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id k1so15288840ils.2;
+        Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
+        b=YV4Bczfd6bRQ9u+eV78DMYCoXm1i8z9d/3fuFQu+vwiA2aPI3YZ8WhC292HaKBRfNP
+         RhhGynlz+72LZnDTTao74cspJhBAu2YxIMiWQ9DhiT/yP3HuVYfdJDj26IHtkZJUuMkj
+         2KhwW3iVCq6490GoCXVJh6wortfVW1+8f6nIw30m8JeXLBOqhVEwQ2vnmO3eKWP5ujDP
+         +q06XRpDXWU9ea+yNtouGjdWF43ssCft2kSjUrF8flgz9DeUB5wZG+1+OQ9DzLc8YgeW
+         bFyiRbF0fEQEk6wF2r/i3P1SOKsfsunzwwSDwTGwudBthnqM1VNsRtafBDlx6wHaH1Pr
+         MCQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
+        b=O8IBU5Pmd2QjNqvLPsX0IPOprGGPWtvWVnpyIh6gZKV2bGBD8Q5ZfrDtQYttRPubgz
+         wclATHuB7ejw4SP7K/Wv4YKMm7aAmVUPSF85SwdZBg0ZbVfneQmLyrTcsRjTo4GNZBZd
+         iRzfxiH+36h4DbhxcqOkOtpQCt7FpP7x2xYNq0nE+Oc2xzP2LWsl3xthgBLGG74V59TP
+         QGAlt/d9MmUr6iB6YrqV35/hCAmI8DjDjyfNBc+DSyt+a3VeA8lt7uhXFyQW7sYwTcx5
+         Uf/YppLT4pOlCnmXHqN1OVpSILlW7/PXzU0D7Y3y4R76oDIjSyV0jAU3TqBF5Satn5nk
+         AEKw==
+X-Gm-Message-State: AOAM533CtexwywBOIPNpym45kE72Xk3sptPywaQTcKlLXbOPZwRlf0Gt
+        AWv4skIs91aDMAxLj5mRBK4ThO+5jzUDx3EPpRE=
+X-Google-Smtp-Source: ABdhPJyjkFEj14utEUhY6LxqYobmK3bsy7i35K8spE7FGJtI1qZq51d4GS5sK0tLkpXIkrKSpdNa3biT5pTxesm4ysI=
+X-Received: by 2002:a92:bb0b:: with SMTP id w11mr756075ili.238.1593488914196;
+ Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87o8p1z81b.wl-kuninori.morimoto.gx@renesas.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593488794; bh=Waf+fRsBa+tnFyTsNnzSNk2rurwJRlEFA5A13c5KFMs=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=qwFpHH7QE9mC28kfCJxAzmZEE6JRNuOHvraL8M+Y1I0zQ2WHYK/Oh8u5rmuHvtNqL
-         GcmVOB6EW9EOlpdfCaH4AOmTYNBxxacg/Aqt2JtYELBNEAWybmjXvu3pfb4AEyqrHY
-         yYntjl5O1xuuT5F/Sh4kN2gK+PEGfeQf+KCl4vnYO0NNbx7GcryFnkzP9t1XgMNp6w
-         +kXre478ipBLf7aA32L6fd0Y6QQeVQ5UhAfx1kBLrlGT0G/1FnvSypYJelewxTlkSP
-         ACpFmiAhdlrKdgWY8KEQGkm7JZP3NEu8oHzSFiQf8DZKRtYw9BWJms99RTFKLDDhT7
-         ThgNFlWVXU8Ag==
+References: <000000000000744a6805a93b969a@google.com>
+In-Reply-To: <000000000000744a6805a93b969a@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 29 Jun 2020 20:48:23 -0700
+Message-ID: <CAM_iQpV0oPkXPwca_annXc4Rr=_Wa-izZ63tFqML2WmxXuYV_g@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in devlink_get_from_attrs
+To:     syzbot <syzbot+09b4a3f42f32d58b8982@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/30/2020 6:26 AM, Kuninori Morimoto wrote:
-> External email: Use caution opening links or attachments
->
->
-> Hi Sameer
->
->>   snd_soc_runtime_set_dai_fmt() {
->>       ...
->>
->>       if (cpu_dai->component->driver->non_legacy_dai_naming)
->>           fmt = inv_dai_fmt;
->>
->>       ...
->>   }
->>
->> Above flips polarity for 'cpu_dai' if 'non_legacy_dai_naming' flag is set.
->>
->> 1. Hence example mentioned in the commit message does not work if my 'cpu_dai'
->> driver does not have this flag set.
-> ?
-> Do you want fo flip it ? or don't flip?
-> It is for Codec <-> Codec connection.
-
-For DPCM links I don't want to flip based on one Codec reference. My 
-goal was to make the binding work for multiple CPU/Codec link. Hence I 
-thought it would be better to explicitly describe the 'Master' DAI. We 
-can eventually get rid of 'codec' argument from simple_dai_link_of_dpcm().
->> 2. While it is true that we consider reference of 'Codec' mode for simple CPU<->
->> Codec DAI links, for DPCM this does not seem flexible. For DPCM links CPU and
->> Codec are not directly connected (CPU<->Dummy or Dummy<->Codec). Please
->> consider, for example, if the DAI link has multiple CPU/Codecs. Which 'Codec'
->> reference needs to be considered? Isn't it better if we explicitly mention which
->> DAI we want to operate as 'Master'?
-> I think Lars-Peter has (had ?) plan for this SND_SOC_DAIFMT_CBx_CFx
-> flag flexibility ? Yes maybe it is needed for multi CPU/Codec system.
->
-> Thank you for your help !!
->
-> Best regards
-> ---
-> Kuninori Morimoto
-
+#syz fix: genetlink: get rid of family->attrbuf
