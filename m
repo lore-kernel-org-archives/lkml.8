@@ -2,126 +2,157 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A049C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A86C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5F62073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198CE20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isoVzQ1M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BqpmJ9Mw";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ag2Zs8qU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbgF3Mjj (ORCPT
+        id S2387800AbgF3MmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:39:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31507 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387773AbgF3Mji (ORCPT
+        Tue, 30 Jun 2020 08:42:21 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:51756 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgF3MmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:39:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593520776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=TGLGKEpkjdJTS3jT/CrbsQ3UfaSvirL/iq68S1yu1Go=;
-        b=isoVzQ1MCpQB0ja0s/1T89qb3n9X427SJuDMFr1sRPK/Fd1HCbILakevf4hrhdeEuG9Bt6
-        Qi9gqJKhmcPDFLcpYhQLd7PeRBS2OFF8X4c7r9XorFvRLYFiktmkC4dUy2W9j0Y6jBd651
-        BPniGKorjkHibMVr2zWpd4aZu/4+8m0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-MYDV1k4KOGuKARrB8mSQ3w-1; Tue, 30 Jun 2020 08:39:30 -0400
-X-MC-Unique: MYDV1k4KOGuKARrB8mSQ3w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DF6C8015F8;
-        Tue, 30 Jun 2020 12:39:29 +0000 (UTC)
-Received: from [10.36.114.56] (ovpn-114-56.ams2.redhat.com [10.36.114.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 713D17419A;
-        Tue, 30 Jun 2020 12:39:28 +0000 (UTC)
-Subject: Re: [PATCH] mm: remove the redundancy code
-To:     Su Hui <sh_def@163.com>, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20200629173047.GA38128@ubuntu>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <bd8ea243-e00c-a72a-ac80-cd2ec08db4b9@redhat.com>
-Date:   Tue, 30 Jun 2020 14:39:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200629173047.GA38128@ubuntu>
-Content-Type: text/plain; charset=utf-8
+        Tue, 30 Jun 2020 08:42:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593520939; x=1625056939;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=KB9LwajWz+3hH1uGt5TzLC/6j8nCDqQP6vXPPclvPfY=;
+  b=BqpmJ9MwW/p/+k6k+w8oSmIMnL2TM33RUUdSR3c+4YhE+HGLZz3sjbqB
+   gCyxtaUwQHMLU5yobkCYHvVw++htMZ7NSJ48+eLSNdxDlBZP6TT/wlz/s
+   QeJ9UjLiRI4vx0K0qkKZGib31UwKDx2SSXbXsg24w8fRsrbRtTWN5tbIX
+   y9rMOFRJCpvJCLhBrF9b65pAVFLv0UhvR37tCARlvqONKk4qKxylvBSNo
+   WFTu71a8YDafO5g0RYOQwQdiK8Y7eVXGqcD/et/vMNcfxMPkPPkzM0ZiA
+   kvqXqEz3wtWtrVpMFHy4Fn8o6UrHqHXtMNOYo4blgSDZ86P5mURrjLGW/
+   g==;
+IronPort-SDR: UafUUWrJ+annlDH23dzZM+m1EEQG+L0kgUSgUt/OLL4v1ZFs4yl3mFlZcsKGul0dpluQkCpGY0
+ 8Mxrd72GevyDb7sk/nJj2y8TXjdCG2/xDQliyevmugrWGWSZYe1gp6EAQgcOjHaAA66/PETcgf
+ MARzPMd2T8IcVMFq3C6frOF3zJVlAAxm2SfY7uMmXq0BZ0uKmSwHbsY8z6nzONeNxBClYW3v+1
+ 7SaX6UHBUxxqimMx1AEcAyle+32BolRWGU2DUK7ctW19PzEcVz5jN2l9F1GRm6G6VOJkKvlfj4
+ eWQ=
+X-IronPort-AV: E=Sophos;i="5.75,297,1589212800"; 
+   d="scan'208";a="244296776"
+Received: from mail-co1nam11lp2168.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.168])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jun 2020 20:42:16 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hmU/T+I2PhNnpFAZ6TYOZOVU+Y75VAZhRkP6+Bd6iB/tvnPAJWMFLyCQ3o5THsMnBLYxafFWi4wjt66hixBLl/qyPvXHlj4y5xP1hHGT1hx4ivKg1XM0cvcUvmY2zb9dgmk+y4bJ/Ccf/gStvsyHlKw5CbgSUvVOCOvUxSbmKSlxQ2GoiwEi3xJVa7bTy9rPUNgI+8eqLpMIA3H+dvR8ZNKGFbnZCeSAgmGCxOFKIIG3mwFRiVjLUTUeciXa7opA/Oc6i6C7Cfpt2ha8AYXEraOKg+CCKipI8FBy5A5Lql5Z5xgEmI7/XrCg7lv5VLW0pLIFDXJtS4Ok0W+bvQ84oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KB9LwajWz+3hH1uGt5TzLC/6j8nCDqQP6vXPPclvPfY=;
+ b=KvqPzn14piivC7/79wFcj4L29sLoUzsRpyJfoDBM+AH2AFQVVsjqfONrDFoJG20jCLZUm/LcD2Ud2c8cN6mMSHzAic+lz/VJSmSuuWx94nhb/TjUFzja+ryJF3LXWHgHdbU8aZVaqeK2UGFfSnF4i0B/ZSHIFSiVnixhLuxMtdbl4oerQ0lQ59tJebcZbeGsvyz7LU8zkYPN+uXXSllaCSKJjrkFttm9FGMh1cOxEbWP03UVD9f7CH1GG4WjM36zEXpM7HHGfhLG1K4rK4rGknKjiP5bBD3q3Xm+SUO9ODnAioWtoVWq3FTEl7lzH6StOJaO11tT4ig8VR+YfnUhKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KB9LwajWz+3hH1uGt5TzLC/6j8nCDqQP6vXPPclvPfY=;
+ b=ag2Zs8qU4mUyDvWoTOvg36rymcZNCgGGWIGHg19aKwBmSgVVT45Eqfm3Qiy3zcPc0iNRID6VpWU7YDSmzA3iIzX365TZu9R+FxZuJiyyrPf0BzMGYjeXwwXTh2H/E7fSZmychEhjPrXsSnERpsgtB7HzWDi1h1WIzGws0znkrgc=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4077.namprd04.prod.outlook.com (2603:10b6:805:47::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
+ 2020 12:42:13 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 12:42:13 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: RE: [PATCH v4 4/5] scsi: ufs: L2P map management for HPB read
+Thread-Topic: [PATCH v4 4/5] scsi: ufs: L2P map management for HPB read
+Thread-Index: AQHWTebYpX5BfvKkoU2xgSP8E9mBaKjxGyDw
+Date:   Tue, 30 Jun 2020 12:42:13 +0000
+Message-ID: <SN6PR04MB4640BCE167B108B74D5042E5FC6F0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <1239183618.61593413882377.JavaMail.epsvc@epcpadp2>
+        <963815509.21593413582881.JavaMail.epsvc@epcpadp2>
+        <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+        <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p2>
+ <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
+In-Reply-To: <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c101fa71-8e62-4976-aa12-08d81cf303be
+x-ms-traffictypediagnostic: SN6PR04MB4077:
+x-microsoft-antispam-prvs: <SN6PR04MB4077A9B8399F7EBA9086D5B3FC6F0@SN6PR04MB4077.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:229;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4xy7pJ3UVVcd3xUrzswt3omXyMNmV5BbOxQOUdFjdm9H2wg+njNhK/ogmyALHvk7fb3/e25HfI7P/HBViONxHx5aDzfFOE+NcdqAANRcXaQJ68mI+Nmwmqj6Qv6FGWaZ/pawdJK9Xb4IMnOy5YuyYJ1FwgQK71j1YrKnpOErWqj5pdDwNlLlZ8cSF/qBB56O2oVwl6M0g65JCJaHCEt86alHN4kj2M/Yx8Se2XGIDXjs8bg4W1yVeRkTJJ94b0NbODhgbhAfgdFsxsBQRDqq9Ju+PWHPPbOHMtUPbatK+/wsywRn5S2mTHHxNPyDA7REz1tt9AOTpgHcJ9c/BjbdyOEiYC8u6MgrpxeEq4R5Ornmp4UCSAWJEfZ9dcgWkJ4i
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(66946007)(9686003)(7696005)(4744005)(71200400001)(52536014)(83380400001)(8936002)(76116006)(86362001)(5660300002)(4326008)(66446008)(478600001)(55016002)(64756008)(66476007)(66556008)(33656002)(2906002)(110136005)(54906003)(316002)(6506007)(186003)(26005)(7416002)(8676002)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ENa1Qohy0Dzos3YiMRvTrJd/bT7g51Pri071A1cluTa+aDMobPbGEHeCyR9NUhQ0YFxdTwZxaOYWVan5QLMyEQImFsd3YhUpcP5S1qCRRblu2WoYhqsTQlXY850H38JsH4RdnPIRd+HFhfQLkLhYza34/nReMob2C5rjavBbW3yleGXBV7kUnCGY1cC0Lqder74F+vt8Rd0UxWS/5Hc7y3KHfCPBDRQxsuMLqvWTHg+6+X7aTYXx/uE6f/SOJ/p+eoe5OOL6nb8MKNr2V+JrSVUWEggfo+nuAaAb3lTTTG8CIGRQEE6j2bGjXo1tNjy+EAUBwdNlzzg/3n5uy4AZeGm70nnJthTGkzc9IRtZzSZLEdLnvT9Nj3O7K9Yul3jLvQnCB6nrlliHa6myhqPa56+XUDJ+mTXWONfXdD+Bx8mKYMdG71xbmqX3RDLe0IsIGs4FoS7QtlP2JOidEPm/EEaG0CEkWPasdJe+gks3dNE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR04MB4640.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c101fa71-8e62-4976-aa12-08d81cf303be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 12:42:13.6274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fWa9gdynk29vJOGWkyayEKW++2RzpYkvZF5UIuwb+9Qgup9ygJiLddYxPghOvh8LuYd++0370xqGWZBtVjosqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.06.20 19:30, Su Hui wrote:
-> remove the redundancy code, the zone_start_pfn
-> is assigned from zone->zone_start_pfn
-> Signed-off-by: Su Hui <sh_def@163.com>
-> ---
-
-Side note: You should really work on better patch subjects/descriptions.
-+ casing, punctuation, empty line before Signed-off-by ...
-
-"mm: remove the redundancy code" is as expressive as "mm: fix the bug"
-
--- 
-Thanks,
-
-David / dhildenb
-
+PiArc3RhdGljIGludCB1ZnNocGJfaXNzdWVfbWFwX3JlcShzdHJ1Y3QgdWZzaHBiX2x1ICpocGIs
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHVmc2hwYl9yZWdpb24g
+KnJnbiwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgdWZzaHBiX3N1
+YnJlZ2lvbiAqc3JnbikNCj4gK3sNCg0KDQo+ICsNCj4gKyAgICAgICByZXQgPSB1ZnNocGJfbHVf
+Z2V0KGhwYik7DQo+ICsgICAgICAgaWYgKHVubGlrZWx5KHJldCkpIHsNCj4gKyAgICAgICAgICAg
+ICAgIGRldl9ub3RpY2UoJmhwYi0+aHBiX2x1X2RldiwNCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIiVzOiB1ZnNocGJfbHVfZ2V0IGZhaWxlZDogJWQiLCBfX2Z1bmNfXywgcmV0KTsNCj4g
+KyAgICAgICAgICAgICAgIGdvdG8gZnJlZV9tYXBfcmVxOw0KPiArICAgICAgIH0NCj4gKw0KPiAr
+ICAgICAgIHJldCA9IHVmc2hwYl9leGVjdXRlX21hcF9yZXEoaHBiLCBtYXBfcmVxKTsNCj4gKyAg
+ICAgICBpZiAocmV0KSB7DQo+ICsgICAgICAgICAgICAgICBkZXZfbm90aWNlKCZocGItPmhwYl9s
+dV9kZXYsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICIlczogaXNzdWUgbWFwX3JlcSBm
+YWlsZWQ6ICVkLCByZWdpb24gJWQgLSAlZFxuIiwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgX19mdW5jX18sIHJldCwgc3Jnbi0+cmduX2lkeCwgc3Jnbi0+c3Jnbl9pZHgpOw0KPiArICAg
+ICAgICAgICAgICAgdWZzaHBiX2x1X3B1dChocGIpOw0KPiArICAgICAgICAgICAgICAgZ290byBm
+cmVlX21hcF9yZXE7DQo+ICsgICAgICAgfQ0KTWlzc2luZyBjbG9zaW5nIHVmc2hwYl9sdV9wdXQ/
+DQoNCj4gKyAgICAgICByZXR1cm4gMDsNCg==
