@@ -2,194 +2,224 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62075C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D2E206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A964206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w8pM9LlJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oUPVV+iU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgF3FWW (ORCPT
+        id S1729249AbgF3FYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgF3FWR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:22:17 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D97C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:22:17 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q7so7699957ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9qTa0QzfsDsmvRz7fKgPnwC59SuVUu6TJ3V+opbP+k4=;
-        b=w8pM9LlJOVX1fGUrk3Rkss+ak9nYoksk4J6M94Ungd5A1tb3glYYTk/6XssGlVq9Mx
-         pzjfJdHsvwPu2MfTyEpkz/m9bw7Qu++JyMtSbv5VWVkVGCwbFcRTa5a4DTrxXT3NCST2
-         0a51+egH5SNx8zII3jLk7x2jtOFEsC1Af4xdxUUlh8iZqJdfEKRqYQmIf1MySNNusWlq
-         tbBkQS93j87RYcu8csugDk+JuRXO+BXeDxLKMna4pZim3rbuiU7U/c2gTG3tva0fyHq+
-         dHf1PUFZpxRZaz7FtPWzcD3dE/oz5UTXLVdjYK26Z4dx75DVod1cDkAIUOg4MAcG1GiF
-         5ZtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9qTa0QzfsDsmvRz7fKgPnwC59SuVUu6TJ3V+opbP+k4=;
-        b=FGnKfWpq7t8kj79QZB7SCnfMJAYNkS80xovHI1GeEx3POFjHZrRrdz4G2rD2HCgzU6
-         tsKCV2tvr1hvckuGzpW8sYY3JNQH/Elv/lITppYfN7hQ5E7nKS7ieAQwZfhH/eww83Mi
-         4okD+gbyKFMz3bCLaGk+jCaUZTX3pCW5BJ5caoe/50SiuIx4PRRN5eUWz7pz3eOXNMac
-         drmpo1YzhdlFo3+sd8z4aGgFHWkQ0hFvGChaTpjvV2dpNYWQ1WrF5D2AEVgRCGRu0424
-         uhYNOPvS+TeMMm5vhJDjKMLdasBH3CiZGDWOjx7n8RzDbArgsVdEs9zEPuBFGpFDFxU0
-         AqWg==
-X-Gm-Message-State: AOAM530UktDZNwiKupP1aBJBF4vPfSIgJiqUnkzsVTTFWuTQZcM6BAXT
-        +rID4hRAJMvhezUQT8iD9cj7pzVfFq7Z60AWAhAdqg==
-X-Google-Smtp-Source: ABdhPJzbcG26GiwMn5Y85LLRVheOo7eBUCzTe4DBikJ3MwAAL14sldLdOTOQ9coABbisMAUnWXpnmguh9Iqy47lsMEY=
-X-Received: by 2002:a05:651c:1a6:: with SMTP id c6mr1927013ljn.358.1593494535598;
- Mon, 29 Jun 2020 22:22:15 -0700 (PDT)
+        Tue, 30 Jun 2020 01:24:35 -0400
+Received: from mail-am6eur05on2054.outbound.protection.outlook.com ([40.107.22.54]:35649
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726117AbgF3FYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 01:24:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZxQ/GXslvtDLc0mvw8ibKvyFMAMwf03UfPf61MiOR1p5lV1cxCAWBJlVIIUJ4dMnNTwlS6NhV7QTB/niSUd+HIp52+2U5HBtFVjTia9Swl+AR1ywF/axwhDSDu/T65bOpopTpJIeJ1axW5R2po+96B6SHduOmDs8ypL4qIZ5q1xIT0SUyCBM2sB5MPCUGFrnTuYGVAqV6WnfDG7jFNAOaFhtfUSCkC6lDnFXDOXSuJQsU4hGpDjRadyOPgWKvO1lYMdC9zefvMyzY17eYoNhXOdio/dWuUgMC98phuuh3xZWvhUPkN0h9GryiWWJqoPy34V/mRZ+fOCdV8xelP9lFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zwa9tEd1POHbUIM4Xm8BoOQjdEesdscNwIUMqUGqAZ0=;
+ b=K83kB0b5opSt4ZlPv1aTFeUqKLSjtTpvcVSkkCnUBkZbyB8kvSHWsgkLzCe56OKELS0bgRQ4uhrKZAkgK22EffIRV5LoRfcAPXQ61OP2Mj+TgJC5p4MhU3HQdP+1aZ5a8BQ3WG8Z++hq9AvVqPwuQgbk1eQpdRbyk6ceq0YuCuxRqdWmtDQ05EwJOHhKglF1ppz3gmOgm24jNUxRLTkIAne+syTX4mT+H/MT6fBKxAJJRLTdzG7IsXdOc2UUT/J1Cir+HNP6+7+ghP441dqcQCl0796tQYZZzvvJZ5QR8Ozt22AgmxZqKHOSk3UxosvAImuDMr6lzQ4vsCwtk1PswA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zwa9tEd1POHbUIM4Xm8BoOQjdEesdscNwIUMqUGqAZ0=;
+ b=oUPVV+iUq9i99QXDBySwhumXi+Q0lT1Kd4UdXWCVK60f537AqBS8vaYChJQKL/M0Ph9FB5/LrYn6BT6Wzc1Hw5OCivnj5s1OY4FJ2CE8kMTd5La9aUnHwAvXlblJK8ifdtlr2zIbJ41VLSL8yr09c8ZY04idVTo80tdS29EwRVU=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6640.eurprd04.prod.outlook.com (2603:10a6:803:122::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
+ 2020 05:24:27 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
+ 05:24:27 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v10 00/12] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Tue, 30 Jun 2020 21:31:04 +0800
+Message-Id: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0132.apcprd06.prod.outlook.com
+ (2603:1096:1:1d::34) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-References: <20200629152523.2494198-1-sashal@kernel.org>
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Jun 2020 10:52:04 +0530
-Message-ID: <CA+G9fYtVNQj2=W38guCJDPxGYW_Ec9zC9dswNyXNZngLPgxc9A@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/178] 5.4.50-rc1 review
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR06CA0132.apcprd06.prod.outlook.com (2603:1096:1:1d::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 05:24:21 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: aae7f62a-b640-4e14-f3eb-08d81cb5db50
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6640:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB664040790976798F1E133DD1896F0@VE1PR04MB6640.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0450A714CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rv/FQrGpEmSmxvio05fIgnm2I6NpB+E417BfCOFQ9y7MkZLx0Iha1k4l/B/biOs8/ohHA7Zfn+8oF5q83wvZsoAGXn1xhZWadjpjTzlOM+7HKxYz/7tyDZ1UJCmrGBCWDTW7RasOUi2EPthqSDxvpK0LlNWYrdhm5EAxs7RCj0tEsqv7OkbWMOw45FCZhQmuHhawJh+nXI+fEKBSEfAx/ObVPfM4TxTgFaMtcMdoE8kPquk8r/h2NcZVEMxyiim6ppamJT+SGKM6RSKJeRtAwIwzjQ0Uuria/h4MChPBmcXxGeinUOjiVIS0wZkfDi8aGZGsSrXiP8uFqp81pZrl/toTe4j9OTNmwAv5gFTO/wcYC2sgOEZmeIPvZ6P0iwPBzu2pbabGFasafq9Aap85pwN5HTyRnClYkNyePkfTiO2r9Z7iu9gdij2Y8SS4zrEV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(86362001)(956004)(6666004)(2616005)(52116002)(7416002)(4326008)(6506007)(6486002)(2906002)(5660300002)(186003)(26005)(36756003)(16526019)(8676002)(966005)(478600001)(316002)(83380400001)(66946007)(66476007)(6512007)(8936002)(66556008)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: wf1ueChDBtV3sL6vRGpPFyh/aDOJJwOFNQp/5IzGiEcJHXWdvs/d9h3ovw4uUvJBeWXvvYtatJk3v4Hz6i32BrE0+c013xGAJBrNrorHGVcBTlakfCYz5qEIbEklvK2dstiiAz+PIIHFmNNWtsvIFSTdArY4hX1r+kq0OBq0me8x6nOZIy7U1hGspY8pu0UOveyQZm7nwgEURRUlXHq76oLRvYYabDUO14oxLer1L/cI+OGf7LIp497ZnP1dkkp+Cpno3wEWUOIJ5Wcp9zmOvSLlO5HmXvxAoLamOcVoUV3Pvkvd3+wx1MAbVNt2k2DtEAlxxi63iINtCInnkbHKeSpsTIRMVTiJDHnPRXgFRV6kWP0tuakNTS6dirCaUtLJLVVuZDYGZqi6llWTVzsAKFFUwq9y/F4cPWY0AERH9DjWGPiNpGrVd8suEM7sEjfK4trJzdcvq+mXuIu23+Z4FOJ1oM15k5Cu+WMU39Yz5k4=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aae7f62a-b640-4e14-f3eb-08d81cb5db50
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 05:24:27.0097
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Te0jn8nKaJVoNM+zKoT09LrLKyf8GgUSd5RGfc3ikAM/XmhG67ZaC725vCPnMl0cYHecBoFYlWLC5DtlvUT6Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 at 20:55, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 5.4.50 release.
-> There are 178 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 01 Jul 2020 03:25:02 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git/patch/?id=3Dlinux-5.4.y&id2=3Dv5.4.49
->
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> --
-> Thanks,
-> Sasha
+There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.Add Ack tag from Mark and Vinod
+  2.Remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add the last patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch.
+v6:
+  1.Resend after rebase the latest next branch.
+  2.Remove below No.13~No.15 patches of v5 because they were mergered.
+  	ARM: dts: imx6ul: add dma support on ecspi
+  	ARM: dts: imx6sll: correct sdma compatible
+  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  3.Revert "dmaengine: imx-sdma: fix context cache" since
+    'context_loaded' removed.
+v7:
+  1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
+    cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
+    to load context only once" so that no building waring during comes out
+    during bisect.
+  2.Address Sascha's comments, including eliminating any i.mx6sx in this
+    series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and taking
+    care SMC bit for PIO.
+  3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
+   'spi: imx: add new i.mx6ul compatible name in binding doc'
+v8:
+  1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and merge
+    it into 04/13 of v7
+  2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for no any
+    ecspi function broken even if sdma firmware not updated.
+  3.merge 'tx.dst_maxburst' changes in the two continous patches into one
+    patch to avoid confusion.
+  4.fix typo 'duplicated'.
+v9:
+  1. add "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     to fix the potential issue brought by commit bcd8e7761ec9("spi: imx:
+     fallback to PIO if dma setup failure") which is the only one patch
+     of v8 merged. Thanks Matthias for reporting:
+     https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
+  2. remove 05/13 of v8 "spi: imx:fallback to PIO if dma setup failure"
+     since it's been merged.
+v10:
+  1. remove 01/13 "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     since there is another independent patch merged:
+     -- commit 809b1b04df898 ("spi: introduce fallback to pio")
+  2. add "dmaengine: dma: imx-sdma: add fw_loaded and is_ram_script" which
+     is used to fix the potential dma_alloc_coherent() failure while this
+     patchset applied but sdma firmware may not be ready for long time.
+  3. burst size change back from fifo size to normal wml to align with nxp
+     internal tree which has been test for years. Overnight with loopback
+     test with spidev failed with fifo size, but pass with wml(half of fifo
+     size).Seems the whole fifo size fed may cause rxfifo overflow during
+     tx shift out while rx shift in.
+     "spi: imx: remove ERR009165 workaround on i.mx6ul"
+  4. remove 12/13 'dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm'
+     since below two similar patches merged:
+     -- commit 25962e1a7f1d ("dmaengine: imx-sdma: Fix the event id check to
+     include RX event for UART6")
+     -- commit 2f57b8d57673 ("dmaengine: imx-sdma: Fix: Remove 'always true'
+     comparison")
 
-Summary
-------------------------------------------------------------------------
+Robin Gong (12):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove duplicated sdma_load_context
+  dmaengine: dma: imx-sdma: add fw_loaded and is_ram_script
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul compatible name
+  dmaengine: imx-sdma: add uart rom script
 
-kernel: 5.4.50-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 7d61c4b6865ab9c9f22e4ddbc65645c0c4b0427e
-git describe: v5.4.49-178-g7d61c4b6865a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.49-178-g7d61c4b6865a
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
+ drivers/dma/imx-sdma.c                             | 63 ++++++++++++++++------
+ drivers/spi/spi-imx.c                              | 52 +++++++++++++++---
+ include/linux/platform_data/dma-imx-sdma.h         |  8 ++-
+ 7 files changed, 106 insertions(+), 29 deletions(-)
 
-No regressions (compared to build v5.4.49)
+-- 
+2.7.4
 
-No fixes (compared to build v5.4.49)
-
-Ran 36125 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
