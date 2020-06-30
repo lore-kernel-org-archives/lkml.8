@@ -2,144 +2,146 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182D2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F270020842
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6633120768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ciNqqkMh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjY1jjdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbgF3RoX (ORCPT
+        id S1732828AbgF3Rqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55452 "EHLO
+        Tue, 30 Jun 2020 13:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730989AbgF3RoP (ORCPT
+        with ESMTP id S1726813AbgF3Rqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:44:15 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168F4C03E97B
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:44:15 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id i6so12539948plt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:44:15 -0700 (PDT)
+        Tue, 30 Jun 2020 13:46:53 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB00C061755;
+        Tue, 30 Jun 2020 10:46:53 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s9so23558703ljm.11;
+        Tue, 30 Jun 2020 10:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=7SURRzjjRGTOX0xlarMdKzVc2kBvlyxgGqiauUMeAgI=;
-        b=ciNqqkMhKnSEhDrkiyicRV+B2fw/aWLtyBFS44cYqMU9/hk4YoHYAoOzmrmLeE1JTs
-         hMI9APJYDNxFDlNQpcWYNUJRE7yfuHyn3fU33gxVS1g/sM656Z3VhRTA4Cgxvtl0XTgH
-         bSLnAN6AEeH7ff/rAJRzU753rbcdrnIciPgVYaXAWO9HIBFZvlT+39JCkf9Pz1SSG8l4
-         olMkZzDaxXJIfnYvOSReQzleJDzzFa0ep8CFo6+JjdehiVeHh5c7WoNrFW8GiPFrhFQA
-         /tKo1DM+Ek1xkOvXKWduALkTHu1UGQ5Gb4ZqhbgXruX8S49IhfmJpkZh15ZuvTprZx6/
-         yPbw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tjMV2HhxwqIY48F0IP3MOiKFidan1PF9zaHZx5HX7l0=;
+        b=tjY1jjdEVyJZGgANPC64TKpHUZrkSS8EEBBY/YSYskUqJ4iHiJyvY/SRKdbUQ+i8A6
+         mKZGquZKcCYFChv95JDvgtkN3ZV/xibcDqKYEEHIpMJi/A6cAJZGE6pZhE171nGMtmAA
+         nodVM9EiODNeIbtgN3HbrGNAFmMg6N/7B6AzBwFaweyZLIhRUFG+yAwcZWD13JLlh+i0
+         OZ1CEWk/Wj8zu1vB4nlqcy7Xn1NsxZjROarkiYk+/vU/ui4t6L9I0QuT/GLPP4zUT4cf
+         ZsQtGTxKQOVJoHF5wbc0na/+t70V/horF7+xmrRSJ+LCxEtZNCscsWvKeg5fkcmngreJ
+         JhPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=7SURRzjjRGTOX0xlarMdKzVc2kBvlyxgGqiauUMeAgI=;
-        b=LiIJOjynlNGiYu4rMI0Nhe/McNjSjpH8EnPus6shOH1S3w08MGtcBO5a9gVJuoY0G9
-         OG4MVBq3fmUVn5acqQd0DwCTCRe9EcIDwCANcfOK9JuA7XFZuXe6Ba2/LZiXmezL25Ev
-         wblEgkLywOoOxIVZ/9OP/SlEKJUddzA2eHYsXSVEPHLCDQDpf2uKof8pzKV54hNJ1kp8
-         X2Zs1Hx0QrXjtPVJvvXg1e47ibB9ORxSgoh36Wv8520zUgDcwRDpEiJmPpp8P73hA4op
-         CRwnHKLOEkmkZj8txdAulydd8dYbTINsq9ZqEFVAgqnX9aziA3P4zA6BPvrxaR6RrhfF
-         9vig==
-X-Gm-Message-State: AOAM533mtfwPlpIx337fRydbVMQL+N7c1V+z/uXICW9Qyo61oizNxIQk
-        WqwIOQWWjE8LTBdNKFFb2DHeNJvuhtmxkHnr
-X-Google-Smtp-Source: ABdhPJwPGsUvzBGkF/3Z5B2RfmdKVtbm0PtCRn/ARFI6s5uasiK3vHNKYRUI6swXWVIB3MhtxgqwE0kg1LIWpgLm
-X-Received: by 2002:a63:a352:: with SMTP id v18mr16922694pgn.453.1593539054539;
- Tue, 30 Jun 2020 10:44:14 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 17:43:50 +0000
-In-Reply-To: <linchuyuan@google.com>
-Message-Id: <20200630174350.2842555-1-linchuyuan@google.com>
-Mime-Version: 1.0
-References: <linchuyuan@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] hwmon:max6697: Allow max6581 to set temperature read offset
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net, jdelvare@suse.com, linchuyuan@google.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jasonling@google.com, belgaied@google.com, zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tjMV2HhxwqIY48F0IP3MOiKFidan1PF9zaHZx5HX7l0=;
+        b=EWI5fQpaxAaujw/K+alYLCcPAVae6BxmveHPcs1us9GsKT4GcK2ArKl5fZducDhvHk
+         ss9/Q4/PdNK7NV47tuAjoSp6T/pacvuIQqscAVKSl7f9nc2lt3/gFBGHWC7lRfFdAsd1
+         bL1o9nKlnBQ+MEXZC+8KagjTCvsea5vr3THNFzckBeOf4PV68XaiEBoaAB7yWUP18Yx/
+         UmAr3oSlzDeKliaWa0q4ChDxK0pIiqXOGaEGYLDSmGEEMuuyvItJgGj7GPY/7c15ewT/
+         zOAXxDQJcflsnp6HblGVxKyYk7Ba54iFN0uaCGOWAjEnA3nHKxs+l4ODHCBVvDKEFqWw
+         V7UQ==
+X-Gm-Message-State: AOAM533Cwx9bCXDzDDy3J5lpcLyIDCEY8v1u/nO+rvHCKH2YWGTcqUca
+        Ppz5UPbVPXLWegLzmWnFHIbs1ScTaw+bhQ==
+X-Google-Smtp-Source: ABdhPJyeD0L2OQDPsATlLehiaJUOlO6qfctubWWbNJHqTUbySuntBVH0jItLh5nWGXKBUGu1EU7PZw==
+X-Received: by 2002:a2e:9b94:: with SMTP id z20mr9220985lji.404.1593539211578;
+        Tue, 30 Jun 2020 10:46:51 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id y24sm1042122lfy.49.2020.06.30.10.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 10:46:49 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 30 Jun 2020 19:46:47 +0200
+To:     linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        vbabka@suse.cz, mhocko@suse.com
+Cc:     Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200630174647.GA27057@pc636>
+References: <20200618183448.GA15136@pc636>
+ <20200618190359.GU2723@paulmck-ThinkPad-P72>
+ <20200618203557.GB16976@pc636>
+ <20200618203821.GU8681@bombadil.infradead.org>
+ <20200618211709.GA17263@pc636>
+ <20200618213427.GV2723@paulmck-ThinkPad-P72>
+ <20200619154652.GA19990@pc636>
+ <20200619162555.GJ2723@paulmck-ThinkPad-P72>
+ <20200622190406.GA3787@pc636>
+ <20200622195329.GN9247@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622195329.GN9247@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per max6581, reg 4d and reg 4e is used for temperature read offset.
-This patch will let the user specify the temperature read offset for
-max6581. This patch is tested on max6581 and only applies to max6581.
+On Mon, Jun 22, 2020 at 12:53:29PM -0700, Paul E. McKenney wrote:
+> On Mon, Jun 22, 2020 at 09:04:06PM +0200, Uladzislau Rezki wrote:
+> > > > > 
+> > > > > Very good.  When does kfree_rcu() and friends move out of kernel/rcu?
+> > > > > 
+> > > > Do you mean to move the whole logic of kfree_rcu() from top to down to mm/?
+> > > 
+> > > I do mean exactly that.
+> > > 
+> > > That was my goal some years back when Rao Shoaib was making the first
+> > > attempt along these lines, and it remains my goal.  After all, if this
+> > > effort is at all successful, the coupling between kfree_rcu() with
+> > > slab/slob/slub will become much tighter than that between kfree_rcu()
+> > > and RCU.
+> > > 
+> > > There will need to be some additional RCU APIs used by kfree_rcu(),
+> > > for example, something to tell RCU how many blocks are awaiting a
+> > > grace period.  But these are narrow and easily defined APIs.
+> > >
+> > I also think that k[v]free_rcu() should reside somewhere under "mm/".
+> > Currently they are defined as macros under "linux/rcupdate.h". So i
+> > am not sure if definitions should stay there or moved also.
+> 
+> I am not as worried about the high-level macros as I am about the code
+> that does the bulk of the work, but they should still move as well.
+> Otherwise, changes involving both the macros and the underlying
+> implementation are harder than needed.
+> 
+> > Implementation of the k[v]free_rcu() is under rcu/tree.c and for tiny
+> > variant is under rcutiny.h. It can be moved to the mm/slab_common.c
+> > or independent files can be created. I think, mm people should consult
+> > what is the best way to go :)
+> > 
+> > Any thoughts on it?
+> 
+> I don't have any opinion on exactly where in mm the underlying
+> implementation code should go.  You suggestion of mm/slab_common.c
+> seems fine to me.  ;-)
+> 
+OK :)
 
-Testing:
-dts: temperature-read-offset = <0xde 0x0>;
+Then i would like to hear an opinion from the "mm" people where
+kfree_rcu() and friends could potentially be moved.
 
-verify: iotools smbus_read8 <vbus> 0x4d 0x4e
-0x6F
+Matthew, Michal, Vlastimil could you please share your view?
 
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/max6697.c               | 19 +++++++++++++++++--
- include/linux/platform_data/max6697.h |  4 ++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
+Thanks!
 
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 743752a2467a..16c0f0995a12 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -493,8 +493,13 @@ static void max6697_get_config_of(struct device_node *node,
- 	}
- 	prop = of_get_property(node, "transistor-ideality", &len);
- 	if (prop && len == 2 * sizeof(u32)) {
--			pdata->ideality_mask = be32_to_cpu(prop[0]);
--			pdata->ideality_value = be32_to_cpu(prop[1]);
-+		pdata->ideality_mask = be32_to_cpu(prop[0]);
-+		pdata->ideality_value = be32_to_cpu(prop[1]);
-+	}
-+	prop = of_get_property(node, "temperature-read-offset", &len);
-+	if  (prop && len == 2 * sizeof(u32)) {
-+		pdata->offset_mask = be32_to_cpu(prop[0]);
-+		pdata->offset_value = be32_to_cpu(prop[1]);
- 	}
- }
- 
-@@ -586,6 +591,16 @@ static int max6697_init_chip(struct max6697_data *data,
- 						pdata->ideality_mask >> 1);
- 		if (ret < 0)
- 			return ret;
-+		ret = i2c_smbus_write_byte_data(client,
-+						MAX6581_REG_OFFSET,
-+						pdata->offset_value);
-+		if (ret < 0)
-+			return ret;
-+		ret = i2c_smbus_write_byte_data(client,
-+						MAX6581_REG_OFFSET_SELECT,
-+						pdata->offset_mask >> 1);
-+		if (ret < 0)
-+			return ret;
- 	}
- done:
- 	data->update_interval = factor * MAX6697_CONV_TIME;
-diff --git a/include/linux/platform_data/max6697.h b/include/linux/platform_data/max6697.h
-index 6fbb70005541..ff98adfe9d8d 100644
---- a/include/linux/platform_data/max6697.h
-+++ b/include/linux/platform_data/max6697.h
-@@ -28,6 +28,10 @@ struct max6697_platform_data {
- 	u8 ideality_value;		/* transistor ideality as per
- 					 * MAX6581 datasheet
- 					 */
-+	u8 offset_mask;			/* set bit to 0 to disable */
-+	u8 offset_value;		/* temperature read offset as
-+					 * MAX6581 datasheet
-+					 */
- };
- 
- #endif /* MAX6697_H */
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+--
+Vlad Rezki
