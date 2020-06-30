@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E45206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7480920722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uv2o6CXg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UQnfJJ9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbgF3NdM (ORCPT
+        id S2387720AbgF3NdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44790 "EHLO
+        Tue, 30 Jun 2020 09:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732546AbgF3NdJ (ORCPT
+        with ESMTP id S1732565AbgF3NdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:09 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E845C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id k23so20925729iom.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
+        Tue, 30 Jun 2020 09:33:12 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B214CC03E97A
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:11 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id f6so5367751ioj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kDgFHsSUO1neDezcqrxbKw4M4Vw2z46/pelFQ4uN6Us=;
-        b=Uv2o6CXgOdrdRE3wBPoMz4l/rv9cHmE7GOIu9KuRF3jvPrNrIGrq3ZyAtEs9sFPmRD
-         nov4LVJHSax5nJSoLBvdW8tOPHnx2ycNPdBLnDMIC0Ovx/BWnncxdbXFwbQ7L0EfDI0Z
-         JthTexCFC4V0SOCCebpo47934/c8iiYLcXrJ6+10TU0ezINJ8tS5VzgZm42C8N10nvfv
-         xaKxv0NHS300FDcK7ESlR2dVaEPUElQJHJ4g/EqJ36Zq7tip4g2JfCZzZRqEbPQ6TrfE
-         6B9L8NEV1pn9QPkDS2mGzPOJunMd08M+44ijUvXDmpp4EkGawSKbwhSK00LFvdW8Bsva
-         x/cA==
+        bh=r5aSRp59jKO5d55dBFG61qZSPf1iY4fVxx3iYfquSAE=;
+        b=UQnfJJ9gy2RTNvVo3X6qL/EUr1IfMDFqaAo5/bpHG6K0FpVsMRaJjt1jpMfKvOjEBe
+         Gz3kespK0A0O9wPjziN0o/9IelwlJYSBabSRt1ldI3BidnGo8/ZdCSj6JwxgW5fDjXJ3
+         l7n/tDTcKXZt8+wKGW8yFoXyNIR2qdjJu2582Zi2ns9Ld1L9CIQ93ZZ+FGZOtvA1Jt9U
+         yyVHilZ6aQMNtXLTcI2N0DKxemM8wjp40/QOc21194xQwQhxtoR2YduvUnnm4oTlEk7/
+         qc/h9MMKNokPozIy38ZxduQXAc0QOJyztMgPMwSFlcQYu+PSTj56gXw7ahcPcaODn2ur
+         /j1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kDgFHsSUO1neDezcqrxbKw4M4Vw2z46/pelFQ4uN6Us=;
-        b=YlglmN2RINsCHLQ5ulEAeIkj0LIR8YoKx8K60c2ZQebjzSv4gJO3gLQyqJp6c2TfSc
-         sEAl5GysbtHfVeOmE+udYnGnth42AuEA4H3UIV4E6sPW6VQIhg7bgkUYvZEdeMSMBe55
-         WAu7sNG3z/PuMuvjg+FYjaNxr5JTSglPCipaqDrEjKFw1ZkyVJr4cY0MaD38L3QAQBKy
-         yK9zj+IvLPQY2FA5M056oPfDce+/1iQJK0RHJ6P1KP/LOLt9fUfhadN5C2v6nc9uVTPw
-         ARvx0mwcfPej7U0Vg605J5qw2mj/aVNewzPSTZb6Ft15Nm+LDLCx/bUYeODjpDs34ZQl
-         +jQQ==
-X-Gm-Message-State: AOAM5304CTm38H6VRH2NELvcBkF85YgmonGSqGKuuN30iCmvZefwI+tC
-        i/04xz+j2ETdMA9yPvWj5uTtyA==
-X-Google-Smtp-Source: ABdhPJzPIjbodBZZVbQt3ksOF6Eb4Cys04jmQn4GbX6gXxEzNM4nU8I8x87LLHl51/qU9UXjz/3TMw==
-X-Received: by 2002:a05:6602:2dca:: with SMTP id l10mr21765627iow.163.1593523988825;
-        Tue, 30 Jun 2020 06:33:08 -0700 (PDT)
+        bh=r5aSRp59jKO5d55dBFG61qZSPf1iY4fVxx3iYfquSAE=;
+        b=oUn/awcFeAfCQxr9JAW6zNjxaKpH1dxzq4GEfGP29qKD+A4Efay7VvL+1JEyad1hL0
+         RrTuejARcRHWEK+AcP57ytbEiZrLY8HgmVltgPKN5SxHUOMRvCRL3mWH3Vie6408NyOM
+         OLtGWVbOGI8OWcvFX9HWvuk/WUaGYRsYG/HQqFiBr4adff1JiE58mQjr5RyUnbMIoLdu
+         5x3OmdhF6aP4y5OBYcIlV9EBLjtv1QWX9HFsp0idgmem8itWU8rcWStuEsnKoa9vRqmX
+         BeqgMYSYsUTbehSQ8LZfuXLycnpY/KND7gh6wTlS+10kaq7zu0k01BkJ6Uz5m1e19Tqz
+         xsuQ==
+X-Gm-Message-State: AOAM531Olb/GTrcdScmivHQk0Y+469LMyRDQC/V5caUQFeb67BNP5XgU
+        Oy17liIcXFlgWnZUx0OKtpSNDg==
+X-Google-Smtp-Source: ABdhPJzxUL/OXKdQC0L4kfFUqJLX6w6ie9b1sYG3tSzEVuBI5e/8Zqs/9qFk1rNhFbJSmgjAea6XDg==
+X-Received: by 2002:a6b:f40a:: with SMTP id i10mr21701041iog.155.1593523991143;
+        Tue, 30 Jun 2020 06:33:11 -0700 (PDT)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id u15sm1538776iog.18.2020.06.30.06.33.07
+        by smtp.gmail.com with ESMTPSA id u15sm1538776iog.18.2020.06.30.06.33.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:08 -0700 (PDT)
+        Tue, 30 Jun 2020 06:33:10 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 1/5] net: ipa: head-of-line block registers are RX only
-Date:   Tue, 30 Jun 2020 08:33:00 -0500
-Message-Id: <20200630133304.1331058-2-elder@linaro.org>
+Subject: [PATCH net-next v2 3/5] net: ipa: mode register is TX only
+Date:   Tue, 30 Jun 2020 08:33:02 -0500
+Message-Id: <20200630133304.1331058-4-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630133304.1331058-1-elder@linaro.org>
 References: <20200630133304.1331058-1-elder@linaro.org>
@@ -77,32 +77,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The INIT_HOL_BLOCK_EN and INIT_HOL_BLOCK_TIMER endpoint registers
-are only valid for RX endpoints.
-
-Have ipa_endpoint_modem_hol_block_clear_all() skip writing these
-registers for TX endpoints.
+The INIT_MODE endpoint configuration register is only valid for TX
+endpoints.  Rather than writing a zero to that register for RX
+endpoints, avoid writing the register at all.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
 v2: The commented calls to assert() that were added are now gone.
 
- drivers/net/ipa/ipa_endpoint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ipa/ipa_endpoint.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 9f50d0d11704..31afe282f347 100644
+index 1babcfc79360..566ff6a09e65 100644
 --- a/drivers/net/ipa/ipa_endpoint.c
 +++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -683,7 +683,7 @@ void ipa_endpoint_modem_hol_block_clear_all(struct ipa *ipa)
- 	for (i = 0; i < IPA_ENDPOINT_MAX; i++) {
- 		struct ipa_endpoint *endpoint = &ipa->endpoint[i];
+@@ -541,7 +541,7 @@ static void ipa_endpoint_init_mode(struct ipa_endpoint *endpoint)
+ 	u32 offset = IPA_REG_ENDP_INIT_MODE_N_OFFSET(endpoint->endpoint_id);
+ 	u32 val;
  
--		if (endpoint->ee_id != GSI_EE_MODEM)
-+		if (endpoint->toward_ipa || endpoint->ee_id != GSI_EE_MODEM)
- 			continue;
+-	if (endpoint->toward_ipa && endpoint->data->dma_mode) {
++	if (endpoint->data->dma_mode) {
+ 		enum ipa_endpoint_name name = endpoint->data->dma_endpoint;
+ 		u32 dma_endpoint_id;
  
- 		(void)ipa_endpoint_init_hol_block_timer(endpoint, 0);
+@@ -552,7 +552,7 @@ static void ipa_endpoint_init_mode(struct ipa_endpoint *endpoint)
+ 	} else {
+ 		val = u32_encode_bits(IPA_BASIC, MODE_FMASK);
+ 	}
+-	/* Other bitfields unspecified (and 0) */
++	/* All other bits unspecified (and 0) */
+ 
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+ }
+@@ -1297,6 +1297,7 @@ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
+ 		ipa_endpoint_init_aggr(endpoint);
+ 		ipa_endpoint_init_deaggr(endpoint);
+ 		ipa_endpoint_init_seq(endpoint);
++		ipa_endpoint_init_mode(endpoint);
+ 	} else {
+ 		if (endpoint->ipa->version == IPA_VERSION_3_5_1)
+ 			(void)ipa_endpoint_program_suspend(endpoint, false);
+@@ -1306,7 +1307,6 @@ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
+ 	}
+ 	ipa_endpoint_init_cfg(endpoint);
+ 	ipa_endpoint_init_hdr(endpoint);
+-	ipa_endpoint_init_mode(endpoint);
+ 	ipa_endpoint_status(endpoint);
+ }
+ 
 -- 
 2.25.1
 
