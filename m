@@ -2,87 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4A22082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA752082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="li7C5S3i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6vdH9Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgGAUOV (ORCPT
+        id S1727769AbgGAUOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
+        Wed, 1 Jul 2020 16:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGAUOV (ORCPT
+        with ESMTP id S1726287AbgGAUOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:14:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE56EC08C5C1;
-        Wed,  1 Jul 2020 13:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=fw2+4gebTcJUXyNcS2c+cOqcMRuf3D2bJUNwgAt6wzg=; b=li7C5S3irnuwlwvAJc/67sTtqL
-        K53IpbFzITd06frRmKSv2LtF5R3gvW5dF3x48jp3K8l4aKE2s0IUC9RHrjW45U48hV335FPErjIxA
-        2qhNEbMbOWwmDfhQ2uhtnqN5okwQDN/EkWIrKrUQDunGJfJnOkJ9lYD1D1NTC+ESYyg92RmDIA2Kq
-        Tkfvj5EM74ZQ5XFMsIVs02uVULTbPS44X6jbpOTpBEE2qowa5u0aGwKGQIcXoxVB1Zxh5IIFSSnCo
-        eIk21wfJjzuOjyuyej5wMn9cvRhcc+VBsF9yKOzepFYI3oUXmxaxpxKm6RT0WkaCMfFNXuJL/Xu9T
-        ItG1ucXg==;
-Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqj7X-0001UG-NG; Wed, 01 Jul 2020 20:14:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        David Howells <dhowells@redhat.com>
-Subject: [PATCH 01/23] cachefiles: switch to kernel_write
-Date:   Wed,  1 Jul 2020 22:09:29 +0200
-Message-Id: <20200701200951.3603160-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200701200951.3603160-1-hch@lst.de>
-References: <20200701200951.3603160-1-hch@lst.de>
+        Wed, 1 Jul 2020 16:14:30 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0DBC08C5C1;
+        Wed,  1 Jul 2020 13:14:30 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u185so9430780pfu.1;
+        Wed, 01 Jul 2020 13:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j3XX45xXL2ckQCryqen8G8xqi1VBzikcTk3+0I72HLY=;
+        b=Z6vdH9ZkagZcUlBeTb3Wb+OYJP8Of8UMSLBsvIZfVVMyI0fB4CvWQFbRRfqZlt3MZf
+         SysGd8bwRPRSMClVpd89Yjmkpu/idYcGibwdQlCb3teJ1lEGS3ip+L5eWB/kQoXjFqkc
+         RtIpppZrTJcASvarISUfx4CFSiyTTvVxna7HnJldj5BKcS0vySUv7MneDvF30wdQWKaA
+         ks55RgQw/cU7Ue/d9V09C/mLR+UgLf1u4HNeadUYxFkXS82SIsMOio18h9PP6upex+VJ
+         TZbQYZOg43ZGOukob8QzLfBOg6MGec1hXR521puYqEBLBREvAgZd/lj/f5uglDFi0wC2
+         ceQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j3XX45xXL2ckQCryqen8G8xqi1VBzikcTk3+0I72HLY=;
+        b=QaC4tsnNQrj95psauleA8DEDEI2Ie8JTGMBwqKgiaVwnqTP52R+E/vWBtTJ9co/Gsa
+         PlJSyF3HgPS6nIG0RhHOedol4hEvtdadq0+MAjB6KBGHBTBzsZay9ai8mIdB0lF9tBBV
+         Cj3o0Eob+0qszz0hVb3n+QJzUx+LKe2VeuXB6CRHhXlBsZ3OpYFkgrGKTAufwb0xQUya
+         1YUlv2Vb0t3xkJrPik9vqHK9tfn1krWe1Ci1awii7ttugzsBCSHlIsHfJ4mYWnmLSn/B
+         ESgsjuyKN98k0jc3qMJ2t1V0XdeokDxxB1DxUDq72TsX74KqOvVofpCB3qgYUgfHB+Ut
+         I5kw==
+X-Gm-Message-State: AOAM532MFPnQj9GgP/D+i9+rC7GF2yx5b/N8pB7obIVElzBKH9o8xpSJ
+        xOoG4iXcEV60AbLVoPYr8A998ZrqCfiebMaPPrkk4A==
+X-Google-Smtp-Source: ABdhPJwTpVRP0s9Kdt9Cl+CTlfdKHbWBuJdGoK2cC7YIaeI4bE2S1sLDFWylEo6otv0/ysiPMeOeocI+Wb+m9jZ4k/w=
+X-Received: by 2002:a62:3645:: with SMTP id d66mr26487346pfa.275.1593634469910;
+ Wed, 01 Jul 2020 13:14:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200701192936.1397152-1-masahiroy@kernel.org>
+In-Reply-To: <20200701192936.1397152-1-masahiroy@kernel.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 1 Jul 2020 13:14:18 -0700
+Message-ID: <CAMo8Bf+w2ikVxEJecE_DpAbBQFNhY=K1jWpg9y4uDw9jEb5=MQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: do not export LDFLAGS_vmlinux
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Guan Xuetao <gxt@pku.edu.cn>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__kernel_write doesn't take a sb_writers references, which we need here.
+On Wed, Jul 1, 2020 at 12:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: David Howells <dhowells@redhat.com>
----
- fs/cachefiles/rdwr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
-index e7726f5f1241c2..3080cda9e82457 100644
---- a/fs/cachefiles/rdwr.c
-+++ b/fs/cachefiles/rdwr.c
-@@ -937,7 +937,7 @@ int cachefiles_write_page(struct fscache_storage *op, struct page *page)
- 	}
- 
- 	data = kmap(page);
--	ret = __kernel_write(file, data, len, &pos);
-+	ret = kernel_write(file, data, len, &pos);
- 	kunmap(page);
- 	fput(file);
- 	if (ret != len)
+> diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
+> index 12ae1e91cb75..c6538d3321b9 100644
+> --- a/arch/xtensa/boot/boot-elf/Makefile
+> +++ b/arch/xtensa/boot/boot-elf/Makefile
+> @@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
+>                 $(OBJS) $@
+>
+>  $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
+> -       $(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
+> +       $(LD) $(KBUILD_LDFLAGS) \
+
+Can that $(Q) be retained, please?
+The rest LGTM.
+
+>                 -T $(obj)/boot.lds \
+>                 --build-id=none \
+>                 -o $@ $(obj)/Image.o
+
 -- 
-2.26.2
-
+Thanks.
+-- Max
