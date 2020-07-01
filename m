@@ -2,128 +2,166 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A91C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1746CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF802074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2HM49l8"
+	by mail.kernel.org (Postfix) with ESMTP id 01E5B2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgGAJJg (ORCPT
+        id S1729456AbgGAJJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:09:36 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48563 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726255AbgGAJJd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593594572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=7iSWdZz1MQYnvIIt6jkhrHrV7ZLYvXqE5mMXKJ+C5ME=;
-        b=i2HM49l8NKqtDsONZi6jn7D7ZrPcD7yfQQkfgjuqLxrPAPzPycD6NT1sChd+5fZzLasNAR
-        cZIg4nrSIzHWRr0PBVdE8PrapsHmTk/ObM9dHbFYt4LRrk06pCh695N5XdnDXdHBuu/5hT
-        3zYp3US0ygLelosI7SSuyFLyCt8dHp0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-ft1kK71qO1OkZUKpp4aHNw-1; Wed, 01 Jul 2020 05:09:30 -0400
-X-MC-Unique: ft1kK71qO1OkZUKpp4aHNw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B4151005513;
-        Wed,  1 Jul 2020 09:09:28 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-177.pek2.redhat.com [10.72.13.177])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 979BD71662;
-        Wed,  1 Jul 2020 09:08:47 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 0/5]
-Date:   Wed,  1 Jul 2020 17:08:34 +0800
-Message-Id: <20200701090839.12994-1-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Wed, 1 Jul 2020 05:09:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:47820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbgGAJJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:09:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E55E11FB;
+        Wed,  1 Jul 2020 02:09:38 -0700 (PDT)
+Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2DC843F68F;
+        Wed,  1 Jul 2020 02:09:36 -0700 (PDT)
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, valentin.schneider@arm.com
+Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Liviu Dudau <liviu.dudau@arm.com>
+Subject: [PATCH 4/8] cpufreq,vexpress-spc: fix Frequency Invariance (FI) for bL switching
+Date:   Wed,  1 Jul 2020 10:07:47 +0100
+Message-Id: <20200701090751.7543-5-ionela.voinescu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
+In the majority of cases, the index argument to cpufreq's target_index()
+is meant to identify the frequency that is requested from the hardware,
+according to the frequency table: policy->freq_table[index].frequency.
 
-This series tries to support batched IOTLB updating vhost-vdpa.
+After successfully requesting it from the hardware, this value, together
+with the maximum hardware frequency (policy->cpuinfo.max_freq) are used
+as arguments to arch_set_freq_scale(), in order to set the task scheduler
+frequency scale factor. This is a normalized indication of a CPU's
+current performance.
 
-Currently vhost-vdpa accepts userspace mapping via IOTLB API, and it
-can only forward one mapping to IOMMU or device through IOMMU API or
-dma_map(). Though set_map() is designed to have the capability to pass
-an rbtree based mapping to vDPA device, it's still be called at least
-once for each VHOST_IOTLB_UPDATE or VHOST_IOTLB_INVALIDATE. This is
-because vhost-vdpa doesn't know the userspace start or stop then
-updating.
+But for the vexpress-spc-cpufreq driver, when big.LITTLE switching [1]
+is enabled, there are three issues with using the above information for
+setting the FI scale factor:
 
-So this patch introduces two flags as hints for vhost-vdpa to call
-set_map() only when userspace finish a batch of IOTLB updating.
+ - cur_freq: policy->freq_table[index].frequency is not the frequency
+   requested from the hardware. ve_spc_cpufreq_set_rate() will convert
+   from this virtual frequency to an actual frequency, which is then
+   requested from the hardware. For the A7 cluster, the virtual frequency
+   is half the actual frequency. The use of the virtual policy->freq_table
+   frequency results in an incorrect FI scale factor.
 
-So instead of:
+ - max_freq: policy->cpuinfo.max_freq does not correctly identify the
+   maximum frequency of the physical cluster. This value identifies the
+   maximum frequency achievable by the big-LITTLE pair, that is the
+   maximum frequency of the big CPU. But when the LITTLE CPU in the group
+   is used, the hardware maximum frquency passed to arch_set_freq_scale()
+   is incorrect.
 
-1) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
-2) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
-...
-n) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
+ - missing a scale factor update: when switching clusters, the driver
+   recalculates the frequency of the old clock domain based on the
+   requests of the remaining CPUs in the domain and asks for a clock
+   change. But this does not result in an update in the scale factor.
 
-With the help of hints, we do:
+Therefore, introduce a local function bLs_set_sched_freq_scale() that
+helps call arch_set_freq_scale() with correct information for the
+is_bL_switching_enabled() case, while maintaining the old, more
+efficient, call site of arch_set_freq_scale() for when cluster
+switching is disabled.
 
-0) VHOST_IOTLB_BATCH_START
+Also, because of these requirements in computing the scale factor, this
+driver is the only one that maintains custom support for FI, which is
+marked by the presence of the CPUFREQ_CUSTOM_SET_FREQ_SCALE flag.
 
-1) VHOST_IOTLB_UPDATE/INVALIDATE
-...
-n) VHOST_IOTLB_UPDATE/INVALIDATE
+[1] https://lwn.net/Articles/481055/
 
-n+1) VHOST_IOTLB_BATCH_END -> set_map()
+Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+---
+ drivers/cpufreq/vexpress-spc-cpufreq.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-One one call of set_map() to vDPA device for a batch of IOTLB
-mappings. So for the device that has its own DMA translation logic, it
-can efficiently structure the memory mapping to get best performance.
-
-Note, this only impacts the devices that want its own DMA
-translation (less times of set_map() call). For other type of devices,
-there's no changes in the behaviour.
-
-Changes from RFCV1:
-
-- tweak the comments per Michael's request
-
-Jason Wang (5):
-  vhost-vdpa: refine ioctl pre-processing
-  vhost: generialize backend features setting/getting
-  vhost-vdpa: support get/set backend features
-  vhost-vdpa: support IOTLB batching hints
-  vdpasim: support batch updating
-
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 40 +++++++++++++++++++++--
- drivers/vhost/net.c              | 18 ++---------
- drivers/vhost/vdpa.c             | 55 ++++++++++++++++++++++++++------
- drivers/vhost/vhost.c            | 15 +++++++++
- drivers/vhost/vhost.h            |  2 ++
- include/uapi/linux/vhost.h       |  2 ++
- include/uapi/linux/vhost_types.h | 11 +++++++
- 7 files changed, 114 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
+index e0a1a3367ec5..f2caf67d4050 100644
+--- a/drivers/cpufreq/vexpress-spc-cpufreq.c
++++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
+@@ -55,6 +55,8 @@ static atomic_t cluster_usage[MAX_CLUSTERS + 1];
+ static unsigned int clk_big_min;	/* (Big) clock frequencies */
+ static unsigned int clk_little_max;	/* Maximum clock frequency (Little) */
+ 
++static inline u32 get_table_max(struct cpufreq_frequency_table *table);
++
+ static DEFINE_PER_CPU(unsigned int, physical_cluster);
+ static DEFINE_PER_CPU(unsigned int, cpu_last_req_freq);
+ 
+@@ -87,6 +89,18 @@ static unsigned int find_cluster_maxfreq(int cluster)
+ 	return max_freq;
+ }
+ 
++static void bLs_set_sched_freq_scale(int cluster, unsigned long cur_freq)
++{
++	unsigned long max_freq = get_table_max(freq_table[cluster]);
++	int j;
++
++	for_each_online_cpu(j) {
++		if (cluster == per_cpu(physical_cluster, j))
++			arch_set_freq_scale(get_cpu_mask(j), cur_freq,
++					    max_freq);
++	}
++}
++
+ static unsigned int clk_get_cpu_rate(unsigned int cpu)
+ {
+ 	u32 cur_cluster = per_cpu(physical_cluster, cpu);
+@@ -154,6 +168,9 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
+ 
+ 	mutex_unlock(&cluster_lock[new_cluster]);
+ 
++	if (bLs)
++		bLs_set_sched_freq_scale(new_cluster, new_rate);
++
+ 	/* Recalc freq for old cluster when switching clusters */
+ 	if (old_cluster != new_cluster) {
+ 		/* Switch cluster */
+@@ -170,7 +187,11 @@ ve_spc_cpufreq_set_rate(u32 cpu, u32 old_cluster, u32 new_cluster, u32 rate)
+ 			pr_err("%s: clk_set_rate failed: %d, old cluster: %d\n",
+ 			       __func__, ret, old_cluster);
+ 		}
++
+ 		mutex_unlock(&cluster_lock[old_cluster]);
++
++		if (new_rate)
++			bLs_set_sched_freq_scale(old_cluster, new_rate);
+ 	}
+ 
+ 	return 0;
+@@ -200,7 +221,7 @@ static int ve_spc_cpufreq_set_target(struct cpufreq_policy *policy,
+ 	ret = ve_spc_cpufreq_set_rate(cpu, actual_cluster, new_cluster,
+ 				      freqs_new);
+ 
+-	if (!ret) {
++	if (!is_bL_switching_enabled() && !ret) {
+ 		arch_set_freq_scale(policy->related_cpus, freqs_new,
+ 				    policy->cpuinfo.max_freq);
+ 	}
 -- 
-2.20.1
+2.17.1
 
