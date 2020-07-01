@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9973CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A79C20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC7120760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KypgvuN8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+veirxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgGAUDY (ORCPT
+        id S1727013AbgGAUDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
+        Wed, 1 Jul 2020 16:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGAUDX (ORCPT
+        with ESMTP id S1726021AbgGAUDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:03:23 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B41C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:03:22 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d4so12238231pgk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:03:22 -0700 (PDT)
+        Wed, 1 Jul 2020 16:03:38 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96BBC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:03:38 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j12so11445514pfn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=DG/OiDzZKYxcN7tgph7u8U8cnXnzZZZ9acgCYJ83YwI=;
-        b=KypgvuN8A6GvTF5CN3Jkyl+A7/LMTi++GIYEZVAvfQi8Ot5Tt64QQjwC4jI0Hirc63
-         iBxqDmcC8hQBSMpQTuj32vL9Fuu9LG1Pvcyb6jm8sCChD5g6kENuDDiDPl8siCk5ItI1
-         9BNxJ9NPtSYOUcfNQUih4K3sxuEZfSR932DUdWkGiN8GefDd6KVkKhnbNa1N8U0k19js
-         aJXpTsMFQ0iIxT9bJ1RKG5ebx8FJH3c6RukiwJ5CMFoJHAlM/naxjBXIoTyLtVzwDz9L
-         cZM71EnZcykycNMhxQWdJwYTAX11OSuRavVKU054lU719RM88tvgtw45NLNa/pVDas6l
-         kvvw==
+        bh=LLlCSg3wFZxdInZpyFkkqv9fx47XurIkaRWTEZh/Vfg=;
+        b=N+veirxC6q9Jg43Xh5oVdvEX/Bl6N4PRWBWLZNBWmbtVsNuVbMdRgbl8JDbxTbhQtF
+         omFASxNcNrY2gU300IHgJa8SKI/SUWTuXzoucgKv6yrk8Bb3q/NxvCqLdhxTZEFW0M5Q
+         nUhFF9n6zVRjbsIakT1pFEFaFsHKrMC/7GHQ6LYmklPEvBqh4+15WXxilAzifDaZaMPY
+         5V6K1Wd4tyUd7LRRmtjDcqAJSpNbeNnDjNcqaCuLpv6VAEq47yQVRhlFLRmCv0oY40my
+         fqbqMTyYzRyhsyNQxSJvGle0dKCIZ+oUymQtHngEbhiR3oDLJKy4oq5OMdE/4gCoFLt1
+         lx5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=DG/OiDzZKYxcN7tgph7u8U8cnXnzZZZ9acgCYJ83YwI=;
-        b=CCpfHLIT4j239/Ee5zeJ+mneKhagPoWjHlCSN0G0HcaBp5SwYi0Mc/bKXR3b2ovd9u
-         7QIjgpyA2JlAqeQPt4PIC3NkrFRjsvMlTq+OfuY/AuBTyQ4SnuBiVcq71DkNTUi6AeX7
-         oHfmN15Pxky3sAj2e2FaRR3jeRgx39EDbyEAthTIG7dbX3jCUTDYzfjFV9jIuPFv2sTh
-         wYx3VFN1sH8VS4C/fEwq/qf0GrDTnnUJZce/369kiFj8UWMVBGW9eal7RvLYWqIFsQQP
-         xof7Q3Ju9YgLMZmEJs0kCG+1/ReWvERTdjDyi+LyYqq5IkRJicSyYXqvzVYQ187gq/No
-         2geg==
-X-Gm-Message-State: AOAM531g8iv2ynSrpG8Q2HMbIq6Gg/S16YOzW4fsH6Le9ncjej8R1/b7
-        dsrXejn+0Q83tn6fvV90mjyGoA==
-X-Google-Smtp-Source: ABdhPJzS45NkXiunLsIzMQvukb9uRBU3YXdQl00MI74iobOT3CgQ4L0Gm7O7Mii1eRv3hj+zNHOjbw==
-X-Received: by 2002:aa7:86c1:: with SMTP id h1mr12889126pfo.175.1593633801894;
-        Wed, 01 Jul 2020 13:03:21 -0700 (PDT)
+        bh=LLlCSg3wFZxdInZpyFkkqv9fx47XurIkaRWTEZh/Vfg=;
+        b=scH7FGYRKkqBnK20MLBqfMnaEiJHrwVc8O2H+nfCVE56wVIhr0pmvL/SDoN6lkEZDa
+         obqeaDna2FxDBFTTQwgp3A7FPSHQzO2o1kdfToPDkbX2SciLy+Y+ynl807lcoKuDIAuB
+         Oyaoof3tAtok3bP3iTmyuXbUuV6U8a7ccBAxS/P5vRy7sNlpYgU0kpGQZs88xbhgtlDM
+         LcYP4IWxT7lCX+i0L3fgFiYlhUu/5cWXOT+URjPlVL6KS4k+ssyT+ODxJkfreRTaIDC7
+         bj71OEXd2Ttrr8URtYaLoJKJHtz9RUM8X3nmtOjRH+d+v5kv20UAkpTDsnBxf/y9X8Hd
+         sW+g==
+X-Gm-Message-State: AOAM531iWp+xhAI3RHnosNSnsxz/UOlTGF/iT4BqJECJ6EZmhMLeIGS3
+        DWiJ44AJYNW89i/M0FPQxsRw/Q==
+X-Google-Smtp-Source: ABdhPJxBAW8RzOdi9h7XE9ImdkUrGaumHlNPBkSMbKrMSH9JkKtgCbkfa6zCr63HCxxd+DiZIPurFg==
+X-Received: by 2002:a63:515a:: with SMTP id r26mr22767294pgl.204.1593633818169;
+        Wed, 01 Jul 2020 13:03:38 -0700 (PDT)
 Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id u2sm5954919pfl.21.2020.07.01.13.03.20
+        by smtp.gmail.com with ESMTPSA id 8sm6058629pja.0.2020.07.01.13.03.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 13:03:21 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 13:03:20 -0700 (PDT)
+        Wed, 01 Jul 2020 13:03:37 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 13:03:36 -0700 (PDT)
 From:   David Rientjes <rientjes@google.com>
 X-X-Sender: rientjes@chino.kir.corp.google.com
 To:     Dave Hansen <dave.hansen@linux.intel.com>
@@ -68,11 +68,11 @@ cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
         dwagner@suse.de, tobin@kernel.org, cl@linux.com,
         akpm@linux-foundation.org, ying.huang@intel.com,
-        dan.j.williams@intel.com, cai@lca.pw, stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
-In-Reply-To: <20200701152623.384AF0A7@viggo.jf.intel.com>
-Message-ID: <alpine.DEB.2.23.453.2007011303080.1908531@chino.kir.corp.google.com>
-References: <20200701152621.D520E62B@viggo.jf.intel.com> <20200701152623.384AF0A7@viggo.jf.intel.com>
+        dan.j.williams@intel.com, cai@lca.pw
+Subject: Re: [PATCH 2/3] mm/vmscan: move RECLAIM* bits to uapi header
+In-Reply-To: <20200701152624.D6FBDDA8@viggo.jf.intel.com>
+Message-ID: <alpine.DEB.2.23.453.2007011303250.1908531@chino.kir.corp.google.com>
+References: <20200701152621.D520E62B@viggo.jf.intel.com> <20200701152624.D6FBDDA8@viggo.jf.intel.com>
 User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -86,33 +86,13 @@ On Wed, 1 Jul 2020, Dave Hansen wrote:
 > 
 > From: Dave Hansen <dave.hansen@linux.intel.com>
 > 
-> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
-> sysctl.  Like a good kernel developer, I also went to go update the
-> documentation.  I noticed that the bits in the documentation didn't
-> match the bits in the #defines.
+> It is currently not obvious that the RECLAIM_* bits are part of the
+> uapi since they are defined in vmscan.c.  Move them to a uapi header
+> to make it obvious.
 > 
-> The VM never explicitly checks the RECLAIM_ZONE bit.  The bit is,
-> however implicitly checked when checking 'node_reclaim_mode==0'.
-> The RECLAIM_ZONE #define was removed in a cleanup.  That, by itself
-> is fine.
-> 
-> But, when the bit was removed (bit 0) the _other_ bit locations also
-> got changed.  That's not OK because the bit values are documented to
-> mean one specific thing and users surely rely on them meaning that one
-> thing and not changing from kernel to kernel.  The end result is that
-> if someone had a script that did:
-> 
-> 	sysctl vm.zone_reclaim_mode=1
-> 
-> That script went from doing nothing to writing out pages during
-> node reclaim after the commit in question.  That's not great.
-> 
-> Put the bits back the way they were and add a comment so something
-> like this is a bit harder to do again.  Update the documentation to
-> make it clear that the first bit is ignored.
+> This should have no functional impact.
 > 
 > Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Fixes: 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
 > Cc: Ben Widawsky <ben.widawsky@intel.com>
 > Cc: Alex Shi <alex.shi@linux.alibaba.com>
 > Cc: Daniel Wagner <dwagner@suse.de>
@@ -123,6 +103,5 @@ On Wed, 1 Jul 2020, Dave Hansen wrote:
 > Cc: Dan Williams <dan.j.williams@intel.com>
 > Cc: Qian Cai <cai@lca.pw>
 > Cc: Daniel Wagner <dwagner@suse.de>
-> Cc: stable@vger.kernel.org
 
 Acked-by: David Rientjes <rientjes@google.com>
