@@ -2,204 +2,251 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5331C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8020F2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593577345;
-	bh=sUNdRQYpacmShtuPKZlouXdQJzTes0PxZ8qKBGGSl88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fxmffAaGPIOn0hqwSlcZHBJfOLI+82a2KCl2Gg3jLOhW8o5u90KmKMFu512h3Sw+6
-	 8/55d1+HK3XzDVq5ns+Ow4HfmFXBtUK35evy2Tm9hH9iOWv6fQeTTVijSoJrvTMM2g
-	 EAmfASVICa1G2vFzGZrt9n/t5emnqSLMKFBJy2Vw=
+	by mail.kernel.org (Postfix) with ESMTP id BA235206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fvMTkwlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgGAEWY (ORCPT
+        id S1725893AbgGAE1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 00:22:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725272AbgGAEWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 00:22:24 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22B01206B6;
-        Wed,  1 Jul 2020 04:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593577343;
-        bh=sUNdRQYpacmShtuPKZlouXdQJzTes0PxZ8qKBGGSl88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LVJvHV8r23uoRuxg+8uZK8h8jVUumtgzHho+9m6OVsbdh3iwZfXOJK5ag7NLWiS7P
-         2CRb6s1YrPXuVK5ouhY9m28nN3PAlAqd5HR1crsQwql36qEc3IbBrbkxMDrUZhzDH1
-         UpwtjRNPdg7kZ9lZV0hsZBHJaX75WdafDKMAGwJ4=
-Date:   Tue, 30 Jun 2020 21:22:22 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/2] f2fs: split f2fs_allocate_new_segments()
-Message-ID: <20200701042222.GA1539525@google.com>
-References: <20200622093849.35684-1-yuchao0@huawei.com>
- <20200629201943.GB1117827@google.com>
- <0e3c7fe2-9cb8-c457-e251-eb0fb7c0760e@huawei.com>
+        Wed, 1 Jul 2020 00:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgGAE1H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 00:27:07 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577E1C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:27:07 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i16so17463818qtr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0wIgs3VKhIuaXHVPWmnow5qLXIDMbpb3CKsGv/tv2Rk=;
+        b=fvMTkwlF68FklyfTloViaxEICph/kC2zKCH6JBOpKRAJfLRbgiI9qaQ18FIKeKVtiz
+         ff95WfXrYG/YuNqsgmNCwmXASHNY0fdZ9CyOvShO3Wa1sIPTsRv+hBq4sLDia52UUk4N
+         V4/3hyKf2UWqBGesZq5Anle8Nwic/sftQD3Pt46sFTW9V87syXv/AwHhjXhbesDR2neJ
+         q/W9tHv/qIlcmxQtWUcgEzSrgcZxxopLyK4uncNWGQ/zwIjBAFTdylUWCDA+rbQE+0c9
+         LOu3lyF8B4cPY7KiKbGTqSQ2HED35AGoYdlJh0VMWpgzD5GkREYoNfZswzOIEmBDzG7H
+         Kwjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0wIgs3VKhIuaXHVPWmnow5qLXIDMbpb3CKsGv/tv2Rk=;
+        b=Z3n66LO1iB1fKZ0STEKAftoka85pBb+72rz8AKT+qHHAApSHu8JvYtFWaOExNmZ95E
+         a/JZSllaDhv3l9ZvgI1EJi81V4Ck4/coWfbqnjW1qEWtM8us8NfEv+VT6bUcFSdJz/NB
+         V9ZK1ZUVckCri5g6RfbyKznthQKwoW92o7uayrXmvP9i8+fWEt2nFO3MNTwATGRdxWuL
+         GJ/h19chW8UVkeS3hEWVsdKE2RD42JtI8H/80H697TQFENTj5Mg+ybu8ctxqSEZlFCMO
+         zfhcrrBwJ/Fkxf9nw45Su5LYZQoHJ1uG8XwKutmnju7Ps2JfCgPuQireu0XXSlesrDyp
+         A2+Q==
+X-Gm-Message-State: AOAM533/4beoKgoalPRRSgIAFEqaOY7Wv4zansQZQhTwZps/DEjAHyWW
+        rgKO78dD3FxCbLLbnG2jjQDltQ==
+X-Google-Smtp-Source: ABdhPJzgIuK/4NY14D4tI2IOCwMzUL2HpMoesgwdny5dP+EQJUm13F7z14AXMpnBiliTjyAcrD+F0Q==
+X-Received: by 2002:aed:3904:: with SMTP id l4mr20927805qte.370.1593577626394;
+        Tue, 30 Jun 2020 21:27:06 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 195sm4816483qkl.37.2020.06.30.21.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 21:27:05 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org (open list),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-pm@vger.kernel.org (open list:INTERCONNECT API)
+Subject: [RFC PATCH] interconnect: qcom: add functions to query addr/cmds for a path
+Date:   Wed,  1 Jul 2020 00:25:25 -0400
+Message-Id: <20200701042528.12321-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e3c7fe2-9cb8-c457-e251-eb0fb7c0760e@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01, Chao Yu wrote:
-> Jaegeuk, could you please help to change __allocate_new_segment() to static
-> in your tree?
+The a6xx GMU can vote for ddr and cnoc bandwidth, but it needs to be able
+to query the interconnect driver for bcm addresses and commands.
 
-Sure. :)
+I'm not sure what is the best way to go about implementing this, this is
+what I came up with.
 
-> 
-> On 2020/6/30 4:19, Jaegeuk Kim wrote:
-> > On 06/22, Chao Yu wrote:
-> >> to two independent functions:
-> >> - f2fs_allocate_new_segment() for specified type segment allocation
-> >> - f2fs_allocate_new_segments() for all data type segments allocation
-> >>
-> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >>  fs/f2fs/f2fs.h     |  3 ++-
-> >>  fs/f2fs/file.c     |  2 +-
-> >>  fs/f2fs/recovery.c |  2 +-
-> >>  fs/f2fs/segment.c  | 39 +++++++++++++++++++++++----------------
-> >>  4 files changed, 27 insertions(+), 19 deletions(-)
-> >>
-> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >> index 70565d81320b..07290943e91d 100644
-> >> --- a/fs/f2fs/f2fs.h
-> >> +++ b/fs/f2fs/f2fs.h
-> >> @@ -3327,7 +3327,8 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
-> >>  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
-> >>  void f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
-> >>  					unsigned int start, unsigned int end);
-> >> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
-> >> +void f2fs_allocate_new_segment(struct f2fs_sb_info *sbi, int type);
-> >> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
-> >>  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
-> >>  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
-> >>  					struct cp_control *cpc);
-> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >> index f196187159e9..67c65e40b22b 100644
-> >> --- a/fs/f2fs/file.c
-> >> +++ b/fs/f2fs/file.c
-> >> @@ -1659,7 +1659,7 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
-> >>  		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
-> >>  
-> >>  		f2fs_lock_op(sbi);
-> >> -		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
-> >> +		f2fs_allocate_new_segment(sbi, CURSEG_COLD_DATA_PINNED);
-> > 
-> > This should be CURSEG_COLD_DATA. Otherwise it causes the below kernel panic.
-> > I fixed this in the -dev, so let me know, if you have other concern.
-> > 
-> >   259 Unable to handle kernel NULL pointer dereference at virtual address 00000008
-> >   259 task: 0000000082b4de99 task.stack: 00000000c6b39dbf
-> >   259 pc : f2fs_do_write_data_page+0x2b4/0x794
-> >   259 lr : f2fs_do_write_data_page+0x290/0x794
-> >   259 sp : ffffff800c83b5a0 pstate : 60c00145
-> >   259 Call trace:
-> >   259  f2fs_do_write_data_page+0x2b4/0x794
-> >   259  f2fs_write_single_data_page+0x4a4/0x764
-> >   259  f2fs_write_data_pages+0x4dc/0x968
-> >   259  do_writepages+0x60/0x124
-> >   259  __writeback_single_inode+0xd8/0x490
-> >   259  writeback_sb_inodes+0x3a8/0x6e4
-> >   259  __writeback_inodes_wb+0xa4/0x14c
-> >   259  wb_writeback+0x218/0x434
-> >   259  wb_workfn+0x2bc/0x57c
-> >   259  process_one_work+0x25c/0x440
-> >   259  worker_thread+0x24c/0x480
-> >   259  kthread+0x11c/0x12c
-> >   259  ret_from_fork+0x10/0x18
-> > 
-> >>  		f2fs_unlock_op(sbi);
-> >>  
-> >>  		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
-> >> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-> >> index ae5310f02e7f..af974ba273b3 100644
-> >> --- a/fs/f2fs/recovery.c
-> >> +++ b/fs/f2fs/recovery.c
-> >> @@ -742,7 +742,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
-> >>  		f2fs_put_page(page, 1);
-> >>  	}
-> >>  	if (!err)
-> >> -		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
-> >> +		f2fs_allocate_new_segments(sbi);
-> >>  	return err;
-> >>  }
-> >>  
-> >> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >> index 113114f98087..f15711e8ee5b 100644
-> >> --- a/fs/f2fs/segment.c
-> >> +++ b/fs/f2fs/segment.c
-> >> @@ -2707,28 +2707,35 @@ void f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
-> >>  	up_read(&SM_I(sbi)->curseg_lock);
-> >>  }
-> >>  
-> >> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
-> >> +void __allocate_new_segment(struct f2fs_sb_info *sbi, int type)
-> >>  {
-> >> -	struct curseg_info *curseg;
-> >> +	struct curseg_info *curseg = CURSEG_I(sbi, type);
-> >>  	unsigned int old_segno;
-> >> -	int i;
-> >>  
-> >> -	down_write(&SIT_I(sbi)->sentry_lock);
-> >> +	if (!curseg->next_blkoff &&
-> >> +		!get_valid_blocks(sbi, curseg->segno, false) &&
-> >> +		!get_ckpt_valid_blocks(sbi, curseg->segno))
-> >> +		return;
-> >>  
-> >> -	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
-> >> -		if (type != NO_CHECK_TYPE && i != type)
-> >> -			continue;
-> >> +	old_segno = curseg->segno;
-> >> +	SIT_I(sbi)->s_ops->allocate_segment(sbi, type, true);
-> >> +	locate_dirty_segment(sbi, old_segno);
-> >> +}
-> >>  
-> >> -		curseg = CURSEG_I(sbi, i);
-> >> -		if (type == NO_CHECK_TYPE || curseg->next_blkoff ||
-> >> -				get_valid_blocks(sbi, curseg->segno, false) ||
-> >> -				get_ckpt_valid_blocks(sbi, curseg->segno)) {
-> >> -			old_segno = curseg->segno;
-> >> -			SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
-> >> -			locate_dirty_segment(sbi, old_segno);
-> >> -		}
-> >> -	}
-> >> +void f2fs_allocate_new_segment(struct f2fs_sb_info *sbi, int type)
-> >> +{
-> >> +	down_write(&SIT_I(sbi)->sentry_lock);
-> >> +	__allocate_new_segment(sbi, type);
-> >> +	up_write(&SIT_I(sbi)->sentry_lock);
-> >> +}
-> >>  
-> >> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
-> >> +{
-> >> +	int i;
-> >> +
-> >> +	down_write(&SIT_I(sbi)->sentry_lock);
-> >> +	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++)
-> >> +		__allocate_new_segment(sbi, i);
-> >>  	up_write(&SIT_I(sbi)->sentry_lock);
-> >>  }
-> >>  
-> >> -- 
-> >> 2.26.2
-> > .
-> > 
+I included a quick example of how this can be used by the a6xx driver to
+fill out the GMU bw_table (two ddr bandwidth levels in this example, note
+this would be using the frequency table in dts and not hardcoded values).
+
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 20 ++++-------
+ drivers/interconnect/qcom/icc-rpmh.c  | 50 +++++++++++++++++++++++++++
+ include/soc/qcom/icc.h                | 11 ++++++
+ 3 files changed, 68 insertions(+), 13 deletions(-)
+ create mode 100644 include/soc/qcom/icc.h
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+index ccd44d0418f8..1fb8f0480be3 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+@@ -4,6 +4,7 @@
+ #include <linux/completion.h>
+ #include <linux/circ_buf.h>
+ #include <linux/list.h>
++#include <soc/qcom/icc.h>
+ 
+ #include "a6xx_gmu.h"
+ #include "a6xx_gmu.xml.h"
+@@ -320,24 +321,18 @@ static void a640_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+ 	msg->cnoc_cmds_data[1][2] =  0x60000001;
+ }
+ 
+-static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
++static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg, struct icc_path *path)
+ {
+ 	/*
+ 	 * Send a single "off" entry just to get things running
+ 	 * TODO: bus scaling
+ 	 */
+-	msg->bw_level_num = 1;
+-
+-	msg->ddr_cmds_num = 3;
++	msg->bw_level_num = 2;
+ 	msg->ddr_wait_bitmask = 0x01;
+ 
+-	msg->ddr_cmds_addrs[0] = 0x50000;
+-	msg->ddr_cmds_addrs[1] = 0x50004;
+-	msg->ddr_cmds_addrs[2] = 0x5007c;
+-
+-	msg->ddr_cmds_data[0][0] =  0x40000000;
+-	msg->ddr_cmds_data[0][1] =  0x40000000;
+-	msg->ddr_cmds_data[0][2] =  0x40000000;
++	msg->ddr_cmds_num = qcom_icc_query_addr(path, msg->ddr_cmds_addrs);
++	qcom_icc_query_cmd(path, msg->ddr_cmds_data[0], 0, 0);
++	qcom_icc_query_cmd(path, msg->ddr_cmds_data[1], 0, 7216000);
+ 
+ 	/*
+ 	 * These are the CX (CNOC) votes - these are used by the GMU but the
+@@ -388,7 +383,6 @@ static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+ 	msg->cnoc_cmds_data[1][2] =  0x60000001;
+ }
+ 
+-
+ static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+ {
+ 	struct a6xx_hfi_msg_bw_table msg = { 0 };
+@@ -400,7 +394,7 @@ static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+ 	else if (adreno_is_a640(adreno_gpu))
+ 		a640_build_bw_table(&msg);
+ 	else if (adreno_is_a650(adreno_gpu))
+-		a650_build_bw_table(&msg);
++		a650_build_bw_table(&msg, adreno_gpu->base.icc_path);
+ 	else
+ 		a6xx_build_bw_table(&msg);
+ 
+diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+index 3ac5182c9ab2..3ce2920330f9 100644
+--- a/drivers/interconnect/qcom/icc-rpmh.c
++++ b/drivers/interconnect/qcom/icc-rpmh.c
+@@ -9,6 +9,7 @@
+ 
+ #include "bcm-voter.h"
+ #include "icc-rpmh.h"
++#include "../internal.h"
+ 
+ /**
+  * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
+@@ -92,6 +93,55 @@ int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+ }
+ EXPORT_SYMBOL_GPL(qcom_icc_set);
+ 
++static u32 bcm_query(struct qcom_icc_bcm *bcm, u64 sum_avg, u64 max_peak)
++{
++	u64 temp, agg_peak = 0;
++	int i;
++
++	for (i = 0; i < bcm->num_nodes; i++) {
++		temp = max_peak * bcm->aux_data.width;
++		do_div(temp, bcm->nodes[i]->buswidth);
++		agg_peak = max(agg_peak, temp);
++	}
++
++	temp = agg_peak * 1000ULL;
++	do_div(temp, bcm->aux_data.unit);
++
++	// TODO vote_x
++
++	return BCM_TCS_CMD(true, temp != 0, 0, temp);
++}
++
++int qcom_icc_query_addr(struct icc_path *path, u32 *addr)
++{
++	struct qcom_icc_node *qn;
++	int i, j, k = 0;
++
++	for (i = 0; i < path->num_nodes; i++) {
++		qn = path->reqs[i].node->data;
++		for (j = 0; j < qn->num_bcms; j++, k++)
++			addr[k] = qn->bcms[j]->addr;
++	}
++
++	return k;
++}
++EXPORT_SYMBOL_GPL(qcom_icc_query_addr);
++
++int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max)
++{
++	struct qcom_icc_node *qn;
++	int i, j, k = 0;
++
++	for (i = 0; i < path->num_nodes; i++) {
++		qn = path->reqs[i].node->data;
++		for (j = 0; j < qn->num_bcms; j++, k++)
++			cmd[k] = bcm_query(qn->bcms[j], avg, max);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qcom_icc_query_cmd);
++
+ /**
+  * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
+  * @bcm: bcm to be initialized
+diff --git a/include/soc/qcom/icc.h b/include/soc/qcom/icc.h
+new file mode 100644
+index 000000000000..8d0ddde49739
+--- /dev/null
++++ b/include/soc/qcom/icc.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __SOC_QCOM_ICC_H__
++#define __SOC_QCOM_ICC_H__
++
++#include <linux/interconnect.h>
++
++int qcom_icc_query_addr(struct icc_path *path, u32 *addr);
++int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max);
++
++#endif /* __SOC_QCOM_ICC_H__ */
+-- 
+2.26.1
+
