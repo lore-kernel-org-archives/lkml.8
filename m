@@ -7,68 +7,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42065C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3907720702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F712080D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjiRPFC2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vT5SNW2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbgGAMsE (ORCPT
+        id S1730785AbgGAMsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
+        Wed, 1 Jul 2020 08:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730632AbgGAMrO (ORCPT
+        with ESMTP id S1730623AbgGAMrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:47:14 -0400
+        Wed, 1 Jul 2020 08:47:11 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE028C03E979
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 05:47:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so23654998wru.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:47:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670B9C03E97B
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 05:47:11 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so12391049wrl.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CbNGlX0G5Ov7FT75iCw50EDu+qwZ/8J7t3LRBNdlSbA=;
-        b=PjiRPFC2+ne1JlGgsc0KpJefm6lvkyRsu+EM+8TXu7yFTsA+q9615YF7ZDoGByGVaA
-         QzIJ0Ny5ocQIQXGLjETMjLTXZkb0S0RYf8k4sh/YGGanFkW1YH7EXKpJ4wCv3GyyvwNp
-         XUZBH+7325vbu6YVK2DFMOYYKnRpozd4ENmvm8mBXAsd/18hWr5L+b/wmMtI/EfBHx0C
-         WK4UMad91alCJ1Eu6G47jzTP96yrOF93Z7YUPcBkS49rzZ4sybvwiHpB8j/7ulafXijB
-         SfEcPSCU1uRCLW8yJj6ouzi6dHUy3dXkwlrEUs3oeOmnnu2UgjKGe6FRs/JWurPC4fNo
-         T4Rw==
+        bh=9fX3YQmu/TyZUi/gCUeVKqHWnQBcFQjsTJlFycXl+A4=;
+        b=vT5SNW2nj2xlct7B5oFAEKNrAmdAYt9aa/C2EsvoZj3iCmWBfwGimRErcQG+WPVnXv
+         XzjOj6noAaG6pXKH01vGd/aIyT0vJVDNQdn3UV+QOSyKvOTW4tRTlsf9IOsX7r0p4hLZ
+         lg5e3peRTHdOPdw9roQqCIQ2Lh9lnDDtNIoHGkQKydRIQy8bwrbNcyNH7J8t0iOBOpkk
+         uZfR4cpYEi3tZXnNA4LyYnYNzRHQreXLLFSrepfwCP3BU6CXtF5CBaJPW2XRBTiteXFl
+         X76nU0olPK0OHVw74/pUz7g2eurHSfAQt1GXqbLePth2UiMhlC+mJYBtY6/ztU6Gw2QG
+         MaFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CbNGlX0G5Ov7FT75iCw50EDu+qwZ/8J7t3LRBNdlSbA=;
-        b=J6K3nRqWdxNqjJQzPQmqDcewbAUoxgkV9evteXDihensgInjgbIfnEWgZTj4giDDm5
-         AuLnTnrCpCd94gSvf6kyLCC1CKTV8QPvqn2rYS+9WLY1P24J8+GO+DaX0JAsiDAbDpyn
-         cvpr19L9NJi9gEwfiNdBhGUY9IFE81IIjZu7qIm/z684FLju7Sg1HCbeCn6AmVw+Q0Ug
-         V2TD803bAoq7nzAGpuQmrRANJ5szpw99tsaPs/nJCLYyeWBdnL9UwQFpeLAUbE5MTMWp
-         iwiWOI5b118Cav7dnEVwlgit2rK5i/TTquOvD6rO6fSZV3zuIiBOwxi5LNqpxnWJsmt/
-         pDng==
-X-Gm-Message-State: AOAM533VfMAE7VSI6hw3T3hH9Sw+9MG0HZs1xpqit410v5vAktHQyTU1
-        3NpXacCvBn7Dt8jNR+zYbgDbqQ==
-X-Google-Smtp-Source: ABdhPJyR/yX50DpfFq9R2u3R16L2+L4q61pYf7cMIGM739hqYmJOThTTybjRR20yzg25Z+WZLrDNYA==
-X-Received: by 2002:a5d:474f:: with SMTP id o15mr23624823wrs.306.1593607631728;
-        Wed, 01 Jul 2020 05:47:11 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id o29sm7817862wra.5.2020.07.01.05.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=9fX3YQmu/TyZUi/gCUeVKqHWnQBcFQjsTJlFycXl+A4=;
+        b=njyEDTJTYKDFLb0MeFz7TASF9NvLWK/s8TP5zmaumYYjK1EjKU2l1kaHqxn2gvpRLq
+         gg25sydiRL7fpGwFp0sS6weER2yvbiqc39mXjEUNktTuzW02Lva+JZ7vWGbnB2qdeTPO
+         B07V22JYqaRL0Oav+Ab3UI8lftu+rpNkjfaw4EuDHyBI+YbnGcTn8lv+W/FEH6jZ64uI
+         4VA6zJ3r7P8elLfPCW4H/O8rsLcR7mHX8ZKgHnAGgQ8p5ZNX/iZX7RKL5Sgl6QYnUdtg
+         GVlmNI4QixqKCg6vfT5kr++Rk+/qFAvL9HAmhoR/J+Cp+KtPN8nI2mgAHb7A3ZZdLOlt
+         PV5Q==
+X-Gm-Message-State: AOAM532GfitkTIPF7H7PtAzhCT8mLea5G2330XwSxBk/nQiIGxq96kaD
+        64DYTzd5MspXOn8TUAnqf7GtZg==
+X-Google-Smtp-Source: ABdhPJzZIumZWDrMmq5PludRvlVmmwImG5o9AgYWwJ5Q0weSLLiLqzjnRp1cub8VUmYgSnRRyLb3Og==
+X-Received: by 2002:a5d:6a07:: with SMTP id m7mr27093821wru.324.1593607630155;
         Wed, 01 Jul 2020 05:47:10 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id o29sm7817862wra.5.2020.07.01.05.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 05:47:09 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     ulf.hansson@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 04/15] mmc: host: sdhci-s3c: Provide documentation for missing struct properties
-Date:   Wed,  1 Jul 2020 13:46:51 +0100
-Message-Id: <20200701124702.908713-5-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 03/15] mmc: core: regulator: Add missing documetation for 'mmc' and 'ios'
+Date:   Wed,  1 Jul 2020 13:46:50 +0100
+Message-Id: <20200701124702.908713-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701124702.908713-1-lee.jones@linaro.org>
 References: <20200701124702.908713-1-lee.jones@linaro.org>
@@ -79,47 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe properties; ext_cd_irq, clk_rates and no_divider (x2).
+Remainder of the kerneldoc descriptions look present and correct.
 
-Squashes the following W=1 kernel build warnings:
+Fixes the following W=1 kernel build warnings:
 
- drivers/mmc/host/sdhci-s3c.c:126: warning: Function parameter or member 'ext_cd_irq' not described in 'sdhci_s3c'
- drivers/mmc/host/sdhci-s3c.c:126: warning: Function parameter or member 'clk_rates' not described in 'sdhci_s3c'
- drivers/mmc/host/sdhci-s3c.c:126: warning: Function parameter or member 'no_divider' not described in 'sdhci_s3c'
- drivers/mmc/host/sdhci-s3c.c:139: warning: Function parameter or member 'no_divider' not described in 'sdhci_s3c_drv_data'
+ drivers/mmc/core/regulator.c:178: warning: Function parameter or member 'mmc' not described in 'mmc_regulator_set_vqmmc'
+ drivers/mmc/core/regulator.c:178: warning: Function parameter or member 'ios' not described in 'mmc_regulator_set_vqmmc'
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ben Dooks <ben-linux@fluff.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mmc/host/sdhci-s3c.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mmc/core/regulator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index 64200c78e90dc..9194bb73e601b 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -107,8 +107,11 @@
-  * @ioarea: The resource created when we claimed the IO area.
-  * @pdata: The platform data for this controller.
-  * @cur_clk: The index of the current bus clock.
-+ * @ext_cd_irq: External card detect interrupt.
-  * @clk_io: The clock for the internal bus interface.
-+ * @clk_rates: Clock frequencies.
-  * @clk_bus: The clocks that are available for the SD/MMC bus clock.
-+ * @no_divider: No or non-standard internal clock divider.
-  */
- struct sdhci_s3c {
- 	struct sdhci_host	*host;
-@@ -128,6 +131,7 @@ struct sdhci_s3c {
+diff --git a/drivers/mmc/core/regulator.c b/drivers/mmc/core/regulator.c
+index 96b1d15045d60..609201a467ef9 100644
+--- a/drivers/mmc/core/regulator.c
++++ b/drivers/mmc/core/regulator.c
+@@ -159,6 +159,8 @@ static int mmc_regulator_set_voltage_if_supported(struct regulator *regulator,
+ 
  /**
-  * struct sdhci_s3c_driver_data - S3C SDHCI platform specific driver data
-  * @sdhci_quirks: sdhci host specific quirks.
-+ * @no_divider: no or non-standard internal clock divider.
+  * mmc_regulator_set_vqmmc - Set VQMMC as per the ios
++ * @mmc: the host to regulate
++ * @ios: io bus settings
   *
-  * Specifies platform specific configuration of sdhci controller.
-  * Note: A structure for driver specific platform data is used for future
+  * For 3.3V signaling, we try to match VQMMC to VMMC as closely as possible.
+  * That will match the behavior of old boards where VQMMC and VMMC were supplied
 -- 
 2.25.1
 
