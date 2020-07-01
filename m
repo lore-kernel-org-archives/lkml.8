@@ -2,314 +2,192 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3740C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D54FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5176206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF2E206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbgGAPyV (ORCPT
+        id S1732217AbgGAPyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:54:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:52478 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 11:54:23 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:34020 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732122AbgGAPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:54:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1BAD11B3;
-        Wed,  1 Jul 2020 08:54:09 -0700 (PDT)
-Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5D9A3F68F;
-        Wed,  1 Jul 2020 08:54:08 -0700 (PDT)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
-        dan.carpenter@oracle.com, cristian.marussi@arm.com
-Subject: [PATCH v11 6/9] firmware: arm_scmi: Add perf notifications support
-Date:   Wed,  1 Jul 2020 16:53:45 +0100
-Message-Id: <20200701155348.52864-7-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701155348.52864-1-cristian.marussi@arm.com>
-References: <20200701155348.52864-1-cristian.marussi@arm.com>
+        id S1732162AbgGAPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:54:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id BF2E5FB03;
+        Wed,  1 Jul 2020 17:54:07 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CCl797Eo_EWk; Wed,  1 Jul 2020 17:54:06 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 6DCB540972; Wed,  1 Jul 2020 17:54:05 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 17:54:05 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+Message-ID: <20200701155405.GA174356@bogon.m.sigxcpu.org>
+References: <20200701103126.1512615-1-megous@megous.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI perf protocol register with the notification core.
+Hi,
+On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> This patchset adds support for the LCD panel of PinePhone.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
-V10 --> V11
-- removed likely/unlikely
-- Ffix set_notify_enabled
-V8 --> V9
-- moved pr_info to pr_debug
-- inlined MAP_EVT_TO_ENABLE_CMD
-- use SCMI_PROTO_QUEUE_SZ
-V6 --> V7
-- fixed report.timestamp type
-- fixed max_payld_sz initialization
-- expose SCMI_EVENT_ in linux/scmi_protocol.h
-V5 --> V6
-- added handle argument to fill_custom_report()
-V4 --> V5
-- fixed unsual return construct
-V3 --> V4
-- scmi_event field renamed
-V2 --> V3
-- added handle awareness
-V1 --> V2
-- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
-  logic out of protocol. ALL_SRCIDs logic is now in charge of the
-  notification core, together with proper reference counting of enables
-- switched to devres protocol-registration
----
- drivers/firmware/arm_scmi/perf.c | 139 +++++++++++++++++++++++++++++--
- include/linux/scmi_protocol.h    |  17 ++++
- 2 files changed, 151 insertions(+), 5 deletions(-)
+I gave this a quick spin on the Librem5 devkit so
 
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index 7b8d7cebdac9..8bcad96e06ca 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -5,15 +5,19 @@
-  * Copyright (C) 2018 ARM Ltd.
-  */
- 
-+#define pr_fmt(fmt) "SCMI Notifications PERF - " fmt
-+
- #include <linux/bits.h>
- #include <linux/of.h>
- #include <linux/io.h>
- #include <linux/io-64-nonatomic-hi-lo.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
-+#include <linux/scmi_protocol.h>
- #include <linux/sort.h>
- 
- #include "common.h"
-+#include "notify.h"
- 
- enum scmi_performance_protocol_cmd {
- 	PERF_DOMAIN_ATTRIBUTES = 0x3,
-@@ -27,11 +31,6 @@ enum scmi_performance_protocol_cmd {
- 	PERF_DESCRIBE_FASTCHANNEL = 0xb,
- };
- 
--enum scmi_performance_protocol_notify {
--	PERFORMANCE_LIMITS_CHANGED = 0x0,
--	PERFORMANCE_LEVEL_CHANGED = 0x1,
--};
--
- struct scmi_opp {
- 	u32 perf;
- 	u32 power;
-@@ -86,6 +85,19 @@ struct scmi_perf_notify_level_or_limits {
- 	__le32 notify_enable;
- };
- 
-+struct scmi_perf_limits_notify_payld {
-+	__le32 agent_id;
-+	__le32 domain_id;
-+	__le32 range_max;
-+	__le32 range_min;
-+};
-+
-+struct scmi_perf_level_notify_payld {
-+	__le32 agent_id;
-+	__le32 domain_id;
-+	__le32 performance_level;
-+};
-+
- struct scmi_msg_resp_perf_describe_levels {
- 	__le16 num_returned;
- 	__le16 num_remaining;
-@@ -158,6 +170,11 @@ struct scmi_perf_info {
- 	struct perf_dom_info *dom_info;
- };
- 
-+static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
-+	PERF_NOTIFY_LIMITS,
-+	PERF_NOTIFY_LEVEL,
-+};
-+
- static int scmi_perf_attributes_get(const struct scmi_handle *handle,
- 				    struct scmi_perf_info *pi)
- {
-@@ -488,6 +505,29 @@ static int scmi_perf_level_get(const struct scmi_handle *handle, u32 domain,
- 	return scmi_perf_mb_level_get(handle, domain, level, poll);
- }
- 
-+static int scmi_perf_level_limits_notify(const struct scmi_handle *handle,
-+					 u32 domain, int message_id,
-+					 bool enable)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_perf_notify_level_or_limits *notify;
-+
-+	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_PERF,
-+				 sizeof(*notify), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	notify = t->tx.buf;
-+	notify->domain = cpu_to_le32(domain);
-+	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_xfer_put(handle, t);
-+	return ret;
-+}
-+
- static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size)
- {
- 	if ((msg == PERF_LEVEL_GET || msg == PERF_LEVEL_SET) && size == 4)
-@@ -722,6 +762,89 @@ static struct scmi_perf_ops perf_ops = {
- 	.fast_switch_possible = scmi_fast_switch_possible,
- };
- 
-+static int scmi_perf_set_notify_enabled(const struct scmi_handle *handle,
-+					u8 evt_id, u32 src_id, bool enable)
-+{
-+	int ret, cmd_id;
-+
-+	if (evt_id >= ARRAY_SIZE(evt_2_cmd))
-+		return -EINVAL;
-+
-+	cmd_id = evt_2_cmd[evt_id];
-+	ret = scmi_perf_level_limits_notify(handle, src_id, cmd_id, enable);
-+	if (ret)
-+		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
-+			 evt_id, src_id, ret);
-+
-+	return ret;
-+}
-+
-+static void *scmi_perf_fill_custom_report(const struct scmi_handle *handle,
-+					  u8 evt_id, u64 timestamp,
-+					  const void *payld, size_t payld_sz,
-+					  void *report, u32 *src_id)
-+{
-+	void *rep = NULL;
-+
-+	switch (evt_id) {
-+	case SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED:
-+	{
-+		const struct scmi_perf_limits_notify_payld *p = payld;
-+		struct scmi_perf_limits_report *r = report;
-+
-+		if (sizeof(*p) != payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->domain_id = le32_to_cpu(p->domain_id);
-+		r->range_max = le32_to_cpu(p->range_max);
-+		r->range_min = le32_to_cpu(p->range_min);
-+		*src_id = r->domain_id;
-+		rep = r;
-+		break;
-+	}
-+	case SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED:
-+	{
-+		const struct scmi_perf_level_notify_payld *p = payld;
-+		struct scmi_perf_level_report *r = report;
-+
-+		if (sizeof(*p) != payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->domain_id = le32_to_cpu(p->domain_id);
-+		r->performance_level = le32_to_cpu(p->performance_level);
-+		*src_id = r->domain_id;
-+		rep = r;
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+
-+	return rep;
-+}
-+
-+static const struct scmi_event perf_events[] = {
-+	{
-+		.id = SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED,
-+		.max_payld_sz = sizeof(struct scmi_perf_limits_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_perf_limits_report),
-+	},
-+	{
-+		.id = SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED,
-+		.max_payld_sz = sizeof(struct scmi_perf_level_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_perf_level_report),
-+	},
-+};
-+
-+static const struct scmi_event_ops perf_event_ops = {
-+	.set_notify_enabled = scmi_perf_set_notify_enabled,
-+	.fill_custom_report = scmi_perf_fill_custom_report,
-+};
-+
- static int scmi_perf_protocol_init(struct scmi_handle *handle)
- {
- 	int domain;
-@@ -754,6 +877,12 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
- 			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
- 	}
- 
-+	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_PERF, SCMI_PROTO_QUEUE_SZ,
-+				      &perf_event_ops, perf_events,
-+				      ARRAY_SIZE(perf_events),
-+				      pinfo->num_domains);
-+
- 	pinfo->version = version;
- 	handle->perf_ops = &perf_ops;
- 	handle->perf_priv = pinfo;
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 81dc3b132fda..65ad83ddde70 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -378,6 +378,8 @@ void scmi_protocol_unregister(int protocol_id);
- /* SCMI Notification API - Custom Event Reports */
- enum scmi_notification_events {
- 	SCMI_EVENT_POWER_STATE_CHANGED = 0x0,
-+	SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED = 0x0,
-+	SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED = 0x1,
- };
- 
- struct scmi_power_state_changed_report {
-@@ -387,4 +389,19 @@ struct scmi_power_state_changed_report {
- 	u32 power_state;
- };
- 
-+struct scmi_perf_limits_report {
-+	u64 timestamp;
-+	u32 agent_id;
-+	u32 domain_id;
-+	u32 range_max;
-+	u32 range_min;
-+};
-+
-+struct scmi_perf_level_report {
-+	u64 timestamp;
-+	u32 agent_id;
-+	u32 domain_id;
-+	u32 performance_level;
-+};
-+
- #endif /* _LINUX_SCMI_PROTOCOL_H */
--- 
-2.17.1
+Tested-by: Guido Günther <agx@sigxcpu.org>
 
+but please also adjust MAINTAINERS so we stay in the loop on driver
+changes.
+Cheers,
+ -- Guido
+
+> 
+> I've tested this on PinePhone 1.0 and 1.2.
+> 
+> Please take a look.
+> 
+> thank you and regards,
+>   Ondrej Jirman
+> 
+> Changes in v6:
+> - Fixed spacing in yaml
+> - Fixed wrong vccio->iovcc supply name in the bindings doc
+> - I noticed that the original driver uses a delay of 20ms in the init
+>   function to achieve a combined total of 120ms required from post-reset
+>   to display_on. I've added a similar delay to xbd599_init, so that
+>   xbd599 panel also has the right timing. (patch 9)
+> - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> - Added review/ack tags
+> - Learned to run dt_binding_check by myself ;)
+> 
+> Changes in v5:
+> - rewritten on top of rocktech-jh057n00900 driver
+> - rocktech-jh057n00900 renamed to st7703 (controller name)
+> - converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
+> 
+> Changes in v4:
+> - use ->type from the mode instead of hardcoding (Samuel)
+> - move init_sequence to ->prepare (Samuel)
+> - move anti-flicker delay to ->enable, explain it (Samuel)
+> - add enter_sleep after display_off (Samuel)
+> - drop ->disable (move code to ->unprepare)
+> - add ID bytes dumping (Linus)
+>   (I can't test it since allwinner DSI driver has a broken
+>    dcs_read function, and I didn't manage to fix it.)
+> - document magic bytes (Linus)
+> - assert reset during powerup
+> - cleanup powerup timings according to the datasheet
+> 
+> Changes in v3:
+> - Panel driver renamed to the name of the LCD controller
+> - Re-organize the driver slightly to more easily support more panels
+>   based on the same controller.
+> - Add patch to enable the touchscreen to complete the LCD support
+>   on PinePhone.
+> - Dropped the "DSI fix" patch (the driver seems to work for me without it)
+> - Improved brightness levels handling:
+>   - PinePhone 1.0 uses default levels generated by the driver
+>   - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+>     default levels can't be used. Martijn Braam came up with a
+>     list of duty cycle values that lead to perception of linear
+>     brigtness level <-> light intensity on PinePhone 1.1
+> - There was some feedback on v2 about this being similar to st7701.
+>   It's only similar in name. Most of the "user commands" are different,
+>   so I opted to keep this in a new driver instead of creating st770x.
+>   
+>   Anyone who likes to check the differences, here are datasheets:
+> 
+>   - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+>   - https://megous.com/dl/tmp/ST7701.pdf
+> 
+> Changes in v2:
+> - DT Example fix.
+> - DT Format fix.
+> - Raised copyright info to 2020.
+> - Sort panel operation functions.
+> - Sort inclusion.
+> 
+> 
+> -- For phone owners: --
+> 
+> There's an open question on how to set the backlight brightness values
+> on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+> to backlight being black. It would be nice if more people can test
+> the various backlight levels on 1.1 and 1.2 revision with this change
+> in dts:
+> 
+>        brightness-levels = <0 1000>;
+>        num-interpolated-steps = <1000>;
+> 
+> and report at what brightness level the backlight turns on. So far it
+> seems this has a wide range. Lowest useable duty cycle for me is ~7%
+> on 1.2 and for Martijn ~20% on 1.1.
+> 
+> Icenowy Zheng (2):
+>   dt-bindings: vendor-prefixes: Add Xingbangda
+>   arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+> 
+> Ondrej Jirman (11):
+>   dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
+>   dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
+>   drm/panel: rocktech-jh057n00900: Rename the driver to st7703
+>   drm/panel: st7703: Rename functions from jh057n prefix to st7703
+>   drm/panel: st7703: Prepare for supporting multiple panels
+>   drm/panel: st7703: Move code specific to jh057n closer together
+>   drm/panel: st7703: Move generic part of init sequence to enable
+>     callback
+>   drm/panel: st7703: Add support for Xingbangda XBD599
+>   drm/panel: st7703: Enter sleep after display off
+>   drm/panel: st7703: Assert reset prior to powering down the regulators
+>   arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+> 
+>  .../display/panel/rocktech,jh057n00900.txt    |  23 -
+>  .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
+>  .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
+>  drivers/gpu/drm/panel/Kconfig                 |  26 +-
+>  drivers/gpu/drm/panel/Makefile                |   2 +-
+>  .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
+>  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
+>  9 files changed, 815 insertions(+), 461 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+>  delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+>  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
+> 
+> -- 
+> 2.27.0
+> 
