@@ -2,189 +2,85 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01036C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4E9220663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593611204;
-	bh=GRBBl2dp8zYYU2EgGTDEZ2J5P+OY0ZXMWIVpAAMyGAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wcMbtb2TLCF+zsGzLMZubV0m5lYjMJM2wIWM0ozLnrw0GjzSNVH1DD9mPfbo3CJel
-	 tFgw533d1S2XYly3TRKqeqW9au3wKBlPV+W0nZiCE1pgsH+TVnNjqWhtMU9f9QvZJ5
-	 KoCYHcSWhJHC1TClYnsGUS53VVuzEV46iji6n5Pg=
+	by mail.kernel.org (Postfix) with ESMTP id 945B920663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VliOYdrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgGANqo (ORCPT
+        id S1731033AbgGANtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:46:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46169 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731101AbgGANqj (ORCPT
+        Wed, 1 Jul 2020 09:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730408AbgGANtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:46:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d194so8372133pga.13;
-        Wed, 01 Jul 2020 06:46:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=om64jDu9TFu8URAa9SBBr8cC4wjdp+QLHBvJRoX56c0=;
-        b=f7Bckg43mtnqSEM+TfHP3ypEvQuCdziZs6zepVuUoxCtf5mgi+S+HK2Lxbe/twbLaM
-         5GGvOxfeHIEWyTCam8XTKk7UekEDMA+2WL7lTgxtDLJkXdMmvn73rDFvQuj1CodOYAaR
-         ayPcbVaqqUQf7uVksFjmONLlM2rnE+ElGYPdS4I0usUYaeyFOsUWCMYmMZRK/E3q56rk
-         vYmlxH0mNhql9JeT/6GsJn9mcEBwhpvRQIKiVDLX5Tw2lA/TttZ8qWWc69Hi+x6FX2f+
-         eWVAavjKvfRTo+72OJEHaitrqnsJY8qof/Lm4+d444TvMZFGm7m5Wkr/jrGCqvqEqp/z
-         herQ==
-X-Gm-Message-State: AOAM530BbAJRU9jS3aE9fhQlNWW+8oM2Unyv9Z8kv1kQBAVJ1pAGxLov
-        4MlZruPz/grU8tUWtLSo+K8=
-X-Google-Smtp-Source: ABdhPJxYZjIBdQ5YSvsiwCsCsRHSw/ZR4oiWyK7bSOZYypdAxgVrCCGoo6WQSwtIE4+aLzDojtHQ0g==
-X-Received: by 2002:a63:125a:: with SMTP id 26mr20530442pgs.340.1593611197813;
-        Wed, 01 Jul 2020 06:46:37 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z11sm5802732pfk.46.2020.07.01.06.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:46:36 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 69D5F403DC; Wed,  1 Jul 2020 13:46:35 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 13:46:35 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200701134635.GR4332@42.do-not-panic.com>
-References: <20200624144311.GA5839@infradead.org>
- <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+        Wed, 1 Jul 2020 09:49:02 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B685CC08C5C1;
+        Wed,  1 Jul 2020 06:49:01 -0700 (PDT)
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0D3A7556;
+        Wed,  1 Jul 2020 15:48:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593611340;
+        bh=S8TQ71TulTFVrL2Q9zX8NQ+PuGr/u92GnJGOwJrQiwI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VliOYdrXr2sKPCqJSh4YoJzsM8dwmiUS8vf/kCrxHAg3hromhADuzZVpsyniQ1Amm
+         9XOcQGi0KI3Nw8nnYMH0MHJ/cFaYC4SIEnT0z3il6xRVVIRY+ewHUMqZjIgEJqFfNx
+         JFTHrl6RXUWGdNIcSZIZv5yTQmQGnOx7n1i5b9DM=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     devicetree@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: phy: zynqmp-psgtr: Fix example's numbers of cells in reg
+Date:   Wed,  1 Jul 2020 16:48:53 +0300
+Message-Id: <20200701134853.30656-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:08:11PM +0200, Christian Borntraeger wrote:
-> dmesg attached
-> [   14.438482] virbr0: port 1(virbr0-nic) entered blocking state
-> [   14.438485] virbr0: port 1(virbr0-nic) entered disabled state
-> [   14.438635] device virbr0-nic entered promiscuous mode
-> [   14.439654] umh: sub_info->path: /sbin/bridge-stp
-> [   14.439656] /sbin/bridge-stp 
-> [   14.439656] virbr0 
-> [   14.439656] start 
+The DT examples are by default compiled in a parent that has
+ #address-cells and #size-cells both set to 1. Fix the example
+accordingly, even if it doesn't match the actual hardware, as this is
+the recommended practice for DT bindings examples.
 
-OK so what we seem to want to debug is the umh call for:
+Fixes: cea0f76a483d ("dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-/sbin/bridge-stp virbr0 start
+diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+index 09e3cde7ebca..04d5654efb38 100644
+--- a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
++++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+@@ -94,8 +94,8 @@ examples:
+   - |
+     phy: phy@fd400000 {
+         compatible = "xlnx,zynqmp-psgtr-v1.1";
+-        reg = <0x0 0xfd400000 0x0 0x40000>,
+-              <0x0 0xfd3d0000 0x0 0x1000>;
++        reg = <0xfd400000 0x40000>,
++              <0xfd3d0000 0x1000>;
+         reg-names = "serdes", "siou";
+         clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
+         clock-names = "ref1", "ref2", "ref3";
+-- 
+Regards,
 
-> [   14.439734] == ret: 00
-> [   14.439735] == KWIFEXITED(ret): 01
-> [   14.439736] KWEXITSTATUS(ret): 0
-
-Its not clear if this is the respective return value, but now
-that we have a clue that this is the the only non-modprobe
-call, we should have a clearer certainty that this is the
-issue.
-
-Indeed my patch "umh: fix processed error when UMH_WAIT_PROC is used"
-did modify bridge-stp in the following way:
-
-diff --git a/net/bridge/br_stp_if.c b/net/bridge/br_stp_if.c
-index ba55851fe132..bdd94b45396b 100644
---- a/net/bridge/br_stp_if.c
-+++ b/net/bridge/br_stp_if.c
-@@ -133,14 +133,8 @@ static int br_stp_call_user(struct net_bridge *br, char *arg)
- 
- 	/* call userspace STP and report program errors */
- 	rc = call_usermodehelper(BR_STP_PROG, argv, envp, UMH_WAIT_PROC);
--	if (rc > 0) {
--		if (rc & 0xff)
--			br_debug(br, BR_STP_PROG " received signal %d\n",
--				 rc & 0x7f);
--		else
--			br_debug(br, BR_STP_PROG " exited with code %d\n",
--				 (rc >> 8) & 0xff);
--	}
-+	if (rc != 0)
-+		br_debug(br, BR_STP_PROG " failed with exit code %d\n", rc);
- 
- 	return rc;
- }
-
-If you look at this carefully though you'll notice that the change just
-modifies *when* we issue the debug print. The more important relevant
-part of the patch however was that we now do return a correct error
-value when the call fails.
-
-More importantly, depending on if an error or not we run the kernel STP
-or userspace STP later:
-
-static void br_stp_start(struct net_bridge *br)
-{
-	int err = -ENOENT;
-
-	if (net_eq(dev_net(br->dev), &init_net))
-		err = br_stp_call_user(br, "start");
-
-	if (err && err != -ENOENT)
-		br_err(br, "failed to start userspace STP (%d)\n", err);
-
-	spin_lock_bh(&br->lock);
-
-	if (br->bridge_forward_delay < BR_MIN_FORWARD_DELAY)
-		__br_set_forward_delay(br, BR_MIN_FORWARD_DELAY);
-	else if (br->bridge_forward_delay > BR_MAX_FORWARD_DELAY)
-		__br_set_forward_delay(br, BR_MAX_FORWARD_DELAY);
-
---------------------->  can you enable debug print for this to see what
---------------------->  you end up using?
-	if (!err) {
-		br->stp_enabled = BR_USER_STP;
-		br_debug(br, "userspace STP started\n");
-	} else {
-		br->stp_enabled = BR_KERNEL_STP;
-		br_debug(br, "using kernel STP\n");
-
-		/* To start timers on any ports left in blocking */
-		if (br->dev->flags & IFF_UP)
-			mod_timer(&br->hello_timer, jiffies + br->hello_time);
-		br_port_state_selection(br);
-	}
------------------>
-
-	spin_unlock_bh(&br->lock);
-}
+Laurent Pinchart
 
