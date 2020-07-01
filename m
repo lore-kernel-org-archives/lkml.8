@@ -2,269 +2,144 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8301207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593618703;
-	bh=K5j91G1ucDiLq6p5G3bRfoySPNvjVeOzPRN8zkRzvm4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=shwfPiEyR171kDd5eVdRP0SzxJbpo2Zvnd2A/3p1Ts+UzPH/yGrcZxSlHIxi8yXRc
-	 VHuoxtzpYZQGMntnt0nl+Tv6Zm2pbnVWsMaRGsNqF6iG+YlH08tzmk20CEVl7qBc6r
-	 96ulJBjfp6bwkesP/6wX34ovz+SUvQvTp/lg9jXo=
+	by mail.kernel.org (Postfix) with ESMTP id 33C1720780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ACRPC2TV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbgGAPvk (ORCPT
+        id S1732164AbgGAPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:51:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36314 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgGAPvi (ORCPT
+        Wed, 1 Jul 2020 11:51:45 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2503 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732138AbgGAPvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:51:38 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 72so21784544otc.3;
-        Wed, 01 Jul 2020 08:51:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7CgWcGqMVGu85tSwcPfY6iFZQOZQ9HLynyZ95T8j5pA=;
-        b=gJ37C+5N7fBUwP3VEyJWxV3fiwMAql2HTnIPW5207VjN4Pt0pU+coMeQEvAhvuy3ln
-         nPQexR5yxoOi9BljUnKa4lpcuIcDHQscSQnJp59itF5m/uxzPTO2e4z3VYOItvoMzMTJ
-         NAf068t5jgMwvmdSfeiCc2jOohv3SkAz+VHe3YHscV2QhsWnKQ63Po8+njPSRo9uV97R
-         EjdgZR6IxrgCFk0l4D/04UbEvAHU2wpIN/kCVaOQhez1fysD/JXkQaR+3MgAs+qt3sIl
-         zZiRWZ/dJCQ9V5eJEMh2ZqTK6XGdp/SwCs3Dy8h+01pI67RjgpOr7O+pzryMbXSy0u32
-         JxVA==
-X-Gm-Message-State: AOAM531iblnuPEvPTiGg10vdMC2o6naMo1y8gnPdZ/WkmR/BNsMl3LcJ
-        /RZ7gSWEooG2geRRF17a+pk9BNlNehsup5CP9j5vvA3q
-X-Google-Smtp-Source: ABdhPJwhRsjhXZKzUR1OnXm9DZo2OalsEw+NEpFM7aYk8N/BlKSBwuXCL3Ci7BynRlZ5yOzj1nn0arezhFRvq5PdgVY=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr23620584otb.262.1593618697292;
- Wed, 01 Jul 2020 08:51:37 -0700 (PDT)
+        Wed, 1 Jul 2020 11:51:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efcb1000000>; Wed, 01 Jul 2020 08:51:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 01 Jul 2020 08:51:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 01 Jul 2020 08:51:41 -0700
+Received: from [172.20.40.59] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
+ 2020 15:51:40 +0000
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     Karol Herbst <kherbst@redhat.com>
+CC:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box>
+ <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+ <CACO55tvT0fOMai7k7oAP1TL42YAuMwJocxk2seNgjYibs+h5oA@mail.gmail.com>
+From:   James Jones <jajones@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <11e5ee1d-8b5e-2721-091e-ffbf9e1271d1@nvidia.com>
+Date:   Wed, 1 Jul 2020 08:51:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-3-ionela.voinescu@arm.com> <20200701095219.gxrkowtukosnfmwp@vireshk-i7>
- <20200701152751.GA29496@arm.com>
-In-Reply-To: <20200701152751.GA29496@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 1 Jul 2020 17:51:26 +0200
-Message-ID: <CAJZ5v0gg4CtixKXEWG4agPATJxm5NZ4bnNVsqt7mRpwZS0Nygw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] cpufreq: move invariance setter calls in cpufreq core
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACO55tvT0fOMai7k7oAP1TL42YAuMwJocxk2seNgjYibs+h5oA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593618689; bh=Mzvm6cuPWYO3wPA51AT6fuQKzrpGXQe7QiaZZeMs4IA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ACRPC2TVbiVt/VwmKP1HOCHmXGn41MG/BZqANI7FTHKcQXLpfGQdE6dHBj/M7QQRj
+         8RfgDnbtcFrRWxxeNorWV0FO35Gg1SNfZ/ybgFbqj+gKBEU50i2+p6JXKYTWcpFDna
+         EYVS5cygsBO5636IA2+ZpmJIHQpNVnb49Qz1xd7h9v9uBmalzzL0Kg7MVH7llXmC17
+         beJJobeEWP3fWVkE+fU7YNBz+nTdmsym5wwpZaCe5MPyyLlEC/LsInCN2aLi/JBtMD
+         OGF27MGZxG35Dy2FCcg/sWLD/a3DGUAg6ldy2OP7tq32EGQ+648sQtVLZqIB9Uf1Y/
+         0bYTvAUMTgHKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 5:28 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
->
-> Hey,
->
-> On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
-> > On 01-07-20, 10:07, Ionela Voinescu wrote:
-> > > From: Valentin Schneider <valentin.schneider@arm.com>
-> > >
-> > > To properly scale its per-entity load-tracking signals, the task scheduler
-> > > needs to be given a frequency scale factor, i.e. some image of the current
-> > > frequency the CPU is running at. Currently, this scale can be computed
-> > > either by using counters (APERF/MPERF on x86, AMU on arm64), or by
-> > > piggy-backing on the frequency selection done by cpufreq.
-> > >
-> > > For the latter, drivers have to explicitly set the scale factor
-> > > themselves, despite it being purely boiler-plate code: the required
-> > > information depends entirely on the kind of frequency switch callback
-> > > implemented by the driver, i.e. either of: target_index(), target(),
-> > > fast_switch() and setpolicy().
-> > >
-> > > The fitness of those callbacks with regard to driving the Frequency
-> > > Invariance Engine (FIE) is studied below:
-> > >
-> > > target_index()
-> > > ==============
-> > > Documentation states that the chosen frequency "must be determined by
-> > > freq_table[index].frequency". It isn't clear if it *has* to be that
-> > > frequency, or if it can use that frequency value to do some computation
-> > > that ultimately leads to a different frequency selection. All drivers
-> > > go for the former, while the vexpress-spc-cpufreq has an atypical
-> > > implementation.
-> > >
-> > > Thefore, the hook works on the asusmption the core can use
-> > > freq_table[index].frequency.
-> > >
-> > > target()
-> > > =======
-> > > This has been flagged as deprecated since:
-> > >
-> > >   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> > >
-> > > It also doesn't have that many users:
-> > >
-> > >   cpufreq-nforce2.c:371:2:  .target = nforce2_target,
-> > >   cppc_cpufreq.c:416:2:             .target = cppc_cpufreq_set_target,
-> > >   pcc-cpufreq.c:573:2:              .target = pcc_cpufreq_target,
-> > >
-> > > Should we care about drivers using this hook, we may be able to exploit
-> > > cpufreq_freq_transition_{being, end}(). Otherwise, if FIE support is
-> > > desired in their current state, arch_set_freq_scale() could still be
-> > > called directly by the driver, while CPUFREQ_CUSTOM_SET_FREQ_SCALE
-> > > could be used to mark support for it.
-> > >
-> > > fast_switch()
-> > > =============
-> > > This callback *has* to return the frequency that was selected.
-> > >
-> > > setpolicy()
-> > > ===========
-> > > This callback does not have any designated way of informing what was the
-> > > end choice. But there are only two drivers using setpolicy(), and none
-> > > of them have current FIE support:
-> > >
-> > >   drivers/cpufreq/longrun.c:281:    .setpolicy      = longrun_set_policy,
-> > >   drivers/cpufreq/intel_pstate.c:2215:      .setpolicy      = intel_pstate_set_policy,
-> > >
-> > > The intel_pstate is known to use counter-driven frequency invariance.
-> >
-> > Same for acpi-cpufreq driver as well ?
-> >
->
-> The acpi-cpufreq driver defines target_index() and fast_switch() so it
-> should go through the setting in cpufreq core. But x86 does not actually
-> define arch_set_freq_scale() so when called it won't do anything (won't
-> set any frequency scale factor), but rely on counters to set it through
-> the arch_scale_freq_tick().
+On 7/1/20 4:24 AM, Karol Herbst wrote:
+> On Wed, Jul 1, 2020 at 6:45 AM James Jones <jajones@nvidia.com> wrote:
+>>
+>> This implies something is trying to use one of the old
+>> DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK format modifiers with DRM-KMS without
+>> first checking whether it is supported by the kernel.  I had tried to
+>> force an Xorg+Mesa stack without my userspace patches to hit this error
+>> when testing, but must have missed some permutation.  If the stalled
+>> Mesa patches go in, this would stop happening of course, but those were
+>> held up for a long time in review, and are now waiting on me to make
+>> some modifications.
+>>
+> 
+> that's completely irrelevant. If a kernel change breaks userspace,
+> it's a kernel bug.
 
-Right.
+Agreed it is unacceptable to break userspace, but I don't think it's 
+irrelevant.  Perhaps the musings on pending userspace patches are.
 
-So on x86 (Intel flavor of it at least), cpufreq has nothing to do
-with this regardless of what driver is in use.
+My intent here was to point out it appears at first glance that 
+something isn't behaving as expected in userspace, so fixing this would 
+likely require some sort of work-around for broken userspace rather than 
+straight-forward fixing of a bug in the kernel logic.  My intent was not 
+to shift blame to something besides my code & testing for the 
+regression, though I certainly see how it could be interpreted that way.
 
-> But this cpufreq functionality could potentially be used.
+Regardless, I'm looking in to it.
 
-How so?
+Thanks,
+-James
 
->
-> > And I think we should do the freq-invariance thing for all the above categories
-> > nevertheless.
-> >
->
-> I'm not sure what you mean by this. You mean we should also (try to) set
-> the frequency scale factor for drivers defining setpolicy() and target()?
-
-No, we shouldn't.
-
-The sched tick potentially does that already and nothing more needs to
-be done unless we know it for the fact that the scale factor is not
-set by the tick.
-
-> > > If FIE support is desired in their current state, arch_set_freq_scale()
-> > > could still be called directly by the driver, while
-> > > CPUFREQ_CUSTOM_SET_FREQ_SCALE could be used to mark support for it.
-> > >
-> > > Conclusion
-> > > ==========
-> > >
-> > > Given that the significant majority of current FIE enabled drivers use
-> > > callbacks that lend themselves to triggering the setting of the FIE scale
-> > > factor in a generic way, move the invariance setter calls to cpufreq core,
-> > > while filtering drivers that flag custom support using
-> > > CPUFREQ_CUSTOM_SET_FREQ_SCALE.
-> > >
-> > > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> > > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c | 20 +++++++++++++++++---
-> > >  1 file changed, 17 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index 0128de3603df..83b58483a39b 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -2046,9 +2046,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
-> > >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
-> > >                                     unsigned int target_freq)
-> > >  {
-> > > +   unsigned int freq;
-> > > +
-> > >     target_freq = clamp_val(target_freq, policy->min, policy->max);
-> > > +   freq = cpufreq_driver->fast_switch(policy, target_freq);
-> > > +
-> >
-> > > +   if (freq && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-> > > +           arch_set_freq_scale(policy->related_cpus, freq,
-> > > +                               policy->cpuinfo.max_freq);
-
-policy->cpuinfo.max_freq need not be the one to use in all cases when
-boost is supported.
-
-policy->cpuinfo.max_freq may be the max boost freq and you may want to
-scale with respect to the max sustainable one anyway.
-
-> > This needs to be a separate function.
-> >
->
-> Yes, that would be nicer.
->
-> > >
-> > > -   return cpufreq_driver->fast_switch(policy, target_freq);
-> > > +   return freq;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
-> > >
-> > > @@ -2140,7 +2147,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
-> > >                         unsigned int relation)
-> > >  {
-> > >     unsigned int old_target_freq = target_freq;
-> > > -   int index;
-> > > +   int index, retval;
-> > >
-> > >     if (cpufreq_disabled())
-> > >             return -ENODEV;
-> > > @@ -2171,7 +2178,14 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
-> > >
-> > >     index = cpufreq_frequency_table_target(policy, target_freq, relation);
-> > >
-> > > -   return __target_index(policy, index);
-> > > +   retval = __target_index(policy, index);
-> > > +
-> > > +   if (!retval && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-> > > +           arch_set_freq_scale(policy->related_cpus,
-> > > +                               policy->freq_table[index].frequency,
-> >
-> > policy->cur gets updated for both target and target_index type drivers. You can
-> > use that safely. It gets updated after the postchange notification.
-> >
->
-> This would allow us to cover the drivers that define target() as well (not
-> only target_index() and fast_switch()). Looking over the code we only take
-> that path (calling cpufreq_freq_transition_end()), for
-> !CPUFREQ_ASYNC_NOTIFICATION. But again, that's only used for
-> powernow-k8 which is deprecated.
->
-> I'll attempt a nice way to use this.
-
-On arches like x86, policy->cur may not be the current frequency of
-the CPU, though.  On relatively recent systems it actually isn't that
-frequency most of the time.
-
-Thanks!
+>> Are you using the modesetting driver in X?  If so, with glamor I
+>> presume?  What version of Mesa?  Any distro patches?  Any non-default
+>> xorg.conf options that would affect modesetting, your X driver if it
+>> isn't modesetting, or glamour?
+>>
+>> Thanks,
+>> -James
+>>
+>> On 6/30/20 4:08 PM, Kirill A. Shutemov wrote:
+>>> On Tue, Jun 02, 2020 at 04:06:32PM +1000, Dave Airlie wrote:
+>>>> James Jones (4):
+>>> ...
+>>>>         drm/nouveau/kms: Support NVIDIA format modifiers
+>>>
+>>> This commit is the first one that breaks Xorg startup for my setup:
+>>> GTX 1080 + Dell UP2414Q (4K DP MST monitor).
+>>>
+>>> I believe this is the crucial part of dmesg (full dmesg is attached):
+>>>
+>>> [   29.997140] [drm:nouveau_framebuffer_new] Unsupported modifier: 0x300000000000014
+>>> [   29.997143] [drm:drm_internal_framebuffer_create] could not create framebuffer
+>>> [   29.997145] [drm:drm_ioctl] pid=3393, ret = -22
+>>>
+>>> Any suggestions?
+>>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
