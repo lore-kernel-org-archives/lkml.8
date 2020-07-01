@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B4120760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FC820760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbgGAP37 (ORCPT
+        id S1732110AbgGAPaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:29:59 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25621 "EHLO mga04.intel.com"
+        Wed, 1 Jul 2020 11:30:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50999 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731622AbgGAP34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:29:56 -0400
-IronPort-SDR: E1QlNoXibqgVbToxXC9mI7WCr7GvZTLBHR+p/3LxhPyBXHK+CkoeERvCWuHTisCMp7m9lkJMtr
- M63QcKiBRIpA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144120734"
+        id S1731999AbgGAP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:29:58 -0400
+IronPort-SDR: CXPyJREHJuFWJlytuaOLl0nGFaPObY52Ja0eXmtQZEqEllEtwltZlBnx+mWBSGr8KvZt8EzIg4
+ LJ7dgdUtO2/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164629248"
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="144120734"
+   d="scan'208";a="164629248"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:29:55 -0700
-IronPort-SDR: ggTlTifZFGv2OXKF8Yqlnk+bQPFK3lXCuGnnGc9WyrL8+1SsPTKRvgsqtjtRoV9O6ePQ1ZObg1
- UJRIopRh8r7g==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:29:57 -0700
+IronPort-SDR: Ismp2V6GfaWh0PhhqHlR4SeVuXkAW4a/LP+kKW3DVQREFdbuUd2Hp5TEkyqyIQX6x+Db6tT6Ow
+ M3O+yVRDHeqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="265439405"
+   d="scan'208";a="312726341"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Jul 2020 08:29:55 -0700
-Subject: [PATCH 2/3] mm/vmscan: move RECLAIM* bits to uapi header
+  by orsmga008.jf.intel.com with ESMTP; 01 Jul 2020 08:29:57 -0700
+Subject: [PATCH 3/3] mm/vmscan: replace implicit RECLAIM_ZONE checks with explicit checks
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
         ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
@@ -43,10 +43,10 @@ Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
         akpm@linux-foundation.org, ying.huang@intel.com,
         dan.j.williams@intel.com, cai@lca.pw
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Wed, 01 Jul 2020 08:26:24 -0700
+Date:   Wed, 01 Jul 2020 08:26:27 -0700
 References: <20200701152621.D520E62B@viggo.jf.intel.com>
 In-Reply-To: <20200701152621.D520E62B@viggo.jf.intel.com>
-Message-Id: <20200701152624.D6FBDDA8@viggo.jf.intel.com>
+Message-Id: <20200701152627.8761147E@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,9 +55,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-It is currently not obvious that the RECLAIM_* bits are part of the
-uapi since they are defined in vmscan.c.  Move them to a uapi header
-to make it obvious.
+RECLAIM_ZONE was assumed to be unused because it was never explicitly
+used in the kernel.  However, there were a number of places where it
+was checked implicitly by checking 'node_reclaim_mode' for a zero
+value.
+
+These zero checks are not great because it is not obvious what a zero
+mode *means* in the code.  Replace them with a helper which makes it
+more obvious: node_reclaim_enabled().
+
+This helper also provides a handy place to explicitly check the
+RECLAIM_ZONE bit itself.  Check it explicitly there to make it more
+obvious where the bit can affect behavior.
 
 This should have no functional impact.
 
@@ -78,42 +87,57 @@ Cc: Daniel Wagner <dwagner@suse.de>
 Note: This is not cc'd to stable.  It does not fix any bugs.
 ---
 
- b/include/uapi/linux/mempolicy.h |    7 +++++++
- b/mm/vmscan.c                    |    8 --------
- 2 files changed, 7 insertions(+), 8 deletions(-)
+ b/include/linux/swap.h |    7 +++++++
+ b/mm/khugepaged.c      |    2 +-
+ b/mm/page_alloc.c      |    2 +-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
-diff -puN include/uapi/linux/mempolicy.h~mm-vmscan-move-RECLAIM-bits-to-uapi include/uapi/linux/mempolicy.h
---- a/include/uapi/linux/mempolicy.h~mm-vmscan-move-RECLAIM-bits-to-uapi	2020-07-01 08:22:12.502955333 -0700
-+++ b/include/uapi/linux/mempolicy.h	2020-07-01 08:22:12.508955333 -0700
-@@ -62,5 +62,12 @@ enum {
- #define MPOL_F_MOF	(1 << 3) /* this policy wants migrate on fault */
- #define MPOL_F_MORON	(1 << 4) /* Migrate On protnone Reference On Node */
+diff -puN include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper include/linux/swap.h
+--- a/include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper	2020-07-01 08:22:13.650955330 -0700
++++ b/include/linux/swap.h	2020-07-01 08:22:13.659955330 -0700
+@@ -12,6 +12,7 @@
+ #include <linux/fs.h>
+ #include <linux/atomic.h>
+ #include <linux/page-flags.h>
++#include <uapi/linux/mempolicy.h>
+ #include <asm/page.h>
  
-+/*
-+ * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
-+ * ABI.  New bits are OK, but existing bits can never change.
-+ */
-+#define RECLAIM_ZONE  (1<<0)	/* Run shrink_inactive_list on the zone */
-+#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
-+#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
+ struct notifier_block;
+@@ -374,6 +375,12 @@ extern int sysctl_min_slab_ratio;
+ #define node_reclaim_mode 0
+ #endif
  
- #endif /* _UAPI_LINUX_MEMPOLICY_H */
-diff -puN mm/vmscan.c~mm-vmscan-move-RECLAIM-bits-to-uapi mm/vmscan.c
---- a/mm/vmscan.c~mm-vmscan-move-RECLAIM-bits-to-uapi	2020-07-01 08:22:12.504955333 -0700
-+++ b/mm/vmscan.c	2020-07-01 08:22:12.509955333 -0700
-@@ -4091,14 +4091,6 @@ module_init(kswapd_init)
- int node_reclaim_mode __read_mostly;
++static inline bool node_reclaim_enabled(void)
++{
++	/* Is any node_reclaim_mode bit set? */
++	return node_reclaim_mode & (RECLAIM_ZONE|RECLAIM_WRITE|RECLAIM_UNMAP);
++}
++
+ extern void check_move_unevictable_pages(struct pagevec *pvec);
  
- /*
-- * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
-- * ABI.  New bits are OK, but existing bits can never change.
-- */
--#define RECLAIM_ZONE  (1<<0)	/* Run shrink_inactive_list on the zone */
--#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
--#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
--
--/*
-  * Priority for NODE_RECLAIM. This determines the fraction of pages
-  * of a node considered for each zone_reclaim. 4 scans 1/16th of
-  * a zone.
+ extern int kswapd_run(int nid);
+diff -puN mm/khugepaged.c~mm-vmscan-node_reclaim_mode_helper mm/khugepaged.c
+--- a/mm/khugepaged.c~mm-vmscan-node_reclaim_mode_helper	2020-07-01 08:22:13.652955330 -0700
++++ b/mm/khugepaged.c	2020-07-01 08:22:13.660955330 -0700
+@@ -709,7 +709,7 @@ static bool khugepaged_scan_abort(int ni
+ 	 * If node_reclaim_mode is disabled, then no extra effort is made to
+ 	 * allocate memory locally.
+ 	 */
+-	if (!node_reclaim_mode)
++	if (!node_reclaim_enabled())
+ 		return false;
+ 
+ 	/* If there is a count for this node already, it must be acceptable */
+diff -puN mm/page_alloc.c~mm-vmscan-node_reclaim_mode_helper mm/page_alloc.c
+--- a/mm/page_alloc.c~mm-vmscan-node_reclaim_mode_helper	2020-07-01 08:22:13.655955330 -0700
++++ b/mm/page_alloc.c	2020-07-01 08:22:13.662955330 -0700
+@@ -3733,7 +3733,7 @@ retry:
+ 			if (alloc_flags & ALLOC_NO_WATERMARKS)
+ 				goto try_this_zone;
+ 
+-			if (node_reclaim_mode == 0 ||
++			if (!node_reclaim_enabled() ||
+ 			    !zone_allows_reclaim(ac->preferred_zoneref->zone, zone))
+ 				continue;
+ 
 _
