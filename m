@@ -2,116 +2,75 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39802C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A4E20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEMZGLOW"
+	by mail.kernel.org (Postfix) with ESMTP id B5BF2207F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593641458;
+	bh=3HfrAS82XLUcoM600jeQhPjXXnFAucaIgDdgxTpT5yk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QX3SZStX+CXsxlCtX9UQHwNImc6Y/tipuXL3pk4Q35/oi70zVRCOEE2s7GfYNnqSL
+	 sAOpOlxFUtM43EO7zNsjij5WfVIQfKIhdqwOyOAkM8D/7ucY48aiC3cQQc+IR6Lvii
+	 9CCpqngnrALwg+Ifb0LWjzXW3uSoE/UOlRctt2Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGAWHu (ORCPT
+        id S1727018AbgGAWK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:07:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgGAWHu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:07:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32A6C08C5C1;
-        Wed,  1 Jul 2020 15:07:49 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z24so4186832ljn.8;
-        Wed, 01 Jul 2020 15:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+ohxmBAJip02a1VFP0Ot2Q9zEKcMeu3jnb8Rzmbca/M=;
-        b=AEMZGLOWrMk73giLAGv+pg9nTBvFlqQdE7gTL/gQ3oWJ8mYZWviYnK4tuTjt91jR6v
-         JyDIu/+10zEKgIdpjHdlHhwtbkqUmzC6r3VG5Id1qPU5ZTZiD7nty+1BZQrh2ZKHQRn6
-         ZPxot1ZORNq5skS6P0hlc8pmRW3shkSBtmoWh57nQPUISJ/69Q2MzXrp46MVcKfUIyYj
-         /TM3cwwxeBpysJJ2ddEfXv4JNGcSydMWQxJs684IY/bZ13QoWcuXYSMv9e46dTj7pp8p
-         hHrOxSMF/8362gA+l05S4i7o5AdH3upOQd+oYMYkvi8zssrpEcVu0V4lBru2CvNEkZZ6
-         VyKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+ohxmBAJip02a1VFP0Ot2Q9zEKcMeu3jnb8Rzmbca/M=;
-        b=R0KQ80xjTlShSmOCMGq4LWHYOfq/yoxN+qeASCYDpCHLKqkpFtuUFuuMNELcVmfKnK
-         4NV4RvXBLiLJpCaBaVjXdieVL0eIVCv2nchwqgn5Zbhqw5q9OUgLYxLM9OMXo2hYrPNi
-         iZGMEZBiEf1ld3iNsv/r5e4SgiptyYohFsOt4YNAPq8RO+X5BXSXlvZhCz2FTqeoH3HH
-         XR8sLsVw0hFzM+1bY7gtgDbtif9q+joR6ja8kQpB13pzdMHPuTNp/cox3E3xolVuLoew
-         MYfNTPzLAQXdTSdqDThnTu8Mo2zI/r9jOFoudumZuZ4uJF7td71gvUU6c44v+BPPHrM3
-         +Ymw==
-X-Gm-Message-State: AOAM530IKOFpv8fDVpxjsC9KVK4I33M0XTmnffsN6hcVlcgdLtN4Tgjv
-        qEv7AP1PsXYqpIt8jgtOXR8=
-X-Google-Smtp-Source: ABdhPJzcVEtLSZafFQYSlr60rjQ71eNMW1TNsnWBOsfPWQdVx5f8OXjnqVWxmIxJhZwcZa3v8QZnTw==
-X-Received: by 2002:a2e:81c8:: with SMTP id s8mr14480440ljg.281.1593641268276;
-        Wed, 01 Jul 2020 15:07:48 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-181-241.NA.cust.bahnhof.se. [98.128.181.241])
-        by smtp.gmail.com with ESMTPSA id x17sm2516292lfe.44.2020.07.01.15.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 15:07:47 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     mst@redhat.com, jasowang@redhat.com, arei.gonglei@huawei.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        virtualization@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] crypto: virtio - constify features[] and id_table[]
-Date:   Wed,  1 Jul 2020 22:29:36 +0200
-Message-Id: <20200701202936.44156-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 18:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgGAWK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:10:57 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE9720780;
+        Wed,  1 Jul 2020 22:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593641456;
+        bh=3HfrAS82XLUcoM600jeQhPjXXnFAucaIgDdgxTpT5yk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YBtMdFtFk0Bq14Gn4WnGiiDEP3+gC8ZrsSRR1BYUgJ/yLMWcHzO5a/recuD1/CDg9
+         IUdbvaKl1xq9LTIWqL/WsPbP8Qef81WWBnU4vWULuP5Nstxfm3vPaKDhTUo172btt3
+         v7HrzYhVtX+n30XTRYs7Rqe22Y1VZgYZvYYk8UpQ=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] Fix IRQ 0 cases
+Date:   Wed,  1 Jul 2020 17:10:38 -0500
+Message-Id: <20200701221040.3667868-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-features[] and id_table[] are not modified and can be made const to
-allow the compiler to put them in read-only memory.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Before:
-   text    data     bss     dec     hex filename
-  11534    2056     160   13750    35b6 drivers/crypto/virtio/virtio_crypto_core.o
+a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
+added a warning if platform_get_irq() returns IRQ 0.  These patches fix a
+couple places that might cause that.
 
-After:
-   text    data     bss     dec     hex filename
-  11630    1992     128   13750    35b6 drivers/crypto/virtio/virtio_crypto_core.o
+Bjorn Helgaas (2):
+  ARM: imx: Remove imx_add_imx_dma() unused irq_err argument
+  virtio-mmio: Reject invalid IRQ 0 command line argument
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/crypto/virtio/virtio_crypto_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-imx/devices/devices-common.h   | 2 +-
+ arch/arm/mach-imx/devices/platform-imx-dma.c | 6 +-----
+ arch/arm/mach-imx/mm-imx21.c                 | 3 +--
+ arch/arm/mach-imx/mm-imx27.c                 | 3 +--
+ drivers/virtio/virtio_mmio.c                 | 4 ++--
+ 5 files changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_core.c b/drivers/crypto/virtio/virtio_crypto_core.c
-index ba8a19c72391..0c66d6193ca2 100644
---- a/drivers/crypto/virtio/virtio_crypto_core.c
-+++ b/drivers/crypto/virtio/virtio_crypto_core.c
-@@ -498,11 +498,11 @@ static int virtcrypto_restore(struct virtio_device *vdev)
- }
- #endif
- 
--static unsigned int features[] = {
-+static const unsigned int features[] = {
- 	/* none */
- };
- 
--static struct virtio_device_id id_table[] = {
-+static const struct virtio_device_id id_table[] = {
- 	{ VIRTIO_ID_CRYPTO, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
- };
+
+base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
 -- 
-2.27.0
+2.25.1
 
