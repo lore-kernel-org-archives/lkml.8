@@ -2,85 +2,117 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD40C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625B82082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F09D20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SLk66hTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgGALUG (ORCPT
+        id S1730255AbgGALVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:20:06 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36326 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbgGALUG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:20:06 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 Jul 2020 07:21:17 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:40089 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730232AbgGALVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:21:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593602475; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=n9dv+4uh/SqsbO43SuymhrpHyZhUe1aTGaZYaxpJrSM=; b=SLk66hTCJmaNcScI6J6y4hqvsAliwn0do2Xjp6mj/MDIo7tH6nQbzsjKW+YIx2slK79c7Zbs
+ gg4tZr6CAV8TVOrACa6Brl2gslH2IZNll5kS2mFZ9b0p8kEPB5DHd8gO7o4TE+ayIUELKYsR
+ CbLQeuWGvGIcw+f9RACOklJBbq4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5efc718f8fe116ddd9e7eceb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:20:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2B195C433CB; Wed,  1 Jul 2020 11:20:46 +0000 (UTC)
+Received: from [10.50.36.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id EC378804B9;
-        Wed,  1 Jul 2020 13:20:02 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 13:20:01 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinay Simha B N <simhavcs@gmail.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Ken-Sue.Tan@taec.toshiba.com, Chris.Cheng@taec.toshiba.com,
-        Bhushan.Patel@taec.toshiba.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
-Message-ID: <20200701112001.GA652928@ravnborg.org>
-References: <20200701070344.6330-1-simhavcs@gmail.com>
- <20200701091940.GB266726@ravnborg.org>
- <CAGWqDJ51_QRHLP0mUyaCJCiKMJkGmbwuR9y2rZ=t=Mo7gCdb1w@mail.gmail.com>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53A55C433C6;
+        Wed,  1 Jul 2020 11:20:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53A55C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
+ <20200527193638.GA2604206@bogus>
+ <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
+Message-ID: <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
+Date:   Wed, 1 Jul 2020 16:50:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWqDJ51_QRHLP0mUyaCJCiKMJkGmbwuR9y2rZ=t=Mo7gCdb1w@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=Nvn8WTl6hB1VAHlkLJEA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinay.
 
-On Wed, Jul 01, 2020 at 03:14:09PM +0530, Vinay Simha B N wrote:
-> sam,
+On 6/1/2020 11:26 AM, Rajendra Nayak wrote:
 > 
-> I rechecked, but did not find any indents are too spaced.
-> This is taken from a working dts tree.
+> On 5/28/2020 1:06 AM, Rob Herring wrote:
+>> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
+>>> Add an optional power domain which when specified can be used for
+>>> setting the performance state of Venus.
+>>>
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>>> index 764affa..ac1ed64 100644
+>>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+>>> @@ -25,12 +25,16 @@ properties:
+>>>       maxItems: 1
+>>>     power-domains:
+>>> -    maxItems: 2
+>>> +    minItems: 2
+>>> +    maxItems: 3
+>>>     power-domain-names:
+>>> +    minItems: 2
+>>> +    maxItems: 3
+>>>       items:
+>>>         - const: venus
+>>>         - const: vcodec0
+>>> +      - const: opp-pd
+>>
+>> Humm, looks suspicious. This is a phyical power island in this block?
 > 
-            port@1 {
-            |   reg = <1>;
-            |   dsi0_out: endpoint {
-            |       remote-endpoint = <&d2l_in_test>;
-            |           data-lanes = <0 1 2 3>;
-            |   };
-             };
-         };
-     };
-See above, something is wrong with the indent in the examples.
+> yes, this is used to represent the physical 'cx' power island in the SoC
+> (Its a shared power island, not a power island specific to this block)
+> that can be scaled to different 'performance levels' based on the frequency
+> the codec is expected to run at.
 
+Rob, Did you have any other concerns here? Should I be re-posting this?
 
-> I had given two examples for a purpose. One for single lvds
-> configuration single link mode,
-> another is for dual lvds configurations dual-link mode and port mappings.
-
-Please provide a proper description of the single link and dual link
-modes in the descriptions of the bindings.
-The examples shall support the bindings, they shall not include
-information that is not covered in the bindings.
-
-	Sam
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
