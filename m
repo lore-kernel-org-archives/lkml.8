@@ -2,99 +2,99 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E713C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B7F20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GCEP0SIz"
+	by mail.kernel.org (Postfix) with ESMTP id 25897207F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgGAJVx (ORCPT
+        id S1729217AbgGAJXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:21:53 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24032 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728776AbgGAJVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:21:52 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0619BDjP023035;
-        Wed, 1 Jul 2020 11:21:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=+Zy5DDQ6neW7WZl6/peSwMUygFppp3WoiU0yXaaJpbA=;
- b=GCEP0SIzeIG1mHgGTwtgiKR9RWx7wQzNjnzmWb9N7YEIbzIw5Q7FVwQtUJndnvYtKKsK
- 7bHgKXs4nmIGb/wsxvpjrxDHyW7jfiK7aQXgd6NJif9U9Pm1J3TiT5Y5BrGjUSdpIwNx
- 2tXk6yWHBJIrZZUkwc1vvXfC6YCosXncgjSgNSIV4hvog4nJo1htXMemdd9cXuSReFgs
- 0Vlyubs6+BsZSmdSKtTlW6W5bCmhcYNCRegO25bu8YOVels9Tv3OnL7WRPeeBBfpZsmz
- tBvr6HsCrloHEM4kKC/dckQwWQGEub+6lHq21+BsrzSjU7L2ttKq7zALpXg8pdL44Qvi 8A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89s8fg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 11:21:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7396410002A;
-        Wed,  1 Jul 2020 11:21:40 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39AFD2AA395;
-        Wed,  1 Jul 2020 11:21:40 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul
- 2020 11:21:39 +0200
-Date:   Wed, 1 Jul 2020 11:21:38 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 0/4] stm32-f7: Addition of SMBus Alert / Host-notify
- features
-Message-ID: <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, pierre-yves.mordret@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <20200630160500.GA2394@kunai>
+        Wed, 1 Jul 2020 05:23:39 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:58090 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728776AbgGAJXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:23:39 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72oSVvxebJ5NAA--.6442S3;
+        Wed, 01 Jul 2020 17:23:30 +0800 (CST)
+Subject: Re: [PATCH v4 03/14] irqchip/csky-mpintc: Fix potential resource
+ leaks
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        linux-csky@vger.kernel.org
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593569786-11500-4-git-send-email-yangtiezhu@loongson.cn>
+ <35eae701-e6b1-96af-9be4-0993330a17dc@web.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <6a468fb4-74b0-4bf3-49bc-cfc62d734e24@loongson.cn>
+Date:   Wed, 1 Jul 2020 17:23:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200630160500.GA2394@kunai>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_04:2020-07-01,2020-07-01 signatures=0
+In-Reply-To: <35eae701-e6b1-96af-9be4-0993330a17dc@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dx72oSVvxebJ5NAA--.6442S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1ftryDXF4DAr4DtF43KFg_yoW3trb_u3
+        45CrWkWa18JFn5AF4Svw4Yqa4vgr4UWw13tFW3Aws7J3s8X3yDZrWxA343ta47tFyjvFsx
+        Ga17XrW2qrnFvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbI8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkI
+        ecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AK
+        xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+        xU4nNVDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:05:00PM +0200, Wolfram Sang wrote:
-> On Thu, Jun 25, 2020 at 09:39:25AM +0200, Alain Volmat wrote:
-> > This serie adds SMBus Alert and SMBus Host-Notify features for the i2c-stm32f7.
-> 
-> If it is not too much work for you, I think it makes sense to split the
-> series into two, i.e. HostNotify and SMBusAlert parts.
-> 
+On 07/01/2020 03:49 PM, Markus Elfring wrote:
+>> exception handling. By the way, do some coding-style cleanups
+> I propose to consider another bit of fine-tuning.
+>
+>
+> …
+>> +++ b/drivers/irqchip/irq-csky-mpintc.c
+> …
+>> @@ -270,12 +274,24 @@ csky_mpintc_init(struct device_node *node, struct device_node *parent)
+>>
+>>   #ifdef CONFIG_SMP
+>>   	ipi_irq = irq_create_mapping(root_domain, IPI_IRQ);
+>> -	if (!ipi_irq)
+>> -		return -EIO;
+>> +	if (!ipi_irq) {
+>> +		ret = -EIO;
+>> +		goto err_domain_remove;
+> How do you think about to use the following source code variant
+> at this place?
+>
+> +		irq_domain_remove(root_domain);
+> +		ret = -EIO;
+> +		goto err_iounmap;
+>
+>
+> Would you like to avoid the repetition of the check “#ifdef CONFIG_SMP”?
 
-I've just prepared the 1st new serie with only the HostNotify bits in it.
-(basically, the core part, the dt-bindings with the enable-host-notify, and
-the usage within i2c-stm32f7).
-You mentioned in the other thread that you still have some more review comment
-I believe. Is that right ? If that is so, I'll wait for those comment and
-then push that new serie for review.
+OK, thank you, it looks good to me, I will do it in v5.
+
+>
+> Regards,
+> Markus
+
