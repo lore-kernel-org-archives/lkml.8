@@ -3,120 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1665FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E834820702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBC72068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBG+Yvvb"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JT7DYgmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbgGAOJI (ORCPT
+        id S1731357AbgGAOJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:09:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48086 "EHLO
+        Wed, 1 Jul 2020 10:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgGAOJH (ORCPT
+        with ESMTP id S1728021AbgGAOJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:09:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0CDC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:09:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so19984470lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 07:09:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/P3F3XEPXIiHBtprCyJGmIkmTTIjneNamDkMb/+IKY=;
-        b=IBG+YvvbuNPKZx2AedrFTn56DnNjAVZWf6WQa+RjBf1mdVwCqjoRe0EOWxf2ZsoKNQ
-         b3hN7uxRdo5X8H/WxKRrWNv4IyQKZwMoGr//UG1BFvD4G80WjJOuxFI0S8bxutB3aBRl
-         0/x5mSLjtl4ALH8xL/qo+ZuHm23MTE7a2MYUMiRAg/rYpwUXAIxp59VbVjZJG/Hg96Sn
-         hEzhJrOi4WgvPeIsoPcSEAEswQ7oN1c+jfCtzg2mmXxV5FSYwIaFA8bEm8UDPlzSbyMJ
-         aadoEpZuQ0drFWEe4DVzI5jCEAc/lkkdTwT+Hos/7mwpPZM6Hkqr1Z1EvfYJ5dWXx569
-         LKBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/P3F3XEPXIiHBtprCyJGmIkmTTIjneNamDkMb/+IKY=;
-        b=Eis4Zc4zco8+w0PDCv2tqj4k7YITZJgqfGeIuIe9XW9llfZQxrbAMiZW06rKldK9zg
-         9TzuJ0WEiOgjsOQ4BYT12ByM9V5xct+AC70alIuOIki8g4SKFQSpJgwcFJkUXGauVQwg
-         PkK+g/qt29Nbz327o6SBpPpNpv42NJFt3qC1bX6FkVRXFhK8wUFZK4+0h2hWGhCC1wuB
-         kbpcjE7s/b2HV9gmlyBEkvEFuzrMbselHy8lyBBb8WSy1fr/J7HQZ609lvTBUd1VQ/hb
-         tQx/4oNyMEbLAQ3Snw1ZOR248FzwDXtbJHQ4/l8Jrifu8rzHmlowGvLZXcOgdmKGH8cw
-         7bZw==
-X-Gm-Message-State: AOAM5310PhvMc00ciQVblCGaOd3iTmOM0RsN4CfD2JJeq3bdnrIQC+sa
-        s7/lBTMMRLuNNOH80gRAE0CRQmhIBRuBtAIGQdA=
-X-Google-Smtp-Source: ABdhPJwcM1s4ggfKptzs/9JApOUZ0JUdrDWPQACOb1X4/rZXWo3OKR82bDwC6Vo02IG5t16TWFBovu0WWwtuG2WL0yA=
-X-Received: by 2002:a2e:82c8:: with SMTP id n8mr13197066ljh.123.1593612545107;
- Wed, 01 Jul 2020 07:09:05 -0700 (PDT)
+        Wed, 1 Jul 2020 10:09:18 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C37C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:09:18 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92F0F556;
+        Wed,  1 Jul 2020 16:09:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593612556;
+        bh=VauXx+GOvJlFO5tYh3rnSCU/l69PGg+UrYNd7Mwc0Fg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JT7DYgmKkgYKPd0i6/F9mW5xc6Vzcspm2nW8w6bo0Yny2pYBvkFWFAwmVa23X9E0D
+         qiBXqjtZi8ikXUVtHbVkVGVe1o82SgQzlMTX8W9GPlYdMdHuQA5hzHiswW+S0nMH16
+         GPeHMClQElrhJVPCLzPTprux8zLz3scAy6pzY90w=
+Date:   Wed, 1 Jul 2020 17:09:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] phy: zynqmp: Fix unused-function compiler warning
+Message-ID: <20200701140913.GG27013@pendragon.ideasonboard.com>
+References: <20200701090438.21224-1-tklauser@distanz.ch>
+ <20200701131902.GC27013@pendragon.ideasonboard.com>
+ <20200701133643.GZ2599@vkoul-mobl>
+ <20200701134443.GE27013@pendragon.ideasonboard.com>
+ <20200701140026.ziplawf6oimjyssh@distanz.ch>
+ <20200701140108.GF27013@pendragon.ideasonboard.com>
+ <20200701140709.kq7eauyrm5lqozsr@distanz.ch>
 MIME-Version: 1.0
-References: <20200629123215.1014747-1-lee.jones@linaro.org>
- <20200629123215.1014747-5-lee.jones@linaro.org> <20200701091518.GW1179328@dell>
-In-Reply-To: <20200701091518.GW1179328@dell>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 1 Jul 2020 22:10:19 +0800
-Message-ID: <CADBw62pFb6aEegTRXS3Y9DeJDTrW4mSHND4nw4p8Qtv-Yk+SNg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: sprd-sc27xx-spi: Fix-up bogus IRQ register offset
- and mask setting
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701140709.kq7eauyrm5lqozsr@distanz.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 5:15 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> 'i / pdata->num_irqs' always equates to 0 and 'BIT(i % pdata->num_irqs)'
-> always ends up being BIT(i) here, so make that clearer in the code.  If
-> the code base needs to support more than 32 IRQs in the future, this will
-> have to be reworked, but lets just keep it simple for as long as we can.
->
-> This fixes the following W=1 warning:
->
->  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Cc: Johan Hovold <johan@kernel.org>
-> Suggested-by: Baolin Wang <baolin.wang7@gmail.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hi Tobias,
 
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
+On Wed, Jul 01, 2020 at 04:07:09PM +0200, Tobias Klauser wrote:
+> On 2020-07-01 at 16:01:08 +0200, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > On Wed, Jul 01, 2020 at 04:00:26PM +0200, Tobias Klauser wrote:
+> >> On 2020-07-01 at 15:44:43 +0200, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> >>> On Wed, Jul 01, 2020 at 07:06:43PM +0530, Vinod Koul wrote:
+> >>>> On 01-07-20, 16:19, Laurent Pinchart wrote:
+> >>>>> On Wed, Jul 01, 2020 at 11:04:38AM +0200, Tobias Klauser wrote:
+> >>>>>> This fixes the following compiler warning when building with
+> >>>>>> CONFIG_PM && !CONFIG_PM_SLEEP:
+> >>>>>> 
+> >>>>>> drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
+> >>>>>>   830 | static int xpsgtr_resume(struct device *dev)
+> >>>>>>       |            ^~~~~~~~~~~~~
+> >>>>>> drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
+> >>>>>>   819 | static int xpsgtr_suspend(struct device *dev)
+> >>>>>>       |            ^~~~~~~~~~~~~~
+> >>>>> 
+> >>>>> Oops :-S Sorry about that.
+> >>>>> 
+> >>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> 
+> >> Thanks for the review Laurent.
+> >> 
+> >>>>> Vinod or Kishon, can you pick this patch up, or do I need to send a pull
+> >>>>> request ? (It's my first driver in the PHY subsystem so I don't know
+> >>>>> what the usual practices are there)
+> >>>> 
+> >>>> patches are welcome :-)
+> >>>> 
+> >>>>> 
+> >>>>>> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> >>>>>> ---
+> >>>>>>  drivers/phy/xilinx/phy-zynqmp.c | 4 ++--
+> >>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>>>> 
+> >>>>>> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
+> >>>>>> index 8babee2ce9ec..22a0ae635797 100644
+> >>>>>> --- a/drivers/phy/xilinx/phy-zynqmp.c
+> >>>>>> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+> >>>>>> @@ -815,7 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
+> >>>>>>   * Power Management
+> >>>>>>   */
+> >>>>>>  
+> >>>>>> -#ifdef CONFIG_PM
+> >>>>>> +#ifdef CONFIG_PM_SLEEP
+> >>>> 
+> >>>> How about marking it as __maybe_unused instead?
+> >>> 
+> >>> I don't mind either, I'll let Tobias decide, but his patch seems fine,
+> >>> is there a drawback in his approach ? If it's just a matter of personal
+> >>> preference, I'd rather not require a v2.
+> >> 
+> >> I don't mind either, it was just what seemed the more straight-forward
+> >> fix. On the other hand, it seems that marking these functions as
+> >> __maybe_unused is the more widely used method in other PHY drivers. In
+> >> addition it would have the nice side-effect of the code always being
+> >> compile-checked regardless of the value of CONFIG_PM_SLEEP.
+> > 
+> > That's a good point, haven't thought about it.
+> > 
+> >> Will send a v2 using __maybe_unused and will let you decide which one to
+> >> pick :)
+> > 
+> > You can keep my R-b :-)
+> 
+> Thanks :) FWIW, I'd also drop the #ifdef CONFIG_PM in the same patch for
+> the same reason. Is that OK with you as well?
 
->
-> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> index c305e941e435c..4a1a61e1a86ea 100644
-> --- a/drivers/mfd/sprd-sc27xx-spi.c
-> +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> @@ -251,10 +251,8 @@ static int sprd_pmic_probe(struct spi_device *spi)
->                 return -ENOMEM;
->
->         ddata->irq_chip.irqs = ddata->irqs;
-> -       for (i = 0; i < pdata->num_irqs; i++) {
-> -               ddata->irqs[i].reg_offset = i / pdata->num_irqs;
-> -               ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
-> -       }
-> +       for (i = 0; i < pdata->num_irqs; i++)
-> +               ddata->irqs[i].mask = BIT(i);
->
->         ret = devm_regmap_add_irq_chip(&spi->dev, ddata->regmap, ddata->irq,
->                                        IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
-
-
+Sure.
 
 -- 
-Baolin Wang
+Regards,
+
+Laurent Pinchart
