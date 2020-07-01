@@ -2,154 +2,490 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C94C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E82206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E555F20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="PESL5l14"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FRT0JkD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731967AbgGAPJN (ORCPT
+        id S1731976AbgGAPJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:09:13 -0400
-Received: from mail-bn8nam12on2072.outbound.protection.outlook.com ([40.107.237.72]:60865
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731780AbgGAPIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:08:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S68QMCsToCvYzqlnINJY+6L6yb5TS+vlvaHc1vVRynLKZvNtMBp9pyD30dByIKE1SvN6P7V+mSz+rViXKaGjpmMSnuq55t7JSPu7aWbGnTkM3znD1IflzSNlfdunstKT1uhljvSq4GTdd/ytuCQb9ezXz1oLlkn0j+9u372PmhYFy8QV+TB/0rdPHd5t6lrTgjTiF7CJNzKXv4NllYqsgec6BiW5dNn2v1PNlew2N3oEBUIIEXOwF+btRufJmxGeZt/KD6/i+E0HagL95TcqJfiU5FPPWeCfyqwIzA2fozdFu7sUK2AEXg24Mzdu9YZFKhQIJDlDtm7btOVY0vD2Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6b7vknL1fmLF2G45nV1ZuX4yW8ngc6jD/djmpaSsGo=;
- b=N0XAP0HcMqtZkb9+bclAVcxxzo0ITLUvou8Hdd0frhAswSsKjlzc5fQw2JGAUb6HAFiJWY5fC4YBCQBRFUuCHC0UxFyAJjylGDPrJ531/z4dVBsA8L+nLGSabB6nc63vEZshmw1fu4tDZZRWHoZ9RVvuwP7jfp+dXS/dP3f+xDW0z309vHjwvfoYXdYa/JkxV1Z2y0xAIdvRkcVrX51Q2N2Chx0zhgYFbVY7/avaMDT1sHiZEgewwKVvrWRS8I0LCKGsHEQo1lvvvN4O5muCJMOZCiXbyZ1Pll9ZBowz45WVqxKbm/HxZrGQpllh8i27bRH6yCfUn+HjNSPJ8y0rcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6b7vknL1fmLF2G45nV1ZuX4yW8ngc6jD/djmpaSsGo=;
- b=PESL5l14KSrMK/b0kwEzJdRYgHLJ282X7PmsI2xn1Jpi3LBds2asJIAEEX0Nllwjk5xLYQo1hl5I8BEvqMP8RAJTMXKywFelIz0CAVYs+MvDMg+pOVZPod7+iMS3/ZSdHvY9e9A1uhr/iFrGaMJy/GW5bhV7dRHuhpLm3kI6Lbg=
-Authentication-Results: driverdev.osuosl.org; dkim=none (message not signed)
- header.d=none;driverdev.osuosl.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SA0PR11MB4736.namprd11.prod.outlook.com (2603:10b6:806:9f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Wed, 1 Jul
- 2020 15:08:20 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336%7]) with mapi id 15.20.3131.033; Wed, 1 Jul 2020
- 15:08:20 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 10/13] staging: wfx: simplify handling of encrypted frames
-Date:   Wed,  1 Jul 2020 17:07:04 +0200
-Message-Id: <20200701150707.222985-11-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701150707.222985-1-Jerome.Pouiller@silabs.com>
-References: <20200701150707.222985-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: DM5PR07CA0143.namprd07.prod.outlook.com
- (2603:10b6:3:13e::33) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        Wed, 1 Jul 2020 11:09:34 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:19206 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729759AbgGAPJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:09:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593616167; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qBeMZqdgVMZ/k7lPNCIiHUmX8Fq6+frNkzccTsYHFjw=; b=FRT0JkD7EQ68L9h0lZHM/r+9G2YAoKhll+/sSrrj6FhEDLJ8j4Az4Bluy/5tfH1s9zUWSmwI
+ fnoArUWtdlJZFIRi/TNeQgMbBKR5107IU7OuCsSL4n3Wy8X0+2cfit/rCJg/g8FDBGX/21M4
+ bpoFt+AW173ucuUAZJxZSoqPUdc=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5efca71e0206ad41d1e0d46f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 15:09:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 10979C433A1; Wed,  1 Jul 2020 15:09:16 +0000 (UTC)
+Received: from [10.50.61.30] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rbokka)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29D99C433CB;
+        Wed,  1 Jul 2020 15:09:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29D99C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rbokka@codeaurora.org
+Subject: Re: [PATCH v4 3/4] nvmem: qfprom: Add fuse blowing support
+To:     Douglas Anderson <dianders@chromium.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     mturney@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        rnayak@codeaurora.org, dhavalp@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, mkurumel@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <20200622144929.230498-1-dianders@chromium.org>
+ <20200622074845.v4.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
+From:   "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>
+Message-ID: <850240a0-a8c2-9bca-b17e-5452ce2f9c10@codeaurora.org>
+Date:   Wed, 1 Jul 2020 20:39:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by DM5PR07CA0143.namprd07.prod.outlook.com (2603:10b6:3:13e::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Wed, 1 Jul 2020 15:08:18 +0000
-X-Mailer: git-send-email 2.27.0
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cfce7e93-f286-4fe7-fd6d-08d81dd0974d
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4736:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR11MB47364E5BFB4D78BD239659E6936C0@SA0PR11MB4736.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xyoaaWMzB8yML1Av7vf5WlIQdyH2lYiACo8UWyKlfSwrQgBjogxft9jKRDFtMYsbRRA9Amy7LAxF6NuUs0CLm1wLNY/UA/ife3Qnyq2LC6NgmuzPbmj8ya0OICh8eUw72BbXsy672eGcOtbyHMcYb3a+RlWbdpgjJn4RgA8U8p5ID3ErtA+Wk6rOE5WVjKE0BKJNMVU2NNk7d2IBFLDqGClynqM0bB1b696Z1XbARCGe04237yIZS4plB7rIisggy+/ssL4d4ziCVWnlQF9DQMwMhF7ig58C8uCN4uQpQZf1KULqRFkRcAnqbrj0Csxm4oa/67L+GCgB2bB3y5Ym8Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(366004)(346002)(376002)(396003)(136003)(5660300002)(6486002)(86362001)(6666004)(66574015)(36756003)(2906002)(186003)(83380400001)(16526019)(8936002)(66556008)(66476007)(107886003)(4326008)(8676002)(2616005)(1076003)(478600001)(316002)(54906003)(66946007)(52116002)(7696005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lzCiDyUbt6pmgFrZks+GLAfgb86XMc95iz/B5x0y3kw+jT0w53MTXN229bX+A/tG5uvH1QnuG4y554yPTcQJkb0/6o+so0ZZdKu1H1Ro9hxvaoSRQNv66yu2slBsGsc6zGoIISWjiijdISoV7DSpoKIUZDKQkDc6Hy/jZYpsOS6PRZXTEiCxARhdeJcanOLphLwHoA2nssHtcFeSnx5UZ6DIHkp6UoLi23hRmUJUpYOxKpi7ZF0H9aUNmLD6h1/VlCtZxAZwY/2Z4CM5PdGs9qGtDbB+9P8c+nmWzXJCABBsvZsDDjcTN2JCt3D1bk9K/5obZdDaDCMMF3p5GPOjTymPtneeSp69lFExjH0Pr9IBETd4nsLGIM139vWHQPdrhswIwqKenBP+gMmDhb9ij5Qg5bw+yJm/SAqNS3HeQDAYsbNpGyEa6RDEHq59s7DFM+tC/xlvL/eS+DRrQgGRjOHsPyP7j7eXOaVVcihxl3Qoc1O0V3FsTqZvags6Ep3CjFjbOZfN8OHK5Ul+KYJHyrx/SfCAvM39uR55WEFCQOw=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfce7e93-f286-4fe7-fd6d-08d81dd0974d
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 15:08:20.4207
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dPYS8KUGYq1340NlcQQjho7HEEYeKxnWectYjoZxjCUvoVWZovEKYgXdIyrDwVtmDsQOR00w2SXIUytY4cbhvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4736
+In-Reply-To: <20200622074845.v4.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKV2Ug
-ZG9uJ3Qgd2FudCBtYWM4MDIxMSB0cnkgdG8gY2hlY2sgTU1JQyBhbmQgb3RoZXIgc2VjdXJpdHkg
-bWVjaGFuaXNtcy4KU28sIHRoZSBkcml2ZXIgcmVtb3ZlIGFsbCB0aGUgZGF0YSByZWxhdGVkIHRv
-IHRoZSBlbmNyeXB0aW9uIChJViwgSUNWLApNTUlDKS4KCkhvd2V2ZXIsIGVuYWJsaW5nIFJYX0ZM
-QUdfUE5fVkFMSURBVEVEIGlzIHN1ZmZpY2llbnQgZm9yIHRoYXQuCgpTbywgZHJvcCB0aGUgdXNl
-bGVzcyBmdW5jdGlvbiB3ZnhfZHJvcF9lbmNyeXB0X2RhdGEoKSBhbmQgZW5hYmxlClJYX0ZMQUdf
-UE5fVkFMSURBVEVELgoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5w
-b3VpbGxlckBzaWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZGF0YV9yeC5jIHwg
-NjAgKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDU4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3Rh
-Z2luZy93ZngvZGF0YV9yeC5jIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9kYXRhX3J4LmMKaW5kZXgg
-MzE2YzJmMTUzN2ZlNS4uNjBlMmU1Y2I0NjU2YSAxMDA2NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5n
-L3dmeC9kYXRhX3J4LmMKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9kYXRhX3J4LmMKQEAgLTEz
-LDU3ICsxMyw2IEBACiAjaW5jbHVkZSAiYmguaCIKICNpbmNsdWRlICJzdGEuaCIKIAotc3RhdGlj
-IGludCB3ZnhfZHJvcF9lbmNyeXB0X2RhdGEoc3RydWN0IHdmeF9kZXYgKndkZXYsCi0JCQkJIGNv
-bnN0IHN0cnVjdCBoaWZfaW5kX3J4ICphcmcsCi0JCQkJIHN0cnVjdCBza19idWZmICpza2IpCi17
-Ci0Jc3RydWN0IGllZWU4MDIxMV9oZHIgKmZyYW1lID0gKHN0cnVjdCBpZWVlODAyMTFfaGRyICop
-c2tiLT5kYXRhOwotCXNpemVfdCBoZHJsZW4gPSBpZWVlODAyMTFfaGRybGVuKGZyYW1lLT5mcmFt
-ZV9jb250cm9sKTsKLQlzaXplX3QgaXZfbGVuLCBpY3ZfbGVuOwotCi0JLyogT29wcy4uLiBUaGVy
-ZSBpcyBubyBmYXN0IHdheSB0byBhc2sgbWFjODAyMTEgYWJvdXQKLQkgKiBJVi9JQ1YgbGVuZ3Ro
-cy4gRXZlbiBkZWZpbmVhcyBhcmUgbm90IGV4cG9zZWQuCi0JICovCi0Jc3dpdGNoIChhcmctPnJ4
-X2ZsYWdzLmVuY3J5cCkgewotCWNhc2UgSElGX1JJX0ZMQUdTX1dFUF9FTkNSWVBURUQ6Ci0JCWl2
-X2xlbiA9IDQgLyogV0VQX0lWX0xFTiAqLzsKLQkJaWN2X2xlbiA9IDQgLyogV0VQX0lDVl9MRU4g
-Ki87Ci0JCWJyZWFrOwotCWNhc2UgSElGX1JJX0ZMQUdTX1RLSVBfRU5DUllQVEVEOgotCQlpdl9s
-ZW4gPSA4IC8qIFRLSVBfSVZfTEVOICovOwotCQlpY3ZfbGVuID0gNCAvKiBUS0lQX0lDVl9MRU4g
-Ki8KLQkJCSsgOCAvKk1JQ0hBRUxfTUlDX0xFTiovOwotCQlicmVhazsKLQljYXNlIEhJRl9SSV9G
-TEFHU19BRVNfRU5DUllQVEVEOgotCQlpdl9sZW4gPSA4IC8qIENDTVBfSERSX0xFTiAqLzsKLQkJ
-aWN2X2xlbiA9IDggLyogQ0NNUF9NSUNfTEVOICovOwotCQlicmVhazsKLQljYXNlIEhJRl9SSV9G
-TEFHU19XQVBJX0VOQ1JZUFRFRDoKLQkJaXZfbGVuID0gMTggLyogV0FQSV9IRFJfTEVOICovOwot
-CQlpY3ZfbGVuID0gMTYgLyogV0FQSV9NSUNfTEVOICovOwotCQlicmVhazsKLQlkZWZhdWx0Ogot
-CQlkZXZfZXJyKHdkZXYtPmRldiwgInVua25vd24gZW5jcnlwdGlvbiB0eXBlICVkXG4iLAotCQkJ
-YXJnLT5yeF9mbGFncy5lbmNyeXApOwotCQlyZXR1cm4gLUVJTzsKLQl9Ci0KLQkvKiBGaXJtd2Fy
-ZSBzdHJpcHMgSUNWIGluIGNhc2Ugb2YgTUlDIGZhaWx1cmUuICovCi0JaWYgKGFyZy0+c3RhdHVz
-ID09IEhJRl9TVEFUVVNfUlhfRkFJTF9NSUMpCi0JCWljdl9sZW4gPSAwOwotCi0JaWYgKHNrYi0+
-bGVuIDwgaGRybGVuICsgaXZfbGVuICsgaWN2X2xlbikgewotCQlkZXZfd2Fybih3ZGV2LT5kZXYs
-ICJtYWxmb3JtZWQgU0RVIHJlY2VpdmVkXG4iKTsKLQkJcmV0dXJuIC1FSU87Ci0JfQotCi0JLyog
-UmVtb3ZlIElWLCBJQ1YgYW5kIE1JQyAqLwotCXNrYl90cmltKHNrYiwgc2tiLT5sZW4gLSBpY3Zf
-bGVuKTsKLQltZW1tb3ZlKHNrYi0+ZGF0YSArIGl2X2xlbiwgc2tiLT5kYXRhLCBoZHJsZW4pOwot
-CXNrYl9wdWxsKHNrYiwgaXZfbGVuKTsKLQlyZXR1cm4gMDsKLX0KLQogdm9pZCB3ZnhfcnhfY2Io
-c3RydWN0IHdmeF92aWYgKnd2aWYsCiAJICAgICAgIGNvbnN0IHN0cnVjdCBoaWZfaW5kX3J4ICph
-cmcsIHN0cnVjdCBza19idWZmICpza2IpCiB7CkBAIC0xMDMsMTMgKzUyLDggQEAgdm9pZCB3Znhf
-cnhfY2Ioc3RydWN0IHdmeF92aWYgKnd2aWYsCiAJaGRyLT5zaWduYWwgPSBhcmctPnJjcGlfcnNz
-aSAvIDIgLSAxMTA7CiAJaGRyLT5hbnRlbm5hID0gMDsKIAotCWlmIChhcmctPnJ4X2ZsYWdzLmVu
-Y3J5cCkgewotCQlpZiAod2Z4X2Ryb3BfZW5jcnlwdF9kYXRhKHd2aWYtPndkZXYsIGFyZywgc2ti
-KSkKLQkJCWdvdG8gZHJvcDsKLQkJaGRyLT5mbGFnIHw9IFJYX0ZMQUdfREVDUllQVEVEIHwgUlhf
-RkxBR19JVl9TVFJJUFBFRDsKLQkJaWYgKGFyZy0+cnhfZmxhZ3MuZW5jcnlwID09IEhJRl9SSV9G
-TEFHU19US0lQX0VOQ1JZUFRFRCkKLQkJCWhkci0+ZmxhZyB8PSBSWF9GTEFHX01NSUNfU1RSSVBQ
-RUQ7Ci0JfQorCWlmIChhcmctPnJ4X2ZsYWdzLmVuY3J5cCkKKwkJaGRyLT5mbGFnIHw9IFJYX0ZM
-QUdfREVDUllQVEVEIHwgUlhfRkxBR19QTl9WQUxJREFURUQ7CiAKIAkvKiBGaWx0ZXIgYmxvY2sg
-QUNLIG5lZ290aWF0aW9uOiBmdWxseSBjb250cm9sbGVkIGJ5IGZpcm13YXJlICovCiAJaWYgKGll
-ZWU4MDIxMV9pc19hY3Rpb24oZnJhbWUtPmZyYW1lX2NvbnRyb2wpICYmCi0tIAoyLjI3LjAKCg==
+Hi Doug,
+I have tested v4 changes internally on target, if i am giving input as 
+unaligned address, it's not throwing any error message.
+
+
+
+On 6/22/2020 8:19 PM, Douglas Anderson wrote:
+> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> 
+> This patch adds support for blowing fuses to the qfprom driver if the
+> required properties are defined in the device tree.
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v4:
+> - Only get clock/regulator if all address ranges are provided.
+> - Don't use optional version of clk_get now.
+> - Clock name is "core", not "sec".
+> - Cleaned up error message if couldn't get clock.
+> - Fixed up minor version mask.
+> - Use GENMASK to generate masks.
+> 
+> Changes in v3:
+> - Don't provide "reset" value for things; just save/restore.
+> - Use the major/minor version read from 0x6000.
+> - Reading should still read "corrected", not "raw".
+> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
+> - Simplified the SoC data structure.
+> - No need for quite so many levels of abstraction for clocks/regulator.
+> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
+> - Properly undo things in the case of failure.
+> - Don't just keep enabling the regulator over and over again.
+> - Enable / disable the clock each time
+> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
+> - No reason for 100 us to be SoC specific.
+> - No need for reg-names.
+> - We shouldn't be creating two separate nvmem devices.
+> 
+>   drivers/nvmem/qfprom.c | 314 +++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 303 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
+> index 8a91717600be..0a8576f2d4c6 100644
+> --- a/drivers/nvmem/qfprom.c
+> +++ b/drivers/nvmem/qfprom.c
+> @@ -3,57 +3,349 @@
+>    * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>    */
+>   
+> +#include <linux/clk.h>
+>   #include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/mod_devicetable.h>
+> -#include <linux/io.h>
+>   #include <linux/nvmem-provider.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +/* Blow timer clock frequency in Mhz */
+> +#define QFPROM_BLOW_TIMER_OFFSET 0x03c
+> +
+> +/* Amount of time required to hold charge to blow fuse in micro-seconds */
+> +#define QFPROM_FUSE_BLOW_POLL_US	10
+> +#define QFPROM_FUSE_BLOW_TIMEOUT_US	100
+> +
+> +#define QFPROM_BLOW_STATUS_OFFSET	0x048
+> +#define QFPROM_BLOW_STATUS_BUSY		0x1
+> +#define QFPROM_BLOW_STATUS_READY	0x0
+> +
+> +#define QFPROM_ACCEL_OFFSET		0x044
+> +
+> +#define QFPROM_VERSION_OFFSET		0x0
+> +#define QFPROM_MAJOR_VERSION_SHIFT	28
+> +#define QFPROM_MAJOR_VERSION_MASK	GENMASK(31, QFPROM_MAJOR_VERSION_SHIFT)
+> +#define QFPROM_MINOR_VERSION_SHIFT	16
+> +#define QFPROM_MINOR_VERSION_MASK	GENMASK(27, QFPROM_MINOR_VERSION_SHIFT)
+> +
+> +static bool read_raw_data;
+> +module_param(read_raw_data, bool, 0644);
+> +MODULE_PARM_DESC(read_raw_data, "Read raw instead of corrected data");
+>   
+> +/**
+> + * struct qfprom_soc_data - config that varies from SoC to SoC.
+> + *
+> + * @accel_value:             Should contain qfprom accel value.
+> + * @qfprom_blow_timer_value: The timer value of qfprom when doing efuse blow.
+> + * @qfprom_blow_set_freq:    The frequency required to set when we start the
+> + *                           fuse blowing.
+> + */
+> +struct qfprom_soc_data {
+> +	u32 accel_value;
+> +	u32 qfprom_blow_timer_value;
+> +	u32 qfprom_blow_set_freq;
+> +};
+> +
+> +/**
+> + * struct qfprom_priv - structure holding qfprom attributes
+> + *
+> + * @qfpraw:       iomapped memory space for qfprom-efuse raw address space.
+> + * @qfpconf:      iomapped memory space for qfprom-efuse configuration address
+> + *                space.
+> + * @qfpcorrected: iomapped memory space for qfprom corrected address space.
+> + * @qfpsecurity:  iomapped memory space for qfprom security control space.
+> + * @dev:          qfprom device structure.
+> + * @secclk:       Clock supply.
+> + * @vcc:          Regulator supply.
+> + * @soc_data:     Data that for things that varies from SoC to SoC.
+> + */
+>   struct qfprom_priv {
+> -	void __iomem *base;
+> +	void __iomem *qfpraw;
+> +	void __iomem *qfpconf;
+> +	void __iomem *qfpcorrected;
+> +	void __iomem *qfpsecurity;
+> +	struct device *dev;
+> +	struct clk *secclk;
+> +	struct regulator *vcc;
+> +	const struct qfprom_soc_data *soc_data;
+> +};
+> +
+> +/**
+> + * struct qfprom_touched_values - saved values to restore after blowing
+> + *
+> + * @clk_rate: The rate the clock was at before blowing.
+> + * @accel_val: The value of the accel reg before blowing.
+> + * @timer_val: The value of the timer before blowing.
+> + */
+> +struct qfprom_touched_values {
+> +	unsigned long clk_rate;
+> +	u32 accel_val;
+> +	u32 timer_val;
+>   };
+>   
+> +/**
+> + * qfprom_disable_fuse_blowing() - Undo enabling of fuse blowing.
+> + * @priv: Our driver data.
+> + * @old:  The data that was stashed from before fuse blowing.
+> + *
+> + * Resets the value of the blow timer, accel register and the clock
+> + * and voltage settings.
+> + *
+> + * Prints messages if there are errors but doesn't return an error code
+> + * since there's not much we can do upon failure.
+> + */
+> +static void qfprom_disable_fuse_blowing(const struct qfprom_priv *priv,
+> +					const struct qfprom_touched_values *old)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_disable(priv->vcc);
+> +	if (ret)
+> +		dev_warn(priv->dev, "Failed to disable regulator (ignoring)\n");
+> +
+> +	ret = clk_set_rate(priv->secclk, old->clk_rate);
+> +	if (ret)
+> +		dev_warn(priv->dev,
+> +			 "Failed to set clock rate for disable (ignoring)\n");
+> +
+> +	clk_disable_unprepare(priv->secclk);
+> +
+> +	writel(old->timer_val, priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
+> +	writel(old->accel_val, priv->qfpconf + QFPROM_ACCEL_OFFSET);
+> +}
+> +
+> +/**
+> + * qfprom_enable_fuse_blowing() - Enable fuse blowing.
+> + * @priv: Our driver data.
+> + * @old:  We'll stash stuff here to use when disabling.
+> + *
+> + * Sets the value of the blow timer, accel register and the clock
+> + * and voltage settings.
+> + *
+> + * Prints messages if there are errors so caller doesn't need to.
+> + *
+> + * Return: 0 or -err.
+> + */
+> +static int qfprom_enable_fuse_blowing(const struct qfprom_priv *priv,
+> +				      struct qfprom_touched_values *old)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->secclk);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	old->clk_rate = clk_get_rate(priv->secclk);
+> +	ret = clk_set_rate(priv->secclk, priv->soc_data->qfprom_blow_set_freq);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to set clock rate for enable\n");
+> +		goto err_clk_prepared;
+> +	}
+> +
+> +	ret = regulator_enable(priv->vcc);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Failed to enable regulator\n");
+> +		goto err_clk_rate_set;
+> +	}
+> +
+> +	old->timer_val = readl(priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
+> +	old->accel_val = readl(priv->qfpconf + QFPROM_ACCEL_OFFSET);
+> +	writel(priv->soc_data->qfprom_blow_timer_value,
+> +	       priv->qfpconf + QFPROM_BLOW_TIMER_OFFSET);
+> +	writel(priv->soc_data->accel_value,
+> +	       priv->qfpconf + QFPROM_ACCEL_OFFSET);
+> +
+> +	return 0;
+> +
+> +err_clk_rate_set:
+> +	clk_set_rate(priv->secclk, old->clk_rate);
+> +err_clk_prepared:
+> +	clk_disable_unprepare(priv->secclk);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * qfprom_efuse_reg_write() - Write to fuses.
+> + * @context: Our driver data.
+> + * @reg:     The offset to write at.
+> + * @_val:    Pointer to data to write.
+> + * @bytes:   The number of bytes to write.
+> + *
+> + * Writes to fuses.  WARNING: THIS IS PERMANENT.
+> + *
+> + * Return: 0 or -err.
+> + */
+> +static int qfprom_reg_write(void *context, unsigned int reg, void *_val,
+> +			    size_t bytes)
+> +{
+> +	struct qfprom_priv *priv = context;
+> +	struct qfprom_touched_values old;
+> +	int words = bytes / 4;
+> +	u32 *value = _val;
+> +	u32 blow_status;
+> +	int ret;
+> +	int i;
+> +
+> +	dev_dbg(priv->dev,
+> +		"Writing to raw qfprom region : %#010x of size: %zu\n",
+> +		reg, bytes);
+> +
+> +	/*
+> +	 * The hardware only allows us to write word at a time, but we can
+> +	 * read byte at a time.  Until the nvmem framework allows a separate
+> +	 * word_size and stride for reading vs. writing, we'll enforce here.
+> +	 */
+> +	if (bytes % 4) {
+> +		dev_err(priv->dev,
+> +			"%zu is not an integral number of words\n", bytes);
+> +		return -EINVAL;
+> +	}
+> +	if (reg % 4) {
+> +		dev_err(priv->dev,
+> +			"Invalid offset: %#x.  Must be word aligned\n", reg);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = qfprom_enable_fuse_blowing(priv, &old);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = readl_relaxed_poll_timeout(
+> +		priv->qfpconf + QFPROM_BLOW_STATUS_OFFSET,
+> +		blow_status, blow_status == QFPROM_BLOW_STATUS_READY,
+> +		QFPROM_FUSE_BLOW_POLL_US, QFPROM_FUSE_BLOW_TIMEOUT_US);
+> +
+> +	if (ret) {
+> +		dev_err(priv->dev,
+> +			"Timeout waiting for initial ready; aborting.\n");
+> +		goto exit_enabled_fuse_blowing;
+> +	}
+> +
+> +	for (i = 0; i < words; i++)
+> +		writel(value[i], priv->qfpraw + reg + (i * 4));
+> +
+> +	ret = readl_relaxed_poll_timeout(
+> +		priv->qfpconf + QFPROM_BLOW_STATUS_OFFSET,
+> +		blow_status, blow_status == QFPROM_BLOW_STATUS_READY,
+> +		QFPROM_FUSE_BLOW_POLL_US, QFPROM_FUSE_BLOW_TIMEOUT_US);
+> +
+> +	/* Give an error, but not much we can do in this case */
+> +	if (ret)
+> +		dev_err(priv->dev, "Timeout waiting for finish.\n");
+> +
+> +exit_enabled_fuse_blowing:
+> +	qfprom_disable_fuse_blowing(priv, &old);
+> +
+> +	return ret;
+> +}
+> +
+>   static int qfprom_reg_read(void *context,
+>   			unsigned int reg, void *_val, size_t bytes)
+>   {
+>   	struct qfprom_priv *priv = context;
+>   	u8 *val = _val;
+>   	int i = 0, words = bytes;
+> +	void __iomem *base = priv->qfpcorrected;
+> +
+> +	if (read_raw_data && priv->qfpraw)
+> +		base = priv->qfpraw;
+>   
+>   	while (words--)
+> -		*val++ = readb(priv->base + reg + i++);
+> +		*val++ = readb(base + reg + i++);
+>   
+>   	return 0;
+>   }
+>   
+> -static struct nvmem_config econfig = {
+> -	.name = "qfprom",
+> -	.stride = 1,
+> -	.word_size = 1,
+> -	.reg_read = qfprom_reg_read,
+> +static const struct qfprom_soc_data qfprom_7_8_data = {
+> +	.accel_value = 0xD10,
+> +	.qfprom_blow_timer_value = 25,
+> +	.qfprom_blow_set_freq = 4800000,
+>   };
+>   
+>   static int qfprom_probe(struct platform_device *pdev)
+>   {
+> +	struct nvmem_config econfig = {
+> +		.name = "qfprom",
+> +		.stride = 1,
+> +		.word_size = 1,
+> +		.reg_read = qfprom_reg_read,
+> +	};
+>   	struct device *dev = &pdev->dev;
+>   	struct resource *res;
+>   	struct nvmem_device *nvmem;
+>   	struct qfprom_priv *priv;
+> +	int ret;
+>   
+>   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>   	if (!priv)
+>   		return -ENOMEM;
+>   
+> +	/* The corrected section is always provided */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	priv->base = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(priv->base))
+> -		return PTR_ERR(priv->base);
+> +	priv->qfpcorrected = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->qfpcorrected))
+> +		return PTR_ERR(priv->qfpcorrected);
+>   
+>   	econfig.size = resource_size(res);
+>   	econfig.dev = dev;
+>   	econfig.priv = priv;
+>   
+> +	priv->dev = dev;
+> +
+> +	/*
+> +	 * If more than one region is provided then the OS has the ability
+> +	 * to write.
+> +	 */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (res) {
+> +		u32 version;
+> +		int major_version, minor_version;
+> +
+> +		priv->qfpraw = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(priv->qfpraw))
+> +			return PTR_ERR(priv->qfpraw);
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +		priv->qfpconf = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(priv->qfpconf))
+> +			return PTR_ERR(priv->qfpconf);
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> +		priv->qfpsecurity = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(priv->qfpsecurity))
+> +			return PTR_ERR(priv->qfpsecurity);
+> +
+> +		version = readl(priv->qfpsecurity + QFPROM_VERSION_OFFSET);
+> +		major_version = (version & QFPROM_MAJOR_VERSION_MASK) >>
+> +				QFPROM_MAJOR_VERSION_SHIFT;
+> +		minor_version = (version & QFPROM_MINOR_VERSION_MASK) >>
+> +				QFPROM_MINOR_VERSION_SHIFT;
+> +
+> +		if (major_version == 7 && minor_version == 8)
+> +			priv->soc_data = &qfprom_7_8_data;
+> +
+> +		priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> +		if (IS_ERR(priv->vcc))
+> +			return PTR_ERR(priv->vcc);
+> +
+> +		priv->secclk = devm_clk_get(dev, "core");
+> +		if (IS_ERR(priv->secclk)) {
+> +			ret = PTR_ERR(priv->secclk);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Error getting clock: %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		/* Only enable writing if we have SoC data. */
+> +		if (priv->soc_data)
+> +			econfig.reg_write = qfprom_reg_write;
+> +	}
+> +
+>   	nvmem = devm_nvmem_register(dev, &econfig);
+>   
+>   	return PTR_ERR_OR_ZERO(nvmem);
+> 
+
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of the Code Aurora Forum, hosted by the Linux Foundation.
