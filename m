@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A00EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36810208A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D11D20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bTUaWvEE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aedw4ZQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgGAUYV (ORCPT
+        id S1728080AbgGAUYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49312 "EHLO
+        Wed, 1 Jul 2020 16:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgGAUXT (ORCPT
+        with ESMTP id S1727808AbgGAUXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:23:19 -0400
+        Wed, 1 Jul 2020 16:23:16 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897B7C08C5DB;
-        Wed,  1 Jul 2020 13:23:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81906C08C5DB;
+        Wed,  1 Jul 2020 13:23:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=ymeeSj/80C80QSTU/Ic1z6CRNbIyEMEL1HfwigYLUGw=; b=bTUaWvEEhg+CSAABSNMICKO9wl
-        t6nGyjhh4mXVXVdLYgurrTmk4wdhXiC75KxaJaj6IZi3hrvSq9rDivO7AJt6ypwlWMUERkZlzOCcp
-        lWdW9ge+/k0IFCvuvFGZilaEmEeC57mrnBVA6OvXUamAQyhKZH9rhtJqqoDoUtxo6mcfptAA5iA0q
-        NbnFRILSRTZjbqNROjTPsmzqYchIoCibWljt0Q5VTf5jkGNTcF5IzFTESRAa3RSd7GT22tV/z9dUx
-        aDGggqSmr0oSwkNO3zGSYqiN/huwCqm3+PaxXa/oFw4pyoVa3GskNwE4VRsBFFrtSsEv4OmyIeghL
-        HblYhvAg==;
+        bh=rF/h+g2aRvM7O684xTgcwq5WjNPNPSLZJBoCztHySj0=; b=aedw4ZQA9cALo1d9Fp8GNOr9x3
+        k649IpCT0RA/ne2b3RtpmrOzHi6W3FeKeC4PQfgH8kNAfT35neIdZh25E9QbST3rTCXa0nl3O7Pju
+        kU9MHR9ZwCKFxoLSNpZm8z5LGgyvqc1eY19pSFbAYsBj0tdB5RualLR4XzcFGoNTENKsxEXWjBG/u
+        EJatLufQ7K1LWzq/q/AVdfpQphY4aRemIktioa/R4FAcIHvyfNJU4OsmX6q+uRZ7tTVvtjFiuuqV+
+        kFyH3XgwNfFcDbSUfY2l7kP0+/sImjO74n+1vXl1KRUDwoVaBfuzBeBsbfiIDAjvKV6vY17TreB3P
+        vZf+8drA==;
 Received: from [2001:4bb8:18c:3b3b:379a:a079:66b5:89c3] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqjGE-0002RF-Ou; Wed, 01 Jul 2020 20:23:15 +0000
+        id 1jqjGB-0002QY-0d; Wed, 01 Jul 2020 20:23:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -47,9 +47,9 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Iurii Zaikin <yzaikin@google.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 14/23] fs: refactor new_sync_read
-Date:   Wed,  1 Jul 2020 22:09:42 +0200
-Message-Id: <20200701200951.3603160-15-hch@lst.de>
+Subject: [PATCH 11/23] fs: implement kernel_read using __kernel_read
+Date:   Wed,  1 Jul 2020 22:09:39 +0200
+Message-Id: <20200701200951.3603160-12-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200701200951.3603160-1-hch@lst.de>
 References: <20200701200951.3603160-1-hch@lst.de>
@@ -61,62 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the read_iter method as a parameter and mark the function
-non-static.  This allows reusing it for additional callsites e.g.
-in procfs.
+Consolidate the two in-kernel read helpers to make upcoming changes
+easier.  The only difference are the missing call to rw_verify_area
+in kernel_read, and an access_ok check that doesn't make sense for
+kernel buffers to start with.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/read_write.c    | 8 +++++---
- include/linux/fs.h | 2 ++
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ fs/read_write.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 8bec4418543994..7550c195a6a10e 100644
+index cc8e0b4f3cd697..a0a0b5d1d9249c 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -401,7 +401,8 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
- 				read_write == READ ? MAY_READ : MAY_WRITE);
- }
+@@ -455,15 +455,12 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  
--static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter))
+ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  {
- 	struct iovec iov = { .iov_base = buf, .iov_len = len };
- 	struct kiocb kiocb;
-@@ -412,7 +413,7 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
- 	kiocb.ki_pos = (ppos ? *ppos : 0);
- 	iov_iter_init(&iter, READ, &iov, 1, len);
+-	mm_segment_t old_fs;
+-	ssize_t result;
++	ssize_t ret;
  
--	ret = call_read_iter(filp, &kiocb, &iter);
-+	ret = cb(&kiocb, &iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
- 	if (ppos)
- 		*ppos = kiocb.ki_pos;
-@@ -488,7 +489,8 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
- 	if (file->f_op->read)
- 		ret = file->f_op->read(file, buf, count, pos);
- 	else if (file->f_op->read_iter)
--		ret = new_sync_read(file, buf, count, pos);
-+		ret = iter_read(file, buf, count, pos,
-+				file->f_op->read_iter);
- 	else
- 		ret = -EINVAL;
- 	if (ret > 0) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0c0ec76b600b50..2e921d7dfd4878 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1916,6 +1916,8 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 			      unsigned long nr_segs, unsigned long fast_segs,
- 			      struct iovec *fast_pointer,
- 			      struct iovec **ret_pointer);
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter));
+-	old_fs = get_fs();
+-	set_fs(KERNEL_DS);
+-	/* The cast to a user pointer is valid due to the set_fs() */
+-	result = vfs_read(file, (void __user *)buf, count, pos);
+-	set_fs(old_fs);
+-	return result;
++	ret = rw_verify_area(READ, file, pos, count);
++	if (ret)
++		return ret;
++	return __kernel_read(file, buf, count, pos);
+ }
+ EXPORT_SYMBOL(kernel_read);
  
- extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
- extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
 -- 
 2.26.2
 
