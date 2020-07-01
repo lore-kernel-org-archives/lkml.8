@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA90EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914AE2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802762073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFD+B4Qi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcFylXjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgGACYI (ORCPT
+        id S1726110AbgGACYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgGACYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jun 2020 22:24:02 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3151C03E979;
-        Tue, 30 Jun 2020 19:24:00 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id t25so20499366lji.12;
-        Tue, 30 Jun 2020 19:24:00 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgGACX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:23:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC9BC061755;
+        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s1so25093772ljo.0;
+        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=37Z3HYJxY12m2q1zLLMVAo9a4Krobq6zohBrdzALyVQ=;
-        b=qFD+B4QikxOPYBwCWRO9sRvcJ2ylNeF6BprSPGFu5CmB/30cJbPc09FTRF2BC4pN6d
-         qMk0PmA+6quTB3ZITKmCox3cQiCpeQ1BVxZHQWhtHRVbSATljqc3zXQzaV9vDjh0yc5y
-         K4XIHbtjgDPD5W/9k01ErjNXGiaOMwoXrSioPERhYLJOG6RPeAP4IbX72j/cbt0w6/JK
-         DBB6BR1FGiOzc83lxK/Qu4+2NQb4Ry5iao5zlNNiOUcwuq0tQ0i4KheOcf+jSOTjKEhI
-         VcuMYNeZtCUh7Nqm6EIYFMWiWkvGO/RAthl0raQ3TDh9Rb65bDaJml3dEHL6I6oQ25x2
-         m/hA==
+        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
+        b=ZcFylXjOLKEs1YEHNYW5SEnwvyP1m2KYyDK40/iSh+wd1xzgRYRzAkZ02SDRdHlvKS
+         FgrWvv/f3DqvqBTjLmLMu4Vgb37oufCQuhSiLv7Q8iMnxlMii3z2EN99y3ogpR5LzBEt
+         0fn0iX2x4kpfMChJJ1RtTXPIBNkK0+CXoEQIIOnJgB9wcneA3QNTxl5UBz6qmXB4MpD1
+         qLT+F+1ONyFbEv9w+pZzH42FrR1hpE8wt08Gr9xjhZWw4kJmx47RfgK8qOhTzI3Usqvf
+         EUJDevskWnGxAUq5YBorUMVQzkr7/o32+e8vp7FaZrropV+fV4n2v7q6GABdOBvgbR1r
+         CbKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=37Z3HYJxY12m2q1zLLMVAo9a4Krobq6zohBrdzALyVQ=;
-        b=C92xQjOJ6AlXRHKbyg42oBARh8NkjD3rEHDqdmwKWF9JarBORUUgBjt/FOUHn8OX8j
-         8/+JlFqvLVwGpcVN59Fcn+NjQo7hNzkVJg+gJOTqmYKT4mH4S1njoLFfOweNrp/M+ybI
-         5YsLBagIvyDdJWGwVzd4chqEuKoZmXznsE5v2QmxGdYF20pG3YVjFNe5+X+WQiS/gDlh
-         jnRyzf+IrL/cpQWHriB8KBI5c6gK5x91upD6iDVi3hUB93svj51FOrtkTUoTW57hmV1+
-         lswuozHyGBSipMn/DcdqJqaKEHfsNyP564kSWERuMpBckGeOX3NvEoAyNdMLTfdPmeHD
-         wO0A==
-X-Gm-Message-State: AOAM530aa6QWSzEnaI12zrf5blCaEAoacoL02I2i2DtkRFqOV8nJ0iRK
-        dQWX4zWr0v6IRpnye3DSQG8=
-X-Google-Smtp-Source: ABdhPJxo1aYYW2nGVu0mj1YJyPlgU5yUWa8RQdGqU5qZJuAQjK37DvU9T6Hbv4tlibV9uHbzIp8naQ==
-X-Received: by 2002:a2e:81c4:: with SMTP id s4mr8902702ljg.284.1593570239143;
-        Tue, 30 Jun 2020 19:23:59 -0700 (PDT)
+        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
+        b=AmZve8DvSTjSPmOxmPGPcOevznLoFzJA/pmVZWjHK+oPjGzyqTtIO8WoPDvmylaUpL
+         SK+5+dxLBBQPxcOEyzGuBS5HXJmx/SNDtKTkIQ3PTZveul99tIh7YGI9JlCNmUKZowyT
+         ohD7w4tu8/0tJRMCY/UIl6QhonZF0zGkaIckKaF8QpEqZyYj5fvVbGU5eTceUfSFVP3u
+         wv0s5dh1QeRcHCj7AASAWWigxEb8f77jxad3+di6P0lNTbW71g8tF89mfQzUGMJhmiMT
+         uT3QFKrwUHCf3Mbm1ZV45FITFMIVDfmx3UkDSqYOD55DzR0gl6+CK6Vd/h1psjM3Tb/X
+         IEfA==
+X-Gm-Message-State: AOAM531adIjyQN0mNxptzElLSk59h3dJKBH61WDdxq3Rv1AL5Qll/u46
+        ujDPYL7Suym3z3cJ+K+eyldPU9O8TtM=
+X-Google-Smtp-Source: ABdhPJzLVu+pc8eNoqlmFJWxGvBMY4WUCgYsygKPGHe9uic2XNC86UNcEKaXm3lAtRK2Rl63z8Fk0Q==
+X-Received: by 2002:a05:651c:3cf:: with SMTP id f15mr9939751ljp.365.1593570236235;
+        Tue, 30 Jun 2020 19:23:56 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id f21sm1303557ljj.121.2020.06.30.19.23.58
+        by smtp.gmail.com with ESMTPSA id f21sm1303557ljj.121.2020.06.30.19.23.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 19:23:58 -0700 (PDT)
+        Tue, 30 Jun 2020 19:23:55 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 4/4] drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
-Date:   Wed,  1 Jul 2020 05:21:28 +0300
-Message-Id: <20200701022128.12968-5-digetx@gmail.com>
+Subject: [PATCH v9 1/4] drm/tegra: output: Don't leak OF node on error
+Date:   Wed,  1 Jul 2020 05:21:25 +0300
+Message-Id: <20200701022128.12968-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200701022128.12968-1-digetx@gmail.com>
 References: <20200701022128.12968-1-digetx@gmail.com>
@@ -79,148 +79,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently Tegra DRM driver manually manages display panel, but this
-management could be moved out into DRM core if we'll wrap panel into
-DRM bridge. This patch wraps RGB panel into a DRM bridge and removes
-manual handling of the panel from the RGB output code.
+The OF node should be put before returning error in tegra_output_probe(),
+otherwise node's refcount will be leaked.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/rgb.c | 70 ++++++++++---------------------------
- 1 file changed, 18 insertions(+), 52 deletions(-)
+ drivers/gpu/drm/tegra/output.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 9a7024ec96bc..4142a56ca764 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -8,7 +8,6 @@
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge_connector.h>
--#include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
- 
- #include "drm.h"
-@@ -86,45 +85,13 @@ static void tegra_dc_write_regs(struct tegra_dc *dc,
- 		tegra_dc_writel(dc, table[i].value, table[i].offset);
- }
- 
--static const struct drm_connector_funcs tegra_rgb_connector_funcs = {
--	.reset = drm_atomic_helper_connector_reset,
--	.detect = tegra_output_connector_detect,
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.destroy = tegra_output_connector_destroy,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--};
--
--static enum drm_mode_status
--tegra_rgb_connector_mode_valid(struct drm_connector *connector,
--			       struct drm_display_mode *mode)
--{
--	/*
--	 * FIXME: For now, always assume that the mode is okay. There are
--	 * unresolved issues with clk_round_rate(), which doesn't always
--	 * reliably report whether a frequency can be set or not.
--	 */
--	return MODE_OK;
--}
--
--static const struct drm_connector_helper_funcs tegra_rgb_connector_helper_funcs = {
--	.get_modes = tegra_output_connector_get_modes,
--	.mode_valid = tegra_rgb_connector_mode_valid,
--};
--
- static void tegra_rgb_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct tegra_output *output = encoder_to_output(encoder);
- 	struct tegra_rgb *rgb = to_rgb(output);
- 
--	if (output->panel)
--		drm_panel_disable(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_disable, ARRAY_SIZE(rgb_disable));
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_unprepare(output->panel);
- }
- 
- static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
-@@ -133,9 +100,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	struct tegra_rgb *rgb = to_rgb(output);
- 	u32 value;
- 
--	if (output->panel)
--		drm_panel_prepare(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_enable, ARRAY_SIZE(rgb_enable));
- 
- 	value = DE_SELECT_ACTIVE | DE_CONTROL_NORMAL;
-@@ -157,9 +121,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	tegra_dc_writel(rgb->dc, value, DC_DISP_SHIFT_CLOCK_OPTIONS);
- 
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_enable(output->panel);
- }
- 
- static int
-@@ -278,6 +239,23 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	drm_encoder_helper_add(&output->encoder,
- 			       &tegra_rgb_encoder_helper_funcs);
- 
-+	/*
-+	 * Wrap directly-connected panel into DRM bridge in order to let
-+	 * DRM core to handle panel for us.
-+	 */
-+	if (output->panel) {
-+		output->bridge = devm_drm_panel_bridge_add(output->dev,
-+							   output->panel);
-+		if (IS_ERR(output->bridge)) {
-+			dev_err(output->dev,
-+				"failed to wrap panel into bridge: %pe\n",
-+				output->bridge);
-+			return PTR_ERR(output->bridge);
-+		}
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index e36e5e7c2f69..a6a711d54e88 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -102,10 +102,10 @@ int tegra_output_probe(struct tegra_output *output)
+ 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
+ 	if (panel) {
+ 		output->panel = of_drm_find_panel(panel);
++		of_node_put(panel);
 +
-+		output->panel = NULL;
-+	}
-+
- 	/*
- 	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
- 	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-@@ -292,8 +270,7 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	 * Newer device-trees utilize LVDS encoder bridge, which provides
- 	 * us with a connector and handles the display panel.
- 	 *
--	 * For older device-trees we fall back to our own connector and use
--	 * nvidia,panel phandle.
-+	 * For older device-trees we wrapped panel into the panel-bridge.
- 	 */
- 	if (output->bridge) {
- 		err = drm_bridge_attach(&output->encoder, output->bridge,
-@@ -313,17 +290,6 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 		}
- 
- 		drm_connector_attach_encoder(connector, &output->encoder);
--	} else {
--		drm_connector_init(drm, &output->connector,
--				   &tegra_rgb_connector_funcs,
--				   DRM_MODE_CONNECTOR_LVDS);
--		drm_connector_helper_add(&output->connector,
--					 &tegra_rgb_connector_helper_funcs);
--		output->connector.dpms = DRM_MODE_DPMS_OFF;
+ 		if (IS_ERR(output->panel))
+ 			return PTR_ERR(output->panel);
 -
--		drm_connector_attach_encoder(&output->connector,
--					     &output->encoder);
--		drm_connector_register(&output->connector);
+-		of_node_put(panel);
  	}
  
- 	err = tegra_output_init(drm, output);
+ 	output->edid = of_get_property(output->of_node, "nvidia,edid", &size);
+@@ -113,13 +113,12 @@ int tegra_output_probe(struct tegra_output *output)
+ 	ddc = of_parse_phandle(output->of_node, "nvidia,ddc-i2c-bus", 0);
+ 	if (ddc) {
+ 		output->ddc = of_find_i2c_adapter_by_node(ddc);
++		of_node_put(ddc);
++
+ 		if (!output->ddc) {
+ 			err = -EPROBE_DEFER;
+-			of_node_put(ddc);
+ 			return err;
+ 		}
+-
+-		of_node_put(ddc);
+ 	}
+ 
+ 	output->hpd_gpio = devm_gpiod_get_from_of_node(output->dev,
 -- 
 2.26.0
 
