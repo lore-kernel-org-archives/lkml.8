@@ -2,143 +2,148 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C29C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2440EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8CA20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgQBNHP2"
+	by mail.kernel.org (Postfix) with ESMTP id EE32820853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593643310;
+	bh=n2vGfZSBPjybhWDA+g1S8i5WOzxKsIimFmP4WaB3i/k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=FeWSt2/z/0lOj1O7oYYEiOrCFswpRFBKs5pI2cMcrAw7wlBmDJcuSJzb4EChT45kS
+	 i/hsks4DIHcXX/L14dKnPIrSy17psVbh0A3662/rzydu1uFzbrZ2MMJhJbaj9H1A6s
+	 1Fqupo4RT85N263CaTx2ko4OCtSlMCN1H9CNndjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgGAWlD (ORCPT
+        id S1727866AbgGAWls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:41:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgGAWlC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:41:02 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C415C08C5C1;
-        Wed,  1 Jul 2020 15:41:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s1so29178061ljo.0;
-        Wed, 01 Jul 2020 15:41:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bh1Ddk7qeAP9r/b4akd97joGGTOfkA4hSpHtOpj8VWM=;
-        b=NgQBNHP2cMgzhC4lpvFFiw+ODzA1BZ4LVJHCSIAmjkGo3nsvx5pXxhQloZlDaGY8AO
-         UDMwX4asZcGsRrF3SAxvMfQgQVzNX0QC4tez95ZJoaYlXmoammVEQ39tDwObQxdA9Oa4
-         18fyN4O/IL5tt9oZMz8oYV0xcrnsCRjQqnOFwg+KwSCwe/sEr5r5mpfci/veAvHqP2uX
-         sqhqEVD/7f3c8k8Ic2ZEXXd18qArjdWKf75aMXRSjtp2R0K65GFOvEQPfAAyRazqbB9i
-         UHa7J5AGZGsJSlC5wh9/gN97E5ZLVwbMqzYBVRqaqgSJ9HhjcCHn6NT7nIpmwo9EDHV2
-         sluw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bh1Ddk7qeAP9r/b4akd97joGGTOfkA4hSpHtOpj8VWM=;
-        b=oUCYNBjYnXJEeGzH8RL5fxlQ3dTvqkVzG5QiDuLSbkRcQcqmArZMJbpuPwHyAGecJ1
-         mVpkABcaLMq0XufD76Oc5ovc0751NxB3chRzTpc5jmV7mB++++HUsdP3zl/VX5X4FzgO
-         450L2c1seusZyG2ynhJ/1tfgCijqGsM32dG/ZE795tlG9JH8a4jOarSUcMNvttmO7EDj
-         BDMdvpZA1xRTDE84xykrlGVnxeccFryNeDZ9OHvFN0mFhFA0rvVsTnzM+7yPNcYpoCqT
-         STMmO0nUHUpjdfVQ5C42IodZSKr5GpIPvqBaLgeGlVs+LMZQzUou2myMA7X5orWkdamS
-         HEjQ==
-X-Gm-Message-State: AOAM53064CcGD2RpUPP7HwagV38+0fe7dK8MiS5Sx3R4BZAh4NKhzt+R
-        8OFtVP9c3D5VUVNRno5XCkU=
-X-Google-Smtp-Source: ABdhPJzVzNWS69AjRHu9Dc76JocLPh0hgx/4x0R35ePixRJQ7+dExk38h/B2aos6Wr3RPpgrCL3Y6Q==
-X-Received: by 2002:a2e:9d10:: with SMTP id t16mr14628572lji.46.1593643261075;
-        Wed, 01 Jul 2020 15:41:01 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-181-241.NA.cust.bahnhof.se. [98.128.181.241])
-        by smtp.gmail.com with ESMTPSA id t15sm2271371lji.49.2020.07.01.15.40.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 15:41:00 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     b.zolnierkie@samsung.com
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] video: fbdev: vt8623fb: Constify static vga_regsets
-Date:   Wed,  1 Jul 2020 23:02:48 +0200
-Message-Id: <20200701210248.64893-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 18:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgGAWlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:41:47 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED3362082F;
+        Wed,  1 Jul 2020 22:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593643307;
+        bh=n2vGfZSBPjybhWDA+g1S8i5WOzxKsIimFmP4WaB3i/k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TUG0m1DmEwhAYs7l/5QTJrOhDJDby5unDa852whT5oB/UNlvATBgfsnl/26I5DcA/
+         vpv2Nom93bhpOJJw0DR+hmCK4/MgE+GNHnfgbqO005+8G7SDuA6AOtBSfyjIbvWSd3
+         yiteYTEVRnZ5ALyh3h6W2QSfOliqQVipE5abOG0s=
+Date:   Wed, 1 Jul 2020 17:41:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Marek Vasut <marex@denx.de>,
+        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: mxs_lradc_ts: Warning due to "0 is an invalid IRQ number"
+Message-ID: <20200701224145.GA3616172@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5D7z=Eg=WYgzrpqn9VoU8HxMeBbEZiv9KLjMVD1_kRo+w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are not modified so make them const to allow the compiler to put
-them in read-only memory.
+[+cc Rob, LKML for visibility & archive]
 
-Before:
-   text    data     bss     dec     hex filename
-  25509    7928      64   33501    82dd drivers/video/fbdev/vt8623fb.o
+On Wed, Jul 01, 2020 at 12:32:48PM -0300, Fabio Estevam wrote:
+> On Tue, Jun 16, 2020 at 8:52 PM Fabio Estevam <festevam@gmail.com> wrote:
+> > I am seeing the following warning on a imx28-evk running linux-next:
+> >
+> > [    7.625012] ------------[ cut here ]------------
+> > [    7.630111] WARNING: CPU: 0 PID: 1 at drivers/base/platform.c:317
+> > __platform_get_irq_byname+0x74/0x90
+> > [    7.639692] 0 is an invalid IRQ number
+> > [    7.643540] Modules linked in:
+> > [    7.646961] CPU: 0 PID: 1 Comm: swapper Not tainted
+> > 5.8.0-rc1-next-20200616-dirty #92
+> > [    7.654896] Hardware name: Freescale MXS (Device Tree)
+> > [    7.660434] [<c00105ec>] (unwind_backtrace) from [<c000e070>]
+> > (show_stack+0x10/0x14)
+> > [    7.668591] [<c000e070>] (show_stack) from [<c001aa90>] (__warn+0xe4/0x108)
+> > [    7.675941] [<c001aa90>] (__warn) from [<c001ab20>]
+> > (warn_slowpath_fmt+0x6c/0xb8)
+> > [    7.683575] [<c001ab20>] (warn_slowpath_fmt) from [<c0491b44>]
+> > (__platform_get_irq_byname+0x74/0x90)
+> > [    7.693101] [<c0491b44>] (__platform_get_irq_byname) from
+> > [<c0491b70>] (platform_get_irq_byname+0x10/0x48)
+> > [    7.703154] [<c0491b70>] (platform_get_irq_byname) from
+> > [<c056e234>] (mxs_lradc_ts_probe+0x190/0x384)
+> > [    7.712771] [<c056e234>] (mxs_lradc_ts_probe) from [<c0491850>]
+> > (platform_drv_probe+0x48/0x98)
+> > [    7.722806] [<c0491850>] (platform_drv_probe) from [<c048f7f0>]
+> > (really_probe+0x218/0x348)
+> > [    7.731530] [<c048f7f0>] (really_probe) from [<c048fa28>]
+> > (driver_probe_device+0x58/0xb4)
+> > [    7.740189] [<c048fa28>] (driver_probe_device) from [<c048fc2c>]
+> > (device_driver_attach+0x58/0x60)
+> > [    7.749471] [<c048fc2c>] (device_driver_attach) from [<c048fcb8>]
+> > (__driver_attach+0x84/0xc0)
+> > [    7.758394] [<c048fcb8>] (__driver_attach) from [<c048db28>]
+> > (bus_for_each_dev+0x70/0xb4)
+> > [    7.766977] [<c048db28>] (bus_for_each_dev) from [<c048eb24>]
+> > (bus_add_driver+0x154/0x1e0)
+> > [    7.775385] [<c048eb24>] (bus_add_driver) from [<c0490774>]
+> > (driver_register+0x74/0x108)
+> > [    7.783872] [<c0490774>] (driver_register) from [<c000a2fc>]
+> > (do_one_initcall+0x68/0x268)
+> > [    7.792467] [<c000a2fc>] (do_one_initcall) from [<c0a00fa0>]
+> > (kernel_init_freeable+0x160/0x1f4)
+> > [    7.801661] [<c0a00fa0>] (kernel_init_freeable) from [<c0720c58>]
+> > (kernel_init+0x8/0xf4)
+> > [    7.810165] [<c0720c58>] (kernel_init) from [<c0008510>]
+> > (ret_from_fork+0x14/0x24)
+> > [    7.818101] Exception stack(0xc748dfb0 to 0xc748dff8)
+> > [    7.823273] dfa0:                                     00000000
+> > 00000000 00000000 00000000
+> > [    7.831815] dfc0: 00000000 00000000 00000000 00000000 00000000
+> > 00000000 00000000 00000000
+> > [    7.840351] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > [    7.847322] irq event stamp: 273303
+> > [    7.850940] hardirqs last  enabled at (273311): [<c0066ed8>]
+> > console_unlock+0x390/0x534
+> > [    7.859314] hardirqs last disabled at (273328): [<c0066b8c>]
+> > console_unlock+0x44/0x534
+> > [    7.867605] softirqs last  enabled at (273344): [<c00097fc>]
+> > __do_softirq+0x2d4/0x450
+> > [    7.875817] softirqs last disabled at (273355): [<c001fe48>]
+> > irq_exit+0x150/0x174
+> > [    7.883472] ---[ end trace ddb222ada5cbf5cd ]---
+> > [    7.900004] input: mxs-lradc-ts as
+> > /devices/soc0/80000000.apb/80040000.apbx/80050000.lradc/mxs-lradc-ts/input/input0
+> >
+> > The touchscreen irq is defined as:
+> >
+> > enum mx28_lradc_irqs {
+> > MX28_LRADC_TS_IRQ = 0,
+> >
+> > Shouldn't we retrieve the IRQ number from the device tree instead?
 
-After:
-   text    data     bss     dec     hex filename
-  26533    6904      64   33501    82dd drivers/video/fbdev/vt8623fb.o
+  mxs_lradc_ts_probe()
+  {
+    ...
+    irq = platform_get_irq_byname(pdev, mxs_lradc_ts_irq_names[i]);
+    if (irq < 0)
+	    return irq;
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/video/fbdev/vt8623fb.c | 36 +++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+    virq = irq_of_parse_and_map(node, irq);
+    ...
+  }
 
-diff --git a/drivers/video/fbdev/vt8623fb.c b/drivers/video/fbdev/vt8623fb.c
-index 7b3eef1b893f..98ff8235c9e9 100644
---- a/drivers/video/fbdev/vt8623fb.c
-+++ b/drivers/video/fbdev/vt8623fb.c
-@@ -62,24 +62,24 @@ static const struct svga_pll vt8623_pll = {2, 127, 2, 7, 0, 3,
- 
- /* CRT timing register sets */
- 
--static struct vga_regset vt8623_h_total_regs[]       = {{0x00, 0, 7}, {0x36, 3, 3}, VGA_REGSET_END};
--static struct vga_regset vt8623_h_display_regs[]     = {{0x01, 0, 7}, VGA_REGSET_END};
--static struct vga_regset vt8623_h_blank_start_regs[] = {{0x02, 0, 7}, VGA_REGSET_END};
--static struct vga_regset vt8623_h_blank_end_regs[]   = {{0x03, 0, 4}, {0x05, 7, 7}, {0x33, 5, 5}, VGA_REGSET_END};
--static struct vga_regset vt8623_h_sync_start_regs[]  = {{0x04, 0, 7}, {0x33, 4, 4}, VGA_REGSET_END};
--static struct vga_regset vt8623_h_sync_end_regs[]    = {{0x05, 0, 4}, VGA_REGSET_END};
--
--static struct vga_regset vt8623_v_total_regs[]       = {{0x06, 0, 7}, {0x07, 0, 0}, {0x07, 5, 5}, {0x35, 0, 0}, VGA_REGSET_END};
--static struct vga_regset vt8623_v_display_regs[]     = {{0x12, 0, 7}, {0x07, 1, 1}, {0x07, 6, 6}, {0x35, 2, 2}, VGA_REGSET_END};
--static struct vga_regset vt8623_v_blank_start_regs[] = {{0x15, 0, 7}, {0x07, 3, 3}, {0x09, 5, 5}, {0x35, 3, 3}, VGA_REGSET_END};
--static struct vga_regset vt8623_v_blank_end_regs[]   = {{0x16, 0, 7}, VGA_REGSET_END};
--static struct vga_regset vt8623_v_sync_start_regs[]  = {{0x10, 0, 7}, {0x07, 2, 2}, {0x07, 7, 7}, {0x35, 1, 1}, VGA_REGSET_END};
--static struct vga_regset vt8623_v_sync_end_regs[]    = {{0x11, 0, 3}, VGA_REGSET_END};
--
--static struct vga_regset vt8623_offset_regs[]        = {{0x13, 0, 7}, {0x35, 5, 7}, VGA_REGSET_END};
--static struct vga_regset vt8623_line_compare_regs[]  = {{0x18, 0, 7}, {0x07, 4, 4}, {0x09, 6, 6}, {0x33, 0, 2}, {0x35, 4, 4}, VGA_REGSET_END};
--static struct vga_regset vt8623_fetch_count_regs[]   = {{0x1C, 0, 7}, {0x1D, 0, 1}, VGA_REGSET_END};
--static struct vga_regset vt8623_start_address_regs[] = {{0x0d, 0, 7}, {0x0c, 0, 7}, {0x34, 0, 7}, {0x48, 0, 1}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_total_regs[]       = {{0x00, 0, 7}, {0x36, 3, 3}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_display_regs[]     = {{0x01, 0, 7}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_blank_start_regs[] = {{0x02, 0, 7}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_blank_end_regs[]   = {{0x03, 0, 4}, {0x05, 7, 7}, {0x33, 5, 5}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_sync_start_regs[]  = {{0x04, 0, 7}, {0x33, 4, 4}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_h_sync_end_regs[]    = {{0x05, 0, 4}, VGA_REGSET_END};
-+
-+static const struct vga_regset vt8623_v_total_regs[]       = {{0x06, 0, 7}, {0x07, 0, 0}, {0x07, 5, 5}, {0x35, 0, 0}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_v_display_regs[]     = {{0x12, 0, 7}, {0x07, 1, 1}, {0x07, 6, 6}, {0x35, 2, 2}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_v_blank_start_regs[] = {{0x15, 0, 7}, {0x07, 3, 3}, {0x09, 5, 5}, {0x35, 3, 3}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_v_blank_end_regs[]   = {{0x16, 0, 7}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_v_sync_start_regs[]  = {{0x10, 0, 7}, {0x07, 2, 2}, {0x07, 7, 7}, {0x35, 1, 1}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_v_sync_end_regs[]    = {{0x11, 0, 3}, VGA_REGSET_END};
-+
-+static const struct vga_regset vt8623_offset_regs[]        = {{0x13, 0, 7}, {0x35, 5, 7}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_line_compare_regs[]  = {{0x18, 0, 7}, {0x07, 4, 4}, {0x09, 6, 6}, {0x33, 0, 2}, {0x35, 4, 4}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_fetch_count_regs[]   = {{0x1C, 0, 7}, {0x1D, 0, 1}, VGA_REGSET_END};
-+static const struct vga_regset vt8623_start_address_regs[] = {{0x0d, 0, 7}, {0x0c, 0, 7}, {0x34, 0, 7}, {0x48, 0, 1}, VGA_REGSET_END};
- 
- static const struct svga_timing_regs vt8623_timing_regs     = {
- 	vt8623_h_total_regs, vt8623_h_display_regs, vt8623_h_blank_start_regs,
--- 
-2.27.0
+That's not right, is it?  irq_of_parse_and_map() takes an *index*, but
+we're passing an IRQ.
 
+mxs_lradc_adc_probe() also has the same pattern.
