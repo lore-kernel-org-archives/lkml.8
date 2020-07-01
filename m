@@ -2,129 +2,138 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A89C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2747DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F0A206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="kNaaxRXW"
+	by mail.kernel.org (Postfix) with ESMTP id 15CC8206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgGAPJt (ORCPT
+        id S1731750AbgGAPJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:09:49 -0400
-Received: from mail-bn8nam12on2072.outbound.protection.outlook.com ([40.107.237.72]:60865
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731733AbgGAPIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:08:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FWehFp4clvN3xOP1vh6nmytlDvSn8nUxuniNzu9FQWxBU9olxcYMt7Hr/JioFwF79jekroQiJDJUxbSKzIIRPCBPlu3dAKbWvre5FWOKdGBzogKYXx/aAXgmZkyGak7i8/uC+96/0zbli3sJrKuSsu22D2aMYZymwzeMiV9xj/1Tdt8+FMI1/gRASp8Yk5l1kuA8A82P960/luL5Z8OCsyMHojaCbpXeyHv2V4LBkM/wr+pbLLnfyKcUmPTtsiLWAQT1fWJqOuCbSFKjZCtYORZixTLX13ciMFrhmR4ee+C4vJ/GCx0d9iIPYQoYlWadeMQ0wdOTzO7mnzlLymmeWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXpNpMygO/KPLne8WsJxsDwp8Ia385m8ResSG8rBl5Q=;
- b=AOUI3c7PPRKmf8uEtY1YpufTcJvEPn2nl05VAMchvvnHTLaYzR3VKczs+B5fTXkRBRWRccBDIjiZbtWL6jk9NXNElAOUmcCp2hrp9hRRutbLd5o86Z5aJHbNZVEjwMhgfChJ2cJKIR+XMJSIwS14e6ZbFOpg8yW3ml9g/Ng0zGekCiDnjXX22T7kFZXfnrxuczYDD9lCtkvCFiVbA1RVHqmpkg7HtxodEvHfy4OkUOKcjhCinJ1H6moPxpoZuSIa6oyhEPt3QWqek55++KFUFQcAdMYUdxX1juMcVy7U8eNzECHhJfh5Kn+bc9dHUHNvQugUkYgNRYvoVmPTViO6kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXpNpMygO/KPLne8WsJxsDwp8Ia385m8ResSG8rBl5Q=;
- b=kNaaxRXWLdKwJqRcbW/Ly6LPZ4c45zlT+i0cZswiaWopCNxmCHCtb2mbYBw7giI9sBaYnasIDLSwRVgwplyY1BUjHIoA1ZaXBIHYrwCPmlLJHfXeHNI1JtH1UCPv1urMv1Jsc+W33AtpYNK7fCslYyNXPR0Pyygt4CA7RbA/+Kc=
-Authentication-Results: driverdev.osuosl.org; dkim=none (message not signed)
- header.d=none;driverdev.osuosl.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SA0PR11MB4736.namprd11.prod.outlook.com (2603:10b6:806:9f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Wed, 1 Jul
- 2020 15:08:10 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::c504:2d66:a8f7:2336%7]) with mapi id 15.20.3131.033; Wed, 1 Jul 2020
- 15:08:10 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 05/13] staging: wfx: load the firmware faster
-Date:   Wed,  1 Jul 2020 17:06:59 +0200
-Message-Id: <20200701150707.222985-6-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701150707.222985-1-Jerome.Pouiller@silabs.com>
-References: <20200701150707.222985-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: DM5PR07CA0143.namprd07.prod.outlook.com
- (2603:10b6:3:13e::33) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        Wed, 1 Jul 2020 11:09:55 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:37536 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731733AbgGAPJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:09:52 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 989F420025;
+        Wed,  1 Jul 2020 17:09:46 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 17:09:45 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Yannick Fertre <yannick.fertre@st.com>
+Cc:     Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge/synopsys: dsi: allows LP commands in video
+ mode
+Message-ID: <20200701150945.GA669248@ravnborg.org>
+References: <20200701145258.2782-1-yannick.fertre@st.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by DM5PR07CA0143.namprd07.prod.outlook.com (2603:10b6:3:13e::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Wed, 1 Jul 2020 15:08:08 +0000
-X-Mailer: git-send-email 2.27.0
-X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f42951af-6a5d-401d-bbe8-08d81dd09164
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4736:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR11MB47360E0F2281DDE64811AA22936C0@SA0PR11MB4736.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sBZWOlsYLJSqTfRR5g1qT8KUPqM6LKt9VKnjsKUVIkoZlZZwX1y5zeyFl8xUBGLRSGR5zOGycdTflFI/36QI06pwGlaTxL9OCp0ABYI98dzLSDYBWZHiKTUEoDjPui5s9WzxWXHSiRiTFnW3AmCv3I+1KBDbMrv+bCQ5FuK+NCSGsatLkdAdeO7mYaKFSlZKoElKXmyIdQEG2/zK5Fk92h25wD02ZYIfUVvfvSItta41bIQeiMqp7NqNgY49rEyza7rxYJ2CWUDskPB2sKvkUf86roRarA/i1uLuDsSMNqhgkuNRMLyqu0/9mDyvGvkWrgTtT579gKFm1Uw3sjwItg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(366004)(346002)(376002)(396003)(136003)(5660300002)(6486002)(86362001)(6666004)(66574015)(36756003)(2906002)(186003)(83380400001)(16526019)(8936002)(66556008)(66476007)(107886003)(4326008)(8676002)(2616005)(1076003)(478600001)(316002)(54906003)(66946007)(52116002)(7696005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 3bWFuyGlUSW2/tGfgR1l8YLSFNc9PEN3jY7pNrVq1utUvIz1lQuefYCuwKPnDUea7WOBy2VwR8B+QqedHCZ0cqgf3x8tgAT9ylmzASaxaqUOwREdxE7Ry7T/Sdhq3AHPh8QU1bX37qpL06wWvc7sV7nlKa7gn/DABoXCpvAmXGMk7dGmzS8AjFv+vPE4dq4ZW+6ENRGopl8SiOCE3ZCgqUCi0/gmIokfE2vlHH923oLMyN1Z8bsN7qkEsjVj9DDtOdP4SoxycidY34i5xaBa7XCxppq0RRctNydnPO4dlP/aAIjeQhp6JiGCngiA2KyUTBGe8i503lya7MDuOmpp2Ej/Y3ZDDw3pLTejobmS0zirmhYJQnoSlVC1SWg85aqIEjoN3pD+590qu6KgU6IvaCqnlpfWqBADhFJaF1ZLsfSj1AzFArc6hElDdcIZ4llfM+HJRrIDV70vjzjpX8LTdH/hdDsl7KcuMdsiWQQuU7BAnMMK4wmJYGvpi1ouQbq0nhGp9k6wgQW5aX8VESNFUU4/m+c4PJ/9e72uAcYTgPI=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f42951af-6a5d-401d-bbe8-08d81dd09164
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 15:08:10.6234
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DQUaFbVTZ3Nakx6JSo3Zr38I/Vwo7ASBvB9/tOg84r3tK4Zvjh3KcA+Vyn+W16O4i/UILinXbP/XOhzNIrJVSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4736
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701145258.2782-1-yannick.fertre@st.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=8b9GpE9nAAAA:8 a=e5mUnYsNAAAA:8
+        a=YTZQKkLrOCVqNVj5krQA:9 a=eq0Tk01GMUV6gyqT:21 a=rLxRNCjj-UiVEZYG:21
+        a=CjuIK1q_8ugA:10 a=T3LWEMljR5ZiDmsYVIUa:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKRHVy
-aW5nIHRoZSBsb2FkaW5nIG9mIHRoZSBmaXJtd2FyZSwgdGhlIFdGWF9EQ0FfR0VUIHJlZ2lzdGVy
-IHByb3ZpZGUgdGhlCm51bWJlciBhdmFpbGFibGUgYnl0ZXMgaW4gdGhlIHJlY2VpdmluZyBidWZm
-ZXIuIEl0IGlzIG5vdCBuZWNlc3NhcnkgdG8KYWNjZXNzIHRvIHRoZSBXRlhfRENBX0dFVCBhZnRl
-ciBzZW50IG9mIGVhY2ggZmlybXdhcmUgZnJhZ21lbnQuCgpUaGlzIHBhdGNoIGFsbG93cyB0byBz
-ZW5kIHRoZSBmaXJtd2FyZToKICAtIGluwqA2NG1zwqBpbnN0ZWFkwqBvZsKgMTMwbXPCoHVzaW5n
-wqBTRElPwqBidXMKICAtIGluwqA3OG1zwqBpbnN0ZWFkwqBvZsKgMTE1bXPCoHVzaW5nwqBTUEnC
-oGJ1cwoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBz
-aWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZndpby5jIHwgOSArKysrLS0tLS0K
-IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9md2lvLmMgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L2Z3
-aW8uYwppbmRleCA3MmJiM2QyYTk2MTM4Li5kOWE4ODZmM2U2NGJlIDEwMDY0NAotLS0gYS9kcml2
-ZXJzL3N0YWdpbmcvd2Z4L2Z3aW8uYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L2Z3aW8uYwpA
-QCAtMTg4LDE1ICsxODgsMTQgQEAgc3RhdGljIGludCB1cGxvYWRfZmlybXdhcmUoc3RydWN0IHdm
-eF9kZXYgKndkZXYsIGNvbnN0IHU4ICpkYXRhLCBzaXplX3QgbGVuKQogCXdoaWxlIChvZmZzIDwg
-bGVuKSB7CiAJCXN0YXJ0ID0ga3RpbWVfZ2V0KCk7CiAJCWZvciAoOzspIHsKLQkJCXJldCA9IHNy
-YW1fcmVnX3JlYWQod2RldiwgV0ZYX0RDQV9HRVQsICZieXRlc19kb25lKTsKLQkJCWlmIChyZXQg
-PCAwKQotCQkJCXJldHVybiByZXQ7CiAJCQlub3cgPSBrdGltZV9nZXQoKTsKLQkJCWlmIChvZmZz
-ICsKLQkJCSAgICBETkxEX0JMT0NLX1NJWkUgLSBieXRlc19kb25lIDwgRE5MRF9GSUZPX1NJWkUp
-CisJCQlpZiAob2ZmcyArIEROTERfQkxPQ0tfU0laRSAtIGJ5dGVzX2RvbmUgPCBETkxEX0ZJRk9f
-U0laRSkKIAkJCQlicmVhazsKIAkJCWlmIChrdGltZV9hZnRlcihub3csIGt0aW1lX2FkZF9tcyhz
-dGFydCwgRENBX1RJTUVPVVQpKSkKIAkJCQlyZXR1cm4gLUVUSU1FRE9VVDsKKwkJCXJldCA9IHNy
-YW1fcmVnX3JlYWQod2RldiwgV0ZYX0RDQV9HRVQsICZieXRlc19kb25lKTsKKwkJCWlmIChyZXQg
-PCAwKQorCQkJCXJldHVybiByZXQ7CiAJCX0KIAkJaWYgKGt0aW1lX2NvbXBhcmUobm93LCBzdGFy
-dCkpCiAJCQlkZXZfZGJnKHdkZXYtPmRldiwgImFuc3dlciBhZnRlciAlbGxkdXNcbiIsCi0tIAoy
-LjI3LjAKCg==
+Hi Yannick.
+
+On Wed, Jul 01, 2020 at 04:52:58PM +0200, Yannick Fertre wrote:
+> From: Antonio Borneo <antonio.borneo@st.com>
+> 
+> Current code only sends LP commands in command mode.
+> 
+> Allows sending LP commands also in video mode by setting the
+> proper flag in DSI_VID_MODE_CFG.
+> 
+> Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+
+> Change-Id: Ib78fa37bcc7559ce63017acd6ee0bbf00c61a397
+Change-Id is not used in kernel patches to my best knowledge.
+
+> Reviewed-on: https://gerrit.st.com/c/mpu/oe/st/linux-stm32/+/153242
+> Reviewed-by: CITOOLS <smet-aci-reviews@lists.codex.cro.st.com>
+> Reviewed-by: CIBUILD <smet-aci-builds@lists.codex.cro.st.com>
+Reviews by humans, not machines..
+
+> Reviewed-by: Yannick FERTRE <yannick.fertre@st.com>
+> Reviewed-by: Philippe CORNU <philippe.cornu@st.com>
+> Tested-by: Yannick FERTRE <yannick.fertre@st.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index d580b2aa4ce9..0cd43e7a69bb 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -367,6 +367,13 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+>  
+>  	dsi_write(dsi, DSI_LPCLK_CTRL, lpm ? 0 : PHY_TXREQUESTCLKHS);
+>  	dsi_write(dsi, DSI_CMD_MODE_CFG, val);
+> +
+> +	val = dsi_read(dsi, DSI_VID_MODE_CFG);
+> +	if (lpm)
+> +		val |= ENABLE_LOW_POWER_CMD;
+> +	else
+> +		val &= ~ENABLE_LOW_POWER_CMD;
+> +	dsi_write(dsi, DSI_VID_MODE_CFG, val);
+>  }
+
+We have following code:
+
+static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+                                 unsigned long mode_flags)
+{
+        dsi_write(dsi, DSI_PWR_UP, RESET);
+
+        if (mode_flags & MIPI_DSI_MODE_VIDEO) {
+                dsi_write(dsi, DSI_MODE_CFG, ENABLE_VIDEO_MODE);
+                dw_mipi_dsi_video_mode_config(dsi);
+                dsi_write(dsi, DSI_LPCLK_CTRL, PHY_TXREQUESTCLKHS);
+        } else {
+                dsi_write(dsi, DSI_MODE_CFG, ENABLE_CMD_MODE);
+        }
+
+        dsi_write(dsi, DSI_PWR_UP, POWERUP);
+}
+
+Here DSI_MODE_CFG is used to set vidoe mode or not.
+
+But the code snip above checks DSI_VID_MODE_CFG.
+It looks inconsistent.
+
+I do not know the HW - and just stumbled over this.
+
+	Sam
+
+
+>  
+>  static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
