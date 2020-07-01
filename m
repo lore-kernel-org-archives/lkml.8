@@ -6,73 +6,86 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2937BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0A320870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0500620853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642250;
-	bh=d+icjJ6GLd3kdgYAlrHBvwkA8bkok4/9Z9kTA40mDjw=;
+	s=default; t=1593642268;
+	bh=P9Rt9oYURSV01v5eWDCi3jteNrlbySxJSwxngoAfxZg=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=eat5c3JQ7QwG7XYtf3otlVUeg8X8yenYdOmjyKhFoLuwQUOhKXsRhbVaBfrBnPsJi
-	 UQnRyWzuRd6JFC87iEvTjRKfQM2DMfTHtP7u7Ocp2qmh4dM5ddhc2DhMQUOHlCDGtv
-	 iV81w7sX2BqqwiD1rFMgs40sd7yTQmQqDQEnhHBo=
+	b=w4ayWIkA9zvc77L0E6k/6pvxjHcDxN4JIMDwlV4HVDiox6CYp9oZNCmyYHu3bcNcU
+	 0N4HzZ+/v7W6Oa82vpcnCoAC2SmYSlx8/sQyq4BMw44AQ5Tiz2+1dp1cJlRXo6XxAn
+	 NScM6AzxeaD73FeuxPIh5lbO5BGJpL10CTZVTAxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgGAWYI (ORCPT
+        id S1728098AbgGAWY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51072 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgGAWYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:04 -0400
+        id S1726413AbgGAWY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:26 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F19207E8;
-        Wed,  1 Jul 2020 22:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E202082F;
+        Wed,  1 Jul 2020 22:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642244;
-        bh=d+icjJ6GLd3kdgYAlrHBvwkA8bkok4/9Z9kTA40mDjw=;
+        s=default; t=1593642265;
+        bh=P9Rt9oYURSV01v5eWDCi3jteNrlbySxJSwxngoAfxZg=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=0sB6wOe5DEtxgCxOspH/Yz56q0iGHkXYoA+JXulPXtCXT/LBpGhVwQgzM/+b9g1VA
-         e1RDreCtuxprr7Qxemo7HGUiqCWIpGXfPQ69Mi6vLCgd7U9B2daSMDUoE6ccCIQ9GF
-         Ns0rWm7vH0qNrhaRyloFPZ8BSXcqBa7pjprK7d/o=
-Date:   Wed, 01 Jul 2020 23:24:02 +0100
+        b=pOaSMgqCZhMj0pC3L/KoLfhwqCnHDfbx0yl1Npdomz4CVjbTDoDwZBE+yBNDBV8vb
+         6jRzYL/6WPptmjo5kLVUkn6tYna8HpadV5jrerf64IK+Y4yJBADHYa0g8cfN5s7ZoR
+         R3dmwo6LPf5toOweaeSwB3d54+1IfpjHPfZhL92I=
+Date:   Wed, 01 Jul 2020 23:24:23 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     agross@kernel.org, Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        bjorn.andersson@linaro.org
-Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-In-Reply-To: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
-References: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
-Subject: Re: [PATCH 0/2] regulator/qcom: Constify static structs
-Message-Id: <159364222729.10880.5748193683459087739.b4-ty@kernel.org>
+To:     f.fainelli@gmail.com, rjui@broadcom.com, nsaenzjulienne@suse.de,
+        sbranden@broadcom.com, Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        kernel@martin.sperl.org, linux-rpi-kernel@lists.infradead.org,
+        linux-spi@vger.kernel.org
+In-Reply-To: <cover.1592261248.git.robin.murphy@arm.com>
+References: <cover.1592261248.git.robin.murphy@arm.com>
+Subject: Re: [PATCH 0/3] spi: bcm2835: Interrupt-handling optimisations
+Message-Id: <159364224814.10988.12578129991432190226.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 21:46:30 +0200, Rikard Falkeborn wrote:
-> Constify some static structs to allow the compiler to put them in
-> read-only memory.
+On Tue, 16 Jun 2020 01:09:26 +0100, Robin Murphy wrote:
+> Although Florian was concerned about a trivial inline check to deal with
+> shared IRQs adding overhead, the reality is that it would be so small as
+> to not be worth even thinking about unless the driver was already tuned
+> to squeeze out every last cycle. And a brief look over the code shows
+> that that clearly isn't the case.
 > 
-> Rikard Falkeborn (2):
->   regulator: qcom_rpm: Constify struct regulator_ops
->   regulator: qcom_spmi: Constify struct regulator_ops
+> This is an example of some of the easy low-hanging fruit that jumps out
+> just from code inspection. Based on disassembly and ARM1176 cycle
+> timings, patch #2 should save the equivalent of 2-3 shared interrupt
+> checks off the critical path in all cases, and patch #3 possibly up to
+> about 100x more. I don't have any means to test these patches, let alone
+> measure performance, so they're only backed by the principle that less
+> code - and in particular fewer memory accesses - is almost always
+> better.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/2] regulator: qcom_rpm: Constify struct regulator_ops
-      commit: 8d41df6469eec8d784137aeeebf87dca7460ce37
-[2/2] regulator: qcom_spmi: Constify struct regulator_ops
-      commit: 3b619e3e2d1a89f383a0a0c527818dcb2bc66f92
+[1/3] spi: bcm3835: Tidy up bcm2835_spi_reset_hw()
+      commit: ac4648b5d866f98feef4525ae8734972359e4edd
+[2/3] spi: bcm2835: Micro-optimise IRQ handler
+      commit: afe7e36360f4c981fc03ef07a81cb4ce3d567325
+[3/3] spi: bcm2835: Micro-optimise FIFO loops
+      commit: 26751de25d255eab7132a8024a893609456996e6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
