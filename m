@@ -2,97 +2,132 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2949C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C6120781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593621499;
-	bh=3WL3y2tOZFzjXBhodyGZbcwf89EI+uU1KCIf6mufhs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p/AY7hb/uqJYiU06UlgdwT6oMpEPUtuNnLzytDasi/OEuBUAentFPIMjz/JFgqglN
-	 i6yqEwZ9EWCGwk6fe6g4UEAe5KnZwxo18tKGeBM1gvuy5z7qDvOHLD/q/q37+/1akX
-	 HWIOKYOrQFysRaZyvh87cnsJcE5Y+FQM/J9bAHic=
+	by mail.kernel.org (Postfix) with ESMTP id AD02920781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZM+72gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732472AbgGAQiR (ORCPT
+        id S1732486AbgGAQjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42788 "EHLO
+        Wed, 1 Jul 2020 12:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGAQiQ (ORCPT
+        with ESMTP id S1726621AbgGAQi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:38:16 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CA3C08C5C1;
-        Wed,  1 Jul 2020 09:38:16 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id t11so9223826qvk.1;
-        Wed, 01 Jul 2020 09:38:16 -0700 (PDT)
+        Wed, 1 Jul 2020 12:38:59 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910FFC08C5C1;
+        Wed,  1 Jul 2020 09:38:59 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id k15so14055236lfc.4;
+        Wed, 01 Jul 2020 09:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tnWfjqu9qwTdD4KnQK/3+SjWTBx9SJibvmRRCZ2MKpw=;
-        b=U026WByv7++7/w1+Nu+RBzmT42CWmL089oP2jZPE4GfX8trhuMpatdvHRasGwxl1tp
-         esIRMJhHnW5uCzGbrrP5CE9k4nW7c65rE4KRI9NkWii4E6mEPbKGBXdTFeEP0b5/X8j1
-         RKDZhhs7eEWkZ9yrTYjSzyRQuzgfxSGkKewuCj72VWynBsVS+2Ska24TaCYNSUtYNx0h
-         tkr380dMygtpbEq4afb+a4dCf6bAwClROx8TUXDVt1XYAVILF8ZQdXine5RK1wrhdCLx
-         lurHJt08cKi6hQMnrm0IC1VIZZ5Da6Y0NgMH3p1I2KbSxRTE3WPzEilFi6RtD7avMeW2
-         +K0w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fS8Kbbr6u+Qt+wSwfOlztvSKvUpRcBAxdtJAIiraa8k=;
+        b=XZM+72gciw9nF4OsUTlGCo821BFfCQbfWMzTG2s4XnB101NtlMstykJPODwJQkbk95
+         ulAI4EpcU7fehmEn2OJ4hmH8jDQ3XUNp6wW631Zg/hLtnJKYYL3+untAdAvh1/2h4CHE
+         Lh9Bbm1CmxMLsT/L4DDWco0F6ND+AFm+pljhj1WkhvSFKl/D82mKul+DFdHfQLZgsW/y
+         tVXDXcRv5gLENn581TARIKvIeyvWyxbAYDXimInWetyiF1Q3I10t2k7nuQwrqWDIAfCH
+         2FXDP4ok4ms1Zb2j1UZZbjokcvm5RNJEcKmP/XvftY1TPqLWeJtapVke08xVAMuAaW5X
+         2Gyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=tnWfjqu9qwTdD4KnQK/3+SjWTBx9SJibvmRRCZ2MKpw=;
-        b=K3fSWa0Ce8fQw1eYj9WLiAfw3wULKCQ2gMPbsZhEHwtd29+I/qJTqjBqbIW1nIaepe
-         cSubrkYY+bDbXMdxQxYD4dh09KJLuE8LVz4hr9ZxzwC9M2vc3Qr8IQommNO5bzMIXUMm
-         qXbZOc3toByQalPEs8XRBITHtctNJYWfH1bC4uSZGztnCrW5jiS3p5JNOl1JL/MmhC90
-         t8qtBiPPjzpq4XtopI0dmgnaX0vTOrNVjWnLCU0jTbevetynrbtjP84di2y6RgU4krBg
-         Us0ZgXH+XkPbEOUC14aAzA+/mwb6zNSdB97HjI8qLPVIA+yTxVvJ0JkNHFqBUgYsd9Vp
-         aiwA==
-X-Gm-Message-State: AOAM532fmwerP9g6efsS8ZAopd3HdJExAtAkFi0cztnEAekytZe1/CZl
-        oLfxqX+30B1m9mVKCwpdig3k+GzgEh4=
-X-Google-Smtp-Source: ABdhPJzfqJE8PIES5DnR2PTCVTamwJmruYSeMWZpKr4HJeNZUuy5RzchyjxSpfzGXXbaj1X8ONNd6g==
-X-Received: by 2002:a05:6214:10e1:: with SMTP id q1mr24708355qvt.78.1593621495518;
-        Wed, 01 Jul 2020 09:38:15 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:f839])
-        by smtp.gmail.com with ESMTPSA id u1sm5792798qkf.49.2020.07.01.09.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 09:38:14 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 12:38:13 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: remove dead bdi congestion leftovers
-Message-ID: <20200701163813.GA5046@mtj.thefacebook.com>
-References: <20200701090622.3354860-1-hch@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fS8Kbbr6u+Qt+wSwfOlztvSKvUpRcBAxdtJAIiraa8k=;
+        b=KlhZSUdmkQXDS+h6VwLHour9kknDEjG/c8uKw/CFR12YUbMt0YRT0ea0gjH/ppiAT4
+         AVjpNIgDe/hKa1SguqgpyUpiBw3+wXGk6QRPLGzPgrHFtjdR0WtINjXiQV8YF3OPN1GH
+         TRNAP1Jl8JWWyLqzriu/LNg52z1u+aVtkCAfncxktjKiQNgZXV4FMjxmdp3QayJORUxl
+         Hu7TSxAw+ph+kUD5Av00MLfGa7XrPLscmTMrQCoxs131mlpmyemuNHu829jspDX1K9EQ
+         I4sFMrEt9Gi16ozA6seRT6GHn7lxOHISFKsiFZx6j0yF+Q6sCH4aHCUaidB7YsWKKMS3
+         kyVg==
+X-Gm-Message-State: AOAM531SYukelTA6FvXI5/4v5V0fplHS+dlmZNbMjjTQnMWJFCSvLh4F
+        zoNwpc7odjg79B7H5uDgqhPbWQmVxgdkB+gtzLVK5A==
+X-Google-Smtp-Source: ABdhPJzhx/RMYa6L4vtQ0mrLwEP+eiVOtfSbexChh9nnu3NLhEZwqxpST5gp2Olwx3jPShY2dcl1VBrf6CxD/I+pfWE=
+X-Received: by 2002:ac2:5e29:: with SMTP id o9mr15143828lfg.196.1593621538016;
+ Wed, 01 Jul 2020 09:38:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701090622.3354860-1-hch@lst.de>
+References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-2-will@kernel.org>
+In-Reply-To: <20200630173734.14057-2-will@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 1 Jul 2020 09:38:46 -0700
+Message-ID: <CAADnVQJ5kZRT+H7MZWKcJ6HqCGR54Y4zdk67KZO3=ho6Kab5fw@mail.gmail.com>
+Subject: Re: [PATCH 01/18] tools: bpf: Use local copy of headers including uapi/linux/filter.h
+To:     Will Deacon <will@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Android Kernel Team <kernel-team@android.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Xiao Yang <ice_yangxiao@163.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:06:18AM +0200, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> we have a lot of bdi congestion related code that is left around without
-> any use.  This series removes it in preparation of sorting out the bdi
-> lifetime rules properly.
+On Tue, Jun 30, 2020 at 10:37 AM Will Deacon <will@kernel.org> wrote:
+>
+> Pulling header files directly out of the kernel sources for inclusion in
+> userspace programs is highly error prone, not least because it bypasses
+> the kbuild infrastructure entirely and so may end up referencing other
+> header files that have not been generated.
+>
+> Subsequent patches will cause compiler.h to pull in the ungenerated
+> asm/rwonce.h file via filter.h, breaking the build for tools/bpf:
+>
+>   | $ make -C tools/bpf
+>   | make: Entering directory '/linux/tools/bpf'
+>   |   CC       bpf_jit_disasm.o
+>   |   LINK     bpf_jit_disasm
+>   |   CC       bpf_dbg.o
+>   | In file included from /linux/include/uapi/linux/filter.h:9,
+>   |                  from /linux/tools/bpf/bpf_dbg.c:41:
+>   | /linux/include/linux/compiler.h:247:10: fatal error: asm/rwonce.h: No such file or directory
+>   |  #include <asm/rwonce.h>
+>   |           ^~~~~~~~~~~~~~
+>   | compilation terminated.
+>   | make: *** [Makefile:61: bpf_dbg.o] Error 1
+>   | make: Leaving directory '/linux/tools/bpf'
+>
+> Take a copy of the installed version of linux/filter.h  (i.e. the one
+> created by the 'headers_install' target) into tools/include/uapi/linux/
+> and adjust the BPF tool Makefile to reference the local include
+> directories instead of those in the main source tree.
+>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
+> Reported-by: Xiao Yang <ice_yangxiao@163.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks a lot for killing the dead code.
-
--- 
-tejun
+Acked-by: Alexei Starovoitov <ast@kernel.org>
