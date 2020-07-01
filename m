@@ -3,185 +3,225 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE73AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A615920722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0522074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X+IRvj1J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfKiRC9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgGAFpx (ORCPT
+        id S1726911AbgGAFqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 01:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
+        Wed, 1 Jul 2020 01:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGAFpw (ORCPT
+        with ESMTP id S1725272AbgGAFqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 01:45:52 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A422AC03E979;
-        Tue, 30 Jun 2020 22:45:51 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 686F4556;
-        Wed,  1 Jul 2020 07:45:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593582347;
-        bh=mGWu/1XJbM4KGrtlPmkgFMmfJiW0pibp/qTE2B02jfg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X+IRvj1JQdnrCzqeSPqQAnKWc5n8pBOvwmPEoRCo5kDbAhlzI3O/ybiM5Np6j7AcY
-         dgzuPrtz48/lWFwu1e2QbuxWjOqaKlvmXg5/9wFfT6mRXC62oAxi/4sUBPKdgntwbW
-         lBNa3k/xfcURd85HCkcaeh3ovjlEG2f4hwBIP6lA=
-Date:   Wed, 1 Jul 2020 08:45:43 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/2] of_graph: add of_graph_is_present()
-Message-ID: <20200701054543.GA5963@pendragon.ideasonboard.com>
-References: <20200701021617.12030-1-digetx@gmail.com>
- <20200701021617.12030-2-digetx@gmail.com>
+        Wed, 1 Jul 2020 01:46:52 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EED1C061755;
+        Tue, 30 Jun 2020 22:46:52 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id f23so23711067iof.6;
+        Tue, 30 Jun 2020 22:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BToyqAFI5f5u68K+7r1bZ4zx3KgdmDtvzPbHmq3uErs=;
+        b=KfKiRC9tQw4BCTxYEe5fbyThBOQ4OzQNMWT9nS95Dd2MUMUd4FcSRV0ZZbF7URZAPa
+         IOz4B4rhquUvz50tSYGyUG9ddbU4xGCIlCZqlBwuypVK+1NnxFvIovJiyZTRa6CgUXKo
+         fJoPvVBIYPf5P9TD1QpSwrt6Qt1i5rjDug6EjxjrbRCVSM2s+DGwmuTNcl4brScjdo/F
+         mZ5q5gXYBjX/eF67htk0QBbhmYk8+MsIRWkkkIj2+2T/atFwbjXy7PqT2WQ2FkdIHkQ2
+         xb5Z5p+3Bc7HukIhmcAQC8j0OWveM2gFaU9B1N84o58YoXE4joD+STj8nAbMadqSyQcb
+         s9QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BToyqAFI5f5u68K+7r1bZ4zx3KgdmDtvzPbHmq3uErs=;
+        b=qZfqr6OXP4XZOgY91LeXnZAiVkIJR/ozR0D7VwxbB0qyovWzit6e9tIZ5zVrctbSfh
+         eeH6d00Cfr5ql1RaGuWT4Z08uNXuHT0fp4CgiOlH1LI6qNAMkCfgOHSD1b475HRCenoQ
+         QRJY1v9C8I0n26X0+8hFaa5kQkivuHo0LGZpzpYKxb/dnPoY0L4lNNeWbFHWEI38rPk0
+         nWfQZ8+qK8KjAndeAK/MMD7ae23F0572OWIg90nvcOfmlc7arhFpTQhDlHzTIzG93nGs
+         rY0LJ3SUIRg8cShZ8OHuYeLq37XXKV/+Q/QDV+Wnk/hu/obmI79b4O6bmQasmZyjJDgk
+         qLLA==
+X-Gm-Message-State: AOAM530Ljn75y6AKV4Lk700Yi5D+Lf8jbFCwzTk0GIUmxhhymS3oQjWW
+        g19MU3QJ/jMIHkacheSef7QE/PCLgn9wm2NA0eU=
+X-Google-Smtp-Source: ABdhPJxZHh81Bt4nofbb5kaKkT4tjWBeDMkWORXVUhNQejFAOhSFnOLyfE8HJptfnuZMxxjozz4R2n+Jm1Crv+nZgnQ=
+X-Received: by 2002:a5d:9c44:: with SMTP id 4mr629061iof.15.1593582411483;
+ Tue, 30 Jun 2020 22:46:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200701021617.12030-2-digetx@gmail.com>
+References: <20200624174048.64754-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200624174048.64754-1-vaibhavgupta40@gmail.com>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Wed, 1 Jul 2020 11:15:13 +0530
+Message-ID: <CAPBsFfCGfyFkeVvUC0QCnr9J4uvfubHoHjgPR9e+muPkYRj9vg@mail.gmail.com>
+Subject: Re: [PATCH v1] orinoco: use generic power management
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-Thank you for the patch.
-
-On Wed, Jul 01, 2020 at 05:16:16AM +0300, Dmitry Osipenko wrote:
-> In some case, like a DRM display code for example, it's useful to silently
-> check whether port node exists at all in a device-tree before proceeding
-> with parsing of the graph.
-> 
-> This patch adds of_graph_is_present() which returns true if given
-> device-tree node contains OF graph port.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Wed, 24 Jun 2020 at 23:14, Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+>
+> With the support of generic PM callbacks, drivers no longer need to use
+> legacy .suspend() and .resume() in which they had to maintain PCI states
+> changes and device's power state themselves. The required operations are
+> done by PCI core.
+>
+> PCI drivers are not expected to invoke PCI helper functions like
+> pci_save/restore_state(), pci_enable/disable_device(),
+> pci_set_power_state(), etc. Their tasks are completed by PCI core itself.
+>
+> Compile-tested only.
+>
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 > ---
->  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
->  include/linux/of_graph.h |  6 +++++
->  2 files changed, 49 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 6a5760f0d6cd..e12b8b491837 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -29,6 +29,48 @@
->  
->  #include "of_private.h"
->  
-> +/**
-> + * of_graph_get_first_local_port() - get first local port node
-> + * @node: pointer to a local endpoint device_node
-
-It's not an endpoint.
-
-> + *
-> + * Return: First local port node associated with local endpoint node linked
-> + *	   to @node. Use of_node_put() on it when done.
-> + */
-> +static struct device_node *
-> +of_graph_get_first_local_port(const struct device_node *node)
-> +{
-> +	struct device_node *ports, *port;
-> +
-> +	ports = of_get_child_by_name(node, "ports");
-> +	if (ports)
-> +		node = ports;
-> +
-> +	port = of_get_child_by_name(node, "port");
-> +	of_node_put(ports);
-> +
-> +	return port;
-> +}
-> +
-> +/**
-> + * of_graph_is_present() - check graph's presence
-> + * @node: pointer to a device_node checked for the graph's presence
-> + *
-> + * Return: True if @node has a port or ports sub-node, false otherwise.
-> + */
-> +bool of_graph_is_present(const struct device_node *node)
-> +{
-> +	struct device_node *local;
-> +
-> +	local = of_graph_get_first_local_port(node);
-> +	if (!local)
-> +		return false;
-> +
-> +	of_node_put(local);
-> +
-> +	return true;
-> +}
-> +EXPORT_SYMBOL(of_graph_is_present);
-> +
->  /**
->   * of_property_count_elems_of_size - Count the number of elements in a property
->   *
-> @@ -608,15 +650,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->  	 * parent port node.
->  	 */
->  	if (!prev) {
-> -		struct device_node *node;
-> -
-> -		node = of_get_child_by_name(parent, "ports");
-> -		if (node)
-> -			parent = node;
-> -
-> -		port = of_get_child_by_name(parent, "port");
-> -		of_node_put(node);
-> -
-> +		port = of_graph_get_first_local_port(parent);
-
-I think this introduces a bug below in the function, where parent is
-used and is expected to point to the ports node if available. I'd leave
-this part of the change out, and inline +of_graph_get_first_local_port()
-in of_graph_is_present().
-
->  		if (!port) {
->  			pr_err("graph: no port node found in %pOF\n", parent);
->  			return NULL;
-> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-> index 01038a6aade0..4d7756087b6b 100644
-> --- a/include/linux/of_graph.h
-> +++ b/include/linux/of_graph.h
-> @@ -38,6 +38,7 @@ struct of_endpoint {
->  	     child = of_graph_get_next_endpoint(parent, child))
->  
->  #ifdef CONFIG_OF
-> +bool of_graph_is_present(const struct device_node *node);
->  int of_graph_parse_endpoint(const struct device_node *node,
->  				struct of_endpoint *endpoint);
->  int of_graph_get_endpoint_count(const struct device_node *np);
-> @@ -56,6 +57,11 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
->  					     u32 port, u32 endpoint);
->  #else
->  
-> +static inline bool of_graph_is_present(const struct device_node *node)
-> +{
-> +	return false;
-> +}
-> +
->  static inline int of_graph_parse_endpoint(const struct device_node *node,
->  					struct of_endpoint *endpoint)
+>  .../intersil/orinoco/orinoco_nortel.c         |  3 +-
+>  .../wireless/intersil/orinoco/orinoco_pci.c   |  3 +-
+>  .../wireless/intersil/orinoco/orinoco_pci.h   | 32 ++++++-------------
+>  .../wireless/intersil/orinoco/orinoco_plx.c   |  3 +-
+>  .../wireless/intersil/orinoco/orinoco_tmd.c   |  3 +-
+>  5 files changed, 13 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c b/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
+> index 048693b6c6c2..96a03d10a080 100644
+> --- a/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
+> @@ -290,8 +290,7 @@ static struct pci_driver orinoco_nortel_driver = {
+>         .id_table       = orinoco_nortel_id_table,
+>         .probe          = orinoco_nortel_init_one,
+>         .remove         = orinoco_nortel_remove_one,
+> -       .suspend        = orinoco_pci_suspend,
+> -       .resume         = orinoco_pci_resume,
+> +       .driver.pm      = &orinoco_pci_pm_ops,
+>  };
+>
+>  static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
+> diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_pci.c b/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
+> index 4938a2208a37..f3c86b07b1b9 100644
+> --- a/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
+> @@ -230,8 +230,7 @@ static struct pci_driver orinoco_pci_driver = {
+>         .id_table       = orinoco_pci_id_table,
+>         .probe          = orinoco_pci_init_one,
+>         .remove         = orinoco_pci_remove_one,
+> -       .suspend        = orinoco_pci_suspend,
+> -       .resume         = orinoco_pci_resume,
+> +       .driver.pm      = &orinoco_pci_pm_ops,
+>  };
+>
+>  static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
+> diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_pci.h b/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
+> index 43f5b9f5a0b0..d49d940864b4 100644
+> --- a/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
+> @@ -18,51 +18,37 @@ struct orinoco_pci_card {
+>         void __iomem *attr_io;
+>  };
+>
+> -#ifdef CONFIG_PM
+> -static int orinoco_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused orinoco_pci_suspend(struct device *dev_d)
 >  {
-
--- 
-Regards,
-
-Laurent Pinchart
+> +       struct pci_dev *pdev = to_pci_dev(dev_d);
+>         struct orinoco_private *priv = pci_get_drvdata(pdev);
+>
+>         orinoco_down(priv);
+>         free_irq(pdev->irq, priv);
+> -       pci_save_state(pdev);
+> -       pci_disable_device(pdev);
+> -       pci_set_power_state(pdev, PCI_D3hot);
+>
+>         return 0;
+>  }
+>
+> -static int orinoco_pci_resume(struct pci_dev *pdev)
+> +static int __maybe_unused orinoco_pci_resume(struct device *dev_d)
+>  {
+> +       struct pci_dev *pdev = to_pci_dev(dev_d);
+>         struct orinoco_private *priv = pci_get_drvdata(pdev);
+>         struct net_device *dev = priv->ndev;
+>         int err;
+>
+> -       pci_set_power_state(pdev, PCI_D0);
+> -       err = pci_enable_device(pdev);
+> -       if (err) {
+> -               printk(KERN_ERR "%s: pci_enable_device failed on resume\n",
+> -                      dev->name);
+> -               return err;
+> -       }
+> -       pci_restore_state(pdev);
+> -
+>         err = request_irq(pdev->irq, orinoco_interrupt, IRQF_SHARED,
+>                           dev->name, priv);
+>         if (err) {
+>                 printk(KERN_ERR "%s: cannot re-allocate IRQ on resume\n",
+>                        dev->name);
+> -               pci_disable_device(pdev);
+>                 return -EBUSY;
+>         }
+>
+> -       err = orinoco_up(priv);
+> -
+> -       return err;
+> +       return orinoco_up(priv);
+>  }
+> -#else
+> -#define orinoco_pci_suspend NULL
+> -#define orinoco_pci_resume NULL
+> -#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(orinoco_pci_pm_ops,
+> +                        orinoco_pci_suspend,
+> +                        orinoco_pci_resume);
+>
+>  #endif /* _ORINOCO_PCI_H */
+> diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_plx.c b/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
+> index 221352027779..16dada94c774 100644
+> --- a/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
+> @@ -336,8 +336,7 @@ static struct pci_driver orinoco_plx_driver = {
+>         .id_table       = orinoco_plx_id_table,
+>         .probe          = orinoco_plx_init_one,
+>         .remove         = orinoco_plx_remove_one,
+> -       .suspend        = orinoco_pci_suspend,
+> -       .resume         = orinoco_pci_resume,
+> +       .driver.pm      = &orinoco_pci_pm_ops,
+>  };
+>
+>  static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
+> diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c b/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
+> index 20ce569b8a43..9a9d335611ac 100644
+> --- a/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
+> +++ b/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
+> @@ -213,8 +213,7 @@ static struct pci_driver orinoco_tmd_driver = {
+>         .id_table       = orinoco_tmd_id_table,
+>         .probe          = orinoco_tmd_init_one,
+>         .remove         = orinoco_tmd_remove_one,
+> -       .suspend        = orinoco_pci_suspend,
+> -       .resume         = orinoco_pci_resume,
+> +       .driver.pm      = &orinoco_pci_pm_ops,
+>  };
+>
+>  static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
+> --
+> 2.27.0
+>
