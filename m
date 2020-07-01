@@ -2,155 +2,197 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B14C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98DA620663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0BB206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OW2tMK5J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyHvDK7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbgGAPPn (ORCPT
+        id S1731771AbgGAPRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:15:43 -0400
-Received: from mout.web.de ([212.227.15.3]:37257 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbgGAPPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:15:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593616510;
-        bh=mYyt+czBz/JjrHxGH28ejngDa9fCpCF5RDmPyJ1eELU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=OW2tMK5J4qQHpBTJyP+rJYtixH1M6oR1YyTXXiu0CUDu4aaXjVdSDFoet4+8WjwWy
-         O91Ou1Y6YeMbIEPS1ntHi2rnpYa6Wi1xZEA+Jq2BOL2gi2LRW0hr/inRm9BEbTjPsw
-         RDmyUHBQh2uLg+RWrFyzCdmSbenv/SnFNhAeVwqs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.41.17]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M3BeZ-1izWET0PMF-00svoo; Wed, 01
- Jul 2020 17:15:10 +0200
-Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
- <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
- <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
- <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
- <648d287e-3636-1858-1439-103d317f8571@web.de>
- <34065299-03cf-5b62-db37-0acc9830be72@infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <65db3f88-1ac8-374d-e3fe-2ea0970ffd67@web.de>
-Date:   Wed, 1 Jul 2020 17:15:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 11:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727887AbgGAPQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:16:59 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0C8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 08:16:59 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 207so10950408pfu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 08:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=eVlqeH2RPGiO//aNy97j7YSMfcTUz/bRuiejQQ3tzco=;
+        b=gyHvDK7N8y1vSsK2b/voB3mWUua5SLMvIaWVofrSLiBjYpwKxfDljXgiipx92z7Ews
+         TsPTlzsAYjsQ9s8/YtpFXwMYGV5BE90kIfkSvOR/lIRsrB5HJzUOPICViB1xg/cytIeK
+         mm+NVX/C0mBVjyuLH97p5Q+WY30lvXPtAQLjqljHPOODXD0Sy1FijFMO5jcu8Im9Bknj
+         EkDIfjTWtupw4N01IBHft8QmhcfzyPw9cvZUZgBGkBpxsY+y+a9BU86YdrNjElWvhqx/
+         E5iCtoY9GAoa6hzVGfWo5s4qUOsQN5R4CmLgTnI1Y4bzQiPvC25x9rfO8Roe23HnSEOK
+         CvSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eVlqeH2RPGiO//aNy97j7YSMfcTUz/bRuiejQQ3tzco=;
+        b=tv3M8mSqtkymzxLTFh/clFNlAOu0tB8UzHcnkNQeGfAn3zXbE/tCALCT+PJ5DZvD0/
+         CVFoBnggqeNQAUQyuQtseHjaQ7J+/7W6OsOS4HtCTaHVl/XLOhd6ABmvpTydC7iI0bfV
+         dIZoxhLMB823sxC4FH7SGJtzZwRFNGet/kKkjZJak5SD0Gkyrm6MGjT3a4RSwzQ7cHd5
+         V+OE/VD/NjPu3N1rT6sH1ueo1AULpsBNrK7xl5AS/1r8uqSMWYEMFdtv2WIYijxnIRKQ
+         6VTLl+PdxWTtaTpPwmK8YSTxjyTZvoh/HXOOREgxAmK1Wn6niHfvxMuJYkyGpUHFjJm+
+         7diw==
+X-Gm-Message-State: AOAM533PrThHblr32zECIdCgxEDqfLhEOr3jqNNGwv0Xm/GujjPzazov
+        SSnPLdYF+Xm2aDaLCsB661w=
+X-Google-Smtp-Source: ABdhPJxPoMJstucPR3aT6Ma+CfxIkoeKgGHjY74VMAXq/rqV58BY+HM5FJSE3nxyvKcUS7ZLZeLSGg==
+X-Received: by 2002:a63:5915:: with SMTP id n21mr20616538pgb.323.1593616619461;
+        Wed, 01 Jul 2020 08:16:59 -0700 (PDT)
+Received: from localhost ([144.34.187.180])
+        by smtp.gmail.com with ESMTPSA id z2sm6499339pfq.67.2020.07.01.08.16.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Jul 2020 08:16:58 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 15:16:45 +0000
+From:   Long Li <lonuxli.64@gmail.com>
+To:     willy@infradead.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] mm, slab: Check GFP_SLAB_BUG_MASK before alloc_pages in
+ kmalloc_order
+Message-ID: <20200701151645.GA26223@lilong>
 MIME-Version: 1.0
-In-Reply-To: <34065299-03cf-5b62-db37-0acc9830be72@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VcD3ISfuI6H2Ya9namtRvcXvRRTENKx49V7npnVOb2NiVNmOwzt
- JUDZbhhPdfZ6E2lpzIdih75xhwXrdssEaA+WQ2IIiy6t9xRzzJ5gEbv/PdwLcmxgY9es6u1
- QIrOsnJjMOmmNeOZoI2vt9IU5vumN0azia/ey/XJETJreSQ8Zmrk+WuTmkDcYU5Ob3nJlYH
- 67uPkX6zAAXtBSOp1+3PQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7/jnl+4XCP0=:Yr7KEXWWTPyYTIK1K+PeXM
- sFHiJuiUnSi9j//yJ2e9AN2dq/trjs5Qmu1RVxLoA49XUDFHPtop/az/WZIcnRMN5uEFND0st
- NnfkacFniRpq9Fq4njkvBGZNHPbN9E3LGTXgIcccL27dBRvizC0Ac/nQhmOJgvsi0Fpg0FXio
- JF7eSqfsSTbuedj0sXyG+zkKrMgYUnXGzQfN++1QNrWaybDmPncdWkUcMWzjYrASi8zopIDZA
- NMStnrfkXTJ21PoGOUcnf29YvBXe3m9onKC1UYq5/Kav5r+DWsEgHyGK/Ajhd7FLRobj1smjG
- 6uUovyV1yWltLQAZK6xYcrL3L/xk5BX1OxNgcCilB6VYFSVXceXOd8VWnSc3MAsrzGnNt2+mF
- TDTwzw6mWyxcwbebfXF5s12ZugD4lYj5cPq2iUD0PKQqy16MOa6Y0W+F3cSxsg+z3BYwfticj
- HxrGigsyyBHteouqS0PgdoeN38O0gqEQGKW6XbqezZ7u4+sO3koSLivWD22k3u1n0tBR7sJMe
- OqpRtfGMSBfo+vlAMDZoRVZ0pKdL317RrYvqdxZUFHpfvftvCfNb8NZRKjde2NTjSKFQqdkEx
- OgIS6qNKHnLQklt7g2YRYaWmUGHuZ1s2CS1kNVn8l+dlc6NwaXxjMQaZuyQ6h+PsLQR1zMrqd
- Ivt4zdJGZ3Ee7M0laoESgKS1XMsIssu8F7QohaTV1c06nfdQ538hu38DcDprDBOW9wVfsMQNL
- ikXwou6ZlWjCc26YBB6XmnMN3bPFiKMy3zLLIBDIR40/Fv6LJg25Qi3+b0YIk4caWouSN0fdr
- 1v6M3lxwi+GGcTA2D5D6nkxHhMlSNUVobQaIt14MB0oC6fA8yilUHfTqWOuydrlcBC4aai5bz
- OzFTYncCBVuDbpYJPV63LT+34jYF8OstSYTbcN9jTB0pNrBXYu0IcKrNc/MOltpo/Oehy5eef
- AzwYO73EZLsKoz1oSWUCyOM8skkhPbdGyKMA2ahNFQRoo/7sTE00l9rNhDzevW6ZpQaVe9Bd4
- oxNbkKX9DEiVkeXHBYni17fJ4dIrZsA5bqwVg3UmqRekr2ucxJ/Sn4hL8WVTH5rFInIxVNsoW
- rb8RTla/0PPk57CCqqcR0WsPjZnXXAP57UxPjluYNwoxEtM5eZI24kYJatfm9y1yFtynvv7G5
- fh70/A6TGVY1Nsehc9f3XpY1RCYJXQKzOChQv2lH41hd5HOcwE696NvpaootkU0X7RtGrXW9O
- TExSXs3O5urgT2+hO
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Would you like to integrate any more details from the running patch rev=
-iew?
->
-> I am satisfied with the current patch.
+kmalloc cannot allocate memory from HIGHMEM.  Allocating large amounts
+of memory currently bypasses the check and will simply leak the memory
+when page_address() returns NULL.  To fix this, factor the
+GFP_SLAB_BUG_MASK check out of slab & slub, and call it from
+kmalloc_order() as well. In order to make the code clear, the warning
+message is put in one place.
 
-I got an other software development impression.
+Signed-off-by: Long Li <lonuxli.64@gmail.com>
+---
 
+changes in V3:
+-Put the warning message in one place
+-updage the change log to be clear
 
-> No doubt that any documentation can be improved, almost ad infinitum,
-> but I'm not trying to do that.
+ mm/slab.c        | 10 +++-------
+ mm/slab.h        |  1 +
+ mm/slab_common.c | 17 +++++++++++++++++
+ mm/slub.c        |  9 ++-------
+ 4 files changed, 23 insertions(+), 14 deletions(-)
 
-Do we stumble on a target conflict according to a specific technical detai=
-l?
+diff --git a/mm/slab.c b/mm/slab.c
+index ac7a223d9ac3..2850fe3c5fb8 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -2573,13 +2573,9 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
+ 	 * Be lazy and only check for valid flags here,  keeping it out of the
+ 	 * critical path in kmem_cache_alloc().
+ 	 */
+-	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+-		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+-		flags &= ~GFP_SLAB_BUG_MASK;
+-		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+-				invalid_mask, &invalid_mask, flags, &flags);
+-		dump_stack();
+-	}
++	if (unlikely(flags & GFP_SLAB_BUG_MASK))
++		flags = kmalloc_invalid_flags(flags);
++
+ 	WARN_ON_ONCE(cachep->ctor && (flags & __GFP_ZERO));
+ 	local_flags = flags & (GFP_CONSTRAINT_MASK|GFP_RECLAIM_MASK);
+ 
+diff --git a/mm/slab.h b/mm/slab.h
+index a06f3313e4a0..ab172dca8ce2 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -90,6 +90,7 @@ void create_kmalloc_caches(slab_flags_t);
+ struct kmem_cache *kmalloc_slab(size_t, gfp_t);
+ #endif
+ 
++gfp_t kmalloc_invalid_flags(gfp_t flags);
+ 
+ /* Functions provided by the slab allocators */
+ int __kmem_cache_create(struct kmem_cache *, slab_flags_t flags);
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index a143a8c8f874..85a16e323906 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -26,6 +26,8 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/kmem.h>
+ 
++#include "internal.h"
++
+ #include "slab.h"
+ 
+ enum slab_state slab_state;
+@@ -805,6 +807,18 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ }
+ #endif /* !CONFIG_SLOB */
+ 
++gfp_t kmalloc_invalid_flags(gfp_t flags)
++{
++	gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
++
++	flags &= ~GFP_SLAB_BUG_MASK;
++	pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
++			invalid_mask, &invalid_mask, flags, &flags);
++	dump_stack();
++
++	return flags;
++}
++
+ /*
+  * To avoid unnecessary overhead, we pass through large allocation requests
+  * directly to the page allocator. We use __GFP_COMP, because we will need to
+@@ -815,6 +829,9 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
+ 	void *ret = NULL;
+ 	struct page *page;
+ 
++	if (unlikely(flags & GFP_SLAB_BUG_MASK))
++		flags = kmalloc_invalid_flags(flags);
++
+ 	flags |= __GFP_COMP;
+ 	page = alloc_pages(flags, order);
+ 	if (likely(page)) {
+diff --git a/mm/slub.c b/mm/slub.c
+index 62d2de56549e..039045211df9 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1817,13 +1817,8 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 
+ static struct page *new_slab(struct kmem_cache *s, gfp_t flags, int node)
+ {
+-	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+-		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+-		flags &= ~GFP_SLAB_BUG_MASK;
+-		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+-				invalid_mask, &invalid_mask, flags, &flags);
+-		dump_stack();
+-	}
++	if (unlikely(flags & GFP_SLAB_BUG_MASK))
++		flags = kmalloc_invalid_flags(flags);
+ 
+ 	return allocate_slab(s,
+ 		flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK), node);
+-- 
+2.17.1
 
-How do you think about to compare source code analysis results
-from programs like =E2=80=9Csparse=E2=80=9D and =E2=80=9Cspatch=E2=80=9D (=
-by the mentioned make command)?
-
-Regards,
-Markus
