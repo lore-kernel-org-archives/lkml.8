@@ -2,112 +2,174 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED648C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97872073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958DC2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gqY4x95R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgGAKOD (ORCPT
+        id S1729802AbgGAKQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:14:03 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:39047 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgGAKOC (ORCPT
+        Wed, 1 Jul 2020 06:16:08 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31665 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729671AbgGAKQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:14:02 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MWz4j-1jJm2z2fWb-00XK1R; Wed, 01 Jul 2020 12:14:00 +0200
-Received: by mail-lj1-f170.google.com with SMTP id d17so11543112ljl.3;
-        Wed, 01 Jul 2020 03:14:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532kA/9uvjHIUKkMqNuGA5XKB4OSc01DncNj6XqWIngARR62GPiU
-        yOkjpAp0oNyrYwHMyPcZyfNPgBT9ZgPaXgTnJ2k=
-X-Google-Smtp-Source: ABdhPJxvxG0YKdQRIZLf3EEmE6+prGIuqXSwFxFbLTEkpoK2wHJFxihZY6FoRRGdIX48u3tOAqejPZ41dhROmiVpNQU=
-X-Received: by 2002:a2e:7f06:: with SMTP id a6mr2089791ljd.446.1593598440088;
- Wed, 01 Jul 2020 03:14:00 -0700 (PDT)
+        Wed, 1 Jul 2020 06:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593598564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=uLU1EDS3zv7giamzF6Bu8abQtgxAXfgzMeTUhqAPcaA=;
+        b=gqY4x95R7v9PxgGi+VnzSsWPJ2iGWbPLVgTewrp7+xmzcX5HzPreRNdAiLZBmUdJIfFFDS
+        OaGXiLIex7xu0FmaSqdxIuaO3RdNk8zyK8T8/uuO0CLdGU1TRAYHQKsFT/+6q2brkQCWF1
+        B7gXSz7N0S1xKn43OtvM/BugqY35S+Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-vptMphDcPdSBuDtp6J5mqg-1; Wed, 01 Jul 2020 06:16:00 -0400
+X-MC-Unique: vptMphDcPdSBuDtp6J5mqg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BCD2107ACF2;
+        Wed,  1 Jul 2020 10:15:58 +0000 (UTC)
+Received: from [10.36.112.52] (ovpn-112-52.ams2.redhat.com [10.36.112.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D941360C81;
+        Wed,  1 Jul 2020 10:15:54 +0000 (UTC)
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
+ <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
+ <20200701084200.GN2369@dhcp22.suse.cz>
+ <20200701100442.GB17918@linux.vnet.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
+Date:   Wed, 1 Jul 2020 12:15:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
- <1593410042-10598-3-git-send-email-Anson.Huang@nxp.com> <CAK8P3a2ZL6_rV=2brNz=UDdji3mddF+1Nb6Ew+=n4j0-fNrCug@mail.gmail.com>
- <DB3PR0402MB3916BA91E0F44EA5DAD6BF26F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3igMrRNa1oR=d=9A-YNAmb+LXNRbwBk9zuJZq5tfvr9Q@mail.gmail.com>
- <DB3PR0402MB39166254A6F287DC0A8216F1F56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3FueW3JSLO4RV4WV3C-UP_5y5UA1WGs+gaQGaPaafaUA@mail.gmail.com>
- <DB3PR0402MB3916F746C792CB2BC876715BF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a1E_UecNq=7rvceQoXdFkmnBFOyUtxrpJ1bF6cLWOtNqQ@mail.gmail.com> <DB3PR0402MB39161C372E869A670D115FBBF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39161C372E869A670D115FBBF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 1 Jul 2020 12:13:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0YKsiKx66ESwvVmsubv=x=UB8JafisCY0Ct8VBMi-JhQ@mail.gmail.com>
-Message-ID: <CAK8P3a0YKsiKx66ESwvVmsubv=x=UB8JafisCY0Ct8VBMi-JhQ@mail.gmail.com>
-Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for module build
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zAbsWGYUYSjUhDcXivmTqZ3C0+A8yahpkjUtZi8A1inf4RtBPZ9
- Ny86rfoQjBRRZ4GqI5RqnDLxmWFce8ZfiBQ0KzC57vBlXk6Xz/x8amZAo5r+QKFyXbQeu9K
- t0zpF3Iq/33XnrT7yCFMLNATdMEaVUQJ52c2ctDgB0Q8dwhEet4D9Al5JGAyayX/s6uYd/+
- D2diBSzGf3FZ9DWXIgC0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wP/f4dl8JjM=:hptme65rAWGJzgsV9COIjS
- Ki8v5CPeBc+Dog1BdJnPh6/CYK9LmJ7obbjpxReq8/e69JtKOuyaIKBpRrxqKSXbmR3hsOaIc
- K2oOcuNWS7nK/jo1Vm1kzM7aMBD9uIL75Dia3pmoPPAx29CMboendorHguBcIGFvcfxbEp+8P
- z0te78arOZf3wjfqMNVEKdpKqUh7ZA10gxRHrS0Xu+xuWUlmrqAYTi2H8T6SBwl0QohzAn9kJ
- Q6wpmITUduLFAnmZY9+MbG+pmP7vtR8qMHhZjzRykptrooNqEu6za5Z1wE9vKDPHp+kcM9q12
- cBRWBgWiOkMspBAAt/OEMEyDEcKXGvY9zZpJ8ZooTddGOd3S5HIGsH60qeFqtuu6dpUFzJ5HU
- HoniL0S2W+L7FCVg79wuaplUD1iSByS9zjbhPuarH6w+BDi70IfYAPUNWNYYw2cx56D95jCA+
- Acje9/utIC05xXdTIYyh6mkipZjVEQYi1paUI/yuQj4UFF5g28LW1Pc50sKuvEC+/K7+HwUji
- bmjXBJWE3n+F9XB9P08jLZlDp5EYU4Vwpgo2bul2ZXGT7jKjJhgMwQvWWsTpPUXN1752RDvFS
- 1r3fL/zqfml/99+gJFC0nNk65b/EW6TbuEFFdDj/AOXVx711IN5+CGHaAegYZVnptMtu8sufq
- MLpNnAsngDiTGPofn7vDW6uwrvzjMb6SQeqDXMtD7JfaTdyxuTAszm665N4d6ZAyXoEp9npQn
- RCTmlkn7Ippgxvw60N4scClRWBFKdW8l9StjgXB/E2JuJbiYFnS4V1LguKJnnXgc75sUELt9J
- 0sGkMtraqvci9Y5+gWVxChWerO3LrLl3PGEZwzKTF+WqiohWQA=
+In-Reply-To: <20200701100442.GB17918@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 12:02 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for
-> > module build
-> > On Wed, Jul 1, 2020 at 11:27 AM Anson Huang <anson.huang@nxp.com>
-> > wrote:
-> > > > Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro
-> > > > for module build
-> > Why not move this all to a separate file then and only build it when
-> > CONFIG_CLK_IMX=y?
-> > It seems that you don't need the imx_keep_uart_clocks_param() if the clk
-> > driver is loaded as a module, but then you also don't need the
-> > imx_clk_disable_uart() and imx_register_uart_clocks() functions or the
-> > associated variables.
->
-> If so, how about just adding "#ifndef MODULE" check for this part of code? I think
-> it should be easier/better than adding a file and build it conditionally?
+On 01.07.20 12:04, Srikar Dronamraju wrote:
+> * Michal Hocko <mhocko@kernel.org> [2020-07-01 10:42:00]:
+> 
+>>
+>>>
+>>> 2. Also existence of dummy node also leads to inconsistent information. The
+>>> number of online nodes is inconsistent with the information in the
+>>> device-tree and resource-dump
+>>>
+>>> 3. When the dummy node is present, single node non-Numa systems end up showing
+>>> up as NUMA systems and numa_balancing gets enabled. This will mean we take
+>>> the hit from the unnecessary numa hinting faults.
+>>
+>> I have to say that I dislike the node online/offline state and directly
+>> exporting that to the userspace. Users should only care whether the node
+>> has memory/cpus. Numa nodes can be online without any memory. Just
+>> offline all the present memory blocks but do not physically hot remove
+>> them and you are in the same situation. If users are confused by an
+>> output of tools like numactl -H then those could be updated and hide
+>> nodes without any memory&cpus.
+>>
+>> The autonuma problem sounds interesting but again this patch doesn't
+>> really solve the underlying problem because I strongly suspect that the
+>> problem is still there when a numa node gets all its memory offline as
+>> mentioned above.
+>>
+>> While I completely agree that making node 0 special is wrong, I have
+>> still hard time to review this very simply looking patch because all the
+>> numa initialization is so spread around that this might just blow up
+>> at unexpected places. IIRC we have discussed testing in the previous
+>> version and David has provided a way to emulate these configurations
+>> on x86. Did you manage to use those instruction for additional testing
+>> on other than ppc architectures?
+>>
+> 
+> I have tried all the steps that David mentioned and reported back at
+> https://lore.kernel.org/lkml/20200511174731.GD1961@linux.vnet.ibm.com/t/#u
+> 
+> As a summary, David's steps are still not creating a memoryless/cpuless on
+> x86 VM.
 
-The #ifdef is clearly a simpler change,  but I think a separate file is
-a cleaner way to do it. Up to you (unless one of the imx or clk maintainers
-has a preference -- I'm only helping out here, not making decisions).
+Now, that is wrong. You get a memoryless/cpuless node, which is *not
+online*. Once you hotplug some memory, it will switch online. Once you
+remove memory, it will switch back offline.
 
-      Arnd
+-- 
+Thanks,
+
+David / dhildenb
+
