@@ -2,181 +2,220 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E54C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22C1920760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np+tZ2jm"
+	by mail.kernel.org (Postfix) with ESMTP id BBE7120780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593608548;
+	bh=EYCp1ofrnYpPL4L+R59mz0chOIe27Q2dNSNot44Kxes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QBam3JhFm1inkFGapKRPOtdaw/j63P1A1gU7F/3OIKOFjidVGENzJ5TOL7W1ubx48
+	 3sjvsRtO/YrtKCOqm5G7iDeOsgLtTBWKXU83M1y2DHnilsSiB1DoHIAeoDGxpkY4ix
+	 kcEIf9Jg1vxRv+Kv++CZPT5oDIHqGdyhpa/rhRzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgGANCT (ORCPT
+        id S1730870AbgGANCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbgGANCQ (ORCPT
+        Wed, 1 Jul 2020 09:02:24 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41183 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730763AbgGANCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 09:02:16 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3372C03E979;
-        Wed,  1 Jul 2020 06:02:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j12so10972350pfn.10;
-        Wed, 01 Jul 2020 06:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9tRb3lcQnQNyqSPd2RUudBp4K9fTszNeoadKdLTyh8Y=;
-        b=np+tZ2jmuroP/ACE0gq1rtk344QwU0PDDtd4OKhwpzFSam+YeQkJVTobzT4asxV+N7
-         5vaGxInqgUw8SDFu5i1qyGtpI2AsSF7tU1r5HUplZJXXqNNCQFxiVx6c1K62JoesC+lb
-         IESzdLyjcNrtj6s1tx9XuoJ7VGlCVp1uMJetLO/uuNy1A+f15CJ9kX2aJ1jkv8wVJqiJ
-         19vIDyRXhqxIYm0Tsw1DONPxTKciIHCVznpsu43eNBexgFCX9IgSkNBTa7XGxpDEu0of
-         oqmgR/KVPPF2UwVV/jC3pZpvR+W0ZVP6t78UzeE2mts3jbb2aF+Gpi28hCDewFe7mxPS
-         dTdQ==
+Received: by mail-lj1-f193.google.com with SMTP id z24so1925963ljn.8;
+        Wed, 01 Jul 2020 06:02:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9tRb3lcQnQNyqSPd2RUudBp4K9fTszNeoadKdLTyh8Y=;
-        b=EYxJynkrXq7RTubYLiFBKI29Xm9v7s+6qLJD+kQlIJz006DGTyxTmdywMotrr7BL4b
-         aH6WcsYQ6YlIs3d1qLy2GgDtcqRkLI5MDDrJqotm2Taq953TD7bsMSzG0viLZ0toAPEI
-         C3wZVD3RUBIznxZ4Fzgrth8JgjdWTJF3FmiXuZSwwfJ/PvcULqgCTsZtOX5kBRt5s3O1
-         siWe7mhY643T+C2EESjJw/07ct/P6SHvHy6n6PpuEf2kDxnPGcZUBmT0Ycnx8Xzw3sSr
-         1QiVGyniCdydZhKwZUdeZwscfuXyAUx7JMVffwnrMF47iNezL3jKvFmDXxe5/NnvUKUm
-         Z0uw==
-X-Gm-Message-State: AOAM530NuAtwhw+5mp3QzbXoaqDTrLYVfqQA2W+BZORwjHQ3oxNbcPk4
-        M10GaKbWx0vkfZGUjvrK0NM=
-X-Google-Smtp-Source: ABdhPJyT6cyR4U2w3jPNfEUYdKRro/S6z/7KSlQcbw2ykn1BefH2zY4ZVM7WN33ZYy9Cnhb1jiYZqA==
-X-Received: by 2002:a63:441c:: with SMTP id r28mr18102161pga.372.1593608534913;
-        Wed, 01 Jul 2020 06:02:14 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id d9sm6070908pgv.45.2020.07.01.06.01.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pONDTE3q4C4ergFWZALFTmpNQdd6P301hOAS15uLVek=;
+        b=ZusZp9pHj6NjfYZIKrt+eOFDMgAVC610SHqJ2eqv+YMkISjLN6fuEt6v4f5bL7W0mR
+         unXbyFW1vC9t0f8r74qpf6NM68Ejns0qZvE1lJrloO5ekCRs16i5JcCMVFiF9cCOlF9c
+         N8z15drYxzJiazRPew7/7WtK6YTdCGCWnxf7sejujjlnMS9EpZK3eTavL22u9XrRWlWD
+         G19T6XJoMkDRBEBItzu5Ix+9ZpnjnA/wJUUG41Vkv7ctBfFZBBLKkkOAsZi3dEGUMsS9
+         CfughaMvnBmu/lW2kKGaU+3KYxypjdM75X2x54Ngq6Tss5pp2dz+MK2VIkS6AeHX5G0e
+         JBuQ==
+X-Gm-Message-State: AOAM530iQjim05AsFzxg+UuWfUEk59/AfotQN1w/5zn5rbQ2s171p0Yd
+        yCVLblzQFhTtvPKL5q5M8FQf3EkoWpI=
+X-Google-Smtp-Source: ABdhPJxRp62vEJvwwakzJZLy1MQMlRAKWi4FPOGPRdB7In7mhIB6SqZXzsLfpgpnM4RfLz5oLWjSEg==
+X-Received: by 2002:a2e:a419:: with SMTP id p25mr6965067ljn.164.1593608532682;
+        Wed, 01 Jul 2020 06:02:12 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id y69sm2028366lfa.86.2020.07.01.06.02.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:02:14 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Dillow <dave@thedillows.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Jon Mason <jdmason@kudzu.us>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 02/11] ne2k-pci: use generic power management
-Date:   Wed,  1 Jul 2020 18:29:29 +0530
-Message-Id: <20200701125938.639447-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
-References: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
+        Wed, 01 Jul 2020 06:02:11 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jqcNK-0007Wz-Nh; Wed, 01 Jul 2020 15:02:07 +0200
+Date:   Wed, 1 Jul 2020 15:02:06 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, linus.walleij@linaro.org,
+        mchehab+huawei@kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
+ support
+Message-ID: <20200701130206.GD3334@localhost>
+References: <20200607162350.21297-1-mani@kernel.org>
+ <20200607162350.21297-3-mani@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607162350.21297-3-mani@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
+> Add gpiochip support for Maxlinear/Exar USB to serial converter
+> for controlling the available gpios.
+> 
+> Inspired from cp210x usb to serial converter driver.
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  drivers/usb/serial/xr_serial.c | 209 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 208 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
+> index bb7df79cc129..2240fbc9ea7f 100644
+> --- a/drivers/usb/serial/xr_serial.c
+> +++ b/drivers/usb/serial/xr_serial.c
+> @@ -10,6 +10,7 @@
+>   * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
+>   */
+>  
+> +#include <linux/gpio/driver.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+> @@ -17,6 +18,18 @@
+>  #include <linux/usb.h>
+>  #include <linux/usb/serial.h>
+>  
+> +#ifdef CONFIG_GPIOLIB
+> +enum gpio_pins {
+> +	GPIO_RI = 0,
+> +	GPIO_CD,
+> +	GPIO_DSR,
+> +	GPIO_DTR,
+> +	GPIO_CTS,
+> +	GPIO_RTS,
+> +	GPIO_MAX,
+> +};
+> +#endif
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+Try to avoid littering the driver with GPIOLIB ifdefs. One or two is
+fine, but no more even if it means declaring an unused type. Add
+stubbed out helpers where appropriate.
 
-Thus, there is no need to call the PCI helper functions like
-pci_enable/disable_device(), pci_save/restore_sate() and
-pci_set_power_state().
+> +
+>  static void xr_set_termios(struct tty_struct *tty,
+>  			   struct usb_serial_port *port,
+>  			   struct ktermios *old_termios);
+> @@ -39,6 +52,11 @@ struct xr_uart_regs {
+>  };
+>  
+>  struct xr_port_private {
+> +#ifdef CONFIG_GPIOLIB
+> +	struct gpio_chip gc;
+> +	bool gpio_registered;
+> +	enum gpio_pins pin_status[GPIO_MAX];
+> +#endif
+>  	const struct xr_uart_regs *regs;
+>  	bool port_open;
+>  };
+> @@ -390,6 +408,13 @@ static void xr_set_flow_mode(struct tty_struct *tty,
+>  	 */
+>  	gpio_mode &= ~UART_MODE_GPIO_MASK;
+>  	if (cflag & CRTSCTS) {
+> +#ifdef CONFIG_GPIOLIB
+> +		/* Check if the CTS/RTS pins are occupied */
+> +		if (port_priv->pin_status[GPIO_RTS] ||
+> +		    port_priv->pin_status[GPIO_CTS])
+> +			return;
+> +#endif
 
-Compile-tested only.
+You cannot just bail out as this could leave software flow enabled etc.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/ethernet/8390/ne2k-pci.c | 29 ++++++----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+You also need to claim these pins once at open or leave them be. We
+don't want CRTSCTS to suddenly start toggling because a pin is released
+by gpiolib.
 
-diff --git a/drivers/net/ethernet/8390/ne2k-pci.c b/drivers/net/ethernet/8390/ne2k-pci.c
-index 77d78b4c59c4..e500f0c05725 100644
---- a/drivers/net/ethernet/8390/ne2k-pci.c
-+++ b/drivers/net/ethernet/8390/ne2k-pci.c
-@@ -699,30 +699,18 @@ static void ne2k_pci_remove_one(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
--#ifdef CONFIG_PM
--static int ne2k_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused ne2k_pci_suspend(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 
- 	netif_device_detach(dev);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- 
- 	return 0;
- }
- 
--static int ne2k_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused ne2k_pci_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
--	int rc;
--
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
--	rc = pci_enable_device(pdev);
--	if (rc)
--		return rc;
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 
- 	NS8390_init(dev, 1);
- 	netif_device_attach(dev);
-@@ -730,19 +718,14 @@ static int ne2k_pci_resume(struct pci_dev *pdev)
- 	return 0;
- }
- 
--#endif /* CONFIG_PM */
--
-+static SIMPLE_DEV_PM_OPS(ne2k_pci_pm_ops, ne2k_pci_suspend, ne2k_pci_resume);
- 
- static struct pci_driver ne2k_driver = {
- 	.name		= DRV_NAME,
- 	.probe		= ne2k_pci_init_one,
- 	.remove		= ne2k_pci_remove_one,
- 	.id_table	= ne2k_pci_tbl,
--#ifdef CONFIG_PM
--	.suspend	= ne2k_pci_suspend,
--	.resume		= ne2k_pci_resume,
--#endif
--
-+	.driver.pm	= &ne2k_pci_pm_ops,
- };
- 
- 
--- 
-2.27.0
+That is, determine who owns each pin at open() and keep it that way till
+close() (by setting some flags at open).
 
+> +
+>  		dev_dbg(&port->dev, "Enabling hardware flow ctrl\n");
+>  		flow = UART_FLOW_MODE_HW;
+>  		gpio_mode |= UART_MODE_RTS_CTS;
+> @@ -497,6 +522,17 @@ static int xr_tiocmset_port(struct usb_serial_port *port,
+>  	u8 gpio_set = 0;
+>  	u8 gpio_clr = 0;
+>  
+> +#ifdef CONFIG_GPIOLIB
+> +	/* Check if the RTS/DTR pins are occupied */
+> +	if (set & TIOCM_RTS || clear & TIOCM_RTS)
+> +		if (port_priv->pin_status[GPIO_RTS])
+> +			return -EBUSY;
+> +
+> +	if (set & TIOCM_DTR || clear & TIOCM_DTR)
+> +		if (port_priv->pin_status[GPIO_DTR])
+> +			return -EBUSY;
+> +#endif
+
+Same here. And perhaps just ignoring the pins managed by gpiolib is
+better (cf. gpiolib and pinctrl being orthogonal).
+
+> +
+>  	/* Modem control pins are active low, so set & clr are swapped */
+>  	if (set & TIOCM_RTS)
+>  		gpio_clr |= UART_MODE_RTS;
+> @@ -589,9 +625,175 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
+>  		   state);
+>  }
+>  
+> +#ifdef CONFIG_GPIOLIB
+> +
+> +static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	/*
+> +	 * Do not proceed if the port is open. This is done to avoid changing
+> +	 * the GPIO configuration used by the serial driver.
+> +	 */
+> +	if (port_priv->port_open)
+> +		return -EBUSY;
+> +
+> +	/* Mark the GPIO pin as busy */
+> +	port_priv->pin_status[offset] = true;
+
+You need a lock to serialise against open/close properly.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void xr_gpio_free(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct usb_serial_port *port = gpiochip_get_data(gc);
+> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+> +
+> +	/* Mark the GPIO pin as free */
+> +	port_priv->pin_status[offset] = false;
+> +}
+
+Johan
