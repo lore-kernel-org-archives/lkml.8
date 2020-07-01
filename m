@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F26C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B21EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D112207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585BA20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgGASYv (ORCPT
+        id S1732947AbgGASYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:24:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:61636 "EHLO mga09.intel.com"
+        Wed, 1 Jul 2020 14:24:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61635 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731814AbgGASYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:24:48 -0400
-IronPort-SDR: V1o/jiNt/Hg2kSbpfTtvmKBs2vFMlp3wBeyiZOIhwViyTETAcZMpP+7QOUdADI7WXeIgzRPd09
- 6AZuN4C6tZow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="148218888"
+        id S1730355AbgGASYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:24:47 -0400
+IronPort-SDR: mRkEHYiJkiFjQ8eJghkhF4jej/qY/oPEEvtq1q7wNapdfmF4nvcKDC7l4fYChkdOHaHvKRU4Hy
+ jiPGDYHDvQBw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="148218884"
 X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
-   d="scan'208";a="148218888"
+   d="scan'208";a="148218884"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 11:24:47 -0700
-IronPort-SDR: RKhoIapeEXbHUDtol/rc9p30Z59tFwBT0r+5FvQu69Zw2DYoUnpT4wNrMtSCsE/3B1DlmZYyc3
- ao3TUJ3wRblQ==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 11:24:46 -0700
+IronPort-SDR: uNZGMcDa6uSQr0V+Q2M+Mdug7RsPQMAaWPGwA1OwhvOhGEkRJAqmwKxvXiYDp7ME9tHN2tA0CT
+ YLAyXwjYxw1A==
 X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
-   d="scan'208";a="425679612"
+   d="scan'208";a="425679609"
 Received: from srnatla-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.76.199])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 11:24:47 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 11:24:45 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
+        Steve Lee <steves.lee@maximintegrated.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 07/11] ASoC: codecs: rt*: fix 'defined but not used' warning
-Date:   Wed,  1 Jul 2020 13:24:18 -0500
-Message-Id: <20200701182422.81496-8-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 06/11] ASoC: codecs: max98390: fix 'defined but not used' warning
+Date:   Wed,  1 Jul 2020 13:24:17 -0500
+Message-Id: <20200701182422.81496-7-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701182422.81496-1-pierre-louis.bossart@linux.intel.com>
 References: <20200701182422.81496-1-pierre-louis.bossart@linux.intel.com>
@@ -57,109 +57,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 warning when ACPI is not defined
+Fix W=1 warning and removed unused table. In this case this a
+duplicate of
+
+static const struct of_device_id max98390_of_match[] = {
+	{ .compatible = "maxim,max98390", },
+	{}
+};
+MODULE_DEVICE_TABLE(of, max98390_of_match);
+
+already used in the rest of the code.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/codecs/rt274.c      | 2 ++
- sound/soc/codecs/rt286.c      | 2 ++
- sound/soc/codecs/rt298.c      | 2 ++
- sound/soc/codecs/rt5660.c     | 2 ++
- sound/soc/codecs/rt5677-spi.c | 2 ++
- 5 files changed, 10 insertions(+)
+ sound/soc/codecs/max98390.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index cbb5e176d11a..40a28fb4fd09 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -1105,12 +1105,14 @@ static const struct i2c_device_id rt274_i2c_id[] = {
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+index b345e626956d..3e8094241645 100644
+--- a/sound/soc/codecs/max98390.c
++++ b/sound/soc/codecs/max98390.c
+@@ -944,14 +944,6 @@ static const struct regmap_config max98390_regmap = {
+ 	.cache_type       = REGCACHE_RBTREE,
  };
- MODULE_DEVICE_TABLE(i2c, rt274_i2c_id);
  
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id rt274_acpi_match[] = {
- 	{ "10EC0274", 0 },
- 	{ "INT34C2", 0 },
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, rt274_acpi_match);
-+#endif
- 
- static int rt274_i2c_probe(struct i2c_client *i2c,
- 			   const struct i2c_device_id *id)
-diff --git a/sound/soc/codecs/rt286.c b/sound/soc/codecs/rt286.c
-index 9593a9a27bf8..89b1c8b68004 100644
---- a/sound/soc/codecs/rt286.c
-+++ b/sound/soc/codecs/rt286.c
-@@ -1079,11 +1079,13 @@ static const struct i2c_device_id rt286_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, rt286_i2c_id);
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id rt286_acpi_match[] = {
- 	{ "INT343A", 0 },
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, rt286_acpi_match);
-+#endif
- 
- static const struct dmi_system_id force_combo_jack_table[] = {
- 	{
-diff --git a/sound/soc/codecs/rt298.c b/sound/soc/codecs/rt298.c
-index 7fc7d6181630..dc0273a5a11f 100644
---- a/sound/soc/codecs/rt298.c
-+++ b/sound/soc/codecs/rt298.c
-@@ -1145,11 +1145,13 @@ static const struct i2c_device_id rt298_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, rt298_i2c_id);
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id rt298_acpi_match[] = {
- 	{ "INT343A", 0 },
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, rt298_acpi_match);
-+#endif
- 
- static const struct dmi_system_id force_combo_jack_table[] = {
- 	{
-diff --git a/sound/soc/codecs/rt5660.c b/sound/soc/codecs/rt5660.c
-index 78371e51bc34..9e3813f7583d 100644
---- a/sound/soc/codecs/rt5660.c
-+++ b/sound/soc/codecs/rt5660.c
-@@ -1241,12 +1241,14 @@ static const struct of_device_id rt5660_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rt5660_of_match);
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id rt5660_acpi_match[] = {
- 	{ "10EC5660", 0 },
- 	{ "10EC3277", 0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(acpi, rt5660_acpi_match);
-+#endif
- 
- static int rt5660_parse_dt(struct rt5660_priv *rt5660, struct device *dev)
+-#ifdef CONFIG_OF
+-static const struct of_device_id max98390_dt_ids[] = {
+-	{ .compatible = "maxim,max98390", },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, max98390_dt_ids);
+-#endif
+-
+ static int max98390_i2c_probe(struct i2c_client *i2c,
+ 		const struct i2c_device_id *id)
  {
-diff --git a/sound/soc/codecs/rt5677-spi.c b/sound/soc/codecs/rt5677-spi.c
-index 7bfade8b3d6e..95ac12a5cc6b 100644
---- a/sound/soc/codecs/rt5677-spi.c
-+++ b/sound/soc/codecs/rt5677-spi.c
-@@ -614,11 +614,13 @@ static int rt5677_spi_probe(struct spi_device *spi)
- 	return ret;
- }
- 
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id rt5677_spi_acpi_id[] = {
- 	{ "RT5677AA", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, rt5677_spi_acpi_id);
-+#endif
- 
- static struct spi_driver rt5677_spi_driver = {
- 	.driver = {
 -- 
 2.25.1
 
