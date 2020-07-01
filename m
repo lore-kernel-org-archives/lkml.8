@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E1BC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E586020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9825420772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="stGgyoux"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1oqn7WJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgGANJS (ORCPT
+        id S1730900AbgGANJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:09:18 -0400
+        Wed, 1 Jul 2020 09:09:22 -0400
 Received: from esa5.microchip.iphmx.com ([216.71.150.166]:32587 "EHLO
         esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730656AbgGANJN (ORCPT
+        with ESMTP id S1729402AbgGANJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:09:13 -0400
+        Wed, 1 Jul 2020 09:09:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593608953; x=1625144953;
+  t=1593608956; x=1625144956;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=yZXM5jwTj3IjGvPe3sjNrDrjgeA8OBDnvK5TxI3UrD8=;
-  b=stGgyoux4j3sBmVxvDfVUhowway3+uP5OVCqY0KZyCg0nfXSW7+N+I+J
-   7yboMbh+tFz7kGAPrhKc7BHVlREMhA/ak+v34415TOCDx1+85DW9tHxoY
-   vZveqZ9D5rHx0KM4c0a9ZwXZdrlLiZw4gmqzcCV34rQ+r/nLE4ApMOCka
-   JeCa6dUBS/2qr8G1mU6sT4rMxehiiLGykumTMlk+xrw33QpnDgat/edfd
-   InjURX07iS3/GscPHERZ2b5blyzNGoJfcvQOjGH+XFiUYBROruja7bxIr
-   A/WrMKSlIwPez9W3zZsSo0JJQnU3XG3RkQ02sXWvNuAC9IHcJg959BHR4
-   g==;
-IronPort-SDR: ms0NRyaYJQ2bEzckjxXrXToHmwtv8gh4I9vxSltGZvu+S8KsayTcwGwjEIVqRO4aYP4whliy+x
- 0ydU5OyDv6GCYc3pMKxTXChhlQvY+xklEiyHXEP+eN33QmkQHQ2OhzIuubp+4FUz/wf1pZKX3B
- sj7zq3l+lvK5sIR0EyRrm82IneqO97GyYvgNuO9ltTGGj75OiaAzam17g06MEb+7SZoBivZ/is
- NiLqaZLPjsO570Zc/JHaKaU7hsKx1pFfKVfLn8JiMaWweuyd+WAMQ8ku0C6ahFwEiC3eW2r0G8
- ytI=
+  bh=s42Du4fy5NBs3k4rUKT5UAKJ01NC2TLYOSaV8P+ljQQ=;
+  b=1oqn7WJuxl1pv2fGShyUhWEtKNyqT/ueAfEZeLuMl4OzZc+L1rhEHCDo
+   gLZGfiPTL6CJKsUUNmKLO4mzZdTH/9Mc5odDTowxsnmx7Pgs+vz1PuHXe
+   JeeWfkkLQT1VYtBlqOtPqXeglcjQhTBIIc8gBNavqiHl6AKARgF+vyZpD
+   5I9mr8bQTghHboNuTlMIHwvZ4gM/YckHeL3cjUMiV0tKIjyO1za8tTaS2
+   fa3jmYhjHuw1XmyoSgcefkKuxjQQPDNSDY5vZ8Jm15XXqjFJ6xe3935wP
+   JBhtJSNR7aOfl8sRvGwoXB0G/COCB1rx1b8+Dia18EjyWSGU/StCxMzOb
+   Q==;
+IronPort-SDR: TUbdAMFTwHMlnO7qwylfeSNJJtIZwk6Ja71BbbAuQxP86iVDFZj+77afZHCPQJEB+MWop7O0kg
+ t5GzuI3Gdj6Qaz7WRpvQ20hFlSgjNbhgshgBSI9YigCI/WelxXMph1itrlJl3/HK18jf0lLIKU
+ k/W9jmyBHAZu00zw+DZdTG2qY/vGDI0/31Mk0yn/VERMVyJQ7IrMddSZzm4f0GnkZGb/Pjyzgf
+ bEE1a2Ad2LzzCwo5KOcD8Gl+rl4QrftX2cDmtzf48v8JalE8L8HwBHnrt0KgqX1Ey6avzt83mG
+ fiM=
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="81529535"
+   d="scan'208";a="81529538"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2020 06:09:10 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2020 06:09:11 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 1 Jul 2020 06:09:06 -0700
+ 15.1.1979.3; Wed, 1 Jul 2020 06:09:10 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 1 Jul 2020 06:09:04 -0700
+ 15.1.1979.3 via Frontend Transport; Wed, 1 Jul 2020 06:09:07 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
         <kuba@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH net-next 3/4] net: macb: do not initialize queue variable
-Date:   Wed, 1 Jul 2020 16:08:50 +0300
-Message-ID: <1593608931-3718-4-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH net-next 4/4] net: macb: remove is_udp variable
+Date:   Wed, 1 Jul 2020 16:08:51 +0300
+Message-ID: <1593608931-3718-5-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593608931-3718-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1593608931-3718-1-git-send-email-claudiu.beznea@microchip.com>
@@ -70,26 +70,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not initialize queue variable. It is already initialized in for loops.
+Remove is_udp variable that is used in only one place and use
+ip_hdr(skb)->protocol == IPPROTO_UDP check instead.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cadence/macb_main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index a84fb0ec53f0..3603ab707e0f 100644
+index 3603ab707e0f..4e7317747f54 100644
 --- a/drivers/net/ethernet/cadence/macb_main.c
 +++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1467,7 +1467,7 @@ static void macb_hresp_error_task(unsigned long data)
- {
- 	struct macb *bp = (struct macb *)data;
- 	struct net_device *dev = bp->dev;
--	struct macb_queue *queue = bp->queues;
-+	struct macb_queue *queue;
- 	unsigned int q;
- 	u32 ctrl;
+@@ -1933,7 +1933,7 @@ static netdev_tx_t macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	unsigned long flags;
+ 	unsigned int desc_cnt, nr_frags, frag_size, f;
+ 	unsigned int hdrlen;
+-	bool is_lso, is_udp = 0;
++	bool is_lso;
+ 	netdev_tx_t ret = NETDEV_TX_OK;
  
+ 	if (macb_clear_csum(skb)) {
+@@ -1949,10 +1949,8 @@ static netdev_tx_t macb_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	is_lso = (skb_shinfo(skb)->gso_size != 0);
+ 
+ 	if (is_lso) {
+-		is_udp = !!(ip_hdr(skb)->protocol == IPPROTO_UDP);
+-
+ 		/* length of headers */
+-		if (is_udp)
++		if (ip_hdr(skb)->protocol == IPPROTO_UDP)
+ 			/* only queue eth + ip headers separately for UDP */
+ 			hdrlen = skb_transport_offset(skb);
+ 		else
 -- 
 2.7.4
 
