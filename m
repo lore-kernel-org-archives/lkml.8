@@ -4,63 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6365E20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E51220870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642238;
-	bh=nrLm50/DFztfbXKPpIFpYoIWkeLNWvJ5kWxiTa+wd8I=;
+	s=default; t=1593642244;
+	bh=UOXPAuNZizHV54u2UlRgg0ZGPwJiEwjwXZbEWx49rQ8=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=UWXwdnAXpxuNCc+hrUKQMCGfrZrx/aMfS3lnA/reRf1fgrN9ZJC9CcTGOFaqxc8CQ
-	 z0m2wITPsPl3hNsxH0QMMDxJznqGUICc0jLKq5QRqTf4VFh5YOIS1uLxVprvYsIW7m
-	 yD2R87DL2lug9w6WXh7lvulq0lc2B9To9W/bs4rM=
+	b=BCaO7JusNlfe9Al7yqcRqIyXcthympQ3Yqcz0c6HpRzSePN7+mUZ/OTJejdOaxmAG
+	 +wfwyuUpP0RDdWSvA2s7LVGWoVMLSC/RgcoNtWUILcvC0yONpSFObiJFuX1sp30hS/
+	 MELiNlAsvQCnJfbq/JY7O15hAG/IrTX6Eto6O13Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgGAWX4 (ORCPT
+        id S1728061AbgGAWYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50892 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgGAWXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:23:54 -0400
+        id S1726464AbgGAWYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:00 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE43A2082F;
-        Wed,  1 Jul 2020 22:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC2F72082F;
+        Wed,  1 Jul 2020 22:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642234;
-        bh=nrLm50/DFztfbXKPpIFpYoIWkeLNWvJ5kWxiTa+wd8I=;
+        s=default; t=1593642239;
+        bh=UOXPAuNZizHV54u2UlRgg0ZGPwJiEwjwXZbEWx49rQ8=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=EIgu0Ta5BB0f13llEDdfIqF/NJ4AlyVwptaYb6n7oun7/EwHsXk4SafLUq6mvfPW7
-         tC921rrPLT9YADDPfSkNuWrmJ84Bp8smXNkAa/nc4jai7rciDWHd79R9X4yaZVXiv3
-         AtRpt13lAbhIgPdY+7CjSITrpX2BkB84KGUHBRoE=
-Date:   Wed, 01 Jul 2020 23:23:52 +0100
+        b=XCO6yN0SOZdO4tHwPmSJ07OoXe1xfyEgg7TnarI9gzJtngKvGuDTDCsupZcuRMzpH
+         LD/NGofIded1lWgJKb2W2wlGyy/3qwEO0OWMZIFkAd2l+ieXZCu21VOp0vOCnZodvR
+         n2p+XBqIPL9sgwzepKz+9MqeFD7+8n10tmdjdzMo=
+Date:   Wed, 01 Jul 2020 23:23:57 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
+To:     lgirdwood@gmail.com, Wesley Cheng <wcheng@codeaurora.org>,
+        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     sivaprak@codeaurora.org
-In-Reply-To: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
-References: <1592889472-6843-1-git-send-email-kathirav@codeaurora.org>
-Subject: Re: [PATCH V2 0/6] Add frequency / voltage scaling support for IPQ6018 SoC
-Message-Id: <159364222730.10880.10457847599595105286.b4-ty@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org
+In-Reply-To: <20200626185516.18018-1-wcheng@codeaurora.org>
+References: <20200626185516.18018-1-wcheng@codeaurora.org>
+Subject: Re: [PATCH v4 0/6] Introduce PMIC based USB type C detection
+Message-Id: <159364222729.10880.15242810692121676047.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 10:47:46 +0530, Kathiravan T wrote:
-> IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
-> controls the APSS and SDCC voltage scaling respectively. Add support
-> for the same.
-> 
-> changes since V1:
-> 	- Moved YAML conversion to the last as per Mark's comments
+On Fri, 26 Jun 2020 11:55:10 -0700, Wesley Cheng wrote:
+> Changes in v4:
+>  - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
+>    endpoint nodes underneath port@1, which is assigned to the SSUSB path
+>    according to usb-connector
+>  - Added usb-connector reference to the typec dt-binding
+>  - Added tags to the usb type c and vbus nodes
+>  - Removed "qcom" tags from type c and vbus nodes
+>  - Modified Kconfig module name, and removed module alias from the typec driver
 > 
 > [...]
 
@@ -70,10 +74,10 @@ Applied to
 
 Thanks!
 
-[1/2] regulator: add MP5496 regulator compatible
-      commit: 93e39d096d7312e38cf502be4e516cff7acf34fa
-[2/2] regulator: qcom_smd: Add MP5496 regulators
-      commit: 47894c859479a9e3472657c7acf2c7ba35778059
+[1/2] regulator: Add support for QCOM PMIC VBUS booster
+      commit: 4fe66d5a62fbe1b050e783e7a01f986632c08c44
+[2/2] regulator: Add dt-binding for QCOM PMIC VBUS output regulator
+      commit: a824bab7c62d7ecd8ccfe9693da7ccb7e4683760
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
