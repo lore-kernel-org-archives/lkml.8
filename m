@@ -6,127 +6,94 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3048DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE912073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACEE20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgGAJ5v (ORCPT
+        id S1729777AbgGAJ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:57:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20571 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgGAJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:57:50 -0400
-IronPort-SDR: 1A3Q9ey3bFzkFE2+bWsI66/08coGxjPulEDFygyy7wIeGUthqrql5woZ0NUFpLe+FqgTAHW9lf
- DLKEMyOKdJLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164527274"
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="164527274"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:57:49 -0700
-IronPort-SDR: eLaADTkcKhiOvG4JlSZ0Sxp3y0KdIygaZBalh8sTPTeY0Cingbus4yq/wDFE49FVZ/AkvAyNXD
- pQ0TrId8spCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="303788511"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 02:57:48 -0700
-Subject: Re: 0001-Fix-CQE-task-queue-timeout.patch
-To:     chen jiangnan <chen.jiangnan@zlingsmart.com>
-Cc:     "riteshh@codeaurora.org" <riteshh@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "ulf.hansson@linaro.or" <ulf.hansson@linaro.or>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <5a7b5ad9-bb3a-4281-a065-f57f9cf71a5a.chen.jiangnan@zlingsmart.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <40cccbed-1cbf-c709-9d5b-b87e796b07e5@intel.com>
-Date:   Wed, 1 Jul 2020 12:57:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 1 Jul 2020 05:58:17 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:38934 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729332AbgGAJ6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:58:16 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_98uXvxecKNNAA--.1551S3;
+        Wed, 01 Jul 2020 17:58:08 +0800 (CST)
+Subject: Re: [PATCH v4 14/14] irqchip/xilinx-intc: Fix potential resource leak
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593569786-11500-15-git-send-email-yangtiezhu@loongson.cn>
+ <e9aaa867-bb11-a469-a4b9-03fb68a18c56@web.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <9434711b-96c1-8ef5-79b6-510170654df8@loongson.cn>
+Date:   Wed, 1 Jul 2020 17:58:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <5a7b5ad9-bb3a-4281-a065-f57f9cf71a5a.chen.jiangnan@zlingsmart.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <e9aaa867-bb11-a469-a4b9-03fb68a18c56@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dx_98uXvxecKNNAA--.1551S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFyxWw4DGFyUKw47tw15CFg_yoW3ZFg_Zr
+        1093Z5GFW8Jrn8JayIyrsI9393Wr4kJan7tFWvva47Z34fXws3urWqkw1xX348WF1fCF45
+        Cw4YvrWftrW7ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/06/20 8:44 am, chen jiangnan wrote:
-> From 547e5635c04f4f9d62cbc1e3a4b4527f87c4e83b Mon Sep 17 00:00:00 2001
-> From: JiangnanChen <chen.jiangnan@zlingsmart.com>
-> Date: Mon, 22 Jun 2020 05:32:21 +0000
-> Subject: [PATCH] Fix CQE task queue timeout. CQE notifies the software that
+On 07/01/2020 05:42 PM, Markus Elfring wrote:
+>> In the function xilinx_intc_of_init(), system resource "irqc->root_domain"
+>> was not released in the error case. Thus add jump target for the completion
+>> of the desired exception handling.
+> Another small wording adjustment:
+>    … Thus add a jump target …
 
-Please separate subject from commit message.
+OK
 
->  task has completed through task completion notification (TCN), but some CQE
->  will occasionally mark the task in the pending state (via DPT). At this time,
->  if a QBR task (such as flush cache) is followed, the entire command queue
->  will be blocked, causing the mmc subsystem to report a timeout error, and cqe
->  enters the recovery process.
+>
+>
+> …
+>> +++ b/drivers/irqchip/irq-xilinx-intc.c
+> …
+>> @@ -250,6 +250,8 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+>>
+>>   	return 0;
+>>
+>> +error_domain_remove:
+>> +	irq_domain_remove(irqc->root_domain);
+>>   error:
+>>   	iounmap(irqc->base);
+> …
+>
+> Can labels like “remove_irq_domain” and “unmap_io” be nicer?
 
-It seems like this is a workaround for broken HW, so you could create a quirk for
-this, but making use of the ->write_l host op is cleaner for cqhci.
+Thank you, I will use "err_domain_remove" and "err_iounmap"
+to keep consistence with other patches.
 
-e.g. in your driver, for the broken controller set cqhci_host_ops write_l to use
-the following:
-
-static void ???_cqhci_writel(struct cqhci_host *cq_host, u32 val, int reg)
-{
-	writel_relaxed(val, cq_host->mmio + reg);
-
-	if (reg == CQHCI_TCN) {
-               u32 pend_status = cqhci_readl(cq_host, CQHCI_DPT);
-               if (val & pend_status) {
-                       pr_debug("%s: cqhci conflict: TCN: 0x%08lx DPT: 0x%08lx\n",
-                                mmc_hostname(cq_host->mmc), val, pend_status);
-                       cqhci_writel(cq_host, val & pend_status, CQHCI_TCLR);
-               }
-	}
-}
-
-> 
-> Signed-off-by: JiangnanChen <chen.jiangnan@zlingsmart.com>
-> ---
->  drivers/mmc/host/cqhci.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index 75934f3c117e..b8c7f6119ac4 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -760,7 +760,7 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
->                       int data_error)
->  {
->         u32 status;
-> -       unsigned long tag = 0, comp_status;
-> +       unsigned long tag = 0, comp_status, pend_status;
->         struct cqhci_host *cq_host = mmc->cqe_private;
->  
->         status = cqhci_readl(cq_host, CQHCI_IS);
-> @@ -778,6 +778,13 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
->                 pr_debug("%s: cqhci: TCN: 0x%08lx\n",
->                          mmc_hostname(mmc), comp_status);
->  
-> +               pend_status = cqhci_readl(cq_host, CQHCI_DPT);
-> +               if (comp_status & pend_status) {
-> +                       pr_debug("%s: cqhci conflict: TCN: 0x%08lx DPT: 0x%08lx\n",
-> +                                mmc_hostname(mmc), comp_status, pend_status);
-> +                       cqhci_writel(cq_host, comp_status & pend_status, CQHCI_TCLR);
-> +               }
-> +
->                 spin_lock(&cq_host->lock);
->  
->                 for_each_set_bit(tag, &comp_status, cq_host->num_slots) {
-> -- 
-> 2.17.1
+>
+> Regards,
+> Markus
 
