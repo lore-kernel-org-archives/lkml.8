@@ -2,111 +2,103 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FAEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 069E62071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkOXYXeu"
+	by mail.kernel.org (Postfix) with ESMTP id A57E02071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgGAPkU (ORCPT
+        id S1731856AbgGAPmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731473AbgGAPkU (ORCPT
+        Wed, 1 Jul 2020 11:42:07 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:34032 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731441AbgGAPmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:40:20 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D33C08C5C1;
-        Wed,  1 Jul 2020 08:40:19 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id f8so15348359ljc.2;
-        Wed, 01 Jul 2020 08:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sOi+qWkKDemVwvNYqv6TF/8o8Mf+HMvL6pnrNxnEAWQ=;
-        b=IkOXYXeuz7fPmGfAGrqMSRe0qiSwWm/2gbXsscpM6jTwtMeITTovL4ZVzz5qq3uke5
-         Z6nfwQTmSbFNOMOqe600laFoQoTmFYSDdHK2w1KrX+ohVWow3Ctcf+BXH2AShFNqoqGz
-         Ciu4ZdxGYWz3XnAEWFxYFpEypbv/uCahmSLhT9JxEv+VJkSG2NIIRA0hR3QWRfNph2cq
-         yQV9xypI7vINoVUE7KT0mRsbYYZSQKNpsVDVa2Wbznwarm+ie94fMWRqiCITr18weqF9
-         2A6frOxoVGRzeYzISJROZl0bQzpzzXUv0h865as9wzoXBZijfAheRRq7BW45vScFQwGi
-         DKfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sOi+qWkKDemVwvNYqv6TF/8o8Mf+HMvL6pnrNxnEAWQ=;
-        b=UmW95IcN0pmIxSJF+W9DdKnih5NnC5cPmOBC2bS29kJheUNu60Q2e3Hw1szn880gjI
-         64ff5QNtUVX9s4e1/IcvbaDmbKrrYf1KcZiyB21qKBK0FyLZCSbqnVA2tIFW2oTM3I/N
-         f1FknJOxu4KU9g/XgSJ1pv/f1N6Db6xRReFBDgGDqZHHnZw2O44HqIhCWCUV84OJQnYo
-         8jjTJoE7RR6CEnbnxuDkC5LXm/ty/V6Y5HUVp/K3AppBRJk4C1vbO3q0Hz2Ddc1xj9IS
-         4rOHbqaw6/46lvQqt1rY5J4wNcblVJ7YQ0TBcoYL8Y8pcgkne5kxhK6QU0snHRcoC6ZS
-         4yRA==
-X-Gm-Message-State: AOAM533TH0f4P8cdcL5GQMlTsxf1XHCwG3Qurg+U2uNXiRiUJSzNqATJ
-        dnswr6w+y5PourmlchYHUpthzuq/7KfIXAV8n5s=
-X-Google-Smtp-Source: ABdhPJwyjNlZqL+HnzBmJ6zhO5PUQmL6vPuNORjeZ2PTJBwbm8J1CNeUPQvLDZ8ndDtb9J0PLhaC8p5pW+u3YDAVY40=
-X-Received: by 2002:a2e:9a0f:: with SMTP id o15mr14249574lji.450.1593618017302;
- Wed, 01 Jul 2020 08:40:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <b1a858ec-7e04-56bc-248a-62cb9bbee726@infradead.org> <a4c90264-c77b-8cfe-d3ff-3526d6229da7@fb.com>
-In-Reply-To: <a4c90264-c77b-8cfe-d3ff-3526d6229da7@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 1 Jul 2020 08:40:05 -0700
-Message-ID: <CAADnVQLvgda8BGMkCezr9stb5k4O5MLLibzLuWqV8-pcTkP7+w@mail.gmail.com>
-Subject: Re: [PATCH -next] bpf: fix net/core/filter build errors when INET is
- not enabled
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 Jul 2020 11:42:06 -0400
+X-IronPort-AV: E=Sophos;i="5.75,300,1589209200"; 
+   d="scan'208";a="50853456"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 02 Jul 2020 00:42:04 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2F082400CE8B;
+        Thu,  2 Jul 2020 00:42:01 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] serial: sh-sci: Initialize spinlock for uart console
+Date:   Wed,  1 Jul 2020 16:41:40 +0100
+Message-Id: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 10:50 AM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 6/30/20 10:29 AM, Randy Dunlap wrote:
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> >
-> > Fix build errors when CONFIG_INET is not set/enabled.
-> >
-> > (.text+0x2b1b): undefined reference to `tcp_prot'
-> > (.text+0x2b3b): undefined reference to `tcp_prot'
-> >
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > Cc: Martin KaFai Lau <kafai@fb.com>
-> > Cc: Song Liu <songliubraving@fb.com>
-> > Cc: Yonghong Song <yhs@fb.com>
-> > Cc: Andrii Nakryiko <andriin@fb.com>
-> > Cc: John Fastabend <john.fastabend@gmail.com>
-> > Cc: KP Singh <kpsingh@chromium.org>
-> > Cc: netdev@vger.kernel.org
-> > Cc: bpf@vger.kernel.org
->
-> Thanks for the fix!
->
-> Acked-by: Yonghong Song <yhs@fb.com>
+serial core expects the spinlock to be initialized by the controller
+driver for serial console, this patch makes sure the spinlock is
+initialized, fixing the below issue:
 
-Applied. Thanks
+[    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
+[    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+[    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
+[    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
+[    0.865968] Call trace:
+[    0.865979]  dump_backtrace+0x0/0x1d8
+[    0.865985]  show_stack+0x14/0x20
+[    0.865996]  dump_stack+0xe8/0x130
+[    0.866006]  spin_dump+0x6c/0x88
+[    0.866012]  do_raw_spin_lock+0xb0/0xf8
+[    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
+[    0.866032]  uart_add_one_port+0x3a4/0x4e0
+[    0.866039]  sci_probe+0x504/0x7c8
+[    0.866048]  platform_drv_probe+0x50/0xa0
+[    0.866059]  really_probe+0xdc/0x330
+[    0.866066]  driver_probe_device+0x58/0xb8
+[    0.866072]  device_driver_attach+0x6c/0x90
+[    0.866078]  __driver_attach+0x88/0xd0
+[    0.866085]  bus_for_each_dev+0x74/0xc8
+[    0.866091]  driver_attach+0x20/0x28
+[    0.866098]  bus_add_driver+0x14c/0x1f8
+[    0.866104]  driver_register+0x60/0x110
+[    0.866109]  __platform_driver_register+0x40/0x48
+[    0.866119]  sci_init+0x2c/0x34
+[    0.866127]  do_one_initcall+0x88/0x428
+[    0.866137]  kernel_init_freeable+0x2c0/0x328
+[    0.866143]  kernel_init+0x10/0x108
+[    0.866150]  ret_from_fork+0x10/0x18
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ drivers/tty/serial/sh-sci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index ae8463a..2d3169f 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -3298,6 +3298,9 @@ static int sci_probe_single(struct platform_device *dev,
+ 		sciport->port.flags |= UPF_HARD_FLOW;
+ 	}
+ 
++	if (sci_uart_driver.cons->index == sciport->port.line)
++		spin_lock_init(&sciport->port.lock);
++
+ 	ret = uart_add_one_port(&sci_uart_driver, &sciport->port);
+ 	if (ret) {
+ 		sci_cleanup_single(sciport);
+-- 
+2.7.4
+
