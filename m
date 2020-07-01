@@ -2,71 +2,79 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D08C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76DB520724
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E312053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG0eRdM4"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="k2b3NgAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGADIQ (ORCPT
+        id S1726283AbgGADK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        Tue, 30 Jun 2020 23:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgGADIQ (ORCPT
+        with ESMTP id S1725868AbgGADK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:08:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AE5C061755;
-        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so21620721wml.3;
-        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
+        Tue, 30 Jun 2020 23:10:28 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18EBC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:10:27 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id v19so17358770qtq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
-        b=CG0eRdM4nSGcNNL81fuuo8W+TEO3HxqCIUhHH01sJ2+wYiauylNYzArgI5NTEfbhfz
-         mKeYTXR0ghYspwz0JBT9vrHKY70ZaxUi6d6c5WX+UZu5B+FkVAd99OR6MAZST5dT1Eh/
-         jdvi55lWYMtQ5uLpZHWcXMwKcK87MNxHQ0X2rSxkh3+hU2iVl1kLXJ067qDH2vLPtYXn
-         sYtZnLzyG33k+NEx45qYpr3PeX8CVeFoEnqmPJUM107iX8mbVgqrsAYlmDmNtFB34BIq
-         wV28hUqcjRBGmIW3VUOkw83YjowV1MKdYeVLsSkZBpwCoTVewspNH/xwYdzBE7iXHTOD
-         mrdg==
+        bh=lsG0/vZrFsbUfKMaszn0w2LlEErj8aBW/8Ir/pz3OGU=;
+        b=k2b3NgAcITe6TyGQHN9BCCJhiQXvuAoeVzfKtvyoSmJgWi8jJF0AMFjlTCh3kwIv+X
+         haarJdYqFvdWs3JzwZBovese0hmZb5eKO8olFoXh8krhzwPKD+22sHoW+zu2hHq6A9NA
+         MqqElaJZeyXyqlV+mPCmIJrZIUwkj3WYL9YngExLzxBkl7s2k5aUT5/U2ONFWf+6Fgxz
+         H6BSC0sjIx6bDb5Pj6Ud57QK3GH9iksxg0GSk9JyMOHZDAT69Yr6Y3XCYmpFM51CVwfA
+         d3QmrhfH/PnJqSnM8PXxc+Q74T1PbSs8u2BiJlTg8wMRO+sUc6NcSkkymgP20aZ7b1JB
+         v4mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
-        b=izJQrB4G8UIrKMkHOY/byhXG0CBXCJFeH9CJnYPZ6o+/p77YYd70J1dEpQ/p/J+3tS
-         lVEkCtInsrPLk6g9OCepFPNUkt40dlZcBgKroIEm+5lIfLRFSpLirHlRl8z8PCaPfxJx
-         oMEiE6O474Kq7shQ4bZAwCZglVevlWvXHDimHii4/ha3wMgs6BvlH61OvKOwZdWq/BwM
-         87AdGf0PGiG+2zGc5zkf9nRe8eTX02eC3DvAmP3U5uOXNb6bGtMJnPjf0BISRz6uCvoJ
-         C9hpF73/qCnKQbJuBudCAqSLaq5cWy8MJemmQ19iSsLfBfuRtQKrz6OKBeNmFdSnGcaO
-         onAA==
-X-Gm-Message-State: AOAM531EGy6XKQUCASNFC4/V/SSU0j3/6oKP1IdKfzOhcd2tpHiI6zfd
-        a1jzGWESAdcImfUrJ1UPEzo=
-X-Google-Smtp-Source: ABdhPJyp2dS0CMUbwyVCAerk4TlBJ87yWOY9msqe2AJenQdsul7dqdlDD+8tUTPPvHvvLJ5/S69IXw==
-X-Received: by 2002:a1c:bc54:: with SMTP id m81mr17607509wmf.22.1593572894543;
-        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id q1sm5515702wro.82.2020.06.30.20.08.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lsG0/vZrFsbUfKMaszn0w2LlEErj8aBW/8Ir/pz3OGU=;
+        b=SKiiLo4W9Xddgo31amhIXJEVnPFu3ftyRRdZwPPhaam2efBpprFy4KPZD8y+9cEBlx
+         SXhyQtJitIAo0/PL1AQuV87BNc3nehnyhO2ik++1Cda1+6vxas2IJkPcSarafEI5xZMe
+         I6mJmmIimll78zI96fh9LgFWSHPkCgE9W4TZvs7gEkOqGl/ExcdAmy1YzcW7naCDyDCC
+         OqtpLi8Y/sAEW1mNgCT1vZusvvlDsrxEOs1HQhLceAemCd3LwBpaUAwEtrXAqEzjjghB
+         MjKAhSGvbNzfZK8FfFxFB/wSoek6wlb3MpKvysnWI2+H5jqPfN6mEZs6btnxHrh0MFLP
+         xuMw==
+X-Gm-Message-State: AOAM532tTXFj+QnEMuxJR0cvacF4pgqh8PvH5DQX0cKST77du9c2Di9/
+        a90uetD6DPdonK/qJue2NeTe2w==
+X-Google-Smtp-Source: ABdhPJxC8b4XsFFiHjxlqHTC3hjSOcLyAEEBDq59JntLmlgh6Yq4M83KNcLLHHfgnTn8UXfVaA2mvw==
+X-Received: by 2002:ac8:5048:: with SMTP id h8mr23325058qtm.81.1593573026817;
+        Tue, 30 Jun 2020 20:10:26 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id r188sm4436866qkf.128.2020.06.30.20.10.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: aspeed: Describe the heartbeat function on ball Y23
-Date:   Wed,  1 Jul 2020 12:37:56 +0930
-Message-Id: <20200701030756.2834657-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.27.0
+        Tue, 30 Jun 2020 20:10:26 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm: handle for EPROBE_DEFER for of_icc_get
+Date:   Tue, 30 Jun 2020 23:08:41 -0400
+Message-Id: <20200701030842.24395-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,62 +82,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+Check for EPROBE_DEFER instead of silently not using icc if the msm driver
+probes before the interconnect driver.
 
-The default pinmux configuration for Y23 is to route a heartbeat to
-drive a LED. Previous revisions of the AST2600 datasheet did not include
-a description of this function.
+Only check for EPROBE_DEFER because of_icc_get can return other errors that
+we want to ignore (ENODATA).
 
-Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Remove the WARN_ON in msm_gpu_cleanup because INIT_LIST_HEAD won't have
+been called on the list yet when going through the defer error path.
+
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 17 ++++++++++++++---
+ drivers/gpu/drm/msm/msm_gpu.c           |  2 --
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index fa32c3e9c9d1..7efe6dbe4398 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -46,6 +46,7 @@
- #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
- #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
- #define SCU694		0x694 /* Multi-function Pin Control #25 */
-+#define SCU69C		0x69C /* Multi-function Pin Control #27 */
- #define SCUC20		0xC20 /* PCIE configuration Setting Control */
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 89673c7ed473..393c00425d68 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -940,12 +940,20 @@ static int adreno_get_pwrlevels(struct device *dev,
+ 		 */
+ 		gpu->icc_path = of_icc_get(dev, NULL);
+ 	}
+-	if (IS_ERR(gpu->icc_path))
++	if (IS_ERR(gpu->icc_path)) {
++		ret = PTR_ERR(gpu->icc_path);
+ 		gpu->icc_path = NULL;
++		if (ret == -EPROBE_DEFER)
++			return ret;
++	}
  
- #define ASPEED_G6_NR_PINS 256
-@@ -819,11 +820,13 @@ FUNC_DECL_2(PWM14, PWM14G0, PWM14G1);
- #define Y23 127
- SIG_EXPR_LIST_DECL_SEMG(Y23, PWM15, PWM15G1, PWM15, SIG_DESC_SET(SCU41C, 31));
- SIG_EXPR_LIST_DECL_SESG(Y23, THRUOUT3, THRU3, SIG_DESC_SET(SCU4BC, 31));
--PIN_DECL_2(Y23, GPIOP7, PWM15, THRUOUT3);
-+SIG_EXPR_LIST_DECL_SESG(Y23, HEARTBEAT, HEARTBEAT, SIG_DESC_SET(SCU69C, 31));
-+PIN_DECL_3(Y23, GPIOP7, PWM15, THRUOUT3, HEARTBEAT);
- GROUP_DECL(PWM15G1, Y23);
- FUNC_DECL_2(PWM15, PWM15G0, PWM15G1);
+ 	gpu->ocmem_icc_path = of_icc_get(dev, "ocmem");
+-	if (IS_ERR(gpu->ocmem_icc_path))
++	if (IS_ERR(gpu->ocmem_icc_path)) {
++		ret = PTR_ERR(gpu->ocmem_icc_path);
+ 		gpu->ocmem_icc_path = NULL;
++		if (ret == -EPROBE_DEFER)
++			return ret;
++	}
  
- FUNC_GROUP_DECL(THRU3, AB24, Y23);
-+FUNC_GROUP_DECL(HEARTBEAT, Y23);
+ 	return 0;
+ }
+@@ -996,6 +1004,7 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 	struct adreno_platform_config *config = pdev->dev.platform_data;
+ 	struct msm_gpu_config adreno_gpu_config  = { 0 };
+ 	struct msm_gpu *gpu = &adreno_gpu->base;
++	int ret;
  
- #define AA25 128
- SSSF_PIN_DECL(AA25, GPIOQ0, TACH0, SIG_DESC_SET(SCU430, 0));
-@@ -1920,6 +1923,7 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(GPIU5),
- 	ASPEED_PINCTRL_GROUP(GPIU6),
- 	ASPEED_PINCTRL_GROUP(GPIU7),
-+	ASPEED_PINCTRL_GROUP(HEARTBEAT),
- 	ASPEED_PINCTRL_GROUP(HVI3C3),
- 	ASPEED_PINCTRL_GROUP(HVI3C4),
- 	ASPEED_PINCTRL_GROUP(I2C1),
-@@ -2158,6 +2162,7 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
- 	ASPEED_PINCTRL_FUNC(GPIU5),
- 	ASPEED_PINCTRL_FUNC(GPIU6),
- 	ASPEED_PINCTRL_FUNC(GPIU7),
-+	ASPEED_PINCTRL_FUNC(HEARTBEAT),
- 	ASPEED_PINCTRL_FUNC(I2C1),
- 	ASPEED_PINCTRL_FUNC(I2C10),
- 	ASPEED_PINCTRL_FUNC(I2C11),
+ 	adreno_gpu->funcs = funcs;
+ 	adreno_gpu->info = adreno_info(config->rev);
+@@ -1007,7 +1016,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 
+ 	adreno_gpu_config.nr_rings = nr_rings;
+ 
+-	adreno_get_pwrlevels(&pdev->dev, gpu);
++	ret = adreno_get_pwrlevels(&pdev->dev, gpu);
++	if (ret)
++		return ret;
+ 
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev,
+ 		adreno_gpu->info->inactive_period);
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a22d30622306..ccf9a0dd9706 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -959,8 +959,6 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
+ 
+ 	DBG("%s", gpu->name);
+ 
+-	WARN_ON(!list_empty(&gpu->active_list));
+-
+ 	for (i = 0; i < ARRAY_SIZE(gpu->rb); i++) {
+ 		msm_ringbuffer_destroy(gpu->rb[i]);
+ 		gpu->rb[i] = NULL;
 -- 
-2.27.0
+2.26.1
 
