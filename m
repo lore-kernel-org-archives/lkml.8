@@ -2,42 +2,41 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D178E20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A327020853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HNPddTaV"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ulSDpGWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgGAVWY (ORCPT
+        id S1727907AbgGAVWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:22:24 -0400
+        Wed, 1 Jul 2020 17:22:32 -0400
 Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43478 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726942AbgGAVWU (ORCPT
+        by vger.kernel.org with ESMTP id S1727840AbgGAVWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:22:20 -0400
+        Wed, 1 Jul 2020 17:22:16 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 6C4B230C119;
-        Wed,  1 Jul 2020 14:22:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 6C4B230C119
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 6891130C0E4;
+        Wed,  1 Jul 2020 14:22:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 6891130C0E4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1593638538;
-        bh=VlSMIaiQaCCPt3rusBGXPF9DWZFolZPcPIIcjR2LOMg=;
+        s=dkimrelay; t=1593638535;
+        bh=iwvBHnllAMckovF6ltNCNQi+jMXHwnBrRf5LtKVSL+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNPddTaVNA47vDlsy/dHudG/VYoA3sTzRz2UPFZrgiI+Zi0qmZ7Jf7QXDATkQycA2
-         HmCxr8uu46d/DyAhVlhiNYsAj94YpMzFJS91Ky4aHKq8nyte+GmNXnoZ7haWjVIetP
-         s+K6CKHvTvIiw6fQQ18bUMDjpIoIdhzWAE8qkWMo=
+        b=ulSDpGWrg0LfDO+WNm5j6h53Lpc9M3hEAKoqe8kR1cM2GxUAja+iehtDned3elm+f
+         BL9MEuigU+ilKI7z/dW1K96f8uhkNMRZj4Z+1KCm7MTaXgeXzb8/cdnJlsKiIV+dv/
+         I3txzkncdHY62zlJ6ItjFQ9WjRrmmycXYJpt9huQ=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 10E01140093;
-        Wed,  1 Jul 2020 14:22:16 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id CD44914008D;
+        Wed,  1 Jul 2020 14:22:13 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -47,15 +46,14 @@ Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 07/12] PCI: brcmstb: Add control of rescal reset
-Date:   Wed,  1 Jul 2020 17:21:37 -0400
-Message-Id: <20200701212155.37830-8-james.quinlan@broadcom.com>
+Subject: [PATCH v6 05/12] PCI: brcmstb: Add suspend and resume pm_ops
+Date:   Wed,  1 Jul 2020 17:21:35 -0400
+Message-Id: <20200701212155.37830-6-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200701212155.37830-1-james.quinlan@broadcom.com>
 References: <20200701212155.37830-1-james.quinlan@broadcom.com>
@@ -66,163 +64,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-Some STB chips have a special purpose reset controller named RESCAL (reset
-calibration).  The PCIe HW can now control RESCAL to start and stop its
-operation.  On probe(), the RESCAL is deasserted and the driver goes
-through the sequence of setting registers and reading status in order to
-start the internal PHY that is required for the PCIe.
+Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+and resume.  Now the PCIe driver may do so as well.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 81 ++++++++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index e5e7f7d82eda..bfc2542d54a8 100644
+index b7a222fde3c4..7c148eb65170 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -23,6 +23,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/printk.h>
-+#include <linux/reset.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -158,6 +159,16 @@
- #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
- #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
- 
-+/* Rescal registers */
-+#define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK		0x4
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT	0x2
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK		0x2
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT		0x1
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK		0x1
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT		0x0
-+
- enum {
- 	RGR1_SW_INIT_1,
- 	EXT_CFG_INDEX,
-@@ -248,6 +259,7 @@ struct brcm_pcie {
- 	const int		*reg_offsets;
- 	const int		*reg_field_info;
- 	enum pcie_type		type;
-+	struct reset_control	*rescal;
- };
- 
- /*
-@@ -966,6 +978,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
- 		dev_err(pcie->dev, "failed to enter low-power link state\n");
+@@ -979,6 +979,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	brcm_pcie_bridge_sw_init_set(pcie, 1);
  }
  
-+static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
++static int brcm_pcie_suspend(struct device *dev)
 +{
-+	static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
-+	static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
-+	const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
-+	const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
-+	u32 tmp, combined_mask = 0;
-+	u32 val = !!start;
-+	void __iomem *base = pcie->base;
-+	int i;
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
 +
-+	for (i = beg; i != end; start ? i++ : i--) {
-+		tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+		tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
-+		writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+		usleep_range(50, 200);
-+		combined_mask |= masks[i];
-+	}
++	brcm_pcie_turn_off(pcie);
++	clk_disable_unprepare(pcie->clk);
 +
-+	tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+	val = start ? combined_mask : 0;
-+
-+	return (tmp & combined_mask) == val ? 0 : -EIO;
++	return 0;
 +}
 +
-+static inline int brcm_phy_start(struct brcm_pcie *pcie)
++static int brcm_pcie_resume(struct device *dev)
 +{
-+	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-+}
-+
-+static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-+{
-+	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-+}
-+
- static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- {
- 	void __iomem *base = pcie->base;
-@@ -993,11 +1046,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- static int brcm_pcie_suspend(struct device *dev)
- {
- 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	void __iomem *base;
++	u32 tmp;
 +	int ret;
- 
- 	brcm_pcie_turn_off(pcie);
-+	ret = brcm_phy_stop(pcie);
-+	if (ret)
-+		dev_err(pcie->dev, "failed to stop phy\n");
- 	clk_disable_unprepare(pcie->clk);
- 
--	return 0;
-+	return ret;
- }
- 
- static int brcm_pcie_resume(struct device *dev)
-@@ -1010,6 +1067,12 @@ static int brcm_pcie_resume(struct device *dev)
- 	base = pcie->base;
- 	clk_prepare_enable(pcie->clk);
- 
-+	ret = brcm_phy_start(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "failed to start phy\n");
-+		return ret;
-+	}
 +
- 	/* Take bridge out of reset so we can access the SERDES reg */
- 	brcm_pcie_bridge_sw_init_set(pcie, 0);
- 
-@@ -1035,6 +1098,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
++	base = pcie->base;
++	clk_prepare_enable(pcie->clk);
++
++	/* Take bridge out of reset so we can access the SERDES reg */
++	brcm_pcie_bridge_sw_init_set(pcie, 0);
++
++	/* SERDES_IDDQ = 0 */
++	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
++	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++
++	/* wait for serdes to be stable */
++	udelay(100);
++
++	ret = brcm_pcie_setup(pcie);
++	if (ret)
++		return ret;
++
++	if (pcie->msi)
++		brcm_msi_set_regs(pcie->msi);
++
++	return 0;
++}
++
+ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
  {
  	brcm_msi_remove(pcie);
- 	brcm_pcie_turn_off(pcie);
-+	if (brcm_phy_stop(pcie))
-+		dev_err(pcie->dev, "failed to stop phy\n");
-+	reset_control_assert(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
- }
+@@ -1110,12 +1151,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  
-@@ -1120,6 +1186,19 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "could not enable clock\n");
- 		return ret;
- 	}
-+	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-+	if (IS_ERR(pcie->rescal))
-+		return PTR_ERR(pcie->rescal);
-+
-+	ret = reset_control_deassert(pcie->rescal);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-+
-+	ret = brcm_phy_start(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "failed to start phy\n");
-+		return ret;
-+	}
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
  
- 	ret = brcm_pcie_setup(pcie);
- 	if (ret)
++static const struct dev_pm_ops brcm_pcie_pm_ops = {
++	.suspend_noirq = brcm_pcie_suspend,
++	.resume_noirq = brcm_pcie_resume,
++};
++
+ static struct platform_driver brcm_pcie_driver = {
+ 	.probe = brcm_pcie_probe,
+ 	.remove = brcm_pcie_remove,
+ 	.driver = {
+ 		.name = "brcm-pcie",
+ 		.of_match_table = brcm_pcie_match,
++		.pm = &brcm_pcie_pm_ops,
+ 	},
+ };
+ module_platform_driver(brcm_pcie_driver);
 -- 
 2.17.1
 
