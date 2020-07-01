@@ -2,190 +2,120 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70758C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0FD20771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06FA2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kggn2/iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgGABbW (ORCPT
+        id S1726135AbgGABbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:31:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7322 "EHLO huawei.com"
+        Tue, 30 Jun 2020 21:31:38 -0400
+Received: from mail-eopbgr140071.outbound.protection.outlook.com ([40.107.14.71]:25859
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbgGABbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:31:21 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 54271B50266FCE1EE869;
-        Wed,  1 Jul 2020 09:31:19 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 1 Jul 2020
- 09:31:14 +0800
-Subject: Re: [PATCH 1/2] f2fs: split f2fs_allocate_new_segments()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200622093849.35684-1-yuchao0@huawei.com>
- <20200629201943.GB1117827@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0e3c7fe2-9cb8-c457-e251-eb0fb7c0760e@huawei.com>
-Date:   Wed, 1 Jul 2020 09:31:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200629201943.GB1117827@google.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1725805AbgGABbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:31:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SgmSRqjM/qVvyOfUFAsb12dn7rjQNRZ63WhSP3zajuyQQ9mmBietTqkWUB/elSYmpL+QoAgRvu+rhfXsz6uF01/h18i9S36Y7UOPeeXhoD3gRF998sFsduldyTANu0KU6pn0KoUyr2usSEbeFRvcwcJe/i3d/0ZFajfp61owWWkbD2npgjYus5PMRPUyi5091lKr6enRmEgC812g46xec/OmQ2A/tjZebvd0lEnP5PLBYp2ThAkSBEkm+4UsTi8HYuQZYuOQqQtftBXY3M1CTCJVtAuK8fXY/udy9EDWXKDgQTwcjrLNTSKNTHAKeVlY4YGXhvPRkn/8iajH3Dik2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lOmJLSAB20NkfbwJz4EJZ8V21/qve4QdHQhjr1KIrjM=;
+ b=a79dzKbyVx0frKeawwh8dzStNqakcUvrtDxP7dhFa9BqR27utZeyADk9CKWXsdKam9j/ZPxZHL/hGnhjazZCsNrWN/g7HQMtOSm/tlCWZwDZGgaRiJ4iyFl1VVaAzwzflnKQ95odXWBkI2PtK1fNVDPOdwQow/M8Zps6GC8IoRVWVtldoERkCA57iLDD/5SxkHbIsO7o7JcN1QP/2/FFyrOFc/x3ztI5DnuLdPgvIii4MnEfekBj4/y+9PaCR04fQ/weDYT59psT2pTr5wxkCE1bG2J0C5+/Xe+U/TKmkup2Jkw/oJt+2vAiEijw94UcL18C8YEq77R5YWEX1sov0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lOmJLSAB20NkfbwJz4EJZ8V21/qve4QdHQhjr1KIrjM=;
+ b=kggn2/iz5ft1xSCUIZQSsspP97FnwkSUftMps7rZcjzOgCTVpMjT4qbtI3BLo0a0vJINZg3GYsQ1LWRx5MQqEdha/WDeQ1oTFK6jWw3YnkP9vOYgawMPy2EmNPt79jLxGswlQMjuLbRnTR3D6CneWNfE53WH79PKRDv2BRrAexk=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR04MB3960.eurprd04.prod.outlook.com
+ (2603:10a6:209:3f::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21; Wed, 1 Jul
+ 2020 01:31:35 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
+ 01:31:35 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing
+ of clk_enet_ref where possible
+Thread-Topic: [EXT] Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing
+ of clk_enet_ref where possible
+Thread-Index: AQHWThag/tmWe004ek+eXrutuxE1fajvmZEAgAAMoQCAAAM9gIABCdjwgABZdICAAOSvsA==
+Date:   Wed, 1 Jul 2020 01:31:34 +0000
+Message-ID: <AM6PR0402MB3607FA45BB1BEFFDE19B6D4BFF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200625140105.14999-1-TheSven73@gmail.com>
+ <20200625140105.14999-2-TheSven73@gmail.com>
+ <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
+ <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com>
+ <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
+ <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
+ <AM6PR0402MB36077C422DABCB4F2EA650A0FF6F0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+ <CAOMZO5B8vU0iNVF7209rnYo0xH57Hs=WcVgz-mbACjwFb289Yg@mail.gmail.com>
+In-Reply-To: <CAOMZO5B8vU0iNVF7209rnYo0xH57Hs=WcVgz-mbACjwFb289Yg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d9c83bf2-042e-4687-2fef-08d81d5e7e03
+x-ms-traffictypediagnostic: AM6PR04MB3960:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB396040EACD96EF18643465B9FF6C0@AM6PR04MB3960.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:747;
+x-forefront-prvs: 04519BA941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yYpHobaJ5aDR7kWxOrPdwGBeTm2Cb5QG8Y51Mzs7O/TJS6eIk9SQ2wrid2dckB+t38QW+3uRFRjlUK/NY0RopJb7OMd31XSN5YOXltq/o8e9OowtslQBiqj59xpptvcTJJmzQseGguByz3wc90HXPgk0fH4yHwOpvvjUcmnInBXY33HApJ8cywUGW8gxhfJ8BpBibPngxV2sspOi1oEOQnSquG2J6z1+OTdyAqLI/nf6A9lWvsNVXfYH0AIpR9OmiD5xl+lhzWfRXCusYNjXpt8bArALbd/QhKemYN3vM9zsPdzGXcY7XVfkNv7J8AB/VqXC8y2xiQcrjCqbclie4wZh04/8g39HPJZzLFYNWP9auo3hyNzPltb4eXuf/Ba5
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(66556008)(66946007)(9686003)(478600001)(55016002)(5660300002)(8936002)(186003)(71200400001)(2906002)(6506007)(33656002)(53546011)(26005)(76116006)(6916009)(86362001)(64756008)(83380400001)(66476007)(66446008)(4326008)(316002)(7696005)(52536014)(8676002)(4744005)(54906003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: GSN1Awv0lMBNTwEZi4Hk/6Ce5tdsdzv2Nye66r6oOeGjg4yxPf1xn5kDOZLuTeqzprif9Tv8iHEa6efPhea86lQmh0rJrCXxCEMcNSZZi3JQjzZA6gFl9PCDTwl/+xj5DxL9e5UQgMpxmWg2vSs6sbduoTDn+6Jb9pruAG1KXrBmfW9stMmnvCDIdAX37x0o6uzgJnNazWZvxnR95AWPkNwwoBckD+JaUV0oMo+Z1oYHMpEwwXuiwGq2ZizOfsQOwFbjdNNGu/HLaiYtIKNNkZqfzL5gTar7V5H7l+TU6QbLMrJwYh2kIZhD9235676WSquSBrjW+R3sAUzTPNrTXw9y63dju20gJtDQi7H5DIxzsWKeY+jWeLJusF/N62pWmD1iZQaOJZTnd9anSLL7T0ZENDSK+OmW4MUDwA4xAzlg5Xs9ehr2buyOGOoecZgJDbW9hHG3Ux+xOrXaM4/Wm9jyDedyYonHXcOMJ7EzB6IeqNecjgHtpDR4OLIQnZeK
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR0402MB3607.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9c83bf2-042e-4687-2fef-08d81d5e7e03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 01:31:34.9497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DBMumFDrqWrQ0DgtJgGkpIoaZNk8TIuANY/v4y7PCNLTiFjY54nwbsw4ndJ5lWp+AXtAznT9zJgRtcO4D+35eQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3960
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jaegeuk, could you please help to change __allocate_new_segment() to static
-in your tree?
-
-On 2020/6/30 4:19, Jaegeuk Kim wrote:
-> On 06/22, Chao Yu wrote:
->> to two independent functions:
->> - f2fs_allocate_new_segment() for specified type segment allocation
->> - f2fs_allocate_new_segments() for all data type segments allocation
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/f2fs.h     |  3 ++-
->>  fs/f2fs/file.c     |  2 +-
->>  fs/f2fs/recovery.c |  2 +-
->>  fs/f2fs/segment.c  | 39 +++++++++++++++++++++++----------------
->>  4 files changed, 27 insertions(+), 19 deletions(-)
->>
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 70565d81320b..07290943e91d 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -3327,7 +3327,8 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
->>  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
->>  void f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
->>  					unsigned int start, unsigned int end);
->> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
->> +void f2fs_allocate_new_segment(struct f2fs_sb_info *sbi, int type);
->> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
->>  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
->>  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
->>  					struct cp_control *cpc);
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index f196187159e9..67c65e40b22b 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -1659,7 +1659,7 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
->>  		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
->>  
->>  		f2fs_lock_op(sbi);
->> -		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
->> +		f2fs_allocate_new_segment(sbi, CURSEG_COLD_DATA_PINNED);
-> 
-> This should be CURSEG_COLD_DATA. Otherwise it causes the below kernel panic.
-> I fixed this in the -dev, so let me know, if you have other concern.
-> 
->   259 Unable to handle kernel NULL pointer dereference at virtual address 00000008
->   259 task: 0000000082b4de99 task.stack: 00000000c6b39dbf
->   259 pc : f2fs_do_write_data_page+0x2b4/0x794
->   259 lr : f2fs_do_write_data_page+0x290/0x794
->   259 sp : ffffff800c83b5a0 pstate : 60c00145
->   259 Call trace:
->   259  f2fs_do_write_data_page+0x2b4/0x794
->   259  f2fs_write_single_data_page+0x4a4/0x764
->   259  f2fs_write_data_pages+0x4dc/0x968
->   259  do_writepages+0x60/0x124
->   259  __writeback_single_inode+0xd8/0x490
->   259  writeback_sb_inodes+0x3a8/0x6e4
->   259  __writeback_inodes_wb+0xa4/0x14c
->   259  wb_writeback+0x218/0x434
->   259  wb_workfn+0x2bc/0x57c
->   259  process_one_work+0x25c/0x440
->   259  worker_thread+0x24c/0x480
->   259  kthread+0x11c/0x12c
->   259  ret_from_fork+0x10/0x18
-> 
->>  		f2fs_unlock_op(sbi);
->>  
->>  		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
->> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
->> index ae5310f02e7f..af974ba273b3 100644
->> --- a/fs/f2fs/recovery.c
->> +++ b/fs/f2fs/recovery.c
->> @@ -742,7 +742,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
->>  		f2fs_put_page(page, 1);
->>  	}
->>  	if (!err)
->> -		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
->> +		f2fs_allocate_new_segments(sbi);
->>  	return err;
->>  }
->>  
->> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->> index 113114f98087..f15711e8ee5b 100644
->> --- a/fs/f2fs/segment.c
->> +++ b/fs/f2fs/segment.c
->> @@ -2707,28 +2707,35 @@ void f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
->>  	up_read(&SM_I(sbi)->curseg_lock);
->>  }
->>  
->> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
->> +void __allocate_new_segment(struct f2fs_sb_info *sbi, int type)
->>  {
->> -	struct curseg_info *curseg;
->> +	struct curseg_info *curseg = CURSEG_I(sbi, type);
->>  	unsigned int old_segno;
->> -	int i;
->>  
->> -	down_write(&SIT_I(sbi)->sentry_lock);
->> +	if (!curseg->next_blkoff &&
->> +		!get_valid_blocks(sbi, curseg->segno, false) &&
->> +		!get_ckpt_valid_blocks(sbi, curseg->segno))
->> +		return;
->>  
->> -	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
->> -		if (type != NO_CHECK_TYPE && i != type)
->> -			continue;
->> +	old_segno = curseg->segno;
->> +	SIT_I(sbi)->s_ops->allocate_segment(sbi, type, true);
->> +	locate_dirty_segment(sbi, old_segno);
->> +}
->>  
->> -		curseg = CURSEG_I(sbi, i);
->> -		if (type == NO_CHECK_TYPE || curseg->next_blkoff ||
->> -				get_valid_blocks(sbi, curseg->segno, false) ||
->> -				get_ckpt_valid_blocks(sbi, curseg->segno)) {
->> -			old_segno = curseg->segno;
->> -			SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
->> -			locate_dirty_segment(sbi, old_segno);
->> -		}
->> -	}
->> +void f2fs_allocate_new_segment(struct f2fs_sb_info *sbi, int type)
->> +{
->> +	down_write(&SIT_I(sbi)->sentry_lock);
->> +	__allocate_new_segment(sbi, type);
->> +	up_write(&SIT_I(sbi)->sentry_lock);
->> +}
->>  
->> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
->> +{
->> +	int i;
->> +
->> +	down_write(&SIT_I(sbi)->sentry_lock);
->> +	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++)
->> +		__allocate_new_segment(sbi, i);
->>  	up_write(&SIT_I(sbi)->sentry_lock);
->>  }
->>  
->> -- 
->> 2.26.2
-> .
-> 
+RnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPiBTZW50OiBUdWVzZGF5LCBK
+dW5lIDMwLCAyMDIwIDc6NDkgUE0NCj4gSGkgQW5keSwNCj4gDQo+IE9uIFR1ZSwgSnVuIDMwLCAy
+MDIwIGF0IDM6MzYgQU0gQW5keSBEdWFuIDxmdWdhbmcuZHVhbkBueHAuY29tPiB3cm90ZToNCj4g
+DQo+ID4gRmFiaW8sIG91ciBRQSBkb3VibGUgdmVyaWZ5IDUuNC4yNF8yLjEuMCwgbm8gbWF0dGVy
+IFNEIGJvb3Qgb3INCj4gPiB0ZnRwL25mcyBib290LCBib3RoIHdvcmsgZmluZSBvbiBpLk1YNlFQ
+IHNhYnJlc2QgYm9hcmQsICBwbGVhc2UgZG91YmxlDQo+IGNoZWNrIHlvdXIgZW52aXJvbm1lbnQu
+DQo+IA0KPiBJcyBzdGF0aWMgSVAgb3IgREhDUCB1c2VkIG9uIHRoZXNlIHRlc3RzPw0KPg0KU0Qg
+Ym9vdCBpbnRvIHlvY3RvIHN5c3RlbSwgdGhlbiBydW4gZGhjcC4NCk9yLCBuZnMgYm9vdC4NCg0K
+Qm90aCB3b3JrcyBmaW5lLg0K
