@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E3BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83F020853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C070B2078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="i+PDCCR8"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Mw7RrWX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgGAV4k (ORCPT
+        id S1727979AbgGAV4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:56:40 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:31529 "EHLO
+        Wed, 1 Jul 2020 17:56:38 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:59996 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAV4X (ORCPT
+        with ESMTP id S1727889AbgGAV40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:56:23 -0400
+        Wed, 1 Jul 2020 17:56:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
         h=from:subject:in-reply-to:references:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=/hlV6hA1ZYGaBqGX5CuSHDD8AHkJj9B4bVowPHBuF0Q=;
-        b=i+PDCCR8woDXP8XrEH2UmLpPM6mRLNVRXMfs5Z6ZmR3uT69GaxtZxBEC2ao+Yt9lnwsJ
-        dFSIdyQlo4NLkXXk+O95MmSRRR+xCNG18pric39pl+jjqHlBYEDbSbjp69lGJsQ1eRZHP8
-        qqIQZaGcImcRG+mF1wxtfSUqe5kH1Q+E8=
-Received: by filterdrecv-p3iad2-5b55dcd864-blwjn with SMTP id filterdrecv-p3iad2-5b55dcd864-blwjn-19-5EFD0686-18
-        2020-07-01 21:56:22.338823217 +0000 UTC m=+449226.382650002
+        s=001; bh=xxBcOYWt9uzoWsnklEsOL7RvonYUzi+J+0wqGYzLRTw=;
+        b=Mw7RrWX0ZzLNqhzpSj0DlF01JA8dDQdPDLDKqgJwZUi4Umu4Fbsn+h1NojdMRLTvYg2t
+        wbvscc5bLknO1zPep+RnYqS0TaB89bExoP9RLqBCmuNj0SmebvrdpgaptHex9KTl2Cu1Zf
+        iGzsoyLwoX8K0FXqkukJyThYge6WuyO9g=
+Received: by filterdrecv-p3iad2-5b55dcd864-xnspw with SMTP id filterdrecv-p3iad2-5b55dcd864-xnspw-17-5EFD0688-6
+        2020-07-01 21:56:24.205538858 +0000 UTC m=+449220.630116891
 Received: from bionic.localdomain (unknown)
         by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
-        id f6p5tSF0SMyqCKQjV1K26Q
-        Wed, 01 Jul 2020 21:56:22.083 +0000 (UTC)
+        id 9_xgV5kdRsyJnw_SpztECA
+        Wed, 01 Jul 2020 21:56:23.947 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 4/9] media: rkvdec: h264: Fix bit depth wrap in pps packet
-Date:   Wed, 01 Jul 2020 21:56:22 +0000 (UTC)
-Message-Id: <20200701215616.30874-5-jonas@kwiboo.se>
+Subject: [PATCH 8/9] media: rkvdec: Add validate_fmt ops for pixelformat
+ validation
+Date:   Wed, 01 Jul 2020 21:56:24 +0000 (UTC)
+Message-Id: <20200701215616.30874-9-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200701215616.30874-1-jonas@kwiboo.se>
 References: <20200701215616.30874-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hzj4dPdmtAAZkhLfl?=
- =?us-ascii?Q?L19oMHdMci4bWAbRSDQ9w19LQaxlqG0eCicKN=2F0?=
- =?us-ascii?Q?KUuxS7ZdMw2eVEhP2W6v0bnkNIY+u8OC9=2Fn3sW1?=
- =?us-ascii?Q?1KzIy+EigF+JWgbyk=2FHDEsUG=2FkZI3HAsIrtBheQ?=
- =?us-ascii?Q?6CRWzrI6uSsFnp1r8wpx+ljCnCzV54SNJG+ClS+?=
- =?us-ascii?Q?VhlDbHGcqiyNYHc7Jibpw=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h+lXJzeJhqDHpvcg8?=
+ =?us-ascii?Q?AJotR+LFDFZT1dM6SQR+PgjpaKMikyyPoncZva0?=
+ =?us-ascii?Q?UczSXisuYUKmaKw2JKm4vH5YXbIqJHMOwVH2axP?=
+ =?us-ascii?Q?TcTsSpWz729V7ypL=2FVuGV64pJQF+1uq24MqXQjT?=
+ =?us-ascii?Q?NgfXoEf+EPeUrHsILNRHiGcyaBjb3jy819CacIF?=
+ =?us-ascii?Q?4grQfrWRJ98wZWnUNu9Eg=3D=3D?=
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
@@ -65,32 +66,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The luma and chroma bit depth fields in the pps packet is 3 bits wide.
-8 is wrongly added to the bit depth value written to these 3-bit fields.
-Because only the 3 LSB is written the hardware is configured correctly.
+Add an optional validate_fmt operation that is used to validate the
+pixelformat of CAPTURE buffers.
 
-Correct this by not adding 8 to the luma and chroma bit depth value.
+This is used in next patch to ensure correct pixelformat is used for 10-bit
+and 4:2:2 content.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/staging/media/rkvdec/rkvdec-h264.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec.c | 8 ++++++++
+ drivers/staging/media/rkvdec/rkvdec.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index c9aebeb8f9b3..9c8e49642cd9 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -662,8 +662,8 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
- 	WRITE_PPS(0xff, PROFILE_IDC);
- 	WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
- 	WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
--	WRITE_PPS(sps->bit_depth_luma_minus8 + 8, BIT_DEPTH_LUMA);
--	WRITE_PPS(sps->bit_depth_chroma_minus8 + 8, BIT_DEPTH_CHROMA);
-+	WRITE_PPS(sps->bit_depth_luma_minus8, BIT_DEPTH_LUMA);
-+	WRITE_PPS(sps->bit_depth_chroma_minus8, BIT_DEPTH_CHROMA);
- 	WRITE_PPS(0, QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG);
- 	WRITE_PPS(sps->log2_max_frame_num_minus4, LOG2_MAX_FRAME_NUM_MINUS4);
- 	WRITE_PPS(sps->max_num_ref_frames, MAX_NUM_REF_FRAMES);
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index b1de55aa6535..465444c58f13 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -239,6 +239,14 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
+ 	if (WARN_ON(!coded_desc))
+ 		return -EINVAL;
+ 
++	if (coded_desc->ops->validate_fmt) {
++		int ret;
++
++		ret = coded_desc->ops->validate_fmt(ctx, pix_mp->pixelformat);
++		if (ret)
++			return ret;
++	}
++
+ 	for (i = 0; i < coded_desc->num_decoded_fmts; i++) {
+ 		if (coded_desc->decoded_fmts[i] == pix_mp->pixelformat)
+ 			break;
+diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+index 2fc9f46b6910..be4fc3645cde 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.h
++++ b/drivers/staging/media/rkvdec/rkvdec.h
+@@ -64,6 +64,7 @@ vb2_to_rkvdec_decoded_buf(struct vb2_buffer *buf)
+ struct rkvdec_coded_fmt_ops {
+ 	int (*adjust_fmt)(struct rkvdec_ctx *ctx,
+ 			  struct v4l2_format *f);
++	int (*validate_fmt)(struct rkvdec_ctx *ctx, u32 pixelformat);
+ 	int (*start)(struct rkvdec_ctx *ctx);
+ 	void (*stop)(struct rkvdec_ctx *ctx);
+ 	int (*run)(struct rkvdec_ctx *ctx);
 -- 
 2.17.1
 
