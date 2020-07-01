@@ -2,328 +2,162 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B24C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8092EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38DCB20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6498520780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QT+y11q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgGAQBI (ORCPT
+        id S1732264AbgGAQBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:01:08 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34300 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731519AbgGAQBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:01:07 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id DF87AFB03;
-        Wed,  1 Jul 2020 18:01:05 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QreS0lBW60hx; Wed,  1 Jul 2020 18:01:03 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 64FD340972; Wed,  1 Jul 2020 18:01:03 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 18:01:03 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 05/13] drm/panel: st7703: Rename functions from jh057n
- prefix to st7703
-Message-ID: <20200701160103.GD174356@bogon.m.sigxcpu.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-6-megous@megous.com>
+        Wed, 1 Jul 2020 12:01:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728534AbgGAQBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:01:23 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34005C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:01:23 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 95so11154113otw.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=opIAV5Btwy4qujYY2tne4EOq5x9GaN0PdpZUvrVNkEg=;
+        b=QT+y11q+fYPFoAgRaAVqtnp2UhXVmkS8TQepM4N+CnM8Eqh4tOB/OZ3EwtiKn9g+lK
+         28OMY5L1KPgIyYVgEhHV7Xm6n/rKzq/macN2yL9YjySCTQf9efk+j1ElSFbeYbCr4Yzi
+         DQgMyLDBENz/wlx86OjeD+Lg+Hp1/gwyGynr4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=opIAV5Btwy4qujYY2tne4EOq5x9GaN0PdpZUvrVNkEg=;
+        b=Mcnmz4KY2AhbRmQHNNobf3sGB+19sRGS/otYXvz27DKwyOVeE/uIdbuhwjU9VlpBft
+         +pIPay0kbprnH0J0vRnB0mWU3lYiorsQK8ZxKT5HB4JqYhu53rPHxAd5Trt0X97ZLVEu
+         0fkPxP1PaMtyQkobqJiUvIhujvMn2xYqQ5jIALSY0FMAR4wb7ZB9PVOcV0hb9udVwVNu
+         dH6iI7BPZ6Q2OXk91RHujd3tNkCQQEic3m8nVlONji4snbpnAMweAc7YKProKL2PkDW/
+         pppg3brLW7PX782OqekojyWlfXbLU5DJN9DotoaRuH8MC0afM0cw6jsEROT/77JZb+n2
+         qIbg==
+X-Gm-Message-State: AOAM533AG8WtzEeUDfFQBjK7MseAlk4fdXL+Jf9BYCi+IGDOF/eYKQKs
+        QZ84Jz0sowrqhKO2rKCy8zozZz363JadngaVyu5ooA==
+X-Google-Smtp-Source: ABdhPJzdd+BhqVEmNutlYxCfKiqBwqfoMHuSEqyxghVO1Q29gOqOuPefP5pTioX762sMqposCOg2Vs3EH3LhN0G8A9k=
+X-Received: by 2002:a05:6830:1613:: with SMTP id g19mr10443362otr.303.1593619282388;
+ Wed, 01 Jul 2020 09:01:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701103126.1512615-6-megous@megous.com>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box> <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+ <CACO55tvT0fOMai7k7oAP1TL42YAuMwJocxk2seNgjYibs+h5oA@mail.gmail.com> <11e5ee1d-8b5e-2721-091e-ffbf9e1271d1@nvidia.com>
+In-Reply-To: <11e5ee1d-8b5e-2721-091e-ffbf9e1271d1@nvidia.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 1 Jul 2020 18:01:10 +0200
+Message-ID: <CAKMK7uEzoFyW6o1gP6xszWH7fKHrVSR32JLs73KeFfYgD=BHPQ@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     James Jones <jajones@nvidia.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Jul 01, 2020 at 12:31:18PM +0200, Ondrej Jirman wrote:
-> This is done so that code that's not specific to a particular
-> jh057n panel is named after the controller. Functions specific
-> to the panel are kept named after the panel.
+On Wed, Jul 1, 2020 at 5:51 PM James Jones <jajones@nvidia.com> wrote:
+>
+> On 7/1/20 4:24 AM, Karol Herbst wrote:
+> > On Wed, Jul 1, 2020 at 6:45 AM James Jones <jajones@nvidia.com> wrote:
+> >>
+> >> This implies something is trying to use one of the old
+> >> DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK format modifiers with DRM-KMS without
+> >> first checking whether it is supported by the kernel.  I had tried to
+> >> force an Xorg+Mesa stack without my userspace patches to hit this error
+> >> when testing, but must have missed some permutation.  If the stalled
+> >> Mesa patches go in, this would stop happening of course, but those were
+> >> held up for a long time in review, and are now waiting on me to make
+> >> some modifications.
+> >>
+> >
+> > that's completely irrelevant. If a kernel change breaks userspace,
+> > it's a kernel bug.
+>
+> Agreed it is unacceptable to break userspace, but I don't think it's
+> irrelevant.  Perhaps the musings on pending userspace patches are.
+>
+> My intent here was to point out it appears at first glance that
+> something isn't behaving as expected in userspace, so fixing this would
+> likely require some sort of work-around for broken userspace rather than
+> straight-forward fixing of a bug in the kernel logic.  My intent was not
+> to shift blame to something besides my code & testing for the
+> regression, though I certainly see how it could be interpreted that way.
+>
+> Regardless, I'm looking in to it.
 
-Reviewed-by: Guido Günther <agx@sigxcpu.org> 
+If we do need to have a kernel workaround I'm happy to help out, I've
+done a bunch of these and occasionally it's good to get rather
+creative :-)
 
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 90 ++++++++++---------
->  1 file changed, 46 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> index 38ff742bc120..511af659f273 100644
-> --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> @@ -1,6 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
-> + * Driver for panels based on Sitronix ST7703 controller, souch as:
-> + *
-> + * - Rocktech jh057n00900 5.5" MIPI-DSI panel
->   *
->   * Copyright (C) Purism SPC 2019
->   */
-> @@ -21,7 +23,7 @@
->  #include <drm/drm_panel.h>
->  #include <drm/drm_print.h>
->  
-> -#define DRV_NAME "panel-rocktech-jh057n00900"
-> +#define DRV_NAME "panel-sitronix-st7703"
->  
->  /* Manufacturer specific Commands send via DSI */
->  #define ST7703_CMD_ALL_PIXEL_OFF 0x22
-> @@ -45,7 +47,7 @@
->  #define ST7703_CMD_SETGIP1	 0xE9
->  #define ST7703_CMD_SETGIP2	 0xEA
->  
-> -struct jh057n {
-> +struct st7703 {
->  	struct device *dev;
->  	struct drm_panel panel;
->  	struct gpio_desc *reset_gpio;
-> @@ -56,9 +58,9 @@ struct jh057n {
->  	struct dentry *debugfs;
->  };
->  
-> -static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
-> +static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
->  {
-> -	return container_of(panel, struct jh057n, panel);
-> +	return container_of(panel, struct st7703, panel);
->  }
->  
->  #define dsi_generic_write_seq(dsi, seq...) do {				\
-> @@ -69,7 +71,7 @@ static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
->  			return ret;					\
->  	} while (0)
->  
-> -static int jh057n_init_sequence(struct jh057n *ctx)
-> +static int jh057n_init_sequence(struct st7703 *ctx)
->  {
->  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->  	struct device *dev = ctx->dev;
-> @@ -141,9 +143,9 @@ static int jh057n_init_sequence(struct jh057n *ctx)
->  	return 0;
->  }
->  
-> -static int jh057n_enable(struct drm_panel *panel)
-> +static int st7703_enable(struct drm_panel *panel)
->  {
-> -	struct jh057n *ctx = panel_to_jh057n(panel);
-> +	struct st7703 *ctx = panel_to_st7703(panel);
->  	int ret;
->  
->  	ret = jh057n_init_sequence(ctx);
-> @@ -156,17 +158,17 @@ static int jh057n_enable(struct drm_panel *panel)
->  	return 0;
->  }
->  
-> -static int jh057n_disable(struct drm_panel *panel)
-> +static int st7703_disable(struct drm_panel *panel)
->  {
-> -	struct jh057n *ctx = panel_to_jh057n(panel);
-> +	struct st7703 *ctx = panel_to_st7703(panel);
->  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->  
->  	return mipi_dsi_dcs_set_display_off(dsi);
->  }
->  
-> -static int jh057n_unprepare(struct drm_panel *panel)
-> +static int st7703_unprepare(struct drm_panel *panel)
->  {
-> -	struct jh057n *ctx = panel_to_jh057n(panel);
-> +	struct st7703 *ctx = panel_to_st7703(panel);
->  
->  	if (!ctx->prepared)
->  		return 0;
-> @@ -178,9 +180,9 @@ static int jh057n_unprepare(struct drm_panel *panel)
->  	return 0;
->  }
->  
-> -static int jh057n_prepare(struct drm_panel *panel)
-> +static int st7703_prepare(struct drm_panel *panel)
->  {
-> -	struct jh057n *ctx = panel_to_jh057n(panel);
-> +	struct st7703 *ctx = panel_to_st7703(panel);
->  	int ret;
->  
->  	if (ctx->prepared)
-> @@ -230,10 +232,10 @@ static const struct drm_display_mode default_mode = {
->  	.height_mm   = 130,
->  };
->  
-> -static int jh057n_get_modes(struct drm_panel *panel,
-> +static int st7703_get_modes(struct drm_panel *panel,
->  			    struct drm_connector *connector)
->  {
-> -	struct jh057n *ctx = panel_to_jh057n(panel);
-> +	struct st7703 *ctx = panel_to_st7703(panel);
->  	struct drm_display_mode *mode;
->  
->  	mode = drm_mode_duplicate(connector->dev, &default_mode);
-> @@ -254,17 +256,17 @@ static int jh057n_get_modes(struct drm_panel *panel,
->  	return 1;
->  }
->  
-> -static const struct drm_panel_funcs jh057n_drm_funcs = {
-> -	.disable   = jh057n_disable,
-> -	.unprepare = jh057n_unprepare,
-> -	.prepare   = jh057n_prepare,
-> -	.enable	   = jh057n_enable,
-> -	.get_modes = jh057n_get_modes,
-> +static const struct drm_panel_funcs st7703_drm_funcs = {
-> +	.disable   = st7703_disable,
-> +	.unprepare = st7703_unprepare,
-> +	.prepare   = st7703_prepare,
-> +	.enable	   = st7703_enable,
-> +	.get_modes = st7703_get_modes,
->  };
->  
->  static int allpixelson_set(void *data, u64 val)
->  {
-> -	struct jh057n *ctx = data;
-> +	struct st7703 *ctx = data;
->  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->  
->  	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
-> @@ -282,7 +284,7 @@ static int allpixelson_set(void *data, u64 val)
->  DEFINE_SIMPLE_ATTRIBUTE(allpixelson_fops, NULL,
->  			allpixelson_set, "%llu\n");
->  
-> -static void jh057n_debugfs_init(struct jh057n *ctx)
-> +static void st7703_debugfs_init(struct st7703 *ctx)
->  {
->  	ctx->debugfs = debugfs_create_dir(DRV_NAME, NULL);
->  
-> @@ -290,16 +292,16 @@ static void jh057n_debugfs_init(struct jh057n *ctx)
->  			    &allpixelson_fops);
->  }
->  
-> -static void jh057n_debugfs_remove(struct jh057n *ctx)
-> +static void st7703_debugfs_remove(struct st7703 *ctx)
->  {
->  	debugfs_remove_recursive(ctx->debugfs);
->  	ctx->debugfs = NULL;
->  }
->  
-> -static int jh057n_probe(struct mipi_dsi_device *dsi)
-> +static int st7703_probe(struct mipi_dsi_device *dsi)
->  {
->  	struct device *dev = &dsi->dev;
-> -	struct jh057n *ctx;
-> +	struct st7703 *ctx;
->  	int ret;
->  
->  	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> @@ -340,7 +342,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
->  		return ret;
->  	}
->  
-> -	drm_panel_init(&ctx->panel, dev, &jh057n_drm_funcs,
-> +	drm_panel_init(&ctx->panel, dev, &st7703_drm_funcs,
->  		       DRM_MODE_CONNECTOR_DSI);
->  
->  	ret = drm_panel_of_backlight(&ctx->panel);
-> @@ -363,13 +365,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
->  		     default_mode.vrefresh,
->  		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
->  
-> -	jh057n_debugfs_init(ctx);
-> +	st7703_debugfs_init(ctx);
->  	return 0;
->  }
->  
-> -static void jh057n_shutdown(struct mipi_dsi_device *dsi)
-> +static void st7703_shutdown(struct mipi_dsi_device *dsi)
->  {
-> -	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
-> +	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
->  	int ret;
->  
->  	ret = drm_panel_unprepare(&ctx->panel);
-> @@ -383,12 +385,12 @@ static void jh057n_shutdown(struct mipi_dsi_device *dsi)
->  			      ret);
->  }
->  
-> -static int jh057n_remove(struct mipi_dsi_device *dsi)
-> +static int st7703_remove(struct mipi_dsi_device *dsi)
->  {
-> -	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
-> +	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
->  	int ret;
->  
-> -	jh057n_shutdown(dsi);
-> +	st7703_shutdown(dsi);
->  
->  	ret = mipi_dsi_detach(dsi);
->  	if (ret < 0)
-> @@ -397,28 +399,28 @@ static int jh057n_remove(struct mipi_dsi_device *dsi)
->  
->  	drm_panel_remove(&ctx->panel);
->  
-> -	jh057n_debugfs_remove(ctx);
-> +	st7703_debugfs_remove(ctx);
->  
->  	return 0;
->  }
->  
-> -static const struct of_device_id jh057n_of_match[] = {
-> +static const struct of_device_id st7703_of_match[] = {
->  	{ .compatible = "rocktech,jh057n00900" },
->  	{ /* sentinel */ }
->  };
-> -MODULE_DEVICE_TABLE(of, jh057n_of_match);
-> +MODULE_DEVICE_TABLE(of, st7703_of_match);
->  
-> -static struct mipi_dsi_driver jh057n_driver = {
-> -	.probe	= jh057n_probe,
-> -	.remove = jh057n_remove,
-> -	.shutdown = jh057n_shutdown,
-> +static struct mipi_dsi_driver st7703_driver = {
-> +	.probe	= st7703_probe,
-> +	.remove = st7703_remove,
-> +	.shutdown = st7703_shutdown,
->  	.driver = {
->  		.name = DRV_NAME,
-> -		.of_match_table = jh057n_of_match,
-> +		.of_match_table = st7703_of_match,
->  	},
->  };
-> -module_mipi_dsi_driver(jh057n_driver);
-> +module_mipi_dsi_driver(st7703_driver);
->  
->  MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
-> -MODULE_DESCRIPTION("DRM driver for Rocktech JH057N00900 MIPI DSI panel");
-> +MODULE_DESCRIPTION("DRM driver for Sitronix ST7703 based MIPI DSI panels");
->  MODULE_LICENSE("GPL v2");
-> -- 
-> 2.27.0
-> 
+Ideally we'd also push a minimal fix in userspace to all stable
+branches and make sure distros upgrade (might need releases if some
+distro is stuck on old horrors), so that we don't have to keep the
+hack in place for 10+ years or so. Definitely if the hack amounts to
+disabling modifiers on nouveau, that would be kinda sad.
+-Daniel
+
+>
+> Thanks,
+> -James
+>
+> >> Are you using the modesetting driver in X?  If so, with glamor I
+> >> presume?  What version of Mesa?  Any distro patches?  Any non-default
+> >> xorg.conf options that would affect modesetting, your X driver if it
+> >> isn't modesetting, or glamour?
+> >>
+> >> Thanks,
+> >> -James
+> >>
+> >> On 6/30/20 4:08 PM, Kirill A. Shutemov wrote:
+> >>> On Tue, Jun 02, 2020 at 04:06:32PM +1000, Dave Airlie wrote:
+> >>>> James Jones (4):
+> >>> ...
+> >>>>         drm/nouveau/kms: Support NVIDIA format modifiers
+> >>>
+> >>> This commit is the first one that breaks Xorg startup for my setup:
+> >>> GTX 1080 + Dell UP2414Q (4K DP MST monitor).
+> >>>
+> >>> I believe this is the crucial part of dmesg (full dmesg is attached):
+> >>>
+> >>> [   29.997140] [drm:nouveau_framebuffer_new] Unsupported modifier: 0x300000000000014
+> >>> [   29.997143] [drm:drm_internal_framebuffer_create] could not create framebuffer
+> >>> [   29.997145] [drm:drm_ioctl] pid=3393, ret = -22
+> >>>
+> >>> Any suggestions?
+> >>>
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >>
+> >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+
+
+
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
