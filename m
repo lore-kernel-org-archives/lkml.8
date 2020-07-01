@@ -2,99 +2,96 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70746C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD60C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4667B206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S26mXcSQ"
+	by mail.kernel.org (Postfix) with ESMTP id B166C206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgGAOsd (ORCPT
+        id S1731620AbgGAOss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:48:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35710 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgGAOsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:48:30 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061EaSG0075681;
-        Wed, 1 Jul 2020 09:36:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593614188;
-        bh=HXEl6HBvdBsKDUGBfUdgQEY4qT6CI4rtQbIO4/KXAPk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=S26mXcSQ4V0OEILlv4buTP+1pgEKq8vr/X5icZ/l8OWB+or/FwwVsoT3hVovYR6t8
-         eFdkfVk5nMEK8xBDC5d9muPjscz9A/qzJKYCgRiYcypr80Qc73RjXVwndBHBXdZLzF
-         AZLcmfPU2tAAxRitVilEH05zAkmE6iGUZABe0YOs=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061EaSPC036063
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 09:36:28 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 09:36:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 09:36:28 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061EaOFB060819;
-        Wed, 1 Jul 2020 09:36:26 -0500
-Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
- initial allowed window
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-3-t-kristo@ti.com>
- <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
- <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
- <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
- <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
- <20200630202356.GA16412@roeck-us.net>
- <4e9c2731-bf02-1b59-298b-b7f9a0e87d10@ti.com>
- <f9ab8206-a3a2-ec6e-2c7b-92e369c0996a@roeck-us.net>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <24c1c3d3-3ab9-46a5-3eef-ad375aaa8f41@ti.com>
-Date:   Wed, 1 Jul 2020 17:36:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 10:48:48 -0400
+Received: from muru.com ([72.249.23.125]:60200 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgGAOsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:48:47 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 48F408063;
+        Wed,  1 Jul 2020 14:49:39 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 07:48:43 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
+ gpio pins
+Message-ID: <20200701144843.GI37466@atomide.com>
+References: <20200628152442.322593-1-drew@beagleboard.org>
+ <20200629170358.GT37466@atomide.com>
+ <20200630020102.GA45128@x1>
+ <20200630182037.GF37466@atomide.com>
+ <20200630213155.GA115731@x1>
+ <20200630213423.GG37466@atomide.com>
+ <20200630214231.GA116238@x1>
 MIME-Version: 1.0
-In-Reply-To: <f9ab8206-a3a2-ec6e-2c7b-92e369c0996a@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630214231.GA116238@x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2020 16:34, Guenter Roeck wrote:
-> On 6/30/20 10:50 PM, Tero Kristo wrote:
-> [ ... ]
+* Drew Fustini <drew@beagleboard.org> [200630 21:43]:
+> On Tue, Jun 30, 2020 at 02:34:23PM -0700, Tony Lindgren wrote:
+> > * Drew Fustini <drew@beagleboard.org> [200630 21:32]:
+> > > On Tue, Jun 30, 2020 at 11:20:37AM -0700, Tony Lindgren wrote:
+> > ...
+> > > > > > Needing to change the dts does not sound good to me.. But maybe you mean
+> > > > > > this is needed until the gpio-omap and pinctrl-single patches are merged?
+> > > > >
+> > > > > I agree that I would like for userspace to be able to do run-time
+> > > > > changes.  However, I think something would need to be added to the
+> > > > > pinconf support in pinctrl-single for that to be possible.  There are
+> > > > > bias properties but non for receiver enable.
+> > > > > 
+> > > > > Does it seem sensible to add that?
+> > > > 
+> > > > Well let's see with Linus W says. To me it seems this might be a good
+> > > > reason to allow a sysfs interface to change the pinctrl if we don't
+> > > > have it yet? With the proper gpio line naming it should be quite simple
+> > > > to use too :)
+> > > 
+> > > I think if pinctrl-single allowed mux to be set through debugfs that
+> > > could be one solution to the use case of users prototyping with a
+> > > beaglebone.  Maybe that could be acceptable?
+> > 
+> > I think this should not depend on debugfs though, it should be a
+> > generic interface.
 > 
->> Hardware supports changing the timeout value, however it only updates this during the next window (preload values are picked once user pings the watchdog.)
->>
-> The current driver doesn't support or use that, though, since the start
-> function is only called once to start the watchdog, and not at all if
-> the watchdog is already running. So, if the bootloader sets the timeout
-> to X, and the user sets a timeout of, say, X * 4, userspace will never
-> ping the watchdog often enough. The driver will have to address that
-> to support already-running watchdogs.
+> Ok, thanks.  I'm trying to imagine a solution as there no existing
+> pinctrl uAPI.  gpiod uAPI has gained some pinctrl functionality with
+> the work that Kent Gibson has been doing beyond just bias flags.
 
-Yeah, I will modify that. I think I will just prevent changing the 
-timeout if watchdog has been enabled from boot, it is probably cleanest 
-approach. Unless I happen to come up with some sane way to change it on fly.
+OK. Yeah sounds like in this case toggling pinctrl receiver enable
+should happen automatically with gpio changes.
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Do you think trying to plumb this through gpio-omap is a reasonable
+> approach?
+
+I think any sysfs interface to update pinctrl settings should be
+generic to the pinctrl framework. But maybe making it work via gpio
+use would do the trick.
+
+Regards,
+
+Tony
