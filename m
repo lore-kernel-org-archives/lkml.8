@@ -7,139 +7,159 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D76C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F39C433DF
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D722820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9565220772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BoqkqhP3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7ViRPt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgGAMM5 (ORCPT
+        id S1730517AbgGAMM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:12:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48060 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgGAMMz (ORCPT
+        Wed, 1 Jul 2020 08:12:58 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43904 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730271AbgGAMMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 08:12:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061CCqVI114140;
-        Wed, 1 Jul 2020 07:12:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593605572;
-        bh=ujTJUKsmBwUaVQ8CAH63MRy30qquq/EoyVehAK2SpD4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BoqkqhP3kzDxqer2mSFyun7ws9C616eq+YzlVBzhBXmrXBe09OH83b/bRWyME8JWI
-         1kk0Qy6SQX7T9dUds/bh645w41Gl1EgpWCabOtzvM5yHWIv1cebb4jKLj+AKdqPtAE
-         sd5Q5JR0IMw4EWkiF5ndE7wCmvF/u5LXLlptBcZ0=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061CCq9q064176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 07:12:52 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 07:12:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 07:12:51 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061CCnaV121802;
-        Wed, 1 Jul 2020 07:12:49 -0500
-Subject: Re: [PATCH next 4/6] soc: ti: k3-ringacc: add request pair of rings
- api.
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
- <20200701103030.29684-5-grygorii.strashko@ti.com>
- <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <e3936c3c-eb60-35a5-6413-ceba273cdf1c@ti.com>
-Date:   Wed, 1 Jul 2020 15:12:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593605574;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XaTa3j8pv7Vv7FPlkaiUQ9sgC3qOTtEDpxvgOBhKsTg=;
+        b=X7ViRPt9irA3Gh2IgWv7XVIAdR2s1ibdwE8OCwxWzzu+V90plHKfCYR9kLRr6jj2IJ8KRQ
+        zHT08TG9zRm0mtOCory1S/xlaArFXb9snR1A8+3nKpSupfA5ak5RRfhPqefM1IYqgVin0p
+        iLfrrAXc3KoKtSCacfJjwlyqyFenCSE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-PqwOCs0AMpCX2fZTOPwQFg-1; Wed, 01 Jul 2020 08:12:48 -0400
+X-MC-Unique: PqwOCs0AMpCX2fZTOPwQFg-1
+Received: by mail-ej1-f70.google.com with SMTP id d16so8180658eje.20
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:12:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XaTa3j8pv7Vv7FPlkaiUQ9sgC3qOTtEDpxvgOBhKsTg=;
+        b=QoRRwRbC+IfnyA1WbbMMGdi8ICAjEsRztpBspXaJsLbVbIm+V9G39RwvBauEBeZY9S
+         t/cR0MB1LLEcZnYLgVo9eZuGKInuHRSiwILvsMSXmWs7QjTo7GEcgpswyvqO9nuZarji
+         qbjYJFk/QJz9J5CtFHRSTSVl+PDhvILKv6+WF//ptzdYUGV/1NER+rvFwYxbYnhzwXoz
+         JGQZd6yuDoHn3w3u9QTEglqbiHs959EtfNguQs5bPILSsFkxXUcRE3gC1vH4luBoW0C3
+         iKpWrR8jw8OnG4vflp1xBwH4HlcnQLoKjJKMuSpIoJJ93fKPDS37CUopju0FfnOxtM98
+         OUcA==
+X-Gm-Message-State: AOAM530Jwinv1Tl7Tf5PqK+3KIG0S6oKeH6RXB323ilsoaWZOVvP955T
+        cJ2PdlF9EsjnR16rSUTicHSwDGXHgNNxgOvs2FRr0WV/c890B3CMBbwVaW0/zc8fQjSp7sn33Kv
+        QRcOsnviFOhdTwVrrbBN/yM2R
+X-Received: by 2002:aa7:d3c8:: with SMTP id o8mr21964632edr.294.1593605567580;
+        Wed, 01 Jul 2020 05:12:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybKmn9TXwxpznNvmXkc/EDdW74VObauZauv68Wmlu4ixsBkY7JPtu25PXyzIRbA9DwPCxw9g==
+X-Received: by 2002:aa7:d3c8:: with SMTP id o8mr21964601edr.294.1593605567361;
+        Wed, 01 Jul 2020 05:12:47 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id cz2sm5763973edb.82.2020.07.01.05.12.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 05:12:46 -0700 (PDT)
+Subject: Re: [PATCH v3] brcmfmac: Transform compatible string for FW loading
+To:     matthias.bgg@kernel.org, arend.vanspriel@broadcom.com,
+        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
+        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
+        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
+        linux-kernel@vger.kernel.org, wright.feng@cypress.com,
+        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
+References: <20200701112201.6449-1-matthias.bgg@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <eaf0f098-c73c-10b5-2d75-b35a5fc8dbb4@redhat.com>
+Date:   Wed, 1 Jul 2020 14:12:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200701112201.6449-1-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 01/07/2020 14:54, Peter Ujfalusi wrote:
-> Hi Grygorii,
+On 7/1/20 1:22 PM, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 > 
-> On 01/07/2020 13.30, Grygorii Strashko wrote:
->> Add new API k3_ringacc_request_rings_pair() to request pair of rings at
->> once, as in the most cases Rings are used with DMA channels, which need to
->> request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) and
->> one to receive completions (RX/TX CQ). This will allow to simplify Ringacc
->> API users.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
->>   include/linux/soc/ti/k3-ringacc.h |  4 ++++
->>   2 files changed, 28 insertions(+)
->>
->> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
->> index 8a8f31d59e24..4cf1150de88e 100644
->> --- a/drivers/soc/ti/k3-ringacc.c
->> +++ b/drivers/soc/ti/k3-ringacc.c
->> @@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
->>   }
->>   EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
->>   
->> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
->> +				  int fwd_id, int compl_id,
->> +				  struct k3_ring **fwd_ring,
->> +				  struct k3_ring **compl_ring)
+> The driver relies on the compatible string from DT to determine which
+> FW configuration file it should load. The DTS spec allows for '/' as
+> part of the compatible string. We change this to '-' so that we will
+> still be able to load the config file, even when the compatible has a
+> '/'. This fixes explicitly the firmware loading for
+> "solidrun,cubox-i/q".
 > 
-> Would you consider re-arranging the parameter list to:
-> int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-> 				  struct k3_ring **fwd_ring, int fwd_id,
-> 				  struct k3_ring **compl_ring, int compl_id)
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> 
+> ---
+> 
+> Changes in v3:
+> - use len variable to store length of string (Hans de Goede)
+> - fix for loop to stop on first NULL-byte (Hans de Goede)
+> 
+> Changes in v2:
+> - use strscpy instead of strncpy (Hans de Goede)
+> - use strlen(tmp) + 1 for allocation (Hans de Goede, kernel test robot)
+
+v3 looks good to me:
+
+Reviewed-by: Hans deGoede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> 
+>   .../wireless/broadcom/brcm80211/brcmfmac/of.c | 19 ++++++++++++++++---
+>   1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> index b886b56a5e5a..a7554265f95f 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> @@ -17,7 +17,6 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+>   {
+>   	struct brcmfmac_sdio_pd *sdio = &settings->bus.sdio;
+>   	struct device_node *root, *np = dev->of_node;
+> -	struct property *prop;
+>   	int irq;
+>   	u32 irqf;
+>   	u32 val;
+> @@ -25,8 +24,22 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+>   	/* Set board-type to the first string of the machine compatible prop */
+>   	root = of_find_node_by_path("/");
+>   	if (root) {
+> -		prop = of_find_property(root, "compatible", NULL);
+> -		settings->board_type = of_prop_next_string(prop, NULL);
+> +		int i, len;
+> +		char *board_type;
+> +		const char *tmp;
+> +
+> +		of_property_read_string_index(root, "compatible", 0, &tmp);
+> +
+> +		/* get rid of '/' in the compatible string to be able to find the FW */
+> +		len = strlen(tmp) + 1;
+> +		board_type = devm_kzalloc(dev, len, GFP_KERNEL);
+> +		strscpy(board_type, tmp, len);
+> +		for (i = 0; i < board_type[i]; i++) {
+> +			if (board_type[i] == '/')
+> +				board_type[i] = '-';
+> +		}
+> +		settings->board_type = board_type;
+> +
+>   		of_node_put(root);
+>   	}
+>   
 > 
 
-i think it's more common to have input parameters first.
-
->> +{
->> +	int ret = 0;
->> +
->> +	if (!fwd_ring || !compl_ring)
->> +		return -EINVAL;
->> +
->> +	*fwd_ring = k3_ringacc_request_ring(ringacc, fwd_id, 0);
->> +	if (!(*fwd_ring))
->> +		return -ENODEV;
->> +
->> +	*compl_ring = k3_ringacc_request_ring(ringacc, compl_id, 0);
->> +	if (!(*compl_ring)) {
->> +		k3_ringacc_ring_free(*fwd_ring);
->> +		ret = -ENODEV;
->> +	}
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
->> +
-
-
-
--- 
-Best regards,
-grygorii
