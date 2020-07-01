@@ -2,114 +2,177 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB1DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5BC2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B8120772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgGALlf (ORCPT
+        id S1730451AbgGALmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:41:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44800 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730330AbgGALle (ORCPT
+        Wed, 1 Jul 2020 07:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730364AbgGALmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:41:34 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 79CCD2A5505;
-        Wed,  1 Jul 2020 12:41:32 +0100 (BST)
-Date:   Wed, 1 Jul 2020 13:41:28 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [RESEND PATCH 3/3] drm/mediatek: mtk_dpi: Use simple encoder
-Message-ID: <20200701134128.6a967a89@collabora.com>
-In-Reply-To: <20200518173909.2259259-4-enric.balletbo@collabora.com>
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-        <20200518173909.2259259-4-enric.balletbo@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 1 Jul 2020 07:42:19 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356F0C03E97A
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 04:42:19 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:503c:ab8:1424:9638])
+        by laurent.telenet-ops.be with bizsmtp
+        id xniG2200249uj5301niG47; Wed, 01 Jul 2020 13:42:16 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jqb84-0006Pu-92; Wed, 01 Jul 2020 13:42:16 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jqb84-0002EF-73; Wed, 01 Jul 2020 13:42:16 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 2/2] gpio: aggregator: Use bitmap_parselist() for parsing GPIO offsets
+Date:   Wed,  1 Jul 2020 13:42:12 +0200
+Message-Id: <20200701114212.8520-3-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701114212.8520-1-geert+renesas@glider.be>
+References: <20200701114212.8520-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 19:39:09 +0200
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+Replace the custom code to parse GPIO offsets and/or GPIO offset ranges
+by a call to bitmap_parselist(), and an iteration over the returned bit
+mask.
 
-> The mtk_dpi driver uses an empty implementation for its encoder. Replace
-> the code with the generic simple encoder.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> ---
-> 
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index baad198c69eb..80778b2aac2a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -20,6 +20,7 @@
->  #include <drm/drm_bridge.h>
->  #include <drm/drm_crtc.h>
->  #include <drm/drm_of.h>
-> +#include <drm/drm_simple_kms_helper.h>
->  
->  #include "mtk_dpi_regs.h"
->  #include "mtk_drm_ddp_comp.h"
-> @@ -510,15 +511,6 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
->  	return 0;
->  }
->  
-> -static void mtk_dpi_encoder_destroy(struct drm_encoder *encoder)
-> -{
-> -	drm_encoder_cleanup(encoder);
-> -}
-> -
-> -static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
-> -	.destroy = mtk_dpi_encoder_destroy,
-> -};
-> -
->  static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
->  				 enum drm_bridge_attach_flags flags)
->  {
-> @@ -591,8 +583,8 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
->  		return ret;
->  	}
->  
-> -	ret = drm_encoder_init(drm_dev, &dpi->encoder, &mtk_dpi_encoder_funcs,
-> -			       DRM_MODE_ENCODER_TMDS, NULL);
-> +	ret = drm_simple_encoder_init(drm_dev, &dpi->encoder,
-> +				      DRM_MODE_ENCODER_TMDS);
+This should have no impact on the format of the configuration parameters
+written to the "new_device" virtual file in sysfs.
 
-Not related to this change, but shouldn't we have DRM_MODE_ENCODER_DPI
-here?
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Rename mask to bitmap,
+  - Allocate bitmap dynamically.
+---
+ drivers/gpio/gpio-aggregator.c | 59 +++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 33 deletions(-)
 
->  	if (ret) {
->  		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
->  		goto err_unregister;
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 62a3fcbd4b4bb106..424a3d25350bf50d 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -10,6 +10,7 @@
+ #include <linux/bitmap.h>
+ #include <linux/bitops.h>
+ #include <linux/ctype.h>
++#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/gpio/machine.h>
+@@ -111,55 +112,45 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
+ 
+ static int aggr_parse(struct gpio_aggregator *aggr)
+ {
+-	unsigned int first_index, last_index, i, n = 0;
+-	char *name, *offsets, *first, *last, *next;
+ 	char *args = aggr->args;
+-	int error;
++	unsigned long *bitmap;
++	unsigned int i, n = 0;
++	char *name, *offsets;
++	int error = 0;
++
++	bitmap = bitmap_alloc(ARCH_NR_GPIOS, GFP_KERNEL);
++	if (!bitmap)
++		return -ENOMEM;
+ 
+ 	for (name = get_arg(&args), offsets = get_arg(&args); name;
+ 	     offsets = get_arg(&args)) {
+ 		if (IS_ERR(name)) {
+ 			pr_err("Cannot get GPIO specifier: %pe\n", name);
+-			return PTR_ERR(name);
++			error = PTR_ERR(name);
++			goto free_bitmap;
+ 		}
+ 
+ 		if (!isrange(offsets)) {
+ 			/* Named GPIO line */
+ 			error = aggr_add_gpio(aggr, name, U16_MAX, &n);
+ 			if (error)
+-				return error;
++				goto free_bitmap;
+ 
+ 			name = offsets;
+ 			continue;
+ 		}
+ 
+ 		/* GPIO chip + offset(s) */
+-		for (first = offsets; *first; first = next) {
+-			next = strchrnul(first, ',');
+-			if (*next)
+-				*next++ = '\0';
+-
+-			last = strchr(first, '-');
+-			if (last)
+-				*last++ = '\0';
+-
+-			if (kstrtouint(first, 10, &first_index)) {
+-				pr_err("Cannot parse GPIO index %s\n", first);
+-				return -EINVAL;
+-			}
+-
+-			if (!last) {
+-				last_index = first_index;
+-			} else if (kstrtouint(last, 10, &last_index)) {
+-				pr_err("Cannot parse GPIO index %s\n", last);
+-				return -EINVAL;
+-			}
+-
+-			for (i = first_index; i <= last_index; i++) {
+-				error = aggr_add_gpio(aggr, name, i, &n);
+-				if (error)
+-					return error;
+-			}
++		error = bitmap_parselist(offsets, bitmap, ARCH_NR_GPIOS);
++		if (error) {
++			pr_err("Cannot parse %s: %d\n", offsets, error);
++			goto free_bitmap;
++		}
++
++		for_each_set_bit(i, bitmap, ARCH_NR_GPIOS) {
++			error = aggr_add_gpio(aggr, name, i, &n);
++			if (error)
++				goto free_bitmap;
+ 		}
+ 
+ 		name = get_arg(&args);
+@@ -167,10 +158,12 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+ 
+ 	if (!n) {
+ 		pr_err("No GPIOs specified\n");
+-		return -EINVAL;
++		error = -EINVAL;
+ 	}
+ 
+-	return 0;
++free_bitmap:
++	bitmap_free(bitmap);
++	return error;
+ }
+ 
+ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+-- 
+2.17.1
 
