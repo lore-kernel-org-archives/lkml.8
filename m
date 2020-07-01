@@ -2,114 +2,66 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC5E20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="cMZd285D"
+	by mail.kernel.org (Postfix) with ESMTP id E83E320780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgGAW3A (ORCPT
+        id S1727861AbgGAW3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:29:00 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:10134 "EHLO
-        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725771AbgGAW27 (ORCPT
+        Wed, 1 Jul 2020 18:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgGAW3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:28:59 -0400
-X-Greylist: delayed 1366 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 18:28:59 EDT
-Received: from pps.filterd (m0122331.ppops.net [127.0.0.1])
-        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061Lrwcg006919;
-        Wed, 1 Jul 2020 23:02:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=P96JFBXVyHt85Gh5PYQ4Ee3kDLcMExA/cDXSyYIEwgQ=;
- b=cMZd285DPh3zYED0z60ZKRdfyekvm88MtbIeXIs84pExvO4ArSqjkSma7y9uX8nAM8EQ
- zb07TdkICz7taKqbss/WkMQNkCOzWNNFjGdL0xV7XVKxF5+bok7+sO/1esw8RxC/9Bb5
- 0uYUTCb+07ILFFLj+aq2M7Wc5YucD91dPySFBP7fVbwAeWeLIkqTboJIBHzmXvgIXJ7S
- 6Eq3rGJdpMc6Gwuge0kuWZ3el18pSod49srUs5eqyaVu7bTya2EbBJqmpfTXglDZVJie
- +DFmyXY6HM9K7NTFWHaJLVxA9+ncxu2hQwf+WCu/GdYIdJ3LI11zvFVddpaoqTyIIe/N Zg== 
-Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
-        by mx0b-00190b01.pphosted.com with ESMTP id 31wu08t74s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 23:02:09 +0100
-Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
-        by prod-mail-ppoint5.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 061M23ck007821;
-        Wed, 1 Jul 2020 15:02:08 -0700
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint5.akamai.com with ESMTP id 31x43aqjmg-1;
-        Wed, 01 Jul 2020 15:02:08 -0700
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id E79A43B147;
-        Wed,  1 Jul 2020 22:02:07 +0000 (GMT)
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     jonas.bonn@netrounds.com, Paolo Abeni <pabeni@redhat.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com>
- <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
-From:   Josh Hunt <johunt@akamai.com>
-Message-ID: <c4db67ab-d01f-402a-757b-cd6949e1f7f5@akamai.com>
-Date:   Wed, 1 Jul 2020 15:02:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 1 Jul 2020 18:29:21 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FCFC08C5C1;
+        Wed,  1 Jul 2020 15:29:21 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E2DE41495921C;
+        Wed,  1 Jul 2020 15:29:20 -0700 (PDT)
+Date:   Wed, 01 Jul 2020 15:29:20 -0700 (PDT)
+Message-Id: <20200701.152920.1650710079381098871.davem@davemloft.net>
+To:     elder@linaro.org
+Cc:     kuba@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/3] net: ipa: small improvements
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200630125846.1281988-1-elder@linaro.org>
+References: <20200630125846.1281988-1-elder@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_15:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
- phishscore=0 bulkscore=0 mlxlogscore=621 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010151
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_15:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 mlxlogscore=574 priorityscore=1501 lowpriorityscore=0
- clxscore=1011 malwarescore=0 cotscore=-2147483648 suspectscore=0
- bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007010152
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 Jul 2020 15:29:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alex Elder <elder@linaro.org>
+Date: Tue, 30 Jun 2020 07:58:43 -0500
 
-On 7/1/20 12:58 PM, Cong Wang wrote:
-> On Wed, Jul 1, 2020 at 9:05 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
->>
->> On Tue, Jun 30, 2020 at 2:08 PM Josh Hunt <johunt@akamai.com> wrote:
->>> Do either of you know if there's been any development on a fix for this
->>> issue? If not we can propose something.
->>
->> If you have a reproducer, I can look into this.
+> This series contains two patches that improve the error output
+> that's reported when an error occurs while changing the state of a
+> GSI channel or event ring.  The first ensures all such error
+> conditions report an error, and the second simplifies the messages a
+> little and ensures they are all consistent.
 > 
-> Does the attached patch fix this bug completely?
+> A third (independent) patch gets rid of an unused symbol in the
+> microcontroller code.
 > 
-> Thanks.
-> 
+> Version 2 fixes two alignment problems pointed out by checkpatch.pl,
+> as requested by Jakub Kicinski.
 
-Hey Cong
-
-Unfortunately we don't have a reproducer that would be easy to share, 
-however your patch makes sense to me at a high-level. We will test and 
-let you know if this fixes our problem.
-
-Thanks!
-Josh
+Series applied.
