@@ -2,95 +2,312 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A33EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC38C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851D42085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEC820853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593628930;
+	bh=SGzBlv6qFvyDNHfk7aechs86/O7qr6E6QM6Q0HVdS7w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SCtlQ3OtIVO+fzv/01OXcGCdX1TmRtbROzj+wRteW2JRYDMQ4XdfScyQtbNh2ixTA
+	 yoQd1JRRyP9OTFGVCaYIieW0BxkCH6PoaSMbGROZ88KNCqQd1fxViZ71DARxSWRObw
+	 2pAW/scDaCk3IMRW1jc3sicTzKDXlhCv5kYQljt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgGASlo (ORCPT
+        id S1726039AbgGASmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgGASln (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:41:43 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFADC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 11:41:43 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqhfn-003Vzq-Dz; Wed, 01 Jul 2020 18:41:31 +0000
-Date:   Wed, 1 Jul 2020 19:41:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: objtool clac/stac handling change..
-Message-ID: <20200701184131.GI2786714@ZenIV.linux.org.uk>
-References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
+        Wed, 1 Jul 2020 14:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbgGASmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:42:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2B2020748;
+        Wed,  1 Jul 2020 18:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593628926;
+        bh=SGzBlv6qFvyDNHfk7aechs86/O7qr6E6QM6Q0HVdS7w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eOLnsih+XR6nvj9wm2mPrE03duUQ1rtTdnCPVrM1pnHLXCBNw5HjBVL2xeLmre15K
+         0s3F9w6ekTVKqf4lBFj0suigXV7Q/YY8F5MmAFkjwluGsKk6Ibu13QJJdlniUZNGeF
+         Hkb0qk79CGkHV41W/aRZykzZdbq4SLTg6r85Qmkw=
+Date:   Wed, 1 Jul 2020 19:42:00 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH v4 4/7] iio: core: move debugfs data on the private iio
+ dev info
+Message-ID: <20200701194200.716a263b@archlinux>
+In-Reply-To: <3ad8e37bc439f0619f63010809fb0080b61a1b56.camel@analog.com>
+References: <20200630045708.14166-1-alexandru.ardelean@analog.com>
+        <20200630045708.14166-5-alexandru.ardelean@analog.com>
+        <3ad8e37bc439f0619f63010809fb0080b61a1b56.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:22:01AM -0700, Linus Torvalds wrote:
-> Josh / PeterZ,
->  it turns out that clang seems to now have fixed the last known
-> nagging details with "asm goto" with outputs, so I'm looking at
-> actually trying to merge the support for that in the kernel.
-> 
-> The main annoyance isn't actually using "asm goto" at all, the main
-> annoyance is just that it will all have to be conditional on whether
-> the compiler supports it or not. We have the config option for that
-> already, but it will just end up with two copies of the code depending
-> on that option.
-> 
-> It's not a huge deal: the recent cleanups wrt the x86 uaccess code
-> have made the code _much_ more straightforward and legible, and I'm
-> not so worried about it all.
-> 
-> Except that when I looked at this, I realized that I really had picked
-> the wrong model for how exceptions are handled wrt stac/clac. In
-> particular user access exceptions return with stac set, so we end up
-> having a code pattern where the error case will also have to do the
-> user_access_end() to finish the STAC region.
-> 
-> Adding a user_access_end() to the user exception fault handler is trivial.
-> 
-> But the thing I'm asking you for is how nasty it would be to change
-> objtool to have those rules?
-> 
-> IOW, right now we have
-> 
->     if (!user_acces_begin(...))
->            goto efault;
->     unsafe_get/put_user(ptr, val, label);
->     user_access_end();
->     return 0;
-> 
-> label:
->      user_access_end();
-> efaulr:
->      return -EFAULT;
-> 
-> and I'd like to make the "label" case just go to "efault", with
-> objtool knowing that the exception handling already did the
-> user_access_end().
-> 
-> That would end up cleaning up the flow for a number of cases.
-> 
-> Nasty? Trivial?
+On Tue, 30 Jun 2020 04:58:06 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Rather nasty for ppc; they have separate user_read_access_end() and
-user_write_access_end().
+> On Tue, 2020-06-30 at 07:57 +0300, Alexandru Ardelean wrote:
+> > This change moves all iio_dev debugfs fields to the iio_dev_priv object.
+> > It's not the biggest advantage yet (to the whole thing of
+> > abstractization)
+> > but it's a start.
+> > 
+> > The iio_get_debugfs_dentry() function (which is moved in
+> > industrialio-core.c) needs to also be guarded against the CONFIG_DEBUG_FS
+> > symbol, when it isn't defined. We do want to keep the inline definition
+> > in
+> > the iio.h header, so that the compiler can better infer when to compile
+> > out
+> > debugfs code that is related to the IIO debugfs directory.
+> >   
+> 
+> Well, pretty much only this patch changed since V3.
+> I thought about maybe re-doing just this patch, then I thought maybe I'd
+> get a minor complaint that I should re-send the series.
+> 
+> Either way, I prefer a complaint on this V4 series-re-send than if I were
+> to have re-sent just this patch.
+
+Either way worked.
+
+However this doesn't pass my basic build test. Config condition
+is reversed. 
+
+Fixed up and pushed out as testing.
+
+
+Jonathan
+
+> 
+> 
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/iio/industrialio-core.c | 46 +++++++++++++++++++++++----------
+> >  include/linux/iio/iio-opaque.h  | 10 +++++++
+> >  include/linux/iio/iio.h         | 13 +---------
+> >  3 files changed, 44 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-
+> > core.c
+> > index 27005ba4d09c..64174052641a 100644
+> > --- a/drivers/iio/industrialio-core.c
+> > +++ b/drivers/iio/industrialio-core.c
+> > @@ -165,6 +165,19 @@ static const char * const iio_chan_info_postfix[] =
+> > {
+> >  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
+> >  };
+> >  
+> > +#if !defined(CONFIG_DEBUG_FS)
+
+Don't we want this if it is defined.
+
+> > +/**
+> > + * There's also a CONFIG_DEBUG_FS guard in include/linux/iio/iio.h for
+> > + * iio_get_debugfs_dentry() to make it inline if CONFIG_DEBUG_FS is
+> > undefined
+> > + */
+> > +struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+> > +{
+> > +	struct iio_dev_opaque *iio_dev_opaque =
+> > to_iio_dev_opaque(indio_dev);
+> > +	return iio_dev_opaque->debugfs_dentry;
+> > +}
+> > +EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
+> > +#endif
+> > +
+> >  /**
+> >   * iio_find_channel_from_si() - get channel from its scan index
+> >   * @indio_dev:		device
+> > @@ -308,35 +321,37 @@ static ssize_t iio_debugfs_read_reg(struct file
+> > *file, char __user *userbuf,
+> >  			      size_t count, loff_t *ppos)
+> >  {
+> >  	struct iio_dev *indio_dev = file->private_data;
+> > +	struct iio_dev_opaque *iio_dev_opaque =
+> > to_iio_dev_opaque(indio_dev);
+> >  	unsigned val = 0;
+> >  	int ret;
+> >  
+> >  	if (*ppos > 0)
+> >  		return simple_read_from_buffer(userbuf, count, ppos,
+> > -					       indio_dev->read_buf,
+> > -					       indio_dev->read_buf_len);
+> > +					       iio_dev_opaque->read_buf,
+> > +					       iio_dev_opaque-  
+> > >read_buf_len);  
+> >  
+> >  	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+> > -						  indio_dev-  
+> > >cached_reg_addr,  
+> > +						  iio_dev_opaque-  
+> > >cached_reg_addr,  
+> >  						  0, &val);
+> >  	if (ret) {
+> >  		dev_err(indio_dev->dev.parent, "%s: read failed\n",
+> > __func__);
+> >  		return ret;
+> >  	}
+> >  
+> > -	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
+> > -					   sizeof(indio_dev->read_buf),
+> > -					   "0x%X\n", val);
+> > +	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
+> > +					      sizeof(iio_dev_opaque-  
+> > >read_buf),  
+> > +					      "0x%X\n", val);
+> >  
+> >  	return simple_read_from_buffer(userbuf, count, ppos,
+> > -				       indio_dev->read_buf,
+> > -				       indio_dev->read_buf_len);
+> > +				       iio_dev_opaque->read_buf,
+> > +				       iio_dev_opaque->read_buf_len);
+> >  }
+> >  
+> >  static ssize_t iio_debugfs_write_reg(struct file *file,
+> >  		     const char __user *userbuf, size_t count, loff_t
+> > *ppos)
+> >  {
+> >  	struct iio_dev *indio_dev = file->private_data;
+> > +	struct iio_dev_opaque *iio_dev_opaque =
+> > to_iio_dev_opaque(indio_dev);
+> >  	unsigned reg, val;
+> >  	char buf[80];
+> >  	int ret;
+> > @@ -351,10 +366,10 @@ static ssize_t iio_debugfs_write_reg(struct file
+> > *file,
+> >  
+> >  	switch (ret) {
+> >  	case 1:
+> > -		indio_dev->cached_reg_addr = reg;
+> > +		iio_dev_opaque->cached_reg_addr = reg;
+> >  		break;
+> >  	case 2:
+> > -		indio_dev->cached_reg_addr = reg;
+> > +		iio_dev_opaque->cached_reg_addr = reg;
+> >  		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
+> >  							  val, NULL);
+> >  		if (ret) {
+> > @@ -378,23 +393,28 @@ static const struct file_operations
+> > iio_debugfs_reg_fops = {
+> >  
+> >  static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
+> >  {
+> > -	debugfs_remove_recursive(indio_dev->debugfs_dentry);
+> > +	struct iio_dev_opaque *iio_dev_opaque =
+> > to_iio_dev_opaque(indio_dev);
+> > +	debugfs_remove_recursive(iio_dev_opaque->debugfs_dentry);
+> >  }
+> >  
+> >  static void iio_device_register_debugfs(struct iio_dev *indio_dev)
+> >  {
+> > +	struct iio_dev_opaque *iio_dev_opaque;
+> > +
+> >  	if (indio_dev->info->debugfs_reg_access == NULL)
+> >  		return;
+> >  
+> >  	if (!iio_debugfs_dentry)
+> >  		return;
+> >  
+> > -	indio_dev->debugfs_dentry =
+> > +	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+> > +
+> > +	iio_dev_opaque->debugfs_dentry =
+> >  		debugfs_create_dir(dev_name(&indio_dev->dev),
+> >  				   iio_debugfs_dentry);
+> >  
+> >  	debugfs_create_file("direct_reg_access", 0644,
+> > -			    indio_dev->debugfs_dentry, indio_dev,
+> > +			    iio_dev_opaque->debugfs_dentry, indio_dev,
+> >  			    &iio_debugfs_reg_fops);
+> >  }
+> >  #else
+> > diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-
+> > opaque.h
+> > index 1375674f14cd..b3f234b4c1e9 100644
+> > --- a/include/linux/iio/iio-opaque.h
+> > +++ b/include/linux/iio/iio-opaque.h
+> > @@ -6,9 +6,19 @@
+> >  /**
+> >   * struct iio_dev_opaque - industrial I/O device opaque information
+> >   * @indio_dev:			public industrial I/O device
+> > information
+> > + * @debugfs_dentry:		device specific debugfs dentry
+> > + * @cached_reg_addr:		cached register address for debugfs reads
+> > + * @read_buf:			read buffer to be used for the
+> > initial reg read
+> > + * @read_buf_len:		data length in @read_buf
+> >   */
+> >  struct iio_dev_opaque {
+> >  	struct iio_dev			indio_dev;
+> > +#if defined(CONFIG_DEBUG_FS)
+> > +	struct dentry			*debugfs_dentry;
+> > +	unsigned			cached_reg_addr;
+> > +	char				read_buf[20];
+> > +	unsigned int			read_buf_len;
+> > +#endif
+> >  };
+> >  
+> >  #define to_iio_dev_opaque(indio_dev)		\
+> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> > index 86112e35ae5f..bb0aae11a111 100644
+> > --- a/include/linux/iio/iio.h
+> > +++ b/include/linux/iio/iio.h
+> > @@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
+> >   * @groups:		[INTERN] attribute groups
+> >   * @groupcounter:	[INTERN] index of next attribute group
+> >   * @flags:		[INTERN] file ops related flags including busy
+> > flag.
+> > - * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
+> > - * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
+> >   * @priv:		[DRIVER] reference to driver's private information
+> >   *			**MUST** be accessed **ONLY** via iio_priv() helper
+> >   */
+> > @@ -567,12 +565,6 @@ struct iio_dev {
+> >  	int				groupcounter;
+> >  
+> >  	unsigned long			flags;
+> > -#if defined(CONFIG_DEBUG_FS)
+> > -	struct dentry			*debugfs_dentry;
+> > -	unsigned			cached_reg_addr;
+> > -	char				read_buf[20];
+> > -	unsigned int			read_buf_len;
+> > -#endif
+> >  	void				*priv;
+> >  };
+> >  
+> > @@ -727,10 +719,7 @@ static inline bool iio_buffer_enabled(struct iio_dev
+> > *indio_dev)
+> >   * @indio_dev:		IIO device structure for device
+> >   **/
+> >  #if defined(CONFIG_DEBUG_FS)
+> > -static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev
+> > *indio_dev)
+> > -{
+> > -	return indio_dev->debugfs_dentry;
+> > -}
+> > +struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
+> >  #else
+> >  static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev
+> > *indio_dev)
+> >  {  
+
