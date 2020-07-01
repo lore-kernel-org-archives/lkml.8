@@ -2,172 +2,134 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B07C20724
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DB520724
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gz+Cecqn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG0eRdM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgGADHE (ORCPT
+        id S1726460AbgGADIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:07:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50612 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgGADHD (ORCPT
+        Tue, 30 Jun 2020 23:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGADIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:07:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06136vQ0180635;
-        Wed, 1 Jul 2020 03:06:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=C+OQSk8SX2KjNV/BOEHQlX3V1mNEDOQ2Qwd9iZIvMHg=;
- b=gz+Cecqn0IukVu6qMxpbz8T6D7bIMqoRDj6GTQnesnHwSdWIcS4opddN7hIT1XSaa3an
- CdX9IncaylVgDZU8Van9Berq/2a2EBz/07d8wZGt2BusQP9zfWYK5a9t2+D/92H4WhMz
- 9k8/OCOnWsTEQQ2swd3+GWfI+YDF8ZWS65D9d9xadJ+tpiIfEc+VRsxtv8aGJq30mubn
- Q/6O26g/Y3eJuc0f9189LJTW8hnxw4vV4nq/OaBxX1FeylCbRFGorsdtGmL7MrnylwHU
- KRfYSnwmdmBtAPtYeK4i/FdJF0H9Ba7Gm2v8gFAZ+SiT5FYPuwKTC6QN+Nx332u3XaB/ bw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31xx1dvr63-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 01 Jul 2020 03:06:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0612wlHC085708;
-        Wed, 1 Jul 2020 03:06:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31xfvtbt98-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jul 2020 03:06:56 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06136sV0029228;
-        Wed, 1 Jul 2020 03:06:54 GMT
-Received: from [192.168.0.110] (/183.246.145.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 01 Jul 2020 03:06:53 +0000
-Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
-To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        open-iscsi@googlegroups.com, lduncan@suse.com,
-        michael.christie@oracle.com
-References: <20200611100717.27506-1-bob.liu@oracle.com>
- <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
- <52fa1d81-e585-37eb-55e5-0ed07ce7adc0@oracle.com>
- <CAJhGHyBPrCr3+iu-dMe69J3+tj99ea8crCGBuXc4yoStD+dEFA@mail.gmail.com>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <bdf25dd0-7ac3-52b5-855b-14955443c52b@oracle.com>
-Date:   Wed, 1 Jul 2020 11:06:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 30 Jun 2020 23:08:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AE5C061755;
+        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so21620721wml.3;
+        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
+        b=CG0eRdM4nSGcNNL81fuuo8W+TEO3HxqCIUhHH01sJ2+wYiauylNYzArgI5NTEfbhfz
+         mKeYTXR0ghYspwz0JBT9vrHKY70ZaxUi6d6c5WX+UZu5B+FkVAd99OR6MAZST5dT1Eh/
+         jdvi55lWYMtQ5uLpZHWcXMwKcK87MNxHQ0X2rSxkh3+hU2iVl1kLXJ067qDH2vLPtYXn
+         sYtZnLzyG33k+NEx45qYpr3PeX8CVeFoEnqmPJUM107iX8mbVgqrsAYlmDmNtFB34BIq
+         wV28hUqcjRBGmIW3VUOkw83YjowV1MKdYeVLsSkZBpwCoTVewspNH/xwYdzBE7iXHTOD
+         mrdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
+        b=izJQrB4G8UIrKMkHOY/byhXG0CBXCJFeH9CJnYPZ6o+/p77YYd70J1dEpQ/p/J+3tS
+         lVEkCtInsrPLk6g9OCepFPNUkt40dlZcBgKroIEm+5lIfLRFSpLirHlRl8z8PCaPfxJx
+         oMEiE6O474Kq7shQ4bZAwCZglVevlWvXHDimHii4/ha3wMgs6BvlH61OvKOwZdWq/BwM
+         87AdGf0PGiG+2zGc5zkf9nRe8eTX02eC3DvAmP3U5uOXNb6bGtMJnPjf0BISRz6uCvoJ
+         C9hpF73/qCnKQbJuBudCAqSLaq5cWy8MJemmQ19iSsLfBfuRtQKrz6OKBeNmFdSnGcaO
+         onAA==
+X-Gm-Message-State: AOAM531EGy6XKQUCASNFC4/V/SSU0j3/6oKP1IdKfzOhcd2tpHiI6zfd
+        a1jzGWESAdcImfUrJ1UPEzo=
+X-Google-Smtp-Source: ABdhPJyp2dS0CMUbwyVCAerk4TlBJ87yWOY9msqe2AJenQdsul7dqdlDD+8tUTPPvHvvLJ5/S69IXw==
+X-Received: by 2002:a1c:bc54:: with SMTP id m81mr17607509wmf.22.1593572894543;
+        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
+Received: from localhost.localdomain ([45.124.203.15])
+        by smtp.gmail.com with ESMTPSA id q1sm5515702wro.82.2020.06.30.20.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
+From:   Joel Stanley <joel@jms.id.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: aspeed: Describe the heartbeat function on ball Y23
+Date:   Wed,  1 Jul 2020 12:37:56 +0930
+Message-Id: <20200701030756.2834657-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <CAJhGHyBPrCr3+iu-dMe69J3+tj99ea8crCGBuXc4yoStD+dEFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9668 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9668 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015 adultscore=0
- suspectscore=0 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007010019
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/29/20 8:37 AM, Lai Jiangshan wrote:
-> On Mon, Jun 29, 2020 at 8:13 AM Bob Liu <bob.liu@oracle.com> wrote:
->>
->> On 6/28/20 11:54 PM, Lai Jiangshan wrote:
->>> On Thu, Jun 11, 2020 at 6:29 PM Bob Liu <bob.liu@oracle.com> wrote:
->>>>
->>>> Current code always set 'Unbound && max_active == 1' workqueues to ordered
->>>> implicitly, while this may be not an expected behaviour for some use cases.
->>>>
->>>> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
->>>> to different cpu so as to get better isolation, but their cpumask can't be
->>>> changed because WQ_ORDERED is set implicitly.
->>>
->>> Hello
->>>
->>> If I read the code correctly, the reason why their cpumask can't
->>> be changed is because __WQ_ORDERED_EXPLICIT, not __WQ_ORDERED.
->>>
->>>>
->>>> This patch adds a flag __WQ_ORDERED_DISABLE and also
->>>> create_singlethread_workqueue_noorder() to offer an new option.
->>>>
->>>> Signed-off-by: Bob Liu <bob.liu@oracle.com>
->>>> ---
->>>>  include/linux/workqueue.h | 4 ++++
->>>>  kernel/workqueue.c        | 4 +++-
->>>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
->>>> index e48554e..4c86913 100644
->>>> --- a/include/linux/workqueue.h
->>>> +++ b/include/linux/workqueue.h
->>>> @@ -344,6 +344,7 @@ enum {
->>>>         __WQ_ORDERED            = 1 << 17, /* internal: workqueue is ordered */
->>>>         __WQ_LEGACY             = 1 << 18, /* internal: create*_workqueue() */
->>>>         __WQ_ORDERED_EXPLICIT   = 1 << 19, /* internal: alloc_ordered_workqueue() */
->>>> +       __WQ_ORDERED_DISABLE    = 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
->>>>
->>>>         WQ_MAX_ACTIVE           = 512,    /* I like 512, better ideas? */
->>>>         WQ_MAX_UNBOUND_PER_CPU  = 4,      /* 4 * #cpus for unbound wq */
->>>> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
->>>>  #define create_singlethread_workqueue(name)                            \
->>>>         alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
->>>>
->>>> +#define create_singlethread_workqueue_noorder(name)                    \
->>>> +       alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
->>>> +                       WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
->>>
->>> I think using __WQ_ORDERED without __WQ_ORDERED_EXPLICIT is what you
->>> need, in which case cpumask is allowed to be changed.
->>>
->>
->> I don't think so, see function workqueue_apply_unbound_cpumask():
->>
->> wq_unbound_cpumask_store()
->>  > workqueue_set_unbound_cpumask()
->>    > workqueue_apply_unbound_cpumask() {
->>      ...
->> 5276                 /* creating multiple pwqs breaks ordering guarantee */
->> 5277                 if (wq->flags & __WQ_ORDERED)
->> 5278                         continue;
->>                           ^^^^
->>                           Here will skip apply cpumask if only __WQ_ORDERED is set.
-> 
-> wq_unbound_cpumask_store() is for changing the cpumask of
-> *all* workqueues. I don't think it can be used to make
-> scsi and iscsi workqueues bound to different cpu.
-> 
-> apply_workqueue_attrs() is for changing the cpumask of the specific
-> workqueue, which can change the cpumask of __WQ_ORDERED workqueue
-> (but without __WQ_ORDERED_EXPLICIT).
-> 
+From: Andrew Jeffery <andrew@aj.id.au>
 
-Yes, you are right. I made a mistake.
-Sorry for the noise.
+The default pinmux configuration for Y23 is to route a heartbeat to
+drive a LED. Previous revisions of the AST2600 datasheet did not include
+a description of this function.
 
-Regards,
-Bob
+Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->>
->> 5280                 ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs);
->>
->>      }
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index fa32c3e9c9d1..7efe6dbe4398 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -46,6 +46,7 @@
+ #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
+ #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
+ #define SCU694		0x694 /* Multi-function Pin Control #25 */
++#define SCU69C		0x69C /* Multi-function Pin Control #27 */
+ #define SCUC20		0xC20 /* PCIE configuration Setting Control */
+ 
+ #define ASPEED_G6_NR_PINS 256
+@@ -819,11 +820,13 @@ FUNC_DECL_2(PWM14, PWM14G0, PWM14G1);
+ #define Y23 127
+ SIG_EXPR_LIST_DECL_SEMG(Y23, PWM15, PWM15G1, PWM15, SIG_DESC_SET(SCU41C, 31));
+ SIG_EXPR_LIST_DECL_SESG(Y23, THRUOUT3, THRU3, SIG_DESC_SET(SCU4BC, 31));
+-PIN_DECL_2(Y23, GPIOP7, PWM15, THRUOUT3);
++SIG_EXPR_LIST_DECL_SESG(Y23, HEARTBEAT, HEARTBEAT, SIG_DESC_SET(SCU69C, 31));
++PIN_DECL_3(Y23, GPIOP7, PWM15, THRUOUT3, HEARTBEAT);
+ GROUP_DECL(PWM15G1, Y23);
+ FUNC_DECL_2(PWM15, PWM15G0, PWM15G1);
+ 
+ FUNC_GROUP_DECL(THRU3, AB24, Y23);
++FUNC_GROUP_DECL(HEARTBEAT, Y23);
+ 
+ #define AA25 128
+ SSSF_PIN_DECL(AA25, GPIOQ0, TACH0, SIG_DESC_SET(SCU430, 0));
+@@ -1920,6 +1923,7 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
+ 	ASPEED_PINCTRL_GROUP(GPIU5),
+ 	ASPEED_PINCTRL_GROUP(GPIU6),
+ 	ASPEED_PINCTRL_GROUP(GPIU7),
++	ASPEED_PINCTRL_GROUP(HEARTBEAT),
+ 	ASPEED_PINCTRL_GROUP(HVI3C3),
+ 	ASPEED_PINCTRL_GROUP(HVI3C4),
+ 	ASPEED_PINCTRL_GROUP(I2C1),
+@@ -2158,6 +2162,7 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
+ 	ASPEED_PINCTRL_FUNC(GPIU5),
+ 	ASPEED_PINCTRL_FUNC(GPIU6),
+ 	ASPEED_PINCTRL_FUNC(GPIU7),
++	ASPEED_PINCTRL_FUNC(HEARTBEAT),
+ 	ASPEED_PINCTRL_FUNC(I2C1),
+ 	ASPEED_PINCTRL_FUNC(I2C10),
+ 	ASPEED_PINCTRL_FUNC(I2C11),
+-- 
+2.27.0
+
