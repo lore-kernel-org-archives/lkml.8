@@ -2,195 +2,138 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D848FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D8F20748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B938D20748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9wGn45Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GwqLCcMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732798AbgGAQyG (ORCPT
+        id S1732820AbgGAQyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45296 "EHLO
+        Wed, 1 Jul 2020 12:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732544AbgGAQyD (ORCPT
+        with ESMTP id S1732739AbgGAQyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:54:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A56C08C5C1;
-        Wed,  1 Jul 2020 09:54:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bf7so817031plb.2;
-        Wed, 01 Jul 2020 09:54:03 -0700 (PDT)
+        Wed, 1 Jul 2020 12:54:16 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3460C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:54:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u5so11256191pfn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:54:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EKYZXzZpvGyQZUTSB7ZSTs6hRzQBV8VsnesAValvrlI=;
-        b=D9wGn45YpgPA9W1hNv3PDO7MFoG+i4XyR7rEvEGxLEK5UxsrRmkL7mGNZ1kU1TDfbb
-         oG9KZmbNokSDsFHcYqrzFrvdEbt5w+Mqg4eA5aHHnSjkGb/wdM30WZ77qy2xIesKYqG8
-         x+fJktS6LUjjwFkR5nbwjkNM2ckekgLpqkLmvNFXnWxV0zX57UaM/Q9b827t+bixP+G2
-         lCoA1w6FOHItH9+ivKP5noXATe5TdBHxWNs/5T3OoYgMXE7YTtiHhtSG9Wq8isedaL2n
-         fauGkZ/nNUy7+lP/BQ+aqEK7sLieZxOOR/Jgi23B261ZCvxabYHZYFMNw18qHM4FZ6o3
-         nuBg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EsXUdM5LAqzZIkn5/W0cNdIO5H2Xp89nIazo0CQdhNk=;
+        b=GwqLCcMAMUHg3piKQ0M1OpiifrcnYUmWU6pkjcqeA7IPO+nvcLIkmswfoCyb5lnB7G
+         nIILTLdTaOKsOt632Yaq+LLwyb08YkoB2dkZlyrzPSWuf/0FLqmNB1O0CP3iq/S6BbRu
+         ih7Mgx0A4CC6tjz80rhNSqnEtE4ojrney1TIE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EKYZXzZpvGyQZUTSB7ZSTs6hRzQBV8VsnesAValvrlI=;
-        b=XnaX6enh2e88e5cXcjn2F5iWi9I68Opl8h+HsxvkDn2wTfzsdQm3qFG/Zk1j3mh7ct
-         dVnGPilaRwGPvjFhyA8Yayk6Lqmp6WFCTcXAaUs5Rs4u1wG32aTssI6JAsx74VIRNtla
-         oH6GGNT7MRt05Hz5Z2/Q9eOisgKjBmZQ/P0ECtvX8/x5/R5KcVDkGJIL4WHpQMvDYPDC
-         v+0nOUbrIdrMCuyhwb2a10Y2+GpLxSzwQ6E1rSXDbxLamFJmzHwEp5ysotyINOwoIgHC
-         lyaOBl0+EDZ7XtZvb/BICKdZiA/pPigHPNuHjl3ryGCpK8YZii2Ys2FKnoE9BO+pFw92
-         I6og==
-X-Gm-Message-State: AOAM5314FlNd9Wy+edrX3tKQHT90AfOeJJ+nuwFUH/UXk/R35VFh69UR
-        j4CkQkCApH2NIR4q8WYrAks=
-X-Google-Smtp-Source: ABdhPJzbqvCjkS3i9SKAN4JvhTqU0cHTWG8FXIo2HWKrocdp4Pctuy82rSqkf8ua0qByYRDC/nkWfw==
-X-Received: by 2002:a17:90a:7107:: with SMTP id h7mr28786115pjk.210.1593622443103;
-        Wed, 01 Jul 2020 09:54:03 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id g140sm6297437pfb.48.2020.07.01.09.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 09:54:02 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Dillow <dave@thedillows.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Jon Mason <jdmason@kudzu.us>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 11/11] natsemi: use generic power management
-Date:   Wed,  1 Jul 2020 22:20:57 +0530
-Message-Id: <20200701165057.667799-12-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
-References: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EsXUdM5LAqzZIkn5/W0cNdIO5H2Xp89nIazo0CQdhNk=;
+        b=a566evr6xWC/M+vb0p1ePzsllca4Jws1054Fz5xMnqPeCoyxVy758nyv9pko8q1K3h
+         YblyZ81mfPw9P0dGSU6jaDNGHTqo1Ywo/SA1tGZghBbb5cklr6k+iwreiMIZ6CIFOhB5
+         XrXTl7R5WFSXhoKLpUReAH1Eq9v2uLTNc3TQRRo81VXUAn+qcPVh92e5Qis2CBBgNXae
+         4WW2xeLnZq1IgxoxIFRUi6gY6Ify8TFSVSLcfikIKz00OgVPbbuvZ8nQeAiBW9IbhtWl
+         hWyFo81K7dcF/0OdJwOuWxB22WWpD3Xp6AR2afjm0Fl5s3On/Y93RVQGn2RQ4JxajQIs
+         7ptQ==
+X-Gm-Message-State: AOAM531NtO9NZpfHbU8u/LxjNuxyh2UHGrlTdpq/QGKnEESfIPSgbLvP
+        AwtY2rk/wiTqhJEFdNg0jpKYBA==
+X-Google-Smtp-Source: ABdhPJyRYU3xYExtmeUyfOXkpw7VsQvHdKoQQRhKbkqyHFECmUwIhbLYFz+24TYxhxLjY5slmp/3Ww==
+X-Received: by 2002:a63:e214:: with SMTP id q20mr13297210pgh.402.1593622456365;
+        Wed, 01 Jul 2020 09:54:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id q1sm6907508pfk.132.2020.07.01.09.54.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 09:54:15 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 09:54:14 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains
+ for venus
+Message-ID: <20200701165414.GB3191083@google.com>
+References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+ <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+On Wed, Jul 01, 2020 at 05:10:38PM +0530, Rajendra Nayak wrote:
+> Add the OPP tables in order to be able to vote on the performance state
+> of a power-domain
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index ad57df2..738a741 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -2392,8 +2392,10 @@
+>  			reg = <0 0x0aa00000 0 0xff000>;
+>  			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+>  			power-domains = <&videocc VENUS_GDSC>,
+> -					<&videocc VCODEC0_GDSC>;
+> -			power-domain-names = "venus", "vcodec0";
+> +					<&videocc VCODEC0_GDSC>,
+> +					<&rpmhpd SC7180_CX>;
+> +			power-domain-names = "venus", "vcodec0", "opp-pd";
+> +			operating-points-v2 = <&venus_opp_table>;
+>  			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>  				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+>  				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> @@ -2414,6 +2416,35 @@
+>  			video-encoder {
+>  				compatible = "venus-encoder";
+>  			};
+> +
+> +			venus_opp_table: venus-opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				opp-200000000 {
+> +					opp-hz = /bits/ 64 <150000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +				};
+> +
+> +				opp-320000000 {
+> +					opp-hz = /bits/ 64 <270000000>;
+> +					required-opps = <&rpmhpd_opp_svs>;
+> +				};
+> +
+> +				opp-380000000 {
+> +					opp-hz = /bits/ 64 <340000000>;
+> +					required-opps = <&rpmhpd_opp_svs_l1>;
+> +				};
+> +
+> +				opp-444000000 {
+> +					opp-hz = /bits/ 64 <434000000>;
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +				};
+> +
+> +				opp-533000000 {
+> +					opp-hz = /bits/ 64 <500000000>;
+> +					required-opps = <&rpmhpd_opp_turbo>;
+> +				};
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
-
-Thus, there is no need to call the PCI helper functions like
-pci_enable_device, which is not recommended. Hence, removed.
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/ethernet/natsemi/natsemi.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/net/ethernet/natsemi/natsemi.c b/drivers/net/ethernet/natsemi/natsemi.c
-index d21d706b83a7..c2867fe995bc 100644
---- a/drivers/net/ethernet/natsemi/natsemi.c
-+++ b/drivers/net/ethernet/natsemi/natsemi.c
-@@ -3247,8 +3247,6 @@ static void natsemi_remove1(struct pci_dev *pdev)
- 	free_netdev (dev);
- }
- 
--#ifdef CONFIG_PM
--
- /*
-  * The ns83815 chip doesn't have explicit RxStop bits.
-  * Kicking the Rx or Tx process for a new packet reenables the Rx process
-@@ -3275,9 +3273,9 @@ static void natsemi_remove1(struct pci_dev *pdev)
-  * Interrupts must be disabled, otherwise hands_off can cause irq storms.
-  */
- 
--static int natsemi_suspend (struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused natsemi_suspend(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata (pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct netdev_private *np = netdev_priv(dev);
- 	void __iomem * ioaddr = ns_ioaddr(dev);
- 
-@@ -3326,11 +3324,10 @@ static int natsemi_suspend (struct pci_dev *pdev, pm_message_t state)
- }
- 
- 
--static int natsemi_resume (struct pci_dev *pdev)
-+static int __maybe_unused natsemi_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata (pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct netdev_private *np = netdev_priv(dev);
--	int ret = 0;
- 
- 	rtnl_lock();
- 	if (netif_device_present(dev))
-@@ -3339,12 +3336,6 @@ static int natsemi_resume (struct pci_dev *pdev)
- 		const int irq = np->pci_dev->irq;
- 
- 		BUG_ON(!np->hands_off);
--		ret = pci_enable_device(pdev);
--		if (ret < 0) {
--			dev_err(&pdev->dev,
--				"pci_enable_device() failed: %d\n", ret);
--			goto out;
--		}
- 	/*	pci_power_on(pdev); */
- 
- 		napi_enable(&np->napi);
-@@ -3364,20 +3355,17 @@ static int natsemi_resume (struct pci_dev *pdev)
- 	netif_device_attach(dev);
- out:
- 	rtnl_unlock();
--	return ret;
-+	return 0;
- }
- 
--#endif /* CONFIG_PM */
-+static SIMPLE_DEV_PM_OPS(natsemi_pm_ops, natsemi_suspend, natsemi_resume);
- 
- static struct pci_driver natsemi_driver = {
- 	.name		= DRV_NAME,
- 	.id_table	= natsemi_pci_tbl,
- 	.probe		= natsemi_probe1,
- 	.remove		= natsemi_remove1,
--#ifdef CONFIG_PM
--	.suspend	= natsemi_suspend,
--	.resume		= natsemi_resume,
--#endif
-+	.driver.pm	= &natsemi_pm_ops,
- };
- 
- static int __init natsemi_init_mod (void)
--- 
-2.27.0
-
+the labels of the OPP nodes don't match the specified frequencies
