@@ -4,44 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B669C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD7A20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA452077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgGAJLS (ORCPT
+        id S1729618AbgGAJLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgGAJLQ (ORCPT
+        Wed, 1 Jul 2020 05:11:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43088 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgGAJLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:11:16 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A3CC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:11:15 -0700 (PDT)
+        Wed, 1 Jul 2020 05:11:30 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 81E282A0D02
+        with ESMTPSA id AE46F2A0D02
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v4 1/2] platform/chrome: cros_ec_typec: Use workqueue for
- port update
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200629211329.2185342-1-pmalani@chromium.org>
-Message-ID: <37673887-70a6-ed1e-b864-419e690899be@collabora.com>
-Date:   Wed, 1 Jul 2020 11:11:12 +0200
+Subject: Re: [PATCH] platform: chrome: Fix EC timestamp overflow
+To:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
+        bhanumaiya@chromium.org
+Cc:     groeck@chromium.org, linux-kernel@vger.kernel.org
+References: <20200630075203.3054990-1-gwendal@chromium.org>
+Message-ID: <2f4f14e9-c7cb-ec6d-e3e9-b9f4132db808@collabora.com>
+Date:   Wed, 1 Jul 2020 11:11:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200629211329.2185342-1-pmalani@chromium.org>
+In-Reply-To: <20200630075203.3054990-1-gwendal@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -50,88 +44,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+Hi Gwendal,
 
-Thank you for the patch. And thanks to Guenter and Heikki for reviewing it.
+Thank you for your patch.
 
-On 29/6/20 23:13, Prashant Malani wrote:
-> Use a work queue to call the port update routines, instead of doing it
-> directly in the PD notifier callback. This will prevent other drivers
-> with PD notifier callbacks from being blocked on the port update routine
-> completing.
+On 30/6/20 9:52, Gwendal Grignou wrote:
+> EC is using 32 bit timestamps (us), and before converting it to 64bit
+> they were not casted, so it would overflow every 4s.
+> Regular overflow every ~70 minutes was not taken into acoun either.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 
-Applied for 5.9 both patches with the corresponding reviewed tags.
+Applied for 5.9 with a slightly modified subject, platform/chrome:
+cros_ec_sensorhub: ...
 
 > ---
+>  drivers/platform/chrome/cros_ec_sensorhub_ring.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Changes in v4:
-> - Removed extra newline.
-> - Moved both variable declarations into one line.
-> 
-> Changes in v3:
-> - Use new 100 character line length limit.
-> 
-> Changes in v2:
-> - No changes.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 0c041b79cbba..69c4118e280c 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -58,6 +58,7 @@ struct cros_typec_data {
->  	/* Array of ports, indexed by port number. */
->  	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
->  	struct notifier_block nb;
-> +	struct work_struct port_work;
->  };
->  
->  static int cros_typec_parse_port_props(struct typec_capability *cap,
-> @@ -619,18 +620,24 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
->  	return 0;
->  }
->  
-> -static int cros_ec_typec_event(struct notifier_block *nb,
-> -			       unsigned long host_event, void *_notify)
-> +static void cros_typec_port_work(struct work_struct *work)
->  {
-> -	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
-> -						     nb);
-> -	int ret, i;
-> +	struct cros_typec_data *typec = container_of(work, struct cros_typec_data, port_work);
-> +	int i, ret;
->  
->  	for (i = 0; i < typec->num_ports; i++) {
->  		ret = cros_typec_port_update(typec, i);
->  		if (ret < 0)
->  			dev_warn(typec->dev, "Update failed for port: %d\n", i);
->  	}
-> +}
-> +
-> +static int cros_ec_typec_event(struct notifier_block *nb,
-> +			       unsigned long host_event, void *_notify)
-> +{
-> +	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data, nb);
-> +
-> +	schedule_work(&typec->port_work);
->  
->  	return NOTIFY_OK;
->  }
-> @@ -689,6 +696,12 @@ static int cros_typec_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	INIT_WORK(&typec->port_work, cros_typec_port_work);
-> +
-> +	/*
-> +	 * Safe to call port update here, since we haven't registered the
-> +	 * PD notifier yet.
-> +	 */
->  	for (i = 0; i < typec->num_ports; i++) {
->  		ret = cros_typec_port_update(typec, i);
->  		if (ret < 0)
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub_ring.c b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> index 23960f3acc0b1..641d91088cee2 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> @@ -465,9 +465,7 @@ cros_ec_sensor_ring_process_event(struct cros_ec_sensorhub *sensorhub,
+>  			 * Disable filtering since we might add more jitter
+>  			 * if b is in a random point in time.
+>  			 */
+> -			new_timestamp = fifo_timestamp -
+> -					fifo_info->timestamp  * 1000 +
+> -					in->timestamp * 1000;
+> +			new_timestamp = c - b * 1000 + a * 1000;
+>  			/*
+>  			 * The timestamp can be stale if we had to use the fifo
+>  			 * info timestamp.
 > 
