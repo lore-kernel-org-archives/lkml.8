@@ -2,214 +2,153 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37135C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3B8C20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593632155;
-	bh=h/qGA0uJIyucVWo5pdfqwk4i7o/Le4zazDXXTgInWw0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XR32nVd/dbBchNxTKSm3HwjNONBfl/BcZqkKBLuhIjPFLUNFNPzgRlktMIOITVET6
-	 f0rPoJvDpuUT4v7XIvdbdYLMeqZK6799GcYKB3trOwMFX1PSGPEkOKbogktbcpoKWf
-	 qqgaZLNVHs5Qav/XrWU2VJPm9oZnhUQ2kDqXet+8=
+	by mail.kernel.org (Postfix) with ESMTP id 525B32082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:39:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S69Z6hVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGATfx (ORCPT
+        id S1726265AbgGATjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
+        Wed, 1 Jul 2020 15:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgGATfw (ORCPT
+        with ESMTP id S1726021AbgGATjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:35:52 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95678C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 12:35:52 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id s9so28589890ljm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 12:35:52 -0700 (PDT)
+        Wed, 1 Jul 2020 15:39:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EACAC08C5DD
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 12:39:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h22so21496780lji.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 12:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JzdMv7QzaIMMiuSv3LueAMzlxlY0Kgapf7U+sbKvloM=;
-        b=bm9HbbW76FxBf2fTQ1FmcTy0zoJuqDZi8QrOZtWv0eBokcsJpN2U7+OEORIZs+msq7
-         wnw8QVVH3XOwPsszpIZ/hw8IZtRI/FkQC/u+RM6ePqiAeiYDGeHfeyeKKws9Ko9SyLxO
-         t2AQy31595SCpzTV/Qh2yxpEDfiljNKG34fMU=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
+        b=S69Z6hVz4wBbcWfEPDTLxOfydDlRKVUspZAmALfKiePq4efP4D6Zy/HnkTrZixiCmy
+         Ot40/jExbO/G56aM0fEZsfzeJIC3kCvsxrM7MHZqzW1HJEEA5UTAiUuuECa6C9aUljR+
+         zCe1fEdW+aHQAlQoaCXz6DY9c4jxfT6LcKyQivUp/xGtatGLTUNnwj6aAa/FWUWiG9K1
+         bWQfTOvQY0EpekmLmMomA0vYwaXO07Hu72AKOO1B90d4yUJX1W3dMZUDfX17J7iVY1pG
+         fllXRQrJrjqemB9c2daT5zN3LzqeuPJW/vRph40oc5de9fK+rU2K+xUO9rJc4nLbCpB6
+         ZJ1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JzdMv7QzaIMMiuSv3LueAMzlxlY0Kgapf7U+sbKvloM=;
-        b=Pxm7rllUXp6mLAtmJIZ53v96B3AFCtHug1IFjvVBGqiFHchJMJwrmUp0E0zmvdz/Ea
-         Ci0fN0ZgIX2G6HdkA+yxAOm2qAe5hR/WryxC3xQwei+JxXcj+dTng4N3AknKwcyyhh90
-         6siS7VcjHudlVRfBQAJRQzgrEBxvVzC09tw/FFtL4v0m1iXzmFH8BdR9ejH32Ii7UWdc
-         t3SR6DYnZ/rOS8mCMFOwnAnmfw6h63vNU4MtXQtxSrCj6pTv3XIMo/3RmBAoqf3U4fDa
-         XMxZVzB1aXcrjO6u7kFgEthnB63Axs8s653D9mEFoZBJGot4bD/SxYCUMV7uFkpCcn3g
-         cbyA==
-X-Gm-Message-State: AOAM531oEr5UdZwOGF70N8EFxd2Bip+7VaSxapc80GeYDPqgpE6J44CU
-        io8gCxZjbE8d78baPSMc88eVv4kaF+k=
-X-Google-Smtp-Source: ABdhPJxmjAVEcKX9q+JmsGfrxA6eAanZC+q1YhBCeQmNN6lEAb+ix/BEo6iUeDdXOo0mtocSRT1Pig==
-X-Received: by 2002:a2e:9193:: with SMTP id f19mr2545271ljg.91.1593632150572;
-        Wed, 01 Jul 2020 12:35:50 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id j4sm2385905lfb.94.2020.07.01.12.35.49
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uZLgRyeqLIrejgbskRWtUMI2dY4YQCIX+GY0py5r3AA=;
+        b=dDsoYSAewr4TXDBFUBNkfixvDhqgnumn0BDogZBjxn2OYG7qqbC0ZoIe2/bbfGTWyR
+         mO7aA2eHT6T+fjsDC49qZ9FaSbYV645Svz53+BbJpCc00M3sCgJgLhMOtTJraUXERCzP
+         79RvjK5WmRwGrM2C/ujCnR1E3GB14JEnkx3HmREmyZaTPLXQOxQ2udLiBwKTjskOvl4j
+         dTe/fYuiRzjMVDmhJ2/1NGZiAJszYc9RFouNZiZEsCWiSV2EtmbZPxdzss89I9T/KJ2R
+         rdY/QE9h4c64fB0P5q9Llshk9J//WhsUo23KWGgwdT9HSQpIYZiAzV8DuHI+VCq81p8A
+         GQ0A==
+X-Gm-Message-State: AOAM532RLnYMstpAF9Qi1wTkezQgcnpYzvHjiujjhjW6WL+oW525LqIX
+        1qTkpXv7lZqme2QiwZFaZ4dVjQFe7VE=
+X-Google-Smtp-Source: ABdhPJznwKrMubCqqzSMTK6VHjJjbQbSK8SWzIJNnS6XVefIEXAhs3wc0iBxGIMfRySbgrsw6uZjLQ==
+X-Received: by 2002:a2e:b4ce:: with SMTP id r14mr5133513ljm.88.1593632359481;
+        Wed, 01 Jul 2020 12:39:19 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.65.203])
+        by smtp.gmail.com with ESMTPSA id y24sm2126434ljy.91.2020.07.01.12.39.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 12:35:49 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id h22so21484900lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 12:35:49 -0700 (PDT)
-X-Received: by 2002:a2e:9c92:: with SMTP id x18mr9104701lji.70.1593632149097;
- Wed, 01 Jul 2020 12:35:49 -0700 (PDT)
+        Wed, 01 Jul 2020 12:39:18 -0700 (PDT)
+Subject: Re: [PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM
+ Graphics clock bindings
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200629172049.30452-1-jonathan@marek.ca>
+ <20200629172049.30452-8-jonathan@marek.ca>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <caa05cad-ff88-fbcb-ce13-9e43133afb7b@linaro.org>
+Date:   Wed, 1 Jul 2020 22:39:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
- <CALCETrXLcyuVT2JCrb0d-5Oq8aRLrERUdhRfGLxVZyYYo3BoBQ@mail.gmail.com>
-In-Reply-To: <CALCETrXLcyuVT2JCrb0d-5Oq8aRLrERUdhRfGLxVZyYYo3BoBQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 Jul 2020 12:35:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
-Message-ID: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
-Subject: Re: objtool clac/stac handling change..
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200629172049.30452-8-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 11:29 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> Do we really want the exception handling to do the CLAC?  Having
-> unsafe_get_user() do CLAC seems surprising to me, and it will break
-> use cases like:
->
-> if (!user_access_begin(...)
->   goto out;
->
-> ret = unsafe_get_user(...);
->
-> user_access_end();
->
-> check ret;
+On 29/06/2020 20:20, Jonathan Marek wrote:
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SM8250 SoCs.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>   .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
+>   include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
+>   2 files changed, 114 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+>   create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+> new file mode 100644
+> index 000000000000..2b9c8f97b76d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
+> +
+> +maintainers:
+> +  -
+> +
+> +description: |
+> +  Qualcomm graphics clock control module which supports the clocks, resets and
+> +  power domains on SM8250.
+> +
+> +  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8250-gpucc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
+> +      - description: GPLL0 main branch source
+> +      - description: GPLL0 div branch source
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bi_tcxo
+> +      - const: gcc_gpu_gpll0_clk_src
+> +      - const: gcc_gpu_gpll0_div_clk_src
 
-That's not how unsafe_get_user() works.
+Missing qdss_qmp_clk here.
 
-unsafe_get_user() always jumps to the error label, it never returns a
-value. So the code is actually now what you claim above, but
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
 
-    if (!user_access_begin(...)
-       goto out;
 
-    unsafe_get_user(..., out_fault);
-    user_access_end();
-   .. this is good, use the value we got..
 
-out_fault:
-    user_access_end();
-out:
-    return -EFAULT;
-
-And that's _exactly_ why I'd like to make the change: because that
-means that the error label for a user access failure is exactly the
-same as the error label for the "user_access_begin()" failure.
-
-So with my suggestion, that "out_fault" label and extra
-user_access_end() would go away, and only "out" would remain.
-
-So my suggestion actually simplifies the use cases, and your example
-was literally an argument _for_ the change, not against it.
-
-That's not why I started doing it, though. The real simplification is
-inside the low-level implementation.
-
-Right now __get_user_nocheck() does this:
-
-        __uaccess_begin();                                      \
-        __get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err);       \
-        __uaccess_end();                                                \
-        (x) = (__force __typeof__(*(ptr)))__gu_val;                     \
-        __builtin_expect(__gu_err, 0);                                  \
-
-because __get_user_nocheck() internally does *not* use the jumping
-version (yet) because of the fact how gcc can't do "asm goto" with
-outputs.
-
-And it's actually _important_ that the assignment to "x" is done
-outside the user access region (because "x" can be a complex
-expression).
-
-But look at what happens if we change things to use a exception jump
-instead of that __gu_error value.
-
-Then we want the code to become this:
-
-        __uaccess_begin_nospec();                                       \
-        __get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_label);     \
-        __uaccess_end();                                                \
-        (x) = (__force __typeof__(*(ptr)))__gu_val;                     \
-        __gu_ret = 0;                                                   \
-__gu_label:                                                             \
-        __builtin_expect(__gu_err, 0);                                  \
-
-and that actually looks nice and understandable, and the compiler will
-also have a really easy time turing any subsequent test of the return
-value into a trivial "we know the fallthrough case returned zero"
-because instead of setting "__gu_err" much deeper and dynamically (and
-with other code in between), it gets set right before the return from
-that statement expression macro.
-
-Btw, all the "it makes it easier to implement" is doubly true in all
-the low-level asm code too. Go look into arch/x86/lib/{get,put}user.S
-right now, and see how the error cases all have two different
-entrypoints, and we have code like
-
-SYM_CODE_START_LOCAL(.Lbad_get_user_clac)
-        ASM_CLAC
-bad_get_user:
-        xor %edx,%edx
-        mov $(-EFAULT),%_ASM_AX
-        ret
-SYM_CODE_END(.Lbad_get_user_clac)
-
-where that "Lbad_get_user_clac" label is used for the exception case,
-and the "bad_get_user" label is used for the "bad address" case.
-
-So it
- (a) makes it easier for users
- (b) makes it easier to implement
- (c) will actually make it easier for compilers to optimize too
-
-Now, if the exception does *not* do the "stop user accesses", we have
-to continue doing the two different failure targets (both in C code
-and in asm code), and for the __get_user_nocheck() case where we use
-"asm goto" with outputs, we can do things like this:
-
-        __uaccess_begin_nospec();                                       \
-        __get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_label);     \
-        __uaccess_end();                                                \
-        (x) = (__force __typeof__(*(ptr)))__gu_val;                     \
-        __gu_err = 0;                                                   \
-        if (0) {                                                        \
- __gu_label:                                                            \
-                __uaccess_end();                                        \
-                __gu_err = -EFAULT;                                     \
-        }                                                               \
-        __builtin_expect(__gu_err, 0);                                  \
-
-which certainly works, but I think you'll admit it's ugly (note that
-nice "if (0)" trick to get the separate error case that does that
-__uaccess_end() that can't be done in the common end part because that
-complex access has to be done after closing the user access region).
-
-So this is why I'd like to change the rules. A user access fault would
-close the user access window.
-
-              Linus
+-- 
+With best wishes
+Dmitry
