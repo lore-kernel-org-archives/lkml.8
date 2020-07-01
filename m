@@ -2,143 +2,180 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B432620781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFDD20884
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="G2zYEl85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732369AbgGAQ2o (ORCPT
+        id S1732389AbgGAQ3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:28:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5418 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731672AbgGAQ2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:28:43 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061G3RvQ001549;
-        Wed, 1 Jul 2020 12:28:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32083fpsfs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 12:28:40 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061GEjEl048292;
-        Wed, 1 Jul 2020 12:28:39 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32083fpsep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 12:28:39 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061GPcIU016721;
-        Wed, 1 Jul 2020 16:28:37 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d4ua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 16:28:37 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061GSY2m7668066
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Jul 2020 16:28:34 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 870DAA405F;
-        Wed,  1 Jul 2020 16:28:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5A59A4065;
-        Wed,  1 Jul 2020 16:28:33 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.203.198])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  1 Jul 2020 16:28:33 +0000 (GMT)
-Date:   Wed, 1 Jul 2020 19:28:31 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-Message-ID: <20200701162831.GB2999146@linux.ibm.com>
-References: <20200701141830.18749-1-david@redhat.com>
- <20200701141830.18749-2-david@redhat.com>
- <20200701150643.GA2999146@linux.ibm.com>
- <20200701153157.GC5008@osiris>
+        Wed, 1 Jul 2020 12:29:36 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51976 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731672AbgGAQ3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:29:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593620970; bh=h41kKdP+3vto+kElOo0VDi6vKhbrYTeB/TfpQYG9yUo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=G2zYEl85biLHwyEiOFO/kaMcNraHZvQR4O65XcOkok8hz8sKy8bqo2ex81MDBezkl
+         tvKQoudL7UNeTi76xcQSLQWMQKqBaZTC24Su46akCky37oA1eD9IGVchCFdQkWYl5j
+         oWNpKKnFrX28UVUi9vO+xHVZyoR2Jk6FygSV2P5c=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v7 00/13] Add support for PinePhone LCD panel
+Date:   Wed,  1 Jul 2020 18:29:15 +0200
+Message-Id: <20200701162928.1638874-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701153157.GC5008@osiris>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- impostorscore=0 priorityscore=1501 spamscore=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 suspectscore=1 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010114
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 05:31:57PM +0200, Heiko Carstens wrote:
-> On Wed, Jul 01, 2020 at 06:06:43PM +0300, Mike Rapoport wrote:
-> > Hi David,
-> > 
-> > On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
-> > > "physmem" in the memblock allocator is somewhat weird: it's not actually
-> > > used for allocation, it's simply information collected during boot, which
-> > > describes the unmodified physical memory map at boot time, without any
-> > > standby/hotplugged memory. It's only used on s390x and is currently the
-> > > only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
-> > > 
-> > > Physmem isn't numa aware and current users don't specify any flags. Let's
-> > > hide it from the user, exposing only for_each_physmem(), and simplify. The
-> > > interface for physmem is now really minimalistic:
-> > > - memblock_physmem_add() to add ranges
-> > > - for_each_physmem() / __next_physmem_range() to walk physmem ranges
-> > > 
-> > > Don't place it into an __init section and don't discard it without
-> > > CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
-> > > the __meminit notifier to avoid section mismatch warnings once
-> > > CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
-> > > CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
-> > > 
-> > > While fixing up the documentation, sneak in some related cleanups. We can
-> > > stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
-> > 
-> > As you noted in the previous version it should have been
-> > CONFIG_ARCH_KEEP_MEMBLOCK ;-)
-> > 
-> > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > 
-> > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > > ---
-> > >  arch/s390/kernel/crash_dump.c |  6 ++--
-> > >  include/linux/memblock.h      | 28 ++++++++++++++---
-> > >  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
-> > >  3 files changed, 55 insertions(+), 36 deletions(-)
-> 
-> So I guess this should go via the s390 tree, since the second patch of
-> this series can go only upstream if both this patch and a patch which
-> is currently only on our features are merged before.
-> 
-> Any objections?
+This patchset adds support for the LCD panel of PinePhone.
 
-Not from my side.
+I've tested this on PinePhone 1.0 and 1.2.
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Changes in v7:
+- Removed mode.vrefresh, rebased onto next-20200701
+- v6->v7 diff: https://megous.com/dl/tmp/v6-v7.patch
+
+Changes in v6:
+- Fixed spacing in yaml
+- Fixed wrong vccio->iovcc supply name in the bindings doc
+- I noticed that the original driver uses a delay of 20ms in the init
+  function to achieve a combined total of 120ms required from post-reset
+  to display_on. I've added a similar delay to xbd599_init, so that
+  xbd599 panel also has the right timing. (patch 9)
+- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+- Added review/ack tags
+- Learned to run dt_binding_check by myself ;)
+
+Changes in v5:
+- rewritten on top of rocktech-jh057n00900 driver
+- rocktech-jh057n00900 renamed to st7703 (controller name)
+- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
+
+Changes in v4:
+- use ->type from the mode instead of hardcoding (Samuel)
+- move init_sequence to ->prepare (Samuel)
+- move anti-flicker delay to ->enable, explain it (Samuel)
+- add enter_sleep after display_off (Samuel)
+- drop ->disable (move code to ->unprepare)
+- add ID bytes dumping (Linus)
+  (I can't test it since allwinner DSI driver has a broken
+   dcs_read function, and I didn't manage to fix it.)
+- document magic bytes (Linus)
+- assert reset during powerup
+- cleanup powerup timings according to the datasheet
+
+Changes in v3:
+- Panel driver renamed to the name of the LCD controller
+- Re-organize the driver slightly to more easily support more panels
+  based on the same controller.
+- Add patch to enable the touchscreen to complete the LCD support
+  on PinePhone.
+- Dropped the "DSI fix" patch (the driver seems to work for me without it)
+- Improved brightness levels handling:
+  - PinePhone 1.0 uses default levels generated by the driver
+  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+    default levels can't be used. Martijn Braam came up with a
+    list of duty cycle values that lead to perception of linear
+    brigtness level <-> light intensity on PinePhone 1.1
+- There was some feedback on v2 about this being similar to st7701.
+  It's only similar in name. Most of the "user commands" are different,
+  so I opted to keep this in a new driver instead of creating st770x.
+  
+  Anyone who likes to check the differences, here are datasheets:
+
+  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+  - https://megous.com/dl/tmp/ST7701.pdf
+
+Changes in v2:
+- DT Example fix.
+- DT Format fix.
+- Raised copyright info to 2020.
+- Sort panel operation functions.
+- Sort inclusion.
+
+
+-- For phone owners: --
+
+There's an open question on how to set the backlight brightness values
+on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+to backlight being black. It would be nice if more people can test
+the various backlight levels on 1.1 and 1.2 revision with this change
+in dts:
+
+       brightness-levels = <0 1000>;
+       num-interpolated-steps = <1000>;
+
+and report at what brightness level the backlight turns on. So far it
+seems this has a wide range. Lowest useable duty cycle for me is ~7%
+on 1.2 and for Martijn ~20% on 1.1.
+
+Icenowy Zheng (2):
+  dt-bindings: vendor-prefixes: Add Xingbangda
+  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+
+Ondrej Jirman (11):
+  dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
+  dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
+  drm/panel: rocktech-jh057n00900: Rename the driver to st7703
+  drm/panel: st7703: Rename functions from jh057n prefix to st7703
+  drm/panel: st7703: Prepare for supporting multiple panels
+  drm/panel: st7703: Move code specific to jh057n closer together
+  drm/panel: st7703: Move generic part of init sequence to enable
+    callback
+  drm/panel: st7703: Add support for Xingbangda XBD599
+  drm/panel: st7703: Enter sleep after display off
+  drm/panel: st7703: Assert reset prior to powering down the regulators
+  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+
+ .../display/panel/rocktech,jh057n00900.txt    |  23 -
+ .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
+ drivers/gpu/drm/panel/Kconfig                 |  26 +-
+ drivers/gpu/drm/panel/Makefile                |   2 +-
+ .../drm/panel/panel-rocktech-jh057n00900.c    | 423 -----------
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 654 ++++++++++++++++++
+ 9 files changed, 813 insertions(+), 460 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+ delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+ create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
 
 -- 
-Sincerely yours,
-Mike.
+2.27.0
+
