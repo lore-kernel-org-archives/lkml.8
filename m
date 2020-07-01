@@ -2,227 +2,194 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A73C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E01C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106AA2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXFRvwbs"
+	by mail.kernel.org (Postfix) with ESMTP id 96A832077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgGAPsK (ORCPT
+        id S1732141AbgGAPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:48:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbgGAPsH (ORCPT
+        Wed, 1 Jul 2020 11:49:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51026 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727941AbgGAPtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:48:07 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FC0C08C5C1;
-        Wed,  1 Jul 2020 08:48:07 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id q15so22937968wmj.2;
-        Wed, 01 Jul 2020 08:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mMNtPXYGOcRO7tLq+pEY3fVgHa7bYP6mmW0sBsz4iyE=;
-        b=fXFRvwbsCOJLj/fmIEHNT63bg9uryP3EE/7dDlwF8jxf9jCt5ybmb3ASo/yDalgM7E
-         iwTdhfdu8M7QgWYlCs2nrUf6HK4eHW44JBNnVDASYA7aewFaeaptanrjcwcrhCY/qWFw
-         xRs1dfvHXYXjViIlp4uGKM8SI52W8+umIvErhAL5ZtHkEXB4AUlZocgMiH4qP9ZODywZ
-         kNOtatYRD/dQ7IQzjEtTzlN3B2yz+0KvtPA3dsPXdI7YG2a0DaXBlW1Z85iOuF4Ty8un
-         GRt3oM8R1MVFoFAlXkQsdAsOUEssjZhG+cTHs37GefShIlCnPHklFfmLNBCbwM6TT/jO
-         1pEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mMNtPXYGOcRO7tLq+pEY3fVgHa7bYP6mmW0sBsz4iyE=;
-        b=qb9OSCvVVhfuQ5gsn+2fDYAgRvZ6r+/k2KkDjlm1A5YD+UkMp9a7sjH9tP8hji+DCS
-         GIiKrmUlokjm0bIwTLNKBiMtJ1BUhcRRZH0F6SWxWTtd4uvYSBYll1pMmzJl9DNrvL99
-         d4NJfhkhjGXXkScgNZDPK8xz7ZQEvIgJa5W9w9VoBVfkQqf6AxCoYITkSyxolZW6ykpV
-         dMPA/YkIfhLWmlpwiMuZUid+h3bP6HU7/Z7r14Lsvf467EnJtlfkdHsawUo1Q4dquPBi
-         KRofi00gSV1YlL2F/jHdgIDivrChkyi5zTjfMjP7o0lhLziqfR759C1Q7GVqPJq0l/5G
-         tmQw==
-X-Gm-Message-State: AOAM531mY/l8KlMoEwddea31O3mVmyhlvomJx6MpIomlViah5dLMzj8l
-        7z8FrCuQBdcF9zxuN1TIEc8=
-X-Google-Smtp-Source: ABdhPJwoHEVt0hAkrRlr66NPMNDPJFnAM6h3LAE5obWcBhZRQBZeNju+7ADF5dUGvnRQvhJTsy+gYw==
-X-Received: by 2002:a7b:c403:: with SMTP id k3mr23338033wmi.35.1593618485682;
-        Wed, 01 Jul 2020 08:48:05 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id d63sm7988050wmc.22.2020.07.01.08.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 08:48:05 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 17:48:04 +0200
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200701154804.f4amjgnqmprcfonw@macmini.local>
-References: <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
- <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
- <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
- <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
- <4c3b01af-2337-1eba-4675-6488105144c8@samsung.com>
- <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
- <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
- <ad4e1a73-6de3-68ee-e3b3-b30bc315bd31@samsung.com>
- <691bc55c-5b04-b519-4575-6dce5ea9914c@samsung.com>
- <be215777-54fd-ed84-0709-1d276bc3fe90@arm.com>
+        Wed, 1 Jul 2020 11:49:23 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061FX9mZ020284;
+        Wed, 1 Jul 2020 11:48:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s291fme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 11:48:58 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061FXok1025572;
+        Wed, 1 Jul 2020 11:48:57 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s291fjg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 11:48:56 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061Fdjku001997;
+        Wed, 1 Jul 2020 15:48:53 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d3ph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 15:48:53 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061Fmp1Q63373420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 15:48:51 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 209E74C058;
+        Wed,  1 Jul 2020 15:48:51 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 717A84C04A;
+        Wed,  1 Jul 2020 15:48:49 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.75.158])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Jul 2020 15:48:49 +0000 (GMT)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <f9f0f868-e511-990a-2a74-1806ac0cb7ac@de.ibm.com>
+Date:   Wed, 1 Jul 2020 17:48:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be215777-54fd-ed84-0709-1d276bc3fe90@arm.com>
+In-Reply-To: <20200701153859.GT4332@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 cotscore=-2147483648 priorityscore=1501 adultscore=0
+ mlxscore=0 spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007010110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-29-12-52-10, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> On 6/29/20 2:43 AM, Chanwoo Choi wrote:
-> > Hi,
-> > 
-> > Sorry for late reply because of my perfornal issue. I count not check the email.
-> 
-> I hope you are good now.
-> 
-> > 
-> > On 6/26/20 8:22 PM, Bartlomiej Zolnierkiewicz wrote:
-> > > 
-> > > On 6/25/20 2:12 PM, Kamil Konieczny wrote:
-> > > > On 25.06.2020 14:02, Lukasz Luba wrote:
-> > > > > 
-> > > > > 
-> > > > > On 6/25/20 12:30 PM, Kamil Konieczny wrote:
-> > > > > > Hi Lukasz,
-> > > > > > 
-> > > > > > On 25.06.2020 12:02, Lukasz Luba wrote:
-> > > > > > > Hi Sylwester,
-> > > > > > > 
-> > > > > > > On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
-> > > > > > > > Hi All,
-> > > > > > > > 
-> > > > > > > > On 24.06.2020 12:32, Lukasz Luba wrote:
-> > > > > > > > > I had issues with devfreq governor which wasn't called by devfreq
-> > > > > > > > > workqueue. The old DELAYED vs DEFERRED work discussions and my patches
-> > > > > > > > > for it [1]. If the CPU which scheduled the next work went idle, the
-> > > > > > > > > devfreq workqueue will not be kicked and devfreq governor won't check
-> > > > > > > > > DMC status and will not decide to decrease the frequency based on low
-> > > > > > > > > busy_time.
-> > > > > > > > > The same applies for going up with the frequency. They both are
-> > > > > > > > > done by the governor but the workqueue must be scheduled periodically.
-> > > > > > > > 
-> > > > > > > > As I have been working on resolving the video mixer IOMMU fault issue
-> > > > > > > > described here: https://patchwork.kernel.org/patch/10861757
-> > > > > > > > I did some investigation of the devfreq operation, mostly on Odroid U3.
-> > > > > > > > 
-> > > > > > > > My conclusions are similar to what Lukasz says above. I would like to add
-> > > > > > > > that broken scheduling of the performance counters read and the devfreq
-> > > > > > > > updates seems to have one more serious implication. In each call, which
-> > > > > > > > normally should happen periodically with fixed interval we stop the counters,
-> > > > > > > > read counter values and start the counters again. But if period between
-> > > > > > > > calls becomes long enough to let any of the counters overflow, we will
-> > > > > > > > get wrong performance measurement results. My observations are that
-> > > > > > > > the workqueue job can be suspended for several seconds and conditions for
-> > > > > > > > the counter overflow occur sooner or later, depending among others
-> > > > > > > > on the CPUs load.
-> > > > > > > > Wrong bus load measurement can lead to setting too low interconnect bus
-> > > > > > > > clock frequency and then bad things happen in peripheral devices.
-> > > > > > > > 
-> > > > > > > > I agree the workqueue issue needs to be fixed. I have some WIP code to use
-> > > > > > > > the performance counters overflow interrupts instead of SW polling and with
-> > > > > > > > that the interconnect bus clock control seems to work much better.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Thank you for sharing your use case and investigation results. I think
-> > > > > > > we are reaching a decent number of developers to maybe address this
-> > > > > > > issue: 'workqueue issue needs to be fixed'.
-> > > > > > > I have been facing this devfreq workqueue issue ~5 times in different
-> > > > > > > platforms.
-> > > > > > > 
-> > > > > > > Regarding the 'performance counters overflow interrupts' there is one
-> > > > > > > thing worth to keep in mind: variable utilization and frequency.
-> > > > > > > For example, in order to make a conclusion in algorithm deciding that
-> > > > > > > the device should increase or decrease the frequency, we fix the period
-> > > > > > > of observation, i.e. to 500ms. That can cause the long delay if the
-> > > > > > > utilization of the device suddenly drops. For example we set an
-> > > > > > > overflow threshold to value i.e. 1000 and we know that at 1000MHz
-> > > > > > > and full utilization (100%) the counter will reach that threshold
-> > > > > > > after 500ms (which we want, because we don't want too many interrupts
-> > > > > > > per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
-> > > > > > > to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
-> > > > > > > threshold after 50*500ms = 25s. It is impossible just for the counters
-> > > > > > > to predict next utilization and adjust the threshold. [...]
-> > > > > > 
-> > > > > > irq triggers for underflow and overflow, so driver can adjust freq
-> > > > > > 
-> > > > > 
-> > > > > Probably possible on some platforms, depends on how many PMU registers
-> > > > > are available, what information can be can assign to them and type of
-> > > > > interrupt. A lot of hassle and still - platform and device specific.
-> > > > > Also, drivers should not adjust the freq, governors (different types
-> > > > > of them with different settings that they can handle) should do it.
-> > > > > 
-> > > > > What the framework can do is to take this responsibility and provide
-> > > > > generic way to monitor the devices (or stop if they are suspended).
-> > > > > That should work nicely with the governors, which try to predict the
-> > > > > next best frequency. From my experience the more fluctuating intervals
-> > > > > the governors are called, the more odd decisions they make.
-> > > > > That's why I think having a predictable interval i.e. 100ms is something
-> > > > > desirable. Tuning the governors is easier in this case, statistics
-> > > > > are easier to trace and interpret, solution is not to platform specific,
-> > > > > etc.
-> > > > > 
-> > > > > Kamil do you have plans to refresh and push your next version of the
-> > > > > workqueue solution?
-> > > > 
-> > > > I do not, as Bartek takes over my work,
-> > > > +CC Bartek
-> > > 
-> > > Hi Lukasz,
-> > > 
-> > > As you remember in January Chanwoo has proposed another idea (to allow
-> > > selecting workqueue type by devfreq device driver):
-> > > 
-> > > "I'm developing the RFC patch and then I'll send it as soon as possible."
-> > > (https://lore.kernel.org/linux-pm/6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com/)
-> > > 
-> > > "After posting my suggestion, we can discuss it"
-> > > (https://lore.kernel.org/linux-pm/f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com/)
-> > > 
-> > > so we have been waiting on the patch to be posted..
-> > 
-> > Sorry for this. I'll send it within few days.
-> 
-> 
-> Feel free to add me on CC, I can review&test the patches if you like.
 
-Please CC me too.
 
+On 01.07.20 17:38, Luis Chamberlain wrote:
+> On Wed, Jul 01, 2020 at 11:08:57PM +0900, Tetsuo Handa wrote:
+>> On 2020/07/01 22:53, Luis Chamberlain wrote:
+>>>> Well, it is not br_stp_call_user() but br_stp_start() which is expecting
+>>>> to set sub_info->retval for both KWIFEXITED() case and KWIFSIGNALED() case.
+>>>> That is, sub_info->retval needs to carry raw value (i.e. without "umh: fix
+>>>> processed error when UMH_WAIT_PROC is used" will be the correct behavior).
+>>>
+>>> br_stp_start() doesn't check for the raw value, it just checks for err
+>>> or !err. So the patch, "umh: fix processed error when UMH_WAIT_PROC is
+>>> used" propagates the correct error now.
+>>
+>> No. If "/sbin/bridge-stp virbr0 start" terminated due to e.g. SIGSEGV
+>> (for example, by inserting "kill -SEGV $$" into right after "#!/bin/sh" line),
+>> br_stp_start() needs to select BR_KERNEL_STP path. We can't assume that
+>> /sbin/bridge-stp is always terminated by exit() syscall (and hence we can't
+>> ignore KWIFSIGNALED() case in call_usermodehelper_exec_sync()).
 > 
-> Stay safe and healthy.
+> Ah, well that would be a different fix required, becuase again,
+> br_stp_start() does not untangle the correct error today really.
+> I also I think it would be odd odd that SIGSEGV or another signal 
+> is what was terminating Christian's bridge stp call, but let's
+> find out!
 > 
-> Regards,
-> Lukasz
+> Note we pass 0 to the options to wait so the mistake here could indeed
+> be that we did not need KWIFSIGNALED(). I was afraid of this prospect...
+> as it other implications.
 > 
-Cheers,
-Willy
+> It means we either *open code* all callers, or we handle this in a
+> unified way on the umh. And if we do handle this in a unified way, it
+> then begs the question as to *what* do we pass for the signals case and
+> continued case. Below we just pass the signal, and treat continued as
+> OK, but treating continued as OK would also be a *new* change as well.
+> 
+> For instance (this goes just boot tested, but Christian if you can
+> try this as well that would be appreciated):
+
+
+Does not help, the bridge stays in DOWN state. 
