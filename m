@@ -2,77 +2,60 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F898C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D544EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBAB720702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDD520702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgGAOLv (ORCPT
+        id S1731427AbgGAOM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:11:51 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60283 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731153AbgGAOLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:11:50 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 061E90OX093153;
-        Wed, 1 Jul 2020 23:09:00 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
- Wed, 01 Jul 2020 23:09:00 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 061E8xWB093138
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 1 Jul 2020 23:08:59 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
-Date:   Wed, 1 Jul 2020 23:08:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+        Wed, 1 Jul 2020 10:12:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17537 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730307AbgGAOM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:12:27 -0400
+IronPort-SDR: Xzxg9+pywGS1QZFZdaKUQ60+pY3yuhAjqKcxpWYhpbDZKpSwgiTSPpWpT0oeoNnbH0S3uexuI8
+ nnUkhHHZyxAA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144086420"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="144086420"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:12:27 -0700
+IronPort-SDR: 2gRFfydadHrNTFFz1trRa8xVauxhWiln8rNZlIWTanAV7EKsJzX5Lcu7siDqwep6s1HHNQ3Qew
+ mLi4N+CbI+ew==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455118274"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.175.105]) ([10.249.175.105])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:12:24 -0700
+Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Chenyi Qiang <chenyi.qiang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200628085341.5107-1-chenyi.qiang@intel.com>
+ <20200628085341.5107-3-chenyi.qiang@intel.com>
+ <878sg3bo8b.fsf@vitty.brq.redhat.com>
+ <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
+ <87366bbe1y.fsf@vitty.brq.redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
+Date:   Wed, 1 Jul 2020 22:12:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200701135324.GS4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <87366bbe1y.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,19 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/01 22:53, Luis Chamberlain wrote:
->> Well, it is not br_stp_call_user() but br_stp_start() which is expecting
->> to set sub_info->retval for both KWIFEXITED() case and KWIFSIGNALED() case.
->> That is, sub_info->retval needs to carry raw value (i.e. without "umh: fix
->> processed error when UMH_WAIT_PROC is used" will be the correct behavior).
+On 7/1/2020 8:44 PM, Vitaly Kuznetsov wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
 > 
-> br_stp_start() doesn't check for the raw value, it just checks for err
-> or !err. So the patch, "umh: fix processed error when UMH_WAIT_PROC is
-> used" propagates the correct error now.
+>> On 7/1/2020 5:04 PM, Vitaly Kuznetsov wrote:
+>>> Chenyi Qiang <chenyi.qiang@intel.com> writes:
+>> [...]
+>>>>    static const int kvm_vmx_max_exit_handlers =
+>>>> @@ -6830,6 +6838,13 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>>>    	if (unlikely(vmx->exit_reason.failed_vmentry))
+>>>>    		return EXIT_FASTPATH_NONE;
+>>>>    
+>>>> +	/*
+>>>> +	 * check the exit_reason to see if there is a bus lock
+>>>> +	 * happened in guest.
+>>>> +	 */
+>>>> +	if (vmx->exit_reason.bus_lock_detected)
+>>>> +		handle_bus_lock(vcpu);
+>>>
+>>> In case the ultimate goal is to have an exit to userspace on bus lock,
+>>
+>> I don't think we will need an exit to userspace on bus lock. See below.
+>>
+>>> the two ways to reach handle_bus_lock() are very different: in case
+>>> we're handling EXIT_REASON_BUS_LOCK we can easily drop to userspace by
+>>> returning 0 but what are we going to do in case of
+>>> exit_reason.bus_lock_detected? The 'higher priority VM exit' may require
+>>> exit to userspace too. So what's the plan? Maybe we can ignore the case
+>>> when we're exiting to userspace for some other reason as this is slow
+>>> already and force the exit otherwise?
+>>
+>>> And should we actually introduce
+>>> the KVM_EXIT_BUS_LOCK and a capability to enable it here?
+>>>
+>>
+>> Introducing KVM_EXIT_BUS_LOCK maybe help nothing. No matter
+>> EXIT_REASON_BUS_LOCK or exit_reason.bus_lock_detected, the bus lock has
+>> already happened. Exit to userspace cannot prevent bus lock, so what
+>> userspace can do is recording and counting as what this patch does in
+>> vcpu->stat.bus_locks.
+> 
+> Exiting to userspace would allow to implement custom 'throttling'
+> policies to mitigate the 'noisy neighbour' problem. The simplest would
+> be to just inject some sleep time.
+> 
 
-No. If "/sbin/bridge-stp virbr0 start" terminated due to e.g. SIGSEGV
-(for example, by inserting "kill -SEGV $$" into right after "#!/bin/sh" line),
-br_stp_start() needs to select BR_KERNEL_STP path. We can't assume that
-/sbin/bridge-stp is always terminated by exit() syscall (and hence we can't
-ignore KWIFSIGNALED() case in call_usermodehelper_exec_sync()).
+So you want an exit to userspace for every bus lock and leave it all to 
+userspace. Yes, it's doable.
 
+As you said, the exit_reason.bus_lock_detected case is the tricky one. 
+We cannot do the similar to extend vcpu->run->exit_reason, this breaks 
+ABI. Maybe we can extend the vcpu->run->flags to indicate bus lock 
+detected for the other exit reason?
