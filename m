@@ -2,97 +2,236 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E154FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0300206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593571681;
-	bh=WTGi74V/M6JRB3BLDWs0zeSTaQWxQakpQtHy05f1GGg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q/+yNYIlpehMqVwCNSE8jLJ6mWExXHpZGLb8fNw222+8RovLIGj7dX7MnEc59b7DT
-	 m+n8JJze4JHj1olhCETuImsEfBA9RRN/UAwrvp/knHFEXEeIz59I+PS96mhQrqM3lu
-	 4HbPhDxOZj4+EXhkAUDF6yWkUlReMFXalvSyNu7U=
+	by mail.kernel.org (Postfix) with ESMTP id 55EC5206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgGACsA (ORCPT
+        id S1726929AbgGACsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 22:48:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29584 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgGACr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:47:59 -0400
-Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8C58206EB;
-        Wed,  1 Jul 2020 02:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593571678;
-        bh=WTGi74V/M6JRB3BLDWs0zeSTaQWxQakpQtHy05f1GGg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mUY4V98q0IugIwaSjIBz0UE5DT7Y59IxduswVw5uo7NzpDfjNo8GRdV8kvAjjGnyO
-         x5HTMhgZAaqfXE8borCroalaROYxeqO2w/SSgJvvqfiCG5M1TyV0+fKDmIKsNVfi/Z
-         arubItYYt+8QyyeRmClKXcCdrjIOYglPFyJuWc70=
-Date:   Tue, 30 Jun 2020 19:47:55 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com, stable@kernel.org
-Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
-Message-Id: <20200630194755.61f56a55d46222f8d0c84bdd@linux-foundation.org>
-In-Reply-To: <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
-References: <20200626003459.D8E015CA@viggo.jf.intel.com>
-        <20200629065203.GJ3346@MiWiFi-R3L-srv>
-        <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
-        <20200629233043.GK3346@MiWiFi-R3L-srv>
-        <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725988AbgGACsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:48:36 -0400
+IronPort-SDR: yfk2t2wjx8iZNqxpJzXgkJA8rdy5/cyOSSRlpS0moUqdT+8PmUq3c3xHihE6Ti33wkebRHy07l
+ MHZ9y31l/pcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="231310019"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="231310019"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:48:34 -0700
+IronPort-SDR: ZqRl8Eli7g9xOCZspJgGaUXH7TtPL43fJdA9ke8V+r/KER1ppSGrCmvPTitUSk0Pgaq/tge/YT
+ fyY1GgGBnmJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="295409057"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga002.jf.intel.com with ESMTP; 30 Jun 2020 19:48:31 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] iommu/vt-d: Add page response ops support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+References: <20200628003332.5720-1-baolu.lu@linux.intel.com>
+ <20200628003332.5720-5-baolu.lu@linux.intel.com>
+ <MWHPR11MB1645B92B81D6A1F7EDAC24848C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <57d6ced7-943e-a93b-8f6d-11516e9f07b2@linux.intel.com>
+Date:   Wed, 1 Jul 2020 10:44:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <MWHPR11MB1645B92B81D6A1F7EDAC24848C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 16:37:37 -0700 Dave Hansen <dave.hansen@intel.com> wrote:
+Hi Kevin,
 
-> On 6/29/20 4:30 PM, Baoquan He wrote:
-> >> The only way I can plausibly think of "cleaning up" the RECLAIM_ZONE bit
-> >> would be to raise our confidence that it is truly unused.  That takes
-> >> time, and probably a warning if we see it being set.  If we don't run
-> >> into anybody setting it or depending on it being set in a few years, we
-> >> can remove it.
-> > So adding the old bit back for compatibility looks good, thanks.
-> > 
-> > Then we have to be very careful when adding and reviewing new
-> > interface introducing, should not leave one which might be used
-> > in the future.
-> > 
-> > In fact, RECLAIM_ZONE is not completely useless. At least, when the old
-> > bit 0 is set, it may enter into node_reclaim() in get_page_from_freelist(),
-> > that makes it like a switch.
-> > 
-> > get_page_from_freelist {
-> > 
-> > 	...
-> >                         if (node_reclaim_mode == 0 ||                                                                                             
-> >                             !zone_allows_reclaim(ac->preferred_zoneref->zone, zone))
-> >                                 continue;
-> > 	...
-> > }
+On 6/30/20 2:19 PM, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Sunday, June 28, 2020 8:34 AM
+>>
+>> After a page request is handled, software must response the device which
+>> raised the page request with the handling result. This is done through
+>> the iommu ops.page_response if the request was reported to outside of
+>> vendor iommu driver through iommu_report_device_fault(). This adds the
+>> VT-d implementation of page_response ops.
+>>
+>> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
+>> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c |  1 +
+>>   drivers/iommu/intel/svm.c   | 73
+>> +++++++++++++++++++++++++++++++++++++
+>>   include/linux/intel-iommu.h |  3 ++
+>>   3 files changed, 77 insertions(+)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index de17952ed133..7eb29167e8f9 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -6057,6 +6057,7 @@ const struct iommu_ops intel_iommu_ops = {
+>>   	.sva_bind		= intel_svm_bind,
+>>   	.sva_unbind		= intel_svm_unbind,
+>>   	.sva_get_pasid		= intel_svm_get_pasid,
+>> +	.page_response		= intel_svm_page_response,
+>>   #endif
+>>   };
+>>
+>> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+>> index 4800bb6f8794..003ea9579632 100644
+>> --- a/drivers/iommu/intel/svm.c
+>> +++ b/drivers/iommu/intel/svm.c
+>> @@ -1092,3 +1092,76 @@ int intel_svm_get_pasid(struct iommu_sva *sva)
+>>
+>>   	return pasid;
+>>   }
+>> +
+>> +int intel_svm_page_response(struct device *dev,
+>> +			    struct iommu_fault_event *evt,
+>> +			    struct iommu_page_response *msg)
+>> +{
+>> +	struct iommu_fault_page_request *prm;
+>> +	struct intel_svm_dev *sdev;
+>> +	struct intel_iommu *iommu;
+>> +	struct intel_svm *svm;
+>> +	bool private_present;
+>> +	bool pasid_present;
+>> +	bool last_page;
+>> +	u8 bus, devfn;
+>> +	int ret = 0;
+>> +	u16 sid;
+>> +
+>> +	if (!dev || !dev_is_pci(dev))
+>> +		return -ENODEV;
+>> +
+>> +	iommu = device_to_iommu(dev, &bus, &devfn);
+>> +	if (!iommu)
+>> +		return -ENODEV;
 > 
-> Oh, that's a very good point.  There are a couple of those around.  Let
-> me circle back and update the documentation and the variable name.  I'll
-> send out another version.
+> move to the place when iommu is referenced. This place is too early.
 
-Was the omission of cc:stable deliberate?
+I took this as a sanity check. If the device has no iommu backed, we
+should consider it as an invalid input.
 
+> 
+>> +
+>> +	if (!msg || !evt)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&pasid_mutex);
+>> +
+>> +	prm = &evt->fault.prm;
+>> +	sid = PCI_DEVID(bus, devfn);
+>> +	pasid_present = prm->flags &
+>> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+>> +	private_present = prm->flags &
+>> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
+>> +	last_page = prm->flags &
+>> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
+>> +
+>> +	if (pasid_present) {
+>> +		/* VT-d supports devices with full 20 bit PASIDs only */
+>> +		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX) {
+>> +			ret = -EINVAL;
+>> +			goto out;
+>> +		}
+> 
+> shouldn't we check prm->pasid here? Above is more reasonable to be
+> checked when page request is reported.
+
+Yes. I will check the pasid in both places.
+
+> 
+>> +
+>> +		ret = pasid_to_svm_sdev(dev, prm->pasid, &svm, &sdev);
+>> +		if (ret || !sdev)
+> 
+> if sdev==NULL, suppose an error (-ENODEV) should be returned here?
+
+Yes. Good catch. I should return an error if sdev==NULL.
+
+> 
+>> +			goto out;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Per VT-d spec. v3.0 ch7.7, system software must respond
+>> +	 * with page group response if private data is present (PDP)
+>> +	 * or last page in group (LPIG) bit is set. This is an
+>> +	 * additional VT-d feature beyond PCI ATS spec.
+> 
+> feature->requirement
+
+Agreed.
+
+> 
+> Thanks
+> Kevin
+
+Best regards,
+baolu
+
+> 
+>> +	 */
+>> +	if (last_page || private_present) {
+>> +		struct qi_desc desc;
+>> +
+>> +		desc.qw0 = QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid)
+>> |
+>> +				QI_PGRP_PASID_P(pasid_present) |
+>> +				QI_PGRP_PDP(private_present) |
+>> +				QI_PGRP_RESP_CODE(msg->code) |
+>> +				QI_PGRP_RESP_TYPE;
+>> +		desc.qw1 = QI_PGRP_IDX(prm->grpid) |
+>> QI_PGRP_LPIG(last_page);
+>> +		desc.qw2 = 0;
+>> +		desc.qw3 = 0;
+>> +		if (private_present)
+>> +			memcpy(&desc.qw2, prm->private_data,
+>> +			       sizeof(prm->private_data));
+>> +
+>> +		qi_submit_sync(iommu, &desc, 1, 0);
+>> +	}
+>> +out:
+>> +	mutex_unlock(&pasid_mutex);
+>> +	return ret;
+>> +}
+>> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+>> index fc2cfc3db6e1..bf6009a344f5 100644
+>> --- a/include/linux/intel-iommu.h
+>> +++ b/include/linux/intel-iommu.h
+>> @@ -741,6 +741,9 @@ struct iommu_sva *intel_svm_bind(struct device
+>> *dev, struct mm_struct *mm,
+>>   				 void *drvdata);
+>>   void intel_svm_unbind(struct iommu_sva *handle);
+>>   int intel_svm_get_pasid(struct iommu_sva *handle);
+>> +int intel_svm_page_response(struct device *dev, struct iommu_fault_event
+>> *evt,
+>> +			    struct iommu_page_response *msg);
+>> +
+>>   struct svm_dev_ops;
+>>
+>>   struct intel_svm_dev {
+>> --
+>> 2.17.1
+> 
