@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2793CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05C0E2083E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986DF20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593620316;
-	bh=6Y1U4n1w/Mwul+Pj0L0xUzIUgPXcO9Kst+MOvUbSY2s=;
+	s=default; t=1593620318;
+	bh=/WuA5zewzHKvbAPia2dkg6Y/bc4K4QKZQSJbdXtaQio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGcqqoUqqvy5c7E301Uw7nfsvqXgZ4ziB+oDLgDBel3q26KG0AFaOks7Xa5dDeKQL
-	 UsKeh3TaCrHZ6t8XSjFIU6pcTIFXIxXtivKcv4pRNknAshf0MzqAC00jKhtbrgIEsW
-	 /w6rOnfZrOssU+ISYn+SeE9CHWeiUq5IdIXQ4ids=
+	b=pb4T+hB2PLWBT4pknQj5PsGlheGusLLDQxcIGqSva+EupBaMoLBoOIfVx+OFmcaf4
+	 ogNIjVKzRo247ozgiFWa5/yyFDYBMca/b81W7v51x4O8oAgZRquA7L/igV9WhN+mwd
+	 vi9D4X30IYMxWh/apVoyUhKgZD3mqPKqynrJeqlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbgGAQSe (ORCPT
+        id S1732364AbgGAQSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 12:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731123AbgGAQSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:18:32 -0400
+        id S1732298AbgGAQSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:18:33 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4401207F5;
-        Wed,  1 Jul 2020 16:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215CB2080D;
+        Wed,  1 Jul 2020 16:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593620311;
-        bh=6Y1U4n1w/Mwul+Pj0L0xUzIUgPXcO9Kst+MOvUbSY2s=;
+        s=default; t=1593620313;
+        bh=/WuA5zewzHKvbAPia2dkg6Y/bc4K4QKZQSJbdXtaQio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gills0sEgGSYnA+q34nYmpLit39RTi+Prt+qDpWR4ZlkqpF1C+FNsk9gAT0ZJP/v4
-         w/uPfTjXGhqnLqh3825vQK7ex/UnRjtmC7BUL3ogov7HJD6e9n54FsLRI1bjZc6s45
-         UuBVTUGY92icEUYTK6Iw5ilrzloP5k9E9KqfcW/A=
+        b=MHLDxf/FS3X1ObYlTdGOqzhDOJLpfVP6rASe63G7FaJZtn3g6PwufhS/woQAi0vgz
+         oVf+RQaT6MThWModZW9SnAk7kK5IZlq2EfWcOwtnn3e7kJXO+ey6gjUlpLL7ZIb8Km
+         rWDgYsQNKCWFtN0xNpukkS4+dotBqTeiIT5PbVFE=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jqfRO-0087Zf-8O; Wed, 01 Jul 2020 17:18:30 +0100
+        id 1jqfRP-0087Zf-LM; Wed, 01 Jul 2020 17:18:31 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
@@ -53,9 +53,9 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel-team@android.com
-Subject: [PATCH 1/3] arm64: Introduce a way to disable the 32bit vdso
-Date:   Wed,  1 Jul 2020 17:18:22 +0100
-Message-Id: <20200701161824.1346732-2-maz@kernel.org>
+Subject: [PATCH 3/3] arm64: timers: Disable the compat vdso for cores affected by ARM64_WORKAROUND_1418040
+Date:   Wed,  1 Jul 2020 17:18:24 +0100
+Message-Id: <20200701161824.1346732-4-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200701161824.1346732-1-maz@kernel.org>
 References: <20200701161824.1346732-1-maz@kernel.org>
@@ -70,65 +70,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a class of errata (grouped under the ARM64_WORKAROUND_1418040
-banner) that force the trapping of counter access from 32bit EL0.
+ARM64_WORKAROUND_1418040 requires that AArch32 EL0 accesses to
+the virtual counter register are trapped and emulated by the kernel.
+This makes the vdso pretty pointless, and in some cases livelock
+prone.
 
-We would normally disable the whole vdso for such defect, except that
-it would disable it for 64bit userspace as well, which is a shame.
-
-Instead, add a new vdso_clock_mode, which signals that the vdso
-isn't usable for compat tasks.  This gets checked in the new
-vdso_clocksource_ok() helper, now provided for the 32bit vdso.
+Provide a workaround entry that limits the vdso to 64bit tasks.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/include/asm/vdso/clocksource.h         | 7 +++++--
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 8 +++++++-
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/clocksource/arm_arch_timer.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/include/asm/vdso/clocksource.h b/arch/arm64/include/asm/vdso/clocksource.h
-index df6ea65c1dec..b054d9febfb5 100644
---- a/arch/arm64/include/asm/vdso/clocksource.h
-+++ b/arch/arm64/include/asm/vdso/clocksource.h
-@@ -2,7 +2,10 @@
- #ifndef __ASM_VDSOCLOCKSOURCE_H
- #define __ASM_VDSOCLOCKSOURCE_H
- 
--#define VDSO_ARCH_CLOCKMODES	\
--	VDSO_CLOCKMODE_ARCHTIMER
-+#define VDSO_ARCH_CLOCKMODES					\
-+	/* vdso clocksource for both 32 and 64bit tasks */	\
-+	VDSO_CLOCKMODE_ARCHTIMER,				\
-+	/* vdso clocksource for 64bit tasks only */		\
-+	VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT
- 
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index f828835c568f..9c61252e7d99 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -480,6 +480,14 @@ static const struct arch_timer_erratum_workaround ool_workarounds[] = {
+ 		.set_next_event_virt = erratum_set_next_event_tval_virt,
+ 	},
  #endif
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index b6907ae78e53..9a625e8947ff 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -111,7 +111,7 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- 	 * update. Return something. Core will do another round and then
- 	 * see the mode change and fallback to the syscall.
- 	 */
--	if (clock_mode == VDSO_CLOCKMODE_NONE)
-+	if (clock_mode != VDSO_CLOCKMODE_ARCHTIMER)
- 		return 0;
++#ifdef CONFIG_ARM64_ERRATUM_1418040
++	{
++		.match_type = ate_match_local_cap_id,
++		.id = (void *)ARM64_WORKAROUND_1418040,
++		.desc = "ARM erratum 1418040",
++		.vdso_clock_mode = VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT,
++	},
++#endif
+ };
  
- 	/*
-@@ -152,6 +152,12 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
- 	return ret;
- }
- 
-+static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
-+{
-+	return vd->clock_mode == VDSO_CLOCKMODE_ARCHTIMER;
-+}
-+#define vdso_clocksource_ok	vdso_clocksource_ok
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+ typedef bool (*ate_match_fn_t)(const struct arch_timer_erratum_workaround *,
 -- 
 2.27.0
 
