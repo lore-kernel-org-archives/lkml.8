@@ -2,91 +2,187 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB82BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C822078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593622428;
-	bh=Hfe5HwP2aw9t1r4VEHxhETqCfmXJeV53dYWyXDkCYbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l4Lxykfmq7ID63nNwVQHoJ4x2gr0nw/21FP9m1mqIY2rbS15hDhefus3poODzo0Au
-	 IUaJvuOIloUmVsBGYMl2/1MljK5Cdyyi3JJuQSAO3kZ3AFCz3Xr57ZsERcT9EfJLi6
-	 wONdwIcZktZjyWvizwTmSZFAz0QKu2OH+4V0dk50=
+	by mail.kernel.org (Postfix) with ESMTP id 3B1E32078D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYs89PTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbgGAQxr (ORCPT
+        id S1732764AbgGAQxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:53:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35638 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732376AbgGAQxo (ORCPT
+        Wed, 1 Jul 2020 12:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732746AbgGAQxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:53:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z2so2556407wrp.2;
-        Wed, 01 Jul 2020 09:53:42 -0700 (PDT)
+        Wed, 1 Jul 2020 12:53:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43EFC08C5C1;
+        Wed,  1 Jul 2020 09:53:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u5so11255621pfn.7;
+        Wed, 01 Jul 2020 09:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VpvTkVw9gP0gieUNtOeeRSACQ5wHhf9d1RaVLsH798Y=;
+        b=sYs89PTZINTXJnt11cIafFjIOSJF8HXHsMbz7WOZTmOZKLA309t8bsbkoGqeyY6sr/
+         p2P5K8/GDUmAai4s2kbTQdU4TC3BVd8f5WDomk4Xz8uxff2ItFjC/2qabv3ZHvI0LiLK
+         i17OaLXNdVEEruJcGC6alMTtqg7ZEyvTbSGCQQhcPnI35fF4TgsVNWO4LxVIZRyWKUP/
+         e7qQi0AcBnvyQp09tBJDdz0kXTDCdMFGwod1riaHLj1uNKGOOdltPHU7rdPUveyQi+G0
+         kJQy3VC6aHfE7m1yrRNHlZ3QaR/KBtxM6Tv/hj1iYL9/S0AeV8XL+3pmsUnrdPzZdFxs
+         WSeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W4aGIA2sVJUTFvh2lVc0/GV3kZcbHmAaStG8roUdCNw=;
-        b=gIrprbonIy7G7RMYu/VoAhSVIYYfOEP67ud/4mRHrbK1r4VScHIPT8STviwrB4D7f8
-         q29TzkF1sx5IWkB9esI5lATDeFyJijcIyDvhprWshxFKwURC2iKD4xP5wVpk0dla4PRw
-         tejf0L4GOs6rhCM7Prxib05+270pzwp4v+hPHAcBsixD8lMcUyE465ASvtU8SDwoLY00
-         2cqKqAqKWvwCMYB76DjH/udHBaVNT80bYX2n4MeOEzC81UJJC6m6X0vxXlLpeU7/AVFw
-         cz3o+fYlfm21GeyZZxBSZN4dkQJ+giRonaHnfoXeVEg/SOoFWtTge8ODLDt7JfD4BOlw
-         y4rA==
-X-Gm-Message-State: AOAM533/HdQz1PTMu4YMcj788w80Sy3wZWFqwHTuOYhI/vW8kC28UnHQ
-        tnEIG4rIn/NHwjLyU0sSXGE=
-X-Google-Smtp-Source: ABdhPJwDeOcChvL4k1hvA2Wrl3bOGcuv+/K+qh4jbWPUqi49VCCIXQ4o5bN2tWQsS2duRI5B5elz0g==
-X-Received: by 2002:a5d:458a:: with SMTP id p10mr27066648wrq.184.1593622421731;
-        Wed, 01 Jul 2020 09:53:41 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n14sm8290457wro.81.2020.07.01.09.53.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VpvTkVw9gP0gieUNtOeeRSACQ5wHhf9d1RaVLsH798Y=;
+        b=dMcI8dkiadL+5CQvJb9Wszz2B30rKst81w9Kh/IGZrY0Orw8ZORig0Tzt0eKqTZB0k
+         GDL9MGaB6JLIf0bakGKuXsVqoSPnRnK1yQqNyVoXoPhWaXWXHp/T8Dx9EEW4rccoQU0Y
+         9k05QaqSOyBB2+9zhKYDB5botedh5b9xRM16d61uBKMSkoaF/AUS0elMMWf/ej4aIIaW
+         KFDKkr/ltl8FnbfncGM2nuZqZZhcr7Elh92YBFgsKfAEJp8xUecJ0LYXR6Ufj78zbPjx
+         B8uujnHkv11F629UKcdY2vJopx5MSwv4hGBJb4QYUHo5vWa/YdM2qOFCM8JN+bsd2RNT
+         pAag==
+X-Gm-Message-State: AOAM530JW5SUDbUthGAYtPwUcJhAzoYEabc6rtdCJvg7tbsMFRnJSvYD
+        lTi0xuotJhcyb7hEIYESfJs=
+X-Google-Smtp-Source: ABdhPJxmeXvRoy1T5abLDqP+AB7MFrZOPWJ/Rgrj/k8nAQvYiM8EJUJ7yiNsE0QLiGe2Xw0A8lWuLQ==
+X-Received: by 2002:a63:9d87:: with SMTP id i129mr20955167pgd.412.1593622426332;
+        Wed, 01 Jul 2020 09:53:46 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id g140sm6297437pfb.48.2020.07.01.09.53.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 09:53:41 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 16:53:39 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     t-mabelt@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        parri.andrea@gmail.com, Andres Beltran <lkmlabelt@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] scsi: storvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Message-ID: <20200701165339.chtxkixnkocnjw5u@liuwe-devbox-debian-v2>
-References: <20200701001221.2540-1-lkmlabelt@gmail.com>
- <20200701001221.2540-3-lkmlabelt@gmail.com>
+        Wed, 01 Jul 2020 09:53:45 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Dillow <dave@thedillows.org>,
+        Ion Badulescu <ionut@badula.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Ajit Khaparde <ajit.khaparde@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Jon Mason <jdmason@kudzu.us>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 09/11] ksz884x: use generic power management
+Date:   Wed,  1 Jul 2020 22:20:55 +0530
+Message-Id: <20200701165057.667799-10-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
+References: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701001221.2540-3-lkmlabelt@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:12:20PM -0400, Andres Beltran wrote:
-> Currently, pointers to guest memory are passed to Hyper-V as
-> transaction IDs in storvsc. In the face of errors or malicious
-> behavior in Hyper-V, storvsc should not expose or trust the transaction
-> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> use small integers generated by vmbus_requestor as requests
-> (transaction) IDs.
-> 
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-James and Martin, FYI I'm going to take this patch via hyperv tree
-because it depends on the first patch.
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
 
-Wei.
+Thus, there is no need to call the PCI helper functions like
+pci_enable_wake(), pci_save/restore_sate() and
+pci_set_power_state().
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/net/ethernet/micrel/ksz884x.c | 25 +++++++++----------------
+ 1 file changed, 9 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/ethernet/micrel/ksz884x.c b/drivers/net/ethernet/micrel/ksz884x.c
+index 4fe6aedca22f..24901342ecc0 100644
+--- a/drivers/net/ethernet/micrel/ksz884x.c
++++ b/drivers/net/ethernet/micrel/ksz884x.c
+@@ -7155,17 +7155,14 @@ static void pcidev_exit(struct pci_dev *pdev)
+ 	kfree(info);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int pcidev_resume(struct pci_dev *pdev)
++static int __maybe_unused pcidev_resume(struct device *dev_d)
+ {
+ 	int i;
+-	struct platform_info *info = pci_get_drvdata(pdev);
++	struct platform_info *info = dev_get_drvdata(dev_d);
+ 	struct dev_info *hw_priv = &info->dev_info;
+ 	struct ksz_hw *hw = &hw_priv->hw;
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	pci_enable_wake(pdev, PCI_D0, 0);
++	device_wakeup_disable(dev_d);
+ 
+ 	if (hw_priv->wol_enable)
+ 		hw_cfg_wol_pme(hw, 0);
+@@ -7182,10 +7179,10 @@ static int pcidev_resume(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-static int pcidev_suspend(struct pci_dev *pdev, pm_message_t state)
++static int pcidev_suspend(struct device *dev_d)
+ {
+ 	int i;
+-	struct platform_info *info = pci_get_drvdata(pdev);
++	struct platform_info *info = dev_get_drvdata(dev_d);
+ 	struct dev_info *hw_priv = &info->dev_info;
+ 	struct ksz_hw *hw = &hw_priv->hw;
+ 
+@@ -7207,12 +7204,9 @@ static int pcidev_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		hw_cfg_wol_pme(hw, 1);
+ 	}
+ 
+-	pci_save_state(pdev);
+-	pci_enable_wake(pdev, pci_choose_state(pdev, state), 1);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
++	device_wakeup_enable(dev_d);
+ 	return 0;
+ }
+-#endif
+ 
+ static char pcidev_name[] = "ksz884xp";
+ 
+@@ -7226,11 +7220,10 @@ static const struct pci_device_id pcidev_table[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, pcidev_table);
+ 
++static SIMPLE_DEV_PM_OPS(pcidev_pm_ops, pcidev_suspend, pcidev_resume);
++
+ static struct pci_driver pci_device_driver = {
+-#ifdef CONFIG_PM
+-	.suspend	= pcidev_suspend,
+-	.resume		= pcidev_resume,
+-#endif
++	.driver.pm	= &pcidev_pm_ops,
+ 	.name		= pcidev_name,
+ 	.id_table	= pcidev_table,
+ 	.probe		= pcidev_init,
+-- 
+2.27.0
+
