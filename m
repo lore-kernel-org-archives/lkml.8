@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E63C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0628B20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D42207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbgGANQh (ORCPT
+        id S1730944AbgGANQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39406 "EHLO
+        Wed, 1 Jul 2020 09:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgGANQa (ORCPT
+        with ESMTP id S1730919AbgGANQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:16:30 -0400
+        Wed, 1 Jul 2020 09:16:37 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2341EC03E979;
-        Wed,  1 Jul 2020 06:16:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFECC03E979;
+        Wed,  1 Jul 2020 06:16:36 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 606ED2A56A6
+        with ESMTPSA id 0D1C22A56A6
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 3/6] hantro: Rework how encoder and decoder are identified
-Date:   Wed,  1 Jul 2020 10:16:04 -0300
-Message-Id: <20200701131607.121988-4-ezequiel@collabora.com>
+Subject: [PATCH v2 5/6] hantro: Remove unused bytesused argument
+Date:   Wed,  1 Jul 2020 10:16:06 -0300
+Message-Id: <20200701131607.121988-6-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200701131607.121988-1-ezequiel@collabora.com>
 References: <20200701131607.121988-1-ezequiel@collabora.com>
@@ -46,227 +46,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far we've been using the .buf_finish hook to distinguish
-decoder from encoder. This is unnecessarily obfuscated.
+The driver doesn't need the bytesused argument.
 
-Moreover, we want to move the buf_finish, so use a cleaner
-scheme to distinguish the driver decoder/encoder type.
+For decoders, the plane bytesused is known and therefore,
+buf_prepare is used to set it. For encoders, it's
+handled by the codec_ops.done hook.
 
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
-v2:
-* Get rid of the helper and simply use the flag,
-  as pointed out by Robin and Philipp.
----
- drivers/staging/media/hantro/hantro.h      |  6 ++---
- drivers/staging/media/hantro/hantro_drv.c  |  9 +++----
- drivers/staging/media/hantro/hantro_v4l2.c | 28 +++++++++++-----------
- 3 files changed, 20 insertions(+), 23 deletions(-)
+ drivers/staging/media/hantro/hantro_drv.c    | 9 ++++-----
+ drivers/staging/media/hantro/hantro_hw.h     | 2 +-
+ drivers/staging/media/hantro/imx8m_vpu_hw.c  | 2 +-
+ drivers/staging/media/hantro/rk3288_vpu_hw.c | 7 +++----
+ drivers/staging/media/hantro/rk3399_vpu_hw.c | 7 +++----
+ 5 files changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
-index 3005207fc6fb..2284e23d8500 100644
---- a/drivers/staging/media/hantro/hantro.h
-+++ b/drivers/staging/media/hantro/hantro.h
-@@ -199,6 +199,7 @@ struct hantro_dev {
-  *
-  * @dev:		VPU driver data to which the context belongs.
-  * @fh:			V4L2 file handler.
-+ * @is_encoder:		Decoder or encoder context?
-  *
-  * @sequence_cap:       Sequence counter for capture queue
-  * @sequence_out:       Sequence counter for output queue
-@@ -223,6 +224,7 @@ struct hantro_dev {
- struct hantro_ctx {
- 	struct hantro_dev *dev;
- 	struct v4l2_fh fh;
-+	bool is_encoder;
- 
- 	u32 sequence_cap;
- 	u32 sequence_out;
-@@ -399,8 +401,6 @@ static inline void hantro_reg_write_s(struct hantro_dev *vpu,
- 	vdpu_write(vpu, vdpu_read_mask(vpu, reg, val), reg->base);
- }
- 
--bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx);
--
- void *hantro_get_ctrl(struct hantro_ctx *ctx, u32 id);
- dma_addr_t hantro_get_ref(struct hantro_ctx *ctx, u64 ts);
- 
-@@ -420,7 +420,7 @@ static inline bool
- hantro_needs_postproc(const struct hantro_ctx *ctx,
- 		      const struct hantro_fmt *fmt)
- {
--	return !hantro_is_encoder_ctx(ctx) && fmt->fourcc != V4L2_PIX_FMT_NV12;
-+	return !ctx->is_encoder && fmt->fourcc != V4L2_PIX_FMT_NV12;
- }
- 
- static inline dma_addr_t
 diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index 0db8ad455160..9145d02e5d3c 100644
+index 88b5c5989d83..34367b169011 100644
 --- a/drivers/staging/media/hantro/hantro_drv.c
 +++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -195,11 +195,6 @@ static void device_run(void *priv)
- 	hantro_job_finish(ctx->dev, ctx, 0, VB2_BUF_STATE_ERROR);
+@@ -58,7 +58,6 @@ dma_addr_t hantro_get_ref(struct hantro_ctx *ctx, u64 ts)
+ 
+ static void hantro_job_finish(struct hantro_dev *vpu,
+ 			      struct hantro_ctx *ctx,
+-			      unsigned int bytesused,
+ 			      enum vb2_buffer_state result)
+ {
+ 	struct vb2_v4l2_buffer *src, *dst;
+@@ -82,7 +81,7 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+ 					 result);
  }
  
--bool hantro_is_encoder_ctx(const struct hantro_ctx *ctx)
--{
--	return ctx->buf_finish == hantro_enc_buf_finish;
--}
--
- static struct v4l2_m2m_ops vpu_m2m_ops = {
- 	.device_run = device_run,
- };
-@@ -240,7 +235,7 @@ queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
- 	 *
- 	 * For the DMA destination buffer, we use a bounce buffer.
- 	 */
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		dst_vq->mem_ops = &vb2_vmalloc_memops;
- 	} else {
- 		dst_vq->bidirectional = true;
-@@ -420,8 +415,10 @@ static int hantro_open(struct file *filp)
- 	if (func->id == MEDIA_ENT_F_PROC_VIDEO_ENCODER) {
- 		allowed_codecs = vpu->variant->codec & HANTRO_ENCODERS;
- 		ctx->buf_finish = hantro_enc_buf_finish;
-+		ctx->is_encoder = true;
- 	} else if (func->id == MEDIA_ENT_F_PROC_VIDEO_DECODER) {
- 		allowed_codecs = vpu->variant->codec & HANTRO_DECODERS;
-+		ctx->is_encoder = false;
- 	} else {
- 		ret = -ENODEV;
- 		goto err_ctx_free;
-diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-index f28a94e2fa93..785d59331d7c 100644
---- a/drivers/staging/media/hantro/hantro_v4l2.c
-+++ b/drivers/staging/media/hantro/hantro_v4l2.c
-@@ -40,7 +40,7 @@ hantro_get_formats(const struct hantro_ctx *ctx, unsigned int *num_fmts)
+-void hantro_irq_done(struct hantro_dev *vpu, unsigned int bytesused,
++void hantro_irq_done(struct hantro_dev *vpu,
+ 		     enum vb2_buffer_state result)
  {
- 	const struct hantro_fmt *formats;
- 
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		formats = ctx->dev->variant->enc_fmts;
- 		*num_fmts = ctx->dev->variant->num_enc_fmts;
- 	} else {
-@@ -55,7 +55,7 @@ static const struct hantro_fmt *
- hantro_get_postproc_formats(const struct hantro_ctx *ctx,
- 			    unsigned int *num_fmts)
- {
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		*num_fmts = 0;
- 		return NULL;
+ 	struct hantro_ctx *ctx =
+@@ -96,7 +95,7 @@ void hantro_irq_done(struct hantro_dev *vpu, unsigned int bytesused,
+ 	if (cancel_delayed_work(&vpu->watchdog_work)) {
+ 		if (result == VB2_BUF_STATE_DONE && ctx->codec_ops->done)
+ 			ctx->codec_ops->done(ctx);
+-		hantro_job_finish(vpu, ctx, bytesused, result);
++		hantro_job_finish(vpu, ctx, result);
  	}
-@@ -158,7 +158,7 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
- 	 *    not MODE_NONE.
- 	 *  - on the output side we want to filter out all MODE_NONE formats.
- 	 */
--	skip_mode_none = capture == hantro_is_encoder_ctx(ctx);
-+	skip_mode_none = capture == ctx->is_encoder;
- 
- 	formats = hantro_get_formats(ctx, &num_fmts);
- 	for (i = 0; i < num_fmts; i++) {
-@@ -240,7 +240,7 @@ static int hantro_try_fmt(const struct hantro_ctx *ctx,
- 	bool capture = !V4L2_TYPE_IS_OUTPUT(type);
- 	bool coded;
- 
--	coded = capture == hantro_is_encoder_ctx(ctx);
-+	coded = capture == ctx->is_encoder;
- 
- 	vpu_debug(4, "trying format %c%c%c%c\n",
- 		  (pix_mp->pixelformat & 0x7f),
-@@ -257,7 +257,7 @@ static int hantro_try_fmt(const struct hantro_ctx *ctx,
- 	if (coded) {
- 		pix_mp->num_planes = 1;
- 		vpu_fmt = fmt;
--	} else if (hantro_is_encoder_ctx(ctx)) {
-+	} else if (ctx->is_encoder) {
- 		vpu_fmt = ctx->vpu_dst_fmt;
- 	} else {
- 		vpu_fmt = ctx->vpu_src_fmt;
-@@ -330,7 +330,7 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
- 
- 	vpu_fmt = hantro_get_default_fmt(ctx, true);
- 
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		ctx->vpu_dst_fmt = vpu_fmt;
- 		fmt = &ctx->dst_fmt;
- 	} else {
-@@ -341,7 +341,7 @@ hantro_reset_encoded_fmt(struct hantro_ctx *ctx)
- 	hantro_reset_fmt(fmt, vpu_fmt);
- 	fmt->width = vpu_fmt->frmsize.min_width;
- 	fmt->height = vpu_fmt->frmsize.min_height;
--	if (hantro_is_encoder_ctx(ctx))
-+	if (ctx->is_encoder)
- 		hantro_set_fmt_cap(ctx, fmt);
- 	else
- 		hantro_set_fmt_out(ctx, fmt);
-@@ -355,7 +355,7 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
- 
- 	raw_vpu_fmt = hantro_get_default_fmt(ctx, false);
- 
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		ctx->vpu_src_fmt = raw_vpu_fmt;
- 		raw_fmt = &ctx->src_fmt;
- 		encoded_fmt = &ctx->dst_fmt;
-@@ -368,7 +368,7 @@ hantro_reset_raw_fmt(struct hantro_ctx *ctx)
- 	hantro_reset_fmt(raw_fmt, raw_vpu_fmt);
- 	raw_fmt->width = encoded_fmt->width;
- 	raw_fmt->width = encoded_fmt->width;
--	if (hantro_is_encoder_ctx(ctx))
-+	if (ctx->is_encoder)
- 		hantro_set_fmt_out(ctx, raw_fmt);
- 	else
- 		hantro_set_fmt_cap(ctx, raw_fmt);
-@@ -409,7 +409,7 @@ static int hantro_set_fmt_out(struct hantro_ctx *ctx,
- 	if (ret)
- 		return ret;
- 
--	if (!hantro_is_encoder_ctx(ctx)) {
-+	if (!ctx->is_encoder) {
- 		struct vb2_queue *peer_vq;
- 
- 		/*
-@@ -450,7 +450,7 @@ static int hantro_set_fmt_out(struct hantro_ctx *ctx,
- 	 * Note that hantro_reset_raw_fmt() also propagates size
- 	 * changes to the raw format.
- 	 */
--	if (!hantro_is_encoder_ctx(ctx))
-+	if (!ctx->is_encoder)
- 		hantro_reset_raw_fmt(ctx);
- 
- 	/* Colorimetry information are always propagated. */
-@@ -479,7 +479,7 @@ static int hantro_set_fmt_cap(struct hantro_ctx *ctx,
- 	if (vb2_is_busy(vq))
- 		return -EBUSY;
- 
--	if (hantro_is_encoder_ctx(ctx)) {
-+	if (ctx->is_encoder) {
- 		struct vb2_queue *peer_vq;
- 
- 		/*
-@@ -512,7 +512,7 @@ static int hantro_set_fmt_cap(struct hantro_ctx *ctx,
- 	 * Note that hantro_reset_raw_fmt() also propagates size
- 	 * changes to the raw format.
- 	 */
--	if (hantro_is_encoder_ctx(ctx))
-+	if (ctx->is_encoder)
- 		hantro_reset_raw_fmt(ctx);
- 
- 	/* Colorimetry information are always propagated. */
-@@ -655,7 +655,7 @@ static bool hantro_vq_is_coded(struct vb2_queue *q)
- {
- 	struct hantro_ctx *ctx = vb2_get_drv_priv(q);
- 
--	return hantro_is_encoder_ctx(ctx) != V4L2_TYPE_IS_OUTPUT(q->type);
-+	return ctx->is_encoder != V4L2_TYPE_IS_OUTPUT(q->type);
  }
  
- static int hantro_start_streaming(struct vb2_queue *q, unsigned int count)
+@@ -111,7 +110,7 @@ void hantro_watchdog(struct work_struct *work)
+ 	if (ctx) {
+ 		vpu_err("frame processing timed out!\n");
+ 		ctx->codec_ops->reset(ctx);
+-		hantro_job_finish(vpu, ctx, 0, VB2_BUF_STATE_ERROR);
++		hantro_job_finish(vpu, ctx, VB2_BUF_STATE_ERROR);
+ 	}
+ }
+ 
+@@ -164,7 +163,7 @@ static void device_run(void *priv)
+ 	return;
+ 
+ err_cancel_job:
+-	hantro_job_finish(ctx->dev, ctx, 0, VB2_BUF_STATE_ERROR);
++	hantro_job_finish(ctx->dev, ctx, VB2_BUF_STATE_ERROR);
+ }
+ 
+ static struct v4l2_m2m_ops vpu_m2m_ops = {
+diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+index 2d6323cd6732..f066de6b592d 100644
+--- a/drivers/staging/media/hantro/hantro_hw.h
++++ b/drivers/staging/media/hantro/hantro_hw.h
+@@ -163,7 +163,7 @@ extern const u32 hantro_vp8_dec_mc_filter[8][6];
+ 
+ void hantro_watchdog(struct work_struct *work);
+ void hantro_run(struct hantro_ctx *ctx);
+-void hantro_irq_done(struct hantro_dev *vpu, unsigned int bytesused,
++void hantro_irq_done(struct hantro_dev *vpu,
+ 		     enum vb2_buffer_state result);
+ void hantro_start_prepare_run(struct hantro_ctx *ctx);
+ void hantro_end_prepare_run(struct hantro_ctx *ctx);
+diff --git a/drivers/staging/media/hantro/imx8m_vpu_hw.c b/drivers/staging/media/hantro/imx8m_vpu_hw.c
+index cb2420c5526e..c222de075ef4 100644
+--- a/drivers/staging/media/hantro/imx8m_vpu_hw.c
++++ b/drivers/staging/media/hantro/imx8m_vpu_hw.c
+@@ -143,7 +143,7 @@ static irqreturn_t imx8m_vpu_g1_irq(int irq, void *dev_id)
+ 	vdpu_write(vpu, 0, G1_REG_INTERRUPT);
+ 	vdpu_write(vpu, G1_REG_CONFIG_DEC_CLK_GATE_E, G1_REG_CONFIG);
+ 
+-	hantro_irq_done(vpu, 0, state);
++	hantro_irq_done(vpu, state);
+ 
+ 	return IRQ_HANDLED;
+ }
+diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+index b1cf2abb972f..7b299ee3e93d 100644
+--- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
+@@ -113,17 +113,16 @@ static irqreturn_t rk3288_vepu_irq(int irq, void *dev_id)
+ {
+ 	struct hantro_dev *vpu = dev_id;
+ 	enum vb2_buffer_state state;
+-	u32 status, bytesused;
++	u32 status;
+ 
+ 	status = vepu_read(vpu, H1_REG_INTERRUPT);
+-	bytesused = vepu_read(vpu, H1_REG_STR_BUF_LIMIT) / 8;
+ 	state = (status & H1_REG_INTERRUPT_FRAME_RDY) ?
+ 		VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
+ 
+ 	vepu_write(vpu, 0, H1_REG_INTERRUPT);
+ 	vepu_write(vpu, 0, H1_REG_AXI_CTRL);
+ 
+-	hantro_irq_done(vpu, bytesused, state);
++	hantro_irq_done(vpu, state);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -141,7 +140,7 @@ static irqreturn_t rk3288_vdpu_irq(int irq, void *dev_id)
+ 	vdpu_write(vpu, 0, G1_REG_INTERRUPT);
+ 	vdpu_write(vpu, G1_REG_CONFIG_DEC_CLK_GATE_E, G1_REG_CONFIG);
+ 
+-	hantro_irq_done(vpu, 0, state);
++	hantro_irq_done(vpu, state);
+ 
+ 	return IRQ_HANDLED;
+ }
+diff --git a/drivers/staging/media/hantro/rk3399_vpu_hw.c b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+index 9ac1f2cb6a16..7a7962cf771e 100644
+--- a/drivers/staging/media/hantro/rk3399_vpu_hw.c
++++ b/drivers/staging/media/hantro/rk3399_vpu_hw.c
+@@ -92,17 +92,16 @@ static irqreturn_t rk3399_vepu_irq(int irq, void *dev_id)
+ {
+ 	struct hantro_dev *vpu = dev_id;
+ 	enum vb2_buffer_state state;
+-	u32 status, bytesused;
++	u32 status;
+ 
+ 	status = vepu_read(vpu, VEPU_REG_INTERRUPT);
+-	bytesused = vepu_read(vpu, VEPU_REG_STR_BUF_LIMIT) / 8;
+ 	state = (status & VEPU_REG_INTERRUPT_FRAME_READY) ?
+ 		VB2_BUF_STATE_DONE : VB2_BUF_STATE_ERROR;
+ 
+ 	vepu_write(vpu, 0, VEPU_REG_INTERRUPT);
+ 	vepu_write(vpu, 0, VEPU_REG_AXI_CTRL);
+ 
+-	hantro_irq_done(vpu, bytesused, state);
++	hantro_irq_done(vpu, state);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -120,7 +119,7 @@ static irqreturn_t rk3399_vdpu_irq(int irq, void *dev_id)
+ 	vdpu_write(vpu, 0, VDPU_REG_INTERRUPT);
+ 	vdpu_write(vpu, 0, VDPU_REG_AXI_CTRL);
+ 
+-	hantro_irq_done(vpu, 0, state);
++	hantro_irq_done(vpu, state);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.26.0.rc2
 
