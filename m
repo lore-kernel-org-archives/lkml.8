@@ -2,472 +2,171 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A055C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C80CC2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13102074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q1HfufrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgGAHxV (ORCPT
+        id S1728377AbgGAHzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:53:21 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:40034 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbgGAHxR (ORCPT
+        Wed, 1 Jul 2020 03:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728229AbgGAHzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:53:17 -0400
-Received: by mail-il1-f200.google.com with SMTP id m64so16538850ill.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:53:15 -0700 (PDT)
+        Wed, 1 Jul 2020 03:55:08 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78484C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:55:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so25784316ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=PSqGyTJQJaUn0zbjG40ghzTcPCpjshT5c0elXwDGNjQ=;
+        b=q1HfufrZCERs36ByVqzQZ1KgT1SmFbl1Bz30XrXZxs1l+fnkTnUY9NJ5ZdiAlkmlXl
+         wEKT/wGr70RQWGafaKvD2GxqVfHRc3iCdaMOY5ryKCe1PAVOJzZRZVwpvfwgC1TUwx/8
+         bjC3XYeWQRAftu7WNoV7rnxfUMpm8NpBH3MpmRBK4TVBjJFY5v5y4QPLdKDZwL0PHmTq
+         RnwIS8PpAvu8Fo80St/qj+94u3LCWj4YyuILnd4gc2N0ypYeCPR7GY1BC7ldjlgmHuwE
+         3PGm4OCNGfWZ70Ir3IIer8o89b6EukduA/DrNQwSyhxa5JToOvcXgG4zFNlW7YCD6YCM
+         WLww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pCgx09tytWT2OCCFM5CUCBjS62AEV0n/QT8HpV+90qg=;
-        b=e9MytGhjamUmijT9IMKpCNCK/CDnUtWVhYlfbxzk+GzX3WSWY6xG1KN6BxGqqQQjyx
-         DBy7+qTY9aLa3l/yT/JoqMjBGBZSVf8JjY8/5k9WkEzjrLMigWgQIf/rvh33NuTHtgmV
-         y3M4Lv6bR+Jl4mBFNPyK0CHGVByHSuzk0HlxyMxwcN5+o+xex1iZ9aG+1Xg2IdNGJAVO
-         4oi2Fi/zB0hjRAnJiW0Phf7eC2wedL/YhAxgNjYrgyzIJrAwoV6vyDxiNm8D40oJmfdM
-         m0J0fmpfYpVNiGg9T2Gc8qynXNPWgVXrXWxJHw6c/5Wtxd4PTD7VO0NwmxcbVQ+dJ1LN
-         7mwA==
-X-Gm-Message-State: AOAM5330AM7q9zqXOi6R9h/7q1kF1gYjBq5HMY85+z3f0HV27DmfXU+a
-        DDJ9hTxcXrdaQV+RZogdz25UmLxbOTbWEYh2GTgmbcLHRdWi
-X-Google-Smtp-Source: ABdhPJzXMiWcIS1KPV9Hr+lmXsCfEIGzH/drdmTr4JcuiVSyUgKTAwHs41Y+nxJv3hSASZkW3A38kjnqX5WFG4i5VgsG8Lgc4o0U
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=PSqGyTJQJaUn0zbjG40ghzTcPCpjshT5c0elXwDGNjQ=;
+        b=O+a3ZcUfSE3wvqqurvaFAB9a/RPuKXbhnC0bgFN2wc+DGx4DbSk8gPGiNC27xlYvck
+         I8dLqvzztACdCB+/7gyWiidY2viyAA9vrU1WDmbdV71LSkQVf8n0Dc+XTP4zVRq5wZxh
+         c1KFbY1oZk8vezHHaYQTN2D9Un4FZNbU194bS8o9Odg7DYydIAMlghCyIdDPfQ2JAQcv
+         /mN0bNZIfbRwuIpYMlwLhIgSfvcxoy02s5WV951eHebfH2SQxsBKkxAd0/DaO0whCOPl
+         dcFcFychza2S65BB1+2UCqb1/E27ElUDhbWEAOzC79clT9n6DX/yIkgRf02c10cvylQn
+         NSUQ==
+X-Gm-Message-State: AOAM531e4BF7nNsBLyImvmKy5a8vZsVE+uyjj8TrTQoRG8y/fAjvXZ5o
+        qqP1ySLtRa6YAbSc/zF3ImiT0kBtyu23vB4G+vUttA==
+X-Google-Smtp-Source: ABdhPJxqTuNpnxVRKVdFQ7l3KPMPtOAhLtUuFhrhD65O8azqovT/lonut3dQMYbk2Ap0yhVOJeXCAqqJc/5yh1hXn+s=
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr12244080ljj.102.1593590105703;
+ Wed, 01 Jul 2020 00:55:05 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:8b90:: with SMTP id i138mr6947018ild.286.1593589995279;
- Wed, 01 Jul 2020 00:53:15 -0700 (PDT)
-Date:   Wed, 01 Jul 2020 00:53:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000961dea05a95c9558@google.com>
-Subject: INFO: task hung in request_key_tag
-From:   syzbot <syzbot+46c77dc7e98c732de754@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 1 Jul 2020 13:24:54 +0530
+Message-ID: <CA+G9fYtrgF_EZHi0vi+HyWiXT5LGggDhVXtNspc=OzzFhL=xRQ@mail.gmail.com>
+Subject: PANIC: mm: memcg/slab: percpu_ref_put_many - Unable to handle kernel
+ paging request at virtual address ffff80096d78f000
+To:     Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+While running LTP mm test suite on arm64 Juno device the kernel panic
+noticed on linux-next 20200630 tag.
 
-syzbot found the following crash on:
+Steps to reproduce:
+- boot linux-next 20200630 kernel on arm64 device
+- cd /opt/ltp
+- ./runltp -f mm
 
-HEAD commit:    c28e58ee Add linux-next specific files for 20200629
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17925a9d100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcd26bbca17dd1db
-dashboard link: https://syzkaller.appspot.com/bug?extid=46c77dc7e98c732de754
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: f2b92b14533e646e434523abdbafddb727c23898
+  git describe: next-20200630
+  kernel-config:
+https://builds.tuxbuild.com/_9rI4zfsOoS0so5wmsOaBQ/kernel.config
 
-Unfortunately, I don't have any reproducer for this crash yet.
+test crash log,
+thp01.c:123: INFO: Using 8192 args of size 4096
+thp01.c:81: INFO: left: 0, right: 4096, mid: 4096
+thp01.c:81: INFO: left: 0, right: 2048, mid: 2048
+thp01.c:81: INFO: left: 1024, right: 2048, mid: 1024
+[  321.974581] Unable to handle kernel paging request at virtual
+address ffff80096d78f000
+[  321.982517] Mem abort info:
+[  321.985309]   ESR = 0x96000005
+[  321.988378]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  321.993704]   SET = 0, FnV = 0
+[  321.996766]   EA = 0, S1PTW = 0
+[  321.999920] Data abort info:
+[  322.002808]   ISV = 0, ISS = 0x00000005
+[  322.006653]   CM = 0, WnR = 0
+[  322.009621] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000081869000
+[  322.016338] [ffff80096d78f000] pgd=00000009fffff003,
+p4d=00000009fffff003, pud=0000000000000000
+[  322.025063] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+[  322.030639] Modules linked in: rfkill tda998x cec drm_kms_helper
+drm crct10dif_ce fuse
+[  322.038579] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G    B
+  5.8.0-rc3-next-20200630 #1
+[  322.047375] Hardware name: ARM Juno development board (r2) (DT)
+[  322.053301] pstate: 40000005 (nZcv daif -PAN -UAO BTYPE=--)
+[  322.058886] pc : percpu_ref_put_many+0x44/0xc8
+[  322.063333] lr : percpu_ref_put_many+0x1c/0xc8
+[  322.067777] sp : ffff800011f23d50
+[  322.071091] x29: ffff800011f23d50 x28: 0000000000000000
+[  322.076408] x27: ffff800011c53e40 x26: 0000000000000000
+[  322.081725] x25: ffff800011f23ea0 x24: ffff800011c53fc0
+[  322.087041] x23: 000000000000000a x22: ffff000975cf1c00
+[  322.092358] x21: ffff000975cf1c00 x20: ffff000954e00b11
+[  322.097674] x19: 0000000000000001 x18: 0000000000000000
+[  322.102990] x17: 0000000000000000 x16: 0000000000000000
+[  322.108307] x15: 0000007bcba8e34a x14: 0000000000000000
+[  322.113623] x13: 0000000000000002 x12: 0000000000000000
+[  322.118938] x11: 0000000000000000 x10: 0000000000000309
+[  322.124254] x9 : 0000000000000010 x8 : ffff00097ef73230
+[  322.129570] x7 : ffff80096d78f000 x6 : fffffe00252ff4c0
+[  322.134886] x5 : ffff00097ef73220 x4 : fffffe00252ff4c8
+[  322.140203] x3 : ffff80096d78f000 x2 : ffff000975cf1c00
+[  322.145519] x1 : ffffffffffffffff x0 : ffff80096d78f000
+[  322.150835] Call trace:
+[  322.153281]  percpu_ref_put_many+0x44/0xc8
+[  322.157381]  uncharge_page+0xb4/0xf0
+[  322.160958]  mem_cgroup_uncharge+0x40/0x70
+[  322.165056]  __put_page+0x4c/0x68
+[  322.168374]  free_page_and_swap_cache+0xf0/0x108
+[  322.172995]  tlb_remove_table_rcu+0x30/0x58
+[  322.177181]  rcu_core+0x2e4/0x4f0
+[  322.180496]  rcu_core_si+0x10/0x20
+[  322.183899]  efi_header_end+0x120/0x240
+[  322.187737]  irq_exit+0xc0/0xe0
+[  322.190879]  __handle_domain_irq+0x68/0xc0
+[  322.194978]  gic_handle_irq+0x54/0xa8
+[  322.198640]  el1_irq+0xb8/0x180
+[  322.201783]  cpuidle_enter_state+0x8c/0x2f8
+[  322.205969]  cpuidle_enter+0x38/0x50
+[  322.209546]  call_cpuidle+0x1c/0x40
+[  322.213035]  do_idle+0x1f4/0x288
+[  322.216263]  cpu_startup_entry+0x28/0x48
+[  322.220189]  secondary_start_kernel+0x14c/0x188
+[  322.224726] Code: b9001041 d538d083 cb1303e1 8b030000 (c85f7c05)
+[  322.230833] ---[ end trace 72b11acd97d36f34 ]---
+[  322.235453] Kernel panic - not syncing: Fatal exception in interrupt
+[  322.241815] SMP: stopping secondary CPUs
+[  322.245896] Kernel Offset: disabled
+[  322.249384] CPU features: 0x240022,24006004
+[  322.253567] Memory Limit: none
+[  322.256627] ---[ end Kernel panic - not syncing: Fatal exception in
+interrupt ]---
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+46c77dc7e98c732de754@syzkaller.appspotmail.com
+Full test log link,
+https://lkft.validation.linaro.org/scheduler/job/1535950#L10517
 
-INFO: task syz-executor.3:23879 can't die for more than 143 seconds.
-syz-executor.3  D27880 23879   7210 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f17e9e62c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000240
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007f17e9e636d4
-INFO: task syz-executor.3:23879 blocked for more than 143 seconds.
-      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D27880 23879   7210 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f17e9e62c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000240
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007f17e9e636d4
-INFO: task syz-executor.3:23899 can't die for more than 144 seconds.
-syz-executor.3  D29304 23899   7210 0x00000006
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f17e9e20c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000240
-RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007f17e9e216d4
-INFO: task syz-executor.3:23899 blocked for more than 144 seconds.
-      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D29304 23899   7210 0x00000006
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007f17e9e20c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000240
-RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007f17e9e216d4
-INFO: task syz-executor.1:23880 can't die for more than 144 seconds.
-syz-executor.1  D27912 23880   6964 0x00000006
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007fe6e7011c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000080
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007fe6e70126d4
-INFO: task syz-executor.1:23880 blocked for more than 145 seconds.
-      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D27912 23880   6964 0x00000006
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007fe6e7011c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000080
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007fe6e70126d4
-INFO: task syz-executor.1:23885 can't die for more than 145 seconds.
-syz-executor.1  D27880 23885   6964 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007fe6e6ff0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000080
-RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007fe6e6ff16d4
-INFO: task syz-executor.1:23885 blocked for more than 145 seconds.
-      Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D27880 23885   6964 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3445 [inline]
- __schedule+0x8b4/0x1e80 kernel/sched/core.c:4169
- schedule+0xd0/0x2a0 kernel/sched/core.c:4244
- bit_wait+0x12/0xa0 kernel/sched/wait_bit.c:199
- __wait_on_bit+0x60/0x190 kernel/sched/wait_bit.c:49
- out_of_line_wait_on_bit+0xd5/0x110 kernel/sched/wait_bit.c:64
- wait_on_bit include/linux/wait_bit.h:76 [inline]
- wait_for_key_construction+0x10b/0x140 security/keys/request_key.c:664
- request_key_tag+0x7a/0xb0 security/keys/request_key.c:705
- dns_query+0x257/0x6c3 net/dns_resolver/dns_query.c:128
- ceph_dns_resolve_name net/ceph/messenger.c:1887 [inline]
- ceph_parse_server_name net/ceph/messenger.c:1922 [inline]
- ceph_parse_ips+0x77f/0x8c0 net/ceph/messenger.c:1949
- ceph_parse_mon_ips+0x59/0xc0 net/ceph/ceph_common.c:411
- ceph_parse_source fs/ceph/super.c:271 [inline]
- ceph_parse_mount_param+0x1239/0x17e0 fs/ceph/super.c:322
- vfs_parse_fs_param fs/fs_context.c:117 [inline]
- vfs_parse_fs_param+0x203/0x550 fs/fs_context.c:98
- vfs_parse_fs_string+0xe6/0x150 fs/fs_context.c:161
- do_new_mount fs/namespace.c:2905 [inline]
- do_mount+0x1222/0x1df0 fs/namespace.c:3237
- __do_sys_mount fs/namespace.c:3447 [inline]
- __se_sys_mount fs/namespace.c:3424 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3424
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb29
-Code: Bad RIP value.
-RSP: 002b:00007fe6e6ff0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000004f72e0 RCX: 000000000045cb29
-RDX: 0000000020000040 RSI: 0000000020000600 RDI: 0000000020000080
-RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000772 R14: 00000000004ca761 R15: 00007fe6e6ff16d4
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1151:
- #0: ffffffff89bc3000 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
-1 lock held by in:imklog/6487:
- #0: ffff8880934365f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:928
-2 locks held by agetty/6717:
- #0: ffff8880a00c5098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
- #1: ffffc90000f942e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x223/0x1a30 drivers/tty/n_tty.c:2156
-2 locks held by agetty/6721:
- #0: ffff888093f4e098 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x22/0x80 drivers/tty/tty_ldisc.c:267
- #1: ffffc90000f642e8 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x223/0x1a30 drivers/tty/n_tty.c:2156
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1151 Comm: khungtaskd Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 3865 Comm: systemd-journal Not tainted 5.8.0-rc3-next-20200629-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:memory_is_nonzero mm/kasan/generic.c:107 [inline]
-RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:134 [inline]
-RIP: 0010:memory_is_poisoned mm/kasan/generic.c:165 [inline]
-RIP: 0010:check_memory_region_inline mm/kasan/generic.c:183 [inline]
-RIP: 0010:check_memory_region+0x59/0x180 mm/kasan/generic.c:192
-Code: 00 49 83 e9 01 48 89 fd 48 b8 00 00 00 00 00 fc ff df 4d 89 ca 48 c1 ed 03 49 c1 ea 03 48 01 c5 49 01 c2 48 89 e8 49 8d 5a 01 <48> 89 da 48 29 ea 48 83 fa 10 7e 63 41 89 eb 41 83 e3 07 75 74 4c
-RSP: 0018:ffffc90001657970 EFLAGS: 00000086
-RAX: fffffbfff18b3b44 RBX: fffffbfff18b3b45 RCX: ffffffff8159e633
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffffffff8c59da20
-RBP: fffffbfff18b3b44 R08: 0000000000000000 R09: ffffffff8c59da27
-R10: fffffbfff18b3b44 R11: 0000000000000000 R12: ffff888093ca2080
-R13: 0000000000000000 R14: cf6300484b50d8b0 R15: 0000000000000000
-FS:  00007fec0e4d08c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fec0bd2e000 CR3: 0000000093db6000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- instrument_atomic_read include/linux/instrumented.h:56 [inline]
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- hlock_class kernel/locking/lockdep.c:179 [inline]
- lookup_chain_cache_add kernel/locking/lockdep.c:3127 [inline]
- validate_chain kernel/locking/lockdep.c:3183 [inline]
- __lock_acquire+0x16e3/0x56e0 kernel/locking/lockdep.c:4380
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xc0 kernel/locking/spinlock.c:159
- __debug_check_no_obj_freed lib/debugobjects.c:955 [inline]
- debug_check_no_obj_freed+0xc7/0x41c lib/debugobjects.c:998
- free_pages_prepare mm/page_alloc.c:1215 [inline]
- __free_pages_ok+0x20b/0xc90 mm/page_alloc.c:1467
- slab_destroy mm/slab.c:1625 [inline]
- slabs_destroy+0x89/0xc0 mm/slab.c:1641
- cache_flusharray mm/slab.c:3409 [inline]
- ___cache_free+0x516/0x750 mm/slab.c:3459
- qlink_free mm/kasan/quarantine.c:148 [inline]
- qlist_free_all+0x79/0x140 mm/kasan/quarantine.c:167
- quarantine_reduce+0x17e/0x200 mm/kasan/quarantine.c:260
- __kasan_kmalloc.constprop.0+0x9e/0xd0 mm/kasan/common.c:475
- slab_post_alloc_hook mm/slab.h:535 [inline]
- slab_alloc mm/slab.c:3316 [inline]
- kmem_cache_alloc+0x148/0x550 mm/slab.c:3486
- prepare_creds+0x39/0x6c0 kernel/cred.c:258
- access_override_creds fs/open.c:353 [inline]
- do_faccessat+0x3d7/0x820 fs/open.c:417
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fec0d78c9c7
-Code: Bad RIP value.
-RSP: 002b:00007ffd86b9dd78 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
-RAX: ffffffffffffffda RBX: 00007ffd86ba0c90 RCX: 00007fec0d78c9c7
-RDX: 00007fec0e1fda00 RSI: 0000000000000000 RDI: 0000557c536289a3
-RBP: 00007ffd86b9ddb0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000069 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007ffd86ba0c90 R15: 00007ffd86b9e2a0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Linaro LKFT
+https://lkft.linaro.org
