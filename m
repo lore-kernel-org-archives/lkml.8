@@ -2,224 +2,203 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA88C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E259C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D622085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3640720702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="esruAha9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOlYI1qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbgGAQmS (ORCPT
+        id S1732396AbgGAQpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:42:18 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53200 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732161AbgGAQmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:42:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593621736; bh=KxUzxz7KwYwMf8rZUJNXWkDofCaDRZo8njkBzSnWVWE=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=esruAha9QuQvsYqjkikeeyljlKuqcM5Qoep+nmmhQzydZ3HF2nuZ4ryef+IsXPGtH
-         hNIKBAZSUn4LP2WSBklanuWaffu096QA80N9Nf1tdedGLlmV0kfCokBBxcWyvj29d8
-         cR2Fm2F0mn07Y4tPZQXotsjtYHH9t+fiFe00Biok=
-Date:   Wed, 1 Jul 2020 18:42:15 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
-Message-ID: <20200701164215.warjiiduzschibkt@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>,
-        linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701155405.GA174356@bogon.m.sigxcpu.org>
+        Wed, 1 Jul 2020 12:45:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgGAQpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:45:32 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B82C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:45:31 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id u17so18963036qtq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y0XJ0Slz7kZn6xQCV03ZiEkNStp45H7CUj9hGVbrJA4=;
+        b=WOlYI1qysbjpCzlysPRaGJ4VaNr1szvkRUtaVRqNVOKRG2psRSUuDfXpJ8eIG0CcZo
+         Xt92VQ8wVt5dL8um5nFiaX7r/CE5lvDMp5vQ/ya9ObE1d3//832zRa/psutipnrPnzhl
+         JguhH+zEZNWNMvTrdoQ6HncUkyrgqu9qrpWQdkz7c2T0K7pzTswsNIGfneTQP7dv4B3S
+         ZqSEw/OQoszGHqaMzuWjuWlmT0qTFF9n55zQuqJ1MgihJVkzXnBWEpbr7Uu+FmBWr2M3
+         9Mvh9b/00KfZ0ohaH6mY3iXEaly5xPu40qKdcdI3Sg4xxnAqilubjcC/lfkHZWpZBU5r
+         zgFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y0XJ0Slz7kZn6xQCV03ZiEkNStp45H7CUj9hGVbrJA4=;
+        b=UMQTpg8Sgb/JINSDhXRAOOBcIBPUM4NCtcLwoOj+M9Aie/nPXOWSrqMkrT4x6lLset
+         pnKDe6yTlcXhvIqj2VErcnyFPncWsje470PfHxuCE2ZLN8kCdJDRmBUqDC/eXog5dn0m
+         BE6tLm4rpH60qvY81YwHMlLVypBzA+zjzeJc4zd5rDeEYxy4+k7aIsj9Z0q7GOy3s7c+
+         jLWD/r7o4qEOiLOuHy/J91FKHmfejPMr3zl6j82/RfidVKCl5qjv7HsNGKodlcdKJMSZ
+         QmDl/VKyDjC9BvI2SCTvOE+xFSSID09fA2eCqWqqILSV9q5ZCWKSt2ldkXeuBzbtPfmu
+         Cepg==
+X-Gm-Message-State: AOAM5318Vq7ity5G0AJqW0pDpP8m1udkEF95TkLj17dyx97KbJAQUw3T
+        0AIMD+elfmiXs9sPoVHGr8o=
+X-Google-Smtp-Source: ABdhPJx4ulb3eFwQXAKpSzVSL7OnSrOyLoX9VIXGKbnlc7gytKE2kz0+C4u+jDfXs4xlVAVxDca18w==
+X-Received: by 2002:ac8:4f4c:: with SMTP id i12mr7109254qtw.17.1593621930946;
+        Wed, 01 Jul 2020 09:45:30 -0700 (PDT)
+Received: from localhost.localdomain (dslb-178-011-230-214.178.011.pools.vodafone-ip.de. [178.11.230.214])
+        by smtp.gmail.com with ESMTPSA id w77sm6247489qka.34.2020.07.01.09.45.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 09:45:30 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8712: use common ieee80211 constants
+Date:   Wed,  1 Jul 2020 18:42:13 +0200
+Message-Id: <20200701164213.4205-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701155405.GA174356@bogon.m.sigxcpu.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Many defined constants in wifi.h are unused and/or available from
+<linux/ieee80211.h>, some with slightly different names. Use the
+common ones, rename where necessary and remove unused.
 
-On Wed, Jul 01, 2020 at 05:54:05PM +0200, Guido Günther wrote:
-> Hi,
-> On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
-> > This patchset adds support for the LCD panel of PinePhone.
-> 
-> I gave this a quick spin on the Librem5 devkit so
-> 
-> Tested-by: Guido Günther <agx@sigxcpu.org>
-> 
-> but please also adjust MAINTAINERS so we stay in the loop on driver
-> changes.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c |  2 +-
+ drivers/staging/rtl8712/rtl871x_mlme.c        |  8 +--
+ drivers/staging/rtl8712/wifi.h                | 51 -------------------
+ 3 files changed, 5 insertions(+), 56 deletions(-)
 
-Ah, right. I'll send a quick followup patch[1] after this gets merged,
-or add it to v8 if there will be a need for v8. Thanks for noticing.
+diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+index 36c89cde525d..81482d5ae1a3 100644
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -1411,7 +1411,7 @@ static int r8711_wx_get_rate(struct net_device *dev,
+ 		pht_capie = (struct rtl_ieee80211_ht_cap *)(p + 2);
+ 		memcpy(&mcs_rate, pht_capie->supp_mcs_set, 2);
+ 		bw_40MHz = (le16_to_cpu(pht_capie->cap_info) &
+-			    IEEE80211_HT_CAP_SUP_WIDTH) ? 1 : 0;
++			    IEEE80211_HT_CAP_SUP_WIDTH_20_40) ? 1 : 0;
+ 		short_GI = (le16_to_cpu(pht_capie->cap_info) &
+ 			    (IEEE80211_HT_CAP_SGI_20 |
+ 			    IEEE80211_HT_CAP_SGI_40)) ? 1 : 0;
+diff --git a/drivers/staging/rtl8712/rtl871x_mlme.c b/drivers/staging/rtl8712/rtl871x_mlme.c
+index efd75add8e35..9ee1bfac0763 100644
+--- a/drivers/staging/rtl8712/rtl871x_mlme.c
++++ b/drivers/staging/rtl8712/rtl871x_mlme.c
+@@ -1660,14 +1660,14 @@ unsigned int r8712_restructure_ht_ie(struct _adapter *padapter, u8 *in_ie,
+ 		}
+ 		out_len = *pout_len;
+ 		memset(&ht_capie, 0, sizeof(struct rtl_ieee80211_ht_cap));
+-		ht_capie.cap_info = cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH |
++		ht_capie.cap_info = cpu_to_le16(IEEE80211_HT_CAP_SUP_WIDTH_20_40 |
+ 				    IEEE80211_HT_CAP_SGI_20 |
+ 				    IEEE80211_HT_CAP_SGI_40 |
+ 				    IEEE80211_HT_CAP_TX_STBC |
+ 				    IEEE80211_HT_CAP_MAX_AMSDU |
+ 				    IEEE80211_HT_CAP_DSSSCCK40);
+-		ht_capie.ampdu_params_info = (IEEE80211_HT_CAP_AMPDU_FACTOR &
+-				0x03) | (IEEE80211_HT_CAP_AMPDU_DENSITY & 0x00);
++		ht_capie.ampdu_params_info = (IEEE80211_HT_AMPDU_PARM_FACTOR &
++				0x03) | (IEEE80211_HT_AMPDU_PARM_DENSITY & 0x00);
+ 		r8712_set_ie(out_ie + out_len, _HT_CAPABILITY_IE_,
+ 			     sizeof(struct rtl_ieee80211_ht_cap),
+ 			     (unsigned char *)&ht_capie, pout_len);
+@@ -1705,7 +1705,7 @@ static void update_ht_cap(struct _adapter *padapter, u8 *pie, uint ie_len)
+ 	if (p && len > 0) {
+ 		pht_capie = (struct rtl_ieee80211_ht_cap *)(p + 2);
+ 		max_ampdu_sz = (pht_capie->ampdu_params_info &
+-				IEEE80211_HT_CAP_AMPDU_FACTOR);
++				IEEE80211_HT_AMPDU_PARM_FACTOR);
+ 		/* max_ampdu_sz (kbytes); */
+ 		max_ampdu_sz = 1 << (max_ampdu_sz + 3);
+ 		phtpriv->rx_ampdu_maxlen = max_ampdu_sz;
+diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
+index 66e0634f07ba..601d4ff607bc 100644
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -437,13 +437,6 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
+  *------------------------------------------------------------------------------
+  */
+ 
+-/* block-ack parameters */
+-#define IEEE80211_ADDBA_PARAM_POLICY_MASK 0x0002
+-#define IEEE80211_ADDBA_PARAM_TID_MASK 0x003C
+-#define IEEE80211_ADDBA_PARAM_BUF_SIZE_MASK 0xFFC0
+-#define IEEE80211_DELBA_PARAM_TID_MASK 0xF000
+-#define IEEE80211_DELBA_PARAM_INITIATOR_MASK 0x0800
+-
+ #define SetOrderBit(pbuf) ({ \
+ 	*(__le16 *)(pbuf) |= cpu_to_le16(_ORDER_); \
+ })
+@@ -481,49 +474,5 @@ struct ieee80211_ht_addt_info {
+ 	unsigned char		basic_set[16];
+ } __packed;
+ 
+-/* 802.11n HT capabilities masks */
+-#define IEEE80211_HT_CAP_SUP_WIDTH		0x0002
+-#define IEEE80211_HT_CAP_SM_PS			0x000C
+-#define IEEE80211_HT_CAP_GRN_FLD		0x0010
+-#define IEEE80211_HT_CAP_SGI_20			0x0020
+-#define IEEE80211_HT_CAP_SGI_40			0x0040
+-#define IEEE80211_HT_CAP_TX_STBC			0x0080
+-#define IEEE80211_HT_CAP_DELAY_BA		0x0400
+-#define IEEE80211_HT_CAP_MAX_AMSDU		0x0800
+-#define IEEE80211_HT_CAP_DSSSCCK40		0x1000
+-/* 802.11n HT capability AMPDU settings */
+-#define IEEE80211_HT_CAP_AMPDU_FACTOR		0x03
+-#define IEEE80211_HT_CAP_AMPDU_DENSITY		0x1C
+-/* 802.11n HT capability MSC set */
+-#define IEEE80211_SUPP_MCS_SET_UEQM		4
+-#define IEEE80211_HT_CAP_MAX_STREAMS		4
+-#define IEEE80211_SUPP_MCS_SET_LEN		10
+-/* maximum streams the spec allows */
+-#define IEEE80211_HT_CAP_MCS_TX_DEFINED		0x01
+-#define IEEE80211_HT_CAP_MCS_TX_RX_DIFF		0x02
+-#define IEEE80211_HT_CAP_MCS_TX_STREAMS		0x0C
+-#define IEEE80211_HT_CAP_MCS_TX_UEQM		0x10
+-/* 802.11n HT IE masks */
+-#define IEEE80211_HT_IE_CHA_SEC_OFFSET		0x03
+-#define IEEE80211_HT_IE_CHA_SEC_NONE		0x00
+-#define IEEE80211_HT_IE_CHA_SEC_ABOVE		0x01
+-#define IEEE80211_HT_IE_CHA_SEC_BELOW		0x03
+-#define IEEE80211_HT_IE_CHA_WIDTH		0x04
+-#define IEEE80211_HT_IE_HT_PROTECTION		0x0003
+-#define IEEE80211_HT_IE_NON_GF_STA_PRSNT	0x0004
+-#define IEEE80211_HT_IE_NON_HT_STA_PRSNT	0x0010
+-
+-/*
+- * A-PMDU buffer sizes
+- * According to IEEE802.11n spec size varies from 8K to 64K (in powers of 2)
+- */
+-#define IEEE80211_MIN_AMPDU_BUF 0x8
+-
+-/* Spatial Multiplexing Power Save Modes */
+-#define WLAN_HT_CAP_SM_PS_STATIC		0
+-#define WLAN_HT_CAP_SM_PS_DYNAMIC	1
+-#define WLAN_HT_CAP_SM_PS_INVALID	2
+-#define WLAN_HT_CAP_SM_PS_DISABLED	3
+-
+ #endif /* _WIFI_H_ */
+ 
+-- 
+2.27.0
 
-[1] https://megous.com/dl/tmp/0001-MAINTAINERS-Update-entry-for-st7703-driver-after-the.patch
-
-And thanks for testing, too. :)
-
-regards,
-	o.
-
-> Cheers,
->  -- Guido
-> 
-> > 
-> > I've tested this on PinePhone 1.0 and 1.2.
-> > 
-> > Please take a look.
-> > 
-> > thank you and regards,
-> >   Ondrej Jirman
-> > 
-> > Changes in v6:
-> > - Fixed spacing in yaml
-> > - Fixed wrong vccio->iovcc supply name in the bindings doc
-> > - I noticed that the original driver uses a delay of 20ms in the init
-> >   function to achieve a combined total of 120ms required from post-reset
-> >   to display_on. I've added a similar delay to xbd599_init, so that
-> >   xbd599 panel also has the right timing. (patch 9)
-> > - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-> > - Added review/ack tags
-> > - Learned to run dt_binding_check by myself ;)
-> > 
-> > Changes in v5:
-> > - rewritten on top of rocktech-jh057n00900 driver
-> > - rocktech-jh057n00900 renamed to st7703 (controller name)
-> > - converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-> > 
-> > Changes in v4:
-> > - use ->type from the mode instead of hardcoding (Samuel)
-> > - move init_sequence to ->prepare (Samuel)
-> > - move anti-flicker delay to ->enable, explain it (Samuel)
-> > - add enter_sleep after display_off (Samuel)
-> > - drop ->disable (move code to ->unprepare)
-> > - add ID bytes dumping (Linus)
-> >   (I can't test it since allwinner DSI driver has a broken
-> >    dcs_read function, and I didn't manage to fix it.)
-> > - document magic bytes (Linus)
-> > - assert reset during powerup
-> > - cleanup powerup timings according to the datasheet
-> > 
-> > Changes in v3:
-> > - Panel driver renamed to the name of the LCD controller
-> > - Re-organize the driver slightly to more easily support more panels
-> >   based on the same controller.
-> > - Add patch to enable the touchscreen to complete the LCD support
-> >   on PinePhone.
-> > - Dropped the "DSI fix" patch (the driver seems to work for me without it)
-> > - Improved brightness levels handling:
-> >   - PinePhone 1.0 uses default levels generated by the driver
-> >   - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-> >     default levels can't be used. Martijn Braam came up with a
-> >     list of duty cycle values that lead to perception of linear
-> >     brigtness level <-> light intensity on PinePhone 1.1
-> > - There was some feedback on v2 about this being similar to st7701.
-> >   It's only similar in name. Most of the "user commands" are different,
-> >   so I opted to keep this in a new driver instead of creating st770x.
-> >   
-> >   Anyone who likes to check the differences, here are datasheets:
-> > 
-> >   - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-> >   - https://megous.com/dl/tmp/ST7701.pdf
-> > 
-> > Changes in v2:
-> > - DT Example fix.
-> > - DT Format fix.
-> > - Raised copyright info to 2020.
-> > - Sort panel operation functions.
-> > - Sort inclusion.
-> > 
-> > 
-> > -- For phone owners: --
-> > 
-> > There's an open question on how to set the backlight brightness values
-> > on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-> > to backlight being black. It would be nice if more people can test
-> > the various backlight levels on 1.1 and 1.2 revision with this change
-> > in dts:
-> > 
-> >        brightness-levels = <0 1000>;
-> >        num-interpolated-steps = <1000>;
-> > 
-> > and report at what brightness level the backlight turns on. So far it
-> > seems this has a wide range. Lowest useable duty cycle for me is ~7%
-> > on 1.2 and for Martijn ~20% on 1.1.
-> > 
-> > Icenowy Zheng (2):
-> >   dt-bindings: vendor-prefixes: Add Xingbangda
-> >   arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-> > 
-> > Ondrej Jirman (11):
-> >   dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
-> >   dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
-> >   drm/panel: rocktech-jh057n00900: Rename the driver to st7703
-> >   drm/panel: st7703: Rename functions from jh057n prefix to st7703
-> >   drm/panel: st7703: Prepare for supporting multiple panels
-> >   drm/panel: st7703: Move code specific to jh057n closer together
-> >   drm/panel: st7703: Move generic part of init sequence to enable
-> >     callback
-> >   drm/panel: st7703: Add support for Xingbangda XBD599
-> >   drm/panel: st7703: Enter sleep after display off
-> >   drm/panel: st7703: Assert reset prior to powering down the regulators
-> >   arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-> > 
-> >  .../display/panel/rocktech,jh057n00900.txt    |  23 -
-> >  .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
-> >  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
-> >  .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
-> >  .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
-> >  drivers/gpu/drm/panel/Kconfig                 |  26 +-
-> >  drivers/gpu/drm/panel/Makefile                |   2 +-
-> >  .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
-> >  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
-> >  9 files changed, 815 insertions(+), 461 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> >  delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> >  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> > 
-> > -- 
-> > 2.27.0
-> > 
