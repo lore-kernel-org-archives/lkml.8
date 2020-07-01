@@ -2,103 +2,182 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA99C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61155C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7FA2065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3240020775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MLuuKP8c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8Toj+Y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgGAHAR (ORCPT
+        id S1728074AbgGAHAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
+        Wed, 1 Jul 2020 03:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAHAE (ORCPT
+        with ESMTP id S1727997AbgGAHAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:00:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E80FC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:00:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so21209587wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:00:02 -0700 (PDT)
+        Wed, 1 Jul 2020 03:00:07 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A885C03E97B
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:00:07 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so22630150wrm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NUS8pl2s+F7HyNG9JOdBIIa6cEhGwk+IKrIPH0RpN/Y=;
-        b=MLuuKP8cIUJ2iLrriN/WG7L7PGffCGdH8sELwG4cVLyX17fYJ7WSC9hH/48rwC0tS5
-         SZJnIRCQSuTsHB4bbjKMf6JnEMwy2EOFqZAkZiwYlWiccHXd9PFalbAjue7hv214KcHD
-         qaWvPnfGZMjr0OfEcnundm+FvqJfDzEdzS5Pc7+H542KHHX6CuUYa1PikiEBBhhrBLLm
-         qZeIP3vJEMASRYdsmpLFuJCVQr8D64gg87iM5e6l4xfiM8G4Qz89Q47Jb0qdUqTApP3Y
-         4LzQqWm2qHieXzsloGFWtrfagySoXL5JxhNGaQfzot3zNneuInvtPvCv8akioLzQfoNj
-         Qmjg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
+        b=j8Toj+Y1Sm33G/MY5KpRJO/4MLA6Xmjv5NEmZN881Y2JY1sddA5DRPZK6/0hHYYGcd
+         krHNiAHXOdRvae6EVQZAGELUQtm8CGXJ/x+SgYHM0VvPaidxeEwowx7vTVi8h37/rb9C
+         R7BfnkfDNL4HN0vdPWCRCwrMaip4v5M1lbG4IKaFHPpDzHWHhYc+HHpuyL85P/cGtTGi
+         WyANo0R3IJVjvT7gqHcbR4cXVNMm9/NoowviYuOanpFmwrhD5+xp9JMNCo9TJNFskga1
+         /lU/Kvj3kKhEUI3AAcKj3cvObXMNLBpVx5h/aEMMdxo8fGGXRH2H1kj9IBR9Z7shRmJe
+         qOpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NUS8pl2s+F7HyNG9JOdBIIa6cEhGwk+IKrIPH0RpN/Y=;
-        b=pDd0ILDilSFpKBvss9tXXV7Am8Dnd9C6csmdDwvBJU5XXpJ5MqYNwoxOQjqwEUzQzQ
-         QCJCz3iY8sqCONRFpFF6++XLWvrlDbqSMAiMLBY8wsFqz/h9bjCeo19LKobYDN19jMsP
-         DRk6Tae2yoWWepYUGJBulqtCTzN6G0X/wRxNzGZDTR3J3uTkAKuDjbK60uSNHTpeBH0+
-         d2ZfJ4hPt8LX4QzDSZUtno6HbUrA/zvD6vo4ADQtizK9ovPKscGC8JdK5QBtSbnaEHAD
-         zdNWdqt0K4qQ45qbVQcoqyuhs6cQPH2TURt/oj7R+vMdcAj92VhQmtrG+vIKF4b+7qBy
-         kVMA==
-X-Gm-Message-State: AOAM532SyHp5KTN2qWoyAxlr1+oYHTjnjNHtQVV/W7HkSX6aajNInUYK
-        vrHr0gARYJOYGbldHUKzUQAcOw==
-X-Google-Smtp-Source: ABdhPJx7GWQPL4rqfjTwgo0RzWsrPQ+g4flCQxCq0DB3EuwqRGXUI8GhDWAnSrmj7ya7GTSZ+DTKKg==
-X-Received: by 2002:a1c:7fd7:: with SMTP id a206mr25103064wmd.104.1593586800732;
-        Wed, 01 Jul 2020 00:00:00 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z16sm6115728wrr.35.2020.06.30.23.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 23:59:59 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 07:59:57 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@caione.org>
-Subject: [PATCH v2] mfd: axp20x-i2c: Tell the compiler that ACPI functions
- may not be used
-Message-ID: <20200701065957.GO1179328@dell>
-References: <20200629123215.1014747-1-lee.jones@linaro.org>
- <20200629123215.1014747-6-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+pRKYTmuOThutSuGqfNrgAamAdWYk1YESRlVS2CO28A=;
+        b=XI8OT7PvX37pdPZ1L8BWfy1AuVxcYAHGuI9VdE3qUd1gZihxim4UUtXDwsdkxqSkly
+         LFOUAy/FG/boNKikFtz6wvlICzniykfxHUT01MkwmXnoMZNjAfo0KfuLJ6MD4TaH38yz
+         Tx3wFe4bo45QGghHvVu/B+KoIGBKohBoFrho3E8h4EZ/+9cOWK8OuA2/Fy+Yl2jdV981
+         IF+errdWR4K3Cpst9sAqAcbAYzVwZMon4pZOWS8egUlv2W4hf81mKPv2dAuE0p2WZDNj
+         +AHfR84tS+yiYssoiiLbWDaQB4bEVPBlUqexfdaSx1q6VfG+KjUxl4zrJWjxj+dJYfLk
+         spHg==
+X-Gm-Message-State: AOAM533Tb0OVJ/3W5O5ZoFk9vJJUL7xo5nNEYYuBqgIafLSYyb+zDunm
+        HNMpKMLq6bgv58/OIurScfhd9Trc+nY=
+X-Google-Smtp-Source: ABdhPJzXAeq3ERQ5grT5ciAC17dbRoZi+Anv+tNI3+3VRZcEoztY0g+mRZPxmb9Cn/QQRsS3FfyLAQ==
+X-Received: by 2002:adf:828b:: with SMTP id 11mr27284990wrc.58.1593586805272;
+        Wed, 01 Jul 2020 00:00:05 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
+        by smtp.googlemail.com with ESMTPSA id o205sm6355532wme.24.2020.07.01.00.00.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 00:00:04 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
+ <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
+Date:   Wed, 1 Jul 2020 09:00:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629123215.1014747-6-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... as is the case when !CONFIG_ACPI.
-    
-This squashes the current W=1 kernel builds warning:
-    
- drivers/mfd/axp20x-i2c.c:82:36: warning: ‘axp20x_i2c_acpi_match’ defined but not used [-Wunused-const-variable=]
-    
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Carlo Caione <carlo@caione.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On 18/06/2020 00:32, Serge Semin wrote:
+> Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+> GIC timer and MIPS CPS CPUidle drivers.
 
-diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
-index 14f9df74f855c..7d08c06de7afc 100644
---- a/drivers/mfd/axp20x-i2c.c
-+++ b/drivers/mfd/axp20x-i2c.c
-@@ -79,7 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
- 
--static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
-+static const struct acpi_device_id __maybe_unused axp20x_i2c_acpi_match[] = {
-        {
-                .id = "INT33F4",
-                .driver_data = AXP288_ID,
+Why will you add yourself in the MAINTAINERS file for those drivers when
+git shows just one contribution for the mips-gic-timer for the timer
+stability ?
+
+git shortlog --numbered --summary drivers/cpuidle/cpuidle-cps.c
+     4  Paul Burton
+     1  Daniel Lezcano
+     1  Marcin Nowakowski
+     1  Matt Redfearn
+     1  Thomas Gleixner
+
+git shortlog --numbered --summary drivers/clocksource/mips-gic-timer.c
+    11  Andrew Bresticker
+     4  Ezequiel Garcia
+     4  Matt Redfearn
+     4  Paul Burton
+     3  Daniel Lezcano
+     3  Thomas Gleixner
+     2  Linus Torvalds
+     1  Alex Smith
+     1  Christophe Jaillet
+     1  Felix Fietkau
+     1  Ingo Molnar
+     1  Markos Chandras
+     1  Paul Gortmaker
+     1  Rafał Miłecki
+     1  Richard Cochran
+     1  Serge Semin
+     1  Viresh Kumar
+     1  YueHaibing
+
+Also, in the cpuidle-cps.c history, there is no signed-off from Rafael,
+neither an Acked-by when it was merged. That make me think the patch
+went through another path than the linux-pm tree without a cpuidle
+framework maintainer acknowledgement.
+
+Perhaps it is a mistake and the patch was actually acked-by, but I would
+like to remind the patches have to be acked by the upper maintainers and
+being listed in the MAINTAINERS file does not give the right of override
+this rule.
+
+
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - Keep the files list alphabetically ordered.
+> - Add Thomas as the co-maintainer of the designated drivers.
+> ---
+>  MAINTAINERS | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2926327e4976..20532e0287d7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+>  F:	drivers/clk/imgtec/clk-boston.c
+>  F:	include/dt-bindings/clock/boston-clock.h
+>  
+> +MIPS CORE DRIVERS
+> +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> +M:	Serge Semin <fancer.lancer@gmail.com>
+> +L:	linux-mips@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/bus/mips_cdmm.c
+> +F:	drivers/clocksource/mips-gic-timer.c
+> +F:	drivers/cpuidle/cpuidle-cps.c
+> +F:	drivers/irqchip/irq-mips-cpu.c
+> +F:	drivers/irqchip/irq-mips-gic.c
+> +
+>  MIPS GENERIC PLATFORM
+>  M:	Paul Burton <paulburton@kernel.org>
+>  L:	linux-mips@vger.kernel.org
+> 
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
