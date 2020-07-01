@@ -2,205 +2,131 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B045C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC19420760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZwglFBP"
+	by mail.kernel.org (Postfix) with ESMTP id 3A2FD20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbgGALbJ (ORCPT
+        id S1730332AbgGALds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:31:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53904 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730216AbgGALbJ (ORCPT
+        Wed, 1 Jul 2020 07:33:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:40583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730196AbgGALdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:31:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593603066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=7cAEZ0VUk04rqXCh5EEKOgMEkG2PuKnDXKZqj/gtn1g=;
-        b=XZwglFBPOHkAwNOfZGauqeL23DIDXWtWvPfGUd3PGKCSe/kVabVXF0qws86+O+8f2EQ/6F
-        sLft1LHR8aUFsEFAS/69R+sy8+X3iOxXVHruiOXFceqR7wcYn13DopoSfvpeAmu3CSoNry
-        9hE0ZOVVv/GePVyP/tNW+McxnnZubOo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-wCTosYe2O8Wa42tj-lYTiw-1; Wed, 01 Jul 2020 07:31:02 -0400
-X-MC-Unique: wCTosYe2O8Wa42tj-lYTiw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C71C107ACCA;
-        Wed,  1 Jul 2020 11:31:00 +0000 (UTC)
-Received: from [10.36.112.52] (ovpn-112-52.ams2.redhat.com [10.36.112.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7CDD5C1D0;
-        Wed,  1 Jul 2020 11:30:57 +0000 (UTC)
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-From:   David Hildenbrand <david@redhat.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
- <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
- <20200701084200.GN2369@dhcp22.suse.cz>
- <20200701100442.GB17918@linux.vnet.ibm.com>
- <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
-Date:   Wed, 1 Jul 2020 13:30:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 07:33:47 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Macf4-1jFtb91Xnm-00c6Rl; Wed, 01 Jul 2020 13:33:45 +0200
+Received: by mail-qk1-f178.google.com with SMTP id j80so21792235qke.0;
+        Wed, 01 Jul 2020 04:33:45 -0700 (PDT)
+X-Gm-Message-State: AOAM533T6ALZjEidRqExrH5mKItpO4/RnI33awMDPqAfmY9TgSooEYhV
+        x/SFu5CYjGQ9T0cFADODlTWPn53JzTz8PDed9CU=
+X-Google-Smtp-Source: ABdhPJzUyheLKExWmWPJJq8cfmtDNQPYUV5VmAxlZw/B9iC/fX9pH44hi8zZXNkJzktUY7GsGZCLQHu7TodbT+JJTF8=
+X-Received: by 2002:a37:9dd6:: with SMTP id g205mr25563365qke.352.1593603224183;
+ Wed, 01 Jul 2020 04:33:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-3-will@kernel.org>
+ <CAK8P3a136e2k-iGoJ4X51mnj0f0KSLJKOw6b=s4F2QHHeyAMEQ@mail.gmail.com> <20200701101603.GB14959@willie-the-truck>
+In-Reply-To: <20200701101603.GB14959@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 1 Jul 2020 13:33:28 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0cfjU-EOVJoMrUcjVDXLOk1Trv4DWcz_bME5Aj3=JPvQ@mail.gmail.com>
+Message-ID: <CAK8P3a0cfjU-EOVJoMrUcjVDXLOk1Trv4DWcz_bME5Aj3=JPvQ@mail.gmail.com>
+Subject: Re: [PATCH 02/18] compiler.h: Split {READ,WRITE}_ONCE definitions out
+ into rwonce.h
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:/RjR3cx/IosXmLHSIAw3K2DqSQYhrhXWA71/rRKV/wIh3QCve5q
+ gHLw8HS5iSdMhiBqrGklBQMexmENgsjC4XY3iUWttf+hhm5BmUWNDrq7JkrPkuEoBALjdhk
+ raeyrDJuwB4zboNjFNxyEmQZtcyRtSEL2IrtiZL0NG0ksR8S/sAH31lB6rD/U23yzLls2/7
+ +eDDFhwm4BJ5vwtrEkhfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:umKuxKgCI1I=:/r8f8diZkq+0S5w0FdPi4N
+ eWZO6vSDlA6Zp+V1hvLgtcU7LKYJJxMf+eEkUvS/E5v06klFMH91fDuGWtwPGu0ROZUsBw2X1
+ LqAhs/Jq/iW+9dJ/SRfWgRIQHciZIf97liLiAclok9p6adg4aVUE30qgg7YkJOwlf3v6FO67U
+ 1vG6L3EDxClpI6oUyaavz1w1jvK5nM5ZAMBSaEudxDmyybYVUeZVGmGDh6DjuEZoDUUSlvvt8
+ nUducq41B+zL9NBiRX/5UsSQNXXiAxBVl1Mz39Dj+qRrfyCGtCBpDYBIz00hdlNP5yPzqsaMO
+ wAomUWS60A6zqCvHHrYgYxRCsAqoiYeoiq9Vprm98My2NRtxIyNEV/0iiCLbDoXPv1wkhGmxd
+ esUq2Q3gYFig/Q8bep5Q0axtp9pmNP15VVYlrkHeHp3CzjKH0zzEk7A7Cmzcsv9uzF1RYhtPC
+ IMttQiM8U/5kalUCZRWVG6auHlBJWclsfH0trOl3dR3FLg9iv7qiw9PKagzs+RA9NeOgsXpzN
+ 7ukk9nHNCZSM1Nj9PEyCmTObPfldglxPA6xoMvMLeEmUANe+NqKJQYsVtRzsQGACi0Kyb+lYI
+ Q51/4YXL+RptvMLqkol+XLc9BZ1VtD7fX6GBOc+PPeKjSx5wV1xR+jvnSsCCjpUGbHsAXU1WW
+ d9bpZ/jxupuo5a4/yDD08rAv7TVNrKk2rs/DLffKGRdGbJkQz80DBp0h5437lbWUb98OMHbwr
+ +ul3fSvH7Y3a1QD2oF/mA9vLiXrR3bOCKf+LAlIRq0Oz8R8r66DYQZ3xAc3HCAMB8WxQvheiY
+ h8rnkXx3DEBg8BGq82zjLmhUAIrejbvsETKZXFsqpj6Q3AE2oo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.07.20 13:06, David Hildenbrand wrote:
-> On 01.07.20 13:01, Srikar Dronamraju wrote:
->> * David Hildenbrand <david@redhat.com> [2020-07-01 12:15:54]:
->>
->>> On 01.07.20 12:04, Srikar Dronamraju wrote:
->>>> * Michal Hocko <mhocko@kernel.org> [2020-07-01 10:42:00]:
->>>>
->>>>>
->>>>>>
->>>>>> 2. Also existence of dummy node also leads to inconsistent information. The
->>>>>> number of online nodes is inconsistent with the information in the
->>>>>> device-tree and resource-dump
->>>>>>
->>>>>> 3. When the dummy node is present, single node non-Numa systems end up showing
->>>>>> up as NUMA systems and numa_balancing gets enabled. This will mean we take
->>>>>> the hit from the unnecessary numa hinting faults.
->>>>>
->>>>> I have to say that I dislike the node online/offline state and directly
->>>>> exporting that to the userspace. Users should only care whether the node
->>>>> has memory/cpus. Numa nodes can be online without any memory. Just
->>>>> offline all the present memory blocks but do not physically hot remove
->>>>> them and you are in the same situation. If users are confused by an
->>>>> output of tools like numactl -H then those could be updated and hide
->>>>> nodes without any memory&cpus.
->>>>>
->>>>> The autonuma problem sounds interesting but again this patch doesn't
->>>>> really solve the underlying problem because I strongly suspect that the
->>>>> problem is still there when a numa node gets all its memory offline as
->>>>> mentioned above.
->>>>>
->>>>> While I completely agree that making node 0 special is wrong, I have
->>>>> still hard time to review this very simply looking patch because all the
->>>>> numa initialization is so spread around that this might just blow up
->>>>> at unexpected places. IIRC we have discussed testing in the previous
->>>>> version and David has provided a way to emulate these configurations
->>>>> on x86. Did you manage to use those instruction for additional testing
->>>>> on other than ppc architectures?
->>>>>
->>>>
->>>> I have tried all the steps that David mentioned and reported back at
->>>> https://lore.kernel.org/lkml/20200511174731.GD1961@linux.vnet.ibm.com/t/#u
->>>>
->>>> As a summary, David's steps are still not creating a memoryless/cpuless on
->>>> x86 VM.
->>>
->>> Now, that is wrong. You get a memoryless/cpuless node, which is *not
->>> online*. Once you hotplug some memory, it will switch online. Once you
->>> remove memory, it will switch back offline.
->>>
->>
->> Let me clarify, we are looking for a node 0 which is cpuless/memoryless at
->> boot.  The code in question tries to handle a cpuless/memoryless node 0 at
->> boot.
-> 
-> I was just correcting your statement, because it was wrong.
-> 
-> Could be that x86 code maps PXM 1 to node 0 because PXM 1 does neither
-> have CPUs nor memory. That would imply that we can, in fact, never have
-> node 0 offline during boot.
-> 
+On Wed, Jul 1, 2020 at 12:16 PM Will Deacon <will@kernel.org> wrote:
+> On Tue, Jun 30, 2020 at 09:11:32PM +0200, Arnd Bergmann wrote:
+> > On Tue, Jun 30, 2020 at 7:37 PM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > In preparation for allowing architectures to define their own
+> > > implementation of the READ_ONCE() macro, move the generic
+> > > {READ,WRITE}_ONCE() definitions out of the unwieldy 'linux/compiler.h'
+> > > file and into a new 'rwonce.h' header under 'asm-generic'.
+> > >
+> > > Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > ---
+> > >  include/asm-generic/Kbuild   |  1 +
+> > >  include/asm-generic/rwonce.h | 91 ++++++++++++++++++++++++++++++++++++
+> > >  include/linux/compiler.h     | 83 +-------------------------------
+> >
+> > Very nice, this has the added benefit of allowing us to stop including
+> > asm/barrier.h once linux/compiler.h gets changed to not include
+> > asm/rwonce.h.
+>
+> Yeah, with this series linux/compiler.h _does_ include asm/rwonce.h because
+> otherwise there are many callers to fix up, but that could be addressed
+> subsequently, I suppose.
 
-Yep, looks like it.
+Right, I didn't mean you should change that right away. I actually
+have a work-in-progress patch series that removes a ton of
+indirect header inclusions to improve build speed, and a script to
+add the explicit includes into .c files where needed.
 
-[    0.009726] SRAT: PXM 1 -> APIC 0x00 -> Node 0
-[    0.009727] SRAT: PXM 1 -> APIC 0x01 -> Node 0
-[    0.009727] SRAT: PXM 1 -> APIC 0x02 -> Node 0
-[    0.009728] SRAT: PXM 1 -> APIC 0x03 -> Node 0
-[    0.009731] ACPI: SRAT: Node 0 PXM 1 [mem 0x00000000-0x0009ffff]
-[    0.009732] ACPI: SRAT: Node 0 PXM 1 [mem 0x00100000-0xbfffffff]
-[    0.009733] ACPI: SRAT: Node 0 PXM 1 [mem 0x100000000-0x13fffffff]
+> > The asm/barrier.h header has a circular dependency, pulling in
+> > linux/compiler.h itself.
+>
+> Hmm. Once smp_read_barrier_depends() disappears, I could actually remove
+> the include of <asm/barrier.h> from asm-generic/rwonce.h. It would have to
+> remain for arch/alpha/, however, since we need the barrier definitions to
+> implement READ_ONCE(). I can probably also replace the include of
+> <linux/compiler.h> in asm-generic/barrier.h with <asm/rwonce.h> too (so it's
+> still circular, but at least a lot simpler).
+>
+> I'll have a play...
 
+I think this would require the same kind of fixup for anything that depends on
+asm/barrier.h being included implicitly at the moment.
 
-
--- 
-Thanks,
-
-David / dhildenb
-
+      Arnd
