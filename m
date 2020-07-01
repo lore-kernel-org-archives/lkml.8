@@ -2,91 +2,69 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0104C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5592074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ovJa4YyV"
+	by mail.kernel.org (Postfix) with ESMTP id 925B420663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgGADqk (ORCPT
+        id S1726736AbgGADuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:46:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13542 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725862AbgGADqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:46:39 -0400
-X-UUID: 5b232870d7d64e75a6adc067879c1dff-20200701
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ry6nys1ZRAY+H8Q6GyL9wPx9JOP40z3D/yzAqhlEzgk=;
-        b=ovJa4YyVa+MSf+OAgTLxN+HYc/SF+vSAFvuNr2xwCVEqPVRs4xFHxhH3Fij7XbSLAf6P9KHsyXjmC6BJOQ7FWjtTAtoyKXOdxAvtNPpYVM3z9Da8lkVeE83n9VETVDCMJC+k9fwft+bb7pkUsXhWjwO8k1drgRg7FF03JL+8zHA=;
-X-UUID: 5b232870d7d64e75a6adc067879c1dff-20200701
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 933444611; Wed, 01 Jul 2020 11:46:33 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 1 Jul 2020 11:46:29 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 1 Jul 2020 11:46:29 +0800
-Message-ID: <1593575190.1533.2.camel@mtksdaap41>
-Subject: Re: [PATCH v2 12/18] media: mtk-vcodec: venc: set OUTPUT buffers
- field to V4L2_FIELD_NONE
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        "Pi-Hsun Shih" <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Wed, 1 Jul 2020 11:46:30 +0800
-In-Reply-To: <20200626080442.292309-13-acourbot@chromium.org>
-References: <20200626080442.292309-1-acourbot@chromium.org>
-         <20200626080442.292309-13-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 30 Jun 2020 23:50:22 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:35316 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgGADuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 23:50:22 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jqTlG-0006Ov-BC; Wed, 01 Jul 2020 13:50:15 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 13:50:14 +1000
+Date:   Wed, 1 Jul 2020 13:50:14 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+Message-ID: <20200701035014.GA7384@gondor.apana.org.au>
+References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+ <20200701020211.GA6875@gondor.apana.org.au>
+ <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
+ <20200701022241.GA7167@gondor.apana.org.au>
+ <CANn89iLKZQAtpejcLHmOu3dsrGf5eyFfHc8JqoMNYisRPWQ8kQ@mail.gmail.com>
+ <20200701025843.GA7254@gondor.apana.org.au>
+ <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 5DBE0FC55AB4023EE954F5DA77B7212998D8E0782B4337E1906B2A5E2DE6EAA12000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA2LTI2IGF0IDE3OjA0ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gQSBkZWZhdWx0IHZhbHVlIG9mIDAgbWVhbnMgVjRMMl9GSUVMRF9BTlksIHdoaWNoIGlz
-IG5vdCBjb3JyZWN0Lg0KPiBSZXBvcnRlZCBieSB2NGwyLWNvbXBsaWFuY2UuDQo+IA0KDQpBY2tl
-ZC1ieTogVGlmZmFueSBMaW4gPHRpZmZhbnkubGluQG1lZGlhdGVrLmNvbT4NCg0KDQo+IFNpZ25l
-ZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0t
-LQ0KPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMg
-fCA5ICsrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVj
-X2VuYy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5j
-LmMNCj4gaW5kZXggZjgzM2FlZTRhMDZmLi4xYTk4MWQ4NDJjMTkgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+ICsrKyBi
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+IEBA
-IC04OTMsOCArODkzLDE3IEBAIHN0YXRpYyB2b2lkIHZiMm9wc192ZW5jX3N0b3Bfc3RyZWFtaW5n
-KHN0cnVjdCB2YjJfcXVldWUgKnEpDQo+ICAJY3R4LT5zdGF0ZSA9IE1US19TVEFURV9GUkVFOw0K
-PiAgfQ0KPiAgDQo+ICtzdGF0aWMgaW50IHZiMm9wc192ZW5jX2J1Zl9vdXRfdmFsaWRhdGUoc3Ry
-dWN0IHZiMl9idWZmZXIgKnZiKQ0KPiArew0KPiArCXN0cnVjdCB2YjJfdjRsMl9idWZmZXIgKnZi
-dWYgPSB0b192YjJfdjRsMl9idWZmZXIodmIpOw0KPiArDQo+ICsJdmJ1Zi0+ZmllbGQgPSBWNEwy
-X0ZJRUxEX05PTkU7DQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgdmIyX29wcyBtdGtfdmVuY192YjJfb3BzID0gew0KPiAgCS5xdWV1ZV9zZXR1cAkJPSB2
-YjJvcHNfdmVuY19xdWV1ZV9zZXR1cCwNCj4gKwkuYnVmX291dF92YWxpZGF0ZQk9IHZiMm9wc192
-ZW5jX2J1Zl9vdXRfdmFsaWRhdGUsDQo+ICAJLmJ1Zl9wcmVwYXJlCQk9IHZiMm9wc192ZW5jX2J1
-Zl9wcmVwYXJlLA0KPiAgCS5idWZfcXVldWUJCT0gdmIyb3BzX3ZlbmNfYnVmX3F1ZXVlLA0KPiAg
-CS53YWl0X3ByZXBhcmUJCT0gdmIyX29wc193YWl0X3ByZXBhcmUsDQoNCg==
+On Tue, Jun 30, 2020 at 08:36:51PM -0700, Eric Dumazet wrote:
+>
+> If I knew so many people were excited about TCP / MD5, I would have
+> posted all my patches on lkml ;)
+> 
+> Without the smp_wmb() we would still need something to prevent KMSAN
+> from detecting that we read uninitialized bytes,
+> if key->keylen is increased.  (initial content of key->key[] is garbage)
+> 
+> Something like this :
 
+LGTM.  Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
