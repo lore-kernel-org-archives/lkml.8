@@ -6,64 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26048C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16A7207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A89720853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642279;
-	bh=ZtxAWjE39NzDXq1FuKkTxOe+E45NfjwE+SIqZVm1Mc4=;
+	s=default; t=1593642288;
+	bh=FHBh1mxPgfAWN1bzSoTB4s7mrsMW5ytak9w9b0zSggs=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Htaqs9z7+Gp8DZvQikcmNADcZg9xbpVRPvTjggvq2dtLtDGXVnskO+rHK8Bi1jWDc
-	 Yo6yPy2rHeG3mjHKDJn/Wllh3NnKhHg3or4IRoHD+N2y4BxGUO8zk+7bVAR9Osk8S+
-	 j+WNFzCNp/ABZc6IrBEF1as3MkPAZZbnHwJCIPYc=
+	b=ZGnUKyUFUSqx60cfm9+4dS1a6xxk/tYaccFkXFExHgjEPkLU0iW1yDE3jUyf95mQm
+	 +ujMG5DdhfCHOamzx2CPBBfYG+TOJnWAOUbm1oquftxVX//VjARkE9CWveDYno98cS
+	 3Zu164+WZUZwcUbzDqyHMgA2MsYkm0pip3lHhnNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgGAWYh (ORCPT
+        id S1728163AbgGAWYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbgGAWYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:35 -0400
+        id S1725771AbgGAWYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:45 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD938207E8;
-        Wed,  1 Jul 2020 22:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA3F20853;
+        Wed,  1 Jul 2020 22:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642275;
-        bh=ZtxAWjE39NzDXq1FuKkTxOe+E45NfjwE+SIqZVm1Mc4=;
+        s=default; t=1593642285;
+        bh=FHBh1mxPgfAWN1bzSoTB4s7mrsMW5ytak9w9b0zSggs=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=IZ2hld1te52uSRaSEG8MzyydRr3eAK26MFEWmUHeE7ADAMJanlrHGSwbXDdDkUhVJ
-         uEIeLFBCq7LXdK94aFKKbQsrcbUdyvqNy8grnWaxIqajDMkNUPEIZcTsryzpB72zX1
-         eIf+Fr8+GQK+U6E/KBV1iXNfXiZK4Iaq4q2XXLXs=
-Date:   Wed, 01 Jul 2020 23:24:33 +0100
+        b=frMh+kziKHUgVefYXDYKCfSq9uFnCLrqxGhglAJNLuLpI1qBHH3CYwq0csPtnqgrW
+         y2aEAEnlxD6fkyDP/i8VSGnDNIf5WQPt/uvtuAgdY9aXiuYD2ZDYYs77SD28M1pIW9
+         Rgaty/yJ2JcuQ7KMnayhiqIpjqD6VzwILARfnrQY=
+Date:   Wed, 01 Jul 2020 23:24:43 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        swboyd@chromium.org, Benson Leung <bleung@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
-In-Reply-To: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
-References: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
-Subject: Re: [PATCH] spi: Avoid setting the chip select if we don't need to
-Message-Id: <159364224814.10988.2511800063055608801.b4-ty@kernel.org>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+In-Reply-To: <20200622162611.83694-1-luc.vanoostenryck@gmail.com>
+References: <20200622162611.83694-1-luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH] spi: fsl: add missing __iomem annotation
+Message-Id: <159364224815.10988.7192403124686277429.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 16:41:06 -0700, Douglas Anderson wrote:
-> On some SPI controllers (like spi-geni-qcom) setting the chip select
-> is a heavy operation.  For instance on spi-geni-qcom, with the current
-> code, is was measured as taking upwards of 20 us.  Even on SPI
-> controllers that aren't as heavy, setting the chip select is at least
-> something like a MMIO operation over some peripheral bus which isn't
-> as fast as a RAM access.
+On Mon, 22 Jun 2020 18:26:11 +0200, Luc Van Oostenryck wrote:
+> The field mspi->reg_base is annotated as an __iomem pointer. Good.
 > 
-> [...]
+> However, this field is often assigned to a temporary variable:
+> before being used. For example:
+> 	struct fsl_spi_reg *reg_base = mspi->reg_base;
+> 
+> But this variable is missing the __iomem annotation.
+> So, add the missing __iomem and make sparse & the bot happier.
 
 Applied to
 
@@ -71,8 +68,8 @@ Applied to
 
 Thanks!
 
-[1/1] spi: Avoid setting the chip select if we don't need to
-      commit: d40f0b6f2e21f2400ae8b1b120d11877d9ffd8ec
+[1/1] spi: fsl: add missing __iomem annotation
+      commit: dd67de8c3b421376b4b6dac14263763aa75535fc
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
