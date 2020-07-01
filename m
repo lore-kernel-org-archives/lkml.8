@@ -2,101 +2,116 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B75C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39802C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BE6207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A4E20780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvEIfAV0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEMZGLOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgGAWEP (ORCPT
+        id S1726942AbgGAWHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36770 "EHLO
+        Wed, 1 Jul 2020 18:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAWEO (ORCPT
+        with ESMTP id S1725771AbgGAWHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:04:14 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A593C08C5C1;
-        Wed,  1 Jul 2020 15:04:14 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id dm19so15202055edb.13;
-        Wed, 01 Jul 2020 15:04:14 -0700 (PDT)
+        Wed, 1 Jul 2020 18:07:50 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32A6C08C5C1;
+        Wed,  1 Jul 2020 15:07:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z24so4186832ljn.8;
+        Wed, 01 Jul 2020 15:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iFf+nz1PIcWLglG4iJr5ZGTsWCrjow9npmRMAWBEENw=;
-        b=YvEIfAV0Igjy0O0J0IYztMsG1KekvK4sHRwUPH8yQojQAFQtDJq89FSEVpW8aN0rPi
-         tgk38NR2HLoMn3VsPGa53Cz6akmXIziT/l1Qyt+jinp5ovJXM/NaRQ3paHG4yTTQ9HZF
-         b5SerZOayYtHcFu7cz4k7INgp+8Iq3gUTeW4aMy2/nyAgTq0135jzdQPeg9vZ+q2Rte7
-         KglE19fUB/F/RK0eZ29tA0nosomgdlMdLcQ28CheiQoL0rGfNoOQsunr1YlMvq/67hUV
-         0p3osMJIp7sJ/vp4MXdAu3Lr/dxkItDqSLni+dzAJRfVPEdB5uUL1pgabFzKmpy5gWiH
-         p7mw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+ohxmBAJip02a1VFP0Ot2Q9zEKcMeu3jnb8Rzmbca/M=;
+        b=AEMZGLOWrMk73giLAGv+pg9nTBvFlqQdE7gTL/gQ3oWJ8mYZWviYnK4tuTjt91jR6v
+         JyDIu/+10zEKgIdpjHdlHhwtbkqUmzC6r3VG5Id1qPU5ZTZiD7nty+1BZQrh2ZKHQRn6
+         ZPxot1ZORNq5skS6P0hlc8pmRW3shkSBtmoWh57nQPUISJ/69Q2MzXrp46MVcKfUIyYj
+         /TM3cwwxeBpysJJ2ddEfXv4JNGcSydMWQxJs684IY/bZ13QoWcuXYSMv9e46dTj7pp8p
+         hHrOxSMF/8362gA+l05S4i7o5AdH3upOQd+oYMYkvi8zssrpEcVu0V4lBru2CvNEkZZ6
+         VyKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iFf+nz1PIcWLglG4iJr5ZGTsWCrjow9npmRMAWBEENw=;
-        b=i4epEh9hGjUODK3TM0NSXVJlW3cSyHJPTVmzZWq3GWzmDxK+PPHPnvjdQB/laKCV/R
-         ldERs5HaMTdmyKwXw2Ta1GMTGRgAKcdHMqFkKPxgPdtkgzqWrjC+SjjtXK9QCuN50i33
-         sE83zWSqEB1dJ+ovppI9M++85zr4fdgptFDugaboFU8alwRNQ82Q87JtP8oLzWBR11Sa
-         XejtzoMeQKa44wouqmdIcpb4DN4RixtZSRXB1dAE52EDJv7le4U4nYGLqNsycr9C6KQ1
-         8kgTbbJBhtDS6YJSxcmvM09t0gaq19OcmAdRSpRDqodXOlZVGzwKHJNNzdC4J9qstZzc
-         xW+Q==
-X-Gm-Message-State: AOAM5333Vuo8JcmHlrP7G0S/meHifTyFIHOALxloWxIJyEZyLxAYHSHo
-        Zs+n8hX9UppfZPexyu0sihZ+uSM9se6G9/QskpU=
-X-Google-Smtp-Source: ABdhPJx2uiQuAv8NKlOX1yDPenefz1yRqEZ83yzQi/GqTFtCmxYidN1mAmQmElJusOWegGptOzISl7YuQL0KmMJw1cw=
-X-Received: by 2002:a05:6402:2d7:: with SMTP id b23mr19223958edx.145.1593641053052;
- Wed, 01 Jul 2020 15:04:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+ohxmBAJip02a1VFP0Ot2Q9zEKcMeu3jnb8Rzmbca/M=;
+        b=R0KQ80xjTlShSmOCMGq4LWHYOfq/yoxN+qeASCYDpCHLKqkpFtuUFuuMNELcVmfKnK
+         4NV4RvXBLiLJpCaBaVjXdieVL0eIVCv2nchwqgn5Zbhqw5q9OUgLYxLM9OMXo2hYrPNi
+         iZGMEZBiEf1ld3iNsv/r5e4SgiptyYohFsOt4YNAPq8RO+X5BXSXlvZhCz2FTqeoH3HH
+         XR8sLsVw0hFzM+1bY7gtgDbtif9q+joR6ja8kQpB13pzdMHPuTNp/cox3E3xolVuLoew
+         MYfNTPzLAQXdTSdqDThnTu8Mo2zI/r9jOFoudumZuZ4uJF7td71gvUU6c44v+BPPHrM3
+         +Ymw==
+X-Gm-Message-State: AOAM530IKOFpv8fDVpxjsC9KVK4I33M0XTmnffsN6hcVlcgdLtN4Tgjv
+        qEv7AP1PsXYqpIt8jgtOXR8=
+X-Google-Smtp-Source: ABdhPJzcVEtLSZafFQYSlr60rjQ71eNMW1TNsnWBOsfPWQdVx5f8OXjnqVWxmIxJhZwcZa3v8QZnTw==
+X-Received: by 2002:a2e:81c8:: with SMTP id s8mr14480440ljg.281.1593641268276;
+        Wed, 01 Jul 2020 15:07:48 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-241.NA.cust.bahnhof.se. [98.128.181.241])
+        by smtp.gmail.com with ESMTPSA id x17sm2516292lfe.44.2020.07.01.15.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 15:07:47 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, arei.gonglei@huawei.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        virtualization@lists.linux-foundation.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] crypto: virtio - constify features[] and id_table[]
+Date:   Wed,  1 Jul 2020 22:29:36 +0200
+Message-Id: <20200701202936.44156-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200701213433.9217-1-michael@walle.cc> <20200701215310.GL1551@shell.armlinux.org.uk>
-In-Reply-To: <20200701215310.GL1551@shell.armlinux.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 2 Jul 2020 01:04:02 +0300
-Message-ID: <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com>
-Subject: Re: [PATCH RESEND net-next v3 0/3] net: enetc: remove bootloader dependency
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Michael Walle <michael@walle.cc>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 00:53, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> fixing up almost every driver the best I can with the exception of two -
-> felix DSA and Mediatek.
->
-> I'm not going to wait for Felix or Mediatek.  As I say, I've given
-> plenty of warning, and it's only a _suspicion_ of breakage on my
-> side.
->
+features[] and id_table[] are not modified and can be made const to
+allow the compiler to put them in read-only memory.
 
-What do you mean "I'm not going to wait for Felix"?
-https://patchwork.ozlabs.org/project/netdev/patch/20200625152331.3784018-5-olteanv@gmail.com/
-We left it at:
+Before:
+   text    data     bss     dec     hex filename
+  11534    2056     160   13750    35b6 drivers/crypto/virtio/virtio_crypto_core.o
 
-> I'm not going to review patch 7
-> tonight because of this fiasco.  To pissed off to do a decent job, so
-> you're just going to have to wait.
+After:
+   text    data     bss     dec     hex filename
+  11630    1992     128   13750    35b6 drivers/crypto/virtio/virtio_crypto_core.o
 
-So, I was actively waiting for you to review it ever since, just like
-you said, so I could send a v2. Were you waiting for anything?
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/crypto/virtio/virtio_crypto_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thank you,
--Vladimir
+diff --git a/drivers/crypto/virtio/virtio_crypto_core.c b/drivers/crypto/virtio/virtio_crypto_core.c
+index ba8a19c72391..0c66d6193ca2 100644
+--- a/drivers/crypto/virtio/virtio_crypto_core.c
++++ b/drivers/crypto/virtio/virtio_crypto_core.c
+@@ -498,11 +498,11 @@ static int virtcrypto_restore(struct virtio_device *vdev)
+ }
+ #endif
+ 
+-static unsigned int features[] = {
++static const unsigned int features[] = {
+ 	/* none */
+ };
+ 
+-static struct virtio_device_id id_table[] = {
++static const struct virtio_device_id id_table[] = {
+ 	{ VIRTIO_ID_CRYPTO, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
+-- 
+2.27.0
+
