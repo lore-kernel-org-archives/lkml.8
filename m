@@ -2,192 +2,240 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D54FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF2E206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A18206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbgGAPyX (ORCPT
+        id S1732228AbgGAPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:54:23 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34020 "EHLO honk.sigxcpu.org"
+        Wed, 1 Jul 2020 11:54:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:52498 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732162AbgGAPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732179AbgGAPyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 11:54:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BF2E5FB03;
-        Wed,  1 Jul 2020 17:54:07 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CCl797Eo_EWk; Wed,  1 Jul 2020 17:54:06 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 6DCB540972; Wed,  1 Jul 2020 17:54:05 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 17:54:05 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
-Message-ID: <20200701155405.GA174356@bogon.m.sigxcpu.org>
-References: <20200701103126.1512615-1-megous@megous.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F371139F;
+        Wed,  1 Jul 2020 08:54:12 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C4D63F68F;
+        Wed,  1 Jul 2020 08:54:11 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        dan.carpenter@oracle.com, cristian.marussi@arm.com
+Subject: [PATCH v11 8/9] firmware: arm_scmi: Add reset notifications support
+Date:   Wed,  1 Jul 2020 16:53:47 +0100
+Message-Id: <20200701155348.52864-9-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701155348.52864-1-cristian.marussi@arm.com>
+References: <20200701155348.52864-1-cristian.marussi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
-> This patchset adds support for the LCD panel of PinePhone.
+Make SCMI reset protocol register with the notification core.
 
-I gave this a quick spin on the Librem5 devkit so
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+V10 --> V11
+- fix set_notify_enabled
+V8 --> V9
+- moved pr_info to pr_debug
+- removed switch()
+- use SCMI_PROTO_QUEUE_SZ
+V6 --> V7
+- fixed report.timestamp type
+- added agent_id notification field
+- fixed .max_payld_sz initialization
+- expose SCMI_EVENT_ in linux/scmi_protocol.h
+V5 --> V6
+- added handle argument to fill_custom_report()
+V4 --> V5
+- fixed unsual return construct
+V3 --> V4
+- scmi_event field renamed
+V2 --> V3
+- added handle awareness
+V1 --> V2
+- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
+  logic out of protocol. ALL_SRCIDs logic is now in charge of the
+  notification core, together with proper reference counting of enables
+- switched to devres protocol-registration
+---
+ drivers/firmware/arm_scmi/reset.c | 96 +++++++++++++++++++++++++++++--
+ include/linux/scmi_protocol.h     |  8 +++
+ 2 files changed, 100 insertions(+), 4 deletions(-)
 
-Tested-by: Guido Günther <agx@sigxcpu.org>
+diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+index de73054554f3..fb7cb517900b 100644
+--- a/drivers/firmware/arm_scmi/reset.c
++++ b/drivers/firmware/arm_scmi/reset.c
+@@ -5,7 +5,12 @@
+  * Copyright (C) 2019 ARM Ltd.
+  */
+ 
++#define pr_fmt(fmt) "SCMI Notifications RESET - " fmt
++
++#include <linux/scmi_protocol.h>
++
+ #include "common.h"
++#include "notify.h"
+ 
+ enum scmi_reset_protocol_cmd {
+ 	RESET_DOMAIN_ATTRIBUTES = 0x3,
+@@ -13,10 +18,6 @@ enum scmi_reset_protocol_cmd {
+ 	RESET_NOTIFY = 0x5,
+ };
+ 
+-enum scmi_reset_protocol_notify {
+-	RESET_ISSUED = 0x0,
+-};
+-
+ #define NUM_RESET_DOMAIN_MASK	0xffff
+ #define RESET_NOTIFY_ENABLE	BIT(0)
+ 
+@@ -40,6 +41,18 @@ struct scmi_msg_reset_domain_reset {
+ #define ARCH_COLD_RESET		(ARCH_RESET_TYPE | COLD_RESET_STATE)
+ };
+ 
++struct scmi_msg_reset_notify {
++	__le32 id;
++	__le32 event_control;
++#define RESET_TP_NOTIFY_ALL	BIT(0)
++};
++
++struct scmi_reset_issued_notify_payld {
++	__le32 agent_id;
++	__le32 domain_id;
++	__le32 reset_state;
++};
++
+ struct reset_dom_info {
+ 	bool async_reset;
+ 	bool reset_notify;
+@@ -190,6 +203,75 @@ static struct scmi_reset_ops reset_ops = {
+ 	.deassert = scmi_reset_domain_deassert,
+ };
+ 
++static int scmi_reset_notify(const struct scmi_handle *handle, u32 domain_id,
++			     bool enable)
++{
++	int ret;
++	u32 evt_cntl = enable ? RESET_TP_NOTIFY_ALL : 0;
++	struct scmi_xfer *t;
++	struct scmi_msg_reset_notify *cfg;
++
++	ret = scmi_xfer_get_init(handle, RESET_NOTIFY,
++				 SCMI_PROTOCOL_RESET, sizeof(*cfg), 0, &t);
++	if (ret)
++		return ret;
++
++	cfg = t->tx.buf;
++	cfg->id = cpu_to_le32(domain_id);
++	cfg->event_control = cpu_to_le32(evt_cntl);
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_xfer_put(handle, t);
++	return ret;
++}
++
++static int scmi_reset_set_notify_enabled(const struct scmi_handle *handle,
++					 u8 evt_id, u32 src_id, bool enable)
++{
++	int ret;
++
++	ret = scmi_reset_notify(handle, src_id, enable);
++	if (ret)
++		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
++			 evt_id, src_id, ret);
++
++	return ret;
++}
++
++static void *scmi_reset_fill_custom_report(const struct scmi_handle *handle,
++					   u8 evt_id, u64 timestamp,
++					   const void *payld, size_t payld_sz,
++					   void *report, u32 *src_id)
++{
++	const struct scmi_reset_issued_notify_payld *p = payld;
++	struct scmi_reset_issued_report *r = report;
++
++	if (evt_id != SCMI_EVENT_RESET_ISSUED || sizeof(*p) != payld_sz)
++		return NULL;
++
++	r->timestamp = timestamp;
++	r->agent_id = le32_to_cpu(p->agent_id);
++	r->domain_id = le32_to_cpu(p->domain_id);
++	r->reset_state = le32_to_cpu(p->reset_state);
++	*src_id = r->domain_id;
++
++	return r;
++}
++
++static const struct scmi_event reset_events[] = {
++	{
++		.id = SCMI_EVENT_RESET_ISSUED,
++		.max_payld_sz = sizeof(struct scmi_reset_issued_notify_payld),
++		.max_report_sz = sizeof(struct scmi_reset_issued_report),
++	},
++};
++
++static const struct scmi_event_ops reset_event_ops = {
++	.set_notify_enabled = scmi_reset_set_notify_enabled,
++	.fill_custom_report = scmi_reset_fill_custom_report,
++};
++
+ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ {
+ 	int domain;
+@@ -218,6 +300,12 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ 		scmi_reset_domain_attributes_get(handle, domain, dom);
+ 	}
+ 
++	scmi_register_protocol_events(handle,
++				      SCMI_PROTOCOL_RESET, SCMI_PROTO_QUEUE_SZ,
++				      &reset_event_ops, reset_events,
++				      ARRAY_SIZE(reset_events),
++				      pinfo->num_domains);
++
+ 	pinfo->version = version;
+ 	handle->reset_ops = &reset_ops;
+ 	handle->reset_priv = pinfo;
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index d0ea4a5037e7..d04d66be596d 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -376,6 +376,7 @@ enum scmi_notification_events {
+ 	SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED = 0x0,
+ 	SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED = 0x1,
+ 	SCMI_EVENT_SENSOR_TRIP_POINT_EVENT = 0x0,
++	SCMI_EVENT_RESET_ISSUED = 0x0,
+ };
+ 
+ struct scmi_power_state_changed_report {
+@@ -407,4 +408,11 @@ struct scmi_sensor_trip_point_report {
+ 	u32 trip_point_desc;
+ };
+ 
++struct scmi_reset_issued_report {
++	u64 timestamp;
++	u32 agent_id;
++	u32 domain_id;
++	u32 reset_state;
++};
++
+ #endif /* _LINUX_SCMI_PROTOCOL_H */
+-- 
+2.17.1
 
-but please also adjust MAINTAINERS so we stay in the loop on driver
-changes.
-Cheers,
- -- Guido
-
-> 
-> I've tested this on PinePhone 1.0 and 1.2.
-> 
-> Please take a look.
-> 
-> thank you and regards,
->   Ondrej Jirman
-> 
-> Changes in v6:
-> - Fixed spacing in yaml
-> - Fixed wrong vccio->iovcc supply name in the bindings doc
-> - I noticed that the original driver uses a delay of 20ms in the init
->   function to achieve a combined total of 120ms required from post-reset
->   to display_on. I've added a similar delay to xbd599_init, so that
->   xbd599 panel also has the right timing. (patch 9)
-> - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-> - Added review/ack tags
-> - Learned to run dt_binding_check by myself ;)
-> 
-> Changes in v5:
-> - rewritten on top of rocktech-jh057n00900 driver
-> - rocktech-jh057n00900 renamed to st7703 (controller name)
-> - converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-> 
-> Changes in v4:
-> - use ->type from the mode instead of hardcoding (Samuel)
-> - move init_sequence to ->prepare (Samuel)
-> - move anti-flicker delay to ->enable, explain it (Samuel)
-> - add enter_sleep after display_off (Samuel)
-> - drop ->disable (move code to ->unprepare)
-> - add ID bytes dumping (Linus)
->   (I can't test it since allwinner DSI driver has a broken
->    dcs_read function, and I didn't manage to fix it.)
-> - document magic bytes (Linus)
-> - assert reset during powerup
-> - cleanup powerup timings according to the datasheet
-> 
-> Changes in v3:
-> - Panel driver renamed to the name of the LCD controller
-> - Re-organize the driver slightly to more easily support more panels
->   based on the same controller.
-> - Add patch to enable the touchscreen to complete the LCD support
->   on PinePhone.
-> - Dropped the "DSI fix" patch (the driver seems to work for me without it)
-> - Improved brightness levels handling:
->   - PinePhone 1.0 uses default levels generated by the driver
->   - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
->     default levels can't be used. Martijn Braam came up with a
->     list of duty cycle values that lead to perception of linear
->     brigtness level <-> light intensity on PinePhone 1.1
-> - There was some feedback on v2 about this being similar to st7701.
->   It's only similar in name. Most of the "user commands" are different,
->   so I opted to keep this in a new driver instead of creating st770x.
->   
->   Anyone who likes to check the differences, here are datasheets:
-> 
->   - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
->   - https://megous.com/dl/tmp/ST7701.pdf
-> 
-> Changes in v2:
-> - DT Example fix.
-> - DT Format fix.
-> - Raised copyright info to 2020.
-> - Sort panel operation functions.
-> - Sort inclusion.
-> 
-> 
-> -- For phone owners: --
-> 
-> There's an open question on how to set the backlight brightness values
-> on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-> to backlight being black. It would be nice if more people can test
-> the various backlight levels on 1.1 and 1.2 revision with this change
-> in dts:
-> 
->        brightness-levels = <0 1000>;
->        num-interpolated-steps = <1000>;
-> 
-> and report at what brightness level the backlight turns on. So far it
-> seems this has a wide range. Lowest useable duty cycle for me is ~7%
-> on 1.2 and for Martijn ~20% on 1.1.
-> 
-> Icenowy Zheng (2):
->   dt-bindings: vendor-prefixes: Add Xingbangda
->   arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-> 
-> Ondrej Jirman (11):
->   dt-bindings: panel: Convert rocktech,jh057n00900 to yaml
->   dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
->   drm/panel: rocktech-jh057n00900: Rename the driver to st7703
->   drm/panel: st7703: Rename functions from jh057n prefix to st7703
->   drm/panel: st7703: Prepare for supporting multiple panels
->   drm/panel: st7703: Move code specific to jh057n closer together
->   drm/panel: st7703: Move generic part of init sequence to enable
->     callback
->   drm/panel: st7703: Add support for Xingbangda XBD599
->   drm/panel: st7703: Enter sleep after display off
->   drm/panel: st7703: Assert reset prior to powering down the regulators
->   arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-> 
->  .../display/panel/rocktech,jh057n00900.txt    |  23 -
->  .../display/panel/rocktech,jh057n00900.yaml   |  70 ++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
->  .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
->  drivers/gpu/drm/panel/Kconfig                 |  26 +-
->  drivers/gpu/drm/panel/Makefile                |   2 +-
->  .../drm/panel/panel-rocktech-jh057n00900.c    | 424 -----------
->  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 656 ++++++++++++++++++
->  9 files changed, 815 insertions(+), 461 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
->  delete mode 100644 drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
->  create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> 
-> -- 
-> 2.27.0
-> 
