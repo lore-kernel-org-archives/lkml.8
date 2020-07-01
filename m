@@ -2,146 +2,306 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC44C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C96C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39EC20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9331206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="HlXEUEc+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isE+Emlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbgGANEp (ORCPT
+        id S1730865AbgGANFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:04:45 -0400
-Received: from mout.web.de ([212.227.15.3]:50267 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbgGANEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:04:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593608661;
-        bh=jPFV0ur8nLdZEhj2YuZemYbcE6QQWuflBtFcXaEDR6A=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=HlXEUEc+a36n7ZM0qXKO9FJPSPcLRK+rW6h2cQe6vIrMJOOkrBY4ZAY4oFPHwVcPI
-         Q5G3hQoWdDWGtAtvgFQQA1Hp6OQ1t68mpZVGymQLmK/isdFhYXO12TqPJW/7nxRUaW
-         SqNT9VTMP8O+VIzfE8ZaKzyn0yw7wMtmjVO7ZI4E=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.41.17]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M9oW8-1jfe3x30DQ-00B3t3; Wed, 01
- Jul 2020 15:04:21 +0200
-Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
- leaks
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
- <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
- <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
- <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <971c649e-fe07-3771-6fea-f5aaeaf090ad@web.de>
-Date:   Wed, 1 Jul 2020 15:04:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 09:05:23 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730746AbgGANFW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 09:05:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593608719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FXzJqt67e31ApHvs5SUuF//sO/9X3G5nc+xRenGHB1E=;
+        b=isE+EmlmqYvjuG57EkHQhpNaKMkkIEm66RW4RBMk3+iKfNxjjPl6BLBhbUTM50bagEvvnc
+        wZbEx0KKooOty1uUsd+wSTV1BqoXL6WNwKflEyjFb7tzn5a7zqE0MJrHfmbCH8PXusSn1q
+        +lki1NVozQkphKxmSwzxd4M7KTxdZjY=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-TpRi8SvlOo6HjlzlFAcvHw-1; Wed, 01 Jul 2020 09:05:15 -0400
+X-MC-Unique: TpRi8SvlOo6HjlzlFAcvHw-1
+Received: by mail-qk1-f199.google.com with SMTP id w27so17080744qkw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 06:05:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FXzJqt67e31ApHvs5SUuF//sO/9X3G5nc+xRenGHB1E=;
+        b=GP1o/C2FjHxOwbRhhML0+E7jRqbwlVB2yKHUQwY1pLfNZdPuqI/TUDSErKlN0lAoea
+         Zk2Kg6V2qidpFq3w/joHveRbJpumYDAdqbb3P86xje2bf/YFtRVzb01EvNCFUOvPXR1M
+         TM+uL4tl5thertnMGfGS6Mzs7kZCR9OCs6zQEt3ACLlCgrUwwig+T/t706cdVKViXE86
+         FetL3FEDNxo6DnV7VfLiU8ckzwckwzh+XwF/6nPDS4k9LnzYPcVlPW20IqYILN/FbBDc
+         vZHpnKg+SCiqj3eYAtKlcZqynvUVwgMPAlbHKFxSf2U3S9A5PPLFl6bkpoKqokI6FXnK
+         33tg==
+X-Gm-Message-State: AOAM530uaHoeMHGJI3RxlNkicjEV73d1jTHTUhPwgrYPzf97AGdEM/xW
+        JbWb7mCNOHx3sQQqrDL9S/PXMlTHC1bTILY4PKkSWbnB7YBY6IMs7Rkb7jnTc38T82L1+7eVsbh
+        E08SJTCKtYSkyzdt0AfOHm69hYH513xPpscnCENjR
+X-Received: by 2002:aed:2a75:: with SMTP id k50mr25110440qtf.27.1593608715107;
+        Wed, 01 Jul 2020 06:05:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyAoQK5YayOI2hmX5DxFb8Z9OAzUrZhiXlTOY3lP5Q9zDq4Yb1uXnRF7HWZxkJcPu2zkVNeRL8lFfgkom+a5Hg=
+X-Received: by 2002:aed:2a75:: with SMTP id k50mr25110412qtf.27.1593608714741;
+ Wed, 01 Jul 2020 06:05:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:7OSzFhibVDDC5R7IvBZIWSm0D8FFC3b0BzYmHzqIz4rVZSakt7C
- DWOPJRWuiQIppjtS5ZM3cUO+ou1IFMjsw4eecnFecR5eDrlQwrzyCAIytmHVszNHKcBiBYT
- 0zRFF/L05OE74VYLX5Hq1I/6wU8a3c4dyzchDpAYc3TPsTyUaMZo7oRTT4wIwEG1QBMWPHU
- WFpTbXngAVMDOFMZcji9A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rRv+FrSsC84=:8PN88Oo4zaAewqDtfw913A
- 4jSKBXudv+VDTbAlEgxQeFJwSjbo+5F1VuktlebnN59PA6Sk5gmEcvD8CVU+ithlMfk7zaew7
- fH97clj4QwLhsl7Es/4r9k21j8ndz1tZSVmI4V7gtyM1u7PQYVRQzOgxq5BdNEA9DYhs9fa//
- KLAPUB0e6Tg23rK0UW/46tGfgowyEjG4FGfSUCbbxiX7SEmY7Bw0IYamDVGR4fdmH9Is59sCh
- lsZgyu8XeXcTTbPtKqMbxwR3lSNs0VETeCr0qdnGP3TNbsADsq6HE/U4kIbSN/xEf+0pNZNRj
- Z7GA6EowIA4ZrrZz5oFioh0HDUhCNob1iSPprnnJ1Ceyu5wYvnWS5KsUymCMbtqBQJNnbfdV1
- SkxhjOW92FoBd68vVFLmY/EKaSKR1/10+Yg3CoprUjohJBSBTN9IKucXQbdkY0T2OQolzqEXF
- WXWT3P3nGIQli60iQO4zitQTmV7fBzq0p18E/jtgGS5i5IqtJlrowBgxPe93v0tHd2vEWsh4H
- lPud2Cao0FRrGqGXHtJwnBxIh7SOXYcORxsF+UI6NltYyjE6F9ALKzQdahFcI7Ou9ifici6hQ
- bn00MeJreoFdg1Ho+wGxnXdH9gJrdo0c2DQ+ZYTtHMmo/PYm8Cc+IVB8zKoeWhBSqUc8MsTia
- TZjhWmSsKns6iK20RtYTEnVBhwl0tah6Asup0oUnRE8ZhdzDO1N9F6GBH7D5ptVkzugxwzNSG
- KwK8hJa7t8SO4w4FcE5xRtxt3AM8JD/489Au2s3Qq6QvLcw47P/EoOIXtoyDyY3L2BYfhznfk
- KOP8+8RlmANf3TpkjKvLBWMNubkLTv2IgAD8DAu3Ztq7+Di+yZhcWemX2/GiJed9epu80oNG5
- JdC5dJT5nRCrxf2ZuazJHXNz3GConX4sOE1BV2j07e9klizuU9Rn3L4RCOOOl//X8N2z7PM9t
- CzeG26gmdgnYth4eUC4+b6t67YYV7Ryu1UiWIfuBGlRvdBSmpTu0oofYUj2K5gYyS0tR4t5v+
- PMBMuR4/uzhBYcshtYu9zw2L5bMca611Kpdm9phIOlLlmNCq97MhEQI4l1P6KYuGiKyxkCZj9
- 29m5zXCCmFL0Pkb2mKVcBXxMZXlqA2sXJxP5n1MqnttcFv5s8Ar1oO/SC8fKbPUJvZjHepA8S
- GgxobDGMrL6Wgdcz52tWYL/ZD8TePNhxOBHhlf5HKgfnpdVtnzHVDWykZJef0GungbLQs2VEt
- wXcNtYTMZVzskegUQxR0I3ZOgAgu33cI9n0P3hA==
+References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
+ <20200611152257.GA1798@char.us.oracle.com> <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
+ <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
+ <20200622114622-mutt-send-email-mst@kernel.org> <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+ <20200622122546-mutt-send-email-mst@kernel.org> <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+ <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com> <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
+In-Reply-To: <419cc689-adae-7ba4-fe22-577b3986688c@redhat.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Wed, 1 Jul 2020 15:04:38 +0200
+Message-ID: <CAJaqyWedEg9TBkH1MxGP1AecYHD-e-=ugJ6XUN+CWb=rQGf49g@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBJZiByZW1vdmUgdGhlIGxvY2FsIHZhcmlhYmxlICJyZXQiLMKgIGl0IHdpbGwgbG9vayBsaWtl
-IHRoaXM6DQrigKYNCj4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1jc2t5LWFwYi1pbnRjLmMN
-CuKApg0KPiBAQCAtMTE4LDE4ICsxMTYsMjMgQEAgY2tfaW50Y19pbml0X2NvbW0oc3RydWN0IGRl
-dmljZV9ub2RlICpub2RlLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCkNCuKApg0KPiAtwqDC
-oMKgwqDCoMKgIHJldCA9IGlycV9hbGxvY19kb21haW5fZ2VuZXJpY19jaGlwcyhyb290X2RvbWFp
-biwgMzIsIDEsDQo+ICvCoMKgwqDCoMKgwqAgaWYgKGlycV9hbGxvY19kb21haW5fZ2VuZXJpY19j
-aGlwcyhyb290X2RvbWFpbiwgMzIsIDEsDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgImNza3lfaW50YyIsIGhhbmRsZV9sZXZlbF9pcnEsDQo+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBJUlFfTk9SRVFVRVNUIHwg
-SVJRX05PUFJPQkUgfCBJUlFfTk9BVVRPRU4sIDAsIDApOw0KPiAtwqDCoMKgwqDCoMKgIGlmIChy
-ZXQpIHsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIElS
-UV9OT1JFUVVFU1QgfCBJUlFfTk9QUk9CRSB8IElSUV9OT0FVVE9FTiwgMCwgMCkpIHsNCj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHByX2VycigiQy1TS1kgSW50YyBpcnFfYWxsb2Nf
-Z2MgZmFpbGVkLlxuIik7DQrigKYNCg0KSSBzdWdnZXN0IHRvIHJlY2hlY2sgdGhlIHBhcmFtZXRl
-ciBhbGlnbm1lbnQgZm9yIHN1Y2ggYSBmdW5jdGlvbiBjYWxsLg0KaHR0cHM6Ly9naXQua2VybmVs
-Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9j
-dW1lbnRhdGlvbi9wcm9jZXNzL2NvZGluZy1zdHlsZS5yc3Q/aWQ9N2MzMGI4NTlhOTQ3NTM1ZjIy
-MTMyNzdlODI3ZDdhYzdkY2ZmOWM4NCNuOTMNCg0KUmVnYXJkcywNCk1hcmt1cw0K
+On Wed, Jul 1, 2020 at 2:40 PM Jason Wang <jasowang@redhat.com> wrote:
+>
+>
+> On 2020/7/1 =E4=B8=8B=E5=8D=886:43, Eugenio Perez Martin wrote:
+> > On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
+> > <eperezma@redhat.com> wrote:
+> >> On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wr=
+ote:
+> >>> On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
+> >>>> On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> =
+wrote:
+> >>>>> On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrot=
+e:
+> >>>>>> On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
+> >>>>>> <eperezma@redhat.com> wrote:
+> >>>>>>> On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
+> >>>>>>> <konrad.wilk@oracle.com> wrote:
+> >>>>>>>> On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wro=
+te:
+> >>>>>>>>> As testing shows no performance change, switch to that now.
+> >>>>>>>> What kind of testing? 100GiB? Low latency?
+> >>>>>>>>
+> >>>>>>> Hi Konrad.
+> >>>>>>>
+> >>>>>>> I tested this version of the patch:
+> >>>>>>> https://lkml.org/lkml/2019/10/13/42
+> >>>>>>>
+> >>>>>>> It was tested for throughput with DPDK's testpmd (as described in
+> >>>>>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.=
+html)
+> >>>>>>> and kernel pktgen. No latency tests were performed by me. Maybe i=
+t is
+> >>>>>>> interesting to perform a latency test or just a different set of =
+tests
+> >>>>>>> over a recent version.
+> >>>>>>>
+> >>>>>>> Thanks!
+> >>>>>> I have repeated the tests with v9, and results are a little bit di=
+fferent:
+> >>>>>> * If I test opening it with testpmd, I see no change between versi=
+ons
+> >>>>>
+> >>>>> OK that is testpmd on guest, right? And vhost-net on the host?
+> >>>>>
+> >>>> Hi Michael.
+> >>>>
+> >>>> No, sorry, as described in
+> >>>> http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.htm=
+l.
+> >>>> But I could add to test it in the guest too.
+> >>>>
+> >>>> These kinds of raw packets "bursts" do not show performance
+> >>>> differences, but I could test deeper if you think it would be worth
+> >>>> it.
+> >>> Oh ok, so this is without guest, with virtio-user.
+> >>> It might be worth checking dpdk within guest too just
+> >>> as another data point.
+> >>>
+> >> Ok, I will do it!
+> >>
+> >>>>>> * If I forward packets between two vhost-net interfaces in the gue=
+st
+> >>>>>> using a linux bridge in the host:
+> >>>>> And here I guess you mean virtio-net in the guest kernel?
+> >>>> Yes, sorry: Two virtio-net interfaces connected with a linux bridge =
+in
+> >>>> the host. More precisely:
+> >>>> * Adding one of the interfaces to another namespace, assigning it an
+> >>>> IP, and starting netserver there.
+> >>>> * Assign another IP in the range manually to the other virtual net
+> >>>> interface, and start the desired test there.
+> >>>>
+> >>>> If you think it would be better to perform then differently please l=
+et me know.
+> >>>
+> >>> Not sure why you bother with namespaces since you said you are
+> >>> using L2 bridging. I guess it's unimportant.
+> >>>
+> >> Sorry, I think I should have provided more context about that.
+> >>
+> >> The only reason to use namespaces is to force the traffic of these
+> >> netperf tests to go through the external bridge. To test netperf
+> >> different possibilities than the testpmd (or pktgen or others "blast
+> >> of frames unconditionally" tests).
+> >>
+> >> This way, I make sure that is the same version of everything in the
+> >> guest, and is a little bit easier to manage cpu affinity, start and
+> >> stop testing...
+> >>
+> >> I could use a different VM for sending and receiving, but I find this
+> >> way a faster one and it should not introduce a lot of noise. I can
+> >> test with two VM if you think that this use of network namespace
+> >> introduces too much noise.
+> >>
+> >> Thanks!
+> >>
+> >>>>>>    - netperf UDP_STREAM shows a performance increase of 1.8, almos=
+t
+> >>>>>> doubling performance. This gets lower as frame size increase.
+> > Regarding UDP_STREAM:
+> > * with event_idx=3Don: The performance difference is reduced a lot if
+> > applied affinity properly (manually assigning CPU on host/guest and
+> > setting IRQs on guest), making them perform equally with and without
+> > the patch again. Maybe the batching makes the scheduler perform
+> > better.
+>
+>
+> Note that for UDP_STREAM, the result is pretty trick to be analyzed. E.g
+> setting a sndbuf for TAP may help for the performance (reduce the drop).
+>
+
+Ok, will add that to the test. Thanks!
+
+>
+> >
+> >>>>>>    - rests of the test goes noticeably worse: UDP_RR goes from ~63=
+47
+> >>>>>> transactions/sec to 5830
+> > * Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning makes
+> > them perform similarly again, only a very small performance drop
+> > observed. It could be just noise.
+> > ** All of them perform better than vanilla if event_idx=3Doff, not sure
+> > why. I can try to repeat them if you suspect that can be a test
+> > failure.
+> >
+> > * With testpmd and event_idx=3Doff, if I send from the VM to host, I se=
+e
+> > a performance increment especially in small packets. The buf api also
+> > increases performance compared with only batching: Sending the minimum
+> > packet size in testpmd makes pps go from 356kpps to 473 kpps.
+>
+>
+> What's your setup for this. The number looks rather low. I'd expected
+> 1-2 Mpps at least.
+>
+
+Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz, 2 NUMA nodes of 16G memory
+each, and no device assigned to the NUMA node I'm testing in. Too low
+for testpmd AF_PACKET driver too?
+
+>
+> > Sending
+> > 1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
+> >
+> > Something strange I observe in these tests: I get more pps the bigger
+> > the transmitted buffer size is. Not sure why.
+> >
+> > ** Sending from the host to the VM does not make a big change with the
+> > patches in small packets scenario (minimum, 64 bytes, about 645
+> > without the patch, ~625 with batch and batch+buf api). If the packets
+> > are bigger, I can see a performance increase: with 256 bits,
+>
+>
+> I think you meant bytes?
+>
+
+Yes, sorry.
+
+>
+> >   it goes
+> > from 590kpps to about 600kpps, and in case of 1500 bytes payload it
+> > gets from 348kpps to 528kpps, so it is clearly an improvement.
+> >
+> > * with testpmd and event_idx=3Don, batching+buf api perform similarly i=
+n
+> > both directions.
+> >
+> > All of testpmd tests were performed with no linux bridge, just a
+> > host's tap interface (<interface type=3D'ethernet'> in xml),
+>
+>
+> What DPDK driver did you use in the test (AF_PACKET?).
+>
+
+Yes, both testpmd are using AF_PACKET driver.
+
+>
+> > with a
+> > testpmd txonly and another in rxonly forward mode, and using the
+> > receiving side packets/bytes data. Guest's rps, xps and interrupts,
+> > and host's vhost threads affinity were also tuned in each test to
+> > schedule both testpmd and vhost in different processors.
+>
+>
+> My feeling is that if we start from simple setup, it would be more
+> easier as a start. E.g start without an VM.
+>
+> 1) TX: testpmd(txonly) -> virtio-user -> vhost_net -> XDP_DROP on TAP
+> 2) RX: pkgetn -> TAP -> vhost_net -> testpmd(rxonly)
+>
+
+Got it. Is there a reason to prefer pktgen over testpmd?
+
+> Thanks
+>
+>
+> >
+> > I will send the v10 RFC with the small changes requested by Stefan and =
+Jason.
+> >
+> > Thanks!
+> >
+> >
+> >
+> >
+> >
+> >
+> >
+> >>>>> OK so it seems plausible that we still have a bug where an interrup=
+t
+> >>>>> is delayed. That is the main difference between pmd and virtio.
+> >>>>> Let's try disabling event index, and see what happens - that's
+> >>>>> the trickiest part of interrupts.
+> >>>>>
+> >>>> Got it, will get back with the results.
+> >>>>
+> >>>> Thank you very much!
+> >>>>
+> >>>>>
+> >>>>>>    - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
+> >>>>>>    - TCP_RR from 6223.64 transactions/sec to 5739.44
+>
+
