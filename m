@@ -4,78 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC743C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3341C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93EC22082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iT/B790I"
+	by mail.kernel.org (Postfix) with ESMTP id 918C12082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593636693;
+	bh=cUJjMPByfU3fDLcRmB6TduvjMVpsJzR1z3CvTDmFFcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UOG3/WQAFDclZfzL4CdZ+641OsUuYeOGvGZweUZmERbTNzkykYSK1QatcXIZ9+d/P
+	 wHLHyft+gh5oqXK6+s4Wbdqygigv+jLhqvwKUfYvCOOM4iCOnuHRkVJWdnKBMbMQJu
+	 Q1O43Sh2tUavotWmQAitHXZPg7dF2Bb2QcUZMkcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgGAUvS (ORCPT
+        id S1726956AbgGAUvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:51:18 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57629 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725535AbgGAUvR (ORCPT
+        Wed, 1 Jul 2020 16:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgGAUvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:51:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593636676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NbYjpD75KSjMkRrn1WEH75w+FOpZgxrMTEmZVf5CAxw=;
-        b=iT/B790I1C+Q2wQ2k9gjmTjUtaXdeFFNYXs3i2sQ8DQH7cg8VkhVfQObSQdrfxwFBby0Af
-        J0wizowoDryIk/Uup0PVaGxp0wk1hCKvbrjqLr2xpEd0Zv9xp2WjRXj5Jmu40rvoqHAbHE
-        fEwBNwQndjAjQIqqb5s1r6Zpc7GM3oU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-pboVzBC7OOSn7T4XBAcKlw-1; Wed, 01 Jul 2020 16:51:12 -0400
-X-MC-Unique: pboVzBC7OOSn7T4XBAcKlw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39BFF1083E80;
-        Wed,  1 Jul 2020 20:51:11 +0000 (UTC)
-Received: from treble (ovpn-117-134.rdu2.redhat.com [10.10.117.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 868255C557;
-        Wed,  1 Jul 2020 20:51:10 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 15:51:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: objtool clac/stac handling change..
-Message-ID: <20200701205108.wtgfnijav7lgfiqe@treble>
+        Wed, 1 Jul 2020 16:51:31 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914E4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:51:30 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n23so28921770ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LfKvJDfH+JgSbbJW8lIadNI33mwPlCXJ+3I1TVMp16U=;
+        b=ajljEXMkWnVATS+Y0B8quCPCXM8vWY7jwlI22KMwwx56KKYKjJ5ho3GoksFEekSUav
+         9w08LuNbtn9E7JI9E3uHZi/Tpy2EzqacgSunOz8sILShQuJHUkPpBvgwdBQcTxOIK0aJ
+         3i3MAe//YEoHEdnGkOgZbG7KvOE3bgYfBntYw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LfKvJDfH+JgSbbJW8lIadNI33mwPlCXJ+3I1TVMp16U=;
+        b=d9U05vZCW+cemHL2oEyfminJqPGl9UQ6SAwlsbRIrUAVqHHHmfKoZqUY9BA+Otr7aP
+         wnU9GNpTp64l1R5RNPUpvhpDgOmCMNy8O9R5bVfLELSKSm6fnrd4F6OBPwihnDQCt6eb
+         yDeLPNkSZ1Xs4XQrrC/3WmcSTa+XBtXDtqXBivPd2zCE8/s3JkDGZI2cjy80iRlzZM4b
+         /begntmkcBXh8uanNe+REYh4p8uud60b2AJf+daAQUHaFQ4/eT8s5OfzuezAhGGMUxeE
+         UI4VHwT6GrEUNZwjVcuYRSns5NFAORHpHfILOAK7VKBRgBzluXvbrd7nzygeZ1//9Wp8
+         D6KQ==
+X-Gm-Message-State: AOAM533NITCTMU7gpTnrEqhBP6YWnJlyt5n9wfcV2j7oZi6tZIOC2i/x
+        HkC1zBpGg9MK+U5NIe95Q+Hvs5f5BG0=
+X-Google-Smtp-Source: ABdhPJw9NgoKTcHzswf2eZi/WVXv5qlpeVBXYCOQzNrhjSeVVs0Lz1dlwE9B+NUZ1Yy2bl6Ef3313g==
+X-Received: by 2002:a2e:3909:: with SMTP id g9mr11947218lja.54.1593636688653;
+        Wed, 01 Jul 2020 13:51:28 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id 190sm2204693ljf.38.2020.07.01.13.51.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 13:51:27 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id t25so24294318lji.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:51:27 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr13959524ljj.102.1593636687265;
+ Wed, 01 Jul 2020 13:51:27 -0700 (PDT)
+MIME-Version: 1.0
 References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
  <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 1 Jul 2020 13:51:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh0X1YBQm8b6dqu=FpE8jgHriisXDeqJ7jai41Ob+sJDA@mail.gmail.com>
+Message-ID: <CAHk-=wh0X1YBQm8b6dqu=FpE8jgHriisXDeqJ7jai41Ob+sJDA@mail.gmail.com>
+Subject: Re: objtool clac/stac handling change..
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 01:36:22PM -0700, Andy Lutomirski wrote:
-> If we do this extable change, we end up with a different mess: some
-> exception handlers will clear AC and some won’t.  I’m sure objtool can
-> deal with this with some effort, but I’m not convinced it’s worth it.
+On Wed, Jul 1, 2020 at 1:36 PM Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> We ought to be able to do it the way I described and get decent code generation too.
 
-Yeah.  Peter's more of the expert here, but I think we'd at least need
-to annotate the code which expects an implicit CLAC so objtool knows
-what to expect.  It's not trivial, but it might be doable.
+No, we really can't.
 
--- 
-Josh
+Each access really needs to jump to an exception label. Otherwise any
+time you have multiple operations (think "strncpy()" and friends) you
+have to test in between each access.
 
+That is why *fundamnetally* the interface to "unsafe_get/put_user()"
+takes a label for the error case. There is absolutely no way to make
+any other interface work efficiently.
+
+(Unless, of course, you make the exception handling something that the
+compiler does entirely on its own. But that has never been a good idea
+for the kernel, and I wouldn't trust a compiler to do what the kernel
+needs).
+
+Side note: the labels can be hidden. I did (long ago) send out
+something that did a
+
+    uaccess_try {
+         val1 = unsafe_get_user(addr);
+         val2 = unsafe_get_user(addr2);
+    } uaccess_catch {
+         error handling here
+     };
+
+kind of thing, but that was just syntactic wrapper around that label
+model. And honestly, it doesn't really change anything fundamental, it
+really ends up with exactly the same issues just with a slightly
+different syntax.
+
+(I did that because we had the nasty "put_user_ex()" interfaces, which
+were horrible horrible crap, and if one access took an exception, then
+all the other ones did too).
+
+The "label for error case" is actually simpler to follow both for the
+user and for a compiler. Yes, it's a bit odd, but once you get used to
+it, it's really quite regular. But having a different error handler
+for the "user_access_begin()" failure and the actual access failure
+really does end up generating duplicate code and confusion.
+
+              Linus
+
+              Linus
