@@ -2,193 +2,404 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97236C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778632082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792422082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VUotbRSZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LlNxNzoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgGAUKs (ORCPT
+        id S1726905AbgGAUMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:10:48 -0400
-Received: from mout.web.de ([212.227.15.4]:48963 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGAUKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:10:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593634219;
-        bh=2/d5gzwWmiWVdOHstHVZeON0XZWU4ALfPZ0g3/Y4zqY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VUotbRSZX+QdAMN9lhgRYY2uA62gWqliRUgvJgK0VoeMp4wxjU+m9KgczeIZHSquk
-         QDuntUunxFDfCrARWHskFmqlcNP+yoXxRyh4fzl63ctgzPTgIAte2ZzDPmw+m8k2vs
-         zgwhWZ1bqK2gtYcIJXo/58SMxGHJGaJJF8kdVYW8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.41.17]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MDg8k-1jakU9259C-00H7I2; Wed, 01
- Jul 2020 22:10:19 +0200
-Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
- <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
- <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
- <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
- <648d287e-3636-1858-1439-103d317f8571@web.de>
- <34065299-03cf-5b62-db37-0acc9830be72@infradead.org>
- <65db3f88-1ac8-374d-e3fe-2ea0970ffd67@web.de>
- <30b722ca-1bd8-2b96-ca41-1e9bc7212b66@infradead.org>
- <bd4033cd-f564-0414-4dbf-4ff58f841648@web.de>
- <05f8cb2b-c76e-e2ba-24a8-5676c1792255@infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5e83b473-8764-fbfc-394c-1acffa74943c@web.de>
-Date:   Wed, 1 Jul 2020 22:10:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 16:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgGAUMM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 16:12:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2DCC08C5C1;
+        Wed,  1 Jul 2020 13:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=+3nYqDlJPdJp51ZVO8Iz8VlyUh5tJAApO6o+yxOVXM4=; b=LlNxNzoNngJEjEjuUVNnobxJmi
+        pQcJ4gY7ZAcaKN2eo6F1iZFRT78IFPvWqFnLvgwS3aV4/eBuV39dfZFYSh95a/Hv+cwu773btqUFi
+        VQdnsLWonmlaTNOEKZobVMpPHi2t4MAYMY0b89CZwg1ZCE3edgzPudKvSz+I6vJVyrDJIq3wEdujQ
+        RHfTUPgyOhuHduJ6R1ic9NkSFu21zDH5G9P3Y0mOecjhmqw7DkuWCGIp+YlQoo9o0QqGiQuiyw8wJ
+        Se4L8qXGF2ZyHU6Jl9mgNRr7CXdHxYa26sWq67uJM7aehQcLsdQS1SYm5JIgaV+s935NQ2Jri0UKo
+        bKOxHhJQ==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqj5P-0001F0-1C; Wed, 01 Jul 2020 20:12:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [RFC] stop using ->read and ->write for kernel access v3
+Date:   Wed,  1 Jul 2020 22:09:28 +0200
+Message-Id: <20200701200951.3603160-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <05f8cb2b-c76e-e2ba-24a8-5676c1792255@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jD4EB52PawaqfgsahwsJGbuF64bQsQduoXCr0IJiHVg3UFzIiwo
- FVDB3b6JEGsVa1N0SecQAhE2hT1CCWlRdbVjW/u/z/qbgRqZutmyEhM8fxvfDJB6HlZUql1
- DHOlk6ZcZdUFZ1UczQWtddIsvX083o65GE7VjRvqBB+keus3d/iZRinol1FhgUcMJG537Bg
- G5/N5v3m1rPaDpq6Y1kjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rHFS/U+2lfQ=:6EKSOFKocFcrfq5useRqwK
- YSM3ONfLrRGLZdt86zHtulfV8Ow2rZ7m1H/c1FQH2ZSxJOAIk3xlxcSwk6abl1SP2jyxe23GO
- uzX4lh6ZLxmFwzq/UDACIikR+Yt5Sg6lB71RFr3ClwbBg9I2wmNUa0YbldjLwBHCpAFoyH3gu
- ZT4Bc3imclVkz4SNMsjg3qqPgxWNR+dWmxT0BTsJftYWChHQck4egNpXNc3Hue2jvbBQ1nvod
- 2+TtZoj3EmAsEp2MsH2/kTPhanyjOHj+bstd9/4CjZfMoqveaBc0ZRgmi8ptE5Fi+70oUy4/+
- TiQzDrRKqdFLYeZWgKjuJ/c1rgtpfZIl1aSvEvjt7n5+31H/xnSL1isEInBcvJEJcLxl8ladU
- 7kDZu0eoiuBSYMTtLii/X7Lo2XBJZNXgFSsVjKsSRxDuDqKZKEG040EE4/sp2kLNNb1QJeWHS
- vju2rAkIZcCWTSGvGCr2P0qZBqgSO8sQtov4/wa33LwcnR2YZPze4wG1B0BI7herkUBFQumkz
- 3/JqknFiiP6SeN+f+5XaFWM1HoI/CFAQL3dOVodIgQHFzK6OM2i3SZi5jkxzLIC4KvlwTLkxG
- BsWU3KtWzypBS1rf8mWaNTy2XOURxanTgpBbEu3cdmocYUh1hAXhp0Ohyi0gkyIEEi9CiEYxZ
- brZUClMkCNqoYL/foCjx36vQM6A1gMY/YQJIQ3dCa4viC9nRUmZdIOfEHWy62/dGAGzUXvi4e
- ZQqgUDgYwi8SyhzpPB7qeNXGJA1Uv9DX8jnEleuHeEdMSks2TBck7Wz3gqM3RWlmCq0dfM0al
- PqSUNoOWhy1W1W0nUgOBlmDZ5zfvFDbb7fBIsFa0V65rfLExw6is4Wx6Or9I7MVldhI9jsfWR
- PnpM0X74nrpkH08xhH6LQClB5/BUyMPqMLnAoNnzM6Tky2jgAXrAKsi0wvmi7oWTuSD0JmED7
- q5C/ba1ZllOdLr6LCB2+KimQWMw9PgkYF2YywEQE2QqRP+nvEXULwwkjtIX2cstiT9Aa3SJxq
- CjiEageY38lC8JE9G+iRsYq5SfpM6zntpU/K9SHe/Km69QdoX5oJUuCVLSxvokEGVaNNfDKBX
- hL7YEhdfTQqLGAPDTQU+PBe+7Te+WJ2zoAVE2v2WYYphxVeMIlHFPtUaBz+/ApA90g2NSzuDv
- u9qOepB1Ow250dHKCHvs80aPipPrQfrOBWseF36f7bouxGoSr6MXkYoJwtu8xCCRt300HUlqM
- EIZEcbfTuWej6PnbX
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Did you test the specified make command for the display
->> of expected data processing results?
->
-> Markus, if something doesn't work, just say so, OK?
+Hi Al and Linus (and Stephen, see below),
 
-Did a previous information fit to this expectation already?
-https://lore.kernel.org/linux-doc/c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web=
-.de/
-https://lkml.org/lkml/2020/6/30/492
+as part of removing set_fs entirely (for which I have a working
+prototype), we need to stop calling ->read and ->write with kernel
+pointers under set_fs.
 
-=E2=80=9C=E2=80=A6
-make: Nothing to be done for 'path/to/file.c'.
-=E2=80=A6=E2=80=9D
+This removes the option to call ->read and ->write with kernel pointers
+entirely.  The replacements are the existing ->read_iter and ->write_iter
+methods which cope with kvecs and kernel pointers just fine and are
+already used by many instances including all the "real" file systems.
 
+A git branch is available here:
 
-> Don't go all obtuse on us.
+    git://git.infradead.org/users/hch/misc.git set_fs-rw
 
-I am curious if involved communication difficulties can be resolved
-better by other means.
+Gitweb:
 
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/set_fs-rw
 
->> How much do you distinguish desired effects according to
->> the specification of file extensions for such build commands?
->
-> I don't grok that.
+Given that this has been out and cooking for a while, is there a chance to
+add the above as a temp branch to linux-next to get a little more exposure
+until Al reviews it and (hopefully) picks it up?
 
-I assume that you got used to the handling of specific file suffixes
-also for their application together with make scripts.
+Changes since v2:
+ - merged with the prep series
+ - simplify warn_unsupported()
+ - make splice do the right thing on files with the iter ops by
+   default instead of requiring manual setup
 
-One part of the discussed software documentation deals with
-the combination of compilation and further source code analysis,
-doesn't it?
+Changes since v1:
+ - drop the read_uptr/write_uptr methods
+ - pick up a bunch of sysctl fixes and iter conversion from Matthew Wilcox
 
-
-> Julia, Markus- can you tell me how to run coccicheck on one source file?
-
-You can choose between two methods.
-
-* Use the documented build target with appropriate parameters.
-  (How many Linux software modules do consist of only a single source file=
-?)
-
-* Do you get further ideas from another concrete command example?
-  https://lore.kernel.org/linux-arm-kernel/5b693ee0-0cb1-7ff3-b562-bac6bcb=
-6aae8@web.de/
-  https://lkml.org/lkml/2020/6/29/357
-
-  elfring@Sonne:~/Projekte/Linux/next-patched> make J=3D1 C=3D1 CHECK=3D's=
-cripts/coccicheck' MODE=3Dcontext COCCI=3D~/Projekte/Linux/next-patched/sc=
-ripts/coccinelle/null/show_pointer_usage_before_null_check-20200701.cocci =
-drivers/usb/mtu3/mtu3_gadget.o
-
-Regards,
-Markus
+Diffstat:
+ Documentation/filesystems/seq_file.rst                            |    2 
+ Documentation/process/clang-format.rst                            |    4 
+ Documentation/translations/it_IT/process/clang-format.rst         |    4 
+ arch/alpha/kernel/srm_env.c                                       |    2 
+ arch/arm/mm/alignment.c                                           |    2 
+ arch/arm/mm/ptdump_debugfs.c                                      |    2 
+ arch/arm64/kvm/vgic/vgic-debug.c                                  |    2 
+ arch/c6x/platforms/pll.c                                          |    2 
+ arch/mips/cavium-octeon/oct_ilm.c                                 |    2 
+ arch/mips/kernel/segment.c                                        |    2 
+ arch/mips/ralink/bootrom.c                                        |    2 
+ arch/powerpc/kernel/rtas-proc.c                                   |   10 
+ arch/powerpc/kvm/book3s_xive_native.c                             |    2 
+ arch/powerpc/kvm/timing.c                                         |    2 
+ arch/powerpc/mm/numa.c                                            |    2 
+ arch/powerpc/mm/ptdump/bats.c                                     |    2 
+ arch/powerpc/mm/ptdump/hashpagetable.c                            |    2 
+ arch/powerpc/mm/ptdump/ptdump.c                                   |    2 
+ arch/powerpc/mm/ptdump/segment_regs.c                             |    2 
+ arch/powerpc/platforms/cell/spufs/file.c                          |    8 
+ arch/powerpc/platforms/pseries/hvCall_inst.c                      |    2 
+ arch/powerpc/platforms/pseries/lpar.c                             |    4 
+ arch/powerpc/platforms/pseries/lparcfg.c                          |    2 
+ arch/s390/kernel/diag.c                                           |    2 
+ arch/s390/mm/dump_pagetables.c                                    |    2 
+ arch/s390/pci/pci_debug.c                                         |    2 
+ arch/sh/mm/alignment.c                                            |    2 
+ arch/sh/mm/asids-debugfs.c                                        |    2 
+ arch/sh/mm/cache-debugfs.c                                        |    2 
+ arch/sh/mm/pmb.c                                                  |    2 
+ arch/sh/mm/tlb-debugfs.c                                          |    2 
+ arch/sparc/kernel/led.c                                           |    2 
+ arch/um/kernel/exitcode.c                                         |    2 
+ arch/um/kernel/process.c                                          |    2 
+ arch/x86/kernel/cpu/mce/severity.c                                |    2 
+ arch/x86/kernel/cpu/mtrr/if.c                                     |    2 
+ arch/x86/mm/pat/memtype.c                                         |    2 
+ arch/x86/mm/pat/set_memory.c                                      |    2 
+ arch/x86/platform/uv/tlb_uv.c                                     |    2 
+ arch/x86/xen/p2m.c                                                |    2 
+ block/blk-mq-debugfs.c                                            |    2 
+ drivers/acpi/battery.c                                            |    2 
+ drivers/acpi/proc.c                                               |    2 
+ drivers/base/power/wakeup.c                                       |    2 
+ drivers/block/aoe/aoeblk.c                                        |    2 
+ drivers/block/drbd/drbd_debugfs.c                                 |   10 
+ drivers/block/nbd.c                                               |    4 
+ drivers/block/pktcdvd.c                                           |    2 
+ drivers/block/rsxx/core.c                                         |    4 
+ drivers/bus/mvebu-mbus.c                                          |    4 
+ drivers/char/tpm/eventlog/common.c                                |    2 
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c                 |    2 
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c                 |    2 
+ drivers/crypto/amlogic/amlogic-gxl-core.c                         |    2 
+ drivers/crypto/caam/dpseci-debugfs.c                              |    2 
+ drivers/crypto/cavium/zip/zip_main.c                              |    6 
+ drivers/crypto/hisilicon/qm.c                                     |    2 
+ drivers/crypto/qat/qat_common/adf_cfg.c                           |    2 
+ drivers/crypto/qat/qat_common/adf_transport_debug.c               |    4 
+ drivers/firmware/tegra/bpmp-debugfs.c                             |    2 
+ drivers/gpio/gpiolib.c                                            |    2 
+ drivers/gpu/drm/amd/amdkfd/kfd_debugfs.c                          |    4 
+ drivers/gpu/drm/arm/display/komeda/komeda_dev.c                   |    2 
+ drivers/gpu/drm/arm/malidp_drv.c                                  |    2 
+ drivers/gpu/drm/armada/armada_debugfs.c                           |    2 
+ drivers/gpu/drm/drm_debugfs.c                                     |    6 
+ drivers/gpu/drm/drm_debugfs_crc.c                                 |    2 
+ drivers/gpu/drm/drm_mipi_dbi.c                                    |    2 
+ drivers/gpu/drm/i915/display/intel_display_debugfs.c              |   16 
+ drivers/gpu/drm/i915/gt/debugfs_gt.h                              |    2 
+ drivers/gpu/drm/i915/i915_debugfs_params.c                        |   12 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_irq.c                      |    2 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c                          |    4 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c                       |    2 
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c                           |    4 
+ drivers/gpu/drm/msm/msm_debugfs.c                                 |    2 
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c                         |    2 
+ drivers/gpu/drm/omapdrm/dss/dss.c                                 |    2 
+ drivers/gpu/host1x/debug.c                                        |    4 
+ drivers/gpu/vga/vga_switcheroo.c                                  |    2 
+ drivers/hid/hid-picolcd_debugfs.c                                 |    2 
+ drivers/hid/hid-wiimote-debug.c                                   |    2 
+ drivers/hwmon/dell-smm-hwmon.c                                    |    2 
+ drivers/ide/ide-proc.c                                            |    4 
+ drivers/infiniband/hw/cxgb4/device.c                              |    4 
+ drivers/infiniband/hw/qib/qib_debugfs.c                           |    2 
+ drivers/infiniband/ulp/ipoib/ipoib_fs.c                           |    4 
+ drivers/input/input.c                                             |    4 
+ drivers/macintosh/via-pmu.c                                       |    2 
+ drivers/md/bcache/closure.c                                       |    2 
+ drivers/md/md.c                                                   |    2 
+ drivers/media/cec/core/cec-core.c                                 |    2 
+ drivers/media/pci/saa7164/saa7164-core.c                          |    2 
+ drivers/memory/emif.c                                             |    4 
+ drivers/memory/tegra/tegra124-emc.c                               |    2 
+ drivers/memory/tegra/tegra186-emc.c                               |    2 
+ drivers/memory/tegra/tegra20-emc.c                                |    2 
+ drivers/memory/tegra/tegra30-emc.c                                |    2 
+ drivers/mfd/ab3100-core.c                                         |    2 
+ drivers/mfd/ab3100-otp.c                                          |    2 
+ drivers/mfd/ab8500-debugfs.c                                      |   14 
+ drivers/mfd/tps65010.c                                            |    2 
+ drivers/misc/habanalabs/debugfs.c                                 |    2 
+ drivers/misc/sgi-gru/gruprocfs.c                                  |    6 
+ drivers/mmc/core/mmc_test.c                                       |    2 
+ drivers/mtd/mtdcore.c                                             |    4 
+ drivers/mtd/ubi/debug.c                                           |    2 
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c                |   38 +-
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c                          |    2 
+ drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c               |    8 
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth-debugfs.c          |    6 
+ drivers/net/ethernet/intel/fm10k/fm10k_debugfs.c                  |    2 
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c           |    2 
+ drivers/net/wireless/ath/ath5k/debug.c                            |    2 
+ drivers/net/wireless/ath/wil6210/debugfs.c                        |   14 
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/debug.c          |    2 
+ drivers/net/wireless/intel/ipw2x00/libipw_module.c                |    2 
+ drivers/net/wireless/intel/iwlwifi/fw/debugfs.c                   |    2 
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c                   |    2 
+ drivers/net/wireless/intersil/hostap/hostap_download.c            |    2 
+ drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c               |    2 
+ drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c               |    2 
+ drivers/net/wireless/mediatek/mt76/mt76x02_debugfs.c              |    4 
+ drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c               |    4 
+ drivers/net/wireless/mediatek/mt7601u/debugfs.c                   |    4 
+ drivers/net/wireless/realtek/rtlwifi/debug.c                      |    2 
+ drivers/net/wireless/realtek/rtw88/debug.c                        |    4 
+ drivers/net/wireless/rsi/rsi_91x_debugfs.c                        |    4 
+ drivers/net/xen-netback/xenbus.c                                  |    2 
+ drivers/nvme/host/fabrics.c                                       |    2 
+ drivers/parisc/led.c                                              |    2 
+ drivers/pci/controller/pci-tegra.c                                |    2 
+ drivers/platform/x86/asus-wmi.c                                   |    2 
+ drivers/platform/x86/intel_pmc_core.c                             |    2 
+ drivers/platform/x86/intel_telemetry_debugfs.c                    |    4 
+ drivers/platform/x86/thinkpad_acpi.c                              |    2 
+ drivers/platform/x86/toshiba_acpi.c                               |    8 
+ drivers/pnp/pnpbios/proc.c                                        |    2 
+ drivers/power/supply/da9030_battery.c                             |    2 
+ drivers/pwm/core.c                                                |    2 
+ drivers/ras/cec.c                                                 |    2 
+ drivers/ras/debugfs.c                                             |    2 
+ drivers/s390/block/dasd.c                                         |    2 
+ drivers/s390/block/dasd_proc.c                                    |    2 
+ drivers/s390/cio/blacklist.c                                      |    2 
+ drivers/s390/cio/qdio_debug.c                                     |    2 
+ drivers/scsi/hisi_sas/hisi_sas_main.c                             |   32 -
+ drivers/scsi/qedf/qedf_dbg.h                                      |    2 
+ drivers/scsi/qedi/qedi_dbg.h                                      |    2 
+ drivers/scsi/qla2xxx/qla_dfs.c                                    |   12 
+ drivers/scsi/scsi_devinfo.c                                       |    2 
+ drivers/scsi/scsi_proc.c                                          |    4 
+ drivers/scsi/sg.c                                                 |    4 
+ drivers/scsi/snic/snic_debugfs.c                                  |    4 
+ drivers/sh/intc/virq-debugfs.c                                    |    2 
+ drivers/soc/qcom/cmd-db.c                                         |    2 
+ drivers/soc/qcom/socinfo.c                                        |    4 
+ drivers/soc/ti/knav_dma.c                                         |    2 
+ drivers/soc/ti/knav_qmss_queue.c                                  |    2 
+ drivers/staging/rtl8192u/ieee80211/ieee80211_module.c             |    2 
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c |    4 
+ drivers/usb/chipidea/debug.c                                      |    4 
+ drivers/usb/dwc2/debugfs.c                                        |    2 
+ drivers/usb/dwc3/debugfs.c                                        |    8 
+ drivers/usb/gadget/function/rndis.c                               |    2 
+ drivers/usb/gadget/udc/lpc32xx_udc.c                              |    2 
+ drivers/usb/gadget/udc/renesas_usb3.c                             |    2 
+ drivers/usb/host/xhci-debugfs.c                                   |    6 
+ drivers/usb/mtu3/mtu3_debugfs.c                                   |    8 
+ drivers/usb/musb/musb_debugfs.c                                   |    4 
+ drivers/video/fbdev/via/viafbdev.c                                |   14 
+ drivers/visorbus/visorbus_main.c                                  |    2 
+ drivers/xen/xenfs/xensyms.c                                       |    2 
+ fs/adfs/file.c                                                    |    1 
+ fs/affs/file.c                                                    |    1 
+ fs/afs/file.c                                                     |    1 
+ fs/autofs/waitq.c                                                 |    2 
+ fs/bfs/file.c                                                     |    1 
+ fs/block_dev.c                                                    |    2 
+ fs/btrfs/file.c                                                   |    1 
+ fs/cachefiles/rdwr.c                                              |    2 
+ fs/ceph/file.c                                                    |    2 
+ fs/cifs/cifs_debug.c                                              |   14 
+ fs/cifs/cifsfs.c                                                  |   12 
+ fs/cifs/dfs_cache.c                                               |    2 
+ fs/coda/file.c                                                    |    1 
+ fs/cramfs/inode.c                                                 |    1 
+ fs/debugfs/file.c                                                 |    4 
+ fs/dlm/debug_fs.c                                                 |    8 
+ fs/ecryptfs/file.c                                                |    1 
+ fs/exfat/file.c                                                   |    2 
+ fs/ext2/file.c                                                    |    2 
+ fs/ext4/file.c                                                    |    2 
+ fs/f2fs/file.c                                                    |    2 
+ fs/fat/file.c                                                     |    2 
+ fs/fscache/object-list.c                                          |    2 
+ fs/fuse/file.c                                                    |    2 
+ fs/gfs2/file.c                                                    |    2 
+ fs/gfs2/glock.c                                                   |    6 
+ fs/hfs/inode.c                                                    |    1 
+ fs/hfsplus/inode.c                                                |    1 
+ fs/hostfs/hostfs_kern.c                                           |    1 
+ fs/hpfs/file.c                                                    |    1 
+ fs/jbd2/journal.c                                                 |    2 
+ fs/jffs2/file.c                                                   |    1 
+ fs/jfs/file.c                                                     |    2 
+ fs/jfs/jfs_debug.c                                                |    2 
+ fs/minix/file.c                                                   |    1 
+ fs/nfs/file.c                                                     |    2 
+ fs/nfs/nfs4file.c                                                 |    2 
+ fs/nfsd/nfs4state.c                                               |    4 
+ fs/nfsd/nfsctl.c                                                  |   12 
+ fs/nfsd/stats.c                                                   |    2 
+ fs/nilfs2/file.c                                                  |    1 
+ fs/ntfs/file.c                                                    |    1 
+ fs/ocfs2/cluster/netdebug.c                                       |    6 
+ fs/ocfs2/dlm/dlmdebug.c                                           |    2 
+ fs/ocfs2/dlmglue.c                                                |    2 
+ fs/ocfs2/file.c                                                   |    4 
+ fs/omfs/file.c                                                    |    1 
+ fs/openpromfs/inode.c                                             |    2 
+ fs/orangefs/orangefs-debugfs.c                                    |    2 
+ fs/proc/array.c                                                   |    2 
+ fs/proc/base.c                                                    |   24 -
+ fs/proc/cpuinfo.c                                                 |    2 
+ fs/proc/fd.c                                                      |    2 
+ fs/proc/generic.c                                                 |    4 
+ fs/proc/inode.c                                                   |   28 +
+ fs/proc/proc_net.c                                                |    4 
+ fs/proc/proc_sysctl.c                                             |   50 +-
+ fs/proc/stat.c                                                    |    2 
+ fs/proc/task_mmu.c                                                |    8 
+ fs/proc/task_nommu.c                                              |    2 
+ fs/proc_namespace.c                                               |    6 
+ fs/ramfs/file-mmu.c                                               |    2 
+ fs/ramfs/file-nommu.c                                             |    2 
+ fs/read_write.c                                                   |  176 ++++++----
+ fs/reiserfs/file.c                                                |    2 
+ fs/romfs/mmap-nommu.c                                             |    1 
+ fs/seq_file.c                                                     |   34 +
+ fs/splice.c                                                       |  125 -------
+ fs/sysv/file.c                                                    |    1 
+ fs/ubifs/file.c                                                   |    2 
+ fs/udf/file.c                                                     |    1 
+ fs/ufs/file.c                                                     |    1 
+ fs/vboxsf/file.c                                                  |    1 
+ fs/xfs/xfs_file.c                                                 |    2 
+ fs/zonefs/super.c                                                 |    2 
+ include/linux/bpf-cgroup.h                                        |    2 
+ include/linux/fs.h                                                |    6 
+ include/linux/proc_fs.h                                           |    1 
+ include/linux/seq_file.h                                          |    7 
+ ipc/util.c                                                        |    2 
+ kernel/bpf/cgroup.c                                               |    2 
+ kernel/bpf/inode.c                                                |    2 
+ kernel/fail_function.c                                            |    2 
+ kernel/gcov/fs.c                                                  |    2 
+ kernel/irq/debugfs.c                                              |    2 
+ kernel/irq/proc.c                                                 |    6 
+ kernel/kallsyms.c                                                 |    2 
+ kernel/kcsan/debugfs.c                                            |    2 
+ kernel/latencytop.c                                               |    2 
+ kernel/locking/lockdep_proc.c                                     |    2 
+ kernel/module.c                                                   |    2 
+ kernel/profile.c                                                  |    2 
+ kernel/sched/debug.c                                              |    2 
+ kernel/sched/psi.c                                                |    6 
+ kernel/time/test_udelay.c                                         |    2 
+ kernel/trace/ftrace.c                                             |   16 
+ kernel/trace/trace.c                                              |   20 -
+ kernel/trace/trace_dynevent.c                                     |    2 
+ kernel/trace/trace_events.c                                       |   10 
+ kernel/trace/trace_events_hist.c                                  |    4 
+ kernel/trace/trace_events_synth.c                                 |    2 
+ kernel/trace/trace_events_trigger.c                               |    2 
+ kernel/trace/trace_kprobe.c                                       |    4 
+ kernel/trace/trace_printk.c                                       |    2 
+ kernel/trace/trace_stack.c                                        |    4 
+ kernel/trace/trace_stat.c                                         |    2 
+ kernel/trace/trace_uprobe.c                                       |    4 
+ lib/debugobjects.c                                                |    2 
+ lib/dynamic_debug.c                                               |    4 
+ lib/error-inject.c                                                |    2 
+ lib/kunit/debugfs.c                                               |    2 
+ mm/kmemleak.c                                                     |    2 
+ mm/shmem.c                                                        |    2 
+ mm/slab_common.c                                                  |    2 
+ mm/swapfile.c                                                     |    2 
+ net/6lowpan/debugfs.c                                             |    2 
+ net/atm/mpoa_proc.c                                               |    2 
+ net/batman-adv/debugfs.c                                          |    4 
+ net/bluetooth/6lowpan.c                                           |    2 
+ net/bpfilter/bpfilter_kern.c                                      |    2 
+ net/core/pktgen.c                                                 |    6 
+ net/hsr/hsr_debugfs.c                                             |    2 
+ net/ipv4/netfilter/ipt_CLUSTERIP.c                                |    2 
+ net/ipv4/route.c                                                  |    4 
+ net/l2tp/l2tp_debugfs.c                                           |    2 
+ net/netfilter/xt_recent.c                                         |    2 
+ net/sunrpc/cache.c                                                |    4 
+ net/sunrpc/debugfs.c                                              |    4 
+ net/sunrpc/rpc_pipe.c                                             |    2 
+ net/sunrpc/stats.c                                                |    2 
+ security/apparmor/apparmorfs.c                                    |   10 
+ security/integrity/iint.c                                         |   14 
+ security/integrity/ima/ima_fs.c                                   |    6 
+ security/selinux/selinuxfs.c                                      |    2 
+ security/smack/smackfs.c                                          |   20 -
+ sound/core/info.c                                                 |    2 
+ 309 files changed, 678 insertions(+), 791 deletions(-)
