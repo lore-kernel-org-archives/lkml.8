@@ -2,102 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92269C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74999C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7199420870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593621662;
-	bh=1oDKRRJecAucuPGAsybdvcvitslL98sAMdG8RwbytZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NmmGGttgn3xNgEZag+vhimKAOicclGkHHgQ301vYIA43dMcT44/fHp9Eotx5WyfFT
-	 OvLNiqd8hUVoPG18M4RRbSS4622cM3sNtKJH3u/AbMC8U6QECFvPDi3Pu8gL8dYDag
-	 mTs9jrNGTcRIww5IFQMGXy9abzzEstGED+AzpHJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 4ABEF20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbgGAQlB (ORCPT
+        id S1732459AbgGAQlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 12:41:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59026 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732255AbgGAQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:41:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 225442085B;
-        Wed,  1 Jul 2020 16:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593621659;
-        bh=1oDKRRJecAucuPGAsybdvcvitslL98sAMdG8RwbytZQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FZRIXIggyKlaPBi3DZsdRlQHQ+jSKGJZolbyP4A8nXWVYzoJxDiSPros5zqrqYn8c
-         ypVL9DZXRgd1XsGEktx5iQ9M7RMbJ3nlbPvSITYgGL90snNQGvqWCYZttA7igsS4Y3
-         jtjx3bvtE4i9K5f1Y4v+3ewY3pl0hzqzvJ8d+TZs=
-Date:   Wed, 1 Jul 2020 18:40:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
-Message-ID: <20200701164045.GA3163341@kroah.com>
-References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1732161AbgGAQlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:41:45 -0400
+IronPort-SDR: oRGzju7WHe0OZGl9LaqcDDbdoUmf2ARYMJRugeFBpjYbMBw8Eu8OEx7RZConph0xxhEzlG6KCg
+ /kuTKAN/Fp3Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="164667469"
+X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
+   d="scan'208";a="164667469"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 09:41:44 -0700
+IronPort-SDR: EoikpcP2W/7ALLzkZ2vGI5g9NRCpYQEm1C/trjn2wIx6E2LQzR+aA5EWw0+bhBo6hQ/J38cF8R
+ tmrl0joXQgvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="313825910"
+Received: from spandruv-mobl3.amr.corp.intel.com ([10.254.75.215])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 09:41:44 -0700
+Message-ID: <d3d748b28e2ff540017129c1f3291fcaa68faa21.camel@linux.intel.com>
+Subject: Re: [PATCH v2 4/5] thermal: core: genetlink support for
+ events/cmd/sampling
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     rkumbako@codeaurora.org, amit.kucheria@linaro.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 01 Jul 2020 09:41:44 -0700
+In-Reply-To: <8526622b-cb31-4d40-95b6-e209b3101563@linaro.org>
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+         <20200625144509.17918-4-daniel.lezcano@linaro.org>
+         <73150ef4ca536368f087672b917dd9773417020e.camel@intel.com>
+         <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
+         <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
+         <4c8abeb4ddff2355d9ba397f50b7844a7734c2e9.camel@linux.intel.com>
+         <8526622b-cb31-4d40-95b6-e209b3101563@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 04:41:40PM +0100, Lad Prabhakar wrote:
-> serial core expects the spinlock to be initialized by the controller
-> driver for serial console, this patch makes sure the spinlock is
-> initialized, fixing the below issue:
+On Wed, 2020-07-01 at 18:31 +0200, Daniel Lezcano wrote:
+> On 01/07/2020 17:49, Srinivas Pandruvada wrote:
+> > [...]
+> > 
+> > > Then I'd prefer we only introduce the events that are used or
+> > > will be
+> > > used soon, like the tz disable/enable, to avoid some potential
+> > > dead
+> > > code.
+> > > We can easily add more events when they are needed.
+> > > 
+> > > Srinivas, do you have plan to use the trip add/delete events?
+> > Yes and also trip modify.
 > 
-> [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
-> [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
-> [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
-> [    0.865968] Call trace:
-> [    0.865979]  dump_backtrace+0x0/0x1d8
-> [    0.865985]  show_stack+0x14/0x20
-> [    0.865996]  dump_stack+0xe8/0x130
-> [    0.866006]  spin_dump+0x6c/0x88
-> [    0.866012]  do_raw_spin_lock+0xb0/0xf8
-> [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
-> [    0.866032]  uart_add_one_port+0x3a4/0x4e0
-> [    0.866039]  sci_probe+0x504/0x7c8
-> [    0.866048]  platform_drv_probe+0x50/0xa0
-> [    0.866059]  really_probe+0xdc/0x330
-> [    0.866066]  driver_probe_device+0x58/0xb8
-> [    0.866072]  device_driver_attach+0x6c/0x90
-> [    0.866078]  __driver_attach+0x88/0xd0
-> [    0.866085]  bus_for_each_dev+0x74/0xc8
-> [    0.866091]  driver_attach+0x20/0x28
-> [    0.866098]  bus_add_driver+0x14c/0x1f8
-> [    0.866104]  driver_register+0x60/0x110
-> [    0.866109]  __platform_driver_register+0x40/0x48
-> [    0.866119]  sci_init+0x2c/0x34
-> [    0.866127]  do_one_initcall+0x88/0x428
-> [    0.866137]  kernel_init_freeable+0x2c0/0x328
-> [    0.866143]  kernel_init+0x10/0x108
-> [    0.866150]  ret_from_fork+0x10/0x18
+> Ok I will keep those then.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > Also I need to have one more event for heartbeat like event which
+> > needs
+> > confirmation from user space to hardware the user process
+> > controlling
+> > thermal is active not dead. So whenever hardware wants to check
+> > health 
+> > it will send an event, which user space should acknowledge
+> 
+> Could it be the opposite? The userspace sends periodically a message
+> to
+> tell it is alive instead of having the kernel asking the userspace?
+> 
+Kernel doesn't ask (there is no timer in the kernel). The HW/FW send
+special event for confirmation and expects reply (This is upto the
+vendors). So user space can't send randomly.
 
-This should be backported to older kernels too, right?  How far back?
+> Is it ok if we add this in a separate series ?
+Yes.
 
-thanks,
+Thanks,
+Srinivas
 
-greg k-h
+> 
+> 
+> 
+
