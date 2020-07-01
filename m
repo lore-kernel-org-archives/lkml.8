@@ -2,131 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E652C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3757F2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dK7H4B3y"
+	by mail.kernel.org (Postfix) with ESMTP id CA5BC2073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbgGALlX (ORCPT
+        id S1730425AbgGALlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:41:23 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20755 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730406AbgGALlV (ORCPT
+        Wed, 1 Jul 2020 07:41:35 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44800 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730330AbgGALle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:41:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593603680; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=yCOmt+7TNApXMP9W7foIqk8TA3VYJjNfF1s36e7JilI=; b=dK7H4B3yYraDVM5V5JL/YCWvQYouv9mUuYhtkj7hlkSHWoqz4IAQTrMLU3SBO0ZOgb3Mh7Ti
- peA8fCsOmwTWwEzcZy00nsnphFr8uxIyAO8MElluVXESYFm8CSm62hysG6uRYcpv+Z1FxymD
- lgN1xPMtLfb+JZOGDUOwCeriTTg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5efc76508fe116ddd9f0845d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:41:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CC484C433A0; Wed,  1 Jul 2020 11:41:03 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 1 Jul 2020 07:41:34 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9EB9C43395;
-        Wed,  1 Jul 2020 11:41:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9EB9C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 3/3] arm64: dts: sc7180: Add OPP tables and power-domains for venus
-Date:   Wed,  1 Jul 2020 17:10:38 +0530
-Message-Id: <1593603638-19296-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
-References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 79CCD2A5505;
+        Wed,  1 Jul 2020 12:41:32 +0100 (BST)
+Date:   Wed, 1 Jul 2020 13:41:28 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [RESEND PATCH 3/3] drm/mediatek: mtk_dpi: Use simple encoder
+Message-ID: <20200701134128.6a967a89@collabora.com>
+In-Reply-To: <20200518173909.2259259-4-enric.balletbo@collabora.com>
+References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+        <20200518173909.2259259-4-enric.balletbo@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables in order to be able to vote on the performance state
-of a power-domain
+On Mon, 18 May 2020 19:39:09 +0200
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
+> The mtk_dpi driver uses an empty implementation for its encoder. Replace
+> the code with the generic simple encoder.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> ---
+> 
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index baad198c69eb..80778b2aac2a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -20,6 +20,7 @@
+>  #include <drm/drm_bridge.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_of.h>
+> +#include <drm/drm_simple_kms_helper.h>
+>  
+>  #include "mtk_dpi_regs.h"
+>  #include "mtk_drm_ddp_comp.h"
+> @@ -510,15 +511,6 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	return 0;
+>  }
+>  
+> -static void mtk_dpi_encoder_destroy(struct drm_encoder *encoder)
+> -{
+> -	drm_encoder_cleanup(encoder);
+> -}
+> -
+> -static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
+> -	.destroy = mtk_dpi_encoder_destroy,
+> -};
+> -
+>  static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
+>  				 enum drm_bridge_attach_flags flags)
+>  {
+> @@ -591,8 +583,8 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
+>  		return ret;
+>  	}
+>  
+> -	ret = drm_encoder_init(drm_dev, &dpi->encoder, &mtk_dpi_encoder_funcs,
+> -			       DRM_MODE_ENCODER_TMDS, NULL);
+> +	ret = drm_simple_encoder_init(drm_dev, &dpi->encoder,
+> +				      DRM_MODE_ENCODER_TMDS);
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index ad57df2..738a741 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2392,8 +2392,10 @@
- 			reg = <0 0x0aa00000 0 0xff000>;
- 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
- 			power-domains = <&videocc VENUS_GDSC>,
--					<&videocc VCODEC0_GDSC>;
--			power-domain-names = "venus", "vcodec0";
-+					<&videocc VCODEC0_GDSC>,
-+					<&rpmhpd SC7180_CX>;
-+			power-domain-names = "venus", "vcodec0", "opp-pd";
-+			operating-points-v2 = <&venus_opp_table>;
- 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
- 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
- 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-@@ -2414,6 +2416,35 @@
- 			video-encoder {
- 				compatible = "venus-encoder";
- 			};
-+
-+			venus_opp_table: venus-opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-200000000 {
-+					opp-hz = /bits/ 64 <150000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+				};
-+
-+				opp-320000000 {
-+					opp-hz = /bits/ 64 <270000000>;
-+					required-opps = <&rpmhpd_opp_svs>;
-+				};
-+
-+				opp-380000000 {
-+					opp-hz = /bits/ 64 <340000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+				};
-+
-+				opp-444000000 {
-+					opp-hz = /bits/ 64 <434000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+				};
-+
-+				opp-533000000 {
-+					opp-hz = /bits/ 64 <500000000>;
-+					required-opps = <&rpmhpd_opp_turbo>;
-+				};
-+			};
- 		};
- 
- 		videocc: clock-controller@ab00000 {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Not related to this change, but shouldn't we have DRM_MODE_ENCODER_DPI
+here?
+
+>  	if (ret) {
+>  		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
+>  		goto err_unregister;
 
