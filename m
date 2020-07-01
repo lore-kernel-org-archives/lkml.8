@@ -2,266 +2,213 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13245C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D58C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5FFA2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682CF2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hx51FY+I"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="izsE4d/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730220AbgGALML (ORCPT
+        id S1730209AbgGALQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:12:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25929 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730159AbgGALMI (ORCPT
+        Wed, 1 Jul 2020 07:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730140AbgGALQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:12:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593601925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yexujkd7auN9ITgPnwA4kXggvTeorMC1CWNzXOrWnvM=;
-        b=hx51FY+InFYWb/b2mFr5WLS/uXogj8g60xIVikBVxUDik2o3QdsQ5tR5UrEmSPQ+ZI4iU5
-        zaYmKu/8wywh2GkGQ/fKYXoo8C2WRILj7TwMYMVbBFjMhT6i82G5actO6Smhx2RwyszOTb
-        wWgHQ0IqXbCxy0NVkUi9Cvj4pqAmemk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-bul42xRlPjebAR0KU5xTpg-1; Wed, 01 Jul 2020 07:12:03 -0400
-X-MC-Unique: bul42xRlPjebAR0KU5xTpg-1
-Received: by mail-wr1-f72.google.com with SMTP id i14so19957195wru.17
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:12:03 -0700 (PDT)
+        Wed, 1 Jul 2020 07:16:55 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B368C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 04:16:55 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n26so10201643ejx.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w5k0/vPEZeTqwY5SXJ0/YDPUmmXWJlzEh3JyeTs1JGI=;
+        b=izsE4d/MxGx5PCBufUvd6Yby0hi5tUgK41AM6BrSGZML4kl+Q5GVb4kIosbzdcdZ6Q
+         y8jEE9b2jt4DcXdhclUnQjFSOLyQBgnTCrK34sqvoKQzYD+kh1INlDOXUSg1UvK8N3ov
+         FiBhVLW6YBYsHLL1g4yLijqhLct2dO+rIAAA+zcFY0UkZ6L8f/wicU9arfRCoPZ5mkbB
+         J/GTwRbSYp7WPzfl5x0GKHQD94hEVEc7/ENiN/lCY6K4WGIYlSVAoxHxjQDq/1/as9A4
+         w40i1d0DkjwdoCdX+GTg9zDJporiggTqcGdLE8cR3LxyfnzW2Lzx2O5/5BFiWOLQBS6p
+         i1/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Yexujkd7auN9ITgPnwA4kXggvTeorMC1CWNzXOrWnvM=;
-        b=rCul0QlB4nfz64ojv0ezybTUiDlO8oi8ts1awmzxqpwDXCwGLSoF+qYc/Bb/lS/d3R
-         iTt8RXftie2y1r/1jVjPGNlzvr0026MHZotYSuSAydiHlZI80BZDDOcYNovft0FqBJOq
-         cu+7oOMM8kYP+Q85Jk/5IG/TRRdXblV+0nhbhRfOMR/TtKHqQjdbVv6bcqtTtVVmVF6m
-         q/WOnzy4qIY/hllqUImttEe/5OXyVMdxCZtZtQ54tmKCdcri/wf83KuvsmEQSOBQuaGe
-         EzXy0+pLPZm8J+sc0vb/Sj+ZyQ+uliMXdqNh7ZYUsdDGzdThEeZtiCbCt8XySx9IJFjx
-         Lz8g==
-X-Gm-Message-State: AOAM532BgacuA65UM2zx/+P78430TIbaSDl2zaSDzrI6jrqF9fgQBGTB
-        4cpwFljqPTJEg7IM4rPDplx7ifhe+ifA0WGEomv4Wo638cK+pYvyXxkkC7Hkz9PowS9M1/j4Ogg
-        GYBR2Xn+j8koCyrPVj7sv0hfS
-X-Received: by 2002:a1c:398b:: with SMTP id g133mr25236177wma.76.1593601922427;
-        Wed, 01 Jul 2020 04:12:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxQMUaayG0vDg3RNtuezDlgxdvof9uLCFzLvN6HKEyQRgj3zoZo7nehIzUAAPphqwvJnljolw==
-X-Received: by 2002:a1c:398b:: with SMTP id g133mr25236149wma.76.1593601922091;
-        Wed, 01 Jul 2020 04:12:02 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id 140sm1930942wmb.15.2020.07.01.04.11.59
+        bh=w5k0/vPEZeTqwY5SXJ0/YDPUmmXWJlzEh3JyeTs1JGI=;
+        b=gE12Mkk2ItevlF2ZXPbSn1D1L+z96MBD1s5eIaqZxwLWWDocaC8C8UKSUQxgsM8Lch
+         XBF0WlBPQBo1Al21QcA4IV2CfPcJG/EnaT9AchPn/01rnBH5VgGzjuz9MWzC8yru9Jfy
+         JdVTrnj8tay1PGWX8RdzOtVU4tBQZmFGGIIij66TXHE9bEVqe2VpLr8VTkVXhjaLioIV
+         q/RJu1jHryDUtnpmYGGF+Jf7DTUd/qLpUkxUYZK/FFCFRMIdQF4K6PlrDouWX/xrPcwY
+         x8BMqTjalOfbSRRFwbGVaWMKV8Gih3NIg7eJp0cSFDRIuTUk9Y1EEwLq+LrFsRYHGEYp
+         BPcQ==
+X-Gm-Message-State: AOAM533QSgWgpttlkJPbiCOpoLe8ZWBChaHvK4FdR45sDwlLHMG3tVoF
+        r00+0r9nQjKHFDv3W7JVQsnXpA==
+X-Google-Smtp-Source: ABdhPJyDtq06fyfgH0Hy0pHn1yaEw14o/ndhRf2GJZrvJwMnQIZ0MHbpzMb8C5Fkuj+N4bF92wEkyg==
+X-Received: by 2002:a17:906:2616:: with SMTP id h22mr22010171ejc.154.1593602214045;
+        Wed, 01 Jul 2020 04:16:54 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id b14sm3081906ejg.18.2020.07.01.04.16.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 04:12:01 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 07:11:57 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
-Message-ID: <20200701071041-mutt-send-email-mst@kernel.org>
-References: <20200611113404.17810-1-mst@redhat.com>
- <20200611113404.17810-3-mst@redhat.com>
- <20200611152257.GA1798@char.us.oracle.com>
- <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
- <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
- <20200622114622-mutt-send-email-mst@kernel.org>
- <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
- <20200622122546-mutt-send-email-mst@kernel.org>
- <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
- <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
+        Wed, 01 Jul 2020 04:16:53 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 13:16:52 +0200
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Niklas Cassel <niklas.cassel@wdc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 2/2] block: add max_active_zones to blk-sysfs
+Message-ID: <20200701111330.3vpivrovh3i46maa@mpHalley.local>
+References: <20200616102546.491961-1-niklas.cassel@wdc.com>
+ <20200616102546.491961-3-niklas.cassel@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
+In-Reply-To: <20200616102546.491961-3-niklas.cassel@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:43:09PM +0200, Eugenio Perez Martin wrote:
-> On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
-> <eperezma@redhat.com> wrote:
-> >
-> > On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
-> > > > On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > >
-> > > > > On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
-> > > > > > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
-> > > > > > <eperezma@redhat.com> wrote:
-> > > > > > >
-> > > > > > > On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
-> > > > > > > <konrad.wilk@oracle.com> wrote:
-> > > > > > > >
-> > > > > > > > On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
-> > > > > > > > > As testing shows no performance change, switch to that now.
-> > > > > > > >
-> > > > > > > > What kind of testing? 100GiB? Low latency?
-> > > > > > > >
-> > > > > > >
-> > > > > > > Hi Konrad.
-> > > > > > >
-> > > > > > > I tested this version of the patch:
-> > > > > > > https://lkml.org/lkml/2019/10/13/42
-> > > > > > >
-> > > > > > > It was tested for throughput with DPDK's testpmd (as described in
-> > > > > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
-> > > > > > > and kernel pktgen. No latency tests were performed by me. Maybe it is
-> > > > > > > interesting to perform a latency test or just a different set of tests
-> > > > > > > over a recent version.
-> > > > > > >
-> > > > > > > Thanks!
-> > > > > >
-> > > > > > I have repeated the tests with v9, and results are a little bit different:
-> > > > > > * If I test opening it with testpmd, I see no change between versions
-> > > > >
-> > > > >
-> > > > > OK that is testpmd on guest, right? And vhost-net on the host?
-> > > > >
-> > > >
-> > > > Hi Michael.
-> > > >
-> > > > No, sorry, as described in
-> > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
-> > > > But I could add to test it in the guest too.
-> > > >
-> > > > These kinds of raw packets "bursts" do not show performance
-> > > > differences, but I could test deeper if you think it would be worth
-> > > > it.
-> > >
-> > > Oh ok, so this is without guest, with virtio-user.
-> > > It might be worth checking dpdk within guest too just
-> > > as another data point.
-> > >
-> >
-> > Ok, I will do it!
-> >
-> > > > > > * If I forward packets between two vhost-net interfaces in the guest
-> > > > > > using a linux bridge in the host:
-> > > > >
-> > > > > And here I guess you mean virtio-net in the guest kernel?
-> > > >
-> > > > Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
-> > > > the host. More precisely:
-> > > > * Adding one of the interfaces to another namespace, assigning it an
-> > > > IP, and starting netserver there.
-> > > > * Assign another IP in the range manually to the other virtual net
-> > > > interface, and start the desired test there.
-> > > >
-> > > > If you think it would be better to perform then differently please let me know.
-> > >
-> > >
-> > > Not sure why you bother with namespaces since you said you are
-> > > using L2 bridging. I guess it's unimportant.
-> > >
-> >
-> > Sorry, I think I should have provided more context about that.
-> >
-> > The only reason to use namespaces is to force the traffic of these
-> > netperf tests to go through the external bridge. To test netperf
-> > different possibilities than the testpmd (or pktgen or others "blast
-> > of frames unconditionally" tests).
-> >
-> > This way, I make sure that is the same version of everything in the
-> > guest, and is a little bit easier to manage cpu affinity, start and
-> > stop testing...
-> >
-> > I could use a different VM for sending and receiving, but I find this
-> > way a faster one and it should not introduce a lot of noise. I can
-> > test with two VM if you think that this use of network namespace
-> > introduces too much noise.
-> >
-> > Thanks!
-> >
-> > > > >
-> > > > > >   - netperf UDP_STREAM shows a performance increase of 1.8, almost
-> > > > > > doubling performance. This gets lower as frame size increase.
-> 
-> Regarding UDP_STREAM:
-> * with event_idx=on: The performance difference is reduced a lot if
-> applied affinity properly (manually assigning CPU on host/guest and
-> setting IRQs on guest), making them perform equally with and without
-> the patch again. Maybe the batching makes the scheduler perform
-> better.
-> 
-> > > > > >   - rests of the test goes noticeably worse: UDP_RR goes from ~6347
-> > > > > > transactions/sec to 5830
-> 
-> * Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning makes
-> them perform similarly again, only a very small performance drop
-> observed. It could be just noise.
-> ** All of them perform better than vanilla if event_idx=off, not sure
-> why. I can try to repeat them if you suspect that can be a test
-> failure.
-> 
-> * With testpmd and event_idx=off, if I send from the VM to host, I see
-> a performance increment especially in small packets. The buf api also
-> increases performance compared with only batching: Sending the minimum
-> packet size in testpmd makes pps go from 356kpps to 473 kpps. Sending
-> 1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
-> 
-> Something strange I observe in these tests: I get more pps the bigger
-> the transmitted buffer size is. Not sure why.
-> 
-> ** Sending from the host to the VM does not make a big change with the
-> patches in small packets scenario (minimum, 64 bytes, about 645
-> without the patch, ~625 with batch and batch+buf api). If the packets
-> are bigger, I can see a performance increase: with 256 bits, it goes
-> from 590kpps to about 600kpps, and in case of 1500 bytes payload it
-> gets from 348kpps to 528kpps, so it is clearly an improvement.
-> 
-> * with testpmd and event_idx=on, batching+buf api perform similarly in
-> both directions.
-> 
-> All of testpmd tests were performed with no linux bridge, just a
-> host's tap interface (<interface type='ethernet'> in xml), with a
-> testpmd txonly and another in rxonly forward mode, and using the
-> receiving side packets/bytes data. Guest's rps, xps and interrupts,
-> and host's vhost threads affinity were also tuned in each test to
-> schedule both testpmd and vhost in different processors.
-> 
-> I will send the v10 RFC with the small changes requested by Stefan and Jason.
-> 
-> Thanks!
-> 
+On 16.06.2020 12:25, Niklas Cassel wrote:
+>Add a new max_active zones definition in the sysfs documentation.
+>This definition will be common for all devices utilizing the zoned block
+>device support in the kernel.
+>
+>Export max_active_zones according to this new definition for NVMe Zoned
+>Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
+>the kernel), and ZBC SCSI devices.
+>
+>Add the new max_active_zones struct member to the request_queue, rather
+>than as a queue limit, since this property cannot be split across stacking
+>drivers.
+>
+>For SCSI devices, even though max active zones is not part of the ZBC/ZAC
+>spec, export max_active_zones as 0, signifying "no limit".
+>
+>Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>---
+> Documentation/block/queue-sysfs.rst |  7 +++++++
+> block/blk-sysfs.c                   | 14 +++++++++++++-
+> drivers/nvme/host/zns.c             |  1 +
+> drivers/scsi/sd_zbc.c               |  1 +
+> include/linux/blkdev.h              | 20 ++++++++++++++++++++
+> 5 files changed, 42 insertions(+), 1 deletion(-)
+>
+>diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
+>index f01cf8530ae4..f261a5c84170 100644
+>--- a/Documentation/block/queue-sysfs.rst
+>+++ b/Documentation/block/queue-sysfs.rst
+>@@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
+> data that will be submitted by the block layer core to the associated
+> block driver.
+>
+>+max_active_zones (RO)
+>+---------------------
+>+For zoned block devices (zoned attribute indicating "host-managed" or
+>+"host-aware"), the sum of zones belonging to any of the zone states:
+>+EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.
+>+If this value is 0, there is no limit.
+>+
+> max_open_zones (RO)
+> -------------------
+> For zoned block devices (zoned attribute indicating "host-managed" or
+>diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+>index fa42961e9678..624bb4d85fc7 100644
+>--- a/block/blk-sysfs.c
+>+++ b/block/blk-sysfs.c
+>@@ -310,6 +310,11 @@ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
+> 	return queue_var_show(queue_max_open_zones(q), page);
+> }
+>
+>+static ssize_t queue_max_active_zones_show(struct request_queue *q, char *page)
+>+{
+>+	return queue_var_show(queue_max_active_zones(q), page);
+>+}
+>+
+> static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
+> {
+> 	return queue_var_show((blk_queue_nomerges(q) << 1) |
+>@@ -677,6 +682,11 @@ static struct queue_sysfs_entry queue_max_open_zones_entry = {
+> 	.show = queue_max_open_zones_show,
+> };
+>
+>+static struct queue_sysfs_entry queue_max_active_zones_entry = {
+>+	.attr = {.name = "max_active_zones", .mode = 0444 },
+>+	.show = queue_max_active_zones_show,
+>+};
+>+
+> static struct queue_sysfs_entry queue_nomerges_entry = {
+> 	.attr = {.name = "nomerges", .mode = 0644 },
+> 	.show = queue_nomerges_show,
+>@@ -776,6 +786,7 @@ static struct attribute *queue_attrs[] = {
+> 	&queue_zoned_entry.attr,
+> 	&queue_nr_zones_entry.attr,
+> 	&queue_max_open_zones_entry.attr,
+>+	&queue_max_active_zones_entry.attr,
+> 	&queue_nomerges_entry.attr,
+> 	&queue_rq_affinity_entry.attr,
+> 	&queue_iostats_entry.attr,
+>@@ -803,7 +814,8 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
+> 		(!q->mq_ops || !q->mq_ops->timeout))
+> 			return 0;
+>
+>-	if (attr == &queue_max_open_zones_entry.attr &&
+>+	if ((attr == &queue_max_open_zones_entry.attr ||
+>+	     attr == &queue_max_active_zones_entry.attr) &&
+> 	    !blk_queue_is_zoned(q))
+> 		return 0;
+>
+>diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
+>index af156529f3b6..502070763266 100644
+>--- a/drivers/nvme/host/zns.c
+>+++ b/drivers/nvme/host/zns.c
+>@@ -83,6 +83,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
+> 	q->limits.zoned = BLK_ZONED_HM;
+> 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
+> 	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);
+>+	blk_queue_max_active_zones(q, le32_to_cpu(id->mar) + 1);
+> free_data:
+> 	kfree(id);
+> 	return status;
+>diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
+>index aa3564139b40..d8b2c49d645b 100644
+>--- a/drivers/scsi/sd_zbc.c
+>+++ b/drivers/scsi/sd_zbc.c
+>@@ -721,6 +721,7 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
+> 		blk_queue_max_open_zones(q, 0);
+> 	else
+> 		blk_queue_max_open_zones(q, sdkp->zones_max_open);
+>+	blk_queue_max_active_zones(q, 0);
+> 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
+>
+> 	/* READ16/WRITE16 is mandatory for ZBC disks */
+>diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>index 2f332f00501d..3776140f8f20 100644
+>--- a/include/linux/blkdev.h
+>+++ b/include/linux/blkdev.h
+>@@ -521,6 +521,7 @@ struct request_queue {
+> 	unsigned long		*conv_zones_bitmap;
+> 	unsigned long		*seq_zones_wlock;
+> 	unsigned int		max_open_zones;
+>+	unsigned int		max_active_zones;
+> #endif /* CONFIG_BLK_DEV_ZONED */
 
-OK so there's a chance you are seeing effects of an aggressive power
-management. which tuned profile are you using? It might be helpful
-to disable PM/frequency scaling.
+Looking a second time at these patches, wouldn't it make sense to move
+this to queue_limits?
 
-
-> 
-> 
-> 
-> 
-> 
-> > > > >
-> > > > > OK so it seems plausible that we still have a bug where an interrupt
-> > > > > is delayed. That is the main difference between pmd and virtio.
-> > > > > Let's try disabling event index, and see what happens - that's
-> > > > > the trickiest part of interrupts.
-> > > > >
-> > > >
-> > > > Got it, will get back with the results.
-> > > >
-> > > > Thank you very much!
-> > > >
-> > > > >
-> > > > >
-> > > > > >   - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
-> > > > > >   - TCP_RR from 6223.64 transactions/sec to 5739.44
-> > > > >
-> > >
-
+Javier
