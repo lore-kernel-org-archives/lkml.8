@@ -2,111 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC77AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72184C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6B820747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491AB2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F640izKj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oXpShRAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgGAK17 (ORCPT
+        id S1729878AbgGAKas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729683AbgGAK16 (ORCPT
+        Wed, 1 Jul 2020 06:30:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37104 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729226AbgGAKas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:27:58 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E93C061755;
-        Wed,  1 Jul 2020 03:27:58 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 207so10628659pfu.3;
-        Wed, 01 Jul 2020 03:27:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3FZxDrlLt48LmtqU4CU5m/XuCUHORmhZRpZzXJKt1c=;
-        b=F640izKjqUNFfwPYQodt/bdItFy5xb3UYVBMO+wQyVBhRzFY6FTSR1/wjdawZlsdOF
-         uwqSjtvxrvZQrjISy88NsGRrFSAqF8r8qk1D6Cx047QUUxU8AaUF+5EoW/ZodwfNH0Rv
-         oaEcs7F9b6LEGPC21F8PatjRXvNVrIA/OFywxfuoPllg/wPGWh1egNkfLVPm9bJgg5Hm
-         YrWNoTef2d7X2RP/jUrdO63vYRJKwkIvTc1W3V8ycuiz8ypXojiDluMEGuT6vS6IPQN3
-         WyIgwQAvou/CIvRiN/y02zqPY8YN3ppcL9XAfdC0vS4MnfW48JAM2XSSnDM5Lu2mqbzl
-         hB7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3FZxDrlLt48LmtqU4CU5m/XuCUHORmhZRpZzXJKt1c=;
-        b=sZBY63nJJGos73vBJ+R0saH9pK7kfGU+6rdftdlj4GPtY+GBcMik6FcBcW7RWpDOLN
-         4ohd/Y07Zq5Q09JLTDjQGptXkqwHw4b7IoZxJU8PWEWGUe8HQgV2Mg2lp4wis7+nBVUU
-         FXzpnCRNye19HHlPRw0MBUtWyGN/nB8/WhLSl2A2WGoF5JgYId/g5ZsiFhGPhSEI9Pp6
-         DhXydhObcPXTB1ZjC/p8ajwF6RJCKIheumyR3JhbPpp+707pyaZqFkZkYESLy5c0JqW/
-         dGSiLqLeU3zHR9shYlMxj5Tklo6FHGVXePdNT+OhMRMak51b4lmBAZm/2jtp3gnE2gy5
-         m4nw==
-X-Gm-Message-State: AOAM5332kfB440ygVNfRVpV6iJd47AacEz4QSR9QYnkhdVblA/RkJxn7
-        lroQVCMUFnNxcdlcB1ThfeWS/os68SElypLC+IA=
-X-Google-Smtp-Source: ABdhPJwEM2tn83JW4KiTR3vh672XMQ7bxMrQqVOpB9OU+4kR2m5bq4L4a4iK+7TUI0oFW8gFMQKq7VKddB3VE3QbFqA=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr13499247pgn.4.1593599277215;
- Wed, 01 Jul 2020 03:27:57 -0700 (PDT)
+        Wed, 1 Jul 2020 06:30:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061AUidM089307;
+        Wed, 1 Jul 2020 05:30:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593599444;
+        bh=NP0JdMLh+U0vhC5zO7pOJizvlOHIeJNO1xQ5Cl4Bwr0=;
+        h=From:To:CC:Subject:Date;
+        b=oXpShRAxFqaCNVB/c7L3+0JwhpPIzkbFTYQPUNyDqqVeLegEwsTFNYZEiY31npCLr
+         s9DLS63f5Xtut3LyQxEhchDWoiJOcw5uXuqYrEBwc3wle8KmFolFOP9UkHXO7kXmaz
+         nwkvP75jp6rHaKw0GEWGaEskc9IPIXHOFLK+Sk0w=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061AUiID055689;
+        Wed, 1 Jul 2020 05:30:44 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 05:30:44 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 05:30:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061AUgWi081763;
+        Wed, 1 Jul 2020 05:30:43 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next 0/6] soc: ti: k3-ringacc: updates
+Date:   Wed, 1 Jul 2020 13:30:24 +0300
+Message-ID: <20200701103030.29684-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com> <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
-In-Reply-To: <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Jul 2020 13:27:43 +0300
-Message-ID: <CAHp75VfxpogiUhiwGDaj3wT5BN7U4s9coMd3Rw10zX=sxSn6Lg@mail.gmail.com>
-Subject: Re: [net-next PATCH v2 2/3] Documentation: ACPI: DSD: Document MDIO PHY
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jon <jon@solid-run.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux.cj@gmail.com, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 9:13 AM Calvin Johnson
-<calvin.johnson@oss.nxp.com> wrote:
->
-> Introduce ACPI mechanism to get PHYs registered on a MDIO bus and
-> provide them to be connected to MAC.
->
-> An ACPI node property "mdio-handle" is introduced to reference the
-> MDIO bus on which PHYs are registered with autoprobing method used
-> by mdiobus_register().
+Hi Santosh,
 
-...
+This series is a set of non critical  updates for The TI K3 AM654x/J721E
+Ring Accelerator driver.
 
-> +                    Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
+Patch 1 - convert bindings to json-schema
+Patches 2,3,5 - code reworking
+Patch 4 - adds new API to request pair of rings k3_ringacc_request_rings_pair()
+Patch 6 - updates K3 UDMA to use new API
 
-Reference as a package? Hmm... Is it really possible to have more than
-one handle here?
+Grygorii Strashko (4):
+  dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
+  soc: ti: k3-ringacc: add ring's flags to dump
+  soc: ti: k3-ringacc: add request pair of rings api.
+  soc: ti: k3-ringacc: separate soc specific initialization
 
-...
+Peter Ujfalusi (2):
+  soc: ti: k3-ringacc: Move state tracking variables under a struct
+  dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
 
-> +                   Package (2) {"phy-channel", 2},
-> +                   Package (2) {"phy-mode", "rgmii-id"},
-> +                   Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
-
-And drop all these 2s. They are counted automatically by `iasl`.
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
+ .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
+ drivers/dma/ti/k3-udma-glue.c                 |  40 ++--
+ drivers/dma/ti/k3-udma.c                      |  34 +--
+ drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------
+ include/linux/soc/ti/k3-ringacc.h             |   4 +
+ 6 files changed, 261 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
