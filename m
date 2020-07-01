@@ -2,204 +2,231 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD70C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02E62073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WQj71VD+";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iAicbsmg"
+	by mail.kernel.org (Postfix) with ESMTP id 5F0D82074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGAC0g (ORCPT
+        id S1726858AbgGAC0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:26:36 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11152 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbgGAC0f (ORCPT
+        Tue, 30 Jun 2020 22:26:54 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36016 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgGAC0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:26:35 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0612PgO6021112;
-        Tue, 30 Jun 2020 19:26:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
- b=WQj71VD+40nL5ohfqASlPtfV0WERo31ODOGDOy/AaMZUJtfiyuncqsglfOgpVE95BFKD
- RcTdXP0RK6dIEFebvzXX1YhXo8p6nprD9B4plCr2xZq57oKgspVuJ7nd6SA05LOgANpa
- s8idjv+i/pjuVFWImA+QzjfL7eufoJUvXKI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31x3xgymmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 30 Jun 2020 19:26:19 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 30 Jun 2020 19:26:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QOa1re290sy08wHaCwUMzWqZw3wRte2ymcOm7h4fCQvVcBblxuTo+Y5clNKwx40NoMXPjlB1keDxgeBlrrVpK4w9fx90Imb1F9XsuSRb9hByD0nRj4VihDSDOC3aU3W4P/lYusACNis980ixUkzpgIp7DiFcHl2/cr0xGJOdIKJEI6tCA0ihcKGrrdXzvs8uWrokD9BTe9bEoG2tWk28EYCGP0wwDII1wVRBJ5vp2jjnu7yqZM5mteHtcIl9uwG5yKqO00L+G6yaoLMTqlNstzhlWMMmgJA1YjTAqVUrnVHOJnE/YzIJvbGNfsFhs2Sxg5BPHNearkX7DcMRBMtBAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
- b=kctZ/lzxuR7VeEqVXKyrJtwKZODzaOlE0M8swa8yBB4GpbEdoKpXWzbQzc+Lugv7b/KgTevYoy3OzG2OOQcZj01PSqrjhtCsJcTl3oenHUy/EPXzoHBYVuAthCFlwR1d7kBtawcO8F19PiEtYh2u8hLE94drCITLlA6ZebrAD230jBVaYLjLugBZOThOi1QY7dcq4SIsVbDscGjE2W5A5iJXtTA9+7V+cCQYBvtrutuhnpj5u6DlIKxiDAGU1ZWScLBUJTeculMBp/9g1E2ZgsgCjmhiv2AkFAME/kznZPAi52/hZ2nbsgPOHlNV57L7MEljuspeqiRgQz0h2uFJhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
- b=iAicbsmgdRGIHk3V6YLxWOD7mI9xrMyOG9GTc8biUE3JW5CvLRgATXWhkz/2t4zMqfkW7t26ik+r2flKty6v2kI4/REG+apbgWPprMeAY+MldjLKUr3YvkhhbIh5751zoCrdpdojo0YOIVn2FK8bHrQGvCVi0CWYVOWAcruyGAI=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB2822.namprd15.prod.outlook.com (2603:10b6:a03:15b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 1 Jul
- 2020 02:26:05 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
- 02:26:05 +0000
-Subject: Re: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use
- hrtimer_range_start_ns.
-To:     Hao Luo <haoluo@google.com>
-CC:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>,
-        <linux-kselftest@vger.kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Bill Wendling <morbo@google.com>
-References: <20200630184922.455439-1-haoluo@google.com>
- <49df8306-ecc7-b979-d887-b023275e4842@fb.com>
- <CA+khW7iJu2tzcz36XzL6gBq4poq+5Qt0vbrmPRdYuvC-c5U4_A@mail.gmail.com>
- <CA+khW7jNqVMqq2dzf6Dy0pWCZYjHrG7Vm_sUEKKLS-L-ptzEtQ@mail.gmail.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <46fc8e13-fb3e-6464-b794-60cf90d16543@fb.com>
-Date:   Tue, 30 Jun 2020 19:26:02 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-In-Reply-To: <CA+khW7jNqVMqq2dzf6Dy0pWCZYjHrG7Vm_sUEKKLS-L-ptzEtQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25)
- To BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+        Tue, 30 Jun 2020 22:26:53 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7FA713A4123;
+        Wed,  1 Jul 2020 12:26:47 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jqSSU-000246-KP; Wed, 01 Jul 2020 12:26:46 +1000
+Date:   Wed, 1 Jul 2020 12:26:46 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [Bug, sched, 5.8-rc2]: PREEMPT kernels crashing in
+ check_preempt_wakeup() running fsx on XFS
+Message-ID: <20200701022646.GO2005@dread.disaster.area>
+References: <20200626004722.GF2005@dread.disaster.area>
+ <20200626073345.GI4800@hirez.programming.kicks-ass.net>
+ <20200626223254.GH2005@dread.disaster.area>
+ <20200627183042.GK4817@hirez.programming.kicks-ass.net>
+ <20200629235533.GL2005@dread.disaster.area>
+ <20200630085732.GT4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c085:21e8::15c2] (2620:10d:c090:400::5:5757) by BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Wed, 1 Jul 2020 02:26:04 +0000
-X-Originating-IP: [2620:10d:c090:400::5:5757]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fe7cf668-a757-44c5-073c-08d81d661b4a
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2822:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB282280E82F7163680D1DB04CD36C0@BYAPR15MB2822.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ifpBzi4u4HCaEZUd7rZgVjIjbdlP1V3dXNdJP0RGQmBCWTOGXwte7a5EEGGn0SqbjFAJbwISYeoke8E5lGSdDEvF7+QNndHxAV97KEbOsq/NV4d17LuQPFjxkD6lvSgAfLRm8nUo334U0fHOxbf9uecbXqhFvhtc5T5W9DfffrbSuQDQctiKisW0zX94u44Dgp5snXeVur52DMrHBj1wLXTWfGZFBZbfOXGuLTBF2dPoshtGcOJjlhacn2FLNKCEJG2G/TeMidzeEKzAFSJDUwuph4hOo2fUsEd+aQPT7kIYEhVVoZMzwQQS+l83eRJcE+wxVEsOj9eAqanR6n9tP/Wn0hgxb0wl6QvfKtF72EXED1kDx/+x2STwu4h5PBph
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(39860400002)(136003)(396003)(376002)(6486002)(36756003)(54906003)(83380400001)(478600001)(16526019)(4326008)(7416002)(186003)(316002)(52116002)(31686004)(8676002)(66556008)(66476007)(66946007)(2906002)(53546011)(8936002)(31696002)(86362001)(6916009)(5660300002)(2616005)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: f9zp8w1hG1APb2Tl4OZ95sHtDIukIECvslDY9RLM41mySPiLtP8AREcrU8uEfeHpRvfjTG352ldBU/quW+V5rparNbXsg2VZu2C1yxlddmjzVV/rxEpDyHZnob9bcHXS3hUEWaYzMEPXktc1CHuy1aqzN8TV/nGvDBl4EzCoUYZyRhMSSAuaFrVXy0xeMHvFfsgN+ptVAg/gBFVSTSivoPcCR+DspMI90jMhtFXOgeaE6M9tfjFzafTc+Lsp9TSOGTIaHJjw/1enrQMQMry1x66KhRn0SIME0X8X7pbPHwgv6GaDntPGkrYVFMUtxRUAoZGX5hTm6XDWIvD8wREnkawlrWI5e+M59xpaKyGX6fbg14s+yb2NNVVd1OGnN88NXQUsaaBrAtF4f6oe2ARLuel9CT2M2+pMFKkjbBdi/h4Ai0Pji4AqGmbJCusrGC9/CnfauEKn/qYLtk1u5GaqjgvYoSWVyorNyJGKGNHXtf2+Z46yjVEhOCL6VTV7cmM/27xdiNF9y43hVtfHii2xoQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe7cf668-a757-44c5-073c-08d81d661b4a
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 02:26:05.7609
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IxjnbgR6fAHJpXpJotXdyNxFlCrSkLlUfxSQDV34hvX6b8aakSzE3Mv5VT0nN4d6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2822
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_01:2020-06-30,2020-06-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- bulkscore=0 priorityscore=1501 mlxscore=0 impostorscore=0 spamscore=0
- clxscore=1011 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010013
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630085732.GT4817@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7-415B0cAAAA:8
+        a=WyWJDwBIb6W5-FMhlnsA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/30/20 5:10 PM, Hao Luo wrote:
-> Ok, with the help of my colleague Ian Rogers, I think we solved the
-> mystery. Clang actually inlined hrtimer_nanosleep() inside
-> SyS_nanosleep(), so there is no call to that function throughout the
-> path of the nanosleep syscall. I've been looking at the function body
-> of hrtimer_nanosleep for quite some time, but clearly overlooked the
-> caller of hrtimer_nanosleep. hrtimer_nanosleep is pretty short and
-> there are many constants, inlining would not be too surprising.
-
-Oh thanks for explanation. inlining makes sense. We have many other
-instances like this in the past where kprobe won't work properly.
-
-Could you reword your commit message then?
-
- > causing fentry and kprobe to not hook on this function properly on a
- > Clang build kernel.
-
-The above is a little vague on what happens. What really happens is
-fentry/kprobe does hook on this function but has no effect since
-its caller has inlined the function.
-
-
-> Sigh...
+On Tue, Jun 30, 2020 at 10:57:32AM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 30, 2020 at 09:55:33AM +1000, Dave Chinner wrote:
+> > Sure, but that misses the point I was making.
+> > 
+> > I regularly have to look deep into other subsystems to work out what
+> > problem the filesystem is tripping over. I'm regularly
+> > looking into parts of the IO stack, memory management, page
+> > allocators, locking and atomics, workqueues, the scheduler, etc
+> > because XFS makes extensive (and complex) use of the infrastructure
+> > they provide. That means to debug filesystem issues, I have to be
+> > able to understand what that infrastructure is trying to do and make
+> > judgements as to whether that code behaving correctly or not.
+> > 
+> > And so when I find a reproducer for a bug that takes 20s to
+> > reproduce and it points me at code that I honestily have no hope of
 > 
-> Hao
+> 20s would've been nice to have a week and a half ago, the reproduce I
+> debugged this with took days to trigger.. a well, such is life.
 > 
-> On Tue, Jun 30, 2020 at 3:48 PM Hao Luo <haoluo@google.com> wrote:
->>
->> On Tue, Jun 30, 2020 at 1:37 PM Yonghong Song <yhs@fb.com> wrote:
->>>
->>> On 6/30/20 11:49 AM, Hao Luo wrote:
->>>> The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
->>>> programs. But it seems Clang may have done an aggressive optimization,
->>>> causing fentry and kprobe to not hook on this function properly on a
->>>> Clang build kernel.
->>>
->>> Could you explain why it does not on clang built kernel? How did you
->>> build the kernel? Did you use [thin]lto?
->>>
->>> hrtimer_nanosleep is a global function who is called in several
->>> different files. I am curious how clang optimization can make
->>> function disappear, or make its function signature change, or
->>> rename the function?
->>>
->>
->> Yonghong,
->>
->> We didn't enable LTO. It also puzzled me. But I can confirm those
->> fentry/kprobe test failures via many different experiments I've done.
->> After talking to my colleague on kernel compiling tools (Bill, cc'ed),
->> we suspected this could be because of clang's aggressive inlining. We
->> also noticed that all the callsites of hrtimer_nanosleep() are tail
->> calls.
->>
->> For a better explanation, I can reach out to the people who are more
->> familiar to clang in the compiler team to see if they have any
->> insights. This may not be of high priority for them though.
->>
->> Hao
+> > understanding well enough to determine if it is working correctly or
+> > not, then we have a problem.  A lot of my time is spent doing root
+> > cause analysis proving that such issues are -not- filesystem
+> > problems (they just had "xfs" in the stack trace), hence being able
+> > to read and understand the code in related core subsystems is
+> > extremely important to performing my day job.
+> > 
+> > If more kernel code falls off the memory barrier cliff like this,
+> > then the ability of people like me to find the root cause of complex
+> > issues is going to be massively reduced. Writing code so smart that
+> > almost no-one else can understand has always been a bad thing, and
+> > memory barriers only make this problem worse... :(
+> 
+> How about you try and give me a hint about where you gave up and I'll
+> try and write better comments?
+
+Hard to explain. Background: we (XFS developers) got badly burnt a
+few years back by memory barrier bugs in rwsems that we could not
+prove were memory barrier bugs in rwsems as instrumentation made
+them go away. But they were most definitely bugs in rwsems that the
+maintainers said could not exist. While I could read the the rwsem
+code and understand how it was supposed to work, identifying the
+missing memory barrier in the code was beyond my capability. It was
+also beyond the capability of the people who wrote the code, too.
+
+As such, I'm extremely sceptical that maintainers actually
+understand their complex ordering constructs as well as they think
+they do, and your comments about "can't explain how it can happen on
+x86-64" do nothing but re-inforce my scepticism.
+
+To your specific question: I gave up looking at the code when I
+realised I had no idea what the relationships between objects and
+logic that the memory barriers were ordering against, nor what
+fields within objects were protected by locks, acquire/release
+depedencies, explicit memory barriers, some combination of all
+three or even something subtle enough that I hadn't noticed yet.
+
+Yes, the code explains the ordering constraints between
+object A and object B, but there's nothing to to actually explain
+what, say, p->on_cpu means, what it's valid states are, when teh
+different values mean, and how it relates to, say, p->on_rq...
+
+e.g. take this comment in ttwu:
+
+       /*
+         * Ensure we load p->on_rq _after_ p->state, otherwise it would
+         * be possible to, falsely, observe p->on_rq == 0 and get stuck
+         * in smp_cond_load_acquire() below.
+         *
+         * sched_ttwu_pending()                 try_to_wake_up()
+         *   STORE p->on_rq = 1                   LOAD p->state
+         *   UNLOCK rq->lock
+         *
+         * __schedule() (switch to task 'p')
+         *   LOCK rq->lock                        smp_rmb();
+         *   smp_mb__after_spinlock();
+         *   UNLOCK rq->lock
+         *
+         * [task p]
+         *   STORE p->state = UNINTERRUPTIBLE     LOAD p->on_rq
+         *
+         * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
+         * __schedule().  See the comment for smp_mb__after_spinlock().
+         *
+         * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
+         */
+        smp_rmb();
+
+The comment explains -what the code is ordering against-. I
+understand that this is a modified message passing pattern that
+requires explicit memory barriers because there isn't a direct
+release/acquire relationship between store and load of the different
+objects.
+
+I then spent an hour learning about smp_cond_load_acquire() because this
+is the first time I'd seen that construct and I had no idea what it did.
+But then I understood what that specific set of ordering constraints
+actually does.
+
+And then I completely didn't understand this code, because the code
+the comment references is this:
+
+	smp_cond_load_acquire(&p->on_cpu, !VAL);
+
+that's *on_cpu* that the load is being done from, but the comment
+that references the load_acquire is talking about ordering *on_rq*
+against p->state.
+
+So after thinking I understood what the code is doing, I realise
+either the comment is wrong or *I don't have a clue what this code
+is doing*. And that I have no way of finding out which it might be
+from looking at the code.
+
+Contrast that to code that just uses basic locks.
+
+Putting the little pieces of critical sections together is
+relatively straight forward to do. The code inside the locks is what
+is being serialised and memory barriers are unlock-to-lock, and so
+assumptions about how entire objects interact can be made and in
+general they are going to be valid because critical sections are
+straight forward and obvious.
+
+For more complex locking constructs - nesting of locks, different
+locks protecting different parts of the same objects, etc , we end
+up documenting what fields in major objects are protected by which
+lock and what order the locks nest in. e.g. in fs/inode.c:
+
+/*
+ * Inode locking rules:
+ *
+ * inode->i_lock protects:
+ *   inode->i_state, inode->i_hash, __iget()
+ * Inode LRU list locks protect:
+ *   inode->i_sb->s_inode_lru, inode->i_lru
+ * inode->i_sb->s_inode_list_lock protects:
+ *   inode->i_sb->s_inodes, inode->i_sb_list
+ * bdi->wb.list_lock protects:
+ *   bdi->wb.b_{dirty,io,more_io,dirty_time}, inode->i_io_list
+ * inode_hash_lock protects:
+ *   inode_hashtable, inode->i_hash
+ *
+ * Lock ordering:
+ *
+ * inode->i_sb->s_inode_list_lock
+ *   inode->i_lock
+ *     Inode LRU list locks
+ *
+ * bdi->wb.list_lock
+ *   inode->i_lock
+ *
+ * inode_hash_lock
+ *   inode->i_sb->s_inode_list_lock
+ *   inode->i_lock
+ *
+ * iunique_lock
+ *   inode_hash_lock
+ */
+
+There's nothing like this in the scheduler code that I can find that
+explains the expected overall ordering/serialisation mechanisms and
+relationships used in the subsystem. Hence when I comes across
+something that doesn't appear to make sense, there's nothign I can
+refer to that would explain whether it is a bug or whether the
+comment is wrong or whether I've just completely misunderstood what
+the comment is referring to.
+
+Put simply: the little details are great, but they aren't sufficient
+by themselves to understand the relationships being maintained
+between the various objects.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
