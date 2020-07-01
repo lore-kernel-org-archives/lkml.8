@@ -2,130 +2,139 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D571D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02E62073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="p0cf9m8g";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XNHCokg4"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WQj71VD+";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iAicbsmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGACZM (ORCPT
+        id S1726805AbgGAC0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:25:12 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:14990 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726416AbgGACZL (ORCPT
+        Tue, 30 Jun 2020 22:26:36 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11152 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgGAC0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:25:11 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0612J63k021825;
-        Tue, 30 Jun 2020 19:23:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=dO3ByXh+MCskQ6V5ANTi6xKEtAAajimldCCab53SXgA=;
- b=p0cf9m8gRTMyKyUOMSpx43B37nE4dzx1I5Us8zxwVqhlC5Ql7rVLrZXujFfRuYJ7vIM5
- a1GDGX4q3fTW0M5oEIoxDqIa8dxBB6zR/pczITs3ujmI1TxIVNb19qy2MPnO8V1BXJG3
- EIAxhwjmAhU/7gchxavhcuWQmBiIWMGAdYQ= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31xp39d8kf-1
+        Tue, 30 Jun 2020 22:26:35 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0612PgO6021112;
+        Tue, 30 Jun 2020 19:26:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
+ b=WQj71VD+40nL5ohfqASlPtfV0WERo31ODOGDOy/AaMZUJtfiyuncqsglfOgpVE95BFKD
+ RcTdXP0RK6dIEFebvzXX1YhXo8p6nprD9B4plCr2xZq57oKgspVuJ7nd6SA05LOgANpa
+ s8idjv+i/pjuVFWImA+QzjfL7eufoJUvXKI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31x3xgymmf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 30 Jun 2020 19:23:15 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
+        Tue, 30 Jun 2020 19:26:19 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 30 Jun 2020 19:23:14 -0700
+ 15.1.1979.3; Tue, 30 Jun 2020 19:26:18 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VG+UKfUIMen+4XBJaXTzNzsNSNF7wTwIy+XSRu+Nvcjb8lY9QYSF96yVVuamTki18CBMVaVIGctKpG+BDT0Blp+lktykgigJzemhDsJz16RBFtCJ70J18Pae+wQJzQvgnoWZvMKkJhVUGEHdNX6baBbQA/p7CvIa6D1LqEejg63wsbmRwPWxpHm0lRO7lplApmet2OnAA7MUILlZxf5Z0Vt4oHx1vE/TrEqbuxpMEw8B1QbvVuw1TErmGikxiKDZoGtfpgD0+S14zdUUS2zf81d7dYvV0yMnRq6fNI0SKp9ArDEBEWvRpqx49IMLSi8HJLW9JFGbaWIeejPggxdO8w==
+ b=QOa1re290sy08wHaCwUMzWqZw3wRte2ymcOm7h4fCQvVcBblxuTo+Y5clNKwx40NoMXPjlB1keDxgeBlrrVpK4w9fx90Imb1F9XsuSRb9hByD0nRj4VihDSDOC3aU3W4P/lYusACNis980ixUkzpgIp7DiFcHl2/cr0xGJOdIKJEI6tCA0ihcKGrrdXzvs8uWrokD9BTe9bEoG2tWk28EYCGP0wwDII1wVRBJ5vp2jjnu7yqZM5mteHtcIl9uwG5yKqO00L+G6yaoLMTqlNstzhlWMMmgJA1YjTAqVUrnVHOJnE/YzIJvbGNfsFhs2Sxg5BPHNearkX7DcMRBMtBAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dO3ByXh+MCskQ6V5ANTi6xKEtAAajimldCCab53SXgA=;
- b=hyFqVL3CrIRt5aT+TBc7563Lc7l8aojPVkR7rldXNL5sJnTY7ag5O3/ikHadLnplJsmcLJl6ccd/gIA4Hl/DVAzJNP22r4C1vTaEjBHPCUcfblevQRFNVgsjeqaQNzjCPTFN+Ii76RpDAC7QSt6KUzeDWm3ezUlRjAjTTyqDTgjpJOLT0u9k+eb9171E85AIG9+tLND9KIMQ6nstfWUnAjKpM2s0yEjeRoRrDwP26jXgENVzWLvngrdaWpIxKugPObIWCz1d+xoS03MV1d3Kwi2pGDFYG3K5V4mfuazqyeTw3GnYk/pGmVNVuIw5/ke0soERO96CGcnAIYUC2RUomw==
+ bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
+ b=kctZ/lzxuR7VeEqVXKyrJtwKZODzaOlE0M8swa8yBB4GpbEdoKpXWzbQzc+Lugv7b/KgTevYoy3OzG2OOQcZj01PSqrjhtCsJcTl3oenHUy/EPXzoHBYVuAthCFlwR1d7kBtawcO8F19PiEtYh2u8hLE94drCITLlA6ZebrAD230jBVaYLjLugBZOThOi1QY7dcq4SIsVbDscGjE2W5A5iJXtTA9+7V+cCQYBvtrutuhnpj5u6DlIKxiDAGU1ZWScLBUJTeculMBp/9g1E2ZgsgCjmhiv2AkFAME/kznZPAi52/hZ2nbsgPOHlNV57L7MEljuspeqiRgQz0h2uFJhg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
  header.d=fb.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
  s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dO3ByXh+MCskQ6V5ANTi6xKEtAAajimldCCab53SXgA=;
- b=XNHCokg4w/2Drh2B1qtlYz8mDbDjNVqZmOPH18Snh/JQZzQmh/d4enD0SvZAukoMmofpdVgbzaCPFEU+BxG8B7yqi+28zoU+LzTkBforigxQ3xbY8+HDsaSSnAdSl17h2hMBfGeSb1TBRouJuISmmLtWr4G6lxFARnPc7kVT078=
-Authentication-Results: linux-foundation.org; dkim=none (message not signed)
- header.d=none;linux-foundation.org; dmarc=none action=none
- header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2629.namprd15.prod.outlook.com (2603:10b6:a03:14f::19) with
+ bh=XzVwesyXppnhHor1c093K65mOOFh7rGEx8HYY3wRhes=;
+ b=iAicbsmgdRGIHk3V6YLxWOD7mI9xrMyOG9GTc8biUE3JW5CvLRgATXWhkz/2t4zMqfkW7t26ik+r2flKty6v2kI4/REG+apbgWPprMeAY+MldjLKUr3YvkhhbIh5751zoCrdpdojo0YOIVn2FK8bHrQGvCVi0CWYVOWAcruyGAI=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2822.namprd15.prod.outlook.com (2603:10b6:a03:15b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Wed, 1 Jul
- 2020 02:23:13 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
- 02:23:13 +0000
-Date:   Tue, 30 Jun 2020 19:23:09 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Barry Song <song.bao.hua@hisilicon.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Aslan Bakirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Rik van Riel <riel@surriel.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] mm/cma.c: use exact_nid true to fix possible per-numa
- cma leak
-Message-ID: <20200701022309.GA58975@carbon.lan>
-References: <20200628074345.27228-1-song.bao.hua@hisilicon.com>
- <20200630190825.GB37586@carbon.dhcp.thefacebook.com>
- <20200630190931.04967b5e8bdf29c33f3c8005@linux-foundation.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630190931.04967b5e8bdf29c33f3c8005@linux-foundation.org>
-X-ClientProxiedBy: BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15)
- To BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 1 Jul
+ 2020 02:26:05 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
+ 02:26:05 +0000
+Subject: Re: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use
+ hrtimer_range_start_ns.
+To:     Hao Luo <haoluo@google.com>
+CC:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <clang-built-linux@googlegroups.com>,
+        <linux-kselftest@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Bill Wendling <morbo@google.com>
+References: <20200630184922.455439-1-haoluo@google.com>
+ <49df8306-ecc7-b979-d887-b023275e4842@fb.com>
+ <CA+khW7iJu2tzcz36XzL6gBq4poq+5Qt0vbrmPRdYuvC-c5U4_A@mail.gmail.com>
+ <CA+khW7jNqVMqq2dzf6Dy0pWCZYjHrG7Vm_sUEKKLS-L-ptzEtQ@mail.gmail.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <46fc8e13-fb3e-6464-b794-60cf90d16543@fb.com>
+Date:   Tue, 30 Jun 2020 19:26:02 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+In-Reply-To: <CA+khW7jNqVMqq2dzf6Dy0pWCZYjHrG7Vm_sUEKKLS-L-ptzEtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25)
+ To BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.lan (2620:10d:c090:400::5:94e1) by BYAPR01CA0038.prod.exchangelabs.com (2603:10b6:a03:94::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Wed, 1 Jul 2020 02:23:12 +0000
-X-Originating-IP: [2620:10d:c090:400::5:94e1]
+Received: from [IPv6:2620:10d:c085:21e8::15c2] (2620:10d:c090:400::5:5757) by BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend Transport; Wed, 1 Jul 2020 02:26:04 +0000
+X-Originating-IP: [2620:10d:c090:400::5:5757]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 561b65b2-cf09-4c05-7f0f-08d81d65b460
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2629:
+X-MS-Office365-Filtering-Correlation-Id: fe7cf668-a757-44c5-073c-08d81d661b4a
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2822:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2629D659A45B64FA3BEAC66FBE6C0@BYAPR15MB2629.namprd15.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <BYAPR15MB282280E82F7163680D1DB04CD36C0@BYAPR15MB2822.namprd15.prod.outlook.com>
 X-FB-Source: Internal
 X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-Forefront-PRVS: 04519BA941
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Tq/4UEgAreL4hvk9eIAIYCQDle1l8p1xKdO+IdqT4/j0hh331cFQtHExXUCrjbLjbOKI3+EghEtQkUvw8aarlT98W61NBs6XUqmBM8JfqUiyswLDdIo+5xyNryJC+CeiEuyocyYAzklszN1sY9NtF+BGV39N9+baOGBTOvrOu5Ne4A6C5oDy+duj6/zuW6QSQgbvlVcVKxEWM0P4gJpPhR7eh1qQkIDvEh/nJcFdKjlg4FuJOSDwlgHC2lPY2tusraIQpGEXo4UdvfwfkHQ0M8Az6+DY6r3/Kammgt6No5jzKTXyMPq2fyo1qrWxWl9CJOjrGD3L3tMqZAVG89tttw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(136003)(346002)(396003)(366004)(316002)(2906002)(186003)(16526019)(66476007)(66556008)(66946007)(8886007)(1076003)(6506007)(7416002)(9686003)(5660300002)(8676002)(55016002)(6916009)(6666004)(7696005)(52116002)(36756003)(8936002)(33656002)(54906003)(83380400001)(478600001)(86362001)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: t4WSvFoPuwDMsPbQBv041JKGCSPk3NYuMSbIqmocqAvNdyApyj2QW5tv3YomsjhPbI5QstOw/rRrYypbpkqsQ8ylqYgGcHvF/MGqt+VfO7LL7rVpiKFi6Eq5lrrAc1pwS4ezCgI6GNL16EXGNVriu0wMTrFh0sdwB8Niwxk62WSEqk6eVYIoTtzI0fenhb+bIssPbfyuIj4TaC5ehyqgFpg6sLDzU+tl+k4OvaqFeNc8Rg6iFk/7i5NV/rwqxu5fhQMJibjIYdeajZtqaPMSu3diS8KxU/Pkqz1nk4jp37gl7kFrMwgOfvaVOevUzazkHQpLrP9Yt+fmEV7lOnw4gcPO8daxS3QtwV/0FMBiFvlPaw/EUq6em6RDfFfDCpQzNm2N6KD4G6RcTY+6JVopVld03KS4nK+xjvl43f5zpLPhnpWjzk557N0ZZCfFKVV8JkR9JnQs0KXvFPSIkY3gmcAKy2YF8zJir1166fho4RtKpUo8CsZy/Q0VK2Pm3T+A8nWaiEjunkwcJPivz5gcAw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 561b65b2-cf09-4c05-7f0f-08d81d65b460
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-Microsoft-Antispam-Message-Info: ifpBzi4u4HCaEZUd7rZgVjIjbdlP1V3dXNdJP0RGQmBCWTOGXwte7a5EEGGn0SqbjFAJbwISYeoke8E5lGSdDEvF7+QNndHxAV97KEbOsq/NV4d17LuQPFjxkD6lvSgAfLRm8nUo334U0fHOxbf9uecbXqhFvhtc5T5W9DfffrbSuQDQctiKisW0zX94u44Dgp5snXeVur52DMrHBj1wLXTWfGZFBZbfOXGuLTBF2dPoshtGcOJjlhacn2FLNKCEJG2G/TeMidzeEKzAFSJDUwuph4hOo2fUsEd+aQPT7kIYEhVVoZMzwQQS+l83eRJcE+wxVEsOj9eAqanR6n9tP/Wn0hgxb0wl6QvfKtF72EXED1kDx/+x2STwu4h5PBph
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(39860400002)(136003)(396003)(376002)(6486002)(36756003)(54906003)(83380400001)(478600001)(16526019)(4326008)(7416002)(186003)(316002)(52116002)(31686004)(8676002)(66556008)(66476007)(66946007)(2906002)(53546011)(8936002)(31696002)(86362001)(6916009)(5660300002)(2616005)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: f9zp8w1hG1APb2Tl4OZ95sHtDIukIECvslDY9RLM41mySPiLtP8AREcrU8uEfeHpRvfjTG352ldBU/quW+V5rparNbXsg2VZu2C1yxlddmjzVV/rxEpDyHZnob9bcHXS3hUEWaYzMEPXktc1CHuy1aqzN8TV/nGvDBl4EzCoUYZyRhMSSAuaFrVXy0xeMHvFfsgN+ptVAg/gBFVSTSivoPcCR+DspMI90jMhtFXOgeaE6M9tfjFzafTc+Lsp9TSOGTIaHJjw/1enrQMQMry1x66KhRn0SIME0X8X7pbPHwgv6GaDntPGkrYVFMUtxRUAoZGX5hTm6XDWIvD8wREnkawlrWI5e+M59xpaKyGX6fbg14s+yb2NNVVd1OGnN88NXQUsaaBrAtF4f6oe2ARLuel9CT2M2+pMFKkjbBdi/h4Ai0Pji4AqGmbJCusrGC9/CnfauEKn/qYLtk1u5GaqjgvYoSWVyorNyJGKGNHXtf2+Z46yjVEhOCL6VTV7cmM/27xdiNF9y43hVtfHii2xoQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe7cf668-a757-44c5-073c-08d81d661b4a
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 02:23:13.0588
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 02:26:05.7609
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NC8yratvtyOhBGsFGEaFX/qDIzYrTEwDsqIXBLWCaxw5jLVMHFDLeh3nmAib1zak
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2629
+X-MS-Exchange-CrossTenant-UserPrincipalName: IxjnbgR6fAHJpXpJotXdyNxFlCrSkLlUfxSQDV34hvX6b8aakSzE3Mv5VT0nN4d6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2822
 X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-01_01:2020-06-30,2020-06-30 signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- impostorscore=0 phishscore=0 cotscore=-2147483648 malwarescore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=5 clxscore=1015
- priorityscore=1501 bulkscore=0 spamscore=0 mlxlogscore=999 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 priorityscore=1501 mlxscore=0 impostorscore=0 spamscore=0
+ clxscore=1011 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2007010013
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -133,53 +142,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 07:09:31PM -0700, Andrew Morton wrote:
-> On Tue, 30 Jun 2020 12:08:25 -0700 Roman Gushchin <guro@fb.com> wrote:
-> 
-> > On Sun, Jun 28, 2020 at 07:43:45PM +1200, Barry Song wrote:
-> > > Calling cma_declare_contiguous_nid() with false exact_nid for per-numa
-> > > reservation can easily cause cma leak and various confusion.
-> > > For example, mm/hugetlb.c is trying to reserve per-numa cma for gigantic
-> > > pages. But it can easily leak cma and make users confused when system has
-> > > memoryless nodes.
-> > > 
-> > > In case the system has 4 numa nodes, and only numa node0 has memory.
-> > > if we set hugetlb_cma=4G in bootargs, mm/hugetlb.c will get 4 cma areas
-> > > for 4 different numa nodes. since exact_nid=false in current code, all
-> > > 4 numa nodes will get cma successfully from node0, but hugetlb_cma[1 to 3]
-> > > will never be available to hugepage will only allocate memory from
-> > > hugetlb_cma[0].
-> > > 
-> > > In case the system has 4 numa nodes, both numa node0&2 has memory, other
-> > > nodes have no memory.
-> > > if we set hugetlb_cma=4G in bootargs, mm/hugetlb.c will get 4 cma areas
-> > > for 4 different numa nodes. since exact_nid=false in current code, all
-> > > 4 numa nodes will get cma successfully from node0 or 2, but hugetlb_cma[1]
-> > > and [3] will never be available to hugepage as mm/hugetlb.c will only
-> > > allocate memory from hugetlb_cma[0] and hugetlb_cma[2].
-> > > This causes permanent leak of the cma areas which are supposed to be
-> > > used by memoryless node.
-> > > 
-> > > Of cource we can workaround the issue by letting mm/hugetlb.c scan all
-> > > cma areas in alloc_gigantic_page() even node_mask includes node0 only.
-> > > that means when node_mask includes node0 only, we can get page from
-> > > hugetlb_cma[1] to hugetlb_cma[3]. But this will cause kernel crash in
-> > > free_gigantic_page() while it wants to free page by:
-> > > cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order)
-> > > 
-> > > On the other hand, exact_nid=false won't consider numa distance, it
-> > > might be not that useful to leverage cma areas on remote nodes.
-> > > I feel it is much simpler to make exact_nid true to make everything
-> > > clear. After that, memoryless nodes won't be able to reserve per-numa
-> > > CMA from other nodes which have memory.
-> > 
-> > Totally agree.
-> > 
-> > Acked-by: Roman Gushchin <guro@fb.com>
-> > 
-> 
-> Do we feel this merits a cc:stable?
 
-It would be nice.
 
-Thanks!
+On 6/30/20 5:10 PM, Hao Luo wrote:
+> Ok, with the help of my colleague Ian Rogers, I think we solved the
+> mystery. Clang actually inlined hrtimer_nanosleep() inside
+> SyS_nanosleep(), so there is no call to that function throughout the
+> path of the nanosleep syscall. I've been looking at the function body
+> of hrtimer_nanosleep for quite some time, but clearly overlooked the
+> caller of hrtimer_nanosleep. hrtimer_nanosleep is pretty short and
+> there are many constants, inlining would not be too surprising.
+
+Oh thanks for explanation. inlining makes sense. We have many other
+instances like this in the past where kprobe won't work properly.
+
+Could you reword your commit message then?
+
+ > causing fentry and kprobe to not hook on this function properly on a
+ > Clang build kernel.
+
+The above is a little vague on what happens. What really happens is
+fentry/kprobe does hook on this function but has no effect since
+its caller has inlined the function.
+
+
+> Sigh...
+> 
+> Hao
+> 
+> On Tue, Jun 30, 2020 at 3:48 PM Hao Luo <haoluo@google.com> wrote:
+>>
+>> On Tue, Jun 30, 2020 at 1:37 PM Yonghong Song <yhs@fb.com> wrote:
+>>>
+>>> On 6/30/20 11:49 AM, Hao Luo wrote:
+>>>> The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
+>>>> programs. But it seems Clang may have done an aggressive optimization,
+>>>> causing fentry and kprobe to not hook on this function properly on a
+>>>> Clang build kernel.
+>>>
+>>> Could you explain why it does not on clang built kernel? How did you
+>>> build the kernel? Did you use [thin]lto?
+>>>
+>>> hrtimer_nanosleep is a global function who is called in several
+>>> different files. I am curious how clang optimization can make
+>>> function disappear, or make its function signature change, or
+>>> rename the function?
+>>>
+>>
+>> Yonghong,
+>>
+>> We didn't enable LTO. It also puzzled me. But I can confirm those
+>> fentry/kprobe test failures via many different experiments I've done.
+>> After talking to my colleague on kernel compiling tools (Bill, cc'ed),
+>> we suspected this could be because of clang's aggressive inlining. We
+>> also noticed that all the callsites of hrtimer_nanosleep() are tail
+>> calls.
+>>
+>> For a better explanation, I can reach out to the people who are more
+>> familiar to clang in the compiler team to see if they have any
+>> insights. This may not be of high priority for them though.
+>>
+>> Hao
