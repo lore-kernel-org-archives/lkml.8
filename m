@@ -2,219 +2,106 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78562C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710C1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47550207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgGACSc (ORCPT
+        id S1726575AbgGACWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:18:32 -0400
-Received: from mx.socionext.com ([202.248.49.38]:48253 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGACSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:18:32 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 01 Jul 2020 11:18:30 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 5330B180B81;
-        Wed,  1 Jul 2020 11:18:30 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Jul 2020 11:18:30 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id DA0EF1A0507;
-        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
-Received: from [10.213.31.247] (unknown [10.213.31.247])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 4D2D4120BB6;
-        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
-Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
- <87v9jcet5h.wl-maz@kernel.org>
- <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
- <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
-Date:   Wed, 1 Jul 2020 11:18:29 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jun 2020 22:22:41 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49152 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725868AbgGACWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:22:40 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S4;
+        Wed, 01 Jul 2020 10:16:27 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource leaks
+Date:   Wed,  1 Jul 2020 10:16:14 +0800
+Message-Id: <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFy7Kr45ZrykZFWrAFy3twb_yoW8XrW3pF
+        4UG3yagrZ7Jw1xWrn7CF1kXr98u348KrZFk34fCas2vrn8Wwn0kryFy3WqyFn8G3yxW3WY
+        9Fs5ta4rCa15AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF
+        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcV
+        CY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
+        aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
+        kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm
+        72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4UMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E
+        5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
+        WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
+        1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+        0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+        U0b_-PUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+In the function ck_intc_init_comm(), system resources "reg_base" and
+"root_domain" were not released in a few error cases. Thus add jump
+targets for the completion of the desired exception handling.
 
-On 2020/06/30 22:23, Marc Zyngier wrote:
-> On 2020-06-29 10:49, Kunihiko Hayashi wrote:
->> Hi Marc,
->>
->> On 2020/06/27 18:48, Marc Zyngier wrote:
->>> On Thu, 18 Jun 2020 09:38:09 +0100,
->>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
->>>>
->>>> The misc interrupts consisting of PME, AER, and Link event, is handled
->>>> by INTx handler, however, these interrupts should be also handled by
->>>> MSI handler.
->>>>
->>>> This adds the function uniphier_pcie_misc_isr() that handles misc
->>>> interrupts, which is called from both INTx and MSI handlers.
->>>> This function detects PME and AER interrupts with the status register,
->>>> and invoke PME and AER drivers related to MSI.
->>>>
->>>> And this sets the mask for misc interrupts from INTx if MSI is enabled
->>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
->>>>
->>>> Cc: Marc Zyngier <maz@kernel.org>
->>>> Cc: Jingoo Han <jingoohan1@gmail.com>
->>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>> ---
->>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
->>>>   1 file changed, 46 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> index a5401a0..5ce2479 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> @@ -44,7 +44,9 @@
->>>>   #define PCL_SYS_AUX_PWR_DET        BIT(8)
->>>>     #define PCL_RCV_INT            0x8108
->>>> +#define PCL_RCV_INT_ALL_INT_MASK    GENMASK(28, 25)
->>>>   #define PCL_RCV_INT_ALL_ENABLE        GENMASK(20, 17)
->>>> +#define PCL_RCV_INT_ALL_MSI_MASK    GENMASK(12, 9)
->>>>   #define PCL_CFG_BW_MGT_STATUS        BIT(4)
->>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS    BIT(3)
->>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS    BIT(2)
->>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->>>>   {
->>>> -    writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
->>>> +    u32 val;
->>>> +
->>>> +    val = PCL_RCV_INT_ALL_ENABLE;
->>>> +    if (pci_msi_enabled())
->>>> +        val |= PCL_RCV_INT_ALL_INT_MASK;
->>>> +    else
->>>> +        val |= PCL_RCV_INT_ALL_MSI_MASK;
->>>
->>> Does this affect endpoints? Or just the RC itself?
->>
->> These interrupts are asserted by RC itself, so this part affects only RC.
->>
->>>> +
->>>> +    writel(val, priv->base + PCL_RCV_INT);
->>>>       writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->>>>   }
->>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
->>>>       .map = uniphier_pcie_intx_map,
->>>>   };
->>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
->>>>   {
->>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>>>       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
->>>> -    unsigned long reg;
->>>> -    u32 val, bit, virq;
->>>> +    u32 val, virq;
->>>>   -    /* INT for debug */
->>>>       val = readl(priv->base + PCL_RCV_INT);
->>>>         if (val & PCL_CFG_BW_MGT_STATUS)
->>>>           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->>>> +
->>>>       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>>>           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "Root Error\n");
->>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
->>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +
->>>> +    if (is_msi) {
->>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>>> +            dev_dbg(pci->dev, "Root Error Status\n");
->>>> +
->>>> +        if (val & PCL_CFG_PME_MSI_STATUS)
->>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
->>>> +
->>>> +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
->>>> +               PCL_CFG_PME_MSI_STATUS)) {
->>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>>> +            generic_handle_irq(virq);
->>>> +        }
->>>> +    }
->>>
->>> Please have two handlers: one for interrupts that are from the RC,
->>> another for interrupts coming from the endpoints.
->> I assume that this handler treats interrupts from the RC only and
->> this is set on the member ".msi_host_isr" added in the patch 1/6.
->> I think that the handler for interrupts coming from endpoints should be
->> treated as a normal case (after calling .msi_host_isr in
->> dw_handle_msi_irq()).
-> 
-> It looks pretty odd that you end-up dealing with both from the
-> same "parent" interrupt. I guess this is in keeping with the
-> rest of the DW PCIe hacks... :-/
-
-It might be odd, however, in case of UniPhier SoC,
-both MSI interrupts from endpoints and PME/AER interrupts from RC are
-asserted by same "parent" interrupt. In other words, PME/AER interrupts
-are notified using the parent interrupt for MSI.
-
-MSI interrupts are treated as child interrupts with reference to
-the status register in DW core. This is handled in a for-loop in
-dw_handle_msi_irq().
-
-PME/AER interrupts are treated with reference to the status register
-in UniPhier glue layer, however, this couldn't be handled in the same way
-directly.
-
-So I'm trying to add .msi_host_isr function to handle this
-with reference to the SoC-specific registers.
-
-This exported function asserts MSI-0 as a shared child interrupt.
-As a result, PME/AER are registered like the followings in dmesg:
-
-    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
-    pcieport 0000:00:00.0: AER: enabled with IRQ 25
-
-And these interrupts are shared as MSI-0:
-
-    # cat /proc/interrupts | grep 25:
-     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
-
-This might be a special case, though, I think that this is needed to handle
-interrupts from RC sharing MSI parent.
-  
-> It is for Lorenzo to make up his mind about this anyway.
-
-I'd like to Lorenzo's opinion, too.
-
-Thank you,
-
+Fixes: edff1b4835b7 ("irqchip: add C-SKY APB bus interrupt controller")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-Best Regards
-Kunihiko Hayashi
+ drivers/irqchip/irq-csky-apb-intc.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-apb-intc.c
+index 5a2ec43..11a35eb 100644
+--- a/drivers/irqchip/irq-csky-apb-intc.c
++++ b/drivers/irqchip/irq-csky-apb-intc.c
+@@ -118,7 +118,8 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
+ 					    &irq_generic_chip_ops, NULL);
+ 	if (!root_domain) {
+ 		pr_err("C-SKY Intc irq_domain_add failed.\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_iounmap;
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
+@@ -126,10 +127,17 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
+ 			IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
+ 	if (ret) {
+ 		pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_domain_remove;
+ 	}
+ 
+ 	return 0;
++
++err_domain_remove:
++	irq_domain_remove(root_domain);
++err_iounmap:
++	iounmap(reg_base);
++	return ret;
+ }
+ 
+ static inline bool handle_irq_perbit(struct pt_regs *regs, u32 hwirq,
+-- 
+2.1.0
+
