@@ -2,97 +2,113 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6269C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C720A207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58B2207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hX9RjxXi"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EJWVupU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbgGANSn (ORCPT
+        id S1730912AbgGANTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
+        Wed, 1 Jul 2020 09:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgGANSm (ORCPT
+        with ESMTP id S1728941AbgGANTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:18:42 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2059EC03E979;
-        Wed,  1 Jul 2020 06:18:42 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id o38so18336054qtf.6;
-        Wed, 01 Jul 2020 06:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tZ8a6oz3Y8ehLX8HUkQPKYGgSTWKJsg21sJcH2+8iVw=;
-        b=hX9RjxXibdgpDLuFtboDrQBKbCbjStq9qgvo5Z2a370FXrP2/9ZDD3+/CebWq4YBe8
-         RKGDu62MorQx4rBwcA1k/jBM7CjohwZouzB0vMTnTIh0KFfAMky0pFdA+NemHXcJjLLA
-         ai3Jhk4qOU0iev9XIAM3Wcl7I3WSAI5W4Ss7KFvahWZKjzjLEsICMbWR1fuVYqrYkfnL
-         JrsR9Cd9lZIRMqMfkHapIlq/8UWZlipAYBBU9awZXGUIyc+HdFUGRZCepjhN5Z1ER8hM
-         NNZqP1OmnxZXtL9nRtkIKfPcm1z9jjv97zuJos2HqZxq2teFsxfqu6LC12rRbinJJcTL
-         0kNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tZ8a6oz3Y8ehLX8HUkQPKYGgSTWKJsg21sJcH2+8iVw=;
-        b=Pmz7yF1z9BfngI3GURlU7o/BYqqqoPPQoAhPQQWsVYGe2W5h4I5mgozAsNJrVq2uhU
-         k1Rw0SgBVMkKirwBMGiW1DHiRU91vrTK/9h9bqWBaHGpnM6SWHptaHVIPI3c/sEb+G8v
-         GgQVJvbDlo3hWY7rFckjc92/VAdFoY9phn8TzJy2emd2Em/AC1rp17dcKR21G0FM4itY
-         c2N8jqldcLbxtHarMQE2BwUjzuYiQ4pVn0UaVEdlEW9CVddx/e51j2UiMRmcYEtuL499
-         IYjpFQpQ4C7Wnu7KIMNGVFl67aCmY6Dw5y9oiJ2C4CIwJe/aEZx1evgLXlu1TGJR4rrJ
-         y58A==
-X-Gm-Message-State: AOAM531rneoIeJWvB3QEfZI82R/BoS7ivOBQg+yKZZOgCau2ONPFNv4x
-        mRk59eo55bXMbxxGwboOY45+yCFrdHYRaJyY4vEwSNRe
-X-Google-Smtp-Source: ABdhPJwcMnkZ4bW0MvgzyrdftwNiSaXI0YU/XF8lrgj8e7pSLPgt1BntWi9/HLZGeZVYmKytlB30FPrRknZRGOGBIaY=
-X-Received: by 2002:ac8:6f73:: with SMTP id u19mr26131625qtv.36.1593609521078;
- Wed, 01 Jul 2020 06:18:41 -0700 (PDT)
+        Wed, 1 Jul 2020 09:19:09 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80382C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 06:19:09 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7FA1D556;
+        Wed,  1 Jul 2020 15:19:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593609546;
+        bh=QIuGWYDVJn87PMqCbqVV5hXAULxxSaTU2ZHwKo1N98g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EJWVupU9GI2h+3VbaQNgDH9oXTC82DsapYCPV1BrYhumTtJayEl4OWedY/Fj2D762
+         x2R/d3F+1XcVnOSWM2URyIF04AhIW/0TXOtkzutkzyoSykpPPRf0dtPDEn/BeUytTO
+         B5GnnJMOhpiGOXsLDOlUZ32/kIfExmZNHL2kgrTY=
+Date:   Wed, 1 Jul 2020 16:19:02 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] phy: zynqmp: Fix unused-function compiler warning
+Message-ID: <20200701131902.GC27013@pendragon.ideasonboard.com>
+References: <20200701090438.21224-1-tklauser@distanz.ch>
 MIME-Version: 1.0
-References: <20200629174421.25784-1-yamane07ynct@gmail.com> <20200630111137.GI5272@sirena.org.uk>
-In-Reply-To: <20200630111137.GI5272@sirena.org.uk>
-From:   Daisuke Yamane <yamane07ynct@gmail.com>
-Date:   Wed, 1 Jul 2020 22:18:04 +0900
-Message-ID: <CAHZ3=rpqq5ZJQUGR54vStbqohcrS_w2beVi4m1S+v=ZWEzVtKg@mail.gmail.com>
-Subject: Re: [PATCH] spi: a3700: fix hang caused by a3700_spi_transfer_one_fifo()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701090438.21224-1-tklauser@distanz.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=E5=B9=B46=E6=9C=8830=E6=97=A5(=E7=81=AB) 20:11 Mark Brown <broonie@ker=
-nel.org>:
->
-> On Tue, Jun 30, 2020 at 02:44:21AM +0900, Daisuke Yamane wrote:
-> > transfer_one() must call spi_finalize_current_transfer() before
-> > returning to inform current transfer has finished. Otherwise spi driver
-> > doesn't issue next transfer, and hang.
->
-> To be clear it can also return a positive value and then finalize later,
-> there's no need to finalize before returning (otherwise finalizing would
-> be a bit redundant) and if the driver doesn't return a positive value
-> there should be no need to finalize at all.
->
-> > However a3700_spi_transfer_one_fifo() doesn't call it if waiting for
-> > "wfifo empty" or "xfer ready" has timed out.
-> > Thus, this patch corrects error handling of them.
->
-> The core shouldn't be waiting at all if the driver returned an error, we
-> only wait if the return value was positive.  Looking at the code it's
-> not clear to me how we manage to end up waiting - it looks like the
-> driver passes back the error correctly and the core looks like it does
-> the right thing.  Have you seen hangs in operation?
-Yes, and I could avoid hanging by this patch. But I also understand that
-your point is correct. Probably I'm misunderstanding the cause of the hang.
-I will investigate a little more.
+Hi Tobias,
+
+Thank you for the patch.
+
+On Wed, Jul 01, 2020 at 11:04:38AM +0200, Tobias Klauser wrote:
+> This fixes the following compiler warning when building with
+> CONFIG_PM && !CONFIG_PM_SLEEP:
+> 
+> drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
+>   830 | static int xpsgtr_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~
+> drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
+>   819 | static int xpsgtr_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~
+
+Oops :-S Sorry about that.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Vinod or Kishon, can you pick this patch up, or do I need to send a pull
+request ? (It's my first driver in the PHY subsystem so I don't know
+what the usual practices are there)
+
+> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> ---
+>  drivers/phy/xilinx/phy-zynqmp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
+> index 8babee2ce9ec..22a0ae635797 100644
+> --- a/drivers/phy/xilinx/phy-zynqmp.c
+> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+> @@ -815,7 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
+>   * Power Management
+>   */
+>  
+> -#ifdef CONFIG_PM
+> +#ifdef CONFIG_PM_SLEEP
+>  static int xpsgtr_suspend(struct device *dev)
+>  {
+>  	struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
+> @@ -854,7 +854,7 @@ static int xpsgtr_resume(struct device *dev)
+>  
+>  	return 0;
+>  }
+> -#endif /* CONFIG_PM */
+> +#endif /* CONFIG_PM_SLEEP */
+>  
+>  static const struct dev_pm_ops xpsgtr_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(xpsgtr_suspend, xpsgtr_resume)
+
+-- 
+Regards,
+
+Laurent Pinchart
