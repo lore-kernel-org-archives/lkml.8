@@ -2,423 +2,106 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7889C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5912620772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963F920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593605811;
+	bh=bsis1mBBkZdDOGXkGlZUQswMrh8525rzfKVNR1qywJY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UVV3Gd8VsEOpFDv0NfOibXh6lp9VqZ90w3CPDOXxYfY2nScN76cZjhaDlftv4SPDB
+	 5YpQM/B+cSGykfjExArHKMLUkpDLv4vB4JrCLmwQ64pRZUWksjeNkE1eBZSM/MBBOP
+	 zomuunkrFFng/sNixIpvAfqD26yNuSFUw8ePwnaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbgGAMQs (ORCPT
+        id S1730573AbgGAMQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:16:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34596 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbgGAMQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:16:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CA5A5ADE1;
-        Wed,  1 Jul 2020 12:16:41 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 1/2] xen/xenbus: avoid large structs and arrays on the stack
-Date:   Wed,  1 Jul 2020 14:16:37 +0200
-Message-Id: <20200701121638.19840-2-jgross@suse.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200701121638.19840-1-jgross@suse.com>
-References: <20200701121638.19840-1-jgross@suse.com>
+        Wed, 1 Jul 2020 08:16:50 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36252 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730503AbgGAMQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 08:16:43 -0400
+Received: by mail-oi1-f196.google.com with SMTP id h17so20417454oie.3;
+        Wed, 01 Jul 2020 05:16:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w+LLXM4KPjeviTd5XtfNEKoIrALguf5kvnK4UkyGpcs=;
+        b=qwD3m6CJQdUEnwzgo1iD0jW//YNcR7k8o/CfzRTZ6lPO3zpV67/CT+Cx9GY5NFDXms
+         FARslZFp16GpssSowEAxl5JRYrRATkEEo+MxkZojhwxNCi0TThG0qG0hvBM7lsncP8dA
+         NNQ9IDck+OakDxIIPjdqgCkvySNTROW109sUmwgYhqQV/WaQTwwjvG1RT3vvdEO1O1hd
+         hgqCn2iZ3JpW+viE/zDYQYIZJmEYqLGZeq4pw2aziFnf0yHZDQGy3u9QzdvyIG2P1LaW
+         gZ1A3eLNl+2117kuOCfuzwaI5Dmg4WCVnDjC98ofGKtxP7iYI6s6cwLTvQte3aSkW0+U
+         LW+A==
+X-Gm-Message-State: AOAM533lORPswViq2V2BYWTKe6GbNN+Ve0ujMy6I4zT0IlJSLN1uvxBg
+        pPLPedrbEdyT/UubSn4I5uQX0Q8pX5DtC9wASnk=
+X-Google-Smtp-Source: ABdhPJxfK1QzCckGAcRzG9ecCejOkFhWuBlSjsQ1HLhnJBkm7BrR3F15SSxW88Iu0/deoTngBDpAiGj4ujZO75q5pBE=
+X-Received: by 2002:aca:4a89:: with SMTP id x131mr20755870oia.103.1593605802721;
+ Wed, 01 Jul 2020 05:16:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200701042007.13333-1-xhao@linux.alibaba.com> <20200701045227.epojzjwuky5kkdzj@vireshk-i7>
+In-Reply-To: <20200701045227.epojzjwuky5kkdzj@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 Jul 2020 14:16:31 +0200
+Message-ID: <CAJZ5v0iRW25n9CqvJ=ODbVh2osocx+wJVz62GqaWV9m4sdL12g@mail.gmail.com>
+Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
+ value in cppc_perf_caps struct
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Xin Hao <xhao@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xenbus_map_ring_valloc() and its sub-functions are putting quite large
-structs and arrays on the stack. This is problematic at runtime, but
-might also result in build failures (e.g. with clang due to the option
--Werror,-Wframe-larger-than=... used).
+On Wed, Jul 1, 2020 at 6:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 01-07-20, 12:20, Xin Hao wrote:
+> >  The 'caps' variable has been defined, so there is no need to get
+> >  'highest_perf' value through 'cpu->caps.highest_perf', you can use
+> >  'caps->highest_perf' instead.
+> >
+> > Signed-off-by: Xin Hao <xhao@linux.alibaba.com>
+> > ---
+> >  drivers/cpufreq/cppc_cpufreq.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> > index 257d726a4456..051d0e56c67a 100644
+> > --- a/drivers/cpufreq/cppc_cpufreq.c
+> > +++ b/drivers/cpufreq/cppc_cpufreq.c
+> > @@ -161,7 +161,7 @@ static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
+> >               if (!max_khz)
+> >                       max_khz = cppc_get_dmi_max_khz();
+> >               mul = max_khz;
+> > -             div = cpu->perf_caps.highest_perf;
+> > +             div = caps->highest_perf;
+> >       }
+> >       return (u64)perf * mul / div;
+> >  }
+> > @@ -184,7 +184,7 @@ static unsigned int cppc_cpufreq_khz_to_perf(struct cppc_cpudata *cpu,
+> >       } else {
+> >               if (!max_khz)
+> >                       max_khz = cppc_get_dmi_max_khz();
+> > -             mul = cpu->perf_caps.highest_perf;
+> > +             mul = caps->highest_perf;
+> >               div = max_khz;
+> >       }
+>
+> Applied. Thanks.
 
-Fix that by moving most of the data from the stack into a dynamically
-allocated struct. Performance is no issue here, as
-xenbus_map_ring_valloc() is used only when adding a new PV device to
-a backend driver.
+I applied the previous cppc_cpufreq patch, hopefully it will not clash
+with this one.
 
-While at it move some duplicated code from pv/hvm specific mapping
-functions to the single caller.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
-V2:
-- shorten internal function names (Boris Ostrovsky)
----
- drivers/xen/xenbus/xenbus_client.c | 161 +++++++++++++++--------------
- 1 file changed, 83 insertions(+), 78 deletions(-)
-
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index 040d2a43e8e3..9f8372079ecf 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -69,11 +69,27 @@ struct xenbus_map_node {
- 	unsigned int   nr_handles;
- };
- 
-+struct map_ring_valloc {
-+	struct xenbus_map_node *node;
-+
-+	/* Why do we need two arrays? See comment of __xenbus_map_ring */
-+	union {
-+		unsigned long addrs[XENBUS_MAX_RING_GRANTS];
-+		pte_t *ptes[XENBUS_MAX_RING_GRANTS];
-+	};
-+	phys_addr_t phys_addrs[XENBUS_MAX_RING_GRANTS];
-+
-+	struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
-+	struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
-+
-+	unsigned int idx;	/* HVM only. */
-+};
-+
- static DEFINE_SPINLOCK(xenbus_valloc_lock);
- static LIST_HEAD(xenbus_valloc_pages);
- 
- struct xenbus_ring_ops {
--	int (*map)(struct xenbus_device *dev,
-+	int (*map)(struct xenbus_device *dev, struct map_ring_valloc *info,
- 		   grant_ref_t *gnt_refs, unsigned int nr_grefs,
- 		   void **vaddr);
- 	int (*unmap)(struct xenbus_device *dev, void *vaddr);
-@@ -449,12 +465,32 @@ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
- 			   unsigned int nr_grefs, void **vaddr)
- {
- 	int err;
-+	struct map_ring_valloc *info;
-+
-+	*vaddr = NULL;
-+
-+	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
-+		return -EINVAL;
-+
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->node = kzalloc(sizeof(*info->node), GFP_KERNEL);
-+	if (!info->node) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	err = ring_ops->map(dev, info, gnt_refs, nr_grefs, vaddr);
- 
--	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
- 	/* Some hypervisors are buggy and can return 1. */
- 	if (err > 0)
- 		err = GNTST_general_error;
- 
-+ out:
-+	kfree(info->node);
-+	kfree(info);
- 	return err;
- }
- EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
-@@ -466,12 +502,10 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 			     grant_ref_t *gnt_refs,
- 			     unsigned int nr_grefs,
- 			     grant_handle_t *handles,
--			     phys_addr_t *addrs,
-+			     struct map_ring_valloc *info,
- 			     unsigned int flags,
- 			     bool *leaked)
- {
--	struct gnttab_map_grant_ref map[XENBUS_MAX_RING_GRANTS];
--	struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
- 	int i, j;
- 	int err = GNTST_okay;
- 
-@@ -479,23 +513,22 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 		return -EINVAL;
- 
- 	for (i = 0; i < nr_grefs; i++) {
--		memset(&map[i], 0, sizeof(map[i]));
--		gnttab_set_map_op(&map[i], addrs[i], flags, gnt_refs[i],
--				  dev->otherend_id);
-+		gnttab_set_map_op(&info->map[i], info->phys_addrs[i], flags,
-+				  gnt_refs[i], dev->otherend_id);
- 		handles[i] = INVALID_GRANT_HANDLE;
- 	}
- 
--	gnttab_batch_map(map, i);
-+	gnttab_batch_map(info->map, i);
- 
- 	for (i = 0; i < nr_grefs; i++) {
--		if (map[i].status != GNTST_okay) {
--			err = map[i].status;
--			xenbus_dev_fatal(dev, map[i].status,
-+		if (info->map[i].status != GNTST_okay) {
-+			err = info->map[i].status;
-+			xenbus_dev_fatal(dev, info->map[i].status,
- 					 "mapping in shared page %d from domain %d",
- 					 gnt_refs[i], dev->otherend_id);
- 			goto fail;
- 		} else
--			handles[i] = map[i].handle;
-+			handles[i] = info->map[i].handle;
- 	}
- 
- 	return GNTST_okay;
-@@ -503,19 +536,19 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
-  fail:
- 	for (i = j = 0; i < nr_grefs; i++) {
- 		if (handles[i] != INVALID_GRANT_HANDLE) {
--			memset(&unmap[j], 0, sizeof(unmap[j]));
--			gnttab_set_unmap_op(&unmap[j], (phys_addr_t)addrs[i],
-+			gnttab_set_unmap_op(&info->unmap[j],
-+					    info->phys_addrs[i],
- 					    GNTMAP_host_map, handles[i]);
- 			j++;
- 		}
- 	}
- 
--	if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref, unmap, j))
-+	if (HYPERVISOR_grant_table_op(GNTTABOP_unmap_grant_ref, info->unmap, j))
- 		BUG();
- 
- 	*leaked = false;
- 	for (i = 0; i < j; i++) {
--		if (unmap[i].status != GNTST_okay) {
-+		if (info->unmap[i].status != GNTST_okay) {
- 			*leaked = true;
- 			break;
- 		}
-@@ -566,21 +599,12 @@ static int xenbus_unmap_ring(struct xenbus_device *dev, grant_handle_t *handles,
- 	return err;
- }
- 
--struct map_ring_valloc_hvm
--{
--	unsigned int idx;
--
--	/* Why do we need two arrays? See comment of __xenbus_map_ring */
--	phys_addr_t phys_addrs[XENBUS_MAX_RING_GRANTS];
--	unsigned long addrs[XENBUS_MAX_RING_GRANTS];
--};
--
- static void xenbus_map_ring_setup_grant_hvm(unsigned long gfn,
- 					    unsigned int goffset,
- 					    unsigned int len,
- 					    void *data)
- {
--	struct map_ring_valloc_hvm *info = data;
-+	struct map_ring_valloc *info = data;
- 	unsigned long vaddr = (unsigned long)gfn_to_virt(gfn);
- 
- 	info->phys_addrs[info->idx] = vaddr;
-@@ -589,39 +613,28 @@ static void xenbus_map_ring_setup_grant_hvm(unsigned long gfn,
- 	info->idx++;
- }
- 
--static int xenbus_map_ring_valloc_hvm(struct xenbus_device *dev,
--				      grant_ref_t *gnt_ref,
--				      unsigned int nr_grefs,
--				      void **vaddr)
-+static int xenbus_map_ring_hvm(struct xenbus_device *dev,
-+			       struct map_ring_valloc *info,
-+			       grant_ref_t *gnt_ref,
-+			       unsigned int nr_grefs,
-+			       void **vaddr)
- {
--	struct xenbus_map_node *node;
-+	struct xenbus_map_node *node = info->node;
- 	int err;
- 	void *addr;
- 	bool leaked = false;
--	struct map_ring_valloc_hvm info = {
--		.idx = 0,
--	};
- 	unsigned int nr_pages = XENBUS_PAGES(nr_grefs);
- 
--	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
--		return -EINVAL;
--
--	*vaddr = NULL;
--
--	node = kzalloc(sizeof(*node), GFP_KERNEL);
--	if (!node)
--		return -ENOMEM;
--
- 	err = alloc_xenballooned_pages(nr_pages, node->hvm.pages);
- 	if (err)
- 		goto out_err;
- 
- 	gnttab_foreach_grant(node->hvm.pages, nr_grefs,
- 			     xenbus_map_ring_setup_grant_hvm,
--			     &info);
-+			     info);
- 
- 	err = __xenbus_map_ring(dev, gnt_ref, nr_grefs, node->handles,
--				info.phys_addrs, GNTMAP_host_map, &leaked);
-+				info, GNTMAP_host_map, &leaked);
- 	node->nr_handles = nr_grefs;
- 
- 	if (err)
-@@ -641,11 +654,13 @@ static int xenbus_map_ring_valloc_hvm(struct xenbus_device *dev,
- 	spin_unlock(&xenbus_valloc_lock);
- 
- 	*vaddr = addr;
-+	info->node = NULL;
-+
- 	return 0;
- 
-  out_xenbus_unmap_ring:
- 	if (!leaked)
--		xenbus_unmap_ring(dev, node->handles, nr_grefs, info.addrs);
-+		xenbus_unmap_ring(dev, node->handles, nr_grefs, info->addrs);
- 	else
- 		pr_alert("leaking %p size %u page(s)",
- 			 addr, nr_pages);
-@@ -653,7 +668,6 @@ static int xenbus_map_ring_valloc_hvm(struct xenbus_device *dev,
- 	if (!leaked)
- 		free_xenballooned_pages(nr_pages, node->hvm.pages);
-  out_err:
--	kfree(node);
- 	return err;
- }
- 
-@@ -676,40 +690,30 @@ int xenbus_unmap_ring_vfree(struct xenbus_device *dev, void *vaddr)
- EXPORT_SYMBOL_GPL(xenbus_unmap_ring_vfree);
- 
- #ifdef CONFIG_XEN_PV
--static int xenbus_map_ring_valloc_pv(struct xenbus_device *dev,
--				     grant_ref_t *gnt_refs,
--				     unsigned int nr_grefs,
--				     void **vaddr)
-+static int xenbus_map_ring_pv(struct xenbus_device *dev,
-+			      struct map_ring_valloc *info,
-+			      grant_ref_t *gnt_refs,
-+			      unsigned int nr_grefs,
-+			      void **vaddr)
- {
--	struct xenbus_map_node *node;
-+	struct xenbus_map_node *node = info->node;
- 	struct vm_struct *area;
--	pte_t *ptes[XENBUS_MAX_RING_GRANTS];
--	phys_addr_t phys_addrs[XENBUS_MAX_RING_GRANTS];
- 	int err = GNTST_okay;
- 	int i;
- 	bool leaked;
- 
--	*vaddr = NULL;
--
--	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
--		return -EINVAL;
--
--	node = kzalloc(sizeof(*node), GFP_KERNEL);
--	if (!node)
--		return -ENOMEM;
--
--	area = alloc_vm_area(XEN_PAGE_SIZE * nr_grefs, ptes);
-+	area = alloc_vm_area(XEN_PAGE_SIZE * nr_grefs, info->ptes);
- 	if (!area) {
- 		kfree(node);
- 		return -ENOMEM;
- 	}
- 
- 	for (i = 0; i < nr_grefs; i++)
--		phys_addrs[i] = arbitrary_virt_to_machine(ptes[i]).maddr;
-+		info->phys_addrs[i] =
-+			arbitrary_virt_to_machine(info->ptes[i]).maddr;
- 
- 	err = __xenbus_map_ring(dev, gnt_refs, nr_grefs, node->handles,
--				phys_addrs,
--				GNTMAP_host_map | GNTMAP_contains_pte,
-+				info, GNTMAP_host_map | GNTMAP_contains_pte,
- 				&leaked);
- 	if (err)
- 		goto failed;
-@@ -722,6 +726,8 @@ static int xenbus_map_ring_valloc_pv(struct xenbus_device *dev,
- 	spin_unlock(&xenbus_valloc_lock);
- 
- 	*vaddr = area->addr;
-+	info->node = NULL;
-+
- 	return 0;
- 
- failed:
-@@ -730,11 +736,10 @@ static int xenbus_map_ring_valloc_pv(struct xenbus_device *dev,
- 	else
- 		pr_alert("leaking VM area %p size %u page(s)", area, nr_grefs);
- 
--	kfree(node);
- 	return err;
- }
- 
--static int xenbus_unmap_ring_vfree_pv(struct xenbus_device *dev, void *vaddr)
-+static int xenbus_unmap_ring_pv(struct xenbus_device *dev, void *vaddr)
- {
- 	struct xenbus_map_node *node;
- 	struct gnttab_unmap_grant_ref unmap[XENBUS_MAX_RING_GRANTS];
-@@ -798,12 +803,12 @@ static int xenbus_unmap_ring_vfree_pv(struct xenbus_device *dev, void *vaddr)
- }
- 
- static const struct xenbus_ring_ops ring_ops_pv = {
--	.map = xenbus_map_ring_valloc_pv,
--	.unmap = xenbus_unmap_ring_vfree_pv,
-+	.map = xenbus_map_ring_pv,
-+	.unmap = xenbus_unmap_ring_pv,
- };
- #endif
- 
--struct unmap_ring_vfree_hvm
-+struct unmap_ring_hvm
- {
- 	unsigned int idx;
- 	unsigned long addrs[XENBUS_MAX_RING_GRANTS];
-@@ -814,19 +819,19 @@ static void xenbus_unmap_ring_setup_grant_hvm(unsigned long gfn,
- 					      unsigned int len,
- 					      void *data)
- {
--	struct unmap_ring_vfree_hvm *info = data;
-+	struct unmap_ring_hvm *info = data;
- 
- 	info->addrs[info->idx] = (unsigned long)gfn_to_virt(gfn);
- 
- 	info->idx++;
- }
- 
--static int xenbus_unmap_ring_vfree_hvm(struct xenbus_device *dev, void *vaddr)
-+static int xenbus_unmap_ring_hvm(struct xenbus_device *dev, void *vaddr)
- {
- 	int rv;
- 	struct xenbus_map_node *node;
- 	void *addr;
--	struct unmap_ring_vfree_hvm info = {
-+	struct unmap_ring_hvm info = {
- 		.idx = 0,
- 	};
- 	unsigned int nr_pages;
-@@ -887,8 +892,8 @@ enum xenbus_state xenbus_read_driver_state(const char *path)
- EXPORT_SYMBOL_GPL(xenbus_read_driver_state);
- 
- static const struct xenbus_ring_ops ring_ops_hvm = {
--	.map = xenbus_map_ring_valloc_hvm,
--	.unmap = xenbus_unmap_ring_vfree_hvm,
-+	.map = xenbus_map_ring_hvm,
-+	.unmap = xenbus_unmap_ring_hvm,
- };
- 
- void __init xenbus_ring_ops_init(void)
--- 
-2.26.2
-
+Are you going to take care of this driver going forward?
