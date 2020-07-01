@@ -2,39 +2,39 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C91C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCD320702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B21520702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbgGAOTd (ORCPT
+        id S1731618AbgGAOTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:19:33 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:1304 "EHLO
+        Wed, 1 Jul 2020 10:19:41 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:64530 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731297AbgGAOSa (ORCPT
+        by vger.kernel.org with ESMTP id S1731324AbgGAOSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 10:18:30 -0400
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E3PVA032161;
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E3clS002775;
         Wed, 1 Jul 2020 14:17:36 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0a-002e3701.pphosted.com with ESMTP id 320mu6kb8h-1
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0b-002e3701.pphosted.com with ESMTP id 320r3bhy2g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 14:17:36 +0000
+        Wed, 01 Jul 2020 14:17:35 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id B95B7B1;
-        Wed,  1 Jul 2020 14:17:33 +0000 (UTC)
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 596C057;
+        Wed,  1 Jul 2020 14:17:34 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id 8B84E2015D85E; Wed,  1 Jul 2020 09:17:32 -0500 (CDT)
-Message-ID: <20200701141732.457301353@hpe.com>
+        id 3024D2015E3C2; Wed,  1 Jul 2020 09:17:33 -0500 (CDT)
+Message-ID: <20200701141733.081104906@hpe.com>
 User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 09:17:39 -0500
+Date:   Wed, 01 Jul 2020 09:17:44 -0500
 From:   steve.wahl@hpe.com
 To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -69,45 +69,80 @@ To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-efi@vger.kernel.org
 Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch 08/13] Remove vestigial mention of UV1 platform from
- arch/x86/include/asm/uv/bios.h
+Subject: [patch 13/13] Remove (now unused) EFI_UV1_MEMMAP from efi.h
 References: <20200701141731.377252388@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- impostorscore=0 mlxlogscore=999 cotscore=-2147483648 spamscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007010102
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=2 impostorscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ bulkscore=0 mlxlogscore=999 cotscore=-2147483648 adultscore=0
+ clxscore=1015 priorityscore=1501 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/x86/include/asm/uv/bios.h: remove UV1 reference
+With UV1 support removed, EFI_UV1_MEMMAP is no longer used.
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/include/asm/uv/bios.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/efi.h |   20 ++------------------
+ 1 file changed, 2 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
-index 2fcc3ac12e76..70050d0136c3 100644
---- a/arch/x86/include/asm/uv/bios.h
-+++ b/arch/x86/include/asm/uv/bios.h
-@@ -72,7 +72,7 @@ struct uv_gam_range_entry {
- };
+--- linux.orig/arch/x86/include/asm/efi.h	2020-06-17 14:21:49.798542440 -0500
++++ linux/arch/x86/include/asm/efi.h	2020-06-17 14:28:55.830071857 -0500
+@@ -22,17 +22,7 @@ extern unsigned long efi_fw_vendor, efi_
+  *
+  * This is the main reason why we're doing stable VA mappings for RT
+  * services.
+- *
+- * SGI UV1 machines are known to be incompatible with this scheme, so we
+- * provide an opt-out for these machines via a DMI quirk that sets the
+- * attribute below.
+  */
+-#define EFI_UV1_MEMMAP         EFI_ARCH_1
+-
+-static inline bool efi_have_uv1_memmap(void)
+-{
+-	return IS_ENABLED(CONFIG_X86_UV) && efi_enabled(EFI_UV1_MEMMAP);
+-}
  
- #define	UV_SYSTAB_SIG			"UVST"
--#define	UV_SYSTAB_VERSION_1		1	/* UV1/2/3 BIOS version */
-+#define	UV_SYSTAB_VERSION_1		1	/* UV2/3 BIOS version */
- #define	UV_SYSTAB_VERSION_UV4		0x400	/* UV4 BIOS base version */
- #define	UV_SYSTAB_VERSION_UV4_1		0x401	/* + gpa_shift */
- #define	UV_SYSTAB_VERSION_UV4_2		0x402	/* + TYPE_NVRAM/WINDOW/MBOX */
--- 
-2.12.3
-
+ #define EFI32_LOADER_SIGNATURE	"EL32"
+ #define EFI64_LOADER_SIGNATURE	"EL64"
+@@ -122,9 +112,7 @@ struct efi_scratch {
+ 	efi_sync_low_kernel_mappings();					\
+ 	kernel_fpu_begin();						\
+ 	firmware_restrict_branch_speculation_start();			\
+-									\
+-	if (!efi_have_uv1_memmap())					\
+-		efi_switch_mm(&efi_mm);					\
++	efi_switch_mm(&efi_mm);						\
+ })
+ 
+ #define arch_efi_call_virt(p, f, args...)				\
+@@ -132,9 +120,7 @@ struct efi_scratch {
+ 
+ #define arch_efi_call_virt_teardown()					\
+ ({									\
+-	if (!efi_have_uv1_memmap())					\
+-		efi_switch_mm(efi_scratch.prev_mm);			\
+-									\
++	efi_switch_mm(efi_scratch.prev_mm);				\
+ 	firmware_restrict_branch_speculation_end();			\
+ 	kernel_fpu_end();						\
+ })
+@@ -176,8 +162,6 @@ extern void efi_delete_dummy_variable(vo
+ extern void efi_switch_mm(struct mm_struct *mm);
+ extern void efi_recover_from_page_fault(unsigned long phys_addr);
+ extern void efi_free_boot_services(void);
+-extern pgd_t * __init efi_uv1_memmap_phys_prolog(void);
+-extern void __init efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
+ 
+ /* kexec external ABI */
+ struct efi_setup_data {
 
