@@ -2,71 +2,129 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B251C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D775520663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593584969;
-	bh=X4+vca/mUEA3Y8838Ax2riljRXkrSPU/HPvLo+gSwbo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=14ePz9IU8cCtTDMk6C2B3CDijVPyKjGNRjkyzQ9rkxBXSauJr+Juu3zs7EPb5ix55
-	 EHQ0cObMD4ep8T9lKfea+F1yNf+efobK08UZ19WiZa83ByyZRnGyqsyGjNv35RLLnz
-	 CTFyqlfi+kF2cjEleLxftSwqUHhJR3DtCWgqxIv8=
+	by mail.kernel.org (Postfix) with ESMTP id E318E20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgGAG32 (ORCPT
+        id S1727051AbgGAGeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgGAG32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 02:29:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F3620663;
-        Wed,  1 Jul 2020 06:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593584967;
-        bh=X4+vca/mUEA3Y8838Ax2riljRXkrSPU/HPvLo+gSwbo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qiGctaDPPI8hFBXPaYIWEaSsKU1t1MzJjxya1cH+T0AEuQifvhCdyX9bEHNvoua4W
-         NZB0lRvH1hb3X9DrBFJZC6cgh2Q6WS5WylFVtB6tXY/1Oiuz8vk1TJS+vNqNdmCgLc
-         g7z7cj0OeB1BkyJrjFjIF7ywp2WCFtidu6KYA5iA=
-Date:   Wed, 1 Jul 2020 08:29:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Peter Chen <hzpeterchen@gmail.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] USB: Fix up terminology
-Message-ID: <20200701062924.GA5927@kroah.com>
-References: <20200630174123.GA1906678@kroah.com>
- <CAL411-pgboix6=1=jKNv_4JaHiC8fKDJ4_mryooMepeHdB-2AA@mail.gmail.com>
+        Wed, 1 Jul 2020 02:34:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41000 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAGeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 02:34:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 557662A4F88
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
+ driver
+In-Reply-To: <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+ <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
+Date:   Wed, 01 Jul 2020 09:35:27 +0300
+Message-ID: <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL411-pgboix6=1=jKNv_4JaHiC8fKDJ4_mryooMepeHdB-2AA@mail.gmail.com>
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 02:02:00PM +0800, Peter Chen wrote:
-> > index 3a7179e90f4e..1a12aab208b4 100644
-> > --- a/drivers/usb/gadget/udc/Kconfig
-> > +++ b/drivers/usb/gadget/udc/Kconfig
-> > @@ -474,7 +474,7 @@ config USB_DUMMY_HCD
-> >         help
-> >           This host controller driver emulates USB, looping all data transfer
-> >           requests back to a USB "gadget driver" in the same host.  The host
-> > -         side is the master; the gadget side is the slave.  Gadget drivers
-> > +         side is the controller; the gadget side is the device.  Gadget drivers
-> 
-> 'the host side is the controller' may not be suitable.
+Hi Neil,
 
-Really?  It is literally a "host controller" as per the specification :)
+On Mon, 29 Jun 2020, Neil Armstrong <narmstrong@baylibre.com> 
+wrote:
+> Hi Adrian, 
+> 
+> On 09/06/2020 19:49, Adrian Ratiu wrote: 
+>> [Re-submitting to cc dri-devel, sorry about the noise]  Hello 
+>> all,  v9 cleanly applies on top of latest next-20200609 tree. 
+>> v9 does not depend on other patches as the last binding doc has 
+>> been merged.   All feedback up to this point has been 
+>> addressed. Specific details in individual patch changelogs. 
+>> The biggest changes are the deprecation of the Synopsys DW 
+>> bridge bind() API in favor of of_drm_find_bridge() and .attach 
+>> callbacks, the addition of a TODO entry which outlines future 
+>> planned bridge driver refactorings and a reordering of some 
+>> i.MX 6 patches to appease checkpatch.   The idea behind the 
+>> TODO is to get this regmap and i.MX 6 driver merged and then do 
+>> the rest of refactorings in-tree because it's easier and the 
+>> refactorings themselves are out-of-scope of this series which 
+>> is adding i.MX 6 support and is quite big already, so please, 
+>> if there are more refactoring ideas, let's add them to the TODO 
+>> doc. :) I intend to tackle those after this series is merged to 
+>> avoid two complex inter-dependent simultaneous series. 
+> 
+> This has been around here for a long time and you seem to have 
+> addressed all the reviews. 
+> 
+>>  As always more testing is welcome especially on Rockchip and 
+>> STM SoCs. 
+> 
+> It has been tested on STM, but I'd like a feedback on RK 
+> platform before applying the bridge parts. 
+> 
+> Can the imx & stm patches be applied separately ? 
+>
+
+Yes the IMX and STM patches can be applied separately, they just 
+both depend on the common regmap patches.
+
+The binding API removal change which directly touches RK can also 
+be applied separately, but unfortunately I do not have access to a 
+RK board with a DSI display to test it (or the bridge regmap logic 
+on RK btw...), I just "eye-balled" the RK code based on the public 
+docs and it LGTM.
+
+> Neil
+>
+>> 
+>> Big thank you to everyone who has contributed to this up to now,
+>> Adrian
+>> 
+>> Adrian Ratiu (11):
+>>   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
+>>   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+>>   drm: bridge: dw_mipi_dsi: add dsi v1.01 support
+>>   drm: bridge: dw_mipi_dsi: remove bind/unbind API
+>>   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+>>   ARM: dts: imx6qdl: add missing mipi dsi properties
+>>   drm: imx: Add i.MX 6 MIPI DSI host platform driver
+>>   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
+>>   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
+>>   drm: bridge: dw-mipi-dsi: fix bad register field offsets
+>>   Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
+>> 
+>>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
+>>  Documentation/gpu/todo.rst                    |  25 +
+>>  arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
+>>  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
+>>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
+>>  drivers/gpu/drm/imx/Kconfig                   |   8 +
+>>  drivers/gpu/drm/imx/Makefile                  |   1 +
+>>  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
+>>  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
+>>  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
+>>  10 files changed, 1059 insertions(+), 231 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+>>  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+>> 
