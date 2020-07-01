@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F92C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1B22077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28DD2078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mE22e0q3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snvn9xvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgGAIbw (ORCPT
+        id S1728921AbgGAIbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
+        Wed, 1 Jul 2020 04:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgGAIbt (ORCPT
+        with ESMTP id S1728680AbgGAIbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:49 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84507C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:48 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q5so22870217wru.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:48 -0700 (PDT)
+        Wed, 1 Jul 2020 04:31:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0B3C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so622594wrp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y0hPzbcINWUoj1nY9cM2w0ma0wuqc7/tUG8vEbWtQrA=;
-        b=mE22e0q3mAUq5UOwG3ensFJ5EhJZrqhHNlRDSU67ux4z1BZRpREWDmPL4YfuT1wnn6
-         m2RLEhd8Dv5MPRqX6cqHXquHmD2L12W7sfjfJRQmYrhRysoYsNz8O93NA9nCftb3W+xS
-         JzLNyESkQxfnJKoZn7Cu11vIBctW0yD5K7zt2InruCHJeqDmZn57cGStUNjVBpmqhN+Z
-         1zFlfIDEMmVk5MBoVsiZOSiKOV8gDpCp+DiJyeP4zE3mtncbCr3cW51KBfan6yLnOLvq
-         kA85t+L7218ZeEe1pqXUFsyriWNffrSVsd9H+oV1nlB/l2iJVS50V1iqYNL1SWOgJUYt
-         AjWg==
+        bh=ihwB2j52q4JKu9sE46KLVBy86wjLuHmVQi4idxjX6zQ=;
+        b=snvn9xvIydiypiXr5MO0bygv1ZS/EM2GgCqevZyGvodvvnT7O7zCWyYmkQLhHVi+1/
+         j/wzvGWRqMxAz2zp4oEaV8GFxHERQJmwaYsiCZo8RIGNoYmsctyShK0Vj1Ig2nCKFUtV
+         rc7jGoLvofLd+9eZNOARjmUt95RTqSDk1lZ/6bfWVLwRQbqyMil6aGpamCtCmzgbzIqM
+         WKb464Mf1lFjB+uXMjTIgTDrPkTkoRtTbt5w03/cWgXsJJnlNds/5sVxDBuBo834mCNN
+         mzfR4bp+ym8sUppFmCBeUZDrxv9/LPJIbh/IIMlxUMxDuSHMEr3ESO+C5LgSNkKZNjxc
+         8OvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y0hPzbcINWUoj1nY9cM2w0ma0wuqc7/tUG8vEbWtQrA=;
-        b=HeTQo1/q7gT6vO7pSWi20bgSAQenbNzwfmJtqeGb63ZHjU/2mHkJV876kGHlBYA59+
-         pnQEWU+mcYexu+hhJxOUqR4HNFxzdNtfLqPEbauY6oz3x568JRpVFAXwT0o5kW+phUNA
-         ROLXTl4XZt0mVO+07KDaNNUUtOSdV+aduPWfrEtMy1eAmSxmuG8dbeuebmXY9CXqV4lS
-         hUuTRR2R6H4B+0RmAkIVnwppFRdt8g+JgIwNqJ6PUxpUSAxk5ywm2dM5cDPsrtp+wdHM
-         lXJlqu9dMvfTs8S/G3fQ6r7VxegHXt4fTLZtvY9b+MrDPC5HlUzh/pBxt0c8dQfTHqBe
-         7jfg==
-X-Gm-Message-State: AOAM533JRASxONCQlqtMjAZMED6XmZ3TP/cqmWwgL1DJw3V799N/l6J+
-        22CVejIuo3YbuEvFXChoLY2a+w==
-X-Google-Smtp-Source: ABdhPJyTZ0tkHH1ieRd1Ju6TZzKtoJw3OU+g0mo1V1nc2EKR8bJX6L3Dq1/l5QayHgvJJZDwEFkfVw==
-X-Received: by 2002:adf:f8cb:: with SMTP id f11mr27049806wrq.358.1593592307243;
-        Wed, 01 Jul 2020 01:31:47 -0700 (PDT)
+        bh=ihwB2j52q4JKu9sE46KLVBy86wjLuHmVQi4idxjX6zQ=;
+        b=dIrL/ESDLJj2ZWiP1rCX+1F6aw1gZ1qmheqo7feOTh9NoZn9HlL1076HQdDHlWv4dP
+         UACCruWlsxp/agmCixjEcyb+pUn0zAbxXDhZkdvw6zliCP5mxVFKsolKkMF817uzYlWC
+         SpOXpcjQw8Ux0L6W89faFF8nqobwO5Zzv/DA4iZ5h8mnsT0ZLKHs0B76QcuFu8ovLDHw
+         m5vPZZfThGL90h36BdKbbgPZIfa29HyRi5R+320joKjoGy/k93OHTFwL3Jn9iyy07SxS
+         pg97MPNLboDE1N41X5HWYLQaHqnRZsD5iP6yJEtCmjpygySX6y3m/OC15wuJcEzkLqZa
+         e7Hg==
+X-Gm-Message-State: AOAM531xKBLstZ7407KzHpqHdHKfcnteqQDyt9XcEGFFQtKPNKgfW4CP
+        tHnkohiDJ6hJ3udmFYdQoD0w/CBcWPs=
+X-Google-Smtp-Source: ABdhPJxrqfwsOrp9KISgBJFoUZ2zRhfjI8gFS2Sf7MKc2RHU0W4nuWlhNSlPDMKn8vHdJktFm7HiwQ==
+X-Received: by 2002:adf:e98f:: with SMTP id h15mr27903913wrm.25.1593592308422;
+        Wed, 01 Jul 2020 01:31:48 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.46
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:46 -0700 (PDT)
+        Wed, 01 Jul 2020 01:31:47 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 20/30] misc: mic: scif: scif_epd: Describe missing 'scifdev' argument(s)
-Date:   Wed,  1 Jul 2020 09:31:08 +0100
-Message-Id: <20200701083118.45744-21-lee.jones@linaro.org>
+Subject: [PATCH v2 21/30] misc: mic: scif: scif_nodeqp: Fix a bunch of kerneldoc issues
+Date:   Wed,  1 Jul 2020 09:31:09 +0100
+Message-Id: <20200701083118.45744-22-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
@@ -75,103 +75,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reason (copy 'n' paste error?) the passed in pointers to
-'struct scif_dev scifdev' weren't described throughout the source
-file.  Change that.
+Includes; missing function argument documentation, misnamed argument
+tags, the promotion of obvious kerneldoc header candidates and an
+ordering issue (functions must follow the kerneldoc which describes
+them).
 
-Fixes the following W=1 kernel build warning(s):
+Fixes the following W=1 kernel build issues:
 
- drivers/misc/mic/scif/scif_epd.c:120: warning: Function parameter or member 'scifdev' not described in 'scif_cnctreq'
- drivers/misc/mic/scif/scif_epd.c:166: warning: Function parameter or member 'scifdev' not described in 'scif_cnctgnt'
- drivers/misc/mic/scif/scif_epd.c:191: warning: Function parameter or member 'scifdev' not described in 'scif_cnctgnt_ack'
- drivers/misc/mic/scif/scif_epd.c:213: warning: Function parameter or member 'scifdev' not described in 'scif_cnctgnt_nack'
- drivers/misc/mic/scif/scif_epd.c:230: warning: Function parameter or member 'scifdev' not described in 'scif_cnctrej'
- drivers/misc/mic/scif/scif_epd.c:255: warning: Function parameter or member 'scifdev' not described in 'scif_discnct'
- drivers/misc/mic/scif/scif_epd.c:309: warning: Function parameter or member 'scifdev' not described in 'scif_discnt_ack'
- drivers/misc/mic/scif/scif_epd.c:325: warning: Function parameter or member 'scifdev' not described in 'scif_clientsend'
- drivers/misc/mic/scif/scif_epd.c:341: warning: Function parameter or member 'scifdev' not described in 'scif_clientrcvd'
+ drivers/misc/mic/scif/scif_nodeqp.c:452: warning: Function parameter or member 'scifdev' not described in 'scif_node_connect'
+ drivers/misc/mic/scif/scif_nodeqp.c:730: warning: Function parameter or member 'unused' not described in 'scif_exit'
+ drivers/misc/mic/scif/scif_nodeqp.c:730: warning: Excess function parameter 'msg' description in 'scif_exit'
+ drivers/misc/mic/scif/scif_nodeqp.c:748: warning: Function parameter or member 'unused' not described in 'scif_exit_ack'
+ drivers/misc/mic/scif/scif_nodeqp.c:748: warning: Excess function parameter 'msg' description in 'scif_exit_ack'
+ drivers/misc/mic/scif/scif_nodeqp.c:939: warning: Function parameter or member 'scifdev' not described in 'scif_node_add_nack'
+ drivers/misc/mic/scif/scif_nodeqp.c:988: warning: Function parameter or member 'scifdev' not described in 'scif_get_node_info_resp'
+ drivers/misc/mic/scif/scif_nodeqp.c:1070: warning: cannot understand function prototype: 'int scif_max_msg_id = SCIF_MAX_MSG; '
+ drivers/misc/mic/scif/scif_nodeqp.c:1129: warning: Function parameter or member 'unused' not described in 'scif_loopb_wq_handler'
+ drivers/misc/mic/scif/scif_nodeqp.c:1129: warning: Excess function parameter 'work' description in 'scif_loopb_wq_handler'
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/mic/scif/scif_epd.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/misc/mic/scif/scif_nodeqp.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/misc/mic/scif/scif_epd.c b/drivers/misc/mic/scif/scif_epd.c
-index 590baca9dc7bf..426687f6696b5 100644
---- a/drivers/misc/mic/scif/scif_epd.c
-+++ b/drivers/misc/mic/scif/scif_epd.c
-@@ -104,6 +104,7 @@ void scif_cleanup_zombie_epd(void)
+diff --git a/drivers/misc/mic/scif/scif_nodeqp.c b/drivers/misc/mic/scif/scif_nodeqp.c
+index ea084626fe116..e0748be373f19 100644
+--- a/drivers/misc/mic/scif/scif_nodeqp.c
++++ b/drivers/misc/mic/scif/scif_nodeqp.c
+@@ -443,6 +443,7 @@ static void scif_deinit_p2p_info(struct scif_dev *scifdev,
  
  /**
-  * scif_cnctreq() - Respond to SCIF_CNCT_REQ interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
+  * scif_node_connect: Respond to SCIF_NODE_CONNECT interrupt message
++ * @scifdev: SCIF device
+  * @dst: Destination node
   *
-  * This message is initiated by the remote node to request a connection
-@@ -155,6 +156,7 @@ void scif_cnctreq(struct scif_dev *scifdev, struct scifmsg *msg)
+  * Connect the src and dst node by setting up the p2p connection
+@@ -719,7 +720,7 @@ scif_init(struct scif_dev *scifdev, struct scifmsg *msg)
+ /**
+  * scif_exit() - Respond to SCIF_EXIT interrupt message
+  * @scifdev:    Remote SCIF device node
+- * @msg:        Interrupt message
++ * @unused:     Interrupt message (unused)
+  *
+  * This function stops the SCIF interface for the node which sent
+  * the SCIF_EXIT message and starts waiting for that node to
+@@ -740,7 +741,7 @@ scif_exit(struct scif_dev *scifdev, struct scifmsg *unused)
+ /**
+  * scif_exitack() - Respond to SCIF_EXIT_ACK interrupt message
+  * @scifdev:    Remote SCIF device node
+- * @msg:        Interrupt message
++ * @unused:     Interrupt message (unused)
+  *
+  */
+ static __always_inline void
+@@ -930,6 +931,7 @@ scif_node_add_ack(struct scif_dev *scifdev, struct scifmsg *msg)
  
  /**
-  * scif_cnctgnt() - Respond to SCIF_CNCT_GNT interrupt message
-+ * @scifdev:    SCIF device
+  * scif_node_add_nack: Respond to SCIF_NODE_ADD_NACK interrupt message
++ * @scifdev:    Remote SCIF device node
   * @msg:        Interrupt message
   *
-  * An accept() on the remote node has occurred and sent this message
-@@ -181,6 +183,7 @@ void scif_cnctgnt(struct scif_dev *scifdev, struct scifmsg *msg)
+  * SCIF_NODE_ADD failed, so inform the waiting wq.
+@@ -946,8 +948,9 @@ scif_node_add_nack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 	}
+ }
+ 
+-/*
++/**
+  * scif_node_remove: Handle SCIF_NODE_REMOVE message
++ * @scifdev:    Remote SCIF device node
+  * @msg: Interrupt message
+  *
+  * Handle node removal.
+@@ -962,8 +965,9 @@ scif_node_remove(struct scif_dev *scifdev, struct scifmsg *msg)
+ 	scif_handle_remove_node(node);
+ }
+ 
+-/*
++/**
+  * scif_node_remove_ack: Handle SCIF_NODE_REMOVE_ACK message
++ * @scifdev:    Remote SCIF device node
+  * @msg: Interrupt message
+  *
+  * The peer has acked a SCIF_NODE_REMOVE message.
+@@ -979,6 +983,7 @@ scif_node_remove_ack(struct scif_dev *scifdev, struct scifmsg *msg)
  
  /**
-  * scif_cnctgnt_ack() - Respond to SCIF_CNCT_GNTACK interrupt message
-+ * @scifdev:    SCIF device
+  * scif_get_node_info: Respond to SCIF_GET_NODE_INFO interrupt message
++ * @scifdev:    Remote SCIF device node
   * @msg:        Interrupt message
   *
-  * The remote connection request has finished mapping the local memory.
-@@ -203,6 +206,7 @@ void scif_cnctgnt_ack(struct scif_dev *scifdev, struct scifmsg *msg)
+  * Retrieve node info i.e maxid and total from the mgmt node.
+@@ -1058,6 +1063,7 @@ static void (*scif_intr_func[SCIF_MAX_MSG + 1])
+ 	scif_recv_sig_resp,	/* SCIF_SIG_NACK */
+ };
+ 
++static int scif_max_msg_id = SCIF_MAX_MSG;
+ /**
+  * scif_nodeqp_msg_handler() - Common handler for node messages
+  * @scifdev: Remote device to respond to
+@@ -1067,8 +1073,6 @@ static void (*scif_intr_func[SCIF_MAX_MSG + 1])
+  * This routine calls the appropriate routine to handle a Node Qp
+  * message receipt
+  */
+-static int scif_max_msg_id = SCIF_MAX_MSG;
+-
+ static void
+ scif_nodeqp_msg_handler(struct scif_dev *scifdev,
+ 			struct scif_qp *qp, struct scifmsg *msg)
+@@ -1117,7 +1121,7 @@ void scif_nodeqp_intrhandler(struct scif_dev *scifdev, struct scif_qp *qp)
  
  /**
-  * scif_cnctgnt_nack() - Respond to SCIF_CNCT_GNTNACK interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
+  * scif_loopb_wq_handler - Loopback Workqueue Handler.
+- * @work: loop back work
++ * @unused: loop back work (unused)
   *
-  * The remote connection request failed to map the local memory it was sent.
-@@ -221,6 +225,7 @@ void scif_cnctgnt_nack(struct scif_dev *scifdev, struct scifmsg *msg)
- 
- /**
-  * scif_cnctrej() - Respond to SCIF_CNCT_REJ interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
-  *
-  * The remote end has rejected the connection request.  Set the end
-@@ -240,6 +245,7 @@ void scif_cnctrej(struct scif_dev *scifdev, struct scifmsg *msg)
- 
- /**
-  * scif_discnct() - Respond to SCIF_DISCNCT interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
-  *
-  * The remote node has indicated close() has been called on its end
-@@ -301,6 +307,7 @@ void scif_discnct(struct scif_dev *scifdev, struct scifmsg *msg)
- 
- /**
-  * scif_discnct_ack() - Respond to SCIF_DISCNT_ACK interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
-  *
-  * Remote side has indicated it has not more references to local resources
-@@ -317,6 +324,7 @@ void scif_discnt_ack(struct scif_dev *scifdev, struct scifmsg *msg)
- 
- /**
-  * scif_clientsend() - Respond to SCIF_CLIENT_SEND interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
-  *
-  * Remote side is confirming send or receive interrupt handling is complete.
-@@ -333,6 +341,7 @@ void scif_clientsend(struct scif_dev *scifdev, struct scifmsg *msg)
- 
- /**
-  * scif_clientrcvd() - Respond to SCIF_CLIENT_RCVD interrupt message
-+ * @scifdev:    SCIF device
-  * @msg:        Interrupt message
-  *
-  * Remote side is confirming send or receive interrupt handling is complete.
+  * This work queue routine is invoked by the loopback work queue handler.
+  * It grabs the recv lock, dequeues any available messages from the head
 -- 
 2.25.1
 
