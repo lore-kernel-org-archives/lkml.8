@@ -2,139 +2,266 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1836EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13245C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62562067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FFA2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hx51FY+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgGALIQ (ORCPT
+        id S1730220AbgGALML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:08:16 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46708 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730159AbgGALIP (ORCPT
+        Wed, 1 Jul 2020 07:12:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25929 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730159AbgGALMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:08:15 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 949071C0C0A; Wed,  1 Jul 2020 13:08:13 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 13:08:13 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, Jesse Barnes <jsbarnes@google.com>,
-        Rajat Jain <rajatja@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200701110813.GA11023@amd>
-References: <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200630214559.GA7113@duo.ucw.cz>
- <20200701065426.GC2044019@kroah.com>
- <20200701084750.GA7144@amd>
- <20200701105714.GA2098169@kroah.com>
+        Wed, 1 Jul 2020 07:12:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593601925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yexujkd7auN9ITgPnwA4kXggvTeorMC1CWNzXOrWnvM=;
+        b=hx51FY+InFYWb/b2mFr5WLS/uXogj8g60xIVikBVxUDik2o3QdsQ5tR5UrEmSPQ+ZI4iU5
+        zaYmKu/8wywh2GkGQ/fKYXoo8C2WRILj7TwMYMVbBFjMhT6i82G5actO6Smhx2RwyszOTb
+        wWgHQ0IqXbCxy0NVkUi9Cvj4pqAmemk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-bul42xRlPjebAR0KU5xTpg-1; Wed, 01 Jul 2020 07:12:03 -0400
+X-MC-Unique: bul42xRlPjebAR0KU5xTpg-1
+Received: by mail-wr1-f72.google.com with SMTP id i14so19957195wru.17
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yexujkd7auN9ITgPnwA4kXggvTeorMC1CWNzXOrWnvM=;
+        b=rCul0QlB4nfz64ojv0ezybTUiDlO8oi8ts1awmzxqpwDXCwGLSoF+qYc/Bb/lS/d3R
+         iTt8RXftie2y1r/1jVjPGNlzvr0026MHZotYSuSAydiHlZI80BZDDOcYNovft0FqBJOq
+         cu+7oOMM8kYP+Q85Jk/5IG/TRRdXblV+0nhbhRfOMR/TtKHqQjdbVv6bcqtTtVVmVF6m
+         q/WOnzy4qIY/hllqUImttEe/5OXyVMdxCZtZtQ54tmKCdcri/wf83KuvsmEQSOBQuaGe
+         EzXy0+pLPZm8J+sc0vb/Sj+ZyQ+uliMXdqNh7ZYUsdDGzdThEeZtiCbCt8XySx9IJFjx
+         Lz8g==
+X-Gm-Message-State: AOAM532BgacuA65UM2zx/+P78430TIbaSDl2zaSDzrI6jrqF9fgQBGTB
+        4cpwFljqPTJEg7IM4rPDplx7ifhe+ifA0WGEomv4Wo638cK+pYvyXxkkC7Hkz9PowS9M1/j4Ogg
+        GYBR2Xn+j8koCyrPVj7sv0hfS
+X-Received: by 2002:a1c:398b:: with SMTP id g133mr25236177wma.76.1593601922427;
+        Wed, 01 Jul 2020 04:12:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxQMUaayG0vDg3RNtuezDlgxdvof9uLCFzLvN6HKEyQRgj3zoZo7nehIzUAAPphqwvJnljolw==
+X-Received: by 2002:a1c:398b:: with SMTP id g133mr25236149wma.76.1593601922091;
+        Wed, 01 Jul 2020 04:12:02 -0700 (PDT)
+Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
+        by smtp.gmail.com with ESMTPSA id 140sm1930942wmb.15.2020.07.01.04.11.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 04:12:01 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 07:11:57 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Eugenio Perez Martin <eperezma@redhat.com>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+Message-ID: <20200701071041-mutt-send-email-mst@kernel.org>
+References: <20200611113404.17810-1-mst@redhat.com>
+ <20200611113404.17810-3-mst@redhat.com>
+ <20200611152257.GA1798@char.us.oracle.com>
+ <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
+ <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
+ <20200622114622-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+ <20200622122546-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+ <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701105714.GA2098169@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 01, 2020 at 12:43:09PM +0200, Eugenio Perez Martin wrote:
+> On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
+> <eperezma@redhat.com> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
+> > > > On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > >
+> > > > > On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
+> > > > > > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
+> > > > > > <eperezma@redhat.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
+> > > > > > > <konrad.wilk@oracle.com> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
+> > > > > > > > > As testing shows no performance change, switch to that now.
+> > > > > > > >
+> > > > > > > > What kind of testing? 100GiB? Low latency?
+> > > > > > > >
+> > > > > > >
+> > > > > > > Hi Konrad.
+> > > > > > >
+> > > > > > > I tested this version of the patch:
+> > > > > > > https://lkml.org/lkml/2019/10/13/42
+> > > > > > >
+> > > > > > > It was tested for throughput with DPDK's testpmd (as described in
+> > > > > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
+> > > > > > > and kernel pktgen. No latency tests were performed by me. Maybe it is
+> > > > > > > interesting to perform a latency test or just a different set of tests
+> > > > > > > over a recent version.
+> > > > > > >
+> > > > > > > Thanks!
+> > > > > >
+> > > > > > I have repeated the tests with v9, and results are a little bit different:
+> > > > > > * If I test opening it with testpmd, I see no change between versions
+> > > > >
+> > > > >
+> > > > > OK that is testpmd on guest, right? And vhost-net on the host?
+> > > > >
+> > > >
+> > > > Hi Michael.
+> > > >
+> > > > No, sorry, as described in
+> > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
+> > > > But I could add to test it in the guest too.
+> > > >
+> > > > These kinds of raw packets "bursts" do not show performance
+> > > > differences, but I could test deeper if you think it would be worth
+> > > > it.
+> > >
+> > > Oh ok, so this is without guest, with virtio-user.
+> > > It might be worth checking dpdk within guest too just
+> > > as another data point.
+> > >
+> >
+> > Ok, I will do it!
+> >
+> > > > > > * If I forward packets between two vhost-net interfaces in the guest
+> > > > > > using a linux bridge in the host:
+> > > > >
+> > > > > And here I guess you mean virtio-net in the guest kernel?
+> > > >
+> > > > Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
+> > > > the host. More precisely:
+> > > > * Adding one of the interfaces to another namespace, assigning it an
+> > > > IP, and starting netserver there.
+> > > > * Assign another IP in the range manually to the other virtual net
+> > > > interface, and start the desired test there.
+> > > >
+> > > > If you think it would be better to perform then differently please let me know.
+> > >
+> > >
+> > > Not sure why you bother with namespaces since you said you are
+> > > using L2 bridging. I guess it's unimportant.
+> > >
+> >
+> > Sorry, I think I should have provided more context about that.
+> >
+> > The only reason to use namespaces is to force the traffic of these
+> > netperf tests to go through the external bridge. To test netperf
+> > different possibilities than the testpmd (or pktgen or others "blast
+> > of frames unconditionally" tests).
+> >
+> > This way, I make sure that is the same version of everything in the
+> > guest, and is a little bit easier to manage cpu affinity, start and
+> > stop testing...
+> >
+> > I could use a different VM for sending and receiving, but I find this
+> > way a faster one and it should not introduce a lot of noise. I can
+> > test with two VM if you think that this use of network namespace
+> > introduces too much noise.
+> >
+> > Thanks!
+> >
+> > > > >
+> > > > > >   - netperf UDP_STREAM shows a performance increase of 1.8, almost
+> > > > > > doubling performance. This gets lower as frame size increase.
+> 
+> Regarding UDP_STREAM:
+> * with event_idx=on: The performance difference is reduced a lot if
+> applied affinity properly (manually assigning CPU on host/guest and
+> setting IRQs on guest), making them perform equally with and without
+> the patch again. Maybe the batching makes the scheduler perform
+> better.
+> 
+> > > > > >   - rests of the test goes noticeably worse: UDP_RR goes from ~6347
+> > > > > > transactions/sec to 5830
+> 
+> * Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning makes
+> them perform similarly again, only a very small performance drop
+> observed. It could be just noise.
+> ** All of them perform better than vanilla if event_idx=off, not sure
+> why. I can try to repeat them if you suspect that can be a test
+> failure.
+> 
+> * With testpmd and event_idx=off, if I send from the VM to host, I see
+> a performance increment especially in small packets. The buf api also
+> increases performance compared with only batching: Sending the minimum
+> packet size in testpmd makes pps go from 356kpps to 473 kpps. Sending
+> 1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
+> 
+> Something strange I observe in these tests: I get more pps the bigger
+> the transmitted buffer size is. Not sure why.
+> 
+> ** Sending from the host to the VM does not make a big change with the
+> patches in small packets scenario (minimum, 64 bytes, about 645
+> without the patch, ~625 with batch and batch+buf api). If the packets
+> are bigger, I can see a performance increase: with 256 bits, it goes
+> from 590kpps to about 600kpps, and in case of 1500 bytes payload it
+> gets from 348kpps to 528kpps, so it is clearly an improvement.
+> 
+> * with testpmd and event_idx=on, batching+buf api perform similarly in
+> both directions.
+> 
+> All of testpmd tests were performed with no linux bridge, just a
+> host's tap interface (<interface type='ethernet'> in xml), with a
+> testpmd txonly and another in rxonly forward mode, and using the
+> receiving side packets/bytes data. Guest's rps, xps and interrupts,
+> and host's vhost threads affinity were also tuned in each test to
+> schedule both testpmd and vhost in different processors.
+> 
+> I will send the v10 RFC with the small changes requested by Stefan and Jason.
+> 
+> Thanks!
+> 
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK so there's a chance you are seeing effects of an aggressive power
+management. which tuned profile are you using? It might be helpful
+to disable PM/frequency scaling.
 
-Hi!
 
-> > > Yes, it originally was designed that way, but again, the world has
-> > > changed so we have to change with it.  That is why USB has for a long
-> > > time now, allowed you to not bind drivers to devices that you do not
-> > > "trust", and that trust can be determined by userspace.  That all came
-> > > about thanks to the work done by the wireless USB spec people and ker=
-nel
-> > > authors, which showed that maybe you just don't want to trust any dev=
-ice
-> > > that comes within range of your system :)
-> >=20
-> > Again, not disagreeing; but note the scale here.
-> >=20
-> > It is mandatory to defend against malicious wireless USB devices.
->=20
-> Turns out there are no more wireless USB devices in the world, and the
-> code for that is gone from Linux :)
->=20
-> > We probably should work on robustness against malicious USB devices.
->=20
-> We are, and do have, that support today.
->=20
-> > Malicious PCI-express devices are lot less of concern.
->=20
-> Not really, they are a lot of concern to some people.  Valid attacks are
-> out there today, see the thunderbolt attacks that numerous people have
-> done and published recently and for many years.
+> 
+> 
+> 
+> 
+> 
+> > > > >
+> > > > > OK so it seems plausible that we still have a bug where an interrupt
+> > > > > is delayed. That is the main difference between pmd and virtio.
+> > > > > Let's try disabling event index, and see what happens - that's
+> > > > > the trickiest part of interrupts.
+> > > > >
+> > > >
+> > > > Got it, will get back with the results.
+> > > >
+> > > > Thank you very much!
+> > > >
+> > > > >
+> > > > >
+> > > > > >   - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
+> > > > > >   - TCP_RR from 6223.64 transactions/sec to 5739.44
+> > > > >
+> > >
 
-In this case PCI-express meant internal cards in PCs. Yes, thunderbolt
-would be higher concern than internal card.
-
-> > Defending against malicious CPU/RAM does not make much sense.
->=20
-> That's what the spectre and rowhammer fixes have been for :)
-
-Yeah, and that's why we have whitelist of working CPUs and only work
-on those, riiight? :-). [There's difference between "malicious" and
-"buggy".]
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl78bp0ACgkQMOfwapXb+vIMwQCgxMUU2uCXMx6F3qqoXwrtOcsB
-PR4AoIv02DSIJXj0/Qp/43XbkGAtf5kj
-=O1gR
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
