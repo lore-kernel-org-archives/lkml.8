@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E93C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79C0620781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E242420771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593565843;
-	bh=X8gtXEPhNZx3ZIBXS6b69iuGP95TvO4abhgwH9+3Tgc=;
+	s=default; t=1593565847;
+	bh=mr+rQe0l8XSIekeEQFmG7I8vyIFw4b1KDVO2WDIE5lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNqOOD2pL/o9rxA6KMCv1EGeCgpGQhylCCRaBrelbH3sjwWwHwrf5CAFirzeuq+fW
-	 sZ5RbnOV45xDskvWN45bm+TEcBzlxF4CxWgtep6+2Eo1dQKtboj86zWwAY/BoM0XpF
-	 e4us7TKZnfiBjPC4PKfsU+e42PTBg6tfIhdOkx1M=
+	b=0JIPYlCuvdmIN1hJiXSW5v2IwHynQ4qVowKSNbLiElKxc8p6pj2KiysO/AnS5MbiB
+	 hY3Ex96ZetryKVtqZSDwEM9mplVSX9PyRhvPDhaqjY7qpicaViUYxo1g6M642ws+gC
+	 gXt0aaLF4k5LSJcMSkauH5/7UyAstuonKg5nbsLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgGABKm (ORCPT
+        id S1726649AbgGABKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 21:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbgGABKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:10:40 -0400
+        id S1726555AbgGABKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:10:43 -0400
 Received: from lenoir.home (lfbn-ncy-1-996-218.w90-101.abo.wanadoo.fr [90.101.73.218])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CFB420771;
-        Wed,  1 Jul 2020 01:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4516520780;
+        Wed,  1 Jul 2020 01:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593565839;
-        bh=X8gtXEPhNZx3ZIBXS6b69iuGP95TvO4abhgwH9+3Tgc=;
+        s=default; t=1593565842;
+        bh=mr+rQe0l8XSIekeEQFmG7I8vyIFw4b1KDVO2WDIE5lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yIVcH5G9TL/6LkQNxuZPFQ0VzmDw3uVrRubV5XDvnR7VuNot99h8HJ0XzyxWLb+dV
-         OCWm0NYL5zOvI6sEk4n+wg5+FbPUNbSIaU5yL6sOXZ8+o6EQDDqFxgd4XjVwEctESa
-         0zwcrAjKvOkjLvisF7QuHqds9FMPuIdz1urmtLIg=
+        b=wJZDTK6GDUNZbV4QtJGgNeRrtwxFjmld8mukrjb6nZXFlYINfDhiIvYgoSwlFJCgh
+         y12cc4o2EEvmteqk9Gvm6QRBh6fq7s67WzXfketN+hfnObaCPvtJmO+StBEH/+So88
+         E6jzhF6mJDuwDsgoE8EjPiDdXqZEAjj6h5MWBDSc=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -46,9 +46,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Anna-Maria Gleixner <anna-maria@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>
-Subject: [RFC PATCH 02/10] timer: Move trigger_dyntick_cpu() to enqueue_timer()
-Date:   Wed,  1 Jul 2020 03:10:22 +0200
-Message-Id: <20200701011030.14324-3-frederic@kernel.org>
+Subject: [RFC PATCH 04/10] timer: Optimize _next_timer_interrupt() level iteration
+Date:   Wed,  1 Jul 2020 03:10:24 +0200
+Message-Id: <20200701011030.14324-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200701011030.14324-1-frederic@kernel.org>
 References: <20200701011030.14324-1-frederic@kernel.org>
@@ -59,91 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consolidate the code by calling trigger_dyntick_cpu() from
-enqueue_timer() instead of calling it from all its callers.
+If a level has a timer that expires before we reach the next level,
+there is no need to iterate further.
+
+The next level is reached when the 3 lower bits of the current level are
+cleared. If the next event happens before/during that, the next levels
+won't give us an earlier expiration.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Anna-Maria Gleixner <anna-maria@linutronix.de>
 Cc: Juri Lelli <juri.lelli@redhat.com>
 ---
- kernel/time/timer.c | 46 +++++++++++++++++++--------------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ kernel/time/timer.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 9a838d38dbe6..4c977df3610b 100644
+index b4838d63a016..4aa74aafdd33 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -529,29 +529,6 @@ static int calc_wheel_index(unsigned long expires, unsigned long clk)
- 	return idx;
- }
+@@ -1515,6 +1515,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 	clk = base->clk;
+ 	for (lvl = 0; lvl < LVL_DEPTH; lvl++, offset += LVL_SIZE) {
+ 		int pos = next_pending_bucket(base, offset, clk & LVL_MASK);
++		unsigned long lvl_clk = clk & LVL_CLK_MASK;
  
--/*
-- * Enqueue the timer into the hash bucket, mark it pending in
-- * the bitmap and store the index in the timer flags.
-- */
--static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
--			  unsigned int idx)
--{
--	hlist_add_head(&timer->entry, base->vectors + idx);
--	__set_bit(idx, base->pending_map);
--	timer_set_idx(timer, idx);
--
--	trace_timer_start(timer, timer->expires, timer->flags);
--}
--
--static void
--__internal_add_timer(struct timer_base *base, struct timer_list *timer)
--{
--	unsigned int idx;
--
--	idx = calc_wheel_index(timer->expires, base->clk);
--	enqueue_timer(base, timer, idx);
--}
--
- static void
- trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
- {
-@@ -596,13 +573,29 @@ trigger_dyntick_cpu(struct timer_base *base, struct timer_list *timer)
- 	wake_up_nohz_cpu(base->cpu);
- }
- 
--static void
--internal_add_timer(struct timer_base *base, struct timer_list *timer)
-+/*
-+ * Enqueue the timer into the hash bucket, mark it pending in
-+ * the bitmap and store the index in the timer flags.
-+ */
-+static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
-+			  unsigned int idx)
- {
--	__internal_add_timer(base, timer);
-+	hlist_add_head(&timer->entry, base->vectors + idx);
-+	__set_bit(idx, base->pending_map);
-+	timer_set_idx(timer, idx);
+ 		if (pos >= 0) {
+ 			unsigned long tmp = clk + (unsigned long) pos;
+@@ -1522,6 +1523,13 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 			tmp <<= LVL_SHIFT(lvl);
+ 			if (time_before(tmp, next))
+ 				next = tmp;
 +
-+	trace_timer_start(timer, timer->expires, timer->flags);
- 	trigger_dyntick_cpu(base, timer);
- }
- 
-+static void internal_add_timer(struct timer_base *base, struct timer_list *timer)
-+{
-+	unsigned int idx;
-+
-+	idx = calc_wheel_index(timer->expires, base->clk);
-+	enqueue_timer(base, timer, idx);
-+}
-+
- #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
- 
- static struct debug_obj_descr timer_debug_descr;
-@@ -1059,7 +1052,6 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
- 	 */
- 	if (idx != UINT_MAX && clk == base->clk) {
- 		enqueue_timer(base, timer, idx);
--		trigger_dyntick_cpu(base, timer);
- 	} else {
- 		internal_add_timer(base, timer);
++			/*
++			 * If the next expiration happens before we reach
++			 * the next level, no need to check further.
++			 */
++			if (pos <= ((LVL_CLK_DIV - lvl_clk) & LVL_CLK_MASK))
++				break;
+ 		}
+ 		/*
+ 		 * Clock for the next level. If the current level clock lower
+@@ -1559,7 +1567,7 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 		 * So the simple check whether the lower bits of the current
+ 		 * level are 0 or not is sufficient for all cases.
+ 		 */
+-		adj = clk & LVL_CLK_MASK ? 1 : 0;
++		adj = lvl_clk ? 1 : 0;
+ 		clk >>= LVL_CLK_SHIFT;
+ 		clk += adj;
  	}
 -- 
 2.26.2
