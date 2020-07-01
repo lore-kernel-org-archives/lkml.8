@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85393C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 642B22077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FF72077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731497AbgGAOSl (ORCPT
+        id S1731487AbgGAOSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:18:41 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:64066 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731310AbgGAOSb (ORCPT
+        Wed, 1 Jul 2020 10:18:40 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:49350 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731290AbgGAOSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:18:31 -0400
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E5Fad004598;
+        Wed, 1 Jul 2020 10:18:30 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E6gnu031004;
         Wed, 1 Jul 2020 14:17:35 GMT
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0b-002e3701.pphosted.com with ESMTP id 3201s83rbd-1
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0b-002e3701.pphosted.com with ESMTP id 3209tgy2pu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 14:17:35 +0000
+        Wed, 01 Jul 2020 14:17:34 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 38C1CAE;
-        Wed,  1 Jul 2020 14:17:34 +0000 (UTC)
+        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 29A0063;
+        Wed,  1 Jul 2020 14:17:32 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id 114742015E3C1; Wed,  1 Jul 2020 09:17:33 -0500 (CDT)
-Message-ID: <20200701141732.957084206@hpe.com>
+        id E4FE42015D828; Wed,  1 Jul 2020 09:17:31 -0500 (CDT)
+Message-ID: <20200701141731.820821383@hpe.com>
 User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 09:17:43 -0500
+Date:   Wed, 01 Jul 2020 09:17:34 -0500
 From:   steve.wahl@hpe.com
 To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -69,215 +69,298 @@ To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-efi@vger.kernel.org
 Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch 12/13] Remove uv bios and efi code related to (now unused) EFI_UV1_MEMMAP
+Subject: [patch 03/13] Remove support for UV1 platform from x2apic_uv_x.c
 References: <20200701141731.377252388@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 spamscore=0
- cotscore=-2147483648 mlxscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=2 mlxlogscore=999 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010102
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 cotscore=-2147483648
+ clxscore=1015 lowpriorityscore=0 suspectscore=0 phishscore=0 adultscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007010102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With UV1 removed, EFI_UV1_MEMMAP is not used.  Remove code used by it
-in arch/x86/platform/uv/bios_uv.c and turn off code in
-arch/x86/platform/efi/efi.c that referenced this code.
+arch/x86/kernel/apic/x2apic_uv_x.c: remove UV1 support
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/platform/efi/efi.c    |    2 
- arch/x86/platform/uv/bios_uv.c |  159 -----------------------------------------
- 2 files changed, 2 insertions(+), 159 deletions(-)
+ arch/x86/kernel/apic/x2apic_uv_x.c |  121 +++++++------------------------------
+ 1 file changed, 25 insertions(+), 96 deletions(-)
 
---- linux.orig/arch/x86/platform/uv/bios_uv.c	2020-06-25 16:13:51.765087047 -0500
-+++ linux/arch/x86/platform/uv/bios_uv.c	2020-06-25 16:14:29.821045358 -0500
-@@ -30,17 +30,7 @@ static s64 __uv_bios_call(enum uv_bios_c
- 		 */
- 		return BIOS_STATUS_UNIMPLEMENTED;
+--- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c	2020-06-17 14:22:16.106513397 -0500
++++ linux/arch/x86/kernel/apic/x2apic_uv_x.c	2020-06-17 14:25:21.838308296 -0500
+@@ -24,8 +24,6 @@
+ #include <asm/uv/uv.h>
+ #include <asm/apic.h>
  
--	/*
--	 * If EFI_UV1_MEMMAP is set, we need to fall back to using our old EFI
--	 * callback method, which uses efi_call() directly, with the kernel page tables:
--	 */
--	if (unlikely(efi_enabled(EFI_UV1_MEMMAP))) {
--		kernel_fpu_begin();
--		ret = efi_call((void *)__va(tab->function), (u64)which, a1, a2, a3, a4, a5);
--		kernel_fpu_end();
--	} else {
--		ret = efi_call_virt_pointer(tab, function, (u64)which, a1, a2, a3, a4, a5);
--	}
-+	ret = efi_call_virt_pointer(tab, function, (u64)which, a1, a2, a3, a4, a5);
+-static DEFINE_PER_CPU(int, x2apic_extra_bits);
+-
+ static enum uv_system_type	uv_system_type;
+ static int			uv_hubbed_system;
+ static int			uv_hubless_system;
+@@ -40,7 +38,7 @@ static u8 oem_table_id[ACPI_OEM_TABLE_ID
+ static struct {
+ 	unsigned int apicid_shift;
+ 	unsigned int apicid_mask;
+-	unsigned int socketid_shift;	/* aka pnode_shift for UV1/2/3 */
++	unsigned int socketid_shift;	/* aka pnode_shift for UV2/3 */
+ 	unsigned int pnode_mask;
+ 	unsigned int gpa_shift;
+ 	unsigned int gnode_shift;
+@@ -48,8 +46,6 @@ static struct {
  
- 	return ret;
- }
-@@ -209,150 +199,3 @@ int uv_bios_init(void)
- 	pr_info("UV: UVsystab: Revision:%x\n", uv_systab->revision);
- 	return 0;
- }
+ static int uv_min_hub_revision_id;
+ 
+-unsigned int uv_apicid_hibits;
 -
--static void __init early_code_mapping_set_exec(int executable)
--{
--	efi_memory_desc_t *md;
--
--	if (!(__supported_pte_mask & _PAGE_NX))
--		return;
--
--	/* Make EFI service code area executable */
--	for_each_efi_memory_desc(md) {
--		if (md->type == EFI_RUNTIME_SERVICES_CODE ||
--		    md->type == EFI_BOOT_SERVICES_CODE)
--			efi_set_executable(md, executable);
--	}
--}
--
--void __init efi_uv1_memmap_phys_epilog(pgd_t *save_pgd)
--{
--	/*
--	 * After the lock is released, the original page table is restored.
--	 */
--	int pgd_idx, i;
--	int nr_pgds;
--	pgd_t *pgd;
--	p4d_t *p4d;
--	pud_t *pud;
--
--	nr_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT) , PGDIR_SIZE);
--
--	for (pgd_idx = 0; pgd_idx < nr_pgds; pgd_idx++) {
--		pgd = pgd_offset_k(pgd_idx * PGDIR_SIZE);
--		set_pgd(pgd_offset_k(pgd_idx * PGDIR_SIZE), save_pgd[pgd_idx]);
--
--		if (!pgd_present(*pgd))
--			continue;
--
--		for (i = 0; i < PTRS_PER_P4D; i++) {
--			p4d = p4d_offset(pgd,
--					 pgd_idx * PGDIR_SIZE + i * P4D_SIZE);
--
--			if (!p4d_present(*p4d))
--				continue;
--
--			pud = (pud_t *)p4d_page_vaddr(*p4d);
--			pud_free(&init_mm, pud);
--		}
--
--		p4d = (p4d_t *)pgd_page_vaddr(*pgd);
--		p4d_free(&init_mm, p4d);
--	}
--
--	kfree(save_pgd);
--
--	__flush_tlb_all();
--	early_code_mapping_set_exec(0);
--}
--
--pgd_t * __init efi_uv1_memmap_phys_prolog(void)
--{
--	unsigned long vaddr, addr_pgd, addr_p4d, addr_pud;
--	pgd_t *save_pgd, *pgd_k, *pgd_efi;
--	p4d_t *p4d, *p4d_k, *p4d_efi;
--	pud_t *pud;
--
--	int pgd;
--	int n_pgds, i, j;
--
--	early_code_mapping_set_exec(1);
--
--	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
--	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
--	if (!save_pgd)
--		return NULL;
--
--	/*
--	 * Build 1:1 identity mapping for UV1 memmap usage. Note that
--	 * PAGE_OFFSET is PGDIR_SIZE aligned when KASLR is disabled, while
--	 * it is PUD_SIZE ALIGNED with KASLR enabled. So for a given physical
--	 * address X, the pud_index(X) != pud_index(__va(X)), we can only copy
--	 * PUD entry of __va(X) to fill in pud entry of X to build 1:1 mapping.
--	 * This means here we can only reuse the PMD tables of the direct mapping.
--	 */
--	for (pgd = 0; pgd < n_pgds; pgd++) {
--		addr_pgd = (unsigned long)(pgd * PGDIR_SIZE);
--		vaddr = (unsigned long)__va(pgd * PGDIR_SIZE);
--		pgd_efi = pgd_offset_k(addr_pgd);
--		save_pgd[pgd] = *pgd_efi;
--
--		p4d = p4d_alloc(&init_mm, pgd_efi, addr_pgd);
--		if (!p4d) {
--			pr_err("Failed to allocate p4d table!\n");
--			goto out;
--		}
--
--		for (i = 0; i < PTRS_PER_P4D; i++) {
--			addr_p4d = addr_pgd + i * P4D_SIZE;
--			p4d_efi = p4d + p4d_index(addr_p4d);
--
--			pud = pud_alloc(&init_mm, p4d_efi, addr_p4d);
--			if (!pud) {
--				pr_err("Failed to allocate pud table!\n");
--				goto out;
--			}
--
--			for (j = 0; j < PTRS_PER_PUD; j++) {
--				addr_pud = addr_p4d + j * PUD_SIZE;
--
--				if (addr_pud > (max_pfn << PAGE_SHIFT))
--					break;
--
--				vaddr = (unsigned long)__va(addr_pud);
--
--				pgd_k = pgd_offset_k(vaddr);
--				p4d_k = p4d_offset(pgd_k, vaddr);
--				pud[j] = *pud_offset(p4d_k, vaddr);
--			}
--		}
--		pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
--	}
--
--	__flush_tlb_all();
--	return save_pgd;
--out:
--	efi_uv1_memmap_phys_epilog(save_pgd);
--	return NULL;
--}
--
--void __iomem *__init efi_ioremap(unsigned long phys_addr, unsigned long size,
--				 u32 type, u64 attribute)
--{
--	unsigned long last_map_pfn;
--
--	if (type == EFI_MEMORY_MAPPED_IO)
--		return ioremap(phys_addr, size);
--
--	last_map_pfn = init_memory_mapping(phys_addr, phys_addr + size,
--					   PAGE_KERNEL);
--	if ((last_map_pfn << PAGE_SHIFT) < phys_addr + size) {
--		unsigned long top = last_map_pfn << PAGE_SHIFT;
--		efi_ioremap(top, size - (top - phys_addr), type, attribute);
--	}
--
--	if (!(attribute & EFI_MEMORY_WB))
--		efi_memory_uc((u64)(unsigned long)__va(phys_addr), size);
--
--	return (void __iomem *)__va(phys_addr);
--}
---- linux.orig/arch/x86/platform/efi/efi.c	2020-06-25 16:13:54.637083901 -0500
-+++ linux/arch/x86/platform/efi/efi.c	2020-06-25 16:15:14.532996386 -0500
-@@ -496,7 +496,7 @@ void __init efi_init(void)
- 		efi_print_memmap();
+ static struct apic apic_x2apic_uv_x;
+ static struct uv_hub_info_s uv_hub_info_node0;
+ 
+@@ -139,12 +135,8 @@ static void __init uv_tsc_check_sync(voi
+ 	/* Accommodate different UV arch BIOSes */
+ 	mmr = uv_early_read_mmr(UVH_TSC_SYNC_MMR);
+ 	mmr_shift =
+-		is_uv1_hub() ? 0 :
+ 		is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
+-	if (mmr_shift)
+-		sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
+-	else
+-		sync_state = 0;
++	sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
+ 
+ 	switch (sync_state) {
+ 	case UVH_TSC_SYNC_VALID:
+@@ -223,21 +215,6 @@ static void __init early_get_apic_socket
+ 	pr_info("UV: socketid_shift:%d pnode_mask:0x%x\n", uv_cpuid.socketid_shift, uv_cpuid.pnode_mask);
  }
  
--#if defined(CONFIG_X86_32) || defined(CONFIG_X86_UV)
-+#if defined(CONFIG_X86_32)
- 
- void __init efi_set_executable(efi_memory_desc_t *md, bool executable)
+-/*
+- * Add an extra bit as dictated by bios to the destination apicid of
+- * interrupts potentially passing through the UV HUB.  This prevents
+- * a deadlock between interrupts and IO port operations.
+- */
+-static void __init uv_set_apicid_hibit(void)
+-{
+-	union uv1h_lb_target_physical_apic_id_mask_u apicid_mask;
+-
+-	if (is_uv1_hub()) {
+-		apicid_mask.v = uv_early_read_mmr(UV1H_LB_TARGET_PHYSICAL_APIC_ID_MASK);
+-		uv_apicid_hibits = apicid_mask.s1.bit_enables & UV_APICID_HIBIT_MASK;
+-	}
+-}
+-
+ static void __init uv_stringify(int len, char *to, char *from)
  {
+ 	/* Relies on 'to' being NULL chars so result will be NULL terminated */
+@@ -280,36 +257,25 @@ static int __init uv_acpi_madt_oem_check
+ 
+ 	/*
+ 	 * Determine UV arch type.
+-	 *   SGI:  UV100/1000
+ 	 *   SGI2: UV2000/3000
+ 	 *   SGI3: UV300 (truncated to 4 chars because of different varieties)
+ 	 *   SGI4: UV400 (truncated to 4 chars because of different varieties)
+ 	 */
+-	uv_hub_info->hub_revision =
+-		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
+-		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE :
+-		!strcmp(oem_id, "SGI") ? UV1_HUB_REVISION_BASE : 0;
+-
+-	if (uv_hub_info->hub_revision == 0)
+-		goto badbios;
+-
+-	switch (uv_hub_info->hub_revision) {
+-	case UV4_HUB_REVISION_BASE:
++	if (!strncmp(oem_id, "SGI4", 4)) {
++		uv_hub_info->hub_revision = UV4_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x11;
+-		break;
+ 
+-	case UV3_HUB_REVISION_BASE:
++	} else if (!strncmp(oem_id, "SGI3", 4)) {
++		uv_hub_info->hub_revision = UV3_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x9;
+-		break;
+ 
+-	case UV2_HUB_REVISION_BASE:
++	} else if (!strcmp(oem_id, "SGI2")) {
++		uv_hub_info->hub_revision = UV2_HUB_REVISION_BASE;
+ 		uv_hubbed_system = 0x5;
+-		break;
+ 
+-	case UV1_HUB_REVISION_BASE:
+-		uv_hubbed_system = 0x3;
+-		break;
++	} else {
++		uv_hub_info->hub_revision = 0;
++		goto badbios;
+ 	}
+ 
+ 	pnodeid = early_get_pnodeid();
+@@ -323,14 +289,6 @@ static int __init uv_acpi_madt_oem_check
+ 		uv_system_type = UV_X2APIC;
+ 		uv_apic = 0;
+ 
+-	} else if (!strcmp(oem_table_id, "UVH")) {
+-		/* Only UV1 systems: */
+-		uv_system_type = UV_NON_UNIQUE_APIC;
+-		x86_platform.legacy.warm_reset = 0;
+-		__this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
+-		uv_set_apicid_hibit();
+-		uv_apic = 1;
+-
+ 	} else if (!strcmp(oem_table_id, "UVL")) {
+ 		/* Only used for very small systems:  */
+ 		uv_system_type = UV_LEGACY_APIC;
+@@ -347,7 +305,7 @@ static int __init uv_acpi_madt_oem_check
+ 
+ badbios:
+ 	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
+-	pr_err("Current BIOS not supported, update kernel and/or BIOS\n");
++	pr_err("Current UV Type or BIOS not supported\n");
+ 	BUG();
+ }
+ 
+@@ -545,7 +503,6 @@ static int uv_wakeup_secondary(int phys_
+ 	int pnode;
+ 
+ 	pnode = uv_apicid_to_pnode(phys_apicid);
+-	phys_apicid |= uv_apicid_hibits;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+ 	    (phys_apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+@@ -576,7 +533,7 @@ static void uv_send_IPI_one(int cpu, int
+ 		dmode = dest_Fixed;
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+-		((apicid | uv_apicid_hibits) << UVH_IPI_INT_APIC_ID_SHFT) |
++		(apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+ 		(dmode << UVH_IPI_INT_DELIVERY_MODE_SHFT) |
+ 		(vector << UVH_IPI_INT_VECTOR_SHFT);
+ 
+@@ -634,22 +591,16 @@ static void uv_init_apic_ldr(void)
+ 
+ static u32 apic_uv_calc_apicid(unsigned int cpu)
+ {
+-	return apic_default_calc_apicid(cpu) | uv_apicid_hibits;
++	return apic_default_calc_apicid(cpu);
+ }
+ 
+-static unsigned int x2apic_get_apic_id(unsigned long x)
++static unsigned int x2apic_get_apic_id(unsigned long id)
+ {
+-	unsigned int id;
+-
+-	WARN_ON(preemptible() && num_online_cpus() > 1);
+-	id = x | __this_cpu_read(x2apic_extra_bits);
+-
+ 	return id;
+ }
+ 
+ static u32 set_apic_id(unsigned int id)
+ {
+-	/* CHECKME: Do we need to mask out the xapic extra bits? */
+ 	return id;
+ }
+ 
+@@ -721,11 +672,6 @@ static struct apic apic_x2apic_uv_x __ro
+ 	.safe_wait_icr_idle		= native_safe_x2apic_wait_icr_idle,
+ };
+ 
+-static void set_x2apic_extra_bits(int pnode)
+-{
+-	__this_cpu_write(x2apic_extra_bits, pnode << uvh_apicid.s.pnode_shift);
+-}
+-
+ #define	UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_LENGTH	3
+ #define DEST_SHIFT UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT
+ 
+@@ -920,15 +866,7 @@ static __init void map_mmioh_high(int mi
+ 		return;
+ 	}
+ 
+-	if (is_uv1_hub()) {
+-		mmr	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+-		shift	= UV1H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+-		mmioh.v	= uv_read_local_mmr(mmr);
+-		enable	= !!mmioh.s1.enable;
+-		base	= mmioh.s1.base;
+-		m_io	= mmioh.s1.m_io;
+-		n_io	= mmioh.s1.n_io;
+-	} else if (is_uv2_hub()) {
++	if (is_uv2_hub()) {
+ 		mmr	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+ 		shift	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
+ 		mmioh.v	= uv_read_local_mmr(mmr);
+@@ -936,16 +874,15 @@ static __init void map_mmioh_high(int mi
+ 		base	= mmioh.s2.base;
+ 		m_io	= mmioh.s2.m_io;
+ 		n_io	= mmioh.s2.n_io;
+-	} else {
+-		return;
+-	}
+ 
+-	if (enable) {
+-		max_pnode &= (1 << n_io) - 1;
+-		pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n", base, shift, m_io, n_io, max_pnode);
+-		map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
+-	} else {
+-		pr_info("UV: MMIOH disabled\n");
++		if (enable) {
++			max_pnode &= (1 << n_io) - 1;
++			pr_info("UV: base:0x%lx shift:%d N_IO:%d M_IO:%d max_pnode:0x%x\n",
++				base, shift, m_io, n_io, max_pnode);
++			map_high("MMIOH", base, shift, m_io, max_pnode, map_uc);
++		} else {
++			pr_info("UV: MMIOH disabled\n");
++		}
+ 	}
+ }
+ 
+@@ -1081,9 +1017,6 @@ void uv_cpu_init(void)
+ 		return;
+ 
+ 	uv_hub_info->nr_online_cpus++;
+-
+-	if (get_uv_system_type() == UV_NON_UNIQUE_APIC)
+-		set_x2apic_extra_bits(uv_hub_info->pnode);
+ }
+ 
+ struct mn {
+@@ -1114,9 +1047,6 @@ static void get_mn(struct mn *mnp)
+ 	} else if (is_uv2_hub()) {
+ 		mnp->m_val	= m_n_config.s2.m_skt;
+ 		mnp->n_lshift	= mnp->m_val == 40 ? 40 : 39;
+-	} else if (is_uv1_hub()) {
+-		mnp->m_val	= m_n_config.s1.m_skt;
+-		mnp->n_lshift	= mnp->m_val;
+ 	}
+ 	mnp->m_shift = mnp->m_val ? 64 - mnp->m_val : 0;
+ }
+@@ -1318,7 +1248,7 @@ static void __init build_socket_tables(v
+ 	size_t bytes;
+ 
+ 	if (!gre) {
+-		if (is_uv1_hub() || is_uv2_hub() || is_uv3_hub()) {
++		if (is_uv2_hub() || is_uv3_hub()) {
+ 			pr_info("UV: No UVsystab socket table, ignoring\n");
+ 			return;
+ 		}
+@@ -1500,8 +1430,7 @@ static void __init uv_system_init_hub(vo
+ 	unsigned short min_pnode = 9999, max_pnode = 0;
+ 	char *hub = is_uv4_hub() ? "UV400" :
+ 		    is_uv3_hub() ? "UV300" :
+-		    is_uv2_hub() ? "UV2000/3000" :
+-		    is_uv1_hub() ? "UV100/1000" : NULL;
++		    is_uv2_hub() ? "UV2000/3000" : NULL;
+ 
+ 	if (!hub) {
+ 		pr_err("UV: Unknown/unsupported UV hub\n");
 
