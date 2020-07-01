@@ -2,123 +2,226 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B21C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F87C20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TR6mo9Vq"
+	by mail.kernel.org (Postfix) with ESMTP id E4E8020747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593600592;
+	bh=fBRyFwIDzERIG5z/DV53hFH9bjjSps7WeBweGXWWG4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GE0cj6t8XcvpmpYnK2tmryOsUHBGSTqg6OWNzaZ0BjCeaIZPCxd9Ho1ACrOYA+ykF
+	 iFs8lDXlJHa3zrDKTnXCjncPpZY4aGsxAeqsx08kX3lvpfWqzZhaWa9sjS9jDZkH37
+	 iQcP3jT/fr6wLU5GJYu/kVEso1d8qd9n77u57iWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgGAKro (ORCPT
+        id S1730067AbgGAKtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729791AbgGAKrn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:47:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE558C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 03:47:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so26322188ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 03:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xkptkJEP+tdrFzmDzQWfCxG5o+z1NG6TF+2zaGvQQxI=;
-        b=TR6mo9VqaTdozo8zppbxjZ/h7ur4irhMUUZjheWP09Efjfdikk/ySwGvMraVipheP9
-         P1xrakMn5wvlPxI/02Dj58AuBtbEzBBLBV0mlaf0UgTGQ5v5o35d5l1Pr2/lA5hj0dEc
-         JW9e0WfZ6LYhFrNUu0m8jxVVxj1wovADP6HRpaIzPYW9PBWyggeouzyuMDB2jCzWQFl8
-         NBy8+TB77Bu2V0qtdmVBS4y19/jg+lAopz9g7do49ijp/eAmVi1f8iQy1CAGEc0w+Zy5
-         mUfpWwwP1rI5NDlQM8nihWK+tuTRgTCwV8vxht+2M8uWrH8IoNut0S/vVQ/GsRXzIo0K
-         Ehiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xkptkJEP+tdrFzmDzQWfCxG5o+z1NG6TF+2zaGvQQxI=;
-        b=KPTB5yeRF/yduKXh++ChSgTJRKlxC83ZoHur6xWpjdVGL2QICla1GslV4eZfRntsYF
-         LMeKrrB51Q0qz+sRHHpl1Zs1oLiaCGrTnL2APQZ5KSdRQWjPJm97zGIcOtW+O0rMujVI
-         oCX1RGUaTbEtDargRKqf/lKIgqtI1D8WwYrxInPwF23DKJuU56xd64gXXYTrH9qdmMVn
-         HsF95UfDSsx1mfdpIvBtkwDMmWLNKSP7wlDSKQfn17cX/9uB70uZhjGRSMbCnMIpOXBH
-         MkQHBtgWyqR3OxGv/HkMgxTcmaT4T/TkQ6J13tD3+C+gLvzUczouEzio3BoV9qRETu0c
-         IjhA==
-X-Gm-Message-State: AOAM533VPOOxVoQtYzQFRZIIqNcAeO1GqukCAx5vutxaefMQKAadZtVc
-        rn6Jko5NOqiTG4H2Q69vMS2pDqhPq3mpX2rgfb12kQ==
-X-Google-Smtp-Source: ABdhPJwEJpbAjTBeorrGRMoXykw2VU2jp3zPkE6fXaVdUO8Fj3tNNbOEbPOUWLaM4XKb7XjSXfnaDHiBJ/2zHkSyl7o=
-X-Received: by 2002:a2e:7f10:: with SMTP id a16mr13603940ljd.69.1593600461320;
- Wed, 01 Jul 2020 03:47:41 -0700 (PDT)
+        Wed, 1 Jul 2020 06:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729791AbgGAKtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:49:49 -0400
+Received: from localhost (p54b334c2.dip0.t-ipconnect.de [84.179.52.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F12B20722;
+        Wed,  1 Jul 2020 10:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593600589;
+        bh=fBRyFwIDzERIG5z/DV53hFH9bjjSps7WeBweGXWWG4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ebE0Vf2T/zBLtKbZynYfabJnL5lBj/JDJU4CHge0TWuCuKWPH0US6US3G9F27OaDb
+         B8mqvU3vdsAmEMt9dXkqf7fVZUvqewJmbstaFVitY/qSDSf6gpC+wGMUUTHdLiLxiH
+         v7SBAZAPJSC8AZ3baoFZ3zEG1EteMkDqI3aCkFpY=
+Date:   Wed, 1 Jul 2020 12:49:46 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 1/4] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200701104946.GH2261@ninjato>
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-2-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-References: <1593598026-2451-1-git-send-email-zijuhu@codeaurora.org>
-In-Reply-To: <1593598026-2451-1-git-send-email-zijuhu@codeaurora.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 1 Jul 2020 12:47:29 +0200
-Message-ID: <CAKfTPtBn0Bh4DjSs_nATYPvRt5Ks2Dg8n0TH7vuxtFfKFTxG5A@mail.gmail.com>
-Subject: Re: [PATCH v1] sched/cfs: Fix pick_next_entity() implementation error
-To:     Zijun Hu <zijuhu@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
+Content-Disposition: inline
+In-Reply-To: <1593070769-9106-2-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 12:07, Zijun Hu <zijuhu@codeaurora.org> wrote:
->
-> sched_entity @se not static @left should be compared
-> to pick up @cfs_rq->next.
 
-Could you elaborate why ?
+--XIiC+We3v3zHqZ6Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-left is the leftmost sched_entity and the one that should be used.
-
-se != left means that left should be skipped after a yield and the
-next se in the rbtree is not "far" from left although it has higher
-vruntime
-
-if we finally want to use last or next instead of se, we must ensure
-that they are still not "far" from left otherwise you can promote a
-sched entity that ends up having a really high vruntime
-
->
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+On Thu, Jun 25, 2020 at 09:39:26AM +0200, Alain Volmat wrote:
+> SMBus Host-Notify protocol, from the adapter point of view
+> consist of receiving a message from a client, including the
+> client address and some other data.
+>=20
+> It can be simply handled by creating a new slave device
+> and registering a callback performing the parsing of the
+> message received from the client.
+>=20
+> This commit introduces two new core functions
+>   * i2c_new_smbus_host_notify_device
+>   * i2c_free_smbus_host_notify_device
+> that take care of registration of the new slave device and
+> callback and will call i2c_handle_smbus_host_notify once a
+> Host-Notify event is received.
+>=20
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
->  kernel/sched/fair.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 658aa7a2ae6f..4790f2d851ad 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4452,13 +4452,13 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
->         /*
->          * Prefer last buddy, try to return the CPU to a preempted task.
->          */
-> -       if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
-> +       if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, se) < 1)
->                 se = cfs_rq->last;
->
->         /*
->          * Someone really wants this to run. If it's not unfair, run it.
->          */
-> -       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
-> +       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, se) < 1)
->                 se = cfs_rq->next;
->
->         clear_buddies(cfs_rq, se);
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
->
+> v2: remove useless dev_err message in case of hnotify handling error
+>     prevent handling hnotify in case of a incomplete write
+
+Okay, now I got it to work, I also noted a few more issues.
+
+First, I'd suggest s/i2c_smbus_host_notify/i2c_slave_host_notify/g for
+all occurences in this patch. This makes a stronger distinction between
+the generic HostNotify support and the slave specific one.
+
+Also, I wonder if this shouldn't go to i2c-smbus.c instead but I haven't
+checked if we end up in dependency hell then. Second best thought: at
+least move to i2c-core-slave.c, then we could save the #ifdeffery in the
+c-file?
+
+>=20
+>  drivers/i2c/i2c-core-smbus.c | 110 +++++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/i2c-smbus.h    |   2 +
+>  2 files changed, 112 insertions(+)
+>=20
+> diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+> index 56bb840142e3..3a37664fb5f6 100644
+> --- a/drivers/i2c/i2c-core-smbus.c
+> +++ b/drivers/i2c/i2c-core-smbus.c
+> @@ -708,3 +708,113 @@ int of_i2c_setup_smbus_alert(struct i2c_adapter *ad=
+apter)
+>  }
+>  EXPORT_SYMBOL_GPL(of_i2c_setup_smbus_alert);
+>  #endif
+> +
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +struct i2c_smbus_host_notify_status {
+> +	bool notify_start;
+> +	u8 addr;
+> +};
+> +
+> +static int i2c_smbus_host_notify_cb(struct i2c_client *client,
+> +				    enum i2c_slave_event event, u8 *val)
+> +{
+> +	struct i2c_smbus_host_notify_status *status =3D client->dev.platform_da=
+ta;
+> +	int ret;
+> +
+> +	switch (event) {
+> +	case I2C_SLAVE_WRITE_REQUESTED:
+> +		status->notify_start =3D true;
+> +		break;
+> +	case I2C_SLAVE_WRITE_RECEIVED:
+> +		/* We only retrieve the first byte received (addr)
+> +		 * since there is currently no support to retrieve the data
+> +		 * parameter from the client.
+> +		 */
+> +		if (!status->notify_start)
+> +			break;
+> +		status->addr =3D *val;
+> +		status->notify_start =3D false;
+
+So, we are safe if the message is too short. Otherwise, we capture the
+first byte (=3D=3D address) only, right. Further bytes until STOP are
+discarded. So, we don't check if the message is too long and contains
+more than the status word. Maybe we should add that?
+
+> +		break;
+> +	case I2C_SLAVE_STOP:
+> +		/* In case of incomplete write, don't handle host-notify */
+> +		if (status->notify_start) {
+> +			status->notify_start =3D false;
+> +			break;
+> +		}
+> +
+> +		ret =3D i2c_handle_smbus_host_notify(client->adapter,
+> +						   status->addr);
+> +		if (ret < 0)
+> +			return ret;
+> +		break;
+> +	default:
+
+The missing cases are mandatory. From my testunit driver:
+
+        case I2C_SLAVE_READ_REQUESTED:
+        case I2C_SLAVE_READ_PROCESSED:
+                *val =3D 0xff;
+                break;
+
+> +		/* Only handle necessary events */
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+=2E..
+
+> --- a/include/linux/i2c-smbus.h
+> +++ b/include/linux/i2c-smbus.h
+> @@ -38,6 +38,8 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_a=
+dapter *adap)
+>  	return 0;
+>  }
+>  #endif
+> +struct i2c_client *i2c_new_smbus_host_notify_device(struct i2c_adapter *=
+adapter);
+> +void i2c_free_smbus_host_notify_device(struct i2c_client *client);
+
+Those need to be guarded with I2C_SLAVE as well. And an #else branch
+with empty/successful placeholders.
+
+> =20
+>  #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
+>  void i2c_register_spd(struct i2c_adapter *adap);
+> --=20
+> 2.7.4
+>=20
+
+--XIiC+We3v3zHqZ6Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl78akUACgkQFA3kzBSg
+KbbHlRAAs1l3c2tSTqVOJVVbdpNSWj9cd9fgOQ5e7DrFZklEo+fWZusrPMYkSk9r
+q8HIUFiiAiEACt4r46NMdLoJguvcXhm5Hqlpi3B7EDAgIH6/eieb2MsFFkwd8Lh3
+HzdfVYY9fgsYmdpoXQlu+eXI7Q3U3kWaWfhFzWnTdOKgTSdflSDDpV+RJpqnXYAb
+j53W1o4RZTxH+PlyQJA+1kxwb4ij4XTE26KpWDeI4yknN0vFx+IqHJzwaF1niYzU
+6WsrXRBMmLOcBOdG0OQQFWCWH7YPORqqiUx7G9sgf21cZal/N3XfuVZdIZzgpaFi
+qCvcLckqrt7E0rE8UrJQwQigZMlgQNn5KARaux6ZisiCbZ5ncLzd91DBByxh53Au
+0FwKdnPWmmbU3OhFStt7JFXj64Q7kp28GPkASuW5fiGF0tpxBvDVtUYmKSx755qJ
+1Z7vRyTR0FpiqOEiUov3bkRIHtoJP6NIzD8LBcJBYjRAV/zKsDqDIeZmRRT6XUsf
+SxQKFTriO1xEXUXVnOI3YJrXwcyveTRxvq81LbDnDUZJ2wxhPVWMkUiDj80LJdm7
+Yzi53x0nT9AtzDgRmYRVglLIc+/ZjD9h++NpVivZD8bCOrjOb1SCDks4hPOyaUqa
+zWx9IDDq1g2VpATy+Erga6U6cSbrD5XxccOsgjunhoOdZLp8ZGE=
+=ODPH
+-----END PGP SIGNATURE-----
+
+--XIiC+We3v3zHqZ6Z--
