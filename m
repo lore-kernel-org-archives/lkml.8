@@ -2,229 +2,311 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24096C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E269020771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BPMflAxZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8497E20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgGABxq (ORCPT
+        id S1726347AbgGABye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:53:46 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:13611 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgGABxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:53:44 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200701015340epoutp04803fbcfa40020355addf7ff832f9ddf7~dfgkiYAXq2870628706epoutp04y
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:53:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200701015340epoutp04803fbcfa40020355addf7ff832f9ddf7~dfgkiYAXq2870628706epoutp04y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593568420;
-        bh=WsewStPi5NKZSWwcHEuTtX9odtbtY4KKnz15o0zNSXQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BPMflAxZPNCHNDvlIFYRcQ86uCt1B/ilmcGU29pWF9U0Cj7wApp8kGnqHjfTSVFSR
-         XEBUsuy7neHyfjg7Lt6bysAfvoZnor80G9yr2o8MNXc1ikOVbO6IYGkPTDWtZ9ZcyG
-         nFuGDu+gUrsmWndOiQ2ALVmMwDuJJ7mwMTurmzPU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200701015340epcas1p2f0e5459da072f597c359e1d7ab854b29~dfgkIcle10632706327epcas1p2w;
-        Wed,  1 Jul 2020 01:53:40 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49xPQT2ny8zMqYlx; Wed,  1 Jul
-        2020 01:53:37 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F9.CF.28581.D9CEBFE5; Wed,  1 Jul 2020 10:53:33 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200701015332epcas1p29e1c70e156db7004b271f6535136d85c~dfgc1RMPx2928629286epcas1p2n;
-        Wed,  1 Jul 2020 01:53:32 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200701015332epsmtrp19153144cf694c76a8d2da45bc13e5ed8~dfgc0hdZ-0911309113epsmtrp1j;
-        Wed,  1 Jul 2020 01:53:32 +0000 (GMT)
-X-AuditID: b6c32a38-2cdff70000006fa5-c2-5efbec9d2432
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        23.21.08303.C9CEBFE5; Wed,  1 Jul 2020 10:53:32 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200701015330epsmtip1f0bfad1efa921b5559635b296aa467fc~dfgbNSVPq0279002790epsmtip1P;
-        Wed,  1 Jul 2020 01:53:30 +0000 (GMT)
-Subject: Re: [PATCH v3] PM / devfreq: rk3399_dmc: Fix kernel oops when
- rockchip,pmu is absent
-To:     Marc Zyngier <maz@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        stable@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <9e2ba2a4-fa6f-d548-9131-31dafdbdf892@samsung.com>
-Date:   Wed, 1 Jul 2020 11:04:43 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 30 Jun 2020 21:54:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49537 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgGAByd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:54:33 -0400
+IronPort-SDR: 2suH2nwikZFnZk2TI1dEJZ2wYRN+SB5N4+g+PI/OC/noj/mkaLUVS6rssyXI1XRwytWhEcFV6B
+ GkAztsUPUyOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="126533005"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="126533005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 18:54:18 -0700
+IronPort-SDR: uI1fcK2/LQWkscXrgGT+Nt1FH4qrKclVdwTneeaHmiUZPdGTv7zwjbsgzQ9SLskK6AQ4/nitpd
+ cdCoIcMHYeXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="265269594"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jun 2020 18:54:16 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 1/2] iommu/vt-d: Move Kconfig and Makefile bits down
+ into intel directory
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20200630200636.48600-1-jsnitsel@redhat.com>
+ <20200630200636.48600-2-jsnitsel@redhat.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <67b765e4-5285-a706-f32a-f5e1bc78c306@linux.intel.com>
+Date:   Wed, 1 Jul 2020 09:49:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200630100546.862468-1-maz@kernel.org>
+In-Reply-To: <20200630200636.48600-2-jsnitsel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBJsWRmVeSWpSXmKPExsWy7bCmge7cN7/jDCb9ZrNYc/sQo8X/R69Z
-        LXZsF7E42/SG3eLyrjlsFp97jzBa7JxzktXiduMKNosFGx8xOnB6bNu9jdVjx90ljB6bVnWy
-        efRtWcXosf3aPGaPz5vkAtiism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTy
-        EnNTbZVcfAJ03TJzgI5SUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRYFugVJ+YW
-        l+al6yXn51oZGhgYmQIVJmRnvJtzh7Vgm1TF7cY+xgbGGyJdjJwcEgImEl2nTzF2MXJxCAns
-        YJTY0DiNFcL5xCixe/ppqMxnRom+Pc9YYFo+HzvKApHYxSjR+v85VNV7RolFjw8wg1QJC8RL
-        nLlzlg3EFhGIkrjc84kZpIhZ4DmjxMne1UwgCTYBLYn9L26AFfELKEpc/fGYEcTmFbCTePDg
-        C9g6FgEViTsvf4PFRQXCJE5ua4GqEZQ4OfMJWA2ngKnEhkUbwGYyC4hL3HoyH8qWl9j+dg7Y
-        YgmBtRwSa9a9ZIX4wUXixI9mJghbWOLV8S3sELaUxMv+Nii7WmLlySNsEM0djBJb9l+AajaW
-        2L90MlAzB9AGTYn1u/QhwooSO3/PZYRYzCfx7msPK0iJhACvREebEESJssTlB3eh1kpKLG7v
-        ZJvAqDQLyTuzkLwwC8kLsxCWLWBkWcUollpQnJueWmxYYIIc35sYwUlWy2IH49y3H/QOMTJx
-        MB5ilOBgVhLhPW3wK06INyWxsiq1KD++qDQntfgQoykwgCcyS4km5wPTfF5JvKGpkbGxsYWJ
-        oZmpoaGSOO9JqwtxQgLpiSWp2ampBalFMH1MHJxSDUz2nVlRP8xOPHOZnr3/gUNKtrzTqacH
-        I1dOn81T/rFN2ag/7uqhCo6l1QZcy44rHdq/7665MdsMvoA8y637NsceEu5ZcPL9NeH/r5Xn
-        6OUx3ckpUbi1+HePgOmNc3IvFY+tMruhHN+S0Sd3dO6rYNtyLfZfxQwhQdfbUu2j0nRkLnIZ
-        GXZPcmtd/2Q3/5SPTZl3+iWc+S0EXVRjVzNLZaxb4ZbsmRbuf/d28nql8qrfkkGGpWcqa+us
-        rLLS18aF/rr46PUy3nUimy5fqJvuJWLspnjz9JUfIRFHuKwTNgZdnXe/osM8W/XMpC/v+ffo
-        LBDsfXA72K7e9UdPSs97vZ3mQZM2/j1kdGRi9WRVRSWW4oxEQy3mouJEAHrC6YE7BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSnO6cN7/jDGZclrNYc/sQo8X/R69Z
-        LXZsF7E42/SG3eLyrjlsFp97jzBa7JxzktXiduMKNosFGx8xOnB6bNu9jdVjx90ljB6bVnWy
-        efRtWcXosf3aPGaPz5vkAtiiuGxSUnMyy1KL9O0SuDLezbnDWrBNquJ2Yx9jA+MNkS5GTg4J
-        AROJz8eOsnQxcnEICexglOj5tJQdIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBJf7q9gBKkRFoiX
-        OHPnLBtIjYhAlMSN5WBhZoHnjBKbW0sh6jsYJT7sPcMGkmAT0JLY/+IGmM0voChx9cdjsAZe
-        ATuJBw++sIDYLAIqEnde/gaLiwqESexc8pgJokZQ4uTMJ2A1nAKmEhsWbWCCWKYu8WfeJWYI
-        W1zi1pP5UHF5ie1v5zBPYBSehaR9FpKWWUhaZiFpWcDIsopRMrWgODc9t9iwwCgvtVyvODG3
-        uDQvXS85P3cTIzjStLR2MO5Z9UHvECMTB+MhRgkOZiUR3tMGv+KEeFMSK6tSi/Lji0pzUosP
-        MUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUIJsvEwSnVwBS+a/fS5z9W8R9OTOtuffB1cttSNgvD
-        XZe2FTou+X5xuc9Bj9qQqTpvT6T/nMillvpE5ZXdPJHOLq+TDW5pM1711jZ/D3Rpktlwxe+f
-        WFhGkMhKI/EFzkdeq0emXZ5sOXvmF+3/8U2Pys8JCE6eX6m2tNN+/rYQZXaVKP9ZN2oOVCT6
-        tD2JnLrnSZmq1k2+dW6RzPNK6itvnw359UzfwvB0lNeb/P0r4nZ1N06vaXr/O2qS0vbfp4rv
-        SCtN/vT9isHJjdrveH7vuba8Qv6NtwWLuv2i6mlBv1K2thwvm7/7yYaPi/mOrfBhr9ulYcWx
-        tz7gnaHmzuzHNSIJAX9tcs0d78rNMLZoUDHZdvUZ13wlluKMREMt5qLiRAATfaNnIwMAAA==
-X-CMS-MailID: 20200701015332epcas1p29e1c70e156db7004b271f6535136d85c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200630100555epcas1p2eb8c442be31d6da3309135fdfe1a1afd
-References: <CGME20200630100555epcas1p2eb8c442be31d6da3309135fdfe1a1afd@epcas1p2.samsung.com>
-        <20200630100546.862468-1-maz@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Jerry,
 
-On 6/30/20 7:05 PM, Marc Zyngier wrote:
-> Booting a recent kernel on a rk3399-based system (nanopc-t4),
-> equipped with a recent u-boot and ATF results in an Oops due
-> to a NULL pointer dereference.
+On 7/1/20 4:06 AM, Jerry Snitselaar wrote:
+> Move Intel Kconfig and Makefile bits down into intel directory
+> with the rest of the Intel specific files.
 > 
-> This turns out to be due to the rk3399-dmc driver looking for
-> an *undocumented* property (rockchip,pmu), and happily using
-> a NULL pointer when the property isn't there.
-> 
-> Instead, make most of what was brought in with 9173c5ceb035
-> ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
-> to TF-A.") conditioned on finding this property in the device-tree,
-> preventing the driver from exploding.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 > ---
-> * From v2:
->   - Trimmed down commit message
->   - Cc stable
+>   drivers/iommu/Kconfig        | 86 +-----------------------------------
+>   drivers/iommu/Makefile       |  8 +---
+>   drivers/iommu/intel/Kconfig  | 86 ++++++++++++++++++++++++++++++++++++
+>   drivers/iommu/intel/Makefile |  7 +++
+>   4 files changed, 96 insertions(+), 91 deletions(-)
+>   create mode 100644 drivers/iommu/intel/Kconfig
+>   create mode 100644 drivers/iommu/intel/Makefile
 > 
->  drivers/devfreq/rk3399_dmc.c | 42 ++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-> index 24f04f78285b..027769e39f9b 100644
-> --- a/drivers/devfreq/rk3399_dmc.c
-> +++ b/drivers/devfreq/rk3399_dmc.c
-> @@ -95,18 +95,20 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
->  
->  	mutex_lock(&dmcfreq->lock);
->  
-> -	if (target_rate >= dmcfreq->odt_dis_freq)
-> -		odt_enable = true;
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6dc49ed8377a..281cd6bd0fe0 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -176,91 +176,7 @@ config AMD_IOMMU_DEBUGFS
+>   	  This option is -NOT- intended for production environments, and should
+>   	  not generally be enabled.
+>   
+> -# Intel IOMMU support
+> -config DMAR_TABLE
+> -	bool
 > -
-> -	/*
-> -	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
-> -	 * timings and to enable or disable the ODT (on-die termination)
-> -	 * resistors.
-> -	 */
-> -	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-> -		      dmcfreq->odt_pd_arg1,
-> -		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-> -		      odt_enable, 0, 0, 0, &res);
-> +	if (dmcfreq->regmap_pmu) {
-> +		if (target_rate >= dmcfreq->odt_dis_freq)
-> +			odt_enable = true;
+> -config INTEL_IOMMU
+> -	bool "Support for Intel IOMMU using DMA Remapping Devices"
+> -	depends on PCI_MSI && ACPI && (X86 || IA64)
+> -	select IOMMU_API
+> -	select IOMMU_IOVA
+> -	select NEED_DMA_MAP_STATE
+> -	select DMAR_TABLE
+> -	select SWIOTLB
+> -	select IOASID
+> -	help
+> -	  DMA remapping (DMAR) devices support enables independent address
+> -	  translations for Direct Memory Access (DMA) from devices.
+> -	  These DMA remapping devices are reported via ACPI tables
+> -	  and include PCI device scope covered by these DMA
+> -	  remapping devices.
+> -
+> -config INTEL_IOMMU_DEBUGFS
+> -	bool "Export Intel IOMMU internals in Debugfs"
+> -	depends on INTEL_IOMMU && IOMMU_DEBUGFS
+> -	help
+> -	  !!!WARNING!!!
+> -
+> -	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!!!
+> -
+> -	  Expose Intel IOMMU internals in Debugfs.
+> -
+> -	  This option is -NOT- intended for production environments, and should
+> -	  only be enabled for debugging Intel IOMMU.
+> -
+> -config INTEL_IOMMU_SVM
+> -	bool "Support for Shared Virtual Memory with Intel IOMMU"
+> -	depends on INTEL_IOMMU && X86_64
+> -	select PCI_PASID
+> -	select PCI_PRI
+> -	select MMU_NOTIFIER
+> -	select IOASID
+> -	help
+> -	  Shared Virtual Memory (SVM) provides a facility for devices
+> -	  to access DMA resources through process address space by
+> -	  means of a Process Address Space ID (PASID).
+> -
+> -config INTEL_IOMMU_DEFAULT_ON
+> -	def_bool y
+> -	prompt "Enable Intel DMA Remapping Devices by default"
+> -	depends on INTEL_IOMMU
+> -	help
+> -	  Selecting this option will enable a DMAR device at boot time if
+> -	  one is found. If this option is not selected, DMAR support can
+> -	  be enabled by passing intel_iommu=on to the kernel.
+> -
+> -config INTEL_IOMMU_BROKEN_GFX_WA
+> -	bool "Workaround broken graphics drivers (going away soon)"
+> -	depends on INTEL_IOMMU && BROKEN && X86
+> -	help
+> -	  Current Graphics drivers tend to use physical address
+> -	  for DMA and avoid using DMA APIs. Setting this config
+> -	  option permits the IOMMU driver to set a unity map for
+> -	  all the OS-visible memory. Hence the driver can continue
+> -	  to use physical addresses for DMA, at least until this
+> -	  option is removed in the 2.6.32 kernel.
+> -
+> -config INTEL_IOMMU_FLOPPY_WA
+> -	def_bool y
+> -	depends on INTEL_IOMMU && X86
+> -	help
+> -	  Floppy disk drivers are known to bypass DMA API calls
+> -	  thereby failing to work when IOMMU is enabled. This
+> -	  workaround will setup a 1:1 mapping for the first
+> -	  16MiB to make floppy (an ISA device) work.
+> -
+> -config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> -	bool "Enable Intel IOMMU scalable mode by default"
+> -	depends on INTEL_IOMMU
+> -	help
+> -	  Selecting this option will enable by default the scalable mode if
+> -	  hardware presents the capability. The scalable mode is defined in
+> -	  VT-d 3.0. The scalable mode capability could be checked by reading
+> -	  /sys/devices/virtual/iommu/dmar*/intel-iommu/ecap. If this option
+> -	  is not selected, scalable mode support could also be enabled by
+> -	  passing intel_iommu=sm_on to the kernel. If not sure, please use
+> -	  the default value.
+> +source "drivers/iommu/intel/Kconfig"
+>   
+>   config IRQ_REMAP
+>   	bool "Support for Interrupt Remapping"
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 342190196dfb..71dd2f382e78 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -1,4 +1,5 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> +obj-y += intel/
+>   obj-$(CONFIG_IOMMU_API) += iommu.o
+>   obj-$(CONFIG_IOMMU_API) += iommu-traces.o
+>   obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
+> @@ -17,13 +18,8 @@ obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
+>   obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
+>   arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+>   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+> -obj-$(CONFIG_DMAR_TABLE) += intel/dmar.o
+> -obj-$(CONFIG_INTEL_IOMMU) += intel/iommu.o intel/pasid.o
+> -obj-$(CONFIG_INTEL_IOMMU) += intel/trace.o
+> -obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += intel/debugfs.o
+> -obj-$(CONFIG_INTEL_IOMMU_SVM) += intel/svm.o
+>   obj-$(CONFIG_IPMMU_VMSA) += ipmmu-vmsa.o
+> -obj-$(CONFIG_IRQ_REMAP) += intel/irq_remapping.o irq_remapping.o
+> +obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
+>   obj-$(CONFIG_MTK_IOMMU) += mtk_iommu.o
+>   obj-$(CONFIG_MTK_IOMMU_V1) += mtk_iommu_v1.o
+>   obj-$(CONFIG_OMAP_IOMMU) += omap-iommu.o
+> diff --git a/drivers/iommu/intel/Kconfig b/drivers/iommu/intel/Kconfig
+> new file mode 100644
+> index 000000000000..877beec9d987
+> --- /dev/null
+> +++ b/drivers/iommu/intel/Kconfig
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Intel IOMMU support
+> +config DMAR_TABLE
+> +	bool
 > +
-> +		/*
-> +		 * This makes a SMC call to the TF-A to set the DDR PD
-> +		 * (power-down) timings and to enable or disable the
-> +		 * ODT (on-die termination) resistors.
-> +		 */
-> +		arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-> +			      dmcfreq->odt_pd_arg1,
-> +			      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-> +			      odt_enable, 0, 0, 0, &res);
-> +	}
->  
->  	/*
->  	 * If frequency scaling from low to high, adjust voltage first.
-> @@ -371,13 +373,14 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
->  	}
->  
->  	node = of_parse_phandle(np, "rockchip,pmu", 0);
-> -	if (node) {
-> -		data->regmap_pmu = syscon_node_to_regmap(node);
-> -		of_node_put(node);
-> -		if (IS_ERR(data->regmap_pmu)) {
-> -			ret = PTR_ERR(data->regmap_pmu);
-> -			goto err_edev;
-> -		}
-> +	if (!node)
-> +		goto no_pmu;
+> +config INTEL_IOMMU
+> +	bool "Support for Intel IOMMU using DMA Remapping Devices"
+> +	depends on PCI_MSI && ACPI && (X86 || IA64)
+> +	select IOMMU_API
+> +	select IOMMU_IOVA
+> +	select NEED_DMA_MAP_STATE
+> +	select DMAR_TABLE
+> +	select SWIOTLB
+> +	select IOASID
+> +	help
+> +	  DMA remapping (DMAR) devices support enables independent address
+> +	  translations for Direct Memory Access (DMA) from devices.
+> +	  These DMA remapping devices are reported via ACPI tables
+> +	  and include PCI device scope covered by these DMA
+> +	  remapping devices.
 > +
-> +	data->regmap_pmu = syscon_node_to_regmap(node);
-> +	of_node_put(node);
-> +	if (IS_ERR(data->regmap_pmu)) {
-> +		ret = PTR_ERR(data->regmap_pmu);
-> +		goto err_edev;
->  	}
->  
->  	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-> @@ -399,6 +402,7 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
->  		goto err_edev;
->  	};
->  
-> +no_pmu:
->  	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
->  		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
->  		      0, 0, 0, 0, &res);
+> +config INTEL_IOMMU_DEBUGFS
+> +	bool "Export Intel IOMMU internals in Debugfs"
+> +	depends on INTEL_IOMMU && IOMMU_DEBUGFS
+> +	help
+> +	  !!!WARNING!!!
+> +
+> +	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!!!
+> +
+> +	  Expose Intel IOMMU internals in Debugfs.
+> +
+> +	  This option is -NOT- intended for production environments, and should
+> +	  only be enabled for debugging Intel IOMMU.
+> +
+> +config INTEL_IOMMU_SVM
+> +	bool "Support for Shared Virtual Memory with Intel IOMMU"
+> +	depends on INTEL_IOMMU && X86_64
+> +	select PCI_PASID
+> +	select PCI_PRI
+> +	select MMU_NOTIFIER
+> +	select IOASID
+> +	help
+> +	  Shared Virtual Memory (SVM) provides a facility for devices
+> +	  to access DMA resources through process address space by
+> +	  means of a Process Address Space ID (PASID).
+> +
+> +config INTEL_IOMMU_DEFAULT_ON
+> +	def_bool y
+> +	prompt "Enable Intel DMA Remapping Devices by default"
+> +	depends on INTEL_IOMMU
+> +	help
+> +	  Selecting this option will enable a DMAR device at boot time if
+> +	  one is found. If this option is not selected, DMAR support can
+> +	  be enabled by passing intel_iommu=on to the kernel.
+> +
+> +config INTEL_IOMMU_BROKEN_GFX_WA
+> +	bool "Workaround broken graphics drivers (going away soon)"
+> +	depends on INTEL_IOMMU && BROKEN && X86
+> +	help
+> +	  Current Graphics drivers tend to use physical address
+> +	  for DMA and avoid using DMA APIs. Setting this config
+> +	  option permits the IOMMU driver to set a unity map for
+> +	  all the OS-visible memory. Hence the driver can continue
+> +	  to use physical addresses for DMA, at least until this
+> +	  option is removed in the 2.6.32 kernel.
+> +
+> +config INTEL_IOMMU_FLOPPY_WA
+> +	def_bool y
+> +	depends on INTEL_IOMMU && X86
+> +	help
+> +	  Floppy disk drivers are known to bypass DMA API calls
+> +	  thereby failing to work when IOMMU is enabled. This
+> +	  workaround will setup a 1:1 mapping for the first
+> +	  16MiB to make floppy (an ISA device) work.
+> +
+> +config INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> +	bool "Enable Intel IOMMU scalable mode by default"
+> +	depends on INTEL_IOMMU
+> +	help
+> +	  Selecting this option will enable by default the scalable mode if
+> +	  hardware presents the capability. The scalable mode is defined in
+> +	  VT-d 3.0. The scalable mode capability could be checked by reading
+> +	  /sys/devices/virtual/iommu/dmar*/intel-iommu/ecap. If this option
+> +	  is not selected, scalable mode support could also be enabled by
+> +	  passing intel_iommu=sm_on to the kernel. If not sure, please use
+> +	  the default value.
+> diff --git a/drivers/iommu/intel/Makefile b/drivers/iommu/intel/Makefile
+> new file mode 100644
+> index 000000000000..fb8e1e8c8029
+> --- /dev/null
+> +++ b/drivers/iommu/intel/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_DMAR_TABLE) += dmar.o
+> +obj-$(CONFIG_INTEL_IOMMU) += iommu.o pasid.o
+> +obj-$(CONFIG_INTEL_IOMMU) += trace.o
+> +obj-$(CONFIG_INTEL_IOMMU_DEBUGFS) += debugfs.o
+> +obj-$(CONFIG_INTEL_IOMMU_SVM) += svm.o
+> +obj-$(CONFIG_IRQ_REMAP) += irq_remapping.o
 > 
-
-Applied it. Thanks.
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
