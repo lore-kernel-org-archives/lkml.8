@@ -2,199 +2,359 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D501C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3AA2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA30220722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HqG1QYAJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPh31ANm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgGAIcB (ORCPT
+        id S1728974AbgGAIcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:32:01 -0400
-Received: from mail-vi1eur05on2042.outbound.protection.outlook.com ([40.107.21.42]:25312
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728911AbgGAIb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UUkd8kdZ/CLyNpUcuIKB7z4+wed82rTGgULtnlbQga/giTm9c+CBwJy/Mu3ioxi8IuOXJV1BKLz37v+elrTz5oGFZ2UNksGtcf+AeUGKIkZ9u0ELVsuhrJua9roC6krZ5K2Hb3/Fg9CKMkZ0NToPQjhG5L+x2vbztoONpugw92G2L7QBp3Xb3KOTvUaU+so7m7Z5WypHRXRxKSab4UzrrJNPF7zUrq3/+Sn8OlonQ+IkzkIe9dJJ7R+QPJcXFQkVY7cM6nAs+IZIjVcxskXt+p+Kj/gNFG8q3CFXSLyp9qlJTdSh7XHB87qkRZHtM+QMBEo03SHHEWrWKmvfC01oHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OY62pLQE/YYaigFS4TdTj9K5Le+mfCwWvTkIoipvG1s=;
- b=g3OS4k59gsok/KozPswNCaPuc4AALD4uDWr0qNmohfUtil6c4XDBfeRQMHJG5zkDk4zXxiMl4AGfzAA1hQzXuaZZxpvxLGU7O4s5MKngD4lIXZxgWYgk/pJ7dt24dgSULAUMB6xKABgwX6kAqDjaT9sC9AtkFC2BD9PW90YoccdnfylNGJC2ttMX1yx+MRIr5QqTHrVdezdKxkZNoho14p7DPUZvXJ+sI4qYYsIGHQ0XSrqq5qed3kRwNoq55mH3Xz1E2TpjV9nla1T9ONY3be8jwA25nxOQnRDypBtNwKr+y7A9b5qRSPCUyvlo9v6M/vzJGSgmXZRMCRNDbWcIdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OY62pLQE/YYaigFS4TdTj9K5Le+mfCwWvTkIoipvG1s=;
- b=HqG1QYAJyDVAhP8chmLsKjDe3ec877EkildUyCSV1RSX5MsahD6bxkmlmsvPvJ58PXMfAuPyjxJxUOjJp7q+xrgmmgKkhrnTQ53L2+tha3kC9eX1F6KhPITXwXMH89FYHz5qvQsVGbRWGAH/OAx2NRpNqax7IklCdWsmMJwDciE=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB4856.eurprd04.prod.outlook.com (2603:10a6:20b:b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21; Wed, 1 Jul
- 2020 08:31:51 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3153.023; Wed, 1 Jul 2020
- 08:31:51 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Felipe Balbi <balbi@kernel.org>
-CC:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: cdns3: fix possible buffer overflow caused by bad
- DMA value
-Thread-Topic: [PATCH] usb: cdns3: fix possible buffer overflow caused by bad
- DMA value
-Thread-Index: AQHWNjHPz6qvJgpZ+karMYRZFy9ss6jDKN4AgC9TLoCAABvOAA==
-Date:   Wed, 1 Jul 2020 08:31:51 +0000
-Message-ID: <20200701083214.GA22478@b29397-desktop>
-References: <20200530032400.12743-1-baijiaju1990@gmail.com>
- <20200601041048.GB13752@b29397-desktop> <87366b916s.fsf@kernel.org>
-In-Reply-To: <87366b916s.fsf@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0326c165-9d79-4618-59db-08d81d993413
-x-ms-traffictypediagnostic: AM6PR04MB4856:
-x-microsoft-antispam-prvs: <AM6PR04MB4856DAA621F3984B46A0946E8B6C0@AM6PR04MB4856.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04519BA941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fTgCnJs/XbuwUYPv4nVibwD1AmKSVJBIv8AyX8wu5gJn6FtNNAN4wXakEW8JhWeK7HkiI6CvjTluLyfX586TluqkXBatFMtJZvupor2jHZDdpiEMODzuCP06nFCaK2AggZpHmkH9T8xiPm4si2RQqymqF76vbNGUbW+2GZi0b27mSC4xxAeGuOjCxXFAv3q3w3vntPg9yiuqo4U2hlrlBAWFgG8PmLeRC+thtKEewSikFO69/6PmXwTxymAzwHEMSbbQcOifHxt3ZOnmxSuzqY0oQvqVwc+eNSpB0ijnb0h+u3ofvJSKecyFOh4Z7svCI5QhhQxJeIimvHI6RO2e5g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(39860400002)(136003)(396003)(366004)(346002)(376002)(4326008)(91956017)(2906002)(316002)(26005)(76116006)(54906003)(8936002)(1076003)(33716001)(6512007)(9686003)(71200400001)(478600001)(83380400001)(6486002)(53546011)(33656002)(8676002)(186003)(6506007)(5660300002)(6916009)(64756008)(66946007)(44832011)(66476007)(66556008)(86362001)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 1oNOTDVneA+4k3RXQSplFHc+DyqAgotWRZGGB4svTm3txUm9c5umCSsPE0Bf3uROZ+lyaYmKVHw5TFSHQkNK5n66W5/sXdKbgd8T5qE7VEELx744AmrNctEYomRpylDCHVtFiR2bxuGcI6HQASrlJIo5BrzUwHXkyDkh6OJlUUHP6FF3hw/6cuadtUUYYg/yCFFVjArkySqWq67CcY0dQUhtgYyq+S6n1++qZLH9HQ556gJbOdlk4VN8kp5Jh85prWgTwT/opZMvhvHIPJ5BSZHDf3aA3Om9DPp0h8ojcNaS12mkzDucj/x4Nr/t+J2AXFyOhg0mbkA64415l6hSXBC2LhfULFYFAxNyCn/BMI6xKdp901srWjcTYn4YI6EuNPCWFMlkOQu46lJLmOOiVpmFueevYHvb0fZ2mlUb7qRIn4qB1zPnYM13IbYdO5dmZ4jzZjEIrya85p0hRVkwlw3o5j502Mbu9S4rAJIfPHU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <06751ABC84F89F4EA306AC8035D399D0@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Jul 2020 04:32:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbgGAIb5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:31:57 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC8EC03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:56 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so622931wrp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7Vgj6mJ007ffR2XpxkUWmsRKmQ1//Tce8MuBu+oPzlU=;
+        b=HPh31ANmeeDeHGVS/PDby+fvRPUjuW1dvyVoN2jot/X3auKYJnWW2kekKLwwXImcIo
+         48xveaLgyBpmf6K5MzTmqTWlG10uhYmkpyi8oAaxlpmzKdY6IoJHmmro7GTcfKN4zxKF
+         CgnX0dt5jWBLrtiegPVPik0wlmhWZguW9C/kgbqsFloBEyZjmVBgwjgZK/CGv/0KzCOz
+         gJCMu8C/3kM5/ZNO5e5VJy8CZtKPwrhm+JYN2vSPHjZh2kBd4SuqErd37eOX/2MjF4K6
+         WaUX1p3OPLXrOU4gzNUSuXeZuqkwjm4u1XPu8KRPNDlS3PXRaFX8uFi7UaqMxs5d2rgT
+         KtKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7Vgj6mJ007ffR2XpxkUWmsRKmQ1//Tce8MuBu+oPzlU=;
+        b=iDkDGbHlJqn+Zo55RqQfVPCYIuaqWBjPrfw46Vkz0ldcjzG6dLPvWHsCO7KLtovBaO
+         T1iHOn0w1WdkkorEdGkIqc7hRan9zTCbuQ0DIYTscyha5fFkA2dAhdNwm3r6u2BLLINA
+         9Bm1jLK7EHCRDF1f15GHCLdsf9b13sMvv/wUUAn/os8f8+ggqa+TJgWoV/9fSTb1TVcI
+         9xeoZiF6P1fDVX/1IBhrpx5oFj5pjmMtFsHVSt543h3SZQFQXIVNob0GmmG5SXeRR8m9
+         y4DhL4PtmtcRd2WjhEuT0cATbIpO5y0MlHgVfprufjTp+DCSFyO7cbfXh01Xy8zG748r
+         Fbnw==
+X-Gm-Message-State: AOAM530I9BoFMFZINmYEchFyhB/6bIgUNgX37qBIF0P2xo8fuRnvftmE
+        NPBL1gz5o4khhDl45lgC/U3P8Q==
+X-Google-Smtp-Source: ABdhPJzXrU6xi3un+vaiH9VQd76pcfKtWsT2/yo8NWT84QcdHIZ/yaxBnLz5FgKSV89oRtxVPzsRJQ==
+X-Received: by 2002:a5d:6809:: with SMTP id w9mr27438749wru.182.1593592315293;
+        Wed, 01 Jul 2020 01:31:55 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 01:31:54 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 27/30] misc: cxl: hcalls: Demote half-assed kerneldoc attempt
+Date:   Wed,  1 Jul 2020 09:31:15 +0100
+Message-Id: <20200701083118.45744-28-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
+References: <20200701083118.45744-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0326c165-9d79-4618-59db-08d81d993413
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 08:31:51.2745
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YZNOSTJ/BoefWj9euf8mSaxOXNFyOQnEFD4B7hTzMD9dyxOuL1SDvuHLharemZog0SnmjC4jEwDMm9YsyWGo0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4856
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-07-01 09:52:43, Felipe Balbi wrote:
-> Peter Chen <peter.chen@nxp.com> writes:
->=20
-> > On 20-05-30 11:24:00, Jia-Ju Bai wrote:
-> >> In cdns3_ep0_setup_phase():
-> >>   struct usb_ctrlrequest *ctrl =3D priv_dev->setup_buf;
-> >>=20
-> >> Because priv_dev->setup_buf (allocated in cdns3_gadget_start) is store=
-d=20
-> >> in DMA memory, and thus ctrl is a DMA value.
-> >>=20
-> >> cdns3_ep0_setup_phase()
-> >>   cdns3_ep0_standard_request(priv_dev, ctrl)
-> >>     cdns3_req_ep0_get_status(priv_dev, ctrl)
-> >>       index =3D cdns3_ep_addr_to_index(ctrl->wIndex);
-> >>       priv_ep =3D priv_dev->eps[index];
-> >>=20
-> >> cdns3_ep0_setup_phase()
-> >>   cdns3_ep0_standard_request(priv_dev, ctrl)
-> >>     cdns3_req_ep0_handle_feature(priv_dev, ctrl_req, 0)
-> >>       cdns3_ep0_feature_handle_endpoint(priv_dev, ctrl, set)
-> >>         index =3D cdns3_ep_addr_to_index(ctrl->wIndex);
-> >>         priv_ep =3D priv_dev->eps[index];
-> >>=20
-> >> In these cases, ctrl->wIndex can be be modified at anytime by maliciou=
-s
-> >> hardware, and thus a buffer overflow can occur when the code
-> >> "priv_dev->eps[index]" is executed.
-> >>=20
-> >
-> > Did you see the setup buffer is overwritten before the setup handling i=
-s
-> > finished?
-> >
-> >> To fix these possible bugs, index is checked before being used.
-> >
-> > I think the better fix is to use one additional buffer for struct
-> > usb_ctrlrequest, and copy the dma_buf to it after setup packet
-> > has received, then use the value stored in this buffer for later
-> > operation, it could avoid quitting the code which is useful in fact.
->=20
-> Why is this a better fix? If you don't have that endpoint index, you
-> shouldn't try to access it. However, I think the problem here is
-> slightly easier to solve :-)
+Function headers will need a lot of work before they reach the
+standards expected of kerneldoc.  Demote them down to basic
+comments/headers, for now at least.
 
-The possible problem here is: it is a correct setup packet, the memory
-it uses may be modified by controller wrongly (eg, try to get next setup
-packet) before it finishes using. So, I suggest adding a setup buf for
-struct cdns3 to store every setup packet after it receives to avoid
-the original setup buffer corrupted.
+Fixes the following W=1 kernel build warnings:
 
-Peter
+ drivers/misc/cxl/hcalls.c:175: warning: Function parameter or member 'unit_address' not described in 'cxl_h_detach_process'
+ drivers/misc/cxl/hcalls.c:175: warning: Function parameter or member 'process_token' not described in 'cxl_h_detach_process'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'op' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p1' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p2' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p3' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p4' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'out' not described in 'cxl_h_control_function'
+ drivers/misc/cxl/hcalls.c:245: warning: Function parameter or member 'unit_address' not described in 'cxl_h_reset_afu'
+ drivers/misc/cxl/hcalls.c:258: warning: Function parameter or member 'unit_address' not described in 'cxl_h_suspend_process'
+ drivers/misc/cxl/hcalls.c:258: warning: Function parameter or member 'process_token' not described in 'cxl_h_suspend_process'
+ drivers/misc/cxl/hcalls.c:271: warning: Function parameter or member 'unit_address' not described in 'cxl_h_resume_process'
+ drivers/misc/cxl/hcalls.c:271: warning: Function parameter or member 'process_token' not described in 'cxl_h_resume_process'
+ drivers/misc/cxl/hcalls.c:284: warning: Function parameter or member 'unit_address' not described in 'cxl_h_read_error_state'
+ drivers/misc/cxl/hcalls.c:284: warning: Function parameter or member 'state' not described in 'cxl_h_read_error_state'
+ drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_afu_err'
+ drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'offset' not described in 'cxl_h_get_afu_err'
+ drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'buf_address' not described in 'cxl_h_get_afu_err'
+ drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'len' not described in 'cxl_h_get_afu_err'
+ drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_config'
+ drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'cr_num' not described in 'cxl_h_get_config'
+ drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'offset' not described in 'cxl_h_get_config'
+ drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'buf_address' not described in 'cxl_h_get_config'
+ drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'len' not described in 'cxl_h_get_config'
+ drivers/misc/cxl/hcalls.c:333: warning: Function parameter or member 'unit_address' not described in 'cxl_h_terminate_process'
+ drivers/misc/cxl/hcalls.c:333: warning: Function parameter or member 'process_token' not described in 'cxl_h_terminate_process'
+ drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_vpd'
+ drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'record' not described in 'cxl_h_collect_vpd'
+ drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'list_address' not described in 'cxl_h_collect_vpd'
+ drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'num' not described in 'cxl_h_collect_vpd'
+ drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'out' not described in 'cxl_h_collect_vpd'
+ drivers/misc/cxl/hcalls.c:362: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_fn_error_interrupt'
+ drivers/misc/cxl/hcalls.c:362: warning: Function parameter or member 'reg' not described in 'cxl_h_get_fn_error_interrupt'
+ drivers/misc/cxl/hcalls.c:374: warning: Function parameter or member 'unit_address' not described in 'cxl_h_ack_fn_error_interrupt'
+ drivers/misc/cxl/hcalls.c:374: warning: Function parameter or member 'value' not described in 'cxl_h_ack_fn_error_interrupt'
+ drivers/misc/cxl/hcalls.c:386: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_error_log'
+ drivers/misc/cxl/hcalls.c:386: warning: Function parameter or member 'value' not described in 'cxl_h_get_error_log'
+ drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_int_info'
+ drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'process_token' not described in 'cxl_h_collect_int_info'
+ drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'info' not described in 'cxl_h_collect_int_info'
+ drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_faults'
+ drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'process_token' not described in 'cxl_h_control_faults'
+ drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'control_mask' not described in 'cxl_h_control_faults'
+ drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'reset_mask' not described in 'cxl_h_control_faults'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'op' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p1' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p2' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p3' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p4' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'out' not described in 'cxl_h_control_facility'
+ drivers/misc/cxl/hcalls.c:516: warning: Function parameter or member 'unit_address' not described in 'cxl_h_reset_adapter'
+ drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_vpd_adapter'
+ drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'list_address' not described in 'cxl_h_collect_vpd_adapter'
+ drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'num' not described in 'cxl_h_collect_vpd_adapter'
+ drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'out' not described in 'cxl_h_collect_vpd_adapter'
+ drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'unit_address' not described in 'cxl_h_download_facility'
+ drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'op' not described in 'cxl_h_download_facility'
+ drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'list_address' not described in 'cxl_h_download_facility'
+ drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'num' not described in 'cxl_h_download_facility'
+ drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'out' not described in 'cxl_h_download_facility'
+ drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'unit_address' not described in 'cxl_h_download_adapter_image'
+ drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'list_address' not described in 'cxl_h_download_adapter_image'
+ drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'num' not described in 'cxl_h_download_adapter_image'
+ drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'out' not described in 'cxl_h_download_adapter_image'
+ drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'unit_address' not described in 'cxl_h_validate_adapter_image'
+ drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'list_address' not described in 'cxl_h_validate_adapter_image'
+ drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'num' not described in 'cxl_h_validate_adapter_image'
 
->=20
-> >> diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-> >> index e71240b386b4..0a80c7ade613 100644
-> >> --- a/drivers/usb/cdns3/ep0.c
-> >> +++ b/drivers/usb/cdns3/ep0.c
-> >> @@ -265,6 +265,8 @@ static int cdns3_req_ep0_get_status(struct cdns3_d=
-evice *priv_dev,
-> >>  		return cdns3_ep0_delegate_req(priv_dev, ctrl);
-> >>  	case USB_RECIP_ENDPOINT:
-> >>  		index =3D cdns3_ep_addr_to_index(ctrl->wIndex);
->=20
-> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-> index 5e24c2e57c0d..96ba3eec805c 100644
-> --- a/drivers/usb/cdns3/gadget.c
-> +++ b/drivers/usb/cdns3/gadget.c
-> @@ -107,7 +107,10 @@ void cdns3_set_register_bit(void __iomem *ptr, u32 m=
-ask)
->   */
->  u8 cdns3_ep_addr_to_index(u8 ep_addr)
->  {
-> -       return (((ep_addr & 0x7F)) + ((ep_addr & USB_DIR_IN) ? 16 : 0));
-> +       u8 num =3D ep_addr & USB_ENDPOINT_NUMBER_MASK;
-> +       u8 dir =3D ep_addr & USB_ENDPOINT_DIR_MASK;
-> +
-> +       return num + dir ? 16 : 0;
->  }
-> =20
->  static int cdns3_get_dma_pos(struct cdns3_device *priv_dev,
->=20
-> This will guarantee that the number is never over the limit.
->=20
-> --=20
-> balbi
+Cc: Frederic Barrat <fbarrat@linux.ibm.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/misc/cxl/hcalls.c | 42 +++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/misc/cxl/hcalls.c b/drivers/misc/cxl/hcalls.c
+index b7c57f67f4f52..aba5e20eeb1f5 100644
+--- a/drivers/misc/cxl/hcalls.c
++++ b/drivers/misc/cxl/hcalls.c
+@@ -167,7 +167,7 @@ long cxl_h_attach_process(u64 unit_address,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_detach_process - Detach a process element from a coherent
+  *                        platform function.
+  */
+@@ -197,7 +197,7 @@ long cxl_h_detach_process(u64 unit_address, u64 process_token)
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_control_function - This H_CONTROL_CA_FUNCTION hypervisor call allows
+  *                          the partition to manipulate or query
+  *                          certain coherent platform function behaviors.
+@@ -238,7 +238,7 @@ static long cxl_h_control_function(u64 unit_address, u64 op,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_reset_afu - Perform a reset to the coherent platform function.
+  */
+ long cxl_h_reset_afu(u64 unit_address)
+@@ -249,7 +249,7 @@ long cxl_h_reset_afu(u64 unit_address)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_suspend_process - Suspend a process from being executed
+  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
+  *              process was attached.
+@@ -262,7 +262,7 @@ long cxl_h_suspend_process(u64 unit_address, u64 process_token)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_resume_process - Resume a process to be executed
+  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
+  *              process was attached.
+@@ -275,7 +275,7 @@ long cxl_h_resume_process(u64 unit_address, u64 process_token)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_read_error_state - Checks the error state of the coherent
+  *                          platform function.
+  * R4 contains the error state
+@@ -288,7 +288,7 @@ long cxl_h_read_error_state(u64 unit_address, u64 *state)
+ 				state);
+ }
+ 
+-/**
++/*
+  * cxl_h_get_afu_err - collect the AFU error buffer
+  * Parameter1 = byte offset into error buffer to retrieve, valid values
+  *              are between 0 and (ibm,error-buffer-size - 1)
+@@ -304,7 +304,7 @@ long cxl_h_get_afu_err(u64 unit_address, u64 offset,
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_get_config - collect configuration record for the
+  *                    coherent platform function
+  * Parameter1 = # of configuration record to retrieve, valid values are
+@@ -324,7 +324,7 @@ long cxl_h_get_config(u64 unit_address, u64 cr_num, u64 offset,
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_terminate_process - Terminate the process before completion
+  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
+  *              process was attached.
+@@ -337,7 +337,7 @@ long cxl_h_terminate_process(u64 unit_address, u64 process_token)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_collect_vpd - Collect VPD for the coherent platform function.
+  * Parameter1 = # of VPD record to retrieve, valid values are between 0
+  *              and (ibm,#config-records - 1).
+@@ -355,7 +355,7 @@ long cxl_h_collect_vpd(u64 unit_address, u64 record, u64 list_address,
+ 				out);
+ }
+ 
+-/**
++/*
+  * cxl_h_get_fn_error_interrupt - Read the function-wide error data based on an interrupt
+  */
+ long cxl_h_get_fn_error_interrupt(u64 unit_address, u64 *reg)
+@@ -365,7 +365,7 @@ long cxl_h_get_fn_error_interrupt(u64 unit_address, u64 *reg)
+ 				0, 0, 0, 0, reg);
+ }
+ 
+-/**
++/*
+  * cxl_h_ack_fn_error_interrupt - Acknowledge function-wide error data
+  *                                based on an interrupt
+  * Parameter1 = value to write to the function-wide error interrupt register
+@@ -378,7 +378,7 @@ long cxl_h_ack_fn_error_interrupt(u64 unit_address, u64 value)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_get_error_log - Retrieve the Platform Log ID (PLID) of
+  *                       an error log
+  */
+@@ -390,7 +390,7 @@ long cxl_h_get_error_log(u64 unit_address, u64 value)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_collect_int_info - Collect interrupt info about a coherent
+  *                          platform function after an interrupt occurred.
+  */
+@@ -425,7 +425,7 @@ long cxl_h_collect_int_info(u64 unit_address, u64 process_token,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_control_faults - Control the operation of a coherent platform
+  *                        function after a fault occurs.
+  *
+@@ -470,7 +470,7 @@ long cxl_h_control_faults(u64 unit_address, u64 process_token,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_control_facility - This H_CONTROL_CA_FACILITY hypervisor call
+  *                          allows the partition to manipulate or query
+  *                          certain coherent platform facility behaviors.
+@@ -509,7 +509,7 @@ static long cxl_h_control_facility(u64 unit_address, u64 op,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_reset_adapter - Perform a reset to the coherent platform facility.
+  */
+ long cxl_h_reset_adapter(u64 unit_address)
+@@ -520,7 +520,7 @@ long cxl_h_reset_adapter(u64 unit_address)
+ 				NULL);
+ }
+ 
+-/**
++/*
+  * cxl_h_collect_vpd - Collect VPD for the coherent platform function.
+  * Parameter1 = 4K naturally aligned real buffer containing block
+  *              list entries
+@@ -536,7 +536,7 @@ long cxl_h_collect_vpd_adapter(u64 unit_address, u64 list_address,
+ 				out);
+ }
+ 
+-/**
++/*
+  * cxl_h_download_facility - This H_DOWNLOAD_CA_FACILITY
+  *                    hypervisor call provide platform support for
+  *                    downloading a base adapter image to the coherent
+@@ -616,7 +616,7 @@ static long cxl_h_download_facility(u64 unit_address, u64 op,
+ 	}
+ }
+ 
+-/**
++/*
+  * cxl_h_download_adapter_image - Download the base image to the coherent
+  *                                platform facility.
+  */
+@@ -629,7 +629,7 @@ long cxl_h_download_adapter_image(u64 unit_address,
+ 				       list_address, num, out);
+ }
+ 
+-/**
++/*
+  * cxl_h_validate_adapter_image - Validate the base image in the coherent
+  *                                platform facility.
+  */
+-- 
+2.25.1
 
-
---=20
-
-Thanks,
-Peter Chen=
