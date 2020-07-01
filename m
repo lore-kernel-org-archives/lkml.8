@@ -2,100 +2,120 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF71C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8596C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EDB207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C71K5/fQ"
+	by mail.kernel.org (Postfix) with ESMTP id B277120760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593616845;
+	bh=fbMc+YMa09uWpdt75rRlWQBCcOY1La8SPKZA7CZzCn8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t7N1IDfSeDyJ7vqaHqOxjJ1LFprftH92z/j2djbJq7v2qZklnf0sKvejk8kTXrB7H
+	 h02CBvr5MiR0CUVChoByfIGeYPaw4H0UvcHC8qtR4Ht7Z50pxoIwxfgrJLy/orLgth
+	 aX37mz8EIMXWrZNoJ63dtlwcO3MYvYMZc7bBVxSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbgGAPTf (ORCPT
+        id S1731900AbgGAPUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731511AbgGAPTe (ORCPT
+        Wed, 1 Jul 2020 11:20:44 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:44327 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731646AbgGAPUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:19:34 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD94C08C5C1;
-        Wed,  1 Jul 2020 08:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=RMq+iE1LUPENeNcgBeF0Dm87bPYKtg4gXNNVgu26xNQ=; b=C71K5/fQGisGL/dr162sd1/BB0
-        PKXUXMzoOs1afRIhld7BQ9X7Pr4/y1MLjs8gQLGV98nh88bgZ+pw2CnwPL2I6DoGrBt4SfCuJAAAG
-        Pbceya8bm8et3ppzsfP50Wvq/oYOsVgqyFo5BK1gm47jR1/SeiqtHL7E1uSIqRP3ol+8eUm2K8jaV
-        RcKZR8XfcKONRxcIRVyd6WaPpfjCHJRSvjxe+UkOETlAlE2laAv2k9yPX0dwWOM0YC83jwEnr2My/
-        PkNAvhmO2EZhzSFBzyX2BrWqufyNegvBKJWrUEHfZ2RFpKKcNJ+nDVl4U7AsHWZD66vIjR/cTDZm9
-        14ntrsQg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqeWF-00086O-TU; Wed, 01 Jul 2020 15:19:28 +0000
-Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
- <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
- <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
- <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
- <648d287e-3636-1858-1439-103d317f8571@web.de>
- <34065299-03cf-5b62-db37-0acc9830be72@infradead.org>
- <65db3f88-1ac8-374d-e3fe-2ea0970ffd67@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <30b722ca-1bd8-2b96-ca41-1e9bc7212b66@infradead.org>
-Date:   Wed, 1 Jul 2020 08:19:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 11:20:43 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 061FKJP8023980;
+        Thu, 2 Jul 2020 00:20:19 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 061FKJP8023980
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593616819;
+        bh=U+lNViw7WPGshCr+ih3fieJbmictIgFeba+61a+ci9Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xb1gKm+aqYD6Iz4kkBLvF/UeXSSIykW1wstaSoH3diP7m4RidwqYBkxqwlj7ue6j2
+         oZBBq1bPotyL5PGWFH+PIwVprz7//p959TmjM3mU3igv665ihdp2u9SUagXzTa+Rx5
+         KITnIJr7UjVlCb4woyjjPnlNwGgBWKEG468ZHwX5D1N7j1sn7oX4qxzJ5qXLqQMJ0T
+         liMPhbySgRajTUh1iBzctsENGAOInmwDbpDfpXREflomSxGv8eJjoegdT/UH58pDm0
+         VJY6wbSwzWjSXZWkKnCYhgqXboGVU4pTTRlIsD+5YtWUaPaI5OTtLEu4T2HCveh1uY
+         Lf0Qve8dQxdzw==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id p25so5711851vsg.4;
+        Wed, 01 Jul 2020 08:20:19 -0700 (PDT)
+X-Gm-Message-State: AOAM531SrPwk2uWhsUM7YPhVP5yj4R+xpMkVZH3ZxPlYKPtrM8wAua2L
+        vB4g2RqVl/gD+pCm2y2tgvYnBSSvuxX32bJNULY=
+X-Google-Smtp-Source: ABdhPJwFFbcNFkstoDBspvohfOlkIVO9MMPf3L0RU2ABPtLyCu84FW5UR8Vc/gmiF9rrl/wbO/6LF106cE1TvkYAVAs=
+X-Received: by 2002:a67:6c84:: with SMTP id h126mr17435984vsc.181.1593616818552;
+ Wed, 01 Jul 2020 08:20:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <65db3f88-1ac8-374d-e3fe-2ea0970ffd67@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1593498345.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cover.1593498345.git.mchehab+huawei@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 2 Jul 2020 00:19:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ607UrHZ9Pa3QjdkWGhid95idCsMFq+GcZc8S-jHw1Tg@mail.gmail.com>
+Message-ID: <CAK7LNAQ607UrHZ9Pa3QjdkWGhid95idCsMFq+GcZc8S-jHw1Tg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Fix split view search and debug info navigation
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 8:15 AM, Markus Elfring wrote:
->>> Would you like to integrate any more details from the running patch review?
->>
->> I am satisfied with the current patch.
-> 
-> I got an other software development impression.
-> 
-> 
->> No doubt that any documentation can be improved, almost ad infinitum,
->> but I'm not trying to do that.
-> 
-> Do we stumble on a target conflict according to a specific technical detail?
-> 
-> How do you think about to compare source code analysis results
-> from programs like “sparse” and “spatch” (by the mentioned make command)?
+On Tue, Jun 30, 2020 at 3:26 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> This series fixes some issues with search while on split view and fix the
+> broken hyperlink navigation.
+>
+> The first patches restore the pre-Qt5 conversion behavior. The last
+> one implements navigation on a different way. I opted to keep this one
+> in separate, as this one is a new feature.
+>
+> -
 
-None of that has anything to do with the current patch.
 
-Julia, do you have any comments about the current patch? (v2)
+Series, I applied to linux-kbuild/fixes.
+(I used v3.1 for 7/7)
 
-thanks.
+
+If Maxim gives Tested-by or something,
+I will append it.
+
+
+
+
+
+> v3:
+>
+> - dropped a patch that it is not needed anymore;
+> - hyperlinks should now work for non-visible items;
+> - fixed a description at patch 3.
+>
+> Mauro Carvalho Chehab (7):
+>   kconfig: qconf: cleanup includes
+>   kconfig: qconf: make search fully work again on split mode
+>   kconfig: qconf: make debug links work again
+>   kconfig: qconf: re-implement setSelected()
+>   kconfig: qconf: simplify the goBack() logic
+>   kconfig: qconf: don't show goback button on splitMode
+>   kconfig: qconf: navigate menus on hyperlinks
+>
+>  scripts/kconfig/qconf.cc | 169 +++++++++++++++++++++++----------------
+>  scripts/kconfig/qconf.h  |  29 ++++---
+>  2 files changed, 119 insertions(+), 79 deletions(-)
+>
+> --
+> 2.26.2
+>
+>
+
 
 -- 
-~Randy
-
+Best Regards
+Masahiro Yamada
