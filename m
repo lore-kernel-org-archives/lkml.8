@@ -2,178 +2,128 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A91C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8E72074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF802074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2HM49l8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgGAJJc (ORCPT
+        id S1729437AbgGAJJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:09:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:47772 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbgGAJJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDD0B106F;
-        Wed,  1 Jul 2020 02:09:30 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3489D3F68F;
-        Wed,  1 Jul 2020 02:09:29 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        linux@armlinux.org.uk, valentin.schneider@arm.com
-Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] cpufreq: move invariance setter calls in cpufreq core
-Date:   Wed,  1 Jul 2020 10:07:45 +0100
-Message-Id: <20200701090751.7543-3-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+        Wed, 1 Jul 2020 05:09:36 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48563 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726255AbgGAJJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:09:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593594572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=7iSWdZz1MQYnvIIt6jkhrHrV7ZLYvXqE5mMXKJ+C5ME=;
+        b=i2HM49l8NKqtDsONZi6jn7D7ZrPcD7yfQQkfgjuqLxrPAPzPycD6NT1sChd+5fZzLasNAR
+        cZIg4nrSIzHWRr0PBVdE8PrapsHmTk/ObM9dHbFYt4LRrk06pCh695N5XdnDXdHBuu/5hT
+        3zYp3US0ygLelosI7SSuyFLyCt8dHp0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-136-ft1kK71qO1OkZUKpp4aHNw-1; Wed, 01 Jul 2020 05:09:30 -0400
+X-MC-Unique: ft1kK71qO1OkZUKpp4aHNw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B4151005513;
+        Wed,  1 Jul 2020 09:09:28 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-177.pek2.redhat.com [10.72.13.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 979BD71662;
+        Wed,  1 Jul 2020 09:08:47 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 0/5]
+Date:   Wed,  1 Jul 2020 17:08:34 +0800
+Message-Id: <20200701090839.12994-1-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+Hi all:
 
-To properly scale its per-entity load-tracking signals, the task scheduler
-needs to be given a frequency scale factor, i.e. some image of the current
-frequency the CPU is running at. Currently, this scale can be computed
-either by using counters (APERF/MPERF on x86, AMU on arm64), or by
-piggy-backing on the frequency selection done by cpufreq.
+This series tries to support batched IOTLB updating vhost-vdpa.
 
-For the latter, drivers have to explicitly set the scale factor
-themselves, despite it being purely boiler-plate code: the required
-information depends entirely on the kind of frequency switch callback
-implemented by the driver, i.e. either of: target_index(), target(),
-fast_switch() and setpolicy().
+Currently vhost-vdpa accepts userspace mapping via IOTLB API, and it
+can only forward one mapping to IOMMU or device through IOMMU API or
+dma_map(). Though set_map() is designed to have the capability to pass
+an rbtree based mapping to vDPA device, it's still be called at least
+once for each VHOST_IOTLB_UPDATE or VHOST_IOTLB_INVALIDATE. This is
+because vhost-vdpa doesn't know the userspace start or stop then
+updating.
 
-The fitness of those callbacks with regard to driving the Frequency
-Invariance Engine (FIE) is studied below:
+So this patch introduces two flags as hints for vhost-vdpa to call
+set_map() only when userspace finish a batch of IOTLB updating.
 
-target_index()
-==============
-Documentation states that the chosen frequency "must be determined by
-freq_table[index].frequency". It isn't clear if it *has* to be that
-frequency, or if it can use that frequency value to do some computation
-that ultimately leads to a different frequency selection. All drivers
-go for the former, while the vexpress-spc-cpufreq has an atypical
-implementation.
+So instead of:
 
-Thefore, the hook works on the asusmption the core can use
-freq_table[index].frequency.
+1) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
+2) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
+...
+n) VHOST_IOTLB_UPDATE/VHOST_IOTLB_INVALIDATE -> set_map() (s)
 
-target()
-=======
-This has been flagged as deprecated since:
+With the help of hints, we do:
 
-  commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+0) VHOST_IOTLB_BATCH_START
 
-It also doesn't have that many users:
+1) VHOST_IOTLB_UPDATE/INVALIDATE
+...
+n) VHOST_IOTLB_UPDATE/INVALIDATE
 
-  cpufreq-nforce2.c:371:2:	.target = nforce2_target,
-  cppc_cpufreq.c:416:2:		.target = cppc_cpufreq_set_target,
-  pcc-cpufreq.c:573:2:		.target = pcc_cpufreq_target,
+n+1) VHOST_IOTLB_BATCH_END -> set_map()
 
-Should we care about drivers using this hook, we may be able to exploit
-cpufreq_freq_transition_{being, end}(). Otherwise, if FIE support is
-desired in their current state, arch_set_freq_scale() could still be
-called directly by the driver, while CPUFREQ_CUSTOM_SET_FREQ_SCALE
-could be used to mark support for it.
+One one call of set_map() to vDPA device for a batch of IOTLB
+mappings. So for the device that has its own DMA translation logic, it
+can efficiently structure the memory mapping to get best performance.
 
-fast_switch()
-=============
-This callback *has* to return the frequency that was selected.
+Note, this only impacts the devices that want its own DMA
+translation (less times of set_map() call). For other type of devices,
+there's no changes in the behaviour.
 
-setpolicy()
-===========
-This callback does not have any designated way of informing what was the
-end choice. But there are only two drivers using setpolicy(), and none
-of them have current FIE support:
+Changes from RFCV1:
 
-  drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
-  drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
+- tweak the comments per Michael's request
 
-The intel_pstate is known to use counter-driven frequency invariance.
+Jason Wang (5):
+  vhost-vdpa: refine ioctl pre-processing
+  vhost: generialize backend features setting/getting
+  vhost-vdpa: support get/set backend features
+  vhost-vdpa: support IOTLB batching hints
+  vdpasim: support batch updating
 
-If FIE support is desired in their current state, arch_set_freq_scale()
-could still be called directly by the driver, while
-CPUFREQ_CUSTOM_SET_FREQ_SCALE could be used to mark support for it.
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 40 +++++++++++++++++++++--
+ drivers/vhost/net.c              | 18 ++---------
+ drivers/vhost/vdpa.c             | 55 ++++++++++++++++++++++++++------
+ drivers/vhost/vhost.c            | 15 +++++++++
+ drivers/vhost/vhost.h            |  2 ++
+ include/uapi/linux/vhost.h       |  2 ++
+ include/uapi/linux/vhost_types.h | 11 +++++++
+ 7 files changed, 114 insertions(+), 29 deletions(-)
 
-Conclusion
-==========
-
-Given that the significant majority of current FIE enabled drivers use
-callbacks that lend themselves to triggering the setting of the FIE scale
-factor in a generic way, move the invariance setter calls to cpufreq core,
-while filtering drivers that flag custom support using
-CPUFREQ_CUSTOM_SET_FREQ_SCALE.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/cpufreq.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 0128de3603df..83b58483a39b 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2046,9 +2046,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
- unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
- 					unsigned int target_freq)
- {
-+	unsigned int freq;
-+
- 	target_freq = clamp_val(target_freq, policy->min, policy->max);
-+	freq = cpufreq_driver->fast_switch(policy, target_freq);
-+
-+	if (freq && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-+		arch_set_freq_scale(policy->related_cpus, freq,
-+				    policy->cpuinfo.max_freq);
- 
--	return cpufreq_driver->fast_switch(policy, target_freq);
-+	return freq;
- }
- EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
- 
-@@ -2140,7 +2147,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
- 			    unsigned int relation)
- {
- 	unsigned int old_target_freq = target_freq;
--	int index;
-+	int index, retval;
- 
- 	if (cpufreq_disabled())
- 		return -ENODEV;
-@@ -2171,7 +2178,14 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
- 
- 	index = cpufreq_frequency_table_target(policy, target_freq, relation);
- 
--	return __target_index(policy, index);
-+	retval = __target_index(policy, index);
-+
-+	if (!retval && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-+		arch_set_freq_scale(policy->related_cpus,
-+				    policy->freq_table[index].frequency,
-+				    policy->cpuinfo.max_freq);
-+
-+	return retval;
- }
- EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
- 
 -- 
-2.17.1
+2.20.1
 
