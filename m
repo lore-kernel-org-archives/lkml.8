@@ -2,176 +2,96 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFDFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C977820771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VUnkVkyd"
+	by mail.kernel.org (Postfix) with ESMTP id 9E69E20780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593563568;
+	bh=Gb3KlTuWaOGWGE1Hbxb0Bp5nifCf6yHJW4gy9mIWqpg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1N8aouSb4EXliFgd9lQJ0kC31YW5DWPYzKz1FgsQlm/XdUTx0169+Kic+VEwXSgu+
+	 OhH3AYPPBBbidmSvMh5Lj2Iz+Bbk4zg4kE7fcyYoPXLNOaMH4nkmsH+9KJBoCmwVrd
+	 zbnFKs5qFh7xV3e7OW9A/w02NOLKtP+ifYTeH3zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGAAb4 (ORCPT
+        id S1726356AbgGAAcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 20:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgGAAbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 20:31:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AC6C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:31:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f3so10800215pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jKo6oaglSydwSdtHpON8xvKNOVdPkOj6C6m2pnkcfV8=;
-        b=VUnkVkydgj3kBhMeje9+XBjUYPS1fpHc21BHbAea9UX8b3TuFifDfdPzbjcaWXLK1M
-         vZMBVIJGJgusForm11N/XCMJqXrsxkgRIZBP5aLW9yCCmWD0hdXtgp8J9XMSoLV4toH5
-         Ae6yzqknGleg4mRwotEIIeX+I0OQKz4qnBqpQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jKo6oaglSydwSdtHpON8xvKNOVdPkOj6C6m2pnkcfV8=;
-        b=Q+3zK2Gem0jmbrEk6j0loRVMHsJmymqW8avApw3PyCgQb927kRUCH9BfUGFJceb5u/
-         mtHI0Ftq4daHpFivgLetnG9LdWroPugB5frfJy6pGBOWHIfNw86TpooIBCb1NRl5yXuo
-         AF5ncruA5p3B6ytw29pHpaNFditGAPKhHKyn7VIhqPRAE95NQh5Q/Xsu00E37t02jX8h
-         lBszaok6dp/n1ceBY26R3bBmqUjVr4B9JDz7+PhTyNTtrrcWiVu9wyeWkyLp+oPLidSb
-         qzS78qkCIpoi9f3Ln8s9xqE1GQgvtn6QTRItiKuWtSVty/rBo/8EYxlka2SaFtJR87AD
-         ypDg==
-X-Gm-Message-State: AOAM531hqUiAB2opKInFjXFdGVQwYFcVgKk+luP8BKIK0h3NpKong1nQ
-        AQygxR+pvi8dMsDKUdPW8N3ZDjaqUZQ=
-X-Google-Smtp-Source: ABdhPJzZgWPdo2OTLyz94MwHpshOd9176RKhAvMMkP32xdFAg2xqXFaakMKnqOD2FQ1eo+QtZ5W5ZA==
-X-Received: by 2002:a63:531e:: with SMTP id h30mr16700836pgb.165.1593563514657;
-        Tue, 30 Jun 2020 17:31:54 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
-        by smtp.gmail.com with ESMTPSA id l22sm3214699pjq.20.2020.06.30.17.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 17:31:54 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org (open list:USB TYPEC CLASS)
-Subject: [PATCH] usb: typec: Add num_altmodes partner attribute
-Date:   Tue, 30 Jun 2020 17:31:48 -0700
-Message-Id: <20200701003149.3101219-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jun 2020 20:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbgGAAcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 20:32:47 -0400
+Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4403620771;
+        Wed,  1 Jul 2020 00:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593563566;
+        bh=Gb3KlTuWaOGWGE1Hbxb0Bp5nifCf6yHJW4gy9mIWqpg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N6wiuw9CNrj943TnC25HzHVfwVDUqfkTO9umUC7BnDi0GwsA6qQvOA1B3MOOeaYeH
+         J2mwVukPEyUovq5ZioYa60MdMmj+7ZuZwfQYqMb2s0l6op2ZSzuYR+uvrNSaWSlEjO
+         KFdL/I3qs8PKakRTLXAVdAeCArn82z62Nt3tmcb0=
+Date:   Tue, 30 Jun 2020 17:32:44 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        peterz@infradead.org, frederic@kernel.org, mtosatti@redhat.com,
+        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        tglx@linutronix.de, davem@davemloft.net, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to
+ houskeeping CPUs
+Message-Id: <20200630173244.eef158fb09dca3cc1e2e63b1@linux-foundation.org>
+In-Reply-To: <8054aff1-544d-80de-456f-c3e244233419@redhat.com>
+References: <20200625223443.2684-1-nitesh@redhat.com>
+        <20200625223443.2684-2-nitesh@redhat.com>
+        <8054aff1-544d-80de-456f-c3e244233419@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a user-visible attribute for the number of alt modes available in a
-partner. This allows userspace to determine whether there are any
-remaining alt modes left to be registered by the kernel driver. It can
-begin implementing any policy state machine after all available alt
-modes have been registered with the connector class framework.
+On Mon, 29 Jun 2020 12:11:25 -0400 Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 
-This value is set to "-1" initially, which is an invalid value,
-signifying that a valid number of alt modes haven't been set for the
-partner.
+> 
+> On 6/25/20 6:34 PM, Nitesh Narayan Lal wrote:
+> > From: Alex Belits <abelits@marvell.com>
+> >
+> > The current implementation of cpumask_local_spread() does not respect the
+> > isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
+> > it will return it to the caller for pinning of its IRQ threads. Having
+> > these unwanted IRQ threads on an isolated CPU adds up to a latency
+> > overhead.
+> >
+> > Restrict the CPUs that are returned for spreading IRQs only to the
+> > available housekeeping CPUs.
+> >
+> > Signed-off-by: Alex Belits <abelits@marvell.com>
+> > Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> 
+> Hi Peter,
+> 
+> I just realized that Yuqi jin's patch [1] that modifies cpumask_local_spread is
+> lying in linux-next.
+> Should I do a re-post by re-basing the patches on the top of linux-next?
+> 
+> [1]
+> https://lore.kernel.org/lkml/1582768688-2314-1-git-send-email-zhangshaokun@hisilicon.com/
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>
----
- drivers/usb/typec/class.c | 34 ++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  1 +
- 2 files changed, 35 insertions(+)
-
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index c9234748537a..680cbcfbd427 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -33,6 +33,7 @@ struct typec_partner {
- 	struct usb_pd_identity		*identity;
- 	enum typec_accessory		accessory;
- 	struct ida			mode_ids;
-+	int				num_altmodes;
- };
- 
- struct typec_port {
-@@ -532,9 +533,18 @@ static ssize_t supports_usb_power_delivery_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(supports_usb_power_delivery);
- 
-+static ssize_t num_altmodes_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct typec_partner *p = to_typec_partner(dev);
-+
-+	return sprintf(buf, "%d\n", p->num_altmodes);
-+}
-+static DEVICE_ATTR_RO(num_altmodes);
-+
- static struct attribute *typec_partner_attrs[] = {
- 	&dev_attr_accessory_mode.attr,
- 	&dev_attr_supports_usb_power_delivery.attr,
-+	&dev_attr_num_altmodes.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(typec_partner);
-@@ -570,6 +580,29 @@ int typec_partner_set_identity(struct typec_partner *partner)
- }
- EXPORT_SYMBOL_GPL(typec_partner_set_identity);
- 
-+/**
-+ * typec_partner_set_num_altmodes - Update number of available altmodes
-+ * @partner: The partner to be updated
-+ * @num_alt_modes: The number of altmodes we want to specify as available
-+ *
-+ * This routine is used to report the number of alternate modes supported by the
-+ * partner. This value is *not* enforced in alt mode registration routines.
-+ *
-+ * @partner.num_altmodes is set to -1 on partner registration, denoting that
-+ * a valid value has not been set for it yet.
-+ */
-+int typec_partner_set_num_altmodes(struct typec_partner *partner, int num_altmodes)
-+{
-+	if (num_altmodes < 0)
-+		return -EINVAL;
-+
-+	partner->num_altmodes = num_altmodes;
-+	sysfs_notify(&partner->dev.kobj, NULL, "num_altmodes");
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(typec_partner_set_num_altmodes);
-+
- /**
-  * typec_partner_register_altmode - Register USB Type-C Partner Alternate Mode
-  * @partner: USB Type-C Partner that supports the alternate mode
-@@ -612,6 +645,7 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
- 	ida_init(&partner->mode_ids);
- 	partner->usb_pd = desc->usb_pd;
- 	partner->accessory = desc->accessory;
-+	partner->num_altmodes = -1;
- 
- 	if (desc->identity) {
- 		/*
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 5daa1c49761c..ab523caa23a4 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -112,6 +112,7 @@ struct typec_altmode_desc {
- 	enum typec_port_data	roles;
- };
- 
-+int typec_partner_set_num_altmodes(struct typec_partner *partner, int num_altmodes);
- struct typec_altmode
- *typec_partner_register_altmode(struct typec_partner *partner,
- 				const struct typec_altmode_desc *desc);
--- 
-2.27.0.212.ge8ba1cc988-goog
+This patch has had some review difficulties and has been pending for
+quite some time.  I suggest you base your work on mainline and that we
+ask Yuqi jin to rebase on that, if I don't feel confident doing it,
 
