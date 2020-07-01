@@ -2,228 +2,298 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A75C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 066C220823
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB22207CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BsTGPXYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbgGASGe (ORCPT
+        id S1732846AbgGASHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:06:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:35098 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730227AbgGASGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:06:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AC6F1FB;
-        Wed,  1 Jul 2020 11:06:33 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE11C3F73C;
-        Wed,  1 Jul 2020 11:06:32 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 19:06:31 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
- freq invariance
-Message-ID: <20200701180631.GA12482@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-2-ionela.voinescu@arm.com>
- <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
- <20200701133330.GA32736@arm.com>
- <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
+        Wed, 1 Jul 2020 14:07:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732620AbgGASHW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:07:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0E7C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 11:07:21 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so24712878ljp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 11:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GPchDjqYkLt5LIbAVBTKAkoGd+R4o2ZdbYc6covxDDQ=;
+        b=BsTGPXYCVpVlqYTgEWspxnsolANEIVOz/7dLLUO7vQR+2YRsZH1dYqAY7a9jjyk+ye
+         h+/+hovMD55Db+/6KXS2T2vM/It5sYnq0hOMDZ19nCKCxlXJOufqu8Qt0LDGM7cd8Pb1
+         LKeLBupoZJrJpuNVbRF9Aip1T2pZTKw2qWly1NDPQcvHskkCnL3zaapLf1s4GP222gUI
+         6HqjLvF5gwpcZE1D8h9AgakZFIp+b8wX5u1aF819W7kdKkggCJER8c/I8C52EGeabGNa
+         xE79UWetUqTFSxFMGrdglLqjEmyYgIJYMM/OOg2uxXYMddi2z+bBGWTSMM5wbV7Rc5zG
+         whPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GPchDjqYkLt5LIbAVBTKAkoGd+R4o2ZdbYc6covxDDQ=;
+        b=k5skeNY0PnWx6yM50iZG5rtTF2JfkFqmHuCvdQ/vc2UdOL8yI4uF8bZ3Bklswzt+ez
+         ZmNOP+vZ8bXrl83TtZ0/LvSCcuDPwB9A3YEhPvGiQbLXqLZXbA5cE7ZvhojDJMkc3Ulw
+         XUcE2/NWXnp059RtGz/hNBx7rYgNwXhCll1gQ2D6DLmXpIRvAeoJu6J/1IfjLYwuuWWO
+         r41260IVWavD0sgzxsfUYlGBLGs8BGy4G9VTLrDMxJ4Vex+GYH0DgqSirzVnlZo3hGnU
+         maKSxYEmWK4y5lC5oqb+nv2UpVmolrl10hDrtTtzxJ0j+wvthd1K4eiMLeeOi5wKVjsI
+         +jFw==
+X-Gm-Message-State: AOAM530SrbvFqQD5O6R62KU0Sh+on9MU+JNzn3SUbcvoA6jwsyWqPetu
+        NbtgFPlFbQC1JR6mWidWldVkSXkDgTYSfQYUonSmcQ==
+X-Google-Smtp-Source: ABdhPJyL3NPG9USNMnYd3yLWIqT+Oua7tSa5MNUojDCvTt+lpV65yUAnQ072eSVg/tCyEjA3gs/6Bzinn189gX4/V3E=
+X-Received: by 2002:a05:651c:550:: with SMTP id q16mr13910527ljp.188.1593626839643;
+ Wed, 01 Jul 2020 11:07:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
+ <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+ <20200630153816.GD1785141@kroah.com> <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+ <20200630170012.GB1894898@kroah.com>
+In-Reply-To: <20200630170012.GB1894898@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 1 Jul 2020 11:06:43 -0700
+Message-ID: <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+Hello,
 
-Thank you for the review!
-
-On Wednesday 01 Jul 2020 at 18:05:33 (+0200), Rafael J. Wysocki wrote:
-> On Wed, Jul 1, 2020 at 3:33 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
-> >
-> > Hi,
-> >
-> > Thank you for taking a look over these so quickly.
-> >
-> > On Wednesday 01 Jul 2020 at 16:16:17 (+0530), Viresh Kumar wrote:
-> > > On 01-07-20, 10:07, Ionela Voinescu wrote:
-> > > > diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> > > > index 3494f6763597..42668588f9f8 100644
-> > > > --- a/include/linux/cpufreq.h
-> > > > +++ b/include/linux/cpufreq.h
-> > > > @@ -293,7 +293,7 @@ __ATTR(_name, 0644, show_##_name, store_##_name)
-> > > >
-> > > >  struct cpufreq_driver {
-> > > >     char            name[CPUFREQ_NAME_LEN];
-> > > > -   u8              flags;
-> > > > +   u16             flags;
+On Tue, Jun 30, 2020 at 10:00 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 30, 2020 at 06:08:31PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
 > > >
-> > > Lets make it u32.
-> > >
-> > > >     void            *driver_data;
+> > > On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
+> > > > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
+> > > > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> > > > > > > Add a new (optional) field to denote the physical location of a device
+> > > > > > > in the system, and expose it in sysfs. This was discussed here:
+> > > > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+> > > > > > >
+> > > > > > > (The primary choice for attribute name i.e. "location" is already
+> > > > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> > > > > > > that want to support this new attribute can opt-in by setting a flag in
+> > > > > > > bus_type, and then populating the location of device while enumerating
+> > > > > > > it.
+> > > > > >
+> > > > > > So why not just call it "physical_location"?
+> > > > >
+> > > > > That's better, and will allow us to put "3rd blue plug from the left,
+> > > > > 4th row down" in there someday :)
+> > > > >
+> > > > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
+> > > > > are the systems with drawers of PCI and CPUs and memory that can be
+> > > > > added/removed at any point in time being handled here?  What is
+> > > > > "internal" and "external" for them?
+> > > > >
+> > > > > What exactly is the physical boundry here that is attempting to be
+> > > > > described?
 > > > >
-> > > >     /* needed by all drivers */
-> > > > @@ -417,6 +417,14 @@ struct cpufreq_driver {
-> > > >   */
-> > > >  #define CPUFREQ_IS_COOLING_DEV                     BIT(7)
-> > > >
-> > > > +/*
-> > > > + * Set by drivers which implement the necessary calls to the scheduler's
-> > > > + * frequency invariance engine. The use of this flag will result in the
-> > > > + * default arch_set_freq_scale calls being skipped in favour of custom
-> > > > + * driver calls.
-> > > > + */
-> > > > +#define CPUFREQ_CUSTOM_SET_FREQ_SCALE              BIT(8)
+> > > > Also, where is the "physical location" information going to come from?
 > > >
-> > > I will rather suggest CPUFREQ_SKIP_SET_FREQ_SCALE as the name and
-> > > functionality. We need to give drivers a choice if they do not want
-> > > the core to do it on their behalf, because they are doing it on their
-> > > own or they don't want to do it.
-> 
-> Well, this would go backwards to me, as we seem to be designing an
-> opt-out flag for something that's not even implemented already.
-> 
-> I would go for an opt-in instead.  That would be much cleaner and less
-> prone to regressions IMO.
-> 
+> > > Who knows?  :)
+> > >
+> > > Some BIOS seem to provide this, but do you trust that?
+> > >
+> > > > If that is the platform firmware (which I suspect is the anticipated
+> > > > case), there may be problems with reliability related to that.
+> > >
+> > > s/may/will/
+> > >
+> > > which means making the kernel inact a policy like this patch series
+> > > tries to add, will result in a lot of broken systems, which is why I
+> > > keep saying that it needs to be done in userspace.
+> > >
+> > > It's as if some of us haven't been down this road before and just keep
+> > > being ignored...
+> > >
+> > > {sigh}
 > >
-> > In this case we would not be able to tell if cpufreq (driver or core)
-> > can provide the frequency scale factor, so we would not be able to tell
-> > if the system is really frequency invariant; CPUFREQ_SKIP_SET_FREQ_SCALE
-> > would be set if either:
-> >  - the driver calls arch_set_freq_scale() on its own
-> >  - the driver does not want arch_set_freq_scale() to be called.
+> > Well, to be honest, if you are a "vertical" vendor and you control the
+> > entire stack, *including* the platform firmware, it would be kind of
+> > OK for you to do that in a product kernel.
 > >
-> > So at the core level we would not be able to distinguish between the
-> > two, and return whether cpufreq-based invariance is supported.
+> > However, this is not a practical thing to do in the mainline kernel
+> > which must work for everybody, including people who happen to use
+> > systems with broken or even actively unfriendly firmware on them.
 > >
-> > I don't really see a reason why a driver would not want to set the
-> > frequency scale factor, if it has the proper mechanisms to do so
-> > (therefore excluding the exceptions mentioned in 2/8). I think the
-> > cpufreq core or drivers should produce the information (set the scale
-> > factor) and it should be up to the users to decide whether to use it or
-> > not. But being invariant should always be the default.
-> 
-> So instead of what is being introduced by this patch, there should be
-> an opt-in mechanism for drivers to tell the core to do the freq-scale
-> factor setting on behalf of the driver.
-> 
+> > So I'm inclined to say that IMO this series "as is" would not be an
+> > improvement from the mainline perspective.
+>
+> It can be, we have been using this for USB devices for many many years
+> now, quite successfully.  The key is not to trust that the platform
+> firmware got it right :)
+>
+> > I guess it would make sense to have an attribute for user space to
+> > write to in order to make the kernel reject device plug-in events
+> > coming from a given port or connector, but the kernel has no reliable
+> > means to determine *which* ports or connectors are "safe", and even if
+> > there was a way for it to do that, it still may not agree with user
+> > space on which ports or connectors should be regarded as "safe".
+>
+> Again, we have been doing this for USB devices for a very long time, PCI
+> shouldn't be any different.  Why people keep ignoring working solutions
+> is beyond me, there's nothing "special" about PCI devices here for this
+> type of "worry" or reasoning to try to create new solutions.
+>
+> So, again, I ask, go do what USB does, and to do that, take the logic
+> out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
+> code. Why the original submitter keeps ignoring my request to do this
+> is beyond me, I guess they like making patches that will get rejected :(
+
+IMHO I'm actually trying to precisely do what I think was the
+conclusion of our discussion, and then some changes because of the
+further feedback I received on those patches. Let's take a step back
+and please allow me to explain how I got here (my apologies but this
+spans a couple of threads, and I"m trying to tie them all together
+here):
+
+GOAL: To allow user space to control what (PCI) drivers he wants to
+allow on external (thunderbolt) ports. There was a lot of debate about
+the need for such a policy at
+https://lore.kernel.org/linux-pci/CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com/
+with the final conclusion that it should be OK to implement such a
+policy in userspace, as long as the policy is not implemented in the
+kernel. The kernel only needs to expose bits & info that is needed by
+the userspace to implement such a policy, and it can be used in
+conjunction with "drivers_autoprobe" to implement this policy:
+--------------------------------------------------------------------
+....
+That's an odd thing, but sure, if you want to write up such a policy for
+your systems, great.  But that policy does not belong in the kernel, it
+belongs in userspace.
+....
+--------------------------------------------------------------------
+
+1) The post https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
+lists out the approach that was agreed on. Replicating it here:
+-----------------------------------------------------------------------
+  - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+    today, but doing so would be trivial.  I think I would prefer a
+    sysfs name like "external" so it's more descriptive and less of a
+    judgment.
+
+    This comes from either the DT "external-facing" property or the
+    ACPI "ExternalFacingPort" property.
+
+  - All devices present at boot are enumerated.  Any statically built
+    drivers will bind to them before any userspace code runs.
+
+    If you want to keep statically built drivers from binding, you'd
+    need to invent some mechanism so pci_driver_init() could clear
+    drivers_autoprobe after registering pci_bus_type.
+
+  - Early userspace code prevents modular drivers from automatically
+    binding to PCI devices:
+
+      echo 0 > /sys/bus/pci/drivers_autoprobe
+
+    This prevents modular drivers from binding to all devices, whether
+    present at boot or hot-added.
+
+  - Userspace code uses the sysfs "bind" file to control which drivers
+    are loaded and can bind to each device, e.g.,
+
+      echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
+-----------------------------------------------------------------------
+
+2) As part of implementing the above agreed approach, when I exposed
+PCI "untrusted" attribute to userspace, it ran into discussion that
+concluded that instead of this, the device core should be enhanced
+with a location attribute.
+https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
+-----------------------------------------------------------------------
+...
+The attribute should be called something like "location" or something
+like that (naming is hard), as you don't always know if something is
+external or not (it could be internal, it could be unknown, it could be
+internal to an external device that you trust (think PCI drawers for
+"super" computers that are hot pluggable but yet really part of the
+internal bus).
+....
+"trust" has no direct relation to the location, except in a policy of
+what you wish to do with that device, so as long as you keep them
+separate that way, I am fine with it.
+...
+-----------------------------------------------------------------------
+
+And hence this patch. I don't see an attribute in USB comparable to
+this new attribute, except for the boolean "removable" may be. Are you
+suggesting to pull that into the device core instead of adding this
+"physical_location" attribute?
+
+3) The one deviation from the agreed approach in (1) is
+https://patchwork.kernel.org/patch/11633095/ . The reason is I
+realized that contrary to what I earlier believed, we might not be
+able to disable the PCI link to all external PCI devices at boot. So
+external PCI devices may actually bind to drivers before userspace
+comes up and does "echo 0 > /sys/bus/pci/drivers_autoprobe").
+
+I'm really happy to do what you think is the right way as long as it
+helps achieve my goal above. Really looking for clear directions here.
+
+Thanks & Best Regards,
+
+Rajat
 
 
-This could work better as it covers the following scenarios:
- - All the drivers in patch 3/8 would just use the flag to inform the
-   the core that it can call arch_set_freq_scale() on their behalf.
- - It being omitted truly conveys the message that cpufreq information
-   should not be used for frequency invariance, no matter the
-   implementation of arch_set_freq_scale() (more details below)
-
-The only case that it does not cover is is the scenario in patch 4/8:
-one in which the driver is atypical and it needs its own calls to
-arch_set_freq_scale(), while it still wants to be able to report support
-for frequency invariance through cpufreq_sets_freq_scale() and later
-arch_scale_freq_invariant(). But the jury is still out on whether that
-part of the vexpress-spc driver should be given that much consideration.
-
-My choice of flag was considering this case and potentially other future
-ones like it, but this alternative also sounds good to me.
-
-
-> Then, the driver would be responsible to only opt-in for that if it
-> knows it for a fact that the sched tick doesn't set the freq-scale
-> factor.
-> 
-
-I think that would create a tight coupling between the driver and the
-architecture, when arch_set_freq_scale() is already meant to have the
-same purpose, but it also provides some flexibility. Let me expand on
-this below.
-
-> > Therefore, there are a few reasons I went for
-> > CPUFREQ_CUSTOM_SET_FREQ_SCALE instead:
-> >  - It tells us if the driver has custom mechanisms to set the scale
-> >    factor to filter the setting in cpufreq core and to inform the
-> >    core on whether the system is frequency invariant.
-> >  - It does have a user in the vexpress-spc driver.
-> >  - Currently there aren't drivers that could but choose not to set
-> >    the frequency scale factor, and it my opinion this should not be
-> >    the case.
-> 
-> Well, that depends on what you mean by "could".
-> 
-> For example, it doesn't really make sense to set the freq-scale factor
-> in either the ACPI cpufreq driver or intel_pstate, because the
-> frequency (or P-state to be precise) requested by them may not be the
-> one the CPU ends up running at and even so it may change at any time
-> for various reasons (eg. in the turbo range).  However, the ACPI
-> cpufreq driver as well as intel_pstate in the passive mode both set
-> policy->cur, so that might be used for setting the freq-scale factor
-> in principle, but that freq-scale factor may not be very useful in
-> practice.
-> 
-
-Yes, this completely makes sense, and if there are more accurate methods
-of obtaining information about the current performance level, by using
-counters for example, they should definitely be used.
-
-But in my opinion it should not be up to the driver to choose between
-the methods. The driver and core would only have some information on the
-current performance level (more or less accurate) and
-arch_set_freq_scale() is called to *potentially* use it to set the scale
-factor. So the use of policy->cur would be entirely dependent on the
-implementation of arch_set_freq_scale().
-
-There could be a few scenarios here:
- - arch_set_freq_scale() is left to its weak default that does nothing
-   (which would be the case for when the ACPI cpufreq driver or
-   intel_psate are used)
- - arch_set_freq_scale() is implemented in such a way that takes into
-   account the presence of a counter-based method of setting the scale
-   factor and makes that take precedence (currently done for the users
-   of the arch_topology driver). This also provides support for platforms
-   that have partial support for counters, where the use of cpufreq
-   information is still useful for the CPUs that don't support counters.
-   For those cases, some information, although not entirely accurate,
-   is still better than no information at all.
-
-So I believe cpufreq should just provide the information, if it can,
-and let the user decide whether to use it, or what source of information
-takes precedence. Therefore, arch_set_freq_scale() would decide to
-whether to filter it out.
-
-In any case, your suggestion regarding the choice of flag would make
-bypassing the use of cpufreq information in setting the scale factor
-explicit, no matter the definition of arch_set_freq_scale(). But it
-would also require writers of cpufreq driver code to remember to
-consider the setting of that flag.
-
-I'll consider this more while gauging interest in 4/8.
-
-Many thanks,
-Ionela.
-
-> Thanks!
+> thanks,
+>
+> greg k-h
