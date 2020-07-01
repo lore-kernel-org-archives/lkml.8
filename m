@@ -2,151 +2,172 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3955BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 178C12072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B07C20724
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KbaEO652"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gz+Cecqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgGADE5 (ORCPT
+        id S1726416AbgGADHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgGADE5 (ORCPT
+        Tue, 30 Jun 2020 23:07:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50612 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGADHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:04:57 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD739C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:04:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so14161115wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FLtS6Wl7safhhZxHe3vVwSQB+yrO3mf2F7wF6Yw4fG0=;
-        b=KbaEO652xuoW+WWFjpVvbpU4iiOyR2q6HIhzph64pNfR28SnPEpOFpnm6Pk89a8e+W
-         JAT3VG+sxB93nRQWpM+YDaZC3sSDFSCoU5dk3T3WCGVYQHSqG/ilxyomaVpY/q1N34lV
-         B+gHoDj3TK7UiAVNnqeMeaz6KV1E7YtT91g384zDSd5THbqX7FIIiYz9AUvhFvXCyEcS
-         koF1erQ2cVBTMQoBov9q6qC9wb0V16djKfjkQh7Ehd391Jz1koRhZU9LSpKSCDcHbW0T
-         DH+x3H+qlggoe+5dm3Pu7I9g+Gsok4hhkE7WJI7M9k5HbiWhe0lP2G9BE3vMQNX5nIkx
-         T9Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FLtS6Wl7safhhZxHe3vVwSQB+yrO3mf2F7wF6Yw4fG0=;
-        b=AnWcVsGfr1gC4ZPHObayxe42fdUhSy4X7crvDf+PrsNHi/k+s8jUoTQoTwkZ+/IUkT
-         QAziJXVT2adBWrPmyeHVEqsMDJ7dO2asJirxNmPCSq3R8TGVcQ9HNVB0YZnjLvL8xQ8w
-         70S15N5avoNA34rC+KyVqSeKwBY/XpYh8pGL3PubZS9fhnbwL+8uHMAX8ykqdDDFFf8V
-         i+jwIW2MhUrfbtsVGc1dvSLleEOKHR6OOvD6GKNFVCsf6MKaGBxFrh5xdkaJHhvjigjL
-         X/S9jUnIdOw7hfWn4ARtktPtbMB6Q4JIDFoNs3eZQ+gF5wrlEwT4M4dRBZoXB2amZ06W
-         ZnFA==
-X-Gm-Message-State: AOAM530sv7UpZ6IcgkYdaF61mHmyNgG5tKbg0YGHBMyLWlYIm3bp6Mr/
-        BlWSIxIuffq33glxbE67HGxAFtOqC24IcbylDVf5Bw==
-X-Google-Smtp-Source: ABdhPJwTrmy+YsfHh6wkihsWhfoWsE3KVKSECWn1liJ/rlHC2aq2YGRFMe9yCLw77V28tEsajrievYBesO5qreNpbAk=
-X-Received: by 2002:adf:dd81:: with SMTP id x1mr24362897wrl.7.1593572694204;
- Tue, 30 Jun 2020 20:04:54 -0700 (PDT)
+        Tue, 30 Jun 2020 23:07:03 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06136vQ0180635;
+        Wed, 1 Jul 2020 03:06:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=C+OQSk8SX2KjNV/BOEHQlX3V1mNEDOQ2Qwd9iZIvMHg=;
+ b=gz+Cecqn0IukVu6qMxpbz8T6D7bIMqoRDj6GTQnesnHwSdWIcS4opddN7hIT1XSaa3an
+ CdX9IncaylVgDZU8Van9Berq/2a2EBz/07d8wZGt2BusQP9zfWYK5a9t2+D/92H4WhMz
+ 9k8/OCOnWsTEQQ2swd3+GWfI+YDF8ZWS65D9d9xadJ+tpiIfEc+VRsxtv8aGJq30mubn
+ Q/6O26g/Y3eJuc0f9189LJTW8hnxw4vV4nq/OaBxX1FeylCbRFGorsdtGmL7MrnylwHU
+ KRfYSnwmdmBtAPtYeK4i/FdJF0H9Ba7Gm2v8gFAZ+SiT5FYPuwKTC6QN+Nx332u3XaB/ bw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31xx1dvr63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 01 Jul 2020 03:06:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0612wlHC085708;
+        Wed, 1 Jul 2020 03:06:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31xfvtbt98-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Jul 2020 03:06:56 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06136sV0029228;
+        Wed, 1 Jul 2020 03:06:54 GMT
+Received: from [192.168.0.110] (/183.246.145.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Jul 2020 03:06:53 +0000
+Subject: Re: [PATCH 1/2] workqueue: don't always set __WQ_ORDERED implicitly
+To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        open-iscsi@googlegroups.com, lduncan@suse.com,
+        michael.christie@oracle.com
+References: <20200611100717.27506-1-bob.liu@oracle.com>
+ <CAJhGHyDQLuoCkjwnze_6ZOLwXPtbNxnjxOr=fqqqsR_yxB9xtA@mail.gmail.com>
+ <52fa1d81-e585-37eb-55e5-0ed07ce7adc0@oracle.com>
+ <CAJhGHyBPrCr3+iu-dMe69J3+tj99ea8crCGBuXc4yoStD+dEFA@mail.gmail.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <bdf25dd0-7ac3-52b5-855b-14955443c52b@oracle.com>
+Date:   Wed, 1 Jul 2020 11:06:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200630070552.1110864-1-davidgow@google.com> <20200630110654.00001d40@Huawei.com>
-In-Reply-To: <20200630110654.00001d40@Huawei.com>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 1 Jul 2020 11:04:42 +0800
-Message-ID: <CABVgOSnOo4iauOBGpJUZ4NRihCUU-1vue8hajZTCKAcH98_Lrw@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: Specify IOMEM dependency for adi-axi-adc driver
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-iio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJhGHyBPrCr3+iu-dMe69J3+tj99ea8crCGBuXc4yoStD+dEFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9668 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9668 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007010019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 6:07 PM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue, 30 Jun 2020 00:05:52 -0700
-> David Gow <davidgow@google.com> wrote:
->
-> > The Analog Devices AXI ADC driver uses the devm_ioremap_resource
-> > function, but does not specify a dependency on IOMEM in Kconfig. This
-> > causes a build failure on architectures without IOMEM, for example, UML
-> > (notably with make allyesconfig).
-> >
-> > Fix this by making CONFIG_ADI_AXI_ADC depend on CONFIG_IOMEM.
-> >
-> > Signed-off-by: David Gow <davidgow@google.com>
-> Hi David,
->
-> Could you confirm what the build error is?  I thought the stubs added in
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1bcbfbfdeb
-> were meant to allow us to avoid having lots of depends on IOMEM lines for the
-> few architectures who don't support it.
+On 6/29/20 8:37 AM, Lai Jiangshan wrote:
+> On Mon, Jun 29, 2020 at 8:13 AM Bob Liu <bob.liu@oracle.com> wrote:
+>>
+>> On 6/28/20 11:54 PM, Lai Jiangshan wrote:
+>>> On Thu, Jun 11, 2020 at 6:29 PM Bob Liu <bob.liu@oracle.com> wrote:
+>>>>
+>>>> Current code always set 'Unbound && max_active == 1' workqueues to ordered
+>>>> implicitly, while this may be not an expected behaviour for some use cases.
+>>>>
+>>>> E.g some scsi and iscsi workqueues(unbound && max_active = 1) want to be bind
+>>>> to different cpu so as to get better isolation, but their cpumask can't be
+>>>> changed because WQ_ORDERED is set implicitly.
+>>>
+>>> Hello
+>>>
+>>> If I read the code correctly, the reason why their cpumask can't
+>>> be changed is because __WQ_ORDERED_EXPLICIT, not __WQ_ORDERED.
+>>>
+>>>>
+>>>> This patch adds a flag __WQ_ORDERED_DISABLE and also
+>>>> create_singlethread_workqueue_noorder() to offer an new option.
+>>>>
+>>>> Signed-off-by: Bob Liu <bob.liu@oracle.com>
+>>>> ---
+>>>>  include/linux/workqueue.h | 4 ++++
+>>>>  kernel/workqueue.c        | 4 +++-
+>>>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+>>>> index e48554e..4c86913 100644
+>>>> --- a/include/linux/workqueue.h
+>>>> +++ b/include/linux/workqueue.h
+>>>> @@ -344,6 +344,7 @@ enum {
+>>>>         __WQ_ORDERED            = 1 << 17, /* internal: workqueue is ordered */
+>>>>         __WQ_LEGACY             = 1 << 18, /* internal: create*_workqueue() */
+>>>>         __WQ_ORDERED_EXPLICIT   = 1 << 19, /* internal: alloc_ordered_workqueue() */
+>>>> +       __WQ_ORDERED_DISABLE    = 1 << 20, /* internal: don't set __WQ_ORDERED implicitly */
+>>>>
+>>>>         WQ_MAX_ACTIVE           = 512,    /* I like 512, better ideas? */
+>>>>         WQ_MAX_UNBOUND_PER_CPU  = 4,      /* 4 * #cpus for unbound wq */
+>>>> @@ -433,6 +434,9 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+>>>>  #define create_singlethread_workqueue(name)                            \
+>>>>         alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
+>>>>
+>>>> +#define create_singlethread_workqueue_noorder(name)                    \
+>>>> +       alloc_workqueue("%s", WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | \
+>>>> +                       WQ_UNBOUND | __WQ_ORDERED_DISABLE, 1, (name))
+>>>
+>>> I think using __WQ_ORDERED without __WQ_ORDERED_EXPLICIT is what you
+>>> need, in which case cpumask is allowed to be changed.
+>>>
+>>
+>> I don't think so, see function workqueue_apply_unbound_cpumask():
+>>
+>> wq_unbound_cpumask_store()
+>>  > workqueue_set_unbound_cpumask()
+>>    > workqueue_apply_unbound_cpumask() {
+>>      ...
+>> 5276                 /* creating multiple pwqs breaks ordering guarantee */
+>> 5277                 if (wq->flags & __WQ_ORDERED)
+>> 5278                         continue;
+>>                           ^^^^
+>>                           Here will skip apply cpumask if only __WQ_ORDERED is set.
+> 
+> wq_unbound_cpumask_store() is for changing the cpumask of
+> *all* workqueues. I don't think it can be used to make
+> scsi and iscsi workqueues bound to different cpu.
+> 
+> apply_workqueue_attrs() is for changing the cpumask of the specific
+> workqueue, which can change the cpumask of __WQ_ORDERED workqueue
+> (but without __WQ_ORDERED_EXPLICIT).
+> 
 
-No worries:
-/usr/bin/ld: drivers/iio/adc/adi-axi-adc.o: in function `adi_axi_adc_probe':
-torvalds-linux/drivers/iio/adc/adi-axi-adc.c:415: undefined reference
-to `devm_platform_ioremap_resource'
+Yes, you are right. I made a mistake.
+Sorry for the noise.
 
-Alas, the devm_platform_ioremap_resource function isn't handled by the
-UML stubs: it all seems to be in drivers/base/platform.c and
-lib/devres.c, behind #ifdef HAS_IOMEM.
+Regards,
+Bob
 
-In any case, improving IOMEM support for UML (at least for the KUnit
-test case, which is my use case) is something I'd like to do. There
-are only three drivers[1,2] upstream at the moment which fail to build
-as-is, though, so it seemed worth trying to fix them in the meantime.
-That being said, I tried just getting rid of the few #ifdef HAS_IOMEMs
-around the various devm_*_ioremap functions, and everything seems to
-be working... So maybe that's a false dependency given the various
-stubs (at least on UML). I used this (hideously hacky) patch:
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c0d0a5490ac6..b6f08c88e2b6 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -61,7 +61,7 @@ struct resource *platform_get_resource(struct
-platform_device *dev,
-}
-EXPORT_SYMBOL_GPL(platform_get_resource);
-
--#ifdef CONFIG_HAS_IOMEM
-+#if 1//def CONFIG_HAS_IOMEM
-/**
- * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
- *                                         platform device and get resource
-diff --git a/lib/Makefile b/lib/Makefile
-index b1c42c10073b..35c21af33b93 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -115,7 +115,7 @@ obj-y += math/ crypto/
-
-obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
-obj-$(CONFIG_GENERIC_PCI_IOMAP) += pci_iomap.o
--obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
-+obj-y += iomap_copy.o devres.o
-obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
-obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
-
----
-
-If this seems to work more broadly, I may try to clean it up and post
-it for broader review.
-
-Cheers,
--- David
+>>
+>> 5280                 ctx = apply_wqattrs_prepare(wq, wq->unbound_attrs);
+>>
+>>      }
