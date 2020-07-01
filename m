@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F283C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1420C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA56120760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFEE20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTrFLI6W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdMhGiBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgGANCh (ORCPT
+        id S1730921AbgGANCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        Wed, 1 Jul 2020 09:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730744AbgGANCc (ORCPT
+        with ESMTP id S1730744AbgGANCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:02:32 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDC5C03E97A;
-        Wed,  1 Jul 2020 06:02:32 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so7451348pje.0;
-        Wed, 01 Jul 2020 06:02:32 -0700 (PDT)
+        Wed, 1 Jul 2020 09:02:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6A8C03E979;
+        Wed,  1 Jul 2020 06:02:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so8997622plm.10;
+        Wed, 01 Jul 2020 06:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YSd7xHW0v3feamfrhjVTkN6nApBkwLgvxLmLLLtPadE=;
-        b=nTrFLI6WYPLCwU+CrpdvrfX0LvHTn+t2U+SbMCIPRJo5YaVA+nZawFfgZKvHpRlOY3
-         RgnBWR1zPzroXhIhzFVBSdQa+nvUFuYTz8AVEcCx1FJ8aV5n+Xo7VXrTpX68uVnjJlcx
-         zNmeFJTkwyw8PXrmXvP1i/yqs9gk6wj3OdWm3ZAmPkrQ7/dMYUiz8S73V5dXZuzKiz6X
-         BjEc+1R7y6DpQeltscfbnMbFZu5TdjND1EdOUNSOTukPGGzQPI9/kMkH1AxlT2chzZ4z
-         D2q/ZWBsu7xwEsaXuctpy61YwNnO7qJvhWtzuPmcbmGXtsxDSLv0gUObspK7oSPVt5zG
-         1zzw==
+        bh=ZlRjk8zT4O+JvT0opsFaP8uu4DQA96Rwf9GDzwtwPpA=;
+        b=VdMhGiBHDnabiz1ww0We+D9xZ9YmY5AgbsQKaGxp9X4Hm+abCnEeOrBoKe9mrC6FqR
+         fd37KpKkysUAQZKj0HvlRzy/TKTaWWRJdNeU+gmE003f0d2NX0eeXVLmhdIS+1TBWYEG
+         GCXU4tkesPB14EFk24cDw5pNcAjFXBb1+c7BIwnOiOvATlEljHlIUHHOhV11o3gbITdf
+         8/Xn6tZuC5M9hXWrg/4XdKc4tgeEMJCKJonU236n/rFn5A+fPS4xogqADs63+ml2Wgx5
+         8suHPkakVKL2fM3/0Y7sl1tqUE/T2gYYWyw4FexMnIbajICuyWfnAKEwc1EAP455rKsc
+         3YNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YSd7xHW0v3feamfrhjVTkN6nApBkwLgvxLmLLLtPadE=;
-        b=JHS2B7+8rvfUjMRA9SShypWX5JaWSU8jtlhUntiGK91N8D0CQxYSg2WAqBg3I7OfGQ
-         yguItRhVaZe3FqkQM35XUxYZ6VA/qrm0ewHZfDN5oXcbVkea2LjUYeyV5hfMaR73e6xh
-         YXUrTUb8Dgsfygy6w0Y5X7bCFrRjRMMFQ6ZgjcHXO24cewB7LlhqVDzwUVaBrAk4R1uR
-         n+ViYBnpkr9INI3Ijjsuity5y3pVh9BtULOqFgYtgUX1TWpGO/jF/WYL/uZbWIODe9dW
-         CuHR1ztWMaB7vPmPS5AjRN1+SiHsCClhH7OFpAgpn5mCJCtMBjwW2B0ywyLDv8vt8exx
-         Ygvg==
-X-Gm-Message-State: AOAM533idjxbg2rCwcPTPxU30h+Ao7wypx95Cws3IZfYuhgvQ8l201se
-        mcxUYjF+HmhLXn9laAfXMB8=
-X-Google-Smtp-Source: ABdhPJyG4zlKvfXAs+jLp35G3XHfILwx4P0BEmEJbilD9ajN5lFPfq3fEV2IXuYW8D7wu6wvx+nuIQ==
-X-Received: by 2002:a17:902:26f:: with SMTP id 102mr21561130plc.226.1593608551872;
-        Wed, 01 Jul 2020 06:02:31 -0700 (PDT)
+        bh=ZlRjk8zT4O+JvT0opsFaP8uu4DQA96Rwf9GDzwtwPpA=;
+        b=hfPjqaoTrXMLI6zEPX9Wz5oo3olikyFMkHhsvHxL3ScYM1/biCOI+FvOlRf5ZHzHsQ
+         c2SzJPo/ELZHGyilgpvKSGvmJKC1j0jfLM1YLW3YV1/RQlJdgzS6U8VT2cgc35fqLZ61
+         S8030fsCSXHPgNMARskh+5vXpbvn3stMxNGZMEbk5yohjLcKGRdquyia8vDrWz/TOZho
+         JwPodI5L07rpnxsvU0avh1iBrXykadtmo7oonhYXRw4N1J6oq805vfIDop0R674jc5HJ
+         5l2bEoiA83P7IjgRABbafRZ3KxHoiCCC1rX5cBx2vzKvXFbEu8JmWjmKMZIhj44sMuHM
+         Nt0A==
+X-Gm-Message-State: AOAM532M1D/5sqNCJrBt6Puhq44Vt4/+ZzPeAe2EZQyoVWjWV38bY8K5
+        noNkWzneIyrXG/ZSn2Hdh4A=
+X-Google-Smtp-Source: ABdhPJyW6WI+g29dTNawJ1+miqNXQEfKV65sxS6eTTaCmhAfO21hyaIO5yGGqu9+kNECK2Glk9Y4ZQ==
+X-Received: by 2002:a17:90a:9b82:: with SMTP id g2mr26144757pjp.187.1593608560269;
+        Wed, 01 Jul 2020 06:02:40 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id d9sm6070908pgv.45.2020.07.01.06.02.24
+        by smtp.gmail.com with ESMTPSA id d9sm6070908pgv.45.2020.07.01.06.02.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:02:31 -0700 (PDT)
+        Wed, 01 Jul 2020 06:02:39 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
@@ -86,9 +86,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org
-Subject: [PATCH v1 04/11] ena_netdev: use generic power management
-Date:   Wed,  1 Jul 2020 18:29:31 +0530
-Message-Id: <20200701125938.639447-5-vaibhavgupta40@gmail.com>
+Subject: [PATCH v1 05/11] liquidio: use generic power management
+Date:   Wed,  1 Jul 2020 18:29:32 +0530
+Message-Id: <20200701125938.639447-6-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
 References: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
@@ -99,77 +99,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions.
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
+
+The driver defined empty-body .suspend() and .resume() callbacks earlier.
+They can now be define NULL and bind with "struct dev_pm_ops" variable.
 
 Compile-tested only.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 21 ++++++++------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ .../net/ethernet/cavium/liquidio/lio_main.c   | 31 +++----------------
+ 1 file changed, 5 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index dda4b8fc9525..92e6d244550c 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -4420,13 +4420,12 @@ static void ena_shutdown(struct pci_dev *pdev)
- 	__ena_shutoff(pdev, true);
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+index 66d31c018c7e..19689d72bc4e 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+@@ -405,27 +405,8 @@ static void liquidio_pcie_resume(struct pci_dev *pdev __attribute__((unused)))
+ 	/* Nothing to be done here. */
  }
  
 -#ifdef CONFIG_PM
- /* ena_suspend - PM suspend callback
-- * @pdev: PCI device information struct
-- * @state:power state
-+ * @dev_d: Device information struct
-  */
--static int ena_suspend(struct pci_dev *pdev,  pm_message_t state)
-+static int __maybe_unused ena_suspend(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct ena_adapter *adapter = pci_get_drvdata(pdev);
- 
- 	u64_stats_update_begin(&adapter->syncp);
-@@ -4445,12 +4444,11 @@ static int ena_suspend(struct pci_dev *pdev,  pm_message_t state)
- }
- 
- /* ena_resume - PM resume callback
-- * @pdev: PCI device information struct
-- *
-+ * @dev_d: Device information struct
-  */
--static int ena_resume(struct pci_dev *pdev)
-+static int __maybe_unused ena_resume(struct device *dev_d)
- {
--	struct ena_adapter *adapter = pci_get_drvdata(pdev);
-+	struct ena_adapter *adapter = dev_get_drvdata(dev_d);
- 	int rc;
- 
- 	u64_stats_update_begin(&adapter->syncp);
-@@ -4462,7 +4460,8 @@ static int ena_resume(struct pci_dev *pdev)
- 	rtnl_unlock();
- 	return rc;
- }
+-/**
+- * \brief called when suspending
+- * @param pdev Pointer to PCI device
+- * @param state state to suspend to
+- */
+-static int liquidio_suspend(struct pci_dev *pdev __attribute__((unused)),
+-			    pm_message_t state __attribute__((unused)))
+-{
+-	return 0;
+-}
+-
+-/**
+- * \brief called when resuming
+- * @param pdev Pointer to PCI device
+- */
+-static int liquidio_resume(struct pci_dev *pdev __attribute__((unused)))
+-{
+-	return 0;
+-}
 -#endif
-+
-+static SIMPLE_DEV_PM_OPS(ena_pm_ops, ena_suspend, ena_resume);
++#define liquidio_suspend NULL
++#define liquidio_resume NULL
  
- static struct pci_driver ena_pci_driver = {
- 	.name		= DRV_MODULE_NAME,
-@@ -4470,10 +4469,6 @@ static struct pci_driver ena_pci_driver = {
- 	.probe		= ena_probe,
- 	.remove		= ena_remove,
- 	.shutdown	= ena_shutdown,
--#ifdef CONFIG_PM
--	.suspend    = ena_suspend,
--	.resume     = ena_resume,
--#endif
- 	.sriov_configure = pci_sriov_configure_simple,
+ /* For PCI-E Advanced Error Recovery (AER) Interface */
+ static const struct pci_error_handlers liquidio_err_handler = {
+@@ -451,17 +432,15 @@ static const struct pci_device_id liquidio_pci_tbl[] = {
  };
+ MODULE_DEVICE_TABLE(pci, liquidio_pci_tbl);
  
++static SIMPLE_DEV_PM_OPS(liquidio_pm_ops, liquidio_suspend, liquidio_resume);
++
+ static struct pci_driver liquidio_pci_driver = {
+ 	.name		= "LiquidIO",
+ 	.id_table	= liquidio_pci_tbl,
+ 	.probe		= liquidio_probe,
+ 	.remove		= liquidio_remove,
+ 	.err_handler	= &liquidio_err_handler,    /* For AER */
+-
+-#ifdef CONFIG_PM
+-	.suspend	= liquidio_suspend,
+-	.resume		= liquidio_resume,
+-#endif
++	.driver.pm	= &liquidio_pm_ops,
+ #ifdef CONFIG_PCI_IOV
+ 	.sriov_configure = liquidio_enable_sriov,
+ #endif
 -- 
 2.27.0
 
