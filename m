@@ -2,127 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD43CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81AB20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593585910;
-	bh=V86J3jgURHSdZsyXulxAnsXOcGyXU5usoo+RFkulY4s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k+7XxqySnCL+xIYqxP6sxVfgXrFLlRWQmzjhzDNmyEmgrgovpkn46Hob/pJUgRQ4h
-	 MHnodYaPLw8x+1bn0/t7Tisr6r3Lt/qO6sAw1uyLQc54UA9EF5URZsHcQNsT6LAjpb
-	 7HwB0+bKzo4uu5YdrWfk9bu6qCbA4WOyzy4/DSSk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E07A206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGAGpJ (ORCPT
+        id S1727940AbgGAGpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44036 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 02:45:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34030 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGAGpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 02:45:09 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F39207D4
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 06:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593585908;
-        bh=V86J3jgURHSdZsyXulxAnsXOcGyXU5usoo+RFkulY4s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OQzC8wBFpBQCqYh5C94NtLJpj4JYoVqRA9r7zs6jT+bP7y7Gtb5VAwpSc3pEhRKYW
-         p32WsdLFpASecpHsn5civsVvTSZlVWKKLak3KIQWsuotKlXxlvZGse2M1sywiRO0Az
-         4qVaa3DLq5V3e7xQstDEA0qkU4b++WMnMXztbNi8=
-Received: by mail-ot1-f41.google.com with SMTP id m2so20601832otr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 23:45:08 -0700 (PDT)
-X-Gm-Message-State: AOAM532ErFhtav5D157Kr7cUAQkb86M4njHuTxkfo0fD3MtdRwpocbpg
-        3pw8qQHvFu77D3UI3Q1/u+os6urRyGlsv4B1vzQ=
-X-Google-Smtp-Source: ABdhPJzkllfSrkVjVRmkL64xW0OFGAH2LVAQjLBGmm+x67KpPW6KvfPoiTTZgc1feVe4Iw/ywmnvgsZnK0WPJo3pBq8=
-X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr22646743otf.77.1593585907399;
- Tue, 30 Jun 2020 23:45:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <202006290907.E5EF18A@keescook> <CAMj1kXFge5aWL2BY8Y1=m1TonB+SrDq6p7TQWuO5JkzcR2dhjQ@mail.gmail.com>
- <202006290919.93C759C62@keescook> <20200629165603.GD900899@rani.riverdale.lan>
- <20200629173735.l3ssrj7m3q5swfup@google.com> <CAMj1kXHaXzYFkW_H=w36vMb1qPpuZXsnTd_giq4vsh0bw3S3eA@mail.gmail.com>
- <20200629233405.n56yb4xwlgxrt3fn@google.com> <CAMj1kXGTOdNiuU70pFB74UJ6z43AM-UViTSd3=ATV=94W+f1RA@mail.gmail.com>
- <20200630175408.GA2301688@rani.riverdale.lan> <20200630220043.4snabunhgvfdktte@google.com>
- <20200630232759.GA2641539@rani.riverdale.lan>
-In-Reply-To: <20200630232759.GA2641539@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 1 Jul 2020 08:44:56 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHVJ0eDHcod633P_nt0HbTayBkxwx8LQAV0k9t9oEFZSA@mail.gmail.com>
-Message-ID: <CAMj1kXHVJ0eDHcod633P_nt0HbTayBkxwx8LQAV0k9t9oEFZSA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime relocations
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726144AbgGAGpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 02:45:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E7CDAADC5;
+        Wed,  1 Jul 2020 06:45:17 +0000 (UTC)
+Date:   Wed, 01 Jul 2020 08:45:16 +0200
+Message-ID: <s5himf7g2df.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg KH <greg@kroah.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 4.9 026/191] ALSA: usb-audio: Improve frames size computation
+In-Reply-To: <20200630183328.GA1916087@kroah.com>
+References: <20200629154007.2495120-1-sashal@kernel.org>
+        <20200629154007.2495120-27-sashal@kernel.org>
+        <e033669a50b53e439f5071ad12d05c2d02ab6cfc.camel@tsoy.me>
+        <20200630165407.GZ1931@sasha-vm>
+        <20200630183328.GA1916087@kroah.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 01:28, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, Jun 30, 2020 at 03:00:43PM -0700, Fangrui Song wrote:
-> > * Ard Biesheuvel
-> > > On Tue, 30 Jun 2020 at 01:34, Fangrui Song <maskray@google.com> wrote:
-> >
-> > If the executable is purely static, it does not need to have PLT. All
-> > calls to a PLT can be redirected to the function itself.  Some range
-> > extension thunks (other terms: stub groups, veneers, etc) may still be
-> > needed if the distance is too large.
-> >
-> > There are cases where a GOT cannot be avoided, e.g.
-> >
-> > extern char foo[] __attribute__((weak, visibility("hidden")));
-> > char *fun() { return foo; }
-> >
-> > If foo is a SHN_ABS, `movq foo@GOTPCREL(%rip), %rax` can't be optimized
-> > by GOTPCRELX (https://sourceware.org/bugzilla/show_bug.cgi?id=25749 binutils>=2.35 will be good)
-> > Many other architectures don't even have a GOT optimization.
->
-> Urk -- the example given in that bug report isn't even weak. Are you
-> guys proposing to pessimize every access to a global symbol, regardless
-> of visibility, by going through the GOT on the off chance that somebody
-> might define one of them as SHN_ABS? Can we at least gate it behind
-> something like __attribute__((might_be_shn_abs))?
->
+On Tue, 30 Jun 2020 20:33:28 +0200,
+Greg KH wrote:
+> 
+> On Tue, Jun 30, 2020 at 12:54:07PM -0400, Sasha Levin wrote:
+> > On Tue, Jun 30, 2020 at 01:49:50PM +0300, Alexander Tsoy wrote:
+> > > В Пн, 29/06/2020 в 11:37 -0400, Sasha Levin пишет:
+> > > > From: Alexander Tsoy <alexander@tsoy.me>
+> > > > 
+> > > > [ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
+> > > > 
+> > > > For computation of the the next frame size current value of fs/fps
+> > > > and
+> > > > accumulated fractional parts of fs/fps are used, where values are
+> > > > stored
+> > > > in Q16.16 format. This is quite natural for computing frame size for
+> > > > asynchronous endpoints driven by explicit feedback, since in this
+> > > > case
+> > > > fs/fps is a value provided by the feedback endpoint and it's already
+> > > > in
+> > > > the Q format. If an error is accumulated over time, the device can
+> > > > adjust fs/fps value to prevent buffer overruns/underruns.
+> > > > 
+> > > > But for synchronous endpoints the accuracy provided by these
+> > > > computations
+> > > > is not enough. Due to accumulated error the driver periodically
+> > > > produces
+> > > > frames with incorrect size (+/- 1 audio sample).
+> > > > 
+> > > > This patch fixes this issue by implementing a different algorithm for
+> > > > frame size computation. It is based on accumulating of the remainders
+> > > > from division fs/fps and it doesn't accumulate errors over time. This
+> > > > new method is enabled for synchronous and adaptive playback
+> > > > endpoints.
+> > > > 
+> > > > Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+> > > > Link:
+> > > > https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
+> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > > ---
+> > > >  sound/usb/card.h     |  4 ++++
+> > > >  sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++--
+> > > > ---
+> > > >  sound/usb/endpoint.h |  1 +
+> > > >  sound/usb/pcm.c      |  2 ++
+> > > >  4 files changed, 45 insertions(+), 5 deletions(-)
+> > > 
+> > > Please drop this patch from the queue for now (and for 4.4 as well). It
+> > > introduced a regression for some devices. The fix is available, but not
+> > > accepted yet.
+> > 
+> > I've dropped it from the older branches, but note that it's already in
+> > newer released stable kernels. Should it be reverted or should we wait
+> > for the fix?
+> 
+> I was going to wait for the fix.
 
-SHN_ABS is typically only used for constants emitted by the linker
-script, so I don't think this is a huge deal.
+The corresponding fix is now in sound git tree.
+But since I'm traveling in this week, the pull request to Linus will
+be delayed likely to the next week.
 
-The example above is not that different from having a statically
-initialized function pointer in your object (which might be NULL), and
-that is something we already have to deal with anyway.
 
-What I was talking about is the tendency of the compiler to assume
-that every function symbol with external linkage is preemptible, and
-the only way to suppress this behavior is to issue a #pragma that can
-be done in code only, not on the compiler command line.
+thanks,
 
-> >
-> > >I don't think it's really relevant for the kernel build -- all we get is
-> > >ld -static --no-dynamic-linker, all -static does is prevent searching
-> > >shared libraries, and we already pass --no-dynamic-linker if it's
-> > >supported.
-> > >
-> > >[0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81498
+Takashi
