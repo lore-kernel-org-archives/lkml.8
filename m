@@ -2,140 +2,121 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1665FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2550207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E834820702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBG+Yvvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbgGAOHj (ORCPT
+        id S1731267AbgGAOJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:07:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:43934 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbgGAOHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:07:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30C0F30E;
-        Wed,  1 Jul 2020 07:07:37 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C614C3F73C;
-        Wed,  1 Jul 2020 07:07:36 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 15:07:35 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
-        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 4/8] cpufreq,vexpress-spc: fix Frequency Invariance (FI)
- for bL switching
-Message-ID: <20200701140735.GB32736@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-5-ionela.voinescu@arm.com>
- <20200701095414.2wjcnyhndgcedk2q@vireshk-i7>
+        Wed, 1 Jul 2020 10:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgGAOJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:09:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0CDC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:09:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so19984470lji.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 07:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P/P3F3XEPXIiHBtprCyJGmIkmTTIjneNamDkMb/+IKY=;
+        b=IBG+YvvbuNPKZx2AedrFTn56DnNjAVZWf6WQa+RjBf1mdVwCqjoRe0EOWxf2ZsoKNQ
+         b3hN7uxRdo5X8H/WxKRrWNv4IyQKZwMoGr//UG1BFvD4G80WjJOuxFI0S8bxutB3aBRl
+         0/x5mSLjtl4ALH8xL/qo+ZuHm23MTE7a2MYUMiRAg/rYpwUXAIxp59VbVjZJG/Hg96Sn
+         hEzhJrOi4WgvPeIsoPcSEAEswQ7oN1c+jfCtzg2mmXxV5FSYwIaFA8bEm8UDPlzSbyMJ
+         aadoEpZuQ0drFWEe4DVzI5jCEAc/lkkdTwT+Hos/7mwpPZM6Hkqr1Z1EvfYJ5dWXx569
+         LKBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P/P3F3XEPXIiHBtprCyJGmIkmTTIjneNamDkMb/+IKY=;
+        b=Eis4Zc4zco8+w0PDCv2tqj4k7YITZJgqfGeIuIe9XW9llfZQxrbAMiZW06rKldK9zg
+         9TzuJ0WEiOgjsOQ4BYT12ByM9V5xct+AC70alIuOIki8g4SKFQSpJgwcFJkUXGauVQwg
+         PkK+g/qt29Nbz327o6SBpPpNpv42NJFt3qC1bX6FkVRXFhK8wUFZK4+0h2hWGhCC1wuB
+         kbpcjE7s/b2HV9gmlyBEkvEFuzrMbselHy8lyBBb8WSy1fr/J7HQZ609lvTBUd1VQ/hb
+         tQx/4oNyMEbLAQ3Snw1ZOR248FzwDXtbJHQ4/l8Jrifu8rzHmlowGvLZXcOgdmKGH8cw
+         7bZw==
+X-Gm-Message-State: AOAM5310PhvMc00ciQVblCGaOd3iTmOM0RsN4CfD2JJeq3bdnrIQC+sa
+        s7/lBTMMRLuNNOH80gRAE0CRQmhIBRuBtAIGQdA=
+X-Google-Smtp-Source: ABdhPJwcM1s4ggfKptzs/9JApOUZ0JUdrDWPQACOb1X4/rZXWo3OKR82bDwC6Vo02IG5t16TWFBovu0WWwtuG2WL0yA=
+X-Received: by 2002:a2e:82c8:: with SMTP id n8mr13197066ljh.123.1593612545107;
+ Wed, 01 Jul 2020 07:09:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701095414.2wjcnyhndgcedk2q@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
+ <20200629123215.1014747-5-lee.jones@linaro.org> <20200701091518.GW1179328@dell>
+In-Reply-To: <20200701091518.GW1179328@dell>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 1 Jul 2020 22:10:19 +0800
+Message-ID: <CADBw62pFb6aEegTRXS3Y9DeJDTrW4mSHND4nw4p8Qtv-Yk+SNg@mail.gmail.com>
+Subject: Re: [PATCH] mfd: sprd-sc27xx-spi: Fix-up bogus IRQ register offset
+ and mask setting
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
-> On 01-07-20, 10:07, Ionela Voinescu wrote:
-> > In the majority of cases, the index argument to cpufreq's target_index()
-> > is meant to identify the frequency that is requested from the hardware,
-> > according to the frequency table: policy->freq_table[index].frequency.
-> > 
-> > After successfully requesting it from the hardware, this value, together
-> > with the maximum hardware frequency (policy->cpuinfo.max_freq) are used
-> > as arguments to arch_set_freq_scale(), in order to set the task scheduler
-> > frequency scale factor. This is a normalized indication of a CPU's
-> > current performance.
-> > 
-> > But for the vexpress-spc-cpufreq driver, when big.LITTLE switching [1]
-> > is enabled, there are three issues with using the above information for
-> > setting the FI scale factor:
-> > 
-> >  - cur_freq: policy->freq_table[index].frequency is not the frequency
-> >    requested from the hardware. ve_spc_cpufreq_set_rate() will convert
-> >    from this virtual frequency to an actual frequency, which is then
-> >    requested from the hardware. For the A7 cluster, the virtual frequency
-> >    is half the actual frequency. The use of the virtual policy->freq_table
-> >    frequency results in an incorrect FI scale factor.
-> > 
-> >  - max_freq: policy->cpuinfo.max_freq does not correctly identify the
-> >    maximum frequency of the physical cluster. This value identifies the
-> >    maximum frequency achievable by the big-LITTLE pair, that is the
-> >    maximum frequency of the big CPU. But when the LITTLE CPU in the group
-> >    is used, the hardware maximum frquency passed to arch_set_freq_scale()
-> >    is incorrect.
-> > 
-> >  - missing a scale factor update: when switching clusters, the driver
-> >    recalculates the frequency of the old clock domain based on the
-> >    requests of the remaining CPUs in the domain and asks for a clock
-> >    change. But this does not result in an update in the scale factor.
-> > 
-> > Therefore, introduce a local function bLs_set_sched_freq_scale() that
-> > helps call arch_set_freq_scale() with correct information for the
-> > is_bL_switching_enabled() case, while maintaining the old, more
-> > efficient, call site of arch_set_freq_scale() for when cluster
-> > switching is disabled.
-> > 
-> > Also, because of these requirements in computing the scale factor, this
-> > driver is the only one that maintains custom support for FI, which is
-> > marked by the presence of the CPUFREQ_CUSTOM_SET_FREQ_SCALE flag.
-> > 
-> > [1] https://lwn.net/Articles/481055/
-> > 
-> > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Liviu Dudau <liviu.dudau@arm.com>
-> > ---
-> >  drivers/cpufreq/vexpress-spc-cpufreq.c | 23 ++++++++++++++++++++++-
-> >  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> Is there anyone who cares for this driver and EAS ? I will just skip doing the
-> FIE thing here and mark it skipped.
-> 
+On Wed, Jul 1, 2020 at 5:15 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> 'i / pdata->num_irqs' always equates to 0 and 'BIT(i % pdata->num_irqs)'
+> always ends up being BIT(i) here, so make that clearer in the code.  If
+> the code base needs to support more than 32 IRQs in the future, this will
+> have to be reworked, but lets just keep it simple for as long as we can.
+>
+> This fixes the following W=1 warning:
+>
+>  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
+>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Cc: Johan Hovold <johan@kernel.org>
+> Suggested-by: Baolin Wang <baolin.wang7@gmail.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-That is a good question. The vexpress driver is still used for TC2, but
-I don't know of any users of this bL switcher functionality that's part
-of the driver. I think there were a few people wondering recently if
-it's still used [1].
+Thanks.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-If we disconsider the bL switcher functionality, then the vexpress
-driver itself gets in line with the other drivers supported by this
-series. Therefore there would not be a flag set needed here. Also, to
-maintain current functionality, we would not need to introduce a flag
-at all.
-
-But, the frequency invariance fix is also useful for schedutil to
-better select a frequency based on invariant utilization. So if we
-independently decide having a flag like the one introduced at 1/8 is
-useful, I would recommend to consider this patch, as it does fix some
-current functionality in the kernel (whether we can determine if it's
-used much or not).
-
-Therefore, IMO, if it's not used any more it should be removed, but if
-it's kept it should be fixed.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200624195811.435857-8-maz@kernel.org/
+>
+> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> index c305e941e435c..4a1a61e1a86ea 100644
+> --- a/drivers/mfd/sprd-sc27xx-spi.c
+> +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> @@ -251,10 +251,8 @@ static int sprd_pmic_probe(struct spi_device *spi)
+>                 return -ENOMEM;
+>
+>         ddata->irq_chip.irqs = ddata->irqs;
+> -       for (i = 0; i < pdata->num_irqs; i++) {
+> -               ddata->irqs[i].reg_offset = i / pdata->num_irqs;
+> -               ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
+> -       }
+> +       for (i = 0; i < pdata->num_irqs; i++)
+> +               ddata->irqs[i].mask = BIT(i);
+>
+>         ret = devm_regmap_add_irq_chip(&spi->dev, ddata->regmap, ddata->irq,
+>                                        IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
 
 
-Thanks,
-Ionela.
 
-
-> -- 
-> viresh
+-- 
+Baolin Wang
