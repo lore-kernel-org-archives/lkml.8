@@ -2,164 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F12AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA821C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539462077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958732077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593618456;
+	bh=wdRT6Ex6SG25wPHP/Mv56uWdU4ywRU4s98WEu20SKys=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AP0RCD9m/kCRlWwmIgT3C2svFmzUD6+d7QTCvPOU/eS6aGO9fQd5oCDizfjNaWV+1
+	 hgV2C48Q90mSWxRuD4O7uHXpbWRJ75yhLcmRFk1WIyp99fFyF/SFdpdAjQ+oF9NeKo
+	 4ivkKFezxrTDGK7R7SDTAxKt1/2C7lknHpuicmqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbgGAPrD (ORCPT
+        id S1731966AbgGAPrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:47:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44382 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731763AbgGAPrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:47:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D9634AEDE;
-        Wed,  1 Jul 2020 15:47:00 +0000 (UTC)
-Subject: Re: [PATCH] brcmfmac: expose firmware config files through modinfo
-To:     Hans de Goede <hdegoede@redhat.com>, matthias.bgg@kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Double Lo <double.lo@cypress.com>,
-        Frank Kao <frank.kao@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Soeren Moch <smoch@web.de>
-References: <20200701153123.25602-1-matthias.bgg@kernel.org>
- <338e3cff-dfa0-c588-cf53-a160d75af2ee@redhat.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-Message-ID: <1013c7e6-f1fb-af0c-fe59-4d6cd612f959@suse.com>
-Date:   Wed, 1 Jul 2020 17:46:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 11:47:35 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:59015 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731519AbgGAPre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:47:34 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 061Fl7NF003090
+        for <linux-kernel@vger.kernel.org>; Thu, 2 Jul 2020 00:47:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 061Fl7NF003090
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593618428;
+        bh=DAwQW/iKms2Pd5SxjfNrAxgMBpgB3wuUDGSw/2ikg0w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WfcpXwhMfxGovAbt204Xh7ug7fFQv5h2nEgLS7kG1ZYqP0/YsTen/hhpvAC42YsNF
+         jz+Jkf8NBaON4pyr/0CG6aaDEx0v4Gz74hE02pdfCBc+zEaoAsdk2sl5QmRlSALXSW
+         NAQYS+KbYev9G5ZN/0B1IzM0gJwI2e9w/BkOtyt6jpNqjq5E1YjFDD02hq2F2cuPhF
+         N5T9/Ov8F0gBDP2IVH03iU5KcSEKdjUPu11NaCvf3rFb7K5RSCPIPbUOVVOZEzpaiT
+         l6xRv+F7T6SZxcgfen1PqssSjNW+ZOXoajNf7iWNnTY0ElkBZLBTzJSEFy32m6441L
+         +3Meic2THJV/A==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id x13so8813758vsx.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 08:47:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531NDjFfWpC5yt6IgfD9hOvFWAnZlrrurXxfzlBIBe4AB7t0tny6
+        VXmigs/De2HoRyWjZ4CI+SB5zwbFS9HIoX3C9ts=
+X-Google-Smtp-Source: ABdhPJzB1vl8xD2N6vsVCpQAw+0Y9VboCtD5BhKxqQPhn3odFuKVp7dIo0dsORdnOtk8/amr/wIne1V8Q7+nUvvXNnY=
+X-Received: by 2002:a67:22c7:: with SMTP id i190mr19510608vsi.179.1593618426679;
+ Wed, 01 Jul 2020 08:47:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <338e3cff-dfa0-c588-cf53-a160d75af2ee@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200630142653.10375-1-pmenzel@molgen.mpg.de>
+In-Reply-To: <20200630142653.10375-1-pmenzel@molgen.mpg.de>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 2 Jul 2020 00:46:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ79EYXMgRC2uexXAbgA7uUa7SoMKu+00qRvqJCv5+C1Q@mail.gmail.com>
+Message-ID: <CAK7LNAQ79EYXMgRC2uexXAbgA7uUa7SoMKu+00qRvqJCv5+C1Q@mail.gmail.com>
+Subject: Re: [PATCH] .gitignore: Do not track `defconfig` from `make savedefconfig`
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On Tue, Jun 30, 2020 at 11:27 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> ---
+>  .gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/.gitignore b/.gitignore
+> index 87b9dd8a163b..5c1a5349852b 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -142,6 +142,7 @@ x509.genkey
+>  /allno.config
+>  /allrandom.config
+>  /allyes.config
+> +/defconfig
+>
+>  # Kdevelop4
+>  *.kdev4
+> --
+> 2.27.0
+>
 
-On 01/07/2020 17:38, Hans de Goede wrote:
-> Hi,
-> 
-> On 7/1/20 5:31 PM, matthias.bgg@kernel.org wrote:
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> Apart from a firmware binary the chip needs a config file used by the
->> FW. Add the config files to modinfo so that they can be read by
->> userspace.
-> 
-> The configfile firmware filename is dynamically generated, just adding the list
-> of all currently shipped ones is not really helpful and this is going to get
-> out of sync with what we actually have in linux-firmware.
 
-I'm aware of this, and I agree.
+all*.config files are used as Kconfig presets,
+but 'defconfig' does not belong to them.
 
-> 
-> I must honestly say that I'm not a fan of this, I guess you are trying to
-> get some tool which builds a minimal image, such as an initrd generator
-> to add these files to the image ?
-> 
 
-Yes exactly.
 
-> I do not immediately have a better idea, but IMHO the solution
-> this patch proposes is not a good one, so nack from me for this change.
-> 
+Better to update the comment line above?
 
-Another path we could go is add a wildcard string instead, for example:
-MODULE_FIRMWARE("brcm/brcmfmac43455-sdio.*.txt");
 
-AFAIK there is no driver in the kernel that does this. I checked with our dracut
-developer and right now dracut can't cope with that. But he will try to
-implement that in the future.
+For example,
 
-So my idea was to maintain that list for now and switch to the wildcard approach
-once we have dracut support that.
+   # Kconfig presets
 
-Regards,
-Matthias
+-->
 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>
->> ---
->>
->>   .../wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
->> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
->> index 310d8075f5d7..ba18df6d8d94 100644
->> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
->> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
->> @@ -624,6 +624,22 @@ BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
->>   BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
->>   BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
->>   +/* firmware config files */
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac4330-sdio.Prowise-PT301.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43340-sdio.meegopad-t08.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43340-sdio.pov-tab-p1006w-data.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43362-sdio.cubietech,cubietruck.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43430a0-sdio.jumper-ezpad-mini3.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.ONDA-V80
->> PLUS.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.AP6212.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.MUR1DX.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.MINIX-NEO
->> Z83-4.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac43455-sdio.raspberrypi,4-model-b.txt");
->> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
->> "brcm/brcmfmac4356-pcie.gpd-win-pocket.txt");
->> +
->>   static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
->>       BRCMF_FW_ENTRY(BRCM_CC_43143_CHIP_ID, 0xFFFFFFFF, 43143),
->>       BRCMF_FW_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
->>
-> 
+  # Kconfig presets, savedefconfg output
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
