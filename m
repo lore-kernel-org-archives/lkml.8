@@ -2,101 +2,86 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B63C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87C320702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97F020702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="NLm6qUfc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbgGAPAQ (ORCPT
+        id S1731701AbgGAPCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:00:16 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45286 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgGAPAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:00:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g17so10008891plq.12;
-        Wed, 01 Jul 2020 08:00:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RN9Uob7cuR1gH1ZG/1wnY76yopcBcsRZ3UN3Pc2rBNE=;
-        b=eW5+aDbCTkpwHvG+yH7bWwtslzPQKw8o4khzZ9Jfloc72VSyCmk6aZyOPULRadI/0x
-         cEGcQhooMp+d2nDjzH2qjWr4goaiuqgUEi8cqunOvSKY3z/qZ3JQ81vwk0OAzNnSgqFz
-         jtfSsfU4ASdns3E3maqT5GMRHcKEULxE/4+hyV67PQx/JJ5154JmdKSM07yTKhAIgruw
-         l3OXCMXMQFGU2CL29zK4hDxZLsTaXZTxdTJzrC+/1EkVdZa2W2MxvXYa2RQUrUa0D94g
-         1aw+ko8sg1ybdtpcKcY1YwU+MIKIyD/PdhftsGw0ZNrTSfgRpErzfauVoZm4/D49svGv
-         Ngcg==
-X-Gm-Message-State: AOAM531/J3Jhu7+ibR9ITuLloZUEhrvRBbUq6sCci7dG9oq08nYs7iyA
-        tMzwW4TC3M50FskonXO93cY=
-X-Google-Smtp-Source: ABdhPJx6w2QyJcI4wbGNxQyPRuHfBXQ+DGZhqI0gNiEnDPbGveZWRnTA6sbUb1YjwyTIh2MDQe34pQ==
-X-Received: by 2002:a17:902:eb49:: with SMTP id i9mr21335692pli.231.1593615613150;
-        Wed, 01 Jul 2020 08:00:13 -0700 (PDT)
-Received: from sultan-book.localdomain ([89.46.114.241])
-        by smtp.gmail.com with ESMTPSA id c2sm5940117pgk.77.2020.07.01.08.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 08:00:12 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 08:00:07 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     aaron.ma@canonical.com, admin@kryma.net,
-        andriy.shevchenko@linux.intel.com, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
-        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
-        wsa@kernel.org
-Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
- power
-Message-ID: <20200701150007.GA2141@sultan-book.localdomain>
-References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
- <20200616154951.3050-1-sultan@kerneltoast.com>
- <37ceaf7a-3421-e305-4355-a6b40ae54843@linux.intel.com>
- <20200629174328.GB1646@sultan-box.localdomain>
- <ef949533-c614-7afb-f206-5c54d827deac@linux.intel.com>
+        Wed, 1 Jul 2020 11:02:33 -0400
+Received: from first.geanix.com ([116.203.34.67]:51102 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731518AbgGAPCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:02:31 -0400
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id 729292243300;
+        Wed,  1 Jul 2020 14:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1593615422; bh=bVYNtopJ04VZEaf1UkhnNm6KZD1lcCfOyd/wbyQDgnI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=NLm6qUfcMrMT4EehNEWaUPrLuDhC8zyspMuBJU9QwcTvAemifn1RvwhhwMitCk0zr
+         GgiGxWTn1JOAtERQaQf9KTU15nqXOfcWkbPeM/wv+FsG3EPJ0A3W3Q/lI7WUve0Vrb
+         7ZfI3flAT/xFC0Hw8vzg/ekNLBbgP0JpGVWZ+kcvqw1Cd21vCZ9GQMKxzyET1Sm1o6
+         a2GfNkHiSnPY/g9CoBiy247z52+DVhXuu7HYEQ/XQWo3FH2mxXAHy9iYZjAENcE8lG
+         vvXw44LtkK6eBQNqJG0MUSCyZYngP92kOVsu8ozyrT6qCS3G1zMdRYEcqEBTQisIXE
+         YqILsh30udQGg==
+From:   Esben Haabendal <esben@geanix.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 2/3] uio_pdrv_genirq: fix use without device tree and no interrupt
+Date:   Wed,  1 Jul 2020 16:56:58 +0200
+Message-Id: <20200701145659.3978-3-esben@geanix.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200701145659.3978-1-esben@geanix.com>
+References: <20200701145659.3978-1-esben@geanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef949533-c614-7afb-f206-5c54d827deac@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:04:01AM +0300, Jarkko Nikula wrote:
-> On 6/29/20 8:43 PM, Sultan Alsawaf wrote:
-> > Hmm, for some reason in 5.8 I get the same problem, but 5.7 is fine. Could you
-> > try this on 5.7 and see if it works?
-> > 
-> > In the meantime I'll bisect 5.8 to see why it's causing problems for me...
-> > 
-> I see the same issue on top of v5.7:
+While e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
+interrupt") added support for using uio_pdrv_genirq for devices without
+interrupt for device tree platforms, the removal of uio_pdrv in
+26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
+broke the support for non device tree platforms.
 
-Try reverting my "i2c: designware: Only check the first byte for SMBus block
-read length" patch and apply the following change instead:
+This change fixes this, so that uio_pdrv_genirq can be used without
+interrupt on all platforms.
 
---- a/drivers/i2c/busses/i2c-designware-master.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -394,10 +394,12 @@ i2c_dw_read(struct dw_i2c_dev *dev)
- 			u32 flags = msgs[dev->msg_read_idx].flags;
- 
- 			*buf = dw_readl(dev, DW_IC_DATA_CMD);
--			/* Ensure length byte is a valid value */
--			if (flags & I2C_M_RECV_LEN &&
--				*buf <= I2C_SMBUS_BLOCK_MAX && *buf > 0) {
--				len = i2c_dw_recv_len(dev, *buf);
-+			if (flags & I2C_M_RECV_LEN) {
-+				/* Ensure length byte is a valid value */
-+				if (*buf <= I2C_SMBUS_BLOCK_MAX && *buf > 0)
-+					len = i2c_dw_recv_len(dev, *buf);
-+				else
-+					len = i2c_dw_recv_len(dev, len);
- 			}
- 			buf++;
- 			dev->rx_outstanding--;
+This still leaves the support that uio_pdrv had for custom interrupt
+handler lacking, as uio_pdrv_genirq does not handle it (yet).
+
+Fixes: 26dac3c49d56 ("uio: Remove uio_pdrv and use uio_pdrv_genirq instead")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/uio/uio_pdrv_genirq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index 1d69dd49c6d2..b60173bc93ce 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -161,7 +161,7 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ 	if (!uioinfo->irq) {
+ 		ret = platform_get_irq_optional(pdev, 0);
+ 		uioinfo->irq = ret;
+-		if (ret == -ENXIO && pdev->dev.of_node)
++		if (ret == -ENXIO)
+ 			uioinfo->irq = UIO_IRQ_NONE;
+ 		else if (ret == -EPROBE_DEFER)
+ 			return ret;
+-- 
+2.4.11
+
