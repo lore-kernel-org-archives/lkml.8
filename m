@@ -2,109 +2,101 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2490EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6130C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017BC2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD5320722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le6GV5f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgGAL0B (ORCPT
+        id S1730334AbgGAL0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:26:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6793 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730159AbgGAL0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:26:01 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B6201EE0AAC0EB1C54FF;
-        Wed,  1 Jul 2020 19:25:57 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 1 Jul 2020
- 19:25:50 +0800
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-To:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     <richard@nod.at>, <yi.zhang@huawei.com>
-Subject: [PATCH] ubifs: Fix a potential space leak problem while linking tmpfile
-Date:   Wed, 1 Jul 2020 19:26:43 +0800
-Message-ID: <20200701112643.726986-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 1 Jul 2020 07:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbgGAL0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:26:03 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851A0C061755;
+        Wed,  1 Jul 2020 04:26:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n26so10233723ejx.0;
+        Wed, 01 Jul 2020 04:26:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZj26CwH+3KxgC+hP0OazVEBLvLFOKJxYzi5I45O0dE=;
+        b=le6GV5f/dGAjJq8wQz68W89CxKq+Q499yJDPo1FZ34phrSQRPK38GppEy7phsx2bGc
+         rHa3s3sNxHuIqvMyxEIn7rBiHjCYnqMEElkXl5Q435p8Qu8jFWEh4clqHHstOyw/4T4u
+         fX9xBpxMuTRIp9wGoV5hmtQ7feG3BLYChxDkr2YrIpZb7FvYVNejZEQDXJXXtO+InpL9
+         ve63FzYwHFg5b6FvyVflElf/sD5c0WrUC1p88FjvtE4gCW50lupvFVoCDBzUfMOaZnEK
+         k/U766DpT4UBHFsNfVIMA6yixTqqxdz+/CsyAw0rHkf1RvNIWj+VlBY3KALoMtnpxZAg
+         1WzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZj26CwH+3KxgC+hP0OazVEBLvLFOKJxYzi5I45O0dE=;
+        b=SOW9Vb7M4Ue7H8FB7JxXCHVEzlRSwcMdipkGTMpRUtoE+hOrIewNEPGeN0IADChNka
+         orpxdEkRCUHhR/GnEafLPzeZ//fTL6DurRfM3g+WojhELvtYhyvnQj3f8QkAV3fXZh3A
+         TVpY7cueluc+iOk+bs07sw0S1gccJ1EAXd3e9LWMZLZA7wN/RTyiQFHRLxN1A3TTE7qK
+         NMkmwO6tz+r8CQFbMm0ns2LCSpxVvxa+g91aKQKV+aTGivTaiR6Jf/zNHHl+M1ToQ97A
+         dAQfPywKM122oy+Zkc9Ke9pvtj4IYjHfHLPjN7mTyo7zoW0WVtY3rQh3t2Pcv4E/3ikN
+         4vMw==
+X-Gm-Message-State: AOAM533N1jW6mQ7krswqWN9n36RvgBbEBSH+ggq7+y3s1K5nrFjjeGZd
+        0fGUmsjanfuqutqkbDvPyhQ=
+X-Google-Smtp-Source: ABdhPJzyUDA2eZqbagHduFxDpj4PTq6ecxrv60hEWjOpDLWCm4e25kYYhpQDiE4dzu7g49qScmSbEw==
+X-Received: by 2002:a17:906:774d:: with SMTP id o13mr17128257ejn.373.1593602761308;
+        Wed, 01 Jul 2020 04:26:01 -0700 (PDT)
+Received: from laptop.fritz.box ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id e3sm6290442edm.14.2020.07.01.04.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 04:26:00 -0700 (PDT)
+From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
+        <ckoenig.leichtzumerken@gmail.com>
+X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+To:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Add myself as DMA-buf maintainer
+Date:   Wed,  1 Jul 2020 13:25:59 +0200
+Message-Id: <20200701112559.22669-1-christian.koenig@amd.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a potential space leak problem while linking tmpfile, in which
-case, inode node (with nlink=0) is valid in tnc (on flash), which leads
-to space leak. Meanwhile, the corresponding data nodes won't be released
-from tnc. For example, (A reproducer can be found in Link):
+As discussed on the list.
 
-$ mount UBIFS
-  [process A]            [process B]         [TNC]         [orphan area]
-
- ubifs_tmpfile                          inode_A (nlink=0)     inode_A
-                          do_commit     inode_A (nlink=0)     inode_A
-			       ↑
-      (comment: It makes sure not replay inode_A in next mount)
- ubifs_link                             inode_A (nlink=0)     inode_A
-   ubifs_delete_orphan                  inode_A (nlink=0)
-                          do_commit     inode_A (nlink=0)
-                           ---> POWERCUT <---
-   (ubifs_jnl_update)
-
-$ mount UBIFS
-  inode_A will neither be replayed in ubifs_replay_journal() nor
-  ubifs_mount_orphans(). inode_A (nlink=0) with its data nodes will
-  always on tnc, it occupy space but is non-visable for users.
-
-Commit ee1438ce5dc4d ("ubifs: Check link count of inodes when killing
-orphans.") handles problem in mistakenly deleting relinked tmpfile
-while replaying orphan area. Since that, tmpfile inode should always
-live in orphan area even it is linked. Fix it by reverting commit
-32fe905c17f001 ("ubifs: Fix O_TMPFILE corner case in ubifs_link()").
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Cc: <stable@vger.kernel.org>  # v5.3+
-Fixes: 32fe905c17f001 ("ubifs: Fix O_TMPFILE corner case in ubifs_link()")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208405
+Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- fs/ubifs/dir.c | 7 -------
- 1 file changed, 7 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-index ef85ec167a84..9534c4bb598f 100644
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -722,11 +722,6 @@ static int ubifs_link(struct dentry *old_dentry, struct inode *dir,
- 		goto out_fname;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 40474982a21d..5d7130f8d342 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5089,6 +5089,7 @@ F:	fs/dlm/
  
- 	lock_2_inodes(dir, inode);
--
--	/* Handle O_TMPFILE corner case, it is allowed to link a O_TMPFILE. */
--	if (inode->i_nlink == 0)
--		ubifs_delete_orphan(c, inode->i_ino);
--
- 	inc_nlink(inode);
- 	ihold(inode);
- 	inode->i_ctime = current_time(inode);
-@@ -747,8 +742,6 @@ static int ubifs_link(struct dentry *old_dentry, struct inode *dir,
- 	dir->i_size -= sz_change;
- 	dir_ui->ui_size = dir->i_size;
- 	drop_nlink(inode);
--	if (inode->i_nlink == 0)
--		ubifs_add_orphan(c, inode->i_ino);
- 	unlock_2_inodes(dir, inode);
- 	ubifs_release_budget(c, &req);
- 	iput(inode);
+ DMA BUFFER SHARING FRAMEWORK
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
++M:	Christian König <christian.koenig@amd.com>
+ L:	linux-media@vger.kernel.org
+ L:	dri-devel@lists.freedesktop.org
+ L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
 -- 
-2.25.4
+2.20.1
 
