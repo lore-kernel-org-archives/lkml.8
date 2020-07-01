@@ -2,67 +2,97 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44961C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8AF20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C720A207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:18:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hX9RjxXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgGANRq convert rfc822-to-8bit (ORCPT
+        id S1730825AbgGANSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39606 "EHLO
+        Wed, 1 Jul 2020 09:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbgGANRp (ORCPT
+        with ESMTP id S1728941AbgGANSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:17:45 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E56AC03E979
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 06:17:45 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jqccQ-0005PS-Au; Wed, 01 Jul 2020 15:17:42 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jqccQ-0003Eq-1w; Wed, 01 Jul 2020 15:17:42 +0200
-Message-ID: <d03728db2e41225acf70202da0a990de686f605e.camel@pengutronix.de>
-Subject: Re: [PATCH v2 0/6] Hantro low-hanging cleanups
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Wed, 01 Jul 2020 15:17:41 +0200
-In-Reply-To: <20200701131607.121988-1-ezequiel@collabora.com>
-References: <20200701131607.121988-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 1 Jul 2020 09:18:42 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2059EC03E979;
+        Wed,  1 Jul 2020 06:18:42 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id o38so18336054qtf.6;
+        Wed, 01 Jul 2020 06:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tZ8a6oz3Y8ehLX8HUkQPKYGgSTWKJsg21sJcH2+8iVw=;
+        b=hX9RjxXibdgpDLuFtboDrQBKbCbjStq9qgvo5Z2a370FXrP2/9ZDD3+/CebWq4YBe8
+         RKGDu62MorQx4rBwcA1k/jBM7CjohwZouzB0vMTnTIh0KFfAMky0pFdA+NemHXcJjLLA
+         ai3Jhk4qOU0iev9XIAM3Wcl7I3WSAI5W4Ss7KFvahWZKjzjLEsICMbWR1fuVYqrYkfnL
+         JrsR9Cd9lZIRMqMfkHapIlq/8UWZlipAYBBU9awZXGUIyc+HdFUGRZCepjhN5Z1ER8hM
+         NNZqP1OmnxZXtL9nRtkIKfPcm1z9jjv97zuJos2HqZxq2teFsxfqu6LC12rRbinJJcTL
+         0kNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tZ8a6oz3Y8ehLX8HUkQPKYGgSTWKJsg21sJcH2+8iVw=;
+        b=Pmz7yF1z9BfngI3GURlU7o/BYqqqoPPQoAhPQQWsVYGe2W5h4I5mgozAsNJrVq2uhU
+         k1Rw0SgBVMkKirwBMGiW1DHiRU91vrTK/9h9bqWBaHGpnM6SWHptaHVIPI3c/sEb+G8v
+         GgQVJvbDlo3hWY7rFckjc92/VAdFoY9phn8TzJy2emd2Em/AC1rp17dcKR21G0FM4itY
+         c2N8jqldcLbxtHarMQE2BwUjzuYiQ4pVn0UaVEdlEW9CVddx/e51j2UiMRmcYEtuL499
+         IYjpFQpQ4C7Wnu7KIMNGVFl67aCmY6Dw5y9oiJ2C4CIwJe/aEZx1evgLXlu1TGJR4rrJ
+         y58A==
+X-Gm-Message-State: AOAM531rneoIeJWvB3QEfZI82R/BoS7ivOBQg+yKZZOgCau2ONPFNv4x
+        mRk59eo55bXMbxxGwboOY45+yCFrdHYRaJyY4vEwSNRe
+X-Google-Smtp-Source: ABdhPJwcMnkZ4bW0MvgzyrdftwNiSaXI0YU/XF8lrgj8e7pSLPgt1BntWi9/HLZGeZVYmKytlB30FPrRknZRGOGBIaY=
+X-Received: by 2002:ac8:6f73:: with SMTP id u19mr26131625qtv.36.1593609521078;
+ Wed, 01 Jul 2020 06:18:41 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200629174421.25784-1-yamane07ynct@gmail.com> <20200630111137.GI5272@sirena.org.uk>
+In-Reply-To: <20200630111137.GI5272@sirena.org.uk>
+From:   Daisuke Yamane <yamane07ynct@gmail.com>
+Date:   Wed, 1 Jul 2020 22:18:04 +0900
+Message-ID: <CAHZ3=rpqq5ZJQUGR54vStbqohcrS_w2beVi4m1S+v=ZWEzVtKg@mail.gmail.com>
+Subject: Re: [PATCH] spi: a3700: fix hang caused by a3700_spi_transfer_one_fifo()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-01 at 10:16 -0300, Ezequiel Garcia wrote:
-> Second iteration, just addressing Philipp's and Robin's
-> feedback on patch 3.
-
-Thank you, feel free to add
-
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-for the series.
-
-regards
-Philipp
+2020=E5=B9=B46=E6=9C=8830=E6=97=A5(=E7=81=AB) 20:11 Mark Brown <broonie@ker=
+nel.org>:
+>
+> On Tue, Jun 30, 2020 at 02:44:21AM +0900, Daisuke Yamane wrote:
+> > transfer_one() must call spi_finalize_current_transfer() before
+> > returning to inform current transfer has finished. Otherwise spi driver
+> > doesn't issue next transfer, and hang.
+>
+> To be clear it can also return a positive value and then finalize later,
+> there's no need to finalize before returning (otherwise finalizing would
+> be a bit redundant) and if the driver doesn't return a positive value
+> there should be no need to finalize at all.
+>
+> > However a3700_spi_transfer_one_fifo() doesn't call it if waiting for
+> > "wfifo empty" or "xfer ready" has timed out.
+> > Thus, this patch corrects error handling of them.
+>
+> The core shouldn't be waiting at all if the driver returned an error, we
+> only wait if the return value was positive.  Looking at the code it's
+> not clear to me how we manage to end up waiting - it looks like the
+> driver passes back the error correctly and the core looks like it does
+> the right thing.  Have you seen hangs in operation?
+Yes, and I could avoid hanging by this patch. But I also understand that
+your point is correct. Probably I'm misunderstanding the cause of the hang.
+I will investigate a little more.
