@@ -2,105 +2,148 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8242FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C986C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A519207C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA6320722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593595740;
-	bh=FSnQ2a8GUJDvhomIUsm53eTUGDIgmLPigf6cM5vfcg8=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=o6PtnlZy3NMPRWYmGdeB9T9SNq36WNUmTz1vdTJiy0bdMbRjDYf/ZTJzC7YMQt6KC
-	 MeRHGbQPvAbqtA0FXrheGSOr2w0jj60xxT2RTx0QGrFzUUGCYN0mTj2VjzF3py3nKf
-	 p53D6Czy5WI8HkI0p59zsqs+iG7EU7RvZzvlb9pA=
+	s=default; t=1593595771;
+	bh=6FTWSKnJSrCx9I/0rc6jurvIXi5Xz5gQleSKrru6zNI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ObeH4MslPwhZx5sesTlhli64R5/QMlH7q2OwvQJCsAuS08daZcl10DqS2wc5EbaYY
+	 LbHcfIfii2x66pO27EGjaiXCLBrPWzAfCCbl20iqt3gR+6cMjnKhNqjJjZ/FQUQD8e
+	 FVlVBiAVnD99cLGcbhHg0m7kE1a1pxNvTEIzFUR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgGAJ26 (ORCPT
+        id S1729441AbgGAJ33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbgGAJ26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:28:58 -0400
-Received: from localhost (p54b334c2.dip0.t-ipconnect.de [84.179.52.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3C8A20722;
-        Wed,  1 Jul 2020 09:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593595737;
-        bh=FSnQ2a8GUJDvhomIUsm53eTUGDIgmLPigf6cM5vfcg8=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=1gDt5ZbBIXbOA73DhArXDo5CAeqAhAuw6gbRad41B77bWC3qpD+LfNtzWHIyVzd2r
-         uSuVHB7ZI1DUC8qwfHady2THrYQn/jsfEIRM6fivtJfphoc/QlhaRVMDAQwJCBC4he
-         IJq6F4NqiXlf858nImJukIifLhjXDOxQ9w7OtQM8=
-Date:   Wed, 1 Jul 2020 11:28:54 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2 0/4] stm32-f7: Addition of SMBus Alert / Host-notify
- features
-Message-ID: <20200701092854.GE2261@ninjato>
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
- <20200630160500.GA2394@kunai>
- <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
+        Wed, 1 Jul 2020 05:29:29 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:46839 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728982AbgGAJ32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:29:28 -0400
+X-Greylist: delayed 97089 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 05:29:27 EDT
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 0619QqhQ002765;
+        Wed, 1 Jul 2020 18:26:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0619QqhQ002765
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593595614;
+        bh=5we+5c718gKlOfNkIYOvekscGTKtWBtNSwI5Fr+6doc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GZN+JENCwEH5hIIAA5OAA6SiwDSbWFSaHKX9f4TdgmuZDiYDeGmIadJKSPba3wD4T
+         ybgOM8V3CHbP2S48ZrQkw8/RhIJNzN5ECtSKZ/tgc/8k+JTmsO6E/e96fzcn9l/pd7
+         BmU0+lSIOJCigxHBdsG9WTlo0hiani9w65gI9r9anD4wPx8DfkHtDfwBBjQSYeQm+8
+         y5T6NDLZCXLgS5Sx9ZxX8dx+Myww98wU5bELOBFrSDC8AJRNQLP+Muu+CdRuQErEh4
+         Zs7ibFUXfzrXiPD6CeCeEhNJQi6/LxgwxXl/lS94IfZcCiUvuIQcp1ZgKfJOKsQxDZ
+         CLApO9/M/F5wg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     linux-kbuild@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Song Liu <songliubraving@fb.com>,
+        =?UTF-8?q?Valdis=20Kl=20=C4=93=20tnieks?= <valdis.kletnieks@vt.edu>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH] bpfilter: allow to build bpfilter_umh as a module without static library
+Date:   Wed,  1 Jul 2020 18:26:44 +0900
+Message-Id: <20200701092644.762234-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Uwl7UQhJk99r8jnw"
-Content-Disposition: inline
-In-Reply-To: <20200701092138.GB3457@gnbcxd0016.gnb.st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Originally, bpfilter_umh was linked with -static only when
+CONFIG_BPFILTER_UMH=y.
 
---Uwl7UQhJk99r8jnw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit 8a2cc0505cc4 ("bpfilter: use 'userprogs' syntax to build
+bpfilter_umh") silently, accidentally dropped the CONFIG_BPFILTER_UMH=y
+test in the Makefile. Revive it in order to link it dynamically when
+CONFIG_BPFILTER_UMH=m.
 
+Since commit b1183b6dca3e ("bpfilter: check if $(CC) can link static
+libc in Kconfig"), the compiler must be capable of static linking to
+enable CONFIG_BPFILTER_UMH, but it requires more than needed.
 
-> I've just prepared the 1st new serie with only the HostNotify bits in it.
-> (basically, the core part, the dt-bindings with the enable-host-notify, and
-> the usage within i2c-stm32f7).
+To loosen the compiler requirement, I changed the dependency as follows:
 
-Cool, thanks!
+    depends on CC_CAN_LINK
+    depends on m || CC_CAN_LINK_STATIC
 
-> You mentioned in the other thread that you still have some more review comment
-> I believe. Is that right ? If that is so, I'll wait for those comment and
-> then push that new serie for review.
+If CONFIG_CC_CAN_LINK_STATIC in unset, CONFIG_BPFILTER_UMH is restricted
+to 'm' or 'n'.
 
-Yes, for the core part. Please wait for these comments.
+In theory, CONFIG_CC_CAN_LINK is not required for CONFIG_BPFILTER_UMH=y,
+but I did not come up with a good way to describe it.
 
+Fixes: 8a2cc0505cc4 ("bpfilter: use 'userprogs' syntax to build bpfilter_umh")
+Reported-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
---Uwl7UQhJk99r8jnw
-Content-Type: application/pgp-signature; name="signature.asc"
+ net/bpfilter/Kconfig  | 10 ++++++----
+ net/bpfilter/Makefile |  2 ++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/net/bpfilter/Kconfig b/net/bpfilter/Kconfig
+index 84015ef3ee27..73d0b12789f1 100644
+--- a/net/bpfilter/Kconfig
++++ b/net/bpfilter/Kconfig
+@@ -9,12 +9,14 @@ menuconfig BPFILTER
+ if BPFILTER
+ config BPFILTER_UMH
+ 	tristate "bpfilter kernel module with user mode helper"
+-	depends on CC_CAN_LINK_STATIC
++	depends on CC_CAN_LINK
++	depends on m || CC_CAN_LINK_STATIC
+ 	default m
+ 	help
+ 	  This builds bpfilter kernel module with embedded user mode helper
+ 
+-	  Note: your toolchain must support building static binaries, since
+-	  rootfs isn't mounted at the time when __init functions are called
+-	  and do_execv won't be able to find the elf interpreter.
++	  Note: To compile this as built-in, your toolchain must support
++	  building static binaries, since rootfs isn't mounted at the time
++	  when __init functions are called and do_execv won't be able to find
++	  the elf interpreter.
+ endif
+diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
+index f23b53294fba..cdac82b8c53a 100644
+--- a/net/bpfilter/Makefile
++++ b/net/bpfilter/Makefile
+@@ -7,10 +7,12 @@ userprogs := bpfilter_umh
+ bpfilter_umh-objs := main.o
+ userccflags += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
+ 
++ifeq ($(CONFIG_BPFILTER_UMH), y)
+ # builtin bpfilter_umh should be linked with -static
+ # since rootfs isn't mounted at the time of __init
+ # function is called and do_execv won't find elf interpreter
+ userldflags += -static
++endif
+ 
+ $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
+ 
+-- 
+2.25.1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl78V1YACgkQFA3kzBSg
-KbbdKRAApTeTI+l9N3GO5hhdEtH3C/r7NIC7rj5lCU56vD4Z1/UP0QIQ9FoweiYL
-4f5BBOxcJdhK65aeXxhntHC3CBlcAKKAmhdBPY8fu/ha493odmvI4EZx3iF3TVwQ
-lVvhSJHXirwu4GNkS0cgdqWtypy1rari2fG2H0Ar5VcOn+imSu24KN4+gcs/3l/Q
-Ze+5ey5B/E4o8C2PbumRaAlYuObRRLsHY+z727s07uaEvgpCvBqmfMk+5+3/vIkA
-JCVrZ8lDzLaAy1vY3elqHFvlNaaUpMJMVLrnaCvte+Qj8fcE2aO6i/5DwAgivtYB
-z1yZbaHbOIVkgDY4PqfcZct7F6mkQXq8zjx/BNocKUeT+wKZYPwzRb6NaubuH/MB
-ukFjgQQ7Q0MS4TLdjey5GWbHG91bBjGbG1sCzMvqT6h0+Ik/UXCFZiPW0sRZ3voo
-cUQMYvD6BqawtldBkRlVtbqnhGtTCNU1FT8alH2LbesOwdKTlQzYIUxsZTHNnuwL
-CjJU2VX/AVrgE981dsE4N2YFhlmnZCJrjMFezsY6+zcWAxqb0WtQKamHuF6fbCYI
-4+Oy/1TVSGHtPf/B9kLHo+PyPDnaXofmiL7yC4HkbVVNwhjbHcV7+kbJLkEUv/hN
-1NVfAQQPJPrO0hYyJ70fjTeY9foxR3PDVy4chuB1IsLkbzKWziw=
-=szi4
------END PGP SIGNATURE-----
-
---Uwl7UQhJk99r8jnw--
