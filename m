@@ -2,137 +2,98 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_RCVD_SPACE_BRACKET,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D605C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B04C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 016C02068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="bysWkfFw"
+	by mail.kernel.org (Postfix) with ESMTP id 776D52077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731313AbgGAOJ5 (ORCPT
+        id S1731366AbgGAOKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:09:57 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:12608 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728021AbgGAOJ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:09:56 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E42a9011115;
-        Wed, 1 Jul 2020 10:09:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id; s=smtpout1;
- bh=G36Fg61fCQr+wCCLzQCC2YORVhnFR9rzAH3ZcF+UlyU=;
- b=bysWkfFwsgWt+dfjsnt8t+/3rl/yz6eWRUb1/4EYMrV0YCypJXvGOIVcgbWY7xkK0yBs
- fyDmyr+sJCEC7byRfggaXf10fl3EvBFdJVcrjvA2wxXP+RLD1qrvjz9v3Gxpo96yUe4q
- bkdxvZfFtoxo8opFPd3VmPpkMzu4aF4N2cK24o4sqHTkuLLByLmB4YEHyHQXvodZrgwS
- +2y8AcfYu2lWtVr2BCWUDWdoKufEwrpDCMNwJXRPwRNmN2DCdcIejm9gKvNCoKnP2NLm
- d+InsqBKoZNAB9LacEB9+FaNHLUAbiObhopMTDvd9mCP48W+leKK6Hv5Qy/6aiL637tu bw== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 31x1b9nyfp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 10:09:52 -0400
-Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E9nQ1049371;
-        Wed, 1 Jul 2020 10:09:52 -0400
-Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
-        by mx0b-00154901.pphosted.com with ESMTP id 320u6191wu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 01 Jul 2020 10:09:51 -0400
-Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061E9cpt026875;
-        Wed, 1 Jul 2020 10:09:38 -0400
-Received: from mailapphubprd52.lss.emc.com ([mailapphubprd52.lss.emc.com [10.106.83.171]]) by mailuogwprd53.lss.emc.com with ESMTP id 061E9Iet026588 ;
-          Wed, 1 Jul 2020 10:09:19 -0400
-Received: from arwen6.xiolab.lab.emc.com (arwen6.xiolab.lab.emc.com [10.76.217.138])
-        by mailapphubprd52.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061E9Fuf002031;
-        Wed, 1 Jul 2020 10:09:16 -0400
-From:   leonid.ravich@dell.com
-To:     dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wed, 1 Jul 2020 10:10:20 -0400
+Received: from sym2.noone.org ([178.63.92.236]:34644 "EHLO sym2.noone.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728021AbgGAOKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:10:19 -0400
+Received: by sym2.noone.org (Postfix, from userid 1002)
+        id 49xjmV0ZnNzvjc1; Wed,  1 Jul 2020 16:10:17 +0200 (CEST)
+From:   Tobias Klauser <tklauser@distanz.ch>
+To:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: ioat setting ioat timeout as module parameter
-Date:   Wed,  1 Jul 2020 17:08:45 +0300
-Message-Id: <20200701140849.8828-1-leonid.ravich@dell.com>
-X-Mailer: git-send-email 2.16.2
-X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- cotscore=-2147483648 adultscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=899 suspectscore=13 bulkscore=0
- lowpriorityscore=0 clxscore=1011 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010102
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
- suspectscore=13 mlxlogscore=922 spamscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010102
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] phy: zynqmp: Fix unused-function compiler warning
+Date:   Wed,  1 Jul 2020 16:10:17 +0200
+Message-Id: <20200701141017.26931-1-tklauser@distanz.ch>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200701090438.21224-1-tklauser@distanz.ch>
+References: <20200701090438.21224-1-tklauser@distanz.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+Mark xpsgtr_suspend and xpsgtr_resume as __maybe_unused to fix the
+following compiler warning when building with !CONFIG_PM_SLEEP:
 
-DMA transaction time to complition  is a function of
-PCI bandwidth,transaction size and a queue depth.
-So hard coded value for timeouts might be wrong
-for some scenarios.
+drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
+  830 | static int xpsgtr_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~
+drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
+  819 | static int xpsgtr_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~
 
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+Also drop the existing #ifdef CONFIG_PM so the functions are always
+compile-checked regardless of CONFIG_PM and/or CONFIG_PM_SLEEP being
+set.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
 ---
- drivers/dma/ioat/dma.c | 12 ++++++++++++
- drivers/dma/ioat/dma.h |  2 --
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/phy/xilinx/phy-zynqmp.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 8ad0ad861c86..7621b5be5cf4 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -26,6 +26,18 @@
+diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
+index 8babee2ce9ec..2b0f921b6ee3 100644
+--- a/drivers/phy/xilinx/phy-zynqmp.c
++++ b/drivers/phy/xilinx/phy-zynqmp.c
+@@ -815,8 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
+  * Power Management
+  */
  
- #include "../dmaengine.h"
+-#ifdef CONFIG_PM
+-static int xpsgtr_suspend(struct device *dev)
++static int __maybe_unused xpsgtr_suspend(struct device *dev)
+ {
+ 	struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
  
-+int complition_timeout = 200;
-+module_param(complition_timeout, int, 0644);
-+MODULE_PARM_DESC(complition_timeout,
-+		"set ioat complition timeout [msec] (default 200 [msec])");
-+int idle_timeout = 2000;
-+module_param(idle_timeout, int, 0644);
-+MODULE_PARM_DESC(idle_timeout,
-+		"set ioat idel timeout [msec] (default 2000 [msec])");
-+
-+#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
-+#define COMPLETION_TIMEOUT msecs_to_jiffies(complition_timeout)
-+
- static char *chanerr_str[] = {
- 	"DMA Transfer Source Address Error",
- 	"DMA Transfer Destination Address Error",
-diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-index e6b622e1ba92..f7f31fdf14cf 100644
---- a/drivers/dma/ioat/dma.h
-+++ b/drivers/dma/ioat/dma.h
-@@ -104,8 +104,6 @@ struct ioatdma_chan {
- 	#define IOAT_RUN 5
- 	#define IOAT_CHAN_ACTIVE 6
- 	struct timer_list timer;
--	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
--	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
- 	#define RESET_DELAY msecs_to_jiffies(100)
- 	struct ioatdma_device *ioat_dma;
- 	dma_addr_t completion_dma;
+@@ -827,7 +826,7 @@ static int xpsgtr_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int xpsgtr_resume(struct device *dev)
++static int __maybe_unused xpsgtr_resume(struct device *dev)
+ {
+ 	struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
+ 	unsigned int icm_cfg0, icm_cfg1;
+@@ -854,7 +853,6 @@ static int xpsgtr_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static const struct dev_pm_ops xpsgtr_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(xpsgtr_suspend, xpsgtr_resume)
 -- 
-2.16.2
+2.27.0
 
