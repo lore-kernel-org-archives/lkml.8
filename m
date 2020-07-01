@@ -2,70 +2,141 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F95C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F348207D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593645650;
-	bh=JMCEhMGrZolS7Zo917Ex5jh02w1p5G8xc+SFAo0CiCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WvvGf4xDoiZP+WpM8ThNZKEHVu79OipEmBnmcyMIL84ewvazR1ze9VAAR71x14X23
-	 cugyfejd9slTlDf1mZOIdgfhfQKPqVuFoWQc3qYr57Dk9obfLGpTd7QF8kAViYH2qZ
-	 A9aPsBfcDKjPwjYsyqGIDang31xC4PW7HIgi9fig=
+	by mail.kernel.org (Postfix) with ESMTP id 83CDC20672
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zs+5XUPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgGAXUt (ORCPT
+        id S1726643AbgGAXZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgGAXUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:20:48 -0400
-Received: from localhost (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BE72077D;
-        Wed,  1 Jul 2020 23:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593645648;
-        bh=JMCEhMGrZolS7Zo917Ex5jh02w1p5G8xc+SFAo0CiCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=llSZRexV93ejjGN0yvBxMOZxe8/+ToIrAV28yxaWFhBs/haZX8ChHmTFqBdgb8toI
-         oIZLVOBchbqW/p8U9dVK/m7KSG87ILLqsXAC1Oh9PVqltWi07IdyxBWiHs/SXyJ/aW
-         C2gCSzG92yVBiLBXV0XA3iLx5kDgRd2uE2bQUx7c=
-Date:   Thu, 2 Jul 2020 01:20:46 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 01/10] timer: Prevent base->clk from moving backward
-Message-ID: <20200701232045.GA17670@lenoir>
-References: <20200701011030.14324-1-frederic@kernel.org>
- <20200701011030.14324-2-frederic@kernel.org>
- <20200701163504.GD9670@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701163504.GD9670@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 1 Jul 2020 19:25:41 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:31950 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgGAXZk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 19:25:40 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200701232537epoutp04e9cad5f6513432fa3a977565d3bf7ed2~dxIlSzo1B0333203332epoutp04L
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:25:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200701232537epoutp04e9cad5f6513432fa3a977565d3bf7ed2~dxIlSzo1B0333203332epoutp04L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593645937;
+        bh=To6Qa4MXv1vIe/oZatIOPnmiOSPIUwt9HcTsHPPllos=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Zs+5XUPBf7KcUjMvEYHRyezn+EVQu0BVz7QGEsBkXRdx7hsH1AztPk25Lk49N2s9U
+         NCswtmFiOjGUWOd1W40GyqQxYixan38nH8XoFnvo7axMfvv8BP0Ovfg1Nq3g5rdXui
+         QjLgx1PQG5hqhwKTs0GDXeSTRPiMW89wYpXevnIQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200701232536epcas1p36124df03e50d7dc7c85ac9f722f5d1e6~dxIlBicLi0140501405epcas1p33;
+        Wed,  1 Jul 2020 23:25:36 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.166]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49xy5D2TMQzMqYkZ; Wed,  1 Jul
+        2020 23:25:36 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B3.BB.29173.07B1DFE5; Thu,  2 Jul 2020 08:25:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac~dxIj6Eh0B0140501405epcas1p3t;
+        Wed,  1 Jul 2020 23:25:35 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200701232535epsmtrp15987d5f99e1e169ff6f1e259b9f372dc~dxIj5ZZEm1659116591epsmtrp1_;
+        Wed,  1 Jul 2020 23:25:35 +0000 (GMT)
+X-AuditID: b6c32a37-9b7ff700000071f5-cd-5efd1b7047fc
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        30.AE.08303.F6B1DFE5; Thu,  2 Jul 2020 08:25:35 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200701232535epsmtip2673fb550dbeb5c86a3245d85d50eb058~dxIjtbhKL2776827768epsmtip2b;
+        Wed,  1 Jul 2020 23:25:35 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     gregkh@linuxfoundation.org, sashal@kernel.org
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH 5.7.y 0/5] exfat stable patches for 5.7.y
+Date:   Thu,  2 Jul 2020 08:20:19 +0900
+Message-Id: <20200701232024.2083-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLKsWRmVeSWpSXmKPExsWy7bCmvm6B9N84gydrhSyaF69ns7i8aw6b
+        xY/p9Rab1lxjs1iw8RGjA6vHplWdbB77565h9+jbsorR4/MmuQCWqBybjNTElNQihdS85PyU
+        zLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKC1SgpliTmlQKGAxOJiJX07m6L8
+        0pJUhYz84hJbpdSClJwCQ4MCveLE3OLSvHS95PxcK0MDAyNToMqEnIwr85+yFtxlrfj3ew5z
+        A+MOli5GTg4JAROJWdu7WLsYuTiEBHYwSuxqW8gG4XxilHjf9ZgJwvnMKDFh1QS4lvlHTjJC
+        JHYxSsyesRShZcWPa0AOBwebgLbEny2iIA0iAoYSNz5fYwEJMwskSpzf6woSFhawlHjavowJ
+        xGYRUJV4M3EWmM0rYC3Rc3ApO8QueYnVGw4wg4yXEJjOLnH/4z1GiISLxN5396EOEpZ4dXwL
+        VIOUxMv+NnaQXRIC1RIf9zNDhDsYJV58t4WwjSVurt/ACnGOpsT6XfoQYUWJnb/ngk1nFuCT
+        ePe1hxViCq9ER5sQRImqRN+lw0wQtrREV/sHqKUeEneX7wNbKiQQKzFtu/EERtlZCPMXMDKu
+        YhRLLSjOTU8tNiwwRo6hTYzgdKRlvoNx2tsPeocYmTgYDzFKcDArifCeNvgVJ8SbklhZlVqU
+        H19UmpNafIjRFBhaE5mlRJPzgQkxryTe0NTI2NjYwsTM3MzUWEmc19fqQpyQQHpiSWp2ampB
+        ahFMHxMHp1QD081zSlOupBWwbYn1CfjNOWli/TwZCx32d2kex8Sqak5x++12fHrMQPzes7KT
+        V5jni8xW+rtsZ/edkAtct6c+XDMlQ3K7soboh4np7c5zp2p89df4rxhvwLBK6kr5hb0vux6Z
+        RjWxZQrUCNva7b5s+sJa0f235c31YnzpyXJu35dNT1/buLY/IMDv2Pe1C18XLTia86Tu5J+3
+        Vw8Zdwn/qPeZkLPilfRVj64LiX+dl1zdcrp8j2zeopA7Ev/utc1irEku51Wulp3R2nHus+On
+        xQwHWM7MsYqJ3evo6N/5uc3YVSz8vZTYB/tZTF8/n7m8Nf1X8XOBxYomUvbhG6eWqjiJfb0p
+        J1n75pThGeeL7UosxRmJhlrMRcWJAK+aBF/QAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNJMWRmVeSWpSXmKPExsWy7bCSvG6+9N84g78nNCyaF69ns7i8aw6b
+        xY/p9Rab1lxjs1iw8RGjA6vHplWdbB77565h9+jbsorR4/MmuQCWKC6blNSczLLUIn27BK6M
+        K/OfshbcZa3493sOcwPjDpYuRk4OCQETiflHTjJ2MXJxCAnsYJTYPucbI0RCWuLYiTPMXYwc
+        QLawxOHDxRA1HxglXvW0sYPE2QS0Jf5sEQUxRQSMJdq/loGYzALJEvv3WoAMERawlHjavowJ
+        xGYRUJV4M3EWmM0rYC3Rc3ApO8QieYnVGw4wT2DkWcDIsIpRMrWgODc9t9iwwCgvtVyvODG3
+        uDQvXS85P3cTIzg8tLR2MO5Z9UHvECMTB+MhRgkOZiUR3tMGv+KEeFMSK6tSi/Lji0pzUosP
+        MUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUIJsvEwSnVwGS3Ovr8BvVdr8+9+Hl8zn77M486XWV9
+        Ds28vVJxxU3WximHLj7cETZL7u9M61WzPwhyz7/2aL7Yb9aWa0Ec/863dDoFZDaWn6n6qZtw
+        o3mnwd/Vvy4V7zrkEa/jwmHzxHijzdWPe1cvXmrmwsJmpyxQb7b5r8v0oD6uV0JlgRyvU+Id
+        dsc+6DrvrjH33TWmT5vEmp7O/dbUE/C9RfvyM5Y31i/TD59fGLb/Y8lKmUnrv2/QXCBhub0v
+        kf3O731P5/jf2bhmAz/D1uDa9uc3Sy6+XV2tN+VrbtDPusVsnSvWSe68tEVVZALrJEf+i8+O
+        9hd11gZkydwI7f0QWmaeUr91YcIN5YlzvBi/Ke7peLK3TImlOCPRUIu5qDgRAL1Ps3l+AgAA
+X-CMS-MailID: 20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac
+References: <CGME20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 06:35:04PM +0200, Juri Lelli wrote:
-> Guess you might be faster to understand what I'm missing. :-)
-
-So, did you port only this patch or the whole set in order to
-trigger this?
-
-If it was the whole set, can you try this patch alone?
+Could you please push exfat stable patches into 5.7.y kernel tree ?
 
 Thanks!
+
+Dan Carpenter (1):
+  exfat: add missing brelse() calls on error paths
+
+Hyeongseok.Kim (1):
+  exfat: Set the unused characters of FileName field to the value 0000h
+
+Hyunchul Lee (1):
+  exfat: call sync_filesystem for read-only remount
+
+Namjae Jeon (1):
+  exfat: move setting VOL_DIRTY over exfat_remove_entries()
+
+Sungjong Seo (1):
+  exfat: flush dirty metadata in fsync
+
+ fs/exfat/dir.c      | 12 +++++++-----
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/file.c     | 19 ++++++++++++++++++-
+ fs/exfat/namei.c    | 14 +++++++++++---
+ fs/exfat/super.c    | 10 ++++++++++
+ 5 files changed, 47 insertions(+), 9 deletions(-)
+
+-- 
+2.17.1
+
