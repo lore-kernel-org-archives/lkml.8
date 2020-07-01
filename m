@@ -2,115 +2,83 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E31C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C49C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D48220663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FBF20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qymYWIhB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzE31B2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgGAOC2 (ORCPT
+        id S1731278AbgGAODH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:02:28 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:16326 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731069AbgGAOC2 (ORCPT
+        Wed, 1 Jul 2020 10:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbgGAODG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:02:28 -0400
+        Wed, 1 Jul 2020 10:03:06 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48582C08C5C1;
+        Wed,  1 Jul 2020 07:03:06 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x3so5516537pfo.9;
+        Wed, 01 Jul 2020 07:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593612148; x=1625148148;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=5zs5lyxU5AtUdWhiM9M4OnXzAKmqv7biVE/Gy/y7dYc=;
-  b=qymYWIhBE249CPHiO7/xKER7PcOnbQjc1tVkv7Sf5xLWwaFuiAnhD+B/
-   Eg1UBEXAjKh96i/oKDN0CyCM5ywgq/3vy7M2+JkfQddKN+m3/JCgZl3z0
-   V7z3IqXuIyT8xxJryKD4MycoX9UMDkeK85BUaXbjxjgnB/OqqnCmP4T9E
-   4=;
-IronPort-SDR: /W76JCUcLQtk7wQg9wwmfEH4BUJ0N5VwiTtPu0r4q1nWt0lIbl7VZ5lLBHNJhWL0Do5IzhbSQw
- 5Haek1aXZJcQ==
-X-IronPort-AV: E=Sophos;i="5.75,300,1589241600"; 
-   d="scan'208";a="48368723"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 01 Jul 2020 14:02:20 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id AA33CA26D8;
-        Wed,  1 Jul 2020 14:02:16 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 1 Jul 2020 14:02:15 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.85) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 1 Jul 2020 14:02:13 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     <kvmarm@lists.cs.columbia.edu>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH] KVM: arm64: Change default caching mode for {PEND,PROP}BASER.outer
-Date:   Wed, 1 Jul 2020 16:02:06 +0200
-Message-ID: <20200701140206.8664-1-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.85]
-X-ClientProxiedBy: EX13D06UWA003.ant.amazon.com (10.43.160.13) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+        d=gmail.com; s=20161025;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=RMM9Z9iqlVaLrecC9159bXlUvQlK4CIqEqnJXgl0LBg=;
+        b=ZzE31B2owR1axpP7mYfwuJ7ByeXlub2RI51vzy5ICs5QskYcnElPcGF/uzVE/6R5yA
+         /33VzijNVDZObmPtmhswp7GQEdiau/6IbduGtM2oePRXbZvBMzI6mUn6fhTvk9haZA5c
+         GNoJe41L7AxpG6lAVvFXDKbAoZkEeiLobAFmWVO6XHaUx+HacmlQODT2R0TtpTwdVKhd
+         ziFrzaWYOMrpKr9IHYCkwjUsY+DBgdI4+8wcpgDIpbcRhMrVSkPmczzZQtS9SMqFKQCo
+         RVa7twrdFgXX1WfmJA29BvMpRFUOc0gEYKF5GLV2cUEYUCB04jP6yuPq2YF/7scGfKn3
+         LdVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=RMM9Z9iqlVaLrecC9159bXlUvQlK4CIqEqnJXgl0LBg=;
+        b=E449t9t0MkJS2ZmN4RSVrDGp66ULuxUlCNakY0bDfGFGaYMWQBKTUkJC3MTWfRNI2o
+         bOJuMf3SzUYH5ozQ6R6uQLUFXvh76gxM0lg4UHIMla341FevMGOWOd/2vxYwdIt5tucv
+         YLyeVh/lSYeAw8vJsO1qUPtqJI2udWYBK4h2eu+29ajdpAmUOR/nMsRn/Zi8CIem7OHE
+         8KlBrgjN9X7HtwQeX6ILKiwRDDuDjwomdJiMgbft9kltcVj5fdHizTWQ+r2FnWSChIPM
+         vEKdFN1jZdo6oUQxJaj8JpQkPP2QIGg6NJt+5q/D7ZqaDJhxnIyer0/Nm/v6ZhE1MWn+
+         qwBA==
+X-Gm-Message-State: AOAM532u6yrfzSI27qf92VZP0aW73lF6n6PaqttsjitiV41WxTmUtQIe
+        KJRGl8Xe3YSMqe9swXLpDniW1yhQUPc=
+X-Google-Smtp-Source: ABdhPJwK1gSyb6BqnZnNGzRFKYis0IPoxy9s7luGlbe6f2nIJBQgiEIvKx84HquKvQmcnNG7mMI2mg==
+X-Received: by 2002:a05:6a00:2bb:: with SMTP id q27mr21826479pfs.176.1593612185922;
+        Wed, 01 Jul 2020 07:03:05 -0700 (PDT)
+Received: from [127.0.0.1] ([103.86.69.165])
+        by smtp.gmail.com with ESMTPSA id w17sm430114pge.10.2020.07.01.07.03.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jul 2020 07:03:05 -0700 (PDT)
+From:   =?utf-8?B?6buE6YeR5rW3?= <2538082724huangjinhai@gmail.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [RFC v2 00/27] Kernel Address Space Isolation
+Message-Id: <53ECD40A-9BC1-4C1E-B089-21BC27264219@gmail.com>
+Date:   Wed, 1 Jul 2020 22:02:58 +0800
+Cc:     bp@alien8.de, dave.hansen@linux.intel.com, graf@amazon.de,
+        hpa@zytor.com, jan.setjeeilers@oracle.com, jwadams@google.com,
+        konrad.wilk@oracle.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        liran.alon@oracle.com, luto@kernel.org, mingo@redhat.com,
+        pbonzini@redhat.com, peterz@infradead.org, rkrcmar@redhat.com,
+        rppt@linux.vnet.ibm.com, tglx@linutronix.de, x86@kernel.org
+To:     alexandre.chartre@oracle.com
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PENDBASER and PROPBASER define the outer caching mode for LPI tables.
-The memory backing them may not be outer sharable, so we mark them as nC
-by default. This however, breaks Windows on ARM which only accepts
-SameAsInner or RaWaWb as values for outer cachability.
-
-We do today already allow the outer mode to be set to SameAsInner
-explicitly, so the easy fix is to default to that instead of nC for
-situations when an OS asks for a not fulfillable cachability request.
-
-This fixes booting Windows in KVM with vgicv3 and ITS enabled for me.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- arch/arm64/kvm/vgic/vgic-mmio-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index d2339a2b9fb9..5c786b915cd3 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -389,7 +389,7 @@ u64 vgic_sanitise_outer_cacheability(u64 field)
- 	case GIC_BASER_CACHE_nC:
- 		return field;
- 	default:
--		return GIC_BASER_CACHE_nC;
-+		return GIC_BASER_CACHE_SameAsInner;
- 	}
- }
- 
--- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+How about performance when running with ASI?
