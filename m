@@ -2,213 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2711BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1320853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593631872;
-	bh=JhjBWQCvl0Vj3FGaTP3ZR0NdM2WZZgfoLlhDYXIW+DI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kYs1iAAIfVH7eBK6bqTYgkuqZoz6xLLZR6Qo+wnkrToNMAV69meax0HOAmUX9/xsJ
-	 5DkCdWVkfmdvch3HvM4bMDiLTbjQHeiwrkmqj0mTgxaZkhgEG3PE6clk/jFS8DA4FW
-	 rj3s/wu/ZkvEVgLLx+WTLv3mLZlgtNo/EvWvi71s=
+	by mail.kernel.org (Postfix) with ESMTP id E8BDD20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CvLLE1I/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgGATbK (ORCPT
+        id S1726505AbgGATbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:31:10 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:50090 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgGATbJ (ORCPT
+        Wed, 1 Jul 2020 15:31:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8034 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgGATba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:31:09 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 061JTbQ8006662;
-        Thu, 2 Jul 2020 04:29:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 061JTbQ8006662
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593631778;
-        bh=Ghsk/6q3IUm5LtJ33X5K2JCyxaLZ1tT51ub8VEalKoo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=n/cMAt/XqaN+wpQkLjiprsZ5IOffenllFJGXDw7DZTUHrYfO4dT9SeDNr5RGJvfo5
-         Nu/3KSxofR1bU7jcw/sMn+ez3PhaZfH5VoK9x4PfSJYCFKj3lvwFVqTmI21DJlDGfl
-         NNNJRa06rrubFSJFCm57PMOJuYjduC5OW/ufY6vzpQ51yKTS00UI5mlv/602ITYf8E
-         vuKnYSu8we48aHWOB3M2uVRtqKdk56xJIisKSPExK+Ld8V2lo3Zeuo1RfFxJAjEJsM
-         TMhSVRamtMPEoELKYZq1fqHZo9EC0W3LnLwtskdcFeRolPzEuBGGIoI1t5+XjY8Fy5
-         EekD6pUmzI1sw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, Guan Xuetao <gxt@pku.edu.cn>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH] kbuild: do not export LDFLAGS_vmlinux
-Date:   Thu,  2 Jul 2020 04:29:36 +0900
-Message-Id: <20200701192936.1397152-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 1 Jul 2020 15:31:30 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efce45f0002>; Wed, 01 Jul 2020 12:30:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 01 Jul 2020 12:31:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 01 Jul 2020 12:31:30 -0700
+Received: from [10.26.73.166] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
+ 2020 19:31:25 +0000
+Subject: Re: [PATCH v8 2/3] dt-bindings: arm-smmu: Add binding for Tegra194
+ SMMU
+To:     Krishna Reddy <vdumpa@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-3-vdumpa@nvidia.com>
+ <3e655881-bac4-f083-44ed-cfa0a61298d0@arm.com>
+ <BYAPR12MB28222D6ADEBA966AA27FA9ECB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+ <0d4f46d6-6a4e-bca0-bcf3-0e22a950e57b@nvidia.com>
+ <BYAPR12MB282245DD6BB50ECA700AC69EB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b10673f6-2a01-b9e5-0948-9684ffbe1813@nvidia.com>
+Date:   Wed, 1 Jul 2020 20:31:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR12MB282245DD6BB50ECA700AC69EB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593631840; bh=ZGC9lIP7pPgpxF+KbHUwdguRxLIBieIt7a3FT6LfKBE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CvLLE1I/rFJiMNetZpFnz4yrdJ2p2ysI4goElMGZaDmeIVvVfVkPcE6W+6+if3Sfy
+         hgHM/wd7JR6WiVc/L/HA8spH+rxaX2jlJiDy/BEej5nmfxCUuyIeZTU23xMEzZa+gz
+         HOGByhGzv3+Pz7ZCoHeWiT9zamCpZCj8ZaJ51zSIgFJzlXRr9XLOgnzvwkroR2XR2c
+         P8AfxVYUtxDd1I1+oE1pR3gWEwJhDFEfEC/+xUo8pl6K1i42OiM/yeI7PvPJ8l7hz7
+         pgv9UdvRpVXBpNklXhs5oy5hBb3hr5wC1/MtI7j556F/XMpXMuqH8JyTP0SqvcNqjv
+         xnRkIjOcIvwhw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When you clean the build tree for ARCH=arm, you may see the following
-error message:
 
-$ make -j24 ARCH=arm clean
-  CLEAN   arch/arm/crypto
-  CLEAN   arch/arm/kernel
-  CLEAN   arch/arm/mach-at91
-  CLEAN   arch/arm/mach-omap2
-  CLEAN   arch/arm/vdso
-  CLEAN   certs
-  CLEAN   lib
-  CLEAN   usr
-  CLEAN   net/wireless
-  CLEAN   drivers/firmware/efi/libstub
-nm: 'arch/arm/boot/compressed/../../../../vmlinux': No such file
-/bin/sh: 1: arithmetic expression: expecting primary: " "
-  CLEAN   arch/arm/boot/compressed
-  CLEAN   drivers/scsi
-  CLEAN   drivers/tty/vt
-  CLEAN   arch/arm/boot
-  CLEAN   vmlinux.symvers modules.builtin modules.builtin.modinfo
+On 01/07/2020 20:00, Krishna Reddy wrote:
+>>>>> +        items:
+>>>>> +          - enum:
+>>>>> +              - nvdia,tegra194-smmu
+>>>>> +          - const: arm,mmu-500
+>>>
+>>>> Is the fallback compatible appropriate here? If software treats this as a standard MMU-500 it will only program the first instance (because the second isn't presented as a separate MMU-500) - is there any way that isn't going to blow up?
+>>>
+>>> When compatible is set to both nvidia,tegra194-smmu and arm,mmu-500, implementation override ensure that both instances are programmed. Isn't it? I am not sure I follow your comment fully.
+> 
+>> The problem is, if for some reason someone had a Tegra194, but only set the compatible string to 'arm,mmu-500' it would assume that it was a normal arm,mmu-500 and only one instance would be programmed. We always want at least 2 of the 3 instances >programmed and so we should only match 'nvidia,tegra194-smmu'. In fact, I think that we also need to update the arm_smmu_of_match table to add 'nvidia,tegra194-smmu' with the data set to &arm_mmu500.
+> 
+> In that case, new binding "nvidia,smmu-v2" can be added with data set to &arm_mmu500 and enumeration would have nvidia,tegra194-smmu and another variant for next generation SoC in future. 
 
-Even if you run the same command again, the error message is not shown
-despite vmlinux is already gone.
+I think you would be better off with nvidia,smmu-500 as smmu-v2 appears
+to be something different. I see others have a smmu-v2 but I am not sure
+if that is legacy. We have an smmu-500 and so that would seem more
+appropriate.
 
-To reproduce it, the parallel option -j is needed. Single thread
-cleaning always executes 'archclean', 'vmlinuxclean' in this order,
-so vmlinux still exists when arch/arm/boot/compressed/ is cleaned.
+Jon
 
-Looking at arch/arm/boot/compressed/Makefile does not help understand
-the reason of the error message. Both KBSS_SZ and LDFLAGS_vmlinux are
-assigned with '=' operator, hence, they are not expanded until they are
-used. Obviously, 'make clean' does not use them.
-
-In fact, the root cause exists in the top Makefile:
-
-  export LDFLAGS_vmlinux
-
-Since LDFLAGS_vmlinux is an exported variable, LDFLAGS_vmlinux in
-arch/arm/boot/compressed/Makefile is expanded when scripts/Makefile.clean
-has a command to execute. This is why the error message shows up only
-when there exist build artifacts in arch/arm/boot/compressed/.
-
-Adding 'unexport LDFLAGS_vmlinux' to arch/arm/boot/compressed/Makefile
-will fix it as far as ARCH=arm is concerned, but I believe the proper
-fix is to get rid of 'export LDFLAGS_vmlinux' from the top Makefile.
-
-LDFLAGS_vmlinux in the top Makefile contains linker flags for the top
-vmlinux. LDFLAGS_vmlinux in arch/arm/boot/compressed/Makefile is for
-arch/arm/boot/compressed/vmlinux. They just happen to have the same
-variable name, but are used for different purposes. Exporting the former
-bothers the decompressor Makefiles.
-
-This commit passes LDFLAGS_vmlinux to scripts/link-vmlinux.sh via a
-command line parameter instead of via an environment variable. LD and
-KBUILD_LDFLAGS are exported, but I did the same for consistency. Anyway,
-they must be included in cmd_link-vmlinux to allow if_changed to detect
-the changes in LD or KBUILD_LDFLAGS.
-
-The following Makefiles are not affected:
-
-  arch/arm/boot/compressed/Makefile
-  arch/h8300/boot/compressed/Makefile
-  arch/nios2/boot/compressed/Makefile
-  arch/parisc/boot/compressed/Makefile
-  arch/s390/boot/compressed/Makefile
-  arch/sh/boot/compressed/Makefile
-  arch/sh/boot/romimage/Makefile
-  arch/x86/boot/compressed/Makefile
-
-They use ':=' or '=' to clear the LDFLAGS_vmlinux inherited from the
-top Makefile.
-
-We need to take a closer look at the impact to unicore32 and xtensa.
-
-arch/unicore32/boot/compressed/Makefile only uses '+=' operator for
-LDFLAGS_vmlinux. So, the decompressor previously inherited the linker
-flags from the top Makefile.
-
-However, commit 70fac51feaf2 ("unicore32 additional architecture files:
-boot process") was merged before commit 1f2bfbd00e46 ("kbuild: link of
-vmlinux moved to a script"). So, I believe this is rather a bug fix of
-1f2bfbd00e46.
-
-arch/xtensa/boot/boot-elf/Makefile is also affected, but this is a fix
-for the same reason. It did not inherit LDFLAGS_vmlinux when commit
-4bedea945451 ("[PATCH] xtensa: Architecture support for Tensilica Xtensa
-Part 2") was merged. I deleted $(LDFLAGS_vmlinux), which is now empty.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Makefile                           | 3 +--
- arch/xtensa/boot/boot-elf/Makefile | 2 +-
- scripts/link-vmlinux.sh            | 4 ++++
- 3 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 5496a32dffa6..075f2f943180 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1100,7 +1100,6 @@ KBUILD_VMLINUX_OBJS += $(patsubst %/,%/built-in.a, $(drivers-y))
- 
- export KBUILD_VMLINUX_OBJS KBUILD_VMLINUX_LIBS
- export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
--export LDFLAGS_vmlinux
- # used by scripts/Makefile.package
- export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) LICENSES arch include scripts tools)
- 
-@@ -1132,7 +1131,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- 
- # Final link of vmlinux with optional arch pass after final link
- cmd_link-vmlinux =                                                 \
--	$(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
-+	$(CONFIG_SHELL) $< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)";    \
- 	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
- 
- vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
-diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-index 12ae1e91cb75..c6538d3321b9 100644
---- a/arch/xtensa/boot/boot-elf/Makefile
-+++ b/arch/xtensa/boot/boot-elf/Makefile
-@@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
- 		$(OBJS) $@
- 
- $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
--	$(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
-+	$(LD) $(KBUILD_LDFLAGS) \
- 		-T $(obj)/boot.lds \
- 		--build-id=none \
- 		-o $@ $(obj)/Image.o
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 7eaf70d58488..16c7818b3e19 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -30,6 +30,10 @@
- # Error out on error
- set -e
- 
-+LD="$1"
-+KBUILD_LDFLAGS="$2"
-+LDFLAGS_vmlinux="$3"
-+
- # Nice output in kbuild format
- # Will be supressed by "make -s"
- info()
 -- 
-2.25.1
-
+nvpublic
