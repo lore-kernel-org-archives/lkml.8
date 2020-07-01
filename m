@@ -2,51 +2,165 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6EFA206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7F1207F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="MdZcrTH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgGAN3s convert rfc822-to-8bit (ORCPT
+        id S1731014AbgGAN3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:29:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60818 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbgGAN3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 09:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730727AbgGAN3r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 09:29:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 634C8AE17;
-        Wed,  1 Jul 2020 13:29:45 +0000 (UTC)
-From:   =?utf-8?Q?Aur=C3=A9lien?= Aptel <aaptel@suse.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        sfrench@samba.org, corbet@lwn.net, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: CIFS
-In-Reply-To: <20200627103125.71828-1-grandmaster@al2klimov.de>
-References: <20200627103125.71828-1-grandmaster@al2klimov.de>
-Date:   Wed, 01 Jul 2020 15:29:44 +0200
-Message-ID: <87tuyrxt13.fsf@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27ABCC08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 06:29:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x72so1580613pfc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 06:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=YgnZaQZA95kZa9eD6Aa+cAMcR8VkfrVLM4dfgiEOVdc=;
+        b=MdZcrTH6R7MypetoKPIS7cwWYBfzncRlX/sj2B9Le2wEQOCNOg4KG6n50/jSWJEOxs
+         +7GNqsDV/bHIBjpT5cozeyY2oUgsjkE3FNWIs0FgrJsMlA/p8ztSG124NdHpDRUaNlP4
+         rzofCw55+49xl5hgBjeZujfO29hSiUs0pBiVJ6Bw/mNB9Ub3sDXwld2HN0MuTrcof4L8
+         UN5vKGx4J8XpOQrE82rZISBEb9O9xxgIX5iOPxMzhrSHQy2mBe3NYempIKDw+ge6GvdT
+         Qp+ZrmpucNycajR8CggchRLto9h0WzX7bP7YzNKNTkFVPLH70byI2LmUsnp7TcZI/H6U
+         bh5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YgnZaQZA95kZa9eD6Aa+cAMcR8VkfrVLM4dfgiEOVdc=;
+        b=aJqXN5v3/Qxg1vzbEzvHcWhWfOb1OFD77kHWU66zQj8BmaukjFaWVf7iEsUwdEPXHl
+         eccIBZAxMLkhnQliVnjdkPopLmS7YFlATwMy3g/+QyeFDpseomS2cr//yS6Z7S2zZZ9Z
+         nhmTUipqcSMZpU9sZq4yifsZEAJASpEbdUv1WcUwkmjI0LGgyErir3TtEKFsCbVU+N1b
+         Yopo1gcvyoOfOJq7+qsfXas2aOBa6PxfcKib7iarhZ/AE6PlqGi3ZXI48ODBN4+aa4/F
+         ERixnlBr6up6zy7m4rq7eG7dZrOQp4SgBcUq8EHeiW6CUYhx6T6q7/eabM7/xFpeTW36
+         B5KA==
+X-Gm-Message-State: AOAM532nHcnjhXHnv6nrqctXAEsZ2E0OpKs+GSj92CPA3MfrtvmOyHYz
+        7YePLnWAF8485wGtDCKQ9mKSwg==
+X-Google-Smtp-Source: ABdhPJzj1O+Xr/fxUrf64PQVVVa1YDdBRm8l3RGZQknYVJhKvV48RBcDh7B1AvfcxXVX4n4OooNCmA==
+X-Received: by 2002:aa7:871a:: with SMTP id b26mr17825125pfo.294.1593610186566;
+        Wed, 01 Jul 2020 06:29:46 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id l22sm5154330pjq.20.2020.07.01.06.29.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 06:29:46 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v9 0/3] media: Add colors' order and other info over test image
+Date:   Wed,  1 Jul 2020 18:59:37 +0530
+Message-Id: <20200701132940.21257-1-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset aims to add a method to display the correct order of
+colors for a test image generated. It does so by adding a function
+which returns a string of correct order of the colors for a test
+pattern. It then adds a control in vimc which displays the string
+over test image. It also displays some other information like saturation,
+hue, contrast brightness and time since the stream started over test
+image generated by vimc.
 
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Changes since v8:
+	In patch 1:
+	- Add more details to commit message.
+	In patch 3:
+	- Formatting nits.
+
+Changes since v7:
+        In patch 3:
+        - Use fallthrough; to indicate a fall through in switch-case
+        - Use enum type instead of int for osd_value
+        - Change varaible to osd_value instead of osd_mode as the enum
+          osd_mode defines the modes.
+
+Changes since v6:
+        In patch 3:
+        - Use switch case instead of if()
+        - reorder declarartions.
+
+Changes since v5:
+        In patch 2:
+        - Add missing EXPORT_SYMBOL_GPL()
+        In patch 3:
+        - Renamed varaibles.
+        - use u64 instead of int for getting current time in
+          nanoseconds.
+        - Use enum instead of numbers to describe the state of osd_mode
+          control in code.
+
+Changes since v4:
+        - Add another patch which changes char argument to const char
+        in function tpg_gen_text()
+        - Return const char * from function tpg_g_color_order() in patch
+          2
+        In 3rd patch:
+        - Check font in probe() instead of s_stream()
+        - Use dev_err instead of pr_err
+        - Fix errors in commit message.
+        - Base VIMC_CID_SHOW_INFO on VIVID_CID_OSD_TEXT_MODE
+
+Changes since v3:
+        In 1st patch:
+        -Improved formatting of returned string.
+
+        In 2nd patch:
+         - Add CID prefix in control name and change it to a more
+           generic name.
+         - Rename bool variable to a generic name.
+         - Disable text rendering instead of stopping stream if no
+           font found.
+         - Display more info like VIVID in VIMC.
+
+Changes since v2:
+        In 1st patch:
+        - Create a 'define' to prevent repetition of the common color
+          sequence string.
+        - Use 'fallthrough' on case statement to prevent repetition of
+          code.
+
+Changes since v1:
+        - Divided the patch into two patches.
+        - Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+        - Renamed variables from camelcase to use '_'
+        - prefixed 'media' to the patches.
+
+Kaaira Gupta (3):
+  media: tpg: change char argument to const char
+  media: tpg: Add function to return colors' order of test image
+  media: vimc: Add a control to display info on test image
+
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 40 +++++++++--
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 71 +++++++++++++++++++
+ include/media/tpg/v4l2-tpg.h                  |  3 +-
+ 6 files changed, 119 insertions(+), 8 deletions(-)
 
 -- 
-Aurélien Aptel / SUSE Labs Samba Team
-GPG: 1839 CB5F 9F5B FB9B AA97  8C99 03C8 A49B 521B D5D3
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, DE
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah HRB 247165 (AG München)
+2.17.1
+
