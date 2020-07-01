@@ -2,99 +2,110 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C68AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED56620722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFA620722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593596001;
+	bh=Q7gpEoPkh6bA0z/x1q2X8NK5Oy7GN6NSJUFo0hDV3Ng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IBuVcAInEctIyAOf2/3nWPII520CKKtvkeU0Z639KcSnLN0PFJ+PxYrZnb6fMTxSU
+	 JR6vjpfEGgGDJZZAZZRWp1a+VVoT56kNwhu+elsC8oMHr6n01eVm9hGkr4ePlJW77I
+	 vbD3N7ZVUC+OTjFG36u4EajAs97DZ7dYAD/aDStk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgGAJdA (ORCPT
+        id S1729484AbgGAJdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:33:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58972 "EHLO mga04.intel.com"
+        Wed, 1 Jul 2020 05:33:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbgGAJc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:32:59 -0400
-IronPort-SDR: AAEhakG+OcgAVZ2LEtwjaOTxoonbHU4icWraLazP5hcXqQzebymBlZnb8tEzpNTiJq0M3HcoYL
- qT/Vnwp4N6ew==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144022533"
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="144022533"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:32:58 -0700
-IronPort-SDR: xPVmHT9r7rUz4ROWtBdompbiKh6cjb5Z+vG9xsw7w1ClrxwrAbTCELUz2R1TC7WyyBlPHckyT+
- bqe9gywTZcog==
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="455036278"
-Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:32:56 -0700
-Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200628085341.5107-1-chenyi.qiang@intel.com>
- <20200628085341.5107-3-chenyi.qiang@intel.com>
- <878sg3bo8b.fsf@vitty.brq.redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
-Date:   Wed, 1 Jul 2020 17:32:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1727090AbgGAJdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:33:19 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E30D20722;
+        Wed,  1 Jul 2020 09:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593595998;
+        bh=Q7gpEoPkh6bA0z/x1q2X8NK5Oy7GN6NSJUFo0hDV3Ng=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PrJBBnhirtBPQWA1S4Fe5yOp4m1YwcWuw+kJWJzQeh8DmWBMvOrftcVAB2jzQZq3I
+         Yv6fql3efRC0U3g4T0nYdGG3FEh4PMtNJnglU76jgyiBCfdDHIblP4PpGtEo+0SdT2
+         T/oapkBtbN3MvbHxUtzPFCToKaXzGJzI/uSncBY4=
+Date:   Wed, 1 Jul 2020 10:33:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "dianders@chromium.org" <dianders@chromium.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "swboyd@chromium.org" <swboyd@chromium.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bleung@chromium.org" <bleung@chromium.org>
+Subject: Re: [PATCH] spi: Avoid setting the chip select if we don't need to
+Message-ID: <20200701093316.GA5385@sirena.org.uk>
+References: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
+ <522b1d9297604a1cfa93fdc54a3cd0773cf7580a.camel@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <878sg3bo8b.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
+In-Reply-To: <522b1d9297604a1cfa93fdc54a3cd0773cf7580a.camel@analog.com>
+X-Cookie: marriage, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/2020 5:04 PM, Vitaly Kuznetsov wrote:
-> Chenyi Qiang <chenyi.qiang@intel.com> writes:
-[...]
->>   static const int kvm_vmx_max_exit_handlers =
->> @@ -6830,6 +6838,13 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>   	if (unlikely(vmx->exit_reason.failed_vmentry))
->>   		return EXIT_FASTPATH_NONE;
->>   
->> +	/*
->> +	 * check the exit_reason to see if there is a bus lock
->> +	 * happened in guest.
->> +	 */
->> +	if (vmx->exit_reason.bus_lock_detected)
->> +		handle_bus_lock(vcpu);
-> 
-> In case the ultimate goal is to have an exit to userspace on bus lock,
 
-I don't think we will need an exit to userspace on bus lock. See below.
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> the two ways to reach handle_bus_lock() are very different: in case
-> we're handling EXIT_REASON_BUS_LOCK we can easily drop to userspace by
-> returning 0 but what are we going to do in case of
-> exit_reason.bus_lock_detected? The 'higher priority VM exit' may require
-> exit to userspace too. So what's the plan? Maybe we can ignore the case
-> when we're exiting to userspace for some other reason as this is slow
-> already and force the exit otherwise? 
+On Wed, Jul 01, 2020 at 06:26:24AM +0000, Ardelean, Alexandru wrote:
+> On Mon, 2020-06-29 at 16:41 -0700, Douglas Anderson wrote:
 
-> And should we actually introduce
-> the KVM_EXIT_BUS_LOCK and a capability to enable it here?
-> 
+> > +	spi->controller->last_cs_enable = enable;
+> > +	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
 
-Introducing KVM_EXIT_BUS_LOCK maybe help nothing. No matter 
-EXIT_REASON_BUS_LOCK or exit_reason.bus_lock_detected, the bus lock has 
-already happened. Exit to userspace cannot prevent bus lock, so what 
-userspace can do is recording and counting as what this patch does in 
-vcpu->stat.bus_locks.
+> I don't feel like this is the best approach for the SPI CS handling,
+> because it's pretty difficult to guess the last CS state, and whether this
+> return would cause other weirder issues [like not toggling CS when it
+> should].
 
+There's no guesswork involved here - the only thing that should be
+setting the chip select is the SPI core so other than at startup we
+always know the state of the chip select.
+
+> Maybe a question is: when should this CS be toggled [or not]?
+> Is it between 2 calls of spi_transfer_one_message() or between 2
+> spi_transfers?
+> Or, is "xfer->cs_change == 1" where it shouldn't be?
+
+This is well documented, it's asserted while a message is being
+transferred unless changed by cs_change in which case we do whatever the
+opposite of the default action is.
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl78WFgACgkQJNaLcl1U
+h9CK7gf+Mr0ecVOXY5ISDr+Ey9IaXHmxgN6V0Z8Clkb7HJ6BM3T1BaHq9IoB8Sag
+ZluyKjIzXpzKgUwXHwWuwVAB+N4TNMsNn8tvDsEDtqw+Bdt0TSrDCp8jHsNIkq4g
+vDCqDsjiVNe67ouQLATkV1hMfn4GN72hNvjLR7waEnztE0e0GbIkVjq5Qa+zcXta
+6fUl9EKYcoTUFqeFgp8b1WuIuvi4zLW7ryiQLYDEIKVJOrmdYrE5t7PWbmLfeivJ
+uGCFHgUCdHRhc1wOGVd+7DZZo404A+AobO+/gBj7mzx8sDnbr6vCtEOt2iUA3rFZ
+C+6N6Xh4an71mefmNEqWH2YJ08kHVw==
+=KyJ9
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
