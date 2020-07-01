@@ -3,114 +3,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F53C20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C1920760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cnhbrCTn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np+tZ2jm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgGANCK (ORCPT
+        id S1730862AbgGANCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:02:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3374 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730812AbgGANBv (ORCPT
+        Wed, 1 Jul 2020 09:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730812AbgGANCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:01:51 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061CrCoq031076;
-        Wed, 1 Jul 2020 15:01:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=zWShjHdtkDP9KEzM3tiXokZkb+o6dSeLDNYRf6d3oDE=;
- b=cnhbrCTnBd/Xs7aCIFuHn2+OJXMIlKHgkrqmLYDb6ptkpKP8Wnyjl7PCUZ41ofi50qsz
- wUXAannB+f52CLA3rNAGgzUMgrvCb+jd6yMOw4Ax1G9ZMQc/cjobajaaHw0ehGtXzwLZ
- aOGEUiVGRd/kvU2vakPACjFreGTFRhNAXIwrM3YNHA0RillGXolYkVOFKEBjE16t3he0
- EEh/tPPhpKPXXF6V6JLEX+UKAsgYXD4cafpYh3ytTfVi5mFwGsdSbA3VC2Y86l550hY0
- 8sL5vqwlk2Ltp+AVOxmWbhsPkElrR8HbVYtgMzT105gAt4WUmfzs3EQq/nZeBLCGO7ga aA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89tgdc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 15:01:41 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 300C210002A;
-        Wed,  1 Jul 2020 15:01:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F99D2B66DF;
-        Wed,  1 Jul 2020 15:01:34 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:01:33
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-media@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
-        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
-        <devicetree@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
-Date:   Wed, 1 Jul 2020 15:01:27 +0200
-Message-ID: <20200701130129.30961-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200701130129.30961-1-benjamin.gaignard@st.com>
-References: <20200701130129.30961-1-benjamin.gaignard@st.com>
+        Wed, 1 Jul 2020 09:02:16 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3372C03E979;
+        Wed,  1 Jul 2020 06:02:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j12so10972350pfn.10;
+        Wed, 01 Jul 2020 06:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9tRb3lcQnQNyqSPd2RUudBp4K9fTszNeoadKdLTyh8Y=;
+        b=np+tZ2jmuroP/ACE0gq1rtk344QwU0PDDtd4OKhwpzFSam+YeQkJVTobzT4asxV+N7
+         5vaGxInqgUw8SDFu5i1qyGtpI2AsSF7tU1r5HUplZJXXqNNCQFxiVx6c1K62JoesC+lb
+         IESzdLyjcNrtj6s1tx9XuoJ7VGlCVp1uMJetLO/uuNy1A+f15CJ9kX2aJ1jkv8wVJqiJ
+         19vIDyRXhqxIYm0Tsw1DONPxTKciIHCVznpsu43eNBexgFCX9IgSkNBTa7XGxpDEu0of
+         oqmgR/KVPPF2UwVV/jC3pZpvR+W0ZVP6t78UzeE2mts3jbb2aF+Gpi28hCDewFe7mxPS
+         dTdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9tRb3lcQnQNyqSPd2RUudBp4K9fTszNeoadKdLTyh8Y=;
+        b=EYxJynkrXq7RTubYLiFBKI29Xm9v7s+6qLJD+kQlIJz006DGTyxTmdywMotrr7BL4b
+         aH6WcsYQ6YlIs3d1qLy2GgDtcqRkLI5MDDrJqotm2Taq953TD7bsMSzG0viLZ0toAPEI
+         C3wZVD3RUBIznxZ4Fzgrth8JgjdWTJF3FmiXuZSwwfJ/PvcULqgCTsZtOX5kBRt5s3O1
+         siWe7mhY643T+C2EESjJw/07ct/P6SHvHy6n6PpuEf2kDxnPGcZUBmT0Ycnx8Xzw3sSr
+         1QiVGyniCdydZhKwZUdeZwscfuXyAUx7JMVffwnrMF47iNezL3jKvFmDXxe5/NnvUKUm
+         Z0uw==
+X-Gm-Message-State: AOAM530NuAtwhw+5mp3QzbXoaqDTrLYVfqQA2W+BZORwjHQ3oxNbcPk4
+        M10GaKbWx0vkfZGUjvrK0NM=
+X-Google-Smtp-Source: ABdhPJyT6cyR4U2w3jPNfEUYdKRro/S6z/7KSlQcbw2ykn1BefH2zY4ZVM7WN33ZYy9Cnhb1jiYZqA==
+X-Received: by 2002:a63:441c:: with SMTP id r28mr18102161pga.372.1593608534913;
+        Wed, 01 Jul 2020 06:02:14 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id d9sm6070908pgv.45.2020.07.01.06.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 06:02:14 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Dillow <dave@thedillows.org>,
+        Ion Badulescu <ionut@badula.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Ajit Khaparde <ajit.khaparde@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Jon Mason <jdmason@kudzu.us>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 02/11] ne2k-pci: use generic power management
+Date:   Wed,  1 Jul 2020 18:29:29 +0530
+Message-Id: <20200701125938.639447-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
+References: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document st,stm32-dcmi-min-frequency property which is used to
-request CPUs minimum frequency when streaming frames.
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
+
+Thus, there is no need to call the PCI helper functions like
+pci_enable/disable_device(), pci_save/restore_sate() and
+pci_set_power_state().
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/8390/ne2k-pci.c | 29 ++++++----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-index 3fe778cb5cc3..05ca85a2411a 100644
---- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-+++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
-@@ -44,6 +44,13 @@ properties:
-       bindings defined in
-       Documentation/devicetree/bindings/media/video-interfaces.txt.
+diff --git a/drivers/net/ethernet/8390/ne2k-pci.c b/drivers/net/ethernet/8390/ne2k-pci.c
+index 77d78b4c59c4..e500f0c05725 100644
+--- a/drivers/net/ethernet/8390/ne2k-pci.c
++++ b/drivers/net/ethernet/8390/ne2k-pci.c
+@@ -699,30 +699,18 @@ static void ne2k_pci_remove_one(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
  
-+  st,stm32-dcmi-min-frequency:
-+    description: DCMI minimum CPUs frequency requirement (in KHz).
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - default: 0
-+
- required:
-   - compatible
-   - reg
-@@ -71,6 +78,7 @@ examples:
-         clock-names = "mclk";
-         dmas = <&dmamux1 75 0x400 0x0d>;
-         dma-names = "tx";
-+        st,stm32-dcmi-min-frequency = <650000>;
+-#ifdef CONFIG_PM
+-static int ne2k_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused ne2k_pci_suspend(struct device *dev_d)
+ {
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct net_device *dev = dev_get_drvdata(dev_d);
  
-         port {
-              dcmi_0: endpoint {
+ 	netif_device_detach(dev);
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+ 
+ 	return 0;
+ }
+ 
+-static int ne2k_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused ne2k_pci_resume(struct device *dev_d)
+ {
+-	struct net_device *dev = pci_get_drvdata(pdev);
+-	int rc;
+-
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-
+-	rc = pci_enable_device(pdev);
+-	if (rc)
+-		return rc;
++	struct net_device *dev = dev_get_drvdata(dev_d);
+ 
+ 	NS8390_init(dev, 1);
+ 	netif_device_attach(dev);
+@@ -730,19 +718,14 @@ static int ne2k_pci_resume(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-#endif /* CONFIG_PM */
+-
++static SIMPLE_DEV_PM_OPS(ne2k_pci_pm_ops, ne2k_pci_suspend, ne2k_pci_resume);
+ 
+ static struct pci_driver ne2k_driver = {
+ 	.name		= DRV_NAME,
+ 	.probe		= ne2k_pci_init_one,
+ 	.remove		= ne2k_pci_remove_one,
+ 	.id_table	= ne2k_pci_tbl,
+-#ifdef CONFIG_PM
+-	.suspend	= ne2k_pci_suspend,
+-	.resume		= ne2k_pci_resume,
+-#endif
+-
++	.driver.pm	= &ne2k_pci_pm_ops,
+ };
+ 
+ 
 -- 
-2.15.0
+2.27.0
 
