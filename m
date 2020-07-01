@@ -2,124 +2,91 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9105C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E64B20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593600890;
-	bh=7GNTkyFGL6BaU9SyC5X2Zxuq8NsIiZjrUMKn2rPmExw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VNIqBYXQpCIb4dWRwROcSEZIBLzyJCdx6JBjf53/e/B9cEGWR6SeHfoerS9wCNLCt
-	 HcYtBcYJv7O5+4sWwjDpB5MoiYeN+xmTsfgFAftokbZS4JHPCb7YKa9BAufFO1eIjP
-	 uwhTyJpfWCTy/Wwa6Cq7Rdz7wfJh4bGgx7KuYamI=
+	by mail.kernel.org (Postfix) with ESMTP id 97898206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgGAKys (ORCPT
+        id S1730150AbgGAKzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:54:48 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:33241 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgGAKyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:54:47 -0400
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 061AsSZ4011733;
-        Wed, 1 Jul 2020 19:54:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 061AsSZ4011733
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593600869;
-        bh=A6uk0LVabw4p6RBBaWE+21lAHhKMnw5ycMt+myfy300=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=10ODLjJribOWq7jnMmdg7a61KeFnyMcyXY6t8C4AQqMldAB+PKznauq6RK4LsG1FL
-         ExOqOlWA2GvpiPWzW2A4OzbXfzoYCNPThTPG+oqYSXoqmnS/Cqgic4o2v67YisbuBu
-         yZqUL74U0U5RyppWtfD2kffTG/guhR4/IHZw0zu3knI5lM9bCtbhf8EzAskdfOLnw1
-         60gsALE4FVDM7iYRUFmKsnm+BrS/3PsDhfvxKXYTkAdkb28BL4A3foEic4vEzz2b+n
-         P3LpoVQuxgoVH+u6TEo3BUn9Elqb1AouVMBbIu7vG2NdqikGN5zKc9krqzhImoalpF
-         gfUvnpI3dpq0Q==
-X-Nifty-SrcIP: [209.85.221.177]
-Received: by mail-vk1-f177.google.com with SMTP id d64so5361534vke.4;
-        Wed, 01 Jul 2020 03:54:28 -0700 (PDT)
-X-Gm-Message-State: AOAM5327zwgIrDasXkkyJgSMko2UrpRJHo/h875kXtk6rqqe3JFDrPXz
-        NwTWYW69mTGCjWrGx4UMLoKCopefZLTV/15iJu0=
-X-Google-Smtp-Source: ABdhPJzEbQbvlLwPi5eSQ/ja5pxAvFFGm84VH74ihD+yI+MOGCFmZrnPrx5yRl/8Ih8eFU6t/Ku3k0hujk5aZQt+b3I=
-X-Received: by 2002:ac5:c74b:: with SMTP id b11mr4735766vkn.73.1593600867304;
- Wed, 01 Jul 2020 03:54:27 -0700 (PDT)
+        Wed, 1 Jul 2020 06:55:55 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39960 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729892AbgGAKzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:55:54 -0400
+IronPort-SDR: Ui6JidojlEaxEVB4wEVJ5O5nnfzSYSiB7JED6GD84NuRieGtnIlbfAvNyIDEJAX8uVrH/g/j06
+ xF8A6aS/JgbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134808883"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="134808883"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 03:55:53 -0700
+IronPort-SDR: GXQIRMxbW+ii2kfDZ+sEivb30yP95UR7z9OHM7b228OGe6+c05HjxdSDhQlnkd6DLe1xX2VwP7
+ ccXct5/T+FQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="386976297"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 01 Jul 2020 03:55:51 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 01 Jul 2020 13:55:50 +0300
+Date:   Wed, 1 Jul 2020 13:55:50 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        perry.yuan@dell.com
+Subject: Re: [PATCH v3 0/2] Allow breaking up Thunderbolt/USB4 updates
+Message-ID: <20200701105550.GR5180@lahna.fi.intel.com>
+References: <20200623161429.24214-1-mario.limonciello@dell.com>
 MIME-Version: 1.0
-References: <20200701113448.3119f64f@canb.auug.org.au> <CANpmjNMz0rtC7AnXUnZKfg+egqqQ3BKPznsWUdEqJQDLTgAaAQ@mail.gmail.com>
-In-Reply-To: <CANpmjNMz0rtC7AnXUnZKfg+egqqQ3BKPznsWUdEqJQDLTgAaAQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 1 Jul 2020 19:53:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ_X2Kmgqc3B1m7g1K8Xnvo+ja3A11eZXRFAOqDC4Jxcw@mail.gmail.com>
-Message-ID: <CAK7LNAQ_X2Kmgqc3B1m7g1K8Xnvo+ja3A11eZXRFAOqDC4Jxcw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the rcu tree with the kbuild tree
-To:     Marco Elver <elver@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623161429.24214-1-mario.limonciello@dell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 2:52 PM Marco Elver <elver@google.com> wrote:
->
-> On Wed, 1 Jul 2020 at 03:34, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > Today's linux-next merge of the rcu tree got a conflict in:
-> >
-> >   kernel/kcsan/Makefile
-> >
-> > between commit:
-> >
-> >   f7c28e224da6 ("kbuild: remove cc-option test of -fno-stack-protector")
->
-> Is it possible that this patch drops the KCSAN portion?
+On Tue, Jun 23, 2020 at 11:14:27AM -0500, Mario Limonciello wrote:
+> Currently updates to Thunderbolt and USB4 controllers are fully atomic
+> actions. When writing into the non-active NVM nothing gets flushed to
+> the hardware until authenticate is sent.
+> 
+> There has been some desire to improve the perceived performance of these
+> updates, particularly for userland that may perform the update upon
+> a performance sensitive time like logging out.
+> 
+> So allow userland to flush the image to hardware at runtime, and then
+> allow authenticating the image at another time.
+> 
+> For the Dell WD19TB some specific hardware capability exists that allows
+> extending this to automatically complete the update when unplugged.
+> Export that functionality to userspace as well.
+> 
+> Changes from v2 to v3:
+>  - Correct some whitespace and kernel-doc comments
+>  - Add another missing 'const'
+>  - For a quirk: (1<<1) -> BIT(0) 
+> 
+> Changes from v1 to v2:
+>  - Improve documentation
+>  - Drop tb-quirks.h
+>  - Adjust function and parameter names to Mika's preferences
+>  - Rebase onto thunderbolt.git/bleeding-edge to move on top of retimer work
+> 
+> Mario Limonciello (2):
+>   thunderbolt: Add support for separating the flush to SPI and
+>     authenticate
+>   thunderbolt: Add support for authenticate on disconnect
 
-
-Done.
-
-Thanks.
-
-
-> The patch
-> "kcsan: Simplify compiler flags" does the same, but is part of a
-> future pull request intended for 5.9.
->
-> The KCSAN changes had been in -next for well over a week. Also, I'm
-> sorry I hadn't seen your patch before, otherwise I would have noticed
-> this.
->
-> Please see: https://lkml.kernel.org/r/20200624190236.GA6603@paulmck-ThinkPad-P72
->
-> > from the kbuild tree and commits:
-> >
-> >   2839a232071f ("kcsan: Simplify compiler flags")
-> >   61d56d7aa5ec ("kcsan: Disable branch tracing in core runtime")
-> >
-> > from the rcu tree.
-> >
-> > I fixed it up (I just used the rcu tree version) and can carry the fix
-> > as necessary. This is now fixed as far as linux-next is concerned, but
-> > any non trivial conflicts should be mentioned to your upstream maintainer
-> > when your tree is submitted for merging.  You may also want to consider
-> > cooperating with the maintainer of the conflicting tree to minimise any
-> > particularly complex conflicts.
->
-> Thank you!
->
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Both applied to thunderbolt.git/next, thanks Mario!
