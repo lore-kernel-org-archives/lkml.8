@@ -2,294 +2,82 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB1B20748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:54:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ffQq/SEy"
+	by mail.kernel.org (Postfix) with ESMTP id 3EC2220748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593622530;
+	bh=GvtsGp11yx4CyQuZ9RgW9RmPb9CbIpEadx+tC5GAmYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mFqO+rFXw44jQBMIKleBQUss5qeEk3AkgmteboMC7y7C/cGQGgUf6lXwc5Ngd/21I
+	 behhmei5urlBJvsb3OdvUOpKJTgcUwp4YDpYn7MESOPdwkyDI0eb6ZpryMcd9YOpO+
+	 Ue12LD4bTb9G65G/XvUPh/M1HTnMq87oiU8CMcUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732611AbgGAQy4 (ORCPT
+        id S1732619AbgGAQz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:54:56 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:48503 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732563AbgGAQy4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:54:56 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id qg0Vji9RJ40yDqg0YjcTtf; Wed, 01 Jul 2020 18:54:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593622492; bh=3JheUqnQKh25pAgfWhVQE5bBDzkbNv25CYMJniBVjoA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ffQq/SEyUNIbpPjIxzOGXKWO8+h9NMOUQp/CKdc+xiEQxkcemzVzUW6cQsmZCZrDR
-         pDtvt3KxYnu9JLvX60hVHEWACk059HlbBugZcjjWo8cYmkb3AW0FM1jC+et87qmLIL
-         GiVK7fDDq1EVdGvc+mEV3wy5svSnUhwddR2kEu5niAUHlrrxlmaHLIgGY8KIfDapwa
-         LaHf2Rcl01PsYSRBwtSqdTrlJnENctkK1VZMWyvB/4iVPfXc4zEFa3eXeQJe6xLU/8
-         V+Q8Cgj81B14ubmLGuEpQkQMLjYGnLDi1yx0yoJEvhRgAwjAWptITMemJMwCHyILpy
-         unE47uKy2o/DA==
-Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
- external sensor
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
- <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
- <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
- <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
- <e8a8a678-e9e8-e941-8dcb-0e747616ba59@nvidia.com>
- <a606ac84-e0bc-aa85-5799-eeeb544d130d@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <92f25457-f4e5-78ea-d453-2b5cf8f272e8@xs4all.nl>
-Date:   Wed, 1 Jul 2020 18:54:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 12:55:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730955AbgGAQz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:55:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C23D72071A;
+        Wed,  1 Jul 2020 16:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593622527;
+        bh=GvtsGp11yx4CyQuZ9RgW9RmPb9CbIpEadx+tC5GAmYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wef9XUjzZgqElVeeA6mWBmPRS8DJOiCuCsDfm+qOciiluO0lS0zIQcl7Ga69d16hG
+         kMLS+YRdNuRemWr0BPaYksQuagE3DzG/PhEy+VeVyIAsCbzA6H/+IcdoLlR+PbvDFC
+         jIowDjMEDK75H9txsXow2QCgtEQTvKB5z2gMVQbo=
+Date:   Wed, 1 Jul 2020 18:55:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] fs: move kernel_read_file* to its own include file
+Message-ID: <20200701165513.GA3176669@kroah.com>
+References: <20200617161218.18487-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <a606ac84-e0bc-aa85-5799-eeeb544d130d@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfPvLGuP4WB3X1eOKFzM4vKUcvprLLd9B95q67ByWk9PLr/06/kcnKA6M4hL1C6yGiisCH9W93rJw63mxQVmkiEeV6lmNeD7xQP+hIBUAhXEzQmWwq90L
- AaOiEOnrHUFQoaXTMIQlHmH9ymDlQOzw78NWHkhHS0yu3FO+FCiFh0VVMWds8/Y13bM/tn/7OPiVgJ68epKIyPfplerOoyBVqGgt3UihDtKRrgBTJSOmQe1S
- a/X0Q2u8XcsmNDQ0ZZb2djQeVB/5vxC6ctTcWH5DL4L5g5Y+sw7RxcifWgTAaJI35sGBM6VCK6BUxXL8JH0AdNAVezhvUPJ9fvAqfWXTllfZKm6iofq3CppS
- Jbiv7+N1GLBzFSUZSfEtgSIyP4AI4X8Hbhi4qnihJbL+IK5gx27Jk/uqXuxKebUEMJVq8bln8JJkoGTnRJ9T5qQS3btwZUzNpLuxuhiFPkiO33kWbPozeXJ3
- FWWiItfl6QnqF9oKu6w7pijTmw+AUT8GqCVf576xxY/qwMi1jO1tKAstPYGHkvliFkmHXFf+xPL4qsJTpEBLDxRae+p0Uu5RKWSIm4ntlq0aWD2TJ0DV/11z
- p0p3C0mPzcC87Z+/Zug7+rbpJlHqZwcmrtOr9/ysWFCk0Js6dFbDGz4XPupqeNDaKt0i+Lbi2kKoPOIqE/dkdN7Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617161218.18487-1-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/06/2020 18:34, Sowjanya Komatineni wrote:
+On Wed, Jun 17, 2020 at 09:12:18AM -0700, Scott Branden wrote:
+> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
+> include file. That header gets pulled in just about everywhere
+> and doesn't really need functions not related to the general fs interface.
 > 
-> On 6/30/20 9:17 AM, Sowjanya Komatineni wrote:
->>
->> On 6/30/20 8:44 AM, Sowjanya Komatineni wrote:
->>>
->>> On 6/30/20 8:13 AM, Hans Verkuil wrote:
->>>> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
->>>>> On 6/30/20 2:21 AM, Hans Verkuil wrote:
->>>>>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
->>>>>>> This series adds support for video capture from external camera 
->>>>>>> sensor to
->>>>>>> Tegra video driver.
->>>>>>>
->>>>>>> Jetson TX1 has camera expansion connector and supports custom 
->>>>>>> camera module
->>>>>>> designed as per TX1 design specification.
->>>>>>>
->>>>>>> This series also enables camera capture support for Jetson Nano 
->>>>>>> which has
->>>>>>> Raspberry PI camera header.
->>>>>>>
->>>>>>> This series is tested with IMX219 camera sensor.
->>>>>> Which tree did you base this on? The media_tree master? Or the 
->>>>>> mainline kernel?
->>>>> These patches are with linux-next base at the time I sent them out 
->>>>> which
->>>>> are on 20200616
->>>>>> I now have the imx219 detected, but if I try to stream I get this:
->>>>>>
->>>>>> $ v4l2-ctl --stream-mmap
->>>>>> <[  512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>>>>> [  512.972975] video4linux video0: frame start syncpt timeout: -11
->>>>>> <VIDIOC_DQBUF: failed: Input/output error
->>>>>> [  513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>>>>>
->>>>>> And then everything hangs and I need to reset.
->>>>>>
->>>>>> I'm testing with the media_tree master with your patches on top.
->>>>>>
->>>>>> Regards,
->>>>>>
->>>>>>     Hans
->>>>> Are you using same device tree as I sent offline? It uses CSI A for 
->>>>> IMX219.
->>>>>
->>>>> Does you setup also uses CSI-A as x2 for IMX219?
->>>>>
->>>>> I tested them on Jetson Nano + IMX219 rasp PI module and also on 
->>>>> Jetson
->>>>> TX1 + IMX274.
->>>>>
->>>>> I did not see any issue and am able to capture from both.
->>>>>
->>>>> Will try again on my side with today's latest linux-next and update 
->>>>> result.
->>>> Please use the media_tree master, that's what I use as well.
->>>>
->>>> I did some more testing and there is something weird going on.
->>>>
->>>> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) 
->>>> with
->>>> three camera connectors. See here for the datasheet:
->>>>
->>>> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.pdf 
->>>>
->>>>
->>>> The first connector (with an IMX274) causes this error:
->>>>
->>>> $ v4l2-ctl -d1 --stream-mmap
->>>> [  599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> [  599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> [  599.681904] video4linux video1: frame start syncpt timeout: -11
->>>> [  599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>> <VIDIOC_DQBUF: failed: Input/output error
->>>> [  599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->>>>
->>>> Similar to the test above where I had an IMX219 connected. Except it 
->>>> didn't
->>>> hang with the IMX274 (I'm beginning to suspect a locking issue in 
->>>> the imx219
->>>> driver that is causing the hang, I'll look at that tomorrow).
->>>>
->>>> If I connect the IMX219 to the middle camera connector, then it 
->>>> works fine.
->>>> I think I tested this with the IMX274 as well, but I'm not 100% 
->>>> certain, also
->>>> something to double check tomorrow.
->>>>
->>>> If I connect the IMX219 or IMX274 to the third camera connector, 
->>>> then I get this:
->>>
->>> Would like to know CSI port mapping to connectors as mipi calibrate 
->>> pads cells need to be updated in device tree based on CSI port in use.
->>>
->>> Will see if I can find that from DS link you sent above.
->>>
->>>>
->>>> $ v4l2-ctl -d0 --stream-mmap
->>>> [  820.513866] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.525354] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.536780] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.548222] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>>
->>>> [  820.559639] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> <[  820.646931] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.658355] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.669797] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.681216] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  820.692601] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> <<<<<<<<<<<<<<< 14.50 fps
->>>> <<<<<<<<<<<<<<< 14.75 fps
->>>> <<<<<<<<<<<<<<< 14.73 fps
->>>> <<<<<<<<<<<<<<< 14.80 fps
->>>> <<<<<<<<<<<<<[ 825.517854] tegra_mc_irq: 133437 callbacks suppressed
->>>> [  825.517874] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.534395] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.545833] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.557280] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.579346] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.590764] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.602188] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.613649] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.625075] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> [  825.645983] tegra-mc 70019000.memory-controller: viw: write 
->>>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->>>> < 14.64 fps
->>>> <<<<<<<<<<<<<<<< 14.87 fps
->>>> <<<<<<<<<<<<<<< 14.89 fps
->>>>
->>>> Something is producing EMEM address decode errors. But it is streaming.
->>>
->>> above memory controller errors may be due to access faults and not 
->>> sure why these show up on your setup. I never have these with my 
->>> testing.
->>>
->>> Also I am using CMA alloc of 256MB and not sure if low CMA alloc size 
->>> is causing this. Can you try with CMA alloc size of 256MB?
->>>
->>>>
->>>> If I enable the TPG then everything is fine.
->>>>
->>>> So I have currently three different behaviors for three camera 
->>>> connectors.
->>>>
->>>> Do you have a datasheet for your Jetson TX1 camera board? It could 
->>>> be useful
->>>> to compare the two.
->>>
->>> Yeah we have and will send it offline.
->>>
->>> Also based on connector mapping to corresponding CSI port, 
->>> mipi-calibrate pad cell value also need to be changed.
->>>
->>> Below is for CSI-A
->>>
->>> nvidia,mipi-calibrate = <&mipi 0x001>
->>>> Regards,
->>>>
->>>>     Hans
->> Connector-1 is CSI-AB where you had timeouts.
->>
->> Connector-2 is CSI-CD and this works for you.
->>
->> Connector-3 is CSI-EF and this works for streaming from above but 
->> there's memory access fault errors (EMEM address decode errors)
->>
->> These EMEM decode errors are not related to connector but its just 
->> they showed up during connector-3 testing I believe. Can you also keep 
->> CMA size to 256MB and try?
->>
->> Not sure if CSI-AB issue with FS and MW_ACK sp timeouts are due to 
->> some HW/setup issue. Streaming should work on CSI-AB ports as well 
->> just like CSI-CD/EF with proper device tree change for port index and 
->> mipi calibrate cells for corresponding ports.
->>
->> On my setup that I tested IMX274 is on CSI-AB.
->>
->> Will update my side test results with today's linux-next
-> 
-> Hans,
-> 
-> We have this module as well. Will try to get this today for testing and 
-> will update just to make sure of this combo as well on my side.
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
-Sowjanya,
-
-A quick update: I had to update my u-boot and I ended up reinstalling everything.
-
-And now the problems I described just disappeared. Very strange.
-
-I have yet to verify if the issue with the third camera connector is also solved,
-I'll do that tomorrow.
-
-But for now you don't have to take any action.
-
-Regards,
-
-	Hans
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
