@@ -2,102 +2,84 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F07C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5287CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08B5207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DiWFYMJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 2506620870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgGAWvm (ORCPT
+        id S1726782AbgGAWxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:51:42 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:43575 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726464AbgGAWvl (ORCPT
+        Wed, 1 Jul 2020 18:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgGAWxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:51:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593643901; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Gzk6MArs2xkSxAn767zjaSgf4SaIL+y96yccCcZqcCg=;
- b=DiWFYMJ1jboTT8AlZAOyuwNy8N9h4fx7Pr/HLG3cw7B5JmgF0E2sSkoZqqZ5G0mVVgkkEHy4
- jSS5kM3WZurXrNExL1a9mohLYgiMTe6/vkReYZmTlKe1fUEtc++FqBrMLuBus3gZag3K8sIL
- YUZ1s/NJytnAm1Jd+tfBoTBL1BA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-east-1.postgun.com with SMTP id
- 5efd136c356bcc26abe21d9d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 22:51:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A7E7BC433A0; Wed,  1 Jul 2020 22:51:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: abhinavk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EFE0FC433C6;
-        Wed,  1 Jul 2020 22:51:21 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Wed, 1 Jul 2020 18:53:51 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E12DC08C5C1;
+        Wed,  1 Jul 2020 15:53:51 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A501314A8D68C;
+        Wed,  1 Jul 2020 15:53:49 -0700 (PDT)
+Date:   Wed, 01 Jul 2020 15:53:48 -0700 (PDT)
+Message-Id: <20200701.155348.853858023908987046.davem@davemloft.net>
+To:     jarod@redhat.com
+Cc:     linux-kernel@vger.kernel.org, huyn@mellanox.com,
+        saeedm@mellanox.com, j.vosburgh@gmail.com, vfalico@gmail.com,
+        andy@greyhouse.net, jeffrey.t.kirsher@intel.com, kuba@kernel.org,
+        steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
+Subject: Re: [PATCH net-next] bonding: allow xfrm offload setup
+ post-module-load
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200630184941.65165-1-jarod@redhat.com>
+References: <20200630184941.65165-1-jarod@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Jul 2020 15:51:21 -0700
-From:   abhinavk@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: ratelimit crtc event overflow error
-In-Reply-To: <20200701203602.1272157-1-robdclark@gmail.com>
-References: <20200701203602.1272157-1-robdclark@gmail.com>
-Message-ID: <d49731c0ecc5b2337f26597decbf82e4@codeaurora.org>
-X-Sender: abhinavk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 Jul 2020 15:53:50 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-01 13:36, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+From: Jarod Wilson <jarod@redhat.com>
+Date: Tue, 30 Jun 2020 14:49:41 -0400
+
+> At the moment, bonding xfrm crypto offload can only be set up if the bonding
+> module is loaded with active-backup mode already set. We need to be able to
+> make this work with bonds set to AB after the bonding driver has already
+> been loaded.
 > 
-> This can happen a lot when things go pear shaped.  Lets not flood dmesg
-> when this happens.
+> So what's done here is:
 > 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 1) move #define BOND_XFRM_FEATURES to net/bonding.h so it can be used
+> by both bond_main.c and bond_options.c
+> 2) set BOND_XFRM_FEATURES in bond_dev->hw_features universally, rather than
+> only when loading in AB mode
+> 3) wire up xfrmdev_ops universally too
+> 4) disable BOND_XFRM_FEATURES in bond_dev->features if not AB
+> 5) exit early (non-AB case) from bond_ipsec_offload_ok, to prevent a
+> performance hit from traversing into the underlying drivers
+> 5) toggle BOND_XFRM_FEATURES in bond_dev->wanted_features and call
+> netdev_change_features() from bond_option_mode_set()
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index e15b42a780e0..969d95aa873c 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -389,7 +389,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 
-> event)
->  	spin_unlock_irqrestore(&dpu_crtc->spin_lock, flags);
+> In my local testing, I can change bonding modes back and forth on the fly,
+> have hardware offload work when I'm in AB, and see no performance penalty
+> to non-AB software encryption, despite having xfrm bits all wired up for
+> all modes now.
 > 
->  	if (!fevent) {
-> -		DRM_ERROR("crtc%d event %d overflow\n", crtc->base.id, event);
-> +		DRM_ERROR_RATELIMITED("crtc%d event %d overflow\n", crtc->base.id, 
-> event);
->  		return;
->  	}
+> Fixes: 18cb261afd7b ("bonding: support hardware encryption offload to slaves")
+> Reported-by: Huy Nguyen <huyn@mellanox.com>
+> Signed-off-by: Jarod Wilson <jarod@redhat.com>
+
+Applied, thanks.
