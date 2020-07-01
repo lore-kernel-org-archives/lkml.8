@@ -2,103 +2,90 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952722077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ImqKOFuo"
+	by mail.kernel.org (Postfix) with ESMTP id 79F752077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgGAJJw (ORCPT
+        id S1729505AbgGAJJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:09:52 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41863 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729496AbgGAJJs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593594587;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5FZNvCVnGKUBeexFie5SVEwwTiu463bRAglPRRjFWJY=;
-        b=ImqKOFuoUq28Kuyfeg1Mhl1nSgJjY1l/g+xfGOFQ8/NqsDrgV8JgEdF3uoYdgIFeAeZsU2
-        iLYADU215vq5jyKjslenFydzfHr2T1zJCLKLFYcOkpEKflEpns6EKfAJxtW0nyQJrGrDCn
-        Vvh5OlJwuT3ppA4YwVzxsQA64PpnZoM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-TD5H89abOp6-9wr6Ia7gdg-1; Wed, 01 Jul 2020 05:09:45 -0400
-X-MC-Unique: TD5H89abOp6-9wr6Ia7gdg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC8898018A4;
-        Wed,  1 Jul 2020 09:09:43 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-177.pek2.redhat.com [10.72.13.177])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAB8E71662;
-        Wed,  1 Jul 2020 09:09:28 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 1/5] vhost-vdpa: refine ioctl pre-processing
-Date:   Wed,  1 Jul 2020 17:08:35 +0800
-Message-Id: <20200701090839.12994-2-jasowang@redhat.com>
-In-Reply-To: <20200701090839.12994-1-jasowang@redhat.com>
-References: <20200701090839.12994-1-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Wed, 1 Jul 2020 05:09:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:47936 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729371AbgGAJJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:09:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2FE01424;
+        Wed,  1 Jul 2020 02:09:49 -0700 (PDT)
+Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DE3533F68F;
+        Wed,  1 Jul 2020 02:09:47 -0700 (PDT)
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, valentin.schneider@arm.com
+Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 8/8] cpufreq: make schedutil the default for arm and arm64
+Date:   Wed,  1 Jul 2020 10:07:51 +0100
+Message-Id: <20200701090751.7543-9-ionela.voinescu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to use 'switch' to make the codes more easier to be extended.
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+schedutil is already a hard-requirement for EAS, which has lead to making
+it default on arm (when CONFIG_BIG_LITTLE), see:
+
+  commit 8fdcca8e254a ("cpufreq: Select schedutil when using big.LITTLE")
+
+One thing worth pointing out is that schedutil isn't only relevant for
+asymmetric CPU capacity systems; for instance, schedutil is the only
+governor that honours util-clamp performance requests. Another good example
+of this is x86 switching to using it by default in:
+
+  commit a00ec3874e7d ("cpufreq: intel_pstate: Select schedutil as the default governor")
+
+Arguably it should be made the default for all architectures, but it seems
+better to wait for them to also gain frequency invariance powers. Make it
+the default for arm && arm64 for now.
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/vhost/vdpa.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/cpufreq/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 77a0c9fb6cc3..db4c9cb44c61 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -353,15 +353,16 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 	idx = array_index_nospec(idx, v->nvqs);
- 	vq = &v->vqs[idx];
- 
--	if (cmd == VHOST_VDPA_SET_VRING_ENABLE) {
-+	switch (cmd) {
-+	case VHOST_VDPA_SET_VRING_ENABLE:
- 		if (copy_from_user(&s, argp, sizeof(s)))
- 			return -EFAULT;
- 		ops->set_vq_ready(vdpa, idx, s.num);
- 		return 0;
--	}
--
--	if (cmd == VHOST_GET_VRING_BASE)
-+	case VHOST_GET_VRING_BASE:
- 		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
-+		break;
-+	}
- 
- 	r = vhost_vring_ioctl(&v->vdev, cmd, argp);
- 	if (r)
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index e91750132552..2c7171e0b001 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -37,7 +37,7 @@ config CPU_FREQ_STAT
+ choice
+ 	prompt "Default CPUFreq governor"
+ 	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
+-	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if BIG_LITTLE
++	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if ARM64 || ARM
+ 	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if X86_INTEL_PSTATE && SMP
+ 	default CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+ 	help
 -- 
-2.20.1
+2.17.1
 
