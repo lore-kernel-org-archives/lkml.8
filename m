@@ -2,128 +2,87 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA13C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9852082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4A22082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwUM0eTj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="li7C5S3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgGAUMx (ORCPT
+        id S1727082AbgGAUOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
+        Wed, 1 Jul 2020 16:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgGAUMw (ORCPT
+        with ESMTP id S1726432AbgGAUOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:12:52 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E7BC08C5C1;
-        Wed,  1 Jul 2020 13:12:52 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x72so2033640pfc.6;
-        Wed, 01 Jul 2020 13:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W20vV3JALPph0VU9IgzKjMWKb8lzvjhb2qzVsECrclc=;
-        b=PwUM0eTjfKWO+jB8QSaTySZ+dZS/8QftYHEPdbAVqrVd0LEVff3jx4meWpTLeCl1hE
-         5gfuTC466r8MFk2xWA4FfJFIpM7LjM+j44fTqrhdbMn3gj4nIwRghF67wpiw6IAJWLlg
-         u3zW1kF0k7Pik9gBHN1jeFzaZGaR7g3SqqOuKYwu7hOyi9sNpM0jPKOTTuEM65We+h20
-         hlpRnyC1mAAoy235GOZNMzUoErceWpALCSwVJAXmlidlStfdVLpKNKWur+HG8XNqKPAe
-         24DK2nZQ9e82HU3PRfA2VcyJn7Xw3bf+HKHz2aU0p1JFrfG3e6OJBv8onRc8MgQddgyF
-         Tptw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W20vV3JALPph0VU9IgzKjMWKb8lzvjhb2qzVsECrclc=;
-        b=F+0vxQ12ie9nrxt1fc333Za6UtGee49X5GLW4ziHN2UWelQfpKt0TybGUWZYu0ka6f
-         XaQNpHusqOLxgtnG5F46j1NnOZl2MrjGAKd92dzYlIVs/oisWnHNsZfmQdYgcgzhKigE
-         eC7R5AunkA6up24u46QOPbznmKT6skxNfaSnmjrR33bjU7Ygcy/2qTECMKFxLHY7oO4B
-         jXrgwmdcwbq2p+CNwTyzV2dm1+iLNxuckvlM4Xujn+tnFKpxkcnS87qPcMhhnEVJ/Xml
-         rXCBvXubymGoxEbhj+9szHQWNebdrgPxQglNvN/qXLuyLICG8o80/Ebj6+7YSH4Pg7qp
-         n3iw==
-X-Gm-Message-State: AOAM532dZEGVTJ3MsUEmrNh6J9bKBA7pZDRTYJs2zOBCdsvx6zVHpO+C
-        DmQ/dGjWv0NVPm8/Va0xxjg=
-X-Google-Smtp-Source: ABdhPJxG1F06kx2wFpILNOql/nZRFFIvn7l1Is/5noNfiyyyoZFJEEWzYUymfaV0XOdlBKmiLMjgXw==
-X-Received: by 2002:a63:2104:: with SMTP id h4mr22094734pgh.427.1593634371657;
-        Wed, 01 Jul 2020 13:12:51 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:1000:7a00::1])
-        by smtp.gmail.com with ESMTPSA id c30sm6654332pfj.213.2020.07.01.13.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 13:12:51 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] clk: mvebu: ARMADA_AP_CPU_CLK needs to select ARMADA_AP_CP_HELPER
-Date:   Wed,  1 Jul 2020 13:11:29 -0700
-Message-Id: <20200701201128.2448427-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 16:14:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE56EC08C5C1;
+        Wed,  1 Jul 2020 13:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=fw2+4gebTcJUXyNcS2c+cOqcMRuf3D2bJUNwgAt6wzg=; b=li7C5S3irnuwlwvAJc/67sTtqL
+        K53IpbFzITd06frRmKSv2LtF5R3gvW5dF3x48jp3K8l4aKE2s0IUC9RHrjW45U48hV335FPErjIxA
+        2qhNEbMbOWwmDfhQ2uhtnqN5okwQDN/EkWIrKrUQDunGJfJnOkJ9lYD1D1NTC+ESYyg92RmDIA2Kq
+        Tkfvj5EM74ZQ5XFMsIVs02uVULTbPS44X6jbpOTpBEE2qowa5u0aGwKGQIcXoxVB1Zxh5IIFSSnCo
+        eIk21wfJjzuOjyuyej5wMn9cvRhcc+VBsF9yKOzepFYI3oUXmxaxpxKm6RT0WkaCMfFNXuJL/Xu9T
+        ItG1ucXg==;
+Received: from 213-225-32-40.nat.highway.a1.net ([213.225.32.40] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqj7X-0001UG-NG; Wed, 01 Jul 2020 20:14:16 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        David Howells <dhowells@redhat.com>
+Subject: [PATCH 01/23] cachefiles: switch to kernel_write
+Date:   Wed,  1 Jul 2020 22:09:29 +0200
+Message-Id: <20200701200951.3603160-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200701200951.3603160-1-hch@lst.de>
+References: <20200701200951.3603160-1-hch@lst.de>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building arm32 allmodconfig:
+__kernel_write doesn't take a sb_writers references, which we need here.
 
-ld.lld: error: undefined symbol: ap_cp_unique_name
->>> referenced by ap-cpu-clk.c
->>>               clk/mvebu/ap-cpu-clk.o:(ap_cpu_clock_probe) in archive drivers/built-in.a
-
-ap_cp_unique_name is only compiled into the kernel image when
-CONFIG_ARMADA_AP_CP_HELPER is selected (as it is not user selectable).
-However, CONFIG_ARMADA_AP_CPU_CLK does not select it.
-
-This has been a problem since the driver was added to the kernel but it
-was not built before commit c318ea261749 ("cpufreq: ap806: fix cpufreq
-driver needs ap cpu clk") so it was never noticed.
-
-Fixes: f756e362d938 ("clk: mvebu: add CPU clock driver for Armada 7K/8K")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: David Howells <dhowells@redhat.com>
 ---
+ fs/cachefiles/rdwr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I do not know who should actually take this patch since the problematic
-patch is on Viresh's cpufreq/arm/linux-next but the problem originated
-from a patch in the clk tree in 5.4. I assume all that would be needed
-is a clk maintainer's ack? Please let me know if I did something wrong.
-
-Cheers,
-Nathan
-
- drivers/clk/mvebu/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index ded07b0bd0d5..557d6213783c 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -42,6 +42,7 @@ config ARMADA_AP806_SYSCON
+diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
+index e7726f5f1241c2..3080cda9e82457 100644
+--- a/fs/cachefiles/rdwr.c
++++ b/fs/cachefiles/rdwr.c
+@@ -937,7 +937,7 @@ int cachefiles_write_page(struct fscache_storage *op, struct page *page)
+ 	}
  
- config ARMADA_AP_CPU_CLK
- 	bool
-+	select ARMADA_AP_CP_HELPER
- 
- config ARMADA_CP110_SYSCON
- 	bool
-
-base-commit: 0363635faa1da1560d2a84e2229c3f3ab108304f
+ 	data = kmap(page);
+-	ret = __kernel_write(file, data, len, &pos);
++	ret = kernel_write(file, data, len, &pos);
+ 	kunmap(page);
+ 	fput(file);
+ 	if (ret != len)
 -- 
-2.27.0
+2.26.2
 
