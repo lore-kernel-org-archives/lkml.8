@@ -7,106 +7,126 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F98C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE902073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8EC2073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgGAFWb (ORCPT
+        id S1726258AbgGAF0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 01:22:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47253 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgGAFWa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 01:22:30 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jqVBw-0001yp-1w; Wed, 01 Jul 2020 05:21:52 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     tiwai@suse.com
-Cc:     anthony.won@canonical.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Libin Yang <libin.yang@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Tomas Espeleta <tomas.espeleta@gmail.com>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        alsa-devel@alsa-project.org (moderated list:SOUND),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ALSA: hda/realtek: Serialize setting GPIO LED
-Date:   Wed,  1 Jul 2020 13:21:35 +0800
-Message-Id: <20200701052138.6378-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Jul 2020 01:26:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:56232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726021AbgGAF0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 01:26:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2346730E;
+        Tue, 30 Jun 2020 22:26:04 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.84.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D88273F73C;
+        Tue, 30 Jun 2020 22:25:58 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2] arm64/cpufeature: Validate feature bits spacing in arm64_ftr_regs[]
+Date:   Wed,  1 Jul 2020 10:55:40 +0530
+Message-Id: <1593581140-4339-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a system has two GPIO controlled LED, one for mute and another one
-for micmute, and both of them are on before system suspend, sometimes
-one of them won't be turned off by system suspend.
+arm64_feature_bits for a register in arm64_ftr_regs[] are in a descending
+order as per their shift values. Validate that these features bits are
+defined correctly and do not overlap with each other. This check protects
+against any inadvertent erroneous changes to the register definitions.
 
-The codec doesn't seem to be able to control multiple GPIO LEDs at the
-same time, so introduce a new mutex to serialize setting the LED, to
-prevent the issue from happening.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- include/sound/hda_codec.h     | 1 +
- sound/pci/hda/hda_codec.c     | 1 +
- sound/pci/hda/patch_realtek.c | 3 +++
- 3 files changed, 5 insertions(+)
+Applies on 5.8-rc3.
 
-diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
-index d16a4229209b..3a1792bbb7ac 100644
---- a/include/sound/hda_codec.h
-+++ b/include/sound/hda_codec.h
-@@ -206,6 +206,7 @@ struct hda_codec {
+Changes in V2:
+
+- Replaced WARN_ON() with WARN() dropping the conditional block per Suzuki
+
+Changes in V1: (https://patchwork.kernel.org/patch/11606285/)
+
+ arch/arm64/kernel/cpufeature.c | 45 +++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 9f63053a63a9..7bd7e6f936a5 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -697,11 +697,50 @@ static s64 arm64_ftr_safe_value(const struct arm64_ftr_bits *ftrp, s64 new,
  
- 	struct mutex spdif_mutex;
- 	struct mutex control_mutex;
-+	struct mutex led_mutex;
- 	struct snd_array spdif_out;
- 	unsigned int spdif_in_enable;	/* SPDIF input enable? */
- 	const hda_nid_t *slave_dig_outs; /* optional digital out slave widgets */
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 7e3ae4534df9..ec477cd8afed 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -946,6 +946,7 @@ int snd_hda_codec_device_new(struct hda_bus *bus, struct snd_card *card,
- 	codec->addr = codec_addr;
- 	mutex_init(&codec->spdif_mutex);
- 	mutex_init(&codec->control_mutex);
-+	mutex_init(&codec->led_mutex);
- 	snd_array_init(&codec->mixers, sizeof(struct hda_nid_item), 32);
- 	snd_array_init(&codec->nids, sizeof(struct hda_nid_item), 32);
- 	snd_array_init(&codec->init_pins, sizeof(struct hda_pincfg), 16);
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 53e0eef8b042..96dac365fbb8 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4101,7 +4101,10 @@ static void alc_update_gpio_led(struct hda_codec *codec, unsigned int mask,
+ static void __init sort_ftr_regs(void)
  {
- 	if (polarity)
- 		enabled = !enabled;
+-	int i;
++	const struct arm64_ftr_reg *ftr_reg;
++	const struct arm64_ftr_bits *ftr_bits;
++	unsigned int i, j, width, shift, prev_shift;
 +
-+	mutex_lock(&codec->led_mutex);
- 	alc_update_gpio_data(codec, mask, !enabled); /* muted -> LED on */
-+	mutex_unlock(&codec->led_mutex);
++	for (i = 0; i < ARRAY_SIZE(arm64_ftr_regs); i++) {
++		/*
++		 * Features here must be sorted in descending order with respect
++		 * to their shift values and should not overlap with each other.
++		 */
++		ftr_reg = arm64_ftr_regs[i].reg;
++		for (ftr_bits = ftr_reg->ftr_bits, j = 0;
++				ftr_bits->width != 0; ftr_bits++, j++) {
++			WARN((ftr_bits->shift  + ftr_bits->width) > 64,
++				"%s has invalid feature at shift %d\n",
++				ftr_reg->name, ftr_bits->shift);
++
++			/*
++			 * Skip the first feature. There is nothing to
++			 * compare against for now.
++			 */
++			if (j == 0)
++				continue;
++
++			prev_shift = ftr_reg->ftr_bits[j - 1].shift;
++			width = ftr_reg->ftr_bits[j].width;
++			shift = ftr_reg->ftr_bits[j].shift;
++			WARN(prev_shift < (shift + width),
++				"%s has feature overlap at shift %d\n",
++				ftr_reg->name, ftr_bits->shift);
++		}
+ 
+-	/* Check that the array is sorted so that we can do the binary search */
+-	for (i = 1; i < ARRAY_SIZE(arm64_ftr_regs); i++)
++		/*
++		 * Skip the first register. There is nothing to
++		 * compare against for now.
++		 */
++		if (i == 0)
++			continue;
++		/*
++		 * Registers here must be sorted in ascending order with respect
++		 * to sys_id for subsequent binary search in get_arm64_ftr_reg()
++		 * to work correctly.
++		 */
+ 		BUG_ON(arm64_ftr_regs[i].sys_id < arm64_ftr_regs[i - 1].sys_id);
++	}
  }
  
- /* turn on/off mute LED via GPIO per vmaster hook */
+ /*
 -- 
-2.17.1
+2.20.1
 
