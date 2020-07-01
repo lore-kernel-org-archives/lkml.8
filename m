@@ -2,90 +2,99 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F69C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70746C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC47120857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4667B206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S26mXcSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731573AbgGAOs0 (ORCPT
+        id S1731603AbgGAOsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:48:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33414 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgGAOsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:48:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9FCFBAEC2;
-        Wed,  1 Jul 2020 14:48:22 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 88D47DA781; Wed,  1 Jul 2020 16:48:06 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 16:48:06 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        dm-devel@redhat.com, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, drbd-dev@tron.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] writeback: remove bdi->congested_fn
-Message-ID: <20200701144805.GC27795@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        dm-devel@redhat.com, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, drbd-dev@tron.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200701090622.3354860-1-hch@lst.de>
- <20200701090622.3354860-5-hch@lst.de>
+        Wed, 1 Jul 2020 10:48:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35710 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgGAOsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:48:30 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061EaSG0075681;
+        Wed, 1 Jul 2020 09:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593614188;
+        bh=HXEl6HBvdBsKDUGBfUdgQEY4qT6CI4rtQbIO4/KXAPk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=S26mXcSQ4V0OEILlv4buTP+1pgEKq8vr/X5icZ/l8OWB+or/FwwVsoT3hVovYR6t8
+         eFdkfVk5nMEK8xBDC5d9muPjscz9A/qzJKYCgRiYcypr80Qc73RjXVwndBHBXdZLzF
+         AZLcmfPU2tAAxRitVilEH05zAkmE6iGUZABe0YOs=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061EaSPC036063
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Jul 2020 09:36:28 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 09:36:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 09:36:28 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061EaOFB060819;
+        Wed, 1 Jul 2020 09:36:26 -0500
+Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
+ initial allowed window
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-3-t-kristo@ti.com>
+ <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
+ <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
+ <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
+ <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
+ <20200630202356.GA16412@roeck-us.net>
+ <4e9c2731-bf02-1b59-298b-b7f9a0e87d10@ti.com>
+ <f9ab8206-a3a2-ec6e-2c7b-92e369c0996a@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <24c1c3d3-3ab9-46a5-3eef-ad375aaa8f41@ti.com>
+Date:   Wed, 1 Jul 2020 17:36:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701090622.3354860-5-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <f9ab8206-a3a2-ec6e-2c7b-92e369c0996a@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:06:22AM +0200, Christoph Hellwig wrote:
-> Except for pktdvd, the only places setting congested bits are file
-> systems that allocate their own backing_dev_info structures.  And
-> pktdvd is a deprecated driver that isn't useful in stack setup
-> either.  So remove the dead congested_fn stacking infrastructure.
+On 01/07/2020 16:34, Guenter Roeck wrote:
+> On 6/30/20 10:50 PM, Tero Kristo wrote:
+> [ ... ]
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/drbd/drbd_main.c   | 59 --------------------------------
->  drivers/md/bcache/request.c      | 43 -----------------------
->  drivers/md/bcache/super.c        |  1 -
->  drivers/md/dm-cache-target.c     | 19 ----------
->  drivers/md/dm-clone-target.c     | 15 --------
->  drivers/md/dm-era-target.c       | 15 --------
->  drivers/md/dm-raid.c             | 12 -------
->  drivers/md/dm-table.c            | 37 +-------------------
->  drivers/md/dm-thin.c             | 16 ---------
->  drivers/md/dm.c                  | 33 ------------------
->  drivers/md/dm.h                  |  1 -
->  drivers/md/md-linear.c           | 24 -------------
->  drivers/md/md-multipath.c        | 23 -------------
->  drivers/md/md.c                  | 23 -------------
->  drivers/md/md.h                  |  4 ---
->  drivers/md/raid0.c               | 16 ---------
->  drivers/md/raid1.c               | 31 -----------------
->  drivers/md/raid10.c              | 26 --------------
->  drivers/md/raid5.c               | 25 --------------
+>> Hardware supports changing the timeout value, however it only updates this during the next window (preload values are picked once user pings the watchdog.)
+>>
+> The current driver doesn't support or use that, though, since the start
+> function is only called once to start the watchdog, and not at all if
+> the watchdog is already running. So, if the bootloader sets the timeout
+> to X, and the user sets a timeout of, say, X * 4, userspace will never
+> ping the watchdog often enough. The driver will have to address that
+> to support already-running watchdogs.
 
-For the btrfs bits
+Yeah, I will modify that. I think I will just prevent changing the 
+timeout if watchdog has been enabled from boot, it is probably cleanest 
+approach. Unless I happen to come up with some sane way to change it on fly.
 
->  fs/btrfs/disk-io.c               | 23 -------------
-
-Acked-by: David Sterba <dsterba@suse.com>
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
