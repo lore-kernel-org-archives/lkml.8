@@ -2,157 +2,260 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B38C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58681207D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA582077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZBu7CFOI"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="T/EQ68wX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgGAX0B (ORCPT
+        id S1726631AbgGAX2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:26:01 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:31469 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbgGAXZm (ORCPT
+        Wed, 1 Jul 2020 19:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbgGAX2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:25:42 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200701232538epoutp02236c9463cba1b8d5a642003dd4c976e0~dxIm3nFoA0803408034epoutp02X
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:25:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200701232538epoutp02236c9463cba1b8d5a642003dd4c976e0~dxIm3nFoA0803408034epoutp02X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593645938;
-        bh=AwryGmeBPsvF8p1weflyNQEdqWqgGlewjxNS+5te05w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBu7CFOIyhIbBA338wo2tJTnj2FEkqJyNC83Eo5uOmWVoUrLRO7VinEp/06S0j7iR
-         OTY+HWvNI2BtSKAbKRRaw7glqnh/XXZgxAQQ1kWYxuiWQ7DOmZgmt/ooFJFCPxpiHd
-         jqhacl+BIlf7bJPOK8Hh4rqn9Oc+eoz/cThM8n6o=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200701232538epcas1p390437cc959439a9d3b7aafae4d3ab143~dxImRO5_D0140501405epcas1p3D;
-        Wed,  1 Jul 2020 23:25:38 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49xy5F1lzXzMqYkW; Wed,  1 Jul
-        2020 23:25:37 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        97.5B.18978.17B1DFE5; Thu,  2 Jul 2020 08:25:37 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200701232536epcas1p1e0f92c7cc47e06ce490088c2e3cc1a21~dxIktvS4f1844818448epcas1p1N;
-        Wed,  1 Jul 2020 23:25:36 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200701232536epsmtrp28bf9711707d4b279be92689ee8d0982f~dxIksjSla1851918519epsmtrp25;
-        Wed,  1 Jul 2020 23:25:36 +0000 (GMT)
-X-AuditID: b6c32a35-603ff70000004a22-fb-5efd1b71a238
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        48.0C.08382.07B1DFE5; Thu,  2 Jul 2020 08:25:36 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200701232536epsmtip23b0e8afbcb7385b02fc04f60b14d6811~dxIkg68Ib2699026990epsmtip2g;
-        Wed,  1 Jul 2020 23:25:36 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     gregkh@linuxfoundation.org, sashal@kernel.org
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Hyeongseok.Kim" <Hyeongseok@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH 5.7.y 1/5] exfat: Set the unused characters of FileName
- field to the value 0000h
-Date:   Thu,  2 Jul 2020 08:20:20 +0900
-Message-Id: <20200701232024.2083-2-namjae.jeon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701232024.2083-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGKsWRmVeSWpSXmKPExsWy7bCmrm6h9N84g95HPBbNi9ezWfyd+InJ
-        4vKuOWwWP6bXW2xac43NYsHGR4wObB47Z91l99i0qpPNY//cNewefVtWMXp83iQXwBqVY5OR
-        mpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDdICSQlliTilQ
-        KCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK0MDAyBSoMiEn4+G8
-        dSwFvZwVd55cYW1gPMDexcjJISFgItHYcoaxi5GLQ0hgB6PExOOLoZxPjBL/r15gh3C+MUo8
-        2/2bCaZl5sJ9zBCJvYwSi1+cYoFrmd7yA6ifg4NNQFvizxZRkAYRAUOJG5+vgdUwC3QxSuy6
-        3c0KkhAWSJK49Gc1G4jNIqAqcbGlgxHE5hWwljjVepYZYpu8xOoNB8BsTgEbiXXn/oPdJyGw
-        j13iWsM0dpBlEgIuEvMmpUHUC0u8Or4F6jkpic/v9rJBlFRLfNwPNbKDUeLFd1sI21ji5voN
-        rCAlzAKaEut36UOEFSV2/p4Ldg2zAJ/Eu689rBBTeCU62oQgSlQl+i4dhgaJtERX+weopR4S
-        O9/eZYWESD+jxL/Hc1gnMMrNQtiwgJFxFaNYakFxbnpqsWGBIXKEbWIEJzAt0x2ME99+0DvE
-        yMTBeIhRgoNZSYT3tMGvOCHelMTKqtSi/Pii0pzU4kOMpsCgm8gsJZqcD0yheSXxhqZGxsbG
-        FiZm5mamxkrivOIyF+KEBNITS1KzU1MLUotg+pg4OKUamNRWhrzbMF2a+77dtQssIXcUEk6n
-        zb968vqCdA9/mXg5FbWPtaaGB+Y8j+hOYdffs1thlmXRScVqp727nr2cs5NFy/r7nfyalr9T
-        LDU+PguxcXr2O2DH3SfTUlMMmV5r7lR8sHRK1O+mlTwvbm/e+fIii0V6zltPrZ9T3af/zkj7
-        EvBHJuTbqbPKljNXLwl0u/5j90zzmuqPtn/6Tur0cEzYnC0gE//vDt/S6X4nuOdtlE2NyGT5
-        6O7aocf3sqzO5WOP17qshT3zfwhv9U64cP3O792RoqmWZ/vKjx/jzin9odxk3qs992Hjik4O
-        w4I5x95UaGx42Jksv/1QYfHpI1fCHfRuOPlEfWUyStFY5aXEUpyRaKjFXFScCADMD7uZ6QMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjluLIzCtJLcpLzFFi42LZdlhJXrdA+m+cwbOVChbNi9ezWfyd+InJ
-        4vKuOWwWP6bXW2xac43NYsHGR4wObB47Z91l99i0qpPNY//cNewefVtWMXp83iQXwBrFZZOS
-        mpNZllqkb5fAlfFw3jqWgl7OijtPrrA2MB5g72Lk5JAQMJGYuXAfcxcjF4eQwG5Gia0317NA
-        JKQljp04A5TgALKFJQ4fLoao+cAo0XNlDytInE1AW+LPFlEQU0TAWKL9axlIJ7NAH6PEzGV1
-        ILawQILE78M/mUFsFgFViYstHYwgNq+AtcSp1rPMEJvkJVZvOABmcwrYSKw79x+sRgioZuOV
-        lywTGPkWMDKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDjItzR2M21d90DvEyMTB
-        eIhRgoNZSYT3tMGvOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8NwoXxgkJpCeWpGanphakFsFk
-        mTg4pRqYahITczcuk9RYckgmOXPzVRYmc5OuQ14Ju/U+bGjrkrJOi0h7PVH3wsakjjeb01q7
-        ulTOyk2fahDTys0jnNnmpZve+iHx0zM3gyJVsXdljK2TxNTmrt50aMsZdu5/B5J507dOFs5n
-        TlpxVefLH4t+yZ+u5z51KAtNTp787YjiVN1pXQqrElp18tcYPpBaz3BhaWeL4w8VBxV7eeul
-        LKqZElWdR4t4it1f9+lK+CieqE/ZrHbr3HeZg7+z/l/dEMUjtPdW/kNPzTy+dX8ufI530P68
-        wvuZlfWcyYqzGkQ5I/US9Sf7Z2/Sb8hwXX7UVLjUaaNXz8WF+7gOLVbeu3Oemfpbm9Yd94MU
-        pv/036XEUpyRaKjFXFScCADXuoeIoQIAAA==
-X-CMS-MailID: 20200701232536epcas1p1e0f92c7cc47e06ce490088c2e3cc1a21
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200701232536epcas1p1e0f92c7cc47e06ce490088c2e3cc1a21
-References: <20200701232024.2083-1-namjae.jeon@samsung.com>
-        <CGME20200701232536epcas1p1e0f92c7cc47e06ce490088c2e3cc1a21@epcas1p1.samsung.com>
+        Wed, 1 Jul 2020 19:28:50 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030C6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 16:28:49 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id m8so7634177qvk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 16:28:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w/6vsbQ9eQ9SYZyjzJjo7q2++dtmL7y8qUp3o/IY01o=;
+        b=T/EQ68wXN+j3TU28ZuKOoUhjEFIYaXWHzb4njqW0NqGdPOBA5aEudroRUdiJ8FrnLm
+         sY65BzCM/yuanryZ58uxsKIUzrwSqwtjuf2VsEFWNQSv/AmVYIZooAHnTVRGBhP4I1Na
+         ElhVC000WZYrhABgmHLOgVP6TzoVIFGNCtZBk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=w/6vsbQ9eQ9SYZyjzJjo7q2++dtmL7y8qUp3o/IY01o=;
+        b=IlvNAipApPa4QrLXYIFVXb7gNqN8HR5EnY2/WcrUP29kWYSz+A7uZPvlx4mHPLPCS6
+         8nXpqS40wq21EsNADwBPkWMel0hPyv81SzZqH9W3H/7PuSZgsgFCOR4JoAiNMtIrWfov
+         nCXt92gXY6o8ZBp3NDzF2esPrOmj0Mv6q/+jHQ+nn+HBFlVfvjYeTb/sMz3BY5cK0SzO
+         F/Vm01cbDgLpRl0dDhvG/kvGkRofUTb0+i28x05eTdEbjhCs/m5XLai/hYId7oNFXW5h
+         hxExl057Hm6WPaCt39j/V+du/sx772bCyy2wKpZArInLg62EU7971E7a/Kuq1JuIBF0k
+         EHuw==
+X-Gm-Message-State: AOAM532At4ps3Ex9+qmAIu+1zvYuLJx5Temv0GoWtugK9EHvWRdcT4hq
+        /FipQNdyFim16EeKfzNcbyCHZQ==
+X-Google-Smtp-Source: ABdhPJySc8UKTCwLa3Lxp62I5q63tLwLgEuWArRfWcNItmojl1J1bW93G7TvXwlgr0hD/mXteORW/w==
+X-Received: by 2002:a0c:a992:: with SMTP id a18mr18028116qvb.211.1593646129011;
+        Wed, 01 Jul 2020 16:28:49 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id c7sm7780636qta.95.2020.07.01.16.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 16:28:48 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 19:28:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        mingo@kernel.org, fweisbec@gmail.com, keescook@chromium.org,
+        kerrnel@google.com, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, vineethrp@gmail.com,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>, paulmck@kernel.org
+Subject: Re: [RFC PATCH 06/16] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20200701232847.GA439212@google.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <ed924e2cb450a4cce4a1b5a2c44d29e968467154.1593530334.git.vpillai@digitalocean.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed924e2cb450a4cce4a1b5a2c44d29e968467154.1593530334.git.vpillai@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Hyeongseok.Kim" <Hyeongseok@gmail.com>
+On Tue, Jun 30, 2020 at 09:32:27PM +0000, Vineeth Remanan Pillai wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Instead of only selecting a local task, select a task for all SMT
+> siblings for every reschedule on the core (irrespective which logical
+> CPU does the reschedule).
+> 
+> There could be races in core scheduler where a CPU is trying to pick
+> a task for its sibling in core scheduler, when that CPU has just been
+> offlined.  We should not schedule any tasks on the CPU in this case.
+> Return an idle task in pick_next_task for this situation.
+> 
+> NOTE: there is still potential for siblings rivalry.
+> NOTE: this is far too complicated; but thus far I've failed to
+>       simplify it further.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
+> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+> Signed-off-by: Aaron Lu <aaron.lu@linux.alibaba.com>
+> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 
-Some fsck tool complain that padding part of the FileName field
-is not set to the value 0000h. So let's maintain filesystem cleaner,
-as exfat's spec. recommendation.
+Hi Peter, Tim, all, the below patch fixes the hotplug issue described in the
+below patch's Link tag. Patch description below describes the issues fixed
+and it applies on top of this patch.
 
-Fixes: ca06197382bd ("exfat: add directory operations")
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Hyeongseok.Kim <Hyeongseok@gmail.com>
-Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+------8<----------
+
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH] sched: Fix CPU hotplug causing crashes in task selection logic
+
+The selection logic does not run correctly if the current CPU is not in the
+cpu_smt_mask (which it is not because the CPU is offlined when the stopper
+finishes running and needs to switch to idle).  There are also other issues
+fixed by the patch I think such as: if some other sibling set core_pick to
+something, however the selection logic on current cpu resets it before
+selecting. In this case, we need to run the task selection logic again to
+make sure it picks something if there is something to run. It might end up
+picking the wrong task.  Yet another issue was, if the stopper thread is an
+unconstrained pick, then rq->core_pick is set. The next time task selection
+logic runs when stopper needs to switch to idle, the current CPU is not in
+the smt_mask. This causes the previous ->core_pick to be picked again which
+happens to be the unconstrained task! so the stopper keeps getting selected
+forever.
+
+That and there are a few more safe guards and checks around checking/setting
+rq->core_pick. To test it, I ran rcutorture and made it tag all torture
+threads. Then ran it in hotplug mode (hotplugging every 200ms) and it hit the
+issue. Now it runs for an hour or so without issue. (Torture testing debug
+changes: https://bit.ly/38htfqK ).
+
+Various fixes were tried causing varying degrees of crashes.  Finally I found
+that it is easiest to just add current CPU to the smt_mask's copy always.
+This is so that task selection logic always runs on the current CPU which
+called schedule().
+
+Link: lore.kernel.org/r/20200414133559.GT20730@hirez.programming.kicks-ass.net
+Reported-by: Tim Chen <tim.c.chen@linux.intel.com>
+Reported-by: Vineeth Pillai <vpillai@digitalocean.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- fs/exfat/dir.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/sched/core.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 4b91afb0f051..349ca0c282c2 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -430,10 +430,12 @@ static void exfat_init_name_entry(struct exfat_dentry *ep,
- 	ep->dentry.name.flags = 0x0;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ede86fb37b4e8..a5604aa292e66 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4307,7 +4307,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+ 	struct task_struct *next, *max = NULL;
+ 	const struct sched_class *class;
+-	const struct cpumask *smt_mask;
++	struct cpumask select_mask;
+ 	int i, j, cpu, occ = 0;
+ 	bool need_sync;
  
- 	for (i = 0; i < EXFAT_FILE_NAME_LEN; i++) {
--		ep->dentry.name.unicode_0_14[i] = cpu_to_le16(*uniname);
--		if (*uniname == 0x0)
--			break;
--		uniname++;
-+		if (*uniname != 0x0) {
-+			ep->dentry.name.unicode_0_14[i] = cpu_to_le16(*uniname);
-+			uniname++;
-+		} else {
-+			ep->dentry.name.unicode_0_14[i] = 0x0;
-+		}
+@@ -4334,7 +4334,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	finish_prev_task(rq, prev, rf);
+ 
+ 	cpu = cpu_of(rq);
+-	smt_mask = cpu_smt_mask(cpu);
++	/* Make a copy of cpu_smt_mask as we should not set that. */
++	cpumask_copy(&select_mask, cpu_smt_mask(cpu));
++
++	/*
++	 * Always make sure current CPU is added to smt_mask so that below
++	 * selection logic runs on it.
++	 */
++	cpumask_set_cpu(cpu, &select_mask);
+ 
+ 	/*
+ 	 * core->core_task_seq, core->core_pick_seq, rq->core_sched_seq
+@@ -4351,7 +4358,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 
+ 	/* reset state */
+ 	rq->core->core_cookie = 0UL;
+-	for_each_cpu(i, smt_mask) {
++	for_each_cpu(i, &select_mask) {
+ 		struct rq *rq_i = cpu_rq(i);
+ 
+ 		rq_i->core_pick = NULL;
+@@ -4371,7 +4378,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	 */
+ 	for_each_class(class) {
+ again:
+-		for_each_cpu_wrap(i, smt_mask, cpu) {
++		for_each_cpu_wrap(i, &select_mask, cpu) {
+ 			struct rq *rq_i = cpu_rq(i);
+ 			struct task_struct *p;
+ 
+@@ -4402,6 +4409,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 			 */
+ 			if (i == cpu && !need_sync && !p->core_cookie) {
+ 				next = p;
++				rq_i->core_pick = next;
++				rq_i->core_sched_seq = rq_i->core->core_pick_seq;
+ 				goto done;
+ 			}
+ 
+@@ -4427,7 +4436,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 				max = p;
+ 
+ 				if (old_max) {
+-					for_each_cpu(j, smt_mask) {
++					for_each_cpu(j, &select_mask) {
+ 						if (j == i)
+ 							continue;
+ 
+@@ -4452,6 +4461,10 @@ next_class:;
+ 
+ 	rq->core->core_pick_seq = rq->core->core_task_seq;
+ 	next = rq->core_pick;
++
++	/* Something should have been selected for current CPU */
++	WARN_ON_ONCE(!next);
++
+ 	rq->core_sched_seq = rq->core->core_pick_seq;
+ 
+ 	/*
+@@ -4462,7 +4475,7 @@ next_class:;
+ 	 * their task. This ensures there is no inter-sibling overlap between
+ 	 * non-matching user state.
+ 	 */
+-	for_each_cpu(i, smt_mask) {
++	for_each_cpu(i, &select_mask) {
+ 		struct rq *rq_i = cpu_rq(i);
+ 
+ 		WARN_ON_ONCE(!rq_i->core_pick);
+@@ -4483,6 +4496,16 @@ next_class:;
  	}
- }
  
+ done:
++	/*
++	 * If we reset a sibling's core_pick, make sure that we picked a task
++	 * for it, this is because we might have reset it though it was set to
++	 * something by another selector. In this case we cannot leave it as
++	 * NULL and should have found something for it.
++	 */
++	for_each_cpu(i, &select_mask) {
++		WARN_ON_ONCE(!cpu_rq(i)->core_pick);
++	}
++
+ 	set_next_task(rq, next);
+ 	return next;
+ }
 -- 
-2.17.1
+2.27.0.212.ge8ba1cc988-goog
 
