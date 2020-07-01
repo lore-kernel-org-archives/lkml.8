@@ -2,107 +2,64 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A2920781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874F220781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGAAsf (ORCPT
+        id S1726617AbgGAAuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 20:48:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37112 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgGAAsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 20:48:35 -0400
-IronPort-SDR: M0FQhrJXXaUE4xq8cqDbs6uBH6WQAaEK64L8vn1P0UTJ6I3FB4XfE5BaTzB8S0lI264TW3ff2z
- vYuxo5ODOy2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207939015"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="207939015"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 17:48:33 -0700
-IronPort-SDR: 7uQbbDbavB+IgSwg+d5bR+aRJ7G8ZlZcCA6NpkA6LEfKLyr+Jz6dawj0KC6OlDv2W2wM51K7Va
- 6jJCjumgaKMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="454807974"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga005.jf.intel.com with ESMTP; 30 Jun 2020 17:48:32 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <rientjes@google.com>, <dan.j.williams@intel.com>
-Subject: Re: [RFC][PATCH 8/8] mm/numa: new reclaim mode to enable reclaim-based migration
-References: <20200629234503.749E5340@viggo.jf.intel.com>
-        <20200629234517.A7EC4BD3@viggo.jf.intel.com>
-        <87v9j9ow3a.fsf@yhuang-dev.intel.com>
-        <29c67873-3cb9-e121-382c-9b81491016bc@linux.alibaba.com>
-Date:   Wed, 01 Jul 2020 08:48:31 +0800
-In-Reply-To: <29c67873-3cb9-e121-382c-9b81491016bc@linux.alibaba.com> (Yang
-        Shi's message of "Tue, 30 Jun 2020 10:50:30 -0700")
-Message-ID: <87mu4knjq8.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 30 Jun 2020 20:50:00 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:44787 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726015AbgGAAt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 20:49:59 -0400
+Received: (qmail 473515 invoked by uid 1000); 30 Jun 2020 20:49:58 -0400
+Date:   Tue, 30 Jun 2020 20:49:58 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200701004958.GA473187@rowland.harvard.edu>
+References: <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
+ <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
+ <20200626154441.GA296771@rowland.harvard.edu>
+ <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
+ <20200629161536.GA405175@rowland.harvard.edu>
+ <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
+ <20200630180255.GA459638@rowland.harvard.edu>
+ <1804723c-4aaf-a820-d3ef-e70125017cad@acm.org>
+ <20200630193802.GA463609@rowland.harvard.edu>
+ <f17e9ebe-fc75-fb51-cc9b-851fa219f31b@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f17e9ebe-fc75-fb51-cc9b-851fa219f31b@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yang,
+On Tue, Jun 30, 2020 at 04:31:58PM -0700, Bart Van Assche wrote:
+> On 2020-06-30 12:38, Alan Stern wrote:
+> > Assume that BLK_MQ_REQ_PREEMPT is set in flags.  Then where exactly 
+> > does blk_queue_enter(q, flags) call blk_pm_request_resume(q)?
+> 
+> Please take a look at how the *current* implementation of runtime power
+> management works. Your question is relevant for the old implementation
+> of runtime power management but not for the current implementation.
 
-Yang Shi <yang.shi@linux.alibaba.com> writes:
+What do you mean by "current"?  I have been looking at the implementation 
+in 5.8-rc3 from Linus's tree.  Should I look somewhere else?
 
->>> diff -puN mm/vmscan.c~enable-numa-demotion mm/vmscan.c
->>> --- a/mm/vmscan.c~enable-numa-demotion	2020-06-29 16:35:01.017312549 -0700
->>> +++ b/mm/vmscan.c	2020-06-29 16:35:01.023312549 -0700
->>> @@ -4165,9 +4165,10 @@ int node_reclaim_mode __read_mostly;
->>>    * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
->>>    * ABI.  New bits are OK, but existing bits can never change.
->>>    */
->>> -#define RECLAIM_RSVD  (1<<0)	/* (currently ignored/unused) */
->>> -#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
->>> -#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
->>> +#define RECLAIM_RSVD	(1<<0)	/* (currently ignored/unused) */
->>> +#define RECLAIM_WRITE	(1<<1)	/* Writeout pages during reclaim */
->>> +#define RECLAIM_UNMAP	(1<<2)	/* Unmap pages during reclaim */
->>> +#define RECLAIM_MIGRATE	(1<<3)	/* Migrate pages during reclaim */
->>>     /*
->>>    * Priority for NODE_RECLAIM. This determines the fraction of pages
->> I found that RECLAIM_MIGRATE is defined but never referenced in the
->> patch.
->>
->> If my understanding of the code were correct, shrink_do_demote_mapping()
->> is called by shrink_page_list(), which is used by kswapd and direct
->> reclaim.  So as long as the persistent memory node is onlined,
->> reclaim-based migration will be enabled regardless of node reclaim mode.
->
-> It looks so according to the code. But the intention of a new node
-> reclaim mode is to do migration on reclaim *only when* the
-> RECLAIM_MODE is enabled by the users.
->
-> It looks the patch just clear the migration target node masks if the
-> memory is offlined.
->
-> So, I'm supposed you need check if node_reclaim is enabled before
-> doing migration in shrink_page_list() and also need make node reclaim
-> to adopt the new mode.
-
-But why shouldn't we migrate in kswapd and direct reclaim?  I think that
-we may need a way to control it, but shouldn't disable it
-unconditionally.
-
-> Please refer to
-> https://lore.kernel.org/linux-mm/1560468577-101178-6-git-send-email-yang.shi@linux.alibaba.com/
->
-
-Best Regards,
-Huang, Ying
+Alan Stern
