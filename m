@@ -6,58 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26048C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DCE20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16A7207E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642274;
-	bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
+	s=default; t=1593642279;
+	bh=ZtxAWjE39NzDXq1FuKkTxOe+E45NfjwE+SIqZVm1Mc4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=hAOEzsBq6UkAQHpqBDzaqRudpAUXRWlQRZ3IsOtG0XqTAwMKVQwqU/VsLj/S/CFnM
-	 V4+43ItfN9ppvtIbrx+eoxxmyGWdwS9ZZIBppvzO1o4KMaxe/EwF0xcS/Z1XAFPQE/
-	 rUhtYeaKuUczhR6jiCzf4CH3EUXjg69ApGdT6Hb4=
+	b=Htaqs9z7+Gp8DZvQikcmNADcZg9xbpVRPvTjggvq2dtLtDGXVnskO+rHK8Bi1jWDc
+	 Yo6yPy2rHeG3mjHKDJn/Wllh3NnKhHg3or4IRoHD+N2y4BxGUO8zk+7bVAR9Osk8S+
+	 j+WNFzCNp/ABZc6IrBEF1as3MkPAZZbnHwJCIPYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgGAWYc (ORCPT
+        id S1728138AbgGAWYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgGAWYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:24:30 -0400
+        id S1728121AbgGAWYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:24:35 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B97207E8;
-        Wed,  1 Jul 2020 22:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD938207E8;
+        Wed,  1 Jul 2020 22:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642270;
-        bh=TW5PQPclJiwa+OQ6f0OZFhtat4XveCrFk1WVPM79oMc=;
+        s=default; t=1593642275;
+        bh=ZtxAWjE39NzDXq1FuKkTxOe+E45NfjwE+SIqZVm1Mc4=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=BH5EJrNlTGmCRsvIJIBkzCqoy1EWY7FftdUKquE+FX+YQruobhe0qUZsbYBIk8lxe
-         ABQNEScug9B/MlIYyDTOGh5Hzbw1c8MydlRr9x7Rc1l2Z1FapVjwdGB/PUJzJMatUp
-         qTVGUiVeQblrW73/pqbhMQ4AuI1pFBpSPc4ktFkY=
-Date:   Wed, 01 Jul 2020 23:24:28 +0100
+        b=IZ2hld1te52uSRaSEG8MzyydRr3eAK26MFEWmUHeE7ADAMJanlrHGSwbXDdDkUhVJ
+         uEIeLFBCq7LXdK94aFKKbQsrcbUdyvqNy8grnWaxIqajDMkNUPEIZcTsryzpB72zX1
+         eIf+Fr8+GQK+U6E/KBV1iXNfXiZK4Iaq4q2XXLXs=
+Date:   Wed, 01 Jul 2020 23:24:33 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-In-Reply-To: <20200701090020.7935-1-leilk.liu@mediatek.com>
-References: <20200701090020.7935-1-leilk.liu@mediatek.com>
-Subject: Re: [PATCH] spi: mediatek: use correct SPI_CFG2_REG MACRO
-Message-Id: <159364224815.10988.5483931944893565732.b4-ty@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        swboyd@chromium.org, Benson Leung <bleung@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
+References: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
+Subject: Re: [PATCH] spi: Avoid setting the chip select if we don't need to
+Message-Id: <159364224814.10988.2511800063055608801.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 17:00:20 +0800, Leilk Liu wrote:
-> this patch use correct SPI_CFG2_REG offset.
+On Mon, 29 Jun 2020 16:41:06 -0700, Douglas Anderson wrote:
+> On some SPI controllers (like spi-geni-qcom) setting the chip select
+> is a heavy operation.  For instance on spi-geni-qcom, with the current
+> code, is was measured as taking upwards of 20 us.  Even on SPI
+> controllers that aren't as heavy, setting the chip select is at least
+> something like a MMIO operation over some peripheral bus which isn't
+> as fast as a RAM access.
+> 
+> [...]
 
 Applied to
 
@@ -65,8 +71,8 @@ Applied to
 
 Thanks!
 
-[1/1] spi: mediatek: use correct SPI_CFG2_REG MACRO
-      commit: 44b37eb79e16a56cb30ba55b2da452396b941e7a
+[1/1] spi: Avoid setting the chip select if we don't need to
+      commit: d40f0b6f2e21f2400ae8b1b120d11877d9ffd8ec
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
