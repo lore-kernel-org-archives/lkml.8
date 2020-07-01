@@ -2,214 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB01C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79CA620747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8FD206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vOmou64n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HrvEj8+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgGAFvI (ORCPT
+        id S1726947AbgGAFw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 01:51:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52480 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgGAFvI (ORCPT
+        Wed, 1 Jul 2020 01:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgGAFw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 01:51:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0615ojJs042309;
-        Wed, 1 Jul 2020 00:50:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593582645;
-        bh=YUXD9ShzQYb7VpV33VRcMcIHHXqrxjBgwEaOLpyAUWA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vOmou64nBL+UgIXvO1hdA8KW/sse0kvsw/1NxW4HWvnwDuZGoko3Jr8J4cq8dvmfd
-         tjPZMHJKNgLNHICA5QcWkiBgnOcKTETauu0aSW3UckXHwDjZsVP0ad42vGrMo8zZ54
-         7h24RA+F1Y9nwgpi8MoxoFGIr3VLM3p+X5+/Y8QU=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0615ojUL037785
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 00:50:45 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 00:50:45 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 00:50:45 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0615ohlE059541;
-        Wed, 1 Jul 2020 00:50:44 -0500
-Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
- initial allowed window
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-3-t-kristo@ti.com>
- <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
- <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
- <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
- <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
- <20200630202356.GA16412@roeck-us.net>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <4e9c2731-bf02-1b59-298b-b7f9a0e87d10@ti.com>
-Date:   Wed, 1 Jul 2020 08:50:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 01:52:26 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96C7C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 22:52:26 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k6so15724855oij.11
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 22:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RsQWUhxGHI4qfc235hpMf/7Q2ttwpb29HIoPyRwKMMI=;
+        b=HrvEj8+kAfMpIVuEg8rKntHthW5PBJgjWjOHDW/5EwGtEb35gdr9WknU9/JdnzmV2q
+         pq2XxKb+EYL+6wv1yg+ZzhikjN8a+4K1MFRZaVKGwu7qKKybw6SR5dhcVAkEGeYtRU+z
+         HY72d4W/cmjwDoifgZPmGVs3gtw9GEGIBE5t9AlX5ng1gjVCvaiYxhtM6Fo6uAqdNWYW
+         Mfa/ExUkAu1cEtj8IG6szT3aHy2m3sfydr687Ek1QhhxU6WbS7aCbPDd/CTRbU10b2kO
+         BgTGwTgMfWqpfStoYJtBgGVT+y1xh2cflHTTdh6S4mBUgHreb3ZGuF66wnnVYDslqb6K
+         NBNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RsQWUhxGHI4qfc235hpMf/7Q2ttwpb29HIoPyRwKMMI=;
+        b=mixzmQYjR66nXRgWXJ4P2NAJepuC0oePGaIaEjA+G+752IiYKQFY9tJEs9/jLjTZtb
+         RWC18IvB3p8cXRcD62IVRf5Aax9fVcyCXbmKDgiFppiiJZ7nAxUC2F1xki1kL0m9oGUg
+         cNjS7YfgZ6QCeHEgSvmMzpZMaegawWdwaNa9ow4tVpPM4r5m74ywqpG2YqGR45z/WkxX
+         g9IO9m4TD33LUDOepCJJOzJLtv/5LfcuEjeSFDRoDPzzDoiPPF0/wVRw9CkQe4hINSoc
+         mstKZmjpMJ47JWXr7U1zhui+CLDDKJ6EeVRC2gvbgHfA1Tk2LOLKdiNR5PdCLiZm+FUx
+         bqTw==
+X-Gm-Message-State: AOAM532MvOOFkn4TL+jSoIIaitOvTPAf2cqaOPKlrGdAOehX1yEO3SeV
+        hy+uTY1uvNs2zUhIc0nGAcmd2LJ8Pv8I4fAcrJeUEw==
+X-Google-Smtp-Source: ABdhPJz7ANpdueEAdE+f31hXBrnPSYVTZC7iD2Dj5fjYx9dxzyDA682ZXvad81d0C1UdShsUEVoVgf9jCNdpgGi5WWs=
+X-Received: by 2002:a05:6808:3ab:: with SMTP id n11mr13900356oie.121.1593582745833;
+ Tue, 30 Jun 2020 22:52:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200630202356.GA16412@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200701113448.3119f64f@canb.auug.org.au>
+In-Reply-To: <20200701113448.3119f64f@canb.auug.org.au>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 1 Jul 2020 07:52:14 +0200
+Message-ID: <CANpmjNMz0rtC7AnXUnZKfg+egqqQ3BKPznsWUdEqJQDLTgAaAQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the rcu tree with the kbuild tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/06/2020 23:23, Guenter Roeck wrote:
-> On Thu, Jun 25, 2020 at 08:04:50PM +0300, Tero Kristo wrote:
->> On 25/06/2020 16:35, Guenter Roeck wrote:
->>> On 6/25/20 1:32 AM, Tero Kristo wrote:
->>>> On 24/06/2020 18:24, Jan Kiszka wrote:
->>>>> On 24.06.20 13:45, Tero Kristo wrote:
->>>>>> If the RTI watchdog has been started by someone (like bootloader) when
->>>>>> the driver probes, we must adjust the initial ping timeout to match the
->>>>>> currently running watchdog window to avoid generating watchdog reset.
->>>>>>
->>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>> ---
->>>>>>     drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
->>>>>>     1 file changed, 25 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->>>>>> index d456dd72d99a..02ea2b2435f5 100644
->>>>>> --- a/drivers/watchdog/rti_wdt.c
->>>>>> +++ b/drivers/watchdog/rti_wdt.c
->>>>>> @@ -55,11 +55,13 @@ static int heartbeat;
->>>>>>      * @base - base io address of WD device
->>>>>>      * @freq - source clock frequency of WDT
->>>>>>      * @wdd  - hold watchdog device as is in WDT core
->>>>>> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
->>>>>>      */
->>>>>>     struct rti_wdt_device {
->>>>>>         void __iomem        *base;
->>>>>>         unsigned long        freq;
->>>>>>         struct watchdog_device    wdd;
->>>>>> +    unsigned int        min_hw_heartbeat_save;
->>>>>>     };
->>>>>>     static int rti_wdt_start(struct watchdog_device *wdd)
->>>>>> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
->>>>>>         /* put watchdog in active state */
->>>>>>         writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
->>>>>> +    if (wdt->min_hw_heartbeat_save) {
->>>>>> +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
->>>>>> +        wdt->min_hw_heartbeat_save = 0;
->>>>>> +    }
->>>>>> +
->>>>>>         return 0;
->>>>>>     }
->>>>>> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>>>>>             goto err_iomap;
->>>>>>         }
->>>>>> +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
->>>>>> +        u32 time_left;
->>>>>> +        u32 heartbeat;
->>>>>> +
->>>>>> +        set_bit(WDOG_HW_RUNNING, &wdd->status);
->>>>>> +        time_left = rti_wdt_get_timeleft(wdd);
->>>>>> +        heartbeat = readl(wdt->base + RTIDWDPRLD);
->>>>>> +        heartbeat <<= WDT_PRELOAD_SHIFT;
->>>>>> +        heartbeat /= wdt->freq;
->>>>>> +        if (time_left < heartbeat / 2)
->>>>>> +            wdd->min_hw_heartbeat_ms = 0;
->>>>>> +        else
->>>>>> +            wdd->min_hw_heartbeat_ms =
->>>>>> +                (time_left - heartbeat / 2 + 1) * 1000;
->>>>>> +
->>>>>> +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
->>>>>> +    }
->>>>>> +
->>>>>>         ret = watchdog_register_device(wdd);
->>>>>>         if (ret) {
->>>>>>             dev_err(dev, "cannot register watchdog device\n");
->>>>>>
->>>>>
->>>>> This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
->>>>
->>>> Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
->>>>
->>>
->>> Not sure if that is a valid assumption. Someone who designs a watchdog
->>> with such a narrow ping window might as well also use it. The question
->>> is if you want to rely on that assumption, or check and change it if needed.
->>
->> Right, if that is a blocker, I can modify the code. Should be maybe couple
->> of lines addition.
->>
->>> Also, I wonder if we should add an API function such as
->>> "set_last_hw_keepalive()" to avoid all that complexity.
->>
->> I can try adding that also if it is desirable.
->>
-> 
-> But wait, the code doesn't really match what the description of this
-> patch claims, or at least the description is misleading. Per the
-> description, this is to prevent an early timeout. However, the problem
-> here is that the watchdog core does not generate a ping, even if
-> requested, because it believes that it just generated one right before
-> the watchdog timer was registered, and that it can not generate another
-> one because min_hw_heartbeat_ms has not elapsed.
+On Wed, 1 Jul 2020 at 03:34, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the rcu tree got a conflict in:
+>
+>   kernel/kcsan/Makefile
+>
+> between commit:
+>
+>   f7c28e224da6 ("kbuild: remove cc-option test of -fno-stack-protector")
 
-You are right. Maybe the patch description could use some more beef into it.
+Is it possible that this patch drops the KCSAN portion? The patch
+"kcsan: Simplify compiler flags" does the same, but is part of a
+future pull request intended for 5.9.
 
-> 
-> With that in mind, the problem is a bit more complex.
-> 
-> First, the driver doesn't really update the current timeout to the
-> value that is currently configured and enabled. Instead, it just
-> uses/assumes the default (DEFAULT_HEARTBEAT or whatever the heartbeat
-> module parameter is set to). This means that it is still possible for
-> an early timeout to occur if there is a mismatch between the bootloader
-> timeout and the timeout assumed by the driver. Worse, the timeout
-> is only updated in the start function - and the start function isn't
-> called if the watchdog is already running. Actually, the driver does
-> not support updating the timeout at all. This means that a mismatch
-> between the bootloader timeout and the timeout assumed by the driver
-> is not handled well.
-> 
-> To solve this, the driver would have to update the actual timeout to
-> whatever is programmed into the chip and ignore any module parameter
-> and default settings if the watchdog is already running. Alternatively,
-> it would have to support updating the timeout (if the hardware supports
-> that) after the watchdog was started.
+The KCSAN changes had been in -next for well over a week. Also, I'm
+sorry I hadn't seen your patch before, otherwise I would have noticed
+this.
 
-Hardware supports changing the timeout value, however it only updates 
-this during the next window (preload values are picked once user pings 
-the watchdog.)
+Please see: https://lkml.kernel.org/r/20200624190236.GA6603@paulmck-ThinkPad-P72
 
-> Second, handling min_hw_heartbeat_ms properly should really be implemented
-> in the watchdog core. Instead of assuming that the most recent keepalive
-> happened "just before now", as it currently does, it should call the
-> timeleft function (if available and if the watchdog is running) and
-> calculate the most recent keepalive (and thus the earliest acceptable
-> next keepalive) from its return value.
-Yes, it all becomes bit complex if we let the bootloader configure the 
-values freely. Current bootloader implementation does not do this, as it 
-is mostly a copy of the kernel driver.
+> from the kbuild tree and commits:
+>
+>   2839a232071f ("kcsan: Simplify compiler flags")
+>   61d56d7aa5ec ("kcsan: Disable branch tracing in core runtime")
+>
+> from the rcu tree.
+>
+> I fixed it up (I just used the rcu tree version) and can carry the fix
+> as necessary. This is now fixed as far as linux-next is concerned, but
+> any non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-However, I can modify the kernel driver to take all this into account, 
-even if the code becomes a bit more complex due to this.
+Thank you!
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+-- Marco
