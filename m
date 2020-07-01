@@ -2,272 +2,257 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A65720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EpR1LhAM"
+	by mail.kernel.org (Postfix) with ESMTP id 8BD222067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgGAVfF (ORCPT
+        id S1727942AbgGAVfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
+        Wed, 1 Jul 2020 17:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbgGAVe4 (ORCPT
+        with ESMTP id S1727856AbgGAVfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:34:56 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C92C08C5C1;
-        Wed,  1 Jul 2020 14:34:56 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id F415A22EE3;
-        Wed,  1 Jul 2020 23:34:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593639292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4b6uM3yLCOFI3APjiQofRi+B+5helRr/4tG22efAfuk=;
-        b=EpR1LhAMxKnegjaDaqCIfW599ltl1Ud0dnHi36wsE1aq8gvILIz7KwoqOEQNcU5hwznO+z
-        2Y0MTdtmlqsvfUgDh2bU8O1fhl29DaiQBAQH8qXbWCLwCd5GA/Te+WZVcuAPQl0Jv0Dcy1
-        XkG3jNYAymhHsxd/9f/TQY+QIZl2Hck=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Michael Walle <michael@walle.cc>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: [PATCH RESEND net-next v3 2/3] net: enetc: Initialize SerDes for SGMII and USXGMII protocols
-Date:   Wed,  1 Jul 2020 23:34:32 +0200
-Message-Id: <20200701213433.9217-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200701213433.9217-1-michael@walle.cc>
-References: <20200701213433.9217-1-michael@walle.cc>
+        Wed, 1 Jul 2020 17:35:05 -0400
+Received: from mout0.freenet.de (mout0.freenet.de [IPv6:2001:748:100:40::2:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86269C08C5C1;
+        Wed,  1 Jul 2020 14:35:05 -0700 (PDT)
+Received: from [195.4.92.165] (helo=mjail2.freenet.de)
+        by mout0.freenet.de with esmtpa (ID viktor.jaegerskuepper@freenet.de) (port 25) (Exim 4.92 #3)
+        id 1jqkNi-0007b5-Gv; Wed, 01 Jul 2020 23:35:02 +0200
+Received: from [::1] (port=37846 helo=mjail2.freenet.de)
+        by mjail2.freenet.de with esmtpa (ID viktor.jaegerskuepper@freenet.de) (Exim 4.92 #3)
+        id 1jqkNi-0007cY-Fc; Wed, 01 Jul 2020 23:35:02 +0200
+Received: from sub5.freenet.de ([195.4.92.124]:55734)
+        by mjail2.freenet.de with esmtpa (ID viktor.jaegerskuepper@freenet.de) (Exim 4.92 #3)
+        id 1jqkLO-00079j-GP; Wed, 01 Jul 2020 23:32:38 +0200
+Received: from p200300e70725c1007461df5dd0c38276.dip0.t-ipconnect.de ([2003:e7:725:c100:7461:df5d:d0c3:8276]:59406 helo=[127.0.0.1])
+        by sub5.freenet.de with esmtpsa (ID viktor.jaegerskuepper@freenet.de) (TLSv1.2:ECDHE-RSA-CHACHA20-POLY1305:256) (port 465) (Exim 4.92 #3)
+        id 1jqkLN-0001xg-LJ; Wed, 01 Jul 2020 23:32:38 +0200
+Subject: [PATCH v2] Revert "ath9k: Fix general protection fault in
+ ath9k_hif_usb_rx_cb"
+To:     Roman Mamedov <rm@romanrm.net>, Kalle Valo <kvalo@codeaurora.org>
+Cc:     Qiujun Huang <hqjagain@gmail.com>, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com, syzkaller-bugs@googlegroups.com
+References: <20200404041838.10426-1-hqjagain@gmail.com>
+ <20200404041838.10426-6-hqjagain@gmail.com> <20200621020428.6417d6fb@natsu>
+ <87lfkff9qe.fsf@codeaurora.org>
+ <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de>
+ <20200702005603.495c5d98@natsu>
+From:   =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?= 
+        <viktor_jaegerskuepper@freenet.de>
+Message-ID: <09616727-e09a-73af-7ee0-33d59278ff44@freenet.de>
+Date:   Wed, 1 Jul 2020 23:32:28 +0200
 MIME-Version: 1.0
+In-Reply-To: <20200702005603.495c5d98@natsu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-Originated-At: 2003:e7:725:c100:7461:df5d:d0c3:8276!59406
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENETC has ethernet MACs capable of SGMII, 2500BaseX and USXGMII. But in
-order to use these protocols some SerDes configurations need to be
-performed. The SerDes is configurable via an internal PCS PHY which is
-connected to an internal MDIO bus at address 0.
+This reverts commit 2bbcaaee1fcb ("ath9k: Fix general protection fault
+in ath9k_hif_usb_rx_cb") because the driver gets stuck like this:
 
-This patch basically removes the dependency on bootloader regarding
-SerDes initialization.
+  [    5.778803] usb 1-5: Manufacturer: ATHEROS
+  [   21.697488] usb 1-5: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.fw requested
+  [   21.701377] usbcore: registered new interface driver ath9k_htc
+  [   22.053705] usb 1-5: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1.4.0.fw, size: 51008
+  [   22.306182] ath9k_htc 1-5:1.0: ath9k_htc: HTC initialized with 33 credits
+  [  115.708513] ath9k_htc: Failed to initialize the device
+  [  115.708683] usb 1-5: ath9k_htc: USB layer deinitialized
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Reported-by: Roman Mamedov <rm@romanrm.net>
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=208251
+Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
+Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+Signed-off-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
 ---
- .../net/ethernet/freescale/enetc/enetc_hw.h   |   3 +
- .../net/ethernet/freescale/enetc/enetc_pf.c   | 135 ++++++++++++++++++
- .../net/ethernet/freescale/enetc/enetc_pf.h   |   2 +
- 3 files changed, 140 insertions(+)
+Changes:
+  - Use correct line indentations (Thanks, Roman!)
+  - Use shorter commit reference in commit log
+---
+ drivers/net/wireless/ath/ath9k/hif_usb.c | 48 ++++++------------------
+ drivers/net/wireless/ath/ath9k/hif_usb.h |  5 ---
+ 2 files changed, 11 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-index 6314051bc6c1..e80c2c36dbe9 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-@@ -224,6 +224,9 @@ enum enetc_bdr_type {TX, RX};
- #define ENETC_PM0_MAXFRM	0x8014
- #define ENETC_SET_TX_MTU(val)	((val) << 16)
- #define ENETC_SET_MAXFRM(val)	((val) & 0xffff)
-+
-+#define ENETC_PM_IMDIO_BASE	0x8030
-+
- #define ENETC_PM0_IF_MODE	0x8300
- #define ENETC_PMO_IFM_RG	BIT(2)
- #define ENETC_PM0_IFM_RLP	(BIT(5) | BIT(11))
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index 824d211ec00f..79499a81c77b 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -841,6 +841,136 @@ static void enetc_of_put_phy(struct enetc_ndev_priv *priv)
- 		of_node_put(priv->phy_node);
+diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
+index 4ed21dad6a8e..6049d3766c64 100644
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -643,9 +643,9 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
+ 
+ static void ath9k_hif_usb_rx_cb(struct urb *urb)
+ {
+-	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
+-	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
+-	struct sk_buff *skb = rx_buf->skb;
++	struct sk_buff *skb = (struct sk_buff *) urb->context;
++	struct hif_device_usb *hif_dev =
++		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
+ 	int ret;
+ 
+ 	if (!skb)
+@@ -685,15 +685,14 @@ static void ath9k_hif_usb_rx_cb(struct urb *urb)
+ 	return;
+ free:
+ 	kfree_skb(skb);
+-	kfree(rx_buf);
  }
  
-+static int enetc_imdio_init(struct enetc_pf *pf, bool is_c45)
-+{
-+	struct device *dev = &pf->si->pdev->dev;
-+	struct enetc_mdio_priv *mdio_priv;
-+	struct phy_device *pcs;
-+	struct mii_bus *bus;
-+	int err;
-+
-+	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	bus->name = "Freescale ENETC internal MDIO Bus";
-+	bus->read = enetc_mdio_read;
-+	bus->write = enetc_mdio_write;
-+	bus->parent = dev;
-+	bus->phy_mask = ~0;
-+	mdio_priv = bus->priv;
-+	mdio_priv->hw = &pf->si->hw;
-+	mdio_priv->mdio_base = ENETC_PM_IMDIO_BASE;
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-imdio", dev_name(dev));
-+
-+	err = mdiobus_register(bus);
-+	if (err) {
-+		dev_err(dev, "cannot register internal MDIO bus (%d)\n", err);
-+		goto free_mdio_bus;
-+	}
-+
-+	pcs = get_phy_device(bus, 0, is_c45);
-+	if (IS_ERR(pcs)) {
-+		err = PTR_ERR(pcs);
-+		dev_err(dev, "cannot get internal PCS PHY (%d)\n", err);
-+		goto unregister_mdiobus;
-+	}
-+
-+	pf->imdio = bus;
-+	pf->pcs = pcs;
-+
-+	return 0;
-+
-+unregister_mdiobus:
-+	mdiobus_unregister(bus);
-+free_mdio_bus:
-+	devm_mdiobus_free(dev, bus);
-+	return err;
-+}
-+
-+static void enetc_imdio_remove(struct enetc_pf *pf)
-+{
-+	if (pf->pcs)
-+		put_device(&pf->pcs->mdio.dev);
-+	if (pf->imdio)
-+		mdiobus_unregister(pf->imdio);
-+}
-+
-+static void enetc_configure_sgmii(struct phy_device *pcs)
-+{
-+	/* SGMII spec requires tx_config_Reg[15:0] to be exactly 0x4001
-+	 * for the MAC PCS in order to acknowledge the AN.
-+	 */
-+	phy_write(pcs, MII_ADVERTISE, ADVERTISE_SGMII | ADVERTISE_LPACK);
-+
-+	phy_write(pcs, ENETC_PCS_IF_MODE,
-+		  ENETC_PCS_IF_MODE_SGMII_EN |
-+		  ENETC_PCS_IF_MODE_USE_SGMII_AN);
-+
-+	/* Adjust link timer for SGMII */
-+	phy_write(pcs, ENETC_PCS_LINK_TIMER1, ENETC_PCS_LINK_TIMER1_VAL);
-+	phy_write(pcs, ENETC_PCS_LINK_TIMER2, ENETC_PCS_LINK_TIMER2_VAL);
-+
-+	phy_write(pcs, MII_BMCR, BMCR_ANRESTART | BMCR_ANENABLE);
-+}
-+
-+static void enetc_configure_2500basex(struct phy_device *pcs)
-+{
-+	phy_write(pcs, ENETC_PCS_IF_MODE,
-+		  ENETC_PCS_IF_MODE_SGMII_EN |
-+		  ENETC_PCS_IF_MODE_SGMII_SPEED(ENETC_PCS_SPEED_2500));
-+
-+	phy_write(pcs, MII_BMCR, BMCR_SPEED1000 | BMCR_FULLDPLX | BMCR_RESET);
-+}
-+
-+static void enetc_configure_usxgmii(struct phy_device *pcs)
-+{
-+	/* Configure device ability for the USXGMII Replicator */
-+	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_ADVERTISE,
-+		      ADVERTISE_SGMII |
-+		      ADVERTISE_LPACK |
-+		      USXGMII_ADVERTISE_FDX);
-+
-+	/* Restart PCS AN */
-+	phy_write_mmd(pcs, MDIO_MMD_VEND2, MII_BMCR,
-+		      USXGMII_BMCR_RESET |
-+		      USXGMII_BMCR_AN_EN |
-+		      USXGMII_BMCR_RST_AN);
-+}
-+
-+static int enetc_configure_serdes(struct enetc_ndev_priv *priv)
-+{
-+	bool is_c45 = priv->if_mode == PHY_INTERFACE_MODE_USXGMII;
-+	struct enetc_pf *pf = enetc_si_priv(priv->si);
-+	int err;
-+
-+	if (priv->if_mode != PHY_INTERFACE_MODE_SGMII &&
-+	    priv->if_mode != PHY_INTERFACE_MODE_2500BASEX &&
-+	    priv->if_mode != PHY_INTERFACE_MODE_USXGMII)
-+		return 0;
-+
-+	err = enetc_imdio_init(pf, is_c45);
-+	if (err)
-+		return err;
-+
-+	switch (priv->if_mode) {
-+	case PHY_INTERFACE_MODE_SGMII:
-+		enetc_configure_sgmii(pf->pcs);
-+		break;
-+	case PHY_INTERFACE_MODE_2500BASEX:
-+		enetc_configure_2500basex(pf->pcs);
-+		break;
-+	case PHY_INTERFACE_MODE_USXGMII:
-+		enetc_configure_usxgmii(pf->pcs);
-+		break;
-+	default:
-+		dev_err(&pf->si->pdev->dev, "Unsupported link mode %s\n",
-+			phy_modes(priv->if_mode));
-+	}
-+
-+	return 0;
-+}
-+
- static int enetc_pf_probe(struct pci_dev *pdev,
- 			  const struct pci_device_id *ent)
+ static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
  {
-@@ -905,6 +1035,10 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	if (err)
- 		dev_warn(&pdev->dev, "Fallback to PHY-less operation\n");
+-	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
+-	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
+-	struct sk_buff *skb = rx_buf->skb;
++	struct sk_buff *skb = (struct sk_buff *) urb->context;
+ 	struct sk_buff *nskb;
++	struct hif_device_usb *hif_dev =
++		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
+ 	int ret;
  
-+	err = enetc_configure_serdes(priv);
-+	if (err)
-+		dev_warn(&pdev->dev, "Attempted SerDes config but failed\n");
-+
- 	err = register_netdev(ndev);
- 	if (err)
- 		goto err_reg_netdev;
-@@ -940,6 +1074,7 @@ static void enetc_pf_remove(struct pci_dev *pdev)
- 	priv = netdev_priv(si->ndev);
- 	unregister_netdev(si->ndev);
+ 	if (!skb)
+@@ -751,7 +750,6 @@ static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
+ 	return;
+ free:
+ 	kfree_skb(skb);
+-	kfree(rx_buf);
+ 	urb->context = NULL;
+ }
  
-+	enetc_imdio_remove(pf);
- 	enetc_mdio_remove(pf);
- 	enetc_of_put_phy(priv);
+@@ -797,7 +795,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(struct hif_device_usb *hif_dev)
+ 	init_usb_anchor(&hif_dev->mgmt_submitted);
  
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-index 59e65a6f6c3e..2cb922b59f46 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-@@ -44,6 +44,8 @@ struct enetc_pf {
- 	DECLARE_BITMAP(active_vlans, VLAN_N_VID);
+ 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
+-		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
++		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
+ 		if (!tx_buf)
+ 			goto err;
  
- 	struct mii_bus *mdio; /* saved for cleanup */
-+	struct mii_bus *imdio;
-+	struct phy_device *pcs;
+@@ -834,9 +832,8 @@ static void ath9k_hif_usb_dealloc_rx_urbs(struct hif_device_usb *hif_dev)
+ 
+ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
+ {
+-	struct rx_buf *rx_buf = NULL;
+-	struct sk_buff *skb = NULL;
+ 	struct urb *urb = NULL;
++	struct sk_buff *skb = NULL;
+ 	int i, ret;
+ 
+ 	init_usb_anchor(&hif_dev->rx_submitted);
+@@ -844,12 +841,6 @@ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
+ 
+ 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
+ 
+-		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
+-		if (!rx_buf) {
+-			ret = -ENOMEM;
+-			goto err_rxb;
+-		}
+-
+ 		/* Allocate URB */
+ 		urb = usb_alloc_urb(0, GFP_KERNEL);
+ 		if (urb == NULL) {
+@@ -864,14 +855,11 @@ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
+ 			goto err_skb;
+ 		}
+ 
+-		rx_buf->hif_dev = hif_dev;
+-		rx_buf->skb = skb;
+-
+ 		usb_fill_bulk_urb(urb, hif_dev->udev,
+ 				  usb_rcvbulkpipe(hif_dev->udev,
+ 						  USB_WLAN_RX_PIPE),
+ 				  skb->data, MAX_RX_BUF_SIZE,
+-				  ath9k_hif_usb_rx_cb, rx_buf);
++				  ath9k_hif_usb_rx_cb, skb);
+ 
+ 		/* Anchor URB */
+ 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
+@@ -897,8 +885,6 @@ static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
+ err_skb:
+ 	usb_free_urb(urb);
+ err_urb:
+-	kfree(rx_buf);
+-err_rxb:
+ 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
+ 	return ret;
+ }
+@@ -910,21 +896,14 @@ static void ath9k_hif_usb_dealloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+ 
+ static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+ {
+-	struct rx_buf *rx_buf = NULL;
+-	struct sk_buff *skb = NULL;
+ 	struct urb *urb = NULL;
++	struct sk_buff *skb = NULL;
+ 	int i, ret;
+ 
+ 	init_usb_anchor(&hif_dev->reg_in_submitted);
+ 
+ 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
+ 
+-		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
+-		if (!rx_buf) {
+-			ret = -ENOMEM;
+-			goto err_rxb;
+-		}
+-
+ 		/* Allocate URB */
+ 		urb = usb_alloc_urb(0, GFP_KERNEL);
+ 		if (urb == NULL) {
+@@ -939,14 +918,11 @@ static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+ 			goto err_skb;
+ 		}
+ 
+-		rx_buf->hif_dev = hif_dev;
+-		rx_buf->skb = skb;
+-
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				  usb_rcvintpipe(hif_dev->udev,
+ 						  USB_REG_IN_PIPE),
+ 				  skb->data, MAX_REG_IN_BUF_SIZE,
+-				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
++				  ath9k_hif_usb_reg_in_cb, skb, 1);
+ 
+ 		/* Anchor URB */
+ 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
+@@ -972,8 +948,6 @@ static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+ err_skb:
+ 	usb_free_urb(urb);
+ err_urb:
+-	kfree(rx_buf);
+-err_rxb:
+ 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
+ 	return ret;
+ }
+diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/ath9k/hif_usb.h
+index 5985aa15ca93..a94e7e1c86e9 100644
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.h
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
+@@ -86,11 +86,6 @@ struct tx_buf {
+ 	struct list_head list;
  };
  
- int enetc_msg_psi_init(struct enetc_pf *pf);
--- 
-2.20.1
-
+-struct rx_buf {
+-	struct sk_buff *skb;
+-	struct hif_device_usb *hif_dev;
+-};
+-
+ #define HIF_USB_TX_STOP  BIT(0)
+ #define HIF_USB_TX_FLUSH BIT(1)
+ 
+--
+2.27.0
