@@ -2,165 +2,112 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F024CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED648C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D12682073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hxZkYjsv"
+	by mail.kernel.org (Postfix) with ESMTP id D97872073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgGAKLO (ORCPT
+        id S1729486AbgGAKOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:11:14 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33469 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729358AbgGAKLN (ORCPT
+        Wed, 1 Jul 2020 06:14:03 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:39047 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbgGAKOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:11:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593598273; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=amiqoJGPjX9RNHOLVHTe5Q2mOjhh5iGIl3d/MtXJOIs=;
- b=hxZkYjsvcv0XKZNZlVGTt7XYWZKobYzl9037lBe50uq6cPLFGiPLLcJ3JHBBFAYrHwxWhApA
- OUpDwFoLCTYV6zUdFyx1POC43JXsD3fYf2AEwjXc2cBntmb5pxoLcXlvrzUyKZoRGCLGwxEK
- c22YieittPBkxLNT1uqrNV4Wgj8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5efc6139117610c7ff405ea9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 10:11:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2A470C433AD; Wed,  1 Jul 2020 10:11:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6F35C433C8;
-        Wed,  1 Jul 2020 10:11:03 +0000 (UTC)
+        Wed, 1 Jul 2020 06:14:02 -0400
+Received: from mail-lj1-f170.google.com ([209.85.208.170]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MWz4j-1jJm2z2fWb-00XK1R; Wed, 01 Jul 2020 12:14:00 +0200
+Received: by mail-lj1-f170.google.com with SMTP id d17so11543112ljl.3;
+        Wed, 01 Jul 2020 03:14:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532kA/9uvjHIUKkMqNuGA5XKB4OSc01DncNj6XqWIngARR62GPiU
+        yOkjpAp0oNyrYwHMyPcZyfNPgBT9ZgPaXgTnJ2k=
+X-Google-Smtp-Source: ABdhPJxvxG0YKdQRIZLf3EEmE6+prGIuqXSwFxFbLTEkpoK2wHJFxihZY6FoRRGdIX48u3tOAqejPZ41dhROmiVpNQU=
+X-Received: by 2002:a2e:7f06:: with SMTP id a6mr2089791ljd.446.1593598440088;
+ Wed, 01 Jul 2020 03:14:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Jul 2020 15:41:03 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
-        Shawn Guo <shawn.guo@linaro.org>, Takashi Iwai <tiwai@suse.de>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v9 0/7] iommu/arm-smmu: Enable split pagetable support
-In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
-Message-ID: <bdc2a4348230f430138d320e49e188c0@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
+ <1593410042-10598-3-git-send-email-Anson.Huang@nxp.com> <CAK8P3a2ZL6_rV=2brNz=UDdji3mddF+1Nb6Ew+=n4j0-fNrCug@mail.gmail.com>
+ <DB3PR0402MB3916BA91E0F44EA5DAD6BF26F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a3igMrRNa1oR=d=9A-YNAmb+LXNRbwBk9zuJZq5tfvr9Q@mail.gmail.com>
+ <DB3PR0402MB39166254A6F287DC0A8216F1F56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a3FueW3JSLO4RV4WV3C-UP_5y5UA1WGs+gaQGaPaafaUA@mail.gmail.com>
+ <DB3PR0402MB3916F746C792CB2BC876715BF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a1E_UecNq=7rvceQoXdFkmnBFOyUtxrpJ1bF6cLWOtNqQ@mail.gmail.com> <DB3PR0402MB39161C372E869A670D115FBBF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39161C372E869A670D115FBBF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 1 Jul 2020 12:13:44 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0YKsiKx66ESwvVmsubv=x=UB8JafisCY0Ct8VBMi-JhQ@mail.gmail.com>
+Message-ID: <CAK8P3a0YKsiKx66ESwvVmsubv=x=UB8JafisCY0Ct8VBMi-JhQ@mail.gmail.com>
+Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zAbsWGYUYSjUhDcXivmTqZ3C0+A8yahpkjUtZi8A1inf4RtBPZ9
+ Ny86rfoQjBRRZ4GqI5RqnDLxmWFce8ZfiBQ0KzC57vBlXk6Xz/x8amZAo5r+QKFyXbQeu9K
+ t0zpF3Iq/33XnrT7yCFMLNATdMEaVUQJ52c2ctDgB0Q8dwhEet4D9Al5JGAyayX/s6uYd/+
+ D2diBSzGf3FZ9DWXIgC0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wP/f4dl8JjM=:hptme65rAWGJzgsV9COIjS
+ Ki8v5CPeBc+Dog1BdJnPh6/CYK9LmJ7obbjpxReq8/e69JtKOuyaIKBpRrxqKSXbmR3hsOaIc
+ K2oOcuNWS7nK/jo1Vm1kzM7aMBD9uIL75Dia3pmoPPAx29CMboendorHguBcIGFvcfxbEp+8P
+ z0te78arOZf3wjfqMNVEKdpKqUh7ZA10gxRHrS0Xu+xuWUlmrqAYTi2H8T6SBwl0QohzAn9kJ
+ Q6wpmITUduLFAnmZY9+MbG+pmP7vtR8qMHhZjzRykptrooNqEu6za5Z1wE9vKDPHp+kcM9q12
+ cBRWBgWiOkMspBAAt/OEMEyDEcKXGvY9zZpJ8ZooTddGOd3S5HIGsH60qeFqtuu6dpUFzJ5HU
+ HoniL0S2W+L7FCVg79wuaplUD1iSByS9zjbhPuarH6w+BDi70IfYAPUNWNYYw2cx56D95jCA+
+ Acje9/utIC05xXdTIYyh6mkipZjVEQYi1paUI/yuQj4UFF5g28LW1Pc50sKuvEC+/K7+HwUji
+ bmjXBJWE3n+F9XB9P08jLZlDp5EYU4Vwpgo2bul2ZXGT7jKjJhgMwQvWWsTpPUXN1752RDvFS
+ 1r3fL/zqfml/99+gJFC0nNk65b/EW6TbuEFFdDj/AOXVx711IN5+CGHaAegYZVnptMtu8sufq
+ MLpNnAsngDiTGPofn7vDW6uwrvzjMb6SQeqDXMtD7JfaTdyxuTAszm665N4d6ZAyXoEp9npQn
+ RCTmlkn7Ippgxvw60N4scClRWBFKdW8l9StjgXB/E2JuJbiYFnS4V1LguKJnnXgc75sUELt9J
+ 0sGkMtraqvci9Y5+gWVxChWerO3LrLl3PGEZwzKTF+WqiohWQA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will, Robin,
+On Wed, Jul 1, 2020 at 12:02 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for
+> > module build
+> > On Wed, Jul 1, 2020 at 11:27 AM Anson Huang <anson.huang@nxp.com>
+> > wrote:
+> > > > Subject: Re: [PATCH V3 02/10] init.h: Fix the __setup_param() macro
+> > > > for module build
+> > Why not move this all to a separate file then and only build it when
+> > CONFIG_CLK_IMX=y?
+> > It seems that you don't need the imx_keep_uart_clocks_param() if the clk
+> > driver is loaded as a module, but then you also don't need the
+> > imx_clk_disable_uart() and imx_register_uart_clocks() functions or the
+> > associated variables.
+>
+> If so, how about just adding "#ifndef MODULE" check for this part of code? I think
+> it should be easier/better than adding a file and build it conditionally?
 
-On 2020-06-27 01:30, Jordan Crouse wrote:
-> Another iteration of the split-pagetable support for arm-smmu and the 
-> Adreno GPU
-> SMMU. After email discussions [1] we opted to make a arm-smmu 
-> implementation for
-> specifically for the Adreno GPU and use that to enable split pagetable 
-> support
-> and later other implementation specific bits that we need.
-> 
-> On the hardware side this is very close to the same code from before 
-> [2] only
-> the TTBR1 quirk is turned on by the implementation and not a domain 
-> attribute.
-> In drm/msm we use the returned size of the aperture as a clue to let us 
-> know
-> which virtual address space we should use for global memory objects.
-> 
-> There are two open items that you should be aware of. First, in the
-> implementation specific code we have to check the compatible string of 
-> the
-> device so that we only enable TTBR1 for the GPU (SID 0) and not the GMU 
-> (SID 4).
-> I went back and forth trying to decide if I wanted to use the 
-> compatible string
-> or the SID as the filter and settled on the compatible string but I 
-> could be
-> talked out of it.
-> 
-> The other open item is that in drm/msm the hardware only uses 49 bits 
-> of the
-> address space but arm-smmu expects the address to be sign extended all 
-> the way
-> to 64 bits. This isn't a problem normally unless you look at the 
-> hardware
-> registers that contain a IOVA and then the upper bits will be zero. I 
-> opted to
-> restrict the internal drm/msm IOVA range to only 49 bits and then sign 
-> extend
-> right before calling iommu_map / iommu_unmap. This is a bit wonky but I 
-> thought
-> that matching the hardware would be less confusing when debugging a 
-> hang.
-> 
-> v9: Fix bot-detected merge conflict
-> v7: Add attached device to smmu_domain to pass to implementation 
-> specific
-> functions
-> 
-> [1] 
-> https://lists.linuxfoundation.org/pipermail/iommu/2020-May/044537.html
-> [2] https://patchwork.kernel.org/patch/11482591/
-> 
-> 
-> Jordan Crouse (7):
->   iommu/arm-smmu: Pass io-pgtable config to implementation specific
->     function
->   iommu/arm-smmu: Add support for split pagetables
->   dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
->   iommu/arm-smmu: Add a pointer to the attached device to smmu_domain
->   iommu/arm-smmu: Add implementation for the adreno GPU SMMU
->   drm/msm: Set the global virtual address range from the IOMMU domain
->   arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
-> 
->  .../devicetree/bindings/iommu/arm,smmu.yaml   |  4 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 13 +++++-
->  drivers/gpu/drm/msm/msm_iommu.c               |  7 +++
->  drivers/iommu/arm-smmu-impl.c                 |  6 ++-
->  drivers/iommu/arm-smmu-qcom.c                 | 45 ++++++++++++++++++-
->  drivers/iommu/arm-smmu.c                      | 38 +++++++++++-----
->  drivers/iommu/arm-smmu.h                      | 30 ++++++++++---
->  8 files changed, 120 insertions(+), 25 deletions(-)
+The #ifdef is clearly a simpler change,  but I think a separate file is
+a cleaner way to do it. Up to you (unless one of the imx or clk maintainers
+has a preference -- I'm only helping out here, not making decisions).
 
-Any chance reviewing this?
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+      Arnd
