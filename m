@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB232C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD54207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909E7207F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Gx76JBMT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NHxw0mcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgGANZp (ORCPT
+        id S1730985AbgGANZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:25:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38500 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729429AbgGANZn (ORCPT
+        Wed, 1 Jul 2020 09:25:49 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23944 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730954AbgGANZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:25:43 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061DOox8030327;
-        Wed, 1 Jul 2020 15:25:29 +0200
+        Wed, 1 Jul 2020 09:25:46 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061DOnul002514;
+        Wed, 1 Jul 2020 15:25:31 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=7+MnleNJkiEaO/P1tUZdrf9rpTSD5jzSpmCxlBfmTnI=;
- b=Gx76JBMTsqptjwZwc5fsVRS0+t666vCfCYg5/odc3DaN/jNfB6Dyneowd+uoGNjihGSv
- 1dhzU/PKegvYhV/y0UJuxvYCtxk0LO3K5SIoX85SVIoZ2tbISeFCzoX+t2kELxYzFnIl
- 4nHCucn7rY9Inwo4/Q0D6oPLu/DKl+JtLtAUtihTakr8AhVsEhqq/Q6YwVJkUUoCLkDq
- NsA0DNRFku0WjsWUHyfjTWljjoammFaCSTeqtWRMLXor5ZZSyYR1fQvmr1Qqfcmlrw22
- cIqxDjrzwj+8Heis3IAxISeoUOmKmvArYUYPqnMvTX/ehMNme3mov6v/cxrwFL693elK zQ== 
+ bh=Qtjkenp1luntosfDrmrcRmxaJE1CtXuduIjGsuWvcRw=;
+ b=NHxw0mcWRvblCnPSjL29QFflxIzogQjOY3CRadoxfCsSaugUO13kTwuiWRqJZ+YmqbNT
+ PTB0e5wviT5x/IZ7sbdffYV3n8w3UsQ0WQKY84Snikji6R3yGdDhKPCXmJxTRaaqok1W
+ v+Wv9rwG0A29AjksOePPVIHqQRcRwqdOkCwVXspu8xPfr0Dj2WIo2PCJVFnXwbZsqFkj
+ gQ0z+8C248zKH+K/FijLWz8mHd2uHhkBMX2CEl38pHer6Cu+hm5VAeQaHaWWR3fZ/QE5
+ iA7nwOuldeU7/rYLVfStWxAsPwJwlMu1Dd7a+LxPQSXy9SbpfphDcFAHFmchRrgfRS/Y iA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31ww0ga8ka-1
+        by mx07-00178001.pphosted.com with ESMTP id 31wuvwa835-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 15:25:29 +0200
+        Wed, 01 Jul 2020 15:25:31 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0F0F5100034;
-        Wed,  1 Jul 2020 15:25:29 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8517C10002A;
+        Wed,  1 Jul 2020 15:25:31 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F10072B6DD9;
-        Wed,  1 Jul 2020 15:25:28 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:25:28
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 76E682B6DD8;
+        Wed,  1 Jul 2020 15:25:31 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:25:30
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
@@ -57,15 +57,15 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <stefano.stabellini@xilinx.com>,
         <tomase@xilinx.com>, <devicetree@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 1/5] dt-bindings: bus: Add firewall bindings
-Date:   Wed, 1 Jul 2020 15:25:19 +0200
-Message-ID: <20200701132523.32533-2-benjamin.gaignard@st.com>
+Subject: [PATCH v4 3/5] dt-bindings: bus: Add STM32 ETZPC firewall controller
+Date:   Wed, 1 Jul 2020 15:25:21 +0200
+Message-ID: <20200701132523.32533-4-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200701132523.32533-1-benjamin.gaignard@st.com>
 References: <20200701132523.32533-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
+X-Originating-IP: [10.75.127.48]
 X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
@@ -75,83 +75,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add schemas for firewall consumer and provider.
+Document STM32 ETZPC firewall controller bindings
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../bindings/bus/stm32/firewall-consumer.yaml      | 36 ++++++++++++++++++++++
- .../bindings/bus/stm32/firewall-provider.yaml      | 18 +++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+ .../bindings/bus/stm32/st,stm32-etzpc.yaml         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
 
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+diff --git a/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
 new file mode 100644
-index 000000000000..d3d76f99b38d
+index 000000000000..d92865fda40c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
++$id: http://devicetree.org/schemas/bus/stm32/st,stm32-etzpc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Common Bus Firewall consumer binding
-+
-+description: |
-+  Firewall properties provide the possible firewall bus controller
-+  configurations for a device.
-+  Bus firewall controllers are typically used to control if a hardware
-+  block can perform read or write operations on bus.
-+  The contents of the firewall bus configuration properties are defined by
-+  the binding for the individual firewall controller device.
-+
-+  The first configuration 'firewall-0' or the one named 'default' is
-+  applied before probing the device itself.
++title: STM32 Extended TrustZone Protection controller
 +
 +maintainers:
 +  - Benjamin Gaignard <benjamin.gaignard@st.com>
 +
-+# always select the core schema
-+select: true
++description: STMicroelectronics's STM32 firewall bus controller implementation
++
++allOf:
++  - $ref: "firewall-provider.yaml#"
++  - $ref: /schemas/simple-bus.yaml#
 +
 +properties:
-+  firewall-0: true
++  compatible:
++    contains:
++      enum:
++        - st,stm32-etzpc-bus
 +
-+  firewall-names: true
++  reg:
++   maxItems: 1
 +
-+patternProperties:
-+  "firewall-[0-9]":
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+
-+dependencies:
-+  firewall-names: [ firewall-0 ]
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-new file mode 100644
-index 000000000000..299824c620ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-provider.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall provider binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+properties:
 +  '#firewall-cells':
-+     $ref: /schemas/types.yaml#/definitions/uint32
-+     description: Number of cells in a bus firewall specifier
++    const: 2
 +
 +required:
++  - compatible
++  - reg
 +  - '#firewall-cells'
++
++examples:
++  - |
++    soc@5c007000 {
++      compatible = "st,stm32-etzpc-bus", "simple-bus";
++      reg = <0x5c007000 0x400>;
++      #firewall-cells = <2>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++    };
++
++...
 -- 
 2.15.0
 
