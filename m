@@ -2,116 +2,95 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF082C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A33EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7C120748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593628796;
-	bh=BzgN9CdkNj8KsNJpO6Dp3dgk25B6SZxEFrbbFo9+dlk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LOqCTLkldKxA1ff7thxhKQWm89vasdLeUmyeZrd47tSAFJMDTOUyb60hs3/YN/lth
-	 7qxBO6jdHcqdA+r5Ct90gI+GT8jEZokwwtuczMvueOy4Scv8CYUX4CPD5dG6K+uGUM
-	 HxFj17QnOitYN4hgr0MAOZ9I1ewrs6j3EUrQmWr0=
+	by mail.kernel.org (Postfix) with ESMTP id 851D42085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgGASjz (ORCPT
+        id S1726364AbgGASlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgGASjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:39:54 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A36A0208D5
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 18:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593628793;
-        bh=BzgN9CdkNj8KsNJpO6Dp3dgk25B6SZxEFrbbFo9+dlk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EekpatgCfXAY5PVIXJOXKjXre1Wyt5kLnk69xj79naKsliUjFBna4Am1jKxDJ1RUB
-         YwgGo3BT2S3Rx2ybuQVvOdWWxVpkyGDwgeTCGh2QZeVh0VyaK5E3Db8ddZOCtW/e4V
-         jqfSmiN8gcKG4aikDeyjscuKc7uS8UTF14Y94hyM=
-Received: by mail-wr1-f53.google.com with SMTP id j4so22725448wrp.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 11:39:53 -0700 (PDT)
-X-Gm-Message-State: AOAM533QH2hxR//37kO+f8WPrD3lBPK78r+0FcAW8ozFRxfPq1H++aF+
-        GCVXt2lM/TdmiyQ80atWbxs1W6Q5X4vKGpeVvJIQJA==
-X-Google-Smtp-Source: ABdhPJxL9r2ocTMGAnClzir8rROoW17dgBhZ2sKyXqCKyH9ofutXZA7VisI5aNG7X5iBtvuS5HHHhEDpobjJAmSLQgA=
-X-Received: by 2002:a5d:458a:: with SMTP id p10mr27429972wrq.184.1593628792155;
- Wed, 01 Jul 2020 11:39:52 -0700 (PDT)
+        Wed, 1 Jul 2020 14:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgGASln (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:41:43 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFADC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 11:41:43 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqhfn-003Vzq-Dz; Wed, 01 Jul 2020 18:41:31 +0000
+Date:   Wed, 1 Jul 2020 19:41:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: objtool clac/stac handling change..
+Message-ID: <20200701184131.GI2786714@ZenIV.linux.org.uk>
+References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1593191971.git.luto@kernel.org> <947880c41ade688ff4836f665d0c9fcaa9bd1201.1593191971.git.luto@kernel.org>
- <CAMzpN2iW4XD1Gsgq0ZeeH2eewLO+9Mk6eyk0LnbF-kP3v=smLg@mail.gmail.com>
-In-Reply-To: <CAMzpN2iW4XD1Gsgq0ZeeH2eewLO+9Mk6eyk0LnbF-kP3v=smLg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 1 Jul 2020 11:39:40 -0700
-X-Gmail-Original-Message-ID: <CALCETrVy-Q4K04wmEPe5VeU=at2BL4b-bSFkoSU-BPbTaTB2Yg@mail.gmail.com>
-Message-ID: <CALCETrVy-Q4K04wmEPe5VeU=at2BL4b-bSFkoSU-BPbTaTB2Yg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] x86/entry/64/compat: Fix Xen PV SYSENTER frame setup
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 8:42 AM Brian Gerst <brgerst@gmail.com> wrote:
->
-> On Fri, Jun 26, 2020 at 1:30 PM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > The SYSENTER frame setup was nonsense.  It worked by accident
-> > because the normal code into which the Xen asm jumped
-> > (entry_SYSENTER_32/compat) threw away SP without touching the stack.
-> > entry_SYSENTER_compat was recently modified such that it relied on
-> > having a valid stack pointer, so now the Xen asm needs to invoke it
-> > with a valid stack.
-> >
-> > Fix it up like SYSCALL: use the Xen-provided frame and skip the bare
-> > metal prologue.
-> >
-> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Cc: Juergen Gross <jgross@suse.com>
-> > Cc: Stefano Stabellini <sstabellini@kernel.org>
-> > Cc: xen-devel@lists.xenproject.org
-> > Fixes: 1c3e5d3f60e2 ("x86/entry: Make entry_64_compat.S objtool clean")
-> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> > ---
-> >  arch/x86/entry/entry_64_compat.S |  1 +
-> >  arch/x86/xen/xen-asm_64.S        | 20 ++++++++++++++++----
-> >  2 files changed, 17 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/entry/entry_64_compat.S b/arch/x86/entry/entry_64_compat.S
-> > index 7b9d8150f652..381a6de7de9c 100644
-> > --- a/arch/x86/entry/entry_64_compat.S
-> > +++ b/arch/x86/entry/entry_64_compat.S
-> > @@ -79,6 +79,7 @@ SYM_CODE_START(entry_SYSENTER_compat)
-> >         pushfq                          /* pt_regs->flags (except IF = 0) */
-> >         pushq   $__USER32_CS            /* pt_regs->cs */
-> >         pushq   $0                      /* pt_regs->ip = 0 (placeholder) */
-> > +SYM_INNER_LABEL(entry_SYSENTER_compat_after_hwframe, SYM_L_GLOBAL)
->
-> This skips over the section that truncates the syscall number to
-> 32-bits.  The comments present some doubt that it is actually
-> necessary, but the Xen path shouldn't differ from native.  That code
-> should be moved after this new label.
+On Wed, Jul 01, 2020 at 11:22:01AM -0700, Linus Torvalds wrote:
+> Josh / PeterZ,
+>  it turns out that clang seems to now have fixed the last known
+> nagging details with "asm goto" with outputs, so I'm looking at
+> actually trying to merge the support for that in the kernel.
+> 
+> The main annoyance isn't actually using "asm goto" at all, the main
+> annoyance is just that it will all have to be conditional on whether
+> the compiler supports it or not. We have the config option for that
+> already, but it will just end up with two copies of the code depending
+> on that option.
+> 
+> It's not a huge deal: the recent cleanups wrt the x86 uaccess code
+> have made the code _much_ more straightforward and legible, and I'm
+> not so worried about it all.
+> 
+> Except that when I looked at this, I realized that I really had picked
+> the wrong model for how exceptions are handled wrt stac/clac. In
+> particular user access exceptions return with stac set, so we end up
+> having a code pattern where the error case will also have to do the
+> user_access_end() to finish the STAC region.
+> 
+> Adding a user_access_end() to the user exception fault handler is trivial.
+> 
+> But the thing I'm asking you for is how nasty it would be to change
+> objtool to have those rules?
+> 
+> IOW, right now we have
+> 
+>     if (!user_acces_begin(...))
+>            goto efault;
+>     unsafe_get/put_user(ptr, val, label);
+>     user_access_end();
+>     return 0;
+> 
+> label:
+>      user_access_end();
+> efaulr:
+>      return -EFAULT;
+> 
+> and I'd like to make the "label" case just go to "efault", with
+> objtool knowing that the exception handling already did the
+> user_access_end().
+> 
+> That would end up cleaning up the flow for a number of cases.
+> 
+> Nasty? Trivial?
 
-Whoops.  I thought I caught that myself, but apparently not.  I'll fix it.
-
->
-> --
-> Brian Gerst
+Rather nasty for ppc; they have separate user_read_access_end() and
+user_write_access_end().
