@@ -2,101 +2,129 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6130C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD5320722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A978F20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le6GV5f/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UfOtJ+xS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbgGAL0G (ORCPT
+        id S1730269AbgGAL21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730159AbgGAL0D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:26:03 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851A0C061755;
-        Wed,  1 Jul 2020 04:26:02 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n26so10233723ejx.0;
-        Wed, 01 Jul 2020 04:26:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lZj26CwH+3KxgC+hP0OazVEBLvLFOKJxYzi5I45O0dE=;
-        b=le6GV5f/dGAjJq8wQz68W89CxKq+Q499yJDPo1FZ34phrSQRPK38GppEy7phsx2bGc
-         rHa3s3sNxHuIqvMyxEIn7rBiHjCYnqMEElkXl5Q435p8Qu8jFWEh4clqHHstOyw/4T4u
-         fX9xBpxMuTRIp9wGoV5hmtQ7feG3BLYChxDkr2YrIpZb7FvYVNejZEQDXJXXtO+InpL9
-         ve63FzYwHFg5b6FvyVflElf/sD5c0WrUC1p88FjvtE4gCW50lupvFVoCDBzUfMOaZnEK
-         k/U766DpT4UBHFsNfVIMA6yixTqqxdz+/CsyAw0rHkf1RvNIWj+VlBY3KALoMtnpxZAg
-         1WzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lZj26CwH+3KxgC+hP0OazVEBLvLFOKJxYzi5I45O0dE=;
-        b=SOW9Vb7M4Ue7H8FB7JxXCHVEzlRSwcMdipkGTMpRUtoE+hOrIewNEPGeN0IADChNka
-         orpxdEkRCUHhR/GnEafLPzeZ//fTL6DurRfM3g+WojhELvtYhyvnQj3f8QkAV3fXZh3A
-         TVpY7cueluc+iOk+bs07sw0S1gccJ1EAXd3e9LWMZLZA7wN/RTyiQFHRLxN1A3TTE7qK
-         NMkmwO6tz+r8CQFbMm0ns2LCSpxVvxa+g91aKQKV+aTGivTaiR6Jf/zNHHl+M1ToQ97A
-         dAQfPywKM122oy+Zkc9Ke9pvtj4IYjHfHLPjN7mTyo7zoW0WVtY3rQh3t2Pcv4E/3ikN
-         4vMw==
-X-Gm-Message-State: AOAM533N1jW6mQ7krswqWN9n36RvgBbEBSH+ggq7+y3s1K5nrFjjeGZd
-        0fGUmsjanfuqutqkbDvPyhQ=
-X-Google-Smtp-Source: ABdhPJzyUDA2eZqbagHduFxDpj4PTq6ecxrv60hEWjOpDLWCm4e25kYYhpQDiE4dzu7g49qScmSbEw==
-X-Received: by 2002:a17:906:774d:: with SMTP id o13mr17128257ejn.373.1593602761308;
-        Wed, 01 Jul 2020 04:26:01 -0700 (PDT)
-Received: from laptop.fritz.box ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id e3sm6290442edm.14.2020.07.01.04.26.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 04:26:00 -0700 (PDT)
-From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
-        <ckoenig.leichtzumerken@gmail.com>
-X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-To:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Add myself as DMA-buf maintainer
-Date:   Wed,  1 Jul 2020 13:25:59 +0200
-Message-Id: <20200701112559.22669-1-christian.koenig@amd.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 Jul 2020 07:28:27 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:28023 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730159AbgGAL20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:28:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593602905; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ELbkVNkvv2QKPq9yfmUAk6/gAsnRwgGG4Ne3CuTu8y4=; b=UfOtJ+xSTEc5rjxZD6eKZyKQhO27bLM9HLyFmWh74POcXwiLcFCoVx5YlaHAnN2sQja51YLs
+ X7ljbHpL7hdeT0zscrnf2cEuCrLeE+p/eL1RRdECFKBa3FROx2/a1OeO8uxTspdLDIejumox
+ FuKT5+Xvytqck1awHsokWOJcuoM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
+ 5efc73560206ad41d14c5669 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:28:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 10C4CC433CB; Wed,  1 Jul 2020 11:28:22 +0000 (UTC)
+Received: from [10.50.36.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E245C433C6;
+        Wed,  1 Jul 2020 11:28:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E245C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v6 0/6] DVFS for IO devices on sdm845 and sc7180
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
+        robdclark@chromium.org, viresh.kumar@linaro.org, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <20200617221546.GC4525@google.com>
+ <4f3d4c91-2a01-8ef5-1ad0-73ed354f930a@codeaurora.org>
+ <9bb7fbb6-6309-3f30-dd4f-2ee3d187c074@linaro.org>
+ <3ec9bc56-3e31-64fe-320a-2dc153a81f98@codeaurora.org>
+ <d715708b-db7a-efb7-5861-aa5bb8dfcd86@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <9bcf3419-d394-268e-c2af-c7b71574ab8e@codeaurora.org>
+Date:   Wed, 1 Jul 2020 16:58:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <d715708b-db7a-efb7-5861-aa5bb8dfcd86@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As discussed on the list.
+Hey Stan,
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+>>
+>> Hey Stan,
+>>   
+>>> On 6/18/20 7:47 AM, Rajendra Nayak wrote:
+>>>> Hey Matthias, thanks for summarizing this.
+>>>>
+>>>> On 6/18/2020 3:45 AM, Matthias Kaehlcke wrote:
+>>>>> What is the plan for landing these, it seems not all must/should
+>>>>> go through the QCOM tree.
+>>>>>
+>>>>> My guesses:
+>>>>>
+>>>>> tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+>>>>> spi: spi-geni-qcom: Use OPP API to set clk/perf state
+>>>>>      QCOM tree due to shared dependency on change in
+>>>>> include/linux/qcom-geni-se.h
+>>>>
+>>>> That's correct, Bjorn/Andy, can these be pulled in now for 5.9?
+>>>> They have acks from Greg for serial and Mark for the spi patch.
+>>>>   
+>>>>> drm/msm/dpu: Use OPP API to set clk/perf state
+>>>>> drm/msm: dsi: Use OPP API to set clk/perf state
+>>>>>      drm/msm tree
+>>>>
+>>>> Correct, the dsi patch is still not reviewed by Rob, so once that's
+>>>> done,
+>>>> I am guessing Rob would pull both of these.
+>>>>
+>>>>>
+>>>>> media: venus: core: Add support for opp tables/perf voting
+>>>>>      venus tree
+>>>>
+>>>> correct, this is pending review/ack from Stan.
+>>>
+>>> I tested the changes in the driver, and they looks fine. But when
+>>> applied the corresponding change in the DT node I see this message when
+>>> the streaming is stopping:
+>>>
+>>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>>>
+>>> I tested on v5.7 (linaro-integration). Should I be worried ?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 40474982a21d..5d7130f8d342 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5089,6 +5089,7 @@ F:	fs/dlm/
- 
- DMA BUFFER SHARING FRAMEWORK
- M:	Sumit Semwal <sumit.semwal@linaro.org>
-+M:	Christian König <christian.koenig@amd.com>
- L:	linux-media@vger.kernel.org
- L:	dri-devel@lists.freedesktop.org
- L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
+I had a look at this message and also spoke to Maulik, and it seems
+like its fairly harmless. It just suggests we had to wait a while to
+get a TCS, and then retry, So nothing to worry about.
+
+thanks,
+Rajendra
+
 -- 
-2.20.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
