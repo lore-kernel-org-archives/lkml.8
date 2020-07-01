@@ -2,89 +2,111 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ABBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E67C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7146D20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593591597;
-	bh=gloUNhUzU4f+X/ESg4esOSkH91gL58eQGdW1/JLfGw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jS9I/iFuG5POWt0KUGhwPzS4lnOoSnUIFUpJew/76s1fOgAe3ljHptVy07j9RJSeZ
-	 JjDRPv4tlM66xno4fAdS9bBL9k3lGAfl6MI/p7zZQ3/76DCcv5BTPGnyYdGXH4eZeJ
-	 PUfjS+VVtyhLMDl0lCi020WUkFmus/vFWW9eH9tI=
+	by mail.kernel.org (Postfix) with ESMTP id 9AC2B2078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:20:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RGNBtsFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgGAITz (ORCPT
+        id S1728694AbgGAIUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:19:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35695 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbgGAITz (ORCPT
+        Wed, 1 Jul 2020 04:20:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13419 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgGAIUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:19:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e15so18828503edr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:19:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=thbUP8KbOogeqAEdzq644Nq9+Yx56Jb6fhYA6UnFTDs=;
-        b=DcJq6UDwAkFZXyDd4sxK3n1EazehLvdrmD1MaeL0POhAOkv/1Urj0qvYNur1hdWcgE
-         nrWDkiteol9LkLu3KUPypJopsGOSbDYLTjG4OgIrlgaY59sqA/lPzDJR950YvbxD1xOr
-         qj/XOmXhFnl//0Oxauztw5E72VQfpM3vW3nuzZ9W32IHUt4GompMjHgvw8bxM3ZUGho0
-         jeX0mhWWihOTnlSRBotBXTLk0sL0322Yl7Onc4DB6zDpsXTgomSWqpzDxYB/hBG/WDsD
-         ZWsLkvq8Y9cx/5/e3gbJqKq01MJ5+5sHwItpEeUbeHxoB2OxWO8XsdkJArKTXY3m5FQh
-         OKLQ==
-X-Gm-Message-State: AOAM533GbZJQ6TCgkpQMEwUnoMWpMcJDDr+zo9K4GZNrbE7mmiHEuOJA
-        5Vsxvq+rsd2wjESvrjoswIjoj34A
-X-Google-Smtp-Source: ABdhPJwur1+7K8jfjciMaTh1Q1nX6ZIJsSyfVDTVFKntMDoCtbOJ+EapOxRLydxpvqxlKyEk9DQ/hA==
-X-Received: by 2002:aa7:c714:: with SMTP id i20mr28057806edq.215.1593591593695;
-        Wed, 01 Jul 2020 01:19:53 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id c15sm2061538edm.47.2020.07.01.01.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:19:52 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 10:19:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Christoph Lameter <cl@linux.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PANIC: mm: memcg/slab: percpu_ref_put_many - Unable to handle
- kernel paging request at virtual address ffff80096d78f000
-Message-ID: <20200701081951.GL2369@dhcp22.suse.cz>
-References: <CA+G9fYtrgF_EZHi0vi+HyWiXT5LGggDhVXtNspc=OzzFhL=xRQ@mail.gmail.com>
+        Wed, 1 Jul 2020 04:20:04 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efc46d00000>; Wed, 01 Jul 2020 01:18:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 01 Jul 2020 01:20:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 01 Jul 2020 01:20:03 -0700
+Received: from [10.26.73.166] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
+ 2020 08:19:56 +0000
+Subject: Re: [PATCH v9 3/4] dt-bindings: arm-smmu: add binding for Tegra194
+ SMMU
+To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
+        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <treding@nvidia.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
+        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
+        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+References: <20200630235752.8737-1-vdumpa@nvidia.com>
+ <20200630235752.8737-4-vdumpa@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <689714e8-a5bb-7d13-f2f2-ee26b2c53811@nvidia.com>
+Date:   Wed, 1 Jul 2020 09:19:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYtrgF_EZHi0vi+HyWiXT5LGggDhVXtNspc=OzzFhL=xRQ@mail.gmail.com>
+In-Reply-To: <20200630235752.8737-4-vdumpa@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593591504; bh=tSDe8LeboRnurzjwRe+5HLTMPSrGI8/MJArXEKpfbZA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=RGNBtsFVGdCPynKZU03jKlzrlB0P6BJ0aS4u/xPTgAr9viUfOO9j1Gn0xEnUfgsxJ
+         fewKSXXv83xcmBHZh7d2x98lh6f8toxAI1QtW3Jn0bPT5Sf1iE6jZiP9DQppUv18vH
+         T144o3M9HGregS5DROpZ6yBnKTJ7flIQ1Mlgue5rUqYMzq46v0YM40OYMMLBw1+Mo+
+         BY5QjGQMfJMT0I28dtMaVCUgMgkkzVhDz5dgANA3kihh+lJ3K5yPR+mUAx4Uvd3TEI
+         k2HPo9MnnuXnGUlbpHGWsTNA0Xf1GNPAmFAFIsPs9cwzG5swAOhYOVDvEhrdpA6B4E
+         3xU9gkacrP2hw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-07-20 13:24:54, Naresh Kamboju wrote:
-> While running LTP mm test suite on arm64 Juno device the kernel panic
-> noticed on linux-next 20200630 tag.
 
-Can you try to bisect? The new memcg slab allocator series sounds like a
-potential candidate. One of the patches has changed the memcg reference
-counting which is showing up on the stack. This might be a side effect
-of something else of course but bisection would tell us more.
+On 01/07/2020 00:57, Krishna Reddy wrote:
+> Add binding for NVIDIA's Tegra194 SoC SMMU topology that is based
+> on ARM MMU-500.
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  .../devicetree/bindings/iommu/arm,smmu.yaml    | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index d7ceb4c34423b..662c46e16f07d 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -38,6 +38,11 @@ properties:
+>                - qcom,sc7180-smmu-500
+>                - qcom,sdm845-smmu-500
+>            - const: arm,mmu-500
+> +      - description: NVIDIA SoCs that use more than one "arm,mmu-500"
+> +        items:
+> +          - enum:
+> +              - nvidia,tegra194-smmu
+> +          - const: arm,mmu-500
 
-Thanks
+We should also address Robin's comments here. I don't think that we ever
+want to fail back to just the regular 'arm,mmu-500' and should be should
+probably just drop this part.
+
+Jon
 
 -- 
-Michal Hocko
-SUSE Labs
+nvpublic
