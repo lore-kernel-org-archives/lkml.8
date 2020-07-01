@@ -2,163 +2,109 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88273C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B195C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAF120780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0D8207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UuzPoqH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgGAM5v (ORCPT
+        id S1730736AbgGAM7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:57:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60264 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730581AbgGAM5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:57:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A6BAEADE2;
-        Wed,  1 Jul 2020 12:57:47 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 13244604DC; Wed,  1 Jul 2020 14:57:47 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 14:57:47 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Song Liu <songliubraving@fb.com>,
-        Valdis Kl =?utf-8?B?xJM=?= tnieks <valdis.kletnieks@vt.edu>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH] bpfilter: allow to build bpfilter_umh as a module
- without static library
-Message-ID: <20200701125747.wu6442a5vr5phzoh@lion.mk-sys.cz>
-References: <20200701092644.762234-1-masahiroy@kernel.org>
+        Wed, 1 Jul 2020 08:59:37 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59922 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730545AbgGAM7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 08:59:36 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061Cso1T018088;
+        Wed, 1 Jul 2020 14:59:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=zLwEj7MqWWxOTNW8GUFQe1h25GWD27n/XUQYErjbCu4=;
+ b=UuzPoqH3RADYLvym79Sc5/VufNC+mdau580qHP3eVNTE+RmuNMwhTPz71CToj3W98WMW
+ TuNKoiqvRIyIRSA5yATCiBGSANMmIb08Uac71VuOUgXXYLJ8phCqhxIDseF6cxPU3iYn
+ GnDVt4gIiAtVEiHIVNy1kghm6EOy7qdIf2yUiNfvGya4opAgUUuvZLbrS91kXZ+pnGDk
+ C6ixEGO2G/x3jTfEIiLOsqqTVypzNN9q6UvSzVxifHnEocBbHISupGqavQacWyQZYBak
+ fQxwL8/tIMEcZgtNSURRV9ep+BNKksipAs3HgQ8SoCk0PHdE9JiEdZ2l+Y9cmMHcBuGL iw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31ww0ga2ux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 14:59:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B9FB910002A;
+        Wed,  1 Jul 2020 14:59:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 851BF2B66DE;
+        Wed,  1 Jul 2020 14:59:21 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 14:59:20
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
+        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
+        <devicetree@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v6 0/3] DCMI set minimum cpufreq requirement
+Date:   Wed, 1 Jul 2020 14:59:15 +0200
+Message-ID: <20200701125918.30793-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gyz6kzseltosq2ow"
-Content-Disposition: inline
-In-Reply-To: <20200701092644.762234-1-masahiroy@kernel.org>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series allow to STM32 camera interface (DCMI) to require a minimum
+frequency to the CPUs before start streaming frames from the sensor.
+The minimum frequency requirement is provided in the devide-tree node.
 
---gyz6kzseltosq2ow
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Setting a minimum frequency for the CPUs is needed to ensure a quick handling
+of the interrupts between two sensor frames and avoid dropping half of them.
 
-On Wed, Jul 01, 2020 at 06:26:44PM +0900, Masahiro Yamada wrote:
-> Originally, bpfilter_umh was linked with -static only when
-> CONFIG_BPFILTER_UMH=3Dy.
->=20
-> Commit 8a2cc0505cc4 ("bpfilter: use 'userprogs' syntax to build
-> bpfilter_umh") silently, accidentally dropped the CONFIG_BPFILTER_UMH=3Dy
-> test in the Makefile. Revive it in order to link it dynamically when
-> CONFIG_BPFILTER_UMH=3Dm.
->=20
-> Since commit b1183b6dca3e ("bpfilter: check if $(CC) can link static
-> libc in Kconfig"), the compiler must be capable of static linking to
-> enable CONFIG_BPFILTER_UMH, but it requires more than needed.
->=20
-> To loosen the compiler requirement, I changed the dependency as follows:
->=20
->     depends on CC_CAN_LINK
->     depends on m || CC_CAN_LINK_STATIC
->=20
-> If CONFIG_CC_CAN_LINK_STATIC in unset, CONFIG_BPFILTER_UMH is restricted
-> to 'm' or 'n'.
->=20
-> In theory, CONFIG_CC_CAN_LINK is not required for CONFIG_BPFILTER_UMH=3Dy,
-> but I did not come up with a good way to describe it.
->=20
-> Fixes: 8a2cc0505cc4 ("bpfilter: use 'userprogs' syntax to build bpfilter_=
-umh")
-> Reported-by: Michal Kubecek <mkubecek@suse.cz>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+version 6:
+- come back to version 4 and follow Valentin's suggestions about notifier
 
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
+version 5:
+- add a mutex to protect dcmi_irq_notifier_notify()
+- register notifier a probe time
 
-Thank you,
-Michal
+version 4:
+- simplify irq affinity handling by using only dcmi_irq_notifier_notify() 
 
-> ---
->=20
->  net/bpfilter/Kconfig  | 10 ++++++----
->  net/bpfilter/Makefile |  2 ++
->  2 files changed, 8 insertions(+), 4 deletions(-)
->=20
-> diff --git a/net/bpfilter/Kconfig b/net/bpfilter/Kconfig
-> index 84015ef3ee27..73d0b12789f1 100644
-> --- a/net/bpfilter/Kconfig
-> +++ b/net/bpfilter/Kconfig
-> @@ -9,12 +9,14 @@ menuconfig BPFILTER
->  if BPFILTER
->  config BPFILTER_UMH
->  	tristate "bpfilter kernel module with user mode helper"
-> -	depends on CC_CAN_LINK_STATIC
-> +	depends on CC_CAN_LINK
-> +	depends on m || CC_CAN_LINK_STATIC
->  	default m
->  	help
->  	  This builds bpfilter kernel module with embedded user mode helper
-> =20
-> -	  Note: your toolchain must support building static binaries, since
-> -	  rootfs isn't mounted at the time when __init functions are called
-> -	  and do_execv won't be able to find the elf interpreter.
-> +	  Note: To compile this as built-in, your toolchain must support
-> +	  building static binaries, since rootfs isn't mounted at the time
-> +	  when __init functions are called and do_execv won't be able to find
-> +	  the elf interpreter.
->  endif
-> diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
-> index f23b53294fba..cdac82b8c53a 100644
-> --- a/net/bpfilter/Makefile
-> +++ b/net/bpfilter/Makefile
-> @@ -7,10 +7,12 @@ userprogs :=3D bpfilter_umh
->  bpfilter_umh-objs :=3D main.o
->  userccflags +=3D -I $(srctree)/tools/include/ -I $(srctree)/tools/includ=
-e/uapi
-> =20
-> +ifeq ($(CONFIG_BPFILTER_UMH), y)
->  # builtin bpfilter_umh should be linked with -static
->  # since rootfs isn't mounted at the time of __init
->  # function is called and do_execv won't find elf interpreter
->  userldflags +=3D -static
-> +endif
-> =20
->  $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
-> =20
-> --=20
-> 2.25.1
->=20
+version 3:
+- add a cpumask field to track boosted CPUs
+- add irq_affinity_notify callback
+- protect cpumask field with a mutex 
 
---gyz6kzseltosq2ow
-Content-Type: application/pgp-signature; name="signature.asc"
+Benjamin Gaignard (3):
+  dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
+  media: stm32-dcmi: Set minimum cpufreq requirement
+  ARM: dts: stm32: Set DCMI frequency requirement for stm32mp15x
 
------BEGIN PGP SIGNATURE-----
+ .../devicetree/bindings/media/st,stm32-dcmi.yaml   |   8 ++
+ arch/arm/boot/dts/stm32mp151.dtsi                  |   1 +
+ drivers/media/platform/stm32/stm32-dcmi.c          | 138 +++++++++++++++++++--
+ 3 files changed, 139 insertions(+), 8 deletions(-)
 
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl78iEoACgkQ538sG/LR
-dpWAzAf/anZ96cIZ4DlFNa9GThY9O1+XsFFj/6av5YNogxsfciAMQZECXJvtdYhQ
-JlMcWVS2mFxSURSdP8U2fuOnT58SsZ1cc+/Zy4z3576i8ovIV2TZocOcfxtC0azh
-/SO2kZFHIDot+rdxWv56bPoa6XKJEJguk2Am8JUf0C6WBaRHZiY+Wl6DbrmKeZTd
-DOIh5KSR1+ovROcfX6iHiciQi0r5f2sYENNuXeJ8RJJOcM0PYIk1a0bc4HQpQlo8
-1vU8lfZywgtC2PIGlYHA4I5GL3b1wDghZ3GHkMxyXFzrNb29AObaFhwSLOT5swmf
-Y9NPAkvFEVT7SGu7LOi6pF85jlSTdw==
-=DLqC
------END PGP SIGNATURE-----
+-- 
+2.15.0
 
---gyz6kzseltosq2ow--
