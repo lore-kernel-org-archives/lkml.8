@@ -2,81 +2,136 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D40EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 612152077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C6720780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="FvVOnHAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732150AbgGAPth (ORCPT
+        id S1732097AbgGAPue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:49:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:28891 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgGAPtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:49:36 -0400
-IronPort-SDR: O59kB8H475LLwzRSjHEMXpDrHBTa7OONWVOg6XyDxF0ugmE0Q0K5ak+xqEhlAyY73qlKdT6+dc
- CLLfkubxWhlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="211672182"
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="211672182"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:49:36 -0700
-IronPort-SDR: uIcVsZKpC1T/XZABeBlT37G65ne6km5mDT/3irZE34DT8lWnPGk+KZtJ6UPqd9vR1kLZns5THn
- JSuZkfIIiucg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="312732363"
-Received: from spandruv-mobl3.amr.corp.intel.com ([10.254.75.215])
-  by orsmga008.jf.intel.com with ESMTP; 01 Jul 2020 08:49:36 -0700
-Message-ID: <4c8abeb4ddff2355d9ba397f50b7844a7734c2e9.camel@linux.intel.com>
-Subject: Re: [PATCH v2 4/5] thermal: core: genetlink support for
- events/cmd/sampling
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rkumbako@codeaurora.org, amit.kucheria@linaro.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 01 Jul 2020 08:49:35 -0700
-In-Reply-To: <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
-         <20200625144509.17918-4-daniel.lezcano@linaro.org>
-         <73150ef4ca536368f087672b917dd9773417020e.camel@intel.com>
-         <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
-         <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Wed, 1 Jul 2020 11:50:34 -0400
+Received: from sonic314-19.consmr.mail.gq1.yahoo.com ([98.137.69.82]:35914
+        "EHLO sonic314-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbgGAPue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:50:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1593618633; bh=R5EdgnehZaIlYM8EBPA/vlDhBKIThSGmN4i2/1YN62k=; h=Date:From:To:Cc:Subject:In-Reply-To:References:From:Subject; b=FvVOnHAN8bAvsJPvtXWz6Js8+X5IvcxO2HCuhgKGFI2sVqb5VJSlF+eg5uTfC0teesogeSYYNxHDTmIbYabxJxVe4W1nQJhLEwTzTvJ16BL8mnRbXADRM9PXiYBbQxDMloiupnu8+5K4qN2YGMlp7enpfxNYcnM0NA2OA7RfJ8pwYbcaGgxQWOrJicG+BnpRXNukSRuNy+wE2TIVH4+MsVCWYrcYEBhOvNluUWzl/QXOMEdjFkX2097wD6+25kAMNNn5w0caCnI/e7apFiHq2mxMAU0qOPg23zJE4bhhNSQs3dsErVx86YkDrx0Jp0qPLwxnRjC5mMOb86kTmdfyJw==
+X-YMail-OSG: WY9rcpUVM1matKAkYphaAT_vliUhz2vNSyt2r.xdV8D2sMhv9KJwcSfgFsDcx1Q
+ O6pnPZ3d9NbH.PDL6CZOlC1..tWluuPepkphnTTtoHFFukoK1EtGHUNSV0ZU9PfOKaAu3TW1RrYZ
+ cVdwezfG.klNgsvND7vSXMkchvACiiL9wOahSGwT3fbos1rIFA52oDo1bQMFJu9klnQfY.pibjNs
+ c.Rjgu16PjSOLoZeiU.3cZ47SjeJPJkdrF7oNRsG.ziMOAQilFJtLqRlN1.QUK.adKdPGBMvrrhg
+ B9GeFHDOdIuLjuWLKEsK0MkwwD.zbKzaTtJFdw7eS_Rse089j0_p8iFFUqbivWHxPcPSmOw38Ivn
+ Y7VlR.jQaM785UgtM_eymaHofjW_IybQqzSjetoCWyen_22MqHgv10Vy1_bBW0zCVrnZxGnEVXPK
+ 26xQTeinXK5aeEXPXIU5nhNOEfZlPgp0B8NbxPNBeEA4K8f8fcKCa4Sxgta9vH5mefTKxMCXHEsf
+ orJWV65QWBqMZ93ZK70UdG1yi7U8eLBcwTAQpz5kMf3NfP1FL3wgVXYoL1FDQRNcp5ABNKjZqLIu
+ nUCrzAR8vQwl1DwwAX1p.DnMuwUzEAcdHzUNd6Y18hHhCPLBM4rJ8bqLxEpGUpFhv9rMI0L07Vae
+ MWfgXUoO3DB0fgfH9kpMzAdHlshpQwNJUWAbaqmkndyxHvteZkfu7V4y2PlR_CcP5K41NzxQLJhx
+ q5aUbzFb9vza6ui7eXDKinkzi.7RRDVcw3IwlMpS4SCJTsZAkl9EW6.IPvxKaehHMV275CSI8SRC
+ wpLFxIUiMm60vNDOwbHElb149LGjR4CTYEVJ4fd55SNa460J8XilquJ2GuP6AzsIDvxNkMAkz7cp
+ ELXsCdK4CRtL2OSO3vO_Mx3MpdsBTG07UoUpWS4UA9ktdIk5_OKLmt68hEwsvkx9vC7JxEDq.dxg
+ TaLWuaT2JWnVXxkqsN9YGCfdgT3fr3nTIg2AgMWAVzI1SnlZ2l83cUR1mXqE61QppMviB7Hae6ya
+ pb8GjjE8bjH04Rb5zgpmRUrtAzaOjDQxc0V2hcPZfw4iAYbCwR4Rk2uBLZHm0BR9VL8oVglK2EzC
+ ld0Htls_OeNRrjQUtAF9AMr4ZzPum4O317sESQ_O1eYZngPx6GRXf3aIcF2IekxUF2_oK4wC6wsf
+ lmLmFf17d_pX9qBuDrVAFIjAAfIw2Z0KZQx0xaSgu4_KARKy.5c949hHj3RrdxYCypW2nMWNFoWy
+ T4g9.o.2FX5ZFu3GNROAF9Lb_FFHxUhx7hOBA_sExvHFf1WHjUvX5p7PMJFjIldrcevBQQvWLUMR
+ 9xyEd_oiq2AHbVzAjWb89h7OL8OnBm7GfL8iH_AJsDT1lT.uwsum48NYSPZ0.CbD4J8d.GaNSCsq
+ OZF_wzILo9.sO9MUhbVLP6HaPdwCeYMZkag--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.gq1.yahoo.com with HTTP; Wed, 1 Jul 2020 15:50:33 +0000
+Received: by smtp415.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 9236ef3beededec92ee024faf27b2091;
+          Wed, 01 Jul 2020 15:50:27 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 23:50:05 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     linux-kernel@vger.kernel.org,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Nick Terrell <terrelln@fb.com>,
+        Norbert Lange <nolange79@gmail.com>, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: Kernel compression benchmarks
+Message-ID: <20200701153028.GA30962@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588791882.08g1378g67.none@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200701153028.GA30962.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Mailer: WebService/1.1.16197 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
 
-[...]
+(sorry... maybe my @gmx.com email is broken again...)
 
-> Then I'd prefer we only introduce the events that are used or will be
-> used soon, like the tz disable/enable, to avoid some potential dead
-> code.
-> We can easily add more events when they are needed.
+On Wed, Jul 01, 2020 at 10:35:48AM -0400, Alex Xu (Hello71) wrote:
 > 
-> Srinivas, do you have plan to use the trip add/delete events?
-Yes and also trip modify.
-Also I need to have one more event for heartbeat like event which needs
-confirmation from user space to hardware the user process controlling
-thermal is active not dead. So whenever hardware wants to check health 
-it will send an event, which user space should acknowledge
+> My conclusions:
+> 
+> - zstd is an improvement on almost all metrics.
+> - bzip2 and lzma should be removed post-haste.
+
+I'm some familar with LZ4 and LZMA (xz) internals.
+
+I'd like to add some notes from the principle perspective,
+but I'm not sure if I would join some further topic
+about this...
+
+ XZ is another form of LZMA2, which is based on LZMA.
+ It uses range coder technology. In principle, it has better
+ compession ratio with slowest speed (due to multiplication
+ by bits rather than lookup table). Instead, Zstd uses huffman
+ (which is much like deflate, aka. gzip) and FSE (If I'm not
+  wrong about Zstd)...
+
+ So in general (apart from the specific implementation),
+ the decompression speed vs compression ratio ralationship are
+  LZ4  -  Zstd  -  LZMA
+
+ Some arguments such as compression level have impact on
+ LZ matchfinder (yeah, except for bzip2, all algorithms
+ are LZ-based) and dictionary size. And some specific
+ compressors aren't well-optimized (e.g. zlib).
+
+ Anyway, I think LZMA (xz) is still useful and which is more
+ friendly to fixed-sized output compression than Zstd yet (But
+ yeah, I'm not familar with all ZSTD internals. I will dig
+ into that if I've more extra time).
+
+> - lzo should be removed once zstd is merged.
+> - compression level is important to consider for compression speed: the 
+>   default lz4 -1 compresses very fast but has a very poor compression 
+>   ratio. zstd -19 compresses barely better than zstd -18, but takes 
+>   significantly longer to compress.
+> - compression level should be configurable: lz4 -1 is useful, but so is 
+>   lz4 -9. zstd -1 is useful, but so is zstd -19. zstd -1 is useful for 
+>   developers who want kernel builds as fast as possible, zstd -19 for 
+>   everybody else.
+> - gzip is by far not the fastest compressor (even excluding cat)
+> - modern compressors (xz, lz4, zstd) decompress about as fast for each 
+>   compression level, only requiring more memory
+
+ lz4 has fixed sliding window (dictionary, 64k), so it won't
+ require more memory among different compression level when
+ decompressing.
 
 Thanks,
-Srinivas
-> > 
-> > 
-> > 
+Gao Xiang
+
 
