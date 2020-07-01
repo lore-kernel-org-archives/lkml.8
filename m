@@ -2,126 +2,100 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B59CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9D1208B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593637384;
-	bh=snTyeY63qTGUw29voMUg3c3I3UJoKbQgVp+Tgu7nsjs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VSLywsOb3E+bP7NhnhbPbgdV9yWpAEj6XabuDeZtl6Ei3KELXY29r8P9hHp/HavYk
-	 orWz5351/ZtdEFRrt+4Qw0/jH7HcSMVVJBpfWQT3DYDklHZB4BNqaD0C7/dp7hcFbb
-	 MQ/ovfCgnN8/KQvHbx/lIRPur9FWWlkeHR1Y7n/w=
+	by mail.kernel.org (Postfix) with ESMTP id 16C0220720
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OeCRAKIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgGAVDC (ORCPT
+        id S1726746AbgGAVIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
+        Wed, 1 Jul 2020 17:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbgGAVDC (ORCPT
+        with ESMTP id S1725847AbgGAVIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:03:02 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA716C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:03:01 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id t25so24327666lji.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DJJQ0JuSWbNincDMm+mwtyZQMnCdEroZXX8CnDea68I=;
-        b=gZ8TD+jnU7OaD3x3gkybCeHrYMmT6lBf9QwEBW7+9DFLrbf4hlFHHJJHNCDWMDKt9O
-         sqy39UJQbL13e7j9qdt/YVfX3zmsz9bdW9dqOW6xdFcJugF9ujGAHU91OUIRJKiiaD0+
-         cHqU1KIT5fVviHAZ90mmMkvOVj7MOn+ogU+eI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DJJQ0JuSWbNincDMm+mwtyZQMnCdEroZXX8CnDea68I=;
-        b=CHJJ2qpbsvo6BnKVmA56rt9Iu/EH6pVvUa14TmWd6rR2jm+9Gb3z6q8W6qqkz7m9v5
-         3rjGN+FT+E6FJ3MU34iKYJXof3z1wkuKi+DLZQFqTziTTSX2x2o1Fr/+lm9iweWEntR7
-         V+c1OhaUkuQaZjdfsjhfC8QQnhYTlN89llC0tUWijOW9aY2IZKzd0W5CGxGacFXoxwTK
-         UazTMSAD2LUXwBUTaABmXJFxJzUOMTbJAw9Oebddb+P5w2Yv8DkRJKiRKHUn9lQJYLmq
-         7eK0DSJyBnliqqnclN2GZ5A5ThbqbYLUDTNvDq5BPljjTaObNMwEjzXDDVjO+Fyf1ocW
-         EWlA==
-X-Gm-Message-State: AOAM533JemgQWkcyO30PrfMelT6DEHHqyI4uXJwieKEPPbaSjdtimWvW
-        a0sWtkukM149EqiE3/sl80dTUshYTQw=
-X-Google-Smtp-Source: ABdhPJz9fOnGXLKvwjSHWLyYt6/Icm4Z4jLs+pvvcoZR0k9Vyfsfr2nS8UReKYNScaNQypoU+ARzGA==
-X-Received: by 2002:a2e:9855:: with SMTP id e21mr9877796ljj.424.1593637379763;
-        Wed, 01 Jul 2020 14:02:59 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id 2sm2445032lfr.48.2020.07.01.14.02.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 14:02:58 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id h22so21758484lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:02:58 -0700 (PDT)
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr15024788ljj.312.1593637378147;
- Wed, 01 Jul 2020 14:02:58 -0700 (PDT)
+        Wed, 1 Jul 2020 17:08:42 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C615DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=n3MhCVUc4stdpN2Qe7L9WDOpNOr9JzTLo6XaZBRTMak=; b=OeCRAKIekfVonveM23MX3a487K
+        UPN8c7BE8HI2uqDE+mA9j98eCqcctiz8v2eYUtiRId40gw/y7BJsyNolh76MzPA3QmGUUloXYxweG
+        cce+/+4/TzWzTYcu/4s2K6s6iM/d5t6ryPgBDidii8xI+IMu7Z80Sj6waidY3Y5XOSsChg24/DeuB
+        K0dvhrX65yKSWLeTERVnh7xLktIfWe+CsMIg+S3hwJvV3DOIKkgoTwOhBiRzWr4sSrnFVZ3ZoGC6X
+        oD5OKjv/KluHFb4tvDKXFb11RIdHi+LXchW7GZTnjxuM6JFavRfGr4SBWTYU/mbARVRWOaKZhQFkI
+        h7JTHOpA==;
+Received: from [2601:1c0:6280:3f0::81af]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqjxz-0000hb-LV; Wed, 01 Jul 2020 21:08:27 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] sound: fix SND_HDA_GENERIC kconfig & build
+Message-ID: <01233744-9625-38b3-0342-1b37250dbc72@infradead.org>
+Date:   Wed, 1 Jul 2020 14:08:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
- <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net> <20200701205108.wtgfnijav7lgfiqe@treble>
-In-Reply-To: <20200701205108.wtgfnijav7lgfiqe@treble>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 Jul 2020 14:02:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
-Message-ID: <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
-Subject: Re: objtool clac/stac handling change..
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 1:51 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> Yeah.  Peter's more of the expert here, but I think we'd at least need
-> to annotate the code which expects an implicit CLAC so objtool knows
-> what to expect.  It's not trivial, but it might be doable.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-In both C and asm code, it's the "_ASM_EXTABLE_UA" cases that would do
-this ("UA" being for "User Access").
+Fix kconfig warnings and lots of subsequent build errors by
+adding yet another ugly select statement:
 
-In fact, it should be quite easy to see: the thing that distinguishes
-those things is that the exception handler is "ex_handler_uaccess". So
-objtool should be able to see that quite easily as it follows the
-exception tables.
+WARNING: unmet direct dependencies detected for LEDS_CLASS
+  Depends on [n]: NEW_LEDS [=n]
+  Selected by [y]:
+  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
 
-It's a special case for entirely unrelated reasons (reasons objtool
-doesn't care about): a user access exception can be either due to a
-page fault (normal) or due to a misformed non-canonical address, and
-we warn about the latter case.
+WARNING: unmet direct dependencies detected for LEDS_TRIGGERS
+  Depends on [n]: NEW_LEDS [=n] && LEDS_CLASS [=y]
+  Selected by [y]:
+  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
+  Selected by [m]:
+  - MAC80211_LEDS [=y] && NET [=y] && WIRELESS [=y] && MAC80211 [=m] && LEDS_CLASS [=y]
+  - IWLWIFI_LEDS [=y] && NETDEVICES [=y] && WLAN [=y] && WLAN_VENDOR_INTEL [=y] && IWLWIFI [=m] && (LEDS_CLASS [=y]=y || LEDS_CLASS [=y]=IWLWIFI [=m]) && (IWLMVM [=m] || IWLDVM [=m])
 
-That said, I wouldn't necessarily object to making the rule be that
-*any* exception handler invocation will always do the
-user_access_end().
+WARNING: unmet direct dependencies detected for LEDS_TRIGGER_AUDIO
+  Depends on [n]: NEW_LEDS [=n] && LEDS_TRIGGERS [=y]
+  Selected by [y]:
+  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
 
-It sounds dangerous/wrong to me to do anything that can fault (other
-than the user access itself, of course) within a STAC/CLAC region.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+---
+ sound/pci/hda/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-So the objtool rule might be:
+--- linux-next-20200701.orig/sound/pci/hda/Kconfig
++++ linux-next-20200701/sound/pci/hda/Kconfig
+@@ -221,6 +221,7 @@ comment "Set to Y if you want auto-loadi
+ 
+ config SND_HDA_GENERIC
+ 	tristate "Enable generic HD-audio codec parser"
++	select NEW_LEDS if SND_HDA_GENERIC_LEDS
+ 	select LEDS_CLASS if SND_HDA_GENERIC_LEDS
+ 	select LEDS_TRIGGERS if SND_HDA_GENERIC_LEDS
+ 	select LEDS_TRIGGER_AUDIO if SND_HDA_GENERIC_LEDS
 
- - in a STAC region, no exception handlers at all except for that
-ex_handler_uaccess case
-
- - and that case will clear AC if it triggers.
-
-and maybe such an objtool check would show some case where I'm wrong,
-and we do some MSR read other other fault thing within a STAC region.
-That _sounds_ wrong to me, but maybe we have reason to do so that I
-just can't think or right now?
-
-               Linus
