@@ -2,194 +2,184 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B9F20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A11520722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DxHymwgP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6ajc9hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgGAJ1M (ORCPT
+        id S1729344AbgGAJ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:27:12 -0400
-Received: from mail-eopbgr30070.outbound.protection.outlook.com ([40.107.3.70]:13690
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728812AbgGAJ1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:27:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UDbiHp5t60urN6o1ijnig4jgu1sz3LnlPp7guizXrVJZTBObvPc00UUldjlxbQaFttyrvvzMIva5QsbbFxJsbXeZcM1KmbL1sv4DEFRuCTHk6J9m1iTyqnT8z96ZDc4PpwWWktq1qq+Hk+2SwQPVakoLlN96FNAfwYN/0toZWvfjI5qA8gxVGAnrYPwfW60pQy9FyZgRDcPMQZvZqejSzZseVkIjYyV8GJLdvc/RefTMk0BT/ROS7RytdgNgAJf9jP8GLwAqi/7pgjm4/J/fKlgh+JMb1hkIPiB0jdHEaYKcgMZNImjGHrbIFIAAzi2rXcJiMd9c7WypMCKuu0bL4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ0Tgzxr5jmDXZrdkX5fzezxOaogvKHGE3uTkDNgwKE=;
- b=NRaGrtgjyUC3qEzZkopmIQsi+Gklj/QSWvConP4A4paraHnRiEwkNRrax2aV/mCffZgiCimLHin5AhzJGJm9RCtQA1tGrit9Kci5oJlzUGA04yIVvTjJhr6fpgvjGsnwLbbeQtM744LrWwd/3NeioIsg1p0QUlsVIKiLAhCcTDA4UX6eQFkK2BwJ1At/c9ItMv2Gdn/Iwp2zsF6T/uZZmZabkhfa2Pbng0F+6RiV8cEYw3XrJczbn1404o843AJarOy/Har7LCABbyzfZVwXRGOs7r4cWjnjOR/3vNEMrohA/B6DzilFztQhD1ucE/1ahsmaj4l8WWhzEn2TnH5wCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pZ0Tgzxr5jmDXZrdkX5fzezxOaogvKHGE3uTkDNgwKE=;
- b=DxHymwgPxjkEm1A4aKQ5R5wWCjiyrC15XeL9o+FSD9KETkvtsdUtUzu6/kBHLDjHghK4w3NqRuGB1GV3u2dP2sbeN7vJvu2a3jkbkJ9bSxUofkMbeqkqmKMA3EstDbIt3sDVxdqFADaRXMl9kO3pOLfdWLRKUvWFhHlvd3QZQMg=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB8PR04MB7180.eurprd04.prod.outlook.com (2603:10a6:10:12c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Wed, 1 Jul
- 2020 09:27:07 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3131.030; Wed, 1 Jul 2020
- 09:27:07 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for module
- build
-Thread-Topic: [PATCH V3 02/10] init.h: Fix the __setup_param() macro for
- module build
-Thread-Index: AQHWTdtegku2i+ERdU6EY9a3qfOcyajvdnIAgAABM5CAAAXKgIACsi5ggAA6hYCAAAwYQA==
-Date:   Wed, 1 Jul 2020 09:27:07 +0000
-Message-ID: <DB3PR0402MB3916F746C792CB2BC876715BF56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
- <1593410042-10598-3-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a2ZL6_rV=2brNz=UDdji3mddF+1Nb6Ew+=n4j0-fNrCug@mail.gmail.com>
- <DB3PR0402MB3916BA91E0F44EA5DAD6BF26F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3igMrRNa1oR=d=9A-YNAmb+LXNRbwBk9zuJZq5tfvr9Q@mail.gmail.com>
- <DB3PR0402MB39166254A6F287DC0A8216F1F56C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3FueW3JSLO4RV4WV3C-UP_5y5UA1WGs+gaQGaPaafaUA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3FueW3JSLO4RV4WV3C-UP_5y5UA1WGs+gaQGaPaafaUA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.9.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fb6695fd-c618-46cf-b9b9-08d81da0ec90
-x-ms-traffictypediagnostic: DB8PR04MB7180:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB7180063B25F64D1E07972265F56C0@DB8PR04MB7180.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 04519BA941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gkpwXKAAPmLMFtTC7G9U0PhtzwuOeoyhd1Cyt1KB4UD3DdFyO/kJUH8+BJjfa7YJXfWFNok43JL+VURq1VCmutdOKY0Nz5JUopCE1UzNza/aCFXo/joCPzjGFZAnRaLifv4dkZm5q6CbcksH16hZWprVr8FXa6NbCrBlB+omrI1E6R7Nfeq93hob9845/ydZxPWVFL4c2XIai9vUbfmOFiur7AADkyAgMh1rbDXQoi2crIPo3f6E15Bbxr4Rnam4AB3AyBqiVYXDw6N+Qq0YShWB3ExiCo5h5+NdoJozTVTl6N/j9bh/S54YNTkSibB399fbB04WINBV1xkGejA7Aw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(136003)(39860400002)(366004)(6506007)(316002)(7416002)(54906003)(2906002)(6916009)(55016002)(7696005)(9686003)(5660300002)(66446008)(86362001)(52536014)(478600001)(66556008)(53546011)(44832011)(66946007)(71200400001)(66476007)(64756008)(8936002)(83380400001)(26005)(8676002)(76116006)(186003)(4326008)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 8zYdrBGwHBWbMCqd9ywrSpIzocyGkc2NcZRHSz5V4sFqGyz9cCZEbBJboLxByceMykNMnkxsr+nqI+wfeDKpBpTfUC65DwHnfNhD7w6bbabPQD+ML744VmD0wLfb+N/CzFbVeXjJVrCR5jwaTXfUE4Sgt4WnWRTcKe5xL7U5Bjx88m31rHh92qk/PPu2CgUfBgd6f/+m78nigTW2lS/xU64BRlntNgah9gAvGsTZixzxcMwl2XHUIKEgO2XNgLl16ck8VFIX6y7npbMogKDhzmaWYjLxO7s3T0K/ZUiJOfBOsk1E5vIJmi18CXMQ6b6wvyA1UMhKbYQPSeSuSOCOUtr4Dc9aH2i1NZVe8mIOSr5KVShfhDhn2DZwNIx1xSvM9ASCPPvc6P0M88zoAfd9dURU5pzXuzzHCTiBzdiQVJhUKFCz6DrCQ0I6u3Jn6O1sxj+6GGxBkb4xxzF8LHgU2olK/qtHwltAQt/r+y7sm3o=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 1 Jul 2020 05:27:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41868 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728812AbgGAJ1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593595663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=2nsia7hoWJXpo2twiK/t+26Uc4uSozlsBwnZUcpoESQ=;
+        b=R6ajc9hrEiKjX674he0RITkMENmvKbmOY97umWqv+C6vb8+q0PY/GP3MP0EKFCQS1oN11e
+        XNhbSJ7ph8JzUoXsoNJ3iTDiMUkSAWS24NrDVOG4MD4vKVa3djbhZbN1QUinhMO88c7u5h
+        rlAGCOwM0GgOpU528kc1rub/6zaUgDQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-fAZK4nTsPFW4gTPbDDDFQQ-1; Wed, 01 Jul 2020 05:27:40 -0400
+X-MC-Unique: fAZK4nTsPFW4gTPbDDDFQQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89ECA107ACF4;
+        Wed,  1 Jul 2020 09:27:39 +0000 (UTC)
+Received: from [10.36.112.52] (ovpn-112-52.ams2.redhat.com [10.36.112.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C22D7C1EE;
+        Wed,  1 Jul 2020 09:27:38 +0000 (UTC)
+Subject: Re: [PATCH] mm/sparse: only sub-section aligned range would be
+ populated
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     dan.j.williams@intel.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200630021436.43281-1-richard.weiyang@linux.alibaba.com>
+ <f1e6036c-1966-56dd-0acf-e795671c5ec4@redhat.com>
+ <20200701023258.GA51545@L-31X9LVDL-1304.local>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ed889007-0363-b719-c4bc-9591f87b046c@redhat.com>
+Date:   Wed, 1 Jul 2020 11:27:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb6695fd-c618-46cf-b9b9-08d81da0ec90
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 09:27:07.2086
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CiwRw7Y6uv8re18TfPm+rkRMkp6OO4OQMhaurWBTS5o7ZB7jphnuhdd6pj4TX2JKJysOC2XJL6coHpIjeJ7O+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7180
+In-Reply-To: <20200701023258.GA51545@L-31X9LVDL-1304.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFybmQNCg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMDIvMTBdIGluaXQuaDogRml4
-IHRoZSBfX3NldHVwX3BhcmFtKCkgbWFjcm8gZm9yDQo+IG1vZHVsZSBidWlsZA0KPiANCj4gT24g
-V2VkLCBKdWwgMSwgMjAyMCBhdCA3OjE0IEFNIEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAu
-Y29tPg0KPiB3cm90ZToNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMDIvMTBdIGluaXQu
-aDogRml4IHRoZSBfX3NldHVwX3BhcmFtKCkgbWFjcm8NCj4gPiA+IGZvciBtb2R1bGUgYnVpbGQg
-T24gTW9uLCBKdW4gMjksIDIwMjAgYXQgMTo0MCBQTSBBbnNvbiBIdWFuZw0KPiA+ID4gPGFuc29u
-Lmh1YW5nQG54cC5jb20+DQo+ID4gPiB3cm90ZToNCj4gPiA+ID4gSXQgbWFrZXMgc2Vuc2UgdG8g
-ZHJvcCB0aGUgX19zZXR1cCgpIGFuZCBfX3NlcnVwX3BhcmFtKCkgaW4gdGhlDQo+ID4gPiA+ICNl
-bHNlIGJsb2NrLCBqdXN0IHVzZSBvbmUgZGVmaW5pdGlvbiBmb3IgYWxsIGNhc2VzLCBpZiBubyBv
-bmUNCj4gPiA+ID4gb2JqZWN0cywgSSB3aWxsIHJlbW92ZQ0KPiA+ID4gdGhlbSBpbiBuZXh0IHBh
-dGNoIHNlcmllcy4NCj4gPiA+DQo+ID4gPiBPaywgc291bmRzIGdvb2QuIE5vdGUgdGhhdCB0aGVy
-ZSBtYXkgYmUgdXNlcnMgb2YgdGhlIHBsYWluIF9fc2V0dXAoKQ0KPiA+ID4gdGhhdCBqdXN0IGdl
-dCB0dXJuZWQgaW50byBub3BzIHJpZ2h0IG5vdy4gVXN1YWxseSB0aG9zZSBhcmUgYWxyZWFkeQ0K
-PiA+ID4gZW5jbG9zZWQgaW4gIiNpZm5kZWYgTU9EVUxFIiwgYnV0IGlmIHRoZXkgYXJlIG5vdCwg
-dGhlbiByZW1vdmluZyB0aGUNCj4gPiA+IGRlZmluaXRpb24gd291bGQgY2F1c2UgYSBidWlsZCBl
-cnJvci4NCj4gPiA+DQo+ID4gPiBIYXZlIGEgbG9vayBpZiB5b3UgY2FuIGZpbmQgc3VjaCBpbnN0
-YW5jZXMsIGFuZCBlaXRoZXIgY2hhbmdlIHRoZQ0KPiA+ID4gcGF0Y2ggdG8gYWRkIHRoZSBtaXNz
-aW5nICIjaWZuZGVmIE1PRFVMRSIgY2hlY2tzLCBvciBqdXN0IGRyb3AgdGhlDQo+ID4gPiBfX3Nl
-dHVwX3BhcmFtKCkgYW5kIGxlYXZlIHRoZSBfX3NldHVwKCkgaWYgaXQgZ2V0cyB0b28gY29tcGxp
-Y2F0ZWQuDQo+ID4NCj4gPiBMb29rcyBsaWtlIHRoZSBfX3NldHVwX3BhcmFtKCkgZGVmaW5lZCBp
-biAiI2lmbmRlZiBNT0RVTEUiIGNhbiBOT1QgYmUNCj4gPiB1c2VkIGZvciBNT0RVTEUgYnVpbGQg
-YXQgYWxsLCBzbyBzaGFyaW5nIHNhbWUgaW1wbGVtZW50YXRpb24gaXMgTk9UDQo+ID4gYXZhaWxh
-YmxlLCBzbyBpZiBpdCBpcyBOT1QgdGhhdCBjcml0aWNhbCwgSSBwbGFuIHRvIGtlZXAgdGhlICNl
-bHNlDQo+ID4gYmxvY2sgaW4gdGhpcyBwYXRjaCwgbGV0IG1lIGtub3cgaWYgeW91IGhhdmUgZnVy
-dGhlciBjb25jZXJuIG9yIGFueQ0KPiA+IG90aGVyIHN1Z2dlc3Rpb24sIGJlbG93IGlzIHRoZSBi
-dWlsZCBlcnJvciByZXBvcnRlZCBmb3IgbW9kdWxlIGJ1aWxkDQo+ID4gdXNpbmcNCj4gPiBfX3Nl
-dHVwX3BhcmFtKCkgaW1wbGVtZW50YXRpb24gZm9yIGJ1aWx0IGluLg0KPiANCj4gSSBkb24ndCB1
-bmRlcnN0YW5kIHdoYXQgeW91ciBwbGFuIGlzIGhlcmUuIERvIHlvdSBtZWFuIHlvdSB3aWxsIGxl
-YXZlIHRoYXQNCj4gcGFydCBvZiB0aGUgY2xrIGRyaXZlciBhcyBidWlsdC1pbj8NCg0KSSBtZWFu
-dCBJIHdpbGwgbGVhdmUgdGhlICNlbHNlIGJsb2NrIG9mIF9fc2V0dXBfcGFyYW0oKSBkZWZpbmVk
-IGFzIG5vdGhpbmcgYXMgYmVsb3cgdG8NCm1ha2UgbW9kdWxlIGJ1aWxkIHBhc3NlZC4NCg0KI2Rl
-ZmluZSBfX3NldHVwX3BhcmFtKHN0ciwgdW5pcXVlX2lkLCBmbiwgZWFybHkpICAgICAgICAvKiBu
-b3RoaW5nICovDQoNCj4gDQo+ID4gSW4gZmlsZSBpbmNsdWRlZCBmcm9tIC4vYXJjaC9hcm02NC9p
-bmNsdWRlL2FzbS9hbHRlcm5hdGl2ZS5oOjEyLA0KPiA+ICAgICAgICAgICAgICAgICAgZnJvbSAu
-L2FyY2gvYXJtNjQvaW5jbHVkZS9hc20vbHNlLmg6MTUsDQo+ID4gICAgICAgICAgICAgICAgICBm
-cm9tIC4vYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9jbXB4Y2hnLmg6MTQsDQo+ID4gICAgICAgICAg
-ICAgICAgICBmcm9tIC4vYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9hdG9taWMuaDoxNiwNCj4gPiAg
-ICAgICAgICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L2F0b21pYy5oOjcsDQo+ID4gICAg
-ICAgICAgICAgICAgICBmcm9tIC4vaW5jbHVkZS9hc20tZ2VuZXJpYy9iaXRvcHMvYXRvbWljLmg6
-NSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL2Jp
-dG9wcy5oOjI2LA0KPiA+ICAgICAgICAgICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvYml0
-b3BzLmg6MjksDQo+ID4gICAgICAgICAgICAgICAgICBmcm9tIC4vaW5jbHVkZS9saW51eC9rZXJu
-ZWwuaDoxMiwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gLi9pbmNsdWRlL2xpbnV4L2Nsay5o
-OjEzLA0KPiA+ICAgICAgICAgICAgICAgICAgZnJvbSBkcml2ZXJzL2Nsay9pbXgvY2xrLmM6MjoN
-Cj4gPiAuL2luY2x1ZGUvbGludXgvaW5pdC5oOjE3NzoxNjogZXJyb3I6IHZhcmlhYmxlDQo+IOKA
-mF9fc2V0dXBfaW14X2tlZXBfdWFydF9lYXJseWNvbuKAmSBoYXMgaW5pdGlhbGl6ZXIgYnV0IGlu
-Y29tcGxldGUgdHlwZQ0KPiA+ICAgMTc3IHwgIHN0YXRpYyBzdHJ1Y3Qgb2JzX2tlcm5lbF9wYXJh
-bSBfX3NldHVwXyMjdW5pcXVlX2lkICBcDQo+ID4gICAgICAgfCAgICAgICAgICAgICAgICBefn5+
-fn5+fn5+fn5+fn5+DQo+ID4gZHJpdmVycy9jbGsvaW14L2Nsay5jOjE1NzoxOiBub3RlOiBpbiBl
-eHBhbnNpb24gb2YgbWFjcm8g4oCYX19zZXR1cF9wYXJhbeKAmQ0KPiA+ICAgMTU3IHwgX19zZXR1
-cF9wYXJhbSgiZWFybHljb24iLCBpbXhfa2VlcF91YXJ0X2Vhcmx5Y29uLA0KPiA+ICAgICAgIHwg
-Xn5+fn5+fn5+fn5+fg0KPiA+IC4vaW5jbHVkZS9saW51eC9pbml0Lmg6MTgwOjc6IHdhcm5pbmc6
-IGV4Y2VzcyBlbGVtZW50cyBpbiBzdHJ1Y3QgaW5pdGlhbGl6ZXINCj4gPiAgIDE4MCB8ICAgPSB7
-IF9fc2V0dXBfc3RyXyMjdW5pcXVlX2lkLCBmbiwgZWFybHkgfQ0KPiA+ICAgICAgIHwgICAgICAg
-Xn5+fn5+fn5+fn5+DQo+ID4gZHJpdmVycy9jbGsvaW14L2Nsay5jOjE1NzoxOiBub3RlOiBpbiBl
-eHBhbnNpb24gb2YgbWFjcm8g4oCYX19zZXR1cF9wYXJhbeKAmQ0KPiA+ICAgMTU3IHwgX19zZXR1
-cF9wYXJhbSgiZWFybHljb24iLCBpbXhfa2VlcF91YXJ0X2Vhcmx5Y29uLA0KPiA+ICAgICAgIHwg
-Xn5+fn5+fn5+fn5+fg0KPiA+IC4vaW5jbHVkZS9saW51eC9pbml0Lmg6MTgwOjc6IG5vdGU6IChu
-ZWFyIGluaXRpYWxpemF0aW9uIGZvcg0KPiA+IOKAmF9fc2V0dXBfaW14X2tlZXBfdWFydF9lYXJs
-eWNvbuKAmSkNCj4gDQo+IFRoaXMgZXJyb3IganVzdCBtZWFucyB5b3UgY2FuJ3QgaGF2ZSBhIF9f
-c2V0dXBfcGFyYW0oKSBjYWxsIGluIGEgbG9hZGFibGUNCj4gbW9kdWxlLCB3aGljaCB3ZSBhbHJl
-YWR5IGtuZXcuIElmIHlvdSBuZWVkIHRvIGRvIHNvbWV0aGluZyB3aXRoIHRoZSBjbG9ja3MNCj4g
-ZWFybHkgb24sIHRoYXQgaGFzIHRvIGJlIGluIGJ1aWx0LWluIGNvZGUgYW5kIGNhbm5vdCBiZSBp
-biBhIG1vZHVsZS4gSWYgeW91IGRvbid0DQo+IG5lZWQgdGhhdCBjb2RlLCB0aGVuIHlvdSBzaG91
-bGQganVzdCByZW1vdmUgaXQgZnJvbSBib3RoIHRoZSBtb2R1bGFyIHZlcnNpb24NCj4gYW5kIHRo
-ZSBidWlsdC1pbiB2ZXJzaW9uLg0KPiANCj4gV2hhdCBpcyB0aGUgcHVycG9zZSBvZiB0aGF0IF9f
-c2V0dXBfcGFyYW0oKSBhcmd1bWVudCBwYXJzaW5nIGluIHRoZSBjbG9jaw0KPiBkcml2ZXI/DQo+
-IA0KDQpXZSBuZWVkIHRoZSBjb2RlIGZvciBwcm9wZXIgdWFydCBjbG9jayBtYW5hZ2VtZW50IG9m
-IGVhcmx5Y29uLCBmcm9tIHRoZSBjb2RlLCBpdA0KaXMgdHJ5aW5nIHRvIGtlZXAgY29uc29sZSB1
-YXJ0IGNsb2NrIGVuYWJsZWQgZHVyaW5nIGtlcm5lbCBib290IHVwLiANCg0KVGhhbmtzLA0KQW5z
-b24NCg==
+On 01.07.20 04:32, Wei Yang wrote:
+> On Tue, Jun 30, 2020 at 02:52:35PM +0200, David Hildenbrand wrote:
+>> On 30.06.20 04:14, Wei Yang wrote:
+>>> There are two code path which invoke __populate_section_memmap()
+>>>
+>>>   * sparse_init_nid()
+>>>   * sparse_add_section()
+>>>
+>>> For both case, we are sure the memory range is sub-section aligned.
+>>>
+>>>   * we pass PAGES_PER_SECTION to sparse_init_nid()
+>>>   * we check range by check_pfn_span() before calling
+>>>     sparse_add_section()
+>>>
+>>> Also, the counterpart of __populate_section_memmap(), we don't do such
+>>> calculation and check since the range is checked by check_pfn_span() in
+>>> __remove_pages().
+>>>
+>>> Clear the calculation and check to keep it simple and comply with its
+>>> counterpart.
+>>>
+>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>> ---
+>>>  mm/sparse-vmemmap.c | 16 ++--------------
+>>>  1 file changed, 2 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+>>> index 0db7738d76e9..24b01ebae111 100644
+>>> --- a/mm/sparse-vmemmap.c
+>>> +++ b/mm/sparse-vmemmap.c
+>>> @@ -247,20 +247,8 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
+>>>  struct page * __meminit __populate_section_memmap(unsigned long pfn,
+>>>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>>>  {
+>>> -	unsigned long start;
+>>> -	unsigned long end;
+>>> -
+>>> -	/*
+>>> -	 * The minimum granularity of memmap extensions is
+>>> -	 * PAGES_PER_SUBSECTION as allocations are tracked in the
+>>> -	 * 'subsection_map' bitmap of the section.
+>>> -	 */
+>>> -	end = ALIGN(pfn + nr_pages, PAGES_PER_SUBSECTION);
+>>> -	pfn &= PAGE_SUBSECTION_MASK;
+>>> -	nr_pages = end - pfn;
+>>> -
+>>> -	start = (unsigned long) pfn_to_page(pfn);
+>>> -	end = start + nr_pages * sizeof(struct page);
+>>> +	unsigned long start = (unsigned long) pfn_to_page(pfn);
+>>> +	unsigned long end = start + nr_pages * sizeof(struct page);
+>>>  
+>>>  	if (vmemmap_populate(start, end, nid, altmap))
+>>>  		return NULL;
+>>>
+>>
+>> Can we add a WARN_ON_ONCE to catch mis-use in the future?
+>>
+>> if (WARN_ON_ONCE(!IS_ALIGNED(pfn, PAGES_PER_SUBSECTION) ||
+>>                 !IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION))
+>> 	return NULL;
+> 
+> How about to add this into both population and depopulation?
+
+We don't have a similar wrapper for vmemmap_free().
+
+-- 
+Thanks,
+
+David / dhildenb
+
