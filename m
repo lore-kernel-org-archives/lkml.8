@@ -2,225 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF508207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22E5207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbgGAP1z (ORCPT
+        id S1732093AbgGAP2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:27:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:50272 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 11:28:00 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55082 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732065AbgGAP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:27:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0331F30E;
-        Wed,  1 Jul 2020 08:27:53 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99B1B3F68F;
-        Wed,  1 Jul 2020 08:27:52 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 16:27:51 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
-        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] cpufreq: move invariance setter calls in cpufreq core
-Message-ID: <20200701152751.GA29496@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-3-ionela.voinescu@arm.com>
- <20200701095219.gxrkowtukosnfmwp@vireshk-i7>
+        id S1732001AbgGAP1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:27:55 -0400
+IronPort-SDR: LoS762vxAk/BUwawcP/tLvgibULz793n6r9EuzCRLgCq//vIp+IiAe7ekgY93HyM/KMIYGqsDh
+ DIfPFFU2eMsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144781854"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="144781854"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:27:49 -0700
+IronPort-SDR: gZOr6WplbAdaFEtI9Fphq38WUDpez5cC1wI9i10yj5Oh4vVivr7dEpwEBrBILABux695POnPVu
+ AZs8NsCbWfPw==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455141064"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:27:47 -0700
+Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
+        dwagner@suse.de, tobin@kernel.org, cl@linux.com
+References: <20200626003459.D8E015CA@viggo.jf.intel.com>
+ <20200629065203.GJ3346@MiWiFi-R3L-srv>
+ <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
+ <20200629233043.GK3346@MiWiFi-R3L-srv>
+ <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
+ <20200630194755.61f56a55d46222f8d0c84bdd@linux-foundation.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <5dc16fdf-21bf-403d-240a-0f11df1b2af5@intel.com>
+Date:   Wed, 1 Jul 2020 08:27:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701095219.gxrkowtukosnfmwp@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200630194755.61f56a55d46222f8d0c84bdd@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey,
+On 6/30/20 7:47 PM, Andrew Morton wrote:
+>> Oh, that's a very good point.  There are a couple of those around.  Let
+>> me circle back and update the documentation and the variable name.  I'll
+>> send out another version.
+> Was the omission of cc:stable deliberate?
 
-On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
-> On 01-07-20, 10:07, Ionela Voinescu wrote:
-> > From: Valentin Schneider <valentin.schneider@arm.com>
-> > 
-> > To properly scale its per-entity load-tracking signals, the task scheduler
-> > needs to be given a frequency scale factor, i.e. some image of the current
-> > frequency the CPU is running at. Currently, this scale can be computed
-> > either by using counters (APERF/MPERF on x86, AMU on arm64), or by
-> > piggy-backing on the frequency selection done by cpufreq.
-> > 
-> > For the latter, drivers have to explicitly set the scale factor
-> > themselves, despite it being purely boiler-plate code: the required
-> > information depends entirely on the kind of frequency switch callback
-> > implemented by the driver, i.e. either of: target_index(), target(),
-> > fast_switch() and setpolicy().
-> > 
-> > The fitness of those callbacks with regard to driving the Frequency
-> > Invariance Engine (FIE) is studied below:
-> > 
-> > target_index()
-> > ==============
-> > Documentation states that the chosen frequency "must be determined by
-> > freq_table[index].frequency". It isn't clear if it *has* to be that
-> > frequency, or if it can use that frequency value to do some computation
-> > that ultimately leads to a different frequency selection. All drivers
-> > go for the former, while the vexpress-spc-cpufreq has an atypical
-> > implementation.
-> > 
-> > Thefore, the hook works on the asusmption the core can use
-> > freq_table[index].frequency.
-> > 
-> > target()
-> > =======
-> > This has been flagged as deprecated since:
-> > 
-> >   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> > 
-> > It also doesn't have that many users:
-> > 
-> >   cpufreq-nforce2.c:371:2:	.target = nforce2_target,
-> >   cppc_cpufreq.c:416:2:		.target = cppc_cpufreq_set_target,
-> >   pcc-cpufreq.c:573:2:		.target = pcc_cpufreq_target,
-> > 
-> > Should we care about drivers using this hook, we may be able to exploit
-> > cpufreq_freq_transition_{being, end}(). Otherwise, if FIE support is
-> > desired in their current state, arch_set_freq_scale() could still be
-> > called directly by the driver, while CPUFREQ_CUSTOM_SET_FREQ_SCALE
-> > could be used to mark support for it.
-> > 
-> > fast_switch()
-> > =============
-> > This callback *has* to return the frequency that was selected.
-> > 
-> > setpolicy()
-> > ===========
-> > This callback does not have any designated way of informing what was the
-> > end choice. But there are only two drivers using setpolicy(), and none
-> > of them have current FIE support:
-> > 
-> >   drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
-> >   drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
-> > 
-> > The intel_pstate is known to use counter-driven frequency invariance.
-> 
-> Same for acpi-cpufreq driver as well ?
-> 
-
-The acpi-cpufreq driver defines target_index() and fast_switch() so it
-should go through the setting in cpufreq core. But x86 does not actually
-define arch_set_freq_scale() so when called it won't do anything (won't
-set any frequency scale factor), but rely on counters to set it through
-the arch_scale_freq_tick(). But this cpufreq functionality could
-potentially be used.
-
-> And I think we should do the freq-invariance thing for all the above categories
-> nevertheless.
-> 
-
-I'm not sure what you mean by this. You mean we should also (try to) set
-the frequency scale factor for drivers defining setpolicy() and target()?
-
-> > If FIE support is desired in their current state, arch_set_freq_scale()
-> > could still be called directly by the driver, while
-> > CPUFREQ_CUSTOM_SET_FREQ_SCALE could be used to mark support for it.
-> > 
-> > Conclusion
-> > ==========
-> > 
-> > Given that the significant majority of current FIE enabled drivers use
-> > callbacks that lend themselves to triggering the setting of the FIE scale
-> > factor in a generic way, move the invariance setter calls to cpufreq core,
-> > while filtering drivers that flag custom support using
-> > CPUFREQ_CUSTOM_SET_FREQ_SCALE.
-> > 
-> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 20 +++++++++++++++++---
-> >  1 file changed, 17 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 0128de3603df..83b58483a39b 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -2046,9 +2046,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
-> >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
-> >  					unsigned int target_freq)
-> >  {
-> > +	unsigned int freq;
-> > +
-> >  	target_freq = clamp_val(target_freq, policy->min, policy->max);
-> > +	freq = cpufreq_driver->fast_switch(policy, target_freq);
-> > +
-> 
-> > +	if (freq && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-> > +		arch_set_freq_scale(policy->related_cpus, freq,
-> > +				    policy->cpuinfo.max_freq);
-> 
-> This needs to be a separate function.
-> 
-
-Yes, that would be nicer.
-
-> >  
-> > -	return cpufreq_driver->fast_switch(policy, target_freq);
-> > +	return freq;
-> >  }
-> >  EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
-> >  
-> > @@ -2140,7 +2147,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
-> >  			    unsigned int relation)
-> >  {
-> >  	unsigned int old_target_freq = target_freq;
-> > -	int index;
-> > +	int index, retval;
-> >  
-> >  	if (cpufreq_disabled())
-> >  		return -ENODEV;
-> > @@ -2171,7 +2178,14 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
-> >  
-> >  	index = cpufreq_frequency_table_target(policy, target_freq, relation);
-> >  
-> > -	return __target_index(policy, index);
-> > +	retval = __target_index(policy, index);
-> > +
-> > +	if (!retval && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
-> > +		arch_set_freq_scale(policy->related_cpus,
-> > +				    policy->freq_table[index].frequency,
-> 
-> policy->cur gets updated for both target and target_index type drivers. You can
-> use that safely. It gets updated after the postchange notification.
-> 
-
-This would allow us to cover the drivers that define target() as well (not
-only target_index() and fast_switch()). Looking over the code we only take
-that path (calling cpufreq_freq_transition_end()), for 
-!CPUFREQ_ASYNC_NOTIFICATION. But again, that's only used for
-powernow-k8 which is deprecated. 
-
-I'll attempt a nice way to use this.
-
-Thank you very much for the review,
-Ionela.
-
-> > +				    policy->cpuinfo.max_freq);
-> > +
-> > +	return retval;
-> >  }
-> >  EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
-> 
-> -- 
-> viresh
+Nope, it was an accidental stable@kernel.org instead of stable@vger.
+<Sigh> Not the first time I've done that...  I'll fix it up in the resend.
