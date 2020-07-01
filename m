@@ -2,100 +2,102 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5B62074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:50:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tvs2DSdH"
+	by mail.kernel.org (Postfix) with ESMTP id 0BE0B20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593589859;
+	bh=p84kYY9UMRLBAMs9rNo8BJHfDwmh0Roplc3jfShd5k0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PUYeR0PDS93ONm7np7c7/xgWL3xRWpkBEn+b4Gbs6PqE9OPjLs/0Y2WPgrIDv1jpB
+	 S3okyN4Xbej0iducJ7V1RwWfCguahGrR9mLRDdRZq7fsXtwhs3JcpLBmD3xUUDRikj
+	 Lv5E9pi6kyJnz/5Cjd8nLxB/AMAOHa0qLSkCfs3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgGAHux (ORCPT
+        id S1728456AbgGAHu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbgGAHux (ORCPT
+        Wed, 1 Jul 2020 03:50:57 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42261 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728349AbgGAHu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:50:53 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D759AC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:50:52 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t25so21209593lji.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uz2HVrjjWvM9xtc3pLsQOyiOISHzNTG2GYwMVCw6J4o=;
-        b=tvs2DSdH9VtwLW7TdYV8ZAqaUg/zZ8haHmG8YpMOlppKeOLLQbv5ErlxCiEgo2/eXK
-         77As9LEMtO5Mk/n8z5uLzjqYSo5Mhn8o4iSVjroURbmuoqH6xpj0dvP6gPfFOJT1rvwV
-         T2pZTjcKOppqeOjFBTHlhjsr5ALmNO3j9hUdL1PUtLuvgZ4PFaHTyYG2fVCwkaBuYKwo
-         xussbvQg1VFQaVTB9vB8oSf+Qx7zJtAb8ihs1wIwWwwHktc9Sf3sDhxwGFZTMY1sBJB4
-         iaEN1xgQeU6zhego2PxrwsM12K2MdRSrNT/wEmTm9whZ6UZ247TkW8wtJ14MkpaKfZ7t
-         mIQg==
+        Wed, 1 Jul 2020 03:50:56 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h22so18630169lji.9;
+        Wed, 01 Jul 2020 00:50:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uz2HVrjjWvM9xtc3pLsQOyiOISHzNTG2GYwMVCw6J4o=;
-        b=qw09bgbcxJHYJWdcXRIneVzvAx5Eq5ob3IfkBZQ0kaPfSPx55zX8kwM/d3mItsCP8x
-         6pgYBGsAkfvQe/I6akfmBV9hylsQaLPjbSHtEC9KN7JeI93pHw9+TMh27dKUYY7+3JN9
-         /pmz3ifNIBVcNEC12i4L2ANi1FikHMcH0gC2vyow/twQuzyFJerQRCmEfEdhPqcxcxIF
-         zoWCbWpqdyGbvSUK2mDzVoYfzLCFuh7l+ujAODXq+ByyI9sXoiwj7iCRgC7EwcQfIBT6
-         VUNDYZLCBQHNMFvfDHKsJrzER+BCYUiaoJWxU1+dRniLcZXKiOiTYKtefuxOc+AnWlT+
-         2sZg==
-X-Gm-Message-State: AOAM530ZpaZCVeCaqVMSx08THK4s5jIKZ0QmKev/busw5xmFuh0BIm/w
-        MPHHBdwvjJPuXUJo+jZ9dSKLGNYm43yhizLNdXiQEQ==
-X-Google-Smtp-Source: ABdhPJwgrorp6PW7xMBimsg+9NrZkVcYegomjAzeg6KTUWqMNqo6scmxWP7ixbhDL9EU3lg5KTkr+7Ecj790mtBVXkk=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr7003529ljg.144.1593589851375;
- Wed, 01 Jul 2020 00:50:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V5USxJUqdNDMLfwU5wJfAdESBZenthDQ0zK5od654+k=;
+        b=fWCvcbToGLuUeogj4PEWGECpzTjIHxJe43I5nvoKXntAX93d2GP5HaTDNPPHLpCye6
+         eL5BPfDqdb6fv8wxkoxol3NeooIPqczF0Y+yGcWnGrxWKw5sBg0skRacrySPhEuxbo+R
+         jPHU0/nHZ6SFYTOuNUR5p+byG2Sdj4GSnHBrWQalBkbwPc5AX8lHJ9uAPTMAeWrQunXN
+         aN5xsf0d9SCKZgYXBFY6c7u19MxErFbGg7gMdO8X04ZPzNS1Q6IZDOUzcOMNdUrgIHGy
+         gX+l5cOfS8pebJeTvI0MvfXtqLZ1Eadw3izrX01nXYhuhl7DWZTe2Ynr2d0MhGlKonno
+         px9Q==
+X-Gm-Message-State: AOAM531n8yinI+8LdOZMAH2OaoaLDGmmLtdRIDSeXpoh1EEnEKrHPiYs
+        ZdD3HHq9yIvuNH9Qu0DMJn49lxZWCSI=
+X-Google-Smtp-Source: ABdhPJzcFqBA84jJpx6KwqXnUpdFMSRkHlEPlSIHbaryPhq0XLJl4MQGrzNcaj2OPvXqqXM5pR7hfA==
+X-Received: by 2002:a2e:9ed0:: with SMTP id h16mr13495821ljk.366.1593589853723;
+        Wed, 01 Jul 2020 00:50:53 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id 23sm1744591lff.91.2020.07.01.00.50.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 00:50:52 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jqXW3-0006GS-8l; Wed, 01 Jul 2020 09:50:48 +0200
+Date:   Wed, 1 Jul 2020 09:50:47 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, linus.walleij@linaro.org,
+        mchehab+huawei@kernel.org
+Subject: Re: [PATCH v4 0/3] Add support for MaxLinear/Exar USB to serial
+ converters
+Message-ID: <20200701075047.GB3334@localhost>
+References: <20200607160809.20192-1-mani@kernel.org>
+ <20200626143136.GF8333@Mani-XPS-13-9360>
 MIME-Version: 1.0
-References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-10-megous@megous.com>
-In-Reply-To: <20200626005601.241022-10-megous@megous.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Jul 2020 09:50:40 +0200
-Message-ID: <CACRpkdZcMA_Y_eH8_TL09Z0_DADDcUy5s_S45UfrnoSKmNgtXw@mail.gmail.com>
-Subject: Re: [PATCH v5 09/13] drm/panel: st7703: Add support for Xingbangda XBD599
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626143136.GF8333@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
+On Fri, Jun 26, 2020 at 08:01:36PM +0530, Manivannan Sadhasivam wrote:
+> On Sun, Jun 07, 2020 at 09:38:06PM +0530, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > This series adds support for MaxLinear/Exar USB to serial converters.
+> > This driver only supports XR21V141X series but it can easily be extended
+> > to other series in future.
+> > 
+> > This driver is inspired from the initial one submitted by Patong Yang:
+> > 
+> > https://patchwork.kernel.org/patch/10543261/
+> > 
+> > While the initial driver was a custom tty USB driver exposing whole
+> > new serial interface ttyXRUSBn, this version is completely based on USB
+> > serial core thus exposing the interfaces as ttyUSBn. This will avoid
+> > the overhead of exposing a new USB serial interface which the userspace
+> > tools are unaware of.
+> > 
+> > This series has been tested with Hikey970 board hosting XR21V141X chip.
+> > 
+> 
+> Gentle ping on this series!
 
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
-> PinePhone. Add support for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+You sending this in reply to your superseded v4. Please make sure to
+always increment the revision number when updating a series, including
+when changing authorship.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Johan
