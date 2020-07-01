@@ -2,94 +2,111 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC5A20771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170B22074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593569390;
+	bh=eoerlDq0jq33nBxOyIP192wzXoIP45xb+HMF4L54sis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mjWgv51FXsfXla8J51UKLpu3ktTI/eOyoUrVSUHYfGKDj+QRo+EM5OX4tuW9GwPCD
+	 1v36utCQb4pXzIduUeTKQpurDtl1xiSmp/doF+g9oerZE0uMiWQl46zT9A4YDMcqSv
+	 yAoxdQWKPkSizSBPiAojf/YuqbgBW3GM/PaUuFEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgGACCU (ORCPT
+        id S1726003AbgGACJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:02:20 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35250 "EHLO fornost.hmeau.com"
+        Tue, 30 Jun 2020 22:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgGACCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:02:20 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jqS4h-00058w-Ea; Wed, 01 Jul 2020 12:02:12 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 12:02:11 +1000
-Date:   Wed, 1 Jul 2020 12:02:11 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     mathieu.desnoyers@efficios.com, davem@davemloft.net,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, ycheng@google.com, joraj@efficios.com
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-Message-ID: <20200701020211.GA6875@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
-X-Newsgroups: apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725805AbgGACJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:09:33 -0400
+Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344712074D;
+        Wed,  1 Jul 2020 02:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593569373;
+        bh=eoerlDq0jq33nBxOyIP192wzXoIP45xb+HMF4L54sis=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D4lvFjrP7/gXpPVCuaDLzbxJ5drqo+jOu/sn+9nnHVlvXXWcp4N0YAzU3iaKz0xIe
+         n7KiQtBc5SEPwvc0wYxfFOxeNCEeX2dO7r48ULrO/vLhNEkwoE/31DWotWv9s+K7/k
+         5f9XjTJ33nGnMHiBtZMLKTVYAAzeRbneHKzI8bOM=
+Date:   Tue, 30 Jun 2020 19:09:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Barry Song <song.bao.hua@hisilicon.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Aslan Bakirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Rik van Riel <riel@surriel.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] mm/cma.c: use exact_nid true to fix possible per-numa
+ cma leak
+Message-Id: <20200630190931.04967b5e8bdf29c33f3c8005@linux-foundation.org>
+In-Reply-To: <20200630190825.GB37586@carbon.dhcp.thefacebook.com>
+References: <20200628074345.27228-1-song.bao.hua@hisilicon.com>
+        <20200630190825.GB37586@carbon.dhcp.thefacebook.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Dumazet <edumazet@google.com> wrote:
->
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
-> 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
-> int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
-> tcp_md5sig_key *key)
-> {
->        struct scatterlist sg;
-> +       u8 keylen = key->keylen;
+On Tue, 30 Jun 2020 12:08:25 -0700 Roman Gushchin <guro@fb.com> wrote:
+
+> On Sun, Jun 28, 2020 at 07:43:45PM +1200, Barry Song wrote:
+> > Calling cma_declare_contiguous_nid() with false exact_nid for per-numa
+> > reservation can easily cause cma leak and various confusion.
+> > For example, mm/hugetlb.c is trying to reserve per-numa cma for gigantic
+> > pages. But it can easily leak cma and make users confused when system has
+> > memoryless nodes.
+> > 
+> > In case the system has 4 numa nodes, and only numa node0 has memory.
+> > if we set hugetlb_cma=4G in bootargs, mm/hugetlb.c will get 4 cma areas
+> > for 4 different numa nodes. since exact_nid=false in current code, all
+> > 4 numa nodes will get cma successfully from node0, but hugetlb_cma[1 to 3]
+> > will never be available to hugepage will only allocate memory from
+> > hugetlb_cma[0].
+> > 
+> > In case the system has 4 numa nodes, both numa node0&2 has memory, other
+> > nodes have no memory.
+> > if we set hugetlb_cma=4G in bootargs, mm/hugetlb.c will get 4 cma areas
+> > for 4 different numa nodes. since exact_nid=false in current code, all
+> > 4 numa nodes will get cma successfully from node0 or 2, but hugetlb_cma[1]
+> > and [3] will never be available to hugepage as mm/hugetlb.c will only
+> > allocate memory from hugetlb_cma[0] and hugetlb_cma[2].
+> > This causes permanent leak of the cma areas which are supposed to be
+> > used by memoryless node.
+> > 
+> > Of cource we can workaround the issue by letting mm/hugetlb.c scan all
+> > cma areas in alloc_gigantic_page() even node_mask includes node0 only.
+> > that means when node_mask includes node0 only, we can get page from
+> > hugetlb_cma[1] to hugetlb_cma[3]. But this will cause kernel crash in
+> > free_gigantic_page() while it wants to free page by:
+> > cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order)
+> > 
+> > On the other hand, exact_nid=false won't consider numa distance, it
+> > might be not that useful to leverage cma areas on remote nodes.
+> > I feel it is much simpler to make exact_nid true to make everything
+> > clear. After that, memoryless nodes won't be able to reserve per-numa
+> > CMA from other nodes which have memory.
 > 
-> -       sg_init_one(&sg, key->key, key->keylen);
-> -       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
-> +       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
-> +
-> +       sg_init_one(&sg, key->key, keylen);
-> +       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
->        return crypto_ahash_update(hp->md5_req);
-> }
-> EXPORT_SYMBOL(tcp_md5_hash_key);
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
-> 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
-> tcp_md5_addr *addr,
->        if (key) {
->                /* Pre-existing entry - just update that one. */
->                memcpy(key->key, newkey, newkeylen);
-> +
-> +               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
-> +
->                key->keylen = newkeylen;
->                return 0;
->        }
+> Totally agree.
+> 
+> Acked-by: Roman Gushchin <guro@fb.com>
+> 
 
-This doesn't make sense.  Your smp_rmb only guarantees that you
-see a version of key->key that's newer than keylen.  What if the
-key got changed twice? You could still read more than what's in
-the key (if that's what you're trying to protect against).
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Do we feel this merits a cc:stable?
