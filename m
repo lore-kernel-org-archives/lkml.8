@@ -2,147 +2,156 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C275BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC374C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7B62077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8702074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGeBX6Lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgGAJJo (ORCPT
+        id S1729528AbgGAJKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:09:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:47844 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbgGAJJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 071C61396;
-        Wed,  1 Jul 2020 02:09:41 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 42E793F68F;
-        Wed,  1 Jul 2020 02:09:39 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        linux@armlinux.org.uk, valentin.schneider@arm.com
-Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] cpufreq: report whether cpufreq supports Frequency Invariance (FI)
-Date:   Wed,  1 Jul 2020 10:07:48 +0100
-Message-Id: <20200701090751.7543-6-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+        Wed, 1 Jul 2020 05:10:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47276 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729087AbgGAJKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:10:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593594616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QMPqqdA13OB8Wbq1cykQlNhk0fPsMbbs+lqAtCf74+Q=;
+        b=RGeBX6Lw/DtTHZuKT1L2Nur4+Vf1FDHrr76o6KauCvru2mJZn87mKaSYEQBakn4s730H4S
+        35iS3KlySliUJQXqgd0y2pYY2zu92v6n519AXUwoX36d478ZWXq7gE/c1sNVZLMIhRuSg5
+        Z6WFuMFLEs86qDcrP/t43eqD57rbGIU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-f_I8q3zRMJ-cHIdTAEwUqQ-1; Wed, 01 Jul 2020 05:10:15 -0400
+X-MC-Unique: f_I8q3zRMJ-cHIdTAEwUqQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BFE2EC1A2;
+        Wed,  1 Jul 2020 09:10:13 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-177.pek2.redhat.com [10.72.13.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6AB871662;
+        Wed,  1 Jul 2020 09:09:44 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 2/5] vhost: generialize backend features setting/getting
+Date:   Wed,  1 Jul 2020 17:08:36 +0800
+Message-Id: <20200701090839.12994-3-jasowang@redhat.com>
+In-Reply-To: <20200701090839.12994-1-jasowang@redhat.com>
+References: <20200701090839.12994-1-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the update of the FI scale factor is done in cpufreq core for
-selected functions - target_index() and fast_switch(), and drivers can
-mark themselves as providing custom support for FI as well, by calling
-arch_set_freq_scale() themselves, we can provide feedback to the task
-scheduler (and not only) on whether cpufreq supports FI.
+Move the backend features setting/getting from net.c to vhost.c to be
+reused by vhost-vdpa.
 
-For this purpose, provide error and debug messages, together with an
-external function to expose whether the cpufreq drivers support FI, by
-using a static key.
-
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/cpufreq/cpufreq.c | 26 ++++++++++++++++++++++++++
- include/linux/cpufreq.h   |  5 +++++
- 2 files changed, 31 insertions(+)
+ drivers/vhost/net.c   | 18 ++----------------
+ drivers/vhost/vhost.c | 15 +++++++++++++++
+ drivers/vhost/vhost.h |  2 ++
+ 3 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 83b58483a39b..60b5272c5d80 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -59,6 +59,9 @@ static struct cpufreq_driver *cpufreq_driver;
- static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
- static DEFINE_RWLOCK(cpufreq_driver_lock);
- 
-+/* Mark support for the scheduler's frequency invariance engine */
-+static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
-+
- /* Flag to suspend/resume CPUFreq governors */
- static bool cpufreq_suspended;
- 
-@@ -67,6 +70,26 @@ static inline bool has_target(void)
- 	return cpufreq_driver->target_index || cpufreq_driver->target;
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 0b509be8d7b1..d88afe3f6060 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1622,21 +1622,6 @@ static long vhost_net_reset_owner(struct vhost_net *n)
+ 	return err;
  }
  
-+static inline
-+void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
-+{
-+	if ((driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE) ||
-+	    ((driver->target_index || driver->fast_switch)
-+	     && !(driver->target || driver->setpolicy))) {
-+
-+		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
-+		pr_debug("%s: Driver %s can provide frequency invariance.",
-+			 __func__, driver->name);
-+	} else
-+		pr_err("%s: Driver %s cannot provide frequency invariance.",
-+		__func__, driver->name);
-+}
-+
-+bool cpufreq_sets_freq_scale(void)
-+{
-+	return static_branch_likely(&cpufreq_set_freq_scale);
-+}
-+
- /* internal prototypes */
- static unsigned int __cpufreq_get(struct cpufreq_policy *policy);
- static int cpufreq_init_governor(struct cpufreq_policy *policy);
-@@ -2713,6 +2736,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	cpufreq_driver = driver_data;
- 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
- 
-+	enable_cpufreq_freq_invariance(cpufreq_driver);
-+
- 	if (driver_data->setpolicy)
- 		driver_data->flags |= CPUFREQ_CONST_LOOPS;
- 
-@@ -2782,6 +2807,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
- 	cpus_read_lock();
- 	subsys_interface_unregister(&cpufreq_interface);
- 	remove_boost_sysfs_file();
-+	static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
- 	cpuhp_remove_state_nocalls_cpuslocked(hp_online);
- 
- 	write_lock_irqsave(&cpufreq_driver_lock, flags);
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 42668588f9f8..8b6369d657bd 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -217,6 +217,7 @@ void refresh_frequency_limits(struct cpufreq_policy *policy);
- void cpufreq_update_policy(unsigned int cpu);
- void cpufreq_update_limits(unsigned int cpu);
- bool have_governor_per_policy(void);
-+bool cpufreq_sets_freq_scale(void);
- struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
- void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
- void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
-@@ -237,6 +238,10 @@ static inline unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
+-static int vhost_net_set_backend_features(struct vhost_net *n, u64 features)
+-{
+-	int i;
+-
+-	mutex_lock(&n->dev.mutex);
+-	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
+-		mutex_lock(&n->vqs[i].vq.mutex);
+-		n->vqs[i].vq.acked_backend_features = features;
+-		mutex_unlock(&n->vqs[i].vq.mutex);
+-	}
+-	mutex_unlock(&n->dev.mutex);
+-
+-	return 0;
+-}
+-
+ static int vhost_net_set_features(struct vhost_net *n, u64 features)
  {
- 	return 0;
+ 	size_t vhost_hlen, sock_hlen, hdr_len;
+@@ -1737,7 +1722,8 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
+ 			return -EFAULT;
+ 		if (features & ~VHOST_NET_BACKEND_FEATURES)
+ 			return -EOPNOTSUPP;
+-		return vhost_net_set_backend_features(n, features);
++		vhost_set_backend_features(&n->dev, features);
++		return 0;
+ 	case VHOST_RESET_OWNER:
+ 		return vhost_net_reset_owner(n);
+ 	case VHOST_SET_OWNER:
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index dc510dc2b1ef..ba61f499d420 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2700,6 +2700,21 @@ struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
  }
-+static inline bool cpufreq_sets_freq_scale(void)
-+{
-+	return false;
-+}
- static inline void disable_cpufreq(void) { }
- #endif
+ EXPORT_SYMBOL_GPL(vhost_dequeue_msg);
  
++void vhost_set_backend_features(struct vhost_dev *dev, u64 features)
++{
++	struct vhost_virtqueue *vq;
++	int i;
++
++	mutex_lock(&dev->mutex);
++	for (i = 0; i < dev->nvqs; ++i) {
++		vq = dev->vqs[i];
++		mutex_lock(&vq->mutex);
++		vq->acked_backend_features = features;
++		mutex_unlock(&vq->mutex);
++	}
++	mutex_unlock(&dev->mutex);
++}
++EXPORT_SYMBOL_GPL(vhost_set_backend_features);
+ 
+ static int __init vhost_init(void)
+ {
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 264a2a2fae97..52753aecd82a 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -223,6 +223,8 @@ void vhost_enqueue_msg(struct vhost_dev *dev,
+ 		       struct vhost_msg_node *node);
+ struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
+ 					 struct list_head *head);
++void vhost_set_backend_features(struct vhost_dev *dev, u64 features);
++
+ __poll_t vhost_chr_poll(struct file *file, struct vhost_dev *dev,
+ 			    poll_table *wait);
+ ssize_t vhost_chr_read_iter(struct vhost_dev *dev, struct iov_iter *to,
 -- 
-2.17.1
+2.20.1
 
