@@ -7,64 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A867DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB89C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9CA20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB1E207CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WrK11Ec3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYhH5D4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgGAIdC (ORCPT
+        id S1729141AbgGAIdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
+        Wed, 1 Jul 2020 04:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgGAIbn (ORCPT
+        with ESMTP id S1728858AbgGAIbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB0EC03E979
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l2so20794016wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:42 -0700 (PDT)
+        Wed, 1 Jul 2020 04:31:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A87C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so22822432wrj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oA8RTovB0rd6yTwQFM7j/fT5zajZLuFIh0xLtIq5guU=;
-        b=WrK11Ec31w4tuU8HCCO4VXLIfnciHgOfevpUGBzfQ3xbF5bV2C/YHIzlaNHOWFD5iK
-         ypklMlwIAEMTPaSzC336jN8UTGOtmlySQkuawDxjI7JeY0sqec11PiiQQ6jIuJeHZ+rU
-         hFaVwdzb3ezTguIerZcbG6vu346i7c3zLmPsXIL8OsJRvkets2jsNHVoYLygQO2nOlOS
-         PkVkjHzYKkRIH02uc7ghIVVjfzFw/+IY9+eewtJT5TGx8qhuGW0UpS9ufdKrha63L8sg
-         4dU9xCetvmuKpO4H4uDcIFoKOeHHa0MRQWBxYsUE6xNVAD3Iu9CR/SaNLPlr/ldNowgj
-         IZ7w==
+        bh=qqN6XxuBV4Jc4c7/xcuhasc+YhoMkS+syDgxfhyrVnI=;
+        b=HYhH5D4iYKvqfOcEZozIXbZK+3GUFjQvEt9oTG0zyZplKyq3KFireZ7yKQJR9prio5
+         m8kt9h93baqc+9situIhiciE/ochx21mTwPCscD1ytzEqFdeQCKFBK0Y2yNYmvYVQfXt
+         yUkIWS/zHIVRCNh9vxRI5Pq00TXoX7HLq8hJUs2cSeQ8sCZN/oUclHAtCTFHYG7TQa0V
+         cWs57a6DrY9cUFoReNqJWSDX3wfiLdAAMhCy7rFnrqGot2/hIvnGJcXWwoNf06ncU2Ct
+         YA8t+aD+R9P7H+/QpwiSaHINEc4g9rJTITMBcqnRvATjQ3Frth/hSFXWKlGu+zyR4wQU
+         /XkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oA8RTovB0rd6yTwQFM7j/fT5zajZLuFIh0xLtIq5guU=;
-        b=Q3cjGUkAw+ZGUejFVV/n17iq1WnM63ZpHqH4gGvDWsf9ocFF2ZevvJ3hJLSZs6Xn7H
-         Lkv5lj0SWTx62aBlHXJ67AO7pQ8G9cx3ILIVfgEcl425EXTZu47d2XMRuUme8F7fBtXv
-         hHl1FBhk5Vt2/HUx8Mpkd36/H8s9cVJX+Z35sWM/ElMVCwg79t8Rx4Wf/NczQUadatsr
-         eUjK7X1yug52cFjQYXh6KgK1H4qhtRurtSPMgoEow8yU3NQj0DhwbbPAzE9TCNgucjXP
-         5MThYUm87kRIilssAZspRy+LiQjr6Ak+fv3rkRJcEbKq26RjmpyvnPlFoxAKqakrewJf
-         BW7Q==
-X-Gm-Message-State: AOAM533so86WC8I9z/cn18RvkcifJJLg+wS8H8CF4PeJiqVQfwVshmeg
-        lOPor8zNU475HOzDsXTkGANB+8PY29M=
-X-Google-Smtp-Source: ABdhPJyR3mT3l+HU/A8tyDCKJz3R8IPmnK5C/miGyhGwUsBMnHQe5vBBWBpSeQirIrzxrutuyPxrBA==
-X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr27637161wml.185.1593592301382;
-        Wed, 01 Jul 2020 01:31:41 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=qqN6XxuBV4Jc4c7/xcuhasc+YhoMkS+syDgxfhyrVnI=;
+        b=FCV4Bt4hsBoky6v+sMZbBE5Ek7xUUgcX/yr65uFPXTi2BbBQiq039rhsX7O85mERST
+         AkzE3IvBb+f/bEUQ3Sxq31DcWWS3lrlWCDOU8CKdpEFyoqz9ZbA9shdibaGCdkU6WoA2
+         Gtcrmkcq9XGXHBHyApy/dC9wqe8WlXnoaXxcovN8YE5tA9SS8IJUlxVNfcrhMnOiLjEB
+         1whs9mtzLcXGkXuFnKxI54TJOlv0tpx9PXnlrogfd7i243/ShDGOnjhdbL9Z0wwhw3Al
+         oPMM1VEsjYzXubHEZEq6PrpZFFH9v9Hpk9qO9WG/f2i2+ZSSdgDdqHezlu6+GLVXiIV2
+         e6Eg==
+X-Gm-Message-State: AOAM531mGoS+jLuK/v8qf1gW9EyZ3V6n9HbSUhh36W3O93qdQIJ6r6F+
+        22R15+JgS4QoEAfNHEFH4CPWWJvoWxw=
+X-Google-Smtp-Source: ABdhPJwFyytyHe6Fg/Zzb9Dm+c+uudMotSOlxn7CNoD2NPieFAechx3QO9ukci0nDDTXMezmZJ1YHA==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr24287781wrm.146.1593592300331;
         Wed, 01 Jul 2020 01:31:40 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 01:31:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 15/30] misc: mic: cosm: cosm_main: Document 'force' function argument
-Date:   Wed,  1 Jul 2020 09:31:03 +0100
-Message-Id: <20200701083118.45744-16-lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH v2 14/30] misc: mic: host: mic_debugfs: Demote function headers from kerneldoc
+Date:   Wed,  1 Jul 2020 09:31:02 +0100
+Message-Id: <20200701083118.45744-15-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
@@ -75,27 +77,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning:
+The correct format is not used and no attempt has been made
+to document the function arguments.  Makes sense to just demote
+the headers back down to simple comments.
 
- drivers/misc/mic/cosm/cosm_main.c:31: warning: Function parameter or member 'force' not described in 'cosm_hw_reset'
+Fixes the following W=1 warnings:
 
+ drivers/misc/mic/host/mic_debugfs.c:108: warning: Function parameter or member 'mdev' not described in 'mic_create_debug_dir'
+ drivers/misc/mic/host/mic_debugfs.c:131: warning: Function parameter or member 'mdev' not described in 'mic_delete_debug_dir'
+
+Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/mic/cosm/cosm_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/mic/host/mic_debugfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/mic/cosm/cosm_main.c b/drivers/misc/mic/cosm/cosm_main.c
-index f9133c4f61050..ebb0eac43754a 100644
---- a/drivers/misc/mic/cosm/cosm_main.c
-+++ b/drivers/misc/mic/cosm/cosm_main.c
-@@ -26,6 +26,7 @@ static atomic_t g_num_dev;
- /**
-  * cosm_hw_reset - Issue a HW reset for the MIC device
-  * @cdev: pointer to cosm_device instance
-+ * @force: force a MIC to reset even if it is already reset and ready
+diff --git a/drivers/misc/mic/host/mic_debugfs.c b/drivers/misc/mic/host/mic_debugfs.c
+index ab0db7a2ac8c2..ffda740e20d56 100644
+--- a/drivers/misc/mic/host/mic_debugfs.c
++++ b/drivers/misc/mic/host/mic_debugfs.c
+@@ -101,7 +101,7 @@ static int mic_msi_irq_info_show(struct seq_file *s, void *pos)
+ 
+ DEFINE_SHOW_ATTRIBUTE(mic_msi_irq_info);
+ 
+-/**
++/*
+  * mic_create_debug_dir - Initialize MIC debugfs entries.
   */
- static void cosm_hw_reset(struct cosm_device *cdev, bool force)
- {
+ void mic_create_debug_dir(struct mic_device *mdev)
+@@ -124,7 +124,7 @@ void mic_create_debug_dir(struct mic_device *mdev)
+ 			    &mic_msi_irq_info_fops);
+ }
+ 
+-/**
++/*
+  * mic_delete_debug_dir - Uninitialize MIC debugfs entries.
+  */
+ void mic_delete_debug_dir(struct mic_device *mdev)
+@@ -132,7 +132,7 @@ void mic_delete_debug_dir(struct mic_device *mdev)
+ 	debugfs_remove_recursive(mdev->dbg_dir);
+ }
+ 
+-/**
++/*
+  * mic_init_debugfs - Initialize global debugfs entry.
+  */
+ void __init mic_init_debugfs(void)
+@@ -140,7 +140,7 @@ void __init mic_init_debugfs(void)
+ 	mic_dbg = debugfs_create_dir(KBUILD_MODNAME, NULL);
+ }
+ 
+-/**
++/*
+  * mic_exit_debugfs - Uninitialize global debugfs entry
+  */
+ void mic_exit_debugfs(void)
 -- 
 2.25.1
 
