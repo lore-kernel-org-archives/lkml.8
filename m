@@ -2,96 +2,91 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0B92073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5592074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUKgl91b"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ovJa4YyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgGADpP (ORCPT
+        id S1726723AbgGADqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgGADpO (ORCPT
+        Tue, 30 Jun 2020 23:46:40 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:13542 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725862AbgGADqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:45:14 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FC1C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:45:14 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b25so21636951ljp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nBz+jEb6wK1LlNw8ACgX4nWl1JiNlrUxCpaRcgOcNMY=;
-        b=CUKgl91bW3eQwUurAPzfs3189MS6vi9b8vTqoTS3fXd07sQhCEmMwzCr+Mun7OIdaJ
-         hyPV+AQqLOvnTivdudbjuZaJwvWk1QPr0sbmQI4vsLWn6rn6vQaaohxVeCHTTmcE6TUg
-         kc90eCGJGecUtDkt636fORfD4ocOtlbEdRTicN3MlJGie8IGlHG44V2CqVIspQ9oluAB
-         POosrx84TXrfN2FwCCZKFCGh8ViWlGC8mPfSYFOj6NNodpKqe2DBlvZhmQeVz7jHUT2K
-         aBcZt2LalVWbMc23gHYAnq1+DI96OTXt+mXmhu29Go/xC9YNibQ547BEMpbGSkmpYUu5
-         Zq8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nBz+jEb6wK1LlNw8ACgX4nWl1JiNlrUxCpaRcgOcNMY=;
-        b=Ow5SlP/7+SngPuTlAlb3FIK+x2wcc66plvoiK08if5nBFEZYVtaB7bE/LpD7EVwCc1
-         dE6i2GU2LpNuMtVjEJEbvAeQF+RlJwgYdNSK2ZmSz6V/PNxX7dKhSAAvJSXjCx2S50Xq
-         CBctm9/Bpo+h+jvTnH+EFh5TwWfBBnlniLiIFkgmaRmpbao+MqzPTLv6DrK2LQ0Voi13
-         kigufvREefcSOkAy2xo1ZS/QFG6mPpChbDVf1c/8FeSvO04ZeCtc+ff7fSTbOsxC8CCY
-         EPoh8ojV77y7KAaRGXDSXonLCcTBlDy0P8BYwphB/3Kk2KaejXRnrE0pJNkZam11kH3D
-         ZzKA==
-X-Gm-Message-State: AOAM530BlaAWfxZhpYDydFfmNn7NS+3809ggi6nK5QrOZchjP7EOUnf1
-        Mmvj9p4dFLIt32NER8rV02CmEEQNQ3Hts11OuE5FnqJK
-X-Google-Smtp-Source: ABdhPJzZiy0/RrxJEYCgpY8YdrdDpvjCA/fSs2FUDRRZ1tcTC+bKJxBHbcusdhWcpiKRuQpJIczAKkx+F1SESXet0HI=
-X-Received: by 2002:a2e:880e:: with SMTP id x14mr2400378ljh.218.1593575112578;
- Tue, 30 Jun 2020 20:45:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
- <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
- <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com>
- <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
- <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
- <AM6PR0402MB36077C422DABCB4F2EA650A0FF6F0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAGngYiV9HqxSLV=PCPg10vqVC-SaayF5wakcWs2gBbXxgcUEPQ@mail.gmail.com>
- <AM6PR0402MB3607986330B844B161E271FAFF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAOMZO5B-XVaZ-t2T7UBdCqqde3bJREiQhR71ET8p=9EHJ-DQbA@mail.gmail.com> <AM6PR0402MB360717519B42A48A754691C8FF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR0402MB360717519B42A48A754691C8FF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 1 Jul 2020 00:45:01 -0300
-Message-ID: <CAOMZO5CZMBeSY=0sa39wJsZpaCqWeCb4-HG4jjXO5pGeW64azg@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing
- of clk_enet_ref where possible
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Tue, 30 Jun 2020 23:46:39 -0400
+X-UUID: 5b232870d7d64e75a6adc067879c1dff-20200701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Ry6nys1ZRAY+H8Q6GyL9wPx9JOP40z3D/yzAqhlEzgk=;
+        b=ovJa4YyVa+MSf+OAgTLxN+HYc/SF+vSAFvuNr2xwCVEqPVRs4xFHxhH3Fij7XbSLAf6P9KHsyXjmC6BJOQ7FWjtTAtoyKXOdxAvtNPpYVM3z9Da8lkVeE83n9VETVDCMJC+k9fwft+bb7pkUsXhWjwO8k1drgRg7FF03JL+8zHA=;
+X-UUID: 5b232870d7d64e75a6adc067879c1dff-20200701
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 933444611; Wed, 01 Jul 2020 11:46:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jul 2020 11:46:29 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 1 Jul 2020 11:46:29 +0800
+Message-ID: <1593575190.1533.2.camel@mtksdaap41>
+Subject: Re: [PATCH v2 12/18] media: mtk-vcodec: venc: set OUTPUT buffers
+ field to V4L2_FIELD_NONE
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        "Pi-Hsun Shih" <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 1 Jul 2020 11:46:30 +0800
+In-Reply-To: <20200626080442.292309-13-acourbot@chromium.org>
+References: <20200626080442.292309-1-acourbot@chromium.org>
+         <20200626080442.292309-13-acourbot@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 5DBE0FC55AB4023EE954F5DA77B7212998D8E0782B4337E1906B2A5E2DE6EAA12000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 12:42 AM Andy Duan <fugang.duan@nxp.com> wrote:
+T24gRnJpLCAyMDIwLTA2LTI2IGF0IDE3OjA0ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gQSBkZWZhdWx0IHZhbHVlIG9mIDAgbWVhbnMgVjRMMl9GSUVMRF9BTlksIHdoaWNoIGlz
+IG5vdCBjb3JyZWN0Lg0KPiBSZXBvcnRlZCBieSB2NGwyLWNvbXBsaWFuY2UuDQo+IA0KDQpBY2tl
+ZC1ieTogVGlmZmFueSBMaW4gPHRpZmZhbnkubGluQG1lZGlhdGVrLmNvbT4NCg0KDQo+IFNpZ25l
+ZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0t
+LQ0KPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMg
+fCA5ICsrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVj
+X2VuYy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5j
+LmMNCj4gaW5kZXggZjgzM2FlZTRhMDZmLi4xYTk4MWQ4NDJjMTkgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+ICsrKyBi
+L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2VuYy5jDQo+IEBA
+IC04OTMsOCArODkzLDE3IEBAIHN0YXRpYyB2b2lkIHZiMm9wc192ZW5jX3N0b3Bfc3RyZWFtaW5n
+KHN0cnVjdCB2YjJfcXVldWUgKnEpDQo+ICAJY3R4LT5zdGF0ZSA9IE1US19TVEFURV9GUkVFOw0K
+PiAgfQ0KPiAgDQo+ICtzdGF0aWMgaW50IHZiMm9wc192ZW5jX2J1Zl9vdXRfdmFsaWRhdGUoc3Ry
+dWN0IHZiMl9idWZmZXIgKnZiKQ0KPiArew0KPiArCXN0cnVjdCB2YjJfdjRsMl9idWZmZXIgKnZi
+dWYgPSB0b192YjJfdjRsMl9idWZmZXIodmIpOw0KPiArDQo+ICsJdmJ1Zi0+ZmllbGQgPSBWNEwy
+X0ZJRUxEX05PTkU7DQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgdmIyX29wcyBtdGtfdmVuY192YjJfb3BzID0gew0KPiAgCS5xdWV1ZV9zZXR1cAkJPSB2
+YjJvcHNfdmVuY19xdWV1ZV9zZXR1cCwNCj4gKwkuYnVmX291dF92YWxpZGF0ZQk9IHZiMm9wc192
+ZW5jX2J1Zl9vdXRfdmFsaWRhdGUsDQo+ICAJLmJ1Zl9wcmVwYXJlCQk9IHZiMm9wc192ZW5jX2J1
+Zl9wcmVwYXJlLA0KPiAgCS5idWZfcXVldWUJCT0gdmIyb3BzX3ZlbmNfYnVmX3F1ZXVlLA0KPiAg
+CS53YWl0X3ByZXBhcmUJCT0gdmIyX29wc193YWl0X3ByZXBhcmUsDQoNCg==
 
-> It doesn't break old dtbs, and doesn't break imx6q/dl/solo.
-
-Well, it breaks imx6qp as I said multiple times.
-
-It does not break in your case because you are using NXP U-Boot.
-
-You cannot assume people are using NXP U-Boot.
