@@ -2,99 +2,191 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4109AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEEE20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:14:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRPKmLM1"
+	by mail.kernel.org (Postfix) with ESMTP id 24E8A20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbgGASOl (ORCPT
+        id S1728718AbgGASSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728453AbgGASOk (ORCPT
+        Wed, 1 Jul 2020 14:18:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63946 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726449AbgGASSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:14:40 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154CAC08C5C1;
-        Wed,  1 Jul 2020 11:14:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dg28so20900841edb.3;
-        Wed, 01 Jul 2020 11:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mLcYZYfXrLLmrM/puOG+soPTfd30cxtKUrRS7WI6ng4=;
-        b=BRPKmLM1MkbWv32OZHR9VQ2JPdU696KsT6AAzUBoxN65GdBlBQWWWOj5h/OxGc0ixC
-         nAQ9z0LrAHKG9E/5qYX275f31V9EFtVDBoQDNyy2lEyk2Nb/QHAEaViIr+6N8/wAyE1M
-         qejlTgUYWRLmM9ySsmMVi1lpQdi4+wiMZVH+HaUyJLq+Jz29Af3uILM/O1PJjib5sDww
-         zTnvcg9kKu919WNcAOt7A2yLBjWqU5TyKsvzbaZpks3ADKzVpgYMkmJ/UlBjF+8mESMF
-         t6KfQ/FXBes8PIYKmNuQOptnqMfVpVmJFsVzNC1F6pk+03jyUiTS3XOkqfZtmeVL2vqT
-         yx1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mLcYZYfXrLLmrM/puOG+soPTfd30cxtKUrRS7WI6ng4=;
-        b=t76UTfw8Ar3aJaxPGtlPQ7oclPcIrjEG8CgMFHrC5bSpAMJk3H+Kk1c3rFcqSArHtW
-         pbqXNYfp83QT6jh2wggXpn2ylMksaUaKVgfGz3ZTc6OBzD+YtI1DxeEn0SdMD5xIhkTA
-         KvzvFPzJfphcZsv1xwhnrvgSgSsCaelEcMxib/FdJy+KxTfBXuG1+FiTCgS1JalvJzro
-         3BwfeqjdslxWxmPsG6K0OGgBp7O0kRrwDEPBuTr2coigbDS+Gu88AoxhOf04OitBJIhg
-         Q46ObdaC9IhNQq1gPRBc/2yu1uFg/qpZ6y5JWSNpVe64lVvyEaYJ6iRhJQki9denJBBR
-         hrlw==
-X-Gm-Message-State: AOAM531GVJ8CPtl/KbrZBZqTLcdX+aRZzRxXOaCzil0dOrQBkvzCf6bL
-        DfnGX0e4FWhYTpTF29QM6w==
-X-Google-Smtp-Source: ABdhPJy0IH2YHRQjW2SIiGuoagp0vZ3yw4YIe6AjkE4gK4IZ/YXvtsnjtuIaTg2CZkh6qG2sfu+5tg==
-X-Received: by 2002:a05:6402:176e:: with SMTP id da14mr14951195edb.262.1593627278830;
-        Wed, 01 Jul 2020 11:14:38 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.251.41])
-        by smtp.gmail.com with ESMTPSA id ck6sm5910337edb.18.2020.07.01.11.14.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 11:14:38 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 21:14:36 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     zhenwei pi <pizhenwei@bytedance.com>
-Cc:     tglx@linutronix.de, kzak@redhat.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fs/proc: add short desc for /proc/softirqs
-Message-ID: <20200701181436.GA100441@localhost.localdomain>
-References: <1593614103-23574-1-git-send-email-pizhenwei@bytedance.com>
+        Wed, 1 Jul 2020 14:18:24 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061I3AKg069652;
+        Wed, 1 Jul 2020 14:18:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s23dsbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 14:18:13 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061IICwq116143;
+        Wed, 1 Jul 2020 14:18:12 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s23dsay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 14:18:12 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061IGdL4011473;
+        Wed, 1 Jul 2020 18:18:10 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 31wwr7teqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 18:18:10 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061IGlgD54133104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 18:16:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C58B42061;
+        Wed,  1 Jul 2020 18:18:07 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5625E42059;
+        Wed,  1 Jul 2020 18:18:04 +0000 (GMT)
+Received: from [9.102.31.46] (unknown [9.102.31.46])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Jul 2020 18:18:04 +0000 (GMT)
+Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+ <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <6e96ae5a-91fd-726e-1eda-314f2317d8b4@linux.ibm.com>
+Date:   Wed, 1 Jul 2020 23:48:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1593614103-23574-1-git-send-email-pizhenwei@bytedance.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_09:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ cotscore=-2147483648 mlxscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007010126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 10:35:03PM +0800, zhenwei pi wrote:
-> Only softirq name is not friendly to end-users, typically 'HI' is
-> difficult to understand. During developing irqtop/lsirq utilities
-> for util-linux, Karel Zak considered that we should give more
-> information to end-users. Discuss about this:
->     https://github.com/karelzak/util-linux/pull/1079
+
+
+On 01/07/20 1:10 pm, Dave Young wrote:
+> Hi Hari,
+> On 06/27/20 at 12:35am, Hari Bathini wrote:
+>> crashkernel region could have an overlap with special memory regions
+>> like  opal, rtas, tce-table & such. These regions are referred to as
+>> exclude memory ranges. Setup this ranges during image probe in order
+>> to avoid them while finding the buffer for different kdump segments.
+>> Implement kexec_locate_mem_hole_ppc64() that locates a memory hole
+>> accounting for these ranges. Also, override arch_kexec_add_buffer()
+>> to locate a memory hole & later call __kexec_add_buffer() function
+>> with kbuf->mem set to skip the generic locate memory hole lookup.
+>>
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>> ---
+>>  arch/powerpc/include/asm/crashdump-ppc64.h |   10 +
+>>  arch/powerpc/include/asm/kexec.h           |    7 -
+>>  arch/powerpc/kexec/elf_64.c                |    7 +
+>>  arch/powerpc/kexec/file_load_64.c          |  292 ++++++++++++++++++++++++++++
+>>  4 files changed, 312 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+>>
+> [snip]
+>>  /**
+>> + * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
+>> + *                             regions like opal/rtas, tce-table, initrd,
+>> + *                             kernel, htab which should be avoided while
+>> + *                             setting up kexec load segments.
+>> + * @mem_ranges:                Range list to add the memory ranges to.
+>> + *
+>> + * Returns 0 on success, negative errno on error.
+>> + */
+>> +static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = add_tce_mem_ranges(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_initrd_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_htab_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_kernel_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_rtas_mem_range(mem_ranges, false);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_opal_mem_range(mem_ranges, false);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_reserved_ranges(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	/* exclude memory ranges should be sorted for easy lookup */
+>> +	sort_memory_ranges(*mem_ranges);
+>> +out:
+>> +	if (ret)
+>> +		pr_err("Failed to setup exclude memory ranges\n");
+>> +	return ret;
+>> +}
 > 
-> Add short desc for /proc/softirqs in this patch, then /proc/softirqs
-> gets more human-readable.
+> I'm confused about the "overlap with crashkernel memory", does that mean
+> those normal kernel used memory could be put in crashkernel reserved
 
-> --- a/fs/proc/softirqs.c
-> +++ b/fs/proc/softirqs.c
-> @@ -20,7 +20,7 @@ static int show_softirqs(struct seq_file *p, void *v)
->  		seq_printf(p, "%12s:", softirq_to_name[i]);
->  		for_each_possible_cpu(j)
->  			seq_printf(p, " %10u", kstat_softirqs_cpu(i, j));
-> -		seq_putc(p, '\n');
-> +		seq_printf(p, "  %s\n", softirq_to_desc[i]);
+There are regions that could overlap with crashkernel region but they are
+not normal kernel used memory though. These are regions that kernel and/or
+f/w chose to place at a particular address for real mode accessibility
+and/or memory layout between kernel & f/w kind of thing.
 
-This could break parsers. I'd rather leave it as is and update proc(5).
+> memory range?  If so why can't just skip those areas while crashkernel
+> doing the reservation?
 
-Of course this file doesn't need more characters in it. :-\
+crashkernel region has a dependency to be in the first memory block for it
+to be accessible in real mode. Accommodating this requirement while addressing
+other requirements would mean something like what we have now. A list of
+possible special memory regions in crashkernel region to take care of.
+
+I have plans to split crashkernel region into low & high to have exclusive
+regions for crashkernel, even if that means to have two of them. But that
+is for another day with its own set of complexities to deal with...
+
+Thanks
+Hari
