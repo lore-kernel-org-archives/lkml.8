@@ -2,65 +2,109 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FBAC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E05C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC362073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D590D2073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="0ZlA74Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgGACWu (ORCPT
+        id S1726812AbgGACXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:22:50 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35268 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgGACWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:22:48 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jqSOX-0005Pn-Rq; Wed, 01 Jul 2020 12:22:42 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 12:22:41 +1000
-Date:   Wed, 1 Jul 2020 12:22:41 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-Message-ID: <20200701022241.GA7167@gondor.apana.org.au>
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
- <20200701020211.GA6875@gondor.apana.org.au>
- <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
+        Tue, 30 Jun 2020 22:23:53 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45862 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgGACXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:23:53 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 944F68066C;
+        Wed,  1 Jul 2020 14:23:44 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593570224;
+        bh=mI32KsENUjMHrBaa4ywoRDgEOcKsi98TwBM9Vd/zqmA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=0ZlA74PotZDiJUGfC2GeoNw5Zm8QJIogcWXxcz8vFzgKeCd2kxM7GOy8dvRtVYSlm
+         jrJSfNOpnZM8W7dEymC2ON8/lA0K0KVZVMq95jxGUpCjhYlDBLAqHFpEJUTSUQEUK3
+         33FmhY58plKFeiN8ihahel2mT4DxT1r8JKqm2vvyCIqtMVs4YvRSQy7dx52TdUHuXp
+         PWQvNFe8fLJlzvysRxQ5aAV2I0hWcKRUtjy0l89wI0nrae1sDuPRVch82g9xbzPrTJ
+         Q2sijJdCQmJuBWCC3ZakLK1B6AY9ht/zCZrvbkv1jYZ+D1gTrWsJZRu8sD3gamWles
+         OHnAWgCEQMF6Q==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efbf3b10001>; Wed, 01 Jul 2020 14:23:45 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 1 Jul 2020 14:23:44 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 1 Jul 2020 14:23:44 +1200
+From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
+To:     "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+Thread-Topic: [PATCH] pinctrl: initialise nsp-mux earlier.
+Thread-Index: AQHWTyWf+OJCQzu0tUG0OUfiNa14/6jw7mWAgABHbYA=
+Date:   Wed, 1 Jul 2020 02:23:43 +0000
+Message-ID: <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
+References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+         <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+In-Reply-To: <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:23:899d:a7e9:b35a:a1ab]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <632CE4073ECE9D4199209DF8E6A9E704@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 07:17:46PM -0700, Eric Dumazet wrote:
->
-> The main issue of the prior code was the double read of key->keylen in
-> tcp_md5_hash_key(), not that few bytes could change under us.
->
-> I used smp_rmb() to ease backports, since old kernels had no
-> READ_ONCE()/WRITE_ONCE(), but ACCESS_ONCE() instead.
-
-If it's the double-read that you're protecting against, you should
-just use barrier() and the comment should say so too.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+T24gVHVlLCAyMDIwLTA2LTMwIGF0IDE1OjA4IC0wNzAwLCBSYXkgSnVpIHdyb3RlOg0KPiBNYXkg
+SSBrbm93IHdoaWNoIEdQSU8gZHJpdmVyIHlvdSBhcmUgcmVmZXJyaW5nIHRvIG9uIE5TUD8gQm90
+aCB0aGUgaVByb2MNCj4gR1BJTyBkcml2ZXIgYW5kIHRoZSBOU1AgR1BJTyBkcml2ZXIgYXJlIGlu
+aXRpYWxpemVkIGF0IHRoZSBsZXZlbCBvZg0KPiAnYXJjaF9pbml0Y2FsbF9zeW5jJywgd2hpY2gg
+aXMgc3VwcG9zZWQgdG8gYmUgYWZ0ZXIgJ2FyY2hfaW5pdGNhbGwnIHVzZWQNCj4gaGVyZSBpbiB0
+aGUgcGlubXV4IGRyaXZlcg0KDQpTb3JyeSwgaXQgbG9va3MgbGlrZSBJIG1hZGUgYSBtaXN0YWtl
+IGluIG15IHRlc3RpbmcgKG9yIEkgd2FzIGx1Y2t5KSwNCmFuZCB0aGlzIHBhdGNoIGRvZXNuJ3Qg
+Zml4IHRoZSBpc3N1ZS4gV2hhdCBpcyBoYXBwZW5pbmcgaXM6DQoxKSBuc3AtcGlubXV4IGRyaXZl
+ciBpcyByZWdpc3RlcmVkIChhcmNoX2luaXRjYWxsKS4NCjIpIG5zcC1ncGlvLWEgZHJpdmVyIGlz
+IHJlZ2lzdGVyZWQgKGFyY2hfaW5pdGNhbGxfc3luYykuDQozKSBvZl9wbGF0Zm9ybV9kZWZhdWx0
+X3BvcHVsYXRlX2luaXQoKSBpcyBjYWxsZWQgKGFsc28gYXQgbGV2ZWwNCmFyY2hfaW5pdGNhbGxf
+c3luYyksIHdoaWNoIHNjYW5zIHRoZSBkZXZpY2UgdHJlZSwgYWRkcyB0aGUgbnNwLWdwaW8tYQ0K
+ZGV2aWNlLCBydW5zIGl0cyBwcm9iZSwgYW5kIHRoaXMgcmV0dXJucyAtRVBST0JFX0RFRkVSIHdp
+dGggdGhlIGVycm9yDQptZXNzYWdlLg0KNCkgT25seSBub3cgbnNwLXBpbm11eCBkZXZpY2UgaXMg
+cHJvYmVkLg0KDQpDaGFuZ2luZyB0aGUgJ2FyY2hfaW5pdGNhbGxfc3luYycgdG8gJ2RldmljZV9p
+bml0Y2FsbCcgaW4gbnNwLWdwaW8tYQ0KZW5zdXJlcyB0aGF0IHRoZSBwaW5tdXggaXMgcHJvYmVk
+IGZpcnN0IHNpbmNlDQpvZl9wbGF0Zm9ybV9kZWZhdWx0X3BvcHVsYXRlX2luaXQoKSB3aWxsIGJl
+IGNhbGxlZCBiZXR3ZWVuIHRoZSB0d28NCnJlZ2lzdGVyIGNhbGxzLCBhbmQgdGhlIGVycm9yIGdv
+ZXMgYXdheS4gSXMgdGhpcyBjaGFuZ2UgYWNjZXB0YWJsZSBhcyBhDQpzb2x1dGlvbj8NCg0KPiA+
+IHRob3VnaCB0aGUgcHJvYmUgd2lsbCBzdWNjZWVkIHdoZW4gdGhlIGRyaXZlciBpcyByZS1pbml0
+aWFsaXNlZCwgdGhlDQo+ID4gZXJyb3IgY2FuIGJlIHNjYXJ5IHRvIGVuZCB1c2Vycy4gVG8gZml4
+IHRoaXMsIGNoYW5nZSB0aGUgdGltZSB0aGUNCj4gDQo+IFNjYXJ5IHRvIGVuZCB1c2Vycz8gSSBk
+b24ndCBrbm93IGFib3V0IHRoYXQuIC1FUFJPQkVfREVGRVIgd2FzDQo+IGludHJvZHVjZWQgZXhh
+Y3RseSBmb3IgdGhpcyBwdXJwb3NlLiBQZXJoYXBzIHVzZXJzIG5lZWQgdG8gbGVhcm4gd2hhdA0K
+PiAtRVBST0JFX0RFRkVSIGVycm5vIG1lYW5zPw0KDQpUaGUgYWN0dWFsIGVycm9yIG1lc3NhZ2Ug
+aW4gc3lzbG9nIGlzOg0KDQprZXJuLmVyciBrZXJuZWw6IGdwaW9jaGlwX2FkZF9kYXRhX3dpdGhf
+a2V5OiBHUElPcyA0ODAuLjUxMQ0KKDE4MDAwMDIwLmdwaW8pIGZhaWxlZCB0byByZWdpc3Rlciwg
+LTUxNw0KDQpTbyBhbiBlbmQgdXNlciBzZWVzICJlcnIiIGFuZCAiZmFpbGVkIiwgYW5kIGRvZXNu
+J3Qga25vdyB3aGF0ICItNTE3Ig0KbWVhbnMuDQoNCg==
