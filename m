@@ -2,154 +2,89 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20548C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EABDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034AC2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593617119;
-	bh=yRmjzMu9YWj+NOLepjKm+aB0pjmOhF8mZmELt36mcA0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vtnWk6v9ATdTK9uSNB6yrsumEQ50gouv3r4LV5hN03NhIT5R9Ee9QyZwaIQ//sa7C
-	 VH+mW9Sei1T84GRINLYbbcJogcuZ3jHDaCh7qD6GHWD9AgpfcXWEDdSl/dkaZT7GsE
-	 dbQtJubjk0f+xG8jSO5QVm3Ci5gSM+JxlTFCeD4s=
+	by mail.kernel.org (Postfix) with ESMTP id 0F70B207FB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbgGAPZR (ORCPT
+        id S1731964AbgGAPZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731715AbgGAPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:25:17 -0400
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 1 Jul 2020 11:25:39 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:39080 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731646AbgGAPZj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:25:39 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0D820899;
-        Wed,  1 Jul 2020 15:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593617116;
-        bh=yRmjzMu9YWj+NOLepjKm+aB0pjmOhF8mZmELt36mcA0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YAjxA7qonfZicJTji5t6KrKshQc8SIIF1shTK/aOyeWiOJNB3+/YbRLfQA+BaC+qM
-         PJFwrSlA2jr7+HlaJAsBbo8TrE2pGeqol7bAH3Z1awMtGP8LQJJTZ1Nq1WrjvHz+bC
-         KU+tCPmVN0Du4tkFI1t50hITsOEHx26RR25GMYZs=
-Received: by mail-yb1-f169.google.com with SMTP id o4so12184547ybp.0;
-        Wed, 01 Jul 2020 08:25:16 -0700 (PDT)
-X-Gm-Message-State: AOAM530INUP0sylri8YwAYPWl2swvYGLZkkXBs9OJBfPpra4HtfLv1gb
-        0Xb8Ske1/ItWj4EbawTuQvW4SRvdb+I9ldDlLjA=
-X-Google-Smtp-Source: ABdhPJy9AKnU7TLcunRsA3LE7E5ZGLLHAN/4GGZWVlhQ9VRoyei2I2CxfreGz6IXtL350r2vzowvmiQuGW9yiXJrzBc=
-X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr24502977otf.77.1593617115444;
- Wed, 01 Jul 2020 08:25:15 -0700 (PDT)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 492D920025;
+        Wed,  1 Jul 2020 17:25:34 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 17:25:32 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+Message-ID: <20200701152532.GA670324@ravnborg.org>
+References: <20200701103126.1512615-1-megous@megous.com>
 MIME-Version: 1.0
-References: <20200701141731.377252388@hpe.com> <20200701141732.706351085@hpe.com>
-In-Reply-To: <20200701141732.706351085@hpe.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 1 Jul 2020 17:25:04 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE63uh2QhN1mrdSjwNM6yQqM7EY1kRnLBEmdeLovXYmSQ@mail.gmail.com>
-Message-ID: <CAMj1kXE63uh2QhN1mrdSjwNM6yQqM7EY1kRnLBEmdeLovXYmSQ@mail.gmail.com>
-Subject: Re: [patch 10/13] Delete SGI UV1 detection.
-To:     Steve Wahl <steve.wahl@hpe.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Austin Kim <austindh.kim@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Russ Anderson <rja@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=J_fg_7IlAAAA:8 a=SxmoPjm5-5tPnGG2PkAA:9
+        a=CjuIK1q_8ugA:10 a=zGOw-GkVl6h1W4ZARoUA:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 at 16:18, <steve.wahl@hpe.com> wrote:
->
-> As a part of UV1 platform removal, don't try to recognize the platform
-> through DMI to set the EFI_UV1_MEMMAP bit.
->
-> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+Hi Ondrej.
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> This patchset adds support for the LCD panel of PinePhone.
+> 
+> I've tested this on PinePhone 1.0 and 1.2.
+> 
+> Please take a look.
+> 
+> thank you and regards,
+>   Ondrej Jirman
+> 
+> Changes in v6:
+> - Fixed spacing in yaml
+> - Fixed wrong vccio->iovcc supply name in the bindings doc
+> - I noticed that the original driver uses a delay of 20ms in the init
+>   function to achieve a combined total of 120ms required from post-reset
+>   to display_on. I've added a similar delay to xbd599_init, so that
+>   xbd599 panel also has the right timing. (patch 9)
+> - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> - Added review/ack tags
+> - Learned to run dt_binding_check by myself ;)
+The patch-set does not apply clean on top of drm-misc-next - due to
+vrefresh removal.
+Please re-spin.
 
-> ---
->  arch/x86/platform/efi/quirks.c |   23 -----------------------
->  1 file changed, 23 deletions(-)
->
-> --- linux.orig/arch/x86/platform/efi/quirks.c   2020-06-17 14:29:45.510015978 -0500
-> +++ linux/arch/x86/platform/efi/quirks.c        2020-06-17 14:36:34.473414139 -0500
-> @@ -558,16 +558,6 @@ out:
->         return ret;
->  }
->
-> -static const struct dmi_system_id sgi_uv1_dmi[] __initconst = {
-> -       { NULL, "SGI UV1",
-> -               {       DMI_MATCH(DMI_PRODUCT_NAME,     "Stoutland Platform"),
-> -                       DMI_MATCH(DMI_PRODUCT_VERSION,  "1.0"),
-> -                       DMI_MATCH(DMI_BIOS_VENDOR,      "SGI.COM"),
-> -               }
-> -       },
-> -       { } /* NULL entry stops DMI scanning */
-> -};
-> -
->  void __init efi_apply_memmap_quirks(void)
->  {
->         /*
-> @@ -579,17 +569,6 @@ void __init efi_apply_memmap_quirks(void
->                 pr_info("Setup done, disabling due to 32/64-bit mismatch\n");
->                 efi_memmap_unmap();
->         }
-> -
-> -       /* UV2+ BIOS has a fix for this issue.  UV1 still needs the quirk. */
-> -       if (dmi_check_system(sgi_uv1_dmi)) {
-> -               if (IS_ENABLED(CONFIG_X86_UV)) {
-> -                       set_bit(EFI_UV1_MEMMAP, &efi.flags);
-> -               } else {
-> -                       pr_warn("EFI runtime disabled, needs CONFIG_X86_UV=y on UV1\n");
-> -                       clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
-> -                       efi_memmap_unmap();
-> -               }
-> -       }
->  }
->
->  /*
-> @@ -723,8 +702,6 @@ void efi_recover_from_page_fault(unsigne
->
->         /*
->          * Make sure that an efi runtime service caused the page fault.
-> -        * "efi_mm" cannot be used to check if the page fault had occurred
-> -        * in the firmware context because the UV1 memmap doesn't use efi_pgd.
->          */
->         if (efi_rts_work.efi_rts_id == EFI_NONE)
->                 return;
->
+	Sam
