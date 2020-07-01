@@ -2,80 +2,125 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22450C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A12C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0402920780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77516207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m07W1h5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbgGANQo (ORCPT
+        id S1730893AbgGANQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:16:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45836 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730942AbgGANQk (ORCPT
+        Wed, 1 Jul 2020 09:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729326AbgGANQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:16:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 634CB2A56CF
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Wed, 1 Jul 2020 09:16:30 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68539C03E97A;
+        Wed,  1 Jul 2020 06:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=TzymcoRAO2UgBPJ0ZOVe0YcF3uo0oF1NDuUFLaqpiJ4=; b=m07W1h5vKC5SMjGqugevcSkZLL
+        cghSRDU80En08ElqHsdloYVWrm+t5xNIDXw3uEFkYvRKBmgeSXmJBSHmntBOCX5QknNMtoBDAr7ei
+        4eJ/47+c7xhbLklKkziuiyz+0amNouPoO6VrsNrv2Yuz5vYw6QKPYgtpt1Mip+w1Lwxn/L9wZ32hS
+        N9Z16wQ/bg9GZxvTrdj47Xpuq6nmCOJN0Mp9aBJLE4iisjeXId4XVGHmyq3FNI1vH90P0pvWzyFXv
+        2M7T/9D65rSS1Rt1mp62jWY2VZsb1xAMSm3fBPFq9ogG91g5kh4OXBxsTRvjZcKVVHlRTFP3xsDxH
+        llEXk/xQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqcbD-0005v1-IE; Wed, 01 Jul 2020 13:16:27 +0000
+Subject: Re: [net-next PATCH v2 2/3] Documentation: ACPI: DSD: Document MDIO
+ PHY
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Cc:     netdev@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux.cj@gmail.com, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 6/6] hantro: Make sure we don't use post-processor on an encoder
-Date:   Wed,  1 Jul 2020 10:16:07 -0300
-Message-Id: <20200701131607.121988-7-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200701131607.121988-1-ezequiel@collabora.com>
-References: <20200701131607.121988-1-ezequiel@collabora.com>
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com>
+ <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7f7a4876-0c80-dc54-5653-b268c685caae@infradead.org>
+Date:   Wed, 1 Jul 2020 06:16:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 986eee3a5234f fixed hantro_needs_postproc condition,
-but missed one case. Encoders don't have any post-processor
-hardware block, so also can't be disabled.
+On 6/30/20 11:12 PM, Calvin Johnson wrote:
+> Introduce ACPI mechanism to get PHYs registered on a MDIO bus and
+> provide them to be connected to MAC.
+> 
+> An ACPI node property "mdio-handle" is introduced to reference the
+> MDIO bus on which PHYs are registered with autoprobing method used
+> by mdiobus_register().
+> 
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  Documentation/firmware-guide/acpi/dsd/phy.rst | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/firmware-guide/acpi/dsd/phy.rst
+> 
+> diff --git a/Documentation/firmware-guide/acpi/dsd/phy.rst b/Documentation/firmware-guide/acpi/dsd/phy.rst
+> new file mode 100644
+> index 000000000000..78dcb0cacc7e
+> --- /dev/null
+> +++ b/Documentation/firmware-guide/acpi/dsd/phy.rst
+> @@ -0,0 +1,40 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================
+> +MDIO bus and PHYs in ACPI
+> +=========================
+> +
+> +The PHYs on a mdiobus are probed and registered using mdiobus_register().
 
-Fix it.
+            on an mdiobus (?)
 
-Fixes: 986eee3a5234f ("media: hantro: Prevent encoders from using post-processing")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/staging/media/hantro/hantro_drv.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> +Later, for connecting these PHYs to MAC, the PHYs registered on the
+> +mdiobus have to be referenced.
+> +
+> +For each MAC node, a property "mdio-handle" is used to reference the
+> +MDIO bus on which the PHYs are registered. On getting hold of the MDIO
+> +bus, use find_phy_device() to get the PHY connected to the MAC.
+> +
+> +
+> +An example of this is show below::
 
-diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-index 34367b169011..d32b6b1ab70b 100644
---- a/drivers/staging/media/hantro/hantro_drv.c
-+++ b/drivers/staging/media/hantro/hantro_drv.c
-@@ -122,10 +122,12 @@ void hantro_start_prepare_run(struct hantro_ctx *ctx)
- 	v4l2_ctrl_request_setup(src_buf->vb2_buf.req_obj.req,
- 				&ctx->ctrl_handler);
- 
--	if (hantro_needs_postproc(ctx, ctx->vpu_dst_fmt))
--		hantro_postproc_enable(ctx);
--	else
--		hantro_postproc_disable(ctx);
-+	if (!ctx->is_encoder) {
-+		if (hantro_needs_postproc(ctx, ctx->vpu_dst_fmt))
-+			hantro_postproc_enable(ctx);
-+		else
-+			hantro_postproc_disable(ctx);
-+	}
- }
- 
- void hantro_end_prepare_run(struct hantro_ctx *ctx)
+                         shown
+
+> +
+> +	Scope(\_SB.MCE0.PR17) // 1G
+
+
 -- 
-2.26.0.rc2
+~Randy
 
