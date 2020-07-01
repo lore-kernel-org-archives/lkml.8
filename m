@@ -2,95 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07674C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61F62065D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593574224;
-	bh=2MoVySu/ublseimSBPc25bFEnUgfYf0OXy9TbR5xyWU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Dbm5S5SvbpZBSTomN8edxbECJqYUgmOxNCr9ObV2VVXnOw9SWp7Cd7Nzu5VifL/4q
-	 kBmfDYas6xwL1yhebVPZED2Z7DZURdeJDoCQG+GrXx9/2uIFBRQFc7nMgecL4hmy4G
-	 Lx7k71eG7dgSTEi3u0UUPNlFxAsD0axQiP8vhGic=
+	by mail.kernel.org (Postfix) with ESMTP id D115420826
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YoLCiZxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGADaX (ORCPT
+        id S1726737AbgGADag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:30:23 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:46532 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgGADaX (ORCPT
+        Tue, 30 Jun 2020 23:30:36 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:19311 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725862AbgGADaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:30:23 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 0613Trw4014075;
-        Wed, 1 Jul 2020 12:29:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 0613Trw4014075
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593574194;
-        bh=0Z1bbyiVQq41ZTVNj6Alel59TFbFFxJ8BkSvlKkpLvc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jrhAgf9S5/WyiK0vuVYeAX9ymxYQAryLXq0e2vbz9u4A6nweLovrJb7jAaUryqoxx
-         LD3cvgngZBwHNDPJioP2CvStuPJ3VJnwedMWZT6q4DYmD5POlAYdFot70q03FloH3C
-         YhJfXrFNxPoxADay/bEJZ+LyQRPUoLv2YmoF1fgw+NB9bEgCFudy5U6oRwQOcLL3G4
-         CbqdVNeUpwXjk9K0KbcKXhZvw+ZgiaZSQFmuEJuVsDLmCNp9VoAD/YtS7ajOu6HPCA
-         wkfp4SzTEGsHhQRliGR199huDeQ8bfi+CJk5tQK28UHb1pvMBXaaf9Alo+bDcYvhX5
-         3/WFeJCZ1iBkw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: always create directories of targets
-Date:   Wed,  1 Jul 2020 12:29:51 +0900
-Message-Id: <20200701032951.409675-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 30 Jun 2020 23:30:35 -0400
+X-UUID: bf78afeb2d104bc2830bd126a97cacf8-20200701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=hMaB+50yOQw2HFn/LcuwEydwHyNKHncHsixDvcNbkVA=;
+        b=YoLCiZxhQOYET+bqLy0fgGdz6hdx4/7WcJs+ulz07qLdqZuslI3mWJZS1CRY57+OJxEdM06pYUNtPyD+HphdHfpXAxPjQ34IooDBaD6N4r1Je7/iUczb2bQgG9Gx9sbY0kZUQx2XIsx/zWLyuUwr3gTxnmULtG8NXGcK7jiX4L0=;
+X-UUID: bf78afeb2d104bc2830bd126a97cacf8-20200701
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1181170197; Wed, 01 Jul 2020 11:30:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jul 2020 11:30:30 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 1 Jul 2020 11:30:30 +0800
+Message-ID: <1593574231.1533.0.camel@mtksdaap41>
+Subject: Re: [PATCH v2 10/18] Revert "media: mtk-vcodec: Remove extra area
+ allocation in an input buffer on encoding"
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        "Pi-Hsun Shih" <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 1 Jul 2020 11:30:31 +0800
+In-Reply-To: <20200626080442.292309-11-acourbot@chromium.org>
+References: <20200626080442.292309-1-acourbot@chromium.org>
+         <20200626080442.292309-11-acourbot@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the directories of objects are automatically created
-only for O= builds.
-
-It should not hurt to cater to this for in-tree builds too.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/Makefile.build | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index ca24c3077fef..98013fcde935 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -517,15 +517,13 @@ existing-targets := $(wildcard $(sort $(targets)))
- 
- -include $(foreach f,$(existing-targets),$(dir $(f)).$(notdir $(f)).cmd)
- 
--ifdef building_out_of_srctree
- # Create directories for object files if they do not exist
--obj-dirs := $(sort $(obj) $(patsubst %/,%, $(dir $(targets))))
-+obj-dirs := $(sort $(patsubst %/,%, $(dir $(targets))))
- # If targets exist, their directories apparently exist. Skip mkdir.
- existing-dirs := $(sort $(patsubst %/,%, $(dir $(existing-targets))))
- obj-dirs := $(strip $(filter-out $(existing-dirs), $(obj-dirs)))
- ifneq ($(obj-dirs),)
- $(shell mkdir -p $(obj-dirs))
- endif
--endif
- 
- .PHONY: $(PHONY)
--- 
-2.25.1
+T24gRnJpLCAyMDIwLTA2LTI2IGF0IDE3OjA0ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gVGhpcyByZXZlcnRzIGNvbW1pdCA4MTczNWVjYjYyZjg4Mjg1M2EzN2E4YzE1NzQwN2Vj
+NGFlZDQ0ZmQwLg0KPiANCj4gVGhlIGhhcmR3YXJlIG5lZWRzIGRhdGEgdG8gZm9sbG93IHRoZSBw
+cmV2aW91cyBhbGlnbm1lbnQsIHNvIHRoaXMgZXh0cmENCj4gc3BhY2Ugd2FzIG5vdCBzdXBlcmZs
+dW91cyBhZnRlciBhbGwuIEJlc2lkZXMsIHRoaXMgYWxzbyBtYWRlDQo+IHY0bDItY29tcGxpYW5j
+ZSdzIEdfRk1UIGFuZCBTX0ZNVCB0ZXN0cyByZWdyZXNzLg0KPiANCkFja2VkLWJ5OiBUaWZmYW55
+IExpbiA8dGlmZmFueS5saW5AbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhh
+bmRyZSBDb3VyYm90IDxhY291cmJvdEBjaHJvbWl1bS5vcmc+DQo+IC0tLQ0KPiAgZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMgfCA5ICsrKysrKy0tLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2Rl
+Y19lbmMuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2Vu
+Yy5jDQo+IGluZGV4IDA1NzQzYTc0NWExMS4uZjJiYTE5YzMyNDAwIDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0KPiArKysg
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0KPiBA
+QCAtMjk5LDEyICsyOTksMTQgQEAgc3RhdGljIGludCB2aWRpb2NfdHJ5X2ZtdChzdHJ1Y3QgdjRs
+Ml9mb3JtYXQgKmYsDQo+ICANCj4gIAkJcGl4X2ZtdF9tcC0+bnVtX3BsYW5lcyA9IGZtdC0+bnVt
+X3BsYW5lczsNCj4gIAkJcGl4X2ZtdF9tcC0+cGxhbmVfZm10WzBdLnNpemVpbWFnZSA9DQo+IC0J
+CQlwaXhfZm10X21wLT53aWR0aCAqIHBpeF9mbXRfbXAtPmhlaWdodDsNCj4gKwkJCQlwaXhfZm10
+X21wLT53aWR0aCAqIHBpeF9mbXRfbXAtPmhlaWdodCArDQo+ICsJCQkJKChBTElHTihwaXhfZm10
+X21wLT53aWR0aCwgMTYpICogMikgKiAxNik7DQo+ICAJCXBpeF9mbXRfbXAtPnBsYW5lX2ZtdFsw
+XS5ieXRlc3BlcmxpbmUgPSBwaXhfZm10X21wLT53aWR0aDsNCj4gIA0KPiAgCQlpZiAocGl4X2Zt
+dF9tcC0+bnVtX3BsYW5lcyA9PSAyKSB7DQo+ICAJCQlwaXhfZm10X21wLT5wbGFuZV9mbXRbMV0u
+c2l6ZWltYWdlID0NCj4gLQkJCQkocGl4X2ZtdF9tcC0+d2lkdGggKiBwaXhfZm10X21wLT5oZWln
+aHQpIC8gMjsNCj4gKwkJCQkocGl4X2ZtdF9tcC0+d2lkdGggKiBwaXhfZm10X21wLT5oZWlnaHQp
+IC8gMiArDQo+ICsJCQkJKEFMSUdOKHBpeF9mbXRfbXAtPndpZHRoLCAxNikgKiAxNik7DQo+ICAJ
+CQlwaXhfZm10X21wLT5wbGFuZV9mbXRbMl0uc2l6ZWltYWdlID0gMDsNCj4gIAkJCXBpeF9mbXRf
+bXAtPnBsYW5lX2ZtdFsxXS5ieXRlc3BlcmxpbmUgPQ0KPiAgCQkJCQkJCXBpeF9mbXRfbXAtPndp
+ZHRoOw0KPiBAQCAtMzEyLDcgKzMxNCw4IEBAIHN0YXRpYyBpbnQgdmlkaW9jX3RyeV9mbXQoc3Ry
+dWN0IHY0bDJfZm9ybWF0ICpmLA0KPiAgCQl9IGVsc2UgaWYgKHBpeF9mbXRfbXAtPm51bV9wbGFu
+ZXMgPT0gMykgew0KPiAgCQkJcGl4X2ZtdF9tcC0+cGxhbmVfZm10WzFdLnNpemVpbWFnZSA9DQo+
+ICAJCQlwaXhfZm10X21wLT5wbGFuZV9mbXRbMl0uc2l6ZWltYWdlID0NCj4gLQkJCQkocGl4X2Zt
+dF9tcC0+d2lkdGggKiBwaXhfZm10X21wLT5oZWlnaHQpIC8gNDsNCj4gKwkJCQkocGl4X2ZtdF9t
+cC0+d2lkdGggKiBwaXhfZm10X21wLT5oZWlnaHQpIC8gNCArDQo+ICsJCQkJKChBTElHTihwaXhf
+Zm10X21wLT53aWR0aCwgMTYpIC8gMikgKiAxNik7DQo+ICAJCQlwaXhfZm10X21wLT5wbGFuZV9m
+bXRbMV0uYnl0ZXNwZXJsaW5lID0NCj4gIAkJCQlwaXhfZm10X21wLT5wbGFuZV9mbXRbMl0uYnl0
+ZXNwZXJsaW5lID0NCj4gIAkJCQlwaXhfZm10X21wLT53aWR0aCAvIDI7DQoNCg==
 
