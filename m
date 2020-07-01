@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 842C720702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEB120702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="jWDZPSTI"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="bPdVAqgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgGAPCd (ORCPT
+        id S1731684AbgGAPCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 1 Jul 2020 11:02:33 -0400
-Received: from first.geanix.com ([116.203.34.67]:51100 "EHLO first.geanix.com"
+Received: from first.geanix.com ([116.203.34.67]:51098 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731490AbgGAPCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727124AbgGAPCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 11:02:31 -0400
+X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 11:02:30 EDT
 Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 07B4022432FD;
-        Wed,  1 Jul 2020 14:57:01 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id C31832243302;
+        Wed,  1 Jul 2020 14:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1593615421; bh=z31N8AQ+S2BawxjT54NpNGz2lpgKvwpwj8HFL25Hyik=;
+        t=1593615423; bh=VCNbg8KAWx3WCHakE9UqNr62DnfO64KL9n8mC4ADfdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=jWDZPSTIjigw3f7alub+NkuuRQWxLpO9FliyrUjwjCDLL+YRShqUlG6TQwqhz5a8N
-         qbN16ft9CqWbb9clIefgiPFkB0Mx3OXZ0rVY2qRVVWNHPdo/ezwFG3SG67wHySEOYh
-         cVNYWeDSED9eDs6ppd2bLG5Nh7+PUrJEmkvnEJVIENhNQIpBrQxAWLRb5+N5K3QreX
-         oMtpzsiWdMl5gd0qTbXi7N59Cz5gWNEpDFiOfifdAb4OGD54OO+adEKhB6uiKhqF5v
-         8jSA8S1pPCYVVCw2JiLCZ0Lx7OCHB0CgLOT++/KZq0zJ2a2qAVNLfYLkhG7QLhLuQ2
-         7PBAS7bC9Mqlg==
+        b=bPdVAqgYWpxE6wwb4vEtZS+OtqJwEKf5eE6nTdMnUSvsDTCyw6OP0RObYaOhHB85i
+         nKSq80rAZ/3yjwYkkjg15qL1g9YYNHtaIUdR6lC7TFprTbHH5bg8TKtbqujzDv2LI6
+         i2L4jNoiYQPKCbPn1bbm9bfgyuKX2rfNWQz+HSxqVQi6Fhh8im84+f/BmG0dwAIAXy
+         RWqDLe2MjsACnEXWHwqRQWDnye53fgpVxNxHwrGBgN1o0hpl06vkbI23laZ/18u8oO
+         9inM496APTLIC180EC48nYmpMDkzYdLyYQ2UWY5PkHRiDmXiVuiuIeP9jh1KAet09I
+         35BRCZFMlMmkg==
 From:   Esben Haabendal <esben@geanix.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 1/3] uio_pdrv_genirq: Remove warning when irq is not specified
-Date:   Wed,  1 Jul 2020 16:56:57 +0200
-Message-Id: <20200701145659.3978-2-esben@geanix.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] uio_pdrv_genirq: Allow use with non-page-aligned memory resources
+Date:   Wed,  1 Jul 2020 16:56:59 +0200
+Message-Id: <20200701145659.3978-4-esben@geanix.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200701145659.3978-1-esben@geanix.com>
 References: <20200701145659.3978-1-esben@geanix.com>
@@ -50,31 +51,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since e3a3c3a20555 ("UIO: fix uio_pdrv_genirq with device tree but no
-interrupt"), the uio_pdrv_genirq has supported use without interrupt,
-so the change in 7723f4c5ecdb ("driver core: platform: Add an error
-message to") added false warnings for those cases.
+Similar to the changes made in 270579d95f82 ("uio_mf624: Align memory
+regions to page size and set correct offsets"), this will allow
+uio_pdrv_genirq devices to expose memory regions that is not page-aligned,
+requiring the users to respect the offset sysfs attribute (as implemented
+in libuio).
 
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
 Signed-off-by: Esben Haabendal <esben@geanix.com>
-Cc: stable@vger.kernel.org
 ---
- drivers/uio/uio_pdrv_genirq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/uio/uio_pdrv_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index ae319ef3a832..1d69dd49c6d2 100644
+index b60173bc93ce..86f75a4fe0e3 100644
 --- a/drivers/uio/uio_pdrv_genirq.c
 +++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -159,7 +159,7 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- 	priv->pdev = pdev;
+@@ -187,8 +187,10 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ 		}
  
- 	if (!uioinfo->irq) {
--		ret = platform_get_irq(pdev, 0);
-+		ret = platform_get_irq_optional(pdev, 0);
- 		uioinfo->irq = ret;
- 		if (ret == -ENXIO && pdev->dev.of_node)
- 			uioinfo->irq = UIO_IRQ_NONE;
+ 		uiomem->memtype = UIO_MEM_PHYS;
+-		uiomem->addr = r->start;
+-		uiomem->size = resource_size(r);
++		uiomem->addr = r->start & PAGE_MASK;
++		uiomem->offs = r->start & ~PAGE_MASK;
++		uiomem->size = (uiomem->offs + resource_size(r)
++				+ PAGE_SIZE - 1) & PAGE_MASK;
+ 		uiomem->name = r->name;
+ 		++uiomem;
+ 	}
 -- 
 2.4.11
 
