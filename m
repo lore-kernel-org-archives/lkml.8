@@ -2,135 +2,219 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932BD2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fJXH5kgA"
+	by mail.kernel.org (Postfix) with ESMTP id 710C1207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgGACSA (ORCPT
+        id S1727084AbgGACSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgGACR7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:17:59 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C4EC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:17:59 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id e197so7142744yba.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QQ3KRdyNKq0NjChcDS5Efh5/mojKWckJwK+l+KsphhM=;
-        b=fJXH5kgAaIYzB9rvTW3U8j5fmccmSA2+BZfNUdfYIAtTuU56W7Y0oFU3fczx2+skFX
-         0Jm11JvxZahtDz5DQF5DRP8qBedrTLySaMN8TKxxdRFNEz0vc3XOtEx5yOb2mWzEZrTj
-         bnneqqERieACLYgpzOV3LEI2+4or2SnpV+9bZdt+nE1Q61ZZowJ1BzVAMJdS/zn+YqE1
-         6PqJ+RDkkuB5TiDQiaK/XwClyG4Jp8BA5ss9XY9UStTr8e5p184j7g6VoNUaly9io3jX
-         MD+FViLQmQsp0CjbZNld+lhsKFPu8hRdWZaiqEOlJYgJ9dPwV4s+gaDtVzTva3vsVHPD
-         7FPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QQ3KRdyNKq0NjChcDS5Efh5/mojKWckJwK+l+KsphhM=;
-        b=L1yp95rrVayQ5lMbuUgz6tq+4eMIeFiYLOwpGI9opu20Id1MBuTdDJRQ1YxDFO4ZoE
-         uFVqOkzuIawx558PHc+UtBmG4mnVx3o9gbZE6Slc5Es5eQJQRFhJGIgZGJURPiZXEtJY
-         53AkL8JemIDbEXNgbBNe6Ad/x49/CMtDTmmd4I9tbd+9JdFrGykMb9jwOoPVMy0dKBGp
-         4oaDuBvXr1SQMOjSv9RfGDarwF7R5Nx9oNMfHYgQ3sGtd4RnPiGqb+j/ndPOGjxWKORp
-         uuZ2MexOG4XsfRTCfyNnFbjtSPJ5Hf+clpvL+yzBMuH2H7x5bbG11gM1kQgbPmSEBZrm
-         RLbQ==
-X-Gm-Message-State: AOAM532OvIHlJliRg978igNVYQJNIb+Xxky2DMlEt+cWIXYHhxLkcS3z
-        eRqmePatyAxvxizSNdZ3VYI9TVt311hlPOwctIlrMr8bHSE=
-X-Google-Smtp-Source: ABdhPJxb/7CdKcnOoMbFkhx1mIWpXPOIVNhLUOE+TiuUBaE3PllWXwaKAgIIzzFvXdXbDTh1SASNn48H5oBd2F6SqD8=
-X-Received: by 2002:a25:ca4a:: with SMTP id a71mr17561581ybg.101.1593569878306;
- Tue, 30 Jun 2020 19:17:58 -0700 (PDT)
+        Tue, 30 Jun 2020 22:18:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:48253 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgGACSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:18:32 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 01 Jul 2020 11:18:30 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 5330B180B81;
+        Wed,  1 Jul 2020 11:18:30 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 1 Jul 2020 11:18:30 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id DA0EF1A0507;
+        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
+Received: from [10.213.31.247] (unknown [10.213.31.247])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 4D2D4120BB6;
+        Wed,  1 Jul 2020 11:18:29 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+ <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+ <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <95adf862-6c52-ddb9-b96a-e278a1925053@socionext.com>
+Date:   Wed, 1 Jul 2020 11:18:29 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
- <20200701020211.GA6875@gondor.apana.org.au>
-In-Reply-To: <20200701020211.GA6875@gondor.apana.org.au>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 30 Jun 2020 19:17:46 -0700
-Message-ID: <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:02 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> > index 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
-> > 100644
-> > --- a/net/ipv4/tcp.c
-> > +++ b/net/ipv4/tcp.c
-> > @@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
-> > int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
-> > tcp_md5sig_key *key)
-> > {
-> >        struct scatterlist sg;
-> > +       u8 keylen = key->keylen;
-> >
-> > -       sg_init_one(&sg, key->key, key->keylen);
-> > -       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
-> > +       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
-> > +
-> > +       sg_init_one(&sg, key->key, keylen);
-> > +       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
-> >        return crypto_ahash_update(hp->md5_req);
-> > }
-> > EXPORT_SYMBOL(tcp_md5_hash_key);
-> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> > index ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
-> > 100644
-> > --- a/net/ipv4/tcp_ipv4.c
-> > +++ b/net/ipv4/tcp_ipv4.c
-> > @@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
-> > tcp_md5_addr *addr,
-> >        if (key) {
-> >                /* Pre-existing entry - just update that one. */
-> >                memcpy(key->key, newkey, newkeylen);
-> > +
-> > +               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
-> > +
-> >                key->keylen = newkeylen;
-> >                return 0;
-> >        }
->
-> This doesn't make sense.  Your smp_rmb only guarantees that you
-> see a version of key->key that's newer than keylen.  What if the
-> key got changed twice? You could still read more than what's in
-> the key (if that's what you're trying to protect against).
+Hi Marc,
 
-The worst that can happen is a dropped packet.
+On 2020/06/30 22:23, Marc Zyngier wrote:
+> On 2020-06-29 10:49, Kunihiko Hayashi wrote:
+>> Hi Marc,
+>>
+>> On 2020/06/27 18:48, Marc Zyngier wrote:
+>>> On Thu, 18 Jun 2020 09:38:09 +0100,
+>>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>>>
+>>>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>>>> by INTx handler, however, these interrupts should be also handled by
+>>>> MSI handler.
+>>>>
+>>>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>>>> interrupts, which is called from both INTx and MSI handlers.
+>>>> This function detects PME and AER interrupts with the status register,
+>>>> and invoke PME and AER drivers related to MSI.
+>>>>
+>>>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>>>
+>>>> Cc: Marc Zyngier <maz@kernel.org>
+>>>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>>> ---
+>>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> index a5401a0..5ce2479 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> @@ -44,7 +44,9 @@
+>>>>   #define PCL_SYS_AUX_PWR_DET        BIT(8)
+>>>>     #define PCL_RCV_INT            0x8108
+>>>> +#define PCL_RCV_INT_ALL_INT_MASK    GENMASK(28, 25)
+>>>>   #define PCL_RCV_INT_ALL_ENABLE        GENMASK(20, 17)
+>>>> +#define PCL_RCV_INT_ALL_MSI_MASK    GENMASK(12, 9)
+>>>>   #define PCL_CFG_BW_MGT_STATUS        BIT(4)
+>>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS    BIT(3)
+>>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS    BIT(2)
+>>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>>>   {
+>>>> -    writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>>>> +    u32 val;
+>>>> +
+>>>> +    val = PCL_RCV_INT_ALL_ENABLE;
+>>>> +    if (pci_msi_enabled())
+>>>> +        val |= PCL_RCV_INT_ALL_INT_MASK;
+>>>> +    else
+>>>> +        val |= PCL_RCV_INT_ALL_MSI_MASK;
+>>>
+>>> Does this affect endpoints? Or just the RC itself?
+>>
+>> These interrupts are asserted by RC itself, so this part affects only RC.
+>>
+>>>> +
+>>>> +    writel(val, priv->base + PCL_RCV_INT);
+>>>>       writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>>>   }
+>>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>>>       .map = uniphier_pcie_intx_map,
+>>>>   };
+>>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>>>   {
+>>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>>       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>>       struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>> -    unsigned long reg;
+>>>> -    u32 val, bit, virq;
+>>>> +    u32 val, virq;
+>>>>   -    /* INT for debug */
+>>>>       val = readl(priv->base + PCL_RCV_INT);
+>>>>         if (val & PCL_CFG_BW_MGT_STATUS)
+>>>>           dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>>> +
+>>>>       if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>>           dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "Root Error\n");
+>>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
+>>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +
+>>>> +    if (is_msi) {
+>>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>>> +            dev_dbg(pci->dev, "Root Error Status\n");
+>>>> +
+>>>> +        if (val & PCL_CFG_PME_MSI_STATUS)
+>>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
+>>>> +
+>>>> +        if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>>>> +               PCL_CFG_PME_MSI_STATUS)) {
+>>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>>> +            generic_handle_irq(virq);
+>>>> +        }
+>>>> +    }
+>>>
+>>> Please have two handlers: one for interrupts that are from the RC,
+>>> another for interrupts coming from the endpoints.
+>> I assume that this handler treats interrupts from the RC only and
+>> this is set on the member ".msi_host_isr" added in the patch 1/6.
+>> I think that the handler for interrupts coming from endpoints should be
+>> treated as a normal case (after calling .msi_host_isr in
+>> dw_handle_msi_irq()).
+> 
+> It looks pretty odd that you end-up dealing with both from the
+> same "parent" interrupt. I guess this is in keeping with the
+> rest of the DW PCIe hacks... :-/
 
-Which is anyway going to happen anyway eventually if an application
-changes a TCP MD5 key on a live flow.
+It might be odd, however, in case of UniPhier SoC,
+both MSI interrupts from endpoints and PME/AER interrupts from RC are
+asserted by same "parent" interrupt. In other words, PME/AER interrupts
+are notified using the parent interrupt for MSI.
 
-The main issue of the prior code was the double read of key->keylen in
-tcp_md5_hash_key(), not that few bytes could change under us.
+MSI interrupts are treated as child interrupts with reference to
+the status register in DW core. This is handled in a for-loop in
+dw_handle_msi_irq().
 
-I used smp_rmb() to ease backports, since old kernels had no
-READ_ONCE()/WRITE_ONCE(), but ACCESS_ONCE() instead.
+PME/AER interrupts are treated with reference to the status register
+in UniPhier glue layer, however, this couldn't be handled in the same way
+directly.
+
+So I'm trying to add .msi_host_isr function to handle this
+with reference to the SoC-specific registers.
+
+This exported function asserts MSI-0 as a shared child interrupt.
+As a result, PME/AER are registered like the followings in dmesg:
+
+    pcieport 0000:00:00.0: PME: Signaling with IRQ 25
+    pcieport 0000:00:00.0: AER: enabled with IRQ 25
+
+And these interrupts are shared as MSI-0:
+
+    # cat /proc/interrupts | grep 25:
+     25:          0          0          0          0   PCI-MSI   0 Edge      PCIe PME, aerdrv
+
+This might be a special case, though, I think that this is needed to handle
+interrupts from RC sharing MSI parent.
+  
+> It is for Lorenzo to make up his mind about this anyway.
+
+I'd like to Lorenzo's opinion, too.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
