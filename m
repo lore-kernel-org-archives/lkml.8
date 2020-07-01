@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E70C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F75C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5CE2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFA12074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWv+idF9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xTCIkOiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgGAHwf (ORCPT
+        id S1728475AbgGAHxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45352 "EHLO
+        Wed, 1 Jul 2020 03:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbgGAHwe (ORCPT
+        with ESMTP id S1728327AbgGAHxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:52:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1B3C03E979
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:52:34 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so25776339ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:52:34 -0700 (PDT)
+        Wed, 1 Jul 2020 03:53:06 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D2AC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:53:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t25so21215769lji.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Sp8OFRFf6RX3lWs07Kr7AL+Vpp0ArpSvDuDKv5ockV4=;
-        b=ZWv+idF9f6C09tDpuANbtiZts4oy6Jp5G1wSc4cfgblqEH6E+eM6fWzw78g8Jym25H
-         ESLvx77xZlyF23QX2tk/bGVSZNIB3cK6WP7tuOsSmSUSUfQKFljAkgjkGFTg5MVl2SHc
-         I45UL6AyclZyHXiaOMg5f2gg14p0pj9SskoqwosD9HZoQEAmhfiFU6SFqpnSIdpxjDYK
-         gb4O0POOdeIrAJGg2v5Pp1AmYKsvfYwczug197KEa/QuFl43CZRsgMDP7tJL54aSqTky
-         SmG+X0j/S7GVnqpwYBphXgIDO0nunTa5tPSy6BcjTknPtA8noK/g2cyVwldEPqFh9+Xu
-         zjfw==
+        bh=enPGC0OPftzCJlUnTQARq7JEwIW+q43cB8Io8/Pof2M=;
+        b=xTCIkOiBtlJ6KiXHJnag1uUXr7+sABVaySKZwGWLW5bPgNh2BpVrCKqCjglU/TuFGH
+         m9QtKUXanPF0gEBmpQNGPZx85JSQb83YZbgLpLTKkIv1UXKqBUZJTMA+lDPcpg6NmnA8
+         yEJfoyS1/zewE72ZeCP16ZGXR9t4xXVWMNqfm8H8UJfeX03FrzhX/Ue7EnpKQHR0Ul1N
+         bbl0jRMKuKHGYDE9ofhB5OiIbUeQJIdWXfo1NerQIiNu+MdLppPXX5PEm4N2CmlC6zkk
+         HlGZOPJdteytMiASWqZt67U+AMjsKUhgRsKVnC709MG+tkDQD2kyIYXYGPsOxYUQY1A5
+         xMww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Sp8OFRFf6RX3lWs07Kr7AL+Vpp0ArpSvDuDKv5ockV4=;
-        b=MnVPfN+4qHMwPvwIxCuQc98BZ8prqmWA6BZZTG4PB4oR0RozEuKDPnBUK9GpGgqQja
-         RSYmvo7wRBZR8CERCxK6N/Hc890urrnUPuMyCsGhrGimK51r260fp5J8fzp+FTCCsOWV
-         z7Lk9aA/uQfEjasb4Qb99I0v3/VE5obZrsD3gPdSGLGKYrwdfFT3/yz3azd0sEiHcdXJ
-         sQTB0lR5TP1qOVTAx9S5fJTzIOaAZrpzjbbGkobvWU5Rg05CfSd8yuRDFJe+XBT2mw5v
-         +udUiiHceOaCCJ70Ov/MDBhaaQ/MEIiFk7YFlm8OSklQh1rfh4xX/Jeopwot3g1+pad7
-         VZtw==
-X-Gm-Message-State: AOAM5320Myb9TtTWkwrQqzg5rwmWJsz5JLlw7B2NwJ18ZsQ9HJLWzE+D
-        7JMZ7cZvA6MB7fJeAc6PwuA9H+gniHPIcV3mkzLftw==
-X-Google-Smtp-Source: ABdhPJwpRScXAGVUMqgSm84FX6WJ0SzvlgWp8UNzvNb5Aa6vqYqzZkRC8x+/6pQpFExpVAZVeTV2K/cWOS/1LOUiSjs=
-X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr11806438ljo.338.1593589952845;
- Wed, 01 Jul 2020 00:52:32 -0700 (PDT)
+        bh=enPGC0OPftzCJlUnTQARq7JEwIW+q43cB8Io8/Pof2M=;
+        b=ouKxEFQb8qn/+zC99gIEJeKS7F8x+ySQ+wa76Zzr/uqTUOwmlFvvslBDv0iXo8K6VC
+         EMHz4gSco90PNEM9xhu0XKpqmj4MMG/Z2yonc3To/xF9OYoPbONe/RgatorWOsAsNFTd
+         N4WzHrnHFkWPaJp7/oWUYVO3BOAxNwBoLRzmg6lpWPq+vaan3AMRu4xs1+tucRw6uYcX
+         aPzyJHqd6G+hM0z5+AS1bcwXjK7pbjbYJN98B2ApKRgaajDv8mWBb0e6UcHS6E214Qbo
+         wcTDjHkO09nPPKzfiiznlnf38SrbI79AyolDfRAjbbVW2R0+cZFR7d2BAXocJCcHuIv4
+         SLbw==
+X-Gm-Message-State: AOAM5302TMkpREw5vMVMo4RtI/2nJoqFtfQswEBB/UaEchtdy4rZUuzS
+        vQrSKXdk4CKT6OrT7qUsHaOttHIG2OsRI01dS3LOvw==
+X-Google-Smtp-Source: ABdhPJw3tzZ9D9p6jgEm59VOvtaJaUTyrZtudaxwwHOStc/fwYBz/YcU4X11SqbNhvI9hCjXocTGYoYCbCv2Fh3PwSk=
+X-Received: by 2002:a05:651c:284:: with SMTP id b4mr1772479ljo.283.1593589984484;
+ Wed, 01 Jul 2020 00:53:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-13-megous@megous.com>
-In-Reply-To: <20200626005601.241022-13-megous@megous.com>
+References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-14-megous@megous.com>
+In-Reply-To: <20200626005601.241022-14-megous@megous.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Jul 2020 09:52:21 +0200
-Message-ID: <CACRpkdaca=1gvYv5e2v3BzZSTE_1gab6nOt6DCrFm3QX64xy9Q@mail.gmail.com>
-Subject: Re: [PATCH v5 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD
- support on PinePhone
+Date:   Wed, 1 Jul 2020 09:52:53 +0200
+Message-ID: <CACRpkda2LnZ7UQkp_ZDEVCfxHVQ-VUE7NH0dEGNHYrUd1LcC0Q@mail.gmail.com>
+Subject: Re: [PATCH v5 13/13] arm64: dts: sun50i-a64-pinephone: Add
+ touchscreen support
 To:     Ondrej Jirman <megous@megous.com>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -90,18 +90,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
 
-> From: Icenowy Zheng <icenowy@aosc.io>
+> Pinephone has a Goodix GT917S capacitive touchscreen controller on
+> I2C0 bus. Add support for it.
 >
-> PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-> display.
->
-> Backlight levels curve was optimized by Martijn Braam using a
-> lux meter.
->
-> Add its device nodes.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Martijn Braam <martijn@brixit.nl>
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
 
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
