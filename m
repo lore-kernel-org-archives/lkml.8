@@ -2,162 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38487C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158902073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:45:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qcXawn2W"
+	by mail.kernel.org (Postfix) with ESMTP id 434B72073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgGABpv (ORCPT
+        id S1726107AbgGABq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgGABpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:45:50 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56126C061755;
-        Tue, 30 Jun 2020 18:45:50 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so12637137lfb.0;
-        Tue, 30 Jun 2020 18:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HczcFWcC6ZdwoUa650Xj9nL47iYNBcU34xhBNmcm5mQ=;
-        b=qcXawn2WKloYEsPbetf6aagiDS45tW33ipg0zz3WpddTf5mEfIPl/RMM9F4K1UD0CA
-         PyrZx3PgfMl6DntR2pNPLKuFwKF44YW5yhfETcUmTvZtwQys3Sa24F32CSHiXsXi+Zee
-         tWrAu2tOdbV5ta2vdNmYg2bItojho4xB1/WO9czIGpsBqf3dPr67OrQwMj2W6NDqaf+T
-         OCTVkIifGIabvdY9ZjZ6IRYTqrc9RJyqx1K6E8sxUmppsswEFsVxPJaC/H+INESMKHfC
-         DyoaZC3gOoMtsEaGj5hUdAxFWGcDOTyMZJlKw35i76V0XWVl52wdzqVlxci/HIjlLUj1
-         kLaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HczcFWcC6ZdwoUa650Xj9nL47iYNBcU34xhBNmcm5mQ=;
-        b=tCJHthBWYapCJWgbIXTGLHtrZhQHDP71UP95zMjd4R7M+pVbNm0ilTB4/Q92CN3W3X
-         OkVQrtXdjg6kwbHayrcGK9Qpit2GPeBoNZqzuazFNv3TREHSR8vmGYqJu7kwuG/AVdUr
-         XkrK4SoJGrtiB7+BqukQG/DF0JKYjmh2346VDOUPVVsaZWKB9qOd34OTLT8KwVxRI8XE
-         7LWYve7+/x0Kob2k5b+7Rn8/fSe9Wk84OhVjqiQKvQ3uUhVEn/QVXbhY95myNWiErfl8
-         pCX+kAXJwPSi77HwhZ+xxB0GmhFrOruZw0RMaW/IIl+nkfWfXBlgzzdLHjf7s6cxHhyN
-         uMxA==
-X-Gm-Message-State: AOAM530gOnXz0K38YYP1FeMWHza8v0TVjCiFb/uCPopTVs+/h66mtyPX
-        UHAiwpCosttXvmuebc86Bd4=
-X-Google-Smtp-Source: ABdhPJwbkW9xT3ZwoL2zmgvISkNdI5MF+tmhowtU+Y/M+Llvwp1rA3SMtcAIZ5jfUBSevSSc5oW50A==
-X-Received: by 2002:ac2:548a:: with SMTP id t10mr13826582lfk.142.1593567948716;
-        Tue, 30 Jun 2020 18:45:48 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id 193sm1594603lfa.90.2020.06.30.18.45.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 18:45:47 -0700 (PDT)
-Subject: Re: [PATCH v7 31/36] staging: tegra-vde: fix common struct sg_table
- related issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org
-References: <20200619103636.11974-1-m.szyprowski@samsung.com>
- <CGME20200619103714eucas1p18db6efd1a380fc0bdb16174ee85036fa@eucas1p1.samsung.com>
- <20200619103636.11974-32-m.szyprowski@samsung.com>
- <20200621070015.0cf833ab@dimatab>
- <559970b6-e80f-90ec-7fb0-1fab742d99de@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <60aacf07-e263-85e0-9d45-1edb8ba3b954@gmail.com>
-Date:   Wed, 1 Jul 2020 04:45:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 30 Jun 2020 21:46:56 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62470 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgGABq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:46:56 -0400
+IronPort-SDR: sDNfTzP9y+myuF/wWl/Yk2Tk07CW/cg+Wv7dW383uexsI6RcYbKD1iYv6oL3xcQ6ZvtIxtgUXv
+ ISZC4l9YRWbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134726157"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="134726157"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 18:46:55 -0700
+IronPort-SDR: Gdy5hOeQXoCfJBO4i9k8eF8tqNIKIBbebXCUWsdtesZ4jRvvJ7LLnSRCyzb08j8S1Q92WNp9v8
+ GpZFk5CH4FKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="313606775"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Jun 2020 18:46:54 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jqRpt-0002K1-S8; Wed, 01 Jul 2020 01:46:53 +0000
+Date:   Wed, 01 Jul 2020 09:46:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 009bce1df0bb5eb970b9eb98d963861f7fe353c7
+Message-ID: <5efbeaf9.upnmyiFnvHtP16Gi%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <559970b6-e80f-90ec-7fb0-1fab742d99de@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.06.2020 13:07, Marek Szyprowski пишет:
-> On 21.06.2020 06:00, Dmitry Osipenko wrote:
->> В Fri, 19 Jun 2020 12:36:31 +0200
->> Marek Szyprowski <m.szyprowski@samsung.com> пишет:
->>
->>> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg()
->>> function returns the number of the created entries in the DMA address
->>> space. However the subsequent calls to the
->>> dma_sync_sg_for_{device,cpu}() and dma_unmap_sg must be called with
->>> the original number of the entries passed to the dma_map_sg().
->>>
->>> struct sg_table is a common structure used for describing a
->>> non-contiguous memory buffer, used commonly in the DRM and graphics
->>> subsystems. It consists of a scatterlist with memory pages and DMA
->>> addresses (sgl entry), as well as the number of scatterlist entries:
->>> CPU pages (orig_nents entry) and DMA mapped pages (nents entry).
->>>
->>> It turned out that it was a common mistake to misuse nents and
->>> orig_nents entries, calling DMA-mapping functions with a wrong number
->>> of entries or ignoring the number of mapped entries returned by the
->>> dma_map_sg() function.
->>>
->>> To avoid such issues, lets use a common dma-mapping wrappers operating
->>> directly on the struct sg_table objects and use scatterlist page
->>> iterators where possible. This, almost always, hides references to the
->>> nents and orig_nents entries, making the code robust, easier to follow
->>> and copy/paste safe.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>   drivers/staging/media/tegra-vde/iommu.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/staging/media/tegra-vde/iommu.c
->>> b/drivers/staging/media/tegra-vde/iommu.c index
->>> 6af863d92123..adf8dc7ee25c 100644 ---
->>> a/drivers/staging/media/tegra-vde/iommu.c +++
->>> b/drivers/staging/media/tegra-vde/iommu.c @@ -36,8 +36,8 @@ int
->>> tegra_vde_iommu_map(struct tegra_vde *vde,
->>>   	addr = iova_dma_addr(&vde->iova, iova);
->>>   
->>> -	size = iommu_map_sg(vde->domain, addr, sgt->sgl, sgt->nents,
->>> -			    IOMMU_READ | IOMMU_WRITE);
->>> +	size = iommu_map_sgtable(vde->domain, addr, sgt,
->>> +				 IOMMU_READ | IOMMU_WRITE);
->>>   	if (!size) {
->>>   		__free_iova(&vde->iova, iova);
->>>   		return -ENXIO;
->> Ahh, I saw the build failure report. You're changing the DMA API in
->> this series, while DMA API isn't used by this driver, it uses IOMMU
->> API. Hence there is no need to touch this code. Similar problem in the
->> host1x driver patch.
-> 
-> The issue is caused by the lack of iommu_map_sgtable() stub when no 
-> IOMMU support is configured. I've posted a patch for this:
-> 
-> https://lore.kernel.org/lkml/20200630081756.18526-1-m.szyprowski@samsung.com/
-> 
-> The patch for this driver is fine, we have to wait until the above fix 
-> gets merged and then it can be applied during the next release cycle.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: 009bce1df0bb5eb970b9eb98d963861f7fe353c7  x86/split_lock: Don't write MSR_TEST_CTRL on CPUs that aren't whitelisted
 
-Thank you for the clarification!
+elapsed time: 801m
+
+configs tested: 34
+configs skipped: 74
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
