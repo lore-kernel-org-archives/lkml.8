@@ -2,64 +2,65 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC677C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8988820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A79C20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7ZV4ZqQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KypgvuN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgGAUDF (ORCPT
+        id S1726927AbgGAUDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
+        Wed, 1 Jul 2020 16:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgGAUDE (ORCPT
+        with ESMTP id S1726021AbgGAUDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:03:04 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B648EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:03:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc9so4904523pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:03:04 -0700 (PDT)
+        Wed, 1 Jul 2020 16:03:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B41C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:03:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so12238231pgk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:03:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=h+1Zhw+IU5Q0TCwvXbDCPP03c9PbqFM6QbL3RKeglzg=;
-        b=m7ZV4ZqQ8dOTQW70jelDPr+AgEtdHXqgtBl2IgnF8daantVBxjfVIMK1Gm8F0Li+oI
-         BxefPgOgTQmCaBj+1lln0RS9uWIH5LCJU7gk7KR2SdjqjdbouPMoV38yKEEhDWStJCD8
-         txk92EdtNZ31+swmcPZgxROjzV0toLSKWPt0Z/IGgj4fpbAspLLAgqqPeWx8ImLB6gjk
-         b1WYj9qFzqvEkIMskziaG0QSnhRU49ZDaS7Z4Wfeo1H0npKeSez+MuLu9oZKekqHYcZd
-         YUx9TrsSVGTjQYoH8C3lkeRO8GgtA6g+VV4oT4g19iMBZe6OPhKArE84hfJRK8QWZfp2
-         Fc0Q==
+        bh=DG/OiDzZKYxcN7tgph7u8U8cnXnzZZZ9acgCYJ83YwI=;
+        b=KypgvuN8A6GvTF5CN3Jkyl+A7/LMTi++GIYEZVAvfQi8Ot5Tt64QQjwC4jI0Hirc63
+         iBxqDmcC8hQBSMpQTuj32vL9Fuu9LG1Pvcyb6jm8sCChD5g6kENuDDiDPl8siCk5ItI1
+         9BNxJ9NPtSYOUcfNQUih4K3sxuEZfSR932DUdWkGiN8GefDd6KVkKhnbNa1N8U0k19js
+         aJXpTsMFQ0iIxT9bJ1RKG5ebx8FJH3c6RukiwJ5CMFoJHAlM/naxjBXIoTyLtVzwDz9L
+         cZM71EnZcykycNMhxQWdJwYTAX11OSuRavVKU054lU719RM88tvgtw45NLNa/pVDas6l
+         kvvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=h+1Zhw+IU5Q0TCwvXbDCPP03c9PbqFM6QbL3RKeglzg=;
-        b=qZL3L0QAdqvAa/t3oMxIMggHxiILzZ87OXrF2BJSE6XAAAG5wtV6R/JxkktdWZ7PWq
-         MTVXR28DI9jTpxkSU9z7qAOKmspOjRnGBGyOFmDAcvHKpqvB0wAjcPRswIGY4M02o5dF
-         Ziq+6lqpLEJLs/u2u/ZuuCl+BHOg80O1f5/wvP7rVirjhDWQsiwTNfEhjwQl5nr2plXK
-         mIIHABw3+8c6aoIrD1zFJ4DIFUxGPrVHM+MPvZURTBlHJyv+oUlR0PWuVw1d2WyRdQdZ
-         KOGvhEoiGePzxku0M8XnkOn0YTde5StGEKCOZJWgo8mOXwvwG30BypYMP3Ic5olPX2bF
-         ZeMQ==
-X-Gm-Message-State: AOAM530ux0PyhEyK4Z0cfd9PuWSxVEcx0i1Hoq/H2SflqAu51zMww6L2
-        ZBCWPNUIemXg5RMMmpiGQ9Az/XCfHPY=
-X-Google-Smtp-Source: ABdhPJwjsX59K7TNEodj6s9VSLwhn8IML/5qqPGnMeNAlqTTpcG08YE/nNMw432H+LegU0Apgf7xPQ==
-X-Received: by 2002:a17:902:d20c:: with SMTP id t12mr23683155ply.291.1593633783951;
-        Wed, 01 Jul 2020 13:03:03 -0700 (PDT)
+        bh=DG/OiDzZKYxcN7tgph7u8U8cnXnzZZZ9acgCYJ83YwI=;
+        b=CCpfHLIT4j239/Ee5zeJ+mneKhagPoWjHlCSN0G0HcaBp5SwYi0Mc/bKXR3b2ovd9u
+         7QIjgpyA2JlAqeQPt4PIC3NkrFRjsvMlTq+OfuY/AuBTyQ4SnuBiVcq71DkNTUi6AeX7
+         oHfmN15Pxky3sAj2e2FaRR3jeRgx39EDbyEAthTIG7dbX3jCUTDYzfjFV9jIuPFv2sTh
+         wYx3VFN1sH8VS4C/fEwq/qf0GrDTnnUJZce/369kiFj8UWMVBGW9eal7RvLYWqIFsQQP
+         xof7Q3Ju9YgLMZmEJs0kCG+1/ReWvERTdjDyi+LyYqq5IkRJicSyYXqvzVYQ187gq/No
+         2geg==
+X-Gm-Message-State: AOAM531g8iv2ynSrpG8Q2HMbIq6Gg/S16YOzW4fsH6Le9ncjej8R1/b7
+        dsrXejn+0Q83tn6fvV90mjyGoA==
+X-Google-Smtp-Source: ABdhPJzS45NkXiunLsIzMQvukb9uRBU3YXdQl00MI74iobOT3CgQ4L0Gm7O7Mii1eRv3hj+zNHOjbw==
+X-Received: by 2002:aa7:86c1:: with SMTP id h1mr12889126pfo.175.1593633801894;
+        Wed, 01 Jul 2020 13:03:21 -0700 (PDT)
 Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id oc6sm6464478pjb.43.2020.07.01.13.03.02
+        by smtp.gmail.com with ESMTPSA id u2sm5954919pfl.21.2020.07.01.13.03.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 13:03:02 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 13:03:01 -0700 (PDT)
+        Wed, 01 Jul 2020 13:03:21 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 13:03:20 -0700 (PDT)
 From:   David Rientjes <rientjes@google.com>
 X-X-Sender: rientjes@chino.kir.corp.google.com
 To:     Dave Hansen <dave.hansen@linux.intel.com>
@@ -67,12 +68,11 @@ cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
         dwagner@suse.de, tobin@kernel.org, cl@linux.com,
         akpm@linux-foundation.org, ying.huang@intel.com,
-        dan.j.williams@intel.com, cai@lca.pw
-Subject: Re: [PATCH 3/3] mm/vmscan: replace implicit RECLAIM_ZONE checks with
- explicit checks
-In-Reply-To: <20200701152627.8761147E@viggo.jf.intel.com>
-Message-ID: <alpine.DEB.2.23.453.2007011256280.1908531@chino.kir.corp.google.com>
-References: <20200701152621.D520E62B@viggo.jf.intel.com> <20200701152627.8761147E@viggo.jf.intel.com>
+        dan.j.williams@intel.com, cai@lca.pw, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
+In-Reply-To: <20200701152623.384AF0A7@viggo.jf.intel.com>
+Message-ID: <alpine.DEB.2.23.453.2007011303080.1908531@chino.kir.corp.google.com>
+References: <20200701152621.D520E62B@viggo.jf.intel.com> <20200701152623.384AF0A7@viggo.jf.intel.com>
 User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -83,35 +83,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 1 Jul 2020, Dave Hansen wrote:
 
-> diff -puN include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper include/linux/swap.h
-> --- a/include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper	2020-07-01 08:22:13.650955330 -0700
-> +++ b/include/linux/swap.h	2020-07-01 08:22:13.659955330 -0700
-> @@ -12,6 +12,7 @@
->  #include <linux/fs.h>
->  #include <linux/atomic.h>
->  #include <linux/page-flags.h>
-> +#include <uapi/linux/mempolicy.h>
->  #include <asm/page.h>
->  
->  struct notifier_block;
-> @@ -374,6 +375,12 @@ extern int sysctl_min_slab_ratio;
->  #define node_reclaim_mode 0
->  #endif
->  
-> +static inline bool node_reclaim_enabled(void)
-> +{
-> +	/* Is any node_reclaim_mode bit set? */
-> +	return node_reclaim_mode & (RECLAIM_ZONE|RECLAIM_WRITE|RECLAIM_UNMAP);
-> +}
-> +
->  extern void check_move_unevictable_pages(struct pagevec *pvec);
->  
->  extern int kswapd_run(int nid);
+> 
+> From: Dave Hansen <dave.hansen@linux.intel.com>
+> 
+> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
+> sysctl.  Like a good kernel developer, I also went to go update the
+> documentation.  I noticed that the bits in the documentation didn't
+> match the bits in the #defines.
+> 
+> The VM never explicitly checks the RECLAIM_ZONE bit.  The bit is,
+> however implicitly checked when checking 'node_reclaim_mode==0'.
+> The RECLAIM_ZONE #define was removed in a cleanup.  That, by itself
+> is fine.
+> 
+> But, when the bit was removed (bit 0) the _other_ bit locations also
+> got changed.  That's not OK because the bit values are documented to
+> mean one specific thing and users surely rely on them meaning that one
+> thing and not changing from kernel to kernel.  The end result is that
+> if someone had a script that did:
+> 
+> 	sysctl vm.zone_reclaim_mode=1
+> 
+> That script went from doing nothing to writing out pages during
+> node reclaim after the commit in question.  That's not great.
+> 
+> Put the bits back the way they were and add a comment so something
+> like this is a bit harder to do again.  Update the documentation to
+> make it clear that the first bit is ignored.
+> 
+> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Fixes: 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
+> Cc: Ben Widawsky <ben.widawsky@intel.com>
+> Cc: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Daniel Wagner <dwagner@suse.de>
+> Cc: "Tobin C. Harding" <tobin@kernel.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Daniel Wagner <dwagner@suse.de>
+> Cc: stable@vger.kernel.org
 
-If a user writes a bit that isn't a RECLAIM_* bit to vm.zone_reclaim_mode 
-today, it acts as though RECLAIM_ZONE is enabled: we try to reclaim in 
-zonelist order before falling back to the next zone in the page allocator.  
-The sysctl doesn't enforce any max value :/  I dont know if there is any 
-such user, but this would break them if there is.
-
-Should this simply be return !!node_reclaim_mode?
+Acked-by: David Rientjes <rientjes@google.com>
