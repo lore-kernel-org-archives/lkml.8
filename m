@@ -2,140 +2,137 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D605C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBC72068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016C02068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JT7DYgmK"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="bysWkfFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbgGAOJS (ORCPT
+        id S1731313AbgGAOJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgGAOJS (ORCPT
+        Wed, 1 Jul 2020 10:09:57 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:12608 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728021AbgGAOJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:09:18 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C37C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:09:18 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92F0F556;
-        Wed,  1 Jul 2020 16:09:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593612556;
-        bh=VauXx+GOvJlFO5tYh3rnSCU/l69PGg+UrYNd7Mwc0Fg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JT7DYgmKkgYKPd0i6/F9mW5xc6Vzcspm2nW8w6bo0Yny2pYBvkFWFAwmVa23X9E0D
-         qiBXqjtZi8ikXUVtHbVkVGVe1o82SgQzlMTX8W9GPlYdMdHuQA5hzHiswW+S0nMH16
-         GPeHMClQElrhJVPCLzPTprux8zLz3scAy6pzY90w=
-Date:   Wed, 1 Jul 2020 17:09:13 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] phy: zynqmp: Fix unused-function compiler warning
-Message-ID: <20200701140913.GG27013@pendragon.ideasonboard.com>
-References: <20200701090438.21224-1-tklauser@distanz.ch>
- <20200701131902.GC27013@pendragon.ideasonboard.com>
- <20200701133643.GZ2599@vkoul-mobl>
- <20200701134443.GE27013@pendragon.ideasonboard.com>
- <20200701140026.ziplawf6oimjyssh@distanz.ch>
- <20200701140108.GF27013@pendragon.ideasonboard.com>
- <20200701140709.kq7eauyrm5lqozsr@distanz.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701140709.kq7eauyrm5lqozsr@distanz.ch>
+        Wed, 1 Jul 2020 10:09:56 -0400
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E42a9011115;
+        Wed, 1 Jul 2020 10:09:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id; s=smtpout1;
+ bh=G36Fg61fCQr+wCCLzQCC2YORVhnFR9rzAH3ZcF+UlyU=;
+ b=bysWkfFwsgWt+dfjsnt8t+/3rl/yz6eWRUb1/4EYMrV0YCypJXvGOIVcgbWY7xkK0yBs
+ fyDmyr+sJCEC7byRfggaXf10fl3EvBFdJVcrjvA2wxXP+RLD1qrvjz9v3Gxpo96yUe4q
+ bkdxvZfFtoxo8opFPd3VmPpkMzu4aF4N2cK24o4sqHTkuLLByLmB4YEHyHQXvodZrgwS
+ +2y8AcfYu2lWtVr2BCWUDWdoKufEwrpDCMNwJXRPwRNmN2DCdcIejm9gKvNCoKnP2NLm
+ d+InsqBKoZNAB9LacEB9+FaNHLUAbiObhopMTDvd9mCP48W+leKK6Hv5Qy/6aiL637tu bw== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 31x1b9nyfp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 10:09:52 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E9nQ1049371;
+        Wed, 1 Jul 2020 10:09:52 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0b-00154901.pphosted.com with ESMTP id 320u6191wu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 01 Jul 2020 10:09:51 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061E9cpt026875;
+        Wed, 1 Jul 2020 10:09:38 -0400
+Received: from mailapphubprd52.lss.emc.com ([mailapphubprd52.lss.emc.com [10.106.83.171]]) by mailuogwprd53.lss.emc.com with ESMTP id 061E9Iet026588 ;
+          Wed, 1 Jul 2020 10:09:19 -0400
+Received: from arwen6.xiolab.lab.emc.com (arwen6.xiolab.lab.emc.com [10.76.217.138])
+        by mailapphubprd52.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061E9Fuf002031;
+        Wed, 1 Jul 2020 10:09:16 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Wed,  1 Jul 2020 17:08:45 +0300
+Message-Id: <20200701140849.8828-1-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ cotscore=-2147483648 adultscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=899 suspectscore=13 bulkscore=0
+ lowpriorityscore=0 clxscore=1011 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010102
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
+ suspectscore=13 mlxlogscore=922 spamscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias,
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-On Wed, Jul 01, 2020 at 04:07:09PM +0200, Tobias Klauser wrote:
-> On 2020-07-01 at 16:01:08 +0200, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> > On Wed, Jul 01, 2020 at 04:00:26PM +0200, Tobias Klauser wrote:
-> >> On 2020-07-01 at 15:44:43 +0200, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> >>> On Wed, Jul 01, 2020 at 07:06:43PM +0530, Vinod Koul wrote:
-> >>>> On 01-07-20, 16:19, Laurent Pinchart wrote:
-> >>>>> On Wed, Jul 01, 2020 at 11:04:38AM +0200, Tobias Klauser wrote:
-> >>>>>> This fixes the following compiler warning when building with
-> >>>>>> CONFIG_PM && !CONFIG_PM_SLEEP:
-> >>>>>> 
-> >>>>>> drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
-> >>>>>>   830 | static int xpsgtr_resume(struct device *dev)
-> >>>>>>       |            ^~~~~~~~~~~~~
-> >>>>>> drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
-> >>>>>>   819 | static int xpsgtr_suspend(struct device *dev)
-> >>>>>>       |            ^~~~~~~~~~~~~~
-> >>>>> 
-> >>>>> Oops :-S Sorry about that.
-> >>>>> 
-> >>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >> 
-> >> Thanks for the review Laurent.
-> >> 
-> >>>>> Vinod or Kishon, can you pick this patch up, or do I need to send a pull
-> >>>>> request ? (It's my first driver in the PHY subsystem so I don't know
-> >>>>> what the usual practices are there)
-> >>>> 
-> >>>> patches are welcome :-)
-> >>>> 
-> >>>>> 
-> >>>>>> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-> >>>>>> ---
-> >>>>>>  drivers/phy/xilinx/phy-zynqmp.c | 4 ++--
-> >>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>>>> 
-> >>>>>> diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
-> >>>>>> index 8babee2ce9ec..22a0ae635797 100644
-> >>>>>> --- a/drivers/phy/xilinx/phy-zynqmp.c
-> >>>>>> +++ b/drivers/phy/xilinx/phy-zynqmp.c
-> >>>>>> @@ -815,7 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
-> >>>>>>   * Power Management
-> >>>>>>   */
-> >>>>>>  
-> >>>>>> -#ifdef CONFIG_PM
-> >>>>>> +#ifdef CONFIG_PM_SLEEP
-> >>>> 
-> >>>> How about marking it as __maybe_unused instead?
-> >>> 
-> >>> I don't mind either, I'll let Tobias decide, but his patch seems fine,
-> >>> is there a drawback in his approach ? If it's just a matter of personal
-> >>> preference, I'd rather not require a v2.
-> >> 
-> >> I don't mind either, it was just what seemed the more straight-forward
-> >> fix. On the other hand, it seems that marking these functions as
-> >> __maybe_unused is the more widely used method in other PHY drivers. In
-> >> addition it would have the nice side-effect of the code always being
-> >> compile-checked regardless of the value of CONFIG_PM_SLEEP.
-> > 
-> > That's a good point, haven't thought about it.
-> > 
-> >> Will send a v2 using __maybe_unused and will let you decide which one to
-> >> pick :)
-> > 
-> > You can keep my R-b :-)
-> 
-> Thanks :) FWIW, I'd also drop the #ifdef CONFIG_PM in the same patch for
-> the same reason. Is that OK with you as well?
+DMA transaction time to complition  is a function of
+PCI bandwidth,transaction size and a queue depth.
+So hard coded value for timeouts might be wrong
+for some scenarios.
 
-Sure.
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 8ad0ad861c86..7621b5be5cf4 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -26,6 +26,18 @@
+ 
+ #include "../dmaengine.h"
+ 
++int complition_timeout = 200;
++module_param(complition_timeout, int, 0644);
++MODULE_PARM_DESC(complition_timeout,
++		"set ioat complition timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
++
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(complition_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Source Address Error",
+ 	"DMA Transfer Destination Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index e6b622e1ba92..f7f31fdf14cf 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -104,8 +104,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
 -- 
-Regards,
+2.16.2
 
-Laurent Pinchart
