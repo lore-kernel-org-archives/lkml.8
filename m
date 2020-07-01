@@ -2,223 +2,163 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7690C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B067120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C6020663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:53:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j0jlJMyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbgGALwA (ORCPT
+        id S1730438AbgGALxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730349AbgGALv7 (ORCPT
+        Wed, 1 Jul 2020 07:53:21 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45678 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730198AbgGALxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:51:59 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5AF4C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 04:51:59 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EEDA22A55E8;
-        Wed,  1 Jul 2020 12:51:56 +0100 (BST)
-Date:   Wed, 1 Jul 2020 13:51:53 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [RESEND PATCH 2/3] drm/mediatek: mtk_dpi: Convert to bridge
- driver
-Message-ID: <20200701135153.475db3a5@collabora.com>
-In-Reply-To: <20200518173909.2259259-3-enric.balletbo@collabora.com>
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-        <20200518173909.2259259-3-enric.balletbo@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 1 Jul 2020 07:53:21 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061BrCov108915;
+        Wed, 1 Jul 2020 06:53:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593604392;
+        bh=uoVs0xKRr+EGHIZ9Yms8yptYm1qeOYBru5wiZ5Cd0Fw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=j0jlJMyUVJibebHe50ClQPIRZ+vAdKZO77rFwdiyF50oaBF1WTzshiOERM5jxmUBJ
+         6er6AuJvXau66tgvqD+x85MKvlZ9SlwTfrdQHlYHO+xebqj+esmr7jBE2K83VsHTcx
+         eZpq9obda6M+Xc+sBr9STNZUWbXLPgbAEYczKHCM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061BrCpM034174;
+        Wed, 1 Jul 2020 06:53:12 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 06:53:12 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 06:53:12 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061Br9Dx086455;
+        Wed, 1 Jul 2020 06:53:10 -0500
+Subject: Re: [PATCH next 4/6] soc: ti: k3-ringacc: add request pair of rings
+ api.
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+ <20200701103030.29684-5-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
+Date:   Wed, 1 Jul 2020 14:54:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200701103030.29684-5-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 19:39:08 +0200
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+Hi Grygorii,
 
-> Convert mtk_dpi to a bridge driver with built-in encoder support for
-> compatibility with existing component drivers.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+On 01/07/2020 13.30, Grygorii Strashko wrote:
+> Add new API k3_ringacc_request_rings_pair() to request pair of rings at=
+
+> once, as in the most cases Rings are used with DMA channels, which need=
+ to
+> request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) an=
+d
+> one to receive completions (RX/TX CQ). This will allow to simplify Ring=
+acc
+> API users.
+>=20
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
-> 
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 66 +++++++++++++++---------------
->  1 file changed, 34 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 7112125dc3d1..baad198c69eb 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -61,6 +61,7 @@ enum mtk_dpi_out_color_format {
->  struct mtk_dpi {
->  	struct mtk_ddp_comp ddp_comp;
->  	struct drm_encoder encoder;
-> +	struct drm_bridge bridge;
->  	struct drm_bridge *next_bridge;
->  	void __iomem *regs;
->  	struct device *dev;
-> @@ -77,9 +78,9 @@ struct mtk_dpi {
->  	int refcount;
->  };
->  
-> -static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
-> +static inline struct mtk_dpi *bridge_to_dpi(struct drm_bridge *b)
->  {
-> -	return container_of(e, struct mtk_dpi, encoder);
-> +	return container_of(b, struct mtk_dpi, bridge);
+>  drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
+>  include/linux/soc/ti/k3-ringacc.h |  4 ++++
+>  2 files changed, 28 insertions(+)
+>=20
+> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+> index 8a8f31d59e24..4cf1150de88e 100644
+> --- a/drivers/soc/ti/k3-ringacc.c
+> +++ b/drivers/soc/ti/k3-ringacc.c
+> @@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_=
+ringacc *ringacc,
 >  }
->  
->  enum mtk_dpi_polarity {
-> @@ -518,50 +519,44 @@ static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
->  	.destroy = mtk_dpi_encoder_destroy,
->  };
->  
-> -static bool mtk_dpi_encoder_mode_fixup(struct drm_encoder *encoder,
-> -				       const struct drm_display_mode *mode,
-> -				       struct drm_display_mode *adjusted_mode)
-> +static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
-> +				 enum drm_bridge_attach_flags flags)
->  {
-> -	return true;
-> +	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
-> +
-> +	return drm_bridge_attach(bridge->encoder, dpi->next_bridge,
-> +				 &dpi->bridge, flags);
->  }
->  
-> -static void mtk_dpi_encoder_mode_set(struct drm_encoder *encoder,
-> -				     struct drm_display_mode *mode,
-> -				     struct drm_display_mode *adjusted_mode)
-> +static void mtk_dpi_bridge_mode_set(struct drm_bridge *bridge,
-> +				const struct drm_display_mode *mode,
-> +				const struct drm_display_mode *adjusted_mode)
->  {
-> -	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-> +	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
->  
->  	drm_mode_copy(&dpi->mode, adjusted_mode);
->  }
->  
-> -static void mtk_dpi_encoder_disable(struct drm_encoder *encoder)
-> +static void mtk_dpi_bridge_disable(struct drm_bridge *bridge)
->  {
-> -	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-> +	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
->  
->  	mtk_dpi_power_off(dpi);
->  }
->  
-> -static void mtk_dpi_encoder_enable(struct drm_encoder *encoder)
-> +static void mtk_dpi_bridge_enable(struct drm_bridge *bridge)
->  {
-> -	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-> +	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
->  
->  	mtk_dpi_power_on(dpi);
->  	mtk_dpi_set_display_mode(dpi, &dpi->mode);
->  }
->  
-> -static int mtk_dpi_atomic_check(struct drm_encoder *encoder,
-> -				struct drm_crtc_state *crtc_state,
-> -				struct drm_connector_state *conn_state)
-> -{
-> -	return 0;
-> -}
-> -
-> -static const struct drm_encoder_helper_funcs mtk_dpi_encoder_helper_funcs = {
-> -	.mode_fixup = mtk_dpi_encoder_mode_fixup,
-> -	.mode_set = mtk_dpi_encoder_mode_set,
-> -	.disable = mtk_dpi_encoder_disable,
-> -	.enable = mtk_dpi_encoder_enable,
-> -	.atomic_check = mtk_dpi_atomic_check,
-> +static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
-> +	.attach = mtk_dpi_bridge_attach,
-> +	.mode_set = mtk_dpi_bridge_mode_set,
-> +	.disable = mtk_dpi_bridge_disable,
-> +	.enable = mtk_dpi_bridge_enable,
->  };
->  
->  static void mtk_dpi_start(struct mtk_ddp_comp *comp)
-> @@ -602,16 +597,13 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
->  		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
->  		goto err_unregister;
->  	}
-> -	drm_encoder_helper_add(&dpi->encoder, &mtk_dpi_encoder_helper_funcs);
->  
->  	/* Currently DPI0 is fixed to be driven by OVL1 */
->  	dpi->encoder.possible_crtcs = BIT(1);
->  
-> -	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
-> -	if (ret) {
-> -		dev_err(dev, "Failed to attach bridge: %d\n", ret);
+>  EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
+> =20
+> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
+> +				  int fwd_id, int compl_id,
+> +				  struct k3_ring **fwd_ring,
+> +				  struct k3_ring **compl_ring)
 
-Any reason your decided to drop this error message? If there's one,
-this should probably happen in a separate patch.
+Would you consider re-arranging the parameter list to:
+int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
+				  struct k3_ring **fwd_ring, int fwd_id,
+				  struct k3_ring **compl_ring, int compl_id)
 
-> +	ret = drm_bridge_attach(&dpi->encoder, &dpi->bridge, NULL, 0);
-> +	if (ret)
->  		goto err_cleanup;
-> -	}
->  
->  	dpi->bit_num = MTK_DPI_OUT_BIT_NUM_8BITS;
->  	dpi->channel_swap = MTK_DPI_OUT_CHANNEL_SWAP_RGB;
-> @@ -768,8 +760,15 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, dpi);
->  
-> +	dpi->bridge.funcs = &mtk_dpi_bridge_funcs;
-> +	dpi->bridge.of_node = dev->of_node;
-> +	dpi->bridge.type = DRM_MODE_CONNECTOR_DPI;
+> +{
+> +	int ret =3D 0;
 > +
-> +	drm_bridge_add(&dpi->bridge);
-
-I wonder if it's really useful to add the bridge when it's private (you
-don't want this bridge to be added to external bridge chains).
-
+> +	if (!fwd_ring || !compl_ring)
+> +		return -EINVAL;
 > +
->  	ret = component_add(dev, &mtk_dpi_component_ops);
->  	if (ret) {
-> +		drm_bridge_remove(&dpi->bridge);
->  		dev_err(dev, "Failed to add component: %d\n", ret);
->  		return ret;
->  	}
-> @@ -779,7 +778,10 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->  
->  static int mtk_dpi_remove(struct platform_device *pdev)
+> +	*fwd_ring =3D k3_ringacc_request_ring(ringacc, fwd_id, 0);
+> +	if (!(*fwd_ring))
+> +		return -ENODEV;
+> +
+> +	*compl_ring =3D k3_ringacc_request_ring(ringacc, compl_id, 0);
+> +	if (!(*compl_ring)) {
+> +		k3_ringacc_ring_free(*fwd_ring);
+> +		ret =3D -ENODEV;
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
+> +
+>  static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
 >  {
-> +	struct mtk_dpi *dpi = platform_get_drvdata(pdev);
-> +
->  	component_del(&pdev->dev, &mtk_dpi_component_ops);
-> +	drm_bridge_remove(&dpi->bridge);
->  
->  	return 0;
->  }
+>  	struct k3_ringacc *ringacc =3D ring->parent;
+> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k=
+3-ringacc.h
+> index 26f73df0a524..7ac115432fa1 100644
+> --- a/include/linux/soc/ti/k3-ringacc.h
+> +++ b/include/linux/soc/ti/k3-ringacc.h
+> @@ -107,6 +107,10 @@ struct k3_ringacc *of_k3_ringacc_get_by_phandle(st=
+ruct device_node *np,
+>  struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+>  					int id, u32 flags);
+> =20
+> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
+> +				  int fwd_id, int compl_id,
+> +				  struct k3_ring **fwd_ring,
+> +				  struct k3_ring **compl_ring);
+>  /**
+>   * k3_ringacc_ring_reset - ring reset
+>   * @ring: pointer on Ring
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/=
+Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
