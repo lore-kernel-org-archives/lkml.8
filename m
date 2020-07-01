@@ -2,107 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8437C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8906AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C59206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MnYxDhdp"
+	by mail.kernel.org (Postfix) with ESMTP id 728E020874
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732250AbgGAP4E (ORCPT
+        id S1732121AbgGAP42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:56:04 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26329 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731716AbgGAP4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:56:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593618962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e0KVjpfACjzmzlyjZ1wTOceznsfclUnV1xTtsevFH5A=;
-        b=MnYxDhdp4jWqF8xP8MuwctoStFyBCBVuoIq+Z+8lWNXJNpdHr3jgm4qLYTpOJCFURkwIXK
-        BcawxiDGeI0xXHebMCjsQSosSWkFUxcv1Ld0xiasTBjVky9BGUMtLIKmEdb7mCq+x/FGSC
-        sjizTKqfzGXl+hU0NooBRgkiBqsUyfU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-JE3ecO_dMGqbrbZfsBHmJw-1; Wed, 01 Jul 2020 11:55:56 -0400
-X-MC-Unique: JE3ecO_dMGqbrbZfsBHmJw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E80021015DB2;
-        Wed,  1 Jul 2020 15:55:41 +0000 (UTC)
-Received: from starship (unknown [10.35.206.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3D6A73FC0;
-        Wed,  1 Jul 2020 15:55:40 +0000 (UTC)
-Message-ID: <4c23e1d782be86a965f5fbc4592f7bbd515d37bb.camel@redhat.com>
-Subject: Re: [PATCH v3.1 7/7] kconfig: qconf: navigate menus on hyperlinks
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 01 Jul 2020 18:55:39 +0300
-In-Reply-To: <20200701175144.501abc91@coco.lan>
-References: <cover.1593498345.git.mchehab+huawei@kernel.org>
-         <6f7162e40f127e76c7169315d33a14946a85719a.1593498345.git.mchehab+huawei@kernel.org>
-         <20200630084835.4db1331f@coco.lan>
-         <CAK7LNARjZWwKeFXMbDy76jYu21oCckz8qxkMSu7y1xmL+a3C3g@mail.gmail.com>
-         <20200701175144.501abc91@coco.lan>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 1 Jul 2020 11:56:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1075 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730659AbgGAP42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:56:28 -0400
+IronPort-SDR: LtzIowLFR3qeYb7/o/i0jCEspvdOPsYrDjC5p2o1vsWjO9+wPGsd6h3j1IGKTviTUSJxzgFZxQ
+ 5GWUEAIqrftw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="134899413"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="134899413"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:56:28 -0700
+IronPort-SDR: h1yXtmzDleyXBhp5s3R2xErVG6hGrte5rTSXwADFmvvDvvu6NxzQmyL5NzK2+VJP5nKNQm7SYI
+ 03CrG5YqtHDg==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455150987"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:56:26 -0700
+Subject: Re: [PATCH 2/3] mm/vmscan: move RECLAIM* bits to uapi header
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        alex.shi@linux.alibaba.com, dwagner@suse.de, tobin@kernel.org,
+        cl@linux.com, akpm@linux-foundation.org, ying.huang@intel.com,
+        dan.j.williams@intel.com, cai@lca.pw
+References: <20200701152621.D520E62B@viggo.jf.intel.com>
+ <20200701152624.D6FBDDA8@viggo.jf.intel.com>
+ <20200701154635.2dwwz2b6xbeyp2rc@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <d48be7a9-ee18-956b-a14f-7eda08aa7bc0@intel.com>
+Date:   Wed, 1 Jul 2020 08:56:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200701154635.2dwwz2b6xbeyp2rc@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-01 at 17:51 +0200, Mauro Carvalho Chehab wrote:
-> Em Thu, 2 Jul 2020 00:21:36 +0900
-> Masahiro Yamada <masahiroy@kernel.org> escreveu:
-> 
-> > On Tue, Jun 30, 2020 at 3:48 PM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > > Instead of just changing the helper window to show a
-> > > dependency, also navigate to it at the config and menu
-> > > widgets.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > 
-> > > 
-> > > ---
-> > > 
-> > > I ended re-sending the same version as on patch series 2.  
-> > 
-> > Do you mean this one should substitute 7/7 in v3, right?
-> 
-> Yes.
-> 
-> > Applied to linux-kbuild.
-> 
-> Thank you!
-> 
-> Mauro
-> 
+On 7/1/20 8:46 AM, Ben Widawsky wrote:
+>> +/*
+>> + * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
+>> + * ABI.  New bits are OK, but existing bits can never change.
+>> + */
+>> +#define RECLAIM_ZONE  (1<<0)	/* Run shrink_inactive_list on the zone */
+>> +#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
+>> +#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
+> Have you considered turning this into an enum while moving it?
 
-I tested these series yestarday, but found a but which I haven't yet had time to debug.
-Now when I click on a item that goes to a submenu in the right panel, the app
-segfaults. I'll debug this soon.
-
-
-Best regards,
-	Maxim evitsky
-
-
+The thought occurred to me, but all of the other bits in the uapi file
+were defined this way.  I decided to not not attempt to buck the trend
+in their new home.
