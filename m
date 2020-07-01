@@ -2,116 +2,80 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814B620747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="DDbJNvOS"
+	by mail.kernel.org (Postfix) with ESMTP id 640542073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgGAJxZ (ORCPT
+        id S1729827AbgGAJxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:53:25 -0400
-Received: from ma-dnext01.denso.co.jp ([133.192.181.76]:33426 "EHLO
-        adnmlgw01h.denso.co.jp" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726343AbgGAJxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:53:23 -0400
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by adnmlgw01h.denso.co.jp (Postfix) with ESMTP id 822EA2001015;
-        Wed,  1 Jul 2020 18:53:22 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=adit-jv.com;
-        s=jpadit-jvmail2020; t=1593597202;
-        bh=AA4N0r3nVMyfY229fipU3bpRWZ7RgWTk3Fj6MV78fTw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=DDbJNvOS4/iQn3Hej09I5Jk2rTWGLl/YzzYA91CW7pQCEDJVkObN5R9K/RJMDv8vJ
-         Nk4ROCLAyB4bZ775VjNpPxJ4WImTmc2IwtshUf+KD7zwhbZzVTZ8wpjIMaxfpinl+H
-         IfbEdfABMkvVWytqgJf/Bk5V8PJYFx/RjJnq7riDL2S7d1TKwRqNOrNEcWfJrgPlDH
-         ElidiEYhFM+QN+on8ta06tR1weYV7kOksAjqOsyqeQ79DklPFnDcQniHxti6BONWqX
-         pIXUraftczACfTk4jDu5AHCXpsOSblwWpzw+92yc9KKzJTeOSLCKVLPJt7USqyG6Az
-         QiztAfqCBBfTw==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id 7F51CC04E0A; Wed,  1 Jul 2020 18:53:22 +0900 (JST)
-Received: from smtp1.denso.co.jp [133.192.24.88] 
-         by grdma01h. with ESMTP id UAA12619;
-         Wed, 1 Jul 2020 18:53:22 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp01.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id GDD18934;
-        Wed, 1 Jul 2020 18:53:22 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 1 Jul 2020
- 18:53:21 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <niklas.soderlund@ragnatech.se>
-CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <mchehab@kernel.org>, <michael@rodin.online>,
-        <mrodin@de.adit-jv.com>, <securitycheck@denso.co.jp>,
-        <sudipi@jp.adit-jv.com>
-Subject: [PATCH v9 3/3] media: rcar-csi2: Optimize the selection PHTW register
-Date:   Wed, 1 Jul 2020 18:53:01 +0900
-Message-ID: <1593597181-8296-3-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593597181-8296-1-git-send-email-sudipi@jp.adit-jv.com>
-References: <20200630220816.GL2365286@oden.dyn.berto.se>
- <1593597181-8296-1-git-send-email-sudipi@jp.adit-jv.com>
+        Wed, 1 Jul 2020 05:53:32 -0400
+Received: from smtp.asem.it ([151.1.184.197]:64358 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbgGAJxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:53:32 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000352730.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 11:53:28 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 11:53:25 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 1 Jul 2020 11:53:25 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1 1/1] mmc: host: sdhci-msm: fix spelling mistake
+Date:   Wed, 1 Jul 2020 11:53:13 +0200
+Message-ID: <20200701095313.27507-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.71.112.120]
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090209.5EFC5D16.0032,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PHTW register is selected based on default bit rate from Table[1].
-for the bit rates less than or equal to 250. Currently first
-value of default bit rate which is greater than or equal to
-the caculated mbps is selected. This selection can be further
-improved by selecting the default bit rate which is nearest to
-the calculated value.
+Fix typo: "trigered" --> "triggered"
 
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.12]
-
-Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/media/platform/rcar-vin/rcar-csi2.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+v1: add Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index 1184527..3efa1cb 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -917,10 +917,17 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
- 				 const struct rcsi2_mbps_reg *values, u16 code)
- {
- 	const struct rcsi2_mbps_reg *value;
-+	const struct rcsi2_mbps_reg *prev_value = NULL;
- 
--	for (value = values; value->mbps; value++)
-+	for (value = values; value->mbps; value++) {
- 		if (value->mbps >= mbps)
- 			break;
-+		prev_value = value;
-+	}
-+
-+	if (prev_value &&
-+	    ((mbps - prev_value->mbps) <= (value->mbps - mbps)))
-+		value = prev_value;
- 
- 	if (!value->mbps) {
- 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+ drivers/mmc/host/sdhci-msm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index b277dd7fbdb5..3f615d0ccb61 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1362,7 +1362,7 @@ static inline void sdhci_msm_complete_pwr_irq_wait(
+  * To what state the register writes will change the IO lines should be passed
+  * as the argument req_type. This API will check whether the IO line's state
+  * is already the expected state and will wait for power irq only if
+- * power irq is expected to be trigerred based on the current IO line state
++ * power irq is expected to be triggered based on the current IO line state
+  * and expected IO line state.
+  */
+ static void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
 -- 
-2.7.4
+2.17.1
 
