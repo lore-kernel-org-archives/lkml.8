@@ -2,154 +2,190 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B185EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD51C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A73F20748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MKVnDFIT"
+	by mail.kernel.org (Postfix) with ESMTP id 96B5120748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGADhF (ORCPT
+        id S1726791AbgGADhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGADhE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:37:04 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B98BC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:37:04 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id o4so11269999ybp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 20:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s3Jq5zLzpbl6Zv3uYHByFe0ZmS4s3FezoDHzT/nIYcQ=;
-        b=MKVnDFITxci7XZwoiI2Qwlr/n6NcWOarH7ex0rhrRXAfYSXZBOstF2ROLvMxeiCDkc
-         UvKCz9Vdfr3s6ws1b6KY39kujwl9Y+TbQTAKz56nj1bk/C9IF2K6EBy38VjZXAulUqWK
-         AXJ4iNasKw/tA0z0uJKYC562PRFKvOkQYrCA1z5o3WqyeBxbM9+1OvbWg8a6pnJX07jK
-         wYkVEeKcmJ5kTb8zi2yOJlT3dY3ns0Df9MbjnkETH48l7DsBe6CveAhPuY/etE2WmxRB
-         CvSJ+ybMGJjV86LvWAFyYC/wRUypUW7ajimzh0ksVFxcPavrKl8HATU2xMMdOdfj2nPA
-         hpEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s3Jq5zLzpbl6Zv3uYHByFe0ZmS4s3FezoDHzT/nIYcQ=;
-        b=e5z+PcEJNuT+MU6Ys19SC1oZDImjFk2RNoMH+J++y71yLvBLwxpyDmrpq48ERUY+/N
-         iAxGvD+mrqN/GHdq9hqXR3sTLyzHEIr7Omb/8kGJiY077KNa6enG2ys4atwzxxcER187
-         bQvJs+LV7ryn2BIqHDS3a3jyS4bCUFIaB/o5zVodUN/dVkVMYGfaOFkTK9zDekH7kz0h
-         jipelo5Xkgud64B5GHGVnX6+x5zMRKNu7MEmm0XueEbl9qpA18z3QNS0JT4ehdxJbM5D
-         UIQxyuPLvAyTytO67JuZ2lHgqNNxSFVUow9GcE20NkdAyeVizdn8tntE/CsLlmCmdKyI
-         /Uhw==
-X-Gm-Message-State: AOAM5331h2WH85HzmXYasZBmmtiAolxFutbQP3+51iflRUmmwxmKYdeN
-        RIR8eIplVOtRiXBBG+XZ3iaUxVBJ1p1fN6CqIF53Ew==
-X-Google-Smtp-Source: ABdhPJzptl+ZwuKHWxBxEUKXN0tTbaalbFddIAtD50sheOjj7wa+/JmdyFI74aYBGH2qjkuBhjY6U5OjoVwYPi/KA6U=
-X-Received: by 2002:a25:b7cc:: with SMTP id u12mr23794552ybj.173.1593574623004;
- Tue, 30 Jun 2020 20:37:03 -0700 (PDT)
+        Tue, 30 Jun 2020 23:37:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5751 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgGADhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 23:37:38 -0400
+IronPort-SDR: RJRdgJzMFGh7knTUuElIauPYn8CsnCIXyqDYWX37z9jQ17UCpW0mExoaqVPADsR8DIMk9GBL/P
+ s9N8lykbE2eA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134745300"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="134745300"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 20:37:38 -0700
+IronPort-SDR: lECyP7cCN7fruNVhHYcp14JICpS/6mPOwcECJkv+rLQo1mG3RlyIlaDVqJLBoseKM46+XzNzCQ
+ HBf8XsvyLc+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="454848235"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 30 Jun 2020 20:37:36 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jqTZ2-0002P2-1n; Wed, 01 Jul 2020 03:37:36 +0000
+Date:   Wed, 01 Jul 2020 11:36:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ 98817a84ff1c755c347ac633ff017a623a631fad
+Message-ID: <5efc04cd.rZXPEds5t6qHU3WN%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
- <20200701020211.GA6875@gondor.apana.org.au> <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
- <20200701022241.GA7167@gondor.apana.org.au> <CANn89iLKZQAtpejcLHmOu3dsrGf5eyFfHc8JqoMNYisRPWQ8kQ@mail.gmail.com>
- <20200701025843.GA7254@gondor.apana.org.au>
-In-Reply-To: <20200701025843.GA7254@gondor.apana.org.au>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 30 Jun 2020 20:36:51 -0700
-Message-ID: <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:59 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Tue, Jun 30, 2020 at 07:30:43PM -0700, Eric Dumazet wrote:
-> >
-> > I made this clear in the changelog, do we want comments all over the places ?
-> > Do not get me wrong, we had this bug for years and suddenly this is a
-> > big deal...
->
-> I thought you were adding a new pair of smp_rmb/smp_wmb.  If they
-> already exist in the code then I agree it's not a big deal.  But
-> adding a new pair of bogus smp_Xmb's is bad for maintenance.
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
+branch HEAD: 98817a84ff1c755c347ac633ff017a623a631fad  Merge tag 'irqchip-fixes-5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
 
-If I knew so many people were excited about TCP / MD5, I would have
-posted all my patches on lkml ;)
+elapsed time: 1005m
 
-Without the smp_wmb() we would still need something to prevent KMSAN
-from detecting that we read uninitialized bytes,
-if key->keylen is increased.  (initial content of key->key[] is garbage)
+configs tested: 120
+configs skipped: 2
 
-Something like this :
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index f111660453241692a17c881dd6dc2910a1236263..c3af8180c7049d5c4987bf5c67e4aff2ed6967c9
-100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4033,11 +4033,9 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+m68k                             alldefconfig
+arm                         socfpga_defconfig
+mips                              allnoconfig
+arm                         s3c2410_defconfig
+openrisc                 simple_smp_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                           corgi_defconfig
+m68k                        m5307c3_defconfig
+powerpc                          g5_defconfig
+arm                           u8500_defconfig
+sparc                       sparc32_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200630
+i386                 randconfig-a003-20200630
+i386                 randconfig-a002-20200630
+i386                 randconfig-a004-20200630
+i386                 randconfig-a005-20200630
+i386                 randconfig-a006-20200630
+x86_64               randconfig-a011-20200630
+x86_64               randconfig-a014-20200630
+x86_64               randconfig-a013-20200630
+x86_64               randconfig-a015-20200630
+x86_64               randconfig-a016-20200630
+x86_64               randconfig-a012-20200630
+x86_64               randconfig-a012-20200701
+x86_64               randconfig-a016-20200701
+x86_64               randconfig-a014-20200701
+x86_64               randconfig-a011-20200701
+x86_64               randconfig-a015-20200701
+x86_64               randconfig-a013-20200701
+i386                 randconfig-a011-20200630
+i386                 randconfig-a016-20200630
+i386                 randconfig-a015-20200630
+i386                 randconfig-a012-20200630
+i386                 randconfig-a014-20200630
+i386                 randconfig-a013-20200630
+i386                 randconfig-a011-20200701
+i386                 randconfig-a015-20200701
+i386                 randconfig-a014-20200701
+i386                 randconfig-a016-20200701
+i386                 randconfig-a012-20200701
+i386                 randconfig-a013-20200701
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
- int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
-tcp_md5sig_key *key)
- {
--       u8 keylen = key->keylen;
-+       u8 keylen = READ_ONCE(key->keylen); /* paired with
-WRITE_ONCE() in tcp_md5_do_add */
-        struct scatterlist sg;
-
--       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
--
-        sg_init_one(&sg, key->key, keylen);
-        ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
-        return crypto_ahash_update(hp->md5_req);
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 99916fcc15ca0be12c2c133ff40516f79e6fdf7f..0d08e0134335a21d23702e6a5c24a0f2b3c61c6f
-100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1114,9 +1114,13 @@ int tcp_md5_do_add(struct sock *sk, const union
-tcp_md5_addr *addr,
-                /* Pre-existing entry - just update that one. */
-                memcpy(key->key, newkey, newkeylen);
-
--               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
-+               /* Pairs with READ_ONCE() in tcp_md5_hash_key().
-+                * Also note that a reader could catch new key->keylen value
-+                * but old key->key[], this is the reason we use __GFP_ZERO
-+                * at sock_kmalloc() time below these lines.
-+                */
-+               WRITE_ONCE(key->keylen, newkeylen);
-
--               key->keylen = newkeylen;
-                return 0;
-        }
-
-@@ -1132,7 +1136,7 @@ int tcp_md5_do_add(struct sock *sk, const union
-tcp_md5_addr *addr,
-                rcu_assign_pointer(tp->md5sig_info, md5sig);
-        }
-
--       key = sock_kmalloc(sk, sizeof(*key), gfp);
-+       key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
-        if (!key)
-                return -ENOMEM;
-        if (!tcp_alloc_md5sig_pool()) {
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
