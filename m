@@ -2,103 +2,77 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F322C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD42C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0FD207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:20:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RKvKfAUT"
+	by mail.kernel.org (Postfix) with ESMTP id 91D1F207F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgGANUy (ORCPT
+        id S1730806AbgGANZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbgGANUx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:20:53 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A3BC03E979;
-        Wed,  1 Jul 2020 06:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=NZ5j0zaMEeBcTQCTIfHMlgD1k2APAiWLx7DBz7K1OM4=; b=RKvKfAUTi2u9gsqOMxXP/SLUI+
-        DQfKmNMI/8hU1D5g/hgg43LmXTi+qwaJ5iFIZLXRdqh8FTrKoyfGvrbabGBh8loHmIQ6BOD2ZKVIY
-        ooqd+ofQookVnXTPLHDOjXa0DcPReKyOhJRgSCyyZXhuAKl5wyv1uae0w5waanBIX7xVvvl3CElqH
-        0B5mn7t0arO7F/bJgsYSXnHJciKOBvlcBVzdaShBKuMz6KF/NjSiDJAhV0bMR7OTT0WnRw48CsQd/
-        Ifx1Us/DxmRyDp7MUPkZqiNCb/bgD3VrBI+HvtkALMtP23Yl+ndknsZmHaaZYpZqbavAmd5gv/svY
-        AxtWOxrw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqcfH-0006g9-U8; Wed, 01 Jul 2020 13:20:40 +0000
-Subject: Re: [PATCH v2] Documentation: Coccinelle: fix typos and command
- example
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
-Date:   Wed, 1 Jul 2020 06:20:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 09:25:08 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41412 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728941AbgGANZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 09:25:07 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jqcjO-0039OF-3I; Wed, 01 Jul 2020 15:24:54 +0200
+Date:   Wed, 1 Jul 2020 15:24:54 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        netdev@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux.cj@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH v2 1/3] net: phy: introduce find_phy_device()
+Message-ID: <20200701132454.GF718441@lunn.ch>
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com>
+ <20200701061233.31120-2-calvin.johnson@oss.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701061233.31120-2-calvin.johnson@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 4:56 AM, Markus Elfring wrote:
->>> …
->>>> +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
->>> …
->>>> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
->>>>  To apply Coccinelle on a file basis, instead of a directory basis, the
->>>>  following command may be used::
->>>>
->>>> -    make C=1 CHECK="scripts/coccicheck"
->>>> +    make C=1 CHECK="scripts/coccicheck" path/to/file.c
-> …
->>> We might stumble on different interpretations according to the wording “file basis”.
->>> Do you find a message like “make: Nothing to be done for 'path/to/file.c'.” interesting then?
->>>
->>> * Would you like to add any links for information around the support for
->>>   source code checkers?
->>>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n198
-> …
->> Feel free to submit patches.
-> 
-> How do you think about to use the following command variant
-> for the adjustment of the software documentation?
-> 
-> +    make C=1 CHECK='scripts/coccicheck' 'path/to/file.o'
-> 
+> +struct phy_device *find_phy_device(struct fwnode_handle *fwnode)
 
-I don't understand the reason for that change...
+We should consider the naming convention. All phylib phy functions
+start with phy_. We already have phy_find_first(), so maybe
+phy_find_by_fwnode() to follow the pattern?
 
+> +{
+> +	struct fwnode_handle *fwnode_mdio;
+> +	struct platform_device *pdev;
+> +	struct mii_bus *mdio;
+> +	struct device *dev;
+> +	int addr;
+> +	int err;
+> +
+> +	fwnode_mdio = fwnode_find_reference(fwnode, "mdio-handle", 0);
+> +	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode_mdio);
+> +	if (IS_ERR_OR_NULL(dev))
+> +		return NULL;
+> +	pdev =  to_platform_device(dev);
+> +	mdio = platform_get_drvdata(pdev);
 
--- 
-~Randy
+That is a big assumption to make. Please take a look at the
+class_find_device_by_*() functions, as used by of_mdio_find_bus(),
+mdio_find_bus(), etc.
 
+	Andrew
