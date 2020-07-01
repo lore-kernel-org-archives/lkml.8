@@ -2,514 +2,242 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB3C20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:53:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cw0KgKNm"
+	by mail.kernel.org (Postfix) with ESMTP id BC08F2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 05:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593582833;
+	bh=eF2VvWCCUZP5LBAh5w6yCsy/P3P0tf1GBIvhW/yTSX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zyPZjyHbI9BFTCnS0rcbg2Ioo+E4/GvlhKShoeWzfsT3VoAmhMuLno5PWIjXwfnyS
+	 e3ldpbGzitlIH3UEAyJeKMGnLBf+Q2TDdBBeeUBNCsJkhumkMjW8MJmORZmHU5Eqke
+	 AwKxpIU7Rd4Bn0pnuPRxtstoyK8dtx4S8yAoAqy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGAFxm (ORCPT
+        id S1726987AbgGAFxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 01:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGAFxl (ORCPT
+        Wed, 1 Jul 2020 01:53:52 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36627 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgGAFxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 01:53:41 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AFFC061755;
-        Tue, 30 Jun 2020 22:53:41 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EC31C556;
-        Wed,  1 Jul 2020 07:53:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593582820;
-        bh=jNEnbbU+mUUHmnVaN867YZAh01TVrstm4KhGyErE+kI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cw0KgKNmp+avM2ErZ4x8oyqFokj+a/tVeMtCuJQDuLZv/CuGSXVuIoUk4tPy9zsuv
-         IwIR3DmSrvB+FX6vchtaQtSVtZc1RVwc6FUKDnmCbWhrm5SdyXK6syJVRZHg8HSIrJ
-         VIQLqOb8hvIz2FS+rB4TDfezttAltNHCCGmXKw1o=
-Date:   Wed, 1 Jul 2020 08:53:36 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: display: Convert connectors to DT schema
-Message-ID: <20200701055336.GC5963@pendragon.ideasonboard.com>
-References: <20200630200216.1172566-1-robh@kernel.org>
+        Wed, 1 Jul 2020 01:53:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dg28so18458706edb.3;
+        Tue, 30 Jun 2020 22:53:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=k+6o2/28qwx847jf3CSNV9jK8i0a3/ha45Nsa3unt/A=;
+        b=PQg10q6hZeXybrk1iKxTA9o8AuvUq9LxD9zDYvctxrXa0Ufc3b//XsX6tZKOUAg+Po
+         snKwzcPf52hvzgwo0h2MGI5m7cQCfNl0btqszghqnJh6YL39+ucQ7gogLAs8Tkqnc1Ys
+         nniTzFS8oKteKZtUaCER4IOWP/mlC1w5+r771LtlBeaMyLlQcEfwerurnVUBo4sLAl+W
+         okjBgYRVZC8Fh6O7fUtaS19drgIWz57IMGHdLGwKj/DlMMPMQkp4DFmRdLspKPtnK2er
+         0jndgvJUaK9ASDRYeIM3BS641EnJBdIUtch7dp6ziwyijbTnA7qlSz0dcVlMLYL332MW
+         YRYA==
+X-Gm-Message-State: AOAM5303BpwrdgOOqcSknMAGc3cxqxYB5IHHzmsLEyYssOZoT0kiPaZs
+        aRfKNywJg9tjhPDu3KmUrFo=
+X-Google-Smtp-Source: ABdhPJy8toavvw3l4F6Z9AsDPY7F9Y2lPONomNsScJDmPInnBs8xV8Kn5NNLsUJisuKfIF4IkhQJgg==
+X-Received: by 2002:aa7:da89:: with SMTP id q9mr27465825eds.273.1593582828832;
+        Tue, 30 Jun 2020 22:53:48 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id g8sm5467625edk.13.2020.06.30.22.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 22:53:47 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 07:53:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 6/6] mm: Add memalloc_nowait
+Message-ID: <20200701055346.GH2369@dhcp22.suse.cz>
+References: <20200625113122.7540-1-willy@infradead.org>
+ <20200625113122.7540-7-willy@infradead.org>
+ <20200629050851.GC1492837@kernel.org>
+ <20200629121816.GC25523@casper.infradead.org>
+ <20200629125231.GJ32461@dhcp22.suse.cz>
+ <6421BC93-CF2F-4697-B5CB-5ECDAA9FCB37@kernel.org>
+ <20200629212830.GJ25523@casper.infradead.org>
+ <20200630063436.GA2369@dhcp22.suse.cz>
+ <20200701041203.GQ25523@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630200216.1172566-1-robh@kernel.org>
+In-Reply-To: <20200701041203.GQ25523@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Thank you for the patch.
-
-On Tue, Jun 30, 2020 at 02:02:16PM -0600, Rob Herring wrote:
-> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
-> format.
+On Wed 01-07-20 05:12:03, Matthew Wilcox wrote:
+> On Tue, Jun 30, 2020 at 08:34:36AM +0200, Michal Hocko wrote:
+> > On Mon 29-06-20 22:28:30, Matthew Wilcox wrote:
+> > [...]
+> > > The documentation is hard to add a new case to, so I rewrote it.  What
+> > > do you think?  (Obviously I'll split this out differently for submission;
+> > > this is just what I have in my tree right now).
+> > 
+> > I am fine with your changes. Few notes below.
 > 
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> v2:
-> - Make Laurent maintainer
-> - Add missing port and compatible required
-> - Drop copy-n-paste 'type' from dvi-connector
-> - Use 4 space indent on examples
-> ---
->  .../display/connector/analog-tv-connector.txt | 31 --------
->  .../connector/analog-tv-connector.yaml        | 52 ++++++++++++++
->  .../display/connector/dvi-connector.txt       | 36 ----------
->  .../display/connector/dvi-connector.yaml      | 70 +++++++++++++++++++
->  .../display/connector/hdmi-connector.txt      | 31 --------
->  .../display/connector/hdmi-connector.yaml     | 64 +++++++++++++++++
->  .../display/connector/vga-connector.txt       | 36 ----------
->  .../display/connector/vga-connector.yaml      | 46 ++++++++++++
->  8 files changed, 232 insertions(+), 134 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.yaml
+> Thanks!
 > 
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> deleted file mode 100644
-> index 883bcb2604c7..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -Analog TV Connector
-> -===================
-> -
-> -Required properties:
-> -- compatible: "composite-video-connector" or "svideo-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- sdtv-standards: limit the supported TV standards on a connector to the given
-> -                  ones. If not specified all TV standards are allowed.
-> -                  Possible TV standards are defined in
-> -                  include/dt-bindings/display/sdtv-standards.h.
-> -
-> -Required nodes:
-> -- Video port for TV input
-> -
-> -Example
-> --------
-> -#include <dt-bindings/display/sdtv-standards.h>
-> -
-> -tv: connector {
-> -	compatible = "composite-video-connector";
-> -	label = "tv";
-> -	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> -
-> -	port {
-> -		tv_connector_in: endpoint {
-> -			remote-endpoint = <&venc_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> new file mode 100644
-> index 000000000000..eebe88fed999
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/analog-tv-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog TV Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - composite-video-connector
-> +      - svideo-connector
-> +
-> +  label: true
-> +
-> +  sdtv-standards:
-> +    description:
-> +      Limit the supported TV standards on a connector to the given ones. If
-> +      not specified all TV standards are allowed. Possible TV standards are
-> +      defined in include/dt-bindings/display/sdtv-standards.h.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  port:
-> +    description: Connection to controller providing analog TV signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/display/sdtv-standards.h>
-> +
-> +    connector {
-> +        compatible = "composite-video-connector";
-> +        label = "tv";
-> +        sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> +
-> +        port {
-> +            tv_connector_in: endpoint {
-> +                remote-endpoint = <&venc_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> deleted file mode 100644
-> index 207e42e9eba0..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -DVI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "dvi-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> -- analog: the connector has DVI analog pins
-> -- digital: the connector has DVI digital pins
-> -- dual-link: the connector has pins for DVI dual-link
-> -- hpd-gpios: HPD GPIO number
-> -
-> -Required nodes:
-> -- Video port for DVI input
-> -
-> -Note: One (or both) of 'analog' or 'digital' must be set.
-> -
-> -Example
-> --------
-> -
-> -dvi0: connector@0 {
-> -	compatible = "dvi-connector";
-> -	label = "dvi";
-> -
-> -	digital;
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		dvi_connector_in: endpoint {
-> -			remote-endpoint = <&tfp410_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> new file mode 100644
-> index 000000000000..71cb9220fa59
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/dvi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DVI Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: dvi-connector
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  analog:
-> +    type: boolean
-> +    description: the connector has DVI analog pins
-> +
-> +  digital:
-> +    type: boolean
-> +    description: the connector has DVI digital pins
-> +
-> +  dual-link:
-> +    type: boolean
-> +    description: the connector has pins for DVI dual-link
-> +
-> +  port:
-> +    description: Connection to controller providing DVI signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +anyOf:
-> +  - required:
-> +      - analog
-> +  - required:
-> +      - digital
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "dvi-connector";
-> +        label = "dvi";
-> +
-> +        digital;
-> +
-> +        ddc-i2c-bus = <&i2c3>;
-> +
-> +        port {
-> +            dvi_connector_in: endpoint {
-> +                remote-endpoint = <&tfp410_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> deleted file mode 100644
-> index aeb07c4bd703..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -HDMI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "hdmi-connector"
-> -- type: the HDMI connector type: "a", "b", "c", "d" or "e"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- hpd-gpios: HPD GPIO number
-> -- ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-> -- ddc-en-gpios: signal to enable DDC bus
-> -
-> -Required nodes:
-> -- Video port for HDMI input
-> -
-> -Example
-> --------
-> -
-> -hdmi0: connector@1 {
-> -	compatible = "hdmi-connector";
-> -	label = "hdmi";
-> -
-> -	type = "a";
-> -
-> -	port {
-> -		hdmi_connector_in: endpoint {
-> -			remote-endpoint = <&tpd12s015_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> new file mode 100644
-> index 000000000000..14d7128af592
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/hdmi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HDMI Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: hdmi-connector
-> +
-> +  type:
-> +    description: The HDMI connector type
-> +    enum:
-> +      - a   # Standard full size
-> +      - b   # Never deployed?
-> +      - c   # Mini
-> +      - d   # Micro
-> +      - e   # automotive
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ddc-en-gpios:
-> +    description: GPIO signal to enable DDC bus
-> +    maxItems: 1
-> +
-> +  port:
-> +    description: Connection to controller providing HDMI signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +  - type
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "hdmi-connector";
-> +        label = "hdmi";
-> +
-> +        type = "a";
-> +
-> +        port {
-> +            hdmi_connector_in: endpoint {
-> +                remote-endpoint = <&tpd12s015_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.txt b/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> deleted file mode 100644
-> index c727f298e7ad..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -VGA Connector
-> -=============
-> -
-> -Required properties:
-> -
-> -- compatible: "vga-connector"
-> -
-> -Optional properties:
-> -
-> -- label: a symbolic name for the connector corresponding to a hardware label
-> -- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
-> -
-> -Required nodes:
-> -
-> -The VGA connector internal connections are modeled using the OF graph bindings
-> -specified in Documentation/devicetree/bindings/graph.txt.
-> -
-> -The VGA connector has a single port that must be connected to a video source
-> -port.
-> -
-> -
-> -Example
-> --------
-> -
-> -vga0: connector@0 {
-> -	compatible = "vga-connector";
-> -	label = "vga";
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		vga_connector_in: endpoint {
-> -			remote-endpoint = <&adv7123_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.yaml b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> new file mode 100644
-> index 000000000000..5782c4bb3252
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/vga-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VGA Connector
-> +
-> +maintainers:
-> +  - Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: vga-connector
-> +
-> +  label: true
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  port:
-> +    description: Connection to controller providing VGA signals
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +        compatible = "vga-connector";
-> +        label = "vga";
-> +
-> +        ddc-i2c-bus = <&i2c3>;
-> +
-> +        port {
-> +            vga_connector_in: endpoint {
-> +                remote-endpoint = <&adv7123_out>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
+> > > -It turned out though that above approach has led to
+> > > -abuses when the restricted gfp mask is used "just in case" without a
+> > > -deeper consideration which leads to problems because an excessive use
+> > > -of GFP_NOFS/GFP_NOIO can lead to memory over-reclaim or other memory
+> > > -reclaim issues.
+> > 
+> > I believe this is an important part because it shows that new people
+> > coming to the existing code shouldn't take it as correct and rather
+> > question it. Also having a clear indication that overuse is causing real
+> > problems that might be not immediately visible to subsystems outside of
+> > MM.
+> 
+> It seemed to say a lot of the same things as this paragraph:
+> 
+> +You may notice that quite a few allocations in the existing code specify
+> +``GFP_NOIO`` or ``GFP_NOFS``. Historically, they were used to prevent
+> +recursion deadlocks caused by direct memory reclaim calling back into
+> +the FS or IO paths and blocking on already held resources. Since 4.12
+> +the preferred way to address this issue is to use the new scope APIs
+> +described below.
+> 
+> Since this is in core-api/ rather than vm/, I felt that discussion of
+> the problems that it causes to the mm was a bit too much detail for the
+> people who would be reading this document.  Maybe I could move that
+> information into a new Documentation/vm/reclaim.rst file?
 
+Hmm, my experience is that at least some users of NOFS/NOIO use this
+flag just to be sure they do not do something wrong without realizing
+that this might have a very negative effect on the whole system
+operation. That was the main motivation to have an explicit note there.
+I am not sure having that in MM internal documentation will make it
+stand out for a general reader.
+
+But I will not insist of course.
+
+> Let's see if Our Grumpy Editor has time to give us his advice on this.
+> 
+> > > -FS/IO code then simply calls the appropriate save function before
+> > > -any critical section with respect to the reclaim is started - e.g.
+> > > -lock shared with the reclaim context or when a transaction context
+> > > -nesting would be possible via reclaim.  
+> > 
+> > [...]
+> > 
+> > > +These functions should be called at the point where any memory allocation
+> > > +would start to cause problems.  That is, do not simply wrap individual
+> > > +memory allocation calls which currently use ``GFP_NOFS`` with a pair
+> > > +of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
+> > > +find the lock which is taken that would cause problems if memory reclaim
+> > > +reentered the filesystem, place a call to memalloc_nofs_save() before it
+> > > +is acquired and a call to memalloc_nofs_restore() after it is released.
+> > > +Ideally also add a comment explaining why this lock will be problematic.
+> > 
+> > The above text has mentioned the transaction context nesting as well and
+> > that was a hint by Dave IIRC. It is imho good to have an example of
+> > other reentrant points than just locks. I believe another useful example
+> > would be something like loop device which is mixing IO and FS layers but
+> > I am not familiar with all the details to give you an useful text.
+> 
+> I'll let Mikulas & Dave finish fighting about that before I write any
+> text mentioning the loop driver.  How about this for mentioning the
+> filesystem transaction possibility?
+> 
+> @@ -103,12 +103,16 @@ flags specified by any particular call to allocate memory.
+>  
+>  These functions should be called at the point where any memory allocation
+>  would start to cause problems.  That is, do not simply wrap individual
+> -memory allocation calls which currently use ``GFP_NOFS`` with a pair
+> -of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
+> -find the lock which is taken that would cause problems if memory reclaim
+> +memory allocation calls which currently use ``GFP_NOFS`` with a pair of
+> +calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead, find
+> +the resource which is acquired that would cause problems if memory reclaim
+>  reentered the filesystem, place a call to memalloc_nofs_save() before it
+>  is acquired and a call to memalloc_nofs_restore() after it is released.
+>  Ideally also add a comment explaining why this lock will be problematic.
+> +A resource might be a lock which would need to be acquired by an attempt
+> +to reclaim memory, or it might be starting a transaction that should not
+> +nest over a memory reclaim transaction.  Deep knowledge of the filesystem
+> +or driver is often needed to place memory scoping calls correctly.
+
+Ack
+
+>  Please note that the proper pairing of save/restore functions
+>  allows nesting so it is safe to call memalloc_noio_save() and
+> 
+> > > @@ -104,16 +134,19 @@ ARCH_KMALLOC_MINALIGN bytes.  For sizes which are a power of two, the
+> > >  alignment is also guaranteed to be at least the respective size.
+> > >  
+> > >  For large allocations you can use vmalloc() and vzalloc(), or directly
+> > > -request pages from the page allocator. The memory allocated by `vmalloc`
+> > > -and related functions is not physically contiguous.
+> > > +request pages from the page allocator.  The memory allocated by `vmalloc`
+> > > +and related functions is not physically contiguous.  The `vmalloc`
+> > > +family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
+> > > +flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
+> > > +the allocator which are hard to remove.  However, the scope APIs described
+> > > +above can be used to limit the `vmalloc` functions.
+> > 
+> > I would reiterate "Do not just wrap vmalloc by the scope api but rather
+> > rely on the real scope for the NOFS/NOIO context". Maybe we want to
+> > stress out that once a scope is defined it is sticky to _all_
+> > allocations and all allocators within that scope. The text is already
+> > saying that but maybe we want to make it explicit and make it stand out.
+> 
+> yes.  I went with:
+> 
+> @@ -139,7 +143,10 @@ and related functions is not physically contiguous.  The `vmalloc`
+>  family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
+>  flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
+>  the allocator which are hard to remove.  However, the scope APIs described
+> -above can be used to limit the `vmalloc` functions.
+> +above can be used to limit the `vmalloc` functions.  As described above,
+> +do not simply wrap individual calls in the scope APIs, but look for the
+> +underlying reason why the memory allocation may not call into filesystems
+> +or block devices.
+
+ack
+
+>  
+>  If you are not sure whether the allocation size is too large for
+>  `kmalloc`, it is possible to use kvmalloc() and its derivatives. It will
+> 
+> 
+> > [...]
+> > > diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> > > index 6484569f50df..9fc091274d1d 100644
+> > > --- a/include/linux/sched/mm.h
+> > > +++ b/include/linux/sched/mm.h
+> > > @@ -186,9 +186,10 @@ static inline gfp_t current_gfp_context(gfp_t flags)
+> > >  		 * them.  noio implies neither IO nor FS and it is a weaker
+> > >  		 * context so always make sure it takes precedence.
+> > >  		 */
+> > > -		if (current->memalloc_nowait)
+> > > +		if (current->memalloc_nowait) {
+> > >  			flags &= ~__GFP_DIRECT_RECLAIM;
+> > > -		else if (current->memalloc_noio)
+> > > +			flags |= __GFP_NOWARN;
+> > 
+> > I dunno. I wouldn't make nowait implicitly NOWARN as well. At least not
+> > with the initial implementation. Maybe we will learn later that there is
+> > just too much unhelpful noise in the kernel log and will reconsider but
+> > I wouldn't just start with that. Also we might learn that there will be
+> > other modifiers for atomic (or should I say non-sleeping) scopes to be
+> > defined. E.g. access to memory reserves but let's just wait for real
+> > usecases.
+> 
+> Fair enough.  I'll drop that part.  Thanks!
+
+thanks!
 -- 
-Regards,
-
-Laurent Pinchart
+Michal Hocko
+SUSE Labs
