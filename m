@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE58C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42517C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22BF2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCF820747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tSnmokbP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lhRMXL/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGAHW3 (ORCPT
+        id S1728190AbgGAHWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:22:29 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:56411 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgGAHW3 (ORCPT
+        Wed, 1 Jul 2020 03:22:53 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:53909 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgGAHWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:22:29 -0400
+        Wed, 1 Jul 2020 03:22:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593588149; x=1625124149;
+  t=1593588172; x=1625124172;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=ASReo1CJm8170qaaG0UUzUeLV1c7HctXtdLcR5LMm/I=;
-  b=tSnmokbPztLf4L//Jmmh+kI3T1295R0tcteFEYeZrFMg8hHiJsw4IipK
-   nkl17KadobHgUm/tbPB5tL+9ahbCFvJQGcZs75nrNTDrSZ0W/KekTGor1
-   /gZ8PXAydXYMmbxYWfhnEZqIDs++ipfHRFRYB+dhJYB5Cb6jk/MtJVrm0
-   PETkvPF5125T2GcI6mS/Sa9rZVDulBBvgCHzk+z6FfbXg62JrEiS2fdHV
-   q9KgrlknyLtqppaV5lrFyrE5xpRn2Czqt4uPUbxkljNoyrAv6Cp7RKLv8
-   cNM6wo2cDk1BL3Wf1NKsiAtWF3Zjbne4CeCBz1KgZQleSlrUYwKQbvq/z
-   Q==;
-IronPort-SDR: 5uBsSbrAYzBz21ZsGyql3MBfc5HFsT+DIsLVPvR9k9KUP3UL8ZRn6zg8Pqylahvk/RtcYsoyCF
- +JFRTvX5nkUBBOWg4uG3NRXCreQZk9AHTUThhgcQXz4QIuqV0SaiEVYq4G42+YBtR3SFg0/n2h
- eBstsnmZhCxENpQOl88X6SMJWlHRsWQTj8nMp+t95HQl8hZWxwvQ/bU/aDGi5pK2uXNkw60p0a
- HFM/5a0ib6PxMRWZ1PBck/1IvEd4oOJSUODs8W+cDD73eP62u4eGN1skCi2DJzgMoYTmxTutwW
- fZs=
+  b=lhRMXL/49QwyrzTl+tCF2VkPIh4cv9f2gtZLugO9+ZNCBbTbjGFkeSqZ
+   0mhDpV3/t7qdPwtYrr+rWdvOdqcBXFm0QrIs23Ky5Iy6pQWfMJVDce0UK
+   SQNj4Zbf72POdMX833JWXdaST0LMPH7vfuhnDBy7ung0id0szuqMUTuID
+   7cJ9Q1r1kwQtQfkHWkm99Fehe5g0hWqy1XWes9xEo0zxbO1KcutUDs9wL
+   8g0F8sDNFFLiorK8vTXfWjMkXaeI1gJlmg4dQjJeXnLW4siWYDug3A1Tm
+   QTZdNCmxy6y4UoW529tbwQAfmRvFM6S1ge/FFpSbvXJw28Ai84Zk3E7Ye
+   A==;
+IronPort-SDR: dx6YWF45EaJUUid5tzRABJTT/zLGOxeI4WC1j94JuHpBZ+qFmmiXbqG0qY4gMaPetuuNqFMHLr
+ L1VbaOZ7z9xXQ08pr2nmpE3B44zCHGHhH0C+iIoxArvw9WRZtpDrrkeb1b4E45NCE6NvOwRQS+
+ ScjG909CpUxg7faRiAYSyLBEUMmVy1TscPtmAnox8Lmt5tLn8I/7s76dkz8dVSu/07dGtgLFt9
+ BBOoLl0SMwIE5AGMWUh+QMPzvKDxmjUgHWhnj2xwacQImJPiQdSgtsxr51JiUxqSPWgvtPCAJV
+ Gfo=
 X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="81498611"
+   d="scan'208";a="85776837"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2020 00:22:29 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2020 00:22:51 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 1 Jul 2020 00:22:27 -0700
+ 15.1.1979.3; Wed, 1 Jul 2020 00:22:51 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 1 Jul 2020 00:22:05 -0700
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 1 Jul 2020 00:22:30 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
@@ -58,8 +58,8 @@ To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
 Subject: [PATCH net-next v2 0/3] bridge: mrp: Add support for getting the status
-Date:   Wed, 1 Jul 2020 09:21:17 +0200
-Message-ID: <20200701072120.520571-1-horatiu.vultur@microchip.com>
+Date:   Wed, 1 Jul 2020 09:22:36 +0200
+Message-ID: <20200701072239.520807-1-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
