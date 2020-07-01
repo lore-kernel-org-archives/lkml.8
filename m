@@ -2,112 +2,390 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ACFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05CDA20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1662C20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crw6jiU7"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="X82jdnmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGAVXm (ORCPT
+        id S1727807AbgGAVYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:23:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31610 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726144AbgGAVXm (ORCPT
+        Wed, 1 Jul 2020 17:24:07 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:39553 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGAVYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:23:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593638620;
+        Wed, 1 Jul 2020 17:24:06 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 1343D22EDB;
+        Wed,  1 Jul 2020 23:24:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593638643;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m2r4biBmgD4usQWexXh9vBu72j/PA8sqQ6Ual1zjZVg=;
-        b=crw6jiU7NhllWsejLks+KSy/+5heCSBlI+u1DNJL2cT6+NItN82GvS+jfs17iRKCIBbGAp
-        WyPqN76wPTH65j/okO6O+/uOTgo3EYLtA56qxDTEbJJunIMBrN5a9rpcm5bdgnxjHWgovX
-        NdXLwRk8svEcRy+4XpXZbIx0kcEUf48=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-4k_3co6SOTSedzKSiL7HHg-1; Wed, 01 Jul 2020 17:23:39 -0400
-X-MC-Unique: 4k_3co6SOTSedzKSiL7HHg-1
-Received: by mail-wr1-f72.google.com with SMTP id j16so17151262wrw.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:23:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m2r4biBmgD4usQWexXh9vBu72j/PA8sqQ6Ual1zjZVg=;
-        b=jEzOYrgxJFjv8xZFfLHLVhMCnYsKWLQFyph9Q/BmKuTxKJQMHbiDRHdd0ic64gSj8w
-         SCwKixUBot5g8LRK1TgAbst2ZPeSaWrk8H2AfacqjBpCkObc0WEKdtRnD6WH35YvvOEc
-         6sERuzNZf7Ryva6OCi7zOrg7QLvb60x+fTnphXE4XSI4PVMJGRv0H8rxXcwQRsCrRGh9
-         h7oCtEhSM1aQPE/LG3ZkTiyOg/2TCgz5YTwXZxf6quZIjhi6Rn2ry6Jcm/5MI6cn/l9z
-         O7iMFONqSurvT/C0yoO75al/Gp65WYPJmaBn1rJvgsn6IAVjJXtJOBV3ovapk5Rh5jfZ
-         nP4w==
-X-Gm-Message-State: AOAM533pGMnLX5N8rGU9plSRsdwr8xYM0ZpxZmOIhYMrVTW6Mj8mcc/E
-        iSiLAUDTqwS8POsR3Vu4YDCn/UnSc35TpuoCuSXvbNmJSY7TrvkotUd02VkB0l9wrQAcsnD8zai
-        2gtsJptP4OSqfTYFAXNvTYkZQ
-X-Received: by 2002:a5d:6b8c:: with SMTP id n12mr28640726wrx.352.1593638617972;
-        Wed, 01 Jul 2020 14:23:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzQ5EOdK3/I7t3hzH2nXxlZ8gKRo3bNG63qK7yosafmw6Hvgwi6pb2IZMrXml3ZBqz0x5VNnw==
-X-Received: by 2002:a5d:6b8c:: with SMTP id n12mr28640715wrx.352.1593638617762;
-        Wed, 01 Jul 2020 14:23:37 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id d63sm8905146wmc.22.2020.07.01.14.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 14:23:35 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 17:23:32 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, jgross@suse.com,
-        Peng Fan <peng.fan@nxp.com>, x86@kernel.org,
-        konrad.wilk@oracle.com, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-imx@nxp.com,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
-Message-ID: <20200701172219-mutt-send-email-mst@kernel.org>
-References: <20200624050355-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
- <20200624163940-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
- <20200624181026-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
- <20200626110629-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006291621300.8121@sstabellini-ThinkPad-T480s>
- <20200701133456.GA23888@infradead.org>
- <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+3aEdivimryDZBSKjFuPi0PkZcAYhem+hA7t/pdN/sY=;
+        b=X82jdnmbqI/hR8u+2IN9Ggbgl5DkVS5CdNPWFss7FGcvl+RXWvdXiy1l9Cm8G0U/eOH4/Y
+        Qw5DmCy9P6SF8jxSqSD4Zi4ASzpLGah1WH3MzaN40cyeaNRPlNXGJnRBBMoitoitbUuu/b
+        bfHfBASiwaOWvE1hwMmObX1DxDOjDwc=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Michael Walle <michael@walle.cc>,
+        Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH] mfd: remove smsc-ece1099 MFD driver
+Date:   Wed,  1 Jul 2020 23:23:48 +0200
+Message-Id: <20200701212348.8085-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 10:34:53AM -0700, Stefano Stabellini wrote:
-> Would you be in favor of a more flexible check along the lines of the
-> one proposed in the patch that started this thread:
-> 
->     if (xen_vring_use_dma())
->             return true;
-> 
-> 
-> xen_vring_use_dma would be implemented so that it returns true when
-> xen_swiotlb is required and false otherwise.
+This MFD driver has no user. The keypad driver of this device never made
+it into the kernel. Therefore, this driver is useless. Remove it.
 
-Just to stress - with a patch like this virtio can *still* use DMA API
-if PLATFORM_ACCESS is set. So if DMA API is broken on some platforms
-as you seem to be saying, you guys should fix it before doing something
-like this..
+Signed-off-by: Michael Walle <michael@walle.cc>
+Cc: Sourav Poddar <sourav.poddar@ti.com>
+---
+ Documentation/driver-api/index.rst        |   1 -
+ Documentation/driver-api/smsc_ece1099.rst |  60 -------------
+ drivers/mfd/Kconfig                       |  12 ---
+ drivers/mfd/Makefile                      |   1 -
+ drivers/mfd/smsc-ece1099.c                |  87 ------------------
+ include/linux/mfd/smsc.h                  | 104 ----------------------
+ 6 files changed, 265 deletions(-)
+ delete mode 100644 Documentation/driver-api/smsc_ece1099.rst
+ delete mode 100644 drivers/mfd/smsc-ece1099.c
+ delete mode 100644 include/linux/mfd/smsc.h
 
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index 6567187e7687..1397a30188eb 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -98,7 +98,6 @@ available subsections can be seen below.
+    rfkill
+    serial/index
+    sm501
+-   smsc_ece1099
+    switchtec
+    sync_file
+    vfio-mediated-device
+diff --git a/Documentation/driver-api/smsc_ece1099.rst b/Documentation/driver-api/smsc_ece1099.rst
+deleted file mode 100644
+index 079277421eaf..000000000000
+--- a/Documentation/driver-api/smsc_ece1099.rst
++++ /dev/null
+@@ -1,60 +0,0 @@
+-=================================================
+-Msc Keyboard Scan Expansion/GPIO Expansion device
+-=================================================
+-
+-What is smsc-ece1099?
+-----------------------
+-
+-The ECE1099 is a 40-Pin 3.3V Keyboard Scan Expansion
+-or GPIO Expansion device. The device supports a keyboard
+-scan matrix of 23x8. The device is connected to a Master
+-via the SMSC BC-Link interface or via the SMBus.
+-Keypad scan Input(KSI) and Keypad Scan Output(KSO) signals
+-are multiplexed with GPIOs.
+-
+-Interrupt generation
+---------------------
+-
+-Interrupts can be generated by an edge detection on a GPIO
+-pin or an edge detection on one of the bus interface pins.
+-Interrupts can also be detected on the keyboard scan interface.
+-The bus interrupt pin (BC_INT# or SMBUS_INT#) is asserted if
+-any bit in one of the Interrupt Status registers is 1 and
+-the corresponding Interrupt Mask bit is also 1.
+-
+-In order for software to determine which device is the source
+-of an interrupt, it should first read the Group Interrupt Status Register
+-to determine which Status register group is a source for the interrupt.
+-Software should read both the Status register and the associated Mask register,
+-then AND the two values together. Bits that are 1 in the result of the AND
+-are active interrupts. Software clears an interrupt by writing a 1 to the
+-corresponding bit in the Status register.
+-
+-Communication Protocol
+-----------------------
+-
+-- SMbus slave Interface
+-	The host processor communicates with the ECE1099 device
+-	through a series of read/write registers via the SMBus
+-	interface. SMBus is a serial communication protocol between
+-	a computer host and its peripheral devices. The SMBus data
+-	rate is 10KHz minimum to 400 KHz maximum
+-
+-- Slave Bus Interface
+-	The ECE1099 device SMBus implementation is a subset of the
+-	SMBus interface to the host. The device is a slave-only SMBus device.
+-	The implementation in the device is a subset of SMBus since it
+-	only supports four protocols.
+-
+-	The Write Byte, Read Byte, Send Byte, and Receive Byte protocols are the
+-	only valid SMBus protocols for the device.
+-
+-- BC-LinkTM Interface
+-	The BC-Link is a proprietary bus that allows communication
+-	between a Master device and a Companion device. The Master
+-	device uses this serial bus to read and write registers
+-	located on the Companion device. The bus comprises three signals,
+-	BC_CLK, BC_DAT and BC_INT#. The Master device always provides the
+-	clock, BC_CLK, and the Companion device is the source for an
+-	independent asynchronous interrupt signal, BC_INT#. The ECE1099
+-	supports BC-Link speeds up to 24MHz.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index be8053d6fa1f..7e72ed3441f1 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1193,18 +1193,6 @@ config MFD_SKY81452
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called sky81452.
+ 
+-config MFD_SMSC
+-	bool "SMSC ECE1099 series chips"
+-	depends on I2C=y
+-	select MFD_CORE
+-	select REGMAP_I2C
+-	help
+-	  If you say yes here you get support for the
+-	  ece1099 chips from SMSC.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called smsc.
+-
+ config MFD_SC27XX_PMIC
+ 	tristate "Spreadtrum SC27xx PMICs"
+ 	depends on ARCH_SPRD || COMPILE_TEST
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 9e6e18336f14..7e26e7f98ac2 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -127,7 +127,6 @@ obj-$(CONFIG_MFD_CPCAP)		+= motorola-cpcap.o
+ obj-$(CONFIG_MCP)		+= mcp-core.o
+ obj-$(CONFIG_MCP_SA11X0)	+= mcp-sa11x0.o
+ obj-$(CONFIG_MCP_UCB1200)	+= ucb1x00-core.o
+-obj-$(CONFIG_MFD_SMSC)        += smsc-ece1099.o
+ obj-$(CONFIG_MCP_UCB1200_TS)	+= ucb1x00-ts.o
+ 
+ ifeq ($(CONFIG_SA1100_ASSABET),y)
+diff --git a/drivers/mfd/smsc-ece1099.c b/drivers/mfd/smsc-ece1099.c
+deleted file mode 100644
+index 57b792eb58fd..000000000000
+--- a/drivers/mfd/smsc-ece1099.c
++++ /dev/null
+@@ -1,87 +0,0 @@
+-/*
+- * TI SMSC MFD Driver
+- *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
+- *
+- * Author: Sourav Poddar <sourav.poddar@ti.com>
+- *
+- *  This program is free software; you can redistribute it and/or modify it
+- *  under  the terms of the GNU General  Public License as published by the
+- *  Free Software Foundation;  GPL v2.
+- *
+- */
+-
+-#include <linux/init.h>
+-#include <linux/slab.h>
+-#include <linux/i2c.h>
+-#include <linux/gpio.h>
+-#include <linux/workqueue.h>
+-#include <linux/irq.h>
+-#include <linux/regmap.h>
+-#include <linux/err.h>
+-#include <linux/mfd/core.h>
+-#include <linux/mfd/smsc.h>
+-#include <linux/of_platform.h>
+-
+-static const struct regmap_config smsc_regmap_config = {
+-		.reg_bits = 8,
+-		.val_bits = 8,
+-		.max_register = SMSC_VEN_ID_H,
+-		.cache_type = REGCACHE_RBTREE,
+-};
+-
+-static int smsc_i2c_probe(struct i2c_client *i2c,
+-			const struct i2c_device_id *id)
+-{
+-	struct smsc *smsc;
+-	int devid, rev, venid_l, venid_h;
+-	int ret;
+-
+-	smsc = devm_kzalloc(&i2c->dev, sizeof(*smsc), GFP_KERNEL);
+-	if (!smsc)
+-		return -ENOMEM;
+-
+-	smsc->regmap = devm_regmap_init_i2c(i2c, &smsc_regmap_config);
+-	if (IS_ERR(smsc->regmap))
+-		return PTR_ERR(smsc->regmap);
+-
+-	i2c_set_clientdata(i2c, smsc);
+-	smsc->dev = &i2c->dev;
+-
+-#ifdef CONFIG_OF
+-	of_property_read_u32(i2c->dev.of_node, "clock", &smsc->clk);
+-#endif
+-
+-	regmap_read(smsc->regmap, SMSC_DEV_ID, &devid);
+-	regmap_read(smsc->regmap, SMSC_DEV_REV, &rev);
+-	regmap_read(smsc->regmap, SMSC_VEN_ID_L, &venid_l);
+-	regmap_read(smsc->regmap, SMSC_VEN_ID_H, &venid_h);
+-
+-	dev_info(&i2c->dev, "SMSCxxx devid: %02x rev: %02x venid: %02x\n",
+-		devid, rev, (venid_h << 8) | venid_l);
+-
+-	ret = regmap_write(smsc->regmap, SMSC_CLK_CTRL, smsc->clk);
+-	if (ret)
+-		return ret;
+-
+-#ifdef CONFIG_OF
+-	if (i2c->dev.of_node)
+-		ret = devm_of_platform_populate(&i2c->dev);
+-#endif
+-
+-	return ret;
+-}
+-
+-static const struct i2c_device_id smsc_i2c_id[] = {
+-	{ "smscece1099", 0},
+-	{},
+-};
+-
+-static struct i2c_driver smsc_i2c_driver = {
+-	.driver = {
+-		   .name = "smsc",
+-	},
+-	.probe = smsc_i2c_probe,
+-	.id_table = smsc_i2c_id,
+-};
+-builtin_i2c_driver(smsc_i2c_driver);
+diff --git a/include/linux/mfd/smsc.h b/include/linux/mfd/smsc.h
+deleted file mode 100644
+index 83944124e886..000000000000
+--- a/include/linux/mfd/smsc.h
++++ /dev/null
+@@ -1,104 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+- * SMSC ECE1099
+- *
+- * Copyright 2012 Texas Instruments Inc.
+- *
+- * Author: Sourav Poddar <sourav.poddar@ti.com>
+- */
+-
+-#ifndef __LINUX_MFD_SMSC_H
+-#define __LINUX_MFD_SMSC_H
+-
+-#include <linux/regmap.h>
+-
+-#define SMSC_ID_ECE1099			1
+-#define SMSC_NUM_CLIENTS		2
+-
+-#define SMSC_BASE_ADDR			0x38
+-#define OMAP_GPIO_SMSC_IRQ		151
+-
+-#define SMSC_MAXGPIO         32
+-#define SMSC_BANK(offs)      ((offs) >> 3)
+-#define SMSC_BIT(offs)       (1u << ((offs) & 0x7))
+-
+-struct smsc {
+-	struct device *dev;
+-	struct i2c_client *i2c_clients[SMSC_NUM_CLIENTS];
+-	struct regmap *regmap;
+-	int clk;
+-	/* Stored chip id */
+-	int id;
+-};
+-
+-struct smsc_gpio;
+-struct smsc_keypad;
+-
+-static inline int smsc_read(struct device *child, unsigned int reg,
+-	unsigned int *dest)
+-{
+-	struct smsc     *smsc = dev_get_drvdata(child->parent);
+-
+-	return regmap_read(smsc->regmap, reg, dest);
+-}
+-
+-static inline int smsc_write(struct device *child, unsigned int reg,
+-	unsigned int value)
+-{
+-	struct smsc     *smsc = dev_get_drvdata(child->parent);
+-
+-	return regmap_write(smsc->regmap, reg, value);
+-}
+-
+-/* Registers for SMSC */
+-#define SMSC_RESET						0xF5
+-#define SMSC_GRP_INT						0xF9
+-#define SMSC_CLK_CTRL						0xFA
+-#define SMSC_WKUP_CTRL						0xFB
+-#define SMSC_DEV_ID						0xFC
+-#define SMSC_DEV_REV						0xFD
+-#define SMSC_VEN_ID_L						0xFE
+-#define SMSC_VEN_ID_H						0xFF
+-
+-/* CLK VALUE */
+-#define SMSC_CLK_VALUE						0x13
+-
+-/* Registers for function GPIO INPUT */
+-#define SMSC_GPIO_DATA_IN_START					0x00
+-
+-/* Registers for function GPIO OUPUT */
+-#define SMSC_GPIO_DATA_OUT_START                                       0x05
+-
+-/* Definitions for SMSC GPIO CONFIGURATION REGISTER*/
+-#define SMSC_GPIO_INPUT_LOW					0x01
+-#define SMSC_GPIO_INPUT_RISING					0x09
+-#define SMSC_GPIO_INPUT_FALLING					0x11
+-#define SMSC_GPIO_INPUT_BOTH_EDGE				0x19
+-#define SMSC_GPIO_OUTPUT_PP					0x21
+-#define SMSC_GPIO_OUTPUT_OP					0x31
+-
+-#define GRP_INT_STAT						0xf9
+-#define	SMSC_GPI_INT						0x0f
+-#define SMSC_CFG_START						0x0A
+-
+-/* Registers for SMSC GPIO INTERRUPT STATUS REGISTER*/
+-#define SMSC_GPIO_INT_STAT_START                                  0x32
+-
+-/* Registers for SMSC GPIO INTERRUPT MASK REGISTER*/
+-#define SMSC_GPIO_INT_MASK_START                               0x37
+-
+-/* Registers for SMSC function KEYPAD*/
+-#define SMSC_KP_OUT						0x40
+-#define SMSC_KP_IN						0x41
+-#define SMSC_KP_INT_STAT					0x42
+-#define SMSC_KP_INT_MASK					0x43
+-
+-/* Definitions for keypad */
+-#define SMSC_KP_KSO           0x70
+-#define SMSC_KP_KSI           0x51
+-#define SMSC_KSO_ALL_LOW        0x20
+-#define SMSC_KP_SET_LOW_PWR        0x0B
+-#define SMSC_KP_SET_HIGH           0xFF
+-#define SMSC_KSO_EVAL           0x00
+-
+-#endif /*  __LINUX_MFD_SMSC_H */
 -- 
-MST
+2.20.1
 
