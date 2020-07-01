@@ -2,100 +2,98 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB16C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C0220720
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D455C20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OeCRAKIe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JsBY6+8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgGAVIm (ORCPT
+        id S1726990AbgGAVLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgGAVIm (ORCPT
+        Wed, 1 Jul 2020 17:11:09 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36442 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgGAVLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:08:42 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C615DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=n3MhCVUc4stdpN2Qe7L9WDOpNOr9JzTLo6XaZBRTMak=; b=OeCRAKIekfVonveM23MX3a487K
-        UPN8c7BE8HI2uqDE+mA9j98eCqcctiz8v2eYUtiRId40gw/y7BJsyNolh76MzPA3QmGUUloXYxweG
-        cce+/+4/TzWzTYcu/4s2K6s6iM/d5t6ryPgBDidii8xI+IMu7Z80Sj6waidY3Y5XOSsChg24/DeuB
-        K0dvhrX65yKSWLeTERVnh7xLktIfWe+CsMIg+S3hwJvV3DOIKkgoTwOhBiRzWr4sSrnFVZ3ZoGC6X
-        oD5OKjv/KluHFb4tvDKXFb11RIdHi+LXchW7GZTnjxuM6JFavRfGr4SBWTYU/mbARVRWOaKZhQFkI
-        h7JTHOpA==;
-Received: from [2601:1c0:6280:3f0::81af]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqjxz-0000hb-LV; Wed, 01 Jul 2020 21:08:27 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] sound: fix SND_HDA_GENERIC kconfig & build
-Message-ID: <01233744-9625-38b3-0342-1b37250dbc72@infradead.org>
-Date:   Wed, 1 Jul 2020 14:08:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 17:11:09 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061LB7dC100435;
+        Wed, 1 Jul 2020 16:11:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593637867;
+        bh=pNY14uoreEMb1N8k616MvSldr3BlysWH/SPhuew/hCs=;
+        h=From:To:CC:Subject:Date;
+        b=JsBY6+8Xs8KZpWm+qEpGjhoNxH31nOhKCA70i/gAlJ3UVbgI8RInrlw4SoJoXDmLg
+         vYSymU6PXIsycnXGIS+IIOWJyzafVUo7Byl2LiO7br98hHVQPMCwCxBjPghTfT2WBa
+         SXQtMOg87aokGNfSbOaPasUcL+SHxQ0lGXySW+ao=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061LB7eC047938;
+        Wed, 1 Jul 2020 16:11:07 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 16:11:06 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 16:11:06 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061LB6dK063311;
+        Wed, 1 Jul 2020 16:11:06 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+Subject: [PATCH v15 0/4] Add JEITA properties and introduce the bq2515x charger
+Date:   Wed, 1 Jul 2020 16:10:40 -0500
+Message-ID: <20200701211044.18590-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Hello,
 
-Fix kconfig warnings and lots of subsequent build errors by
-adding yet another ugly select statement:
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-WARNING: unmet direct dependencies detected for LEDS_CLASS
-  Depends on [n]: NEW_LEDS [=n]
-  Selected by [y]:
-  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
+Dan Murphy (2):
+  power_supply: Add additional health properties to the header
+  dt-bindings: power: Convert battery.txt to battery.yaml
 
-WARNING: unmet direct dependencies detected for LEDS_TRIGGERS
-  Depends on [n]: NEW_LEDS [=n] && LEDS_CLASS [=y]
-  Selected by [y]:
-  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
-  Selected by [m]:
-  - MAC80211_LEDS [=y] && NET [=y] && WIRELESS [=y] && MAC80211 [=m] && LEDS_CLASS [=y]
-  - IWLWIFI_LEDS [=y] && NETDEVICES [=y] && WLAN [=y] && WLAN_VENDOR_INTEL [=y] && IWLWIFI [=m] && (LEDS_CLASS [=y]=y || LEDS_CLASS [=y]=IWLWIFI [=m]) && (IWLMVM [=m] || IWLDVM [=m])
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bindings for the bq2515x family of
+    chargers.
+  power: supply: bq25150 introduce the bq25150
 
-WARNING: unmet direct dependencies detected for LEDS_TRIGGER_AUDIO
-  Depends on [n]: NEW_LEDS [=n] && LEDS_TRIGGERS [=y]
-  Selected by [y]:
-  - SND_HDA_GENERIC [=y] && SOUND [=y] && !UML && SND [=y] && SND_HDA [=y] && SND_HDA_GENERIC_LEDS [=y]
+ Documentation/ABI/testing/sysfs-class-power   |    3 +-
+ .../bindings/power/supply/battery.txt         |   86 +-
+ .../bindings/power/supply/battery.yaml        |  157 +++
+ .../bindings/power/supply/bq2515x.yaml        |   93 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1169 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    3 +
+ include/linux/power_supply.h                  |    3 +
+ 9 files changed, 1442 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
----
- sound/pci/hda/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20200701.orig/sound/pci/hda/Kconfig
-+++ linux-next-20200701/sound/pci/hda/Kconfig
-@@ -221,6 +221,7 @@ comment "Set to Y if you want auto-loadi
- 
- config SND_HDA_GENERIC
- 	tristate "Enable generic HD-audio codec parser"
-+	select NEW_LEDS if SND_HDA_GENERIC_LEDS
- 	select LEDS_CLASS if SND_HDA_GENERIC_LEDS
- 	select LEDS_TRIGGERS if SND_HDA_GENERIC_LEDS
- 	select LEDS_TRIGGER_AUDIO if SND_HDA_GENERIC_LEDS
+-- 
+2.27.0
 
