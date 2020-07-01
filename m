@@ -2,163 +2,186 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D580FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C6020663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j0jlJMyU"
+	by mail.kernel.org (Postfix) with ESMTP id B891F20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgGALxV (ORCPT
+        id S1730407AbgGALyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:53:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45678 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730198AbgGALxV (ORCPT
+        Wed, 1 Jul 2020 07:54:46 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:38636 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730198AbgGALyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:53:21 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061BrCov108915;
-        Wed, 1 Jul 2020 06:53:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593604392;
-        bh=uoVs0xKRr+EGHIZ9Yms8yptYm1qeOYBru5wiZ5Cd0Fw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=j0jlJMyUVJibebHe50ClQPIRZ+vAdKZO77rFwdiyF50oaBF1WTzshiOERM5jxmUBJ
-         6er6AuJvXau66tgvqD+x85MKvlZ9SlwTfrdQHlYHO+xebqj+esmr7jBE2K83VsHTcx
-         eZpq9obda6M+Xc+sBr9STNZUWbXLPgbAEYczKHCM=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061BrCpM034174;
-        Wed, 1 Jul 2020 06:53:12 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 06:53:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 06:53:12 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061Br9Dx086455;
-        Wed, 1 Jul 2020 06:53:10 -0500
-Subject: Re: [PATCH next 4/6] soc: ti: k3-ringacc: add request pair of rings
- api.
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
- <20200701103030.29684-5-grygorii.strashko@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
-Date:   Wed, 1 Jul 2020 14:54:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 07:54:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U1MIZDg_1593604481;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1MIZDg_1593604481)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 01 Jul 2020 19:54:42 +0800
+Date:   Wed, 1 Jul 2020 19:54:41 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        akpm@linux-foundation.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] mm: define pte_add_end for consistency
+Message-ID: <20200701115441.GA4979@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
+ <40362e99-a354-c44f-8645-e2326a6df680@redhat.com>
+ <20200701021113.GA51306@L-31X9LVDL-1304.local>
+ <da4a470e-f34c-fbf8-c95a-93a7d30a215b@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701103030.29684-5-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da4a470e-f34c-fbf8-c95a-93a7d30a215b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Grygorii,
+On Wed, Jul 01, 2020 at 10:29:08AM +0200, David Hildenbrand wrote:
+>On 01.07.20 04:11, Wei Yang wrote:
+>> On Tue, Jun 30, 2020 at 02:44:00PM +0200, David Hildenbrand wrote:
+>>> On 30.06.20 05:18, Wei Yang wrote:
+>>>> When walking page tables, we define several helpers to get the address of
+>>>> the next boundary. But we don't have one for pte level.
+>>>>
+>>>> Let's define it and consolidate the code in several places.
+>>>>
+>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>>> ---
+>>>>  arch/x86/mm/init_64.c   | 6 ++----
+>>>>  include/linux/pgtable.h | 7 +++++++
+>>>>  mm/kasan/init.c         | 4 +---
+>>>>  3 files changed, 10 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+>>>> index dbae185511cd..f902fbd17f27 100644
+>>>> --- a/arch/x86/mm/init_64.c
+>>>> +++ b/arch/x86/mm/init_64.c
+>>>> @@ -973,9 +973,7 @@ remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end,
+>>>>  
+>>>>  	pte = pte_start + pte_index(addr);
+>>>>  	for (; addr < end; addr = next, pte++) {
+>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>> -		if (next > end)
+>>>> -			next = end;
+>>>> +		next = pte_addr_end(addr, end);
+>>>>  
+>>>>  		if (!pte_present(*pte))
+>>>>  			continue;
+>>>> @@ -1558,7 +1556,7 @@ void register_page_bootmem_memmap(unsigned long section_nr,
+>>>>  		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
+>>>>  
+>>>>  		if (!boot_cpu_has(X86_FEATURE_PSE)) {
+>>>> -			next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>> +			next = pte_addr_end(addr, end);
+>>>>  			pmd = pmd_offset(pud, addr);
+>>>>  			if (pmd_none(*pmd))
+>>>>  				continue;
+>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>> index 32b6c52d41b9..0de09c6c89d2 100644
+>>>> --- a/include/linux/pgtable.h
+>>>> +++ b/include/linux/pgtable.h
+>>>> @@ -706,6 +706,13 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>>>>  })
+>>>>  #endif
+>>>>  
+>>>> +#ifndef pte_addr_end
+>>>> +#define pte_addr_end(addr, end)						\
+>>>> +({	unsigned long __boundary = ((addr) + PAGE_SIZE) & PAGE_MASK;	\
+>>>> +	(__boundary - 1 < (end) - 1) ? __boundary : (end);		\
+>>>> +})
+>>>> +#endif
+>>>> +
+>>>>  /*
+>>>>   * When walking page tables, we usually want to skip any p?d_none entries;
+>>>>   * and any p?d_bad entries - reporting the error before resetting to none.
+>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+>>>> index fe6be0be1f76..89f748601f74 100644
+>>>> --- a/mm/kasan/init.c
+>>>> +++ b/mm/kasan/init.c
+>>>> @@ -349,9 +349,7 @@ static void kasan_remove_pte_table(pte_t *pte, unsigned long addr,
+>>>>  	unsigned long next;
+>>>>  
+>>>>  	for (; addr < end; addr = next, pte++) {
+>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>> -		if (next > end)
+>>>> -			next = end;
+>>>> +		next = pte_addr_end(addr, end);
+>>>>  
+>>>>  		if (!pte_present(*pte))
+>>>>  			continue;
+>>>>
+>>>
+>>> I'm not really a friend of this I have to say. We're simply iterating
+>>> over single pages, not much magic ....
+>> 
+>> Hmm... yes, we are iterating on Page boundary, while we many have the case
+>> when addr or end is not PAGE_ALIGN.
+>
+>I really do wonder if not having page aligned addresses actually happens
+>in real life. Page tables operate on page granularity, and
+>adding/removing unaligned parts feels wrong ... and that's also why I
+>dislike such a helper.
+>
+>1. kasan_add_zero_shadow()/kasan_remove_zero_shadow(). If I understand
+>the logic (WARN_ON()) correctly, we bail out in case we would ever end
+>up in such a scenario, where we would want to add/remove things not
+>aligned to PAGE_SIZE.
+>
+>2. remove_pagetable()...->remove_pte_table()
+>
+>vmemmap_free() should never try to de-populate sub-pages. Even with
+>sub-section hot-add/remove (2MB / 512 pages), with valid struct page
+>sizes (56, 64, 72, 80), we always end up with full pages.
+>
+>kernel_physical_mapping_remove() is only called via
+>arch_remove_memory(). That will never remove unaligned parts.
+>
 
-On 01/07/2020 13.30, Grygorii Strashko wrote:
-> Add new API k3_ringacc_request_rings_pair() to request pair of rings at=
+I don't have a very clear mind now, while when you look into
+remove_pte_table(), it has two cases based on alignment of addr and next.
 
-> once, as in the most cases Rings are used with DMA channels, which need=
- to
-> request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) an=
-d
-> one to receive completions (RX/TX CQ). This will allow to simplify Ring=
-acc
-> API users.
->=20
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
->  include/linux/soc/ti/k3-ringacc.h |  4 ++++
->  2 files changed, 28 insertions(+)
->=20
-> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-> index 8a8f31d59e24..4cf1150de88e 100644
-> --- a/drivers/soc/ti/k3-ringacc.c
-> +++ b/drivers/soc/ti/k3-ringacc.c
-> @@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_=
-ringacc *ringacc,
->  }
->  EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
-> =20
-> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-> +				  int fwd_id, int compl_id,
-> +				  struct k3_ring **fwd_ring,
-> +				  struct k3_ring **compl_ring)
+If we always remove a page, the second case won't happen?
 
-Would you consider re-arranging the parameter list to:
-int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-				  struct k3_ring **fwd_ring, int fwd_id,
-				  struct k3_ring **compl_ring, int compl_id)
+>3. register_page_bootmem_memmap()
+>
+>It operates on full pages only.
+>
+>
+>This needs in-depth analysis, but my gut feeling is that this alignment
+>is unnecessary.
+>
+>> 
+>>>
+>>> What would definitely make sense is replacing (addr + PAGE_SIZE) &
+>>> PAGE_MASK; by PAGE_ALIGN() ...
+>>>
+>> 
+>> No, PAGE_ALIGN() is expanded to be 
+>> 
+>> 	(addr + PAGE_SIZE - 1) & PAGE_MASK;
+>> 
+>> If we change the code to PAGE_ALIGN(), we would end up with infinite loop.
+>
+>Very right, it would have to be PAGE_ALIGN(addr + 1).
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-> +{
-> +	int ret =3D 0;
-> +
-> +	if (!fwd_ring || !compl_ring)
-> +		return -EINVAL;
-> +
-> +	*fwd_ring =3D k3_ringacc_request_ring(ringacc, fwd_id, 0);
-> +	if (!(*fwd_ring))
-> +		return -ENODEV;
-> +
-> +	*compl_ring =3D k3_ringacc_request_ring(ringacc, compl_id, 0);
-> +	if (!(*compl_ring)) {
-> +		k3_ringacc_ring_free(*fwd_ring);
-> +		ret =3D -ENODEV;
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
-> +
->  static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
->  {
->  	struct k3_ringacc *ringacc =3D ring->parent;
-> diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k=
-3-ringacc.h
-> index 26f73df0a524..7ac115432fa1 100644
-> --- a/include/linux/soc/ti/k3-ringacc.h
-> +++ b/include/linux/soc/ti/k3-ringacc.h
-> @@ -107,6 +107,10 @@ struct k3_ringacc *of_k3_ringacc_get_by_phandle(st=
-ruct device_node *np,
->  struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
->  					int id, u32 flags);
-> =20
-> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
-> +				  int fwd_id, int compl_id,
-> +				  struct k3_ring **fwd_ring,
-> +				  struct k3_ring **compl_ring);
->  /**
->   * k3_ringacc_ring_reset - ring reset
->   * @ring: pointer on Ring
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/=
-Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+-- 
+Wei Yang
+Help you, Help me
