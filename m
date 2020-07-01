@@ -2,317 +2,191 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C80C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BA220780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDD0206C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbgGAQDf (ORCPT
+        id S1732341AbgGAQDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:03:35 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34516 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbgGAQDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:03:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 4E229FB03;
-        Wed,  1 Jul 2020 18:03:32 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Jh_UlnejPwD8; Wed,  1 Jul 2020 18:03:30 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 0697540972; Wed,  1 Jul 2020 18:03:30 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 18:03:29 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 09/13] drm/panel: st7703: Add support for Xingbangda
- XBD599
-Message-ID: <20200701160329.GH174356@bogon.m.sigxcpu.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-10-megous@megous.com>
+        Wed, 1 Jul 2020 12:03:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58346 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731672AbgGAQDw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:03:52 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061FXIr2051668;
+        Wed, 1 Jul 2020 12:02:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320pw7p9df-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 12:02:08 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061Fn0CP132425;
+        Wed, 1 Jul 2020 12:02:07 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320pw7p9bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 12:02:06 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061FtZi0007012;
+        Wed, 1 Jul 2020 16:02:04 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d42q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 16:02:04 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061G21gZ7995686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 16:02:01 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A96A74C046;
+        Wed,  1 Jul 2020 16:02:01 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDFFB4C044;
+        Wed,  1 Jul 2020 16:01:59 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.75.158])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Jul 2020 16:01:59 +0000 (GMT)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+ <f9f0f868-e511-990a-2a74-1806ac0cb7ac@de.ibm.com>
+ <20200701155819.GU4332@42.do-not-panic.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <eb0b2ec2-52db-81a4-11b0-c0112b39a7aa@de.ibm.com>
+Date:   Wed, 1 Jul 2020 18:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701103126.1512615-10-megous@megous.com>
+In-Reply-To: <20200701155819.GU4332@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 cotscore=-2147483648 phishscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ clxscore=1011 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007010110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Jul 01, 2020 at 12:31:22PM +0200, Ondrej Jirman wrote:
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel used in
-> PinePhone. Add support for it.
 
-Reviewed-by: Guido Günther <agx@sigxcpu.org> 
 
+On 01.07.20 17:58, Luis Chamberlain wrote:
+[...]
+
+>>>
+>>> Ah, well that would be a different fix required, becuase again,
+>>> br_stp_start() does not untangle the correct error today really.
+>>> I also I think it would be odd odd that SIGSEGV or another signal 
+>>> is what was terminating Christian's bridge stp call, but let's
+>>> find out!
+>>>
+>>> Note we pass 0 to the options to wait so the mistake here could indeed
+>>> be that we did not need KWIFSIGNALED(). I was afraid of this prospect...
+>>> as it other implications.
+>>>
+>>> It means we either *open code* all callers, or we handle this in a
+>>> unified way on the umh. And if we do handle this in a unified way, it
+>>> then begs the question as to *what* do we pass for the signals case and
+>>> continued case. Below we just pass the signal, and treat continued as
+>>> OK, but treating continued as OK would also be a *new* change as well.
+>>>
+>>> For instance (this goes just boot tested, but Christian if you can
+>>> try this as well that would be appreciated):
+>>
+>>
+>> Does not help, the bridge stays in DOWN state. 
 > 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 200 +++++++++++++++++-
->  1 file changed, 198 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> index cdbf7dfb4dd4..5cd5503f894f 100644
-> --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> @@ -39,10 +39,11 @@
->  #define ST7703_CMD_SETEXTC	 0xB9
->  #define ST7703_CMD_SETMIPI	 0xBA
->  #define ST7703_CMD_SETVDC	 0xBC
-> -#define ST7703_CMD_UNKNOWN0	 0xBF
-> +#define ST7703_CMD_UNKNOWN_BF	 0xBF
->  #define ST7703_CMD_SETSCR	 0xC0
->  #define ST7703_CMD_SETPOWER	 0xC1
->  #define ST7703_CMD_SETPANEL	 0xCC
-> +#define ST7703_CMD_UNKNOWN_C6	 0xC6
->  #define ST7703_CMD_SETGAMMA	 0xE0
->  #define ST7703_CMD_SETEQ	 0xE3
->  #define ST7703_CMD_SETGIP1	 0xE9
-> @@ -109,7 +110,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
->  	msleep(20);
->  
->  	dsi_generic_write_seq(dsi, ST7703_CMD_SETVCOM, 0x3F, 0x3F);
-> -	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN0, 0x02, 0x11, 0x00);
-> +	dsi_generic_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
->  	dsi_generic_write_seq(dsi, ST7703_CMD_SETGIP1,
->  			      0x82, 0x10, 0x06, 0x05, 0x9E, 0x0A, 0xA5, 0x12,
->  			      0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-> @@ -163,6 +164,200 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
->  	.init_sequence = jh057n_init_sequence,
->  };
->  
-> +#define dsi_dcs_write_seq(dsi, cmd, seq...) do {			\
-> +		static const u8 d[] = { seq };				\
-> +		int ret;						\
-> +		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-> +		if (ret < 0)						\
-> +			return ret;					\
-> +	} while (0)
-> +
-> +
-> +static int xbd599_init_sequence(struct st7703 *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-> +
-> +	/*
-> +	 * Init sequence was supplied by the panel vendor.
-> +	 */
-> +
-> +	/* Magic sequence to unlock user commands below. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC, 0xF1, 0x12, 0x83);
-> +
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
-> +			  0x33, /* VC_main = 0, Lane_Number = 3 (4 lanes) */
-> +			  0x81, /* DSI_LDO_SEL = 1.7V, RTERM = 90 Ohm */
-> +			  0x05, /* IHSRX = x6 (Low High Speed driving ability) */
-> +			  0xF9, /* TX_CLK_SEL = fDSICLK/16 */
-> +			  0x0E, /* HFP_OSC (min. HFP number in DSI mode) */
-> +			  0x0E, /* HBP_OSC (min. HBP number in DSI mode) */
-> +			  /* The rest is undocumented in ST7703 datasheet */
-> +			  0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			  0x44, 0x25, 0x00, 0x91, 0x0a, 0x00, 0x00, 0x02,
-> +			  0x4F, 0x11, 0x00, 0x00, 0x37);
-> +
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
-> +			  0x25, /* PCCS = 2, ECP_DC_DIV = 1/4 HSYNC */
-> +			  0x22, /* DT = 15ms XDK_ECP = x2 */
-> +			  0x20, /* PFM_DC_DIV = /1 */
-> +			  0x03  /* ECP_SYNC_EN = 1, VGX_SYNC_EN = 1 */);
-> +
-> +	/* RGB I/F porch timing */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
-> +			  0x10, /* VBP_RGB_GEN */
-> +			  0x10, /* VFP_RGB_GEN */
-> +			  0x05, /* DE_BP_RGB_GEN */
-> +			  0x05, /* DE_FP_RGB_GEN */
-> +			  /* The rest is undocumented in ST7703 datasheet */
-> +			  0x03, 0xFF,
-> +			  0x00, 0x00,
-> +			  0x00, 0x00);
-> +
-> +	/* Source driving settings. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
-> +			  0x73, /* N_POPON */
-> +			  0x73, /* N_NOPON */
-> +			  0x50, /* I_POPON */
-> +			  0x50, /* I_NOPON */
-> +			  0x00, /* SCR[31,24] */
-> +			  0xC0, /* SCR[23,16] */
-> +			  0x08, /* SCR[15,8] */
-> +			  0x70, /* SCR[7,0] */
-> +			  0x00  /* Undocumented */);
-> +
-> +	/* NVDDD_SEL = -1.8V, VDDD_SEL = out of range (possibly 1.9V?) */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
-> +
-> +	/*
-> +	 * SS_PANEL = 1 (reverse scan), GS_PANEL = 0 (normal scan)
-> +	 * REV_PANEL = 1 (normally black panel), BGR_PANEL = 1 (BGR)
-> +	 */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
-> +
-> +	/* Zig-Zag Type C column inversion. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
-> +
-> +	/* Set display resolution. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP,
-> +			  0xF0, /* NL = 240 */
-> +			  0x12, /* RES_V_LSB = 0, BLK_CON = VSSD,
-> +				 * RESO_SEL = 720RGB
-> +				 */
-> +			  0xF0  /* WHITE_GND_EN = 1 (GND),
-> +				 * WHITE_FRAME_SEL = 7 frames,
-> +				 * ISC = 0 frames
-> +				 */);
-> +
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
-> +			  0x00, /* PNOEQ */
-> +			  0x00, /* NNOEQ */
-> +			  0x0B, /* PEQGND */
-> +			  0x0B, /* NEQGND */
-> +			  0x10, /* PEQVCI */
-> +			  0x10, /* NEQVCI */
-> +			  0x00, /* PEQVCI1 */
-> +			  0x00, /* NEQVCI1 */
-> +			  0x00, /* reserved */
-> +			  0x00, /* reserved */
-> +			  0xFF, /* reserved */
-> +			  0x00, /* reserved */
-> +			  0xC0, /* ESD_DET_DATA_WHITE = 1, ESD_WHITE_EN = 1 */
-> +			  0x10  /* SLPIN_OPTION = 1 (no need vsync after sleep-in)
-> +				 * VEDIO_NO_CHECK_EN = 0
-> +				 * ESD_WHITE_GND_EN = 0
-> +				 * ESD_DET_TIME_SEL = 0 frames
-> +				 */);
-> +
-> +	/* Undocumented command. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_C6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
-> +
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
-> +			  0x74, /* VBTHS, VBTLS: VGH = 17V, VBL = -11V */
-> +			  0x00, /* FBOFF_VGH = 0, FBOFF_VGL = 0 */
-> +			  0x32, /* VRP  */
-> +			  0x32, /* VRN */
-> +			  0x77, /* reserved */
-> +			  0xF1, /* APS = 1 (small),
-> +				 * VGL_DET_EN = 1, VGH_DET_EN = 1,
-> +				 * VGL_TURBO = 1, VGH_TURBO = 1
-> +				 */
-> +			  0xFF, /* VGH1_L_DIV, VGL1_L_DIV (1.5MHz) */
-> +			  0xFF, /* VGH1_R_DIV, VGL1_R_DIV (1.5MHz) */
-> +			  0xCC, /* VGH2_L_DIV, VGL2_L_DIV (2.6MHz) */
-> +			  0xCC, /* VGH2_R_DIV, VGL2_R_DIV (2.6MHz) */
-> +			  0x77, /* VGH3_L_DIV, VGL3_L_DIV (4.5MHz) */
-> +			  0x77  /* VGH3_R_DIV, VGL3_R_DIV (4.5MHz) */);
-> +
-> +	/* Reference voltage. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP,
-> +			  0x07, /* VREF_SEL = 4.2V */
-> +			  0x07  /* NVREF_SEL = 4.2V */);
-> +	msleep(20);
-> +
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM,
-> +			  0x2C, /* VCOMDC_F = -0.67V */
-> +			  0x2C  /* VCOMDC_B = -0.67V */);
-> +
-> +	/* Undocumented command. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_UNKNOWN_BF, 0x02, 0x11, 0x00);
-> +
-> +	/* This command is to set forward GIP timing. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
-> +			  0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
-> +			  0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
-> +			  0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
-> +			  0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
-> +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
-> +			  0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +			  0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-> +
-> +	/* This command is to set backward GIP timing. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
-> +			  0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			  0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
-> +			  0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
-> +			  0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
-> +			  0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
-> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> +			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
-> +			  0xA5, 0x00, 0x00, 0x00, 0x00);
-> +
-> +	/* Adjust the gamma characteristics of the panel. */
-> +	dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
-> +			  0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
-> +			  0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
-> +			  0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
-> +			  0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
-> +			  0x12, 0x18);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct drm_display_mode xbd599_mode = {
-> +	.hdisplay    = 720,
-> +	.hsync_start = 720 + 40,
-> +	.hsync_end   = 720 + 40 + 40,
-> +	.htotal	     = 720 + 40 + 40 + 40,
-> +	.vdisplay    = 1440,
-> +	.vsync_start = 1440 + 18,
-> +	.vsync_end   = 1440 + 18 + 10,
-> +	.vtotal	     = 1440 + 18 + 10 + 17,
-> +	.vrefresh    = 60,
-> +	.clock	     = 69000,
-> +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +	.width_mm    = 68,
-> +	.height_mm   = 136,
-> +};
-> +
-> +static const struct st7703_panel_desc xbd599_desc = {
-> +	.mode = &xbd599_mode,
-> +	.lanes = 4,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.init_sequence = xbd599_init_sequence,
-> +};
-> +
->  static int st7703_enable(struct drm_panel *panel)
->  {
->  	struct st7703 *ctx = panel_to_st7703(panel);
-> @@ -428,6 +623,7 @@ static int st7703_remove(struct mipi_dsi_device *dsi)
->  
->  static const struct of_device_id st7703_of_match[] = {
->  	{ .compatible = "rocktech,jh057n00900", .data = &jh057n00900_panel_desc },
-> +	{ .compatible = "xingbangda,xbd599", .data = &xbd599_desc },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, st7703_of_match);
-> -- 
-> 2.27.0
-> 
+> OK thanks for testing, that was fast! Does your code go through the
+> STP kernel path or userpath? If it is taking the STP kernel path
+> then this is not the real culprit to your issue then.
+
+I have no idea and I cannot look into this right now. I can test
+patches as compile,reboot and test is almost no effort.
+
+FWIW, this is just the network of a KVM guest of libvirts default network
+no longer working, maybe you can reproduce this on x86 as well?
+
