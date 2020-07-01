@@ -2,119 +2,125 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32725C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F24420780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1EA20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHkY2YMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgGALXJ (ORCPT
+        id S1730299AbgGALYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:23:09 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44544 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730169AbgGALXI (ORCPT
+        Wed, 1 Jul 2020 07:24:20 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27958 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730196AbgGALYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:23:08 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3BBDA27DAFB;
-        Wed,  1 Jul 2020 12:23:06 +0100 (BST)
-Date:   Wed, 1 Jul 2020 13:23:03 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [RESEND PATCH 1/3] drm/mediatek: mtk_dpi: Rename bridge to
- next_bridge
-Message-ID: <20200701132303.047ea605@collabora.com>
-In-Reply-To: <20200518173909.2259259-2-enric.balletbo@collabora.com>
-References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
-        <20200518173909.2259259-2-enric.balletbo@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 1 Jul 2020 07:24:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593602658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=a0yfRNSZH7jw3LwxF/5C1mFfotPxZcAA3DmkNVF3agc=;
+        b=iHkY2YMUGWFd7ZNtKJ7Id2PJLB2moD8F8n4g+aam2oVKkVoRSxyt9B3NzsMTgE59kOiZp4
+        bt0vtzJ8Xm6ene7xaolTNotM4BxFS1zZrmoAWfWt5rW1w6wNjS4Y+7QPvWVYLL1oMQ2vSd
+        kaXAwqpsWaKXjE0axAVciPUFCeUInmg=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-PxuC8yTYPvi4S1yXQDL6_Q-1; Wed, 01 Jul 2020 07:24:11 -0400
+X-MC-Unique: PxuC8yTYPvi4S1yXQDL6_Q-1
+Received: by mail-qt1-f198.google.com with SMTP id c22so16620391qtp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:24:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a0yfRNSZH7jw3LwxF/5C1mFfotPxZcAA3DmkNVF3agc=;
+        b=Y/jzj81epR/J/wmm+B+44v4hEbzd2pVWvPDFwpv2lmFxThYKdyTBr1iukIoS1udl6E
+         PNDsAPka3lhcutI9TXrccKWc63/8W3G92BMBZFHXcaYVAWlMaP/vYswLx7/yAG/g/pfF
+         YS1UXJiR0Xgq1JUhBJcqYog+Mk8vyHQJAdJdRMv+bCI7YxPbrduBDvheb98uARYhtwTH
+         Cjf8SRby7s01s/9aoIkr6XyniUEwn/Ai8ijCQiSCjd4KyF7oGFFSnMDRHODUeoTvgEJt
+         0oNQbtwg6Vt8rBBAqYJJ24OWsPKqlht2+0nU51n8frbxBGckMHaGMATr1aURZc6K/YwG
+         SCdw==
+X-Gm-Message-State: AOAM533RR8AtKBBBD1YnlUXrDPxMmmlbquE5JGUoWUhGAvHP/Icb2Qbv
+        jFk3Qq278Sx3bd4BMTiSRLcLDN6w7gZN6PWDV8nJ4F08iqpuBBCR+dSeDfmhNRUw0mh0ga9dAjH
+        3g6efNbqwhBZzMl2uNxIc07IRIaLyfxXLcSSDB4En
+X-Received: by 2002:aed:208c:: with SMTP id 12mr25653170qtb.286.1593602651313;
+        Wed, 01 Jul 2020 04:24:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwbe3/mk0yAROfKDdFroQfk3ZID3DtTYPB35Q69fjTtOuyoXNweu61AJE29nOxb7iqVnZIUltP//HI7XwvB/DM=
+X-Received: by 2002:aed:208c:: with SMTP id 12mr25653150qtb.286.1593602650968;
+ Wed, 01 Jul 2020 04:24:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box> <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+In-Reply-To: <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 1 Jul 2020 13:24:00 +0200
+Message-ID: <CACO55tvT0fOMai7k7oAP1TL42YAuMwJocxk2seNgjYibs+h5oA@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     James Jones <jajones@nvidia.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 19:39:07 +0200
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+On Wed, Jul 1, 2020 at 6:45 AM James Jones <jajones@nvidia.com> wrote:
+>
+> This implies something is trying to use one of the old
+> DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK format modifiers with DRM-KMS without
+> first checking whether it is supported by the kernel.  I had tried to
+> force an Xorg+Mesa stack without my userspace patches to hit this error
+> when testing, but must have missed some permutation.  If the stalled
+> Mesa patches go in, this would stop happening of course, but those were
+> held up for a long time in review, and are now waiting on me to make
+> some modifications.
+>
 
-> This is really a cosmetic change just to make a bit more readable the
-> code after convert the driver to drm_bridge. The bridge variable name
-> will be used by the encoder drm_bridge, and the chained bridge will be
-> named next_bridge.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> ---
-> 
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 7fbfa95bab09..7112125dc3d1 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -61,7 +61,7 @@ enum mtk_dpi_out_color_format {
->  struct mtk_dpi {
->  	struct mtk_ddp_comp ddp_comp;
->  	struct drm_encoder encoder;
-> -	struct drm_bridge *bridge;
-> +	struct drm_bridge *next_bridge;
+that's completely irrelevant. If a kernel change breaks userspace,
+it's a kernel bug.
 
-Did you consider moving the drm_of_find_panel_or_bridge() call to
-mtk_dpi_bind() so you can get rid of this field?
-
-This makes we realize there's no refcounting on bridges, which means
-the bridge can vanish between the drm_of_find_panel_or_bridge() and
-drm_bridge_attach() calls :-/.
-
->  	void __iomem *regs;
->  	struct device *dev;
->  	struct clk *engine_clk;
-> @@ -607,7 +607,7 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
->  	/* Currently DPI0 is fixed to be driven by OVL1 */
->  	dpi->encoder.possible_crtcs = BIT(1);
->  
-> -	ret = drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
-> +	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
->  	if (ret) {
->  		dev_err(dev, "Failed to attach bridge: %d\n", ret);
->  		goto err_cleanup;
-> @@ -747,11 +747,11 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->  	}
->  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> -					  NULL, &dpi->bridge);
-> +					  NULL, &dpi->next_bridge);
->  	if (ret)
->  		return ret;
->  
-> -	dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
-> +	dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_node);
->  
->  	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
->  	if (comp_id < 0) {
+> Are you using the modesetting driver in X?  If so, with glamor I
+> presume?  What version of Mesa?  Any distro patches?  Any non-default
+> xorg.conf options that would affect modesetting, your X driver if it
+> isn't modesetting, or glamour?
+>
+> Thanks,
+> -James
+>
+> On 6/30/20 4:08 PM, Kirill A. Shutemov wrote:
+> > On Tue, Jun 02, 2020 at 04:06:32PM +1000, Dave Airlie wrote:
+> >> James Jones (4):
+> > ...
+> >>        drm/nouveau/kms: Support NVIDIA format modifiers
+> >
+> > This commit is the first one that breaks Xorg startup for my setup:
+> > GTX 1080 + Dell UP2414Q (4K DP MST monitor).
+> >
+> > I believe this is the crucial part of dmesg (full dmesg is attached):
+> >
+> > [   29.997140] [drm:nouveau_framebuffer_new] Unsupported modifier: 0x300000000000014
+> > [   29.997143] [drm:drm_internal_framebuffer_create] could not create framebuffer
+> > [   29.997145] [drm:drm_ioctl] pid=3393, ret = -22
+> >
+> > Any suggestions?
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
 
