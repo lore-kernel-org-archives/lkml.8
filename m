@@ -2,146 +2,256 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE10AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B766020890
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOZH3Nn9"
+	by mail.kernel.org (Postfix) with ESMTP id 577072074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGACYQ (ORCPT
+        id S1727007AbgGACYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgGACX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:23:59 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A33C03E979;
-        Tue, 30 Jun 2020 19:23:58 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t9so12655218lfl.5;
-        Tue, 30 Jun 2020 19:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
-        b=WOZH3Nn9evGdNfNdegsmScfv681f/RyxGofCEPnYWGfspTEyGhonNre+yGBHn5bFfa
-         sxTcaYeEaMnRWVLKe6dvl953jlQGCQ90o4ua4ivcGyBeLWZRJOINabmsrtxixKEvjfTs
-         rbOv9o6+OeD7sJ5vR+COPvihHs5V3r5hDipoEF41JSOpjhY4i1iU3acV2Zg4TXZ1LabF
-         J/TkePIkZrTOmGmyxPRnEKauahz/hGAbNE3AhAXj+cq3pUaNCKcoSaLRj/r2e3ZlZj3b
-         NageNukvNfawQfIsidTyucHIEs5hhntMok1Rxq3MsKd2uiw0jxmGMBHY+EAUfqj4e1Jt
-         6Dzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
-        b=WRTcdkOqwiIHdrLnBxCfFqRZI+cw7tifWscqCCwKKflQBATydbJWRHHR4dflvNuS3h
-         tgmumx29mbYJAU5ljYq6BpbQ6Ddd/aT5n/TuCBiYhLDXp5ck2NW02XPmKr3BhdcgMaKY
-         viZxcL6Zl+r2n56cJW7Cq1qVWCADCNWrrP4txZHf9CbCvmtjZ2NhwHUCS75LutT8MeUx
-         eKioCEk7rdmvnn43Pe3udX6LlgOk+eS6G6R4ajJYWsHNcHbfpS5o2c9IilGZFoch43AF
-         kw5fy9cyzTkBA2dnVLwBkdQD0eh/bScJq576TLdctZs2BnyaQfxw2WIpcYswTR8dQ4aO
-         h9ng==
-X-Gm-Message-State: AOAM530voMtzvE2OqEnnI06v+aCyGJHIZXRKM5AMf+vkP+sg5uIr0p3O
-        3I/cEo2l8DejvuKXjRnYDYQ=
-X-Google-Smtp-Source: ABdhPJxLkVvzwxeFv14SPpaqlsYj0gMEYB9Z7wtPKtzeNL3g1IL8KbUjYp/yAgjzyzyrDcB8Hs5VPA==
-X-Received: by 2002:ac2:569c:: with SMTP id 28mr13540340lfr.195.1593570237240;
-        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id f21sm1303557ljj.121.2020.06.30.19.23.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 19:23:56 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 2/4] drm/tegra: output: Support DRM bridges
-Date:   Wed,  1 Jul 2020 05:21:26 +0300
-Message-Id: <20200701022128.12968-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200701022128.12968-1-digetx@gmail.com>
-References: <20200701022128.12968-1-digetx@gmail.com>
+        Tue, 30 Jun 2020 22:24:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49619 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbgGACYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:24:14 -0400
+IronPort-SDR: gc0SX2He3yxN1ITHL+xwa4oZq+752+7aVWDsJJF8ij0VFpLgVCfd7d0PfBj0/DbPeeAbNVx9KN
+ XytpkkP06gJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="147992808"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="147992808"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:24:12 -0700
+IronPort-SDR: Sgp81RKLPMZ4/nH1D7ZciI8ToGHFOJTS/nzbTgyqqZ4H+xAR1OpnYBcch+QZ/gTKCdrAKN7mHE
+ S/CMs4cpjUEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="321605461"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 30 Jun 2020 19:24:11 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jqSPy-0002L1-K7; Wed, 01 Jul 2020 02:24:10 +0000
+Date:   Wed, 01 Jul 2020 10:22:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/fpu] BUILD SUCCESS
+ 4185b3b92792eaec5869266e594338343421ffb0
+Message-ID: <5efbf365.NV6HoYoBazd1zeAD%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer Tegra device-trees will specify a video output graph which involves
-a bridge. This patch adds initial support for the DRM bridges to the Tegra
-DRM output.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/fpu
+branch HEAD: 4185b3b92792eaec5869266e594338343421ffb0  selftests/fpu: Add an FPU selftest
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+elapsed time: 2529m
+
+configs tested: 186
+configs skipped: 13
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+mips                         tb0287_defconfig
+powerpc                  mpc866_ads_defconfig
+mips                      pistachio_defconfig
+sparc64                          allyesconfig
+s390                             alldefconfig
+riscv                          rv32_defconfig
+m68k                             alldefconfig
+arm                         socfpga_defconfig
+mips                              allnoconfig
+arm                         s3c2410_defconfig
+openrisc                 simple_smp_defconfig
+m68k                          hp300_defconfig
+sh                             espt_defconfig
+arm                           stm32_defconfig
+sparc                       sparc64_defconfig
+m68k                              allnoconfig
+arm                    vt8500_v6_v7_defconfig
+arm                           corgi_defconfig
+m68k                        m5307c3_defconfig
+powerpc                          g5_defconfig
+arm                           u8500_defconfig
+sparc                       sparc32_defconfig
+sh                          landisk_defconfig
+sh                         apsh4a3a_defconfig
+arm                          badge4_defconfig
+arm                          lpd270_defconfig
+sh                           se7724_defconfig
+mips                  maltasmvp_eva_defconfig
+mips                 pnx8335_stb225_defconfig
+s390                              allnoconfig
+mips                         tb0219_defconfig
+powerpc                      mgcoge_defconfig
+nds32                             allnoconfig
+arm                          pcm027_defconfig
+mips                         mpc30x_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                             pxa_defconfig
+mips                      pic32mzda_defconfig
+mips                           xway_defconfig
+sh                      rts7751r2d1_defconfig
+arm                           viper_defconfig
+powerpc                      ppc44x_defconfig
+arm                          moxart_defconfig
+sh                        sh7763rdp_defconfig
+arm                        mvebu_v7_defconfig
+arm                          exynos_defconfig
+c6x                        evmc6474_defconfig
+arm                            pleb_defconfig
+arm                             ezx_defconfig
+xtensa                       common_defconfig
+powerpc                          allyesconfig
+arm                         orion5x_defconfig
+arm                         nhk8815_defconfig
+sh                                  defconfig
+m68k                          amiga_defconfig
+m68k                          sun3x_defconfig
+mips                  mips_paravirt_defconfig
+sh                     sh7710voipgw_defconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+sh                               allmodconfig
+mips                             allyesconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200630
+i386                 randconfig-a003-20200630
+i386                 randconfig-a002-20200630
+i386                 randconfig-a004-20200630
+i386                 randconfig-a005-20200630
+i386                 randconfig-a006-20200630
+i386                 randconfig-a002-20200701
+i386                 randconfig-a001-20200701
+i386                 randconfig-a006-20200701
+i386                 randconfig-a005-20200701
+i386                 randconfig-a004-20200701
+i386                 randconfig-a003-20200701
+i386                 randconfig-a006-20200629
+i386                 randconfig-a002-20200629
+i386                 randconfig-a003-20200629
+i386                 randconfig-a001-20200629
+i386                 randconfig-a005-20200629
+i386                 randconfig-a004-20200629
+x86_64               randconfig-a011-20200629
+x86_64               randconfig-a012-20200629
+x86_64               randconfig-a013-20200629
+x86_64               randconfig-a014-20200629
+x86_64               randconfig-a015-20200629
+x86_64               randconfig-a016-20200629
+x86_64               randconfig-a011-20200630
+x86_64               randconfig-a014-20200630
+x86_64               randconfig-a013-20200630
+x86_64               randconfig-a015-20200630
+x86_64               randconfig-a016-20200630
+x86_64               randconfig-a012-20200630
+x86_64               randconfig-a012-20200701
+x86_64               randconfig-a016-20200701
+x86_64               randconfig-a014-20200701
+x86_64               randconfig-a011-20200701
+x86_64               randconfig-a015-20200701
+x86_64               randconfig-a013-20200701
+i386                 randconfig-a013-20200629
+i386                 randconfig-a016-20200629
+i386                 randconfig-a014-20200629
+i386                 randconfig-a012-20200629
+i386                 randconfig-a015-20200629
+i386                 randconfig-a011-20200629
+i386                 randconfig-a011-20200630
+i386                 randconfig-a016-20200630
+i386                 randconfig-a015-20200630
+i386                 randconfig-a014-20200630
+i386                 randconfig-a013-20200630
+i386                 randconfig-a012-20200630
+i386                 randconfig-a011-20200701
+i386                 randconfig-a015-20200701
+i386                 randconfig-a014-20200701
+i386                 randconfig-a016-20200701
+i386                 randconfig-a012-20200701
+i386                 randconfig-a013-20200701
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
 ---
- drivers/gpu/drm/tegra/drm.h    |  2 ++
- drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
-
-diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
-index b25443255be6..f38de08e0c95 100644
---- a/drivers/gpu/drm/tegra/drm.h
-+++ b/drivers/gpu/drm/tegra/drm.h
-@@ -12,6 +12,7 @@
- #include <linux/gpio/consumer.h>
- 
- #include <drm/drm_atomic.h>
-+#include <drm/drm_bridge.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
-@@ -116,6 +117,7 @@ struct tegra_output {
- 	struct device_node *of_node;
- 	struct device *dev;
- 
-+	struct drm_bridge *bridge;
- 	struct drm_panel *panel;
- 	struct i2c_adapter *ddc;
- 	const struct edid *edid;
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index a6a711d54e88..ccd1421f1b24 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_of.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
- 
-@@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
- 	if (!output->of_node)
- 		output->of_node = output->dev->of_node;
- 
-+	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
-+					  &output->panel, &output->bridge);
-+	if (err && err != -ENODEV)
-+		return err;
-+
- 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
- 	if (panel) {
-+		/*
-+		 * Don't mix nvidia,panel phandle with the graph in a
-+		 * device-tree.
-+		 */
-+		WARN_ON(output->panel || output->bridge);
-+
- 		output->panel = of_drm_find_panel(panel);
- 		of_node_put(panel);
- 
--- 
-2.26.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
