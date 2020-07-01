@@ -6,59 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F622C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03BF20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB2E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593642180;
-	bh=qR6b0seueX1BWelGymIepBrH7Jm0QvYZYSibZfidNYw=;
+	s=default; t=1593642190;
+	bh=su8lRXPUuESBhMFT4qfJWMmRjY0xhVTDKxotkdY74v8=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=VosyZW4CfaSu5Pi8pYTEk7Sd3jipcvVXHLF6ZMf5RQF7XYL6JhNh27zJuIeT4RHGk
-	 JPwld0qsr5vJkWHOTwF1AgYbw3Bi0RLR+pK4BxYt9DaACjYVUPg8Hvx/Oiw6vKr3lP
-	 h0uLNiJGg/RBNEx3ZCeWdXC0XRHUW8ihwPgrYHBU=
+	b=SJ0Mc0PpAUfZqJy/u7W0MlINuG3/v+Ez60AFqbxtsuytn3+iB0GhmvXNRcBxTFj8F
+	 HRmp5gTj9akOT9J6KBxw0/OZKo4H9IAsTNwDOO78IzxM0L5+omrP8t7+dlXdedKUxr
+	 kTF3C9MiahIOtmmQVzZ2BKvoxH9qyNjByCKF8gGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgGAWW7 (ORCPT
+        id S1726749AbgGAWXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgGAWW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:22:58 -0400
+        id S1726116AbgGAWXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:23:08 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3347207E8;
-        Wed,  1 Jul 2020 22:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A978E20780;
+        Wed,  1 Jul 2020 22:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593642178;
-        bh=qR6b0seueX1BWelGymIepBrH7Jm0QvYZYSibZfidNYw=;
+        s=default; t=1593642188;
+        bh=su8lRXPUuESBhMFT4qfJWMmRjY0xhVTDKxotkdY74v8=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ybfuOJs9Vmbfe4ObII/sYSTuo+YClxTRqYIrdBxAyiM0aJd4f3dszsnJI5I2cS56c
-         Io6TIbicvRPVE0epumlQ9rhyFeaw+fmO7gcxFUwM8n8nrDNpcxmYhwms3XbZeiEbPF
-         OSZG1Xp5CZASNqiARSsBmmzvNZ6MkkU0192ooJp0=
-Date:   Wed, 01 Jul 2020 23:22:56 +0100
+        b=lKprS4aJgESOGveRTAbiF7BH6q5sc7al7dsGwQHUJMeV1dmv4340iQcahdJr4B+cF
+         Se9cDdjIy/BwJpOIKLEqtJguTFmcnPTTGp/lilx9uqT7fDqFqfzHlyfLGqeW06pJ+y
+         C/X8W7hrcWRKahHce+U2Fsl5dbXmekobhze/VzUk=
+Date:   Wed, 01 Jul 2020 23:23:06 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     perex@perex.cz, alsa-devel@alsa-project.org, tiwai@suse.com,
-        Xiubo.Lee@gmail.com, timur@kernel.org, festevam@gmail.com,
-        nicoleotsuka@gmail.com, Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1593412953-10897-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1593412953-10897-1-git-send-email-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Refine regcache usage with pm runtime
-Message-Id: <159364215573.10630.10167601683932305726.b4-ty@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200630183754.20641-1-akshu.agrawal@amd.com>
+References: <20200630183754.20641-1-akshu.agrawal@amd.com>
+Subject: Re: [PATCH] ASoC: amd: Enable interrupt in dma_open
+Message-Id: <159364215574.10630.16072972777156479448.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 14:42:33 +0800, Shengjiu Wang wrote:
-> When there is dedicated power domain bound with device, after probing
-> the power will be disabled, then registers are not accessible in
-> fsl_sai_dai_probe(), so regcache only need to be enabled in end of
-> probe() and regcache_mark_dirty should be moved to pm runtime resume
-> callback function.
+On Wed, 1 Jul 2020 00:07:46 +0530, Akshu Agrawal wrote:
+> Fixes interrupt enable condition check with which now
+> interrupt gets enabled in dma_open.
+> Prior to this patch it was getting enabled in runtime_resume only.
 
 Applied to
 
@@ -66,8 +70,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: fsl_sai: Refine regcache usage with pm runtime
-      commit: d8d702e19e997cf3f172487e0659d0e68aa5ede5
+[1/1] ASoC: amd: Enable interrupt in dma_open
+      commit: 820d7fcb23c189e87bfe8c95a6e7215d873e5082
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
