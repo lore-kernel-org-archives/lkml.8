@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8285C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC937C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEFAA20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00A220853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593632018;
+	s=default; t=1593632023;
 	bh=N2f6dNa0zm1G+CzQof96J68S69txegg3zJ2gyRzibb8=;
 	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Subject:In-Reply-To:References:
 	 List-ID:From;
-	b=U/r60pkevxD8Ky3Mc4hsfLFMcceolwmBxyL+rYlJ2RptipC44gYjzSIyfGHfpeExC
-	 M5iM3RLSqdjTRibwVvhmXbZT5NrJ+o/gsZG+vaeK99HNDoe6vMpstjfqBO4rLINE0K
-	 Swpsh9iWdm6GvSsqnDy+aBD0SzaJcojVrhTv2JKY=
+	b=tiRNJKuDzj+97KADj092R3VqkIlzf8FA/W5E2erlGb+4YIlcvfMSLXknXxfNJU60q
+	 2AHVRGWn/Z5Q5N8F8HtDM1ciOzyxbxQEsc5MvjM34vQ06c1VG5hXhH3UG7DLhnt2NI
+	 8XW9+Fo8sQHaM4lYI3/apsxzOBcy4/WYPc1ZTq5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgGATdh (ORCPT
+        id S1727086AbgGATdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38686 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 15:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbgGATdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:33:25 -0400
+        id S1726895AbgGATdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 15:33:22 -0400
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 097F920853;
-        Wed,  1 Jul 2020 19:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7D0D20853;
+        Wed,  1 Jul 2020 19:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593632005;
+        s=default; t=1593632002;
         bh=N2f6dNa0zm1G+CzQof96J68S69txegg3zJ2gyRzibb8=;
         h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Subject:In-Reply-To:References:
          From;
-        b=i0YbNIGgWcU5FIswdPqt/LIzn9R6jQeVBsi2rVWhlEsFghlmiB4FrSspSbPeXKMvK
-         Jp31vUNtR4v/0fP0BJXwxDLvWmOEqsEhxMrBnr53KRpNfchOacPwbkzihtOKytBQC8
-         1s6wwZntq1jsAh1/cuIK4JASv61yGfVUHFIF90jA=
-Date:   Wed, 01 Jul 2020 19:33:24 +0000
+        b=pW9U5X9NkBY3GnCJF7xpaaciCydoHDRmVSHsca4O8X3o0duYNQ3vhwRSNtkmqld7P
+         41oVv0qheLqGmPfI02FQWLtCV0ENwfcvl2h2nwON39bdTR6wiNTAw4NuzsepSkqzJJ
+         k6eMlvmmIdyEBFwtMb2hRayNJY365v5ILvN45zK4=
+Date:   Wed, 01 Jul 2020 19:33:21 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
@@ -49,10 +49,10 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     <stable@vger.kernel.org>
 Cc:     Thor Thayer <thor.thayer@linux.intel.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 04/10] mfd: altera-sysmgr: Fix physical address storing hacks
-In-Reply-To: <20200624150704.2729736-5-lee.jones@linaro.org>
-References: <20200624150704.2729736-5-lee.jones@linaro.org>
-Message-Id: <20200701193325.097F920853@mail.kernel.org>
+Subject: Re: [PATCH 10/10] mfd: altera-sysmgr: Supply descriptions for 'np' and 'property' function args
+In-Reply-To: <20200625064619.2775707-11-lee.jones@linaro.org>
+References: <20200625064619.2775707-11-lee.jones@linaro.org>
+Message-Id: <20200701193321.D7D0D20853@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
