@@ -2,172 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0304CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9D6D20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="sG39cyUa"
+	by mail.kernel.org (Postfix) with ESMTP id D31D420772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593606035;
+	bh=N13ZLGUJaht5n5gmpWlI3C9ZD1c4CH4SnSBG9Qt4LeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qEyf7yaHwcMAavO0FJB3Jus6vTnA0YZBRaWMxkoOecSI65o8SwgitRusPI8GYZ7OO
+	 FNfljNiKhnAyECbb6SKaCU9r7/vz2w7JC85oAOOC5gT544PxL8aaEULaFyP5TTCcwo
+	 jZF6WoPge+gBUQDjDG7qIJ7HMU/QuXUNkAYnzjIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730578AbgGAMTq (ORCPT
+        id S1730583AbgGAMUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:19:46 -0400
-Received: from mail.efficios.com ([167.114.26.124]:50208 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730063AbgGAMTq (ORCPT
+        Wed, 1 Jul 2020 08:20:34 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55897 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730063AbgGAMUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:19:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A354A2CD6E7;
-        Wed,  1 Jul 2020 08:19:42 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2FJk1-xrNm4E; Wed,  1 Jul 2020 08:19:42 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 4A8AD2CD572;
-        Wed,  1 Jul 2020 08:19:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4A8AD2CD572
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593605982;
-        bh=YXoF5PUmxWXzp2LmHg4Wgh13FE3P4zYYtwXrHzfqq3Y=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=sG39cyUal96uC6mVyehepRr4pm1czvIHFsUGOd53n/dOX2qwq+HAY1AYOll43FKKK
-         aLuZoGCMngJoRBScUGKntC5NT2sInb2Eh8EG2FT8QXfZVR4/kojqte6y6KA83fzKVL
-         WFgTHC3EULUyItFTiDhFMGZgVgN9jjWwoNoge6dDRMkSxcq/587EsdxMPEJi9RtYul
-         PPSZGqHYpt3+gngE0EmiaxVZr6Gx1mJQeLWvBcW2zWhTOWd/bZ9RyHfuA9YUMzNiNU
-         nW+fcJm7c+MLyrTZaCM/0+juW8g5yPVmeI9N43OiiPOGCGvDyxqG6ceJ2/RfFq/OlS
-         K5lGL6JG5BUow==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 8b3X4FPEW-Fj; Wed,  1 Jul 2020 08:19:42 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 3BB862CD987;
-        Wed,  1 Jul 2020 08:19:42 -0400 (EDT)
-Date:   Wed, 1 Jul 2020 08:19:42 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <338284155.18826.1593605982156.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com> <20200701020211.GA6875@gondor.apana.org.au> <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com> <20200701022241.GA7167@gondor.apana.org.au> <CANn89iLKZQAtpejcLHmOu3dsrGf5eyFfHc8JqoMNYisRPWQ8kQ@mail.gmail.com> <20200701025843.GA7254@gondor.apana.org.au> <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
+        Wed, 1 Jul 2020 08:20:33 -0400
+Received: by mail-pj1-f68.google.com with SMTP id a9so505734pjh.5;
+        Wed, 01 Jul 2020 05:20:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VwgLhJhuD3bTOoPlbUjfhcLw7tSFjG6RAmBLl9KmyJc=;
+        b=XAOkdakQTzKPF0XomcICYSxrxfxmxaKgxxzNv/eHrpQgEgMwY2BmhzSXI9yojvDZxP
+         OwpRT7JEy22HqP6+VM20VJxLk40xi1QPjZJ4cBEvdaC2IcBA1W0M1cKT3vzD8+eUp5ge
+         Ck2ts36Ba+4/qNNL3zn18f7DHoCJXra3VTBTvhU+Qrx7AKUy9I/KfygcP2ZPzu/n5lvB
+         6Vu5a/79ZJNrcGWLjqvDAl6OJTVxI3wSLhzkKCVhhOhw5anXnRp5yOXwO/hzISjn53mV
+         dlkjKe/4KP85vDsqsl5R55jEUzHXXUGNfCTes/BbwRqR5FPcosBk6O7cMHesbsYgAqWG
+         zHOQ==
+X-Gm-Message-State: AOAM5300Yocc8uPGsGgojFc5THp9vHeHd2rVCjdQPLlLZGXWSnkJR9iJ
+        MswtqoLeIcH2AkKxEACKp8A=
+X-Google-Smtp-Source: ABdhPJwXGS21Suclru/CJ+S2jfDOb1KyAhamV2KxRUxxFQw3Qxxld+hbL4v1CsqA3kNd47uNIvE0eA==
+X-Received: by 2002:a17:90a:65c9:: with SMTP id i9mr28333485pjs.201.1593606032838;
+        Wed, 01 Jul 2020 05:20:32 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id f132sm5724544pfa.122.2020.07.01.05.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 05:20:31 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4A395403DC; Wed,  1 Jul 2020 12:20:30 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 12:20:30 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Christoph Hellwig <hch@infradead.org>, mcgrof@kernel.org
+Cc:     syzbot <syzbot+46c77dc7e98c732de754@syzkaller.appspotmail.com>,
+        dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: task hung in request_key_tag
+Message-ID: <20200701122030.GP4332@42.do-not-panic.com>
+References: <000000000000961dea05a95c9558@google.com>
+ <728915db-592b-997f-6970-464cc59441d7@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: TCP_MD5SIG on established sockets
-Thread-Index: DVmdKoIdfg8hNWwm7FgIos17cuNI0g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <728915db-592b-997f-6970-464cc59441d7@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 30, 2020, at 11:36 PM, Eric Dumazet edumazet@google.com wrote:
+On Wed, Jul 01, 2020 at 07:04:15PM +0900, Tetsuo Handa wrote:
+> I suspect commit 9e9b47d6bbe9df65 ("umh: fix processed error when UMH_WAIT_PROC is used").
+> Maybe the change in kernel/umh.c and/or security/keys/request_key.c made by that commit is
+> affecting call_usermodehelper_keys() == 0 case when complete_request_key() is called.
 
-> On Tue, Jun 30, 2020 at 7:59 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->>
->> On Tue, Jun 30, 2020 at 07:30:43PM -0700, Eric Dumazet wrote:
->> >
->> > I made this clear in the changelog, do we want comments all over the places ?
->> > Do not get me wrong, we had this bug for years and suddenly this is a
->> > big deal...
->>
->> I thought you were adding a new pair of smp_rmb/smp_wmb.  If they
->> already exist in the code then I agree it's not a big deal.  But
->> adding a new pair of bogus smp_Xmb's is bad for maintenance.
->>
-> 
-> If I knew so many people were excited about TCP / MD5, I would have
-> posted all my patches on lkml ;)
-> 
-> Without the smp_wmb() we would still need something to prevent KMSAN
-> from detecting that we read uninitialized bytes,
-> if key->keylen is increased.  (initial content of key->key[] is garbage)
-> 
-> Something like this :
+That patch has been dropped for now due to another reported issue
+bisected to it and even though we have not root caused that issue [0].
 
-The approach below looks good to me, but you'll also need to annotate
-both tcp_md5_hash_key and tcp_md5_do_add with __no_kcsan or use
-data_race(expr) to let the concurrency sanitizer know that there is
-a known data race which is there on purpose (triggered by memcpy in tcp_md5_do_add
-and somewhere within crypto_ahash_update). See Documentation/dev-tools/kcsan.rst
-for details.
+It would be good to have a reproducer for this reported issue as well,
+but I should also point out a regression which Naresh reported is fixed
+recently by a posted patch [1] by Herbert Xu. It would be good if you
+can test with that patch posted by Herbert.
 
-Thanks,
+[0] https://lkml.kernel.org/r/20200623141157.5409-1-borntraeger@de.ibm.com          
+[1] https://lkml.kernel.org/r/20200626062948.GA25285@gondor.apana.org.au
 
-Mathieu
+  Luis
 
 > 
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index
-> f111660453241692a17c881dd6dc2910a1236263..c3af8180c7049d5c4987bf5c67e4aff2ed6967c9
-> 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -4033,11 +4033,9 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
-> 
-> int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
-> tcp_md5sig_key *key)
-> {
-> -       u8 keylen = key->keylen;
-> +       u8 keylen = READ_ONCE(key->keylen); /* paired with
-> WRITE_ONCE() in tcp_md5_do_add */
->        struct scatterlist sg;
-> 
-> -       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
-> -
->        sg_init_one(&sg, key->key, keylen);
->        ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
->        return crypto_ahash_update(hp->md5_req);
-> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> index
-> 99916fcc15ca0be12c2c133ff40516f79e6fdf7f..0d08e0134335a21d23702e6a5c24a0f2b3c61c6f
-> 100644
-> --- a/net/ipv4/tcp_ipv4.c
-> +++ b/net/ipv4/tcp_ipv4.c
-> @@ -1114,9 +1114,13 @@ int tcp_md5_do_add(struct sock *sk, const union
-> tcp_md5_addr *addr,
->                /* Pre-existing entry - just update that one. */
->                memcpy(key->key, newkey, newkeylen);
-> 
-> -               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
-> +               /* Pairs with READ_ONCE() in tcp_md5_hash_key().
-> +                * Also note that a reader could catch new key->keylen value
-> +                * but old key->key[], this is the reason we use __GFP_ZERO
-> +                * at sock_kmalloc() time below these lines.
-> +                */
-> +               WRITE_ONCE(key->keylen, newkeylen);
-> 
-> -               key->keylen = newkeylen;
->                return 0;
->        }
-> 
-> @@ -1132,7 +1136,7 @@ int tcp_md5_do_add(struct sock *sk, const union
-> tcp_md5_addr *addr,
->                rcu_assign_pointer(tp->md5sig_info, md5sig);
->        }
-> 
-> -       key = sock_kmalloc(sk, sizeof(*key), gfp);
-> +       key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
->        if (!key)
->                return -ENOMEM;
->         if (!tcp_alloc_md5sig_pool()) {
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> On 2020/07/01 16:53, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    c28e58ee Add linux-next specific files for 20200629
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17925a9d100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dcd26bbca17dd1db
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=46c77dc7e98c732de754
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+46c77dc7e98c732de754@syzkaller.appspotmail.com
