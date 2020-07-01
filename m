@@ -2,98 +2,117 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B98C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE720809
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A49A2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwBpvJCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgGACRY (ORCPT
+        id S1727061AbgGACR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:17:24 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47706 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726723AbgGACQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:16:36 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S11;
-        Wed, 01 Jul 2020 10:16:30 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v4 09/14] irqchip/mscc-ocelot: Fix potential resource leaks
-Date:   Wed,  1 Jul 2020 10:16:21 +0800
-Message-Id: <1593569786-11500-10-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S11
-X-Coremail-Antispam: 1UD129KBjvJXoWrKrykCw43Jw13Kw47XFWDArb_yoW8Jr4kpF
-        48t3yq9r4rJw48urykA3Wvvas5KrW8Kay7K3yFkwn7Zwn8Gw4DKFy8Z342vF18GFWxZa12
-        yFs7JFW8CF1UCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBqb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
-        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
-        8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
-        x4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-        xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWx
-        JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4UMxAIw2
-        8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
-        CI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
-        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Gii3UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 30 Jun 2020 22:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgGACQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:16:35 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52D8C03E979;
+        Tue, 30 Jun 2020 19:16:34 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y18so12641545lfh.11;
+        Tue, 30 Jun 2020 19:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vapTfDZ2f1tAvfpKmc+ZWDOZuBAyLK5G5gnKE1dsXng=;
+        b=XwBpvJCtsnnsnuaueMAfzetWsRY7ZOzou4jP71fGDWF3pG796loCN0qXhchF2sgu84
+         edWAmjAvruo+Bs0X8kE5aDgm7DD2IzGRyhEn66nySzPGXYTgAu331v/qx8sx0mv03iFV
+         sdQtshunNKY9AYMqCIZrfxtMv+N1zXb29khQh5iJo8DEf9ZfEXqMjTGqawmDqwh+JB1E
+         ZKz84KGiwitlYGRQ7OyP1Knp+MMRs3jKRCPiE1dQWOINtvy4os+twMHyAfg8OAohSJwI
+         pLnP0JvMUjxvtYIiAyMeHVqofEI6cEwhkPc6anWD8ODFk5KdlbA1C9pI88zjI3teKNpK
+         RIOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vapTfDZ2f1tAvfpKmc+ZWDOZuBAyLK5G5gnKE1dsXng=;
+        b=QNmvRF1pPuz9e4z7+FJmSFbvuLH9jcd80B5XSIcAy4QaqlDI+LWsW2fl5nVjmsBo7s
+         p4EbE9dtFVOiwE7pr5b7vBIx5OaXOuFPpKPYjQ5XU2rOrtxkCKr7cF3scIiKC4prtlmT
+         IiDDqvY5S2tUbvtjEyyTjJ5JFYrbxxjYRFmVkQhEWRPoshs/45HL/4jDcsCFof/aGaG+
+         Eo8XD93jMUJR+BHqZ2TwXkkWugwYjjwZ/41fRjlY0y4GO7DnRkTSKb+ASUyT6Vqs3kwH
+         Y6lkQnyDBjyTae01Y8nPDQTwzs69sfftUheCEd6cX57kjSKN9vNtef/QdsQXKQqQn11e
+         V2Ng==
+X-Gm-Message-State: AOAM532Dks+CHI172ET5wMeMeyYsgXM6sHkb00lbFaI81devO8/LgP6/
+        C4yBjx/0jNv59gS/SVVBMjQ=
+X-Google-Smtp-Source: ABdhPJxhbSKKq0FhmJrE9dy8QVFhZlrI2NTNt76+0Z8xz5UeHKJ8xcWUitnVVvXISrjygrzzMjHiVQ==
+X-Received: by 2002:a19:f20a:: with SMTP id q10mr13842463lfh.89.1593569793367;
+        Tue, 30 Jun 2020 19:16:33 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id i2sm1296892lji.59.2020.06.30.19.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 19:16:32 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 2/2] drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
+Date:   Wed,  1 Jul 2020 05:16:17 +0300
+Message-Id: <20200701021617.12030-3-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200701021617.12030-1-digetx@gmail.com>
+References: <20200701021617.12030-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function ocelot_irq_init(), system resource "parent_irq"
-was not released in a few error cases. Thus add jump target for
-the completion of the desired exception handling.
+When graph isn't defined in a device-tree, the of_graph_get_remote_node()
+prints a noisy error message, telling that port node is not found. This is
+undesirable behaviour in our case because absence of a panel/bridge graph
+is a valid case. Let's check the graph's presence in a device-tree before
+proceeding with parsing of the graph.
 
-Fixes: 19d99164480a ("irqchip: Add a driver for the Microsemi Ocelot controller")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/irqchip/irq-mscc-ocelot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_of.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mscc-ocelot.c b/drivers/irqchip/irq-mscc-ocelot.c
-index 88143c0..e676ae2 100644
---- a/drivers/irqchip/irq-mscc-ocelot.c
-+++ b/drivers/irqchip/irq-mscc-ocelot.c
-@@ -73,7 +73,8 @@ static int __init ocelot_irq_init(struct device_node *node,
- 				       &irq_generic_chip_ops, NULL);
- 	if (!domain) {
- 		pr_err("%pOFn: unable to add irq domain\n", node);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_irq_dispose;
- 	}
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index b50b44e76279..fdb05fbf72a0 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -246,6 +246,15 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
+ 	if (panel)
+ 		*panel = NULL;
  
- 	ret = irq_alloc_domain_generic_chips(domain, OCELOT_NR_IRQ, 1,
-@@ -109,9 +110,10 @@ static int __init ocelot_irq_init(struct device_node *node,
- 
- err_gc_free:
- 	irq_free_generic_chip(gc);
--
- err_domain_remove:
- 	irq_domain_remove(domain);
-+err_irq_dispose:
-+	irq_dispose_mapping(parent_irq);
- 
- 	return ret;
- }
++	/*
++	 * of_graph_get_remote_node() produces a noisy error message if port
++	 * node isn't found and the absence of the port is a legit case here,
++	 * so at first we silently check whether graph presents in the
++	 * device-tree node.
++	 */
++	if (!of_graph_is_present(np))
++		return -ENODEV;
++
+ 	remote = of_graph_get_remote_node(np, port, endpoint);
+ 	if (!remote)
+ 		return -ENODEV;
 -- 
-2.1.0
+2.26.0
 
