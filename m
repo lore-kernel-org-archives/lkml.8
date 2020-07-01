@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E84C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02E7E20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99212074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EO2/wK4P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UoNm1D5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgGAIbj (ORCPT
+        id S1728825AbgGAIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
+        Wed, 1 Jul 2020 04:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728782AbgGAIbc (ORCPT
+        with ESMTP id S1728581AbgGAIbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4A8C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so22891060wrv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:31 -0700 (PDT)
+        Wed, 1 Jul 2020 04:31:33 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F72AC03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k6so22899206wrn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zimOoN2kqyjp0StchByfx/9jGDhP6/dApme8q5aFBgg=;
-        b=EO2/wK4PRSyboLgDsq/WNh959+FgXLZsxqngzbTbLNkvgz9w3l9BgjL1vPqb6RizP/
-         MRC2pLxcWnDuCdtZc8JdBWgBns3DnibDOJHkiMPeGc6TQSBx1qWaH541Y31RSlpZ945t
-         VjPaLfaQsJUESwaLGE5/YFm7BAYeKFyqTvnuGo62pEPHeAu/9H7Vu1MPGITYC/usXinq
-         qPgjVRqPjSaZ/bXdjPNl2Mgj6O6nGon0h9Jnsr/c3j8Ji2cSX9fMpYxjzAlocxBe//3u
-         STEOM+Jzy8tGR9y2v24MyuVg9fWsLgUR3GHOR1pbdL0oVsrXzE055CAhJBiz2x1WG9bP
-         4ulw==
+        bh=KJS/keN17J0QH5GuMuvB98PgdVtEKXtUDk7tuwa3qBk=;
+        b=UoNm1D5TufX8B+t8ssXSDq8eKZlkPzJtDurcv1/Rr3Ye8pXB95M+gpBS/8nBdnAzk+
+         /a/3xutZ9yo23C8dyFYoMpvokPD/XiS/fqBv6M6B2t9+TpBgpuICvsZO+9sG5YvzMvmv
+         4xMbJPLTy1HTTy9hS95xNDZQxKjy3RQqvijocE4GDAByZOgKuTlpcHPr9ixhdf5f34u8
+         tTRPA3tucd1s9Br/pPXSD1IhyMFIkxNT54ybfEs2J8kAkMDKq62w9MbMLCLueGYB5SNG
+         RiYJqygKRH7CM2uxGr8CwuS/eHzLiJa9g3eUtU8q1EJ93zGug5y2U2EXJzZ1VT99dskV
+         GAsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zimOoN2kqyjp0StchByfx/9jGDhP6/dApme8q5aFBgg=;
-        b=CX3D5tPpkvXE2CXsyC2Ft5juUpUEndC437Rq1hFBS0tDR1XMqCz0BgWovq50V2MQyN
-         kZZqpau/mZmM+97W16dpxw4MSBnMcRJWxoemnJm/zWYZQeJi6WoXI67SZQrY/sVpp8eJ
-         DpAaZcv9nFYGPZb0aDMwP7FcpbORP6w1sIVaJS/wRxCsmimKDaTVup6vq0z8YwX2MtUQ
-         L9DJ7uQ/gKAlhDHenF+8HIPWyhGViql3GRBdcBKJ2MhXemvFsbh06CELuEb+5daWqJx3
-         vEmWmGHNIv/4MkmIWvpHKe/DqQJqYKTV3DLsdREf+86oQkKYWOp6WhZIZ/5jaU1TMx3C
-         PcaQ==
-X-Gm-Message-State: AOAM531RQDNtasxumkr8kGWVFSokQ+Vz11ZRzMAhq4S6h7BhhyM7tIhF
-        Q9PsY2OXxJJYY/eG2tLD/XVc2Q==
-X-Google-Smtp-Source: ABdhPJyJeY9cDJBeXV2JRCgxMZtUeeVgYIjZaXwm6EMlTMOt/rQJ2CUo+FeQqWNoVvd9KBqVtP6GeQ==
-X-Received: by 2002:adf:8024:: with SMTP id 33mr27473683wrk.117.1593592290190;
-        Wed, 01 Jul 2020 01:31:30 -0700 (PDT)
+        bh=KJS/keN17J0QH5GuMuvB98PgdVtEKXtUDk7tuwa3qBk=;
+        b=FRqFpBhxB45xVUFUifqz2VM4jWIiXhzCZanezyae0YwOtwtgUiJx5wXC4ky18qIEJ1
+         UPVpKzq2SEPDWKjiXBoOzFWuMkXHW+nk8+tBZSN2mAlGSLs/eXaR3zZ0aLld3HYj3AWw
+         W1LJ2SO2RFDSLYJcU2kMa6xwuw8A3KMsN8FPVAOCfpnoFlL+TZkjvpLjGgQYxfbpYfEx
+         KAWm/XrINMCws3Ki/YTfjigHJoTV7gowi9S4tqG8g/p866SxL5pkvG/hgO4SWE1MymQ7
+         ligIyScu6Y6cwcQDM3rmZFjbqaW95vWie9WRi+iPYzEwHdh58ADRvjKe85gpPJLExuez
+         DKow==
+X-Gm-Message-State: AOAM53203tdGfVOrykkSNVHXcCkp8zTcqEcIuLJehVozk42PDhqPUjn9
+        h5OOk6cGMobTEu7k6oiQjWj8xA==
+X-Google-Smtp-Source: ABdhPJyXfPWH9EIRAdDMw4b75QwoN0j6lUU72/VPx0euMYQS+BSTnPLWGJjZ7rL/S5wu85HGWfNtaQ==
+X-Received: by 2002:a5d:6809:: with SMTP id w9mr27436961wru.182.1593592291305;
+        Wed, 01 Jul 2020 01:31:31 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.29
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:29 -0700 (PDT)
+        Wed, 01 Jul 2020 01:31:30 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         =?UTF-8?q?Max=20Asb=C3=B6ck?= <amax@us.ibm.com>
-Subject: [PATCH v2 05/30] misc: ibmasm: event: Demote function headers from kerneldoc
-Date:   Wed,  1 Jul 2020 09:30:53 +0100
-Message-Id: <20200701083118.45744-6-lee.jones@linaro.org>
+Subject: [PATCH v2 06/30] misc: ibmasm: command: Demote function headers from kerneldoc
+Date:   Wed,  1 Jul 2020 09:30:54 +0100
+Message-Id: <20200701083118.45744-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
@@ -83,40 +83,51 @@ the header back down to a simple comment.
 
 Fixes the following W=1 warnings:
 
- drivers/misc/ibmasm/event.c:44: warning: Function parameter or member 'sp' not described in 'ibmasm_receive_event'
- drivers/misc/ibmasm/event.c:44: warning: Function parameter or member 'data' not described in 'ibmasm_receive_event'
- drivers/misc/ibmasm/event.c:44: warning: Function parameter or member 'data_size' not described in 'ibmasm_receive_event'
- drivers/misc/ibmasm/event.c:78: warning: Function parameter or member 'sp' not described in 'ibmasm_get_next_event'
- drivers/misc/ibmasm/event.c:78: warning: Function parameter or member 'reader' not described in 'ibmasm_get_next_event'
+ drivers/misc/ibmasm/command.c:106: warning: Function parameter or member 'sp' not described in 'ibmasm_exec_command'
+ drivers/misc/ibmasm/command.c:106: warning: Function parameter or member 'cmd' not described in 'ibmasm_exec_command'
+ drivers/misc/ibmasm/command.c:149: warning: Function parameter or member 'cmd' not described in 'ibmasm_wait_for_response'
+ drivers/misc/ibmasm/command.c:149: warning: Function parameter or member 'timeout' not described in 'ibmasm_wait_for_response'
+ drivers/misc/ibmasm/command.c:162: warning: Function parameter or member 'sp' not described in 'ibmasm_receive_command_response'
+ drivers/misc/ibmasm/command.c:162: warning: Function parameter or member 'response' not described in 'ibmasm_receive_command_response'
+ drivers/misc/ibmasm/command.c:162: warning: Function parameter or member 'size' not described in 'ibmasm_receive_command_response'
 
 Cc: "Max Asböck" <amax@us.ibm.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/ibmasm/event.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/ibmasm/command.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/ibmasm/event.c b/drivers/misc/ibmasm/event.c
-index 974d63f5a4dda..40ce75f8970c1 100644
---- a/drivers/misc/ibmasm/event.c
-+++ b/drivers/misc/ibmasm/event.c
-@@ -31,7 +31,7 @@ static void wake_up_event_readers(struct service_processor *sp)
-                 wake_up_interruptible(&reader->wait);
+diff --git a/drivers/misc/ibmasm/command.c b/drivers/misc/ibmasm/command.c
+index 2863657fa2683..733dd30fbaccf 100644
+--- a/drivers/misc/ibmasm/command.c
++++ b/drivers/misc/ibmasm/command.c
+@@ -94,7 +94,7 @@ static inline void do_exec_command(struct service_processor *sp)
+ 	}
  }
  
 -/**
 +/*
-  * receive_event
-  * Called by the interrupt handler when a dot command of type sp_event is
-  * received.
-@@ -68,7 +68,7 @@ static inline int event_available(struct event_buffer *b, struct event_reader *r
- 	return (r->next_serial_number < b->next_serial_number);
+  * exec_command
+  * send a command to a service processor
+  * Commands are executed sequentially. One command (sp->current_command)
+@@ -140,7 +140,7 @@ static void exec_next_command(struct service_processor *sp)
+ 	}
  }
  
 -/**
 +/*
-  * get_next_event
-  * Called by event readers (initiated from user space through the file
-  * system).
+  * Sleep until a command has failed or a response has been received
+  * and the command status been updated by the interrupt handler.
+  * (see receive_response).
+@@ -153,7 +153,7 @@ void ibmasm_wait_for_response(struct command *cmd, int timeout)
+ 				timeout * HZ);
+ }
+ 
+-/**
++/*
+  * receive_command_response
+  * called by the interrupt handler when a dot command of type command_response
+  * was received.
 -- 
 2.25.1
 
