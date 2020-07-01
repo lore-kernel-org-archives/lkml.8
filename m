@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C275BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A732077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7B62077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgGAJKB (ORCPT
+        id S1729479AbgGAJJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:10:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:47902 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 05:09:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:47844 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729494AbgGAJJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:47 -0400
+        id S1726255AbgGAJJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:09:41 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9949213FD;
-        Wed,  1 Jul 2020 02:09:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 071C61396;
+        Wed,  1 Jul 2020 02:09:41 -0700 (PDT)
 Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D2AF93F68F;
-        Wed,  1 Jul 2020 02:09:44 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 42E793F68F;
+        Wed,  1 Jul 2020 02:09:39 -0700 (PDT)
 From:   Ionela Voinescu <ionela.voinescu@arm.com>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
         catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
@@ -33,9 +33,9 @@ To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
 Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
         ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] arch_topology,arm64: define arch_scale_freq_invariant()
-Date:   Wed,  1 Jul 2020 10:07:50 +0100
-Message-Id: <20200701090751.7543-8-ionela.voinescu@arm.com>
+Subject: [PATCH 5/8] cpufreq: report whether cpufreq supports Frequency Invariance (FI)
+Date:   Wed,  1 Jul 2020 10:07:48 +0100
+Message-Id: <20200701090751.7543-6-ionela.voinescu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
 References: <20200701090751.7543-1-ionela.voinescu@arm.com>
@@ -44,102 +44,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+Now that the update of the FI scale factor is done in cpufreq core for
+selected functions - target_index() and fast_switch(), and drivers can
+mark themselves as providing custom support for FI as well, by calling
+arch_set_freq_scale() themselves, we can provide feedback to the task
+scheduler (and not only) on whether cpufreq supports FI.
 
-arch_scale_freq_invariant() is used by schedutil to determine whether
-the scheduler's load-tracking signals are frequency invariant. Its
-definition is overridable, though by default it is hardcoded to 'true'
-if arch_scale_freq_capacity() is defined ('false' otherwise).
+For this purpose, provide error and debug messages, together with an
+external function to expose whether the cpufreq drivers support FI, by
+using a static key.
 
-This behaviour is not overridden on arm, arm64 and other users of the
-generic arch topology driver, which is somewhat precarious:
-arch_scale_freq_capacity() will always be defined, yet not all cpufreq
-drivers are guaranteed to drive the frequency invariance scale factor
-setting. In other words, the load-tracking signals may very well *not*
-be frequency invariant.
-
-Now that cpufreq can be queried on whether the current driver is driving
-the Frequency Invariance (FI) scale setting, the current situation can
-be improved. This combines the query of whether cpufreq supports the
-setting of the frequency scale factor, with whether all online CPUs are
-counter-based FI enabled.
-
-While cpufreq FI enablement applies at system level, for all CPUs,
-counter-based FI support could also be used for only a subset of CPUs to
-set the invariance scale factor. Therefore, if cpufreq-based FI support
-is present, we consider the system to be invariant. If missing, we
-require all online CPUs to be counter-based FI enabled in order for the
-full system to be considered invariant.
-
-If the system ends up not being invariant, a new condition is needed in
-the counter initialization code that disables all scale factor setting
-based on counters.
-
-Precedence of counters over cpufreq use is not important here. The
-invariant status is only given to the system if all CPUs have at least
-one method of setting the frequency scale factor.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm64/kernel/topology.c  | 7 +++++++
- drivers/base/arch_topology.c  | 6 ++++++
- include/linux/arch_topology.h | 4 ++++
- 3 files changed, 17 insertions(+)
+ drivers/cpufreq/cpufreq.c | 26 ++++++++++++++++++++++++++
+ include/linux/cpufreq.h   |  5 +++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 9a9f2b8dedf5..4064d39bb66d 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -246,6 +246,13 @@ static int __init init_amu_fie(void)
- 		static_branch_enable(&amu_fie_key);
- 	}
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 83b58483a39b..60b5272c5d80 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -59,6 +59,9 @@ static struct cpufreq_driver *cpufreq_driver;
+ static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
+ static DEFINE_RWLOCK(cpufreq_driver_lock);
  
-+	/*
-+	 * If the system is not fully invariant after AMU init, disable
-+	 * partial use of counters for frequency invariance.
-+	 */
-+	if (!topology_scale_freq_invariant())
-+		static_branch_disable(&amu_fie_key);
++/* Mark support for the scheduler's frequency invariance engine */
++static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
 +
- free_valid_mask:
- 	free_cpumask_var(valid_cpus);
+ /* Flag to suspend/resume CPUFreq governors */
+ static bool cpufreq_suspended;
  
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 8447e1f30340..8686771b866d 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -21,6 +21,12 @@
- #include <linux/sched.h>
- #include <linux/smp.h>
+@@ -67,6 +70,26 @@ static inline bool has_target(void)
+ 	return cpufreq_driver->target_index || cpufreq_driver->target;
+ }
  
-+bool topology_scale_freq_invariant(void)
++static inline
++void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
 +{
-+	return cpufreq_sets_freq_scale() ||
-+	       arch_freq_counters_available(cpu_online_mask);
++	if ((driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE) ||
++	    ((driver->target_index || driver->fast_switch)
++	     && !(driver->target || driver->setpolicy))) {
++
++		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
++		pr_debug("%s: Driver %s can provide frequency invariance.",
++			 __func__, driver->name);
++	} else
++		pr_err("%s: Driver %s cannot provide frequency invariance.",
++		__func__, driver->name);
 +}
 +
- __weak bool arch_freq_counters_available(const struct cpumask *cpus)
++bool cpufreq_sets_freq_scale(void)
++{
++	return static_branch_likely(&cpufreq_set_freq_scale);
++}
++
+ /* internal prototypes */
+ static unsigned int __cpufreq_get(struct cpufreq_policy *policy);
+ static int cpufreq_init_governor(struct cpufreq_policy *policy);
+@@ -2713,6 +2736,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+ 	cpufreq_driver = driver_data;
+ 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+ 
++	enable_cpufreq_freq_invariance(cpufreq_driver);
++
+ 	if (driver_data->setpolicy)
+ 		driver_data->flags |= CPUFREQ_CONST_LOOPS;
+ 
+@@ -2782,6 +2807,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
+ 	cpus_read_lock();
+ 	subsys_interface_unregister(&cpufreq_interface);
+ 	remove_boost_sysfs_file();
++	static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
+ 	cpuhp_remove_state_nocalls_cpuslocked(hp_online);
+ 
+ 	write_lock_irqsave(&cpufreq_driver_lock, flags);
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index 42668588f9f8..8b6369d657bd 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -217,6 +217,7 @@ void refresh_frequency_limits(struct cpufreq_policy *policy);
+ void cpufreq_update_policy(unsigned int cpu);
+ void cpufreq_update_limits(unsigned int cpu);
+ bool have_governor_per_policy(void);
++bool cpufreq_sets_freq_scale(void);
+ struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
+ void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
+ void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
+@@ -237,6 +238,10 @@ static inline unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
  {
- 	return false;
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 4be0315700cb..6272fbc05cde 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -53,6 +53,10 @@ struct cpu_topology {
- };
+ 	return 0;
+ }
++static inline bool cpufreq_sets_freq_scale(void)
++{
++	return false;
++}
+ static inline void disable_cpufreq(void) { }
+ #endif
  
- #ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
-+
-+extern bool topology_scale_freq_invariant(void);
-+#define arch_scale_freq_invariant() topology_scale_freq_invariant()
-+
- extern struct cpu_topology cpu_topology[NR_CPUS];
- 
- #define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
 -- 
 2.17.1
 
