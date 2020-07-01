@@ -2,178 +2,166 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D971C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3A520870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A2F20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Av78oiyw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J+YIXUya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgGATW7 (ORCPT
+        id S1726129AbgGATZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:22:59 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:20389 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbgGATW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:22:58 -0400
-Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efce28e0000>; Thu, 02 Jul 2020 03:22:54 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 Jul 2020 12:22:54 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate101.nvidia.com on Wed, 01 Jul 2020 12:22:54 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
- 2020 19:22:50 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 1 Jul 2020 19:22:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FejRiXDR+KUKR45cUVNlCHjj/gnrF1TU+6Z3WbepCWM63HhBit65on+ECH91mzTIsSXHH83mpbRkAQcaVtI9o0ZnIb7gmsnGNSkP9CN/h2KUzOCtAvc8Jcff2lTEpW3rwINJlKxyjCgeP5y4fnGNIrzRup+I5/ZrLqsAAcZUyj5iLGSaWEcOFKHAIoJG5MgHBLvD+UOzXtxNIWcdcDm7hmimV9DF75UGhF3qWyMP2b7NNLBEbsmuYK4zvuzvmPKrdc/M3CvkOpoiBjmj5EA+bmw3MSWNn2z2Rf5olLYTGNEq/1IoaSjY3RgHnTVfrEZ63CP1wi6JY7IWJFJsYLz7cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=npiE+DZxGztABdxQds5tfE47KtXBU3Exj1JwJcB4ex0=;
- b=GVU4Q9mlzBx+nCuZ9nszEmQWSrr1axgDWCPPgAwLrafC46WCZDHlD2s4DCVmGmOIWJLXzIuNQVIDXM1aqF0eQ0d6FYrvipZQ9Vsbexk3lQUMD3NjC3F1hWFxJOKaoqteyxIXwuUiXo+/QbMmsLSA6W3EUXKKpQ0/IOwzb5J6kz/Y4IDTg6iTsgVC7Zk8/+9JNZeTAw6xC8EM+sCrvi8bBmajJqsIuICSZ2xUMVvEHaeJHWmVRZmrUHZljsXJUFYaZgsBu5uBdeeFoIN6U8+iTj23RiyrwC4u/BAGyKOdZT+cnO0X3pnnCeSPdR/bLNC3YCWzF1zR7ozlYHdOB0t//w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
- by BYAPR12MB3064.namprd12.prod.outlook.com (2603:10b6:a03:da::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Wed, 1 Jul
- 2020 19:22:47 +0000
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
- 19:22:47 +0000
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-CC:     Sachin Nikam <Snikam@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        "Bryan Huntsman" <bhuntsman@nvidia.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Pritesh Raithatha" <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Yu-Huan Hsu <YHsu@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: RE: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
- implementation hooks
-Thread-Topic: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
- implementation hooks
-Thread-Index: AQHWTnL3VCCI3Y3jhE+XVIWcwjPCvKjw1msAgAA8hACAAf2WwIAACi0AgAAAusA=
-Date:   Wed, 1 Jul 2020 19:22:46 +0000
-Message-ID: <BYAPR12MB2822911461ABAAC205E76DE7B36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-4-vdumpa@nvidia.com>
- <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
- <6c2ce909-c71b-351f-79f5-b1a4b4c0e4ac@arm.com>
- <BYAPR12MB282244D2B008E1C8CA57916BB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
- <446ffe79-3a44-5d41-459f-b698a1cc361b@arm.com>
-In-Reply-To: <446ffe79-3a44-5d41-459f-b698a1cc361b@arm.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-07-01T19:22:39.5041949Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=9b388edc-4a0f-4f83-aa33-c45582982b13;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [216.228.112.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4b421c2-523e-4f49-3fbc-08d81df42328
-x-ms-traffictypediagnostic: BYAPR12MB3064:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3064668DA837A27C6B138834B36C0@BYAPR12MB3064.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 04519BA941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pNmG4wMUiZiqhDMzoE9vz/D04d7tvmvCMqmWCTiaJcMMrIN3LltNIB4l4nWbx1QSzdSbGmaZA8yJkDDLaTMGXF/HJuMKsUnyveGKVKXz+loqyzI5q8tqxUTj2a2TQQiazgVo1BVOsSxw+wY42Ni3uKjQ5VMVh49J44bEYRsWOZsl2tpcjCxoW8+5ArPLBuxCvkzaab9mN+axLq0C89EzTEJD1G4etlGDdSPNlFkMK5u9SFZj6J+t8hn51OS0MNgeXSbo8NH0CZvJeAzmnol5qIOnEqtZRdB6gqCM0mw8OuXvEAJSjQF5qc9K8asoWzFheVpzyNXIgVhOnoUrj9mroQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(376002)(396003)(346002)(366004)(5660300002)(7696005)(6636002)(4326008)(8936002)(55016002)(316002)(76116006)(54906003)(107886003)(33656002)(478600001)(8676002)(83380400001)(66476007)(64756008)(2906002)(66556008)(66446008)(26005)(71200400001)(186003)(9686003)(66946007)(6506007)(4744005)(86362001)(52536014)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: MhcqX2A2fruUQ3cbHffHzQSrzmTc6mDVICp5qm6qYf/WPcSLq/7oR5ZMGch57X+Ij+4vdlO9O792GmHevtaMLFZnUeqGXGkCMgyJ5bPdTCl+W8+t4prxBDHrPXuBL45OhNPP7CJTYhJOG0M2uB7Gk1gnlHYMENvY44PcN3F3RBOAc5AZjwIBHWJDdjQi+acVhUV9TcdfADg1xQdmKR8VtBy5+GrcJvx39XEFi9GAdLVwjaKgQJ2yPxRnQNvs8+Y0tBN2lKROgtBxwVvuB42Xh0RsNT7vqOYKCmkoItrtqs2lWZ3eX+Wngj42mzX89uBGKD/2nYewrSiRzOwC5XsWlFjOPBQnmeiQgu1FbDILbN9OrDcTLpwNsG/BcOgdUapm95dGN6fU81eXgt/zsn9KTyPsbTFLQfF0YAz+15EQtLpfts7SEnXTBtcDSa0Xl7octdIUbhhtyhzGJ9V9TCjuGYGA2tVjj6NU2OebzsVaiTWtFh11XAPbb17U0tLY4k5+
+        Wed, 1 Jul 2020 15:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgGATZL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 15:25:11 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC11C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 12:25:11 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 207so11228640pfu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 12:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=sBsUXVNlnuQSVvIzRU1R9guTj/lYh/qxcsRbYVmHtpo=;
+        b=J+YIXUyax0RYTHIbZKa4cWlTKXbWa5VU3LAw34i1eIv+ejZAPAv8VZn3v1wQxF/07N
+         tQu+gDpVprCEqnjUwlhy5w9wBA+8AeDnu2o/5yLhAQIU6ol+xtZZTv1QD0uELxgxn3+z
+         FatOseSEPAlPnKoigbwvfpACYhT2fmWY2NoCH3X+QRImw50FPMgFe5jg3dNnwv4P6LDV
+         0lkCDVFk8eoqs/tmt3Zad8ghvFKKi33+6aKk6kqgZerzM/IoHYHypaWClFMJnynhL27A
+         zOMIpAfNDkeK87gF/84Oxn5W1cUvuflxU9+viGMpag7BXzZt+8BUK1xrRk2/mEhfcimf
+         mf7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=sBsUXVNlnuQSVvIzRU1R9guTj/lYh/qxcsRbYVmHtpo=;
+        b=buUQTx+hWx+PQ99FiHNwgAFSwQqKUNg32pnlqKvyEbjhVEb0auh7MglVOzmMc2h4KD
+         9a42rd26qyDDht9yMShqPoWPurscj/Q6QIGPVvSmsZWA1UCeXtpD9c8C4lMA7FwrIVvZ
+         RunIMGqTJXLVJ2ZISP6SQ0mbv3eNyMVFEHOq5NKgdwIswP0MsuOMSHTJqGbNvtvPVvvh
+         ZEjOo6teMK5XtMWfU+vq/AGp1wYvTuq89VQgSMvuyG3KWWz0n4BXqlj/wpT3bjrQ7Bt9
+         RGHte2QqGGSUETy5iM43Lp0az9zxugzD/hT5TqdRAz+auZoi4YpucM6PcjVE9t8C90QY
+         UyOQ==
+X-Gm-Message-State: AOAM531aNl8I9M4IyoqM/KLnawC+Svk/QhMaFyNXci6u/HcZaW+l9V+q
+        0m5jxGgeZkaKVrXHavPzpjBOqA==
+X-Google-Smtp-Source: ABdhPJyGxbCQkrju0gfdcbhYhDulZvMGIkoGO9+77qCi0+Grm0m8vysrkBTQPY8oAmOqTtTZ2wlPqA==
+X-Received: by 2002:a63:201f:: with SMTP id g31mr20700099pgg.186.1593631510368;
+        Wed, 01 Jul 2020 12:25:10 -0700 (PDT)
+Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
+        by smtp.gmail.com with ESMTPSA id j36sm6782407pgj.39.2020.07.01.12.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 12:25:09 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 12:25:08 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Dave Hansen <dave.hansen@intel.com>
+cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kbusch@kernel.org, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, dan.j.williams@intel.com
+Subject: Re: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of
+ discard
+In-Reply-To: <c06b4453-c533-a9ba-939a-8877fb301ad6@intel.com>
+Message-ID: <alpine.DEB.2.23.453.2007011203500.1908531@chino.kir.corp.google.com>
+References: <20200629234503.749E5340@viggo.jf.intel.com> <20200629234509.8F89C4EF@viggo.jf.intel.com> <alpine.DEB.2.22.394.2006301732010.1644114@chino.kir.corp.google.com> <c06b4453-c533-a9ba-939a-8877fb301ad6@intel.com>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4b421c2-523e-4f49-3fbc-08d81df42328
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 19:22:46.9752
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F2INbIGyKny2bPhIWseKU9U0oBKPy60xQa1wHQWKdnMHh0r7uFavmYu09UJvLK8J2bWJCu7WSSTodDZndv2JCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3064
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593631374; bh=npiE+DZxGztABdxQds5tfE47KtXBU3Exj1JwJcB4ex0=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=Av78oiyw2h0d8Ftv6lnaG5kXX873St/dW2C03y0UrzPZYr5WH+H0znCbwJBkOxvnm
-         t4NCJiRQiBSWmSVwYbLoXogVDtcqHO1Kxlv2in22EgIqIjeIUA16c8kJDko0mOUX6o
-         C3z9T+MiCrB6Et4AYd5tez6qRZOptqEFj7vipY4EXn6gR+J8//hkvYwGjvBXh7zMcC
-         N6KxBAGeHdQ/hCXdMMm++BqnwaycFoFQ0uKO2HcJww49TOGRkN2Va9HtKGQJFSoRfm
-         x4UIaNtpo2ROfcL6rgUvwBVsGTqFCNGXrMVDK5sdc6ey8b+SfSWF+aRzQnYBBbTezG
-         NR1aHPuxmESRA==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gV2l0aCBzaGFyZWQgaXJxIGxpbmUsIHRoZSBjb250ZXh0IGZhdWx0IGlkZW50aWZpY2F0aW9u
-IGlzIG5vdCBvcHRpbWFsIGFscmVhZHkuICBSZWFkaW5nIGFsbCB0aGUgY29udGV4dCBiYW5rcyBh
-bGwgdGhlIHRpbWUgY2FuIGJlIGFkZGl0aW9uYWwgbW1pbyByZWFkIG92ZXJoZWFkLiBCdXQsIGl0
-IG1heSBub3QgaHVydCB0aGUgcmVhbCB1c2UgY2FzZXMgYXMgdGhlc2UgaGFwcGVuIG9ubHkgd2hl
-biB0aGVyZSBhcmUgYnVncy4NCg0KPlJpZ2h0LCBJIGRpZCBwb25kZXIgdGhlIGlkZWEgb2YgYSB3
-aG9sZSBwcm9ncmFtbWF0aWMgInJlcXVlc3RfY29udGV4dF9pcnEiIGhvb2sgdGhhdCB3b3VsZCBh
-bGxvdyByZWdpc3RlcmluZyB0aGUgaGFuZGxlciBmb3IgYm90aCBpbnRlcnJ1cHRzIHdpdGggdGhl
-IGFwcHJvcHJpYXRlIGNvbnRleHQgYmFuayBhbmQgaW5zdGFuY2UgZGF0YSwgYnV0IHNpbmNlIGFs
-bCBpbnRlcnJ1cHRzIGFyZSBjdXJyZW50bHkgdW5leHBlY3RlZCBpdCBzZWVtcyBzb21ld2hhdCBo
-YXJkIHRvIGp1c3RpZnkgdGhlIGV4dHJhIGNvbXBsZXhpdHkuIE9idmlvdXNseSB3ZSBjYW4gcmV2
-aXNpdCB0aGlzIGluIGZ1dHVyZSBpZiB5b3Ugd2FudCB0byBzdGFydCBhY3R1YWxseSBkb2luZyBz
-b21ldGhpbmcgd2l0aCBmYXVsdHMgbGlrZSB0aGUgcWNvbSBHUFUgZm9sa3MgZG8uDQoNClRoYW5r
-cywgSSB3b3VsZCBqdXN0IGF2b2lkIG1ha2luZyBjaGFuZ2VzIHRvIGludGVycnVwdCBoYW5kbGVy
-cyB0aWxsIGl0IGlzIHJlYWxseSBuZWNlc3NhcnkgaW4gZnV0dXJlLiBUaGUgY3VycmVudCBjb2Rl
-IHdvdWxkIGp1c3QgYmUgc2ltcGxlIGFuZCBmdW5jdGlvbmFsIHdpdGggbW9yZSBpbnRlcnJ1cHRz
-IHdoZW4gdGhlcmUgYXJlIG11bHRpcGxlIGZhdWx0cy4NCg0KLUtSDQo=
+On Wed, 1 Jul 2020, Dave Hansen wrote:
+
+> > Could this cause us to break a user's mbind() or allow a user to 
+> > circumvent their cpuset.mems?
+> 
+> In its current form, yes.
+> 
+> My current rationale for this is that while it's not as deferential as
+> it can be to the user/kernel ABI contract, it's good *overall* behavior.
+>  The auto-migration only kicks in when the data is about to go away.  So
+> while the user's data might be slower than they like, it is *WAY* faster
+> than they deserve because it should be off on the disk.
+> 
+
+It's outside the scope of this patchset, but eventually there will be a 
+promotion path that I think requires a strict 1:1 relationship between 
+DRAM and PMEM nodes because otherwise mbind(), set_mempolicy(), and 
+cpuset.mems become ineffective for nodes facing memory pressure.
+
+For the purposes of this patchset, agreed that DRAM -> PMEM -> swap makes 
+perfect sense.  Theoretically, I think you could have DRAM N0 and N1 and 
+then a single PMEM N2 and this N2 can be the terminal node for both N0 and 
+N1.  On promotion, I think we need to rely on something stronger than 
+autonuma to decide which DRAM node to promote to: specifically any user 
+policy put into effect (memory tiering or autonuma shouldn't be allowed to 
+subvert these user policies).
+
+As others have mentioned, we lose the allocation or process context at the 
+time of demotion or promotion and any workaround for that requires some 
+hacks, such as mapping the page to cpuset (what is the right solution for 
+shared pages?) or adding NUMA locality handling to memcg.
+
+I think a 1:1 relationship between DRAM and PMEM nodes is required if we 
+consider the eventual promotion of this memory so that user memory can't 
+eventually reappear on a DRAM node that is not allowed by mbind(), 
+set_mempolicy(), or cpuset.mems.  I think it also makes this patchset much 
+simpler.
+
+> > Because we don't have a mapping of the page back to its allocation 
+> > context (or the process context in which it was allocated), it seems like 
+> > both are possible.
+> > 
+> > So let's assume that migration nodes cannot be other DRAM nodes.  
+> > Otherwise, memory pressure could be intentionally or unintentionally 
+> > induced to migrate these pages to another node.  Do we have such a 
+> > restriction on migration nodes?
+> 
+> There's nothing explicit.  On a normal, balanced system where there's a
+> 1:1:1 relationship between CPU sockets, DRAM nodes and PMEM nodes, it's
+> implicit since the migration path is one deep and goes from DRAM->PMEM.
+> 
+> If there were some oddball system where there was a memory only DRAM
+> node, it might very well end up being a migration target.
+> 
+
+Shouldn't DRAM->DRAM demotion be banned?  It's all DRAM and within the 
+control of mempolicies and cpusets today, so I had assumed this is outside 
+the scope of memory tiering support.  I had assumed that memory tiering 
+support was all about separate tiers :)
+
+> >> +static struct page *alloc_demote_node_page(struct page *page, unsigned long node)
+> >> +{
+> >> +	/*
+> >> +	 * 'mask' targets allocation only to the desired node in the
+> >> +	 * migration path, and fails fast if the allocation can not be
+> >> +	 * immediately satisfied.  Reclaim is already active and heroic
+> >> +	 * allocation efforts are unwanted.
+> >> +	 */
+> >> +	gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
+> >> +			__GFP_NOMEMALLOC | __GFP_THISNODE | __GFP_HIGHMEM |
+> >> +			__GFP_MOVABLE;
+> > 
+> > GFP_NOWAIT has the side-effect that it does __GFP_KSWAPD_RECLAIM: do we 
+> > actually want to kick kswapd on the pmem node?
+> 
+> In my mental model, cold data flows from:
+> 
+> 	DRAM -> PMEM -> swap
+> 
+> Kicking kswapd here ensures that while we're doing DRAM->PMEM migrations
+> for kinda cold data, kswapd can be working on doing the PMEM->swap part
+> on really cold data.
+> 
+
+Makes sense.
