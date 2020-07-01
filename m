@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D4420747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87052067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="d5cAgCYY"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gy45UMG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgGAKbw (ORCPT
+        id S1730083AbgGAKb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:31:52 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42428 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 06:31:57 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42460 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729997AbgGAKbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:31:39 -0400
+        id S1729991AbgGAKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:31:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599493; bh=DvITnUxZVcnsKisp8VN9mijP099DQ56ot4eLoJf/s34=;
+        t=1593599492; bh=io8IIDWW5fH3zfZMutivNOdZXhTkjY8qZHk7MdbKacI=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=d5cAgCYYo9BAdY5QF30KJ1wlKezbARyhLlDubu3e8Gp7xC35/Tmapd+SZ3Jdfds0Y
-         oKNP4pXz8szJTwMhX+Ci+fqoTE38t29pFNEuQbJH5CKr0VeHC3vpHg8JbSUgyfDIow
-         eqnKaRNKDbjux/3AJj1+vhLI0A6UAY9Qcu60zQDs=
+        b=gy45UMG7npGE5n3k3wmTIWyxBRnS3RNnq0zN/QhbfTZmzOZWPdJVXclVZhxc62Mfg
+         z5y2m6G1YbAGjR3ctVxjMOrpB/CG2my9Ihja8LqpIP3zJOnDb2B6YGd5EMERsJ6trQ
+         0jvtNZsoedRGwUBKixGUQ2eaYfGGyRFi9JGH+XN4=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -47,9 +47,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v6 10/13] drm/panel: st7703: Enter sleep after display off
-Date:   Wed,  1 Jul 2020 12:31:23 +0200
-Message-Id: <20200701103126.1512615-11-megous@megous.com>
+Subject: [PATCH v6 07/13] drm/panel: st7703: Move code specific to jh057n closer together
+Date:   Wed,  1 Jul 2020 12:31:20 +0200
+Message-Id: <20200701103126.1512615-8-megous@megous.com>
 In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
 References: <20200701103126.1512615-1-megous@megous.com>
 MIME-Version: 1.0
@@ -59,40 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The datasheet suggests to issue sleep in after display off
-as a part of the panel's shutdown sequence.
+It's better than having it spread around the driver.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 50 +++++++++----------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-index 5cd5503f894f..0c4167994d01 100644
+index 08cbc316266c..d03aab10cfef 100644
 --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
 +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-@@ -395,8 +395,19 @@ static int st7703_disable(struct drm_panel *panel)
- {
- 	struct st7703 *ctx = panel_to_st7703(panel);
- 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to turn off the display: %d\n", ret);
- 
--	return mipi_dsi_dcs_set_display_off(dsi);
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to enter sleep mode: %d\n", ret);
-+
-+	return 0;
+@@ -153,6 +153,31 @@ static int jh057n_init_sequence(struct st7703 *ctx)
+ 	return 0;
  }
  
- static int st7703_unprepare(struct drm_panel *panel)
++static const struct drm_display_mode jh057n00900_mode = {
++	.hdisplay    = 720,
++	.hsync_start = 720 + 90,
++	.hsync_end   = 720 + 90 + 20,
++	.htotal	     = 720 + 90 + 20 + 20,
++	.vdisplay    = 1440,
++	.vsync_start = 1440 + 20,
++	.vsync_end   = 1440 + 20 + 4,
++	.vtotal	     = 1440 + 20 + 4 + 12,
++	.vrefresh    = 60,
++	.clock	     = 75276,
++	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++	.width_mm    = 65,
++	.height_mm   = 130,
++};
++
++struct st7703_panel_desc jh057n00900_panel_desc = {
++	.mode = &jh057n00900_mode,
++	.lanes = 4,
++	.mode_flags = MIPI_DSI_MODE_VIDEO |
++		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
++	.format = MIPI_DSI_FMT_RGB888,
++	.init_sequence = jh057n_init_sequence,
++};
++
+ static int st7703_enable(struct drm_panel *panel)
+ {
+ 	struct st7703 *ctx = panel_to_st7703(panel);
+@@ -226,31 +251,6 @@ static int st7703_prepare(struct drm_panel *panel)
+ 	return ret;
+ }
+ 
+-static const struct drm_display_mode jh057n00900_mode = {
+-	.hdisplay    = 720,
+-	.hsync_start = 720 + 90,
+-	.hsync_end   = 720 + 90 + 20,
+-	.htotal	     = 720 + 90 + 20 + 20,
+-	.vdisplay    = 1440,
+-	.vsync_start = 1440 + 20,
+-	.vsync_end   = 1440 + 20 + 4,
+-	.vtotal	     = 1440 + 20 + 4 + 12,
+-	.vrefresh    = 60,
+-	.clock	     = 75276,
+-	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+-	.width_mm    = 65,
+-	.height_mm   = 130,
+-};
+-
+-struct st7703_panel_desc jh057n00900_panel_desc = {
+-	.mode = &jh057n00900_mode,
+-	.lanes = 4,
+-	.mode_flags = MIPI_DSI_MODE_VIDEO |
+-		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
+-	.format = MIPI_DSI_FMT_RGB888,
+-	.init_sequence = jh057n_init_sequence,
+-};
+-
+ static int st7703_get_modes(struct drm_panel *panel,
+ 			    struct drm_connector *connector)
+ {
 -- 
 2.27.0
 
