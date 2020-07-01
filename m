@@ -2,209 +2,107 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB565C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF6620704
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C766220704
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LHVWr8fC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzgI19rO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgGAEMG (ORCPT
+        id S1726102AbgGAEMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 00:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
+        Wed, 1 Jul 2020 00:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgGAEMG (ORCPT
+        with ESMTP id S1726048AbgGAEMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 00:12:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD8CC061755;
-        Tue, 30 Jun 2020 21:12:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cxS26j1kqb/npKNutTlSyM7+/KYZexcgqH00K0WcRKE=; b=LHVWr8fCHMQRh0I7lznNiZygOE
-        H0xyr9K+doOszin3HKJLMAWX2ybRAnkNu8ctZRUlzMubMCf0HJV4/cRJmy/2K2TQ0Tu6oE4J9Zl7o
-        Q79uR27aWh/aUtwege3ZI7nedkSmptSvqIyBu1ZqcS7QMX+iQbFInLf7PRpbDxsRfnc07oaJtPIIx
-        yT8drQRhIo9a83DbUddoeseLWSBIxJa33PECmIVxV7TMjhGDsH3ZlObP0ugZexU6DX6Px7j3ZH3KR
-        0KxNRlT/lNQjFYIaBm069nx3xKkxWotlnXPrHDMiP6lLjU2sgQIekuNhQ6nrKlAFIqKuFisW8tEjs
-        x1S89aXg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqU6N-0001r3-5N; Wed, 01 Jul 2020 04:12:03 +0000
-Date:   Wed, 1 Jul 2020 05:12:03 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 6/6] mm: Add memalloc_nowait
-Message-ID: <20200701041203.GQ25523@casper.infradead.org>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625113122.7540-7-willy@infradead.org>
- <20200629050851.GC1492837@kernel.org>
- <20200629121816.GC25523@casper.infradead.org>
- <20200629125231.GJ32461@dhcp22.suse.cz>
- <6421BC93-CF2F-4697-B5CB-5ECDAA9FCB37@kernel.org>
- <20200629212830.GJ25523@casper.infradead.org>
- <20200630063436.GA2369@dhcp22.suse.cz>
+        Wed, 1 Jul 2020 00:12:48 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38EDC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:12:47 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j1so10407815pfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k+fR5g5hKeYGrL/DpC1exUTm8ZVYDFKB3ckR2riVDD0=;
+        b=UzgI19rOE764vGU7SFQDdRgSO+xjaPLz5krZf9jiRrmfIxzrsoI2FhIiTOXjr9HFMx
+         Q2Fei2QAd7dFes10PTZO9Or5QnPhp9QyP6jCq2KQAlVKMiGdfeF8KhtNMhzkbT/R9JLw
+         N74Bfo/Ug8cSTqeWL+oJAzg7VpLoAUXYwf2zRpWkXABw82qRCpc/E74pb1ga+8iJGFpq
+         2aQ/byMoNqjPerVz8G2PrafOZoqe9jCSLOKXvkElp9wLnXjFl1A8VU/5sqna22ciJ0Cr
+         0FRHk7HFvnxkpKy4NBx7H518AOePtMrvo+/n9uWfObQIwZV7h58/N+2Bqk2F5MRJEh8r
+         2OGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k+fR5g5hKeYGrL/DpC1exUTm8ZVYDFKB3ckR2riVDD0=;
+        b=REBsWV+dQB4nNh8pEwFOKSNE2b0pA4nY8lFsU0SI6c5YSSnimP+npa+nJRf8if4vqk
+         +YLjET9MSUPfWxVrrwcESNZOm8slYSODBubAWlIlnz3OWJl7+PaeNazdJ/hGUCU1iVhe
+         OmzBY8SaRU1YOkojX2nJxpspFNgaJnudfXalFKww/IM/3unOROu/iWN9evH9Y6AmntOE
+         sl2aadYSMdhFwd98nhJRYld9faHEvbLQM2cToGmKXoZeJx4p8f4KDAirkeWA8WKNvg/J
+         NkqrVJeNa/ZudaBnlh4LX9Jvdb5/AljZQqAYLq1/HBsibqekgdnGhPr/4PZuT3hNFTh0
+         V+iw==
+X-Gm-Message-State: AOAM533O4j+22xr3o34MvIY7xl3twEPMYrLkUk0He70FF/Jhd6HmYMUn
+        33vj0PTiHgsezFntSyoRkJruig==
+X-Google-Smtp-Source: ABdhPJxupVepWv4QobFpsTdi9bcER9PfEdaM7M6SQTle+pu75UzPH7+1PuTQSLivgBO0Bq38UpEGKA==
+X-Received: by 2002:a62:9251:: with SMTP id o78mr8798030pfd.256.1593576767290;
+        Tue, 30 Jun 2020 21:12:47 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id u14sm4346023pfk.211.2020.06.30.21.12.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jun 2020 21:12:46 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 09:42:44 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xin Hao <xhao@linux.alibaba.com>
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2]  cpufreq: CPPC: fix some unreasonable codes in
+ cppc_cpufreq_perf_to_khz()
+Message-ID: <20200701041244.bhes5bvtcfvm3zbb@vireshk-i7>
+References: <20200701032610.11944-1-xhao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630063436.GA2369@dhcp22.suse.cz>
+In-Reply-To: <20200701032610.11944-1-xhao@linux.alibaba.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:34:36AM +0200, Michal Hocko wrote:
-> On Mon 29-06-20 22:28:30, Matthew Wilcox wrote:
-> [...]
-> > The documentation is hard to add a new case to, so I rewrote it.  What
-> > do you think?  (Obviously I'll split this out differently for submission;
-> > this is just what I have in my tree right now).
+On 01-07-20, 11:26, Xin Hao wrote:
+>  The 'caps' variable has been defined, so there is no need to get
+>  'highest_perf' value through 'cpu->caps.highest_perf', you can use
+>  'caps->highest_perf' instead.
 > 
-> I am fine with your changes. Few notes below.
-
-Thanks!
-
-> > -It turned out though that above approach has led to
-> > -abuses when the restricted gfp mask is used "just in case" without a
-> > -deeper consideration which leads to problems because an excessive use
-> > -of GFP_NOFS/GFP_NOIO can lead to memory over-reclaim or other memory
-> > -reclaim issues.
+> Signed-off-by: Xin Hao <xhao@linux.alibaba.com>
+> ---
+>  drivers/cpufreq/cppc_cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I believe this is an important part because it shows that new people
-> coming to the existing code shouldn't take it as correct and rather
-> question it. Also having a clear indication that overuse is causing real
-> problems that might be not immediately visible to subsystems outside of
-> MM.
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 257d726a4456..444ee76a6bae 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -161,7 +161,7 @@ static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
+>  		if (!max_khz)
+>  			max_khz = cppc_get_dmi_max_khz();
+>  		mul = max_khz;
+> -		div = cpu->perf_caps.highest_perf;
+> +		div = caps->highest_perf;
+>  	}
+>  	return (u64)perf * mul / div;
+>  }
 
-It seemed to say a lot of the same things as this paragraph:
+Applied. Thanks.
 
-+You may notice that quite a few allocations in the existing code specify
-+``GFP_NOIO`` or ``GFP_NOFS``. Historically, they were used to prevent
-+recursion deadlocks caused by direct memory reclaim calling back into
-+the FS or IO paths and blocking on already held resources. Since 4.12
-+the preferred way to address this issue is to use the new scope APIs
-+described below.
-
-Since this is in core-api/ rather than vm/, I felt that discussion of
-the problems that it causes to the mm was a bit too much detail for the
-people who would be reading this document.  Maybe I could move that
-information into a new Documentation/vm/reclaim.rst file?
-
-Let's see if Our Grumpy Editor has time to give us his advice on this.
-
-> > -FS/IO code then simply calls the appropriate save function before
-> > -any critical section with respect to the reclaim is started - e.g.
-> > -lock shared with the reclaim context or when a transaction context
-> > -nesting would be possible via reclaim.  
-> 
-> [...]
-> 
-> > +These functions should be called at the point where any memory allocation
-> > +would start to cause problems.  That is, do not simply wrap individual
-> > +memory allocation calls which currently use ``GFP_NOFS`` with a pair
-> > +of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
-> > +find the lock which is taken that would cause problems if memory reclaim
-> > +reentered the filesystem, place a call to memalloc_nofs_save() before it
-> > +is acquired and a call to memalloc_nofs_restore() after it is released.
-> > +Ideally also add a comment explaining why this lock will be problematic.
-> 
-> The above text has mentioned the transaction context nesting as well and
-> that was a hint by Dave IIRC. It is imho good to have an example of
-> other reentrant points than just locks. I believe another useful example
-> would be something like loop device which is mixing IO and FS layers but
-> I am not familiar with all the details to give you an useful text.
-
-I'll let Mikulas & Dave finish fighting about that before I write any
-text mentioning the loop driver.  How about this for mentioning the
-filesystem transaction possibility?
-
-@@ -103,12 +103,16 @@ flags specified by any particular call to allocate memory.
- 
- These functions should be called at the point where any memory allocation
- would start to cause problems.  That is, do not simply wrap individual
--memory allocation calls which currently use ``GFP_NOFS`` with a pair
--of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
--find the lock which is taken that would cause problems if memory reclaim
-+memory allocation calls which currently use ``GFP_NOFS`` with a pair of
-+calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead, find
-+the resource which is acquired that would cause problems if memory reclaim
- reentered the filesystem, place a call to memalloc_nofs_save() before it
- is acquired and a call to memalloc_nofs_restore() after it is released.
- Ideally also add a comment explaining why this lock will be problematic.
-+A resource might be a lock which would need to be acquired by an attempt
-+to reclaim memory, or it might be starting a transaction that should not
-+nest over a memory reclaim transaction.  Deep knowledge of the filesystem
-+or driver is often needed to place memory scoping calls correctly.
- 
- Please note that the proper pairing of save/restore functions
- allows nesting so it is safe to call memalloc_noio_save() and
-
-> > @@ -104,16 +134,19 @@ ARCH_KMALLOC_MINALIGN bytes.  For sizes which are a power of two, the
-> >  alignment is also guaranteed to be at least the respective size.
-> >  
-> >  For large allocations you can use vmalloc() and vzalloc(), or directly
-> > -request pages from the page allocator. The memory allocated by `vmalloc`
-> > -and related functions is not physically contiguous.
-> > +request pages from the page allocator.  The memory allocated by `vmalloc`
-> > +and related functions is not physically contiguous.  The `vmalloc`
-> > +family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
-> > +flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
-> > +the allocator which are hard to remove.  However, the scope APIs described
-> > +above can be used to limit the `vmalloc` functions.
-> 
-> I would reiterate "Do not just wrap vmalloc by the scope api but rather
-> rely on the real scope for the NOFS/NOIO context". Maybe we want to
-> stress out that once a scope is defined it is sticky to _all_
-> allocations and all allocators within that scope. The text is already
-> saying that but maybe we want to make it explicit and make it stand out.
-
-yes.  I went with:
-
-@@ -139,7 +143,10 @@ and related functions is not physically contiguous.  The `vmalloc`
- family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
- flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
- the allocator which are hard to remove.  However, the scope APIs described
--above can be used to limit the `vmalloc` functions.
-+above can be used to limit the `vmalloc` functions.  As described above,
-+do not simply wrap individual calls in the scope APIs, but look for the
-+underlying reason why the memory allocation may not call into filesystems
-+or block devices.
- 
- If you are not sure whether the allocation size is too large for
- `kmalloc`, it is possible to use kvmalloc() and its derivatives. It will
-
-
-> [...]
-> > diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> > index 6484569f50df..9fc091274d1d 100644
-> > --- a/include/linux/sched/mm.h
-> > +++ b/include/linux/sched/mm.h
-> > @@ -186,9 +186,10 @@ static inline gfp_t current_gfp_context(gfp_t flags)
-> >  		 * them.  noio implies neither IO nor FS and it is a weaker
-> >  		 * context so always make sure it takes precedence.
-> >  		 */
-> > -		if (current->memalloc_nowait)
-> > +		if (current->memalloc_nowait) {
-> >  			flags &= ~__GFP_DIRECT_RECLAIM;
-> > -		else if (current->memalloc_noio)
-> > +			flags |= __GFP_NOWARN;
-> 
-> I dunno. I wouldn't make nowait implicitly NOWARN as well. At least not
-> with the initial implementation. Maybe we will learn later that there is
-> just too much unhelpful noise in the kernel log and will reconsider but
-> I wouldn't just start with that. Also we might learn that there will be
-> other modifiers for atomic (or should I say non-sleeping) scopes to be
-> defined. E.g. access to memory reserves but let's just wait for real
-> usecases.
-
-Fair enough.  I'll drop that part.  Thanks!
+-- 
+viresh
