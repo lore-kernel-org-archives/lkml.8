@@ -2,39 +2,39 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4220AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C67E20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695852077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbgGAOS3 (ORCPT
+        id S1731368AbgGAOSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:18:29 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:42940 "EHLO
+        Wed, 1 Jul 2020 10:18:31 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:52178 "EHLO
         mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728712AbgGAOS2 (ORCPT
+        by vger.kernel.org with ESMTP id S1731039AbgGAOS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:18:28 -0400
+        Wed, 1 Jul 2020 10:18:29 -0400
 Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E8MN4027198;
-        Wed, 1 Jul 2020 14:17:35 GMT
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E8M5x027199;
+        Wed, 1 Jul 2020 14:17:34 GMT
 Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0b-002e3701.pphosted.com with ESMTP id 320b6py5xt-1
+        by mx0b-002e3701.pphosted.com with ESMTP id 320b6py5xn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 14:17:35 +0000
+        Wed, 01 Jul 2020 14:17:33 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 16815A8;
-        Wed,  1 Jul 2020 14:17:34 +0000 (UTC)
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 0B87C83;
+        Wed,  1 Jul 2020 14:17:31 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id A9E2D2015D85F; Wed,  1 Jul 2020 09:17:32 -0500 (CDT)
-Message-ID: <20200701141732.581935948@hpe.com>
+        id A64032015C701; Wed,  1 Jul 2020 09:17:31 -0500 (CDT)
+Message-ID: <20200701141731.560960583@hpe.com>
 User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 09:17:40 -0500
+Date:   Wed, 01 Jul 2020 09:17:32 -0500
 From:   steve.wahl@hpe.com
 To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -69,15 +69,15 @@ To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-efi@vger.kernel.org
 Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch 09/13] Remove efi=old_map command line option
+Subject: [patch 01/13] Remove support for UV1 platform from uv_time.c
 References: <20200701141731.377252388@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- cotscore=-2147483648 suspectscore=0 adultscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ cotscore=-2147483648 suspectscore=0 adultscore=0 mlxlogscore=936
  malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
  phishscore=0 priorityscore=1501 mlxscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
@@ -87,33 +87,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a part of UV1 platform removal, delete the efi=old_map option,
-which should no longer be needed.
+arch/x86/platform/uv/uv_time.c: remove UV1 support
 
 Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |    4 +---
- arch/x86/platform/uv/bios_uv.c                  |   14 --------------
- 2 files changed, 1 insertion(+), 17 deletions(-)
+ arch/x86/platform/uv/uv_time.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
---- linux.orig/arch/x86/platform/uv/bios_uv.c	2020-06-18 16:26:33.963087219 -0500
-+++ linux/arch/x86/platform/uv/bios_uv.c	2020-06-25 09:53:43.013835162 -0500
-@@ -356,17 +356,3 @@ void __iomem *__init efi_ioremap(unsigne
+diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+index 7af31b245636..41e982fda86c 100644
+--- a/arch/x86/platform/uv/uv_time.c
++++ b/arch/x86/platform/uv/uv_time.c
+@@ -74,7 +74,6 @@ static void uv_rtc_send_IPI(int cpu)
  
- 	return (void __iomem *)__va(phys_addr);
- }
--
--static int __init arch_parse_efi_cmdline(char *str)
--{
--	if (!str) {
--		pr_warn("need at least one option\n");
--		return -EINVAL;
--	}
--
--	if (!efi_is_mixed() && parse_option_str(str, "old_map"))
--		set_bit(EFI_UV1_MEMMAP, &efi.flags);
--
--	return 0;
--}
--early_param("efi", arch_parse_efi_cmdline);
+ 	apicid = cpu_physical_id(cpu);
+ 	pnode = uv_apicid_to_pnode(apicid);
+-	apicid |= uv_apicid_hibits;
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+ 	      (apicid << UVH_IPI_INT_APIC_ID_SHFT) |
+ 	      (X86_PLATFORM_IPI_VECTOR << UVH_IPI_INT_VECTOR_SHFT);
+@@ -85,10 +84,7 @@ static void uv_rtc_send_IPI(int cpu)
+ /* Check for an RTC interrupt pending */
+ static int uv_intr_pending(int pnode)
+ {
+-	if (is_uv1_hub())
+-		return uv_read_global_mmr64(pnode, UVH_EVENT_OCCURRED0) &
+-			UV1H_EVENT_OCCURRED0_RTC1_MASK;
+-	else if (is_uvx_hub())
++	if (is_uvx_hub())
+ 		return uv_read_global_mmr64(pnode, UVXH_EVENT_OCCURRED2) &
+ 			UVXH_EVENT_OCCURRED2_RTC_1_MASK;
+ 	return 0;
+@@ -98,19 +94,15 @@ static int uv_intr_pending(int pnode)
+ static int uv_setup_intr(int cpu, u64 expires)
+ {
+ 	u64 val;
+-	unsigned long apicid = cpu_physical_id(cpu) | uv_apicid_hibits;
++	unsigned long apicid = cpu_physical_id(cpu);
+ 	int pnode = uv_cpu_to_pnode(cpu);
+ 
+ 	uv_write_global_mmr64(pnode, UVH_RTC1_INT_CONFIG,
+ 		UVH_RTC1_INT_CONFIG_M_MASK);
+ 	uv_write_global_mmr64(pnode, UVH_INT_CMPB, -1L);
+ 
+-	if (is_uv1_hub())
+-		uv_write_global_mmr64(pnode, UVH_EVENT_OCCURRED0_ALIAS,
+-				UV1H_EVENT_OCCURRED0_RTC1_MASK);
+-	else
+-		uv_write_global_mmr64(pnode, UVXH_EVENT_OCCURRED2_ALIAS,
+-				UVXH_EVENT_OCCURRED2_RTC_1_MASK);
++	uv_write_global_mmr64(pnode, UVXH_EVENT_OCCURRED2_ALIAS,
++			      UVXH_EVENT_OCCURRED2_RTC_1_MASK);
+ 
+ 	val = (X86_PLATFORM_IPI_VECTOR << UVH_RTC1_INT_CONFIG_VECTOR_SHFT) |
+ 		((u64)apicid << UVH_RTC1_INT_CONFIG_APIC_ID_SHFT);
+-- 
+2.12.3
+
 
