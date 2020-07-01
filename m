@@ -2,95 +2,196 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8177DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E07F20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB2D20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:38:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="k/IMfhNW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3KJ5G+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbgGAKhV (ORCPT
+        id S1730036AbgGAKiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:37:21 -0400
-Received: from onstation.org ([52.200.56.107]:45296 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729939AbgGAKhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:37:19 -0400
-X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Jul 2020 06:37:18 EDT
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 48FFB3E8F8;
-        Wed,  1 Jul 2020 10:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1593599442;
-        bh=AfMnHuNqEFE1eiUXfPAPZcZ71kvTA3HP878CQfPF7ts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/IMfhNWmQ6NBOOlZ3+aH0ZSqT5p2sLBdcXiWAFZevUiEknrJ5Ec1X/PJdCdMmIry
-         qjvlc+VNsWJUYWbD4U70mHL5/SsRJrCUsshAkVFRXdDTckyP7UUI6iRZqiriucny6T
-         F8w3FHpaKymodReo+y62bolSB++U2keyCZlQJg34=
-Date:   Wed, 1 Jul 2020 06:30:41 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/7] ARM: dts: qcom: msm8974: klte: Enable some hardware
-Message-ID: <20200701103041.GA3246@onstation.org>
-References: <20200630140912.260294-1-iskren.chernev@gmail.com>
+        Wed, 1 Jul 2020 06:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729180AbgGAKiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:38:12 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF3FC061755;
+        Wed,  1 Jul 2020 03:38:12 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so1292816pjg.3;
+        Wed, 01 Jul 2020 03:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ay25oY07NOmbixOtBMWVYmhszlZHF/YFooJn+9Ipub8=;
+        b=E3KJ5G+nJ16g2CKalAuxGYpIOXxRdvvUoZBAYhyZdpv1+IRV/XdKVlrlD/ncMJRTlM
+         DQ72k5hr87hRV6RXLAwuL0790w3F/9VpHdyKak8P3gAr4vL0bnnvRfkHCl153pcBlZlT
+         b949Mmca2xjQ1NN6hqPGbAhdfzdioAVYoI7N8sWwqjUZKIjBX++yC14jJWEJapL25zIg
+         JV+HaXJ6VCDCO46HoGxHHd3AEAaMEQgvQ19V4JAKlCR0Yl2BH0JMq5i3Xp9kRdJQllZz
+         0Qa/D+Lit+3fpJeSg7DP9T5mpOAmjziidgetbF6OK0weRP6/2PZ02EEZ9Qn96+dWXfO0
+         pY5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ay25oY07NOmbixOtBMWVYmhszlZHF/YFooJn+9Ipub8=;
+        b=WajHG/pkmYpDNAsT10bBQ3pI2lNAxKiHh3wWYCiLwcq/FmZ0V1DTGcjK7pdcL+e5zj
+         8Fk4N/zfPEtX+eHEt++1sFAQKzOAGlhnmzJzRfcEqRKZjYx7GViCXeiY0V0VnpLHO67K
+         4Nv4wuJQzc1XMN7iKCHcMZiShhSRCp5PZvRkYcA0fNMTjXrV9ohIff/E3xCDnWt5HqQM
+         BcZyps9ciAnCkC6QYtND83TpTYVwUW8UFlaT6fT2ZmvX+v8FutRpl4PI+NGVVAZymNiD
+         /GMk9DV/UMObCJc90dOBTDIzHR/PJC0V56g91P6hxViSdLTG2X7OZbQ6fxqhImR/G6ef
+         IYeQ==
+X-Gm-Message-State: AOAM531j0eM1EdFDkTqwAqu6ZO2wRpQwX8AzGGOZ3U+2MXTxa1tMC+jT
+        j5wsWo4LK9YDqGqQp6Nn7a7ThCZfGG/jgTh3XwqOKJ7Zr9g=
+X-Google-Smtp-Source: ABdhPJy7/D67hf5+MecXjYgpK9V7/RtGhKxzUBqStKpQiE9aKsQkiguOqWHY1pYzUUFZFqZ4rfpaxiOcOPlMiEWsdRQ=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr490320pjp.228.1593599891781;
+ Wed, 01 Jul 2020 03:38:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com> <20200701061233.31120-4-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200701061233.31120-4-calvin.johnson@oss.nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Jul 2020 13:37:58 +0300
+Message-ID: <CAHp75VdMdefZpRh5hE0pWTAYoA-VJepTCrCHD-MYZa9P_aqk6w@mail.gmail.com>
+Subject: Re: [net-next PATCH v2 3/3] net: dpaa2-mac: Add ACPI support for
+ DPAA2 MAC driver
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        netdev <netdev@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux.cj@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Iskren,
+On Wed, Jul 1, 2020 at 9:13 AM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+>
+> Modify dpaa2_mac_connect() to support ACPI along with DT.
+> Modify dpaa2_mac_get_node() to get the dpmac fwnode from either
+> DT or ACPI.
+> Replace of_get_phy_mode with fwnode_get_phy_mode to get
+> phy-mode for a dpmac_node.
+> Define and use helper function find_phy_device() to find phy_dev
+> that is later connected to mac->phylink.
 
-On Tue, Jun 30, 2020 at 05:09:05PM +0300, Iskren Chernev wrote:
-> Enable support for various hw found on the Samsung Galaxy S5:
-> - touchkey (the two buttons around the home button)
-> - touchscreen
-> - notification led
-> - wifi
-> - external SD card
-> 
-> Please note that for working wifi the correct firmware is needed. Check [1]
-> for links and locations.
-> 
-> Also note, that to actually run a mainline kernel on the klte, you'd need
-> to apply this patch [2]. Any feedback on getting this to run on pure
-> mainline are welcome.
-> 
-> [1] https://gitlab.com/postmarketOS/pmaports/-/blob/master/firmware/firmware-samsung-klte/APKBUILD
-> [2] https://gitlab.com/postmarketOS/linux-postmarketos/-/commit/765f55b248cd3b231af8431fe2f2aeca263b4e4b
+...
 
-Good to see more msm8974 support upstream!
+>  #include "dpaa2-eth.h"
+>  #include "dpaa2-mac.h"
 
-Regarding the second patch, that should only be needed in order to
-use the GPU on these devices. I hope that patch won't be needed once
-IOMMU support is added, which is the last major missing piece in order
-to have the GPU working upstream. I posted a RFC patch [3] in January
-but didn't get any suggestions. I suspect some kind of memory corruption
-since the board gets unstable with that patch.
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
 
-If that hack patch is still needed to use the GPU once IOMMU support is
-in place, then I planned to troubleshoot it further by adding some log
-statements to various probe functions with and without that patch to see
-the probe order between the various subsystems. I suspect the issue is
-that a clock isn't ticking yet.
+Can we put (more) generic headers atop of (more) private ones?
 
-[3] https://lore.kernel.org/lkml/20200109002606.35653-1-masneyb@onstation.org/T/#u
+...
 
-Brian
+> +       struct fwnode_handle *fsl_mc_fwnode = dev->parent->parent->fwnode;
+
+dev_fwnode() please.
+
+> +       struct fwnode_handle *dpmacs, *dpmac = NULL;
+> +       struct device *fsl_mc = dev->parent->parent;
+
+So. something like
+       struct device *fsl_mc = dev->parent->parent;
+       struct fwnode_handle *fsl_mc_fwnode = dev_fwnode(fsl_mc);
+
+...
+
+> +               dpmacs = device_get_named_child_node(fsl_mc, "dpmacs");
+
+If you have fwnode, why to use device_* API?
+               dpmacs = fwnode_get_named_child_node(fsl_mc_fwnode, "dpmacs");
+
+> +               if (!dpmacs)
+> +                       return NULL;
+> +
+> +               while ((dpmac = fwnode_get_next_child_node(dpmacs, dpmac))) {
+> +                       err = fwnode_property_read_u32(dpmac, "reg", &id);
+> +                       if (err)
+> +                               continue;
+> +                       if (id == dpmac_id)
+> +                               return dpmac;
+> +               }
+
+...
+
+> +       } else if (is_acpi_node(fsl_mc_fwnode)) {
+
+is_acpi_device_node() ?
+
+> +               adev = acpi_find_child_device(ACPI_COMPANION(dev->parent),
+> +                                             dpmac_id, false);
+> +               if (adev)
+
+> +                       return (&adev->fwnode);
+
+No need to have parentheses. Don't we have some special macro to get
+fwnode out of ACPI device?
+
+...
+
+> +       err = fwnode_get_phy_mode(dpmac_node);
+> +       if (err > 0)
+> +               return err;
+
+Positive?! Why? What's going on here?
+
+...
+
+> +       if (is_of_node(dpmac_node))
+> +               err = phylink_of_phy_connect(mac->phylink,
+> +                                            to_of_node(dpmac_node), 0);
+> +       else if (is_acpi_node(dpmac_node)) {
+> +               phy_dev = find_phy_device(dpmac_node);
+> +               if (IS_ERR(phy_dev))
+> +                       goto err_phylink_destroy;
+> +               err = phylink_connect_phy(mac->phylink, phy_dev);
+
+Can't you rather provide phylink_fwnode_connect_phy API and drop this
+conditional tree entirely?
+
+...
+
+> +       if (is_of_node(dpmac_node))
+
+Redundant.
+
+> +               of_node_put(to_of_node(dpmac_node));
+
+Honestly, looking at this code, I think one needs a bit more time to
+get into fwnode paradigm and APIs.
+
+...
+
+> +       if (is_of_node(dpmac_node))
+
+Ditto.
+
+> +               of_node_put(to_of_node(dpmac_node));
+
+-- 
+With Best Regards,
+Andy Shevchenko
