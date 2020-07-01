@@ -2,163 +2,93 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DE62078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1E0207E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="WSi8BJTU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gc+3jqpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgGAV4x (ORCPT
+        id S1727014AbgGAWBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:56:53 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:5498 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727813AbgGAV4W (ORCPT
+        Wed, 1 Jul 2020 18:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAWBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:56:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=from:subject:in-reply-to:references:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=hPL/kgQTz6wlFRy8GpHOwzP9TJx6MI3KcPavoqbKOOc=;
-        b=WSi8BJTUy3xDpcNlZN5tgfE1peEZwGWXPR8iKHe6BqAwMIL3afNAX6UTQthDkJGX9Lk7
-        WKl/9aE5gP4U4tiqW2w3Qh7W8S2yrj2ayYFlPTWGRA5muHaRKVU9zc9ahIY6WQCGfgNaT/
-        I740X3GHA6TgaYdhueZaThZOdgN1oFw+8=
-Received: by filterdrecv-p3iad2-5b55dcd864-xvj6x with SMTP id filterdrecv-p3iad2-5b55dcd864-xvj6x-20-5EFD0685-3B
-        2020-07-01 21:56:21.873945324 +0000 UTC m=+449225.981582369
-Received: from bionic.localdomain (unknown)
-        by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
-        id tbZBENmMR5K2F9HM17zllg
-        Wed, 01 Jul 2020 21:56:21.586 +0000 (UTC)
-From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 3/9] media: rkvdec: h264: Fix pic width and height in mbs
-Date:   Wed, 01 Jul 2020 21:56:21 +0000 (UTC)
-Message-Id: <20200701215616.30874-4-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701215616.30874-1-jonas@kwiboo.se>
-References: <20200701215616.30874-1-jonas@kwiboo.se>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h46KlexVvyedR2tUq?=
- =?us-ascii?Q?gjVmM=2FILFuMT+pt9FyPU3oqNPS8WalWdE9qEGVv?=
- =?us-ascii?Q?QSMehNe2haUM8g4S6hR000xVYRiSvFYzX0hWotq?=
- =?us-ascii?Q?uJI4V8=2FFRknXNbAWJRYGeTNTgfs53XPoKdQfYmj?=
- =?us-ascii?Q?Oi=2FM+iZnPe9IC=2FQqBsL4MtrKiCI5fbeRtkPDps+?=
- =?us-ascii?Q?bhHvMBF3OMM9wHSqoXdcQ=3D=3D?=
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Wed, 1 Jul 2020 18:01:17 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CA0C08C5C1;
+        Wed,  1 Jul 2020 15:01:16 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49xwCr1Gn1z9sRf;
+        Thu,  2 Jul 2020 08:01:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593640873;
+        bh=VHwdW1vT/s6ckSN9i/ISxHoKGW5YumIiwPoW9KfgCAQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Gc+3jqpizUBwOeP8ppTxkIPGSDQDqMA+yh8DGI3xl8mzLVOkCmcE9KUA6kSzhz/pD
+         o/eeN/ugA5T+fOZ0VdXBYNLhtB2clZUHdVEQjXOjEWth9xDHZ7roMVGJsdKFVA573K
+         0Fllt3jx2I+xeIifcrd7zqUYjyXh27lbtE5S8M82id6wzqb8GblAhddIKiTJ2vwjKh
+         LRmsllhQpxTqA5yifv/cAsYhU+TLQH/4/ururl9CmjzHV2cb4mfyemH5tLMAsvdY9W
+         l8je0pIPld7wIrG1jNJisu8/f63ihtij6JZuiV+BTrMlqub6w7enCInwjplPviuQ6Q
+         UK75VCnb1BZww==
+Date:   Thu, 2 Jul 2020 08:01:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wade Mealing <wmealing@redhat.com>
+Subject: linux-next: Signed-off-by missing for commit in the
+ char-misc.current tree
+Message-ID: <20200702080110.24d42ffe@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/XddFE0jaews0RUKaC/MMvZm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The width and height in mbs is currently configured based on OUTPUT buffer
-resolution, this works for frame pictures but can cause issues for field
-pictures or when frmsize step_width is changed to support 10-bit decoding.
+--Sig_/XddFE0jaews0RUKaC/MMvZm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When frame_mbs_only_flag is 0 the height in mbs should be height of
-the field instead of height of frame.
+Hi all,
 
-Validate pic_width_in_mbs_minus1 and pic_height_in_map_units_minus1
-against CAPTURE buffer resolution and use these values to configure HW.
+Commit
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- drivers/staging/media/rkvdec/rkvdec-h264.c | 44 +++++++++++++++++++---
- 1 file changed, 39 insertions(+), 5 deletions(-)
+  853eab68afc8 ("Revert "zram: convert remaining CLASS_ATTR() to CLASS_ATTR=
+_RO()"")
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index f0cfed84d60d..c9aebeb8f9b3 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -672,8 +672,8 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
- 		  LOG2_MAX_PIC_ORDER_CNT_LSB_MINUS4);
- 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_DELTA_PIC_ORDER_ALWAYS_ZERO),
- 		  DELTA_PIC_ORDER_ALWAYS_ZERO_FLAG);
--	WRITE_PPS(DIV_ROUND_UP(ctx->coded_fmt.fmt.pix_mp.width, 16), PIC_WIDTH_IN_MBS);
--	WRITE_PPS(DIV_ROUND_UP(ctx->coded_fmt.fmt.pix_mp.height, 16), PIC_HEIGHT_IN_MBS);
-+	WRITE_PPS(sps->pic_width_in_mbs_minus1 + 1, PIC_WIDTH_IN_MBS);
-+	WRITE_PPS(sps->pic_height_in_map_units_minus1 + 1, PIC_HEIGHT_IN_MBS);
- 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY),
- 		  FRAME_MBS_ONLY_FLAG);
- 	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD),
-@@ -1058,10 +1058,33 @@ static void rkvdec_h264_stop(struct rkvdec_ctx *ctx)
- 	kfree(h264_ctx);
- }
- 
--static void rkvdec_h264_run_preamble(struct rkvdec_ctx *ctx,
--				     struct rkvdec_h264_run *run)
-+static int validate_sps(struct rkvdec_ctx *ctx,
-+			const struct v4l2_ctrl_h264_sps *sps)
-+{
-+	unsigned int width, height;
-+
-+	if (WARN_ON(!sps))
-+		return -EINVAL;
-+
-+	width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
-+	height = (sps->pic_height_in_map_units_minus1 + 1) * 16;
-+
-+	if (width > ctx->decoded_fmt.fmt.pix_mp.width ||
-+	    height > ctx->decoded_fmt.fmt.pix_mp.height) {
-+		dev_err(ctx->dev->dev,
-+			"unexpected bitstream resolution %ux%u\n",
-+			width, height);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rkvdec_h264_run_preamble(struct rkvdec_ctx *ctx,
-+				    struct rkvdec_h264_run *run)
- {
- 	struct v4l2_ctrl *ctrl;
-+	int ret;
- 
- 	ctrl = v4l2_ctrl_find(&ctx->ctrl_hdl,
- 			      V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS);
-@@ -1080,6 +1103,12 @@ static void rkvdec_h264_run_preamble(struct rkvdec_ctx *ctx,
- 	run->scaling_matrix = ctrl ? ctrl->p_cur.p : NULL;
- 
- 	rkvdec_run_preamble(ctx, &run->base);
-+
-+	ret = validate_sps(ctx, run->sps);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
- 
- static int rkvdec_h264_run(struct rkvdec_ctx *ctx)
-@@ -1088,8 +1117,13 @@ static int rkvdec_h264_run(struct rkvdec_ctx *ctx)
- 	struct rkvdec_dev *rkvdec = ctx->dev;
- 	struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
- 	struct rkvdec_h264_run run;
-+	int ret;
- 
--	rkvdec_h264_run_preamble(ctx, &run);
-+	ret = rkvdec_h264_run_preamble(ctx, &run);
-+	if (ret) {
-+		rkvdec_run_postamble(ctx, &run.base);
-+		return ret;
-+	}
- 
- 	/* Build the P/B{0,1} ref lists. */
- 	v4l2_h264_init_reflist_builder(&reflist_builder, run.decode_params,
--- 
-2.17.1
+is missing a Signed-off-by from its author.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XddFE0jaews0RUKaC/MMvZm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl79B6YACgkQAVBC80lX
+0GyQBQf5AQogOXSyDmB6nboIldCVWSIp/2coW0qV7Rg3y0f9XwKM8+wkV1ebVAhZ
+0JcJZ9zViNhuQY5ygKVErIiCnDAMc7Wa/n4DuDQyZp9/w6oFVZ+qqghV+HsNPDH6
+oFvgdZlNdXnwLqtdlZ5kmD1MpmKvoVAqg/+wwpfUM0KqSmoX0vHD18vIbqE/Ielb
+y2JIrPNg8a/YhoeJF0meflbDM0/PosyRKLB8KrCjr7UbeIkVdAcrZhCmrJ+hGl2I
+E4TqLz9KXSYNFtGtFAhhwusTyp3kUr3opI7FJh4NCyVO5VBagDkZuCBO+IDyRIDD
+8oEg+pf8+pA0+r0vHkU0Z/6sS3wVoA==
+=UAvn
+-----END PGP SIGNATURE-----
+
+--Sig_/XddFE0jaews0RUKaC/MMvZm--
