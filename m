@@ -2,95 +2,127 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A8F2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F8220771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgGABt7 (ORCPT
+        id S1726171AbgGABuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:49:59 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35220 "EHLO fornost.hmeau.com"
+        Tue, 30 Jun 2020 21:50:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:25314 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgGABt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:49:59 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jqRsU-0004tu-Eh; Wed, 01 Jul 2020 11:49:35 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 11:49:34 +1000
-Date:   Wed, 1 Jul 2020 11:49:34 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
-        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
-        George Cherian <gcherian@marvell.com>,
-        linux-crypto@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [PATCH 1/3 v6] crypto: introduce the flag
- CRYPTO_ALG_ALLOCATES_MEMORY
-Message-ID: <20200701014934.GA6710@gondor.apana.org.au>
-References: <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626164617.GA211634@gmail.com>
- <alpine.LRH.2.02.2006281505250.347@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006300954150.15237@file01.intranet.prod.int.rdu2.redhat.com>
- <20200630163552.GA837@sol.localdomain>
- <alpine.LRH.2.02.2006301256110.30526@file01.intranet.prod.int.rdu2.redhat.com>
- <20200630175746.GA2026704@gmail.com>
- <alpine.LRH.2.02.2006301414120.30526@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006301414580.30526@file01.intranet.prod.int.rdu2.redhat.com>
+        id S1725763AbgGABuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:50:07 -0400
+IronPort-SDR: Z8R1RR7l14pHRT+G/L9/3SmR/5gsKibzUIXsvpNUVP0mtwXCkNeUawjVm/xtsdsyalHUcZR09T
+ dZbg/afpgjHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="231299498"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="231299498"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 18:50:06 -0700
+IronPort-SDR: P4q4STTHl8YHwzmESTyZkAcHTorHeACpmx8HN8RxpEoXVDCH+UGwm/Gnmgu6+NNvxTc3I6e5OM
+ YRTDZXbcRj9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="265268574"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jun 2020 18:50:03 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 6/7] iommu/vt-d: Warn on out-of-range invalidation address
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
+ <d87d15fd-71d5-6735-74df-583024826ab0@linux.intel.com>
+ <20200630103459.6c99c961@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f5a2ffda-a243-ed20-63e0-50d784d3af71@linux.intel.com>
+Date:   Wed, 1 Jul 2020 09:45:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006301414580.30526@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200630103459.6c99c961@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 02:15:55PM -0400, Mikulas Patocka wrote:
->
-> Index: linux-2.6/crypto/pcrypt.c
-> ===================================================================
-> --- linux-2.6.orig/crypto/pcrypt.c	2020-06-29 16:03:07.346417000 +0200
-> +++ linux-2.6/crypto/pcrypt.c	2020-06-30 20:11:56.636417000 +0200
-> @@ -225,19 +225,21 @@ static int pcrypt_init_instance(struct c
->  	return 0;
->  }
->  
-> -static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb,
-> -			      u32 type, u32 mask)
-> +static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb)
->  {
+Hi Jacob,
 
-Rather than removing these two arguments, I think you should pass
-along algt instead.
+On 7/1/20 1:34 AM, Jacob Pan wrote:
+> On Thu, 25 Jun 2020 18:10:43 +0800
+> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> 
+>> Hi,
+>>
+>> On 2020/6/23 23:43, Jacob Pan wrote:
+>>> For guest requested IOTLB invalidation, address and mask are
+>>> provided as part of the invalidation data. VT-d HW silently ignores
+>>> any address bits below the mask. SW shall also allow such case but
+>>> give warning if address does not align with the mask. This patch
+>>> relax the fault handling from error to warning and proceed with
+>>> invalidation request with the given mask.
+>>>
+>>> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
+>>> ---
+>>>    drivers/iommu/intel/iommu.c | 7 +++----
+>>>    1 file changed, 3 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/intel/iommu.c
+>>> b/drivers/iommu/intel/iommu.c index 5ea5732d5ec4..50fc62413a35
+>>> 100644 --- a/drivers/iommu/intel/iommu.c
+>>> +++ b/drivers/iommu/intel/iommu.c
+>>> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct
+>>> iommu_domain *domain, struct device *dev,
+>>>    		switch (BIT(cache_type)) {
+>>>    		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>>> +			/* HW will ignore LSB bits based on
+>>> address mask */ if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+>>>    			    size &&
+>>>    			    (inv_info->addr_info.addr &
+>>> ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+>>> -				pr_err_ratelimited("Address out of
+>>> range, 0x%llx, size order %llu\n",
+>>> -
+>>> inv_info->addr_info.addr, size);
+>>> -				ret = -ERANGE;
+>>> -				goto out_unlock;
+>>> +				WARN_ONCE(1, "Address out of
+>>> range, 0x%llx, size order %llu\n",
+>>> +
+>>> inv_info->addr_info.addr, size);
+>> I don't think WARN_ONCE() is suitable here. It makes users think it's
+>> a kernel bug. How about pr_warn_ratelimited()?
+>>
+> I think pr_warn_ratelimited might still be too chatty. There is no
+> functional issues, we just don't to silently ignore it. Perhaps just
+> say:
+> WARN_ONCE(1, "User provided address not page aligned, alignment forced")
+> ?
+> 
 
->  	struct pcrypt_instance_ctx *ctx;
->  	struct crypto_attr_type *algt;
->  	struct aead_instance *inst;
->  	struct aead_alg *alg;
-> +	u32 mask;
->  	int err;
->  
->  	algt = crypto_get_attr_type(tb);
->  	if (IS_ERR(algt))
->  		return PTR_ERR(algt);
+WARN() is normally used for reporting a kernel bug. It dumps kernel
+trace. And the users will report bug through bugzilla.kernel.org.
 
-Then we could remove this bit.
+In this case, it's actually an unexpected user input, we shouldn't
+treat it as a kernel bug and pr_err_ratelimited() is enough?
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Best regards,
+baolu
