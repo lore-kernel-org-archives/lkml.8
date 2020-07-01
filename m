@@ -2,111 +2,83 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B10C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCDA20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593591660;
-	bh=mvYYmiZD0lRjkcahXyyE68VrSfxPw8nxlENouGT4zFU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpeSfQ3O0WcQtNvzRUqHIixMRA6lLNh0eSuI1AlF8PovEzIOwC3mRg7OGagRmjz3o
-	 8QWNBgfekYSEEeO5N0kq3awXYfUxxmf/IJmTiXH9fLwrjfgIaaR/vTzk2yJ/pN1IMH
-	 krsWHkP4lTpPQMVlXs0FDhBv4f8pj+fJ1YTrcLgo=
+	by mail.kernel.org (Postfix) with ESMTP id CFE6A2078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgGAIU6 (ORCPT
+        id S1728616AbgGAIWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 04:22:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52134 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgGAIU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:20:58 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8370120722;
-        Wed,  1 Jul 2020 08:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593591657;
-        bh=mvYYmiZD0lRjkcahXyyE68VrSfxPw8nxlENouGT4zFU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+kvMzaED0bKnFHQXu5Z+wC4wUKy/MUOj/uldXaRx3i0CNI7f7jy4bfVAgAZ5gk/0
-         GTOBdWnhcO35n66pQL3FL1SnBRHNwv0zobP6wsJlT16PsQNvFNV6xWHS0aQkoPRxUm
-         H8cKiVbzSmPeIY+RND3X6F5hpIkCr4VCjyJVtLEA=
-Received: by pali.im (Postfix)
-        id 8FA80102D; Wed,  1 Jul 2020 10:20:55 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card connected
-Date:   Wed,  1 Jul 2020 10:20:44 +0200
-Message-Id: <20200701082044.4494-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200528143141.29956-1-pali@kernel.org>
-References: <20200528143141.29956-1-pali@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1728479AbgGAIWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:22:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id ED795AF21;
+        Wed,  1 Jul 2020 08:22:11 +0000 (UTC)
+Message-ID: <1593591727.3586.2.camel@suse.de>
+Subject: Re: [PATCH v3 00/15] HWPOISON: soft offline rework
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Qian Cai <cai@lca.pw>, nao.horiguchi@gmail.com
+Cc:     linux-mm@kvack.org, mhocko@kernel.org, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, tony.luck@intel.com, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, zeil@yandex-team.ru,
+        naoya.horiguchi@nec.com, linux-kernel@vger.kernel.org
+Date:   Wed, 01 Jul 2020 10:22:07 +0200
+In-Reply-To: <1593498910.3046.2.camel@suse.de>
+References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
+         <20200630050803.GA2747@lca.pw> <1593498910.3046.2.camel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is no PCIe card connected and advk_pcie_rd_conf() or
-advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-root bridge, the aardvark driver throws the following error message:
+On Tue, 2020-06-30 at 08:35 +0200, Oscar Salvador wrote:
+> > Even after applied the compling fix,
+> > 
+> > https://lore.kernel.org/linux-mm/20200628065409.GA546944@u2004/
+> > 
+> > madvise(MADV_SOFT_OFFLINE) will fail with EIO with hugetlb where it
+> > would succeed without this series. Steps:
+> > 
+> > # git clone https://github.com/cailca/linux-mm
+> > # cd linux-mm; make
+> > # ./random 1 (Need at least two NUMA memory nodes)
+> >  start: migrate_huge_offline
+> > - use NUMA nodes 0,4.
+> > - mmap and free 8388608 bytes hugepages on node 0
+> > - mmap and free 8388608 bytes hugepages on node 4
+> > madvise: Input/output error
+> 
+> I think I know why.
+> It's been a while since I took a look, but I compared the posted
+> patchset with my newest patchset I had ready and I saw I made some
+> changes with regard of hugetlb pages.
+> 
+> I will be taking a look, although it might be better to re-post the
+> patchset instead of adding a fix on top since the changes are a bit
+> substantial.
 
-  advk-pcie d0070000.pcie: config read/write timed out
+Yap, I just confirmed this.
 
-Obviously accessing PCIe registers of disconnected card is not possible.
+Posted version had some flaws wrt. hugetlb pages, that is why I was
+working on a v3.
+I am rebasing my v3 on top of the mm with the posted patchset reverted.
 
-Extend check in advk_pcie_valid_device() function for validating
-availability of PCIe bus. If PCIe link is down, then the device is marked
-as Not Found and the driver does not try to access these registers.
+I expect to post it on Friday.
 
-This is just an optimization to prevent accessing PCIe registers when card
-is disconnected. Trying to access PCIe registers of disconnected card does
-not cause any crash, kernel just needs to wait for a timeout. So if card
-disappear immediately after checking for PCIe link (before accessing PCIe
-registers), it does not cause any problems.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-
----
-Changes in V2:
-* Update commit message, mention that this is optimization
----
- drivers/pci/controller/pci-aardvark.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..53a4cfd7d377 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
- 		return false;
- 
-+	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-+		return false;
-+
- 	return true;
- }
- 
 -- 
-2.20.1
-
+Oscar Salvador
+SUSE L3
