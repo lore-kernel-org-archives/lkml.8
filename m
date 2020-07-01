@@ -2,82 +2,93 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74268C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F932074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFA220722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:06:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fqj9Bq+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgGAJEo (ORCPT
+        id S1729095AbgGAJGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:04:44 -0400
-Received: from sym2.noone.org ([178.63.92.236]:37656 "EHLO sym2.noone.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbgGAJEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:04:43 -0400
-Received: by sym2.noone.org (Postfix, from userid 1002)
-        id 49xZzp5Bkvzvjc1; Wed,  1 Jul 2020 11:04:38 +0200 (CEST)
-From:   Tobias Klauser <tklauser@distanz.ch>
-To:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] phy: zynqmp: Fix unused-function compiler warning
-Date:   Wed,  1 Jul 2020 11:04:38 +0200
-Message-Id: <20200701090438.21224-1-tklauser@distanz.ch>
-X-Mailer: git-send-email 2.11.0
+        Wed, 1 Jul 2020 05:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgGAJG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:06:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B283C061755;
+        Wed,  1 Jul 2020 02:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=kVtz6vlqJaw/bVcdduLYH4iE1TfD3bHAdPcoJqUty3c=; b=fqj9Bq+LPiX5Cw82+DKENOtZGq
+        aBH2pV9JriMzRvy5+0j64xrRmqbi06FwHdCyyH3uCDubulK1NERetFJK1xFzKQY+iXQVy5XGPU+xl
+        /8+zjmJSUzyKDSohp1PbTPulp7b3LNcKbeAeTRiFa5ER5du9CjNnVFmk1/cLC4YQcwJeNFeAu/B/t
+        7LQYhpHNJ89uXgEEGIP8Kl/6Q59oBdTnE2iI0XlR6ib/eAbUM2WK68TsWfzhy2JvgP5NrxmDNwUdK
+        2kLdrPLtmrx4+deQuyG8ej+JvRoHTRyPjJ4ocq2XFWOIjBChE8rflkGjPJ8f2cJsvLg9xAC3ZO5Oq
+        zQLc42fA==;
+Received: from [2001:4bb8:184:76e3:ea38:596b:3e9e:422a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqYhD-0000hE-MD; Wed, 01 Jul 2020 09:06:24 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Tejun Heo <tj@kernel.org>, dm-devel@redhat.com,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: remove dead bdi congestion leftovers
+Date:   Wed,  1 Jul 2020 11:06:18 +0200
+Message-Id: <20200701090622.3354860-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following compiler warning when building with
-CONFIG_PM && !CONFIG_PM_SLEEP:
+Hi Jens,
 
-drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
-  830 | static int xpsgtr_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~
-drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
-  819 | static int xpsgtr_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~
+we have a lot of bdi congestion related code that is left around without
+any use.  This series removes it in preparation of sorting out the bdi
+lifetime rules properly.
 
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
----
- drivers/phy/xilinx/phy-zynqmp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
-index 8babee2ce9ec..22a0ae635797 100644
---- a/drivers/phy/xilinx/phy-zynqmp.c
-+++ b/drivers/phy/xilinx/phy-zynqmp.c
-@@ -815,7 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
-  * Power Management
-  */
- 
--#ifdef CONFIG_PM
-+#ifdef CONFIG_PM_SLEEP
- static int xpsgtr_suspend(struct device *dev)
- {
- 	struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
-@@ -854,7 +854,7 @@ static int xpsgtr_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM */
-+#endif /* CONFIG_PM_SLEEP */
- 
- static const struct dev_pm_ops xpsgtr_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(xpsgtr_suspend, xpsgtr_resume)
--- 
-2.27.0
-
+Diffstat:
+ block/blk-cgroup.c               |   19 ----
+ drivers/block/drbd/drbd_main.c   |   59 --------------
+ drivers/block/drbd/drbd_proc.c   |    1 
+ drivers/md/bcache/request.c      |   43 ----------
+ drivers/md/bcache/super.c        |    1 
+ drivers/md/dm-cache-target.c     |   19 ----
+ drivers/md/dm-clone-target.c     |   15 ---
+ drivers/md/dm-era-target.c       |   15 ---
+ drivers/md/dm-raid.c             |   12 --
+ drivers/md/dm-table.c            |   37 ---------
+ drivers/md/dm-thin.c             |   16 ---
+ drivers/md/dm.c                  |   33 --------
+ drivers/md/dm.h                  |    1 
+ drivers/md/md-linear.c           |   24 -----
+ drivers/md/md-multipath.c        |   23 -----
+ drivers/md/md.c                  |   23 -----
+ drivers/md/md.h                  |    4 
+ drivers/md/raid0.c               |   16 ---
+ drivers/md/raid1.c               |   31 -------
+ drivers/md/raid10.c              |   26 ------
+ drivers/md/raid5.c               |   25 ------
+ fs/btrfs/disk-io.c               |   23 -----
+ include/linux/backing-dev-defs.h |   43 ----------
+ include/linux/backing-dev.h      |   22 -----
+ include/linux/blk-cgroup.h       |    6 -
+ include/linux/device-mapper.h    |   11 --
+ mm/backing-dev.c                 |  157 +++------------------------------------
+ 27 files changed, 20 insertions(+), 685 deletions(-)
