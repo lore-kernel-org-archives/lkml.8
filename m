@@ -2,186 +2,140 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC584C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD13220748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B1920748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hjQlQBiX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2iqyFAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732589AbgGAQvm (ORCPT
+        id S1732599AbgGAQw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:51:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:59557 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732578AbgGAQvj (ORCPT
+        Wed, 1 Jul 2020 12:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732543AbgGAQw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593622299; x=1625158299;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KtFvv4njZRd4RUyqHqCrtp8f+r4C5L+zEXOcmypW9aY=;
-  b=hjQlQBiXXwe6X91Juq0GhrCpk9/OWtCqC8k1eT64+BtfnIZ7uC6F4vb/
-   CW26FoWQBL6Fgpf0m+qEr1HvEZQee+sLeaq5acDBX8tovhaBn2e/2JbOd
-   tk2MrPEknDHAghvPjB3xE+D+agn3yC3LRvOUpLonmNGpddyc2Ez+skUDw
-   CoFwarinbNWD2WuFAld5js6vt04BRE8HwqalHLnUqWZOWpI8hCRLAH7GB
-   2YBZs5XW/eL0llAoaBS4gSPHYEdHUCjXr9xdU+HN7mLT6mQPPUdAjnvss
-   LcRFJQa05dvxFImWZxqPXbi3EjG0IA7AMgE5mNPcFw3j/xvhaQHmqiyMv
-   w==;
-IronPort-SDR: 8RLMovVziAW+boUG/RB7ra2K2nTbM7GMGiexCzt67DidZVnC4U6A5RbOaWQfbIWpjXEHHD7cyo
- r9TkqjwUaiT6PPnBObeoAsYN8MSxT40QB2BB0AbkEXzuG8v8qQggD6PkoxWTu+OOm9vvJhiOMz
- rJAwiuQko8zGGT0oRqbrH2zFHDs20WMxLmBbkAF5C7ZG5jRzqJDwSrce/KMOVj4WY5OFKyIFyB
- WNCb/xKdgC4obd1uZoDNLwo0ZsMFuip0YA2UKp0rhRet3CjdMIDRDTRWYB8S91tio2RHFDGyWN
- dAM=
-X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
-   d="scan'208";a="82247352"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2020 09:51:39 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 1 Jul 2020 09:51:19 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 1 Jul 2020 09:51:15 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
-        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-        <nicolas.ferre@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/2] net: dsa: microchip: split adjust_link() in phylink_mac_link_{up|down}()
-Date:   Wed, 1 Jul 2020 19:51:28 +0300
-Message-ID: <20200701165128.1213447-2-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200701165128.1213447-1-codrin.ciubotariu@microchip.com>
-References: <20200701165128.1213447-1-codrin.ciubotariu@microchip.com>
+        Wed, 1 Jul 2020 12:52:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAC7C08C5C1;
+        Wed,  1 Jul 2020 09:52:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so11062108pfu.3;
+        Wed, 01 Jul 2020 09:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yq7hs32OGfY8UE2WDtnMKE4YTJJ97qchS3NAypAqKh4=;
+        b=a2iqyFAgZJghpL1599VKJivckFlNKW6YZ2eyXsbimKE8c9lemuTeuE7lj/cyp1Y40L
+         Fgsq18tOxN1TfbuY/DMPfICbk52aFVuRdvz8RcCEnrgIsQHsvaqrdPepKUtwzJ8reyCw
+         ggfMdD4+ryg3Mkip2YwIoucybjQoJBWSO4IjkPq3lpUSHg3/GsWOeXdtkGeLNJQAPSwT
+         6OgJR5EFL4LA65j/FrnfLtl7JqVM5f6s7EbnfuiDCNRm9md3RhzwQtEvr1tF8wx8oFq6
+         idbDwWHhB5sWFxsudB8ocXNK4VRxYI939wJ7NgQT/nVDkk1o0QIHiS6acEcZwRjNgy6j
+         vs3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yq7hs32OGfY8UE2WDtnMKE4YTJJ97qchS3NAypAqKh4=;
+        b=kNENOs4Qax63TYV5ZvcBKyGw1igmkcTGicFFoVIpwZTEyuN7iF2cVTvuDF/N5vlF13
+         E89w6r5l2KVut1h5Sd4ZNC2G1AL7MbUeO2okXczwCOEk3h44nCTNHrajU1+5s/0RNCat
+         +c9tlIDMfIVM0AgQaN6gQrnBoiqhHgodwsI+mdqwyMWFPjFjFG+XhysLQnRGEzZAEKK4
+         AyTwupqB0An2t1G9Pv6wbIScPv7EP5w+F1KViG5iYgbM2uVvfs/LLfnKk78yORmRQbDi
+         uoRf7Bwpy02cOfjSo79dAi7mAipFg1QNuy6vsf7kVL6591hJXbFuB/rCaQoU06ha9p2i
+         hFyg==
+X-Gm-Message-State: AOAM532dsU0wSSbK/7A/aPBmhzmDOYRkXKV/BrSF5HiuuPqClFcvmzQW
+        LGJ7hOiNfLpK91URi+O6uys=
+X-Google-Smtp-Source: ABdhPJwZPXeUQcZx7/ku1wET7DYWbP5fjR/f9o0/uE/qo9tXNxugawuCNTx3l8stWcZDsJmbzgaheg==
+X-Received: by 2002:a62:ee1a:: with SMTP id e26mr24172206pfi.228.1593622347102;
+        Wed, 01 Jul 2020 09:52:27 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id g140sm6297437pfb.48.2020.07.01.09.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 09:52:26 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Dillow <dave@thedillows.org>,
+        Ion Badulescu <ionut@badula.org>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Ajit Khaparde <ajit.khaparde@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Jon Mason <jdmason@kudzu.us>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 00/11] net: ethernet: use generic power management
+Date:   Wed,  1 Jul 2020 22:20:46 +0530
+Message-Id: <20200701165057.667799-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DSA subsystem moved to phylink and adjust_link() became deprecated in
-the process. This patch removes adjust_link from the KSZ DSA switches and
-adds phylink_mac_link_up() and phylink_mac_link_down().
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/net/dsa/microchip/ksz8795.c    |  3 ++-
- drivers/net/dsa/microchip/ksz9477.c    |  3 ++-
- drivers/net/dsa/microchip/ksz_common.c | 32 ++++++++++++++++----------
- drivers/net/dsa/microchip/ksz_common.h |  7 ++++--
- 4 files changed, 29 insertions(+), 16 deletions(-)
+The purpose of this patch series is to remove legacy power management callbacks
+from net ethernet drivers.
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index b0227b0e31e6..d07231d1def5 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -1111,7 +1111,8 @@ static const struct dsa_switch_ops ksz8795_switch_ops = {
- 	.setup			= ksz8795_setup,
- 	.phy_read		= ksz_phy_read16,
- 	.phy_write		= ksz_phy_write16,
--	.adjust_link		= ksz_adjust_link,
-+	.phylink_mac_link_down	= ksz_mac_link_down,
-+	.phylink_mac_link_up	= ksz_mac_link_up,
- 	.port_enable		= ksz_enable_port,
- 	.port_disable		= ksz_disable_port,
- 	.get_strings		= ksz8795_get_strings,
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index 833cf3763000..162f2bd84774 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -1399,7 +1399,8 @@ static const struct dsa_switch_ops ksz9477_switch_ops = {
- 	.setup			= ksz9477_setup,
- 	.phy_read		= ksz9477_phy_read16,
- 	.phy_write		= ksz9477_phy_write16,
--	.adjust_link		= ksz_adjust_link,
-+	.phylink_mac_link_down	= ksz_mac_link_down,
-+	.phylink_mac_link_up	= ksz_mac_link_up,
- 	.port_enable		= ksz_enable_port,
- 	.port_disable		= ksz_disable_port,
- 	.get_strings		= ksz9477_get_strings,
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index 4a41f0c7dbbc..a35d6ba8dd8a 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -135,26 +135,34 @@ int ksz_phy_write16(struct dsa_switch *ds, int addr, int reg, u16 val)
- }
- EXPORT_SYMBOL_GPL(ksz_phy_write16);
- 
--void ksz_adjust_link(struct dsa_switch *ds, int port,
--		     struct phy_device *phydev)
-+void ksz_mac_link_down(struct dsa_switch *ds, int port, unsigned int mode,
-+		       phy_interface_t interface)
- {
- 	struct ksz_device *dev = ds->priv;
- 	struct ksz_port *p = &dev->ports[port];
- 
- 	/* Read all MIB counters when the link is going down. */
--	if (!phydev->link) {
--		p->read = true;
--		schedule_delayed_work(&dev->mib_read, 0);
--	}
-+	p->read = true;
-+	schedule_delayed_work(&dev->mib_read, 0);
-+
-+	mutex_lock(&dev->dev_mutex);
-+	dev->live_ports &= ~(1 << port);
-+	mutex_unlock(&dev->dev_mutex);
-+}
-+EXPORT_SYMBOL_GPL(ksz_mac_link_down);
-+
-+void ksz_mac_link_up(struct dsa_switch *ds, int port, unsigned int mode,
-+		     phy_interface_t interface, struct phy_device *phydev,
-+		     int speed, int duplex, bool tx_pause, bool rx_pause)
-+{
-+	struct ksz_device *dev = ds->priv;
-+
-+	/* Remember which port is connected and active. */
- 	mutex_lock(&dev->dev_mutex);
--	if (!phydev->link)
--		dev->live_ports &= ~(1 << port);
--	else
--		/* Remember which port is connected and active. */
--		dev->live_ports |= (1 << port) & dev->on_ports;
-+	dev->live_ports |= (1 << port) & dev->on_ports;
- 	mutex_unlock(&dev->dev_mutex);
- }
--EXPORT_SYMBOL_GPL(ksz_adjust_link);
-+EXPORT_SYMBOL_GPL(ksz_mac_link_up);
- 
- int ksz_sset_count(struct dsa_switch *ds, int port, int sset)
- {
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index 785702514a46..b1c468713609 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -160,8 +160,11 @@ void ksz_init_mib_timer(struct ksz_device *dev);
- 
- int ksz_phy_read16(struct dsa_switch *ds, int addr, int reg);
- int ksz_phy_write16(struct dsa_switch *ds, int addr, int reg, u16 val);
--void ksz_adjust_link(struct dsa_switch *ds, int port,
--		     struct phy_device *phydev);
-+void ksz_mac_link_down(struct dsa_switch *ds, int port, unsigned int mode,
-+		       phy_interface_t interface);
-+void ksz_mac_link_up(struct dsa_switch *ds, int port, unsigned int mode,
-+		     phy_interface_t interface, struct phy_device *phydev,
-+		     int speed, int duplex, bool tx_pause, bool rx_pause);
- int ksz_sset_count(struct dsa_switch *ds, int port, int sset);
- void ksz_get_ethtool_stats(struct dsa_switch *ds, int port, uint64_t *buf);
- int ksz_port_bridge_join(struct dsa_switch *ds, int port,
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the power management
+themselves, which is not recommended.
+
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
+
+All patches are compile-tested only.
+
+Vaibhav Gupta (11):
+  typhoon: use generic power management
+  ne2k-pci: use generic power management
+  starfire: use generic power management
+  ena_netdev: use generic power management
+  liquidio: use generic power management
+  sundance: use generic power management
+  benet: use generic power management
+  mlx4: use generic power management
+  ksz884x: use generic power management
+  vxge: use generic power management
+  natsemi: use generic power management
+
+ drivers/net/ethernet/3com/typhoon.c           | 53 +++++++++++--------
+ drivers/net/ethernet/8390/ne2k-pci.c          | 29 +++-------
+ drivers/net/ethernet/adaptec/starfire.c       | 23 +++-----
+ drivers/net/ethernet/amazon/ena/ena_netdev.c  | 22 ++++----
+ .../net/ethernet/cavium/liquidio/lio_main.c   | 31 ++---------
+ drivers/net/ethernet/dlink/sundance.c         | 27 +++-------
+ drivers/net/ethernet/emulex/benet/be_main.c   | 22 +++-----
+ drivers/net/ethernet/mellanox/mlx4/main.c     | 11 ++--
+ drivers/net/ethernet/micrel/ksz884x.c         | 25 ++++-----
+ drivers/net/ethernet/natsemi/natsemi.c        | 26 +++------
+ .../net/ethernet/neterion/vxge/vxge-main.c    | 14 ++---
+ 11 files changed, 101 insertions(+), 182 deletions(-)
+
 -- 
-2.25.1
+2.27.0
 
