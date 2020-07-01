@@ -2,272 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D396207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21E720760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 13:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1v7YWBn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fZ1ivIvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbgGANBg (ORCPT
+        id S1730811AbgGANBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 09:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730271AbgGANBf (ORCPT
+        Wed, 1 Jul 2020 09:01:48 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25378 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730271AbgGANBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 09:01:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F088C03E979;
-        Wed,  1 Jul 2020 06:01:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so11021604pjc.4;
-        Wed, 01 Jul 2020 06:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2OLtDqAl4GQ2i7cTj9ta2eBmWz0EGmYq4wIiRHp9/FE=;
-        b=E1v7YWBnZy/6D8OpTUzwkwr/HwxzEV2bD0PivosnKEP8vNMQ18ZyF5/DN+iiB8ZJ0z
-         R1jtKjOfwTFc5KkQJfIRkRFWoFNAEyWs0QHabsAWYTacOFSEpKynq5XgeQNcZWTz6V6Y
-         IWJWTq7jbnWGBh2wyg1t4XurPAdXJE+FtWOT09GtxUID8EhFotqerSHwXkQPk8umaREf
-         7BYLTVoi3Ama+5QeSK0ZFnKAbR9BkyTNaT6JANWVXLl12MjzdhDZ57Wcru2eQbHo0fGW
-         8Jpxi1juIN1vaUAhCcqHfCI/1Wm05Y6gTrg5FxDCiq9ePpnidLForpbC+x6+tOnp11C3
-         iz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2OLtDqAl4GQ2i7cTj9ta2eBmWz0EGmYq4wIiRHp9/FE=;
-        b=A3uEzM+QRHpsMbf6CnvCmAa83FWOjWTkFx9bAz/GKYm0xIne4PZWvcqJ1ALl6NmaIO
-         33VMh6VLig0aRO1wZ4DPjPPyidhoGlCDd/7ycIquSz4wyP5+ZvzzxnIr70eZpHcktwVv
-         tlsTnAq0OKBsVKnt5ZgdqsfyLkNHvS/M6Ld3uwnhX4RyNxCH/Moj5ngVpU+pPDiac2SW
-         LL4/NUfHgWJIWzM7eWQp3s6kA/Zu1yi7Rxf82y/l7E7m6so/vfqBrabOUwO7X/p+vDlV
-         inGlTA+CH/P/Sf0GuQeq9Y6KD8eYqrmEKwAgTahWZQah6hdQzlKfxry4hmiVBV7YifUK
-         nmeA==
-X-Gm-Message-State: AOAM533SdG/88bINZN1SHVJ29cJBYNj5t4dy3Zhj/8zssUbV5SMJaTS+
-        KowT4U/5cQ5WvwBvEkyjsEc=
-X-Google-Smtp-Source: ABdhPJxdUIQH7axNy8voJMnTkC/MVwjwPe+tBk8ZMmR8fhHtut3Jt9z85yF0t1uUIMkD74vPyuj5Nw==
-X-Received: by 2002:a17:90b:1491:: with SMTP id js17mr28856528pjb.118.1593608494762;
-        Wed, 01 Jul 2020 06:01:34 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id d9sm6070908pgv.45.2020.07.01.06.01.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:01:34 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Dillow <dave@thedillows.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Netanel Belgazal <netanel@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Zorik Machulsky <zorik@amazon.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Jon Mason <jdmason@kudzu.us>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 01/11] typhoon: use generic power management
-Date:   Wed,  1 Jul 2020 18:29:28 +0530
-Message-Id: <20200701125938.639447-2-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
-References: <20200701125938.639447-1-vaibhavgupta40@gmail.com>
+        Wed, 1 Jul 2020 09:01:42 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061Crs4w021831;
+        Wed, 1 Jul 2020 15:01:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=BPg1bCVg0walO+NYuFbF25pediBiPKNmiMXAhb/AmP4=;
+ b=fZ1ivIvpDVStRCamFjYjcFR539ZUa5+G/VP9wmcClnzVzC6LoZwhKkYzsCSpi2UceGHg
+ bSGP9tT8DNR6I+IyZPyiAc53IonWtceDuE+qXixYHmZBI+bIyiwx4ulOmpZeMIYaPxfq
+ 6ZE7MWQFMPpBX6qqUmviMz2qo3u+MinCnfsJPt2JZIL+aIuNGD5ZODhDUBKZUB/tUqvT
+ qKwhAEW5zQNcJjhb1LTLNKRMOahlqgMYbqkz3WeW1A0gcDaFm9A+kN1sfzpGZJoruQcY
+ kxwv+84DYCO9fH88i/Eyvhm1S4IGOXiiepjiHFiHQjFwQ+4vAI8vO+zj7ut5tg73h4EJ 7g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuk1j457-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 15:01:33 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2971610003A;
+        Wed,  1 Jul 2020 15:01:33 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0FA852B66E2;
+        Wed,  1 Jul 2020 15:01:33 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:01:32
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
+        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
+        <devicetree@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v7 0/3] DCMI set minimum cpufreq requirement
+Date:   Wed, 1 Jul 2020 15:01:26 +0200
+Message-ID: <20200701130129.30961-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states. And they use PCI
-helper functions to do it.
+This series allow to STM32 camera interface (DCMI) to require a minimum
+frequency to the CPUs before start streaming frames from the sensor.
+The minimum frequency requirement is provided in the devide-tree node.
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+Setting a minimum frequency for the CPUs is needed to ensure a quick handling
+of the interrupts between two sensor frames and avoid dropping half of them.
 
-In this driver:
-typhoon_resume() calls typhoon_wakeup() which then calls PCI helper
-functions pci_set_power_state() and pci_restore_state(). The only other
-function, using typhoon_wakeup() is typhoon_open().
+version 7:
+- rebase on v5.8-rc3
+- add reviewed and ack-by 
+- fix test condition 
 
-Thus remove the pci_*() calls from tyhpoon_wakeup() and place them in
-typhoon_open(), maintaining the order, to retain the normal behavior of
-the function
+version 6:
+- come back to version 4 and follow Valentin's suggestions about notifier
 
-Now, typhoon_suspend() calls typhoon_sleep() which then calls PCI helper
-functions pci_enable_wake(), pci_disable_device() and
-pci_set_power_state(). Other functions:
- - typhoon_open()
- - typhoon_close()
- - typhoon_init_one()
-are also invoking typhoon_sleep(). Thus, in this case, cannot simply
-move PCI helper functions call.
+version 5:
+- add a mutex to protect dcmi_irq_notifier_notify()
+- register notifier a probe time
 
-Hence, define a new function typhoon_sleep_early() which will do all the
-operations, which typhoon_sleep() was doing before calling PCI helper
-functions. Now typhoon_sleep() will call typhoon_sleep_early() to do
-those tasks, hence, the behavior for _open(), _close and _init_one() remain
-unchanged. And typhon_suspend() only requires typhoon_sleep_early().
+version 4:
+- simplify irq affinity handling by using only dcmi_irq_notifier_notify() 
 
-Compile-tested only.
+version 3:
+- add a cpumask field to track boosted CPUs
+- add irq_affinity_notify callback
+- protect cpumask field with a mutex 
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/ethernet/3com/typhoon.c | 53 +++++++++++++++++------------
- 1 file changed, 32 insertions(+), 21 deletions(-)
+Benjamin Gaignard (3):
+  dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
+  media: stm32-dcmi: Set minimum cpufreq requirement
+  ARM: dts: stm32: Set DCMI frequency requirement for stm32mp15x
 
-diff --git a/drivers/net/ethernet/3com/typhoon.c b/drivers/net/ethernet/3com/typhoon.c
-index 5ed33c2c4742..d3b30bacc94e 100644
---- a/drivers/net/ethernet/3com/typhoon.c
-+++ b/drivers/net/ethernet/3com/typhoon.c
-@@ -1801,9 +1801,8 @@ typhoon_free_rx_rings(struct typhoon *tp)
- }
- 
- static int
--typhoon_sleep(struct typhoon *tp, pci_power_t state, __le16 events)
-+typhoon_sleep_early(struct typhoon *tp, __le16 events)
- {
--	struct pci_dev *pdev = tp->pdev;
- 	void __iomem *ioaddr = tp->ioaddr;
- 	struct cmd_desc xp_cmd;
- 	int err;
-@@ -1832,20 +1831,29 @@ typhoon_sleep(struct typhoon *tp, pci_power_t state, __le16 events)
- 	 */
- 	netif_carrier_off(tp->dev);
- 
-+	return 0;
-+}
-+
-+static int
-+typhoon_sleep(struct typhoon *tp, pci_power_t state, __le16 events)
-+{
-+	int err;
-+
-+	err = typhoon_sleep_early(tp, events);
-+
-+	if (err)
-+		return err;
-+
- 	pci_enable_wake(tp->pdev, state, 1);
--	pci_disable_device(pdev);
--	return pci_set_power_state(pdev, state);
-+	pci_disable_device(tp->pdev);
-+	return pci_set_power_state(tp->pdev, state);
- }
- 
- static int
- typhoon_wakeup(struct typhoon *tp, int wait_type)
- {
--	struct pci_dev *pdev = tp->pdev;
- 	void __iomem *ioaddr = tp->ioaddr;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
- 	/* Post 2.x.x versions of the Sleep Image require a reset before
- 	 * we can download the Runtime Image. But let's not make users of
- 	 * the old firmware pay for the reset.
-@@ -2049,6 +2057,9 @@ typhoon_open(struct net_device *dev)
- 	if (err)
- 		goto out;
- 
-+	pci_set_power_state(tp->pdev, PCI_D0);
-+	pci_restore_state(tp->pdev);
-+
- 	err = typhoon_wakeup(tp, WaitSleep);
- 	if (err < 0) {
- 		netdev_err(dev, "unable to wakeup device\n");
-@@ -2114,11 +2125,10 @@ typhoon_close(struct net_device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int
--typhoon_resume(struct pci_dev *pdev)
-+static int __maybe_unused
-+typhoon_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct typhoon *tp = netdev_priv(dev);
- 
- 	/* If we're down, resume when we are upped.
-@@ -2144,9 +2154,10 @@ typhoon_resume(struct pci_dev *pdev)
- 	return -EBUSY;
- }
- 
--static int
--typhoon_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused
-+typhoon_suspend(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct net_device *dev = pci_get_drvdata(pdev);
- 	struct typhoon *tp = netdev_priv(dev);
- 	struct cmd_desc xp_cmd;
-@@ -2190,18 +2201,19 @@ typhoon_suspend(struct pci_dev *pdev, pm_message_t state)
- 		goto need_resume;
- 	}
- 
--	if (typhoon_sleep(tp, pci_choose_state(pdev, state), tp->wol_events) < 0) {
-+	if (typhoon_sleep_early(tp, tp->wol_events) < 0) {
- 		netdev_err(dev, "unable to put card to sleep\n");
- 		goto need_resume;
- 	}
- 
-+	device_wakeup_enable(dev_d);
-+
- 	return 0;
- 
- need_resume:
--	typhoon_resume(pdev);
-+	typhoon_resume(dev_d);
- 	return -EBUSY;
- }
--#endif
- 
- static int
- typhoon_test_mmio(struct pci_dev *pdev)
-@@ -2533,15 +2545,14 @@ typhoon_remove_one(struct pci_dev *pdev)
- 	free_netdev(dev);
- }
- 
-+static SIMPLE_DEV_PM_OPS(typhoon_pm_ops, typhoon_suspend, typhoon_resume);
-+
- static struct pci_driver typhoon_driver = {
- 	.name		= KBUILD_MODNAME,
- 	.id_table	= typhoon_pci_tbl,
- 	.probe		= typhoon_init_one,
- 	.remove		= typhoon_remove_one,
--#ifdef CONFIG_PM
--	.suspend	= typhoon_suspend,
--	.resume		= typhoon_resume,
--#endif
-+	.driver.pm	= &typhoon_pm_ops,
- };
- 
- static int __init
+ .../devicetree/bindings/media/st,stm32-dcmi.yaml   |   8 ++
+ arch/arm/boot/dts/stm32mp151.dtsi                  |   1 +
+ drivers/media/platform/stm32/stm32-dcmi.c          | 138 +++++++++++++++++++--
+ 3 files changed, 139 insertions(+), 8 deletions(-)
+
 -- 
-2.27.0
+2.15.0
 
