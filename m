@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4743C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC7C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8F2208B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C88A214F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGAXSE (ORCPT
+        id S1727817AbgGAXR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59680 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 19:17:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbgGAXR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:17:58 -0400
+        id S1726539AbgGAXR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 19:17:57 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E7720C56;
-        Wed,  1 Jul 2020 23:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4D00208C7;
+        Wed,  1 Jul 2020 23:17:56 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jqlzI-004918-O5; Wed, 01 Jul 2020 19:17:56 -0400
-Message-ID: <20200701231756.619246244@goodmis.org>
+        id 1jqlzH-0048yY-Ve; Wed, 01 Jul 2020 19:17:55 -0400
+Message-ID: <20200701231755.857125951@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 19:17:24 -0400
+Date:   Wed, 01 Jul 2020 19:17:19 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: [for-next][PATCH 7/8] ktest.pl: Add the log of last test in email on failure
+Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>
+Subject: [for-next][PATCH 2/8] ktest.pl: Always show log file location if defined even on success
 References: <20200701231717.757834010@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,120 +44,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-If a failure happens and an email is sent, show the contents of the log of
-the last test that failed in the email.
+If a log file is defined and the test were to error, a print statement is
+made that shows the user where the log file is to examine it further. But
+this is not done if the test were to succeed.
 
-Cc: Greg KH <gregkh@linuxfoundation.org>
+I find it annoying that it does not show where the log file is on success,
+as I run several different tests that place their log files in various
+locations, and even though the test pass, there's things I want to look at
+in the log file (like warnings). It is much easier to find where the log
+file is, if it is displayed at the end of a test.
+
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/testing/ktest/ktest.pl | 44 ++++++++++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 4 deletions(-)
+ tools/testing/ktest/ktest.pl | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index e90e2e7cb72c..945a7d8c178c 100755
+index 5f6f88911f5c..5d5cf3e1e81a 100755
 --- a/tools/testing/ktest/ktest.pl
 +++ b/tools/testing/ktest/ktest.pl
-@@ -82,6 +82,8 @@ my %default = (
-     "IGNORE_UNUSED"		=> 0,
- );
- 
-+my $test_log_start = 0;
-+
- my $ktest_config = "ktest.conf";
- my $version;
- my $have_version = 0;
-@@ -1492,8 +1494,21 @@ sub dodie {
- 
-     if ($email_on_error) {
- 	my $name = get_test_name;
-+	my $log_file;
-+
-+	if (defined($opt{"LOG_FILE"})) {
-+	    $log_file = "$tmpdir/log";
-+	    open (L, "$opt{LOG_FILE}") or die "Can't open $opt{LOG_FILE} to read)";
-+	    open (O, "> $tmpdir/log") or die "Can't open $tmpdir/log\n";
-+	    seek(L, $test_log_start, 0);
-+	    while (<L>) {
-+		print O;
-+	    }
-+	    close O;
-+	    close L;
-+	}
-         send_email("KTEST: critical failure for test $i [$name]",
--                "Your test started at $script_start_time has failed with:\n@_\n");
-+                "Your test started at $script_start_time has failed with:\n@_\n", $log_file);
-     }
- 
-     if ($monitor_cnt) {
-@@ -4185,7 +4200,7 @@ sub find_mailer {
+@@ -4441,6 +4441,10 @@ if ($opt{"POWEROFF_ON_SUCCESS"}) {
  }
  
- sub do_send_mail {
--    my ($subject, $message) = @_;
-+    my ($subject, $message, $file) = @_;
  
-     if (!defined($mail_path)) {
- 	# find the mailer
-@@ -4195,22 +4210,37 @@ sub do_send_mail {
- 	}
-     }
- 
-+    my $header_file = "$tmpdir/header";
-+    open (HEAD, ">$header_file") or die "Can not create $header_file\n";
-+    print HEAD "To: $mailto\n";
-+    print HEAD "Subject: $subject\n\n";
-+    print HEAD "$message\n";
-+    close HEAD;
++if (defined($opt{"LOG_FILE"})) {
++    print "\n See $opt{LOG_FILE} for the record of results.\n";
++}
 +
-     if (!defined($mail_command)) {
- 	if ($mailer eq "mail" || $mailer eq "mailx") {
--	    $mail_command = "\$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO <<< \'\$MESSAGE\'";
-+	    $mail_command = "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO";
- 	} elsif ($mailer eq "sendmail" ) {
--	    $mail_command =  "echo \'Subject: \$SUBJECT\n\n\$MESSAGE\' | \$MAIL_PATH/\$MAILER -t \$MAILTO";
-+	    $mail_command =  "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -t \$MAILTO";
- 	} else {
- 	    die "\nYour mailer: $mailer is not supported.\n";
- 	}
-     }
+ doprint "\n    $successes of $opt{NUM_TESTS} tests were successful\n\n";
  
-+    if (defined($file)) {
-+	$mail_command =~ s/\$BODY_FILE/$file/g;
-+    } else {
-+	$mail_command =~ s/\$BODY_FILE//g;
-+    }
-+
-+    $mail_command =~ s/\$HEADER_FILE/$header_file/g;
-     $mail_command =~ s/\$MAILER/$mailer/g;
-     $mail_command =~ s/\$MAIL_PATH/$mail_path/g;
-     $mail_command =~ s/\$MAILTO/$mailto/g;
-     $mail_command =~ s/\$SUBJECT/$subject/g;
-     $mail_command =~ s/\$MESSAGE/$message/g;
- 
-+	    print ">$mail_command<\n";
-     run_command $mail_command;
- }
- 
-@@ -4352,6 +4382,11 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
-     }
- 
-     doprint "\n\n";
-+
-+    if (defined($opt{"LOG_FILE"})) {
-+	$test_log_start = tell(LOG);
-+    }
-+
-     doprint "RUNNING TEST $i of $opt{NUM_TESTS}$name with option $test_type $run_type$installme\n\n";
- 
-     if (defined($pre_test)) {
-@@ -4461,6 +4496,7 @@ if ($email_when_finished) {
- }
- 
- if (defined($opt{"LOG_FILE"})) {
-+
-     print "\n See $opt{LOG_FILE} for the record of results.\n\n";
-     close LOG;
- }
+ if ($email_when_finished) {
 -- 
 2.26.2
 
