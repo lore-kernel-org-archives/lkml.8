@@ -2,251 +2,216 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2584EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA098C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9B92078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593587078;
-	bh=OJi4TwQ/AA4heWaYPz3OAf3XiDvTKL/p+rJQt1+v6FA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jx7ka0t7bqzCD6Tl6bsiLmBaNS+eoMGicvA9Y14jGyRWfZiiFE5Ik+hMIcDJ2ru3V
-	 QVgm7VXL9oA5J7uM8m5GndmKkUkAN3Dd7kNL0PpKoyv8LpVESkUmykuWrb+9JqSMT6
-	 CtbaWzalWjTtYfZgh66EG0iYvMlK+o1W4yBhQp3M=
+	by mail.kernel.org (Postfix) with ESMTP id A1CCE20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M5xx14Cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgGAHEg (ORCPT
+        id S1728126AbgGAHEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbgGAHEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:04:35 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B516020775;
-        Wed,  1 Jul 2020 07:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593587074;
-        bh=OJi4TwQ/AA4heWaYPz3OAf3XiDvTKL/p+rJQt1+v6FA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mevCwmWZHnD24MLcRKyCpDUKGLlk3ssUotGYzuCIzZjYQgbQlSv9TeXvxvDlqwVdh
-         D8m8LSMHEzFX8CR2njEus2usi2yj1XsP7za5gWivl9PsapKNFRA4hPmr5EVMtwjvf7
-         lo6uYhPLHZDfZbdR0RWYfFXy3N7svkwkF6tMpEPA=
-Date:   Wed, 1 Jul 2020 10:04:22 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 6/6] mm: Add memalloc_nowait
-Message-ID: <20200701070422.GH1492837@kernel.org>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625113122.7540-7-willy@infradead.org>
- <20200629050851.GC1492837@kernel.org>
- <20200629121816.GC25523@casper.infradead.org>
- <20200629125231.GJ32461@dhcp22.suse.cz>
- <6421BC93-CF2F-4697-B5CB-5ECDAA9FCB37@kernel.org>
- <20200629212830.GJ25523@casper.infradead.org>
- <20200630063436.GA2369@dhcp22.suse.cz>
- <20200701041203.GQ25523@casper.infradead.org>
- <20200701055346.GH2369@dhcp22.suse.cz>
+        Wed, 1 Jul 2020 03:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgGAHEi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 03:04:38 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C6DC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:04:38 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z13so22641013wrw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
+        b=M5xx14CvYq83HbV1b8rfXttQ1GPSnY1Tk0KdGpXG8pGlUAlrg0sWDEnk8bzKkJ6r6k
+         2Aa0XA3apmz6vDJQ0V5lUPceHC4c95rjbZ0M/T1M/vH/i0zfizzW71uUJr+IuzrwnQru
+         9kTAGNbQv3W1fYpXuQhR+qoNUkjPUQnu2c/R1I+MTqIlj2BJoKllFFzmemkMhkrlTlo+
+         yiv1jOcJwAo7xFKUnGiVXrK0m4pTQpddkUlVJcbN5jtVBKnBeLEE62nGdLe64NtdU2hP
+         6P7VnvWOXc23r0ZP3HU6wwfGlrc8BLrfA2YlVx4xaX6aBozq60qV4YXQi72OtSGVKYUT
+         Y6Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
+        b=YsUJbAhLy6YrfkSlccz3esrrRWFvj8RLxQkW9WfsQ+u1cvbz342J4lAo0si0C7KFYE
+         s3pwQubh4zODmeKNRx+jUIBdUtKMB9dgSwq+dTYxI+pJ6/M3tgrv1omFE1JSfLyv985Q
+         49r9VUIxv68vYNhQGCq87SChYejT/210EqB+pcT9nt/bQjSDq4lKaMbML07IsNPtpSgQ
+         H22ESfKJH1L4u7rYEzZ6oKb3XzxAzr1+emPto8O++WV+mcmyUbFSkMOC+OG/PBTx78BU
+         zVwPNuhgCMhNvO/Nrng+6bwDYpq/RopS4hmZM1jOJ6+9713XPEq8n2mt9HbzNKFRxmFt
+         qC0w==
+X-Gm-Message-State: AOAM530nPnrNWKcz+3BmDXhXhoPQa0VsVgQM1jv/dOOsOWA6QqgBKWVi
+        R6ywZNywimPbkcWhPcoAevrPTQ==
+X-Google-Smtp-Source: ABdhPJyZ0zCqVJ4yCEcYTanPmJiMHwO+RzvGh5qS/YdgNhZ3s59Ce3qt5dt+K7Lrub9MMzWPYdgvBA==
+X-Received: by 2002:a5d:66ca:: with SMTP id k10mr14794987wrw.244.1593587077069;
+        Wed, 01 Jul 2020 00:04:37 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id l18sm6294142wrm.52.2020.07.01.00.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 00:04:36 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 08:04:34 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+Message-ID: <20200701070434.GP1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
+ <f505c52d565ba7dbf05eef895782c410@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200701055346.GH2369@dhcp22.suse.cz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f505c52d565ba7dbf05eef895782c410@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 07:53:46AM +0200, Michal Hocko wrote:
-> On Wed 01-07-20 05:12:03, Matthew Wilcox wrote:
-> > On Tue, Jun 30, 2020 at 08:34:36AM +0200, Michal Hocko wrote:
-> > > On Mon 29-06-20 22:28:30, Matthew Wilcox wrote:
-> > > [...]
-> > > > The documentation is hard to add a new case to, so I rewrote it.  What
-> > > > do you think?  (Obviously I'll split this out differently for submission;
-> > > > this is just what I have in my tree right now).
-> > > 
-> > > I am fine with your changes. Few notes below.
-> > 
-> > Thanks!
-> > 
-> > > > -It turned out though that above approach has led to
-> > > > -abuses when the restricted gfp mask is used "just in case" without a
-> > > > -deeper consideration which leads to problems because an excessive use
-> > > > -of GFP_NOFS/GFP_NOIO can lead to memory over-reclaim or other memory
-> > > > -reclaim issues.
-> > > 
-> > > I believe this is an important part because it shows that new people
-> > > coming to the existing code shouldn't take it as correct and rather
-> > > question it. Also having a clear indication that overuse is causing real
-> > > problems that might be not immediately visible to subsystems outside of
-> > > MM.
-> > 
-> > It seemed to say a lot of the same things as this paragraph:
-> > 
-> > +You may notice that quite a few allocations in the existing code specify
-> > +``GFP_NOIO`` or ``GFP_NOFS``. Historically, they were used to prevent
-> > +recursion deadlocks caused by direct memory reclaim calling back into
-> > +the FS or IO paths and blocking on already held resources. Since 4.12
-> > +the preferred way to address this issue is to use the new scope APIs
-> > +described below.
-> > 
-> > Since this is in core-api/ rather than vm/, I felt that discussion of
-> > the problems that it causes to the mm was a bit too much detail for the
-> > people who would be reading this document.  Maybe I could move that
-> > information into a new Documentation/vm/reclaim.rst file?
+On Wed, 01 Jul 2020, Michael Walle wrote:
 
-It would be nice to have Documentation/vm/reclaim.rst regardless ;-)
-
-> Hmm, my experience is that at least some users of NOFS/NOIO use this
-> flag just to be sure they do not do something wrong without realizing
-> that this might have a very negative effect on the whole system
-> operation. That was the main motivation to have an explicit note there.
-> I am not sure having that in MM internal documentation will make it
-> stand out for a general reader.
-
-I'd add an explict note in the "Memory Scoping API" section. Please see
-below.
-
-> But I will not insist of course.
+> Hi Lee,
 > 
-> > Let's see if Our Grumpy Editor has time to give us his advice on this.
+> Am 2020-06-30 11:16, schrieb Michael Walle:
+> > I'm just trying to use this for my sl28 driver. Some remarks, see below.
 > > 
-> > > > -FS/IO code then simply calls the appropriate save function before
-> > > > -any critical section with respect to the reclaim is started - e.g.
-> > > > -lock shared with the reclaim context or when a transaction context
-> > > > -nesting would be possible via reclaim.  
+> > Am 2020-06-22 09:51, schrieb Lee Jones:
+> > > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > > accesses, facilitated by Regmap.  This extends support for registers
+> > > held behind I2C busses.
 > > > 
-> > > [...]
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > > Changelog:
 > > > 
-> > > > +These functions should be called at the point where any memory allocation
-> > > > +would start to cause problems.  That is, do not simply wrap individual
-> > > > +memory allocation calls which currently use ``GFP_NOFS`` with a pair
-> > > > +of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
-> > > > +find the lock which is taken that would cause problems if memory reclaim
-> > > > +reentered the filesystem, place a call to memalloc_nofs_save() before it
-> > > > +is acquired and a call to memalloc_nofs_restore() after it is released.
-> > > > +Ideally also add a comment explaining why this lock will be problematic.
+> > > v3 => v4
+> > >   - Add ability to provide a non-default Regmap configuration
 > > > 
-> > > The above text has mentioned the transaction context nesting as well and
-> > > that was a hint by Dave IIRC. It is imho good to have an example of
-> > > other reentrant points than just locks. I believe another useful example
-> > > would be something like loop device which is mixing IO and FS
-> > > layers but I am not familiar with all the details to give you an
-> > > useful text.
-> > 
-> > I'll let Mikulas & Dave finish fighting about that before I write
-> > any text mentioning the loop driver.  How about this for mentioning
-> > the filesystem transaction possibility?
-> > 
-> > @@ -103,12 +103,16 @@ flags specified by any particular call to allocate memory.
-> >  
-> >  These functions should be called at the point where any memory allocation
-> >  would start to cause problems.  That is, do not simply wrap individual
-> > -memory allocation calls which currently use ``GFP_NOFS`` with a pair
-> > -of calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead,
-> > -find the lock which is taken that would cause problems if memory reclaim
-> > +memory allocation calls which currently use ``GFP_NOFS`` with a pair of
-> > +calls to memalloc_nofs_save() and memalloc_nofs_restore().  Instead, find
-> > +the resource which is acquired that would cause problems if memory reclaim
-> >  reentered the filesystem, place a call to memalloc_nofs_save() before it
-> >  is acquired and a call to memalloc_nofs_restore() after it is released.
-> >  Ideally also add a comment explaining why this lock will be problematic.
-> > +A resource might be a lock which would need to be acquired by an attempt
-> > +to reclaim memory, or it might be starting a transaction that should not
-> > +nest over a memory reclaim transaction.  Deep knowledge of the filesystem
-> > +or driver is often needed to place memory scoping calls correctly.
-
-I'd s/often/always/ :)
-
-> Ack
-
-And
-
-+ Using memory scoping APIs "just in case" may lead to problematic
-reclaim behaviour and have a very negative effect on the whole system
-operation.
-
-> >  Please note that the proper pairing of save/restore functions
-> >  allows nesting so it is safe to call memalloc_noio_save() and
-> > 
-> > > > @@ -104,16 +134,19 @@ ARCH_KMALLOC_MINALIGN bytes.  For sizes which are a power of two, the
-> > > >  alignment is also guaranteed to be at least the respective size.
-> > > >  
-> > > >  For large allocations you can use vmalloc() and vzalloc(), or directly
-> > > > -request pages from the page allocator. The memory allocated by `vmalloc`
-> > > > -and related functions is not physically contiguous.
-> > > > +request pages from the page allocator.  The memory allocated by `vmalloc`
-> > > > +and related functions is not physically contiguous.  The `vmalloc`
-> > > > +family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
-> > > > +flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
-> > > > +the allocator which are hard to remove.  However, the scope APIs described
-> > > > +above can be used to limit the `vmalloc` functions.
+> > > v2 => v3
+> > >   - Change 'is CONFIG' present check to include loadable modules
+> > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+> > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
 > > > 
-> > > I would reiterate "Do not just wrap vmalloc by the scope api but rather
-> > > rely on the real scope for the NOFS/NOIO context". Maybe we want to
-> > > stress out that once a scope is defined it is sticky to _all_
-> > > allocations and all allocators within that scope. The text is already
-> > > saying that but maybe we want to make it explicit and make it stand out.
+> > > v1 => v2
+> > >   - Remove legacy references to OF
+> > >   - Allow building as a module (fixes h8300 0-day issue)
+> > > 
+> > > drivers/mfd/Kconfig            |   7 +++
+> > >  drivers/mfd/Makefile           |   1 +
+> > >  drivers/mfd/syscon-i2c.c       | 104
+> > > +++++++++++++++++++++++++++++++++
+> > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+> > >  4 files changed, 148 insertions(+)
+> > >  create mode 100644 drivers/mfd/syscon-i2c.c
+> > >  create mode 100644 include/linux/mfd/syscon-i2c.h
+> > > 
 > > 
-> > yes.  I went with:
+> > [..]
 > > 
-> > @@ -139,7 +143,10 @@ and related functions is not physically contiguous.  The `vmalloc`
-> >  family of functions don't support the old ``GFP_NOFS`` or ``GFP_NOIO``
-> >  flags because there are hardcoded ``GFP_KERNEL`` allocations deep inside
-> >  the allocator which are hard to remove.  However, the scope APIs described
-> > -above can be used to limit the `vmalloc` functions.
-> > +above can be used to limit the `vmalloc` functions.  As described above,
-> > +do not simply wrap individual calls in the scope APIs, but look for the
-> > +underlying reason why the memory allocation may not call into filesystems
-> > +or block devices.
+> > > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client
+> > > *client,
+> > > +					    struct regmap_config *regmap_config)
+> > > +{
+> > > +	struct device *dev = &client->dev;
+> > > +	struct syscon *entry, *syscon = NULL;
+> > > +
+> > > +	spin_lock(&syscon_i2c_list_slock);
+> > > +
+> > > +	list_for_each_entry(entry, &syscon_i2c_list, list)
+> > > +		if (entry->dev == dev) {
+> > > +			syscon = entry;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +	spin_unlock(&syscon_i2c_list_slock);
+> > > +
+> > > +	if (!syscon)
+> > > +		syscon = syscon_i2c_register(client, regmap_config);
+> > > +
+> > > +	if (IS_ERR(syscon))
+> > > +		return ERR_CAST(syscon);
+> > > +
+> > > +	return syscon->regmap;
+> > > +}
+> > > +
+> > > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
+> > > +					   struct regmap_config *regmap_config)
+> > > +{
+> > > +	return syscon_i2c_get_regmap(client, regmap_config);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
+> > > +
+> > > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
+> > > +{
+> > > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
+> > 
+> > What do you think about
+> > 
+> > struct regmap *syscon_i2c_to_regmap(struct device *dev)
+> > {
+> > 	struct i2c_client *client = i2c_verify_client(dev);
+> > 
+> > 	if (!client)
+> > 		return ERR_PTR(-EINVAL);
+> > 
+> > 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> > }
+> > 
+> > Or even move it to syscon_i2c_get_regmap().
+> > 
+> > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
+> > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
+> > all over again in all sub drivers.
+> > 
+> > So you could just do a
+> >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+> > 
+> > I've also noticed that the mmio syscon uses device_node as parameter.
+> > What
+> > was the reason to divert from that? Just curious.
 > 
-> ack
+> How is this supposed to be used?
 > 
-> >  
-> >  If you are not sure whether the allocation size is too large for
-> >  `kmalloc`, it is possible to use kvmalloc() and its derivatives. It will
-> > 
-> > 
-> > > [...]
-> > > > diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> > > > index 6484569f50df..9fc091274d1d 100644
-> > > > --- a/include/linux/sched/mm.h
-> > > > +++ b/include/linux/sched/mm.h
-> > > > @@ -186,9 +186,10 @@ static inline gfp_t current_gfp_context(gfp_t flags)
-> > > >  		 * them.  noio implies neither IO nor FS and it is a weaker
-> > > >  		 * context so always make sure it takes precedence.
-> > > >  		 */
-> > > > -		if (current->memalloc_nowait)
-> > > > +		if (current->memalloc_nowait) {
-> > > >  			flags &= ~__GFP_DIRECT_RECLAIM;
-> > > > -		else if (current->memalloc_noio)
-> > > > +			flags |= __GFP_NOWARN;
-> > > 
-> > > I dunno. I wouldn't make nowait implicitly NOWARN as well. At least not
-> > > with the initial implementation. Maybe we will learn later that there is
-> > > just too much unhelpful noise in the kernel log and will reconsider but
-> > > I wouldn't just start with that. Also we might learn that there will be
-> > > other modifiers for atomic (or should I say non-sleeping) scopes to be
-> > > defined. E.g. access to memory reserves but let's just wait for real
-> > > usecases.
-> > 
-> > Fair enough.  I'll drop that part.  Thanks!
+> I had something like the following in mind:
 > 
-> thanks!
-> -- 
-> Michal Hocko
-> SUSE Labs
+> &i2c {
+>   cpld@4a {
+>     compatible = "simple-mfd";
+>     reg = <0x4a>;
+> 
+>     gpio@4 {
+>       compatible = "vendor,gpio";
+>       reg = <0x4>;
+>     };
+>   };
+> };
+
+Yes, that was the idea.
+
+> But I think the childen are not enumerated if its an I2C device. And
+> the actual i2c driver is also missing.
+
+What do you mean?  Can you elaborate?
 
 -- 
-Sincerely yours,
-Mike.
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
