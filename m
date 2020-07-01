@@ -7,127 +7,193 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9717C2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203532074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IB4Hvt+x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kjDtT5Cn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgGAIcV (ORCPT
+        id S1729035AbgGAIcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:32:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51512 "EHLO
+        Wed, 1 Jul 2020 04:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgGAIcA (ORCPT
+        with ESMTP id S1728925AbgGAIby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:32:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E71C03E979
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:32:00 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so21493682wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:32:00 -0700 (PDT)
+        Wed, 1 Jul 2020 04:31:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44AA4C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so11619783wrl.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NnszQP2mk8a9Zq/MXSfFAa0Z6TG4Q6FByatEINovmEo=;
-        b=IB4Hvt+xLQjh7eH1K3vHpPewhv/QSAS3XGMBecXxTdYAVW9QcYdtLk7UOYl3azpF+V
-         40hSmK4rPCC5A6cnflmbpHGZW3V/0bY+a4YVir+5IDSrVSz0gTPgXhTuJ+ZuX7nCBFYt
-         QvZXvcX3DpZJjDjhKolpvBrQq5qxHGLxX0/ou2lvhY9BS6M7eYCcy4urFScvi3a6w7sq
-         AwZaht8IhrjmVMzouZuq0LcKMcXykZc7BqujAbcJuvWhoLoWHx0PnuNi2eKWzLg18Y/z
-         aiTRKWS5Pi02jjk4tNb957wqb5EPgtZLf18VxrMiszOnySekKm3h/UH+OWQAY4Blkq8p
-         Ygzg==
+        bh=y1zDXtnu4nYqM822JS90Uin0HwiZbzzdDBFpt66EWWs=;
+        b=kjDtT5CnnyHoOI//9ZKRCdWsUsDrpb78iN3QmW/EPRi1EjNlnjt73xLQRJ14BuFVXZ
+         +TCBypxwQk4NaL10ELB7nmCC//0gKXs+OZ+VDgWn9swpU9AZRkOW8A+4sW478jBbeZv5
+         Cl9xpiwLRyjI12R3BmSXnsPbdxX89kApsR6LhwS8plrPBlQ2JgZRLjfqXN2+WWF9V/xJ
+         tCVf4rOmkjk+HN6YwW20H2rI+BXoer+ue/go04ER2+LwTV5LvSgML57AGaFPmas4HPwm
+         DzXeQ32siFV1f01/T6qIgmq96PwOsIzsnmgGhlvzus1I0xax5ZLiyxVojkM3jPHhsgug
+         /88g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NnszQP2mk8a9Zq/MXSfFAa0Z6TG4Q6FByatEINovmEo=;
-        b=a1JodCOwGYC6tfto78va0gDuYOVBIOwzBL8isgVs6ymB+xEpFboJFj5SlOTetcMgP3
-         2GXFEslKwgdMoUTLqRFSjP+d6ivMp7kAFxG5Efsn28I26C6u2GndqGtA0M+OZ1UI5KZU
-         tyPh9EgDRrNau4noR50vVkdUyBBDqvXOprsnctiQvrt3SQYVeFGfRmzLvL693rHSz3R2
-         Q3HG6YaQSOSQeE+aDN58gYdCa0+NMlhQ6ro2qVhSDr9LwmqQLJYfavVJqheD2vSlBRem
-         4m4FszXdHUlhKic+j+tmVJQTmVvvJ/BMGU6XuWqR1kHh0AO2IqzuNBvJ5rY1KpB9jqg7
-         L8Xw==
-X-Gm-Message-State: AOAM531Jhy3wrhdQ27faSlg4e+PSSl51dtyeGIEDJgBd8b54R1ZVqyNk
-        5Qmm7Z7Jc9bQfEbFJPJxlKNnBQ==
-X-Google-Smtp-Source: ABdhPJy4sOV8stoOBzvTAvtFg8DBehh2mCfwoxjT94FkE4/HFkIXwq07UCxvviaLtD5CKsR0ap3+Rg==
-X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr25297772wmg.88.1593592318888;
-        Wed, 01 Jul 2020 01:31:58 -0700 (PDT)
+        bh=y1zDXtnu4nYqM822JS90Uin0HwiZbzzdDBFpt66EWWs=;
+        b=GQOBIiuAX/8XQcwaGDPFEtC1UBgJ26xMskN9C/R2g/N1UAy/0JGLOaqDss0ujtOdAv
+         HNYi4mOaaDYSKHEHaT0VteRKjg8ExDSYam2JLYHGcpGYNPJYvlDbC5twS5Tuna7MUdMX
+         Yl9Lj2Yvox8+ZHuqxZtjOm0jw/2oeAA8YjIGueXqvHHjOn4QmjBzGjJhyiySvPid/8nl
+         TQ9zSIJ6FFj9w/Fpm9KjffHJdUlH8Xsp2U7Q/9WhA7sV0tZpin6t80S0tj/hmfajvBIf
+         8PMBGAAPAmfsW37mEGrVRB5cVtxj7gWpx1bstOMxV2Akf3lbQGD0+SMsbJ7IK+PJjZ13
+         qzLw==
+X-Gm-Message-State: AOAM532+Qct/lLwrelw+xF3LFAK7zeYrw3A0u19Qn/diU0E3SSQqPoNF
+        lUozP5o7dyF3nH8IAUwCv7hhPA==
+X-Google-Smtp-Source: ABdhPJzQeILaMz/3pbBn9I99fcx2XvYHiAGeoAtPLrPO4Cn+nWNfHzJEjB3d+NMRDC+WpQHQ8M06Sw==
+X-Received: by 2002:adf:9525:: with SMTP id 34mr27141922wrs.313.1593592312976;
+        Wed, 01 Jul 2020 01:31:52 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.57
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:58 -0700 (PDT)
+        Wed, 01 Jul 2020 01:31:52 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 30/30] misc: cxl: flash: Remove unused pointer
-Date:   Wed,  1 Jul 2020 09:31:18 +0100
-Message-Id: <20200701083118.45744-31-lee.jones@linaro.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH v2 25/30] misc: mic: scif: scif_rma: Repair a bunch of kerneldoc issues
+Date:   Wed,  1 Jul 2020 09:31:13 +0100
+Message-Id: <20200701083118.45744-26-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DRC index pointer us updated on an OPCODE_ADD, but never
-actually read.  Remove the used pointer and shift up OPCODE_ADD
-to group with OPCODE_DELETE which also provides a noop.
+Firstly, for some reason documentation of all 'scifdev' arguments
+are missing, so apply those.  Also remove 2 descriptions of 'ep'
+which appear to document non-existent function arguments.
 
-Fixes the following W=1 kernel build warning:
+ drivers/misc/mic/scif/scif_rma.c:468: warning: Function parameter or member 'scifdev' not described in 'scif_create_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:468: warning: Excess function parameter 'ep' description in 'scif_create_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:510: warning: Excess function parameter 'ep' description in 'scif_destroy_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:1045: warning: Function parameter or member 'scifdev' not described in 'scif_alloc_req'
+ drivers/misc/mic/scif/scif_rma.c:1080: warning: Function parameter or member 'scifdev' not described in 'scif_alloc_gnt_rej'
+ drivers/misc/mic/scif/scif_rma.c:1104: warning: Function parameter or member 'scifdev' not described in 'scif_free_virt'
+ drivers/misc/mic/scif/scif_rma.c:1142: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg'
+ drivers/misc/mic/scif/scif_rma.c:1178: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg'
+ drivers/misc/mic/scif/scif_rma.c:1243: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg_ack'
+ drivers/misc/mic/scif/scif_rma.c:1262: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg_nack'
+ drivers/misc/mic/scif/scif_rma.c:1280: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg_ack'
+ drivers/misc/mic/scif/scif_rma.c:1299: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg_nack'
 
- drivers/misc/cxl/flash.c: In function ‘update_devicetree’:
- drivers/misc/cxl/flash.c:178:16: warning: variable ‘drc_index’ set but not used [-Wunused-but-set-variable]
- 178 | __be32 *data, drc_index, phandle;
- | ^~~~~~~~~
-
-Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/cxl/flash.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/misc/mic/scif/scif_rma.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/cxl/flash.c b/drivers/misc/cxl/flash.c
-index cb9cca35a2263..24e3dfcc91a74 100644
---- a/drivers/misc/cxl/flash.c
-+++ b/drivers/misc/cxl/flash.c
-@@ -175,7 +175,7 @@ static int update_devicetree(struct cxl *adapter, s32 scope)
- 	struct update_nodes_workarea *unwa;
- 	u32 action, node_count;
- 	int token, rc, i;
--	__be32 *data, drc_index, phandle;
-+	__be32 *data, phandle;
- 	char *buf;
+diff --git a/drivers/misc/mic/scif/scif_rma.c b/drivers/misc/mic/scif/scif_rma.c
+index 406cd5abfa726..de8f61efaef5c 100644
+--- a/drivers/misc/mic/scif/scif_rma.c
++++ b/drivers/misc/mic/scif/scif_rma.c
+@@ -458,7 +458,7 @@ static void scif_destroy_remote_lookup(struct scif_dev *remote_dev,
  
- 	token = rtas_token("ibm,update-nodes");
-@@ -206,15 +206,12 @@ static int update_devicetree(struct cxl *adapter, s32 scope)
+ /**
+  * scif_create_remote_window:
+- * @ep: end point
++ * @scifdev:  SCIF device
+  * @nr_pages: number of pages in window
+  *
+  * Allocate and prepare a remote registration window.
+@@ -500,7 +500,6 @@ scif_create_remote_window(struct scif_dev *scifdev, int nr_pages)
  
- 				switch (action) {
- 				case OPCODE_DELETE:
-+				case OPCODE_ADD:
- 					/* nothing to do */
- 					break;
- 				case OPCODE_UPDATE:
- 					update_node(phandle, scope);
- 					break;
--				case OPCODE_ADD:
--					/* nothing to do, just move pointer */
--					drc_index = *data++;
--					break;
- 				}
- 			}
- 		}
+ /**
+  * scif_destroy_remote_window:
+- * @ep: end point
+  * @window: remote registration window
+  *
+  * Deallocate resources for remote window.
+@@ -1037,6 +1036,7 @@ void scif_free_window_offset(struct scif_endpt *ep,
+ 
+ /**
+  * scif_alloc_req: Respond to SCIF_ALLOC_REQ interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remote side is requesting a memory allocation.
+@@ -1072,6 +1072,7 @@ void scif_alloc_req(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_alloc_gnt_rej: Respond to SCIF_ALLOC_GNT/REJ interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remote side responded to a memory allocation.
+@@ -1096,6 +1097,7 @@ void scif_alloc_gnt_rej(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_free_virt: Respond to SCIF_FREE_VIRT interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Free up memory kmalloc'd earlier.
+@@ -1134,6 +1136,7 @@ scif_fixup_aper_base(struct scif_dev *dev, struct scif_window *window)
+ 
+ /**
+  * scif_recv_reg: Respond to SCIF_REGISTER interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Update remote window list with a new registered window.
+@@ -1170,6 +1173,7 @@ void scif_recv_reg(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_unreg: Respond to SCIF_UNREGISTER interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remove window from remote registration list;
+@@ -1235,6 +1239,7 @@ void scif_recv_unreg(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_reg_ack: Respond to SCIF_REGISTER_ACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to complete registration.
+@@ -1253,6 +1258,7 @@ void scif_recv_reg_ack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_reg_nack: Respond to SCIF_REGISTER_NACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to inform it that registration
+@@ -1272,6 +1278,7 @@ void scif_recv_reg_nack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_unreg_ack: Respond to SCIF_UNREGISTER_ACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to complete unregistration.
+@@ -1290,6 +1297,7 @@ void scif_recv_unreg_ack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_unreg_nack: Respond to SCIF_UNREGISTER_NACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to inform it that unregistration
 -- 
 2.25.1
 
