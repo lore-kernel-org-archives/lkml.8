@@ -2,78 +2,97 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63143C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E154FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9BA206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZtRsZCs"
+	by mail.kernel.org (Postfix) with ESMTP id C0300206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593571681;
+	bh=WTGi74V/M6JRB3BLDWs0zeSTaQWxQakpQtHy05f1GGg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q/+yNYIlpehMqVwCNSE8jLJ6mWExXHpZGLb8fNw222+8RovLIGj7dX7MnEc59b7DT
+	 m+n8JJze4JHj1olhCETuImsEfBA9RRN/UAwrvp/knHFEXEeIz59I+PS96mhQrqM3lu
+	 4HbPhDxOZj4+EXhkAUDF6yWkUlReMFXalvSyNu7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgGACrN (ORCPT
+        id S1726919AbgGACsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGACrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:47:12 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9970FC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:47:12 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id e12so17328567qtr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=65Lb9qUYvL+TtRCJQNaCYe75zyZB0A/F6ddO/rGUvVs=;
-        b=RZtRsZCs1NDJAch4MibIDogGxCGQvAVPwfIHcrRuJIotG6759I+5sb5Nw6ONu/13sf
-         cfXTsZsL7tUU5zzksQrfhbsLFcJ5GaJD0xyU9ROGwFZ7dvl7Z+zI/Qn/Zf5PpUlxy5wY
-         bO8+faJL4CmxZIfgJpAcADgax9RAkisuXhyVoU3jKKzPWNvcvPvFolBkn7+ua1YYB941
-         XDrVhcCEDGRz2PSSfliQBQvLeNvrbXf7TA2CxY4EGJXycCtmyxhYuQTkgv00k78x6KDZ
-         Jv+OVeks56wS9/VLYufFbE67AHxkaXo/nMOjc+yMzGfiERNDWHzATH+DcEUoBzs0vm2i
-         MFoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=65Lb9qUYvL+TtRCJQNaCYe75zyZB0A/F6ddO/rGUvVs=;
-        b=aAnS8FQzeGe6A+Ve1z5cupULNSiru/Y2MUSltTfHE0NP7qjQtE5r+Qf7A8ZSJQZPUN
-         Dn7A8V6QXnh1uK/361CvLJLP6YsI39yrolb3KBKkYF35XAKScseDKYnNTuGDlYVbafL4
-         Yw3yfGNJu6cpU/OHWMfNWW2EvbhBNTjibrtPao2zJOwpjyOTXJq4xrVKaKX7vyJWP/2d
-         INaV+YrnhkhMOzx3nGFRypLPskVQwWeQuCd92ulOMAETwidbCg1BykVH+8EFnndS6c3l
-         s7DlljCFVzjssqbkB2pPlzJL90PelHZ4TKPOytQAbnqKBO3bO8hGjUsFAfAgLO3a8CCI
-         YVEg==
-X-Gm-Message-State: AOAM530GyzAZ+nwLmPf988niduuYnoxeatVMYfd3SKFceoDS98CZnqsK
-        mO2Xd1Yf8iNspxt5oJgr3D2zWH6HDALvvsAy0XJQ/BaOyV6rFg==
-X-Google-Smtp-Source: ABdhPJx+prB+JwxfK9FgPokdDAhqqWoWVFK/HRqfv5FRHMJYn/18hANIOuZJZB6wV8CO60y/O6o8mNdqKUidA/8fbDE=
-X-Received: by 2002:ac8:172e:: with SMTP id w43mr12978532qtj.8.1593571630514;
- Tue, 30 Jun 2020 19:47:10 -0700 (PDT)
-MIME-Version: 1.0
-From:   =?UTF-8?B?5a2Z5LiW6b6ZIHN1bnNoaWxvbmc=?= <sunshilong369@gmail.com>
-Date:   Wed, 1 Jul 2020 10:46:59 +0800
-Message-ID: <CAAvDm6awRF3J=sn-bZ1FO-JzuEAhcBvb66ev7=5BB2YracCgWg@mail.gmail.com>
-Subject: How do you investigate the cause of total hang? Is there some
- information that I should pay attention to in order to get some hint?
-To:     linux-kernel@vger.kernel.org, Kernelnewbies@kernelnewbies.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 22:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgGACr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:47:59 -0400
+Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8C58206EB;
+        Wed,  1 Jul 2020 02:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593571678;
+        bh=WTGi74V/M6JRB3BLDWs0zeSTaQWxQakpQtHy05f1GGg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mUY4V98q0IugIwaSjIBz0UE5DT7Y59IxduswVw5uo7NzpDfjNo8GRdV8kvAjjGnyO
+         x5HTMhgZAaqfXE8borCroalaROYxeqO2w/SSgJvvqfiCG5M1TyV0+fKDmIKsNVfi/Z
+         arubItYYt+8QyyeRmClKXcCdrjIOYglPFyJuWc70=
+Date:   Tue, 30 Jun 2020 19:47:55 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
+        dwagner@suse.de, tobin@kernel.org, cl@linux.com, stable@kernel.org
+Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
+Message-Id: <20200630194755.61f56a55d46222f8d0c84bdd@linux-foundation.org>
+In-Reply-To: <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
+References: <20200626003459.D8E015CA@viggo.jf.intel.com>
+        <20200629065203.GJ3346@MiWiFi-R3L-srv>
+        <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
+        <20200629233043.GK3346@MiWiFi-R3L-srv>
+        <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, list
+On Mon, 29 Jun 2020 16:37:37 -0700 Dave Hansen <dave.hansen@intel.com> wrote:
 
-My x86 machine(linux4.19) sometimes hangs, suddenly not responding in
-any way to the mouse or the keyboard.
+> On 6/29/20 4:30 PM, Baoquan He wrote:
+> >> The only way I can plausibly think of "cleaning up" the RECLAIM_ZONE bit
+> >> would be to raise our confidence that it is truly unused.  That takes
+> >> time, and probably a warning if we see it being set.  If we don't run
+> >> into anybody setting it or depending on it being set in a few years, we
+> >> can remove it.
+> > So adding the old bit back for compatibility looks good, thanks.
+> > 
+> > Then we have to be very careful when adding and reviewing new
+> > interface introducing, should not leave one which might be used
+> > in the future.
+> > 
+> > In fact, RECLAIM_ZONE is not completely useless. At least, when the old
+> > bit 0 is set, it may enter into node_reclaim() in get_page_from_freelist(),
+> > that makes it like a switch.
+> > 
+> > get_page_from_freelist {
+> > 
+> > 	...
+> >                         if (node_reclaim_mode == 0 ||                                                                                             
+> >                             !zone_allows_reclaim(ac->preferred_zoneref->zone, zone))
+> >                                 continue;
+> > 	...
+> > }
+> 
+> Oh, that's a very good point.  There are a couple of those around.  Let
+> me circle back and update the documentation and the variable name.  I'll
+> send out another version.
 
-How can I investigate why it hung up? Is there extra information I can
-find for a clue? Is there anything less drastic than power-off to get
-some kind of action, if only some limited shell or just beeps,
-but might give a clue?
+Was the omission of cc:stable deliberate?
 
-Thank you for your attention to this matter.
