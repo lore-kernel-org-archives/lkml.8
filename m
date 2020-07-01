@@ -2,133 +2,111 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C321EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC77AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9282074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593599140;
-	bh=jhLhsiid/JHPTIQixozqrmVK7Z7yivTR5uDy/0fEI4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=woS+Vsj9I6C96VkpmzCAF/MH8d0tV38pxZyZ3itLGlAfD1jOXM3+V7Dc+3TAvyqmE
-	 Im9X5VOjLpaTFaOU5qFAK2Y3l4H85LJOcU451R7J8jSx62HlEE7yRQohMeXr+b3lUv
-	 /2+c8uSFAuSwqow3fo6QK0TV9RMKeiyApBMxTXsU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E6B820747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F640izKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgGAKZj (ORCPT
+        id S1729904AbgGAK17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgGAKZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:25:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61FB02067D;
-        Wed,  1 Jul 2020 10:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593599137;
-        bh=jhLhsiid/JHPTIQixozqrmVK7Z7yivTR5uDy/0fEI4U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MIdgHcm8hZxwfkiuFehiZvcf3/Tr5GQA+93bWFROSIzCHdkqIW0C336sqCSrcoOe
-         9IGFq8THz2jtH5mtcNylSPiv8N8xlfrvpic2hj5lk+Rk4Eb7rCXBL3olxKyBxMCDvy
-         0GTZR7CuylPcMkoeFsVzizN2x+JiEUGVw6wBlss8=
-Date:   Wed, 1 Jul 2020 11:25:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
- CLANG_LTO=y
-Message-ID: <20200701102531.GE14959@willie-the-truck>
-References: <20200630173734.14057-1-will@kernel.org>
- <20200630173734.14057-19-will@kernel.org>
- <CANpmjNPOO=AVsVJMdL8sq03jwHsDR_1_FfWccwaLKEBRn1RFtA@mail.gmail.com>
- <CABCJKudxmrSNNzgPkc4NHt71rfdjAqFbb9n49S4QBDZPQ52e0w@mail.gmail.com>
+        Wed, 1 Jul 2020 06:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729683AbgGAK16 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:27:58 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E93C061755;
+        Wed,  1 Jul 2020 03:27:58 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 207so10628659pfu.3;
+        Wed, 01 Jul 2020 03:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m3FZxDrlLt48LmtqU4CU5m/XuCUHORmhZRpZzXJKt1c=;
+        b=F640izKjqUNFfwPYQodt/bdItFy5xb3UYVBMO+wQyVBhRzFY6FTSR1/wjdawZlsdOF
+         uwqSjtvxrvZQrjISy88NsGRrFSAqF8r8qk1D6Cx047QUUxU8AaUF+5EoW/ZodwfNH0Rv
+         oaEcs7F9b6LEGPC21F8PatjRXvNVrIA/OFywxfuoPllg/wPGWh1egNkfLVPm9bJgg5Hm
+         YrWNoTef2d7X2RP/jUrdO63vYRJKwkIvTc1W3V8ycuiz8ypXojiDluMEGuT6vS6IPQN3
+         WyIgwQAvou/CIvRiN/y02zqPY8YN3ppcL9XAfdC0vS4MnfW48JAM2XSSnDM5Lu2mqbzl
+         hB7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m3FZxDrlLt48LmtqU4CU5m/XuCUHORmhZRpZzXJKt1c=;
+        b=sZBY63nJJGos73vBJ+R0saH9pK7kfGU+6rdftdlj4GPtY+GBcMik6FcBcW7RWpDOLN
+         4ohd/Y07Zq5Q09JLTDjQGptXkqwHw4b7IoZxJU8PWEWGUe8HQgV2Mg2lp4wis7+nBVUU
+         FXzpnCRNye19HHlPRw0MBUtWyGN/nB8/WhLSl2A2WGoF5JgYId/g5ZsiFhGPhSEI9Pp6
+         DhXydhObcPXTB1ZjC/p8ajwF6RJCKIheumyR3JhbPpp+707pyaZqFkZkYESLy5c0JqW/
+         dGSiLqLeU3zHR9shYlMxj5Tklo6FHGVXePdNT+OhMRMak51b4lmBAZm/2jtp3gnE2gy5
+         m4nw==
+X-Gm-Message-State: AOAM5332kfB440ygVNfRVpV6iJd47AacEz4QSR9QYnkhdVblA/RkJxn7
+        lroQVCMUFnNxcdlcB1ThfeWS/os68SElypLC+IA=
+X-Google-Smtp-Source: ABdhPJwEM2tn83JW4KiTR3vh672XMQ7bxMrQqVOpB9OU+4kR2m5bq4L4a4iK+7TUI0oFW8gFMQKq7VKddB3VE3QbFqA=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr13499247pgn.4.1593599277215;
+ Wed, 01 Jul 2020 03:27:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKudxmrSNNzgPkc4NHt71rfdjAqFbb9n49S4QBDZPQ52e0w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com> <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200701061233.31120-3-calvin.johnson@oss.nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Jul 2020 13:27:43 +0300
+Message-ID: <CAHp75VfxpogiUhiwGDaj3wT5BN7U4s9coMd3Rw10zX=sxSn6Lg@mail.gmail.com>
+Subject: Re: [net-next PATCH v2 2/3] Documentation: ACPI: DSD: Document MDIO PHY
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        netdev <netdev@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux.cj@gmail.com, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:57:54PM -0700, Sami Tolvanen wrote:
-> On Tue, Jun 30, 2020 at 12:47 PM Marco Elver <elver@google.com> wrote:
-> >
-> > On Tue, 30 Jun 2020 at 19:39, Will Deacon <will@kernel.org> wrote:
-> > >
-> > > When building with LTO, there is an increased risk of the compiler
-> > > converting an address dependency headed by a READ_ONCE() invocation
-> > > into a control dependency and consequently allowing for harmful
-> > > reordering by the CPU.
-> > >
-> > > Ensure that such transformations are harmless by overriding the generic
-> > > READ_ONCE() definition with one that provides acquire semantics when
-> > > building with LTO.
-> > >
-> > > Signed-off-by: Will Deacon <will@kernel.org>
-> > > ---
-> > >  arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
-> > >  arch/arm64/kernel/vdso/Makefile   |  2 +-
-> > >  arch/arm64/kernel/vdso32/Makefile |  2 +-
-> > >  3 files changed, 65 insertions(+), 2 deletions(-)
-> > >  create mode 100644 arch/arm64/include/asm/rwonce.h
-> >
-> > This seems reasonable, given we can't realistically tell the compiler
-> > about dependent loads. What (if any), is the performance impact? I
-> > guess this also heavily depends on the actual silicon.
-> >
-> > I do wonder, though, if there is some way to make the compiler do
-> > something better for us. Clearly, implementing real
-> > memory_order_consume hasn't worked out until today. But maybe the
-> > compiler could promote dependent loads to acquires if it recognizes it
-> > lost dependencies during optimizations. Just thinking out loud, it
-> > probably still has some weird corner case that will break. ;-)
-> >
-> > The other thing is that I'd be cautious blaming LTO, as I tried to
-> > summarize here:
-> > https://lore.kernel.org/kernel-hardening/20200630191931.GA884155@elver.google.com/
-> >
-> > The main thing is that, yes, this might be something to be worried
-> > about, but if we are worried about it, we need to be worried about it
-> > in *all* builds (LTO or not). My guess is that's not acceptable. Would
-> > it be better to just guard the promotion of READ_ONCE() to acquire
-> > behind a config option like CONFIG_ACQUIRE_READ_DEPENDENCIES, and then
-> > make LTO select that (or maybe leave it optional?). In future, for
-> > very aggressive non-LTO compilers even, one may then also select that
-> > if there is substantiated worry things do actually break.
-> 
-> I agree, a separate config option would be better here.
-> 
-> Also Will, the LTO patches use CONFIG_LTO_CLANG instead of CLANG_LTO.
+On Wed, Jul 1, 2020 at 9:13 AM Calvin Johnson
+<calvin.johnson@oss.nxp.com> wrote:
+>
+> Introduce ACPI mechanism to get PHYs registered on a MDIO bus and
+> provide them to be connected to MAC.
+>
+> An ACPI node property "mdio-handle" is introduced to reference the
+> MDIO bus on which PHYs are registered with autoprobing method used
+> by mdiobus_register().
 
-D'oh, sorry. I'll fix that (I had that #ifdef commented out for my testing).
+...
 
-Will
+> +                    Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
+
+Reference as a package? Hmm... Is it really possible to have more than
+one handle here?
+
+...
+
+> +                   Package (2) {"phy-channel", 2},
+> +                   Package (2) {"phy-mode", "rgmii-id"},
+> +                   Package (2) {"mdio-handle", Package (){\_SB.MDI0}}
+
+And drop all these 2s. They are counted automatically by `iasl`.
+
+-- 
+With Best Regards,
+Andy Shevchenko
