@@ -2,146 +2,142 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED79C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A00E20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+MWlv5d"
+	by mail.kernel.org (Postfix) with ESMTP id A9A0120747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgGAJdv (ORCPT
+        id S1729422AbgGAJfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgGAJdv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:33:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0E6C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:33:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f8so13842292ljc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FXVNWOucI6EFBlae54Jt5ATW+9aYYLThSen8wW5XL98=;
-        b=N+MWlv5d/FXup8ILTXoea15sJMo76qgGssVMC0+yvlLxtz7pDBS5PLLHzyAj3OG/qd
-         cnmy9y+V66jkAnPsSAYNwjs31IaaDYtbX4jAiQXT0YrAiWigSY2NxRnY+3L0tQ02cIey
-         7FlHiDGkQ96aaZ/s6KiERKxjurCUzmVnoQ2z73cMGvr3dsvJipEAlRzYRaK3phM+xTfM
-         M4HXFPPBjmOFZAxxRJfooqx7q8Lt6BNXCEi3zazHg8iTSZQc4QaBl5pst/U/p3p8xbiJ
-         m7qUo8sa+9ExT4OOLIHAhvaIgWZv+WgOUf3kqvWL6BwxS/Sd5KypFOc3tHSCKlHlvLbN
-         hEFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FXVNWOucI6EFBlae54Jt5ATW+9aYYLThSen8wW5XL98=;
-        b=UpJ9hGcatOX6YA4zEcm1Teshg/Rs2XSB39xIaQjWtsNO+36U73SJI5lNce8jxTCTnM
-         IaX+8VrlXMzBExWPpzDxHRPr7ryhy7N7Jpi3oHhbxtPkFs2/cwvErATjNBt8H9OIrzm5
-         QKWr9ygoOoTb4mQxxN+GiwvRB/T6ZL8mDbbqaExNFQQhMG5FTk4Rg2fF+M+dFetpzPe6
-         dBx8ro2QFw8KjPnMUg0j7QsAyMX6e67qCOh4wKIAcPgz/lQygRnfRUuk4Vmj6Q8l5bi+
-         tHG4OCHE30cU9dBU/Mr9JQEhJ7N/nmfV2uNlXMAL15YQ7k/CNZ3fxOXxUfV5POdxHBIu
-         XyAA==
-X-Gm-Message-State: AOAM533XL0hCXEkDJkPdSUmSIRl9JF91nQ2OGujYLiOOuNdHtIMDLpJi
-        9jXmD0JGwnvLwo3oRsGHcO+LjhtAi2c040pO0dQt2Q==
-X-Google-Smtp-Source: ABdhPJzWLRNJD27Z7gbJanMdExaMCHQCltjsFuFwRAFU8qXv/ZmPe2JLRAGFSFeyuTZDcu0xZDwmNUF3OBw1bqThA5w=
-X-Received: by 2002:a2e:3602:: with SMTP id d2mr13337944lja.152.1593596029145;
- Wed, 01 Jul 2020 02:33:49 -0700 (PDT)
+        Wed, 1 Jul 2020 05:35:44 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:33250 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726715AbgGAJfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:35:43 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72nnWPxeqKBNAA--.1635S3;
+        Wed, 01 Jul 2020 17:35:36 +0800 (CST)
+Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
+ leaks
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        linux-csky@vger.kernel.org
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
+ <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
+Date:   Wed, 1 Jul 2020 17:35:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <20200625144509.17918-3-daniel.lezcano@linaro.org> <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
- <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org>
-In-Reply-To: <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 1 Jul 2020 15:03:38 +0530
-Message-ID: <CAP245DUG-OsSD-_CucMMQ26HpzjJhn0emfq_go923NsDq6RqOg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dx72nnWPxeqKBNAA--.1635S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1DGr4DWw1UArWkGryfJFb_yoW8Cw15pF
+        WUXrZI9rZ7t3W7Wrn7ZF97X3s8u347KFZFy34Skas7Zrn8Crn8CrW8AFnYvFn8Cw1xWa1F
+        vFs5Aa4rCa15AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvqb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280
+        aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0x
+        ZFpf9x07jriSQUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 2:56 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+On 07/01/2020 04:40 PM, Markus Elfring wrote:
+>> … were not released in a few error cases. …
+> Another small wording adjustment:
+>    … in two error cases. …
+
+OK
+
 >
-> On 30/06/2020 13:47, Amit Kucheria wrote:
-> > On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> In order to set the scene for the new generic netlink thermal
-> >> management and notifications, let remove the old dead code remaining
-> >
-> > s/management/management api/
-> >
-> > s/let/let's/
-> >
-> >> in the uapi headers.
-> >>
-> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >> ---
-> >>  include/linux/thermal.h      |  5 -----
-> >>  include/uapi/linux/thermal.h | 12 +-----------
-> >>  2 files changed, 1 insertion(+), 16 deletions(-)
-> >>
-> >> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> >> index faf7ad031e42..fc93a6348082 100644
-> >> --- a/include/linux/thermal.h
-> >> +++ b/include/linux/thermal.h
-> >> @@ -302,11 +302,6 @@ struct thermal_zone_params {
-> >>         int offset;
-> >>  };
-> >>
-> >> -struct thermal_genl_event {
-> >> -       u32 orig;
-> >> -       enum events event;
-> >> -};
-> >> -
-> >>  /**
-> >>   * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
-> >>   *
-> >> diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
-> >> index 96218378dda8..22df67ed9e9c 100644
-> >> --- a/include/uapi/linux/thermal.h
-> >> +++ b/include/uapi/linux/thermal.h
-> >> @@ -6,21 +6,12 @@
-> >>
-> >>  /* Adding event notification support elements */
-> >>  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
-> >> -#define THERMAL_GENL_VERSION                    0x01
-> >> +#define THERMAL_GENL_VERSION                    0x02
-> >
-> > This hunk should be removed since you set version back to 1 in the
-> > next patch and we don't actually intend to bump the version yet.
 >
-> Well, I've been very strict here for git-bisecting.
+> …
+>> +++ b/drivers/irqchip/irq-csky-apb-intc.c
+> …
+>> @@ -126,10 +127,17 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
+> …
+>> +err_iounmap:
+>> +	iounmap(reg_base);
+>> +	return ret;
+>>   }
+> …
 >
-> I move to V2 because of the removal, but when adding the new genetlink
-> code, the family name changed, so we returned back to the V1 as it is a
-> new genetlink thermal brand.
+> How do you think about to use the statement “return -ENOMEM;”?
 
-I don't understand the move to v2 for an empty skeleton UAPI. For the
-purposes of bisection, couldn't you just remove all the v1 UAPI (w/o
-bumping to v2) and then add a new UAPI in the next patch?
+OK
 
-> The name is change because it is no longer event based but also sampling
-> and commands.
+> Can the local variable “ret” be omitted in this function implementation?
 
-In this case, just to avoid any confusion, the new UAPI could be v2
-making the transition clear in case of bisection.
+If remove the local variable "ret",  it will look like this:
 
-I'm afraid the v1->v2->v1 is a bit more confusing.
+diff --git a/drivers/irqchip/irq-csky-apb-intc.c 
+b/drivers/irqchip/irq-csky-apb-intc.c
+index 5a2ec43..7e56657 100644
+--- a/drivers/irqchip/irq-csky-apb-intc.c
++++ b/drivers/irqchip/irq-csky-apb-intc.c
+@@ -101,8 +101,6 @@ static inline void setup_irq_channel(u32 magic, void 
+__iomem *reg_addr)
+  static int __init
+  ck_intc_init_comm(struct device_node *node, struct device_node *parent)
+  {
+-       int ret;
+-
+         if (parent) {
+                 pr_err("C-SKY Intc not a root irq controller\n");
+                 return -EINVAL;
+@@ -118,18 +116,23 @@ ck_intc_init_comm(struct device_node *node, struct 
+device_node *parent)
+&irq_generic_chip_ops, NULL);
+         if (!root_domain) {
+                 pr_err("C-SKY Intc irq_domain_add failed.\n");
+-               return -ENOMEM;
++               goto err_iounmap;
+         }
 
-/Amit
+-       ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
++       if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
+                         "csky_intc", handle_level_irq,
+-                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
+-       if (ret) {
++                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
+                 pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+-               return -ENOMEM;
++               goto err_domain_remove;
+         }
+
+         return 0;
++
++err_domain_remove:
++       irq_domain_remove(root_domain);
++err_iounmap:
++       iounmap(reg_base);
++       return -ENOMEM;
+  }
+
+>
+> Regards,
+> Markus
+
