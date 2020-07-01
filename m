@@ -2,107 +2,117 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B47C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B7B2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B334207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgGACQq (ORCPT
+        id S1726912AbgGACQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:16:46 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47700 "EHLO loongson.cn"
+        Tue, 30 Jun 2020 22:16:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47714 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726752AbgGACQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726744AbgGACQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jun 2020 22:16:37 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S2;
-        Wed, 01 Jul 2020 10:16:27 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S8;
+        Wed, 01 Jul 2020 10:16:29 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v4 00/14] irqchip: Fix potential resource leaks
-Date:   Wed,  1 Jul 2020 10:16:12 +0800
-Message-Id: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 06/14] irqchip/digicolor: Fix potential resource leaks
+Date:   Wed,  1 Jul 2020 10:16:18 +0800
+Message-Id: <1593569786-11500-7-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy5GF48uFW8Wr4xCryxGrg_yoW8trW8pF
-        4xta9Ivr48Cay3JrnxAr1jyF9xXwnYyay7K3s3A343Xwn5WryDGF1UAw1rXryUWayfGF1j
-        kr1rtFyUC3WDAFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr
-        0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8JwCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5AKs5UUUUU==
+In-Reply-To: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S8
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFW8AFW5Cr43trWruw1kAFb_yoW8uryUpF
+        WUGa9IgrWIvw4xWF1vkFyUZF98Kr4xKa9ru3yxC3Z2vrn5C34qkFyUAF1j9FyrArWxZa1j
+        vFs7tFy8C3WUKaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBSb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
+        jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI
+        8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2
+        IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4U
+        McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr1l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcRwZDUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I test the irqchip code of Loongson, I read the related code of other
-chips in drivers/irqchip and I find some potential resource leaks in the
-error path, I think it is better to fix them.
+In the function digicolor_of_init(), system resources "reg_base" and
+"digicolor_irq_domain" were not released in a few error cases. Thus
+add jump targets for the completion of the desired exception handling.
 
-v2:
-  - Split the first patch into a new patch series which
-    includes small patches and add "Fixes" tag
-  - Use "goto" label to handle error path in some patches
+Fixes: 8041dfbd31cf ("irqchip: Conexant CX92755 interrupts controller driver")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/irq-digicolor.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-v3:
-  - Add missed variable "ret" in the patch #5 and #13
-
-v4:
-  - Modify the commit message of each patch suggested by Markus Elfring
-  - Make "irq_domain_remove(root_domain)" under CONFIG_SMP in patch #3
-  - Add a return statement before goto label in patch #4
-
-Tiezhu Yang (14):
-  irqchip/ath79-misc: Fix potential resource leaks
-  irqchip/csky-apb-intc: Fix potential resource leaks
-  irqchip/csky-mpintc: Fix potential resource leaks
-  irqchip/davinci-aintc: Fix potential resource leaks
-  irqchip/davinci-cp-intc: Fix potential resource leaks
-  irqchip/digicolor: Fix potential resource leaks
-  irqchip/dw-apb-ictl: Fix potential resource leaks
-  irqchip/ls1x: Fix potential resource leaks
-  irqchip/mscc-ocelot: Fix potential resource leaks
-  irqchip/nvic: Fix potential resource leaks
-  irqchip/omap-intc: Fix potential resource leak
-  irqchip/riscv-intc: Fix potential resource leak
-  irqchip/s3c24xx: Fix potential resource leaks
-  irqchip/xilinx-intc: Fix potential resource leak
-
- drivers/irqchip/irq-ath79-misc.c      | 14 +++++++++++---
- drivers/irqchip/irq-csky-apb-intc.c   | 12 ++++++++++--
- drivers/irqchip/irq-csky-mpintc.c     | 34 +++++++++++++++++++++++++---------
- drivers/irqchip/irq-davinci-aintc.c   | 18 ++++++++++++++----
- drivers/irqchip/irq-davinci-cp-intc.c | 18 +++++++++++++++---
- drivers/irqchip/irq-digicolor.c       | 14 +++++++++++---
- drivers/irqchip/irq-dw-apb-ictl.c     | 11 ++++++++---
- drivers/irqchip/irq-ls1x.c            |  4 +++-
- drivers/irqchip/irq-mscc-ocelot.c     |  6 ++++--
- drivers/irqchip/irq-nvic.c            | 12 +++++++++---
- drivers/irqchip/irq-omap-intc.c       |  4 +++-
- drivers/irqchip/irq-riscv-intc.c      |  1 +
- drivers/irqchip/irq-s3c24xx.c         | 23 +++++++++++++++++------
- drivers/irqchip/irq-xilinx-intc.c     |  4 +++-
- 14 files changed, 134 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/irqchip/irq-digicolor.c b/drivers/irqchip/irq-digicolor.c
+index fc38d2d..18c6e77 100644
+--- a/drivers/irqchip/irq-digicolor.c
++++ b/drivers/irqchip/irq-digicolor.c
+@@ -89,7 +89,8 @@ static int __init digicolor_of_init(struct device_node *node,
+ 	ucregs = syscon_regmap_lookup_by_phandle(node, "syscon");
+ 	if (IS_ERR(ucregs)) {
+ 		pr_err("%pOF: unable to map UC registers\n", node);
+-		return PTR_ERR(ucregs);
++		ret = PTR_ERR(ucregs);
++		goto err_iounmap;
+ 	}
+ 	/* channel 1, regular IRQs */
+ 	regmap_write(ucregs, UC_IRQ_CONTROL, 1);
+@@ -98,7 +99,8 @@ static int __init digicolor_of_init(struct device_node *node,
+ 		irq_domain_add_linear(node, 64, &irq_generic_chip_ops, NULL);
+ 	if (!digicolor_irq_domain) {
+ 		pr_err("%pOF: unable to create IRQ domain\n", node);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_iounmap;
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(digicolor_irq_domain, 32, 1,
+@@ -106,7 +108,7 @@ static int __init digicolor_of_init(struct device_node *node,
+ 					     clr, 0, 0);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to allocate IRQ gc\n", node);
+-		return ret;
++		goto err_domain_remove;
+ 	}
+ 
+ 	digicolor_set_gc(reg_base, 0, IC_INT0ENABLE_LO, IC_FLAG_CLEAR_LO);
+@@ -115,5 +117,11 @@ static int __init digicolor_of_init(struct device_node *node,
+ 	set_handle_irq(digicolor_handle_irq);
+ 
+ 	return 0;
++
++err_domain_remove:
++	irq_domain_remove(digicolor_irq_domain);
++err_iounmap:
++	iounmap(reg_base);
++	return ret;
+ }
+ IRQCHIP_DECLARE(conexant_digicolor_ic, "cnxt,cx92755-ic", digicolor_of_init);
 -- 
 2.1.0
 
