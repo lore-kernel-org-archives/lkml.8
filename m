@@ -2,313 +2,177 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D82C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F69C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6455A20781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDADC20781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zmd4WEQl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YFBSv7Vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgGAArh (ORCPT
+        id S1726298AbgGAAsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 20:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGAArh (ORCPT
+        Tue, 30 Jun 2020 20:48:06 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:37547 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgGAAsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 20:47:37 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D6DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:47:36 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j1so10194690pfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=FApsYfidCWF8PUb9YyQNziOfrjjNdEduZb66lKdbc78=;
-        b=Zmd4WEQlBlsjWKtE75ycMbKBRu1JDnXqQYurD8IYKJHbytt1oNi2iooVpjaxrZIjJO
-         QiOxqGzwegHW+xwf0kS5vn9scMVGq9nwrAlf/bQZTRXV9PXgauEhiwwBPcBg4XOBGkCM
-         eLyp+Dalbt7MsG+WFcJbdk50F3v5WM0H+N6Ivb4yTUAWdxsVgU6O5NIidNJbVvUTwcw5
-         wIis06r1txEX95i9UW6PrvkeiLIxslqLVsrFzks8QAbY+A5NUu35dmUUxcCrVxdwVP85
-         bXy3hOJjvvE838U6eR/9MXdBYUj6tVPSA0GZrkR4LCB1Chc8e7cezKfZOSur+OdinMbU
-         64gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=FApsYfidCWF8PUb9YyQNziOfrjjNdEduZb66lKdbc78=;
-        b=TWJG7YYPPf9/xrToK8pjwE0A4l/HzQdfIZyyPjXp+pHMN0HNxwdcR+bObOSIMigEjs
-         T5SQ2NIvI+uXPbJE+W8K5yCkGed9rmom/KvOHX1hfalQtQCCygx5LU7688mFGst70JGq
-         gOl1zilQITdL+n4/e2HFq6ImFDiLDNN3U6T0wswjMA0wF2/vi3a0+5Y2kOOsOKSO/ef3
-         rwiCIMiYhLQAYHLDprX1OGpJcvuH82nBlz8w+xNeiu0UUSwNWOSyN0Mcec7uRluZEowt
-         R42wyGJXdJNRRptj7zA3jFrO+r1I3XaAFaFrUsaYHHsR70ply0SyS4P7A07CI5UXVGlf
-         Mrwg==
-X-Gm-Message-State: AOAM5334Hdgt+ynAJ9C9JQzg9ld3HA1Q+hENlKgOLp9v0pQ00McROKKg
-        rS7EuZgC/vo88b4X/+Xbqg1gAiuCpr8=
-X-Google-Smtp-Source: ABdhPJyCrtSQmP3D0piJX0g6xwWJ54MYBvmA94nVDX6BkKfdovGMEuJnDDbYAAIS88sT2BHLIOfgQg==
-X-Received: by 2002:a62:6d03:: with SMTP id i3mr14088228pfc.6.1593564455789;
-        Tue, 30 Jun 2020 17:47:35 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id g9sm3525327pfm.151.2020.06.30.17.47.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 17:47:34 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 17:47:34 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kbusch@kernel.org, yang.shi@linux.alibaba.com,
-        ying.huang@intel.com, dan.j.williams@intel.com
-Subject: Re: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of
- discard
-In-Reply-To: <20200629234509.8F89C4EF@viggo.jf.intel.com>
-Message-ID: <alpine.DEB.2.22.394.2006301732010.1644114@chino.kir.corp.google.com>
-References: <20200629234503.749E5340@viggo.jf.intel.com> <20200629234509.8F89C4EF@viggo.jf.intel.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 30 Jun 2020 20:48:04 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200701004802epoutp01295832ea388dae21e2793c4182669e82~denQ01KGe1643816438epoutp01D
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:48:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200701004802epoutp01295832ea388dae21e2793c4182669e82~denQ01KGe1643816438epoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593564482;
+        bh=CNHOyk7FntBxbO6DreAHDvfBp5z8zIJ33mfiTt6PEOo=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=YFBSv7VjrWxwTug/llzdu5kvWGSpoSIK5GbGHzCx9tY1NixRa12bgqSJ6feYOPmMP
+         +l//C8SRBBqQUtKLGXMMayBTqn5RqCon+5NQRjF2JFxIxpmDEg4Li6YZ0DogwZVuoe
+         YbwQ3/qtLGnueccNjJvqaVWXcTNoemptidLCftNw=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200701004802epcas1p104acdf83bdd554594d94cf051eafaf3f~denQb2vuN3040330403epcas1p1N;
+        Wed,  1 Jul 2020 00:48:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [RFC PATCH v3 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bean Huo <huobean@gmail.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <fd205a23c433aea43f846c37cf1f521c114cdd68.camel@gmail.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1210830415.21593564482235.JavaMail.epsvc@epcpadp2>
+Date:   Wed, 01 Jul 2020 09:14:34 +0900
+X-CMS-MailID: 20200701001434epcms2p19a2315a4e4b55344ce1cacd79350408b
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200623010201epcms2p11aebdf1fbc719b409968cba997507114
+References: <fd205a23c433aea43f846c37cf1f521c114cdd68.camel@gmail.com>
+        <60647cf00d9db6818488a714b48b9b6e2a1eb728.camel@gmail.com>
+        <948f573d136b39410f7d610e5019aafc9c04fe62.camel@gmail.com>
+        <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
+        <336371513.41593411482259.JavaMail.epsvc@epcpadp2>
+        <231786897.01593479281798.JavaMail.epsvc@epcpadp2>
+        <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020, Dave Hansen wrote:
-
-> From: Dave Hansen <dave.hansen@linux.intel.com>
+On Tue, 2020-06-30 at 10:05 +0900, Daejun Park wrote:
+> > Hi Bean,
+> > > On Mon, 2020-06-29 at 15:15 +0900, Daejun Park wrote:
+> > > > > Seems you intentionally ignored to give you comments on my
+> > > > > suggestion.
+> > > > > let me provide the reason.
+> > > > 
+> > > > Sorry! I replied to your comment (
+> > > > 
+> https://protect2.fireeye.com/url?k=be575021-e3854728-be56db6e-0cc47a31cdf8-6c7d0e1e42762b92&q=1&u=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F6%2F15%2F1492
+> > > > ),
+> > > > but you didn't reply on that. I thought you agreed because you
+> > > > didn't
+> > > > send
+> > > > any more comments.
+> > > > 
+> > > > 
+> > > > > Before submitting your next version patch, please check your
+> > > > > L2P
+> > > > > mapping HPB reqeust submission logical algorithem. I have did
+> > > > 
+> > > > We are also reviewing the code that you submitted before.
+> > > > It seems to be a performance improvement as it sends a map
+> > > > request
+> > > > directly.
+> > > > 
+> > > > > performance comparison testing on 4KB, there are about 13%
+> > > > > performance
+> > > > > drop. Also the hit count is lower. I don't know if this is
+> > > > > related
+> > > > > to
+> > > > 
+> > > > It is interesting that there is actually a performance
+> > > > improvement. 
+> > > > Could you share the test environment, please? However, I think
+> > > > stability is
+> > > > important to HPB driver. We have tested our method with the real
+> > > > products and
+> > > > the HPB 1.0 driver is based on that.
+> > > 
+> > > I just run fio benchmark tool with --rw=randread, --bs=4kb, --
+> > > size=8G/10G/64G/100G. and see what performance diff with the direct
+> > > submission approach.
+> > 
+> > Thanks!
+> > 
+> > > > After this patch, your approach can be done as an incremental
+> > > > patch?
+> > > > I would
+> > > > like to test the patch that you submitted and verify it.
+> > > > 
+> > > > > your current work queue scheduling, since you didn't add the
+> > > > > timer
+> > > > > for
+> > > > > each HPB request.
+> > > 
+> > > Taking into consideration of the HPB 2.0, can we submit the HPB
+> > > write
+> > > request to the SCSI layer? if not, it will be a direct submission
+> > > way.
+> > > why not directly use direct way? or maybe you have a more advisable
+> > > approach to work around this. would you please share with us.
+> > > appreciate.
+> > 
+> > I am considering a direct submission way for the next version.
+> > We will implement the write buffer command of HPB 2.0, after patching
+> > HPB 1.0.
+> > 
+> > As for the direct submission of HPB releated command including HPB
+> > write
+> > buffer, I think we'd better discuss the right approach in depth
+> > before
+> > moving on to the next step.
+> > 
 > 
-> If a memory node has a preferred migration path to demote cold pages,
-> attempt to move those inactive pages to that migration node before
-> reclaiming. This will better utilize available memory, provide a faster
-> tier than swapping or discarding, and allow such pages to be reused
-> immediately without IO to retrieve the data.
+> Hi Daejun
+> If you need reference code, you can freely copy my code from my RFC v3
+> patchset. or if you need my side testing support, just let me, I can
+> help you test your code.
 > 
-> When handling anonymous pages, this will be considered before swap if
-> enabled. Should the demotion fail for any reason, the page reclaim
-> will proceed as if the demotion feature was not enabled.
-> 
+It will be good example code for developing HPB 2.0.
 
-Thanks for sharing these patches and kick-starting the conversation, Dave.
-
-Could this cause us to break a user's mbind() or allow a user to 
-circumvent their cpuset.mems?
-
-Because we don't have a mapping of the page back to its allocation 
-context (or the process context in which it was allocated), it seems like 
-both are possible.
-
-So let's assume that migration nodes cannot be other DRAM nodes.  
-Otherwise, memory pressure could be intentionally or unintentionally 
-induced to migrate these pages to another node.  Do we have such a 
-restriction on migration nodes?
-
-> Some places we would like to see this used:
-> 
->   1. Persistent memory being as a slower, cheaper DRAM replacement
->   2. Remote memory-only "expansion" NUMA nodes
->   3. Resolving memory imbalances where one NUMA node is seeing more
->      allocation activity than another.  This helps keep more recent
->      allocations closer to the CPUs on the node doing the allocating.
-> 
-
-(3) is the concerning one given the above if we are to use 
-migrate_demote_mapping() for DRAM node balancing.
-
-> Yang Shi's patches used an alternative approach where to-be-discarded
-> pages were collected on a separate discard list and then discarded
-> as a batch with migrate_pages().  This results in simpler code and
-> has all the performance advantages of batching, but has the
-> disadvantage that pages which fail to migrate never get swapped.
-> 
-> #Signed-off-by: Keith Busch <keith.busch@intel.com>
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> ---
-> 
->  b/include/linux/migrate.h        |    6 ++++
->  b/include/trace/events/migrate.h |    3 +-
->  b/mm/debug.c                     |    1 
->  b/mm/migrate.c                   |   52 +++++++++++++++++++++++++++++++++++++++
->  b/mm/vmscan.c                    |   25 ++++++++++++++++++
->  5 files changed, 86 insertions(+), 1 deletion(-)
-> 
-> diff -puN include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/linux/migrate.h
-> --- a/include/linux/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.950312604 -0700
-> +++ b/include/linux/migrate.h	2020-06-29 16:34:38.963312604 -0700
-> @@ -25,6 +25,7 @@ enum migrate_reason {
->  	MR_MEMPOLICY_MBIND,
->  	MR_NUMA_MISPLACED,
->  	MR_CONTIG_RANGE,
-> +	MR_DEMOTION,
->  	MR_TYPES
->  };
->  
-> @@ -78,6 +79,7 @@ extern int migrate_huge_page_move_mappin
->  				  struct page *newpage, struct page *page);
->  extern int migrate_page_move_mapping(struct address_space *mapping,
->  		struct page *newpage, struct page *page, int extra_count);
-> +extern int migrate_demote_mapping(struct page *page);
->  #else
->  
->  static inline void putback_movable_pages(struct list_head *l) {}
-> @@ -104,6 +106,10 @@ static inline int migrate_huge_page_move
->  	return -ENOSYS;
->  }
->  
-> +static inline int migrate_demote_mapping(struct page *page)
-> +{
-> +	return -ENOSYS;
-> +}
->  #endif /* CONFIG_MIGRATION */
->  
->  #ifdef CONFIG_COMPACTION
-> diff -puN include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard include/trace/events/migrate.h
-> --- a/include/trace/events/migrate.h~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.952312604 -0700
-> +++ b/include/trace/events/migrate.h	2020-06-29 16:34:38.963312604 -0700
-> @@ -20,7 +20,8 @@
->  	EM( MR_SYSCALL,		"syscall_or_cpuset")		\
->  	EM( MR_MEMPOLICY_MBIND,	"mempolicy_mbind")		\
->  	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
-> -	EMe(MR_CONTIG_RANGE,	"contig_range")
-> +	EM( MR_CONTIG_RANGE,	"contig_range")			\
-> +	EMe(MR_DEMOTION,	"demotion")
->  
->  /*
->   * First define the enums in the above macros to be exported to userspace
-> diff -puN mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/debug.c
-> --- a/mm/debug.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.954312604 -0700
-> +++ b/mm/debug.c	2020-06-29 16:34:38.963312604 -0700
-> @@ -25,6 +25,7 @@ const char *migrate_reason_names[MR_TYPE
->  	"mempolicy_mbind",
->  	"numa_misplaced",
->  	"cma",
-> +	"demotion",
->  };
->  
->  const struct trace_print_flags pageflag_names[] = {
-> diff -puN mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/migrate.c
-> --- a/mm/migrate.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.956312604 -0700
-> +++ b/mm/migrate.c	2020-06-29 16:34:38.964312604 -0700
-> @@ -1151,6 +1151,58 @@ int next_demotion_node(int node)
->  	return node;
->  }
->  
-> +static struct page *alloc_demote_node_page(struct page *page, unsigned long node)
-> +{
-> +	/*
-> +	 * 'mask' targets allocation only to the desired node in the
-> +	 * migration path, and fails fast if the allocation can not be
-> +	 * immediately satisfied.  Reclaim is already active and heroic
-> +	 * allocation efforts are unwanted.
-> +	 */
-> +	gfp_t mask = GFP_NOWAIT | __GFP_NOWARN | __GFP_NORETRY |
-> +			__GFP_NOMEMALLOC | __GFP_THISNODE | __GFP_HIGHMEM |
-> +			__GFP_MOVABLE;
-
-GFP_NOWAIT has the side-effect that it does __GFP_KSWAPD_RECLAIM: do we 
-actually want to kick kswapd on the pmem node?
-
-If not, GFP_TRANSHUGE_LIGHT does a trick where it does 
-GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM.  You could probably do the same 
-here although the __GFP_IO and __GFP_FS would be unnecessary (but not 
-harmful).
-
-> +	struct page *newpage;
-> +
-> +	if (PageTransHuge(page)) {
-> +		mask |= __GFP_COMP;
-> +		newpage = alloc_pages_node(node, mask, HPAGE_PMD_ORDER);
-> +		if (newpage)
-> +			prep_transhuge_page(newpage);
-> +	} else
-> +		newpage = alloc_pages_node(node, mask, 0);
-> +
-> +	return newpage;
-> +}
-> +
-> +/**
-> + * migrate_demote_mapping() - Migrate this page and its mappings to its
-> + *                            demotion node.
-> + * @page: A locked, isolated, non-huge page that should migrate to its current
-> + *        node's demotion target, if available. Since this is intended to be
-> + *        called during memory reclaim, all flag options are set to fail fast.
-> + *
-> + * @returns: MIGRATEPAGE_SUCCESS if successful, -errno otherwise.
-> + */
-> +int migrate_demote_mapping(struct page *page)
-> +{
-> +	int next_nid = next_demotion_node(page_to_nid(page));
-> +
-> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +	VM_BUG_ON_PAGE(PageHuge(page), page);
-> +	VM_BUG_ON_PAGE(PageLRU(page), page);
-> +
-> +	if (next_nid == NUMA_NO_NODE)
-> +		return -ENOSYS;
-> +	if (PageTransHuge(page) && !thp_migration_supported())
-> +		return -ENOMEM;
-> +
-> +	/* MIGRATE_ASYNC is the most light weight and never blocks.*/
-> +	return __unmap_and_move(alloc_demote_node_page, NULL, next_nid,
-> +				page, MIGRATE_ASYNC, MR_DEMOTION);
-> +}
-> +
-> +
->  /*
->   * gcc 4.7 and 4.8 on arm get an ICEs when inlining unmap_and_move().  Work
->   * around it.
-> diff -puN mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard mm/vmscan.c
-> --- a/mm/vmscan.c~0008-mm-vmscan-Attempt-to-migrate-page-in-lieu-of-discard	2020-06-29 16:34:38.959312604 -0700
-> +++ b/mm/vmscan.c	2020-06-29 16:34:38.965312604 -0700
-> @@ -1077,6 +1077,7 @@ static unsigned long shrink_page_list(st
->  	LIST_HEAD(free_pages);
->  	unsigned nr_reclaimed = 0;
->  	unsigned pgactivate = 0;
-> +	int rc;
->  
->  	memset(stat, 0, sizeof(*stat));
->  	cond_resched();
-> @@ -1229,6 +1230,30 @@ static unsigned long shrink_page_list(st
->  			; /* try to reclaim the page below */
->  		}
->  
-> +		rc = migrate_demote_mapping(page);
-> +		/*
-> +		 * -ENOMEM on a THP may indicate either migration is
-> +		 * unsupported or there was not enough contiguous
-> +		 * space. Split the THP into base pages and retry the
-> +		 * head immediately. The tail pages will be considered
-> +		 * individually within the current loop's page list.
-> +		 */
-> +		if (rc == -ENOMEM && PageTransHuge(page) &&
-> +		    !split_huge_page_to_list(page, page_list))
-> +			rc = migrate_demote_mapping(page);
-> +
-> +		if (rc == MIGRATEPAGE_SUCCESS) {
-> +			unlock_page(page);
-> +			if (likely(put_page_testzero(page)))
-> +				goto free_it;
-> +			/*
-> +			 * Speculative reference will free this page,
-> +			 * so leave it off the LRU.
-> +			 */
-> +			nr_reclaimed++;
-
-nr_reclaimed += nr_pages instead?
-
-> +			continue;
-> +		}
-> +
->  		/*
->  		 * Anonymous process memory has backing store?
->  		 * Try to allocate it some swap space here.
+Thanks,
+Daejun
