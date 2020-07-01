@@ -4,106 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF98C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5837E2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2845520722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/961bqf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="st9khFND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgGAIcr (ORCPT
+        id S1728579AbgGAIcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
+        Wed, 1 Jul 2020 04:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgGAIbr (ORCPT
+        with ESMTP id S1728880AbgGAIbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:47 -0400
+        Wed, 1 Jul 2020 04:31:46 -0400
 Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71899C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so22891915wrv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CB4C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so22875541wrc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DZzcRr+il6B7Wb5szs9514Q011nYXDt2b1eWYEXToMg=;
-        b=T/961bqfLhKvkYLxSnHHWpEfPBVLQHZP8JmP9cDGKQgDJKxp2PSYH0sNvAslRP8Rh6
-         Qio/3x7UgE+n4G1rJQwVtFnLhuw7mQ+0ePSBVqN8owOWFqgwtKTWvGJ0E3or5afJYfaK
-         +R00WyNEkoWOvADs8PSOfJyZq43uqzhUBensqR5HWPyo+RV87EKZKeRwzFACq9/qV7cm
-         hEQVKgbV6U+0Pl8qVpufSrK5d7z3Jc7qb+hQp9w2Dhxv1PQqYkkwDsdlnPzyfjCntTlN
-         dR+47xS8X/mdxH7P6m8ibWTUdPuHGDfzH/CM+HkuJ0GrNoOAEwxTqqJHKRQ2e6TZAKjl
-         2kvg==
+        bh=g8/OUfoNrwMRghF2Xm56r8amPV/zzR8eJyRX/3dxUYA=;
+        b=st9khFNDH3xQf2hJ5YLeso81Gz5AFUN9O8or/g0IYTWvmC60mIuf5DpcmpN+ZypxQh
+         L7//4DX84Rv+sohP1235h5XV02SuclKXxhx+avvcEunppssBbgU/6l+L5y0SZUNUitrW
+         yqTEO2OfoeGa/zeNXp4CvjkFz6a5GPM9NjDUYleFDIeMOdiO6EseWV8NdTOplPNR0Aa9
+         cnQpbaNOTam//MtoVajCfdsdiX0oLzvvrc4I142JMlQOu4Pdf28ItPLN5nOy28sy9blx
+         96sB0IXnmpWgBEvGbQxfV4uZReiaDSbGtFJvymyi/7FhMmkdpWAeJ0zFDQuo1I4L66Hd
+         5JAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DZzcRr+il6B7Wb5szs9514Q011nYXDt2b1eWYEXToMg=;
-        b=hgkb+4AS890O51a03me1cX4O62xJp47aVfO41C5cRI8emBJQVUKWjz8DiZT8z5jmRq
-         wV/Wf2/aEMFCbOkkjiwcGajfThI8QyleqjF4uHl0pTv73ZutOP0/2y3pmjUQYQIbmck1
-         ZKGJ2E+b+wtFIusN9xk4qjo5G4arXniWRVJqtkwme+hJO6ZOPifKBbf+WIjq/I2SF3Aj
-         hSa53O4sLWkFeBhuywyTGcOUHqhF4pEwHWUdiZg+nttxTv23lWnlQ5ec/7N8N0tDSazv
-         NNBGehjGnt9XTLbKEvYKcaHPI0fmx+dqHokduHhNwxOl+HtW6ubrPquo4kEilBi2Rmkl
-         sjqw==
-X-Gm-Message-State: AOAM531i+tYaaDvjcWqtTMWxhdf98VMikyGzt1SL0QG/Kn5qDVVzoJ7R
-        JOfrrNY8Y44CpKWb2Du4L6mkow==
-X-Google-Smtp-Source: ABdhPJxqVgReTrmNRgeGnposdJbFETiC9GzH6pknz4+2saBKDurPy8FBUajeS2RPoThNqCEbqUTLtg==
-X-Received: by 2002:adf:b6a4:: with SMTP id j36mr26072060wre.260.1593592306136;
-        Wed, 01 Jul 2020 01:31:46 -0700 (PDT)
+        bh=g8/OUfoNrwMRghF2Xm56r8amPV/zzR8eJyRX/3dxUYA=;
+        b=ePqybdPsFDEOKUq6GFdmYrlUtt0ybfxJFivsl0AYg5YscJgG1ZsEHDRccigDVfUg3/
+         yCG9vdnOt7pQiHIxXMT/RoVQL46dgPcLWopB5FAQVnL7OAXeMswHZmx0S8SFCOk0uG3/
+         i+zrtLGE/sxWGtIhdBBVojLbuhSkwOhwRZKTnEZhhAmzYm55w4eSRk5D0bhkUw10n9wu
+         QM/MvaVQCLKjxcqeHENkFuyeloDpuku5pHQTSR3sVbee2yCcEF5vRk5tGVAfEDFnGQQs
+         IoO3/eN3OPnI7vQVULKSRMWvKlRQwrdVVD+sakOvw9dVvqGVYUXvvUkVlfmiCCGTn3FY
+         M7vw==
+X-Gm-Message-State: AOAM531engExwVKtA1/lVNBa3TYnbPTUqRpxfjArDGow80Xn/QpNBydH
+        aUQBXP7Brav7V7FbV3aBx9sGSQ==
+X-Google-Smtp-Source: ABdhPJz4nPSjctD17WJOZgqWv8CxdL8DQIOTqp2RBSddELktT6Icfa5fQOy49/+AhZ9uHCv/aOvR1A==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr25251031wrj.273.1593592304581;
+        Wed, 01 Jul 2020 01:31:44 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.44
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:45 -0700 (PDT)
+        Wed, 01 Jul 2020 01:31:43 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 19/30] misc: mic: scif: scif_api: Demote scif_accept() function header
-Date:   Wed,  1 Jul 2020 09:31:07 +0100
-Message-Id: <20200701083118.45744-20-lee.jones@linaro.org>
+Subject: [PATCH v2 18/30] misc: mic: scif: scif_api: Remove set but unused variable 'read_size'
+Date:   Wed,  1 Jul 2020 09:31:06 +0100
+Message-Id: <20200701083118.45744-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The correct format is not used and no attempt has been made
-to document the function arguments.  Makes sense to just demote
-the header back down to a simple comment.
+'read_size' appears to have been assigned, but never used since the
+SCIF messaging and node enumeration APIs were introduced in 2015.
+Makes sense to simply remove it.
 
-Fixes the following W=1 warnings:
+Fixes the following W=1 warning:
 
- drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'epd' not described in 'scif_accept'
- drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'peer' not described in 'scif_accept'
- drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'newepd' not described in 'scif_accept'
- drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'flags' not described in 'scif_accept'
+ drivers/misc/mic/scif/scif_api.c: In function ‘_scif_recv’:
+ drivers/misc/mic/scif/scif_api.c:1000:6: warning: variable ‘read_size’ set but not used [-Wunused-but-set-variable]
+ 1000 | int read_size;
+ | ^~~~~~~~~
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/mic/scif/scif_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/mic/scif/scif_api.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/misc/mic/scif/scif_api.c b/drivers/misc/mic/scif/scif_api.c
-index d7faffdd87e92..9cc6b2a6cf229 100644
+index 781217c030a63..d7faffdd87e92 100644
 --- a/drivers/misc/mic/scif/scif_api.c
 +++ b/drivers/misc/mic/scif/scif_api.c
-@@ -713,7 +713,7 @@ int scif_connect(scif_epd_t epd, struct scif_port_id *dst)
- }
- EXPORT_SYMBOL_GPL(scif_connect);
+@@ -997,7 +997,6 @@ static int _scif_send(scif_epd_t epd, void *msg, int len, int flags)
  
--/**
-+/*
-  * scif_accept() - Accept a connection request from the remote node
-  *
-  * The function accepts a connection request from the remote node.  Successful
+ static int _scif_recv(scif_epd_t epd, void *msg, int len, int flags)
+ {
+-	int read_size;
+ 	struct scif_endpt *ep = (struct scif_endpt *)epd;
+ 	struct scifmsg notif_msg;
+ 	int curr_recv_len = 0, remaining_len = len, read_count;
+@@ -1017,8 +1016,7 @@ static int _scif_recv(scif_epd_t epd, void *msg, int len, int flags)
+ 			 * important for the Non Blocking case.
+ 			 */
+ 			curr_recv_len = min(remaining_len, read_count);
+-			read_size = scif_rb_get_next(&qp->inbound_q,
+-						     msg, curr_recv_len);
++			scif_rb_get_next(&qp->inbound_q, msg, curr_recv_len);
+ 			if (ep->state == SCIFEP_CONNECTED) {
+ 				/*
+ 				 * Update the read pointer only if the endpoint
 -- 
 2.25.1
 
