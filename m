@@ -2,91 +2,119 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE0C20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE04320722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y2MZvUMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgGAKoa (ORCPT
+        id S1730018AbgGAKqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:44:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39136 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgGAKoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:44:30 -0400
-IronPort-SDR: N7whw5bG3g52W9I+AUsJ67g7tMFtvfVjXGjzz9qV8mM2fU2QHfviptTu/iR2J7uGT/dw9e31Xu
- +M8KcJYHLeOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134807117"
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="134807117"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 03:44:19 -0700
-IronPort-SDR: Jpa5Aep7E13qHjqBxVTHr2OHKFxzhVxQg1u48cFSsh6JHvXElDp5y1uTpbe1iAf+8vu9YyleRV
- WGtiCn5O2Dqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="303805612"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 03:44:17 -0700
-Subject: Re: [PATCH] mmc: sdhci-acpi: For amd device set driver type as
- MMC_SET_DRIVER_TYPE_A
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     rrangel@google.com, nehal-bakulchandra.shah@amd.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-References: <20200623133347.4598-1-akshu.agrawal@amd.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <b51faa2a-f465-581b-05bc-81677c8c1071@intel.com>
-Date:   Wed, 1 Jul 2020 13:43:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 1 Jul 2020 06:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729892AbgGAKqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:46:21 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DABC03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 03:46:21 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so492109pls.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 03:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZAwIqiRySDiFfmgD/1oQKpgA8/Glycu71hEVY2X/5aI=;
+        b=Y2MZvUMxug59kJ6DDiLOpxa9zz6EJSdJWxnPjurraa6ShY+zwguiLuVARBo2GsYARE
+         sCBkYAjnk8pxDw6oB8oYB32xL2alGAVqRPY9f4ka1qooiZvIZ1rQFc2RCSl9hXErdZ8O
+         l2R+I1SFM5l9TUuGSKCN/nXFxiXTCkqe7NcMZ8WZ18FSTMVVQiDxRLRWt3TjHIRIHxZa
+         lw3/CrMZTs/Xla60Ez35dHPn+j7pFdAAX9vfqeviEf+R2//EnfHkS/+0uek5aH0NP7M0
+         /GZvpAXruFM3RGb9Gw2a9FvZjV35rJRNtOSbVmVTrP5TuYIhV201UAKxQOKMieYx4mlB
+         1+ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZAwIqiRySDiFfmgD/1oQKpgA8/Glycu71hEVY2X/5aI=;
+        b=eTAmgP31d9M6y4fyPaLg30Xp2Al5YYys9BFTN4vo/skpVYUmTkh/Q8wEKQ+9q8Rc/Z
+         C8V42tlYJMNyzzQNqVHn5j6DxErdZ6ao7grKx8dnoE1NRreE45ytARPmGDjTpVNS4wtn
+         Zh1Ba6YeNueqdCZ9hc9hrJvMOprTIbKrwbEyDsUd6DJvXBADCp2tVmzXnkty/Ru7L5nt
+         lHnXEn+TLJNxYbnOTap0jPk95BoqBv1LfKShO5P9Y7xUbQyhzLsnhSrGyKrQMQRlH9W/
+         1s79XbCYhOSjR6J8mCokU83GOi99zXlc3aoNyNntTajvMG3AZrEuzkTBZrjfUM36dz66
+         LQ+g==
+X-Gm-Message-State: AOAM530sBY2xx9zRb4dbyazUx8LDh3VKR6jVKzxPl1nBT+6GyGNVk/27
+        HF15/YOTLfYf4r4S5GZhiRRGIg==
+X-Google-Smtp-Source: ABdhPJxPFfNLz+aE4EPYb5tQdrUGE5weML5br9ZUPuFYPAJytDY8xi4+x275Aqh4ljhNNfYUKKeflg==
+X-Received: by 2002:a17:902:8d89:: with SMTP id v9mr21290407plo.191.1593600381045;
+        Wed, 01 Jul 2020 03:46:21 -0700 (PDT)
+Received: from localhost ([122.172.81.75])
+        by smtp.gmail.com with ESMTPSA id d16sm5413722pfo.156.2020.07.01.03.46.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jul 2020 03:46:19 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 16:16:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
+        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
+        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
+ freq invariance
+Message-ID: <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+ <20200701090751.7543-2-ionela.voinescu@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623133347.4598-1-akshu.agrawal@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701090751.7543-2-ionela.voinescu@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/20 4:33 pm, Akshu Agrawal wrote:
-> HS400/HS200/eMMC HS doesn't have Preset Value register.
-> Hence, sdhci_set_ios function overrides the value set by fmw to
-> SDHCI_CTRL_DRV_TYPE_B.
-> This patch sets drv_type to MMC_SET_DRIVER_TYPE_A
-> so that host_control2 register gets updated with the required
-> strength value.
-> 
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-acpi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-> index d8b76cb8698a..48ecbd0b180d 100644
-> --- a/drivers/mmc/host/sdhci-acpi.c
-> +++ b/drivers/mmc/host/sdhci-acpi.c
-> @@ -542,6 +542,7 @@ static int amd_select_drive_strength(struct mmc_card *card,
->  				     unsigned int max_dtr, int host_drv,
->  				     int card_drv, int *drv_type)
->  {
-> +	*drv_type = MMC_SET_DRIVER_TYPE_A;
->  	return MMC_SET_DRIVER_TYPE_A;
->  }
+On 01-07-20, 10:07, Ionela Voinescu wrote:
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 3494f6763597..42668588f9f8 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -293,7 +293,7 @@ __ATTR(_name, 0644, show_##_name, store_##_name)
 >  
-> 
+>  struct cpufreq_driver {
+>  	char		name[CPUFREQ_NAME_LEN];
+> -	u8		flags;
+> +	u16		flags;
 
+Lets make it u32.
+
+>  	void		*driver_data;
+>  
+>  	/* needed by all drivers */
+> @@ -417,6 +417,14 @@ struct cpufreq_driver {
+>   */
+>  #define CPUFREQ_IS_COOLING_DEV			BIT(7)
+>  
+> +/*
+> + * Set by drivers which implement the necessary calls to the scheduler's
+> + * frequency invariance engine. The use of this flag will result in the
+> + * default arch_set_freq_scale calls being skipped in favour of custom
+> + * driver calls.
+> + */
+> +#define CPUFREQ_CUSTOM_SET_FREQ_SCALE		BIT(8)
+
+I will rather suggest CPUFREQ_SKIP_SET_FREQ_SCALE as the name and
+functionality. We need to give drivers a choice if they do not want
+the core to do it on their behalf, because they are doing it on their
+own or they don't want to do it.
+
+-- 
+viresh
