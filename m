@@ -2,117 +2,212 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E034C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5E02073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459812073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgGACdC (ORCPT
+        id S1726856AbgGACdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:33:02 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:50549 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725988AbgGACdC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:33:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U1Dumf6_1593570778;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1Dumf6_1593570778)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Jul 2020 10:32:59 +0800
-Date:   Wed, 1 Jul 2020 10:32:58 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        dan.j.williams@intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/sparse: only sub-section aligned range would be
- populated
-Message-ID: <20200701023258.GA51545@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200630021436.43281-1-richard.weiyang@linux.alibaba.com>
- <f1e6036c-1966-56dd-0acf-e795671c5ec4@redhat.com>
+        Tue, 30 Jun 2020 22:33:21 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:34656 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbgGACdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:33:19 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id DFE08240C6DE705A518A;
+        Wed,  1 Jul 2020 10:33:16 +0800 (CST)
+Received: from dggeme751-chm.china.huawei.com (10.3.19.97) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 1 Jul 2020 10:33:16 +0800
+Received: from [10.174.177.240] (10.174.177.240) by
+ dggeme751-chm.china.huawei.com (10.3.19.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 1 Jul 2020 10:33:16 +0800
+Subject: Re: [PATCH] drm: fix double free for gbo in drm_gem_vram_init and
+ drm_gem_vram_create
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@linux.ie>, <daniel@ffwll.ch>
+References: <20200620062134.82961-1-jiayang5@huawei.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+From:   Jia Yang <jiayang5@huawei.com>
+Message-ID: <b6410a5e-2649-ba17-b4fe-eb24dab45253@huawei.com>
+Date:   Wed, 1 Jul 2020 10:32:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1e6036c-1966-56dd-0acf-e795671c5ec4@redhat.com>
+In-Reply-To: <20200620062134.82961-1-jiayang5@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.240]
+X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
+ dggeme751-chm.china.huawei.com (10.3.19.97)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 02:52:35PM +0200, David Hildenbrand wrote:
->On 30.06.20 04:14, Wei Yang wrote:
->> There are two code path which invoke __populate_section_memmap()
->> 
->>   * sparse_init_nid()
->>   * sparse_add_section()
->> 
->> For both case, we are sure the memory range is sub-section aligned.
->> 
->>   * we pass PAGES_PER_SECTION to sparse_init_nid()
->>   * we check range by check_pfn_span() before calling
->>     sparse_add_section()
->> 
->> Also, the counterpart of __populate_section_memmap(), we don't do such
->> calculation and check since the range is checked by check_pfn_span() in
->> __remove_pages().
->> 
->> Clear the calculation and check to keep it simple and comply with its
->> counterpart.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/sparse-vmemmap.c | 16 ++--------------
->>  1 file changed, 2 insertions(+), 14 deletions(-)
->> 
->> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
->> index 0db7738d76e9..24b01ebae111 100644
->> --- a/mm/sparse-vmemmap.c
->> +++ b/mm/sparse-vmemmap.c
->> @@ -247,20 +247,8 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
->>  struct page * __meminit __populate_section_memmap(unsigned long pfn,
->>  		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
->>  {
->> -	unsigned long start;
->> -	unsigned long end;
->> -
->> -	/*
->> -	 * The minimum granularity of memmap extensions is
->> -	 * PAGES_PER_SUBSECTION as allocations are tracked in the
->> -	 * 'subsection_map' bitmap of the section.
->> -	 */
->> -	end = ALIGN(pfn + nr_pages, PAGES_PER_SUBSECTION);
->> -	pfn &= PAGE_SUBSECTION_MASK;
->> -	nr_pages = end - pfn;
->> -
->> -	start = (unsigned long) pfn_to_page(pfn);
->> -	end = start + nr_pages * sizeof(struct page);
->> +	unsigned long start = (unsigned long) pfn_to_page(pfn);
->> +	unsigned long end = start + nr_pages * sizeof(struct page);
->>  
->>  	if (vmemmap_populate(start, end, nid, altmap))
->>  		return NULL;
->> 
->
->Can we add a WARN_ON_ONCE to catch mis-use in the future?
->
->if (WARN_ON_ONCE(!IS_ALIGNED(pfn, PAGES_PER_SUBSECTION) ||
->                 !IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION))
->	return NULL;
+Ping...
 
-How about to add this into both population and depopulation?
-
->
->-- 
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+On 2020/6/20 14:21, Jia Yang wrote:
+> I got a use-after-free report when doing some fuzz test:
+> 
+> If ttm_bo_init() fails, the "gbo" and "gbo->bo.base" will be
+> freed by ttm_buffer_object_destroy() in ttm_bo_init(). But
+> then drm_gem_vram_create() and drm_gem_vram_init() will free
+> "gbo" and "gbo->bo.base" again.
+> 
+> BUG: KMSAN: use-after-free in drm_vma_offset_remove+0xb3/0x150
+> CPU: 0 PID: 24282 Comm: syz-executor.1 Tainted: G    B   W         5.7.0-rc4-msan #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+> Call Trace:
+>  __dump_stack
+>  dump_stack+0x1c9/0x220
+>  kmsan_report+0xf7/0x1e0
+>  __msan_warning+0x58/0xa0
+>  drm_vma_offset_remove+0xb3/0x150
+>  drm_gem_free_mmap_offset
+>  drm_gem_object_release+0x159/0x180
+>  drm_gem_vram_init
+>  drm_gem_vram_create+0x7c5/0x990
+>  drm_gem_vram_fill_create_dumb
+>  drm_gem_vram_driver_dumb_create+0x238/0x590
+>  drm_mode_create_dumb
+>  drm_mode_create_dumb_ioctl+0x41d/0x450
+>  drm_ioctl_kernel+0x5a4/0x710
+>  drm_ioctl+0xc6f/0x1240
+>  vfs_ioctl
+>  ksys_ioctl
+>  __do_sys_ioctl
+>  __se_sys_ioctl+0x2e9/0x410
+>  __x64_sys_ioctl+0x4a/0x70
+>  do_syscall_64+0xb8/0x160
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x4689b9
+> Code: fd e0 fa ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb e0 fa ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f368fa4dc98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 000000000076bf00 RCX: 00000000004689b9
+> RDX: 0000000020000240 RSI: 00000000c02064b2 RDI: 0000000000000003
+> RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00000000004d17e0 R14: 00007f368fa4e6d4 R15: 000000000076bf0c
+> 
+> Uninit was created at:
+>  kmsan_save_stack_with_flags
+>  kmsan_internal_poison_shadow+0x66/0xd0
+>  kmsan_slab_free+0x6e/0xb0
+>  slab_free_freelist_hook
+>  slab_free
+>  kfree+0x571/0x30a0
+>  drm_gem_vram_destroy
+>  ttm_buffer_object_destroy+0xc8/0x130
+>  ttm_bo_release
+>  kref_put
+>  ttm_bo_put+0x117d/0x23e0
+>  ttm_bo_init_reserved+0x11c0/0x11d0
+>  ttm_bo_init+0x289/0x3f0
+>  drm_gem_vram_init
+>  drm_gem_vram_create+0x775/0x990
+>  drm_gem_vram_fill_create_dumb
+>  drm_gem_vram_driver_dumb_create+0x238/0x590
+>  drm_mode_create_dumb
+>  drm_mode_create_dumb_ioctl+0x41d/0x450
+>  drm_ioctl_kernel+0x5a4/0x710
+>  drm_ioctl+0xc6f/0x1240
+>  vfs_ioctl
+>  ksys_ioctl
+>  __do_sys_ioctl
+>  __se_sys_ioctl+0x2e9/0x410
+>  __x64_sys_ioctl+0x4a/0x70
+>  do_syscall_64+0xb8/0x160
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> If ttm_bo_init() fails, the "gbo" will be freed by
+> ttm_buffer_object_destroy() in ttm_bo_init(). But then
+> drm_gem_vram_create() and drm_gem_vram_init() will free
+> "gbo" again.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jia Yang <jiayang5@huawei.com>
+> ---
+>  drivers/gpu/drm/drm_gem_vram_helper.c | 28 +++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+> index 8b2d5c945c95..1d85af9a481a 100644
+> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> @@ -175,6 +175,10 @@ static void drm_gem_vram_placement(struct drm_gem_vram_object *gbo,
+>  	}
+>  }
+>  
+> +/*
+> + * Note that on error, drm_gem_vram_init will free the buffer object.
+> + */
+> +
+>  static int drm_gem_vram_init(struct drm_device *dev,
+>  			     struct drm_gem_vram_object *gbo,
+>  			     size_t size, unsigned long pg_align)
+> @@ -184,15 +188,19 @@ static int drm_gem_vram_init(struct drm_device *dev,
+>  	int ret;
+>  	size_t acc_size;
+>  
+> -	if (WARN_ONCE(!vmm, "VRAM MM not initialized"))
+> +	if (WARN_ONCE(!vmm, "VRAM MM not initialized")) {
+> +		kfree(gbo);
+>  		return -EINVAL;
+> +	}
+>  	bdev = &vmm->bdev;
+>  
+>  	gbo->bo.base.funcs = &drm_gem_vram_object_funcs;
+>  
+>  	ret = drm_gem_object_init(dev, &gbo->bo.base, size);
+> -	if (ret)
+> +	if (ret) {
+> +		kfree(gbo);
+>  		return ret;
+> +	}
+>  
+>  	acc_size = ttm_bo_dma_acc_size(bdev, size, sizeof(*gbo));
+>  
+> @@ -203,13 +211,13 @@ static int drm_gem_vram_init(struct drm_device *dev,
+>  			  &gbo->placement, pg_align, false, acc_size,
+>  			  NULL, NULL, ttm_buffer_object_destroy);
+>  	if (ret)
+> -		goto err_drm_gem_object_release;
+> +		/*
+> +		 * A failing ttm_bo_init will call ttm_buffer_object_destroy
+> +		 * to release gbo->bo.base and kfree gbo.
+> +		 */
+> +		return ret;
+>  
+>  	return 0;
+> -
+> -err_drm_gem_object_release:
+> -	drm_gem_object_release(&gbo->bo.base);
+> -	return ret;
+>  }
+>  
+>  /**
+> @@ -243,13 +251,9 @@ struct drm_gem_vram_object *drm_gem_vram_create(struct drm_device *dev,
+>  
+>  	ret = drm_gem_vram_init(dev, gbo, size, pg_align);
+>  	if (ret < 0)
+> -		goto err_kfree;
+> +		return ERR_PTR(ret);
+>  
+>  	return gbo;
+> -
+> -err_kfree:
+> -	kfree(gbo);
+> -	return ERR_PTR(ret);
+>  }
+>  EXPORT_SYMBOL(drm_gem_vram_create);
+>  
+> 
