@@ -2,143 +2,94 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A748C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0589C20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC5A20771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgGACAH (ORCPT
+        id S1726142AbgGACCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:00:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57734 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbgGACAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:00:05 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4681418191EF47DAEB71;
-        Wed,  1 Jul 2020 10:00:01 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 1 Jul 2020
- 09:59:55 +0800
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid readahead race condition
-To:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200624012148.180050-1-jaegeuk@kernel.org>
- <20200629150323.GA3293033@google.com> <20200629202720.GA230664@google.com>
- <20200630204348.GA2504307@ubuntu-s3-xlarge-x86>
- <20200630205635.GB1396584@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <285a4e16-2cbc-d1e9-8464-8a06bacbaaa0@huawei.com>
-Date:   Wed, 1 Jul 2020 09:59:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 30 Jun 2020 22:02:20 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:35250 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgGACCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:02:20 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jqS4h-00058w-Ea; Wed, 01 Jul 2020 12:02:12 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 12:02:11 +1000
+Date:   Wed, 1 Jul 2020 12:02:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     mathieu.desnoyers@efficios.com, davem@davemloft.net,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, ycheng@google.com, joraj@efficios.com
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+Message-ID: <20200701020211.GA6875@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200630205635.GB1396584@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/1 4:56, Jaegeuk Kim wrote:
-> On 06/30, Nathan Chancellor wrote:
->> On Mon, Jun 29, 2020 at 01:27:20PM -0700, Jaegeuk Kim wrote:
->>> If two readahead threads having same offset enter in readpages, every read
->>> IOs are split and issued to the disk which giving lower bandwidth.
->>>
->>> This patch tries to avoid redundant readahead calls.
->>>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>> v3:
->>>  - use READ|WRITE_ONCE
->>> v2:
->>>   - add missing code to bypass read
->>>  
->>>  fs/f2fs/data.c  | 18 ++++++++++++++++++
->>>  fs/f2fs/f2fs.h  |  1 +
->>>  fs/f2fs/super.c |  2 ++
->>>  3 files changed, 21 insertions(+)
->>>
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 995cf78b23c5e..360b4c9080d97 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -2296,6 +2296,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
->>>  	unsigned nr_pages = rac ? readahead_count(rac) : 1;
->>>  	unsigned max_nr_pages = nr_pages;
->>>  	int ret = 0;
->>> +	bool drop_ra = false;
->>>  
->>>  	map.m_pblk = 0;
->>>  	map.m_lblk = 0;
->>> @@ -2306,10 +2307,24 @@ static int f2fs_mpage_readpages(struct inode *inode,
->>>  	map.m_seg_type = NO_CHECK_TYPE;
->>>  	map.m_may_create = false;
->>>  
->>> +	/*
->>> +	 * Two readahead threads for same address range can cause race condition
->>> +	 * which fragments sequential read IOs. So let's avoid each other.
->>> +	 */
->>> +	if (rac && readahead_count(rac)) {
->>> +		if (READ_ONCE(F2FS_I(inode)->ra_offset) == readahead_index(rac))
->>> +			drop_ra = true;
->>> +		else
->>> +			WRITE_ONCE(F2FS_I(inode)->ra_offset,
->>> +						readahead_index(rac));
->>> +	}
->>> +
->>>  	for (; nr_pages; nr_pages--) {
->>>  		if (rac) {
->>>  			page = readahead_page(rac);
->>>  			prefetchw(&page->flags);
->>> +			if (drop_ra)
->>> +				goto next_page;
->>
->> When CONFIG_F2FS_FS_COMPRESSION is not set (i.e. x86_64 defconfig +
->> CONFIG_F2FS_FS=y):
->>
->> $ make -skj"$(nproc)" O=out distclean defconfig fs/f2fs/data.o
->> ../fs/f2fs/data.c: In function ‘f2fs_mpage_readpages’:
->> ../fs/f2fs/data.c:2327:5: error: label ‘next_page’ used but not defined
->>  2327 |     goto next_page;
->>       |     ^~~~
->> ...
+Eric Dumazet <edumazet@google.com> wrote:
+>
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
+> 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+> int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
+> tcp_md5sig_key *key)
+> {
+>        struct scatterlist sg;
+> +       u8 keylen = key->keylen;
 > 
-> Thanks. I pushed the fix for -next.
-> https://lore.kernel.org/linux-f2fs-devel/1be18397-7fc6-703e-121b-e210e101357f@infradead.org/T/#t
+> -       sg_init_one(&sg, key->key, key->keylen);
+> -       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
+> +       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+> +
+> +       sg_init_one(&sg, key->key, keylen);
+> +       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
+>        return crypto_ahash_update(hp->md5_req);
+> }
+> EXPORT_SYMBOL(tcp_md5_hash_key);
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
+> 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
+> tcp_md5_addr *addr,
+>        if (key) {
+>                /* Pre-existing entry - just update that one. */
+>                memcpy(key->key, newkey, newkeylen);
+> +
+> +               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
+> +
+>                key->keylen = newkeylen;
+>                return 0;
+>        }
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+This doesn't make sense.  Your smp_rmb only guarantees that you
+see a version of key->key that's newer than keylen.  What if the
+key got changed twice? You could still read more than what's in
+the key (if that's what you're trying to protect against).
 
-Thanks,
-
-> 
-> Thanks,
-> 
->>
->> Cheers,
->> Nathan
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> 
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
