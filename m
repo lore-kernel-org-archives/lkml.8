@@ -2,175 +2,103 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EA12077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952722077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:09:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ImqKOFuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgGAJJs (ORCPT
+        id S1729499AbgGAJJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 1 Jul 2020 05:09:52 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41863 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729496AbgGAJJs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 05:09:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:47876 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgGAJJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:09:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5002139F;
-        Wed,  1 Jul 2020 02:09:43 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CA303F68F;
-        Wed,  1 Jul 2020 02:09:41 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        linux@armlinux.org.uk, valentin.schneider@arm.com
-Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] arch_topology,cpufreq,sched/core: constify arch_* cpumasks
-Date:   Wed,  1 Jul 2020 10:07:49 +0100
-Message-Id: <20200701090751.7543-7-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200701090751.7543-1-ionela.voinescu@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593594587;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5FZNvCVnGKUBeexFie5SVEwwTiu463bRAglPRRjFWJY=;
+        b=ImqKOFuoUq28Kuyfeg1Mhl1nSgJjY1l/g+xfGOFQ8/NqsDrgV8JgEdF3uoYdgIFeAeZsU2
+        iLYADU215vq5jyKjslenFydzfHr2T1zJCLKLFYcOkpEKflEpns6EKfAJxtW0nyQJrGrDCn
+        Vvh5OlJwuT3ppA4YwVzxsQA64PpnZoM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-TD5H89abOp6-9wr6Ia7gdg-1; Wed, 01 Jul 2020 05:09:45 -0400
+X-MC-Unique: TD5H89abOp6-9wr6Ia7gdg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC8898018A4;
+        Wed,  1 Jul 2020 09:09:43 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-177.pek2.redhat.com [10.72.13.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AAB8E71662;
+        Wed,  1 Jul 2020 09:09:28 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 1/5] vhost-vdpa: refine ioctl pre-processing
+Date:   Wed,  1 Jul 2020 17:08:35 +0800
+Message-Id: <20200701090839.12994-2-jasowang@redhat.com>
+In-Reply-To: <20200701090839.12994-1-jasowang@redhat.com>
+References: <20200701090839.12994-1-jasowang@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+Switch to use 'switch' to make the codes more easier to be extended.
 
-The passed cpumask arguments to:
- - arch_set_freq_scale(),
- - arch_set_thermal_pressure(), and
- - arch_freq_counters_available()
-
-are only iterated over, so reflect this in the prototype. This also
-allows to pass system cpumasks like cpu_online_mask without getting
-a warning.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- arch/arm64/kernel/topology.c  | 2 +-
- drivers/base/arch_topology.c  | 4 ++--
- drivers/cpufreq/cpufreq.c     | 5 +++--
- include/linux/arch_topology.h | 4 ++--
- include/linux/cpufreq.h       | 3 ++-
- kernel/sched/core.c           | 2 +-
- 6 files changed, 11 insertions(+), 9 deletions(-)
+ drivers/vhost/vdpa.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 0801a0f3c156..9a9f2b8dedf5 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -253,7 +253,7 @@ static int __init init_amu_fie(void)
- }
- late_initcall_sync(init_amu_fie);
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 77a0c9fb6cc3..db4c9cb44c61 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -353,15 +353,16 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
+ 	idx = array_index_nospec(idx, v->nvqs);
+ 	vq = &v->vqs[idx];
  
--bool arch_freq_counters_available(struct cpumask *cpus)
-+bool arch_freq_counters_available(const struct cpumask *cpus)
- {
- 	return amu_freq_invariant() &&
- 	       cpumask_subset(cpus, amu_fie_cpus);
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 4d0a0038b476..8447e1f30340 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -21,13 +21,13 @@
- #include <linux/sched.h>
- #include <linux/smp.h>
+-	if (cmd == VHOST_VDPA_SET_VRING_ENABLE) {
++	switch (cmd) {
++	case VHOST_VDPA_SET_VRING_ENABLE:
+ 		if (copy_from_user(&s, argp, sizeof(s)))
+ 			return -EFAULT;
+ 		ops->set_vq_ready(vdpa, idx, s.num);
+ 		return 0;
+-	}
+-
+-	if (cmd == VHOST_GET_VRING_BASE)
++	case VHOST_GET_VRING_BASE:
+ 		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
++		break;
++	}
  
--__weak bool arch_freq_counters_available(struct cpumask *cpus)
-+__weak bool arch_freq_counters_available(const struct cpumask *cpus)
- {
- 	return false;
- }
- DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
- 
--void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-+void arch_set_freq_scale(const struct cpumask *cpus, unsigned long cur_freq,
- 			 unsigned long max_freq)
- {
- 	unsigned long scale;
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 60b5272c5d80..161b8089b0f6 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -177,8 +177,9 @@ u64 get_cpu_idle_time(unsigned int cpu, u64 *wall, int io_busy)
- }
- EXPORT_SYMBOL_GPL(get_cpu_idle_time);
- 
--__weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
--		unsigned long max_freq)
-+__weak void arch_set_freq_scale(const struct cpumask *cpus,
-+				unsigned long cur_freq,
-+				unsigned long max_freq)
- {
- }
- EXPORT_SYMBOL_GPL(arch_set_freq_scale);
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 0566cb3314ef..4be0315700cb 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -30,7 +30,7 @@ static inline unsigned long topology_get_freq_scale(int cpu)
- 	return per_cpu(freq_scale, cpu);
- }
- 
--bool arch_freq_counters_available(struct cpumask *cpus);
-+bool arch_freq_counters_available(const struct cpumask *cpus);
- 
- DECLARE_PER_CPU(unsigned long, thermal_pressure);
- 
-@@ -39,7 +39,7 @@ static inline unsigned long topology_get_thermal_pressure(int cpu)
- 	return per_cpu(thermal_pressure, cpu);
- }
- 
--void arch_set_thermal_pressure(struct cpumask *cpus,
-+void arch_set_thermal_pressure(const struct cpumask *cpus,
- 			       unsigned long th_pressure);
- 
- struct cpu_topology {
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 8b6369d657bd..23398133c24b 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -1003,7 +1003,8 @@ static inline void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
- extern void arch_freq_prepare_all(void);
- extern unsigned int arch_freq_get_on_cpu(int cpu);
- 
--extern void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-+extern void arch_set_freq_scale(const struct cpumask *cpus,
-+				unsigned long cur_freq,
- 				unsigned long max_freq);
- 
- /* the following are really really optional */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f518af52d0fb..b44a42b1236c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3645,7 +3645,7 @@ unsigned long long task_sched_runtime(struct task_struct *p)
- 
- DEFINE_PER_CPU(unsigned long, thermal_pressure);
- 
--void arch_set_thermal_pressure(struct cpumask *cpus,
-+void arch_set_thermal_pressure(const struct cpumask *cpus,
- 			       unsigned long th_pressure)
- {
- 	int cpu;
+ 	r = vhost_vring_ioctl(&v->vdev, cmd, argp);
+ 	if (r)
 -- 
-2.17.1
+2.20.1
 
