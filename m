@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E67CA207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E121207F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593641472;
-	bh=BALQnrcnOIU/FJXKRrb2SYWT5Jkbat+pRGBTyFzJQjI=;
+	s=default; t=1593641479;
+	bh=Uu5gADrn1c8/F3DyyVDuZVDs635s6vTyqaj9liPB4zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=taufDD0UAnE2Ozgz8O9vpkwnuKMJNZVawvlYxdJThaYBT+PYVBoEU1ACs6VFuQb4D
-	 zIUW/DYqe1rBaR1R9UNztzj8tTq+2+NaxfvVqkr3H8LeTuIpt7rRM6FKVuP7ve893J
-	 FRqG3+nO7rD2E6lg8rlK4JBU56Zzx/UWR2w96H4k=
+	b=wXSoNwzuPGKvIMklzMF68INX+XOJtOvkCo9+V8Y+/ortScuPLPx4PEIKZf557mlPe
+	 85y1FfCZ+OCJOn9cs9nbiNOG6WRWlk6aTuxWvEsQkZja157dvxVWF1lCGz8bPDGEIG
+	 1vuiPPqK/q4BfIn9T/ZM0h81S2FoR/uFTR5C+WXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgGAWLK (ORCPT
+        id S1727808AbgGAWLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46864 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 18:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgGAWLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:11:09 -0400
+        id S1726114AbgGAWLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:11:17 -0400
 Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E93B20780;
-        Wed,  1 Jul 2020 22:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F4620780;
+        Wed,  1 Jul 2020 22:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593641469;
-        bh=BALQnrcnOIU/FJXKRrb2SYWT5Jkbat+pRGBTyFzJQjI=;
+        s=default; t=1593641477;
+        bh=Uu5gADrn1c8/F3DyyVDuZVDs635s6vTyqaj9liPB4zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hhc0hmwvsJvR1D1FEsdNcdzp5JJRNlJoHq9dkqMzqPYYrtMTdo3Mi6FgzaeIHjHpa
-         J9tDeFZjwXU1ETv3HKgIKlv1fsKFhaUo4C4MsQ3aVT3aHXwKkriXGEu2VUbCKenyz0
-         Fon4TATXRbyW4WLcTl4Vda7b2TmKkKj2XC8lBeWM=
+        b=U8yRMXPv35K3avDnwhvyRBDN3TNUYAo8JSlafx8DbhjvxNvecxo6SLc034QaZPn4h
+         lKm1OjMxsQHLbtB1FSpdDBiwsCDxCPL4QTIgMUXfOptbU2PVJLe2Oe1Rv4KuXzxI1A
+         zhmCVHmxGbIqhYSKQE5jqPLVCYeSkWEbZptbj6Cw=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/2] ARM: imx: Remove imx_add_imx_dma() unused irq_err argument
-Date:   Wed,  1 Jul 2020 17:10:39 -0500
-Message-Id: <20200701221040.3667868-2-helgaas@kernel.org>
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH 2/2] virtio-mmio: Reject invalid IRQ 0 command line argument
+Date:   Wed,  1 Jul 2020 17:10:40 -0500
+Message-Id: <20200701221040.3667868-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701221040.3667868-1-helgaas@kernel.org>
 References: <20200701221040.3667868-1-helgaas@kernel.org>
@@ -62,93 +60,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-No callers of imx_add_imx_dma() need an error IRQ, so they supply 0 as
-"irq_err", which means we register a resource of IRQ 0, which is invalid
-and causes a warning if used.
+The "virtio_mmio.device=" command line argument allows a user to specify
+the size, address, and IRQ of a virtio device.  Previously the only
+requirement for the IRQ was that it be an unsigned integer.
 
-Remove the "irq_err" argument altogether so there's no chance of trying to
-use the invalid IRQ 0.
+Zero is an unsigned integer but an invalid IRQ number, and after
+a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid"),
+attempts to use IRQ 0 cause warnings.
+
+If the user specifies IRQ 0, return failure instead of registering a device
+with IRQ 0.
 
 Fixes: a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: kernel@pengutronix.de
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
 ---
- arch/arm/mach-imx/devices/devices-common.h   | 2 +-
- arch/arm/mach-imx/devices/platform-imx-dma.c | 6 +-----
- arch/arm/mach-imx/mm-imx21.c                 | 3 +--
- arch/arm/mach-imx/mm-imx27.c                 | 3 +--
- 4 files changed, 4 insertions(+), 10 deletions(-)
+ drivers/virtio/virtio_mmio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-imx/devices/devices-common.h b/arch/arm/mach-imx/devices/devices-common.h
-index 2a685adec1df..ae84c08e11fa 100644
---- a/arch/arm/mach-imx/devices/devices-common.h
-+++ b/arch/arm/mach-imx/devices/devices-common.h
-@@ -289,6 +289,6 @@ struct platform_device *__init imx_add_spi_imx(
- 		const struct spi_imx_master *pdata);
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index 9d16aaffca9d..627ac0487494 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -641,11 +641,11 @@ static int vm_cmdline_set(const char *device,
+ 			&vm_cmdline_id, &consumed);
  
- struct platform_device *imx_add_imx_dma(char *name, resource_size_t iobase,
--					int irq, int irq_err);
-+					int irq);
- struct platform_device *imx_add_imx_sdma(char *name,
- 	resource_size_t iobase, int irq, struct sdma_platform_data *pdata);
-diff --git a/arch/arm/mach-imx/devices/platform-imx-dma.c b/arch/arm/mach-imx/devices/platform-imx-dma.c
-index 26b47b36257b..12656f24ad0d 100644
---- a/arch/arm/mach-imx/devices/platform-imx-dma.c
-+++ b/arch/arm/mach-imx/devices/platform-imx-dma.c
-@@ -6,7 +6,7 @@
- #include "devices-common.h"
+ 	/*
+-	 * sscanf() must processes at least 2 chunks; also there
++	 * sscanf() must process at least 2 chunks; also there
+ 	 * must be no extra characters after the last chunk, so
+ 	 * str[consumed] must be '\0'
+ 	 */
+-	if (processed < 2 || str[consumed])
++	if (processed < 2 || str[consumed] || irq == 0)
+ 		return -EINVAL;
  
- struct platform_device __init __maybe_unused *imx_add_imx_dma(char *name,
--	resource_size_t iobase, int irq, int irq_err)
-+	resource_size_t iobase, int irq)
- {
- 	struct resource res[] = {
- 		{
-@@ -17,10 +17,6 @@ struct platform_device __init __maybe_unused *imx_add_imx_dma(char *name,
- 			.start = irq,
- 			.end = irq,
- 			.flags = IORESOURCE_IRQ,
--		}, {
--			.start = irq_err,
--			.end = irq_err,
--			.flags = IORESOURCE_IRQ,
- 		},
- 	};
- 
-diff --git a/arch/arm/mach-imx/mm-imx21.c b/arch/arm/mach-imx/mm-imx21.c
-index 50a2edac8513..b834026e4615 100644
---- a/arch/arm/mach-imx/mm-imx21.c
-+++ b/arch/arm/mach-imx/mm-imx21.c
-@@ -78,8 +78,7 @@ void __init imx21_soc_init(void)
- 	mxc_register_gpio("imx21-gpio", 5, MX21_GPIO6_BASE_ADDR, SZ_256, MX21_INT_GPIO, 0);
- 
- 	pinctrl_provide_dummies();
--	imx_add_imx_dma("imx21-dma", MX21_DMA_BASE_ADDR,
--			MX21_INT_DMACH0, 0); /* No ERR irq */
-+	imx_add_imx_dma("imx21-dma", MX21_DMA_BASE_ADDR, MX21_INT_DMACH0);
- 	platform_device_register_simple("imx21-audmux", 0, imx21_audmux_res,
- 					ARRAY_SIZE(imx21_audmux_res));
- }
-diff --git a/arch/arm/mach-imx/mm-imx27.c b/arch/arm/mach-imx/mm-imx27.c
-index 4e4125140025..2717614f101d 100644
---- a/arch/arm/mach-imx/mm-imx27.c
-+++ b/arch/arm/mach-imx/mm-imx27.c
-@@ -79,8 +79,7 @@ void __init imx27_soc_init(void)
- 	mxc_register_gpio("imx21-gpio", 5, MX27_GPIO6_BASE_ADDR, SZ_256, MX27_INT_GPIO, 0);
- 
- 	pinctrl_provide_dummies();
--	imx_add_imx_dma("imx27-dma", MX27_DMA_BASE_ADDR,
--			MX27_INT_DMACH0, 0); /* No ERR irq */
-+	imx_add_imx_dma("imx27-dma", MX27_DMA_BASE_ADDR, MX27_INT_DMACH0);
- 	/* imx27 has the imx21 type audmux */
- 	platform_device_register_simple("imx21-audmux", 0, imx27_audmux_res,
- 					ARRAY_SIZE(imx27_audmux_res));
+ 	resources[0].flags = IORESOURCE_MEM;
 -- 
 2.25.1
 
