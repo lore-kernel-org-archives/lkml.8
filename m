@@ -2,222 +2,319 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B11C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9379FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9362220722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE8B20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnxOQGwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgGAHDp (ORCPT
+        id S1728090AbgGAHEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:03:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7470 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgGAHDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:03:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49xXJF6R5rz9v1xr;
-        Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lJg3lFJH2Aax; Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49xXJF20wwz9v1xq;
-        Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C5EB48B7DE;
-        Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id o-A-Qpkw4yiK; Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B87B8B75F;
-        Wed,  1 Jul 2020 09:03:41 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
- <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
- <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
- <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
- <20200630163324.GW3598@gate.crashing.org>
- <f8819fa4-94e3-4bf9-4b60-c57d2804e529@csgroup.eu>
- <20200630211817.GZ3598@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <aaf5ac33-cd24-3b82-a034-2fc1d43d443f@csgroup.eu>
-Date:   Wed, 1 Jul 2020 09:05:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200630211817.GZ3598@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 1 Jul 2020 03:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbgGAHEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 03:04:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E51C061755;
+        Wed,  1 Jul 2020 00:04:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b92so10635476pjc.4;
+        Wed, 01 Jul 2020 00:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=NnxOQGwN2fiVijkyKWMDRKyu6NhJ9XGf1RN8fCmtWJbYPFPZwt1E2v1y95ag2laVoz
+         JuRRtV/SSKcCUZ5IBPUmO4XZZOss80RdERJBx/cWm3TR/JNM8fcyzk79WbIqDxc2+8Um
+         6bAnewGJU/0QdRS1mj/C/NqEo5w4fF/ao5pT/Bfp2sMKKvlfNqt0xWNBGW4yy9TfKEQJ
+         UTMBlxfU8+DNUQ/I/lK0ONPLhCR47k9No8uQ6GRE8QF32H5caMOcNZ/GXPFSCQlPGX7p
+         vdMzvNa00shOqnPOB6rxqrSPoA6ueTsDPgqXItp09e21hATcW6yrktrPCXRbnsAO0lYZ
+         URfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=hy4nJOd4iJFyHi0RMpOLHbQEyAon/bm5qsRvbK/EhnrSs4oK0YgXrv/WSmQidYnghV
+         GPoDtylMVM5ZhlgreT4ICW79Dj6xqAYHjA0datPYXh6ntpSICdp52sK0jb3teCM/1tbJ
+         NJ9+X0wJ4HLvvZjTr3kccteV0rapWeYg1ANU3p7sB8+LuDFxR70pRQanSnkngnFOR4bd
+         bvVhaBUCE+UD0p7bh8oJMAff0mGW1TpLbh6+yIKJ6pxK2uuaOjgBRWgc30mOvIayPah5
+         mH804Xhlq9jW07z/wmd9hCooW983vUaUc/bitwrrDps+ox7NsS99qvyV9t+fLhw9NCnT
+         4Akg==
+X-Gm-Message-State: AOAM5305EP+J5NjBuU5aJDt9JgYF/8bVhCL4F7e+O711sJNQKrrs68Md
+        Pxhye5P9M8VM6m2vxdco9tqfWd7LnMc=
+X-Google-Smtp-Source: ABdhPJx/6lPBNeVtHwsvQ63vNg3gQTw0bGryosd9ftVV+EMIb/Bl718hMVuloKtYMtKlOW9lBXxOlQ==
+X-Received: by 2002:a17:902:9042:: with SMTP id w2mr11542065plz.8.1593587062534;
+        Wed, 01 Jul 2020 00:04:22 -0700 (PDT)
+Received: from in099003062.routereb3c90.com ([106.51.138.45])
+        by smtp.gmail.com with ESMTPSA id f2sm3623201pfb.184.2020.07.01.00.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 00:04:21 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+To:     narmstrong@baylibre.com, Ken-Sue.Tan@taec.toshiba.com,
+        Chris.Cheng@taec.toshiba.com, Bhushan.Patel@taec.toshiba.com
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Date:   Wed,  1 Jul 2020 12:33:36 +0530
+Message-Id: <20200701070344.6330-1-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This driver is tested with two panels with Apq8016-IFC6309 board
+https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
 
+1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
+2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
 
-Le 30/06/2020 à 23:18, Segher Boessenkool a écrit :
-> Hi again,
-> 
-> Thanks for your work so far!
-> 
-> On Tue, Jun 30, 2020 at 06:53:39PM +0000, Christophe Leroy wrote:
->> On 06/30/2020 04:33 PM, Segher Boessenkool wrote:
->>>>> + make -s CC=powerpc64-linux-gnu-gcc -j 160
->>>>> In file included from /linux/include/linux/uaccess.h:11:0,
->>>>>                   from /linux/include/linux/sched/task.h:11,
->>>>>                   from /linux/include/linux/sched/signal.h:9,
->>>>>                   from /linux/include/linux/rcuwait.h:6,
->>>>>                   from /linux/include/linux/percpu-rwsem.h:7,
->>>>>                   from /linux/include/linux/fs.h:33,
->>>>>                   from /linux/include/linux/huge_mm.h:8,
->>>>>                   from /linux/include/linux/mm.h:675,
->>>>>                   from /linux/arch/powerpc/kernel/signal_32.c:17:
->>>>> /linux/arch/powerpc/kernel/signal_32.c: In function
->>>>> 'save_user_regs.isra.14.constprop':
->>>>> /linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has
->>>>> impossible constraints
->>>>>    __asm__ __volatile__(     \
->>>>>    ^
->>>>> /linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of
->>>>> macro '__put_user_asm'
->>>>>      case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
->>>>>              ^
->>>>> /linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of
->>>>> macro '__put_user_size_allowed'
->>>>>    __put_user_size_allowed(x, ptr, size, retval);  \
->>>>>    ^
->>>>> /linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of
->>>>> macro '__put_user_size'
->>>>>    __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
->>>>>    ^
->>>>> /linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of
->>>>> macro '__put_user_nocheck'
->>>>>    __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
->>>>>    ^
->>>>> /linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro
->>>>> '__put_user'
->>>>>     if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
->>>>>         ^
->>>
->>> Can we see what that was after the macro jungle?  Like, the actual
->>> preprocessed code?
->>
->> Sorry for previous misunderstanding
->>
->> Here is the code:
->>
->> #define __put_user_asm(x, addr, err, op)			\
->> 	__asm__ __volatile__(					\
->> 		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
->> 		"2:\n"						\
->> 		".section .fixup,\"ax\"\n"			\
->> 		"3:	li %0,%3\n"				\
->> 		"	b 2b\n"					\
->> 		".previous\n"					\
->> 		EX_TABLE(1b, 3b)				\
->> 		: "=r" (err)					\
->> 		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
-> 
-> Yeah I don't see it.  I'll have to look at compiler debug dumps, but I
-> don't have any working 4.9 around, and I cannot reproduce this with
-> either older or newer compilers.
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 
-I reproduced it with 4.8.5
+---
+v1:
+ Initial version wast .txt file
 
-> 
-> It is complainig that constrain_operands just does not work *at all* on
-> this "m<>" constraint apparently, which doesn't make much sense.
-> 
+v2:
+ From txt to yaml file format
 
-Here is a small reproducer:
+v3:
+* Andrzej Hajda review comments incorporated
+  dual port lvds implemented
 
-#include <linux/elf.h>
-#include <linux/ptrace.h>
-#include <linux/uaccess.h>
+* Laurent Pinchart review comments incorporated
+  dsi lanes property removed and it is dynamically
+  picked from the dsi ports
+  VESA/JEIDA format picked from panel-lvds dts
+---
+ .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
+ 1 file changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
 
-struct mcontext {
-	elf_gregset_t32		mc_gregs;
-	elf_fpregset_t		mc_fregs;
-	unsigned int		mc_pad[2];
-	elf_vrregset_t32	mc_vregs __attribute__((__aligned__(16)));
-	elf_vsrreghalf_t32      mc_vsregs __attribute__((__aligned__(16)));
-};
+diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+new file mode 100644
+index 000000000000..ec53d62d408b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Toshiba TC358775 DSI to LVDS bridge bindings
++
++maintainers:
++ - Vinay Simha BN <simhavcs@gmail.com>
++
++description: |
++ This binding supports DSI to LVDS bridge TC358775
++
++properties:
++  compatible:
++    const: toshiba,tc358775
++
++  reg:
++    maxItems: 1
++    description: i2c address of the bridge, 0x0f
++
++  vdd-supply:
++    maxItems: 1
++    description:  1.2V LVDS Power Supply
++
++  vddio-supply:
++    maxItems: 1
++    description: 1.8V IO Power Supply
++
++  stby-gpios:
++    maxItems: 1
++    description: Standby pin, Low active
++
++  reset-gpios:
++    maxItems: 1
++    description: Hardware reset, Low active
++
++  ports:
++    type: object
++    description:
++      A node containing input and output port nodes with endpoint definitions
++      as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description: |
++          DSI Input. The remote endpoint phandle should be a
++          reference to a valid mipi_dsi_host device node.
++
++      port@1:
++        type: object
++        description: |
++          Video port for LVDS output (panel or connector).
++
++      port@2:
++        type: object
++        description: |
++          Video port for Dual link LVDS output (panel or connector).
++
++    required:
++      - port@0
++      - port@1
++
++required:
++ - compatible
++ - reg
++ - vdd-supply
++ - vddio-supply
++ - stby-gpios
++ - reset-gpios
++ - ports
++
++examples:
++ - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_test: endpoint {
++                        remote-endpoint = <&dsi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out: endpoint {
++                    remote-endpoint = <&d2l_in_test>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++
++ - |
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge_dual: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_dual: endpoint {
++                        remote-endpoint = <&dsi0_out_dual>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds0_out: endpoint {
++                        remote-endpoint = <&panel_in0>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    lvds1_out: endpoint {
++                        remote-endpoint = <&panel_in1>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out_dual: endpoint {
++                    remote-endpoint = <&d2l_in_dual>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++...
+-- 
+2.17.1
 
-int save_general_regs(struct pt_regs *regs, struct mcontext __user *frame)
-{
-	elf_greg_t64 *gregs = (elf_greg_t64 *)regs;
-	int i;
-
-	for (i = 0; i <= PT_RESULT; i ++) {
-		if (i == 14)
-			i = 32;
-		if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
-			return -EFAULT;
-	}
-	return 0;
-}
-
-
-If you remove the "if i == 14 ..." you get no failure.
-
-Preprocessor result:
-
-int save_general_regs(struct pt_regs *regs, struct mcontext *frame)
-{
-  elf_greg_t64 *gregs = (elf_greg_t64 *)regs;
-  int i;
-
-  for (i = 0; i <= 43; i ++) {
-   if (i == 14)
-    i = 32;
-   if (({ long __pu_err; __typeof__(*((&frame->mc_gregs[i]))) *__pu_addr 
-= ((&frame->mc_gregs[i])); __typeof__(*((&frame->mc_gregs[i]))) __pu_val 
-= ((__typeof__(*(&frame->mc_gregs[i])))((unsigned int)gregs[i])); 
-__typeof__(sizeof(*(&frame->mc_gregs[i]))) __pu_size = 
-(sizeof(*(&frame->mc_gregs[i]))); if (!(((unsigned long)__pu_addr) >= 
-0x8000000000000000ul)) might_fault(); (void)0; do { 
-allow_write_to_user(__pu_addr, __pu_size); do { __pu_err = 0; switch 
-(__pu_size) { case 1: __asm__ __volatile__( "1:	" "stb" "%U2%X2 %1,%2	# 
-put_user\n" "2:\n" ".section .fixup,\"ax\"\n" "3:	li %0,%3\n" "	b 2b\n" 
-".previous\n" ".section __ex_table,\"a\";" " " ".balign 4;" " " ".long 
-(1b) - . ;" " " ".long (3b) - . ;" " " ".previous" " " : "=r" (__pu_err) 
-: "r" (__pu_val), "m<>" (*__pu_addr), "i" (-14), "0" (__pu_err)); break; 
-case 2: __asm__ __volatile__( "1:	" "sth" "%U2%X2 %1,%2	# put_user\n" 
-"2:\n" ".section .fixup,\"ax\"\n" "3:	li %0,%3\n" "	b 2b\n" 
-".previous\n" ".section __ex_table,\"a\";" " " ".balign 4;" " " ".long 
-(1b) - . ;" " " ".long (3b) - . ;" " " ".previous" " " : "=r" (__pu_err) 
-: "r" (__pu_val), "m<>" (*__pu_addr), "i" (-14), "0" (__pu_err)); break; 
-case 4: __asm__ __volatile__( "1:	" "stw" "%U2%X2 %1,%2	# put_user\n" 
-"2:\n" ".section .fixup,\"ax\"\n" "3:	li %0,%3\n" "	b 2b\n" 
-".previous\n" ".section __ex_table,\"a\";" " " ".balign 4;" " " ".long 
-(1b) - . ;" " " ".long (3b) - . ;" " " ".previous" " " : "=r" (__pu_err) 
-: "r" (__pu_val), "m<>" (*__pu_addr), "i" (-14), "0" (__pu_err)); break; 
-case 8: __asm__ __volatile__( "1:	" "std" "%U2%X2 %1,%2	# put_user\n" 
-"2:\n" ".section .fixup,\"ax\"\n" "3:	li %0,%3\n" "	b 2b\n" 
-".previous\n" ".section __ex_table,\"a\";" " " ".balign 4;" " " ".long 
-(1b) - . ;" " " ".long (3b) - . ;" " " ".previous" " " : "=r" (__pu_err) 
-: "r" (__pu_val), "m<>" (*__pu_addr), "i" (-14), "0" (__pu_err)); break; 
-default: __put_user_bad(); } } while (0); 
-prevent_write_to_user(__pu_addr, __pu_size); } while (0); __pu_err; }))
-    return -14;
-  }
-  return 0;
-}
-
-
-Christophe
