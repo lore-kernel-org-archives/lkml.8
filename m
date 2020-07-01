@@ -2,130 +2,148 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1D6206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="H36JJcEb"
+	by mail.kernel.org (Postfix) with ESMTP id A6BF1207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbgGAObn (ORCPT
+        id S1731444AbgGAOcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:31:43 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11928 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730245AbgGAObn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:31:43 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061ET9B0010141;
-        Wed, 1 Jul 2020 16:31:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=2H4rJcc4Kq591hNX8sznqvH4uJ8CcStcaPrDL9Edm2U=;
- b=H36JJcEbriSryEhCLbG2fojXgMHXjBhVXgP15riT/Ujyis17ISJIBmel12xC1I8o8Spc
- 6kezrDHN6UuDuGW+dIedUBtnQbEbGRnxhxmmTAA1swav0MlNoMCxjA8F9fPCK0YiJhse
- 80SbW9hzUFld3V6pnko5OTZ2Z2WVvfhqz+831d8DZ0wE72pXpfjFfZt1OKyXcBAUuaXD
- 61Pro0G4QE+K0D+Kdm6Z2Jc4P9GQZ4vrNG8RmSJdksvZc0rWrefkr6Xa3/7dzKu+V93r
- f95DA+LKGPOIW8Ayf+WDISeIO2KxrBm4GEdTsfzVe7MTEiJ8UbjxmdoD+FtYXrC6DA3w Fw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89u28x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 16:31:34 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0727B10002A;
-        Wed,  1 Jul 2020 16:31:33 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DEAFE2BC7A9;
-        Wed,  1 Jul 2020 16:31:33 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul 2020 16:31:33
- +0200
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/bridge/synopsys: dsi: allow sending longer LP commands
-Date:   Wed, 1 Jul 2020 16:31:31 +0200
-Message-ID: <20200701143131.841-1-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Jul 2020 10:32:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:44452 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731328AbgGAOcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:32:19 -0400
+IronPort-SDR: BLdzghiPKst31UcPYVThfCPiBLDbJGEnmGtRzdUXTmsTbPIwmngUgYMLUxKUsolObxlBO2qYFi
+ yJi4+e3LcgMw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164601737"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="164601737"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:32:18 -0700
+IronPort-SDR: xMZRsEBocY4ou+X3JlDrChWzZ4wk4zF+4qSsdv8rZwGe+mSaTYpIZ1H1TrEOwIlNVZUdFGoDbi
+ 0Y5TB98auCeQ==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455124215"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:32:17 -0700
+Subject: Re: [RFC] [PATCH 0/8] Migrate Pages in lieu of discard
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+ <CALvZod55OFzOozsDbyTkUh1uZEobo4CZ=+8JgrJJHw8QuWh0hw@mail.gmail.com>
+ <654d785f-3fe5-d8bd-86bf-bf7431527184@intel.com>
+ <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
+ <fdfeb902-e363-f8b5-4c63-df224b9817fa@intel.com>
+ <8927EC7B-76F2-4DFC-9AD8-EC2F15E3CEF9@nvidia.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <9c47b66b-f381-4b98-2e8f-7262e8567e15@intel.com>
+Date:   Wed, 1 Jul 2020 07:32:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+In-Reply-To: <8927EC7B-76F2-4DFC-9AD8-EC2F15E3CEF9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Current code does not properly computes the max length of LP
-commands that can be send during H or V sync, and rely on static
-values.
-Limiting the max LP length to 4 byte during the V-sync is overly
-conservative.
+On 7/1/20 7:24 AM, Zi Yan wrote:
+> On 30 Jun 2020, at 15:31, Dave Hansen wrote:
+>>> BTW is this proposal only for systems having multi-tiers of
+>>> memory? Can a multi-node DRAM-only system take advantage of
+>>> this proposal? For example I have a system with two DRAM nodes
+>>> running two jobs hardwalled to each node. For each job the
+>>> other node is kind of low-tier memory. If I can describe the
+>>> per-job demotion paths then these jobs can take advantage of
+>>> this proposal during occasional peaks.
+>> I don't see any reason it could not work there.  There would just
+>> need to be a way to set up a different demotion path policy that
+>> what was done here.
+> We might need a different threshold (or GFP flag) for allocating
+> new pages in remote node for demotion. Otherwise, we could see
+> scenarios like: two nodes in a system are almost full and Node A
+> is trying to demote some pages to Node B, which triggers page
+> demotion from Node B to Node A.
 
-Relax the limit and allows longer LP commands (16 bytes) to be
-sent during V-sync.
+I've always assumed that migration cycles would be illegal since it's
+so hard to guarantee forward reclaim progress with them in place.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
----
- drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-index d580b2aa4ce9..1a24ea648ef8 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-@@ -360,6 +360,15 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
- 	bool lpm = msg->flags & MIPI_DSI_MSG_USE_LPM;
- 	u32 val = 0;
- 
-+	/*
-+	 * TODO dw drv improvements
-+	 * largest packet sizes during hfp or during vsa/vpb/vfp
-+	 * should be computed according to byte lane, lane number and only
-+	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
-+	 */
-+	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(16)
-+		  | INVACT_LPCMD_TIME(4));
-+
- 	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
- 		val |= ACK_RQST_EN;
- 	if (lpm)
-@@ -611,14 +620,6 @@ static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
- 	dsi_write(dsi, DSI_DPI_VCID, DPI_VCID(dsi->channel));
- 	dsi_write(dsi, DSI_DPI_COLOR_CODING, color);
- 	dsi_write(dsi, DSI_DPI_CFG_POL, val);
--	/*
--	 * TODO dw drv improvements
--	 * largest packet sizes during hfp or during vsa/vpb/vfp
--	 * should be computed according to byte lane, lane number and only
--	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
--	 */
--	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(4)
--		  | INVACT_LPCMD_TIME(4));
- }
- 
- static void dw_mipi_dsi_packet_handler_config(struct dw_mipi_dsi *dsi)
--- 
-2.17.1
-
+iQIcBAEBCAAGBQJe/J5kAAoJEGg1lTBwyZKw0TMP/1kufbxVGSY331xhOL/QHEoE
+Tsuo62l2CJ/CbhIBKzac24k1Rf9AiyxUukkVZfa32c2Kf03XWjUNiWVuRPSTMlfT
+E0h2llYYbUBs+eVeT4Ksz4xkThKHlXPNuS1OMhuSVbjhieiPqp3J0blohXaWdkSa
+DBgpiqNlVPD7V0NIA5qfsumZRrOJDdJNdLKbjI7GBVprEHu5N/X0NQpakPErtcka
+kSz7Hjv5x+fbd3rxc2QhrnegBE1oMQGUl14nf/kIKnKuZV2WIdabaxrYWrQBvALa
+Z2sfcBRU41/SKvz/syCwJpSr1XkfsjNKvDMlkflXndMTzzP4/rhAyDX5Wzw99Aws
+zz6UmRhZrFOudq4R5jpOqJiDfn1RGYA8mH04bEOPjEgGRiXaxi5Sp6fh/BQG5p7n
+QESH0LVHEhg8h+10FWZ5VYU1UwMIdzolBI8Y8VlJDjeSpzSFyyDFP7Re3OyQRfmb
+ij5ThSozo35t+zEYS4yofgPMZKJ/aZ+EySEF5LZsipKC2RsRuFFpaDSOOGXZKLXq
+G/R9g2LeLZK6iNNlCrIGjeAAKN8UZzOMJwapYV8czt0HTQ2vRjuDE1Y2TRD6gjXI
+x6vUCfFyOEJw4l3mca+Sb1pmFcaiXBRxBrat6q23Ls+eCDMIaTgx5wA7NEeq0Td7
+yShQbtIvJKRubiscJlZ/
+=MjgB
+-----END PGP SIGNATURE-----
