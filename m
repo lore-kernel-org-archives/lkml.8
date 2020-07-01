@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECDAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE4E2067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0247B2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dCfY7ko4"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aj5FfPDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgGAKbo (ORCPT
+        id S1730050AbgGAKbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:31:44 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42018 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 06:31:47 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42084 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgGAKbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729986AbgGAKbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 06:31:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599489; bh=V8lg3QrmlL/+ORB8+T8iagnNb4aO75aHpHs9Ov8wOuQ=;
+        t=1593599490; bh=Oj0dUcmJMqbWWnEM4fT6FFb2wi7F4yzS6GdUL1tM2bs=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=dCfY7ko4BIdTflXRtqeswknuLtuD3paoj9yVmsF+B794AMHSh37ZwDnxJOBEifsro
-         zzazJp8GhhNN6e/6VerwZULr6oZsVADdtdsxzRHqRMWTt59Oot4zSEvkYQkRUIpQnj
-         3xJF06BnRzYDEeg4A36EJACnXtWrbXfyiYm0RFCI=
+        b=aj5FfPDT0tbje9T8LJ/JVemDlV8qwX4buTrZYBVUe2NjFwJqfb6beTFTvEJxHF9sr
+         T0FmM0fWsf+BmqQeQFZ8NLTR6WwV9h4PSpWNef4q2Kthrj6FinV1Lwf4PPJmfWSaRH
+         qXmRhOZfrWMMDyOOUtJCpRcN05hFlmuUIzNmkgHw=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,16 +41,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 01/13] dt-bindings: vendor-prefixes: Add Xingbangda
-Date:   Wed,  1 Jul 2020 12:31:14 +0200
-Message-Id: <20200701103126.1512615-2-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v6 03/13] dt-bindings: panel: Add compatible for Xingbangda XBD599 panel
+Date:   Wed,  1 Jul 2020 12:31:16 +0200
+Message-Id: <20200701103126.1512615-4-megous@megous.com>
 In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
 References: <20200701103126.1512615-1-megous@megous.com>
 MIME-Version: 1.0
@@ -60,33 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel. It is based on
+Sitronix ST7703 LCD controller just like rocktech,jh057n00900. It is
+used in PinePhone.
 
-Shenzhen Xingbangda Display Technology Co., Ltd is a company which
-produces LCD modules. It supplies the LCD panels for the PinePhone.
+Add a compatible for it.
 
-Add the vendor prefix of it.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/display/panel/rocktech,jh057n00900.yaml        | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..740b116b179f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1157,6 +1157,8 @@ patternProperties:
-     description: Xiaomi Technology Co., Ltd.
-   "^xillybus,.*":
-     description: Xillybus Ltd.
-+  "^xingbangda,.*":
-+    description: Shenzhen Xingbangda Display Technology Co., Ltd
-   "^xinpeng,.*":
-     description: Shenzhen Xinpeng Technology Co., Ltd
-   "^xlnx,.*":
+diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+index 928ba42e7f8d..a6985cd947fb 100644
+--- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
++++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+@@ -18,7 +18,11 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: rocktech,jh057n00900
++    enum:
++        # Rocktech JH057N00900 5.5" 720x1440 TFT LCD panel
++      - rocktech,jh057n00900
++        # Xingbangda XBD599 5.99" 720x1440 TFT LCD panel
++      - xingbangda,xbd599
+ 
+   reg:
+     maxItems: 1
 -- 
 2.27.0
 
