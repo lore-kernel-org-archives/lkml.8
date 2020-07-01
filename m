@@ -2,105 +2,117 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D36C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E43820663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593586267;
-	bh=IvkldxSKy6dI7BoDzvZmf7aeX4tfPJCRDYRLEDZqKMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0yZ5HGnhcZ3NGPHHB6Z49XsceYv+aVCFC4auETcsZkNXDUznAb3lQCvFKT2T4lYlt
-	 A7i8cQbvTlcAgL6Sq59n1vQCl/mU3MIf5G+KQpMdYkY6Faa6e/GSddyAkUUdz95j1Q
-	 Ev1UmSzqSiUfzEbtWFbUrRRCq525pF0Lya4KlF0A=
+	by mail.kernel.org (Postfix) with ESMTP id 539CB20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:51:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cxLxSk93";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Thb2uVjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgGAGvF (ORCPT
+        id S1728057AbgGAGvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgGAGvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 02:51:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B77120663;
-        Wed,  1 Jul 2020 06:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593586264;
-        bh=IvkldxSKy6dI7BoDzvZmf7aeX4tfPJCRDYRLEDZqKMQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IPwJpsgotx+b38Fkxsx62wgi3q01XfBP3GU//4orXtlEWskY5MZ4mak46kahneNZg
-         Nm5VLRsavkVRP3LUdzeqXZnKkAF5RB11bcudAhuJYEFLYxBPB4Lvduq7qKPDs0vBv2
-         ypqOvhqvALfE9KsIE/SlzwECxKdcutu33CA6uZLg=
-Date:   Wed, 1 Jul 2020 08:50:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Peter Chen <hzpeterchen@gmail.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] USB: Fix up terminology
-Message-ID: <20200701065051.GB2044019@kroah.com>
-References: <20200630174123.GA1906678@kroah.com>
- <CAL411-pgboix6=1=jKNv_4JaHiC8fKDJ4_mryooMepeHdB-2AA@mail.gmail.com>
- <20200701062924.GA5927@kroah.com>
- <DB8PR04MB7162C271B04650CBCC87729D8B6C0@DB8PR04MB7162.eurprd04.prod.outlook.com>
+        Wed, 1 Jul 2020 02:51:14 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:44489 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727817AbgGAGvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 02:51:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DC494AA7;
+        Wed,  1 Jul 2020 02:51:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 01 Jul 2020 02:51:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=DMlwC4LDZdJp/AElsdSkN7QDFdA
+        xaBzbT1BNfb3j+c0=; b=cxLxSk93t8J6dOd9wq+KFmXn34ZCBDSQqIKdR4Wb0yL
+        AIKvHg2d9TLY1njfPXqdbyId8+oRdwWGKfYlvRU8Dw0zdDSBSFlEPRbpDAzvG+qk
+        VcW+WwrBnCEfKDRG6Ne8GyvqEoUgV2SLIcNRN4xz5BgXqiDd4BxzbBZ1JMwIyRIJ
+        DvjUrIW0pkXRlsMoU48b8x+gdMhxa74miehgDWW6He23mwJpdgtpSGcg+Wf97Jic
+        I+4I2ifemhF/DdTiNw1mPrfqjlldNa2MpRBkhUS2ogAF16GbE5P5RKoMm0wTEB2P
+        TMJa70yPIhhtd6WhKr7ImA8hISsQ9f8AK9WicAd24hw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=DMlwC4
+        LDZdJp/AElsdSkN7QDFdAxaBzbT1BNfb3j+c0=; b=Thb2uVjhGDFYSOBdjBXJiP
+        3u+y5J53+9pRuUxU/eNw+cZVANLrLEyXbpP1gi8c61D+J6U0U6742MUlUwl1a8Yz
+        pi7i0OcwrDbjDuwyOrCRKOebG335obRy12b6DmZV0EDDpUAdYET1ml9y+23EAPLQ
+        tHMmAA+1gIum1iRzIyuibLTJnpIbi4n+Dle/2ozZkrIKTRntq5DIIqMjkeuHcByr
+        ZNH4kYqvUREJjZsm9Ddpbo556E6pwddXGBg1YcztLNbA5TCgVYlmzOLaPJ1K7ukW
+        eTQI1ec7dQ/KUIEPFJn3mcRSnjHVR6LDrzNlCsQBOvm4SJCq6FhYcPrBCulynbQQ
+        ==
+X-ME-Sender: <xms:XDL8Xmq0aaZWCwKkaWJfKNzsiK-nqXWWAxS5A5o1psW4xi9xgacQow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtddugdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:XDL8Xkopx1jOmA49yAwBC3rc-9VW7Yr8xqo03MtoZug9NgM462_4Og>
+    <xmx:XDL8XrNofe-BCmqXUMGf01Hm3tgRMX_R-sUyFNUNQtzsRF5e7jEY2g>
+    <xmx:XDL8Xl7SXahVf5qVwJPf1hroEw3NXNxK709Aw9haqlEyaFyCXqdOEA>
+    <xmx:XzL8XlGFyaNxBpbCImJWUPj1CEyjT3kkOA4udqttLvAMOhQaU1a0ag>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1ABE7328005A;
+        Wed,  1 Jul 2020 02:51:08 -0400 (EDT)
+Date:   Wed, 1 Jul 2020 08:51:05 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] dt-bindings: display: Convert connectors to DT schema
+Message-ID: <20200701065105.skz3ln54h3qo4div@gilmour.lan>
+References: <20200630200216.1172566-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="g3kj2uw52dmun5h6"
 Content-Disposition: inline
-In-Reply-To: <DB8PR04MB7162C271B04650CBCC87729D8B6C0@DB8PR04MB7162.eurprd04.prod.outlook.com>
+In-Reply-To: <20200630200216.1172566-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 06:40:20AM +0000, Peter Chen wrote:
->  
-> > 
-> > On Wed, Jul 01, 2020 at 02:02:00PM +0800, Peter Chen wrote:
-> > > > index 3a7179e90f4e..1a12aab208b4 100644
-> > > > --- a/drivers/usb/gadget/udc/Kconfig
-> > > > +++ b/drivers/usb/gadget/udc/Kconfig
-> > > > @@ -474,7 +474,7 @@ config USB_DUMMY_HCD
-> > > >         help
-> > > >           This host controller driver emulates USB, looping all data transfer
-> > > >           requests back to a USB "gadget driver" in the same host.  The host
-> > > > -         side is the master; the gadget side is the slave.  Gadget drivers
-> > > > +         side is the controller; the gadget side is the device.  Gadget drivers
-> > >
-> > > 'the host side is the controller' may not be suitable.
-> > 
-> > Really?  It is literally a "host controller" as per the specification :)
-> 
-> You are right. At first, I thought, there are device controller, host controller and dual-role
-> controller, why you only said, "the host side is the controller"? After checking USB 3.0 spec,
-> there are only "device", "host" and "host controller" at its Terms and Abbreviations.
-> 
-> device
-> A logical or physical entity that performs one or more functions. The actual entity
-> described depends on the context of the reference. At the lowest level, device may refer
-> to a single hardware component, as in a memory device. At a higher level, it may refer to
-> a collection of hardware components that perform a particular function, such as a USB
-> interface device. At an even higher level, device may refer to the function performed by
-> an entity attached to the USB. Devices may be physical, electrical, addressable, and
-> logical.
-> When used as a non-specific reference, a USB device is either a hub or a peripheral
-> device.
-> 
-> host
-> The host computer system where the USB host controller is installed. This includes the
-> host hardware platform (CPU, bus, etc.) and the operating system in use.
-> 
-> host controller
-> The interface provided to the system to support devices on the USB.
 
-Thanks for the confirmation.  This is why we had to "invent" the term
-"gadget" to describe the code that runs in the device to try to reduce
-the confusion here.
+--g3kj2uw52dmun5h6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-greg k-h
+On Tue, Jun 30, 2020 at 02:02:16PM -0600, Rob Herring wrote:
+> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
+> format.
+>=20
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
+
+--g3kj2uw52dmun5h6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvwyWQAKCRDj7w1vZxhR
+xasDAP9r4tg1fgeE0OZMBPlT1tZ6mI4krecIcchC8sEDC0LnWwD/d6jfFt9QEnRZ
+Ekag5CaO0kUl1bT5fgnQxuhWYFlaRg0=
+=2psa
+-----END PGP SIGNATURE-----
+
+--g3kj2uw52dmun5h6--
