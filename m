@@ -2,176 +2,120 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7512C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE0820760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b3oPVpuK"
+	by mail.kernel.org (Postfix) with ESMTP id 899DB207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593617500;
+	bh=EB2CkEeCooqWPM+FKciypi3S6C1CFpF0DGtBgv2mghk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NzbOj/iCqXZLzae8vndd6IzQstACoUl60EegyPMsvjB0qwHbLo50pav+IXZaND4tc
+	 l8cJj9MGGlZZJ4C6yzkH94kx5QdltJBN9/zGhh+veEKtNHRaqIT0KK2MsHTRKctuID
+	 czFq+Fp3wk99vTwZNqCoOl2vr+N87kucXVxKdIDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbgGAPbP (ORCPT
+        id S1732119AbgGAPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731608AbgGAPbO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:31:14 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E32CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 08:31:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=RclAIIkZW3ZiXGcGlVoas281Hc1XxmdGe8QV2kbulsU=; b=b3oPVpuKnOK70sQ8PtkU3B/W9T
-        Ib2kMj/r72OrROoaxbDMI5rASQC/j70EMitwdCKYE+Ya7zkkbgwbjTLB4Yf3C+kV0HyScWE8EFMo7
-        5e0uUPc+cm594b8dCqGIBebLgLUDgjykt9JdO1iQj7WtqL0cGAFjFlQW5riDimJk0qi0oh0avZwrv
-        pMpTWaKVzKxsBeRivyhlsIJj9HaLt0MAzffAcubhhe+XW7FJLELmpyxXpxKznxvWYUeh1E5D16OfW
-        yUMj234NP6tMHQvQn7h20Rl5HP6tduRfJP0oI0wtp2eg+5ek10U6qUYzsjMxJazjB7kLyPUIUBtfj
-        y2ezYntg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqeha-0001IS-Eu; Wed, 01 Jul 2020 15:31:10 +0000
-Subject: Re: [PATCH v2 6/6] Documentation: Describe console mouse reporting
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-References: <cover.1593615440.git.tammo.block@gmail.com>
- <1a16072f2e8152e4cd3a9d733bf8bed84228e9de.1593615440.git.tammo.block@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8986005c-9d82-c958-c902-f77175d71012@infradead.org>
-Date:   Wed, 1 Jul 2020 08:31:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 11:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731879AbgGAPbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:31:38 -0400
+Received: from ziggy.cz (unknown [213.195.114.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAC5220760;
+        Wed,  1 Jul 2020 15:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593617497;
+        bh=EB2CkEeCooqWPM+FKciypi3S6C1CFpF0DGtBgv2mghk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OWNMZ3rJ5ciZjAne86fG6PgL7snREQ8Oxp1PzRvjC7tXhtr/8lDoariL+hIXqRWlI
+         Yda13FmLkR2Juu8D5+Ev+trCwp0K/BNMiMyOTxHtmcwnYPNk0VhVYuti0hKzOM3X+F
+         k1UznWujuneMKF6uv+rNGLf7bXYmaauzozH/eBu0=
+From:   matthias.bgg@kernel.org
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>, hdegoede@redhat.com
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Double Lo <double.lo@cypress.com>,
+        Frank Kao <frank.kao@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        netdev@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Soeren Moch <smoch@web.de>
+Subject: [PATCH] brcmfmac: expose firmware config files through modinfo
+Date:   Wed,  1 Jul 2020 17:31:23 +0200
+Message-Id: <20200701153123.25602-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <1a16072f2e8152e4cd3a9d733bf8bed84228e9de.1593615440.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 8:14 AM, Tammo Block wrote:
-> This patch adds a description of the kernel interface(s) used for vt
-> console mouse reporting and describes the protocols and bitmasks.
-> 
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
-> ---
->  .../admin-guide/console-mouse-reporting.rst   | 88 +++++++++++++++++++
->  Documentation/admin-guide/index.rst           |  1 +
->  2 files changed, 89 insertions(+)
->  create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
-> 
-> diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
-> new file mode 100644
-> index 000000000000..c75a627f27b8
-> --- /dev/null
-> +++ b/Documentation/admin-guide/console-mouse-reporting.rst
-> @@ -0,0 +1,88 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=======================
-> +Console Mouse Reporting
-> +=======================
-> +
-> +A terminal may send escape sequences to enable applications to react to mouse
-> +input. As the kernel does not know when to emit these events a mouse daemon
-> +is needed to react to mouse movements and signal the kernel accordingly. The
-> +kernel will then send an escape sequence to the application. This is called
-> +mouse reporting and several types and protocols have been developed over time.
-> +
-> +See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
-> +man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
-> +list and description of the various protocols, their bit layout as well as
-> +their limitations.
-> +
-> +Events and formats
-> +++++++++++++++++++
-> +
-> +A Linux console keeps state about two different aspects of mouse reporting,
-> +the kind of **events** to be reported and the **format** to send to userspace.
-> +
-> +A mouse daemon can check which kind of mouse events a client wants to be
-> +informed about via the TIOCLINUX ioctl, using the TIOCL_GETMOUSEREPORTING
-> +subcall. The values of the supported event classes (9, 1000, 1002, 1003) are
-> +described in tiocl.h. Based on this information the daemon is responsible
-> +for not sending data packages for unrequested events.
-> +
-> +A userspace client may request to be informed by the kernel about one of
-> +the event classes and choose one of the data formats URXVT (1005), SRG
-> +(1006) or X10/X11 (default) via console escape sequences. In general all
-> +of them encode similar information, only the escape sequences differ.
-> +
-> +See the xterm [1]_ or terminalguide [2]_ home pages for all details.
-> +
-> +Reports from kernel to userspace client
-> ++++++++++++++++++++++++++++++++++++++++
-> +
-> +The requested events are sent by the kernel to userspace encoded in an
-> +escape sequences; details depend on the chosen format. All of them use one
+From: Matthias Brugger <mbrugger@suse.com>
 
-          sequence;
+Apart from a firmware binary the chip needs a config file used by the
+FW. Add the config files to modinfo so that they can be read by
+userspace.
 
-(this word was correct in v1)
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-> +based pointer coordinates and a single byte to encode the button status.
-> +
-> +Short summary (we call this the SRG button format for the rest of this text):
-> +
-> + - 1,2 : Buttons, lower bits (see notes below)
-> + - 3-5 : Modifier keys (Shift, Alt and Ctrl)
-> + - 6   : Mouse movement only, no button status change
-> + - 7-8 : Buttons, upper bits (for buttons 4-15)
-> +
-> +Reports sent from daemon to kernel
-> +++++++++++++++++++++++++++++++++++
-> +
-> +A report is sent by a mouse daemon to the kernel via the TIOCLINUX ioctl,
-> +using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
-> +xs and ys, with 0,0 as the upper left corner, but see the note below.
-> +The format used by the userspace mouse daemon for button encoding is almost
-> +identical to the SRG button layout described above and is put into the sel_mode
-> +of the tiocl_selection struct. All bits masked in TIOCL_SELBUTTONMASK are
-> +unchanged compared to the SRG button format above; the remaining three are
-> +changed the following way:
-> +
-> +- 3,4  : Unused, must be zero. The kernel knows modifier key state anyway.
-> +- 5    : Always 1, identifies mouse report / TIOCL_SELMOUSEREPORT
-> +
-> +Notes
-> ++++++
-> +
-> +Button numbers are encoded like this:
-> +
-> +- 0-2  : Left, middle and right button
-> +- 3    : No button pressed / Button release
-> +- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
-> +
-> +Please note that button releases should only be reported for buttons 0-2.
-> +
-> +Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
-> +syscall but one based for the escape sequences sent by the kernel, so the
-> +kernel will increase all coordinates by one.
-> +
-> +Older kernels only used the lower 4 bits of sel_mode, effectively limiting
-> +the protocol to 3 buttons and button click only. The meaning of the 4 bits
-> +is equivalent to the SRG button layout. Note that newer kernels will ignore
-> +the upper two bits (modifier keys).
-> +
-> +.. [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
-> +.. [2] https://terminalguide.namepad.de/mouse/
-> +
+---
 
-thanks.
+ .../wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 310d8075f5d7..ba18df6d8d94 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -624,6 +624,22 @@ BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
+ BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
+ BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
+ 
++/* firmware config files */
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac4330-sdio.Prowise-PT301.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43340-sdio.meegopad-t08.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43340-sdio.pov-tab-p1006w-data.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43362-sdio.cubietech,cubietruck.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.jumper-ezpad-mini3.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.AP6212.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.MUR1DX.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.MINIX-NEO Z83-4.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.raspberrypi,4-model-b.txt");
++MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac4356-pcie.gpd-win-pocket.txt");
++
+ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
+ 	BRCMF_FW_ENTRY(BRCM_CC_43143_CHIP_ID, 0xFFFFFFFF, 43143),
+ 	BRCMF_FW_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
 -- 
-~Randy
+2.27.0
 
