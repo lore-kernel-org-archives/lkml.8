@@ -2,98 +2,225 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EA2207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF508207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbgGAP1u (ORCPT
+        id S1732078AbgGAP1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:27:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54837 "EHLO mga17.intel.com"
+        Wed, 1 Jul 2020 11:27:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:50272 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732004AbgGAP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:27:25 -0400
-IronPort-SDR: 1lKOYQEx6jjlc7iAAJFMMwz/Q99Q7cNox9+cUXWwZe6PsSgian1z0C2o6o0O60pcVGMn2dJ+io
- lUFLthEI61DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="126699717"
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="126699717"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:27:22 -0700
-IronPort-SDR: u9h00Dj0YFmtIgKW1YoQHXAnJsnfhOsoXn8xVha87V1+qfbpWl7YNx/mN8KRBgu0o4amTw1zLf
- ywszPxoX+Lew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="295591646"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2020 08:27:22 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 3/7] iommu/vt-d: Fix PASID devTLB invalidation
-Date:   Wed,  1 Jul 2020 08:33:52 -0700
-Message-Id: <1593617636-79385-4-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        id S1732065AbgGAP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:27:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0331F30E;
+        Wed,  1 Jul 2020 08:27:53 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99B1B3F68F;
+        Wed,  1 Jul 2020 08:27:52 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 16:27:51 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
+        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
+        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] cpufreq: move invariance setter calls in cpufreq core
+Message-ID: <20200701152751.GA29496@arm.com>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+ <20200701090751.7543-3-ionela.voinescu@arm.com>
+ <20200701095219.gxrkowtukosnfmwp@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701095219.gxrkowtukosnfmwp@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DevTLB flush can be used for both DMA request with and without PASIDs.
-The former uses PASID#0 (RID2PASID), latter uses non-zero PASID for SVA
-usage.
+Hey,
 
-This patch adds a check for PASID value such that devTLB flush with
-PASID is used for SVA case. This is more efficient in that multiple
-PASIDs can be used by a single device, when tearing down a PASID entry
-we shall flush only the devTLB specific to a PASID.
+On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
+> On 01-07-20, 10:07, Ionela Voinescu wrote:
+> > From: Valentin Schneider <valentin.schneider@arm.com>
+> > 
+> > To properly scale its per-entity load-tracking signals, the task scheduler
+> > needs to be given a frequency scale factor, i.e. some image of the current
+> > frequency the CPU is running at. Currently, this scale can be computed
+> > either by using counters (APERF/MPERF on x86, AMU on arm64), or by
+> > piggy-backing on the frequency selection done by cpufreq.
+> > 
+> > For the latter, drivers have to explicitly set the scale factor
+> > themselves, despite it being purely boiler-plate code: the required
+> > information depends entirely on the kind of frequency switch callback
+> > implemented by the driver, i.e. either of: target_index(), target(),
+> > fast_switch() and setpolicy().
+> > 
+> > The fitness of those callbacks with regard to driving the Frequency
+> > Invariance Engine (FIE) is studied below:
+> > 
+> > target_index()
+> > ==============
+> > Documentation states that the chosen frequency "must be determined by
+> > freq_table[index].frequency". It isn't clear if it *has* to be that
+> > frequency, or if it can use that frequency value to do some computation
+> > that ultimately leads to a different frequency selection. All drivers
+> > go for the former, while the vexpress-spc-cpufreq has an atypical
+> > implementation.
+> > 
+> > Thefore, the hook works on the asusmption the core can use
+> > freq_table[index].frequency.
+> > 
+> > target()
+> > =======
+> > This has been flagged as deprecated since:
+> > 
+> >   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+> > 
+> > It also doesn't have that many users:
+> > 
+> >   cpufreq-nforce2.c:371:2:	.target = nforce2_target,
+> >   cppc_cpufreq.c:416:2:		.target = cppc_cpufreq_set_target,
+> >   pcc-cpufreq.c:573:2:		.target = pcc_cpufreq_target,
+> > 
+> > Should we care about drivers using this hook, we may be able to exploit
+> > cpufreq_freq_transition_{being, end}(). Otherwise, if FIE support is
+> > desired in their current state, arch_set_freq_scale() could still be
+> > called directly by the driver, while CPUFREQ_CUSTOM_SET_FREQ_SCALE
+> > could be used to mark support for it.
+> > 
+> > fast_switch()
+> > =============
+> > This callback *has* to return the frequency that was selected.
+> > 
+> > setpolicy()
+> > ===========
+> > This callback does not have any designated way of informing what was the
+> > end choice. But there are only two drivers using setpolicy(), and none
+> > of them have current FIE support:
+> > 
+> >   drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
+> >   drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
+> > 
+> > The intel_pstate is known to use counter-driven frequency invariance.
+> 
+> Same for acpi-cpufreq driver as well ?
+> 
 
-Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/pasid.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+The acpi-cpufreq driver defines target_index() and fast_switch() so it
+should go through the setting in cpufreq core. But x86 does not actually
+define arch_set_freq_scale() so when called it won't do anything (won't
+set any frequency scale factor), but rely on counters to set it through
+the arch_scale_freq_tick(). But this cpufreq functionality could
+potentially be used.
 
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index c81f0f17c6ba..fa0154cce537 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -486,7 +486,16 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
- 
--	qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-+	/*
-+	 * When PASID 0 is used, it indicates RID2PASID(DMA request w/o PASID),
-+	 * devTLB flush w/o PASID should be used. For non-zero PASID under
-+	 * SVA usage, device could do DMA with multiple PASIDs. It is more
-+	 * efficient to flush devTLB specific to the PASID.
-+	 */
-+	if (pasid == PASID_RID2PASID)
-+		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-+	else
-+		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0, 64 - VTD_PAGE_SHIFT);
- }
- 
- void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
--- 
-2.7.4
+> And I think we should do the freq-invariance thing for all the above categories
+> nevertheless.
+> 
 
+I'm not sure what you mean by this. You mean we should also (try to) set
+the frequency scale factor for drivers defining setpolicy() and target()?
+
+> > If FIE support is desired in their current state, arch_set_freq_scale()
+> > could still be called directly by the driver, while
+> > CPUFREQ_CUSTOM_SET_FREQ_SCALE could be used to mark support for it.
+> > 
+> > Conclusion
+> > ==========
+> > 
+> > Given that the significant majority of current FIE enabled drivers use
+> > callbacks that lend themselves to triggering the setting of the FIE scale
+> > factor in a generic way, move the invariance setter calls to cpufreq core,
+> > while filtering drivers that flag custom support using
+> > CPUFREQ_CUSTOM_SET_FREQ_SCALE.
+> > 
+> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  drivers/cpufreq/cpufreq.c | 20 +++++++++++++++++---
+> >  1 file changed, 17 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 0128de3603df..83b58483a39b 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2046,9 +2046,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
+> >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+> >  					unsigned int target_freq)
+> >  {
+> > +	unsigned int freq;
+> > +
+> >  	target_freq = clamp_val(target_freq, policy->min, policy->max);
+> > +	freq = cpufreq_driver->fast_switch(policy, target_freq);
+> > +
+> 
+> > +	if (freq && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
+> > +		arch_set_freq_scale(policy->related_cpus, freq,
+> > +				    policy->cpuinfo.max_freq);
+> 
+> This needs to be a separate function.
+> 
+
+Yes, that would be nicer.
+
+> >  
+> > -	return cpufreq_driver->fast_switch(policy, target_freq);
+> > +	return freq;
+> >  }
+> >  EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
+> >  
+> > @@ -2140,7 +2147,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
+> >  			    unsigned int relation)
+> >  {
+> >  	unsigned int old_target_freq = target_freq;
+> > -	int index;
+> > +	int index, retval;
+> >  
+> >  	if (cpufreq_disabled())
+> >  		return -ENODEV;
+> > @@ -2171,7 +2178,14 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
+> >  
+> >  	index = cpufreq_frequency_table_target(policy, target_freq, relation);
+> >  
+> > -	return __target_index(policy, index);
+> > +	retval = __target_index(policy, index);
+> > +
+> > +	if (!retval && !(cpufreq_driver->flags & CPUFREQ_CUSTOM_SET_FREQ_SCALE))
+> > +		arch_set_freq_scale(policy->related_cpus,
+> > +				    policy->freq_table[index].frequency,
+> 
+> policy->cur gets updated for both target and target_index type drivers. You can
+> use that safely. It gets updated after the postchange notification.
+> 
+
+This would allow us to cover the drivers that define target() as well (not
+only target_index() and fast_switch()). Looking over the code we only take
+that path (calling cpufreq_freq_transition_end()), for 
+!CPUFREQ_ASYNC_NOTIFICATION. But again, that's only used for
+powernow-k8 which is deprecated. 
+
+I'll attempt a nice way to use this.
+
+Thank you very much for the review,
+Ionela.
+
+> > +				    policy->cpuinfo.max_freq);
+> > +
+> > +	return retval;
+> >  }
+> >  EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
+> 
+> -- 
+> viresh
