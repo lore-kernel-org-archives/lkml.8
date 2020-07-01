@@ -2,131 +2,127 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4127BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3295C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B72920771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9524620771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgGABSi (ORCPT
+        id S1726024AbgGAB2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:18:38 -0400
-Received: from atcsqr.andestech.com ([60.248.187.195]:53180 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGABSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:18:37 -0400
-X-Greylist: delayed 1586 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jun 2020 21:18:36 EDT
-Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
-        by ATCSQR.andestech.com with ESMTP id 0610ijSs066933
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Jul 2020 08:44:45 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id 0610i76Y066903;
-        Wed, 1 Jul 2020 08:44:07 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 1 Jul 2020
- 08:51:29 +0800
-Date:   Wed, 1 Jul 2020 08:51:29 +0800
-From:   Alan Kao <alankao@andestech.com>
-To:     Zong Li <zong.li@sifive.com>
-CC:     <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-Message-ID: <20200701005129.GA27962@andestech.com>
-References: <cover.1593397455.git.zong.li@sifive.com>
+        Tue, 30 Jun 2020 21:28:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39091 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgGAB2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:28:12 -0400
+IronPort-SDR: Wp3I0SUAqtgwW03Ujh/FTsOzPCYZBX7SbMe7c7RJO3yjUO7hFKR3yx50jfOqLcCLh5262Szj1a
+ hmYKu5Q0iakQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="126063173"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="126063173"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 18:28:12 -0700
+IronPort-SDR: vJpC9c2ju7gYWK/45yBYB3OIJK02r58VOs+HGboGK9z9tREKl9UPd6EtISSPSlzpJnk5lQUips
+ sI351JY9ufJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="321090981"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Jun 2020 18:28:10 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <rientjes@google.com>, <dan.j.williams@intel.com>
+Subject: Re: [RFC][PATCH 8/8] mm/numa: new reclaim mode to enable reclaim-based migration
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+        <20200629234517.A7EC4BD3@viggo.jf.intel.com>
+        <87v9j9ow3a.fsf@yhuang-dev.intel.com>
+        <29c67873-3cb9-e121-382c-9b81491016bc@linux.alibaba.com>
+        <87mu4knjq8.fsf@yhuang-dev.intel.com>
+        <cdcdc19a-0dde-8392-6f3b-2480c2d740d0@linux.alibaba.com>
+Date:   Wed, 01 Jul 2020 09:28:10 +0800
+In-Reply-To: <cdcdc19a-0dde-8392-6f3b-2480c2d740d0@linux.alibaba.com> (Yang
+        Shi's message of "Tue, 30 Jun 2020 18:12:42 -0700")
+Message-ID: <87bll0nhw5.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1593397455.git.zong.li@sifive.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com 0610i76Y066903
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:19:09AM +0800, Zong Li wrote:
-> This patch set adds raw event support on RISC-V. In addition, we
-> introduce the DT mechanism to make our perf more generic and common.
-> 
-> Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> would raise an illegal instruction exception and trap into m-mode to
-> emulate event selector CSRs access. It doesn't make sense because we
-> shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> selector through standard SBI call or the shadow CSRs of s-mode. We have
-> prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> but we also discussing the feasibility of accessing these PMU CSRs on
-> s-mode at the same time, such as delegation mechanism, so I was
-> wondering if we could use SBI calls first and make the PMU SBI extension
-> as legacy when s-mode access mechanism is accepted by Foundation? or
-> keep the current situation to see what would happen in the future.
-> 
-> This patch set also introduces the DT mechanism, we don't want to add too
-> much platform-dependency code in perf like other architectures, so we
-> put the mapping of generic hardware events to DT, then we can easy to
-> transfer generic hardware events to vendor's own hardware events without
-> any platfrom-dependency stuff in our perf.
-> 
-> Zong Li (6):
->   dt-bindings: riscv: Add YAML documentation for PMU
->   riscv: dts: sifive: Add DT support for PMU
->   riscv: add definition of hpmcounter CSRs
->   riscv: perf: Add raw event support
->   riscv: perf: introduce DT mechanism
->   riscv: remove PMU menu of Kconfig
-> 
+Yang Shi <yang.shi@linux.alibaba.com> writes:
 
-DT-based PMU registration looks good to me. Together with Anup's feedback,
-we can anticipate that the following items will be:
+> On 6/30/20 5:48 PM, Huang, Ying wrote:
+>> Hi, Yang,
+>>
+>> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>>
+>>>>> diff -puN mm/vmscan.c~enable-numa-demotion mm/vmscan.c
+>>>>> --- a/mm/vmscan.c~enable-numa-demotion	2020-06-29 16:35:01.017312549 -0700
+>>>>> +++ b/mm/vmscan.c	2020-06-29 16:35:01.023312549 -0700
+>>>>> @@ -4165,9 +4165,10 @@ int node_reclaim_mode __read_mostly;
+>>>>>     * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
+>>>>>     * ABI.  New bits are OK, but existing bits can never change.
+>>>>>     */
+>>>>> -#define RECLAIM_RSVD  (1<<0)	/* (currently ignored/unused) */
+>>>>> -#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
+>>>>> -#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
+>>>>> +#define RECLAIM_RSVD	(1<<0)	/* (currently ignored/unused) */
+>>>>> +#define RECLAIM_WRITE	(1<<1)	/* Writeout pages during reclaim */
+>>>>> +#define RECLAIM_UNMAP	(1<<2)	/* Unmap pages during reclaim */
+>>>>> +#define RECLAIM_MIGRATE	(1<<3)	/* Migrate pages during reclaim */
+>>>>>      /*
+>>>>>     * Priority for NODE_RECLAIM. This determines the fraction of pages
+>>>> I found that RECLAIM_MIGRATE is defined but never referenced in the
+>>>> patch.
+>>>>
+>>>> If my understanding of the code were correct, shrink_do_demote_mapping()
+>>>> is called by shrink_page_list(), which is used by kswapd and direct
+>>>> reclaim.  So as long as the persistent memory node is onlined,
+>>>> reclaim-based migration will be enabled regardless of node reclaim mode.
+>>> It looks so according to the code. But the intention of a new node
+>>> reclaim mode is to do migration on reclaim *only when* the
+>>> RECLAIM_MODE is enabled by the users.
+>>>
+>>> It looks the patch just clear the migration target node masks if the
+>>> memory is offlined.
+>>>
+>>> So, I'm supposed you need check if node_reclaim is enabled before
+>>> doing migration in shrink_page_list() and also need make node reclaim
+>>> to adopt the new mode.
+>> But why shouldn't we migrate in kswapd and direct reclaim?  I think that
+>> we may need a way to control it, but shouldn't disable it
+>> unconditionally.
+>
+> Let me share some background. In the past discussions on LKML and last
+> year's LSFMM the opt-in approach was preferred since the new feature
+> might be not stable and mature.  So the new node reclaim mode was
+> suggested by both Mel and Michal. I'm supposed this is still a valid
+> point now.
 
-- rewrite RISC-V PMU to a platform driver
-- propose SBI PMU extention
-- fixes: RV32 counter access, namings, etc.
+Is there any technical reason?  I think the code isn't very complex.  If
+we really worry about stable and mature, isn't it enough to provide some
+way to enable/disable the feature?  Even for kswapd and direct reclaim?
 
-Yes, all are good directions towards better counting (`perf stat`) function.
-But as the original author of RISC-V perf port, please allow me to address
-the fundamental problems of RISC-V perf, again [0][1][2][3], that the sampling
-(`perf record`) function never earned enough respect.  Counting gives you a
-shallow view regarding an application, while sampling demystifies one for you.
+Best Regards,
+Huang, Ying
 
-The problems are three-fold
-(1) Interrupt
-Sampling in perf requires that a HPM raises an interrupt when it overflows.
-Making RISC-V perf platform driver or not has nothing to do with this.  This
-requires more discussions in TGs.
-(2) S-mode access to PMU CSRs
-This is also addressed in this patch set but to me, it is kind of like a
-SBI-solves-them-all mindset to me.  Perf event is for performance monitoring
-thus we should eliminate any possible overhead if we can.  Setting event masks
-through SBI calls for counting maybe OK, but if we really take sampling and
-interrupt handling into consideration, it is questionable if it is still a
-viable way.
-(3) Registers, registers, registers
-There is just no enough CSR/function for perf sampling. The previous proposal
-explains why [2].
-
-Perf sampling is off-topic but somehow related, so I bring it up here just
-for your information.
-
-As this patch set goes v2, the PMU porting guide in [0] should be removed since
-it contains no useful information anymore.
-
-[0] Documentation/riscv/pmu.rst
-[1] https://www.youtube.com/watch?v=Onvlcl4e2IU
-[2] https://github.com/riscv/riscv-isa-manual/issues/402
-    This proposal has been posted in Privileged Spec Task Group, in
-https://lists.riscv.org/g/tech-privileged-archive/message/488?p=,,,20,0,0,0::Created,,Proposal,20,2,40,32306071
-but never receive any feedback.
-[3] https://lists.riscv.org/g/tech-unixplatformspec/message/84
-    I intended to discuss [2] in the Unixplatform Spec Task Group at the
-online meeting, but obviously people were too busy knowing who the new
-RISC-V CTO is and what he has done to even follow the agenda.
-
+> Once it is mature and stable enough we definitely could make it
+> universally preferred and default behavior.
+>
+>>
+>>> Please refer to
+>>> https://lore.kernel.org/linux-mm/1560468577-101178-6-git-send-email-yang.shi@linux.alibaba.com/
+>>>
+>> Best Regards,
+>> Huang, Ying
