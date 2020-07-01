@@ -2,131 +2,127 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E54C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E44420722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B2620722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIi2JFEv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EyiLEzs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgGAAG5 (ORCPT
+        id S1726093AbgGAAKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 20:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgGAAG4 (ORCPT
+        Tue, 30 Jun 2020 20:10:05 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:10822 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGAAKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 20:06:56 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA543C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:06:55 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id o15so12277669vsp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ljeanCVomM9pm7YqGsm40u2yOhEfwYZjVfL5sMIeFvE=;
-        b=oIi2JFEv5Rzvgj01VOi5im5BDpG8PBOTCR2Gw/jkmGUZ56w9OrfB3MYqilO6LH+HiZ
-         Ou+iBDqd+74Fl6JYiVdYj6rV7qyR/n915XQ347lsXgEzS4pUKmAv+OfxvXRfj/LT3TF3
-         LwIZ9VJhGFcPgKdG1BgMRIxMKKb06K6GGJjD7MHwML0XQJtVI3Hl2+RcdgGk9kurlx7K
-         5MOgJOMav82M89YEaW7Q6XwOAY0uIdZWuTjcxn48Qj/rCAkvP6kT6PqXkPQS22NXM9QD
-         nnlNuJx67KyNukV7ztxVjj8VLzxPjetLaUKP+l8Vx4Aevz1XCpFO/EBxgexS679k/Bjt
-         ll2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ljeanCVomM9pm7YqGsm40u2yOhEfwYZjVfL5sMIeFvE=;
-        b=bqKc46s+Qbt5lcKf/qRFEi1Dp5ObDRZpoZXF0I3P/nNX4ACj58HsAxfC3sFBipcwh1
-         T4T5rkqjcUUauNuFIcripG7ySd3dRF883PX8RKFojotbJ73qCQXPlzxlWpyEaPkiwjJR
-         j2uwfrwZs/eEJrL5Ey5TazkjhLjVsbiELVET4zq1+qL/hoLzl8KG3cv2dSe/kBi7Vzxg
-         e1KEiENKDU5IkLc4z1YnjY0PCPM636cAjf8OdHW6KmKxnKItAWEVfsnUkrpFlByp18MX
-         HiDpitBNGoiXMo6FuVDMJDswDqycLaRkuJCW94NtfsQn0viRnLcpZlZgniamROm0vF49
-         UhFA==
-X-Gm-Message-State: AOAM5300zuInL8e6almbpzEkdOa+LKTrNdKcUHUZx5GI3IrARvKuQXqy
-        wAB7yzCGbdSJdCFJ/Xeddj1bzWGZyikxlDSPDHZs
-X-Google-Smtp-Source: ABdhPJzAqs6cElenC01gUzsDtsvwsJx2nGOZyUnKLNyoFEReEJBd3v4RZOf8Kpet7WG3DkYwTUeEJgqFnJo+tuGZ3pM=
-X-Received: by 2002:a67:f04:: with SMTP id 4mr17254670vsp.112.1593562014487;
- Tue, 30 Jun 2020 17:06:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630184922.455439-1-haoluo@google.com> <49df8306-ecc7-b979-d887-b023275e4842@fb.com>
- <CA+khW7iJu2tzcz36XzL6gBq4poq+5Qt0vbrmPRdYuvC-c5U4_A@mail.gmail.com>
-In-Reply-To: <CA+khW7iJu2tzcz36XzL6gBq4poq+5Qt0vbrmPRdYuvC-c5U4_A@mail.gmail.com>
-From:   Bill Wendling <morbo@google.com>
-Date:   Tue, 30 Jun 2020 17:06:43 -0700
-Message-ID: <CAGG=3QWo9J4LVePVH4JVD+Y364q-R-BwpR5rxemXzBR6SqbnVg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use hrtimer_range_start_ns.
-To:     Hao Luo <haoluo@google.com>
-Cc:     Yonghong Song <yhs@fb.com>, Networking <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-kselftest@vger.kernel.org,
-        Stanislav Fomichev <sdf@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 20:10:04 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200701001002epoutp0422ed6cf3df54f8fd149f705db0fbd10f~deGE8iTi40371203712epoutp04N
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:10:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200701001002epoutp0422ed6cf3df54f8fd149f705db0fbd10f~deGE8iTi40371203712epoutp04N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593562202;
+        bh=QWZJSb/2p+9cthTdrVYq6eDkK91lgMsygQOaAVOoG+s=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=EyiLEzs3KKFxtL7pF/rBLT70RK112+vS5SBCs7i3G0ErLsNWRinv2yqHrEI09w6RV
+         8G5oiAdWS5NyQ00VgCP1kLbGOCXu9Df/f9TEQHrse7r1Xl59tqI0a0KfXgPXcv5kbm
+         6HJhmTLXcQdplabnvnUpRUzTQlT9u4ztEG55bzx4=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200701001001epcas1p2ba55774cedc604a1bab26c99f1afa406~deGEZzUS60336103361epcas1p2c;
+        Wed,  1 Jul 2020 00:10:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: RE: [PATCH v4 3/5] scsi: ufs: Introduce HPB module
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <SN6PR04MB4640A27B0DCB321B165D59F0FC6F0@SN6PR04MB4640.namprd04.prod.outlook.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1087081975.11593562201594.JavaMail.epsvc@epcpadp1>
+Date:   Wed, 01 Jul 2020 09:07:57 +0900
+X-CMS-MailID: 20200701000757epcms2p38c0c86b2fcfc414e75a5bcaafa3222cb
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200629064323epcms2p787baba58a416fef7fdd3927f8da701da
+References: <SN6PR04MB4640A27B0DCB321B165D59F0FC6F0@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <963815509.21593413582881.JavaMail.epsvc@epcpadp2>
+        <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+        <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+        <1239183618.61593413882377.JavaMail.epsvc@epcpadp2>
+        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:48 PM Hao Luo <haoluo@google.com> wrote:
->
-> On Tue, Jun 30, 2020 at 1:37 PM Yonghong Song <yhs@fb.com> wrote:
-> >
-> > On 6/30/20 11:49 AM, Hao Luo wrote:
-> > > The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
-> > > programs. But it seems Clang may have done an aggressive optimization,
-> > > causing fentry and kprobe to not hook on this function properly on a
-> > > Clang build kernel.
-> >
-> > Could you explain why it does not on clang built kernel? How did you
-> > build the kernel? Did you use [thin]lto?
-> >
-> > hrtimer_nanosleep is a global function who is called in several
-> > different files. I am curious how clang optimization can make
-> > function disappear, or make its function signature change, or
-> > rename the function?
-> >
->
-> Yonghong,
->
-> We didn't enable LTO. It also puzzled me. But I can confirm those
-> fentry/kprobe test failures via many different experiments I've done.
-> After talking to my colleague on kernel compiling tools (Bill, cc'ed),
-> we suspected this could be because of clang's aggressive inlining. We
-> also noticed that all the callsites of hrtimer_nanosleep() are tail
-> calls.
->
-> For a better explanation, I can reach out to the people who are more
-> familiar to clang in the compiler team to see if they have any
-> insights. This may not be of high priority for them though.
->
-Hi Yonghong,
+Hi Avri,
 
-Clang is generally more aggressive at inlining than gcc. So even
-though hrtimer_nanosleep is a global function, clang goes ahead and
-inlines it into the "nanosleep" syscall, which is in the same file.
-(We're not currently using {Thin}LTO, so this won't happen in
-functions outside of kernel/time/hrtimer.c.) Note that if gcc were to
-change it's inlining heuristics so that it inlined more aggressively,
-you would be faced with a similar issue.
+> +static int ufshpb_get_dev_info(struct ufs_hba *hba,
+> > +                              struct ufshpb_dev_info *hpb_dev_info,
+> > +                              u8 *desc_buf)
+> > +{
+> > +       int ret;
+> > +       int version;
+> > +       u8 hpb_mode;
+> Maybe before doing anything, first verify that all descriptors are in the proper size?
 
-If you would like to test that it calls hrtimer_nanosleep() and not
-another function, it might be best to call a syscall not defined in
-hrtimer.c, e.g. clock_nanosleep().
+Before reading descriptor, ufshcd_map_desc_id_to_length() may check descriptor size.
+So I deleted size checking codes.
 
--bw
+static int ufshpb_read_desc(struct ufs_hba *hba, u8 desc_id, u8 desc_index,    
+                          u8 selector, u8 *desc_buf)                           
+{                                                                              
+        int err = 0;                                                           
+        int size;                                                              
+                                                                               
+  ->    ufshcd_map_desc_id_to_length(hba, desc_id, &size);                     
+                                                                               
+        pm_runtime_get_sync(hba->dev);                                         
+                                                                               
+        err = ufshcd_query_descriptor_retry(hba, UPIU_QUERY_OPCODE_READ_DESC,  
+                                            desc_id, desc_index,               
+                                            selector,                          
+                                            desc_buf, &size);  
+
+
+> > +#define UFSHPB_WRITE_BUFFER_ID                 0x02
+> Should be 0x01 for HPB1.0
+
+OK.
+
+Thanks,
+Daejun
