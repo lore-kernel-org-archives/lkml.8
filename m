@@ -2,148 +2,102 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B037DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92269C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9089520781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ePYUg6XT"
+	by mail.kernel.org (Postfix) with ESMTP id 7199420870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593621662;
+	bh=1oDKRRJecAucuPGAsybdvcvitslL98sAMdG8RwbytZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NmmGGttgn3xNgEZag+vhimKAOicclGkHHgQ301vYIA43dMcT44/fHp9Eotx5WyfFT
+	 OvLNiqd8hUVoPG18M4RRbSS4622cM3sNtKJH3u/AbMC8U6QECFvPDi3Pu8gL8dYDag
+	 mTs9jrNGTcRIww5IFQMGXy9abzzEstGED+AzpHJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732522AbgGAQjn (ORCPT
+        id S1732437AbgGAQlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:39:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32958 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732255AbgGAQjm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:39:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061GddNU031024;
-        Wed, 1 Jul 2020 11:39:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593621579;
-        bh=xbBcjsRuj6VdBiPscvdL+9rTLp0gEqf+2hxn3Z6d4tU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ePYUg6XTP+wPLfdwmIh9352+UIumOXtAnllySUpF0m2zqpdhwJFoFI33pQtH5ncpt
-         8UB0DQSuAkJD+7vmhaH8JOSzBBY1Z6EklyEgSoRbT/zipSRwldcV1QVcfI+G3L/hC4
-         qmLnj87An9WR1Y4+GzLy0MtZG486N1D4wOxDv1aE=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061GddhM095151
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 11:39:39 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 11:39:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 11:39:39 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061GddEm060242;
-        Wed, 1 Jul 2020 11:39:39 -0500
-Subject: Re: [PATCH v14 1/4] power_supply: Add additional health properties to
- the header
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
-References: <20200630215426.26450-1-r-rivera-matos@ti.com>
- <20200630215426.26450-2-r-rivera-matos@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <938bd51f-0551-38f0-c17c-19c7b42ec411@ti.com>
-Date:   Wed, 1 Jul 2020 11:39:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 12:41:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732255AbgGAQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:41:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 225442085B;
+        Wed,  1 Jul 2020 16:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593621659;
+        bh=1oDKRRJecAucuPGAsybdvcvitslL98sAMdG8RwbytZQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FZRIXIggyKlaPBi3DZsdRlQHQ+jSKGJZolbyP4A8nXWVYzoJxDiSPros5zqrqYn8c
+         ypVL9DZXRgd1XsGEktx5iQ9M7RMbJ3nlbPvSITYgGL90snNQGvqWCYZttA7igsS4Y3
+         jtjx3bvtE4i9K5f1Y4v+3ewY3pl0hzqzvJ8d+TZs=
+Date:   Wed, 1 Jul 2020 18:40:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
+Message-ID: <20200701164045.GA3163341@kroah.com>
+References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630215426.26450-2-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+On Wed, Jul 01, 2020 at 04:41:40PM +0100, Lad Prabhakar wrote:
+> serial core expects the spinlock to be initialized by the controller
+> driver for serial console, this patch makes sure the spinlock is
+> initialized, fixing the below issue:
+> 
+> [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
+> [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+> [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
+> [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
+> [    0.865968] Call trace:
+> [    0.865979]  dump_backtrace+0x0/0x1d8
+> [    0.865985]  show_stack+0x14/0x20
+> [    0.865996]  dump_stack+0xe8/0x130
+> [    0.866006]  spin_dump+0x6c/0x88
+> [    0.866012]  do_raw_spin_lock+0xb0/0xf8
+> [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
+> [    0.866032]  uart_add_one_port+0x3a4/0x4e0
+> [    0.866039]  sci_probe+0x504/0x7c8
+> [    0.866048]  platform_drv_probe+0x50/0xa0
+> [    0.866059]  really_probe+0xdc/0x330
+> [    0.866066]  driver_probe_device+0x58/0xb8
+> [    0.866072]  device_driver_attach+0x6c/0x90
+> [    0.866078]  __driver_attach+0x88/0xd0
+> [    0.866085]  bus_for_each_dev+0x74/0xc8
+> [    0.866091]  driver_attach+0x20/0x28
+> [    0.866098]  bus_add_driver+0x14c/0x1f8
+> [    0.866104]  driver_register+0x60/0x110
+> [    0.866109]  __platform_driver_register+0x40/0x48
+> [    0.866119]  sci_init+0x2c/0x34
+> [    0.866127]  do_one_initcall+0x88/0x428
+> [    0.866137]  kernel_init_freeable+0x2c0/0x328
+> [    0.866143]  kernel_init+0x10/0x108
+> [    0.866150]  ret_from_fork+0x10/0x18
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-On 6/30/20 4:54 PM, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
->
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
->
-> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
-> from JEITA specification JISC8712:2015
->
-> Acked-by: Andrew F. Davis <afd@ti.com>
-> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   Documentation/ABI/testing/sysfs-class-power | 3 ++-
->   drivers/power/supply/power_supply_sysfs.c   | 3 +++
->   include/linux/power_supply.h                | 3 +++
->   3 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index 216d61a22f1e..40213c73bc9c 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -205,7 +205,8 @@ Description:
->   		Valid values: "Unknown", "Good", "Overheat", "Dead",
->   			      "Over voltage", "Unspecified failure", "Cold",
->   			      "Watchdog timer expire", "Safety timer expire",
-> -			      "Over current", "Calibration required"
-> +			      "Over current", "Calibration required", "Warm",
-> +			      "Cool", "Hot"
->   
->   What:		/sys/class/power_supply/<supply_name>/precharge_current
->   Date:		June 2017
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index bc79560229b5..4d6e1d5015d6 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -101,6 +101,9 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
->   	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   = "Safety timer expire",
->   	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
->   	[POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED]  = "Calibration required",
-> +	[POWER_SUPPLY_HEALTH_WARM]		    = "Warm",
-> +	[POWER_SUPPLY_HEALTH_COOL]		    = "Cool",
-> +	[POWER_SUPPLY_HEALTH_HOT]		    = "Hot",
->   };
->   
->   static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index ac1345a48ad0..b5ee35d3c304 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -62,6 +62,9 @@ enum {
->   	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->   	POWER_SUPPLY_HEALTH_OVERCURRENT,
->   	POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->   };
->   
->   enum {
+This should be backported to older kernels too, right?  How far back?
 
+thanks,
 
-Can you apply this patch?
-
-We have other charger drivers we want to submit for review but they all 
-depend on this single patch.
-
-If you do not want to apply this patch then please let us know how we 
-can submit our other drivers so that build bots don't start spamming us 
-with build failures
-
-Dan
-
+greg k-h
