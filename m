@@ -2,134 +2,105 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF47C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD0720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA58206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/lWe6IO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VAAuneYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgGAV2g (ORCPT
+        id S1727935AbgGAV3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAV2f (ORCPT
+        Wed, 1 Jul 2020 17:29:02 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57776 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAV3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:28:35 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AA0C08C5C1;
-        Wed,  1 Jul 2020 14:28:35 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dr13so26564710ejc.3;
-        Wed, 01 Jul 2020 14:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2y7y+Op5oyWYys3aPK2F6xIGs6iua31K9nYNmwmPnoM=;
-        b=g/lWe6IOtLO3rB1CxjsEcUq3cjJkeGrLeHIZFNFNgeNfCQ5HpBdaty+X1cOkhYRZ5V
-         kJVaPllB4ziNS9bU1AUITNm2fdPD4s/g2Mdl5Wqdj5pB+Fa6TXJruEG69iH+tKoTEXXN
-         MWy3uSRApMakoGx20EFsR0TQUVIijiTFFTF7md87TPFe1y3EbUNqVoCu0MfBvxpIFFmW
-         qgO/B33CbRxfFmZSue5/aCek25iw585DuAtW9B2L5+WA7Snwnltui6XjlukZ0POYw/Bg
-         5VoazkFd1QtjEgd1x3PerBj7SgM9zfDUkd5nP1BoS0S7zwI0Oep62F2M70Euw0BOp/ls
-         +ysQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2y7y+Op5oyWYys3aPK2F6xIGs6iua31K9nYNmwmPnoM=;
-        b=B9omv4d2l7QpcMbbLTwgCzJEYXaD3EWPBTNDoTIzGcK9zOQvmqwaD4K/pqNe5Qn9yC
-         T2fWXvRbNTRJx/CRz2/vozQaMqU2JSqmNNYbsHGMhRAACl9IrK5+EBLqS22nyaUkfjZo
-         OzljPrtjc7HbFij8An3r1d5lWfEawxT1F/WUGCCLT5QouH5QtcyMtbyxQwfLYF263SX7
-         CiUZz403MJPvzJEMqPQArRnKcXZBy47zn/J7MuCt1c+YO7JEuRA9jMYmalM2x+/5pabi
-         idMsSIKrBUjFlb78VOGLuLqrDdQQNXdpikwVYni+cdhkLU9TwQGzvkx5HY5iCaImYt/u
-         s8VA==
-X-Gm-Message-State: AOAM532AW3oi3oGyonpJP1wI7TS2utMmQM4iN9IlI7Af7SZ5f6y0R5Jk
-        0JbSun22Pnz9Uh6GTzXpHJPi6VDF
-X-Google-Smtp-Source: ABdhPJw3B2rMNk/DR5I6qjhCKexLix74eE5PGlG5zIl9//yDFNfM9XmhobXQiyiCyYNlyPe39SpAlw==
-X-Received: by 2002:a17:906:6959:: with SMTP id c25mr24373759ejs.375.1593638913724;
-        Wed, 01 Jul 2020 14:28:33 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:9c13:a547:3fe2:ec95? ([2a01:110f:b59:fd00:9c13:a547:3fe2:ec95])
-        by smtp.gmail.com with ESMTPSA id j89sm7698816edb.20.2020.07.01.14.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 14:28:33 -0700 (PDT)
-Subject: Re: [PATCH] leds: core: Use blocking op for system suspend
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, pavel@ucw.cz
-Cc:     anthony.wong@canonical.com, Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200701093541.14191-1-kai.heng.feng@canonical.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <38622f5a-4518-cdb4-d1ca-581f470ce797@gmail.com>
-Date:   Wed, 1 Jul 2020 23:28:29 +0200
+        Wed, 1 Jul 2020 17:29:01 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061LSvOO051725;
+        Wed, 1 Jul 2020 16:28:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593638937;
+        bh=CTJQzourXPxe5H+I635s6IAoGRQlIR/1ckLKfy6e0+w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VAAuneYht7VTnMRSQMaDPznjpmJMF7q1mBvT84BWa/wqle7oJNoEFgSy+gQ8kN5t6
+         wZ/rUyiGjpu0axMARi5++OxuXyBie0JI10jWz8oBfHqtez78q8Mg5fkSCt155AhWtr
+         wI2hKYkgl7OGU21iDb9kANX3jPXM1aX8A68W4RUo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061LSqjm006926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Jul 2020 16:28:52 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 16:28:51 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 16:28:51 -0500
+Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061LSplW012741;
+        Wed, 1 Jul 2020 16:28:51 -0500
+Subject: Re: [PATCH 0/2] remoteproc: Address runtime PM issues
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>, <ohad@wizery.com>,
+        <bjorn.andersson@linaro.org>, <paul@crapouillou.net>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <8d3d479a-2b41-bf5f-4ada-ad2fbd46da3d@ti.com>
+Date:   Wed, 1 Jul 2020 16:28:51 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200701093541.14191-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai-Heng,
+Hi Mathieu,
 
-Thank you for the patch.
-
-On 7/1/20 11:35 AM, Kai-Heng Feng wrote:
-> Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
-> system suspend.
-
-Just out of curiosity - are you experiencing that on some hardware?
-
-> led_set_brightness_nopm() uses schedule_work() to set LED brightness.
-> However, there's no guarantee that the scheduled work gets executed
-> because no one calls flush_scheduled_work().
+On 6/30/20 11:31 AM, Mathieu Poirier wrote:
+> This set follows the conversation that took place here[1] and provides
+> the "two small patches" I alluded to at the end of the thread.
 > 
-> As flush_scheduled_work() may affect other drivers' suspend routines,
-> take a more contained approach which uses blocking op to make sure the
-> LED gets turned off.
+> Paul Cercueil: patch 1/2 is compile tested only - please see that it does what
+> you want.
+> Suman Anna: Please test on your side and confirm that it addresses the Omap
+> regression.
+
+Tested the behavior with 5.8-rc3 + these patches, all looks good. Also 
+provided by review tags on the individual patches.
+
+regards
+Suman
+
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->   drivers/leds/led-core.c | 5 +++++
->   1 file changed, 5 insertions(+)
+> Applies on top of rproc-next (7dcef3988eed)
 > 
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index f1f718dbe0f8..9a5bfcd7a704 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -269,6 +269,11 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
->   void led_set_brightness_nopm(struct led_classdev *led_cdev,
->   			      enum led_brightness value)
->   {
-> +
-> +	if (led_cdev->flags & LED_SUSPENDED &&
-> +	    !__led_set_brightness_blocking(led_cdev, value))
-> +		return;
-> +
+> Thanks,
+> Mathieu
+> 
+> [1]. https://lore.kernel.org/linux-remoteproc/20200515104340.10473-1-paul@crapouillou.net/T/#t
+> 
+> Mathieu Poirier (2):
+>    remoteproc: ingenic: Move clock handling to prepare/unprepare
+>      callbacks
+>    Revert "remoteproc: Add support for runtime PM"
+> 
+>   drivers/remoteproc/ingenic_rproc.c   | 84 +++++++++-------------------
+>   drivers/remoteproc/remoteproc_core.c | 17 +-----
+>   2 files changed, 27 insertions(+), 74 deletions(-)
+> 
 
-This function is "nopm" for a reason - we do not make here any
-pm management related operations.
-
-Instead of that, please just add
-
-flush_work(&led_cdev->set_brightness_work);
-
-at the end of led_classdev_suspend()
-
-in drivers/leds/led-class.c.
-
--- 
-Best regards,
-Jacek Anaszewski
