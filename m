@@ -2,180 +2,228 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E98C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECBA20748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AFmflDHI";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="aGJ6Njmj"
+	by mail.kernel.org (Postfix) with ESMTP id 066C220823
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbgGASEg (ORCPT
+        id S1732838AbgGASGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:04:36 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:29314 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbgGASEf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:04:35 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061I41ci026087;
-        Wed, 1 Jul 2020 11:04:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=6LXUzLJurRwr+FOPo13jP7kTsJVM+YjntIBgTOAZIYw=;
- b=AFmflDHItFgBp/TnsW9Wt43uxSnTGibBaoVsA0ZOn2SudOxqk4CE/v7z77y0Yzw423/x
- Uqk6b0HcWyCCo+vtsG5M7vselKxMFBlaitG30yGiJCuoUYZaqX5cVEQPbUxCELH3Uy3C
- /yqU+YxY4An0pgIbN5oZt1Sn8LTNSJxgoKo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31xp3rrqpb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 01 Jul 2020 11:04:16 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 1 Jul 2020 11:04:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mzubM6vEKCtajmgAFEx10xGeN/2VVTUoNWjQt4UHxOjYBmqUPkzNfp4ZIGmwp4FsWsPfmE/G40HQnctpBj2dp7DZZVkS2fta3ESTZPi3hraK/Or+DYyKddsLjmb/Jcw88iBwbiKwsUmIIo6Fi6ROAHynSfX5EZclb56IQ/C2nzViyYlkB0KHHtoa00GjowmxUZ0U62atZmIHOq6srLiPnTysIpTywFW6EM+CXuaykXKv4ySLigc25zRwqWVzPVXQtsNNv0FK5+C0YQ6k5TrGVG6GVF0ZegC4upDkUNzTzzKVO2QiKKGRXekluTkvis5wzmmgaaZ/z5H3v1E8reZJ1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6LXUzLJurRwr+FOPo13jP7kTsJVM+YjntIBgTOAZIYw=;
- b=WZgrp34asfVx7MmHXDiY75VpeW8T94hnuiP6qqWovNwINpZtxuyKlDNdsllIc5rhB6C25Pp0UAkDryu0Apj0e/aZaQVjyFdWmYjGQcFyblcuU27MigkSFQMpdgpjwekP9iCNBaZWrcnO5tb3dKqCZbaK2oSm8fK3AukqY6MQmJTeVGI02/tr+sWTSA/VdqOVZS7w+8A58tGshOsHNunrP/2eLlUQZa8KXLiqa5bb5XI7MNvjpDBgamGCbH995qv1PWXew5SOIMq08v4/2Dlnfs0pi41FLMzqmL6wD91bOlC89fy/33mEmAB8pHTIG0iF1Xqiop6+2FTdLn2kEtrFyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6LXUzLJurRwr+FOPo13jP7kTsJVM+YjntIBgTOAZIYw=;
- b=aGJ6NjmjfIWW8NxtOwRuo2qVPw9f06yv7jOHYEQx5fFjDjwFQg5QDmlL/NFq1tvcKADfVNhs6AShz85sOLp9PBeDCD8XQIRFfQHmPLWREXUtLWGMm/1CzW35Q5SLLZQDQgXSWxXtMkc8ueazOVMbse2ZiIDLtcT+AUvj9R6xxuA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB3045.namprd15.prod.outlook.com (2603:10b6:a03:f9::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 1 Jul
- 2020 18:04:14 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3131.027; Wed, 1 Jul 2020
- 18:04:14 +0000
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Switch test_vmlinux to use
- hrtimer_range_start_ns.
-To:     Hao Luo <haoluo@google.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-CC:     <sdf@google.com>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <linux-kselftest@vger.kernel.org>
-References: <20200701175315.1161242-1-haoluo@google.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <aab03e4b-2779-3b71-44ea-735a7b92a70f@fb.com>
-Date:   Wed, 1 Jul 2020 11:04:12 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-In-Reply-To: <20200701175315.1161242-1-haoluo@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR21CA0015.namprd21.prod.outlook.com
- (2603:10b6:a03:114::25) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Wed, 1 Jul 2020 14:06:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:35098 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730227AbgGASGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:06:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AC6F1FB;
+        Wed,  1 Jul 2020 11:06:33 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE11C3F73C;
+        Wed,  1 Jul 2020 11:06:32 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 19:06:31 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
+ freq invariance
+Message-ID: <20200701180631.GA12482@arm.com>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+ <20200701090751.7543-2-ionela.voinescu@arm.com>
+ <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
+ <20200701133330.GA32736@arm.com>
+ <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c085:21e8::15c2] (2620:10d:c090:400::5:3953) by BYAPR21CA0015.namprd21.prod.outlook.com (2603:10b6:a03:114::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.1 via Frontend Transport; Wed, 1 Jul 2020 18:04:13 +0000
-X-Originating-IP: [2620:10d:c090:400::5:3953]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3c08f14d-f1de-4733-2683-08d81de929fb
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3045:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3045848847851C9C3D45FBF7D36C0@BYAPR15MB3045.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NCjBXFQQRscZOptB/yu4D+30RYjgP63GiRgBVX09mkBE0NSVmOXnbErXAfIV7zY9sip8CuwTKyTxOoTi0qHoc+NFR6GY332MEsBjY9/PKtLVnHezh/p+f/RBkdBtUhLVsXhFbz5Aaa0Pq+Cl74YrHOHRdZ/jXPku4VWukMipoz5P2wreXGzvIgruPPEYYr6UVW0vKNa/EYo8jwikfIGShXRKbKYYIP2PGP2HNizv3AUjRKeRG5iJUGswAPAdl02CDHqfmvpyqllij/dn9YPWlDQjAHrgd/azVfxHe007CJxOhwuokVCHGjUx3HBGwYzZRzSvBcduxGSMcFv5JVeuAH6SVoKx4rdHVpm3D19qJVwNp6wkN0pcUvTG1KbXOgHm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(136003)(376002)(366004)(346002)(7416002)(31686004)(2616005)(36756003)(5660300002)(6486002)(4326008)(53546011)(66946007)(8936002)(83380400001)(52116002)(31696002)(54906003)(16526019)(8676002)(66476007)(186003)(2906002)(66556008)(316002)(86362001)(478600001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 54EfXZSgT0aC2vBmvzqIEcq+9ULGliM9PXtxhjH7gMfE11BHCYt8A91xzpZWV6m4HkQl4ci5ZbUxkJbdXzcgPsqSA4inexIWUTmZU46rcR4fc8ddDCSXicbtgYGFwdCcW35XA2fUSrgpnwmRFpoBAkkCw5n2emCyuZW5OvcB3nqpMqPTDYT/3lQlSaiEXYZbdMx1gOpSIktMCnmeCiasQwMzhbmQpIz3A1gCAANYYLhe2//kvRneNWjF6FsdPnek3bLKTAAe6hyqNiE5Vd5QsrMXP3in5GH6zGAiwhkP1uGX/9UDsxzJ7jsI2JoYDMfpOl9gBAWN8ePa9N/ta9697fH0l85+jnOHRAY2SMzf28I6slF/LMWFqZUopnBSadOv16QZlCAlKal6njyBLiAa3gWkJX5FE5QHxX9tIj3d/faygBPHzsX4Y58spP6UrNTGoXqG3AeFwY2E6KJSy4fPF1QED5oEwfZGRY8wWlmXbzYnOWSKHaxxwODoT1Y8MLmv+Dqq6q2B8sdAjZEEaXpuDQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c08f14d-f1de-4733-2683-08d81de929fb
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 18:04:14.4414
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j6PfvP7ipTstu2h8+W1cPfwG7izugmqW7YsZJK/vvdxuQXnbeLlY78qNbQ++qFth
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3045
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_09:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 bulkscore=0
- phishscore=0 spamscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- cotscore=-2147483648 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007010127
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rafael,
+
+Thank you for the review!
+
+On Wednesday 01 Jul 2020 at 18:05:33 (+0200), Rafael J. Wysocki wrote:
+> On Wed, Jul 1, 2020 at 3:33 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
+> >
+> > Hi,
+> >
+> > Thank you for taking a look over these so quickly.
+> >
+> > On Wednesday 01 Jul 2020 at 16:16:17 (+0530), Viresh Kumar wrote:
+> > > On 01-07-20, 10:07, Ionela Voinescu wrote:
+> > > > diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> > > > index 3494f6763597..42668588f9f8 100644
+> > > > --- a/include/linux/cpufreq.h
+> > > > +++ b/include/linux/cpufreq.h
+> > > > @@ -293,7 +293,7 @@ __ATTR(_name, 0644, show_##_name, store_##_name)
+> > > >
+> > > >  struct cpufreq_driver {
+> > > >     char            name[CPUFREQ_NAME_LEN];
+> > > > -   u8              flags;
+> > > > +   u16             flags;
+> > >
+> > > Lets make it u32.
+> > >
+> > > >     void            *driver_data;
+> > > >
+> > > >     /* needed by all drivers */
+> > > > @@ -417,6 +417,14 @@ struct cpufreq_driver {
+> > > >   */
+> > > >  #define CPUFREQ_IS_COOLING_DEV                     BIT(7)
+> > > >
+> > > > +/*
+> > > > + * Set by drivers which implement the necessary calls to the scheduler's
+> > > > + * frequency invariance engine. The use of this flag will result in the
+> > > > + * default arch_set_freq_scale calls being skipped in favour of custom
+> > > > + * driver calls.
+> > > > + */
+> > > > +#define CPUFREQ_CUSTOM_SET_FREQ_SCALE              BIT(8)
+> > >
+> > > I will rather suggest CPUFREQ_SKIP_SET_FREQ_SCALE as the name and
+> > > functionality. We need to give drivers a choice if they do not want
+> > > the core to do it on their behalf, because they are doing it on their
+> > > own or they don't want to do it.
+> 
+> Well, this would go backwards to me, as we seem to be designing an
+> opt-out flag for something that's not even implemented already.
+> 
+> I would go for an opt-in instead.  That would be much cleaner and less
+> prone to regressions IMO.
+> 
+> >
+> > In this case we would not be able to tell if cpufreq (driver or core)
+> > can provide the frequency scale factor, so we would not be able to tell
+> > if the system is really frequency invariant; CPUFREQ_SKIP_SET_FREQ_SCALE
+> > would be set if either:
+> >  - the driver calls arch_set_freq_scale() on its own
+> >  - the driver does not want arch_set_freq_scale() to be called.
+> >
+> > So at the core level we would not be able to distinguish between the
+> > two, and return whether cpufreq-based invariance is supported.
+> >
+> > I don't really see a reason why a driver would not want to set the
+> > frequency scale factor, if it has the proper mechanisms to do so
+> > (therefore excluding the exceptions mentioned in 2/8). I think the
+> > cpufreq core or drivers should produce the information (set the scale
+> > factor) and it should be up to the users to decide whether to use it or
+> > not. But being invariant should always be the default.
+> 
+> So instead of what is being introduced by this patch, there should be
+> an opt-in mechanism for drivers to tell the core to do the freq-scale
+> factor setting on behalf of the driver.
+> 
 
 
-On 7/1/20 10:53 AM, Hao Luo wrote:
-> The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
-> programs. But in a kernel built by clang, which performs more aggresive
-> inlining, that function gets inlined into its caller SyS_nanosleep.
-> Therefore, even though fentry and kprobe do hook on the function,
-> they aren't triggered by the call to nanosleep in the test.
-> 
-> A possible fix is switching to use a function that is less likely to
-> be inlined, such as hrtimer_range_start_ns. The EXPORT_SYMBOL functions
-> shouldn't be inlined based on the description of [1], therefore safe
-> to use for this test. Also the arguments of this function include the
-> duration of sleep, therefore suitable for test verification.
-> 
-> [1] af3b56289be1 time: don't inline EXPORT_SYMBOL functions
-> 
-> Tested:
->   In a clang build kernel, before this change, the test fails:
-> 
->   test_vmlinux:PASS:skel_open 0 nsec
->   test_vmlinux:PASS:skel_attach 0 nsec
->   test_vmlinux:PASS:tp 0 nsec
->   test_vmlinux:PASS:raw_tp 0 nsec
->   test_vmlinux:PASS:tp_btf 0 nsec
->   test_vmlinux:FAIL:kprobe not called
->   test_vmlinux:FAIL:fentry not called
-> 
->   After switching to hrtimer_range_start_ns, the test passes:
-> 
->   test_vmlinux:PASS:skel_open 0 nsec
->   test_vmlinux:PASS:skel_attach 0 nsec
->   test_vmlinux:PASS:tp 0 nsec
->   test_vmlinux:PASS:raw_tp 0 nsec
->   test_vmlinux:PASS:tp_btf 0 nsec
->   test_vmlinux:PASS:kprobe 0 nsec
->   test_vmlinux:PASS:fentry 0 nsec
-> 
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
+This could work better as it covers the following scenarios:
+ - All the drivers in patch 3/8 would just use the flag to inform the
+   the core that it can call arch_set_freq_scale() on their behalf.
+ - It being omitted truly conveys the message that cpufreq information
+   should not be used for frequency invariance, no matter the
+   implementation of arch_set_freq_scale() (more details below)
 
-Thanks!
-Acked-by: Yonghong Song <yhs@fb.com>
+The only case that it does not cover is is the scenario in patch 4/8:
+one in which the driver is atypical and it needs its own calls to
+arch_set_freq_scale(), while it still wants to be able to report support
+for frequency invariance through cpufreq_sets_freq_scale() and later
+arch_scale_freq_invariant(). But the jury is still out on whether that
+part of the vexpress-spc driver should be given that much consideration.
+
+My choice of flag was considering this case and potentially other future
+ones like it, but this alternative also sounds good to me.
+
+
+> Then, the driver would be responsible to only opt-in for that if it
+> knows it for a fact that the sched tick doesn't set the freq-scale
+> factor.
+> 
+
+I think that would create a tight coupling between the driver and the
+architecture, when arch_set_freq_scale() is already meant to have the
+same purpose, but it also provides some flexibility. Let me expand on
+this below.
+
+> > Therefore, there are a few reasons I went for
+> > CPUFREQ_CUSTOM_SET_FREQ_SCALE instead:
+> >  - It tells us if the driver has custom mechanisms to set the scale
+> >    factor to filter the setting in cpufreq core and to inform the
+> >    core on whether the system is frequency invariant.
+> >  - It does have a user in the vexpress-spc driver.
+> >  - Currently there aren't drivers that could but choose not to set
+> >    the frequency scale factor, and it my opinion this should not be
+> >    the case.
+> 
+> Well, that depends on what you mean by "could".
+> 
+> For example, it doesn't really make sense to set the freq-scale factor
+> in either the ACPI cpufreq driver or intel_pstate, because the
+> frequency (or P-state to be precise) requested by them may not be the
+> one the CPU ends up running at and even so it may change at any time
+> for various reasons (eg. in the turbo range).  However, the ACPI
+> cpufreq driver as well as intel_pstate in the passive mode both set
+> policy->cur, so that might be used for setting the freq-scale factor
+> in principle, but that freq-scale factor may not be very useful in
+> practice.
+> 
+
+Yes, this completely makes sense, and if there are more accurate methods
+of obtaining information about the current performance level, by using
+counters for example, they should definitely be used.
+
+But in my opinion it should not be up to the driver to choose between
+the methods. The driver and core would only have some information on the
+current performance level (more or less accurate) and
+arch_set_freq_scale() is called to *potentially* use it to set the scale
+factor. So the use of policy->cur would be entirely dependent on the
+implementation of arch_set_freq_scale().
+
+There could be a few scenarios here:
+ - arch_set_freq_scale() is left to its weak default that does nothing
+   (which would be the case for when the ACPI cpufreq driver or
+   intel_psate are used)
+ - arch_set_freq_scale() is implemented in such a way that takes into
+   account the presence of a counter-based method of setting the scale
+   factor and makes that take precedence (currently done for the users
+   of the arch_topology driver). This also provides support for platforms
+   that have partial support for counters, where the use of cpufreq
+   information is still useful for the CPUs that don't support counters.
+   For those cases, some information, although not entirely accurate,
+   is still better than no information at all.
+
+So I believe cpufreq should just provide the information, if it can,
+and let the user decide whether to use it, or what source of information
+takes precedence. Therefore, arch_set_freq_scale() would decide to
+whether to filter it out.
+
+In any case, your suggestion regarding the choice of flag would make
+bypassing the use of cpufreq information in setting the scale factor
+explicit, no matter the definition of arch_set_freq_scale(). But it
+would also require writers of cpufreq driver code to remember to
+consider the setting of that flag.
+
+I'll consider this more while gauging interest in 4/8.
+
+Many thanks,
+Ionela.
+
+> Thanks!
