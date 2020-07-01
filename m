@@ -2,175 +2,129 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64039C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3437720781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3A720781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:38:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Ive1cDXG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGc3nSr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgGAQh2 (ORCPT
+        id S1732442AbgGAQiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:37:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51845 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731394AbgGAQh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:37:27 -0400
-IronPort-SDR: GiCNZfpiz9LFo9ZAXdj9NbMtvHOA3wils5PTT6yIs+aol9zG+l84UiLixkQupy1S0b8V0MEFbz
- kSGO9StZkC6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="148184636"
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="148184636"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 09:37:25 -0700
-IronPort-SDR: Uc9yP0K8746GV/iqlowvu8o+v/J2w6AWkDQVBB5QfxhPvbm0QIxLcFQxruBZ94wSnSRb2Rdg7Z
- AG3auGUNVx5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="481659004"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Jul 2020 09:37:25 -0700
-Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Jul 2020 09:37:24 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX155.amr.corp.intel.com (10.22.240.21) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Jul 2020 09:37:24 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Jul 2020 09:37:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q14E5D2Yn3jAhTmCsXZ9Y22EWr3tX8YY4fj//KrBoXSdyt2TykULT0ttb1o4EGHEN6arV/3askpV4ZbOZZmVtUDo7KEZZawKzCN7rgfQcxPGJcnWvLPkiFpF24Q8pP2DVdaK9Re+WnDhMLzJnBONHW5zeNt8gfSaxOUvklmVK59NAGX2z0wAvl8sj9FXEyjY4KjUtIxS1X236o8PMWwmp9jFw6mtidTMC6rRCUJCW6ssc6gQUgyWEbIEBFhmmMppaihKV72yb1EFsW/ZHJPOd6dKlIy68Vd8H/On7F1EVSmLK840eW302kGhR0PFqpPEbfdZ2qQjljSPIxhlO7cmrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wsv4B8iV2NV+z288YwA2mQe2RKPSvXGWJvrzZ+CKfAM=;
- b=NNluxlsOS9o76CjKyzNFtHIf2s+P4Ws1xDOFelkqmyo+erM8NLDLRk/pGLyCfU0hQr8BbDuRKo6wMdy8iy8iXw2gWoeKXJgiqRBp3wk7J8GKNZ4hT/A78BecnoxJAdlHs15Wv746LjHL36sk5o4RK6Aws5rYd/p6BUQO205lrK9ki6scmn/qplkZ8AEqPeZn538dRvzkIQuJVLQvTzKAFJMW045sTOjXgk9rz4bII3rDk7AagURGkM6GLJTLjHRwNGj9UPgKH4J3WndIGtXvaapK1vbSnfmWHeNSChgFbu1IpupBEVBN2HnLtle6S9Ds5FCgDkq9QrNdyxr7of4QGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wsv4B8iV2NV+z288YwA2mQe2RKPSvXGWJvrzZ+CKfAM=;
- b=Ive1cDXGtqzlsjStDMzQgd97WO1lOFpbmW0czskU0OvnWFqp7K9k9j19z3uW9gEFtIHGzW78RW0OANIFYnV0sfhJ02b/l5vaCKLWj8UDkdVCEFGG/ZvA7I+kQ2+lKmwkuAry/ohFLF+P3peIIVVUB7E+lukcb29/YHvr2/H4DyU=
-Received: from BY5PR11MB4307.namprd11.prod.outlook.com (2603:10b6:a03:1bd::27)
- by BY5PR11MB4182.namprd11.prod.outlook.com (2603:10b6:a03:183::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Wed, 1 Jul
- 2020 16:37:21 +0000
-Received: from BY5PR11MB4307.namprd11.prod.outlook.com
- ([fe80::81b2:faf6:4cc3:261a]) by BY5PR11MB4307.namprd11.prod.outlook.com
- ([fe80::81b2:faf6:4cc3:261a%4]) with mapi id 15.20.3131.030; Wed, 1 Jul 2020
- 16:37:21 +0000
-From:   "N, Harshapriya" <harshapriya.n@intel.com>
-To:     =?utf-8?B?xYF1a2FzeiBNYWpjemFr?= <lma@semihalf.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        "Ross Zwisler" <zwisler@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Bob Brandt <brndt@google.com>,
-        "Marcin Wojtas" <mw@semihalf.com>,
-        Alex Levin <levinale@chromium.org>,
-        "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>
-Subject: RE: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-Thread-Topic: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-Thread-Index: AQHWTgYTwQHbv3cvDU6zdR5ijzs9kqjvzAZQgAAboACAADGLwIAC1L0A
-Date:   Wed, 1 Jul 2020 16:37:21 +0000
-Message-ID: <BY5PR11MB4307C20278F32D17551112FAFD6C0@BY5PR11MB4307.namprd11.prod.outlook.com>
-References: <20200521162518.1809995-1-lma@semihalf.com>
- <3c89e614-81f5-ba87-19a9-fbe9f5c73925@linux.intel.com>
- <CAFJ_xbr8TN3ynfELJ3NQnkuRg0VRbkjB7=Cyb8yu2L==JGXJiw@mail.gmail.com>
- <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com>
- <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
- <268b11b6-9f4c-d769-a7f9-536d77198705@linux.intel.com>
- <CAFJ_xboUTDtnpvskb2dY4fGhGLNkEgT0sH3dU0NYJV_Cb_gqPw@mail.gmail.com>
- <BY5PR11MB4307284BAE6DA415CFC0865CFD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
- <CAFJ_xbq3DU8NMmymYHLjy0z+QbGRAOmB4NaiXPphAr2Zu0MPAg@mail.gmail.com>
- <BY5PR11MB4307CBA736456853777A9FD9FD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
-In-Reply-To: <BY5PR11MB4307CBA736456853777A9FD9FD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: semihalf.com; dkim=none (message not signed)
- header.d=none;semihalf.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [24.23.139.164]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 963a7e5d-0858-4a43-3bfb-08d81ddd06e5
-x-ms-traffictypediagnostic: BY5PR11MB4182:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB41827CC973DAC9D07EDE46E1FD6C0@BY5PR11MB4182.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04519BA941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: itQ1i5I5m3uxVgrjZehBG2EacsvztlRtbbyYxgS4v/UkXTmfBE2Occ5clilfJkAzSYiijz4acDr8vFemRYzf2nWLRgwI5lEUSzTqSWg9GplYxIZtF5Itn1iBAGRFblbtUZKOPf7+jaOuay8WwTGUE6npl9/Q8wnCcp++U7TeEQbt+x7Xqpnz1Z+61u8cLrXzTWketgAMWzjLfU5YQqR0Zg7kbxF2TTNLwqyyHvbGqIh5fa0lsLvb5+BISNZDJ4oDo8whmN6q7I4/P99tzdEvhQV0YlEG/z6lDoAHpEYEX87wlcsWXFvFwTs6W3fiZhN0mk/YmdpdzEwI8y3nWHZmng==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(39860400002)(366004)(346002)(396003)(8936002)(7416002)(9686003)(55016002)(76116006)(66556008)(478600001)(5660300002)(64756008)(66446008)(66946007)(8676002)(4326008)(66476007)(52536014)(26005)(2906002)(86362001)(33656002)(7696005)(71200400001)(316002)(110136005)(54906003)(186003)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: kz61TV2eCxKjHekr0SysGCkhr4DESbijs0br4LGrHs4D+0Ok8uLoTJ/QHva21kcGMWuw7HHsxRnvZeCxcIwlBSl8q7ZLfJn2o6ODv6HtcynombRqJBseFAQF1IfeVoGT/U7AXdMuy9CVmZPxgJXmmJplF3lcyp5VC0OrNXxF1WH9PNASF2XETIikSav9JlADwA5G+AS/d/aDsNVpRRVZk/F7Ve0zISRy0HYq3GqXQlpOYac8R7SBMIsWCuEwv0iPuNL5NrjyzxP7qiPymjR5ldKeulvoGjCnLOPT4Bbp/b0v5HuDctSYlf1v2mto9R+GmSbG3B9PRYNxpBotc2ISi3JNbzqD5M4JG8VAWFVt9Zag4lOJM/WPqMM4Fi4pyqfmfFVKKnlzCHGyMbkXxialr8im+9zvk+/yB5Fc8UvTt86Ok86tFjA6CfQcYEqYbHxlaFXDQ47BkKSBqiC7xsJSEd6q3DtPOvG3pw6e+9d1s5t5d/tlAJMRRpDFRentKHjW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 1 Jul 2020 12:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgGAQiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:38:07 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE69C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:38:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y18so14048440lfh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=b+AvB/0HQsEmT/6dVyBt3aUmExGSI3jLVgR9pfCU6xI=;
+        b=NGc3nSr+n0h4fP2ID26hOQgQ2mGQdX3utJApv6cBWQXcVI3h7Fc+D1QRBIQaXZnr11
+         YgeqOntiAqKrnsCCfaKpVcqsrtPXTzfVbTUkjmkkNrnOIPMZykmbNj/2u4WCkAliAREg
+         srt7gl91XjqmoYUp20v+a/dbguhGPKL1fabJgEWJI6T56t9/1CNQ8lqfXza8DolyiRh6
+         YxcJG9lxOqaRR4KuOUA6S0lwFg3/kr+z1P4eliDfSaqRZvBfkOqJO2GlrsIs8/2UUGY3
+         8VYcedkvX4qpBycLPBECUs7hYIk9hfSJ36kCPXDg9vPZk30LJD4yXA32EQ3JE1OeBAZY
+         JHcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=b+AvB/0HQsEmT/6dVyBt3aUmExGSI3jLVgR9pfCU6xI=;
+        b=R/QcAqUI07xNQ8Leb2582qn7zDh+aN9J2KgImLpsZTqJlukswpFrGcfgdQrspU+MZG
+         pq899AP6zWVLHT8HYEyb5oaZNs0TJOVY09VG5MQgRiaivhj86t3mt5cw4EJuJ6FGj3cj
+         F9ShvZ9tAvIhRDlcLfLuduQQXHZlsG1KwSPQRVE7ZD0L6ARSUlb9cO3APyHYKU24svvb
+         bKwUO63y5p9mcqqf7OIZqowFgiVn/Kjvby4Lk3G82GJLK4MjtM2wstlpLr+D0veXx+m9
+         Y1pK9EQXzAVek2PVudmnsKW2rRTMLAgU05/f+b4m0AbBWrDjAv3eF90XndBZvIOtV9zG
+         e6Sg==
+X-Gm-Message-State: AOAM5321bAZDXiCW6msj1Z/5dPCUJp086Q8xImsuthpUJWQp1wafvZkH
+        0ONFyXKVWa8TNaDc/jvgLt8wKUyj6fJi6rN7+Q7OhEtBSNQ=
+X-Google-Smtp-Source: ABdhPJxK/nguThkBJd2Ux3XYuXE4KGHsrekK6XDG2RPUaVUVOzza6kVDTgWwFrm43mM2dign3+VsxQTsCovpxW3dEZ0=
+X-Received: by 2002:ac2:47ed:: with SMTP id b13mr15611694lfp.21.1593621485126;
+ Wed, 01 Jul 2020 09:38:05 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4307.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 963a7e5d-0858-4a43-3bfb-08d81ddd06e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 16:37:21.2420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L9gX3TiOGP9aNYGdvv8GA8KgCr8uiwZX4PM/anN9PFAw7rdPBYy2EQK6GL3F/0fXHrbeqM/1T4UH3Pqh/pXbXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4182
-X-OriginatorOrg: intel.com
+References: <20200701103126.1512615-1-megous@megous.com> <20200701152532.GA670324@ravnborg.org>
+ <20200701163018.cfweuzp76qx5nsew@core.my.home>
+In-Reply-To: <20200701163018.cfweuzp76qx5nsew@core.my.home>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Jul 2020 18:37:53 +0200
+Message-ID: <CACRpkdYf87RymMwUFL=nXNs3dFVveLt7u0X3haL=SN+N6+V_vQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/13] Add support for PinePhone LCD panel
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gPiA+IEZvciBzcGVha2VycyBhbmQgaGVhZHNldHMgaXRzIDQ4S2h6LCAyIGNoIGFuZCAy
-NCBiaXQgYW5kIHRoaXMNCj4gPiA+IHNldHRpbmcgaXMgZG9uZSBiYXNlZCBvbiB0aGUgZnJvbnQt
-ZW5kIGRhaSBGb3Igc3BlYWtlcnMsIGhvd2V2ZXINCj4gPiA+IHN1cHBvcnQgb25seQ0KPiA+ID4g
-MTYgYml0LCBzbyB3ZSBzZXQgaXQgYmFjayB0byAxNiBiaXQgSWYgdGhlIGZyb250IGVuZCBkYWkg
-aXMgZG1pYywNCj4gPiA+IHRoZW4gdGhlIGNoYW5uZWwNCj4gPiBpcyBzZXQgdG8gZWl0aGVyIDIg
-b3IgNCBkbWljX2NvbnN0cmFpbnRzLiBObyBvdGhlciBmb3JtYXRzIG5lZWQgdG8gYmUgc2V0Lg0K
-PiA+ID4NCj4gPiA+IEFsbCB0aGUgU1NQMSB1c2FnZXMgZG8gbm90IGhhdmUgdGhlIHNhbWUgcGFy
-YW1ldGVycyAoYXMgZG1pYyBpcyBvbg0KPiA+ID4gU1NQMSBhbmQgaXRzIGRpZmZlcmVudCBhcyBn
-aXZlbiBhYm92ZSkgTW9zdCBwYXJhbWV0ZXJzIGFyZSBzYW1lIGZvcg0KPiA+IHNwZWFrZXJzIGFu
-ZCBoZWFkc2V0IHdoaWNoIGFyZSBvbiBkaWZmZXJlbnQgU1NQLiBUaGlzIGlzIHRoZSByZWFzb24g
-d2UNCj4gPiBoYWQgYSBzaW5nbGUgZml4dXAgZnVuY3Rpb24uDQo+IE9uIFNTUDEsIGZvciBkbWlj
-IHdlIG5lZWQgdG8gZml4IHRoZSBjaGFubmVscyB3aGljaCBpcyBkZXJpdmVkIGZyb20gZG1pY19u
-dW0NCj4gb2YgdGhlIHNuZF9zb2NfYWNwaV9tYWNoIHN0cnVjdHVyZSBiYXNlZCBvbiB0aGUgbnVt
-YmVyIG9mIGRtaWMgb24gdGhlDQo+IGJvYXJkLg0KPiBUaGUgY2hhbm5lbCBpcyBzb21ldGhpbmcg
-dGhhdCBtaWdodCBiZSBkaWZmZXJlbnQgZnJvbSBzcGVha2Vycy4NCj4gV2UgbWlnaHQgbm90IHdh
-bnQgdG8gY29uc3RyYWludCB0aGUgZG1pYyBjYXB0dXJlIHRvIGFsd2F5cyBiZSA0OEtoeiBhcyB3
-ZWxsLg0KPiBHaXZlbiB0aGlzLCB0aGVyZSBzZWVtcyB0byBtZSwgMiB3YXlzIHRvIHNldCBpdDoN
-Cj4gMS4gRGVyaXZlIGlmIHRoZSBmaXh1cCBpcyBiZWluZyBjYWxsZWQgZm9yIGRtaWMgb3Igc3Bl
-YWtlciAyLiBIYXZpbmcgYSBuZXcgZGFpbGluaw0KPiANCj4gSWYgIzIgaXMgbm90IHByZWZlcnJl
-ZCAoZ29pbmcgYnkgUGllcnJlJ3MgY29tbWVudHMpLCBjYW4gd2UgdXNlIHJ0ZC0NCj4gPmNwdV9k
-YWkvY29kZWNfZGFpLT5uYW1lIHRvIGZpZ3VyZSBvdXQgaWYgaXRzIGZvciBkbWljIG9yIHNwZWFr
-ZXI/DQo+IEkgY2FuIHRlc3QgdGhpcyBhbmQgZ2V0IGJhY2sgdG8geW91Lg0KVGVzdGVkIGFuZCB0
-aGUgZm9sbG93aW5nIGlzIHNvbWV0aGluZyB3ZSBjYW4gdXNlIHdpdGhvdXQgY3JlYXRpbmcgYSBu
-ZXcgZGFpbGluay4NCiAgICAgICAJc3RydWN0IHNuZF9zb2NfZGFpICpjb2RlY19kYWkgPSBhc29j
-X3J0ZF90b19jb2RlYyhydGQsIDApOw0KCWlmICghc3RyY21wKGNvZGVjX2RhaS0+bmFtZSwgS0JM
-X1JFQUxURUtfRE1JQ19DT0RFQ19EQUkpKSB7DQoJCWlmIChwYXJhbXNfY2hhbm5lbHMocGFyYW1z
-KSA9PSAyIHx8ICBETUlDX0NIKGRtaWNfY29uc3RyYWludHMpID09IDIpDQoJCQljaGFubmVscy0+
-bWluID0gY2hhbm5lbHMtPm1heCA9IDI7DQoJCWVsc2UNCgkJCWNoYW5uZWxzLT5taW4gPSBjaGFu
-bmVscy0+bWF4ID0gNDsNCgl9IGVsc2Ugew0KCQlyYXRlLT5taW4gPSByYXRlLT5tYXggPSA0ODAw
-MDsNCgkJY2hhbm5lbHMtPm1pbiA9IGNoYW5uZWxzLT5tYXggPSAyOw0KCQlzbmRfbWFza19ub25l
-KGZtdCk7DQoJCXNuZF9tYXNrX3NldF9mb3JtYXQoZm10LCBwY21fZm10KTsNCgl9DQoNClBpZXJy
-ZSwgdGhvdWdodHM/DQoNCg==
+On Wed, Jul 1, 2020 at 6:30 PM Ond=C5=99ej Jirman <megous@megous.com> wrote=
+:
+> On Wed, Jul 01, 2020 at 05:25:32PM +0200, Sam Ravnborg wrote:
+> > Hi Ondrej.
+> >
+> > On Wed, Jul 01, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> > > This patchset adds support for the LCD panel of PinePhone.
+> > >
+> > > I've tested this on PinePhone 1.0 and 1.2.
+> > >
+> > > Please take a look.
+> > >
+> > > thank you and regards,
+> > >   Ondrej Jirman
+> > >
+> > > Changes in v6:
+> > > - Fixed spacing in yaml
+> > > - Fixed wrong vccio->iovcc supply name in the bindings doc
+> > > - I noticed that the original driver uses a delay of 20ms in the init
+> > >   function to achieve a combined total of 120ms required from post-re=
+set
+> > >   to display_on. I've added a similar delay to xbd599_init, so that
+> > >   xbd599 panel also has the right timing. (patch 9)
+> > > - v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+> > > - Added review/ack tags
+> > > - Learned to run dt_binding_check by myself ;)
+> > The patch-set does not apply clean on top of drm-misc-next - due to
+> > vrefresh removal.
+> > Please re-spin.
+>
+> Sorry for that. Rebased and retested.
+
+Sam will you apply it? I was in the middle of applying and ran into the sam=
+e
+issue :D
+
+Yours,
+Linus Walleij
