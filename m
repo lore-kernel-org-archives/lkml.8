@@ -2,108 +2,91 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A360BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD9820772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593606239;
-	bh=Q9CJu4/bA4tXljW0aFOLG1vuZ8KJtvTX7ZdAFH5LN+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yu1IVZ6wewkdhlou0VOq6xV7nehWqF15zGmQtnaXMAQDm0bJ63IBmePK+61WBZXJY
-	 r3vpvutO29SiO2g/6iOHbCGvadGrxAgB+R3H107KPKK7miAPi39Io9LDHzQtVe5xly
-	 w4NVyoi+88VRfL0sGt7y4cmxlIOcFP2vsVtTT1nQ=
+	by mail.kernel.org (Postfix) with ESMTP id 79E60206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QgugAnlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgGAMX5 (ORCPT
+        id S1730499AbgGAM2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:23:57 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:43663 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730063AbgGAMX5 (ORCPT
+        Wed, 1 Jul 2020 08:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgGAM2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:23:57 -0400
-Received: by mail-ej1-f67.google.com with SMTP id l12so24337482ejn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:23:55 -0700 (PDT)
+        Wed, 1 Jul 2020 08:28:20 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8390C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 05:28:20 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id di5so5929292qvb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=x+BeeH1jYGXK8cfygVL8IQfqxHcN06ti3g1VzLYimNQ=;
+        b=QgugAnlCHHjSSnVHrk6C4jhX65XJ/7MQonaAL3yBlfy9sFckvSCtEmlzDg42xrHZgZ
+         6OZ49jhC1lJvGSGQvdT4Zf+zQGdKMCxtjoDLXF5uXAFpkhfJNLNizR+A2F9GFSVHmWC5
+         HpLayED7ARa27hFj9rxrElzJiztB7uR7leDEx9rH2Kv0SKQ6jHTK6EEBgsqre6u/6xHK
+         2Un/L9Ka7eEpoCex7uH4sX5ZyKaO0lH5iIasFgZ0DjobSHBgKdsn0HNopGAssHDX3HbO
+         9C/syItZgzXUcmC4m7sjUwrpPZTSBhEHZ05cUVFh051PgmbOSxx8KomB9XjyiHdEoOzV
+         LGZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EguftjtGqWh5VAdFTqBrZSaGbeDOMAHvC0KwPTJHn/U=;
-        b=QR4YqyhykckEGVX2lnnAa2SbYPFLykGysqrUo1gL4f3fm5DNNGD6Z1lSkABNNps7PG
-         iNEWC5ywy2cim09AXcmcCF7QAVTpJnrrdqr3rLJNjlhFSRI1v1Gwmeeu4mPitfeTbswE
-         A6wu3u9Oi0ZzpN66zGsXj+7ui5u2e6NBUJvX4ytz29lfQsuD+Q0RbRELmO382jX8LaDU
-         2Sva3XKaFXe2iEGuAIDZr4pL+ezrilUGLwhey1XrYytOpIl3btO25yyNBqLpgJe3Uu4v
-         XzTVqGfsKtUZolCYJ/+367Ntgn17zRi2qq1W/JYU5CkB2Gm1bQF4HyxSgQMAKjEMd6dw
-         OSlw==
-X-Gm-Message-State: AOAM533v/Er/Rn24zNEtMHvtJ3MUN/MYKho0zxkImdHWxB4lcuOI0wbf
-        6bS0A2bb+u1hEIPFAILI4K4=
-X-Google-Smtp-Source: ABdhPJy/WXxww9ppUfxQzV+W46iCW3wMVCFfGKiry/c38Bk6UeJk9x0MK1Dyt9SBwv8ixfZZXNWBfQ==
-X-Received: by 2002:a17:906:284e:: with SMTP id s14mr21684652ejc.498.1593606235211;
-        Wed, 01 Jul 2020 05:23:55 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id q3sm2881770eds.41.2020.07.01.05.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 05:23:54 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 14:23:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Christopher Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200701122353.GU2369@dhcp22.suse.cz>
-References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
- <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
- <alpine.DEB.2.22.394.2006291456550.27163@www.lameter.com>
- <20200630040125.GA31617@linux.vnet.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=x+BeeH1jYGXK8cfygVL8IQfqxHcN06ti3g1VzLYimNQ=;
+        b=twPdig3fAXPcHsKXZ+wL8Dw72o9w8NxFQwf/Bp2BY7gSj56wXMGPC1Ng/E6cyIowZR
+         GiEvKozV6+tJQvRTi0U4iWIjTFf3Q07usK8lmcTLbG8soDkqzaxaWcrn1Lc52pTRY3Iu
+         kgceiJfNOkKt8Hd58uaBhln91gvVObJybi6iplEW/F3+nQkXP+fIVP/2e+Rq+XQVyM0Z
+         ySLNrJPHvSvWyW5xJyRNHaOi8uzB5bTxNQhv2HmO3LaYBylx34cE/p7pFv2uF4ZTkt42
+         aK4jIKM+zEnkia3+w4k9nNAxtbeRyE/uNxfdu1jzLybcgDn51zO0HbK+MuixAqlPM56K
+         BK5w==
+X-Gm-Message-State: AOAM530fToM83rA2C7RY/+QOCrlmxIhD8t296lMev1osQkaJ2iIU4IPd
+        CJEopZtBYQX+/3QEw/gEn55Zbs307S628cLuxzQQewsbVeIFaA==
+X-Google-Smtp-Source: ABdhPJxafBqxFuTp3lrqQFMS1kQlPvnsv0h4pz7C0t6sMAGfTYC64uqViDP8Hk1AjSeISPVrz86pmPyID+llIyFpPz0=
+X-Received: by 2002:a0c:a8e6:: with SMTP id h38mr18474750qvc.15.1593606499816;
+ Wed, 01 Jul 2020 05:28:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630040125.GA31617@linux.vnet.ibm.com>
+References: <CAAvDm6bGBbN=EiJxO9Fq9HqLz6F=hSQqjKms_G6qPHzbZ6G3zg@mail.gmail.com>
+ <20200701105824.GB2098169@kroah.com> <CAAvDm6YjbvEq9Y3wG-Lx_-hJtQ_LW28j97BOqvrewYXnEAS2dg@mail.gmail.com>
+In-Reply-To: <CAAvDm6YjbvEq9Y3wG-Lx_-hJtQ_LW28j97BOqvrewYXnEAS2dg@mail.gmail.com>
+From:   =?UTF-8?B?5a2Z5LiW6b6ZIHN1bnNoaWxvbmc=?= <sunshilong369@gmail.com>
+Date:   Wed, 1 Jul 2020 20:28:07 +0800
+Message-ID: <CAAvDm6Y17WijBAWQ8z+zcxYJP6Ek7JZ6bXg6fOpinSVKpMTeyA@mail.gmail.com>
+Subject: Re: Are there some potentially serious problems that I should be
+ aware of if I totally disable the CONFIG_ACPI option on the X86_64 platform?
+To:     Greg KH <greg@kroah.com>
+Cc:     Kernelnewbies@kernelnewbies.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 30-06-20 09:31:25, Srikar Dronamraju wrote:
-> * Christopher Lameter <cl@linux.com> [2020-06-29 14:58:40]:
-> 
-> > On Wed, 24 Jun 2020, Srikar Dronamraju wrote:
-> > 
-> > > Currently Linux kernel with CONFIG_NUMA on a system with multiple
-> > > possible nodes, marks node 0 as online at boot.  However in practice,
-> > > there are systems which have node 0 as memoryless and cpuless.
-> > 
-> > Maybe add something to explain why you are not simply mapping the
-> > existing memory to NUMA node 0 which is after all just a numbering scheme
-> > used by the kernel and can be used arbitrarily?
-> > 
-> 
-> I thought Michal Hocko already gave a clear picture on why mapping is a bad
-> idea. https://lore.kernel.org/lkml/20200316085425.GB11482@dhcp22.suse.cz/t/#u
-> Are you suggesting that we add that as part of the changelog?
+Hi, Gred
+Thank you for taking the time to respond to me.
 
-Well, I was not aware x86 already does renumber. So there is a certain
-precendence. As I've said I do not really like that but this is what
-already is happening. If renumbering is not an option then just handle
-that in the ppc code explicitly. Generic solution would be preferable of
-course but as I've said it is really hard to check for correctness and
-potential subtle issues.
+>> Would it do harm to the hardware?
+> It might, try it and see :)
+It's really bad news.
 
--- 
-Michal Hocko
-SUSE Labs
+
+=E5=AD=99=E4=B8=96=E9=BE=99 sunshilong <sunshilong369@gmail.com> =E4=BA=8E2=
+020=E5=B9=B47=E6=9C=881=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=888:24=
+=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi, Gred
+> Thank you for taking the time to respond to me.
+> >> Would it do harm to the hardware?
+> > It might, try it and see :)
+> It's really bad news.
