@@ -2,90 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21A7206CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FEF206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgGAK7p (ORCPT
+        id S1730186AbgGAK74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:59:45 -0400
-Received: from nautica.notk.org ([91.121.71.147]:48986 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgGAK7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:59:44 -0400
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id BCAA5C021; Wed,  1 Jul 2020 12:59:42 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 12:59:27 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Cc:     ericvh@gmail.com, lucho@ionkov.net,
-        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        wei.chen@arm.com
-Subject: Re: [PATCH v2] 9p: retrieve fid from file when file instance exist.
-Message-ID: <20200701105927.GA20762@nautica>
-References: <20200701023821.5387-1-jianyong.wu@arm.com>
+        Wed, 1 Jul 2020 06:59:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:44263 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729952AbgGAK7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:59:54 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MX00X-1jJlrc1O4f-00XNgi; Wed, 01 Jul 2020 12:59:53 +0200
+Received: by mail-qk1-f172.google.com with SMTP id b185so11099342qkg.1;
+        Wed, 01 Jul 2020 03:59:53 -0700 (PDT)
+X-Gm-Message-State: AOAM530Pr/UXhWxrak0xcyWKXpgviCxTN2Ym+CC6qF5QsdfyfmpMhbB7
+        mhKw92z5GP6pJ81JM6DVJpcoLt6vacvS37TqvC8=
+X-Google-Smtp-Source: ABdhPJztc8Rs2Aj01FvDlsDy8FiXAWwus7EMwqiq3oxxcJK+edsUbi5amD2c/ikaFMMy81wZESqitxpCJ/9YRg9OP74=
+X-Received: by 2002:a37:9dd6:: with SMTP id g205mr25404833qke.352.1593601192134;
+ Wed, 01 Jul 2020 03:59:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200701023821.5387-1-jianyong.wu@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-19-will@kernel.org>
+ <CAK8P3a2zB4z121reuy6BCqQ3-1mDBAkUkRRXeDuvSFtSr3ha2g@mail.gmail.com> <20200701101922.GC14959@willie-the-truck>
+In-Reply-To: <20200701101922.GC14959@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 1 Jul 2020 12:59:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1MWBxHihcUaduqcpS2U61cKPujQG6mAfn3-pCokzLwUw@mail.gmail.com>
+Message-ID: <CAK8P3a1MWBxHihcUaduqcpS2U61cKPujQG6mAfn3-pCokzLwUw@mail.gmail.com>
+Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when CLANG_LTO=y
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:g7I2hYYZ2lCZFQ7sbdyRHfQy91HD0wtoFaGz8CBa/Dg3GlDiMEM
+ 0cDVsVCv/r0iOiUjFafyiLdI5VLmh3fb/4xtPl3rqxU4Dq9aAR/IVIxpZ8dTcS7JK3zGJBL
+ MG2nTNgHBZNK1wJn0HRu5jLzBpCpkelS2+hqD9/5VgKCl8oaxz3X28Hcrvwu6vhZHbCE7Ax
+ YdMUmUdrpIWPZtf4pB2+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4DwWKkZ8m/I=:B55ukcCg0k7NW87sDOEGI4
+ ezfpNvn78XuzW/zJHkxhecufP7cmEd/Gl6VvKI96SgL/jjGAnD9G4VS7MAbL8DSd2MxlI29Jm
+ pOgFyhsNXhAtoj7ENFbNNyXhj1XNN6d4DvI4+ZW3Yv08i8recA9aME7Vrtl0fSEnjUfCXlJ5J
+ SYliPHA42Gx4R2DGnTELryvEoppMkIsH1ZSBFvM5pFGtyufvui+5w8k+5ELZ1W4qOJWz1NcRx
+ /sgEwy5+TvtUTB/ZSMeTIwZ4mGVs52rW/OhwSeK+QV8Crg8yqtHFdhAGNCtoPAStpN4pctJhB
+ se5V+o9cUGyLZFoxBO2F7eXJtk85pVY8LuTygSa5Kf5pNmwLZX/HhKbQuK21MOt9oQCGPHqwQ
+ 4NHC7/vbLc7ss525ziNJGxYJK5ePR8VdUEoqHa47zwqKEeR8OfYWMToshuvjnQcfNLecDtxeY
+ p+oqSuKNyjkuyLtcyETqiyYzuUrNqgxPUq3SppAG04lsYFdAAYNMyavQ1zNhpGE8OKcOxELIo
+ enuXtU++MpzFPDHXwbx66ECu7o2SacgzWZQcQmEG4CGsH+MB3HkhpnCKMnrToEbkn2uADHHIe
+ DdgS7Vc1cTZcR/h75pQmF8cdr2Vi+YR0EBxsL2Ke5xp8G+fLIUGjbuIMo7CwxKCfzxPoPanvP
+ iaD6bT+eDDzvrdijwabmzRXCoV5inzrcNEZoSVK7wQA/c2X/4tVbvEGg5+meuO0Sv3fO17YH0
+ V0052JR0LleOOUQW0lk/D1getQWpdr7hdsBN7fvMuqlcpO/FRd4VzThCQ1G1nFwwZB8z/tvps
+ rWlfjq+Cc3wfr1uZ/c2o7/0Tn7OzaGcEhD/ZpHjmJ9BiS/o+60=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jianyong Wu wrote on Wed, Jul 01, 2020:
-> In the current setattr implementation in 9p, fid is always retrieved
-> from dentry no matter file instance exists or not. There may be
-> some info related to opened file instance dropped. so it's better
-> to retrieve fid from file instance if file instance is passed to setattr.
-> 
-> for example:
-> fd=open("tmp", O_RDWR);
-> ftruncate(fd, 10);
-> 
-> The file context related with fd will be lost as fid is always
-> retrieved from dentry, then the backend can't get the info of
-> file context. It is against the original intention of user and
-> may lead to bug.
+On Wed, Jul 1, 2020 at 12:19 PM Will Deacon <will@kernel.org> wrote:
+> On Tue, Jun 30, 2020 at 09:25:03PM +0200, Arnd Bergmann wrote:
+> > On Tue, Jun 30, 2020 at 7:39 PM Will Deacon <will@kernel.org> wrote:
+> > Once we make gcc-4.9 the minimum version,
+> > this could be further improved to
+> >
+> >        __auto_type __x = &(x);
+>
+> Is anybody working on moving to 4.9? I've seen the mails from Linus
+> championing it, but I thought there was a RHEL in support that people
+> might care about?
 
-Thanks for the commit message - still feels a bit odd but at least
-correct enough for me :)
+I don't think there was a serious discussion about it so far, and
+we only just moved to gcc-4.8.
 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  fs/9p/vfs_inode.c      | 6 +++++-
->  fs/9p/vfs_inode_dotl.c | 6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-> index c9255d399917..b33574d347fa 100644
-> --- a/fs/9p/vfs_inode.c
-> +++ b/fs/9p/vfs_inode.c
-> @@ -1100,7 +1100,11 @@ static int v9fs_vfs_setattr(struct dentry *dentry, struct iattr *iattr)
->  
->  	retval = -EPERM;
->  	v9ses = v9fs_dentry2v9ses(dentry);
-> -	fid = v9fs_fid_lookup(dentry);
-> +	if (iattr->ia_valid & ATTR_FILE) {
-> +		fid = iattr->ia_file->private_data;
-> +		WARN_ON(!fid);
+I think moving to gnu11 (gcc-4.9 or clang) instead of gnu99 has other
+benefits as well, so we may well want to do it anyway when something
+else comes up.
 
-That would crash in 9p_client_wstat a few lines below with the current
-else ; so I'm not sure WARN_ON is appropriate with this code.
+For __auto_type(), we could do it like
 
-the snippet I had suggested had v9fs_fid_lookup in a different if, not
-as a else statement to avoid this crash (and then warning is OK)
+#if (clang or gcc-4.9+)
+#define auto_typeof(x) __auto_type
+#else
+#define auto_typeof(x) typeof(x)
+#endif
 
-> +	} else
-> +		fid = v9fs_fid_lookup(dentry);
+which could be used in a lot of macros.
 
--- 
-Dominique
+     Arnd
