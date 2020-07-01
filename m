@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A0CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F60E207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8D420772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="FHBeQ5nF"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Z5tXnr4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgGAKcO (ORCPT
+        id S1730129AbgGAKcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:32:14 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42548 "EHLO vps.xff.cz"
+        Wed, 1 Jul 2020 06:32:24 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42466 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729985AbgGAKbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:31:44 -0400
+        id S1730005AbgGAKbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:31:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593599495; bh=mqI4DMxpU5nv3gGp6GplYAwWUJ0ad4+0Fg/Z0K5Wudc=;
+        t=1593599494; bh=LENCEp5fH5Lf53MpYepSnIefkapyPUTQ0yif1AiTbd0=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=FHBeQ5nFreZDNM/2l/SYGog3iYLNPDSfkXOtAYK1Yz5XNjf2LVKMIpAto++BlDQqw
-         N6kczy9TekXltpwUeR34bXP1B8iCG2G0phR9JtIpxL5pAPtyxK2E4CIGLQ46zY9oRF
-         Y2UrLFQKlLmaZnQiOx89ytpZIhLjU4VL6R0VbEQA=
+        b=Z5tXnr4FGZ4ceP/IUWMw69Fp02Hn3LG77j+8gDShlxpfe005ZDKocGa7sh1PLFx4+
+         dZut6HjuszRVmNEHBM7EKezmLkhG4tosB12426gi8xCXvEufqMA0qhSHgy+9MayVg8
+         IebjV1JfgGgpQqPw8iHvb4uBW9eu7E827XaWcBhM=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,15 +41,14 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v6 13/13] arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-Date:   Wed,  1 Jul 2020 12:31:26 +0200
-Message-Id: <20200701103126.1512615-14-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v6 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+Date:   Wed,  1 Jul 2020 12:31:25 +0200
+Message-Id: <20200701103126.1512615-13-megous@megous.com>
 In-Reply-To: <20200701103126.1512615-1-megous@megous.com>
 References: <20200701103126.1512615-1-megous@megous.com>
 MIME-Version: 1.0
@@ -59,43 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinephone has a Goodix GT917S capacitive touchscreen controller on
-I2C0 bus. Add support for it.
+From: Icenowy Zheng <icenowy@aosc.io>
 
+PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
+display.
+
+Backlight levels curve was optimized by Martijn Braam using a
+lux meter.
+
+Add its device nodes.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Martijn Braam <martijn@brixit.nl>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+index 06a775c41664..3e99a87e9ce5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+@@ -9,3 +9,22 @@ / {
+ 	model = "Pine64 PinePhone Braveheart (1.1)";
+ 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
+ };
++
++&backlight {
++	power-supply = <&reg_ldo_io0>;
++	/*
++	 * PWM backlight circuit on this PinePhone revision was changed since
++	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
++	 * being off is around 20%. Duty cycle for the lowest brightness level
++	 * also varries quite a bit between individual boards, so the lowest
++	 * value here was chosen as a safe default.
++	 */
++	brightness-levels = <
++		774  793  814  842
++		882  935  1003 1088
++		1192 1316 1462 1633
++		1830 2054 2309 2596
++		2916 3271 3664 4096>;
++	num-interpolated-steps = <50>;
++	default-brightness-level = <400>;
++};
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index 85a7aa5efd32..2d5694446d17 100644
+index cefda145c3c9..85a7aa5efd32 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -123,6 +123,25 @@ &ehci1 {
+@@ -16,6 +16,13 @@ aliases {
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++		/* Backlight configuration differs per PinePhone revision. */
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -84,6 +91,30 @@ &dai {
  	status = "okay";
  };
  
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
++&de {
++	status = "okay";
++};
++
++&dphy {
++	status = "okay";
++};
++
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;
++	#address-cells = <1>;
++	#size-cells = <0>;
 +	status = "okay";
 +
-+	touchscreen@5d {
-+		compatible = "goodix,gt917s", "goodix,gt911";
-+		reg = <0x5d>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-+		AVDD28-supply = <&reg_ldo_io0>;
-+		VDDIO-supply = <&reg_ldo_io0>;
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1440>;
++	panel@0 {
++		compatible = "xingbangda,xbd599";
++		reg = <0>;
++		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
++		iovcc-supply = <&reg_dldo2>;
++		vcc-supply = <&reg_ldo_io0>;
++		backlight = <&backlight>;
 +	};
 +};
 +
- &i2c1 {
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -188,6 +219,10 @@ &r_pio {
+ 	 */
+ };
+ 
++&r_pwm {
++	status = "okay";
++};
++
+ &r_rsb {
  	status = "okay";
  
 -- 
