@@ -2,119 +2,123 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47492C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDFA207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05ABC207E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sCvs0+5a"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="BOfrmMmC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kXcmCArL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGAWyf (ORCPT
+        id S1726676AbgGAXCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:54:35 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19501 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgGAWyN (ORCPT
+        Wed, 1 Jul 2020 19:02:49 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:36619 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726213AbgGAXCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:54:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efd13e20000>; Wed, 01 Jul 2020 15:53:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 Jul 2020 15:54:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 01 Jul 2020 15:54:12 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
- 2020 22:54:04 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 1 Jul 2020 22:54:03 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5efd140b0002>; Wed, 01 Jul 2020 15:54:03 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nouveau@lists.freedesktop.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Ben Skeggs" <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v3 0/5] mm/hmm/nouveau: add PMD system memory mapping
-Date:   Wed, 1 Jul 2020 15:53:47 -0700
-Message-ID: <20200701225352.9649-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 Jul 2020 19:02:49 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id EBDC17F2;
+        Wed,  1 Jul 2020 19:02:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 01 Jul 2020 19:02:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=1YAscWT5Mz6u+VNH7WtgDonrRp
+        slfYO5bYDazpLN3U8=; b=BOfrmMmC/i27YrdqadTyWQ29h3hFFoPqQxIPzoaOZT
+        t/z9TYlLOKq5dAkCsYA/mApCKR4iSmhgcWjvs4BXrc9tzlH2n7L0leJ5GhGmc7di
+        PtQYWhvDlbgtj0v+wnY4nz0xD598DzSOcgoSw3uoVJTvggsYKKqm9xS1khq1kr8s
+        H1NYdZpYcUZTdaQRMDlf3el9nhkH5QqLo+ITbdZXBt4l8sGxCZ+XP3AhgQzdqTLi
+        g1CdgSv5WxnPk3d7fLFybRf5x2ocZYZ0fzUFZSoYE7LMEpbWgHsbgLtJ4WNQT3nO
+        xylzQWNsrY0xR7YLMt7x2kktca7zJRfV6AY1d7/DfZCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=1YAscWT5Mz6u+VNH7
+        WtgDonrRpslfYO5bYDazpLN3U8=; b=kXcmCArL1NphLT0/LvDuxgrtSv/gcpg3q
+        mKrEdfSjf/1ytbnxXxYQEg0bQZ9vLFVpap48pVxSdeTrfoMd2AVmPSfzSNnsjBkZ
+        mKz6LTLujS76kDsYY7XuPz2W6LcrzzL+RE9iy8rVhODiI13JkNtzT9sQK1OuSk8J
+        p1qYC7x9WohwzQQ7MafshTLomlcz4DFHHZ14K8673fkFGMYssoMLPYY3CB2ml4Ci
+        nuTCtTfZ5cGY4cd9ulRvSPJfp1xXtBJTPzfTepCC5o6jm469szt5nhWjGk4PNt3z
+        oeuul1G+Xxxlp8EK8AlYEInp31a9oIlDbCnPZGQSeDdgYGpv63+eQ==
+X-ME-Sender: <xms:Fxb9Xu07M2EUCikYS8vqjlzn8ECw7wmwjTFPqu6008x4hc4ElTMiwQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdefgdduiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicunfhi
+    nhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpefhie
+    fhgfelgfdufedvudelvdefvdefgfeiueeufeegteffudekgefhvedtieefteenucfkphep
+    udegledrvdegkedrfeekrdduudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegurghnnhihsehkughrrghgtdhnrdguvghv
+X-ME-Proxy: <xmx:Fxb9XhGOGXdJ4w96guThX0cdsViLA9offS20zh_0AMQal-0vo_JC3g>
+    <xmx:Fxb9Xm4bkVjxs2R8zH2Agf20eZPz5YEYan1XZycJUbOB0Mm0OiPTGA>
+    <xmx:Fxb9Xv3tuAYFy2yuMg1OwmD3UwCuKVVHIsT95KdH2HwglkFm8Mi4Kw>
+    <xmx:Fxb9XlgPIsIsHBlJNY2SmoS7QxSnv81fEmKh2iTugxqZAYoxqBs5ZA>
+Received: from pinwheel.localdomain (vsrv_sea01.kdrag0n.dev [149.248.38.11])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2DF7A328005A;
+        Wed,  1 Jul 2020 19:02:46 -0400 (EDT)
+From:   Danny Lin <danny@kdrag0n.dev>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Danny Lin <danny@kdrag0n.dev>
+Subject: [PATCH] net: sched: Allow changing default qdisc to FQ-PIE
+Date:   Wed,  1 Jul 2020 16:01:52 -0700
+Message-Id: <20200701230152.445957-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593644002; bh=MJfr/HRLE6OMXyolgR7JmbdNUj2YCkglGntcmeExnQQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=sCvs0+5aWDEOa98ScHYnH1kou2nuKpIArM70MeHNN0z0Lr2no8sM2jlI5eFdengEi
-         E+EDwBZoNE23w6xILrPPhA7UnQef8+TszwrfBGodCUpC9KY/0jTaS2ESZ8FGYMGJOc
-         ZzhDvtIDp/v45zSQg8e7TdlJg4gwJJmf2Vme3SJ8Uf3hBwc13UsxccJxTpCXK8J551
-         RR/eLZBrmiSGQdHD1T/LjRsWVOvVcYUEvQ1Hnie2f73rD3baTsk0WOT4DyEnu479CW
-         Gvu/PHs94sF/7QBbqZDK8kMjXvmZtHIQk1SeYxLbpF8jNVRMfDiSwgYwaG8jEq3bla
-         OA1t1ZY+Q64uA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goal for this series is to introduce the hmm_pfn_to_map_order()
-function. This allows a device driver to know that a given 4K PFN is
-actually mapped by the CPU using a larger sized CPU page table entry and
-therefore the device driver can safely map system memory using larger
-device MMU PTEs.
-The series is based on 5.8.0-rc3 and is intended for Jason Gunthorpe's
-hmm tree. These were originally part of a larger series:
-https://lore.kernel.org/linux-mm/20200619215649.32297-1-rcampbell@nvidia.co=
-m/
+Similar to fq_codel and the other qdiscs that can set as default,
+fq_pie is also suitable for general use without explicit configuration,
+which makes it a valid choice for this.
 
-Changes in v3:
-Replaced the HMM_PFN_P[MU]D flags with hmm_pfn_to_map_order() to
-indicate the size of the CPU mapping.
+This is useful in situations where a painless out-of-the-box solution
+for reducing bufferbloat is desired but fq_codel is not necessarily the
+best choice. For example, fq_pie can be better for DASH streaming, but
+there could be more cases where it's the better choice of the two simple
+AQMs available in the kernel.
 
-Changes in v2:
-Make the hmm_range_fault() API changes into a separate series and add
-  two output flags for PMD/PUD instead of a single compund page flag as
-  suggested by Jason Gunthorpe.
-Make the nouveau page table changes a separate patch as suggested by
-  Ben Skeggs.
-Only add support for 2MB nouveau mappings initially since changing the
-1:1 CPU/GPU page table size assumptions requires a bigger set of changes.
-Rebase to 5.8.0-rc3.
+Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+---
+ net/sched/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Ralph Campbell (5):
-  nouveau/hmm: fault one page at a time
-  mm/hmm: add hmm_mapping order
-  nouveau: fix mapping 2MB sysmem pages
-  nouveau/hmm: support mapping large sysmem pages
-  hmm: add tests for HMM_PFN_PMD flag
-
- drivers/gpu/drm/nouveau/nouveau_svm.c         | 236 ++++++++----------
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c |   5 +-
- .../drm/nouveau/nvkm/subdev/mmu/vmmgp100.c    |  82 ++++++
- include/linux/hmm.h                           |  24 +-
- lib/test_hmm.c                                |   4 +
- lib/test_hmm_uapi.h                           |   4 +
- mm/hmm.c                                      |  14 +-
- tools/testing/selftests/vm/hmm-tests.c        |  76 ++++++
- 8 files changed, 299 insertions(+), 146 deletions(-)
-
---=20
-2.20.1
+diff --git a/net/sched/Kconfig b/net/sched/Kconfig
+index 84badf00647e..a3b37d88800e 100644
+--- a/net/sched/Kconfig
++++ b/net/sched/Kconfig
+@@ -468,6 +468,9 @@ choice
+ 	config DEFAULT_FQ_CODEL
+ 		bool "Fair Queue Controlled Delay" if NET_SCH_FQ_CODEL
+ 
++	config DEFAULT_FQ_PIE
++		bool "Flow Queue Proportional Integral controller Enhanced" if NET_SCH_FQ_PIE
++
+ 	config DEFAULT_SFQ
+ 		bool "Stochastic Fair Queue" if NET_SCH_SFQ
+ 
+@@ -480,6 +483,7 @@ config DEFAULT_NET_SCH
+ 	default "pfifo_fast" if DEFAULT_PFIFO_FAST
+ 	default "fq" if DEFAULT_FQ
+ 	default "fq_codel" if DEFAULT_FQ_CODEL
++	default "fq_pie" if DEFAULT_FQ_PIE
+ 	default "sfq" if DEFAULT_SFQ
+ 	default "pfifo_fast"
+ endif
+-- 
+2.27.0
 
