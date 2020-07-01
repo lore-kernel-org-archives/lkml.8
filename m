@@ -2,208 +2,174 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5058FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1143FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26BDB20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9D92085B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KChSgt78"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NQvtGT/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgGAVVf (ORCPT
+        id S1727118AbgGAVVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:21:35 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:57417 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGAVVf (ORCPT
+        Wed, 1 Jul 2020 17:21:40 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60074 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgGAVVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:21:35 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C912122EDB;
-        Wed,  1 Jul 2020 23:21:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593638492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FGEoESzqhbGl5sqazUSLjvfDz9FuASX78Vb4MriptvE=;
-        b=KChSgt78CKad7hUC7OaPaa1Dk0VP0qe78AWKnYwZRcTyR/NuL5ZB3U4CYa6Yhjw4kp0RO6
-        jthq7fDrc5tujgfStoE5/UJX7vdP1v2GT//HWuaLdwVgZy9Dw+idF0eV08LRZeXFdo35kk
-        Wv+eQtXxwxOmSem29GKPxBIINc11siQ=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
-        arnd@arndb.de, bgolaszewski@baylibre.com,
-        Michael Walle <michael@walle.cc>
-Subject: [RFC PATCH] mfd: add simple regmap based I2C driver
-Date:   Wed,  1 Jul 2020 23:21:00 +0200
-Message-Id: <20200701212100.6020-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 Jul 2020 17:21:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061LLXxS130492;
+        Wed, 1 Jul 2020 16:21:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593638493;
+        bh=rLRInyM1HUBSe42k9HXIZL+IrIZT1shCKCGOH7tBuOA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NQvtGT/ZG8cPpHc0YuQ+p+9b1vhq5YCipHI6/SYBsD7VZ89xI6JSjhmmGAZ3vdfRM
+         pAvBkzy2HXQ83NEJmgL6ed2dSkMGtGuXurAmgiFyd9+N30wGt6Ik5/KIlaGzKUDZVs
+         S6rQR1fmb7ywdo1URRKpUo5B6uPA4rE0bXwvKf7c=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061LLXCX129314
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Jul 2020 16:21:33 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 16:21:33 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 16:21:33 -0500
+Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061LLWww081460;
+        Wed, 1 Jul 2020 16:21:32 -0500
+Subject: Re: [PATCH 2/2] Revert "remoteproc: Add support for runtime PM"
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>, <ohad@wizery.com>,
+        <bjorn.andersson@linaro.org>, <paul@crapouillou.net>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+ <20200630163118.3830422-3-mathieu.poirier@linaro.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <14cdd336-a2d9-537d-cc61-f47e01f89e9c@ti.com>
+Date:   Wed, 1 Jul 2020 16:21:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+In-Reply-To: <20200630163118.3830422-3-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are I2C devices which contain several different functions but
-doesn't require any special access functions. For these kind of drivers
-an I2C regmap should be enough.
+Hi Mathieu,
 
-Create an I2C driver which creates an I2C regmap and enumerates its
-children. If a device wants to use this as its MFD core driver, it has
-to add an individual compatible string. It may provide its own regmap
-configuration and a .pre_probe hook. The latter allows simple checks
-and abort probing, for example a version check.
+On 6/30/20 11:31 AM, Mathieu Poirier wrote:
+> This reverts commit a99a37f6cd5a74d5b22c08544aa6c5890813c8ba.
+> 
+> Removing PM runtime operations from the remoteproc core in order to:
+> 
+> 1) Keep all power management operations in platform drivers.  That way we
+> do not loose flexibility in an area that is very HW specific.
+> 
+> 2) Avoid making the support for remote processor managed by external
+> entities more complex that it already is.
+> 
+> 3) Fix regression introduced for the Omap remoteproc driver.
 
-Subdevices can use dev_get_regmap() on the parent to get their regmap
-instance.
+Thanks for following up on the discussion, I have verified that the 
+autosuspend regression is fixed.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-I don't think the syscon-i2c is the way to go:
+Tested-by: Suman Anna <s-anna@ti.com>
+Acked-by: Suman Anna <s-anna@ti.com>
 
-   "TBC, while fine for a driver to bind on 'simple-mfd', a
-    DT compatible with that alone is not fine." [1]
+regards
+Suman
 
-   "Yes, this is why specific compatible strings are
-    required." [1]
-
-   "No. I'd like to just kill off syscon and simple-mfd really. Those are
-	just hints meaning a specific compatible is still needed, but I see
-	them all the time alone (or combined like above). 'syscon' just serves
-	to create a regmap. This could be accomplished just with a list of
-	compatibles to register a regmap for. That might be a longish list, but
-	wanting a regmap is really a kernel implementation detail and
-	decision." [2]
-
-So I don't get it why we would now add another syscon type. Instead, here
-is a new try to generalize the idea to just have a simple driver which just
-have a bunch of compatible strings for supported devices (and thus can be
-added quirks to it without changing the DT) and just creates a regmap. A
-simple device can just add itself to the list of compatible strings. If
-quirks are needed later, they can either be added right to simple-mfd-i2c.c
-or split off to an own file, but time will tell.
-
-Right now, there is just a .pre_probe() hook which can be used to cancel
-the probing of the device or print some useful info to the kernel log. Yes,
-this is for "my" version check. And TBH I don't see a problem with adding
-that to this generic driver.
-
-[1] https://lore.kernel.org/linux-devicetree/CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com/
-[2] https://lore.kernel.org/linux-devicetree/20200609165401.GB1019634@bogus/
-
- drivers/mfd/Kconfig          |  9 ++++++
- drivers/mfd/Makefile         |  1 +
- drivers/mfd/simple-mfd-i2c.c | 57 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
- create mode 100644 drivers/mfd/simple-mfd-i2c.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 7e72ed3441f1..96055c7e5c55 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called si476x-core.
- 
-+config MFD_SIMPLE_MFD_I2C
-+	tristate "Simple regmap based I2C devices"
-+	depends on I2C
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	help
-+	  This is a consolidated driver for all MFD devices which are
-+	  basically just a regmap bus driver.
-+
- config MFD_SM501
- 	tristate "Silicon Motion SM501"
- 	depends on HAS_DMA
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 7e26e7f98ac2..fa3a621a5a21 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -265,4 +265,5 @@ obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
- 
- obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
- 
-+obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
- obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-new file mode 100644
-index 000000000000..60708e95f1a0
---- /dev/null
-+++ b/drivers/mfd/simple-mfd-i2c.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+
-+struct simple_mfd_i2c_config {
-+	int (*pre_probe)(struct i2c_client *i2c, struct regmap *regmap);
-+	const struct regmap_config *regmap_config;
-+};
-+
-+static const struct regmap_config simple_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int simple_mfd_i2c_probe(struct i2c_client *i2c)
-+{
-+	const struct regmap_config *regmap_config = &simple_regmap_config;
-+	const struct simple_mfd_i2c_config *config;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	config = device_get_match_data(&i2c->dev);
-+
-+	if (config && config->regmap_config)
-+		regmap_config = config->regmap_config;
-+
-+	regmap = devm_regmap_init_i2c(i2c, regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	if (config && config->pre_probe) {
-+		ret = config->pre_probe(i2c, regmap);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return devm_of_platform_populate(&i2c->dev);
-+}
-+
-+static const struct of_device_id simple_mfd_i2c_of_match[] = {
-+	{}
-+};
-+
-+static struct i2c_driver simple_mfd_i2c_driver = {
-+	.probe_new = simple_mfd_i2c_probe,
-+	.driver = {
-+		.name = "simple-mfd-i2c",
-+		.of_match_table = simple_mfd_i2c_of_match,
-+	},
-+};
-+builtin_i2c_driver(simple_mfd_i2c_driver);
--- 
-2.20.1
+> ---
+>   drivers/remoteproc/remoteproc_core.c | 17 +----------------
+>   1 file changed, 1 insertion(+), 16 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 9f04c30c4aaf..0f95e025ba03 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -29,7 +29,6 @@
+>   #include <linux/devcoredump.h>
+>   #include <linux/rculist.h>
+>   #include <linux/remoteproc.h>
+> -#include <linux/pm_runtime.h>
+>   #include <linux/iommu.h>
+>   #include <linux/idr.h>
+>   #include <linux/elf.h>
+> @@ -1383,12 +1382,6 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>   	if (ret)
+>   		return ret;
+>   
+> -	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+>   	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>   
+>   	/*
+> @@ -1398,7 +1391,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>   	ret = rproc_enable_iommu(rproc);
+>   	if (ret) {
+>   		dev_err(dev, "can't enable iommu: %d\n", ret);
+> -		goto put_pm_runtime;
+> +		return ret;
+>   	}
+>   
+>   	/* Prepare rproc for firmware loading if needed */
+> @@ -1452,8 +1445,6 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>   	rproc_unprepare_device(rproc);
+>   disable_iommu:
+>   	rproc_disable_iommu(rproc);
+> -put_pm_runtime:
+> -	pm_runtime_put(dev);
+>   	return ret;
+>   }
+>   
+> @@ -1891,8 +1882,6 @@ void rproc_shutdown(struct rproc *rproc)
+>   
+>   	rproc_disable_iommu(rproc);
+>   
+> -	pm_runtime_put(dev);
+> -
+>   	/* Free the copy of the resource table */
+>   	kfree(rproc->cached_table);
+>   	rproc->cached_table = NULL;
+> @@ -2183,9 +2172,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>   
+>   	rproc->state = RPROC_OFFLINE;
+>   
+> -	pm_runtime_no_callbacks(&rproc->dev);
+> -	pm_runtime_enable(&rproc->dev);
+> -
+>   	return rproc;
+>   
+>   put_device:
+> @@ -2205,7 +2191,6 @@ EXPORT_SYMBOL(rproc_alloc);
+>    */
+>   void rproc_free(struct rproc *rproc)
+>   {
+> -	pm_runtime_disable(&rproc->dev);
+>   	put_device(&rproc->dev);
+>   }
+>   EXPORT_SYMBOL(rproc_free);
+> 
 
