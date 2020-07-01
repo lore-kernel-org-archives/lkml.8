@@ -2,68 +2,118 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4220AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B0E2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C67E20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgGAOOE (ORCPT
+        id S1731287AbgGAOS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:14:04 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55467 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728712AbgGAOOE (ORCPT
+        Wed, 1 Jul 2020 10:18:29 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:42940 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728712AbgGAOS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:14:04 -0400
-Received: from callcc.thunk.org (pool-96-230-252-158.bstnma.fios.verizon.net [96.230.252.158])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 061EDvRt011986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 1 Jul 2020 10:13:58 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 0CBC14200D9; Wed,  1 Jul 2020 10:13:57 -0400 (EDT)
-Date:   Wed, 1 Jul 2020 10:13:56 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, inux-fsdevel@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Subject: Re: Maintainers / Kernel Summit 2020 planning kick-off
-Message-ID: <20200701141356.GF5484@mit.edu>
-References: <20200515163956.GA2158595@mit.edu>
- <CAPM=9tz3heu1-xTyYDA4huszt3LLgF87pKcifc+OCFqJv-KWdA@mail.gmail.com>
+        Wed, 1 Jul 2020 10:18:28 -0400
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E8MN4027198;
+        Wed, 1 Jul 2020 14:17:35 GMT
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0b-002e3701.pphosted.com with ESMTP id 320b6py5xt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 14:17:35 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 16815A8;
+        Wed,  1 Jul 2020 14:17:34 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+        id A9E2D2015D85F; Wed,  1 Jul 2020 09:17:32 -0500 (CDT)
+Message-ID: <20200701141732.581935948@hpe.com>
+User-Agent: quilt/0.66
+Date:   Wed, 01 Jul 2020 09:17:40 -0500
+From:   steve.wahl@hpe.com
+To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Young <dyoung@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Austin Kim <austindh.kim@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Cc:     Russ Anderson <rja@hpe.com>
+Subject: [patch 09/13] Remove efi=old_map command line option
+References: <20200701141731.377252388@hpe.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPM=9tz3heu1-xTyYDA4huszt3LLgF87pKcifc+OCFqJv-KWdA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ cotscore=-2147483648 suspectscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 09:12:31AM +1000, Dave Airlie wrote:
-> 
-> What timezone are the conferences being held in? It impacts on what I
-> can attend quite heavily :-)
+As a part of UV1 platform removal, delete the efi=old_map option,
+which should no longer be needed.
 
-When you register for the Linux Plumbers Conference, there will be an
-opportunity for you to indicate your timezone preferences.  The
-current thinking is that the timing will be like many of the virtual
-conferences, which is to run it only for at most 3-4 hours a day, at
-hours when it is most, convenient for the people who have registered.
-That's for the Kernel Summit.
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |    4 +---
+ arch/x86/platform/uv/bios_uv.c                  |   14 --------------
+ 2 files changed, 1 insertion(+), 17 deletions(-)
 
-For the Maintainer's Summit, due to the lack of topic proposals, we
-are probably going to end up skipping it for this year.
-
-Cheers,
-
-    	     	      	     	      	     - Ted
+--- linux.orig/arch/x86/platform/uv/bios_uv.c	2020-06-18 16:26:33.963087219 -0500
++++ linux/arch/x86/platform/uv/bios_uv.c	2020-06-25 09:53:43.013835162 -0500
+@@ -356,17 +356,3 @@ void __iomem *__init efi_ioremap(unsigne
+ 
+ 	return (void __iomem *)__va(phys_addr);
+ }
+-
+-static int __init arch_parse_efi_cmdline(char *str)
+-{
+-	if (!str) {
+-		pr_warn("need at least one option\n");
+-		return -EINVAL;
+-	}
+-
+-	if (!efi_is_mixed() && parse_option_str(str, "old_map"))
+-		set_bit(EFI_UV1_MEMMAP, &efi.flags);
+-
+-	return 0;
+-}
+-early_param("efi", arch_parse_efi_cmdline);
 
