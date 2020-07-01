@@ -2,236 +2,140 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B726C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A153520760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5E5207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbgGAP3e (ORCPT
+        id S1731986AbgGAP3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:29:34 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:11678 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731622AbgGAP3d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:29:33 -0400
-X-IronPort-AV: E=Sophos;i="5.75,300,1589234400"; 
-   d="scan'208";a="457697522"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:29:12 +0200
-Date:   Wed, 1 Jul 2020 17:29:11 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>, cocci@systeme.lip6.fr,
-        Gilles Muller <Gilles.Muller@lip6.fr>
-Subject: Re: [Cocci] [PATCH v2] Documentation: Coccinelle: fix typos and
- command        example
-In-Reply-To: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
-Message-ID: <alpine.DEB.2.22.394.2007011728400.2540@hadrien>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 1 Jul 2020 11:29:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:27246 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731622AbgGAP3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:29:54 -0400
+IronPort-SDR: u12ehlGk2bZD2+A79AS0I94QhNN2Eh0SgqbDX7H3RiOwt1tXQLsEAIXNl1T+zbIPQW9eMayYSI
+ 2XhUw2Nqb0uw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="211664191"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="211664191"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:29:53 -0700
+IronPort-SDR: MATPxC2NxKlfAgUDaGpHd5kBCQSE7i0usf4jUnqYf9Kqooj4xzplQR/F0CEfB8wloMMj/uwBQ+
+ 6nCJR6paZMvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="295592133"
+Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
+  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2020 08:29:53 -0700
+Subject: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
+        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
+        akpm@linux-foundation.org, ying.huang@intel.com,
+        dan.j.williams@intel.com, cai@lca.pw, stable@vger.kernel.org
+From:   Dave Hansen <dave.hansen@linux.intel.com>
+Date:   Wed, 01 Jul 2020 08:26:23 -0700
+References: <20200701152621.D520E62B@viggo.jf.intel.com>
+In-Reply-To: <20200701152621.D520E62B@viggo.jf.intel.com>
+Message-Id: <20200701152623.384AF0A7@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
-On Mon, 29 Jun 2020, Randy Dunlap wrote:
+I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
+sysctl.  Like a good kernel developer, I also went to go update the
+documentation.  I noticed that the bits in the documentation didn't
+match the bits in the #defines.
 
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix various typos etc. in dev-tools/coccinelle.rst:
->
-> - punctuation, grammar, wording
-> - add "path/to/file.c" when using Coccinelle to check a single file
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+The VM never explicitly checks the RECLAIM_ZONE bit.  The bit is,
+however implicitly checked when checking 'node_reclaim_mode==0'.
+The RECLAIM_ZONE #define was removed in a cleanup.  That, by itself
+is fine.
 
-Acked-by: Julia Lawall <julia.lawall@inria.fr>
+But, when the bit was removed (bit 0) the _other_ bit locations also
+got changed.  That's not OK because the bit values are documented to
+mean one specific thing and users surely rely on them meaning that one
+thing and not changing from kernel to kernel.  The end result is that
+if someone had a script that did:
 
-Thanks very much for your help!
+	sysctl vm.zone_reclaim_mode=1
 
-julia
+That script went from doing nothing to writing out pages during
+node reclaim after the commit in question.  That's not great.
 
+Put the bits back the way they were and add a comment so something
+like this is a bit harder to do again.  Update the documentation to
+make it clear that the first bit is ignored.
 
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-> Cc: Nicolas Palix <nicolas.palix@imag.fr>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: cocci@systeme.lip6.fr
-> Cc: Markus Elfring <Markus.Elfring@web.de>
-> ---
-> v2: s/at minimum/a minimum/ (Julia and Markus)
->  Documentation/dev-tools/coccinelle.rst |   44 +++++++++++------------
->  1 file changed, 22 insertions(+), 22 deletions(-)
->
-> --- linux-next-20200629.orig/Documentation/dev-tools/coccinelle.rst
-> +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
-> @@ -85,7 +85,7 @@ Four basic modes are defined: ``patch``,
->    file:line:column-column: message
->
->  - ``context`` highlights lines of interest and their context in a
-> -  diff-like style.Lines of interest are indicated with ``-``.
-> +  diff-like style. Lines of interest are indicated with ``-``.
->
->  - ``org`` generates a report in the Org mode format of Emacs.
->
-> @@ -119,7 +119,7 @@ For each semantic patch, a commit messag
->  description of the problem being checked by the semantic patch, and
->  includes a reference to Coccinelle.
->
-> -As any static code analyzer, Coccinelle produces false
-> +As with any static code analyzer, Coccinelle produces false
->  positives. Thus, reports must be carefully checked, and patches
->  reviewed.
->
-> @@ -135,18 +135,18 @@ the parallelism, set the J= variable. Fo
->
->     make coccicheck MODE=report J=4
->
-> -As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
-> +As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization;
->  if support for this is detected you will benefit from parmap parallelization.
->
->  When parmap is enabled coccicheck will enable dynamic load balancing by using
-> -``--chunksize 1`` argument, this ensures we keep feeding threads with work
-> +``--chunksize 1`` argument. This ensures we keep feeding threads with work
->  one by one, so that we avoid the situation where most work gets done by only
->  a few threads. With dynamic load balancing, if a thread finishes early we keep
->  feeding it more work.
->
->  When parmap is enabled, if an error occurs in Coccinelle, this error
-> -value is propagated back, the return value of the ``make coccicheck``
-> -captures this return value.
-> +value is propagated back, and the return value of the ``make coccicheck``
-> +command captures this return value.
->
->  Using Coccinelle with a single semantic patch
->  ---------------------------------------------
-> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
->  To apply Coccinelle on a file basis, instead of a directory basis, the
->  following command may be used::
->
-> -    make C=1 CHECK="scripts/coccicheck"
-> +    make C=1 CHECK="scripts/coccicheck" path/to/file.c
->
->  To check only newly edited code, use the value 2 for the C flag, i.e.::
->
-> -    make C=2 CHECK="scripts/coccicheck"
-> +    make C=2 CHECK="scripts/coccicheck" path/to/file.c
->
-> -In these modes, which works on a file basis, there is no information
-> +In these modes, which work on a file basis, there is no information
->  about semantic patches displayed, and no commit message proposed.
->
->  This runs every semantic patch in scripts/coccinelle by default. The
-> @@ -198,12 +198,12 @@ Debugging Coccinelle SmPL patches
->
->  Using coccicheck is best as it provides in the spatch command line
->  include options matching the options used when we compile the kernel.
-> -You can learn what these options are by using V=1, you could then
-> +You can learn what these options are by using V=1; you could then
->  manually run Coccinelle with debug options added.
->
->  Alternatively you can debug running Coccinelle against SmPL patches
-> -by asking for stderr to be redirected to stderr, by default stderr
-> -is redirected to /dev/null, if you'd like to capture stderr you
-> +by asking for stderr to be redirected to stderr. By default stderr
-> +is redirected to /dev/null; if you'd like to capture stderr you
->  can specify the ``DEBUG_FILE="file.txt"`` option to coccicheck. For
->  instance::
->
-> @@ -211,8 +211,8 @@ instance::
->      make coccicheck COCCI=scripts/coccinelle/free/kfree.cocci MODE=report DEBUG_FILE=cocci.err
->      cat cocci.err
->
-> -You can use SPFLAGS to add debugging flags, for instance you may want to
-> -add both --profile --show-trying to SPFLAGS when debugging. For instance
-> +You can use SPFLAGS to add debugging flags; for instance you may want to
-> +add both --profile --show-trying to SPFLAGS when debugging. For example
->  you may want to use::
->
->      rm -f err.log
-> @@ -229,7 +229,7 @@ DEBUG_FILE support is only supported whe
->  --------------------
->
->  Coccinelle supports reading .cocciconfig for default Coccinelle options that
-> -should be used every time spatch is spawned, the order of precedence for
-> +should be used every time spatch is spawned. The order of precedence for
->  variables for .cocciconfig is as follows:
->
->  - Your current user's home directory is processed first
-> @@ -237,7 +237,7 @@ variables for .cocciconfig is as follows
->  - The directory provided with the --dir option is processed last, if used
->
->  Since coccicheck runs through make, it naturally runs from the kernel
-> -proper dir, as such the second rule above would be implied for picking up a
-> +proper dir; as such the second rule above would be implied for picking up a
->  .cocciconfig when using ``make coccicheck``.
->
->  ``make coccicheck`` also supports using M= targets. If you do not supply
-> @@ -260,13 +260,13 @@ If not using the kernel's coccicheck tar
->  order logic of .cocciconfig reading. If using the kernel's coccicheck target,
->  override any of the kernel's .coccicheck's settings using SPFLAGS.
->
-> -We help Coccinelle when used against Linux with a set of sensible defaults
-> +We help Coccinelle when used against Linux with a set of sensible default
->  options for Linux with our own Linux .cocciconfig. This hints to coccinelle
-> -git can be used for ``git grep`` queries over coccigrep. A timeout of 200
-> +that git can be used for ``git grep`` queries over coccigrep. A timeout of 200
->  seconds should suffice for now.
->
->  The options picked up by coccinelle when reading a .cocciconfig do not appear
-> -as arguments to spatch processes running on your system, to confirm what
-> +as arguments to spatch processes running on your system. To confirm what
->  options will be used by Coccinelle run::
->
->        spatch --print-options-only
-> @@ -290,7 +290,7 @@ given to it when options are in conflict
->
->  Coccinelle supports idutils as well but requires coccinelle >= 1.0.6.
->  When no ID file is specified coccinelle assumes your ID database file
-> -is in the file .id-utils.index on the top level of the kernel, coccinelle
-> +is in the file .id-utils.index on the top level of the kernel. Coccinelle
->  carries a script scripts/idutils_index.sh which creates the database with::
->
->      mkid -i C --output .id-utils.index
-> @@ -317,7 +317,7 @@ SmPL patch specific options
->  ---------------------------
->
->  SmPL patches can have their own requirements for options passed
-> -to Coccinelle. SmPL patch specific options can be provided by
-> +to Coccinelle. SmPL patch-specific options can be provided by
->  providing them at the top of the SmPL patch, for instance::
->
->  	// Options: --no-includes --include-headers
-> @@ -327,7 +327,7 @@ SmPL patch Coccinelle requirements
->
->  As Coccinelle features get added some more advanced SmPL patches
->  may require newer versions of Coccinelle. If an SmPL patch requires
-> -at least a version of Coccinelle, this can be specified as follows,
-> +a minimum version of Coccinelle, this can be specified as follows,
->  as an example if requiring at least Coccinelle >= 1.0.5::
->
->  	// Requires: 1.0.5
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Fixes: 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
+Cc: Ben Widawsky <ben.widawsky@intel.com>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: "Tobin C. Harding" <tobin@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: stable@vger.kernel.org
+---
+
+ b/Documentation/admin-guide/sysctl/vm.rst |   10 +++++-----
+ b/mm/vmscan.c                             |    9 +++++++--
+ 2 files changed, 12 insertions(+), 7 deletions(-)
+
+diff -puN Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi Documentation/admin-guide/sysctl/vm.rst
+--- a/Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-07-01 08:22:11.354955336 -0700
++++ b/Documentation/admin-guide/sysctl/vm.rst	2020-07-01 08:22:11.360955336 -0700
+@@ -948,11 +948,11 @@ that benefit from having their data cach
+ left disabled as the caching effect is likely to be more important than
+ data locality.
+ 
+-zone_reclaim may be enabled if it's known that the workload is partitioned
+-such that each partition fits within a NUMA node and that accessing remote
+-memory would cause a measurable performance reduction.  The page allocator
+-will then reclaim easily reusable pages (those page cache pages that are
+-currently not used) before allocating off node pages.
++Consider enabling one or more zone_reclaim mode bits if it's known that the
++workload is partitioned such that each partition fits within a NUMA node
++and that accessing remote memory would cause a measurable performance
++reduction.  The page allocator will take additional actions before
++allocating off node pages.
+ 
+ Allowing zone reclaim to write out pages stops processes that are
+ writing large amounts of data from dirtying pages on other nodes. Zone
+diff -puN mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi mm/vmscan.c
+--- a/mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-07-01 08:22:11.356955336 -0700
++++ b/mm/vmscan.c	2020-07-01 08:22:11.362955336 -0700
+@@ -4090,8 +4090,13 @@ module_init(kswapd_init)
+  */
+ int node_reclaim_mode __read_mostly;
+ 
+-#define RECLAIM_WRITE (1<<0)	/* Writeout pages during reclaim */
+-#define RECLAIM_UNMAP (1<<1)	/* Unmap pages during reclaim */
++/*
++ * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
++ * ABI.  New bits are OK, but existing bits can never change.
++ */
++#define RECLAIM_ZONE  (1<<0)	/* Run shrink_inactive_list on the zone */
++#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
++#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
+ 
+ /*
+  * Priority for NODE_RECLAIM. This determines the fraction of pages
+_
