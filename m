@@ -2,69 +2,91 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0104C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 925B420663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960A62073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 03:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGADuW (ORCPT
+        id S1726427AbgGAD6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 23:50:22 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35316 "EHLO fornost.hmeau.com"
+        Tue, 30 Jun 2020 23:58:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54298 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgGADuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 23:50:22 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jqTlG-0006Ov-BC; Wed, 01 Jul 2020 13:50:15 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 01 Jul 2020 13:50:14 +1000
-Date:   Wed, 1 Jul 2020 13:50:14 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-Message-ID: <20200701035014.GA7384@gondor.apana.org.au>
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
- <20200701020211.GA6875@gondor.apana.org.au>
- <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
- <20200701022241.GA7167@gondor.apana.org.au>
- <CANn89iLKZQAtpejcLHmOu3dsrGf5eyFfHc8JqoMNYisRPWQ8kQ@mail.gmail.com>
- <20200701025843.GA7254@gondor.apana.org.au>
- <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1725862AbgGAD6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 23:58:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 517941A0607;
+        Wed,  1 Jul 2020 05:58:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FDE01A053E;
+        Wed,  1 Jul 2020 05:58:39 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7DF09402DD;
+        Wed,  1 Jul 2020 11:58:34 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: imx6ul: Add ASRC device node
+Date:   Wed,  1 Jul 2020 11:46:56 +0800
+Message-Id: <1593575216-19921-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:36:51PM -0700, Eric Dumazet wrote:
->
-> If I knew so many people were excited about TCP / MD5, I would have
-> posted all my patches on lkml ;)
-> 
-> Without the smp_wmb() we would still need something to prevent KMSAN
-> from detecting that we read uninitialized bytes,
-> if key->keylen is increased.  (initial content of key->key[] is garbage)
-> 
-> Something like this :
+Add ASRC device node.
 
-LGTM.  Thanks,
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm/boot/dts/imx6ul.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 5379a03391bd..d10d5eb55a88 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -351,6 +351,31 @@
+ 					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
++
++				asrc: asrc@2034000 {
++					compatible = "fsl,imx6ul-asrc", "fsl,imx53-asrc";
++					reg = <0x2034000 0x4000>;
++					interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clks IMX6UL_CLK_ASRC_IPG>,
++						<&clks IMX6UL_CLK_ASRC_MEM>, <&clks 0>,
++						<&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++						<&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++						<&clks 0>, <&clks 0>, <&clks 0>, <&clks 0>,
++						<&clks IMX6UL_CLK_SPDIF>, <&clks 0>, <&clks 0>,
++						<&clks IMX6UL_CLK_SPBA>;
++					clock-names = "mem", "ipg", "asrck_0",
++						"asrck_1", "asrck_2", "asrck_3", "asrck_4",
++						"asrck_5", "asrck_6", "asrck_7", "asrck_8",
++						"asrck_9", "asrck_a", "asrck_b", "asrck_c",
++						"asrck_d", "asrck_e", "asrck_f", "spba";
++					dmas = <&sdma 17 23 1>, <&sdma 18 23 1>, <&sdma 19 23 1>,
++						<&sdma 20 23 1>, <&sdma 21 23 1>, <&sdma 22 23 1>;
++					dma-names = "rxa", "rxb", "rxc",
++						    "txa", "txb", "txc";
++					fsl,asrc-rate  = <48000>;
++					fsl,asrc-width = <16>;
++					status = "okay";
++				};
+ 			};
+ 
+ 			tsc: tsc@2040000 {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.21.0
+
