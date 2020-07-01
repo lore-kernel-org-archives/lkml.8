@@ -2,117 +2,124 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F09D20702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SLk66hTC"
+	by mail.kernel.org (Postfix) with ESMTP id 1192020772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593602531;
+	bh=S1NAV77dXwv+fjwoqyD9mo/JlNrWtWQH78lHIrJHCRA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=R+UzS/e0Sea9vhNjOleCO1tcRwwYj1HaRK8ok0ycj4/kEgxJ3KU1hOtNBcU6asoSd
+	 mbY/xUc+Kc6DL72/ja6KpSc6fqHrPAatNzwYntjD2Z/Ssn3lDKcRGaCXRByE0M5Qfm
+	 mZJYlrWdNUFx4djSHi18ajLBx9paVPQQxMnoJdqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgGALVR (ORCPT
+        id S1730286AbgGALWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:21:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40089 "EHLO m43-7.mailgun.net"
+        Wed, 1 Jul 2020 07:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730232AbgGALVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:21:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593602475; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=n9dv+4uh/SqsbO43SuymhrpHyZhUe1aTGaZYaxpJrSM=; b=SLk66hTCJmaNcScI6J6y4hqvsAliwn0do2Xjp6mj/MDIo7tH6nQbzsjKW+YIx2slK79c7Zbs
- gg4tZr6CAV8TVOrACa6Brl2gslH2IZNll5kS2mFZ9b0p8kEPB5DHd8gO7o4TE+ayIUELKYsR
- CbLQeuWGvGIcw+f9RACOklJBbq4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5efc718f8fe116ddd9e7eceb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:20:47
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2B195C433CB; Wed,  1 Jul 2020 11:20:46 +0000 (UTC)
-Received: from [10.50.36.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        id S1730234AbgGALWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:22:09 -0400
+Received: from ziggy.cz (unknown [213.195.114.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53A55C433C6;
-        Wed,  1 Jul 2020 11:20:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53A55C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
- domain for perf voting
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
- <20200527193638.GA2604206@bogus>
- <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
-Message-ID: <1e8c07c8-0954-462a-cfe6-a1ccde1bedea@codeaurora.org>
-Date:   Wed, 1 Jul 2020 16:50:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A67C20702;
+        Wed,  1 Jul 2020 11:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593602528;
+        bh=S1NAV77dXwv+fjwoqyD9mo/JlNrWtWQH78lHIrJHCRA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oSO9TszIlrcVn+okb5AAX78/ETthqH1FmT2U+ld2nI39STpo0xmVnUM1NsXTTlPVo
+         k6S182Y6hNn284JH0svEkZikLvr5bOP8qVu1K6raiVyLBPr+OKaK9/HgARfWT2Qn8W
+         zMol/oRSi/kXaGFAwPZW24eO3GE9kWGV/OUt/7cI=
+From:   matthias.bgg@kernel.org
+To:     arend.vanspriel@broadcom.com, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
+        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
+        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        wright.feng@cypress.com, matthias.bgg@kernel.org,
+        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
+Subject: [PATCH v3] brcmfmac: Transform compatible string for FW loading
+Date:   Wed,  1 Jul 2020 13:22:00 +0200
+Message-Id: <20200701112201.6449-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <448cc4c0-0714-dc62-df19-7fa8fba91758@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Matthias Brugger <mbrugger@suse.com>
 
-On 6/1/2020 11:26 AM, Rajendra Nayak wrote:
-> 
-> On 5/28/2020 1:06 AM, Rob Herring wrote:
->> On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
->>> Add an optional power domain which when specified can be used for
->>> setting the performance state of Venus.
->>>
->>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>> ---
->>>   Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
->>>   Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
->>>   2 files changed, 10 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>> index 764affa..ac1ed64 100644
->>> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
->>> @@ -25,12 +25,16 @@ properties:
->>>       maxItems: 1
->>>     power-domains:
->>> -    maxItems: 2
->>> +    minItems: 2
->>> +    maxItems: 3
->>>     power-domain-names:
->>> +    minItems: 2
->>> +    maxItems: 3
->>>       items:
->>>         - const: venus
->>>         - const: vcodec0
->>> +      - const: opp-pd
->>
->> Humm, looks suspicious. This is a phyical power island in this block?
-> 
-> yes, this is used to represent the physical 'cx' power island in the SoC
-> (Its a shared power island, not a power island specific to this block)
-> that can be scaled to different 'performance levels' based on the frequency
-> the codec is expected to run at.
+The driver relies on the compatible string from DT to determine which
+FW configuration file it should load. The DTS spec allows for '/' as
+part of the compatible string. We change this to '-' so that we will
+still be able to load the config file, even when the compatible has a
+'/'. This fixes explicitly the firmware loading for
+"solidrun,cubox-i/q".
 
-Rob, Did you have any other concerns here? Should I be re-posting this?
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
+---
+
+Changes in v3:
+- use len variable to store length of string (Hans de Goede)
+- fix for loop to stop on first NULL-byte (Hans de Goede)
+
+Changes in v2:
+- use strscpy instead of strncpy (Hans de Goede)
+- use strlen(tmp) + 1 for allocation (Hans de Goede, kernel test robot)
+
+ .../wireless/broadcom/brcm80211/brcmfmac/of.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+index b886b56a5e5a..a7554265f95f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+@@ -17,7 +17,6 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+ {
+ 	struct brcmfmac_sdio_pd *sdio = &settings->bus.sdio;
+ 	struct device_node *root, *np = dev->of_node;
+-	struct property *prop;
+ 	int irq;
+ 	u32 irqf;
+ 	u32 val;
+@@ -25,8 +24,22 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+ 	/* Set board-type to the first string of the machine compatible prop */
+ 	root = of_find_node_by_path("/");
+ 	if (root) {
+-		prop = of_find_property(root, "compatible", NULL);
+-		settings->board_type = of_prop_next_string(prop, NULL);
++		int i, len;
++		char *board_type;
++		const char *tmp;
++
++		of_property_read_string_index(root, "compatible", 0, &tmp);
++
++		/* get rid of '/' in the compatible string to be able to find the FW */
++		len = strlen(tmp) + 1;
++		board_type = devm_kzalloc(dev, len, GFP_KERNEL);
++		strscpy(board_type, tmp, len);
++		for (i = 0; i < board_type[i]; i++) {
++			if (board_type[i] == '/')
++				board_type[i] = '-';
++		}
++		settings->board_type = board_type;
++
+ 		of_node_put(root);
+ 	}
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.27.0
+
