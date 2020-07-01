@@ -2,147 +2,108 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786662074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103EB20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SzoFhdpL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M6i/pD9i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OOb0yIKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729200AbgGAIdm (ORCPT
+        id S1728857AbgGAIf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51376 "EHLO
+        Wed, 1 Jul 2020 04:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgGAIb2 (ORCPT
+        with ESMTP id S1728612AbgGAIf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:28 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47557C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:28 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z2so621518wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0JG9yfk7UsIlwDFN/XvWcoL4qtnzwNOpXg0C3Lo2gcU=;
-        b=SzoFhdpLOAfa+dq6nAlH2oIjixe1LjRVlgsE9YP5IUq1LTn1Wg3758lP7ziz4wGQsA
-         lPXC/oDkOzunW/jveIUlQ0NQTvteC9Tqnvrwi4d173D8K/EWQJChGnESf7SM83C68EpX
-         whIgtkS56BqF4BgPgmxocXPxGOBH+JDiGOlGhP+jzvFiTDpnzbBbGg5VHjrdQVUm5Je2
-         0Hs+7oX3+y/FWNx9YqWczI8KijaFF6tJlzN4n3l0I/qAPdZbVRwcdNuPvWxiVKH3DTfb
-         4kbO1a8zCOs8QfoIrus2+2ZkuUsUcq736NZQibfCiOhA1wL/zs3wx75Way+YIOH2vp7o
-         FEcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0JG9yfk7UsIlwDFN/XvWcoL4qtnzwNOpXg0C3Lo2gcU=;
-        b=jZano3WCjTYCJy+cpJy7KY4JrJULi7dccGDDWxOsRPC8pJ8gvSVb46IXY+hflCJwSY
-         RqKzqVs2LOw7TdzeRuxi7HuQZ8oU51cmVSQUJZi08UH3ShAcgrQHwUJSmY9yETOisBV8
-         MHagec1ACEyv0qXs5yLrr1PnI5Cphq26ly5pnZjEz3a3YblgLeIvmXBg62/HjCLcFDrk
-         JRIwpzhxofUWIcJT4n550BWYkiDOZbWoxx5RDAozXFq1G54748b3ezDJOEpScNsiyjXK
-         5Mngc9zmuTzv0Hjllv4woOAduqdZ+X45RB9BBhyH6hTglDRBD9JxyssalhTpW8q2hoi1
-         5oHg==
-X-Gm-Message-State: AOAM530whUc95EKdxfvx9LyHY+0o2pcUKABvCuMDMxUUlTyz00Qk5rPN
-        ipR5OXcdR+UKETRbJu8D1Rv/+A==
-X-Google-Smtp-Source: ABdhPJw61Z0MEpUm/aZ4J5rbUdsdfOg65yroMNdYQg0nttjPu2TeFqFVE9C6tX31r/UqSt7IaudK5g==
-X-Received: by 2002:adf:f452:: with SMTP id f18mr25483694wrp.78.1593592286991;
-        Wed, 01 Jul 2020 01:31:26 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:26 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Michael Jung <mijung@gmx.net>,
-        Michael Ruettger <michael@ibmra.de>,
-        Frank Haverkamp <haver@linux.ibm.com>,
-        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Subject: [PATCH v2 02/30] misc: genwqe: card_sysfs: Demote function/file headers from kerneldoc
-Date:   Wed,  1 Jul 2020 09:30:50 +0100
-Message-Id: <20200701083118.45744-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
-References: <20200701083118.45744-1-lee.jones@linaro.org>
+        Wed, 1 Jul 2020 04:35:56 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A922FC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:35:56 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 10:35:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593592555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LFia8MivRxV7u9Ly6ju5ELq3Qzf1QD4CMLWdNVkzCTM=;
+        b=M6i/pD9i9uXW4Ed/VrVjoYK97wsCG31H7MLC65pLZje9vH+B0vh/7I0/fWOlA0EQPJKqGF
+        u0INOzb7FB2MfEUFshoyi/4RflPRIWNnfmR0iBlVB19XkAIFg9+DSdcVKy5dqVeXRqsUS0
+        LKG9Ag62MFiUaIdpoqHbapFGyMDIr6lOfMvhyxcf/3H3kaY/cZlg8z1p0kVR3i6BncEVdI
+        egpJkTr1YQO7+/5zqJiu7KbcQnooMSpUw+VO+w+/bX+CIyA3qjAUprhMg82FbDDjBTwuZg
+        wRjVMAfIh4eXCJJrl5fC/bkCOxD/yxNuTpa8yno5V9fgzDrGyyWfnMuRkI7F5A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593592555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LFia8MivRxV7u9Ly6ju5ELq3Qzf1QD4CMLWdNVkzCTM=;
+        b=OOb0yIKmBEhb1K6p9Nv2perDWtgKjoQwkSjTqh7MgwDA8dYkRIYncjsNRUvyA8dTlVrfju
+        ilWmid67+9b3uWBQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin " <hpa@zytor.com>
+Subject: [PATCH v2] x86/entry: Use should_resched() in
+ idtentry_exit_cond_resched()
+Message-ID: <20200701083553.fuy42cllxvx3bkzp@linutronix.de>
+References: <20200630102209.1143072-1-bigeasy@linutronix.de>
+ <20200630102209.1143072-2-bigeasy@linutronix.de>
+ <20200630111012.GM4800@hirez.programming.kicks-ass.net>
+ <20200630120059.x5p6uh4hzgqrgwuo@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200630120059.x5p6uh4hzgqrgwuo@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There has been no attempt to provide documentation for these function's
-arguments, so align with the remainder of the file and just treat
-them as standards function headers.
+The TIF_NEED_RESCHED bit is inlined on x86 into the preemption counter.
+By using should_resched(0) instead of need_resched() the same check can
+be performed which uses the same variable as 'preempt_count()` which was
+issued before.
 
-Fixes the following W=1 kernel build warnings:
+Use should_resched(0) instead need_resched().
 
- drivers/misc/genwqe/card_sysfs.c:32: warning: cannot understand function prototype: 'const char * const genwqe_types[] = '
- drivers/misc/genwqe/card_sysfs.c:150: warning: Function parameter or member 'dev' not described in 'curr_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:150: warning: Function parameter or member 'attr' not described in 'curr_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:150: warning: Function parameter or member 'buf' not described in 'curr_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:166: warning: Function parameter or member 'dev' not described in 'next_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:166: warning: Function parameter or member 'attr' not described in 'next_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:166: warning: Function parameter or member 'buf' not described in 'next_bitstream_show'
- drivers/misc/genwqe/card_sysfs.c:271: warning: Function parameter or member 'kobj' not described in 'genwqe_is_visible'
- drivers/misc/genwqe/card_sysfs.c:271: warning: Function parameter or member 'attr' not described in 'genwqe_is_visible'
- drivers/misc/genwqe/card_sysfs.c:271: warning: Function parameter or member 'n' not described in 'genwqe_is_visible'
-
-Cc: Michael Jung <mijung@gmx.net>
-Cc: Michael Ruettger <michael@ibmra.de>
-Cc: Frank Haverkamp <haver@linux.ibm.com>
-Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/misc/genwqe/card_sysfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+v1=E2=80=A6v2: Use should_resched() but keep the !preempt_count() check.
 
-diff --git a/drivers/misc/genwqe/card_sysfs.c b/drivers/misc/genwqe/card_sysfs.c
-index 28a3fb1533f70..b2f115602523a 100644
---- a/drivers/misc/genwqe/card_sysfs.c
-+++ b/drivers/misc/genwqe/card_sysfs.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/**
-+/*
-  * IBM Accelerator Family 'GenWQE'
-  *
-  * (C) Copyright IBM Corp. 2013
-@@ -129,7 +129,7 @@ static ssize_t base_clock_show(struct device *dev,
+ arch/x86/entry/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index bd3f14175193c..0bb6966f62738 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -615,11 +615,11 @@ static void idtentry_exit_cond_resched(struct pt_regs=
+ *regs, bool may_sched)
+ 	if (may_sched && !preempt_count()) {
+ 		/* Sanity check RCU and thread stack */
+ 		rcu_irq_exit_check_preempt();
+ 		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+ 			WARN_ON_ONCE(!on_thread_stack());
+-		if (need_resched())
++		if (should_resched(0))
+ 			preempt_schedule_irq();
+ 	}
+ 	/* Covers both tracing and lockdep */
+ 	trace_hardirqs_on();
  }
- static DEVICE_ATTR_RO(base_clock);
- 
--/**
-+/*
-  * curr_bitstream_show() - Show the current bitstream id
-  *
-  * There is a bug in some old versions of the CPLD which selects the
-@@ -156,7 +156,7 @@ static ssize_t curr_bitstream_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(curr_bitstream);
- 
--/**
-+/*
-  * next_bitstream_show() - Show the next activated bitstream
-  *
-  * IO_SLC_CFGREG_SOFTRESET: This register can only be accessed by the PF.
-@@ -260,7 +260,7 @@ static struct attribute *genwqe_normal_attributes[] = {
- 	NULL,
- };
- 
--/**
-+/*
-  * genwqe_is_visible() - Determine if sysfs attribute should be visible or not
-  *
-  * VFs have restricted mmio capabilities, so not all sysfs entries
--- 
-2.25.1
+--=20
+2.27.0
 
