@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B726C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5E5207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B4120760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731986AbgGAP3z (ORCPT
+        id S1732106AbgGAP37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:29:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:27246 "EHLO mga07.intel.com"
+        Wed, 1 Jul 2020 11:29:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25621 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731622AbgGAP3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:29:54 -0400
-IronPort-SDR: u12ehlGk2bZD2+A79AS0I94QhNN2Eh0SgqbDX7H3RiOwt1tXQLsEAIXNl1T+zbIPQW9eMayYSI
- 2XhUw2Nqb0uw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="211664191"
+        id S1731622AbgGAP34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:29:56 -0400
+IronPort-SDR: E1QlNoXibqgVbToxXC9mI7WCr7GvZTLBHR+p/3LxhPyBXHK+CkoeERvCWuHTisCMp7m9lkJMtr
+ M63QcKiBRIpA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144120734"
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="211664191"
+   d="scan'208";a="144120734"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:29:53 -0700
-IronPort-SDR: MATPxC2NxKlfAgUDaGpHd5kBCQSE7i0usf4jUnqYf9Kqooj4xzplQR/F0CEfB8wloMMj/uwBQ+
- 6nCJR6paZMvw==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:29:55 -0700
+IronPort-SDR: ggTlTifZFGv2OXKF8Yqlnk+bQPFK3lXCuGnnGc9WyrL8+1SsPTKRvgsqtjtRoV9O6ePQ1ZObg1
+ UJRIopRh8r7g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="295592133"
+   d="scan'208";a="265439405"
 Received: from viggo.jf.intel.com (HELO localhost.localdomain) ([10.54.77.144])
-  by orsmga002.jf.intel.com with ESMTP; 01 Jul 2020 08:29:53 -0700
-Subject: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
+  by fmsmga007.fm.intel.com with ESMTP; 01 Jul 2020 08:29:55 -0700
+Subject: [PATCH 2/3] mm/vmscan: move RECLAIM* bits to uapi header
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, Dave Hansen <dave.hansen@linux.intel.com>,
         ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
         dwagner@suse.de, tobin@kernel.org, cl@linux.com,
         akpm@linux-foundation.org, ying.huang@intel.com,
-        dan.j.williams@intel.com, cai@lca.pw, stable@vger.kernel.org
+        dan.j.williams@intel.com, cai@lca.pw
 From:   Dave Hansen <dave.hansen@linux.intel.com>
-Date:   Wed, 01 Jul 2020 08:26:23 -0700
+Date:   Wed, 01 Jul 2020 08:26:24 -0700
 References: <20200701152621.D520E62B@viggo.jf.intel.com>
 In-Reply-To: <20200701152621.D520E62B@viggo.jf.intel.com>
-Message-Id: <20200701152623.384AF0A7@viggo.jf.intel.com>
+Message-Id: <20200701152624.D6FBDDA8@viggo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,33 +55,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Hansen <dave.hansen@linux.intel.com>
 
-I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
-sysctl.  Like a good kernel developer, I also went to go update the
-documentation.  I noticed that the bits in the documentation didn't
-match the bits in the #defines.
+It is currently not obvious that the RECLAIM_* bits are part of the
+uapi since they are defined in vmscan.c.  Move them to a uapi header
+to make it obvious.
 
-The VM never explicitly checks the RECLAIM_ZONE bit.  The bit is,
-however implicitly checked when checking 'node_reclaim_mode==0'.
-The RECLAIM_ZONE #define was removed in a cleanup.  That, by itself
-is fine.
-
-But, when the bit was removed (bit 0) the _other_ bit locations also
-got changed.  That's not OK because the bit values are documented to
-mean one specific thing and users surely rely on them meaning that one
-thing and not changing from kernel to kernel.  The end result is that
-if someone had a script that did:
-
-	sysctl vm.zone_reclaim_mode=1
-
-That script went from doing nothing to writing out pages during
-node reclaim after the commit in question.  That's not great.
-
-Put the bits back the way they were and add a comment so something
-like this is a bit harder to do again.  Update the documentation to
-make it clear that the first bit is ignored.
+This should have no functional impact.
 
 Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Fixes: 648b5cf368e0 ("mm/vmscan: remove unused RECLAIM_OFF/RECLAIM_ZONE")
 Cc: Ben Widawsky <ben.widawsky@intel.com>
 Cc: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Daniel Wagner <dwagner@suse.de>
@@ -92,42 +72,23 @@ Cc: Huang Ying <ying.huang@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Qian Cai <cai@lca.pw>
 Cc: Daniel Wagner <dwagner@suse.de>
-Cc: stable@vger.kernel.org
+
+--
+
+Note: This is not cc'd to stable.  It does not fix any bugs.
 ---
 
- b/Documentation/admin-guide/sysctl/vm.rst |   10 +++++-----
- b/mm/vmscan.c                             |    9 +++++++--
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ b/include/uapi/linux/mempolicy.h |    7 +++++++
+ b/mm/vmscan.c                    |    8 --------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-diff -puN Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi Documentation/admin-guide/sysctl/vm.rst
---- a/Documentation/admin-guide/sysctl/vm.rst~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-07-01 08:22:11.354955336 -0700
-+++ b/Documentation/admin-guide/sysctl/vm.rst	2020-07-01 08:22:11.360955336 -0700
-@@ -948,11 +948,11 @@ that benefit from having their data cach
- left disabled as the caching effect is likely to be more important than
- data locality.
+diff -puN include/uapi/linux/mempolicy.h~mm-vmscan-move-RECLAIM-bits-to-uapi include/uapi/linux/mempolicy.h
+--- a/include/uapi/linux/mempolicy.h~mm-vmscan-move-RECLAIM-bits-to-uapi	2020-07-01 08:22:12.502955333 -0700
++++ b/include/uapi/linux/mempolicy.h	2020-07-01 08:22:12.508955333 -0700
+@@ -62,5 +62,12 @@ enum {
+ #define MPOL_F_MOF	(1 << 3) /* this policy wants migrate on fault */
+ #define MPOL_F_MORON	(1 << 4) /* Migrate On protnone Reference On Node */
  
--zone_reclaim may be enabled if it's known that the workload is partitioned
--such that each partition fits within a NUMA node and that accessing remote
--memory would cause a measurable performance reduction.  The page allocator
--will then reclaim easily reusable pages (those page cache pages that are
--currently not used) before allocating off node pages.
-+Consider enabling one or more zone_reclaim mode bits if it's known that the
-+workload is partitioned such that each partition fits within a NUMA node
-+and that accessing remote memory would cause a measurable performance
-+reduction.  The page allocator will take additional actions before
-+allocating off node pages.
- 
- Allowing zone reclaim to write out pages stops processes that are
- writing large amounts of data from dirtying pages on other nodes. Zone
-diff -puN mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi mm/vmscan.c
---- a/mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi	2020-07-01 08:22:11.356955336 -0700
-+++ b/mm/vmscan.c	2020-07-01 08:22:11.362955336 -0700
-@@ -4090,8 +4090,13 @@ module_init(kswapd_init)
-  */
- int node_reclaim_mode __read_mostly;
- 
--#define RECLAIM_WRITE (1<<0)	/* Writeout pages during reclaim */
--#define RECLAIM_UNMAP (1<<1)	/* Unmap pages during reclaim */
 +/*
 + * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
 + * ABI.  New bits are OK, but existing bits can never change.
@@ -136,6 +97,23 @@ diff -puN mm/vmscan.c~mm-vmscan-restore-old-zone_reclaim_mode-abi mm/vmscan.c
 +#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
 +#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
  
+ #endif /* _UAPI_LINUX_MEMPOLICY_H */
+diff -puN mm/vmscan.c~mm-vmscan-move-RECLAIM-bits-to-uapi mm/vmscan.c
+--- a/mm/vmscan.c~mm-vmscan-move-RECLAIM-bits-to-uapi	2020-07-01 08:22:12.504955333 -0700
++++ b/mm/vmscan.c	2020-07-01 08:22:12.509955333 -0700
+@@ -4091,14 +4091,6 @@ module_init(kswapd_init)
+ int node_reclaim_mode __read_mostly;
+ 
  /*
+- * These bit locations are exposed in the vm.zone_reclaim_mode sysctl
+- * ABI.  New bits are OK, but existing bits can never change.
+- */
+-#define RECLAIM_ZONE  (1<<0)	/* Run shrink_inactive_list on the zone */
+-#define RECLAIM_WRITE (1<<1)	/* Writeout pages during reclaim */
+-#define RECLAIM_UNMAP (1<<2)	/* Unmap pages during reclaim */
+-
+-/*
   * Priority for NODE_RECLAIM. This determines the fraction of pages
+  * of a node considered for each zone_reclaim. 4 scans 1/16th of
+  * a zone.
 _
