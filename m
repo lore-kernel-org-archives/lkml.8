@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B892C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3729C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0492073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C7C2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZ7miNZV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lsK7zBiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgGAHvZ (ORCPT
+        id S1728473AbgGAHvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        Wed, 1 Jul 2020 03:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGAHvW (ORCPT
+        with ESMTP id S1728294AbgGAHvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:51:22 -0400
+        Wed, 1 Jul 2020 03:51:53 -0400
 Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE742C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:51:21 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k15so13018354lfc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:51:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E402C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:51:53 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u25so13051847lfm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qA5bM+WCP+6+xrqHaHAfQZE4418oC7dBfKlNpFampf8=;
-        b=ZZ7miNZVWKO46LJ8/TJl+yA0Ss4HFjwCQ1PS4s0VXxhfJW8E2Jda12hCRQW811RZAB
-         rJ0G6F9L7j+s72JYwWteMsMWXhGguGPC6uKnDggH6FlBlnVMzjs4R+zzeBUCCH881MDm
-         wSDDeUfbKti0XT7PZAM1hGGuTatJwiR+0N2CfoGeDTc/cWfiKbvR6xqwTihHm0PPBc1K
-         32ca+MBKN3hCPSOozfWTmjbty1CRTMNtoGHNVGiiM55RomC+hUSpX2e1/qdf0809XS7b
-         hcZLzAQpP7wZKj5F2vpZmvnbAlSdfyRrpeVLeC6RBZ00tG1Hviiw8oXq6WUv9vvARvzJ
-         GMOw==
+        bh=THSsMEdwUkIuQErJNTSneyWBjmNxLfAXVIDX4NKt1Z4=;
+        b=lsK7zBiHNb6ChGBJ4kEzabV7KMiGLiwSMTGvcXRcsTVAcRdfAq7KHVGcId9mA+aMag
+         V3ZkTiFnPCiQcsQjreRimXObyR1YN7YeU9t3zqhZGe6ukwB7Kabok9Pf6SsaQi0xWvWZ
+         9sHML1TYiKIm/bLTyTuSMsZq0cPVfycCcZg0buB3K/pY3Uqlh+rXoFHg6xrSS2bQoxFs
+         Tmpg/aD0TaD+trri+EoYsaNu6ha1j3ul/W8MxWsTcQ0JHj+DNnoFHNvZFzXnVfRbG14x
+         g8WJxHQlpNJQ5fGDNlHD09PSFn10YiFyi6FJMnqDqjRbrcFbDdLmDhtViOSk9S2vyrCj
+         JVjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qA5bM+WCP+6+xrqHaHAfQZE4418oC7dBfKlNpFampf8=;
-        b=KSDmN4JCx9L3gGBTiS2BVM2ohKv4NoHIgKifu++7IbKZTFPIf5Wxdycphf6M0uJHVm
-         1l+ZbO4YEvAdCmg5TQKJLGsTs5xj3h4nxTsfeQRoQEuBlsVgkqX+PkHFyvEY4XDDDVpD
-         z9lhiK/4VXSXJ6ELyv5gVlQlBxb60smUSmj6btVaKcUe4DuOBtmAmOfTk5C8itmJZDh+
-         ryL5kWltovXzY1XyK+2uNjqYlsGUvkgPeH4ec3sKO6CBP/i/5NeoKxMNBw9q93OwOn4c
-         UxJe5UZ2ZL+pwNCtsXvk/7OlibpzSopqgrAb+e+zRiI0QgtulXFRyIFeQHKhjFSZcr8+
-         WtFw==
-X-Gm-Message-State: AOAM532TjwkpARBrCvUbojRnPBVIYy1hlrYM4sfDaZH7xO7RHjmoqf28
-        5Cn1CyZvaudyHIJZv5Njg+bFzsafbx3fNu+YATuolA==
-X-Google-Smtp-Source: ABdhPJyrJFAzSG4TfNUteKjvVvXNEtpwXJyb/bxaFmIvpSRTkSG+0rgLXE3upuXl29SouGIj3HRAshWvgCk19SJwY8Q=
-X-Received: by 2002:a05:6512:3150:: with SMTP id s16mr3355246lfi.47.1593589880512;
- Wed, 01 Jul 2020 00:51:20 -0700 (PDT)
+        bh=THSsMEdwUkIuQErJNTSneyWBjmNxLfAXVIDX4NKt1Z4=;
+        b=nK/GlYiQEXzwCvuZuEstdgBmQmvK+YLYLZLtPosLsBga6ZmCO4TYkJgEaoQGG1s399
+         rHcGejbcPi7Maf8ge/O+o034wkhxtG11AxPENsZJoBfSFxgWaCEu/INKjZI6nwc7e8ic
+         6Aqwa9wEWWb/+OZcs9/l/EOX5IhG0RUhdkCW4VEGVq4ZubOj5q3JLVo0D15tyB22uypL
+         xOM90G1om+afGoP74SJ+YNx03gNJNSW+6nX6ir9bsf78LfF4ZNqs9LY0BrrGhjzLOyAu
+         slhVvATEXfC2XI8S7voiG470rX6DA2MX0xaJ3cgW+VBab1zXz24to62IbQo+RDJVFK4q
+         BFXw==
+X-Gm-Message-State: AOAM531n6a2zfA6e2gIEUn34YCBkx5zTebb/BGankkQYnPk58z88JRR8
+        M+ijrENcPMGR9og15ElRHkq1qCjgsC1P4T6Usin2n604K7I=
+X-Google-Smtp-Source: ABdhPJzsrXRiDZ3PkD9so8U9yDLfPpdekZBYhYQLf31C8+u6SV4k6PNFMTYLo99L9aQ6TZ/WW4DiQG4fnfo9xGSuqc0=
+X-Received: by 2002:a19:ccd0:: with SMTP id c199mr14351117lfg.194.1593589911704;
+ Wed, 01 Jul 2020 00:51:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-11-megous@megous.com>
-In-Reply-To: <20200626005601.241022-11-megous@megous.com>
+References: <20200626005601.241022-1-megous@megous.com> <20200626005601.241022-12-megous@megous.com>
+In-Reply-To: <20200626005601.241022-12-megous@megous.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Jul 2020 09:51:09 +0200
-Message-ID: <CACRpkdYHmZi+BCRs8xzCUqiCEK7RHynHWeptTtEzJ1WHToMRFg@mail.gmail.com>
-Subject: Re: [PATCH v5 10/13] drm/panel: st7703: Enter sleep after display off
+Date:   Wed, 1 Jul 2020 09:51:40 +0200
+Message-ID: <CACRpkdab8pOgrssi91wmKSJC5v2gu7VoQKt1MWG0g5AkNxk+7w@mail.gmail.com>
+Subject: Re: [PATCH v5 11/13] drm/panel: st7703: Assert reset prior to
+ powering down the regulators
 To:     Ondrej Jirman <megous@megous.com>
 Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -89,8 +90,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 26, 2020 at 2:56 AM Ondrej Jirman <megous@megous.com> wrote:
 
-> The datasheet suggests to issue sleep in after display off
-> as a part of the panel's shutdown sequence.
+> The reset pin is inverted, so if we don't assert reset, the actual gpio
+> will be high and may keep driving the IO port of the panel.
 >
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
 
