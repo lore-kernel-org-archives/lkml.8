@@ -2,165 +2,161 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E99DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36EC20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZULoZaFg"
+	by mail.kernel.org (Postfix) with ESMTP id BAD39206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgGACjr (ORCPT
+        id S1726645AbgGACq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:39:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:52805 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726430AbgGACjq (ORCPT
+        Tue, 30 Jun 2020 22:46:28 -0400
+Received: from atcsqr.andestech.com ([60.248.187.195]:48232 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgGACq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:39:46 -0400
-X-UUID: 066125d49a444ee8be5085ac19db7f8d-20200701
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=XoJLKTm3NDdj3w3RtzzMz1926jI4usuO5mIZGP7i8HI=;
-        b=ZULoZaFgfJ7pORj4FtHM8Ges3jP7sY2vvQTNVJBU7YJ8Zwsvvj88ofhU/nz792Uh2xnpkm3/nk6rI6N8df3xiQCsS9TfOjqg1EN5uzQtysiR8vvKrDqcIOffFSLCeSkAoFdFVXIpUeI5Wd3cW0uRKKmip1FyOlBe43DpNI4G7D8=;
-X-UUID: 066125d49a444ee8be5085ac19db7f8d-20200701
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1852284986; Wed, 01 Jul 2020 10:39:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 1 Jul 2020 10:39:40 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 1 Jul 2020 10:39:41 +0800
-Message-ID: <1593571181.7383.5.camel@mtkswgap22>
-Subject: Re: [PATCH] cpuidle: change enter_s2idle() prototype
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     Neal Liu <neal.liu@mediatek.com>, Len Brown <lenb@kernel.org>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Jacob Pan" <jacob.jun.pan@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 1 Jul 2020 10:39:41 +0800
-In-Reply-To: <9963896.lEaLCsxmBZ@kreacher>
-References: <1593421540-7397-1-git-send-email-neal.liu@mediatek.com>
-         <1593421540-7397-2-git-send-email-neal.liu@mediatek.com>
-         <9963896.lEaLCsxmBZ@kreacher>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 30 Jun 2020 22:46:28 -0400
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id 0612cYGv088370;
+        Wed, 1 Jul 2020 10:38:34 +0800 (GMT-8)
+        (envelope-from alankao@andestech.com)
+Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 1 Jul 2020
+ 10:45:56 +0800
+Date:   Wed, 1 Jul 2020 10:45:57 +0800
+From:   Alan Kao <alankao@andestech.com>
+To:     Atish Patra <atishp@atishpatra.org>
+CC:     Zong Li <zong.li@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>
+Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
+Message-ID: <20200701024557.GB27962@andestech.com>
+References: <cover.1593397455.git.zong.li@sifive.com>
+ <20200701005129.GA27962@andestech.com>
+ <CAOnJCU+5fLA5WZuiQ7NprdEDxnEus8RtyLZGD2ehraiHR-uf0Q@mail.gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAOnJCU+5fLA5WZuiQ7NprdEDxnEus8RtyLZGD2ehraiHR-uf0Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com 0612cYGv088370
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE3OjE3ICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCj4gT24gTW9uZGF5LCBKdW5lIDI5LCAyMDIwIDExOjA1OjQwIEFNIENFU1QgTmVhbCBMaXUg
-d3JvdGU6DQo+ID4gQ29udHJvbCBGbG93IEludGVncml0eShDRkkpIGlzIGEgc2VjdXJpdHkgbWVj
-aGFuaXNtIHRoYXQgZGlzYWxsb3dzDQo+ID4gY2hhbmdlcyB0byB0aGUgb3JpZ2luYWwgY29udHJv
-bCBmbG93IGdyYXBoIG9mIGEgY29tcGlsZWQgYmluYXJ5LA0KPiA+IG1ha2luZyBpdCBzaWduaWZp
-Y2FudGx5IGhhcmRlciB0byBwZXJmb3JtIHN1Y2ggYXR0YWNrcy4NCj4gPiANCj4gPiBpbml0X3N0
-YXRlX25vZGUoKSBhc3NpZ25zIHNhbWUgZnVuY3Rpb24gcG9pbnRlciB0byBpZGxlX3N0YXRlLT5l
-bnRlcg0KPiA+IGFuZCBpZGxlX3N0YXRlLT5lbnRlcl9zMmlkbGUuIFRoaXMgZGVmaW5pdGVseSBj
-YXVzZXMgQ0ZJIGZhaWx1cmUNCj4gPiB3aGVuIGNhbGxpbmcgZWl0aGVyIGVudGVyKCkgb3IgZW50
-ZXJfczJpZGxlKCkuDQo+ID4gDQo+ID4gQWxpZ24gZW50ZXJfczJpZGxlKCkgd2l0aCBlbnRlcigp
-IGZ1bmN0aW9uIHByb3RvdHlwZSB0byBmaXggQ0ZJDQo+ID4gZmFpbHVyZS4NCj4gDQo+IFRoYXQg
-bmVlZHMgdG8gYmUgZG9jdW1lbnRlZCBzb21ld2hlcmUgY2xvc2UgdG8gdGhlIGRlZmluaXRpb24g
-b2YgdGhlDQo+IGNhbGxiYWNrcyBpbiBxdWVzdGlvbi4NCj4gDQo+IE90aGVyd2lzZSBpdCBpcyBj
-b21wbGV0ZWx5IHVuY2xlYXIgd2h5IHRoaXMgaXMgYSBnb29kIGlkZWEuDQo+IA0KDQpUaGUgcHJv
-YmxlbSBpcywgaW5pdF9zdGF0ZV9tb2RlKCkgYXNzaWduIHNhbWUgZnVuY3Rpb24gY2FsbGJhY2sg
-dG8NCmRpZmZlcmVudCBmdW5jdGlvbiBwb2ludGVyIGRlY2xhcmF0aW9ucy4NCg0Kc3RhdGljIGlu
-dCBpbml0X3N0YXRlX25vZGUoc3RydWN0IGNwdWlkbGVfc3RhdGUgKmlkbGVfc3RhdGUsDQogICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaGVz
-LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpzdGF0ZV9u
-b2RlKQ0Kew0KLi4uDQogICAgICAgIGlkbGVfc3RhdGUtPmVudGVyID0gbWF0Y2hfaWQtPmRhdGE7
-DQouLi4NCiAgICAgICAgaWRsZV9zdGF0ZS0+ZW50ZXJfczJpZGxlID0gbWF0Y2hfaWQtPmRhdGE7
-DQp9DQoNCkZ1bmN0aW9uIGRlY2xhcmF0aW9uczoNCg0Kc3RydWN0IGNwdWlkbGVfc3RhdGUgew0K
-Li4uDQogICAgICAgIGludCAoKmVudGVyKSAgICAoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYs
-DQogICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCiAg
-ICAgICAgICAgICAgICAgICAgICAgIGludCBpbmRleCk7DQoNCiAgICAgICAgdm9pZCAoKmVudGVy
-X3MyaWRsZSkgKHN0cnVjdCBjcHVpZGxlX2RldmljZSAqZGV2LA0KICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgc3RydWN0IGNwdWlkbGVfZHJpdmVyICpkcnYsDQogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBpbnQgaW5kZXgpOw0KfTsNCg0KSW4gdGhpcyBjYXNlLCBlaXRoZXIgZW50
-ZXIoKSBvciBlbnRlcl9zMmlkbGUoKSB3b3VsZCBjYXVzZSBDRkkgY2hlY2sNCmZhaWxlZCBzaW5j
-ZSB0aGV5IHVzZSBzYW1lIGNhbGxlZS4NCg0KV2UgdHJ5IHRvIGFsaWduIGZ1bmN0aW9uIHByb3Rv
-dHlwZSBvZiBlbnRlcigpIHNpbmNlIGl0IG5lZWRzIHJldHVybg0KdmFsdWUgZm9yIHNvbWUgdXNl
-IGNhc2VzLiBUaGUgcmV0dXJuIHZhbHVlIG9mIGVudGVyX3MyaWRsZSgpIGlzIG5vIG5lZWQNCmN1
-cnJlbnRseS4NCg0KDQo+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlh
-dGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgICB8
-ICAgIDYgKysrKy0tDQo+ID4gIGRyaXZlcnMvY3B1aWRsZS9jcHVpZGxlLXRlZ3JhLmMgfCAgICA4
-ICsrKysrLS0tDQo+ID4gIGRyaXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMgICAgICAgfCAgICA2ICsr
-KystLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2NwdWlkbGUuaCAgICAgICAgIHwgICAgNiArKystLS0N
-Cj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkN
-Cj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgYi9k
-cml2ZXJzL2FjcGkvcHJvY2Vzc29yX2lkbGUuYw0KPiA+IGluZGV4IDc1NTM0YzUuLjZmZmI2Yzkg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMNCj4gPiArKysg
-Yi9kcml2ZXJzL2FjcGkvcHJvY2Vzc29yX2lkbGUuYw0KPiA+IEBAIC02NTUsOCArNjU1LDggQEAg
-c3RhdGljIGludCBhY3BpX2lkbGVfZW50ZXIoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+
-ID4gIAlyZXR1cm4gaW5kZXg7DQo+ID4gIH0NCj4gPiAgDQo+ID4gLXN0YXRpYyB2b2lkIGFjcGlf
-aWRsZV9lbnRlcl9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+ID4gLQkJCQkg
-ICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwgaW50IGluZGV4KQ0KPiA+ICtzdGF0aWMgaW50
-IGFjcGlfaWRsZV9lbnRlcl9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+ID4g
-KwkJCQkgIHN0cnVjdCBjcHVpZGxlX2RyaXZlciAqZHJ2LCBpbnQgaW5kZXgpDQo+ID4gIHsNCj4g
-PiAgCXN0cnVjdCBhY3BpX3Byb2Nlc3Nvcl9jeCAqY3ggPSBwZXJfY3B1KGFjcGlfY3N0YXRlW2lu
-ZGV4XSwgZGV2LT5jcHUpOw0KPiA+ICANCj4gPiBAQCAtNjc0LDYgKzY3NCw4IEBAIHN0YXRpYyB2
-b2lkIGFjcGlfaWRsZV9lbnRlcl9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+
-ID4gIAkJfQ0KPiA+ICAJfQ0KPiA+ICAJYWNwaV9pZGxlX2RvX2VudHJ5KGN4KTsNCj4gPiArDQo+
-ID4gKwlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4gPiAgc3RhdGljIGludCBhY3BpX3Byb2Nl
-c3Nvcl9zZXR1cF9jcHVpZGxlX2N4KHN0cnVjdCBhY3BpX3Byb2Nlc3NvciAqcHIsDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvY3B1aWRsZS9jcHVpZGxlLXRlZ3JhLmMgYi9kcml2ZXJzL2NwdWlk
-bGUvY3B1aWRsZS10ZWdyYS5jDQo+ID4gaW5kZXggMTUwMDQ1OC4uYTEyZmIxNCAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL2NwdWlkbGUvY3B1aWRsZS10ZWdyYS5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9jcHVpZGxlL2NwdWlkbGUtdGVncmEuYw0KPiA+IEBAIC0yNTMsMTEgKzI1MywxMyBAQCBzdGF0
-aWMgaW50IHRlZ3JhX2NwdWlkbGVfZW50ZXIoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+
-ID4gIAlyZXR1cm4gZXJyID8gLTEgOiBpbmRleDsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGlj
-IHZvaWQgdGVncmExMTRfZW50ZXJfczJpZGxlKHN0cnVjdCBjcHVpZGxlX2RldmljZSAqZGV2LA0K
-PiA+IC0JCQkJICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCj4gPiAtCQkJCSAgaW50IGlu
-ZGV4KQ0KPiA+ICtzdGF0aWMgaW50IHRlZ3JhMTE0X2VudGVyX3MyaWRsZShzdHJ1Y3QgY3B1aWRs
-ZV9kZXZpY2UgKmRldiwNCj4gPiArCQkJCSBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCj4g
-PiArCQkJCSBpbnQgaW5kZXgpDQo+ID4gIHsNCj4gPiAgCXRlZ3JhX2NwdWlkbGVfZW50ZXIoZGV2
-LCBkcnYsIGluZGV4KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4g
-PiAgLyoNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pZGxlL2ludGVsX2lkbGUuYyBiL2RyaXZl
-cnMvaWRsZS9pbnRlbF9pZGxlLmMNCj4gPiBpbmRleCBmNDQ5NTg0Li5iMTc4ZGEzIDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMNCj4gPiArKysgYi9kcml2ZXJzL2lk
-bGUvaW50ZWxfaWRsZS5jDQo+ID4gQEAgLTE3NSwxMyArMTc1LDE1IEBAIHN0YXRpYyBfX2NwdWlk
-bGUgaW50IGludGVsX2lkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQo+ID4gICAqIElu
-dm9rZWQgYXMgYSBzdXNwZW5kLXRvLWlkbGUgY2FsbGJhY2sgcm91dGluZSB3aXRoIGZyb3plbiB1
-c2VyIHNwYWNlLCBmcm96ZW4NCj4gPiAgICogc2NoZWR1bGVyIHRpY2sgYW5kIHN1c3BlbmRlZCBz
-Y2hlZHVsZXIgY2xvY2sgb24gdGhlIHRhcmdldCBDUFUuDQo+ID4gICAqLw0KPiA+IC1zdGF0aWMg
-X19jcHVpZGxlIHZvaWQgaW50ZWxfaWRsZV9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpk
-ZXYsDQo+ID4gLQkJCQkJc3RydWN0IGNwdWlkbGVfZHJpdmVyICpkcnYsIGludCBpbmRleCkNCj4g
-PiArc3RhdGljIF9fY3B1aWRsZSBpbnQgaW50ZWxfaWRsZV9zMmlkbGUoc3RydWN0IGNwdWlkbGVf
-ZGV2aWNlICpkZXYsDQo+ID4gKwkJCQkgICAgICAgc3RydWN0IGNwdWlkbGVfZHJpdmVyICpkcnYs
-IGludCBpbmRleCkNCj4gPiAgew0KPiA+ICAJdW5zaWduZWQgbG9uZyBlYXggPSBmbGcyTVdBSVQo
-ZHJ2LT5zdGF0ZXNbaW5kZXhdLmZsYWdzKTsNCj4gPiAgCXVuc2lnbmVkIGxvbmcgZWN4ID0gMTsg
-LyogYnJlYWsgb24gaW50ZXJydXB0IGZsYWcgKi8NCj4gPiAgDQo+ID4gIAltd2FpdF9pZGxlX3dp
-dGhfaGludHMoZWF4LCBlY3gpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICB9DQo+ID4g
-IA0KPiA+ICAvKg0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2NwdWlkbGUuaCBiL2lu
-Y2x1ZGUvbGludXgvY3B1aWRsZS5oDQo+ID4gaW5kZXggZWMyZWY2My4uYmVlMTBjMCAxMDA2NDQN
-Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2NwdWlkbGUuaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGlu
-dXgvY3B1aWRsZS5oDQo+ID4gQEAgLTY2LDkgKzY2LDkgQEAgc3RydWN0IGNwdWlkbGVfc3RhdGUg
-ew0KPiA+ICAJICogc3VzcGVuZGVkLCBzbyBpdCBtdXN0IG5vdCByZS1lbmFibGUgaW50ZXJydXB0
-cyBhdCBhbnkgcG9pbnQgKGV2ZW4NCj4gPiAgCSAqIHRlbXBvcmFyaWx5KSBvciBhdHRlbXB0IHRv
-IGNoYW5nZSBzdGF0ZXMgb2YgY2xvY2sgZXZlbnQgZGV2aWNlcy4NCj4gPiAgCSAqLw0KPiA+IC0J
-dm9pZCAoKmVudGVyX3MyaWRsZSkgKHN0cnVjdCBjcHVpZGxlX2RldmljZSAqZGV2LA0KPiA+IC0J
-CQkgICAgICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCj4gPiAtCQkJICAgICAgaW50IGlu
-ZGV4KTsNCj4gPiArCWludCAoKmVudGVyX3MyaWRsZSkoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpk
-ZXYsDQo+ID4gKwkJCSAgICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCj4gPiArCQkJICAg
-IGludCBpbmRleCk7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICAvKiBJZGxlIFN0YXRlIEZsYWdzICov
-DQo+ID4gLS0gDQo+ID4gMS43LjkuNQ0KPiA+IA0KPiANCj4gDQo+IA0KPiANCg0K
+Tue, Jun 30, 2020 at 06:02:43PM -0700, Atish Patra wrote:
+> On Tue, Jun 30, 2020 at 5:52 PM Alan Kao <alankao@andestech.com> wrote:
+> >
+> > On Mon, Jun 29, 2020 at 11:19:09AM +0800, Zong Li wrote:
+> > > This patch set adds raw event support on RISC-V. In addition, we
+> > > introduce the DT mechanism to make our perf more generic and common.
+> > >
+> > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
+> > > would raise an illegal instruction exception and trap into m-mode to
+> > > emulate event selector CSRs access. It doesn't make sense because we
+> > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
+> > > selector through standard SBI call or the shadow CSRs of s-mode. We have
+> > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
+> > > but we also discussing the feasibility of accessing these PMU CSRs on
+> > > s-mode at the same time, such as delegation mechanism, so I was
+> > > wondering if we could use SBI calls first and make the PMU SBI extension
+> > > as legacy when s-mode access mechanism is accepted by Foundation? or
+> > > keep the current situation to see what would happen in the future.
+> > >
+> > > This patch set also introduces the DT mechanism, we don't want to add too
+> > > much platform-dependency code in perf like other architectures, so we
+> > > put the mapping of generic hardware events to DT, then we can easy to
+> > > transfer generic hardware events to vendor's own hardware events without
+> > > any platfrom-dependency stuff in our perf.
+> > >
+> > > Zong Li (6):
+> > >   dt-bindings: riscv: Add YAML documentation for PMU
+> > >   riscv: dts: sifive: Add DT support for PMU
+> > >   riscv: add definition of hpmcounter CSRs
+> > >   riscv: perf: Add raw event support
+> > >   riscv: perf: introduce DT mechanism
+> > >   riscv: remove PMU menu of Kconfig
+> > >
+> >
+> > DT-based PMU registration looks good to me. Together with Anup's feedback,
+> > we can anticipate that the following items will be:
+> >
+> > - rewrite RISC-V PMU to a platform driver
+> > - propose SBI PMU extention
+> > - fixes: RV32 counter access, namings, etc.
+> >
+> > Yes, all are good directions towards better counting (`perf stat`) function.
+> > But as the original author of RISC-V perf port, please allow me to address
+> > the fundamental problems of RISC-V perf, again [0][1][2][3], that the sampling
+> > (`perf record`) function never earned enough respect.  Counting gives you a
+> > shallow view regarding an application, while sampling demystifies one for you.
+> >
+> > The problems are three-fold
+> > (1) Interrupt
+> > Sampling in perf requires that a HPM raises an interrupt when it overflows.
+> > Making RISC-V perf platform driver or not has nothing to do with this.  This
+> > requires more discussions in TGs.
+> > (2) S-mode access to PMU CSRs
+> > This is also addressed in this patch set but to me, it is kind of like a
+> > SBI-solves-them-all mindset to me.  Perf event is for performance monitoring
+> > thus we should eliminate any possible overhead if we can.  Setting event masks
+> > through SBI calls for counting maybe OK, but if we really take sampling and
+> > interrupt handling into consideration, it is questionable if it is still a
+> > viable way.
+> > (3) Registers, registers, registers
+> > There is just no enough CSR/function for perf sampling. The previous proposal
+> > explains why [2].
+> >
+> > Perf sampling is off-topic but somehow related, so I bring it up here just
+> > for your information.
+> >
+> > As this patch set goes v2, the PMU porting guide in [0] should be removed since
+> > it contains no useful information anymore.
+> >
+> > [0] Documentation/riscv/pmu.rst
+> > [1] https://www.youtube.com/watch?v=Onvlcl4e2IU
+> > [2] https://github.com/riscv/riscv-isa-manual/issues/402
+> >     This proposal has been posted in Privileged Spec Task Group, in
+> > https://lists.riscv.org/g/tech-privileged-archive/message/488?p=,,,20,0,0,0::Created,,Proposal,20,2,40,32306071
+> > but never receive any feedback.
+> > [3] https://lists.riscv.org/g/tech-unixplatformspec/message/84
+> >     I intended to discuss [2] in the Unixplatform Spec Task Group at the
+> > online meeting, but obviously people were too busy knowing who the new
+> > RISC-V CTO is and what he has done to even follow the agenda.
+> >
+> 
+> Sorry. The last meeting's agenda was derailed for numerous reasons.
+> Are you okay with discussing this during the next meeting ?
+> I have not scheduled one yet but will probably schedule it on next
+> Wednesday (8th July) if there is no objection.
+> I can check with Anup if he can present the SBI PMU extension as well.
 
+Thanks for the oppertunity. 
+But I don't think that the time is enough for every important topic to be
+covered.  What I provided in the previous citation [2] is a proposal,
+which need expert to judge and critique after thorough reading.
+
+The TG Chair should decide the priority of the items.  If there is any chance
+for our proposal, I can give brief introductions.
+
+> 
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
+> 
+> 
+> -- 
+> Regards,
+> Atish
