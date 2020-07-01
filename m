@@ -2,106 +2,250 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 370FA20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9987D20722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RALVUCmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbgGAKlC (ORCPT
+        id S1730048AbgGAKnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:41:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34696 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgGAKlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:41:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4AD9EAD04;
-        Wed,  1 Jul 2020 10:40:59 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com, robh+dt@kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sachin.ghadi@sifive.com,
-        aou@eecs.berkeley.edu, anup@brainfault.org, lollivier@baylibre.com,
-        green.wan@sifive.com, atish.patra@wdc.com,
-        alistair.francis@wdc.com, deepa.kernel@gmail.com,
-        bmeng.cn@gmail.com
-Subject: Re: [PATCH 0/3] Dynamic CPU frequency switching for the HiFive
-References: <1592308864-30205-1-git-send-email-yash.shah@sifive.com>
-X-Yow:  ..  over in west Philadelphia a puppy is vomiting..
-Date:   Wed, 01 Jul 2020 12:40:58 +0200
-In-Reply-To: <1592308864-30205-1-git-send-email-yash.shah@sifive.com> (Yash
-        Shah's message of "Tue, 16 Jun 2020 17:31:01 +0530")
-Message-ID: <mvmftabiklh.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
+        Wed, 1 Jul 2020 06:43:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53157 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729856AbgGAKnv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:43:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593600229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iJDnIere4ckUlcqu2vjyvbJB29ysZfytbrXR/5K7PEs=;
+        b=RALVUCmR9gp9sRHt4CA64SI+z5ffw291dGk7Ikx7LlRTHOmpv0Xg6c+rIwP8uAaqtw2Q9B
+        xKxhUsRqw5qygzGw+CtObK5ZErRCfX2zvkHBRsMsev8yLq8Yoxm2Pb1M8LZ/4TWwEAUuQI
+        GktTFF3ih0DxhtHN66GpDAdooZXs6No=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-eo1o8IxAMrObAoCeRY0Jvw-1; Wed, 01 Jul 2020 06:43:47 -0400
+X-MC-Unique: eo1o8IxAMrObAoCeRY0Jvw-1
+Received: by mail-qk1-f198.google.com with SMTP id j79so16800874qke.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 03:43:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iJDnIere4ckUlcqu2vjyvbJB29ysZfytbrXR/5K7PEs=;
+        b=nEPmqe7g5xCmri35F/9tGU1JTHiPdt6dbL8TRN3JqeaNN2/qkoqbzKDk9An8vfSYaQ
+         oGurXmkp5YiKyEvlTgeYyDm2uSqcAomUXsBVGJWd+PreY9Gtipd3bqMvgvblc0uXOEEd
+         E6G49yC9q7Y25Oj2IWVAkhiO2hdbTUk8MTdKYF943YhjdrMYoZmxOjG6u2kUEZ/qPZ0z
+         WaNtBd413vcPRcqW0yw4Seb3cLNs/Y8zo60WHUwDAlDGNF02ohG+j8KuZjXxcITCzrTC
+         m8TnGqYKlPrKu8tu5blPcf2llcTsNR9fMg7woMeGy6z4zoBnahc7xigy8MfKsyqXi3+H
+         nYVg==
+X-Gm-Message-State: AOAM530t2s2RzMAkKHd6wYEkyQCf+trH3mRLE1vJr2xfhMz4ev892vTa
+        Hg14FUUAxXRLHrEqcc8LefnUV6gHrsIYJ6lQx9E6ucHELhI7mFukFXnw08eR6AHNmZtUKixLurE
+        rrY2uHjDDpNghdDn5gWpYoGOjYMZGlX9+VoUqlEAM
+X-Received: by 2002:a05:620a:11b3:: with SMTP id c19mr24282754qkk.203.1593600226408;
+        Wed, 01 Jul 2020 03:43:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxA+6E7kiqCtAV/8nSkNYVRZ2RneWi1RECnUnttFwOq2tXRpiCh8ne4TffX0pRmGxcg2IGuMwNPewmLwloiNcE=
+X-Received: by 2002:a05:620a:11b3:: with SMTP id c19mr24282729qkk.203.1593600226047;
+ Wed, 01 Jul 2020 03:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200611113404.17810-1-mst@redhat.com> <20200611113404.17810-3-mst@redhat.com>
+ <20200611152257.GA1798@char.us.oracle.com> <CAJaqyWdwXMX0JGhmz6soH2ZLNdaH6HEdpBM8ozZzX9WUu8jGoQ@mail.gmail.com>
+ <CAJaqyWdwgy0fmReOgLfL4dAv-E+5k_7z3d9M+vHqt0aO2SmOFg@mail.gmail.com>
+ <20200622114622-mutt-send-email-mst@kernel.org> <CAJaqyWfrf94Gc-DMaXO+f=xC8eD3DVCD9i+x1dOm5W2vUwOcGQ@mail.gmail.com>
+ <20200622122546-mutt-send-email-mst@kernel.org> <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+In-Reply-To: <CAJaqyWfbouY4kEXkc6sYsbdCAEk0UNsS5xjqEdHTD7bcTn40Ow@mail.gmail.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Wed, 1 Jul 2020 12:43:09 +0200
+Message-ID: <CAJaqyWefMHPguj8ZGCuccTn0uyKxF9ZTEi2ASLtDSjGNb1Vwsg@mail.gmail.com>
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jun 16 2020, Yash Shah wrote:
-
-> The patch series adds the support for dynamic CPU frequency switching
-> for FU540-C000 SoC on the HiFive Unleashed board. All the patches are
-> based on Paul Walmsley's work.
+On Tue, Jun 23, 2020 at 6:15 PM Eugenio Perez Martin
+<eperezma@redhat.com> wrote:
 >
-> This series is based on Linux v5.7 and tested on HiFive unleashed board.
+> On Mon, Jun 22, 2020 at 6:29 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 06:11:21PM +0200, Eugenio Perez Martin wrote:
+> > > On Mon, Jun 22, 2020 at 5:55 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > >
+> > > > On Fri, Jun 19, 2020 at 08:07:57PM +0200, Eugenio Perez Martin wrote:
+> > > > > On Mon, Jun 15, 2020 at 2:28 PM Eugenio Perez Martin
+> > > > > <eperezma@redhat.com> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 11, 2020 at 5:22 PM Konrad Rzeszutek Wilk
+> > > > > > <konrad.wilk@oracle.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jun 11, 2020 at 07:34:19AM -0400, Michael S. Tsirkin wrote:
+> > > > > > > > As testing shows no performance change, switch to that now.
+> > > > > > >
+> > > > > > > What kind of testing? 100GiB? Low latency?
+> > > > > > >
+> > > > > >
+> > > > > > Hi Konrad.
+> > > > > >
+> > > > > > I tested this version of the patch:
+> > > > > > https://lkml.org/lkml/2019/10/13/42
+> > > > > >
+> > > > > > It was tested for throughput with DPDK's testpmd (as described in
+> > > > > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html)
+> > > > > > and kernel pktgen. No latency tests were performed by me. Maybe it is
+> > > > > > interesting to perform a latency test or just a different set of tests
+> > > > > > over a recent version.
+> > > > > >
+> > > > > > Thanks!
+> > > > >
+> > > > > I have repeated the tests with v9, and results are a little bit different:
+> > > > > * If I test opening it with testpmd, I see no change between versions
+> > > >
+> > > >
+> > > > OK that is testpmd on guest, right? And vhost-net on the host?
+> > > >
+> > >
+> > > Hi Michael.
+> > >
+> > > No, sorry, as described in
+> > > http://doc.dpdk.org/guides/howto/virtio_user_as_exceptional_path.html.
+> > > But I could add to test it in the guest too.
+> > >
+> > > These kinds of raw packets "bursts" do not show performance
+> > > differences, but I could test deeper if you think it would be worth
+> > > it.
+> >
+> > Oh ok, so this is without guest, with virtio-user.
+> > It might be worth checking dpdk within guest too just
+> > as another data point.
+> >
+>
+> Ok, I will do it!
+>
+> > > > > * If I forward packets between two vhost-net interfaces in the guest
+> > > > > using a linux bridge in the host:
+> > > >
+> > > > And here I guess you mean virtio-net in the guest kernel?
+> > >
+> > > Yes, sorry: Two virtio-net interfaces connected with a linux bridge in
+> > > the host. More precisely:
+> > > * Adding one of the interfaces to another namespace, assigning it an
+> > > IP, and starting netserver there.
+> > > * Assign another IP in the range manually to the other virtual net
+> > > interface, and start the desired test there.
+> > >
+> > > If you think it would be better to perform then differently please let me know.
+> >
+> >
+> > Not sure why you bother with namespaces since you said you are
+> > using L2 bridging. I guess it's unimportant.
+> >
+>
+> Sorry, I think I should have provided more context about that.
+>
+> The only reason to use namespaces is to force the traffic of these
+> netperf tests to go through the external bridge. To test netperf
+> different possibilities than the testpmd (or pktgen or others "blast
+> of frames unconditionally" tests).
+>
+> This way, I make sure that is the same version of everything in the
+> guest, and is a little bit easier to manage cpu affinity, start and
+> stop testing...
+>
+> I could use a different VM for sending and receiving, but I find this
+> way a faster one and it should not introduce a lot of noise. I can
+> test with two VM if you think that this use of network namespace
+> introduces too much noise.
+>
+> Thanks!
+>
+> > > >
+> > > > >   - netperf UDP_STREAM shows a performance increase of 1.8, almost
+> > > > > doubling performance. This gets lower as frame size increase.
 
-I'm using that patch with 5.7.5.
+Regarding UDP_STREAM:
+* with event_idx=on: The performance difference is reduced a lot if
+applied affinity properly (manually assigning CPU on host/guest and
+setting IRQs on guest), making them perform equally with and without
+the patch again. Maybe the batching makes the scheduler perform
+better.
 
-It appears to interfer with serial output when using the ondemand
-governor.
+> > > > >   - rests of the test goes noticeably worse: UDP_RR goes from ~6347
+> > > > > transactions/sec to 5830
 
-I also see soft lockups when using the performance governor:
+* Regarding UDP_RR, TCP_STREAM, and TCP_RR, proper CPU pinning makes
+them perform similarly again, only a very small performance drop
+observed. It could be just noise.
+** All of them perform better than vanilla if event_idx=off, not sure
+why. I can try to repeat them if you suspect that can be a test
+failure.
 
-[  101.587527] rcu: INFO: rcu_sched self-detected stall on CPU
-[  101.592322] rcu:     0-...!: (932 ticks this GP) idle=11a/1/0x4000000000000004 softirq=4301/4301 fqs=4
-[  101.601432]  (t=6001 jiffies g=4017 q=859)
-[  101.605514] rcu: rcu_sched kthread starved for 5984 jiffies! g4017 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=2
-[  101.615494] rcu: RCU grace-period kthread stack dump:
-[  101.620530] rcu_sched       R  running task        0    10      2 0x00000000
-[  101.627560] Call Trace:
-[  101.630004] [<ffffffe00085a7e2>] __schedule+0x25c/0x616
-[  101.635205] [<ffffffe00085abde>] schedule+0x42/0xb2
-[  101.640070] [<ffffffe00085d0ba>] schedule_timeout+0x56/0xb8
-[  101.645626] [<ffffffe000263c34>] rcu_gp_fqs_loop+0x208/0x248
-[  101.651266] [<ffffffe0002666de>] rcu_gp_kthread+0xc2/0xcc
-[  101.656651] [<ffffffe00022654e>] kthread+0xda/0xec
-[  101.661426] [<ffffffe00020140a>] ret_from_exception+0x0/0xc
-[  101.666977] Task dump for CPU 0:
-[  101.670187] loop0           R  running task        0   655      2 0x00000008
-[  101.677218] Call Trace:
-[  101.679657] [<ffffffe0002028ae>] walk_stackframe+0x0/0xaa
-[  101.685036] [<ffffffe000202b76>] show_stack+0x2a/0x34
-[  101.690074] [<ffffffe0002319b0>] sched_show_task.part.0+0xc2/0xd2
-[  101.696154] [<ffffffe00022bb9c>] sched_show_task+0x64/0x66
-[  101.701618] [<ffffffe000231afe>] dump_cpu_task+0x3e/0x48
-[  101.706916] [<ffffffe000267762>] rcu_dump_cpu_stacks+0x94/0xce
-[  101.712731] [<ffffffe0002631f6>] print_cpu_stall+0x116/0x18a
-[  101.718375] [<ffffffe000264a46>] check_cpu_stall+0xcc/0x1a2
-[  101.723929] [<ffffffe000264b52>] rcu_pending.constprop.0+0x36/0xaa
-[  101.730094] [<ffffffe000266ab2>] rcu_sched_clock_irq+0xa6/0xea
-[  101.735913] [<ffffffe00026d1be>] update_process_times+0x1e/0x42
-[  101.741821] [<ffffffe0002793bc>] tick_sched_handle+0x26/0x52
-[  101.747456] [<ffffffe0002798fe>] tick_sched_timer+0x6a/0xd0
-[  101.753015] [<ffffffe00026d9be>] __run_hrtimer.constprop.0+0x50/0xe8
-[  101.759353] [<ffffffe00026da9e>] __hrtimer_run_queues+0x48/0x6c
-[  101.765254] [<ffffffe00026e410>] hrtimer_interrupt+0xca/0x1d4
-[  101.770985] [<ffffffe0006ceef8>] riscv_timer_interrupt+0x32/0x3a
-[  101.776976] [<ffffffe00085e17c>] do_IRQ+0xa4/0xb8
-[  101.781663] [<ffffffe00020140a>] ret_from_exception+0x0/0xc
+* With testpmd and event_idx=off, if I send from the VM to host, I see
+a performance increment especially in small packets. The buf api also
+increases performance compared with only batching: Sending the minimum
+packet size in testpmd makes pps go from 356kpps to 473 kpps. Sending
+1024 length UDP-PDU makes it go from 570kpps to 64 kpps.
 
-Andreas.
+Something strange I observe in these tests: I get more pps the bigger
+the transmitted buffer size is. Not sure why.
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+** Sending from the host to the VM does not make a big change with the
+patches in small packets scenario (minimum, 64 bytes, about 645
+without the patch, ~625 with batch and batch+buf api). If the packets
+are bigger, I can see a performance increase: with 256 bits, it goes
+from 590kpps to about 600kpps, and in case of 1500 bytes payload it
+gets from 348kpps to 528kpps, so it is clearly an improvement.
+
+* with testpmd and event_idx=on, batching+buf api perform similarly in
+both directions.
+
+All of testpmd tests were performed with no linux bridge, just a
+host's tap interface (<interface type='ethernet'> in xml), with a
+testpmd txonly and another in rxonly forward mode, and using the
+receiving side packets/bytes data. Guest's rps, xps and interrupts,
+and host's vhost threads affinity were also tuned in each test to
+schedule both testpmd and vhost in different processors.
+
+I will send the v10 RFC with the small changes requested by Stefan and Jason.
+
+Thanks!
+
+
+
+
+
+
+
+> > > >
+> > > > OK so it seems plausible that we still have a bug where an interrupt
+> > > > is delayed. That is the main difference between pmd and virtio.
+> > > > Let's try disabling event index, and see what happens - that's
+> > > > the trickiest part of interrupts.
+> > > >
+> > >
+> > > Got it, will get back with the results.
+> > >
+> > > Thank you very much!
+> > >
+> > > >
+> > > >
+> > > > >   - TCP_STREAM goes from ~10.7 gbps to ~7Gbps
+> > > > >   - TCP_RR from 6223.64 transactions/sec to 5739.44
+> > > >
+> >
+
