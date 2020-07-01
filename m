@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA7020870
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38E5208A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 19:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593631995;
-	bh=VvptTRaDt7ndl05+l3JBeHa0G2eudUrK0ICgg1ZxOig=;
+	s=default; t=1593632004;
+	bh=r8R75b+xkhLmr1tY3cOQk+t7NaFIqQrJERgYOINJ8u8=;
 	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
 	 List-ID:From;
-	b=PFw8jle7OWNL4wo6BCbELbn55JAopFlWPS+t5OvForFN7DsefIQQbr6TVTl2pI0Bw
-	 8jl7pPV1+CxaNnv6JkYuuipvTJfCWV0Vj/Aoni9PMaXxa9uwVB3OVgT/b5X1UdbNyH
-	 cimQ491tSqAQjTroh9lwBC4iyTfd+hYCuA0v42Z8=
+	b=LNf7TxiCKBgxI0gLsJDWczPCHjRYHkKvQKIcMg1lG+jkREP3N1DBY8rtlt1ZvUMhF
+	 HV6PX2UIa10/ibXJ7ys+H9YySqe84Wb14wIEGYj9Ntgqq8NHv3Mp1EDMWrHMeRo5n0
+	 SQtKUPkid2/X6eO7Oc0ZpXut2sMwaW8hb9u3dy8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgGATdO (ORCPT
+        id S1726914AbgGATdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 15:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38288 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 15:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGATdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:33:14 -0400
+        id S1726208AbgGATdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 15:33:16 -0400
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C9F20760;
-        Wed,  1 Jul 2020 19:33:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 965AB2085B;
+        Wed,  1 Jul 2020 19:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593631993;
-        bh=VvptTRaDt7ndl05+l3JBeHa0G2eudUrK0ICgg1ZxOig=;
+        s=default; t=1593631995;
+        bh=r8R75b+xkhLmr1tY3cOQk+t7NaFIqQrJERgYOINJ8u8=;
         h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=02FTWgvAM+WZVUODNu00Ku69EE3pgmAYG/g6ka+mYDniHTIXgzJPlzHYGhnhx9zdg
-         iQ1V1vMIg24+6MJSJsm7H1N2+/IVHdrKoX4xZAYnFZL5IiBsQXmFhyYHjMVsEFAvt8
-         XVCci7L0Y3j+osvxGlR7osuEIwcyz45ZLCPzsEhk=
-Date:   Wed, 01 Jul 2020 19:33:12 +0000
+        b=XRWn9oCvrlUh8MmtOaY6unvtUPklbJtCzcjWy/8ZoZqMQUStwOzaAySO6L6pwLJHx
+         PRRl5Em/oLhiJmEPIO5ab7ZIV5JfYo5ICoRV8cZU0ioQawiFzSDyw93+54BSst0oHn
+         g9iQVanonpwcQbrLkKtwiQtwZZ31Z4arHln/iO6g=
+Date:   Wed, 01 Jul 2020 19:33:14 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     <stable@vger.kernel.org>
+To:     Joseph Salisbury <joseph.salisbury@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 02/10] mfd: mfd-core: Complete kerneldoc header for devm_mfd_add_devices()
-In-Reply-To: <20200625064619.2775707-3-lee.jones@linaro.org>
-References: <20200625064619.2775707-3-lee.jones@linaro.org>
-Message-Id: <20200701193313.81C9F20760@mail.kernel.org>
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] Drivers: hv: Change flag to write log level in panic msg to false
+In-Reply-To: <1593193685-74615-1-git-send-email-joseph.salisbury@microsoft.com>
+References: <1593193685-74615-1-git-send-email-joseph.salisbury@microsoft.com>
+Message-Id: <20200701193315.965AB2085B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,12 +66,40 @@ The stable tag indicates that it's relevant for the following trees: all
 The bot has tested the following trees: v5.7.6, v5.4.49, v4.19.130, v4.14.186, v4.9.228, v4.4.228.
 
 v5.7.6: Build OK!
-v5.4.49: Build OK!
-v4.19.130: Build OK!
-v4.14.186: Build OK!
-v4.9.228: Build OK!
+v5.4.49: Failed to apply! Possible dependencies:
+    53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+
+v4.19.130: Failed to apply! Possible dependencies:
+    53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+
+v4.14.186: Failed to apply! Possible dependencies:
+    4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+    53edce00ceb74 ("Drivers: hv: vmbus: Remove dependencies on guest page size")
+    7ed4325a44ea5 ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+    81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+    8afc06dd75c06 ("Drivers: hv: vmbus: Fix the issue with freeing up hv_ctl_table_hdr")
+    ddcaf3ca4c3c8 ("Drivers: hv: vmus: Fix the check for return value from kmsg get dump buffer")
+
+v4.9.228: Failed to apply! Possible dependencies:
+    4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+    6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+    73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+    76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+    81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+    8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+    d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
+
 v4.4.228: Failed to apply! Possible dependencies:
-    a8f447be8056d ("mfd: Add resource managed APIs for mfd_add_devices")
+    4a5f3cde4d51c ("Drivers: hv: vmbus: Remove x86-isms from arch independent drivers")
+    619848bd07434 ("drivers:hv: Export a function that maps Linux CPU num onto Hyper-V proc num")
+    6ab42a66d2cc1 ("Drivers: hv: vmbus: Move Hypercall invocation code out of common code")
+    73638cddaad86 ("Drivers: hv: vmbus: Move the check for hypercall page setup")
+    75ff3a8a9168d ("Drivers: hv: vmbus: avoid wait_for_completion() on crash")
+    76d36ab798204 ("hv: switch to cpuhp state machine for synic init/cleanup")
+    81b18bce48af3 ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+    8730046c1498e ("Drivers: hv vmbus: Move Hypercall page setup out of common code")
+    a108393dbf764 ("drivers:hv: Export the API to invoke a hypercall on Hyper-V")
+    d058fa7e98ff0 ("Drivers: hv: vmbus: Move the crash notification function")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
