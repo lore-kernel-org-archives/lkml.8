@@ -2,209 +2,586 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4679FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A53207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25513207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731763AbgGAPyD (ORCPT
+        id S1732147AbgGAPyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:54:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:52404 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 11:54:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:52448 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbgGAPyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:54:02 -0400
+        id S1731798AbgGAPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:54:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75C1E31B;
-        Wed,  1 Jul 2020 08:54:01 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF721D6E;
+        Wed,  1 Jul 2020 08:54:05 -0700 (PDT)
 Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470E33F68F;
-        Wed,  1 Jul 2020 08:54:00 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87EA53F68F;
+        Wed,  1 Jul 2020 08:54:04 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         dan.carpenter@oracle.com, cristian.marussi@arm.com
-Subject: [PATCH v11 0/9] SCMI Notifications Core Support
-Date:   Wed,  1 Jul 2020 16:53:39 +0100
-Message-Id: <20200701155348.52864-1-cristian.marussi@arm.com>
+Subject: [PATCH v11 3/9] firmware: arm_scmi: Add notification dispatch and delivery
+Date:   Wed,  1 Jul 2020 16:53:42 +0100
+Message-Id: <20200701155348.52864-4-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701155348.52864-1-cristian.marussi@arm.com>
+References: <20200701155348.52864-1-cristian.marussi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Add the core SCMI notifications dispatch and delivery support logic
+which is able to dispatch well-known received events from the Rx
+interrupt handler to the dedicated deferred worker. From there, it will
+deliver the events to the registered users' callbacks.
 
-this series wants to introduce SCMI Notification Support, built on top of
-the standard Kernel notification chain subsystem.
+Dispatch and delivery support is just added here, still not enabled.
 
-At initialization time each SCMI Protocol takes care to register with the
-new SCMI notification core the set of its own events which it intends to
-support.
-
-Using the API exposed via scmi_handle.notify_ops a Kernel user can register
-its own notifier_t callback (via a notifier_block as usual) against any
-registered event as identified by the tuple:
-
-		(proto_id, event_id, src_id)
-
-where src_id represents a generic source identifier which is protocol
-dependent like domain_id, performance_id, sensor_id and so forth.
-(users can anyway do NOT provide any src_id, and subscribe instead to ALL
- the existing (if any) src_id sources for that proto_id/evt_id combination)
-
-Each of the above tuple-specified events will be served on its own
-dedicated blocking notification chain, dynamically allocated on-demand when
-at least one user has shown interest on that event.
-
-Upon a notification delivery all the users' registered notifier_t callbacks
-will be in turn invoked and fed with the event_id as @action param and a
-generated custom per-event struct _report as @data param.
-(as in include/linux/scmi_protocol.h)
-
-The final step of notification delivery via users' callback invocation is
-instead delegated to a pool of deferred workers (Kernel cmwq): each
-SCMI protocol has its own dedicated worker and dedicated queue to push
-events from the rx ISR to the worker.
-
-Based on scmi-next/for-next/scmi 5.8-rc3 [1], on top of:
-
-commit 29c9e984d8e3 ("firmware: arm_scmi: Fix SCMI genpd domain probing")
-
-This series has been tested on JUNO with an experimental firmware only
-supporting Perf Notifications.
-
-
-Thanks
-
-Cristian
-
-----
-v10 --> v11:
-- fixed macros for argument reuse checkpatch warning
-- added missing mutex comments
-- removed improper usage of IS_ERR_OR_NULL
-- switch to int retvals for some core functions instead of bools
-- removed all likely/unlikely
-
-v9 --> v10:
-- rebased on top of scmi-next 5.8-rc1
-- fixed a couple of Warnings (-Wtype-limit)
-
-v8 --> v9:
-- rebased on top of scmi-next 5.8
-- moved some pr_info() to dev_dbg()
-- moved around some macros definitions (using FIELD_PREPARE properly)
-- introduced some meaningful define
-- shrunk hashtables' sizes
-- shortened the naming of some massively long data struct
-
-v7 --> v8:
-- removed unneeded initialized/enabled atomics, added proper barriers
-- added a few comments about queueing work item and kfifos
-
-v6 --> v7:
-- rebased on top of scmi-next 5.7, dropped the initial 4 patches
-  since now already queued on base scmi-next [1]
-- fixed some events' proto initialization
-- removed some notify_enabled explicit methods exposed in some protocol_ops
-  since not supposed to be used directly when using this notification
-  framework (and of no other known use)
-- exposing SCMI_EVENT_ enums in scmi_protocol.h
-- added agent_id field in RESET_ISSUED payload as per reviewed SCMI spec
-- removed POWER_STATE_CHANGE_REQUESTED pre-notification definition and
-  handling as per reviewedSCMI spec
-- fixed report.timestamp field type
-
-v5 --> v6:
-- added handle argument to fill_custom_report() helper
-
-v4 --> v5:
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+V10 --> V11
+- removed likely/unlikely
+- fix IS_ERR_OR_NULL
+V8 --> V9
+- fixed pr_ to dev_
+V7 --> V8
+- Fixed enabled check in scmi_notify() not to use atomics
+- Added a few comments about queueing works
+V5 --> V6
+- added handle argument to fill_custom_report()
+V4 --> V5
 - fixed kernel-doc
-- added proper barriers around registered protocols and events
-  initialization
-- reviewed queues allocation using devm_add_action_or_reset
-- reviewed REVT_NOTIFY_ENABLE macro
+- fixed unneded var initialization
+V3 --> V4
+- dispatcher now handles dequeuing of events in chunks (header+payload):
+  handling of these in_flight events let us remove one unneeded memcpy
+  on RX interrupt path (scmi_notify)
+- deferred dispatcher now access their own per-protocol handlers' table
+  reducing locking contention on the RX path
+V2 --> V3
+- exposing wq in sysfs via WQ_SYSFS
+V1 --> V2
+- splitted out of V1 patch 04
+- moved from IDR maps to real HashTables to store event_handlers
+- simplified delivery logic
+---
+ drivers/firmware/arm_scmi/notify.c | 367 ++++++++++++++++++++++++++++-
+ drivers/firmware/arm_scmi/notify.h |  10 +
+ 2 files changed, 373 insertions(+), 4 deletions(-)
 
-v3 --> v4:
-- dropped RFC tag
-- avoid one unneeded evt payload memcpy on the ISR RC code path by
-  redesigning dispatcher to handle partial queue-reads (in_flight events,
-  only header)
-- fixed the initialization issue exposed by late SCMI modules loading by
-  reviewing the init process to support possible late events registrations
-  by protocols and early callbacks registrations by users (pending)
-- cleanup/simplification of exit path: SCMI protocols are generally never
-  de-initialized after the initial device creation, so do not deinit
-  notification core either (we do halt the delivery, stop the wq and empty
-  the queues though)
-- reduced contention on regustered_events_handler to the minimum during
-  delivery by splitting the common registered_events_handlers hashtable
-  into a number of per-protocol tables
-- converted registered_protocols and registered_events hastable to
-  fixed size arrays: simpler and lockless in our usage scenario
-
-v2 --> v3:
-- added platform instance awareness to the notification core: a
-  notification instance is created for each known handle
-- reviewed notification core initialization and shutdown process
-- removed generic non-handle-rooted registration API
-- added WQ_SYSFS flag to workqueue instance
-
-v1 --> v2:
-- dropped anti-tampering patch
-- rebased on top of scmi-for-next-5.6, which includes Viresh series that
-  make SCMI core independent of transport (5c8a47a5a91d)
-- add a few new SCMI transport methods on top of Viresh patch to address
-  needs of SCMI Notifications
-- reviewed/renamed scmi_handle_xfer_delayed_resp()
-- split main SCMI Notification core patch (~1k lines) into three chunks:
-  protocol-registration / callbacks-registration / dispatch-and-delivery
-- removed awkward usage of IDR maps in favour of pure hashtables
-- added enable/disable refcounting in notification core (was broken in v1)
-- removed per-protocol candidate API: a single generic API is now proposed
-  instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
-- added handle->notify_ops as an alternative notification API
-  for scmi_driver
-- moved ALL_SRCIDs enabled handling from protocol code to core code
-- reviewed protocol registration/unregistration logic to use devres
-- reviewed cleanup phase on shutdown
-- fixed  ERROR: reference preceded by free as reported by kbuild test robot
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
-
-Cristian Marussi (9):
-  firmware: arm_scmi: Add notification protocol-registration
-  firmware: arm_scmi: Add notification callbacks-registration
-  firmware: arm_scmi: Add notification dispatch and delivery
-  firmware: arm_scmi: Enable notification core
-  firmware: arm_scmi: Add power notifications support
-  firmware: arm_scmi: Add perf notifications support
-  firmware: arm_scmi: Add sensor notifications support
-  firmware: arm_scmi: Add reset notifications support
-  firmware: arm_scmi: Add base notifications support
-
- drivers/firmware/arm_scmi/Makefile  |    2 +-
- drivers/firmware/arm_scmi/base.c    |  108 +-
- drivers/firmware/arm_scmi/common.h  |    4 +
- drivers/firmware/arm_scmi/driver.c  |   10 +
- drivers/firmware/arm_scmi/notify.c  | 1525 +++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/notify.h  |   66 ++
- drivers/firmware/arm_scmi/perf.c    |  139 ++-
- drivers/firmware/arm_scmi/power.c   |   92 +-
- drivers/firmware/arm_scmi/reset.c   |   96 +-
- drivers/firmware/arm_scmi/sensors.c |   69 +-
- include/linux/scmi_protocol.h       |  108 +-
- 11 files changed, 2189 insertions(+), 30 deletions(-)
- create mode 100644 drivers/firmware/arm_scmi/notify.c
- create mode 100644 drivers/firmware/arm_scmi/notify.h
-
+diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
+index 79615eef0148..c4d006cfde88 100644
+--- a/drivers/firmware/arm_scmi/notify.c
++++ b/drivers/firmware/arm_scmi/notify.c
+@@ -47,6 +47,27 @@
+  * as described in the SCMI Protocol specification, while src_id represents an
+  * optional, protocol dependent, source identifier (like domain_id, perf_id
+  * or sensor_id and so forth).
++ *
++ * Upon reception of a notification message from the platform the SCMI RX ISR
++ * passes the received message payload and some ancillary information (including
++ * an arrival timestamp in nanoseconds) to the core via @scmi_notify() which
++ * pushes the event-data itself on a protocol-dedicated kfifo queue for further
++ * deferred processing as specified in @scmi_events_dispatcher().
++ *
++ * Each protocol has it own dedicated work_struct and worker which, once kicked
++ * by the ISR, takes care to empty its own dedicated queue, deliverying the
++ * queued items into the proper notification-chain: notifications processing can
++ * proceed concurrently on distinct workers only between events belonging to
++ * different protocols while delivery of events within the same protocol is
++ * still strictly sequentially ordered by time of arrival.
++ *
++ * Events' information is then extracted from the SCMI Notification messages and
++ * conveyed, converted into a custom per-event report struct, as the void *data
++ * param to the user callback provided by the registered notifier_block, so that
++ * from the user perspective his callback will look invoked like:
++ *
++ * int user_cb(struct notifier_block *nb, unsigned long event_id, void *report)
++ *
+  */
+ 
+ #define dev_fmt(fmt) "SCMI Notifications - " fmt
+@@ -67,6 +88,7 @@
+ #include <linux/scmi_protocol.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
++#include <linux/workqueue.h>
+ 
+ #include "notify.h"
+ 
+@@ -164,6 +186,13 @@
+ #define REVT_NOTIFY_DISABLE(revt, eid, sid)			\
+ 	REVT_NOTIFY_SET_STATUS((revt), (eid), (sid), false)
+ 
++#define REVT_FILL_REPORT(revt, ...)				\
++({								\
++	typeof(revt) r = revt;					\
++	r->proto->ops->fill_custom_report(r->proto->ni->handle,	\
++					  __VA_ARGS__);		\
++})
++
+ #define SCMI_PENDING_HASH_SZ		4
+ #define SCMI_REGISTERED_HASH_SZ		6
+ 
+@@ -175,6 +204,7 @@ struct scmi_registered_events_desc;
+  * @gid: GroupID used for devres
+  * @handle: A reference to the platform instance
+  * @init_work: A work item to perform final initializations of pending handlers
++ * @notify_wq: A reference to the allocated Kernel cmwq
+  * @pending_mtx: A mutex to protect @pending_events_handlers
+  * @registered_protocols: A statically allocated array containing pointers to
+  *			  all the registered protocol-level specific information
+@@ -189,6 +219,7 @@ struct scmi_notify_instance {
+ 	void			*gid;
+ 	struct scmi_handle	*handle;
+ 	struct work_struct	init_work;
++	struct workqueue_struct	*notify_wq;
+ 	/* lock to protect pending_events_handlers */
+ 	struct mutex		pending_mtx;
+ 	struct scmi_registered_events_desc	**registered_protocols;
+@@ -199,12 +230,16 @@ struct scmi_notify_instance {
+  * struct events_queue  - Describes a queue and its associated worker
+  * @sz: Size in bytes of the related kfifo
+  * @kfifo: A dedicated Kernel kfifo descriptor
++ * @notify_work: A custom work item bound to this queue
++ * @wq: A reference to the associated workqueue
+  *
+  * Each protocol has its own dedicated events_queue descriptor.
+  */
+ struct events_queue {
+-	size_t		sz;
+-	struct kfifo	kfifo;
++	size_t			sz;
++	struct kfifo		kfifo;
++	struct work_struct	notify_work;
++	struct workqueue_struct	*wq;
+ };
+ 
+ /**
+@@ -328,9 +363,270 @@ struct scmi_event_handler {
+ 
+ #define IS_HNDL_PENDING(hndl)	(!(hndl)->r_evt)
+ 
++static struct scmi_event_handler *
++scmi_get_active_handler(struct scmi_notify_instance *ni, u32 evt_key);
++static void scmi_put_active_handler(struct scmi_notify_instance *ni,
++				    struct scmi_event_handler *hndl);
+ static void scmi_put_handler_unlocked(struct scmi_notify_instance *ni,
+ 				      struct scmi_event_handler *hndl);
+ 
++/**
++ * scmi_lookup_and_call_event_chain()  - Lookup the proper chain and call it
++ * @ni: A reference to the notification instance to use
++ * @evt_key: The key to use to lookup the related notification chain
++ * @report: The customized event-specific report to pass down to the callbacks
++ *	    as their *data parameter.
++ */
++static inline void
++scmi_lookup_and_call_event_chain(struct scmi_notify_instance *ni,
++				 u32 evt_key, void *report)
++{
++	int ret;
++	struct scmi_event_handler *hndl;
++
++	/*
++	 * Here ensure the event handler cannot vanish while using it.
++	 * It is legitimate, though, for an handler not to be found at all here,
++	 * e.g. when it has been unregistered by the user after some events had
++	 * already been queued.
++	 */
++	hndl = scmi_get_active_handler(ni, evt_key);
++	if (!hndl)
++		return;
++
++	ret = blocking_notifier_call_chain(&hndl->chain,
++					   KEY_XTRACT_EVT_ID(evt_key),
++					   report);
++	/* Notifiers are NOT supposed to cut the chain ... */
++	WARN_ON_ONCE(ret & NOTIFY_STOP_MASK);
++
++	scmi_put_active_handler(ni, hndl);
++}
++
++/**
++ * scmi_process_event_header()  - Dequeue and process an event header
++ * @eq: The queue to use
++ * @pd: The protocol descriptor to use
++ *
++ * Read an event header from the protocol queue into the dedicated scratch
++ * buffer and looks for a matching registered event; in case an anomalously
++ * sized read is detected just flush the queue.
++ *
++ * Return:
++ * * a reference to the matching registered event when found
++ * * ERR_PTR(-EINVAL) when NO registered event could be found
++ * * NULL when the queue is empty
++ */
++static inline struct scmi_registered_event *
++scmi_process_event_header(struct events_queue *eq,
++			  struct scmi_registered_events_desc *pd)
++{
++	unsigned int outs;
++	struct scmi_registered_event *r_evt;
++
++	outs = kfifo_out(&eq->kfifo, pd->eh,
++			 sizeof(struct scmi_event_header));
++	if (!outs)
++		return NULL;
++	if (outs != sizeof(struct scmi_event_header)) {
++		dev_err(pd->ni->handle->dev, "corrupted EVT header. Flush.\n");
++		kfifo_reset_out(&eq->kfifo);
++		return NULL;
++	}
++
++	r_evt = SCMI_GET_REVT_FROM_PD(pd, pd->eh->evt_id);
++	if (!r_evt)
++		r_evt = ERR_PTR(-EINVAL);
++
++	return r_evt;
++}
++
++/**
++ * scmi_process_event_payload()  - Dequeue and process an event payload
++ * @eq: The queue to use
++ * @pd: The protocol descriptor to use
++ * @r_evt: The registered event descriptor to use
++ *
++ * Read an event payload from the protocol queue into the dedicated scratch
++ * buffer, fills a custom report and then look for matching event handlers and
++ * call them; skip any unknown event (as marked by scmi_process_event_header())
++ * and in case an anomalously sized read is detected just flush the queue.
++ *
++ * Return: False when the queue is empty
++ */
++static inline bool
++scmi_process_event_payload(struct events_queue *eq,
++			   struct scmi_registered_events_desc *pd,
++			   struct scmi_registered_event *r_evt)
++{
++	u32 src_id, key;
++	unsigned int outs;
++	void *report = NULL;
++
++	outs = kfifo_out(&eq->kfifo, pd->eh->payld, pd->eh->payld_sz);
++	if (!outs)
++		return false;
++
++	/* Any in-flight event has now been officially processed */
++	pd->in_flight = NULL;
++
++	if (outs != pd->eh->payld_sz) {
++		dev_err(pd->ni->handle->dev, "corrupted EVT Payload. Flush.\n");
++		kfifo_reset_out(&eq->kfifo);
++		return false;
++	}
++
++	if (IS_ERR(r_evt)) {
++		dev_warn(pd->ni->handle->dev,
++			 "SKIP UNKNOWN EVT - proto:%X  evt:%d\n",
++			 pd->id, pd->eh->evt_id);
++		return true;
++	}
++
++	report = REVT_FILL_REPORT(r_evt, pd->eh->evt_id, pd->eh->timestamp,
++				  pd->eh->payld, pd->eh->payld_sz,
++				  r_evt->report, &src_id);
++	if (!report) {
++		dev_err(pd->ni->handle->dev,
++			"report not available - proto:%X  evt:%d\n",
++			pd->id, pd->eh->evt_id);
++		return true;
++	}
++
++	/* At first search for a generic ALL src_ids handler... */
++	key = MAKE_ALL_SRCS_KEY(pd->id, pd->eh->evt_id);
++	scmi_lookup_and_call_event_chain(pd->ni, key, report);
++
++	/* ...then search for any specific src_id */
++	key = MAKE_HASH_KEY(pd->id, pd->eh->evt_id, src_id);
++	scmi_lookup_and_call_event_chain(pd->ni, key, report);
++
++	return true;
++}
++
++/**
++ * scmi_events_dispatcher()  - Common worker logic for all work items.
++ * @work: The work item to use, which is associated to a dedicated events_queue
++ *
++ * Logic:
++ *  1. dequeue one pending RX notification (queued in SCMI RX ISR context)
++ *  2. generate a custom event report from the received event message
++ *  3. lookup for any registered ALL_SRC_IDs handler:
++ *    - > call the related notification chain passing in the report
++ *  4. lookup for any registered specific SRC_ID handler:
++ *    - > call the related notification chain passing in the report
++ *
++ * Note that:
++ * * a dedicated per-protocol kfifo queue is used: in this way an anomalous
++ *   flood of events cannot saturate other protocols' queues.
++ * * each per-protocol queue is associated to a distinct work_item, which
++ *   means, in turn, that:
++ *   + all protocols can process their dedicated queues concurrently
++ *     (since notify_wq:max_active != 1)
++ *   + anyway at most one worker instance is allowed to run on the same queue
++ *     concurrently: this ensures that we can have only one concurrent
++ *     reader/writer on the associated kfifo, so that we can use it lock-less
++ *
++ * Context: Process context.
++ */
++static void scmi_events_dispatcher(struct work_struct *work)
++{
++	struct events_queue *eq;
++	struct scmi_registered_events_desc *pd;
++	struct scmi_registered_event *r_evt;
++
++	eq = container_of(work, struct events_queue, notify_work);
++	pd = container_of(eq, struct scmi_registered_events_desc, equeue);
++	/*
++	 * In order to keep the queue lock-less and the number of memcopies
++	 * to the bare minimum needed, the dispatcher accounts for the
++	 * possibility of per-protocol in-flight events: i.e. an event whose
++	 * reception could end up being split across two subsequent runs of this
++	 * worker, first the header, then the payload.
++	 */
++	do {
++		if (!pd->in_flight) {
++			r_evt = scmi_process_event_header(eq, pd);
++			if (!r_evt)
++				break;
++			pd->in_flight = r_evt;
++		} else {
++			r_evt = pd->in_flight;
++		}
++	} while (scmi_process_event_payload(eq, pd, r_evt));
++}
++
++/**
++ * scmi_notify()  - Queues a notification for further deferred processing
++ * @handle: The handle identifying the platform instance from which the
++ *	    dispatched event is generated
++ * @proto_id: Protocol ID
++ * @evt_id: Event ID (msgID)
++ * @buf: Event Message Payload (without the header)
++ * @len: Event Message Payload size
++ * @ts: RX Timestamp in nanoseconds (boottime)
++ *
++ * Context: Called in interrupt context to queue a received event for
++ * deferred processing.
++ *
++ * Return: 0 on Success
++ */
++int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
++		const void *buf, size_t len, u64 ts)
++{
++	struct scmi_registered_event *r_evt;
++	struct scmi_event_header eh;
++	struct scmi_notify_instance *ni;
++
++	/* Ensure notify_priv is updated */
++	smp_rmb();
++	if (!handle->notify_priv)
++		return 0;
++	ni = handle->notify_priv;
++
++	r_evt = SCMI_GET_REVT(ni, proto_id, evt_id);
++	if (!r_evt)
++		return -EINVAL;
++
++	if (len > r_evt->evt->max_payld_sz) {
++		dev_err(handle->dev, "discard badly sized message\n");
++		return -EINVAL;
++	}
++	if (kfifo_avail(&r_evt->proto->equeue.kfifo) < sizeof(eh) + len) {
++		dev_warn(handle->dev,
++			 "queue full, dropping proto_id:%d  evt_id:%d  ts:%lld\n",
++			 proto_id, evt_id, ts);
++		return -ENOMEM;
++	}
++
++	eh.timestamp = ts;
++	eh.evt_id = evt_id;
++	eh.payld_sz = len;
++	/*
++	 * Header and payload are enqueued with two distinct kfifo_in() (so non
++	 * atomic), but this situation is handled properly on the consumer side
++	 * with in-flight events tracking.
++	 */
++	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
++	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
++	/*
++	 * Don't care about return value here since we just want to ensure that
++	 * a work is queued all the times whenever some items have been pushed
++	 * on the kfifo:
++	 * - if work was already queued it will simply fail to queue a new one
++	 *   since it is not needed
++	 * - if work was not queued already it will be now, even in case work
++	 *   was in fact already running: this behavior avoids any possible race
++	 *   when this function pushes new items onto the kfifos after the
++	 *   related executing worker had already determined the kfifo to be
++	 *   empty and it was terminating.
++	 */
++	queue_work(r_evt->proto->equeue.wq,
++		   &r_evt->proto->equeue.notify_work);
++
++	return 0;
++}
++
+ /**
+  * scmi_kfifo_free()  - Devres action helper to free the kfifo
+  * @kfifo: The kfifo to free
+@@ -353,13 +649,22 @@ static void scmi_kfifo_free(void *kfifo)
+ static int scmi_initialize_events_queue(struct scmi_notify_instance *ni,
+ 					struct events_queue *equeue, size_t sz)
+ {
++	int ret;
++
+ 	if (kfifo_alloc(&equeue->kfifo, sz, GFP_KERNEL))
+ 		return -ENOMEM;
+ 	/* Size could have been roundup to power-of-two */
+ 	equeue->sz = kfifo_size(&equeue->kfifo);
+ 
+-	return devm_add_action_or_reset(ni->handle->dev, scmi_kfifo_free,
+-					&equeue->kfifo);
++	ret = devm_add_action_or_reset(ni->handle->dev, scmi_kfifo_free,
++				       &equeue->kfifo);
++	if (ret)
++		return ret;
++
++	INIT_WORK(&equeue->notify_work, scmi_events_dispatcher);
++	equeue->wq = ni->notify_wq;
++
++	return ret;
+ }
+ 
+ /**
+@@ -758,6 +1063,37 @@ scmi_get_or_create_handler(struct scmi_notify_instance *ni, u32 evt_key)
+ 	return __scmi_event_handler_get_ops(ni, evt_key, true);
+ }
+ 
++/**
++ * scmi_get_active_handler()  - Helper to get active handlers only
++ * @ni: A reference to the notification instance to use
++ * @evt_key: The event key to use
++ *
++ * Search for the desired handler matching the key only in the per-protocol
++ * table of registered handlers: this is called only from the dispatching path
++ * so want to be as quick as possible and do not care about pending.
++ *
++ * Return: A properly refcounted active handler
++ */
++static struct scmi_event_handler *
++scmi_get_active_handler(struct scmi_notify_instance *ni, u32 evt_key)
++{
++	struct scmi_registered_event *r_evt;
++	struct scmi_event_handler *hndl = NULL;
++
++	r_evt = SCMI_GET_REVT(ni, KEY_XTRACT_PROTO_ID(evt_key),
++			      KEY_XTRACT_EVT_ID(evt_key));
++	if (r_evt) {
++		mutex_lock(&r_evt->proto->registered_mtx);
++		hndl = KEY_FIND(r_evt->proto->registered_events_handlers,
++				hndl, evt_key);
++		if (hndl)
++			refcount_inc(&hndl->users);
++		mutex_unlock(&r_evt->proto->registered_mtx);
++	}
++
++	return hndl;
++}
++
+ /**
+  * __scmi_enable_evt()  - Enable/disable events generation
+  * @r_evt: The registered event to act upon
+@@ -883,6 +1219,16 @@ static void scmi_put_handler(struct scmi_notify_instance *ni,
+ 	mutex_unlock(&ni->pending_mtx);
+ }
+ 
++static void scmi_put_active_handler(struct scmi_notify_instance *ni,
++				    struct scmi_event_handler *hndl)
++{
++	struct scmi_registered_event *r_evt = hndl->r_evt;
++
++	mutex_lock(&r_evt->proto->registered_mtx);
++	scmi_put_handler_unlocked(ni, hndl);
++	mutex_unlock(&r_evt->proto->registered_mtx);
++}
++
+ /**
+  * scmi_event_handler_enable_events()  - Enable events associated to an handler
+  * @hndl: The Event handler to act upon
+@@ -1121,6 +1467,12 @@ int scmi_notification_init(struct scmi_handle *handle)
+ 	ni->gid = gid;
+ 	ni->handle = handle;
+ 
++	ni->notify_wq = alloc_workqueue("scmi_notify",
++					WQ_UNBOUND | WQ_FREEZABLE | WQ_SYSFS,
++					0);
++	if (!ni->notify_wq)
++		goto err;
++
+ 	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
+ 						sizeof(char *), GFP_KERNEL);
+ 	if (!ni->registered_protocols)
+@@ -1162,5 +1514,12 @@ void scmi_notification_exit(struct scmi_handle *handle)
+ 		return;
+ 	ni = handle->notify_priv;
+ 
++	handle->notify_priv = NULL;
++	/* Ensure handle is up to date */
++	smp_wmb();
++
++	/* Destroy while letting pending work complete */
++	destroy_workqueue(ni->notify_wq);
++
+ 	devres_release_group(ni->handle->dev, ni->gid);
+ }
+diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
+index 48702e42995f..3791bb7aa79b 100644
+--- a/drivers/firmware/arm_scmi/notify.h
++++ b/drivers/firmware/arm_scmi/notify.h
+@@ -35,6 +35,11 @@ struct scmi_event {
+  * @set_notify_enabled: Enable/disable the required evt_id/src_id notifications
+  *			using the proper custom protocol commands.
+  *			Return 0 on Success
++ * @fill_custom_report: fills a custom event report from the provided
++ *			event message payld identifying the event
++ *			specific src_id.
++ *			Return NULL on failure otherwise @report now fully
++ *			populated
+  *
+  * Context: Helpers described in &struct scmi_event_ops are called only in
+  *	    process context.
+@@ -42,6 +47,9 @@ struct scmi_event {
+ struct scmi_event_ops {
+ 	int (*set_notify_enabled)(const struct scmi_handle *handle,
+ 				  u8 evt_id, u32 src_id, bool enabled);
++	void *(*fill_custom_report)(const struct scmi_handle *handle,
++				    u8 evt_id, u64 timestamp, const void *payld,
++				    size_t payld_sz, void *report, u32 *src_id);
+ };
+ 
+ int scmi_notification_init(struct scmi_handle *handle);
+@@ -52,5 +60,7 @@ int scmi_register_protocol_events(const struct scmi_handle *handle,
+ 				  const struct scmi_event_ops *ops,
+ 				  const struct scmi_event *evt, int num_events,
+ 				  int num_sources);
++int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
++		const void *buf, size_t len, u64 ts);
+ 
+ #endif /* _SCMI_NOTIFY_H */
 -- 
 2.17.1
 
