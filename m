@@ -2,101 +2,80 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BA720760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i74sl3ZO"
+	by mail.kernel.org (Postfix) with ESMTP id EE4EF20760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593615957;
+	bh=eYeQqWGzvCIGM96lU2UmvLU+iTPFUjr0pWA5ecLh5Dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aCmgLrujPnRWq7OV5LrQKUddQ2iTh5Rt1R05fTPR/VFgh9SgUC1jEPS5psbOX+5xX
+	 Lnrtu/iSmBPJtzonQJKl22CDf/2IkZSaORz9GDWPR0Xh/d0WSpI58d+oKH3TkE6Rri
+	 cLlIKkJNOi63NcsqGmXkjwLC5Tyi4Vu1Op5ecqDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbgGAPFW (ORCPT
+        id S1731697AbgGAPFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731039AbgGAPFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:05:21 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9C0C08C5C1;
-        Wed,  1 Jul 2020 08:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yjUbAZQQ9f4rcShW5GkixqYv9x2nD42GGzyjdsiFm50=; b=i74sl3ZOPr1xqJIhkMJglGWOkB
-        U8dqkz+3Y5fKVBDLcgGRCYbTPQFBGPgHtaCMun69vkwL/Ry/Z+4Jsl8Mf+SEd1g2rFtmyvmpbWIYZ
-        K0Ycyjqzo60JLazLm+uQfh7KsY8FqjTzInhLzUzA/uu1WwZ1uS4jmIhsjRK2swdHfjsLC2mBUqXmb
-        tjLVkf7OGf4kz+DTg9+2SwJMjK14kVHRsmKF/8JUPsny87vwFakQlM7eTrs35Vus1k5vP28RmJNHc
-        Yyq+PGlJEHTv7w05Krc9LSs+q+qVge1miTYAIcksAas9z16JswYUyikbLlMyiWZjWWnmMZFBaj5Bf
-        7m/rqxmg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqeIU-0005dy-9r; Wed, 01 Jul 2020 15:05:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 1 Jul 2020 11:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731039AbgGAPFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:05:54 -0400
+Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 229A930015A;
-        Wed,  1 Jul 2020 17:05:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1242023D44E56; Wed,  1 Jul 2020 17:05:12 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 17:05:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200701150512.GH4817@hirez.programming.kicks-ass.net>
-References: <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
- <20200625085745.GD117543@hirez.programming.kicks-ass.net>
- <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FE7206C3;
+        Wed,  1 Jul 2020 15:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593615953;
+        bh=eYeQqWGzvCIGM96lU2UmvLU+iTPFUjr0pWA5ecLh5Dc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NrfFfeEZwoHPLjLeCiy9QEFPl1uu6H55aZuMpTH1Q7rlZpzsriJxiOGqo4GkhoOmR
+         ZEM22GOtrqf/RpFKhJd98IlSHq4gI3gMfszNEeUU3XSkQfiAznYmluQ5qzv/GAGRdT
+         naCNvGjlPLNCNdW/KKKbPYZpppp5hW0ih/JzyBcs=
+Date:   Wed, 1 Jul 2020 20:35:50 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Tobias Klauser <tklauser@distanz.ch>
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] phy: zynqmp: Fix unused-function compiler warning
+Message-ID: <20200701150550.GD2599@vkoul-mobl>
+References: <20200701090438.21224-1-tklauser@distanz.ch>
+ <20200701141017.26931-1-tklauser@distanz.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200701140654.GL9247@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701141017.26931-1-tklauser@distanz.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 07:06:54AM -0700, Paul E. McKenney wrote:
+On 01-07-20, 16:10, Tobias Klauser wrote:
+> Mark xpsgtr_suspend and xpsgtr_resume as __maybe_unused to fix the
+> following compiler warning when building with !CONFIG_PM_SLEEP:
+> 
+> drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
+>   830 | static int xpsgtr_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~
+> drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
+>   819 | static int xpsgtr_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~
+> 
+> Also drop the existing #ifdef CONFIG_PM so the functions are always
+> compile-checked regardless of CONFIG_PM and/or CONFIG_PM_SLEEP being
+> set.
 
-> The current state in the C++ committee is that marking variables
-> carrying dependencies is the way forward.  This is of course not what
-> the Linux kernel community does, but it should not be hard to have a
-> -fall-variables-dependent or some such that causes all variables to be
-> treated as if they were marked.  Though I was hoping for only pointers.
-> Are they -sure- that they -absolutely- need to carry dependencies
-> through integers???
+Applied, thanks
 
-What's 'need'? :-)
-
-I'm thinking __ktime_get_fast_ns() is better off with a dependent load
-than it is with an extra smp_rmb().
-
-Yes we can stick an smp_rmb() in there, but I don't like it. Like I
-wrote earlier, if I wanted a control dependency, I'd have written one.
+-- 
+~Vinod
