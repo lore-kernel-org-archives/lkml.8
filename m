@@ -2,71 +2,101 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3026320760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BA720760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i74sl3ZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbgGAPEj (ORCPT
+        id S1731687AbgGAPFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:04:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35060 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731039AbgGAPEi (ORCPT
+        Wed, 1 Jul 2020 11:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731039AbgGAPFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:04:38 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jqeHp-0008To-Kh; Wed, 01 Jul 2020 15:04:33 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/packet: remove redundant initialization of variable err
-Date:   Wed,  1 Jul 2020 16:04:33 +0100
-Message-Id: <20200701150433.551656-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 11:05:21 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9C0C08C5C1;
+        Wed,  1 Jul 2020 08:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yjUbAZQQ9f4rcShW5GkixqYv9x2nD42GGzyjdsiFm50=; b=i74sl3ZOPr1xqJIhkMJglGWOkB
+        U8dqkz+3Y5fKVBDLcgGRCYbTPQFBGPgHtaCMun69vkwL/Ry/Z+4Jsl8Mf+SEd1g2rFtmyvmpbWIYZ
+        K0Ycyjqzo60JLazLm+uQfh7KsY8FqjTzInhLzUzA/uu1WwZ1uS4jmIhsjRK2swdHfjsLC2mBUqXmb
+        tjLVkf7OGf4kz+DTg9+2SwJMjK14kVHRsmKF/8JUPsny87vwFakQlM7eTrs35Vus1k5vP28RmJNHc
+        Yyq+PGlJEHTv7w05Krc9LSs+q+qVge1miTYAIcksAas9z16JswYUyikbLlMyiWZjWWnmMZFBaj5Bf
+        7m/rqxmg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqeIU-0005dy-9r; Wed, 01 Jul 2020 15:05:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 229A930015A;
+        Wed,  1 Jul 2020 17:05:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1242023D44E56; Wed,  1 Jul 2020 17:05:12 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 17:05:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+References: <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701140654.GL9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, Jul 01, 2020 at 07:06:54AM -0700, Paul E. McKenney wrote:
 
-The variable err is being initialized with a value that is never read
-and it is being updated later with a new value.  The initialization is
-redundant and can be removed.
+> The current state in the C++ committee is that marking variables
+> carrying dependencies is the way forward.  This is of course not what
+> the Linux kernel community does, but it should not be hard to have a
+> -fall-variables-dependent or some such that causes all variables to be
+> treated as if they were marked.  Though I was hoping for only pointers.
+> Are they -sure- that they -absolutely- need to carry dependencies
+> through integers???
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/packet/af_packet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What's 'need'? :-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 29bd405adbbd..7b436ebde61d 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4293,7 +4293,7 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
- 	struct packet_ring_buffer *rb;
- 	struct sk_buff_head *rb_queue;
- 	__be16 num;
--	int err = -EINVAL;
-+	int err;
- 	/* Added to avoid minimal code churn */
- 	struct tpacket_req *req = &req_u->req;
- 
--- 
-2.27.0
+I'm thinking __ktime_get_fast_ns() is better off with a dependent load
+than it is with an extra smp_rmb().
 
+Yes we can stick an smp_rmb() in there, but I don't like it. Like I
+wrote earlier, if I wanted a control dependency, I'd have written one.
