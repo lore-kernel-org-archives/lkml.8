@@ -2,124 +2,133 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1384FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5268C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E56B6207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:35:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SgjEtluE"
+	by mail.kernel.org (Postfix) with ESMTP id D0B152071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbgGAPfB (ORCPT
+        id S1732075AbgGAPft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:35:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54393 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731399AbgGAPfB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:35:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593617699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DVvafyNDOv03AqOZTolGY7IYO4hSglqR6MUFuKdIAyA=;
-        b=SgjEtluEOgHNWZGFnVsWU9AHBxlJ5rDCnDgnJNTNOUy+PXU+jnkHSasGH5/7V11VaGCgAI
-        Da2bxmFjMW4Q4TViRcesHq7+R6dah6g9ehdtHVcmpnh6TKizR/hWuEOdf5Nm9sU/VGm/9g
-        T5rLe6jmP9/rpunY4Awc155Xa13KFro=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314--HXWtZb6MXq3px9eqioSFA-1; Wed, 01 Jul 2020 11:34:57 -0400
-X-MC-Unique: -HXWtZb6MXq3px9eqioSFA-1
-Received: by mail-wr1-f70.google.com with SMTP id s16so8152407wrv.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 08:34:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=DVvafyNDOv03AqOZTolGY7IYO4hSglqR6MUFuKdIAyA=;
-        b=n1r8X/oR3JjjfXkFNXFvgdTBfaagxi1NFEv2Wu2cXDBIdReJ5mXo6ztgT9pXKkSLZ9
-         Ltz7PkxGwli0JVpc0d0kYKAi5ysYxT+Zt4uQYRNWh1lf0lmDV2IxbrBAy8Lz9PFeaFM/
-         VYC1c6Kb1tXXmz2FhD6ar30v3AGvZnej9HxyGmd9Uo78tRe2IXdHN7wWePWPNSCVBKmS
-         /OH95ZFBfvplbRKOrwkJsWhm4RqCxz4Q880oA1PsxaIuOOfRLhwshOMhXz83LSwv+YkW
-         wb516cCDfXhgaweXuZrn2mcaajdRXAqAWj7Wspg80I5vxGdNWln8rTVMh1dKTANnEv7O
-         V9dA==
-X-Gm-Message-State: AOAM5319Utu65QxxBDs8j7oZ9OHmlXkGLy7u07pR4AKa3pPY6bqmF2TC
-        D99fxPK3T0I+5mvpY7cEDMvXBL4/w+dkVLVDHG6UwJpWIu3xrwH+DhNoVRlBvGgGOPGa4ZpvozC
-        C1wXABcTIJn/kIK0u/VasoFQ7
-X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr26499037wmf.29.1593617696619;
-        Wed, 01 Jul 2020 08:34:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzSLRSauLQmUCOlKoZ6zhkxk/B9lCi8GzNaLObBIoBm96avDayWOtaDoizvp758LMBLXPYlzg==
-X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr26499020wmf.29.1593617696421;
-        Wed, 01 Jul 2020 08:34:56 -0700 (PDT)
-Received: from ?IPv6:2a01:598:b90d:c98:b442:aed2:92f6:a574? ([2a01:598:b90d:c98:b442:aed2:92f6:a574])
-        by smtp.gmail.com with ESMTPSA id z1sm7776010wru.30.2020.07.01.08.34.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 08:34:55 -0700 (PDT)
+        Wed, 1 Jul 2020 11:35:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63785 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731815AbgGAPft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:35:49 -0400
+IronPort-SDR: IVw0humwT8lQmY/A0PJQFnl8H9QHy4b0NbbofEI5dBneY01s/ccR3l5JIyCB/C9AR+f+5aGc0Q
+ qZPDfwVdTv4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134887916"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="134887916"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:35:44 -0700
+IronPort-SDR: +abAFdUttd1IiTCbpADXy70iYFTAduWABsYXbNfm0HhUSUJfjJjXeI7AkGPC9Dt4vtGVimQBHb
+ wSLarVBHmpGg==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455143819"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:35:41 -0700
+Subject: Re: [PATCH v4 23/26] mm/x86: Use general page fault accounting
+To:     Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>
+References: <20200630204601.39591-1-peterx@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <f75ffbf6-5e88-74b8-ffb0-59a316dc6ff3@intel.com>
+Date:   Wed, 1 Jul 2020 08:35:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200630204601.39591-1-peterx@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to add/walk physmem
-Date:   Wed, 1 Jul 2020 17:34:54 +0200
-Message-Id: <62588A3E-81FA-4C79-B215-D1D33887597C@redhat.com>
-References: <20200701150643.GA2999146@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-In-Reply-To: <20200701150643.GA2999146@linux.ibm.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-X-Mailer: iPhone Mail (17F80)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/30/20 1:46 PM, Peter Xu wrote:
+> Use the general page fault accounting by passing regs into handle_mm_fault().
+...
+> -	/*
+> -	 * Major/minor page fault accounting. If any of the events
+> -	 * returned VM_FAULT_MAJOR, we account it as a major fault.
+> -	 */
+> -	if (major) {
+> -		tsk->maj_flt++;
+> -		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
+> -	} else {
+> -		tsk->min_flt++;
+> -		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+> -	}
+> -
+>  	check_v8086_mode(regs, address, tsk);
+>  }
 
+I did a quick grep and it wasn't obvious to me how
+PERF_COUNT_SW_PAGE_FAULTS_MIN/MAJ get bumped in the handle_mm_fault() path.
 
-> Am 01.07.2020 um 17:07 schrieb Mike Rapoport <rppt@linux.ibm.com>:
->=20
-> =EF=BB=BFHi David,
->=20
->> On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
->> "physmem" in the memblock allocator is somewhat weird: it's not actually
->> used for allocation, it's simply information collected during boot, which=
-
->> describes the unmodified physical memory map at boot time, without any
->> standby/hotplugged memory. It's only used on s390x and is currently the
->> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
->>=20
->> Physmem isn't numa aware and current users don't specify any flags. Let's=
-
->> hide it from the user, exposing only for_each_physmem(), and simplify. Th=
-e
->> interface for physmem is now really minimalistic:
->> - memblock_physmem_add() to add ranges
->> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
->>=20
->> Don't place it into an __init section and don't discard it without
->> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
->> the __meminit notifier to avoid section mismatch warnings once
->> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
->> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
->>=20
->> While fixing up the documentation, sneak in some related cleanups. We can=
-
->> stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
->=20
-> As you noted in the previous version it should have been
-> CONFIG_ARCH_KEEP_MEMBLOCK ;-)
-
-Grml :) maybe maintainers can fix that up when applying in case there are no=
- other comments.
-
-Thanks Mike for the fast review!=
+Are you sure they get set?
 
