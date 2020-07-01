@@ -2,164 +2,194 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C04C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5597C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C462073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8002D206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgGAIGR (ORCPT
+        id S1728546AbgGAIEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:06:17 -0400
+        Wed, 1 Jul 2020 04:04:25 -0400
 Received: from mga14.intel.com ([192.55.52.115]:2413 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbgGAIEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:04:25 -0400
-IronPort-SDR: D1/kF3CPEZz69m98BBC7EVJnrP9v8BhbF7FT8wwJe+uYDLUOuuS5Ilc+gu8mYxe/L3+B6FNw7U
- Cu/oB2vIrMvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="145581852"
+        id S1728258AbgGAIEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:04:23 -0400
+IronPort-SDR: we9/QNuDfPRQXKdQnFSNrqQgSPDig6i9mwfxU3slCcCs3xck6ZTjKAGb/kEnpuJTwCs6QPjAa7
+ FI6rCFDnM+Zw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="145581813"
 X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="145581852"
+   d="scan'208";a="145581813"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 01:04:19 -0700
-IronPort-SDR: T/46yqb6MTgFgR70xah2N11zDNTNCFFc8QPVsWnK6209N82B025OUsyNv0ikGSSmNw642oeLP/
- /whbcHrD4/6w==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 01:04:12 -0700
+IronPort-SDR: UhJ3wEyfUjQQla5eUs0kp6guankjI+7N2vW+qen5gPxBb9drj8GuZUuPnOgi6qinh+7WZ7jgo9
+ uZX+TNLG5zag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
-   d="scan'208";a="455010254"
+   d="scan'208";a="455010208"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jul 2020 01:04:16 -0700
+  by orsmga005.jf.intel.com with ESMTP; 01 Jul 2020 01:04:10 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v13 03/11] KVM: VMX: Set guest CET MSRs per KVM and host configuration
-Date:   Wed,  1 Jul 2020 16:04:03 +0800
-Message-Id: <20200701080411.5802-4-weijiang.yang@intel.com>
+Subject: [PATCH v13 00/11] Introduce support for guest CET feature
+Date:   Wed,  1 Jul 2020 16:04:00 +0800
+Message-Id: <20200701080411.5802-1-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200701080411.5802-1-weijiang.yang@intel.com>
-References: <20200701080411.5802-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET MSRs pass through guest directly to enhance performance. CET runtime
-control settings are stored in MSR_IA32_{U,S}_CET, Shadow Stack Pointer(SSP)
-are stored in MSR_IA32_PL{0,1,2,3}_SSP, SSP table base address is stored in
-MSR_IA32_INT_SSP_TAB, these MSRs are defined in kernel and re-used here.
+Control-flow Enforcement Technology (CET) provides protection against
+Return/Jump-Oriented Programming (ROP/JOP) attack. There're two CET
+sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+SHSTK is to prevent ROP programming and IBT is to prevent JOP programming.
 
-MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user-mode protection,the MSR
-contents are switched between threads during scheduling, it makes sense to pass
-through them so that the guest kernel can use xsaves/xrstors to operate them
-efficiently. Other MSRs are used for non-user mode protection. See SDM for detailed
-info.
+Several parts in KVM have been updated to provide VM CET support, including:
+CPUID/XSAVES config, MSR pass-through, user space MSR access interface, 
+vmentry/vmexit config, nested VM etc. These patches have dependency on CET
+kernel patches for xsaves support and CET definitions, e.g., MSR and related
+feature flags.
 
-The difference between CET VMCS fields and CET MSRs is that,the former are used
-during VMEnter/VMExit, whereas the latter are used for CET state storage between
-task/thread scheduling.
+CET kernel patches are here:
+https://lkml.kernel.org/r/20200429220732.31602-1-yu-cheng.yu@intel.com
 
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 46 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c     |  3 +++
- 2 files changed, 49 insertions(+)
+v13:
+- Added CET definitions as a separate patch to facilitate KVM test.
+- Disabled CET support in KVM if unrestricted_guest is turned off since
+  in this case CET related instructions/infrastructure cannot be emulated
+  well.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d52d470e36b1..97e766875a7e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3020,6 +3020,13 @@ void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long cr3)
- 		vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
-+static bool is_cet_state_supported(struct kvm_vcpu *vcpu, u32 xss_states)
-+{
-+	return ((supported_xss & xss_states) &&
-+		(guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
-+}
-+
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7098,6 +7105,42 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
- 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
- }
- 
-+static void vmx_update_intercept_for_cet_msr(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-+	bool incpt;
-+
-+	incpt = !is_cet_state_supported(vcpu, XFEATURE_MASK_CET_USER);
-+	/*
-+	 * U_CET is required for USER CET, and U_CET, PL3_SPP are bound as
-+	 * one component and controlled by IA32_XSS[bit 11].
-+	 */
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW,
-+				  incpt);
-+
-+	incpt = !is_cet_state_supported(vcpu, XFEATURE_MASK_CET_KERNEL);
-+	/*
-+	 * S_CET is required for KERNEL CET, and PL0_SSP ... PL2_SSP are
-+	 * bound as one component and controlled by IA32_XSS[bit 12].
-+	 */
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW,
-+				  incpt);
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW,
-+				  incpt);
-+
-+	incpt |= !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK);
-+	/* SSP_TAB is only available for KERNEL SHSTK.*/
-+	vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW,
-+				  incpt);
-+}
-+
- static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7136,6 +7179,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 			vmx_set_guest_msr(vmx, msr, enabled ? 0 : TSX_CTRL_RTM_DISABLE);
- 		}
- 	}
-+
-+	if (supported_xss & (XFEATURE_MASK_CET_KERNEL | XFEATURE_MASK_CET_USER))
-+		vmx_update_intercept_for_cet_msr(vcpu);
- }
- 
- static __init void vmx_set_cpu_caps(void)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c5835f9cb9ad..6390b62c12ed 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
- 				| XFEATURE_MASK_PKRU)
- 
-+#define KVM_SUPPORTED_XSS       (XFEATURE_MASK_CET_USER | \
-+				 XFEATURE_MASK_CET_KERNEL)
-+
- u64 __read_mostly host_efer;
- EXPORT_SYMBOL_GPL(host_efer);
- 
+v12:
+- Fixed a few issues per Sean and Paolo's review feeback.
+- Refactored patches to make them properly arranged.
+- Removed unnecessary hard-coded CET states for host/guest.
+- Added compile-time assertions for vmcs_field_to_offset_table to detect
+  mismatch of the field type and field encoding number.
+- Added a custom MSR MSR_KVM_GUEST_SSP for guest active SSP save/restore.
+- Rebased patches to 5.7-rc3.
+
+v11:
+- Fixed a guest vmentry failure issue when guest reboots.
+- Used vm_xxx_control_{set, clear}bit() to avoid side effect, it'll
+  clear cached data instead of pure VMCS field bits.
+- Added vcpu->arch.guest_supported_xss dedidated for guest runtime mask,
+  this avoids supported_xss overwritten issue caused by an old qemu.
+- Separated vmentry/vmexit state setting with CR0/CR4 dependency check
+  to make the patch more clear.
+- Added CET VMCS states in dump_vmcs() for debugging purpose.
+- Other refactor based on testing.
+- This patch serial is built on top of below branch and CET kernel patches
+  for seeking xsaves support:
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git/log/?h=cpu-caps
+
+v10:
+- Refactored code per Sean's review feedback.
+- Added CET support for nested VM.
+- Removed fix-patch for CPUID(0xd,N) enumeration as this part is done
+  by Paolo and Sean.
+- This new patchset is based on Paolo's queued cpu_caps branch.
+- Modified patch per XSAVES related change.
+- Consolidated KVM unit-test patch with KVM patches.
+
+v9:
+- Refactored msr-check functions per Sean's feedback.
+- Fixed a few issues per Sean's suggestion.
+- Rebased patch to kernel-v5.4.
+- Moved CET CPUID feature bits and CR4.CET to last patch.
+
+v8:
+- Addressed Jim and Sean's feedback on: 1) CPUID(0xD,i) enumeration. 2)
+  sanity check when configure guest CET. 3) function improvement.
+- Added more sanity check functions.
+- Set host vmexit default status so that guest won't leak CET status to
+  host when vmexit.
+- Added CR0.WP vs. CR4.CET mutual constrains.
+
+v7:
+- Rebased patch to kernel v5.3
+- Sean suggested to change CPUID(0xd, n) enumeration code as alined with
+  existing one, and I think it's better to make the fix as an independent patch 
+  since XSS MSR are being used widely on X86 platforms.
+- Check more host and guest status before configure guest CET
+  per Sean's feedback.
+- Add error-check before guest accesses CET MSRs per Sean's feedback.
+- Other minor fixes suggested by Sean.
+
+v6:
+- Rebase patch to kernel v5.2.
+- Move CPUID(0xD, n>=1) helper to a seperate patch.
+- Merge xsave size fix with other patch.
+- Other minor fixes per community feedback.
+
+v5:
+- Rebase patch to kernel v5.1.
+- Wrap CPUID(0xD, n>=1) code to a helper function.
+- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
+- Add Co-developed-by expression in patch description.
+- Refine patch description.
+
+v4:
+- Add Sean's patch for loading Guest fpu state before access XSAVES
+  managed CET MSRs.
+- Melt down CET bits setting into CPUID configuration patch.
+- Add VMX interface to query Host XSS.
+- Check Host and Guest XSS support bits before set Guest XSS.
+- Make Guest SHSTK and IBT feature enabling independent.
+- Do not report CET support to Guest when Host CET feature is Disabled.
+
+v3:
+- Modified patches to make Guest CET independent to Host enabling.
+- Added patch 8 to add user space access for Guest CET MSR access.
+- Modified code comments and patch description to reflect changes.
+
+v2:
+- Re-ordered patch sequence, combined one patch.
+- Added more description for CET related VMCS fields.
+- Added Host CET capability check while enabling Guest CET loading bit.
+- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
+- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+- Added Host and Guest XSS mask check while setting bits for Guest XSS.
+
+Sean Christopherson (1):
+  KVM: x86: Load guest fpu state when access MSRs managed by XSAVES
+
+Yang Weijiang (10):
+  KVM: x86: Include CET definitions for KVM test purpose
+  KVM: VMX: Introduce CET VMCS fields and flags
+  KVM: VMX: Set guest CET MSRs per KVM and host configuration
+  KVM: VMX: Configure CET settings upon guest CR0/4 changing
+  KVM: x86: Refresh CPUID once guest changes XSS bits
+  KVM: x86: Add userspace access interface for CET MSRs
+  KVM: VMX: Enable CET support for nested VM
+  KVM: VMX: Add VMCS dump and sanity check for CET states
+  KVM: x86: Add #CP support in guest exception dispatch
+  KVM: x86: Enable CET virtualization and advertise CET to userspace
+
+ arch/x86/include/asm/kvm_host.h      |   4 +-
+ arch/x86/include/asm/vmx.h           |   8 +
+ arch/x86/include/uapi/asm/kvm.h      |   1 +
+ arch/x86/include/uapi/asm/kvm_para.h |   7 +-
+ arch/x86/kvm/cpuid.c                 |  28 ++-
+ arch/x86/kvm/vmx/capabilities.h      |   5 +
+ arch/x86/kvm/vmx/nested.c            |  34 ++++
+ arch/x86/kvm/vmx/vmcs12.c            | 275 ++++++++++++++++-----------
+ arch/x86/kvm/vmx/vmcs12.h            |  14 +-
+ arch/x86/kvm/vmx/vmx.c               | 262 ++++++++++++++++++++++++-
+ arch/x86/kvm/x86.c                   |  47 ++++-
+ arch/x86/kvm/x86.h                   |   2 +-
+ include/linux/kvm_host.h             |  32 ++++
+ 13 files changed, 588 insertions(+), 131 deletions(-)
+
 -- 
 2.17.2
 
