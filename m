@@ -2,171 +2,258 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B366DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4274C20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ehk8QxCe"
+	by mail.kernel.org (Postfix) with ESMTP id 80D4020775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgGAIWx (ORCPT
+        id S1728604AbgGAI1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728450AbgGAIWw (ORCPT
+        Wed, 1 Jul 2020 04:27:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51161 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728450AbgGAI1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:22:52 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1BBC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:22:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so22863523wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fqNKcNDWBO1tiQLOFziaLK2OkzYUszDxX893hoiiz9o=;
-        b=Ehk8QxCeHB/mnCJXzEK1P5FNNLtj8uiSRIKn1ej3tkK+nKRnj1tyBrFkoUAtC+JYFB
-         bmlL2IMxo4b3fNk/aNzlBBdxoQtj7WjjtrjqZ16qH960MHcw/yxusCVLnJQHzcGG7XrR
-         hkw7xIgs1SRuBwGg6xDfUxd5AXpIdaL7Jim7NLYE4XQ94EtsVbDehcv5j3ZSDNJlWNCK
-         0pdT0/zn9oZoFvocVAA3j2c/kLXdL+SLUf63mmeoqvMU2A0AtCUmpp9S66teTW1jnDGB
-         RudZwLiDChBHm7QXBZAlka2rkApynpTa3qbc5YQPpDpoM1XeIkdPCoztmLykKnaqOi0b
-         gwxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fqNKcNDWBO1tiQLOFziaLK2OkzYUszDxX893hoiiz9o=;
-        b=km10cj1Zy2TMXoizTEegpGjQ976OS47zvq5tQDciZ0lcR7P6LaJTB27IVGXDu3+Kwy
-         +xZd3WtCis3STFBWwSXBODa/5Yb2MPbJIvAtcMgejM5sVUtAQqwN4qiHfnXp5S6ImFdm
-         WVJnGskxXGgtf9QvY6rwUjeh5ZiChq0tgJrOqyGJdm4883E3sGzN2E38oesqsGAMRXXf
-         8JC99PZ4rpMizL66saga85f3kxn4cJxJuABa2iotJLAHt9EA2IcuO5K9nuSs50uQUEyt
-         7v8Li7YTWRnoIbQUFdW4V8yJ2tKtu4rduN8RuRUkuSAYIj1c8JeH5GDq2Dvax/OSauGz
-         6vBw==
-X-Gm-Message-State: AOAM532lGyGFMUdEDqe+p4xwuv9WJ1EpMXedFI1CpvktTfl4Xq7LZS/L
-        HUdNbbV3rJavTz6ZFruA112RGGnnlR4=
-X-Google-Smtp-Source: ABdhPJyEwEOBEK9Wfs4bAhcC2E5e73b5MTuRD/jKeJpE3uGcviUsWhu3GgN6BcFL1tFqYpOIXyN7Lg==
-X-Received: by 2002:a5d:688c:: with SMTP id h12mr25108563wru.212.1593591770614;
-        Wed, 01 Jul 2020 01:22:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
-        by smtp.googlemail.com with ESMTPSA id c65sm6179920wme.8.2020.07.01.01.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 01:22:50 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] thermal: core: genetlink support for
- events/cmd/sampling
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
-        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <20200625144509.17918-4-daniel.lezcano@linaro.org>
- <73150ef4ca536368f087672b917dd9773417020e.camel@intel.com>
- <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
- <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <ac55475f-7c38-399f-b710-a671074f577d@linaro.org>
-Date:   Wed, 1 Jul 2020 10:22:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 04:27:40 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jqY5F-0001ea-FF; Wed, 01 Jul 2020 08:27:09 +0000
+Date:   Wed, 1 Jul 2020 10:27:08 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Message-ID: <20200701082708.pgfskg7hrsnfi36k@wittgenstein>
+References: <20200701064906.323185-1-areber@redhat.com>
+ <20200701064906.323185-2-areber@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200701064906.323185-2-areber@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2020 09:41, Zhang Rui wrote:
-> Hi, Daniel,
+On Wed, Jul 01, 2020 at 08:49:04AM +0200, Adrian Reber wrote:
+> This patch introduces CAP_CHECKPOINT_RESTORE, a new capability facilitating
+> checkpoint/restore for non-root users.
 > 
-> On Tue, 2020-06-30 at 20:32 +0200, Daniel Lezcano wrote:
->> Hi Zhang,
->>
->> thanks for taking the time to review
->>
->>
->> On 30/06/2020 18:12, Zhang Rui wrote:
->>
->> [ ... ]
->>
->>>> +int thermal_notify_tz_enable(int tz_id);
->>>> +int thermal_notify_tz_disable(int tz_id);
->>>
->>> these two will be used after merging the mode enhancement patches
->>> from
->>> Andrzej Pietrasiewicz, right?
->>
->> Yes, that is correct.
->>
->>>> +int thermal_notify_tz_trip_down(int tz_id, int id);
->>>> +int thermal_notify_tz_trip_up(int tz_id, int id);
->>>> +int thermal_notify_tz_trip_delete(int tz_id, int id);
->>>> +int thermal_notify_tz_trip_add(int tz_id, int id, int type,
->>>> +			       int temp, int hyst);
->>>
->>> is there any case we need to use these two?
->>
->> There is the initial proposal to add/del trip points via sysfs which
->> is
->> not merged because of no comments and the presentation from Srinivas
->> giving the 'add' and 'del' notification description, so I assumed the
->> feature would be added soon.
->>
->> These functions are here ready to be connected to the core code. If
->> anyone is planning to implement add/del trip point, he won't have to
->> implement these two notifications as they will be ready to be called.
->>
-> Then I'd prefer we only introduce the events that are used or will be
-> used soon, like the tz disable/enable, to avoid some potential dead
-> code.
-> We can easily add more events when they are needed.
-
-Sure, if Srinivas does not need them, I can drop these notifications.
-
-However, I would suggest to keep at the uapi header file with the
-definition of the events and the attributes in order to reduce the
-impact of the userspace change when adding these two notifications in
-the future.
-
-> Srinivas, do you have plan to use the trip add/delete events?
+> Over the last years, The CRIU (Checkpoint/Restore In Userspace) team has been
+> asked numerous times if it is possible to checkpoint/restore a process as
+> non-root. The answer usually was: 'almost'.
 > 
->>>> +int thermal_notify_tz_trip_change(int tz_id, int id, int type,
->>>> +				  int temp, int hyst);
->>>> +int thermal_notify_cdev_update(int cdev_id, int state);
->>>
->>> This is used when the cdev cur_state is changed.
->>> what about cases that cdev->max_state changes? I think we need an
->>> extra
->>> event for it, right?
->>
->> Sure, I can add:
->>
->> int thermal_notify_cdev_change(...)
+> The main blocker to restore a process as non-root was to control the PID of the
+> restored process. This feature available via the clone3 system call, or via
+> /proc/sys/kernel/ns_last_pid is unfortunately guarded by CAP_SYS_ADMIN.
 > 
-> thermal_notify_cdev_change() and thermal_notify_cdev_update() looks
-> confusing to me.
-> Can we use thermal_notify_cdev_update_cur() and
-> thermal_notify_cdev_update_max()?
-> Or can we use one event, with updated cur_state and max_state?
+> In the past two years, requests for non-root checkpoint/restore have increased
+> due to the following use cases:
+> * Checkpoint/Restore in an HPC environment in combination with a resource
+>   manager distributing jobs where users are always running as non-root.
+>   There is a desire to provide a way to checkpoint and restore long running
+>   jobs.
+> * Container migration as non-root
+> * We have been in contact with JVM developers who are integrating
+>   CRIU into a Java VM to decrease the startup time. These checkpoint/restore
+>   applications are not meant to be running with CAP_SYS_ADMIN.
+> 
+> We have seen the following workarounds:
+> * Use a setuid wrapper around CRIU:
+>   See https://github.com/FredHutch/slurm-examples/blob/master/checkpointer/lib/checkpointer/checkpointer-suid.c
+> * Use a setuid helper that writes to ns_last_pid.
+>   Unfortunately, this helper delegation technique is impossible to use with
+>   clone3, and is thus prone to races.
+>   See https://github.com/twosigma/set_ns_last_pid
+> * Cycle through PIDs with fork() until the desired PID is reached:
+>   This has been demonstrated to work with cycling rates of 100,000 PIDs/s
+>   See https://github.com/twosigma/set_ns_last_pid
+> * Patch out the CAP_SYS_ADMIN check from the kernel
+> * Run the desired application in a new user and PID namespace to provide
+>   a local CAP_SYS_ADMIN for controlling PIDs. This technique has limited use in
+>   typical container environments (e.g., Kubernetes) as /proc is
+>   typically protected with read-only layers (e.g., /proc/sys) for hardening
+>   purposes. Read-only layers prevent additional /proc mounts (due to proc's
+>   SB_I_USERNS_VISIBLE property), making the use of new PID namespaces limited as
+>   certain applications need access to /proc matching their PID namespace.
+> 
+> The introduced capability allows to:
+> * Control PIDs when the current user is CAP_CHECKPOINT_RESTORE capable
+>   for the corresponding PID namespace via ns_last_pid/clone3.
+> * Open files in /proc/pid/map_files when the current user is
+>   CAP_CHECKPOINT_RESTORE capable in the root namespace, useful for recovering
+>   files that are unreachable via the file system such as deleted files, or memfd
+>   files.
+> 
+> See corresponding selftest for an example with clone3().
+> 
+> Signed-off-by: Adrian Reber <areber@redhat.com>
+> Signed-off-by: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+> ---
 
-I think it is a good idea to use the same event and depending on the
-change we can add the cur_state or the max_state attribute. Up to the
-userspace to figure out which one is present.
+I think that now looks reasonable. A few comments.
 
-[ ... ]
+Before we proceed, please split the addition of
+checkpoint_restore_ns_capable() out into a separate patch.
+In fact, I think the cleanest way of doing this would be:
+- 0/n capability: add CAP_CHECKPOINT_RESTORE
+- 1/n pid: use checkpoint_restore_ns_capable() for set_tid
+- 2/n pid_namespace: use checkpoint_restore_ns_capable() for ns_last_pid
+- 3/n: proc: require checkpoint_restore_ns_capable() in init userns for map_files
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+(commit subjects up to you of course) and a nice commit message for each
+time we relax a permissions on something so we have a clear separate
+track record for each change in case we need to revert something. Then
+the rest of the patches in this series. Testing patches probably last.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>  fs/proc/base.c                      | 8 ++++----
+>  include/linux/capability.h          | 6 ++++++
+>  include/uapi/linux/capability.h     | 9 ++++++++-
+>  kernel/pid.c                        | 2 +-
+>  kernel/pid_namespace.c              | 2 +-
+>  security/selinux/include/classmap.h | 5 +++--
+>  6 files changed, 23 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index d86c0afc8a85..ad806069c778 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -2189,16 +2189,16 @@ struct map_files_info {
+>  };
+>  
+>  /*
+> - * Only allow CAP_SYS_ADMIN to follow the links, due to concerns about how the
+> - * symlinks may be used to bypass permissions on ancestor directories in the
+> - * path to the file in question.
+> + * Only allow CAP_SYS_ADMIN and CAP_CHECKPOINT_RESTORE to follow the links, due
+> + * to concerns about how the symlinks may be used to bypass permissions on
+> + * ancestor directories in the path to the file in question.
+>   */
+>  static const char *
+>  proc_map_files_get_link(struct dentry *dentry,
+>  			struct inode *inode,
+>  		        struct delayed_call *done)
+>  {
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!capable(CAP_SYS_ADMIN) && !capable(CAP_CHECKPOINT_RESTORE))
+>  		return ERR_PTR(-EPERM);
+
+I think it's clearer if you just use:
+checkpoint_restore_ns_capable(&init_user_ns)
+
+> +static inline bool checkpoint_restore_ns_capable(struct user_namespace *ns)
+
+>  
+>  	return proc_pid_get_link(dentry, inode, done);
+> diff --git a/include/linux/capability.h b/include/linux/capability.h
+> index b4345b38a6be..1e7fe311cabe 100644
+> --- a/include/linux/capability.h
+> +++ b/include/linux/capability.h
+> @@ -261,6 +261,12 @@ static inline bool bpf_capable(void)
+>  	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
+>  }
+>  
+> +static inline bool checkpoint_restore_ns_capable(struct user_namespace *ns)
+> +{
+> +	return ns_capable(ns, CAP_CHECKPOINT_RESTORE) ||
+> +		ns_capable(ns, CAP_SYS_ADMIN);
+> +}
+> +
+>  /* audit system wants to get cap info from files as well */
+>  extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+>  
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 48ff0757ae5e..395dd0df8d08 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -408,7 +408,14 @@ struct vfs_ns_cap_data {
+>   */
+>  #define CAP_BPF			39
+>  
+> -#define CAP_LAST_CAP         CAP_BPF
+> +
+> +/* Allow checkpoint/restore related operations */
+> +/* Allow PID selection during clone3() */
+> +/* Allow writing to ns_last_pid */
+> +
+> +#define CAP_CHECKPOINT_RESTORE	40
+> +
+> +#define CAP_LAST_CAP         CAP_CHECKPOINT_RESTORE
+>  
+>  #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+>  
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 5799ae54b89e..2d0a97b7ed7a 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -198,7 +198,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  			if (tid != 1 && !tmp->child_reaper)
+>  				goto out_free;
+>  			retval = -EPERM;
+> -			if (!ns_capable(tmp->user_ns, CAP_SYS_ADMIN))
+> +			if (!checkpoint_restore_ns_capable(tmp->user_ns))
+>  				goto out_free;
+>  			set_tid_size--;
+>  		}
+> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+> index 0e5ac162c3a8..ac135bd600eb 100644
+> --- a/kernel/pid_namespace.c
+> +++ b/kernel/pid_namespace.c
+> @@ -269,7 +269,7 @@ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
+>  	struct ctl_table tmp = *table;
+>  	int ret, next;
+>  
+> -	if (write && !ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
+> +	if (write && !checkpoint_restore_ns_capable(pid_ns->user_ns))
+>  		return -EPERM;
+>  
+>  	/*
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 98e1513b608a..40cebde62856 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -27,9 +27,10 @@
+>  	    "audit_control", "setfcap"
+>  
+>  #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+> -		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf"
+> +		"wake_alarm", "block_suspend", "audit_read", "perfmon", "bpf", \
+> +		"checkpoint_restore"
+>  
+> -#if CAP_LAST_CAP > CAP_BPF
+> +#if CAP_LAST_CAP > CAP_CHECKPOINT_RESTORE
+>  #error New capability defined, please update COMMON_CAP2_PERMS.
+>  #endif
+>  
+> -- 
+> 2.26.2
+> 
