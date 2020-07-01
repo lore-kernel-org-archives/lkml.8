@@ -2,125 +2,244 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5137FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB9D206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fumtQXXq";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="VEm0+8fc"
+	by mail.kernel.org (Postfix) with ESMTP id 32CAF2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgGAHbw (ORCPT
+        id S1728263AbgGAHch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:31:52 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:44317 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgGAHbv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:31:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593588711; x=1625124711;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=fumtQXXqcHs8/paI6gj3auMDvLOHjgiYL+GLnVAyZz2LuV+qWNji6ILj
-   mANTyrVHLYtK1DU7IDeVjg1hVwUuTx9thDSqSa+QzvsAt8JHiQuYvsVq5
-   F+KoOuIHjYZHhGv36QBLmDIofLmU1EIkBMpBIzLe1wCpFXNz++IZxUQLY
-   5KoRh2VMcxF32RNSOUrWr127WE3G+P46px5xo675R6CcMc1NP445RqNoI
-   N5LeCB353L+Oi+/tfDPHgLXAyKM9QpjV6KSt8cR28uEhtJrPulkjddhXc
-   4M1l/h5cnTLttUuFMaOPb00LEcNfxP3WQD1nCWkkNlCMjg/mVRKqtAi6D
-   g==;
-IronPort-SDR: U1+YNOIF4EHUyaZVrQM5NLzDhOKp6Forp82dK4mkiixGqAIicutDw3Ywm2Avkd0TLL2lJPILOx
- AwfmHWc0kFdDYyZvLUW2oCOQiLDPUrrgKwV3AM0uCp1lIQ3UfMpmovlLoDShs1bY/unpMjLyya
- IMIj6X9tAPAn1EyHhFEX3vUwLm00Z0y2RCCH/On0hmTEODJ0h0hrYAus7473+jaGaAORCSME2K
- vn5kIXKII2siu1Tv5BoE1AGqx5mZTQ8D0JsL3ISiCcGy494D2r3KYCyFTwwpmrprmxupE4Ysj5
- PYQ=
-X-IronPort-AV: E=Sophos;i="5.75,299,1589212800"; 
-   d="scan'208";a="145679776"
-Received: from mail-bn7nam10lp2106.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.106])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Jul 2020 15:31:50 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XedH7Ehr1tJejX1oJqnajh6sUIj4dI052Qvny3ktoXHDASABClY/zW164thiZeET7wcpimz7JrOvxTVxeG1RJsFpdsV+w0vds01K7MDVPBe7Ceo+uKpnfwVe0KcPO3eoTG5ZzP/srEKeYZQjSwcvfcIZ/1l/Bq5+SOeZeT2gZYn4A7We2hLe3z1n8yZreu4jpyYEWE1ozFXXARi9WO6wGZSJftpvXfNj9YA7jnPIt1DVhkE+20cUYUAgufWXAY2JerY0YYKTaAgWhvwF24rOf38JEvpwoPi5U4hInoZ8N29yI26wT7omPBfGrQQYlTE0kaMBuV1VLO05osyEcRzY/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=YdGhJ0j2pGFVt/StzG+tH5QoFqR3f5qprcDkQSnOEedbXA6mdhKe/rSMMjRCyQRgB2bfFFqBLg9yswupdqM5ewZlu+n4iOPZEyUx3eRTBQlGVX7gUSwqbLkqQ9bnL/b9QPDZaU+DKAlUFkkDuqhLsiKnzfiTMhL7uFH3TFAseZXcRPSe/t4tiOYUYJ4l8j76+zIWhNcVQPE2W0Js632lsSSp3gIU8iumpJNIeBAmcUGhWr5QOOdaQAD08kUVu3tuv6xabOBffbIPXSiZRPFcqUkV85wXso38pjlQ9e8uxWBJeOSVXcYgTDY6ZWFnYA03tNDrtdiBvsvvKbB3If40Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=VEm0+8fcKihsFHytRF11SzyhOhoAG5h13XCc8a0Gjal+HFqWQXyr2ZU7hIk4Amh7DsV63cgNG+XqBwOuZsffHlXitAdWiowrCqRgAdWuT/EL9h8gNVpSUnMU7ItzOx7p07iT5BEn00hreZ7FAdBydZw6Kqcg8hjI3xswEp/HFR0=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN2PR04MB2320.namprd04.prod.outlook.com
- (2603:10b6:804:16::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 1 Jul
- 2020 07:31:48 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3131.028; Wed, 1 Jul 2020
- 07:31:48 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/7] block: remove the unused bd_private field from struct
- block_device
-Thread-Topic: [PATCH 6/7] block: remove the unused bd_private field from
- struct block_device
-Thread-Index: AQHWS5A1Z9kMQpgijkqsnXwlX5CA1w==
-Date:   Wed, 1 Jul 2020 07:31:48 +0000
-Message-ID: <SN4PR0401MB3598A8FF062FB8E163634B9D9B6C0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200626080158.1998621-1-hch@lst.de>
- <20200626080158.1998621-7-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1515:bd01:85ad:d97d:6da7:d614]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b0265915-d150-4f1e-d1f9-08d81d90d061
-x-ms-traffictypediagnostic: SN2PR04MB2320:
-x-microsoft-antispam-prvs: <SN2PR04MB23204A075D1210ADF7A487779B6C0@SN2PR04MB2320.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 04519BA941
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BRhCQy3F/KGbwNbvDyDUgPpJxTTcvoRvdTw93Pv9m3JtP+6sW5cMHYUrrVaYPbVP6ZnDFCxC7UP62JjBzQWEdYJorHzHNWtRUOKN1CcLGE3cs62qa1YCpHho7En3ghHkJrLOuj8uhxvCLSVTDiKY1K0Dwz3Pplea8HUzYa0yKcPJDLANhE7uOsm2vPImlhEkQizOtaLYa74ZpxFBh73qX0undyRbeO2Z7gsOn2GjIaFrMdkIPSXQoxqLBECx4xdrlCJP+L+qk6wobZM6VqAZSsHb45SOOEO0QySZkSXocSFG1dzI88oWW1YLzBDN4/rhi29bjtQXxuWEEkVYTysAkQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(7696005)(478600001)(33656002)(6506007)(4270600006)(316002)(86362001)(4326008)(8936002)(5660300002)(52536014)(110136005)(8676002)(9686003)(55016002)(186003)(71200400001)(54906003)(19618925003)(91956017)(66556008)(64756008)(66446008)(558084003)(66946007)(66476007)(2906002)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: p12gfzs3ekbdl/AAVOadvOHldga3zNGHl5B6/FJUIlxiEOSjiyWXarTDP6SChDqXsn49VXQ7Itc0NhNScFnX6pOYCatyIOepJj+X1BkDPDOx0p2Ty7qIbnhXmRjTL3DD/wuKiLfESVti1tyof3KNOH0wVwGYQrY+TgSrOl9JYMCHzm98TzdTdevUThNqzlRRLlREJjil4Drfa926UrSIkx6o7Phxm4cixi0laEHWw853lHE9X8XkQHENEKr8t2dbHA3ixXZ67/CSqMmsuKG4CAPIx1iTy7LSpwYyCZN2vfc0tdNVSIXk1XOz7WBNEewS1/ADjt9e1gOfysKxC2xWs2LF0Kpj0TK+0jnfFyHCOUJ+N1CLXkR7014OH9Q8U/lavxWpEPKOMKqxVbi+8afCyD03f9eVD52u1JYa+dIgqlu3QCQVBi8jyzLQBM802RaGNhE8VjfzqhBXy844ILLOPloCmo/lPZAMjKoLrPGYehma526AFgwqeNnSqLnktmbMDj5K3qaNpZfYHPSZXyIX6cYZumKmwwfWTUm1BY0P6IcejCgM7oMBzsCds8ySgaF5
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Jul 2020 03:32:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41099 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727981AbgGAHch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 03:32:37 -0400
+IronPort-SDR: 5pUF98NJwRmIHdmFsL5UWlds5UK0FOL4xrjBLc0IRgVpooJGzbvPRV/UIT6zwWN+sHpjQu6WHW
+ /+oOMcAxONZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="208003211"
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="208003211"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 00:32:28 -0700
+IronPort-SDR: rY7m5Sdzq9E4NKlQ9G3cljrbnk0qrUh/K0wzgG8CpFgIeiOlgJ2oo+NY9+vsI0ztmajo5WTPJJ
+ tPhwgQOXsX2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="277685135"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.30.5]) ([10.255.30.5])
+  by orsmga003.jf.intel.com with ESMTP; 01 Jul 2020 00:32:24 -0700
+Cc:     baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20200627031532.28046-1-baolu.lu@linux.intel.com>
+ <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
+ <5dc1cece-6111-9b56-d04c-9553d592675b@linux.intel.com>
+ <48dd9f1e-c18b-77b7-650a-c35ecbb69f2b@arm.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c38784ad-9dba-0840-3a61-e2c21e781f1e@linux.intel.com>
+Date:   Wed, 1 Jul 2020 15:32:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0265915-d150-4f1e-d1f9-08d81d90d061
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2020 07:31:48.0483
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nKg2u1iArmSZtNeQFUE9MYQlAWQdwjFM82lIdHJ4tkUMKoupdJsRJ6FJAlzp1fDrm4lHAekbNdTYtSc+MGHpBqZlbV0Oaf0fFt+OzjQ1dCo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2320
+In-Reply-To: <48dd9f1e-c18b-77b7-650a-c35ecbb69f2b@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+Hi Robin,
+
+On 2020/7/1 0:51, Robin Murphy wrote:
+> On 2020-06-30 02:03, Lu Baolu wrote:
+>> Hi Robin,
+>>
+>> On 6/29/20 7:56 PM, Robin Murphy wrote:
+>>> On 2020-06-27 04:15, Lu Baolu wrote:
+>>>> The hardware assistant vfio mediated device is a use case of iommu
+>>>> aux-domain. The interactions between vfio/mdev and iommu during mdev
+>>>> creation and passthr are:
+>>>>
+>>>> - Create a group for mdev with iommu_group_alloc();
+>>>> - Add the device to the group with
+>>>>          group = iommu_group_alloc();
+>>>>          if (IS_ERR(group))
+>>>>                  return PTR_ERR(group);
+>>>>
+>>>>          ret = iommu_group_add_device(group, &mdev->dev);
+>>>>          if (!ret)
+>>>>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+>>>>                           iommu_group_id(group));
+>>>> - Allocate an aux-domain
+>>>>     iommu_domain_alloc()
+>>>> - Attach the aux-domain to the physical device from which the mdev is
+>>>>    created.
+>>>>     iommu_aux_attach_device()
+>>>>
+>>>> In the whole process, an iommu group was allocated for the mdev and an
+>>>> iommu domain was attached to the group, but the group->domain leaves
+>>>> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+>>>>
+>>>> This adds iommu_group_get/set_domain() so that group->domain could be
+>>>> managed whenever a domain is attached or detached through the 
+>>>> aux-domain
+>>>> api's.
+>>>
+>>> Letting external callers poke around directly in the internals of 
+>>> iommu_group doesn't look right to me.
+>>
+>> Unfortunately, it seems that the vifo iommu abstraction is deeply bound
+>> to the IOMMU subsystem. We can easily find other examples:
+>>
+>> iommu_group_get/set_iommudata()
+>> iommu_group_get/set_name()
+>> ...
+> 
+> Sure, but those are ways for users of a group to attach useful 
+> information of their own to it, that doesn't matter to the IOMMU 
+> subsystem itself. The interface you've proposed gives callers rich new 
+> opportunities to fundamentally break correct operation of the API:
+> 
+>      dom = iommu_domain_alloc();
+>      iommu_attach_group(dom, grp);
+>      ...
+>      iommu_group_set_domain(grp, NULL);
+>      // oops, leaked and can't ever detach properly now
+> 
+> or perhaps:
+> 
+>      grp = iommu_group_alloc();
+>      iommu_group_add_device(grp, dev);
+>      iommu_group_set_domain(grp, dom);
+>      ...
+>      iommu_detach_group(dom, grp);
+>      // oops, IOMMU driver might not handle this
+> 
+>>> If a regular device is attached to one or more aux domains for PASID 
+>>> use, iommu_get_domain_for_dev() is still going to return the primary 
+>>> domain, so why should it be expected to behave differently for mediated
+>>
+>> Unlike the normal device attach, we will encounter two devices when it
+>> comes to aux-domain.
+>>
+>> - Parent physical device - this might be, for example, a PCIe device
+>> with PASID feature support, hence it is able to tag an unique PASID
+>> for DMA transfers originated from its subset. The device driver hence
+>> is able to wrapper this subset into an isolated:
+>>
+>> - Mediated device - a fake device created by the device driver mentioned
+>> above.
+>>
+>> Yes. All you mentioned are right for the parent device. But for mediated
+>> device, iommu_get_domain_for_dev() doesn't work even it has an valid
+>> iommu_group and iommu_domain.
+>>
+>> iommu_get_domain_for_dev() is a necessary interface for device drivers
+>> which want to support aux-domain. For example,
+> 
+> Only if they want to follow this very specific notion of using made-up 
+> devices and groups to represent aux attachments. Even if a driver 
+> managing its own aux domains entirely privately does create child 
+> devices for them, it's not like it can't keep its domain pointers in 
+> drvdata if it wants to ;)
+> 
+> Let's not conflate the current implementation of vfio_mdev with the 
+> general concepts involved here.
+> 
+>>            struct iommu_domain *domain;
+>>            struct device *dev = mdev_dev(mdev);
+>>        unsigned long pasid;
+>>
+>>            domain = iommu_get_domain_for_dev(dev);
+>>            if (!domain)
+>>                    return -ENODEV;
+>>
+>>            pasid = iommu_aux_get_pasid(domain, dev->parent);
+>>        if (pasid == IOASID_INVALID)
+>>            return -EINVAL;
+>>
+>>        /* Program the device context with the PASID value */
+>>        ....
+>>
+>> Without this fix, iommu_get_domain_for_dev() always returns NULL and the
+>> device driver has no means to support aux-domain.
+> 
+> So either the IOMMU API itself is missing the ability to do the right 
+> thing internally, or the mdev layer isn't using it appropriately. Either 
+> way, simply punching holes in the API for mdev to hack around its own 
+> mess doesn't seem like the best thing to do.
+> 
+> The initial impression I got was that it's implicitly assumed here that 
+> the mdev itself is attached to exactly one aux domain and nothing else, 
+> at which point I would wonder why it's using aux at all, but are you 
+> saying that in fact no attach happens with the mdev group either way, 
+> only to the parent device?
+> 
+> I'll admit I'm not hugely familiar with any of this, but it seems to me 
+> that the logical flow should be:
+> 
+>      - allocate domain
+>      - attach as aux to parent
+>      - retrieve aux domain PASID
+>      - create mdev child based on PASID
+>      - attach mdev to domain (normally)
+> 
+> Of course that might require giving the IOMMU API a proper first-class 
+> notion of mediated devices, such that it knows the mdev represents the 
+> PASID, and can recognise the mdev attach is equivalent to the earlier 
+> parent aux attach so not just blindly hand it down to an IOMMU driver 
+> that's never heard of this new device before. Or perhaps the IOMMU 
+> drivers do their own bookkeeping for the mdev bus, such that they do 
+> handle the attach call, and just validate it internally based on the 
+> associated parent device and PASID. Either way, the inside maintains 
+> self-consistency and from the outside it looks like standard API usage 
+> without nasty hacks.
+> 
+> I'm pretty sure I've heard suggestions of using mediated devices beyond 
+> VFIO (e.g. within the kernel itself), so chances are this is a direction 
+> that we'll have to take at some point anyway.
+> 
+> And, that said, even if people do want an immediate quick fix regardless 
+> of technical debt, I'd still be a lot happier to see 
+> iommu_group_set_domain() lightly respun as iommu_attach_mdev() ;)
+
+Get your point and I agree with your concerns.
+
+To maintain the relationship between mdev's iommu_group and
+iommu_domain, how about extending below existing aux_attach api
+
+int iommu_aux_attach_device(struct iommu_domain *domain,
+			    struct device *dev)
+
+by adding the mdev's iommu_group?
+
+int iommu_aux_attach_device(struct iommu_domain *domain,
+			    struct device *dev,
+			    struct iommu_group *group)
+
+And, in iommu_aux_attach_device(), we require,
+  - @group only has a single device;
+  - @group hasn't been attached by any devices;
+  - Set the @domain to @group
+
+Just like what we've done in iommu_attach_device().
+
+Any thoughts?
+
+Best regards,
+baolu
