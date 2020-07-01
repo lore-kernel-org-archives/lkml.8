@@ -6,151 +6,76 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC743C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA2B2082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EC22082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfFIRYhy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iT/B790I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgGAUrm (ORCPT
+        id S1726573AbgGAUvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:47:42 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34065 "EHLO
+        Wed, 1 Jul 2020 16:51:18 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57629 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725535AbgGAUrk (ORCPT
+        by vger.kernel.org with ESMTP id S1725535AbgGAUvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:47:40 -0400
+        Wed, 1 Jul 2020 16:51:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593636458;
+        s=mimecast20190719; t=1593636676;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MbiyraTJ4trv3FWb4qCBJhr5R70RrnDBw9rQbrUZ784=;
-        b=VfFIRYhyN7UAlCmU4ycy3YjrdUnZaix3K83yEmCJ4yw+0MKL3BwuvHujojAeGw/KHJUYyy
-        Y6SsKzUGNYq4BV0q2xfZCxCjGX4LJA3yWuprFF0sVrh4rQU/MTjyXc6+cmBsvv5uUMLYRf
-        309S+3va0D9/K/zDx6wiFR3gKOdZ6+w=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-HysxjhcjMOOVN17aKfk3VA-1; Wed, 01 Jul 2020 16:47:36 -0400
-X-MC-Unique: HysxjhcjMOOVN17aKfk3VA-1
-Received: by mail-wm1-f71.google.com with SMTP id o13so25176897wmh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:47:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MbiyraTJ4trv3FWb4qCBJhr5R70RrnDBw9rQbrUZ784=;
-        b=Gm1dPRrwCgoL9T10X6SbBKszogGlI46IpOFEzypGef6pQP96s7UbcCmHZxykr/IbKI
-         8pVw+K5rU4BKDVte/jKO5OIoX4+VN5QH/zwNN69yr+aTAjME+O4ImfKnTX8DJsw6Cj2Z
-         ww3mPvZdEk2WERDtKSOQFQ8QoSXe1Vfn1oeLe525vJ22II6fMVast+SSEs0jrQNUhQ81
-         3KXqeY/EyBF90GTApvfZSqHmrbZVD5cKXFW2HPASfFYEbz/7rT3slmCf7u1YyJO3ehGa
-         0Tahey7JxRTQNqqC1aQa4MWQ5iXBnGxw/n68xCk9aPPTGN/uRf8LpvkkuKgufzMm3vP0
-         yGAA==
-X-Gm-Message-State: AOAM5302EBlwxSdEMok5tqIYmi784S4rwN/2ZRUrRSacl7d99R5H1+vh
-        Ta9P3NGZmEU0TTHewqj/RHgtD3vOpMVvHGr2d2uWFA41lCJ76oacMxIcEXno2/PzgQyPGawoKpB
-        aVeejgGBfdCkYg3hQ0uyERwNu
-X-Received: by 2002:adf:ed47:: with SMTP id u7mr30433374wro.201.1593636455515;
-        Wed, 01 Jul 2020 13:47:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzi4/QeFIvFvIhW8MFrahcm+NHf1Nr8du8L4WlMn+iG6s23576AuHveqgE2W9yZnAvkgrNyJg==
-X-Received: by 2002:adf:ed47:: with SMTP id u7mr30433344wro.201.1593636455219;
-        Wed, 01 Jul 2020 13:47:35 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id h2sm8337653wrw.62.2020.07.01.13.47.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 13:47:32 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 16:47:29 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, jgross@suse.com,
-        Peng Fan <peng.fan@nxp.com>, x86@kernel.org,
-        konrad.wilk@oracle.com, jasowang@redhat.com,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-imx@nxp.com,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
-Message-ID: <20200701164501-mutt-send-email-mst@kernel.org>
-References: <20200624050355-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
- <20200624163940-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
- <20200624181026-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
- <20200626110629-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006291621300.8121@sstabellini-ThinkPad-T480s>
- <20200701133456.GA23888@infradead.org>
- <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
+        bh=NbYjpD75KSjMkRrn1WEH75w+FOpZgxrMTEmZVf5CAxw=;
+        b=iT/B790I1C+Q2wQ2k9gjmTjUtaXdeFFNYXs3i2sQ8DQH7cg8VkhVfQObSQdrfxwFBby0Af
+        J0wizowoDryIk/Uup0PVaGxp0wk1hCKvbrjqLr2xpEd0Zv9xp2WjRXj5Jmu40rvoqHAbHE
+        fEwBNwQndjAjQIqqb5s1r6Zpc7GM3oU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-pboVzBC7OOSn7T4XBAcKlw-1; Wed, 01 Jul 2020 16:51:12 -0400
+X-MC-Unique: pboVzBC7OOSn7T4XBAcKlw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39BFF1083E80;
+        Wed,  1 Jul 2020 20:51:11 +0000 (UTC)
+Received: from treble (ovpn-117-134.rdu2.redhat.com [10.10.117.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 868255C557;
+        Wed,  1 Jul 2020 20:51:10 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 15:51:08 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: objtool clac/stac handling change..
+Message-ID: <20200701205108.wtgfnijav7lgfiqe@treble>
+References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
+ <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 10:34:53AM -0700, Stefano Stabellini wrote:
-> On Wed, 1 Jul 2020, Christoph Hellwig wrote:
-> > On Mon, Jun 29, 2020 at 04:46:09PM -0700, Stefano Stabellini wrote:
-> > > > I could imagine some future Xen hosts setting a flag somewhere in the
-> > > > platform capability saying "no xen specific flag, rely on
-> > > > "VIRTIO_F_ACCESS_PLATFORM". Then you set that accordingly in QEMU.
-> > > > How about that?
-> > > 
-> > > Yes, that would be fine and there is no problem implementing something
-> > > like that when we get virtio support in Xen. Today there are still no
-> > > virtio interfaces provided by Xen to ARM guests (no virtio-block/net,
-> > > etc.)
-> > > 
-> > > In fact, in both cases we are discussing virtio is *not* provided by
-> > > Xen; it is a firmware interface to something entirely different:
-> > > 
-> > > 1) virtio is used to talk to a remote AMP processor (RPMesg)
-> > > 2) virtio is used to talk to a secure-world firmware/OS (Trusty)
-> > >
-> > > VIRTIO_F_ACCESS_PLATFORM is not set by Xen in these cases but by RPMesg
-> > > and by Trusty respectively. I don't know if Trusty should or should not
-> > > set VIRTIO_F_ACCESS_PLATFORM, but I think Linux should still work
-> > > without issues.
-> > > 
-> > 
-> > Any virtio implementation that is not in control of the memory map
-> > (aka not the hypervisor) absolutely must set VIRTIO_F_ACCESS_PLATFORM,
-> > else it is completely broken.
-> 
-> Lots of broken virtio implementations out there it would seem :-(
+On Wed, Jul 01, 2020 at 01:36:22PM -0700, Andy Lutomirski wrote:
+> If we do this extable change, we end up with a different mess: some
+> exception handlers will clear AC and some won’t.  I’m sure objtool can
+> deal with this with some effort, but I’m not convinced it’s worth it.
 
-Not really, most of virtio implementations are in full control of
-memory, being part of the hypervisor.
-
-> 
-> > > The xen_domain() check in Linux makes it so that vring_use_dma_api
-> > > returns the opposite value on native Linux compared to Linux as Xen/ARM
-> > > DomU by "accident". By "accident" because there is no architectural
-> > > reason why Linux Xen/ARM DomU should behave differently compared to
-> > > native Linux in this regard.
-> > > 
-> > > I hope that now it is clearer why I think the if (xen_domain()) check
-> > > needs to be improved anyway, even if we fix generic dma_ops with virtio
-> > > interfaces missing VIRTIO_F_ACCESS_PLATFORM.
-> > 
-> > IMHO that Xen quirk should never have been added in this form..
-> 
-> Would you be in favor of a more flexible check along the lines of the
-> one proposed in the patch that started this thread:
-> 
->     if (xen_vring_use_dma())
->             return true;
-> 
-> 
-> xen_vring_use_dma would be implemented so that it returns true when
-> xen_swiotlb is required and false otherwise.
-
-I'll need to think about it. Sounds reasonable on the surface ...
+Yeah.  Peter's more of the expert here, but I think we'd at least need
+to annotate the code which expects an implicit CLAC so objtool knows
+what to expect.  It's not trivial, but it might be doable.
 
 -- 
-MST
+Josh
 
