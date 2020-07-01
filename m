@@ -2,131 +2,333 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A235C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 219F1206CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0072073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPefHxRr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lx0Pvkrf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbgGALki (ORCPT
+        id S1730375AbgGALlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730196AbgGALkh (ORCPT
+        Wed, 1 Jul 2020 07:41:01 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41039 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730360AbgGALlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:40:37 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB77C061755;
-        Wed,  1 Jul 2020 04:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HcAuVDWEpmiLqpe0YNpYLGZ4fmq8QzKs/ZIuj2kkH8Y=; b=RPefHxRrCTySSxthpCiwJtUQ3p
-        sehdVUh/OXlcD2v/g6AxiKxksqOrSjRiJ3RqUoq5JvswSrlFwUahiev5FWK/uvACmhnWZcX96iaAj
-        WVqWxdhoftAZ4iiqY0ToHDJjZkiN1ml6ykH6Gd0nxYOevhI98eCLIhsTljU6lq3B56wQQRmi47Kgn
-        2LXfsp8FLDVW0Y91r/ZhmJ1DxlRIfNCq4WjGOYr1KTJtkpVrIUjrB3ZLhTgikLeGURhbDlKKsizky
-        W2kk0nblBpf9RF7AABwI4KnH5A2qlS/QhSpfLWCJdNS/WllrJd29THxB6xyaqhGxdP1buQGCuqnSh
-        sM+SK4uQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqb6M-0005ut-DO; Wed, 01 Jul 2020 11:40:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ECCE9301AC6;
-        Wed,  1 Jul 2020 13:40:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D969D2BB58971; Wed,  1 Jul 2020 13:40:27 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 13:40:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200701114027.GO4800@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
- <20200625085745.GD117543@hirez.programming.kicks-ass.net>
- <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+        Wed, 1 Jul 2020 07:41:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593603659; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=6Vjx26zB3N6PoS13fVP5Mviq7ntiZBSI7Ue0OuDFRho=; b=lx0PvkrfKKUIGYk6w6gZCxbAf0iIoZZr5DnIRo6l87bs+FvWkjGeLHXkyyt4Ew655hwjMJJX
+ OeBsFajtSuDJvj511K/8QHCyViAJdexV1ndftHoHXTZ0l4UjaDO6WmL9Z82wXiH+JdoKlgdi
+ 0ecskYLGlo7iafkgXAPYf5LlW6I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5efc764ac4bb4f886d40b294 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:40:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1C233C433CB; Wed,  1 Jul 2020 11:40:58 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F822C433C8;
+        Wed,  1 Jul 2020 11:40:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F822C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 1/3] media: venus: core: Add support for opp tables/perf voting
+Date:   Wed,  1 Jul 2020 17:10:36 +0530
+Message-Id: <1593603638-19296-2-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 11:41:17AM +0200, Marco Elver wrote:
-> On Tue, 30 Jun 2020 at 22:30, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
-> > > On Tue, Jun 30, 2020 at 09:19:31PM +0200, Marco Elver wrote:
+Add support to add OPP tables and perf voting on the OPP powerdomain.
+This is needed so venus votes on the corresponding performance state
+for the OPP powerdomain along with setting the core clock rate.
 
-> > > > Thoughts?
-> > >
-> > > How hard would it be to creates something that analyzes a build and
-> > > looks for all 'dependent load -> control dependency' transformations
-> > > headed by a volatile (and/or from asm) load and issues a warning for
-> > > them?
-> 
-> I was thinking about this, but in the context of the "auto-promote to
-> acquire" which you didn't like. Issuing a warning should certainly be
-> simpler.
-> 
-> I think there is no one place where we know these transformations
-> happen, but rather, need to analyze the IR before transformations,
-> take note of all the dependent loads headed by volatile+asm, and then
-> run an analysis after optimizations checking the dependencies are
-> still there.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
+ drivers/media/platform/qcom/venus/core.h       |  5 +++
+ drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
+ 3 files changed, 92 insertions(+), 10 deletions(-)
 
-Urgh, that sounds nasty. The thing is, as I've hinted at in my other
-reply, I would really like a compiler switch to disable this
-optimization entirely -- knowing how relevant the trnaformation is, is
-simply a first step towards that.
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 203c653..630f61b 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -12,6 +12,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
++#include <linux/pm_opp.h>
+ #include <linux/pm_runtime.h>
+ #include <media/videobuf2-v4l2.h>
+ #include <media/v4l2-mem2mem.h>
+@@ -216,21 +217,37 @@ static int venus_probe(struct platform_device *pdev)
+ 	if (!core->pm_ops)
+ 		return -ENODEV;
+ 
++	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
++	if (IS_ERR(core->opp_table))
++		return PTR_ERR(core->opp_table);
++
++	if (core->res->opp_pmdomain) {
++		ret = dev_pm_opp_of_add_table(dev);
++		if (!ret) {
++			core->has_opp_table = true;
++		} else if (ret != -ENODEV) {
++			dev_err(dev, "invalid OPP table in device tree\n");
++			return ret;
++		}
++	}
++
+ 	if (core->pm_ops->core_get) {
+ 		ret = core->pm_ops->core_get(dev);
+ 		if (ret)
+-			return ret;
++			goto err_opp_cleanup;
+ 	}
+ 
+ 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+ 	if (ret)
+-		return ret;
++		goto err_opp_cleanup;
+ 
+ 	if (!dev->dma_parms) {
+ 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+ 					      GFP_KERNEL);
+-		if (!dev->dma_parms)
+-			return -ENOMEM;
++		if (!dev->dma_parms) {
++			ret = -ENOMEM;
++			goto err_opp_cleanup;
++		}
+ 	}
+ 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+ 
+@@ -242,11 +259,11 @@ static int venus_probe(struct platform_device *pdev)
+ 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+ 					"venus", core);
+ 	if (ret)
+-		return ret;
++		goto err_opp_cleanup;
+ 
+ 	ret = hfi_create(core, &venus_core_ops);
+ 	if (ret)
+-		return ret;
++		goto err_opp_cleanup;
+ 
+ 	pm_runtime_enable(dev);
+ 
+@@ -302,6 +319,10 @@ static int venus_probe(struct platform_device *pdev)
+ 	pm_runtime_set_suspended(dev);
+ 	pm_runtime_disable(dev);
+ 	hfi_destroy(core);
++err_opp_cleanup:
++	if (core->has_opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(core->opp_table);
+ 	return ret;
+ }
+ 
+@@ -326,6 +347,10 @@ static int venus_remove(struct platform_device *pdev)
+ 	pm_runtime_put_sync(dev);
+ 	pm_runtime_disable(dev);
+ 
++	if (core->has_opp_table)
++		dev_pm_opp_of_remove_table(dev);
++	dev_pm_opp_put_clkname(core->opp_table);
++
+ 	if (pm_ops->core_put)
+ 		pm_ops->core_put(dev);
+ 
+@@ -355,6 +380,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Drop the performance state vote */
++	if (core->opp_pmdomain)
++		dev_pm_opp_set_rate(dev, 0);
++
+ 	if (pm_ops->core_power)
+ 		ret = pm_ops->core_power(dev, POWER_OFF);
+ 
+@@ -520,6 +549,7 @@ static const struct venus_resources sdm845_res_v2 = {
+ 	.vcodec_clks_num = 2,
+ 	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
+ 	.vcodec_pmdomains_num = 3,
++	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
+ 	.vcodec_num = 2,
+ 	.max_load = 3110400,	/* 4096x2160@90 */
+ 	.hfi_version = HFI_VERSION_4XX,
+@@ -565,6 +595,7 @@ static const struct venus_resources sc7180_res = {
+ 	.vcodec_clks_num = 2,
+ 	.vcodec_pmdomains = { "venus", "vcodec0" },
+ 	.vcodec_pmdomains_num = 2,
++	.opp_pmdomain = (const char *[]) { "opp-pd", NULL },
+ 	.vcodec_num = 1,
+ 	.hfi_version = HFI_VERSION_4XX,
+ 	.vmem_id = VIDC_RESOURCE_NONE,
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 7118612..b0cc544 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -62,6 +62,7 @@ struct venus_resources {
+ 	unsigned int vcodec_clks_num;
+ 	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+ 	unsigned int vcodec_pmdomains_num;
++	const char **opp_pmdomain;
+ 	unsigned int vcodec_num;
+ 	enum hfi_version hfi_version;
+ 	u32 max_load;
+@@ -145,8 +146,12 @@ struct venus_core {
+ 	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+ 	struct icc_path *video_path;
+ 	struct icc_path *cpucfg_path;
++	struct opp_table *opp_table;
++	bool has_opp_table;
+ 	struct device_link *pd_dl_venus;
+ 	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
++	struct device_link *opp_dl_venus;
++	struct device *opp_pmdomain;
+ 	struct video_device *vdev_dec;
+ 	struct video_device *vdev_enc;
+ 	struct v4l2_device v4l2_dev;
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index abf9315..4149ab8 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -9,6 +9,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/pm_domain.h>
++#include <linux/pm_opp.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/types.h>
+ #include <media/v4l2-mem2mem.h>
+@@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+ 
+ static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+ {
+-	struct clk *clk = core->clks[0];
+ 	int ret;
+ 
+-	ret = clk_set_rate(clk, freq);
++	ret = dev_pm_opp_set_rate(core->dev, freq);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
+ 
+ static int vcodec_domains_get(struct device *dev)
+ {
++	int ret;
++	struct opp_table *opp_table;
++	struct device **opp_virt_dev;
+ 	struct venus_core *core = dev_get_drvdata(dev);
+ 	const struct venus_resources *res = core->res;
+ 	struct device *pd;
+ 	unsigned int i;
+ 
+ 	if (!res->vcodec_pmdomains_num)
+-		return -ENODEV;
++		goto skip_pmdomains;
+ 
+ 	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+ 		pd = dev_pm_domain_attach_by_name(dev,
+@@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
+ 	if (!core->pd_dl_venus)
+ 		return -ENODEV;
+ 
++skip_pmdomains:
++	if (!core->has_opp_table)
++		return 0;
++
++	/* Attach the power domain for setting performance state */
++	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
++	if (IS_ERR(opp_table)) {
++		ret = PTR_ERR(opp_table);
++		goto opp_attach_err;
++	}
++
++	core->opp_pmdomain = *opp_virt_dev;
++	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
++					     DL_FLAG_RPM_ACTIVE |
++					     DL_FLAG_PM_RUNTIME |
++					     DL_FLAG_STATELESS);
++	if (!core->opp_dl_venus) {
++		ret = -ENODEV;
++		goto opp_dl_add_err;
++	}
++
+ 	return 0;
++
++opp_dl_add_err:
++	dev_pm_domain_detach(core->opp_pmdomain, true);
++opp_attach_err:
++	if (core->pd_dl_venus) {
++		device_link_del(core->pd_dl_venus);
++		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
++			if (IS_ERR_OR_NULL(core->pmdomains[i]))
++				continue;
++			dev_pm_domain_detach(core->pmdomains[i], true);
++		}
++	}
++	return ret;
+ }
+ 
+ static void vcodec_domains_put(struct device *dev)
+@@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
+ 	unsigned int i;
+ 
+ 	if (!res->vcodec_pmdomains_num)
+-		return;
++		goto skip_pmdomains;
+ 
+ 	if (core->pd_dl_venus)
+ 		device_link_del(core->pd_dl_venus);
+@@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
+ 			continue;
+ 		dev_pm_domain_detach(core->pmdomains[i], true);
+ 	}
++
++skip_pmdomains:
++	if (!core->has_opp_table)
++		return;
++
++	if (core->opp_dl_venus)
++		device_link_del(core->opp_dl_venus);
++
++	dev_pm_domain_detach(core->opp_pmdomain, true);
+ }
+ 
+ static int core_get_v4(struct device *dev)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-In order to control the tranformation, you have to actually know where
-in the optimization passes it happens.
-
-Also, if (big if in my book) we find the optimization is actually
-beneficial, we can invert the warning when using the switch and warn
-about lost optimization possibilities and manually re-write the code to
-use control deps.
-
-> > > This would give us an indication of how valuable this transformation is
-> > > for the kernel. I'm hoping/expecting it's vanishingly rare, but what do
-> > > I know.
-> >
-> > This could be quite useful!
-> 
-> We might then even be able to say, "if you get this warning, turn on
-> CONFIG_ACQUIRE_READ_DEPENDENCIES" (or however the option will be
-> named). 
-
-I was going to suggest: if this happens, employ -fno-wreck-dependencies
-:-)
