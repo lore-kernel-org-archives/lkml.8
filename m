@@ -2,120 +2,135 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7512C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A80C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899DB207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593617500;
-	bh=EB2CkEeCooqWPM+FKciypi3S6C1CFpF0DGtBgv2mghk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NzbOj/iCqXZLzae8vndd6IzQstACoUl60EegyPMsvjB0qwHbLo50pav+IXZaND4tc
-	 l8cJj9MGGlZZJ4C6yzkH94kx5QdltJBN9/zGhh+veEKtNHRaqIT0KK2MsHTRKctuID
-	 czFq+Fp3wk99vTwZNqCoOl2vr+N87kucXVxKdIDo=
+	by mail.kernel.org (Postfix) with ESMTP id 1B87420760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732119AbgGAPbj (ORCPT
+        id S1731980AbgGAPcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731879AbgGAPbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:31:38 -0400
-Received: from ziggy.cz (unknown [213.195.114.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC5220760;
-        Wed,  1 Jul 2020 15:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593617497;
-        bh=EB2CkEeCooqWPM+FKciypi3S6C1CFpF0DGtBgv2mghk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OWNMZ3rJ5ciZjAne86fG6PgL7snREQ8Oxp1PzRvjC7tXhtr/8lDoariL+hIXqRWlI
-         Yda13FmLkR2Juu8D5+Ev+trCwp0K/BNMiMyOTxHtmcwnYPNk0VhVYuti0hKzOM3X+F
-         k1UznWujuneMKF6uv+rNGLf7bXYmaauzozH/eBu0=
-From:   matthias.bgg@kernel.org
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>, hdegoede@redhat.com
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Double Lo <double.lo@cypress.com>,
-        Frank Kao <frank.kao@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Soeren Moch <smoch@web.de>
-Subject: [PATCH] brcmfmac: expose firmware config files through modinfo
-Date:   Wed,  1 Jul 2020 17:31:23 +0200
-Message-Id: <20200701153123.25602-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 1 Jul 2020 11:32:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19396 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731608AbgGAPcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:32:09 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061F4vfE015501;
+        Wed, 1 Jul 2020 11:32:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s4jy81c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 11:32:05 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061F54c5015837;
+        Wed, 1 Jul 2020 11:32:04 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s4jy80a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 11:32:04 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061FKDtn001821;
+        Wed, 1 Jul 2020 15:32:02 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d34m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 15:32:02 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061FVxEq55443522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 15:31:59 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DEC311C04C;
+        Wed,  1 Jul 2020 15:31:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F26BA11C052;
+        Wed,  1 Jul 2020 15:31:58 +0000 (GMT)
+Received: from osiris (unknown [9.171.45.129])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  1 Jul 2020 15:31:58 +0000 (GMT)
+Date:   Wed, 1 Jul 2020 17:31:57 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
+ add/walk physmem
+Message-ID: <20200701153157.GC5008@osiris>
+References: <20200701141830.18749-1-david@redhat.com>
+ <20200701141830.18749-2-david@redhat.com>
+ <20200701150643.GA2999146@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701150643.GA2999146@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=1 bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 phishscore=0
+ cotscore=-2147483648 malwarescore=0 lowpriorityscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+On Wed, Jul 01, 2020 at 06:06:43PM +0300, Mike Rapoport wrote:
+> Hi David,
+> 
+> On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
+> > "physmem" in the memblock allocator is somewhat weird: it's not actually
+> > used for allocation, it's simply information collected during boot, which
+> > describes the unmodified physical memory map at boot time, without any
+> > standby/hotplugged memory. It's only used on s390x and is currently the
+> > only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
+> > 
+> > Physmem isn't numa aware and current users don't specify any flags. Let's
+> > hide it from the user, exposing only for_each_physmem(), and simplify. The
+> > interface for physmem is now really minimalistic:
+> > - memblock_physmem_add() to add ranges
+> > - for_each_physmem() / __next_physmem_range() to walk physmem ranges
+> > 
+> > Don't place it into an __init section and don't discard it without
+> > CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
+> > the __meminit notifier to avoid section mismatch warnings once
+> > CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
+> > CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
+> > 
+> > While fixing up the documentation, sneak in some related cleanups. We can
+> > stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
+> 
+> As you noted in the previous version it should have been
+> CONFIG_ARCH_KEEP_MEMBLOCK ;-)
+> 
+> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> > ---
+> >  arch/s390/kernel/crash_dump.c |  6 ++--
+> >  include/linux/memblock.h      | 28 ++++++++++++++---
+> >  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
+> >  3 files changed, 55 insertions(+), 36 deletions(-)
 
-Apart from a firmware binary the chip needs a config file used by the
-FW. Add the config files to modinfo so that they can be read by
-userspace.
+So I guess this should go via the s390 tree, since the second patch of
+this series can go only upstream if both this patch and a patch which
+is currently only on our features are merged before.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-
----
-
- .../wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 310d8075f5d7..ba18df6d8d94 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -624,6 +624,22 @@ BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
- BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
- 
-+/* firmware config files */
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac4330-sdio.Prowise-PT301.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43340-sdio.meegopad-t08.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43340-sdio.pov-tab-p1006w-data.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43362-sdio.cubietech,cubietruck.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.jumper-ezpad-mini3.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.AP6212.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.MUR1DX.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.MINIX-NEO Z83-4.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.raspberrypi,4-model-b.txt");
-+MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac4356-pcie.gpd-win-pocket.txt");
-+
- static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_43143_CHIP_ID, 0xFFFFFFFF, 43143),
- 	BRCMF_FW_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
--- 
-2.27.0
-
+Any objections?
