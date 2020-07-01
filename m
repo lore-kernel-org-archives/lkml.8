@@ -2,116 +2,139 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D544EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6827EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCDD520702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4986A20702
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbgGAOM2 (ORCPT
+        id S1731434AbgGAOMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:12:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17537 "EHLO mga04.intel.com"
+        Wed, 1 Jul 2020 10:12:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51645 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730307AbgGAOM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:12:27 -0400
-IronPort-SDR: Xzxg9+pywGS1QZFZdaKUQ60+pY3yuhAjqKcxpWYhpbDZKpSwgiTSPpWpT0oeoNnbH0S3uexuI8
- nnUkhHHZyxAA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="144086420"
+        id S1730307AbgGAOMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:12:46 -0400
+IronPort-SDR: ySQn0iArGoC10y4HqwjKHxkaj2vdgM82PMi3100zJ5gRPT+A/z5K++D928OG2HB8HAaELJmSeK
+ R5/HDiab2f2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="126198572"
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="144086420"
+   d="scan'208";a="126198572"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:12:27 -0700
-IronPort-SDR: 2gRFfydadHrNTFFz1trRa8xVauxhWiln8rNZlIWTanAV7EKsJzX5Lcu7siDqwep6s1HHNQ3Qew
- mLi4N+CbI+ew==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:12:45 -0700
+IronPort-SDR: tw+TjEMnr6PSKKEIZGIwlRnMnY+I1IPteQ9YJ/b+xboSW0wpxSK+AXL5tZVvEIqLGEWC1jcv7/
+ mq9WRPL4QW+w==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
-   d="scan'208";a="455118274"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.175.105]) ([10.249.175.105])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:12:24 -0700
-Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Chenyi Qiang <chenyi.qiang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200628085341.5107-1-chenyi.qiang@intel.com>
- <20200628085341.5107-3-chenyi.qiang@intel.com>
- <878sg3bo8b.fsf@vitty.brq.redhat.com>
- <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
- <87366bbe1y.fsf@vitty.brq.redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
-Date:   Wed, 1 Jul 2020 22:12:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+   d="scan'208";a="455118375"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 01 Jul 2020 07:12:45 -0700
+Date:   Wed, 1 Jul 2020 07:19:20 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 6/7] iommu/vt-d: Warn on out-of-range invalidation
+ address
+Message-ID: <20200701071920.0a08f404@jacob-builder>
+In-Reply-To: <f5a2ffda-a243-ed20-63e0-50d784d3af71@linux.intel.com>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        <d87d15fd-71d5-6735-74df-583024826ab0@linux.intel.com>
+        <20200630103459.6c99c961@jacob-builder>
+        <f5a2ffda-a243-ed20-63e0-50d784d3af71@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <87366bbe1y.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/2020 8:44 PM, Vitaly Kuznetsov wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> 
->> On 7/1/2020 5:04 PM, Vitaly Kuznetsov wrote:
->>> Chenyi Qiang <chenyi.qiang@intel.com> writes:
->> [...]
->>>>    static const int kvm_vmx_max_exit_handlers =
->>>> @@ -6830,6 +6838,13 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>>>    	if (unlikely(vmx->exit_reason.failed_vmentry))
->>>>    		return EXIT_FASTPATH_NONE;
->>>>    
->>>> +	/*
->>>> +	 * check the exit_reason to see if there is a bus lock
->>>> +	 * happened in guest.
->>>> +	 */
->>>> +	if (vmx->exit_reason.bus_lock_detected)
->>>> +		handle_bus_lock(vcpu);
->>>
->>> In case the ultimate goal is to have an exit to userspace on bus lock,
->>
->> I don't think we will need an exit to userspace on bus lock. See below.
->>
->>> the two ways to reach handle_bus_lock() are very different: in case
->>> we're handling EXIT_REASON_BUS_LOCK we can easily drop to userspace by
->>> returning 0 but what are we going to do in case of
->>> exit_reason.bus_lock_detected? The 'higher priority VM exit' may require
->>> exit to userspace too. So what's the plan? Maybe we can ignore the case
->>> when we're exiting to userspace for some other reason as this is slow
->>> already and force the exit otherwise?
->>
->>> And should we actually introduce
->>> the KVM_EXIT_BUS_LOCK and a capability to enable it here?
->>>
->>
->> Introducing KVM_EXIT_BUS_LOCK maybe help nothing. No matter
->> EXIT_REASON_BUS_LOCK or exit_reason.bus_lock_detected, the bus lock has
->> already happened. Exit to userspace cannot prevent bus lock, so what
->> userspace can do is recording and counting as what this patch does in
->> vcpu->stat.bus_locks.
-> 
-> Exiting to userspace would allow to implement custom 'throttling'
-> policies to mitigate the 'noisy neighbour' problem. The simplest would
-> be to just inject some sleep time.
-> 
+On Wed, 1 Jul 2020 09:45:40 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-So you want an exit to userspace for every bus lock and leave it all to 
-userspace. Yes, it's doable.
+> Hi Jacob,
+> 
+> On 7/1/20 1:34 AM, Jacob Pan wrote:
+> > On Thu, 25 Jun 2020 18:10:43 +0800
+> > Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+> >   
+> >> Hi,
+> >>
+> >> On 2020/6/23 23:43, Jacob Pan wrote:  
+> >>> For guest requested IOTLB invalidation, address and mask are
+> >>> provided as part of the invalidation data. VT-d HW silently
+> >>> ignores any address bits below the mask. SW shall also allow such
+> >>> case but give warning if address does not align with the mask.
+> >>> This patch relax the fault handling from error to warning and
+> >>> proceed with invalidation request with the given mask.
+> >>>
+> >>> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
+> >>> ---
+> >>>    drivers/iommu/intel/iommu.c | 7 +++----
+> >>>    1 file changed, 3 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/drivers/iommu/intel/iommu.c
+> >>> b/drivers/iommu/intel/iommu.c index 5ea5732d5ec4..50fc62413a35
+> >>> 100644 --- a/drivers/iommu/intel/iommu.c
+> >>> +++ b/drivers/iommu/intel/iommu.c
+> >>> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct
+> >>> iommu_domain *domain, struct device *dev,
+> >>>    		switch (BIT(cache_type)) {
+> >>>    		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> >>> +			/* HW will ignore LSB bits based on
+> >>> address mask */ if (inv_info->granularity == IOMMU_INV_GRANU_ADDR
+> >>> && size &&
+> >>>    			    (inv_info->addr_info.addr &
+> >>> ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> >>> -				pr_err_ratelimited("Address out
+> >>> of range, 0x%llx, size order %llu\n",
+> >>> -
+> >>> inv_info->addr_info.addr, size);
+> >>> -				ret = -ERANGE;
+> >>> -				goto out_unlock;
+> >>> +				WARN_ONCE(1, "Address out of
+> >>> range, 0x%llx, size order %llu\n",
+> >>> +
+> >>> inv_info->addr_info.addr, size);  
+> >> I don't think WARN_ONCE() is suitable here. It makes users think
+> >> it's a kernel bug. How about pr_warn_ratelimited()?
+> >>  
+> > I think pr_warn_ratelimited might still be too chatty. There is no
+> > functional issues, we just don't to silently ignore it. Perhaps just
+> > say:
+> > WARN_ONCE(1, "User provided address not page aligned, alignment
+> > forced") ?
+> >   
+> 
+> WARN() is normally used for reporting a kernel bug. It dumps kernel
+> trace. And the users will report bug through bugzilla.kernel.org.
+> 
+> In this case, it's actually an unexpected user input, we shouldn't
+> treat it as a kernel bug and pr_err_ratelimited() is enough?
+> 
+Sounds good. I will leave it.
 
-As you said, the exit_reason.bus_lock_detected case is the tricky one. 
-We cannot do the similar to extend vcpu->run->exit_reason, this breaks 
-ABI. Maybe we can extend the vcpu->run->flags to indicate bus lock 
-detected for the other exit reason?
+Thanks,
+
+Jacob
+> Best regards,
+> baolu
+
+[Jacob Pan]
