@@ -2,144 +2,133 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8DCD206CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593604717;
-	bh=nDHkQnF3GE7LeSK4D2XQD+Jb5LeVxf5LtuLUx72bPl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=it62Ee67UONcZK9tD4ruVrmVpGRsmq763w7y27aXOacZBhynX/NunTYzIcfUfHPfQ
-	 vXobDKz4YAX1HuqnZa3bfCMfwpmrxhBhAWJmu5hRNvecoTZr9LnkDCkzB1emd1k3cF
-	 6vsW0/Jf+0nW8WTHyU4BV1qihY7qb7qGcKmfoR0Y=
+	by mail.kernel.org (Postfix) with ESMTP id D65D3206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgGAL6g (ORCPT
+        id S1730487AbgGAMAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:58:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 08:00:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:33884 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbgGAL6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:58:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B7342067D;
-        Wed,  1 Jul 2020 11:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593604715;
-        bh=nDHkQnF3GE7LeSK4D2XQD+Jb5LeVxf5LtuLUx72bPl0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UQcpx0io+u/a7HSMAtKB8tJpIHuA9tVGeE/1lhqC+fzTxXp/XFbgQWyziKZCMUo4V
-         9OmPXcF+enzCZDJ7tdbDXIq4TLpdl1kiP+3Fm8W6H/jzJqqM0PqwUVP/kzwmM7HC3u
-         ALCWydllZlvVZhfCIR7+pO9v/EQ96aN/uME61ewI=
-Date:   Wed, 1 Jul 2020 13:58:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [V2 PATCH] usb: mtu3: fix NULL pointer dereference
-Message-ID: <20200701115821.GA2184169@kroah.com>
-References: <1593502942-24455-1-git-send-email-chunfeng.yun@mediatek.com>
+        id S1730133AbgGAMAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 08:00:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EF9630E;
+        Wed,  1 Jul 2020 05:00:17 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B86583F73C;
+        Wed,  1 Jul 2020 05:00:15 -0700 (PDT)
+Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in
+ vmcoreinfo
+To:     Bhupesh Sharma <bhsharma@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc:     bhupesh.linux@gmail.com, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <7abd195f-2091-0ef9-2e0b-4a8bf2cf820e@arm.com>
+Date:   Wed, 1 Jul 2020 12:59:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593502942-24455-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:42:22PM +0800, Chunfeng Yun wrote:
-> Some pointers are dereferenced before successful checks.
+Hi Bhupesh,
+
+On 13/05/2020 19:52, Bhupesh Sharma wrote:
+> vabits_actual variable on arm64 indicates the actual VA space size,
+> and allows a single binary to support both 48-bit and 52-bit VA
+> spaces.
+
+I'd prefer the commit message not to refer to this 'vabits_actual' thing at all. By the
+time a git-archaeologist comes to read this, it may be long gone.
+
+Ideally this would refer to: TCR_EL1.TxSZ, which controls the VA space size,
+and can be configured by a single kernel image to support either 48-bit or 52-bit VA space.
+
+
+> If the ARMv8.2-LVA optional feature is present, and we are running
+> with a 64KB page size; then it is possible to use 52-bits of address
+> space for both userspace and kernel addresses. However, any kernel
+> binary that supports 52-bit must also be able to fall back to 48-bit
+> at early boot time if the hardware feature is not present.
 > 
-> Reported-by: Markus Elfring <Markus.Elfring@web.de>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2: nothing changed, but abandon another patch
-> ---
->  drivers/usb/mtu3/mtu3_gadget.c | 25 ++++++++++++++++++-------
->  1 file changed, 18 insertions(+), 7 deletions(-)
+> Since TCR_EL1.T1SZ indicates the size offset of the memory region
+> addressed by TTBR1_EL1 (and hence can be used for determining the
+> vabits_actual value) it makes more sense to export the same in
+> vmcoreinfo rather than vabits_actual variable, as the name of the
+> variable can change in future kernel versions, but the architectural
+> constructs like TCR_EL1.T1SZ can be used better to indicate intended
+> specific fields to user-space.
 > 
-> diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
-> index f93732e..1689ca8 100644
-> --- a/drivers/usb/mtu3/mtu3_gadget.c
-> +++ b/drivers/usb/mtu3/mtu3_gadget.c
-> @@ -332,14 +332,21 @@ static int mtu3_gadget_queue(struct usb_ep *ep,
->  
->  static int mtu3_gadget_dequeue(struct usb_ep *ep, struct usb_request *req)
->  {
-> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
-> -	struct mtu3_request *mreq = to_mtu3_request(req);
-> +	struct mtu3_ep *mep;
-> +	struct mtu3_request *mreq;
->  	struct mtu3_request *r;
-> +	struct mtu3 *mtu;
->  	unsigned long flags;
->  	int ret = 0;
-> -	struct mtu3 *mtu = mep->mtu;
->  
-> -	if (!ep || !req || mreq->mep != mep)
-> +	if (!ep || !req)
-> +		return -EINVAL;
+> User-space utilities like makedumpfile and crash-utility, need to
+> read this value from vmcoreinfo for determining if a virtual
+> address lies in the linear map range.
+> 
+> While at it also add documentation for TCR_EL1.T1SZ variable being
+> added to vmcoreinfo.
+> 
+> It indicates the size offset of the memory region addressed by TTBR1_EL1
 
-How will either of those ever be NULL?  The kernel will not call this
-function with either of them being NULL, right?
-
+> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> index 1f646b07e3e9..314391a156ee 100644
+> --- a/arch/arm64/kernel/crash_core.c
+> +++ b/arch/arm64/kernel/crash_core.c
+> @@ -7,6 +7,14 @@
+>  #include <linux/crash_core.h>
+>  #include <asm/cpufeature.h>
+>  #include <asm/memory.h>
+> +#include <asm/pgtable-hwdef.h>
 > +
-> +	mep = to_mtu3_ep(ep);
-> +	mtu = mep->mtu;
+> +static inline u64 get_tcr_el1_t1sz(void);
 > +
-> +	mreq = to_mtu3_request(req);
-> +	if (mreq->mep != mep)
->  		return -EINVAL;
+> +static inline u64 get_tcr_el1_t1sz(void)
+> +{
+> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
+> +}
 >  
->  	dev_dbg(mtu->dev, "%s : req=%p\n", __func__, req);
-> @@ -373,8 +380,8 @@ static int mtu3_gadget_dequeue(struct usb_ep *ep, struct usb_request *req)
->   */
->  static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
+>  void arch_crash_save_vmcoreinfo(void)
 >  {
-> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
-> -	struct mtu3 *mtu = mep->mtu;
-> +	struct mtu3_ep *mep;
-> +	struct mtu3 *mtu;
->  	struct mtu3_request *mreq;
->  	unsigned long flags;
->  	int ret = 0;
-> @@ -382,6 +389,9 @@ static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
->  	if (!ep)
->  		return -EINVAL;
+> @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
+>  						kimage_voffset);
+>  	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+>  						PHYS_OFFSET);
+> +	vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
+> +						get_tcr_el1_t1sz());
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>  	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
+>  						system_supports_address_auth() ?
 
-Same here, how can that ever happen?
+(I think second guessing the kernel memory map is a sisyphean effort), but this register
+isn't going to disappear, or change its meaning!:
 
->  
-> +	mep = to_mtu3_ep(ep);
-> +	mtu = mep->mtu;
-> +
->  	dev_dbg(mtu->dev, "%s : %s...", __func__, ep->name);
->  
->  	spin_lock_irqsave(&mtu->lock, flags);
-> @@ -422,11 +432,12 @@ static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
->  /* Sets the halt feature with the clear requests ignored */
->  static int mtu3_gadget_ep_set_wedge(struct usb_ep *ep)
->  {
-> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
-> +	struct mtu3_ep *mep;
->  
->  	if (!ep)
->  		return -EINVAL;
+Reviewed-by: James Morse <james.morse@arm.com>
 
-Again, same here.
+You may need to re-post this to get the maintainer's attention as its normally safe to
+assume patches posted before rc1 no longer apply. (in this case, this one does)
 
-thanks,
 
-greg k-h
+Thanks,
+
+James
