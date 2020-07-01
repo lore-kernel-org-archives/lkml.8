@@ -2,52 +2,55 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D994FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86D42077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F38E2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="cg9ZzczD"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="fbJOow/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgGAV4W (ORCPT
+        id S1727926AbgGAV42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:56:22 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:46978 "EHLO
+        Wed, 1 Jul 2020 17:56:28 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:38124 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAV4V (ORCPT
+        with ESMTP id S1727883AbgGAV4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:56:21 -0400
+        Wed, 1 Jul 2020 17:56:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=from:subject:to:cc:content-type:content-transfer-encoding;
-        s=001; bh=w6MV/RRXKb9vZZR8jzoa9J1Ki5R23xSZpPoVXmzDoyQ=;
-        b=cg9ZzczD1MaMllJV/I916OuTJAHyMj+kj2r3Tp/1VV7OV+83jg6k5SyFGEajqKGHn1Go
-        n2HZ/Ld6c9osGgoYs91IifSgVg8YNRVMyW4UBr7bBhdJbP2ucHET0HOtJwmSquTeHjaEGy
-        TVN268A4jiXy+lkMqIzpD+Ev47xRxTl40=
-Received: by filterdrecv-p3iad2-5b55dcd864-pbk2w with SMTP id filterdrecv-p3iad2-5b55dcd864-pbk2w-17-5EFD0684-19
-        2020-07-01 21:56:20.443253013 +0000 UTC m=+449220.566657132
+        h=from:subject:in-reply-to:references:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=/kf+DgEQfccGmOQpRGQluHKkxKxHGjeyjl28PXeTLHA=;
+        b=fbJOow/Kyq6m/BaOllNH7UijxKvDyqrzXueyGElviEkhkSruFOOBOy7ENfJi/e18UEc8
+        8mPpVZQM+WRsHUCvtpHPw6nEbkpguHiuHdZU+viJ4vecZ92kbz3DOwd2pJMyS6SHkK3Ld/
+        1M4NF/+9DHJl7Hp9qhiQNQuKeZGSSji/A=
+Received: by filterdrecv-p3iad2-5b55dcd864-622mb with SMTP id filterdrecv-p3iad2-5b55dcd864-622mb-16-5EFD0687-3E
+        2020-07-01 21:56:23.740186832 +0000 UTC m=+449224.049633056
 Received: from bionic.localdomain (unknown)
         by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
-        id 4EzSe7fsQ3uiQ9DePBdOZg
-        Wed, 01 Jul 2020 21:56:20.097 +0000 (UTC)
+        id Kl5Ab2oCTJay-_iVs6EVRw
+        Wed, 01 Jul 2020 21:56:23.480 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 0/9] media: rkvdec: Add H.264 High 10 and 4:2:2 profile
- support
-Date:   Wed, 01 Jul 2020 21:56:20 +0000 (UTC)
-Message-Id: <20200701215616.30874-1-jonas@kwiboo.se>
+Subject: [PATCH 7/9] media: rkvdec: h264: Use bytesperline and buffer height
+ to calculate stride
+Date:   Wed, 01 Jul 2020 21:56:23 +0000 (UTC)
+Message-Id: <20200701215616.30874-8-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200701215616.30874-1-jonas@kwiboo.se>
+References: <20200701215616.30874-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hz8iDw7yYGWZEJAfA?=
- =?us-ascii?Q?ke8qOYfmOhodYtXACLNhR2cwQWSNYX=2FbUxaNFkt?=
- =?us-ascii?Q?EGrL+t5FTaCt7iBRMILz+SNMc43ia0ybGVNnazg?=
- =?us-ascii?Q?gHcJKAOlQ1joDUUy7uPRSBik3JzRi4bqXuWQHW=2F?=
- =?us-ascii?Q?udBefSp7lwv6YgDo2FkDosW1mHA30d3zKMcD=2FUF?=
- =?us-ascii?Q?dNeZ+SdM9EGKNpTrNPsfw=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h9JlvUyM0eNLDAPYx?=
+ =?us-ascii?Q?UCjj2=2F7+awfXtB3T1u=2FXc+vBDSChPf5Kecrrq3+?=
+ =?us-ascii?Q?NUvAeCoaMUEJlCOUreeFM8hfV8q7NFIijdYdJ40?=
+ =?us-ascii?Q?2ZKluLlun1ICRX0CB3DpfO53SPfb89UWpJWr4lC?=
+ =?us-ascii?Q?Dlg89O4X5QvYpgRoqlirf9iIN1jmPsdW3OLU1DE?=
+ =?us-ascii?Q?reAgO6ffPA=2F4LB1ebyB8w=3D=3D?=
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
@@ -63,62 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series contains minor fixes and adds H.264 High 10 and 4:2:2 profile
-support to the Rockchip Video Decoder driver.
+Use bytesperline and buffer height to calculate the strides configured.
 
-Patch 1 adds profile and level controls.
+This does not really change anything other than ensuring the bytesperline
+that is signaled to userspace matches was is configured in HW.
 
-Patch 2 and 3 fixes two issues when decoding field encoded content. Patch 3
-also prepare for changes to step_width in the final patch.
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/staging/media/rkvdec/rkvdec-h264.c | 27 +++++++++++++---------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-Patch 5 updates the v4l2_format helpers to consider block width and height
-when calculating plane bytesperline and sizeimage.
-
-Patch 6 adds two new pixelformats for 10-bit 4:2:0/4:2:2.
-
-Patch 7 change to use bytesperline and buffer height to configure strides.
-
-Patch 8 and 9 adds final bits to support H.264 High 10 and 4:2:2 profiles.
-
-This series depend on the "handle unsupported H.264 bitstreams" series at [1].
-
-To fully runtime test this series you may need drm patches from [2] and
-ffmpeg patches from [3], this series and drm patches is also available at [4].
-
-[1] https://patchwork.linuxtv.org/cover/64977/
-[2] https://patchwork.freedesktop.org/series/78099/
-[3] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3-rkvdec-high-10
-[4] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-high-10
-
-Regards,
-Jonas
-
-Jonas Karlman (9):
-  media: rkvdec: h264: Support profile and level controls
-  media: rkvdec: h264: Fix reference frame_num wrap for second field
-  media: rkvdec: h264: Fix pic width and height in mbs
-  media: rkvdec: h264: Fix bit depth wrap in pps packet
-  media: v4l2-common: Add helpers to calculate bytesperline and
-    sizeimage
-  media: v4l2: Add NV15 and NV20 pixel formats
-  media: rkvdec: h264: Use bytesperline and buffer height to calculate
-    stride
-  media: rkvdec: Add validate_fmt ops for pixelformat validation
-  media: rkvdec: h264: Support High 10 and 4:2:2 profiles
-
- .../userspace-api/media/v4l/pixfmt-nv15.rst   | 101 ++++++++++++++++
- .../userspace-api/media/v4l/pixfmt-nv20.rst   |  99 ++++++++++++++++
- .../userspace-api/media/v4l/yuv-formats.rst   |   2 +
- drivers/media/v4l2-core/v4l2-common.c         |  80 ++++++-------
- drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
- drivers/staging/media/rkvdec/rkvdec-h264.c    | 108 +++++++++++++++---
- drivers/staging/media/rkvdec/rkvdec.c         |  43 +++++--
- drivers/staging/media/rkvdec/rkvdec.h         |   1 +
- include/uapi/linux/videodev2.h                |   3 +
- 9 files changed, 369 insertions(+), 70 deletions(-)
- create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv15.rst
- create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-nv20.rst
-
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index 9c8e49642cd9..1cb6af590138 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -891,10 +891,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 	dma_addr_t rlc_addr;
+ 	dma_addr_t refer_addr;
+ 	u32 rlc_len;
+-	u32 hor_virstride = 0;
+-	u32 ver_virstride = 0;
+-	u32 y_virstride = 0;
+-	u32 yuv_virstride = 0;
++	u32 hor_virstride;
++	u32 ver_virstride;
++	u32 y_virstride;
++	u32 uv_virstride;
++	u32 yuv_virstride;
+ 	u32 offset;
+ 	dma_addr_t dst_addr;
+ 	u32 reg, i;
+@@ -904,16 +905,20 @@ static void config_registers(struct rkvdec_ctx *ctx,
+ 
+ 	f = &ctx->decoded_fmt;
+ 	dst_fmt = &f->fmt.pix_mp;
+-	hor_virstride = (sps->bit_depth_luma_minus8 + 8) * dst_fmt->width / 8;
+-	ver_virstride = round_up(dst_fmt->height, 16);
++	hor_virstride = dst_fmt->plane_fmt[0].bytesperline;
++	ver_virstride = dst_fmt->height;
+ 	y_virstride = hor_virstride * ver_virstride;
+ 
+-	if (sps->chroma_format_idc == 0)
+-		yuv_virstride = y_virstride;
+-	else if (sps->chroma_format_idc == 1)
+-		yuv_virstride += y_virstride + y_virstride / 2;
++	if (sps->chroma_format_idc == 1)
++		uv_virstride = y_virstride / 2;
+ 	else if (sps->chroma_format_idc == 2)
+-		yuv_virstride += 2 * y_virstride;
++		uv_virstride = y_virstride;
++	else if (sps->chroma_format_idc == 3)
++		uv_virstride = 2 * y_virstride;
++	else
++		uv_virstride = 0;
++
++	yuv_virstride = y_virstride + uv_virstride;
+ 
+ 	reg = RKVDEC_Y_HOR_VIRSTRIDE(hor_virstride / 16) |
+ 	      RKVDEC_UV_HOR_VIRSTRIDE(hor_virstride / 16) |
 -- 
 2.17.1
 
