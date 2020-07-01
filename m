@@ -2,216 +2,230 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA098C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D86C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1CCE20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AFC20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M5xx14Cv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMNg22jf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgGAHEm (ORCPT
+        id S1728139AbgGAHFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
+        Wed, 1 Jul 2020 03:05:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgGAHEi (ORCPT
+        with ESMTP id S1727969AbgGAHFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:04:38 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C6DC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:04:38 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z13so22641013wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:04:38 -0700 (PDT)
+        Wed, 1 Jul 2020 03:05:05 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C98C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 00:05:04 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so25678874ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 00:05:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
-        b=M5xx14CvYq83HbV1b8rfXttQ1GPSnY1Tk0KdGpXG8pGlUAlrg0sWDEnk8bzKkJ6r6k
-         2Aa0XA3apmz6vDJQ0V5lUPceHC4c95rjbZ0M/T1M/vH/i0zfizzW71uUJr+IuzrwnQru
-         9kTAGNbQv3W1fYpXuQhR+qoNUkjPUQnu2c/R1I+MTqIlj2BJoKllFFzmemkMhkrlTlo+
-         yiv1jOcJwAo7xFKUnGiVXrK0m4pTQpddkUlVJcbN5jtVBKnBeLEE62nGdLe64NtdU2hP
-         6P7VnvWOXc23r0ZP3HU6wwfGlrc8BLrfA2YlVx4xaX6aBozq60qV4YXQi72OtSGVKYUT
-         Y6Xw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dvUBuTvRieomSCqnJCq8xhXaqV0MYHK0mUXKNMYT7fg=;
+        b=ZMNg22jfuWpv9FHjsLcHmAl1n4nnGMwS8YXn4/XRsSjhkWhDqFYthlc8VwYfnobFe0
+         7NuOL1C2Q7Jqn6V/3i/diCS7/6kaFbceDtONervucpWDVCF6dbkXc00DO3C38mIHEYrE
+         /VbI83vtmfp6O43qQMuCpF1QQ5L4jxByWQF0VRuOtxy7AnsLpo/bocETdiSoIttQ7vIO
+         +ApYPvAM2bY6c/KD2nqQ4CIPLNv1na6E6h3XSCayN8ctLqIwCSwcYILnEmJM+Kgr5XtV
+         lWGRls5ON69/6fq31hnDpoVdMOATQlGRk6AA6aVGXZ1cVgiJhNQAkrH4VrYQENoEh73T
+         daog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e12F1suikdS3lGtBuyJAayumJr4O2+9e5bqVwPL0o7M=;
-        b=YsUJbAhLy6YrfkSlccz3esrrRWFvj8RLxQkW9WfsQ+u1cvbz342J4lAo0si0C7KFYE
-         s3pwQubh4zODmeKNRx+jUIBdUtKMB9dgSwq+dTYxI+pJ6/M3tgrv1omFE1JSfLyv985Q
-         49r9VUIxv68vYNhQGCq87SChYejT/210EqB+pcT9nt/bQjSDq4lKaMbML07IsNPtpSgQ
-         H22ESfKJH1L4u7rYEzZ6oKb3XzxAzr1+emPto8O++WV+mcmyUbFSkMOC+OG/PBTx78BU
-         zVwPNuhgCMhNvO/Nrng+6bwDYpq/RopS4hmZM1jOJ6+9713XPEq8n2mt9HbzNKFRxmFt
-         qC0w==
-X-Gm-Message-State: AOAM530nPnrNWKcz+3BmDXhXhoPQa0VsVgQM1jv/dOOsOWA6QqgBKWVi
-        R6ywZNywimPbkcWhPcoAevrPTQ==
-X-Google-Smtp-Source: ABdhPJyZ0zCqVJ4yCEcYTanPmJiMHwO+RzvGh5qS/YdgNhZ3s59Ce3qt5dt+K7Lrub9MMzWPYdgvBA==
-X-Received: by 2002:a5d:66ca:: with SMTP id k10mr14794987wrw.244.1593587077069;
-        Wed, 01 Jul 2020 00:04:37 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l18sm6294142wrm.52.2020.07.01.00.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 00:04:36 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 08:04:34 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-Message-ID: <20200701070434.GP1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
- <f505c52d565ba7dbf05eef895782c410@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dvUBuTvRieomSCqnJCq8xhXaqV0MYHK0mUXKNMYT7fg=;
+        b=p7dInz6sQF5HG6AZUZIBLpcYuCwqqw3U12lBO0p+T5GPyGxT7QJX93dPlmef9lF5Il
+         t7mbWzSaB9LrwRYl2gjJpAz/q5kU0CI2yBbn103aHB5vu0Z1RdA7M9nCfYCGzgC+mPKk
+         4qd0iSk4MCTPBDsNZFEhTF5s+pA/y2Wd9zzdKdMWEVUr8BvGlF1I51JXqBgvHsZcQzt8
+         FWKzEAltrZ9zRofjZQEusybP4WcWY4Nf3jC8/XR2uYTTrpLgz3S9hIqric4bGfrGH0Wm
+         b3amIs8moH6qlar8vqivwGgkTrMJC9kfMeg6j50ZWC/Z0MOjoMYaQ+C15k3cyNWbiAWc
+         xWsw==
+X-Gm-Message-State: AOAM532wr/OOB06b8t3M8lz5WWn6HefOpTSmG9HJ3/Ogcm2PJFmnzmUS
+        66VVtMfXeNUn0UQ7W2eXcJJv5tDDHIsrdAa9TOI=
+X-Google-Smtp-Source: ABdhPJwV5n0TyL60rtFVSJgv1WVFA75LA/7Y+Aomb1kRpVO700ihvwguTRmM/eSrsdaAEArhv7jw1+jQLsLPyUdQed8=
+X-Received: by 2002:a2e:8e68:: with SMTP id t8mr5916934ljk.335.1593587103306;
+ Wed, 01 Jul 2020 00:05:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f505c52d565ba7dbf05eef895782c410@walle.cc>
+References: <20200630005625.2405062-1-daeho43@gmail.com> <961072bb-4c8f-b01e-666d-1f5e35a8b76d@huawei.com>
+In-Reply-To: <961072bb-4c8f-b01e-666d-1f5e35a8b76d@huawei.com>
+From:   Daeho Jeong <daeho43@gmail.com>
+Date:   Wed, 1 Jul 2020 16:04:52 +0900
+Message-ID: <CACOAw_wQx5wjdWDX_WFebNS42t=wBuSh_k7oQ4v7abBv80SZXw@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add symbolic link to kobject in sysfs
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 01 Jul 2020, Michael Walle wrote:
+Actually, I want to keep the mount number remaining to the same
+number, even if it's re-mounted.
+Or we need to keep track of the number being increased whenever it's
+remounted. :(
 
-> Hi Lee,
-> 
-> Am 2020-06-30 11:16, schrieb Michael Walle:
-> > I'm just trying to use this for my sl28 driver. Some remarks, see below.
-> > 
-> > Am 2020-06-22 09:51, schrieb Lee Jones:
-> > > The existing SYSCON implementation only supports MMIO (memory mapped)
-> > > accesses, facilitated by Regmap.  This extends support for registers
-> > > held behind I2C busses.
-> > > 
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > > Changelog:
-> > > 
-> > > v3 => v4
-> > >   - Add ability to provide a non-default Regmap configuration
-> > > 
-> > > v2 => v3
-> > >   - Change 'is CONFIG' present check to include loadable modules
-> > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
-> > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
-> > > 
-> > > v1 => v2
-> > >   - Remove legacy references to OF
-> > >   - Allow building as a module (fixes h8300 0-day issue)
-> > > 
-> > > drivers/mfd/Kconfig            |   7 +++
-> > >  drivers/mfd/Makefile           |   1 +
-> > >  drivers/mfd/syscon-i2c.c       | 104
-> > > +++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
-> > >  4 files changed, 148 insertions(+)
-> > >  create mode 100644 drivers/mfd/syscon-i2c.c
-> > >  create mode 100644 include/linux/mfd/syscon-i2c.h
-> > > 
-> > 
-> > [..]
-> > 
-> > > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client
-> > > *client,
-> > > +					    struct regmap_config *regmap_config)
-> > > +{
-> > > +	struct device *dev = &client->dev;
-> > > +	struct syscon *entry, *syscon = NULL;
-> > > +
-> > > +	spin_lock(&syscon_i2c_list_slock);
-> > > +
-> > > +	list_for_each_entry(entry, &syscon_i2c_list, list)
-> > > +		if (entry->dev == dev) {
-> > > +			syscon = entry;
-> > > +			break;
-> > > +		}
-> > > +
-> > > +	spin_unlock(&syscon_i2c_list_slock);
-> > > +
-> > > +	if (!syscon)
-> > > +		syscon = syscon_i2c_register(client, regmap_config);
-> > > +
-> > > +	if (IS_ERR(syscon))
-> > > +		return ERR_CAST(syscon);
-> > > +
-> > > +	return syscon->regmap;
-> > > +}
-> > > +
-> > > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
-> > > +					   struct regmap_config *regmap_config)
-> > > +{
-> > > +	return syscon_i2c_get_regmap(client, regmap_config);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
-> > > +
-> > > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-> > > +{
-> > > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
-> > 
-> > What do you think about
-> > 
-> > struct regmap *syscon_i2c_to_regmap(struct device *dev)
-> > {
-> > 	struct i2c_client *client = i2c_verify_client(dev);
-> > 
-> > 	if (!client)
-> > 		return ERR_PTR(-EINVAL);
-> > 
-> > 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
-> > }
-> > 
-> > Or even move it to syscon_i2c_get_regmap().
-> > 
-> > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
-> > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
-> > all over again in all sub drivers.
-> > 
-> > So you could just do a
-> >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
-> > 
-> > I've also noticed that the mmio syscon uses device_node as parameter.
-> > What
-> > was the reason to divert from that? Just curious.
-> 
-> How is this supposed to be used?
-> 
-> I had something like the following in mind:
-> 
-> &i2c {
->   cpld@4a {
->     compatible = "simple-mfd";
->     reg = <0x4a>;
-> 
->     gpio@4 {
->       compatible = "vendor,gpio";
->       reg = <0x4>;
->     };
->   };
-> };
-
-Yes, that was the idea.
-
-> But I think the childen are not enumerated if its an I2C device. And
-> the actual i2c driver is also missing.
-
-What do you mean?  Can you elaborate?
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2020=EB=85=84 7=EC=9B=94 1=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 3:36, Ch=
+ao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> Hi Daeho,
+>
+> On 2020/6/30 8:56, Daeho Jeong wrote:
+> > From: Daeho Jeong <daehojeong@google.com>
+> >
+> > Added a symbolic link to directory of sysfs. It will
+> > create a symbolic link such as "mount_0" and "mount_1" to
+> > each f2fs mount in the order of mounting filesystem. It will
+> > provide easy access to sysfs node even if not knowing the
+> > specific device node name like sda19 and dm-3.
+>
+> Just out of curiosity, if we mount/umount as below:
+>
+> mount /dev/zram0 /mnt/f2fs0
+> mount /dev/zram1 /mnt/f2fs1
+> umount /mnt/f2fs0
+> mount /dev/zram0 /mnt/f2fs0
+>
+> Shouldn't sysfs structure be:
+> mount_2 -> zram0
+> mount_1 -> zram1
+> zram0
+> zram1
+>
+> Then we can know zram0 is mounted after zram1?
+>
+> However the result shows:
+> mount_0 -> zram0
+> mount_1 -> zram1
+> zram0
+> zram1
+>
+> Thanks,
+>
+> >
+> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> > ---
+> >  fs/f2fs/f2fs.h  |  4 ++++
+> >  fs/f2fs/sysfs.c | 31 +++++++++++++++++++++++++++----
+> >  2 files changed, 31 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 4b28fd42fdbc..7d6c5f8ce16b 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -1419,6 +1419,8 @@ struct decompress_io_ctx {
+> >  #define MAX_COMPRESS_LOG_SIZE                8
+> >  #define MAX_COMPRESS_WINDOW_SIZE     ((PAGE_SIZE) << MAX_COMPRESS_LOG_=
+SIZE)
+> >
+> > +#define MOUNT_NAME_SIZE                      20
+> > +
+> >  struct f2fs_sb_info {
+> >       struct super_block *sb;                 /* pointer to VFS super b=
+lock */
+> >       struct proc_dir_entry *s_proc;          /* proc entry */
+> > @@ -1599,6 +1601,8 @@ struct f2fs_sb_info {
+> >       /* For sysfs suppport */
+> >       struct kobject s_kobj;
+> >       struct completion s_kobj_unregister;
+> > +     int s_mount_id;
+> > +     char s_mount_name[MOUNT_NAME_SIZE];
+> >
+> >       /* For shrinker support */
+> >       struct list_head s_list;
+> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> > index ab40e1f89f23..64bbe0b3b830 100644
+> > --- a/fs/f2fs/sysfs.c
+> > +++ b/fs/f2fs/sysfs.c
+> > @@ -18,6 +18,7 @@
+> >  #include <trace/events/f2fs.h>
+> >
+> >  static struct proc_dir_entry *f2fs_proc_root;
+> > +static struct ida f2fs_mount_ida;
+> >
+> >  /* Sysfs support for f2fs */
+> >  enum {
+> > @@ -906,6 +907,9 @@ int __init f2fs_init_sysfs(void)
+> >       } else {
+> >               f2fs_proc_root =3D proc_mkdir("fs/f2fs", NULL);
+> >       }
+> > +
+> > +     ida_init(&f2fs_mount_ida);
+> > +
+> >       return ret;
+> >  }
+> >
+> > @@ -915,6 +919,7 @@ void f2fs_exit_sysfs(void)
+> >       kset_unregister(&f2fs_kset);
+> >       remove_proc_entry("fs/f2fs", NULL);
+> >       f2fs_proc_root =3D NULL;
+> > +     ida_destroy(&f2fs_mount_ida);
+> >  }
+> >
+> >  int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+> > @@ -926,12 +931,22 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+> >       init_completion(&sbi->s_kobj_unregister);
+> >       err =3D kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
+> >                               "%s", sb->s_id);
+> > -     if (err) {
+> > -             kobject_put(&sbi->s_kobj);
+> > -             wait_for_completion(&sbi->s_kobj_unregister);
+> > -             return err;
+> > +     if (err)
+> > +             goto err1;
+> > +
+> > +     sbi->s_mount_id =3D ida_simple_get(&f2fs_mount_ida, 0, 0, GFP_KER=
+NEL);
+> > +     if (sbi->s_mount_id < 0) {
+> > +             err =3D sbi->s_mount_id;
+> > +             goto err1;
+> >       }
+> >
+> > +     snprintf(sbi->s_mount_name, MOUNT_NAME_SIZE, "mount_%d",
+> > +                     sbi->s_mount_id);
+> > +     err =3D sysfs_create_link(&f2fs_kset.kobj, &sbi->s_kobj,
+> > +                     sbi->s_mount_name);
+> > +     if (err)
+> > +             goto err2;
+> > +
+> >       if (f2fs_proc_root)
+> >               sbi->s_proc =3D proc_mkdir(sb->s_id, f2fs_proc_root);
+> >
+> > @@ -946,6 +961,12 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+> >                               victim_bits_seq_show, sb);
+> >       }
+> >       return 0;
+> > +err2:
+> > +     ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
+> > +err1:
+> > +     kobject_put(&sbi->s_kobj);
+> > +     wait_for_completion(&sbi->s_kobj_unregister);
+> > +     return err;
+> >  }
+> >
+> >  void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
+> > @@ -957,6 +978,8 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi=
+)
+> >               remove_proc_entry("victim_bits", sbi->s_proc);
+> >               remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
+> >       }
+> > +     sysfs_remove_link(&f2fs_kset.kobj, sbi->s_mount_name);
+> > +     ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
+> >       kobject_del(&sbi->s_kobj);
+> >       kobject_put(&sbi->s_kobj);
+> >  }
+> >
