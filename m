@@ -2,84 +2,145 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ADFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E011B20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTv+1FlJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5DF8A207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593619588;
+	bh=uLEdkNXwe0emaThTM6WspRamdEFQQiLIrC1p6usUuTA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=et/GGEKkErbWczS8ORYIIDExEdr2wl6246YSU3qc3SxNOcCzj15kX1VmrfJRimMFN
+	 mhGCA1+IKdhvIgd9qb3mVi9UMZ8TRE0QGH8/uK2aEJDXY1MqpqWkDVxoIabmMb63fT
+	 RPcNRm4p59HuuzaaA4XC2itYx8BRgFW6ubwmPnUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732349AbgGAQF4 (ORCPT
+        id S1726506AbgGAQG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgGAQF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:05:56 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFEF6C08C5C1;
-        Wed,  1 Jul 2020 09:05:55 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id q3so10797905ilt.8;
-        Wed, 01 Jul 2020 09:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P6Jzhi8PQ7Yh19edg9xNloDUsoGpRoDY3eC/QwCEbjk=;
-        b=UTv+1FlJUGGQF132XOivjrqZzc3NGyMyUIi6+hTuX6aT3f4NgIYkioz+N+w4AbdoDk
-         v29aKjisYx17Z05IiybXRhXX8DUHiOq10D/3xEXnm4YJ9pf00+LAF1/fqUm5007cDAKr
-         nBp3/BUXl7vC8gXVvjqbDaSb3dXYfO1j6b0/k6w/TcOeWQM3Iq6YnFKD3KTioLblIVIg
-         gCAmv9BikJ86B5gHXtu+AdiBnbTiMizUoF9nmkWB4lIJYV02K+1LNtsXrABf/CVfh0r6
-         LI5w2xLbR9OZP99vTQFZAn6+aNqlNGrzAWOOVYBwzeFbsmZzPirKApxKPYGlLA4uI/qv
-         UJGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P6Jzhi8PQ7Yh19edg9xNloDUsoGpRoDY3eC/QwCEbjk=;
-        b=LU4IVEDyivWh8r1Cd+igQPgL1ill4g7WzY9hSvcUBkkh+//pFBCLbhPZt/1klGzf9X
-         HDT69IkDDm2hjGLfpcqZlZnGnqDPhvkcMXV3cR5uwSMVMuU2BjD8BafbaJwoToZRXQV0
-         IzIMwZVn2zk24WCKIbwhGd6cVW694VZlhpzMmuu9D9kJwtXamA/e79c4WhAOjF5hhdHy
-         TPqmWnpHEQIhJ2ZpOvekalcTbMypThRm0iRHilrLW16gSmTcoN3peA4Z6BJiMcZOg+AA
-         y/ZkHwmUJaB0rW8f5fBgZiM311dHRbHLX2AWQg2WPPyuC35PeVyKk/jOu3L9KReB8R4j
-         3Lhw==
-X-Gm-Message-State: AOAM530lcoE/S5OYdg15Mmdt+VxYZYa+y7xi3mpI7rvLD3LxcEaQZmV8
-        9FC+lbNHd7vzQ4tsalpw7SDk0wxFtP402NWzV6E=
-X-Google-Smtp-Source: ABdhPJwBHxtkEsS3T6qBCnTiacFDtYyWIObQUKy5IgofmsXn63hMieFrwhqwuKRnLbN2EJ8ytzScyIBe9dCLrPBmcn8=
-X-Received: by 2002:a92:5857:: with SMTP id m84mr8477108ilb.144.1593619555213;
- Wed, 01 Jul 2020 09:05:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
-In-Reply-To: <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 1 Jul 2020 09:05:43 -0700
-Message-ID: <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Josh Hunt <johunt@akamai.com>
-Cc:     jonas.bonn@netrounds.com, Paolo Abeni <pabeni@redhat.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
+        Wed, 1 Jul 2020 12:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732140AbgGAQGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:06:25 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3CCF20760;
+        Wed,  1 Jul 2020 16:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593619584;
+        bh=uLEdkNXwe0emaThTM6WspRamdEFQQiLIrC1p6usUuTA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=z87UF224UxxlXMucR0NGnQxgFb2cvoaHdXpXRyuWYh2tIS3iEYGUR7Yq6H78+1F+h
+         iTddJwl2nXx4w/xHbGrpzSOey8jQOAcBknpR2TB9Udubo0O6qxBDZSvAph8+4l5p9J
+         c4o1AiJI72YTI3AKDSk0lyqyfYibOxqAny9XLHaw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D2D5F3523108; Wed,  1 Jul 2020 09:06:24 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 09:06:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Peter Zijlstra' <peterz@infradead.org>,
+        Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200701160624.GO9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <20200701091054.GW4781@hirez.programming.kicks-ass.net>
+ <4427b0f825324da4b1640e32265b04bd@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4427b0f825324da4b1640e32265b04bd@AcuMS.aculab.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 2:08 PM Josh Hunt <johunt@akamai.com> wrote:
-> Do either of you know if there's been any development on a fix for this
-> issue? If not we can propose something.
+On Wed, Jul 01, 2020 at 02:20:13PM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 01 July 2020 10:11
+> > On Tue, Jun 30, 2020 at 01:30:16PM -0700, Paul E. McKenney wrote:
+> > > On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
+> > 
+> > > > I'm not convinced C11 memory_order_consume would actually work for us,
+> > > > even if it would work. That is, given:
+> > > >
+> > > >   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
+> > > >
+> > > > only pointers can have consume, but like I pointed out, we have code
+> > > > that relies on dependent loads from integers.
+> > >
+> > > I agree that C11 memory_order_consume is not normally what we want,
+> > > given that it is universally promoted to memory_order_acquire.
+> > >
+> > > However, dependent loads from integers are, if anything, more difficult
+> > > to defend from the compiler than are control dependencies.  This applies
+> > > doubly to integers that are used to index two-element arrays, in which
+> > > case you are just asking the compiler to destroy your dependent loads
+> > > by converting them into control dependencies.
+> > 
+> > Yes, I'm aware. However, as you might know, I'm firmly in the 'C is a
+> > glorified assembler' camp (as I expect most actual OS people are, out of
+> > necessity if nothing else) and if I wanted a control dependency I
+> > would've bloody well written one.
+> 
+> I write in C because doing register tracking is hard :-)
+> I've got an hdlc implementation in C that is carefully adjusted
+> so that the worst case path is bounded.
+> I probably know every one of the 1000 instructions in it.
+> 
+> Would an asm statement that uses the same 'register' for input and
+> output but doesn't actually do anything help?
+> It won't generate any code, but the compiler ought to assume that
+> it might change the value - so can't do optimisations that track
+> the value across the call.
 
-If you have a reproducer, I can look into this.
+It might replace the volatile load, but there are optimizations that
+apply to the downstream code as well.
 
-Thanks.
+Or are you suggesting periodically pushing the dependent variable
+through this asm?  That might work, but it would be easier and
+more maintainable to just mark the variable.
+
+> > I think an optimizing compiler is awesome, but only in so far as that
+> > optimization is actually helpful -- and yes, I just stepped into a giant
+> > twilight zone there. That is, any optimization that has _any_
+> > controversy should be controllable (like -fno-strict-overflow
+> > -fno-strict-aliasing) and I'd very much like the same here.
+> 
+> I'm fed up of gcc generating the code that uses SIMD instructions
+> for the 'tail' loop at the end of a function that is already doing
+> SIMD operations for the main part of the loop.
+> And compilers that convert a byte copy loop to 'rep movsb'.
+> If I'm copying 3 or 4 bytes I don't want a 40 clock overhead.
+
+Agreed, compilers can often be all too "helpful".  :-(
+
+							Thanx, Paul
