@@ -2,208 +2,118 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9666AC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEDE4207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C26B206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593638898;
+	bh=Us/5Jy9tEk6lKrONtGQfRf0LzdvM7mLYjwXq0weXD2o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GVVA/Gh326V5J914/vvZq/juXepPnHsowqSXeblKI1pw6sMtZJln7q/6mr/y1MWuW
+	 B44JKnS6oF/6ONdvSTfDr7abpalfcNQV8DA4h0gV8E3nDaLcyh3ZB2W7m1KHY/KnBp
+	 vA2jURU41drtZ7OAEy1uU65oSKhMeomYR4Kxb9Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgGAV2K (ORCPT
+        id S1727878AbgGAV2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:28:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49774 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgGAV2J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:28:09 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9F98A803202A;
-        Wed,  1 Jul 2020 21:28:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id g3WW4EqKCj7G; Thu,  2 Jul 2020 00:28:03 +0300 (MSK)
-Date:   Thu, 2 Jul 2020 00:28:00 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-Message-ID: <20200701212800.r7ue36dp2qnmmsmm@mobilestation>
-References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
- <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
- <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
+        Wed, 1 Jul 2020 17:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgGAV2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:28:15 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5104206B7;
+        Wed,  1 Jul 2020 21:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593638895;
+        bh=Us/5Jy9tEk6lKrONtGQfRf0LzdvM7mLYjwXq0weXD2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LkEgNJHnln0VSwyeu9MKg2oQSVELTF7r1btaK4RxPrGOUquprOxOqADHd3+0e6Rsd
+         yLrLwI2iCv968/h4T0d0jyDfrAq0V/1F8SN5Gk3q/fy3rwL6/0Me0nOLAbj4NtASkQ
+         8T5+TwNcXpLurasyEoJ8ru+lUDn+3LDyM2hSJcUM=
+Date:   Wed, 1 Jul 2020 16:28:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
+Message-ID: <20200701212812.GA3661715@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e29c9643-db5c-2d89-ff56-0900091770ea@linaro.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200701110302.75199-4-giovanni.cabiddu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Daniel
+On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
+> The current generation of Intel® QuickAssist Technology devices
+> are not designed to run in an untrusted environment because of the
+> following issues reported in the release notes in
+> https://01.org/intel-quickassist-technology:
 
-On Wed, Jul 01, 2020 at 09:00:03AM +0200, Daniel Lezcano wrote:
-> On 18/06/2020 00:32, Serge Semin wrote:
-> > Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
-> > GIC timer and MIPS CPS CPUidle drivers.
+It would be nice if this link were directly clickable, e.g., if there
+were no trailing ":" or something.
+
+And it would be even better if it went to a specific doc that
+described these issues.  I assume these are errata, and it's not easy
+to figure out which doc mentions them.
+
+> QATE-39220 - GEN - Intel® QAT API submissions with bad addresses that
+>              trigger DMA to invalid or unmapped addresses can cause a
+>              platform hang
+> QATE-7495  - GEN - An incorrectly formatted request to Intel® QAT can
+>              hang the entire Intel® QAT Endpoint
 > 
-
-> Why will you add yourself in the MAINTAINERS file for those drivers when
-> git shows just one contribution for the mips-gic-timer for the timer
-> stability ?
+> This patch adds the following QAT devices to the blocklist: DH895XCC,
+> C3XXX and C62X.
 > 
-> git shortlog --numbered --summary drivers/cpuidle/cpuidle-cps.c
->      4  Paul Burton
->      1  Daniel Lezcano
->      1  Marcin Nowakowski
->      1  Matt Redfearn
->      1  Thomas Gleixner
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> git shortlog --numbered --summary drivers/clocksource/mips-gic-timer.c
->     11  Andrew Bresticker
->      4  Ezequiel Garcia
->      4  Matt Redfearn
->      4  Paul Burton
->      3  Daniel Lezcano
->      3  Thomas Gleixner
->      2  Linus Torvalds
->      1  Alex Smith
->      1  Christophe Jaillet
->      1  Felix Fietkau
->      1  Ingo Molnar
->      1  Markos Chandras
->      1  Paul Gortmaker
->      1  RafaÅ‚ MiÅ‚ecki
->      1  Richard Cochran
->      1  Serge Semin
->      1  Viresh Kumar
->      1  YueHaibing
-
-I suppose that the number of commits isn't a main criteria to make someone of
-being a maintainer of a particular driver, though it might be a sufficient
-condition why someone could be appointed with the role. Anyway as I said in
-the cover letter that was a mere suggestion:
-
-> > Suggestion.
-> > Since Paul isn't looking after the MIPS arch code anymore, Ralf hasn't
-> > been seen maintaining MIPS for a long time, Thomas is only responsible
-> > for the next part of it:
-> >         F:      Documentation/devicetree/bindings/mips/
-> >         F:      Documentation/mips/
-> >         F:      arch/mips/
-> >         F:      drivers/platform/mips/
-> > the MIPS-specific drivers like:
-> >         F:      drivers/bus/mips_cdmm.c
-> >         F:      drivers/irqchip/irq-mips-cpu.c
-> >         F:      drivers/irqchip/irq-mips-gic.c
-> >         F:      drivers/clocksource/mips-gic-timer.c
-> >         F:      drivers/cpuidle/cpuidle-cps.c
-> > seem to be left for the subsystems maintainers to support. So if you don't
-> > mind or unless there is a better alternative, I can help with looking
-> > after them to ease the maintainers review burden and since I'll be working
-> > on our MIPS-based SoC drivers integrating into the mainline kernel repo
-> > anyway. Thomas agreed to join in maintaining that drivers."
-
-Primarily I've propose my help with looking after those drivers, since I'll be
-working on our SoC drivers with those components installed anyway.
-
-Another reason why I've decided to create this patch is that I've discovered there
-is noone looking after the drivers/bus/mips_cdmm.c driver. Noone responded to
-accept/decline the CDMM-related changes proposed in this patchset
-(mips_cdmm.c driver), noone except Rob responded to the DT bindings conversion
-patches (irq-mips-gic.c, mips_cdmm.c drivers):
-  68d4fa5d0bb8 dt-bindings: bus: Add MIPS CDMM controller
-  7256641fe15e dt-bindings: interrupt-controller: Convert mti,gic to DT schema
-  da16cdddd947 dt-bindings: power: Convert mti,mips-cpc to DT schema
-Finally I didn't say it in the cover letter, but cpuidle-cps wasn't working for
-our SoC, so I'll have to dig into that driver anyway. Moreover It seems to me
-that cpuidle-cps.c will be abandoned by the author since Paul Burton stopped
-working for MIPS. So based on that I collected all MIPS-related but scattered
-around the kernel subsystems drivers (MIPS CDMM, MIPS CPU/GIC IRQ-chip,
-MIPS GIC-timer and MIPS CPU-idle CPS) in the dedicated maintainers entry and
-proposed my help with their maintenance. By Marc' suggestion Thomas agreed to
-join in.
-
-If you don't need our help in maintaining the mips-gic-timer.c and cpuidle-cps.c
-drivers, then just say so. I'll discard them from the maintenance entry created
-by this patch. Though in that case the list won't be full.)
-
-> 
-> Also, in the cpuidle-cps.c history, there is no signed-off from Rafael,
-> neither an Acked-by when it was merged. That make me think the patch
-> went through another path than the linux-pm tree without a cpuidle
-> framework maintainer acknowledgement.
-> 
-> Perhaps it is a mistake and the patch was actually acked-by, but I would
-> like to remind the patches have to be acked by the upper maintainers and
-> being listed in the MAINTAINERS file does not give the right of override
-> this rule.
-
-Sorry. I don't really get it what patch you are talking about. But I
-totally aware of the rule you've mentioned.
-
--Sergey
-
-> 
-> 
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Acked-by: Marc Zyngier <maz@kernel.org>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v3:
-> > - Keep the files list alphabetically ordered.
-> > - Add Thomas as the co-maintainer of the designated drivers.
-> > ---
-> >  MAINTAINERS | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2926327e4976..20532e0287d7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
-> >  F:	drivers/clk/imgtec/clk-boston.c
-> >  F:	include/dt-bindings/clock/boston-clock.h
-> >  
-> > +MIPS CORE DRIVERS
-> > +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > +M:	Serge Semin <fancer.lancer@gmail.com>
-> > +L:	linux-mips@vger.kernel.org
-> > +S:	Supported
-> > +F:	drivers/bus/mips_cdmm.c
-> > +F:	drivers/clocksource/mips-gic-timer.c
-> > +F:	drivers/cpuidle/cpuidle-cps.c
-> > +F:	drivers/irqchip/irq-mips-cpu.c
-> > +F:	drivers/irqchip/irq-mips-gic.c
-> > +
-> >  MIPS GENERIC PLATFORM
-> >  M:	Paul Burton <paulburton@kernel.org>
-> >  L:	linux-mips@vger.kernel.org
-> > 
-> 
-> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index ea5904ca6cbf..dcac5408c764 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -75,6 +75,21 @@ static inline bool vfio_vga_disabled(void)
+>  
+>  static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
+>  {
+> +	switch (pdev->vendor) {
+> +	case PCI_VENDOR_ID_INTEL:
+> +		switch (pdev->device) {
+> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
+> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
+> +		case PCI_DEVICE_ID_INTEL_QAT_C62X:
+> +		case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
+> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
+> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
+> +			return true;
+> +		default:
+> +			return false;
+> +		}
+> +	}
+> +
+>  	return false;
+>  }
+>  
 > -- 
-> <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+> 2.26.2
 > 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
