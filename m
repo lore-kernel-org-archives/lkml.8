@@ -2,159 +2,130 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB50C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B275C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54CB220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gm7DKZnd"
+	by mail.kernel.org (Postfix) with ESMTP id 2760620663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 15:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbgGAPPY (ORCPT
+        id S1731867AbgGAPPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 11:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgGAPPX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 11:15:23 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0410C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 08:15:22 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id k18so12122588ybm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 08:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1OXCzKlm/ajG5X9F9mYOppVckbS/UtVwRERIIxYgAF0=;
-        b=gm7DKZndG5xIUYp+pckIqDJmVIxEdJ7mokqKBpWulCAJXdFJpoRETrlva80b8BWqri
-         JfzgfjH1Wfp5e4nkEu/uKtEzZtsWfbvgyKfIbpucXnVhHTqsEePdXkjcdheSmeC2udk9
-         bJcg4gANj48YwTwHPaWhoC3J8VsheYwWi0m1XwNuIGnKdeMOy0OsWOFK/w/sRiLEDHe0
-         vcdWjg8T7zs4KZFrKCnyiVRl7fRxYbIA7pWPSRoYp6i93GCrQ92p0mNitS70hGi4Q0ip
-         9iUrnQttT1sBktCWpJzmQ7Ay+LfJI4YBNXkzUaAQiHpqn5F13JgJaofExLIp+GFKGtEa
-         spTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1OXCzKlm/ajG5X9F9mYOppVckbS/UtVwRERIIxYgAF0=;
-        b=H3TZWyg9mfah5CgYiAszgnOIWHPUI2qLhDrdYzB6thyIMLgTcAoWzIQN8xhhrpW7m/
-         ehA3JZjZ8JQFIbGLV1XDwOM2z9GHSrTPdLChtGNQur/ztVdrz0fKcphrzNC49FMFQX+g
-         hYwslSx3lqKrJyP4ZVBNT8Pt/AsS0/srSf949FTfVm7yMC5H2T3WCsrWZVHIL2lDxsgS
-         oP4T0XUauYpPx+Acj22lzRaTZ8Dzw1MrSDDh7croPDEDJI0fDT7OYki+SzsTZc0tT6Ij
-         CrP5ItUBwW6IHBPK3vlV7xwcNJ3Ct1fEmhf2o3xXOQZ8eFHjJCI/r4J8eqTGtYDO8KA7
-         3PXg==
-X-Gm-Message-State: AOAM532amGjH+QZ5FpAWpVZnALfkKztSi42jfTbFqGyAnPSfZoiz4KLG
-        LjsUW5K46GG9LDZvUFwNZHq8qbJU0/2/q/a2XHli8A==
-X-Google-Smtp-Source: ABdhPJzGtgnKdXHNer1rjRzDXoB0nKorJWKbUBcfkGsR9/EkL6I8d+nQZeuowgjlrinMb8zZNxHZ/e6tbOmtSAMrAw0=
-X-Received: by 2002:a25:b7cc:: with SMTP id u12mr27806815ybj.173.1593616521698;
- Wed, 01 Jul 2020 08:15:21 -0700 (PDT)
+        Wed, 1 Jul 2020 11:15:31 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61684 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727887AbgGAPPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 11:15:30 -0400
+IronPort-SDR: kTbHuT3SH1P8ixkn49RHMln5ysw0QafZumYPAe61yPXaqEZzVEQ8hjEtBfTVXdzBgxjM2cGiwz
+ kQ28Y7FjDJZg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134880524"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="134880524"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:15:29 -0700
+IronPort-SDR: hG50aIcMaWNua8XsiIa3dfTzMYvuO91zWluZon+wGAe+sZNe+ukBNlCkaQaQWEKfc8RkP7E/it
+ Y0o6IcmEiv4w==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455137547"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 08:15:23 -0700
+Subject: Re: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of
+ discard
+To:     David Rientjes <rientjes@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kbusch@kernel.org, ying.huang@intel.com, dan.j.williams@intel.com
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+ <20200629234509.8F89C4EF@viggo.jf.intel.com>
+ <alpine.DEB.2.22.394.2006301732010.1644114@chino.kir.corp.google.com>
+ <039a5704-4468-f662-d660-668071842ca3@linux.alibaba.com>
+ <alpine.DEB.2.22.394.2006302208460.1685201@chino.kir.corp.google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <f21bc5a1-b983-837f-ed3e-70b6bd6057cc@intel.com>
+Date:   Wed, 1 Jul 2020 08:15:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
- <20200701020211.GA6875@gondor.apana.org.au> <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
- <20200701022241.GA7167@gondor.apana.org.au> <CANn89iLKZQAtpejcLHmOu3dsrGf5eyFfHc8JqoMNYisRPWQ8kQ@mail.gmail.com>
- <20200701025843.GA7254@gondor.apana.org.au> <CANn89iKnf6=RFd-XRjPv=qaU8P-LGCBcw6JU5Ywwb16gU2iQqQ@mail.gmail.com>
- <338284155.18826.1593605982156.JavaMail.zimbra@efficios.com>
-In-Reply-To: <338284155.18826.1593605982156.JavaMail.zimbra@efficios.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 1 Jul 2020 08:15:10 -0700
-Message-ID: <CANn89iLLuUG-6QaOzTt8UFszpOKkjKhXqDmgDMW1L5GctsqL-g@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.DEB.2.22.394.2006302208460.1685201@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 5:19 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On 6/30/20 10:41 PM, David Rientjes wrote:
+> Maybe the strongest advantage of the node abstraction is the ability to 
+> use autonuma and migrate_pages()/move_pages() API for moving pages 
+> explicitly?  Mempolicies could be used for migration to "top-tier" memory, 
+> i.e. ZONE_NORMAL or ZONE_MOVABLE, instead.
 
-> The approach below looks good to me, but you'll also need to annotate
-> both tcp_md5_hash_key and tcp_md5_do_add with __no_kcsan or use
-> data_race(expr) to let the concurrency sanitizer know that there is
-> a known data race which is there on purpose (triggered by memcpy in tcp_md5_do_add
-> and somewhere within crypto_ahash_update). See Documentation/dev-tools/kcsan.rst
-> for details.
+I totally agree that we _could_ introduce this new memory class as a zone.
 
-Sure, I can add a data_race() and let stable teams handle the
-backports without it ;)
+Doing it as nodes is pretty natural since the firmware today describes
+both slow (versus DRAM) and fast memory as separate nodes.  It also
+means that apps can get visibility into placement with existing NUMA
+tooling and ABIs.  To me, those are the two strongest reasons for PMEM.
 
->
-> Thanks,
->
-> Mathieu
->
-> >
-> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> > index
-> > f111660453241692a17c881dd6dc2910a1236263..c3af8180c7049d5c4987bf5c67e4aff2ed6967c9
-> > 100644
-> > --- a/net/ipv4/tcp.c
-> > +++ b/net/ipv4/tcp.c
-> > @@ -4033,11 +4033,9 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
-> >
-> > int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
-> > tcp_md5sig_key *key)
-> > {
-> > -       u8 keylen = key->keylen;
-> > +       u8 keylen = READ_ONCE(key->keylen); /* paired with
-> > WRITE_ONCE() in tcp_md5_do_add */
-> >        struct scatterlist sg;
-> >
-> > -       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
-> > -
-> >        sg_init_one(&sg, key->key, keylen);
-> >        ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
-> >        return crypto_ahash_update(hp->md5_req);
-> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> > index
-> > 99916fcc15ca0be12c2c133ff40516f79e6fdf7f..0d08e0134335a21d23702e6a5c24a0f2b3c61c6f
-> > 100644
-> > --- a/net/ipv4/tcp_ipv4.c
-> > +++ b/net/ipv4/tcp_ipv4.c
-> > @@ -1114,9 +1114,13 @@ int tcp_md5_do_add(struct sock *sk, const union
-> > tcp_md5_addr *addr,
-> >                /* Pre-existing entry - just update that one. */
-> >                memcpy(key->key, newkey, newkeylen);
-> >
-> > -               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
-> > +               /* Pairs with READ_ONCE() in tcp_md5_hash_key().
-> > +                * Also note that a reader could catch new key->keylen value
-> > +                * but old key->key[], this is the reason we use __GFP_ZERO
-> > +                * at sock_kmalloc() time below these lines.
-> > +                */
-> > +               WRITE_ONCE(key->keylen, newkeylen);
-> >
-> > -               key->keylen = newkeylen;
-> >                return 0;
-> >        }
-> >
-> > @@ -1132,7 +1136,7 @@ int tcp_md5_do_add(struct sock *sk, const union
-> > tcp_md5_addr *addr,
-> >                rcu_assign_pointer(tp->md5sig_info, md5sig);
-> >        }
-> >
-> > -       key = sock_kmalloc(sk, sizeof(*key), gfp);
-> > +       key = sock_kmalloc(sk, sizeof(*key), gfp | __GFP_ZERO);
-> >        if (!key)
-> >                return -ENOMEM;
-> >         if (!tcp_alloc_md5sig_pool()) {
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
+Looking to the future, I don't think the zone approach scales.  I know
+folks want to build stuff within a single socket which is a mix of:
+
+1. High-Bandwidth, on-package memory (a la MCDRAM)
+2. DRAM
+3. DRAM-cached PMEM (aka. "memory mode" PMEM)
+4. Non-cached PMEM
+
+Right now, #1 doesn't exist on modern platform  and #3/#4 can't be mixed
+(you only get 3 _or_ 4 at once).  I'd love to provide something here
+that Intel can use to build future crazy platform configurations that
+don't require kernel enabling.
