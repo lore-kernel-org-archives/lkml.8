@@ -2,75 +2,119 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A4C20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593586150;
-	bh=QEBQrxZVM9HQ3uowb8hGXNoe0tIJpUE81nlcfRcemhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AdARZZISne1mj9hoCFrFW3OQtMRsMFG1NRvMhbzCL3bM50wQrSjBI2xgXLUvJ6uyH
-	 KPr4Y2FClpW/dcznTLI41AnR8QRhrwJp5kCOm8Qwn94VO5PEp9aYl/wPHrlNK/spcx
-	 8S1lJmAhOAEe24F31fjaNcGX75NEPLQ3xz8kSVPE=
+	by mail.kernel.org (Postfix) with ESMTP id A75852074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 06:49:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEVIKlDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgGAGtJ (ORCPT
+        id S1727963AbgGAGtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 02:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGAGtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 02:49:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 Jul 2020 02:49:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29142 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727931AbgGAGtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 02:49:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593586178;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hToiU5LeJAAlC9l0X3eoMf5GmV669rRbGsOZZ5vcImA=;
+        b=VEVIKlDxys8SCCyFjan3k4mJ0EUszUZgFz4Y9BvQPOtQucULbyeG9gWUQVXxQ/1mvfHyqr
+        L/5FcHB1hemESjY7tY0fs3+w+ohRk+E851WBb3LW+DAHUsAS53ATOjIMFvKZH+ey0HYnGq
+        /frIo3z4RKZNlrHrbYREc5tjD4mdGrU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-E6P5FSFWO06ES6NUoi0Giw-1; Wed, 01 Jul 2020 02:49:34 -0400
+X-MC-Unique: E6P5FSFWO06ES6NUoi0Giw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 344F920747;
-        Wed,  1 Jul 2020 06:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593586148;
-        bh=QEBQrxZVM9HQ3uowb8hGXNoe0tIJpUE81nlcfRcemhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o4QhDKEz/G2ez/no2RkaNsf6xNDdFzju45cTFL6m9O88NAWRZcAFKX6PRItpO9TnL
-         a9nYg4eNmpf8kOEMSoyODatJ+7JDh7Nm7TDkhTG40rz+aCBtRFOy59im6RrCwsatlf
-         5+doWk+rc380ToPrIccmSo5kJXAQzzk32yumynIs=
-Date:   Wed, 1 Jul 2020 08:48:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: Fix up terminology
-Message-ID: <20200701064855.GA2044019@kroah.com>
-References: <20200630174123.GA1906678@kroah.com>
- <875zb791x1.fsf@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ADFD80183C;
+        Wed,  1 Jul 2020 06:49:31 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-113-12.ams2.redhat.com [10.36.113.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DB982B4AD;
+        Wed,  1 Jul 2020 06:49:20 +0000 (UTC)
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= 
+        <mclapinski@google.com>, Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Adrian Reber <areber@redhat.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v4 0/3] capabilities: Introduce CAP_CHECKPOINT_RESTORE
+Date:   Wed,  1 Jul 2020 08:49:03 +0200
+Message-Id: <20200701064906.323185-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zb791x1.fsf@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 09:36:58AM +0300, Felipe Balbi wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> 
-> > USB is a HOST/DEVICE protocol, as per the specification and all
-> > documentation.  Fix up terms that are not applicable to make things
-> > match up with the terms used through the rest of the USB stack.
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Do you want me to pick this up and send it back to you on a pull
-> request? It's fine for me either way:
-> 
-> Acked-by: Felipe Balbi <balbi@kernel.org>
+This is v4 of the 'Introduce CAP_CHECKPOINT_RESTORE' patchset. There
+is only one change from v3 to address Jann's comment on patch 3/3
 
-Thanks, I'll just take this as a whole patch, as it touches many files
-in drivers/usb/ at once.
+ (That is not necessarily true in the presence of LSMs like SELinux:
+ You'd have to be able to FILE__EXECUTE_NO_TRANS the target executable
+ according to the system's security policy.)
 
-greg k-h
+Nicolas updated the last patch (3/3). The first two patches are
+unchanged from v3.
+
+Adrian Reber (2):
+  capabilities: Introduce CAP_CHECKPOINT_RESTORE
+  selftests: add clone3() CAP_CHECKPOINT_RESTORE test
+
+Nicolas Viennot (1):
+  prctl: Allow ptrace capable processes to change /proc/self/exe
+
+ fs/proc/base.c                                |   8 +-
+ include/linux/capability.h                    |   6 +
+ include/linux/lsm_hook_defs.h                 |   1 +
+ include/linux/security.h                      |   6 +
+ include/uapi/linux/capability.h               |   9 +-
+ kernel/pid.c                                  |   2 +-
+ kernel/pid_namespace.c                        |   2 +-
+ kernel/sys.c                                  |  12 +-
+ security/commoncap.c                          |  26 +++
+ security/security.c                           |   5 +
+ security/selinux/hooks.c                      |  14 ++
+ security/selinux/include/classmap.h           |   5 +-
+ tools/testing/selftests/clone3/Makefile       |   4 +-
+ .../clone3/clone3_cap_checkpoint_restore.c    | 203 ++++++++++++++++++
+ 14 files changed, 285 insertions(+), 18 deletions(-)
+ create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+
+
+base-commit: f2b92b14533e646e434523abdbafddb727c23898
+-- 
+2.26.2
+
