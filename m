@@ -2,251 +2,109 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5331C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D56EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA235206CB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fvMTkwlF"
+	by mail.kernel.org (Postfix) with ESMTP id 5421E206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgGAE1I (ORCPT
+        id S1726409AbgGAEaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 00:27:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgGAE1H (ORCPT
+        Wed, 1 Jul 2020 00:30:04 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:37271 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgGAEaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 00:27:07 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577E1C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:27:07 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id i16so17463818qtr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 21:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0wIgs3VKhIuaXHVPWmnow5qLXIDMbpb3CKsGv/tv2Rk=;
-        b=fvMTkwlF68FklyfTloViaxEICph/kC2zKCH6JBOpKRAJfLRbgiI9qaQ18FIKeKVtiz
-         ff95WfXrYG/YuNqsgmNCwmXASHNY0fdZ9CyOvShO3Wa1sIPTsRv+hBq4sLDia52UUk4N
-         V4/3hyKf2UWqBGesZq5Anle8Nwic/sftQD3Pt46sFTW9V87syXv/AwHhjXhbesDR2neJ
-         q/W9tHv/qIlcmxQtWUcgEzSrgcZxxopLyK4uncNWGQ/zwIjBAFTdylUWCDA+rbQE+0c9
-         LOu3lyF8B4cPY7KiKbGTqSQ2HED35AGoYdlJh0VMWpgzD5GkREYoNfZswzOIEmBDzG7H
-         Kwjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0wIgs3VKhIuaXHVPWmnow5qLXIDMbpb3CKsGv/tv2Rk=;
-        b=Z3n66LO1iB1fKZ0STEKAftoka85pBb+72rz8AKT+qHHAApSHu8JvYtFWaOExNmZ95E
-         a/JZSllaDhv3l9ZvgI1EJi81V4Ck4/coWfbqnjW1qEWtM8us8NfEv+VT6bUcFSdJz/NB
-         V9ZK1ZUVckCri5g6RfbyKznthQKwoW92o7uayrXmvP9i8+fWEt2nFO3MNTwATGRdxWuL
-         GJ/h19chW8UVkeS3hEWVsdKE2RD42JtI8H/80H697TQFENTj5Mg+ybu8ctxqSEZlFCMO
-         zfhcrrBwJ/Fkxf9nw45Su5LYZQoHJ1uG8XwKutmnju7Ps2JfCgPuQireu0XXSlesrDyp
-         A2+Q==
-X-Gm-Message-State: AOAM533/4beoKgoalPRRSgIAFEqaOY7Wv4zansQZQhTwZps/DEjAHyWW
-        rgKO78dD3FxCbLLbnG2jjQDltQ==
-X-Google-Smtp-Source: ABdhPJzgIuK/4NY14D4tI2IOCwMzUL2HpMoesgwdny5dP+EQJUm13F7z14AXMpnBiliTjyAcrD+F0Q==
-X-Received: by 2002:aed:3904:: with SMTP id l4mr20927805qte.370.1593577626394;
-        Tue, 30 Jun 2020 21:27:06 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 195sm4816483qkl.37.2020.06.30.21.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 21:27:05 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org (open list),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-pm@vger.kernel.org (open list:INTERCONNECT API)
-Subject: [RFC PATCH] interconnect: qcom: add functions to query addr/cmds for a path
-Date:   Wed,  1 Jul 2020 00:25:25 -0400
-Message-Id: <20200701042528.12321-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Wed, 1 Jul 2020 00:30:04 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1954E280038A9;
+        Wed,  1 Jul 2020 06:30:02 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id A44C71940B1; Wed,  1 Jul 2020 06:30:01 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 06:30:01 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Daniel Winkler <danielwinkler@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc:     linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Aaron Sierra <asierra@xes-inc.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "serial: 8250: Fix max baud limit in generic 8250
+ port"
+Message-ID: <20200701043001.73qhxyyjx6bayn2m@wunner.de>
+References: <20200630164204.1.I2cc415fa5793b3e55acfd521ba8f0a71e79aa5f1@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630164204.1.I2cc415fa5793b3e55acfd521ba8f0a71e79aa5f1@changeid>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The a6xx GMU can vote for ddr and cnoc bandwidth, but it needs to be able
-to query the interconnect driver for bcm addresses and commands.
+On Tue, Jun 30, 2020 at 04:42:11PM -0700, Daniel Winkler wrote:
+> This reverts commit 0eeaf62981ecc79e8395ca8caa1570eaf3a12257.
 
-I'm not sure what is the best way to go about implementing this, this is
-what I came up with.
+That is not an upstream commit.  You probably mean:
 
-I included a quick example of how this can be used by the a6xx driver to
-fill out the GMU bw_table (two ddr bandwidth levels in this example, note
-this would be using the frequency table in dts and not hardcoded values).
+    commit 7b668c064ec33f3d687c3a413d05e355172e6c92
+    Author: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+    Date:   Thu May 7 02:31:32 2020 +0300
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 20 ++++-------
- drivers/interconnect/qcom/icc-rpmh.c  | 50 +++++++++++++++++++++++++++
- include/soc/qcom/icc.h                | 11 ++++++
- 3 files changed, 68 insertions(+), 13 deletions(-)
- create mode 100644 include/soc/qcom/icc.h
+    serial: 8250: Fix max baud limit in generic 8250 port
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-index ccd44d0418f8..1fb8f0480be3 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
-@@ -4,6 +4,7 @@
- #include <linux/completion.h>
- #include <linux/circ_buf.h>
- #include <linux/list.h>
-+#include <soc/qcom/icc.h>
- 
- #include "a6xx_gmu.h"
- #include "a6xx_gmu.xml.h"
-@@ -320,24 +321,18 @@ static void a640_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
- 	msg->cnoc_cmds_data[1][2] =  0x60000001;
- }
- 
--static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
-+static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg, struct icc_path *path)
- {
- 	/*
- 	 * Send a single "off" entry just to get things running
- 	 * TODO: bus scaling
- 	 */
--	msg->bw_level_num = 1;
--
--	msg->ddr_cmds_num = 3;
-+	msg->bw_level_num = 2;
- 	msg->ddr_wait_bitmask = 0x01;
- 
--	msg->ddr_cmds_addrs[0] = 0x50000;
--	msg->ddr_cmds_addrs[1] = 0x50004;
--	msg->ddr_cmds_addrs[2] = 0x5007c;
--
--	msg->ddr_cmds_data[0][0] =  0x40000000;
--	msg->ddr_cmds_data[0][1] =  0x40000000;
--	msg->ddr_cmds_data[0][2] =  0x40000000;
-+	msg->ddr_cmds_num = qcom_icc_query_addr(path, msg->ddr_cmds_addrs);
-+	qcom_icc_query_cmd(path, msg->ddr_cmds_data[0], 0, 0);
-+	qcom_icc_query_cmd(path, msg->ddr_cmds_data[1], 0, 7216000);
- 
- 	/*
- 	 * These are the CX (CNOC) votes - these are used by the GMU but the
-@@ -388,7 +383,6 @@ static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
- 	msg->cnoc_cmds_data[1][2] =  0x60000001;
- }
- 
--
- static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
- {
- 	struct a6xx_hfi_msg_bw_table msg = { 0 };
-@@ -400,7 +394,7 @@ static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
- 	else if (adreno_is_a640(adreno_gpu))
- 		a640_build_bw_table(&msg);
- 	else if (adreno_is_a650(adreno_gpu))
--		a650_build_bw_table(&msg);
-+		a650_build_bw_table(&msg, adreno_gpu->base.icc_path);
- 	else
- 		a6xx_build_bw_table(&msg);
- 
-diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
-index 3ac5182c9ab2..3ce2920330f9 100644
---- a/drivers/interconnect/qcom/icc-rpmh.c
-+++ b/drivers/interconnect/qcom/icc-rpmh.c
-@@ -9,6 +9,7 @@
- 
- #include "bcm-voter.h"
- #include "icc-rpmh.h"
-+#include "../internal.h"
- 
- /**
-  * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
-@@ -92,6 +93,55 @@ int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- }
- EXPORT_SYMBOL_GPL(qcom_icc_set);
- 
-+static u32 bcm_query(struct qcom_icc_bcm *bcm, u64 sum_avg, u64 max_peak)
-+{
-+	u64 temp, agg_peak = 0;
-+	int i;
-+
-+	for (i = 0; i < bcm->num_nodes; i++) {
-+		temp = max_peak * bcm->aux_data.width;
-+		do_div(temp, bcm->nodes[i]->buswidth);
-+		agg_peak = max(agg_peak, temp);
-+	}
-+
-+	temp = agg_peak * 1000ULL;
-+	do_div(temp, bcm->aux_data.unit);
-+
-+	// TODO vote_x
-+
-+	return BCM_TCS_CMD(true, temp != 0, 0, temp);
-+}
-+
-+int qcom_icc_query_addr(struct icc_path *path, u32 *addr)
-+{
-+	struct qcom_icc_node *qn;
-+	int i, j, k = 0;
-+
-+	for (i = 0; i < path->num_nodes; i++) {
-+		qn = path->reqs[i].node->data;
-+		for (j = 0; j < qn->num_bcms; j++, k++)
-+			addr[k] = qn->bcms[j]->addr;
-+	}
-+
-+	return k;
-+}
-+EXPORT_SYMBOL_GPL(qcom_icc_query_addr);
-+
-+int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max)
-+{
-+	struct qcom_icc_node *qn;
-+	int i, j, k = 0;
-+
-+	for (i = 0; i < path->num_nodes; i++) {
-+		qn = path->reqs[i].node->data;
-+		for (j = 0; j < qn->num_bcms; j++, k++)
-+			cmd[k] = bcm_query(qn->bcms[j], avg, max);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(qcom_icc_query_cmd);
-+
- /**
-  * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
-  * @bcm: bcm to be initialized
-diff --git a/include/soc/qcom/icc.h b/include/soc/qcom/icc.h
-new file mode 100644
-index 000000000000..8d0ddde49739
---- /dev/null
-+++ b/include/soc/qcom/icc.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __SOC_QCOM_ICC_H__
-+#define __SOC_QCOM_ICC_H__
-+
-+#include <linux/interconnect.h>
-+
-+int qcom_icc_query_addr(struct icc_path *path, u32 *addr);
-+int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max);
-+
-+#endif /* __SOC_QCOM_ICC_H__ */
--- 
-2.26.1
+And you didn't cc the commit author (hereby fixed).
 
+Thanks,
+
+Lukas
+
+> 
+> The change regresses the QCA6174A-3 bluetooth chip, preventing
+> firmware from being properly loaded. We have verified that without
+> this patch, the chip works as intended.
+> 
+> Signed-off-by: Daniel Winkler <danielwinkler@google.com>
+> ---
+> 
+>  drivers/tty/serial/8250/8250_port.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 1632f7d25acca..e057c65ac1580 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2618,8 +2618,6 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+>  					     struct ktermios *termios,
+>  					     struct ktermios *old)
+>  {
+> -	unsigned int tolerance = port->uartclk / 100;
+> -
+>  	/*
+>  	 * Ask the core to calculate the divisor for us.
+>  	 * Allow 1% tolerance at the upper limit so uart clks marginally
+> @@ -2628,7 +2626,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+>  	 */
+>  	return uart_get_baud_rate(port, termios, old,
+>  				  port->uartclk / 16 / UART_DIV_MAX,
+> -				  (port->uartclk + tolerance) / 16);
+> +				  port->uartclk);
+>  }
+>  
+>  void
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
