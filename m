@@ -2,161 +2,148 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A19C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD39206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD20206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgGACq2 (ORCPT
+        id S1726826AbgGACrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:46:28 -0400
-Received: from atcsqr.andestech.com ([60.248.187.195]:48232 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGACq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:46:28 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id 0612cYGv088370;
-        Wed, 1 Jul 2020 10:38:34 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 1 Jul 2020
- 10:45:56 +0800
-Date:   Wed, 1 Jul 2020 10:45:57 +0800
-From:   Alan Kao <alankao@andestech.com>
-To:     Atish Patra <atishp@atishpatra.org>
-CC:     Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-Message-ID: <20200701024557.GB27962@andestech.com>
-References: <cover.1593397455.git.zong.li@sifive.com>
- <20200701005129.GA27962@andestech.com>
- <CAOnJCU+5fLA5WZuiQ7NprdEDxnEus8RtyLZGD2ehraiHR-uf0Q@mail.gmail.com>
+        Tue, 30 Jun 2020 22:47:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49452 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgGACrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:47:06 -0400
+IronPort-SDR: uU9AFxyPn45Kiz9qlzNkJoqS8nmwGp82REXK7TAOkyILyIhu/IoLx5I3zEd1z0O+H/hTwQKX1j
+ GwyHPqCjQ2tw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164450711"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="164450711"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:47:05 -0700
+IronPort-SDR: 8Cs/5Imglx6YXbyj/1U9UILEStcYRGXt8qyJb10gai2Mz57OqXtWbKqw1eR/LDZXaS2OCSvGLI
+ rhtMJJCJ44rA==
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="454836339"
+Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 19:47:02 -0700
+Subject: Re: [PATCH v9 0/8] KVM: Add virtualization support of split lock
+ detection
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+References: <20200509110542.8159-1-xiaoyao.li@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <45214dc8-08eb-5754-4c5c-e2de18592eb7@intel.com>
+Date:   Wed, 1 Jul 2020 10:46:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAOnJCU+5fLA5WZuiQ7NprdEDxnEus8RtyLZGD2ehraiHR-uf0Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com 0612cYGv088370
+In-Reply-To: <20200509110542.8159-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Jun 30, 2020 at 06:02:43PM -0700, Atish Patra wrote:
-> On Tue, Jun 30, 2020 at 5:52 PM Alan Kao <alankao@andestech.com> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 11:19:09AM +0800, Zong Li wrote:
-> > > This patch set adds raw event support on RISC-V. In addition, we
-> > > introduce the DT mechanism to make our perf more generic and common.
-> > >
-> > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> > > would raise an illegal instruction exception and trap into m-mode to
-> > > emulate event selector CSRs access. It doesn't make sense because we
-> > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> > > selector through standard SBI call or the shadow CSRs of s-mode. We have
-> > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> > > but we also discussing the feasibility of accessing these PMU CSRs on
-> > > s-mode at the same time, such as delegation mechanism, so I was
-> > > wondering if we could use SBI calls first and make the PMU SBI extension
-> > > as legacy when s-mode access mechanism is accepted by Foundation? or
-> > > keep the current situation to see what would happen in the future.
-> > >
-> > > This patch set also introduces the DT mechanism, we don't want to add too
-> > > much platform-dependency code in perf like other architectures, so we
-> > > put the mapping of generic hardware events to DT, then we can easy to
-> > > transfer generic hardware events to vendor's own hardware events without
-> > > any platfrom-dependency stuff in our perf.
-> > >
-> > > Zong Li (6):
-> > >   dt-bindings: riscv: Add YAML documentation for PMU
-> > >   riscv: dts: sifive: Add DT support for PMU
-> > >   riscv: add definition of hpmcounter CSRs
-> > >   riscv: perf: Add raw event support
-> > >   riscv: perf: introduce DT mechanism
-> > >   riscv: remove PMU menu of Kconfig
-> > >
-> >
-> > DT-based PMU registration looks good to me. Together with Anup's feedback,
-> > we can anticipate that the following items will be:
-> >
-> > - rewrite RISC-V PMU to a platform driver
-> > - propose SBI PMU extention
-> > - fixes: RV32 counter access, namings, etc.
-> >
-> > Yes, all are good directions towards better counting (`perf stat`) function.
-> > But as the original author of RISC-V perf port, please allow me to address
-> > the fundamental problems of RISC-V perf, again [0][1][2][3], that the sampling
-> > (`perf record`) function never earned enough respect.  Counting gives you a
-> > shallow view regarding an application, while sampling demystifies one for you.
-> >
-> > The problems are three-fold
-> > (1) Interrupt
-> > Sampling in perf requires that a HPM raises an interrupt when it overflows.
-> > Making RISC-V perf platform driver or not has nothing to do with this.  This
-> > requires more discussions in TGs.
-> > (2) S-mode access to PMU CSRs
-> > This is also addressed in this patch set but to me, it is kind of like a
-> > SBI-solves-them-all mindset to me.  Perf event is for performance monitoring
-> > thus we should eliminate any possible overhead if we can.  Setting event masks
-> > through SBI calls for counting maybe OK, but if we really take sampling and
-> > interrupt handling into consideration, it is questionable if it is still a
-> > viable way.
-> > (3) Registers, registers, registers
-> > There is just no enough CSR/function for perf sampling. The previous proposal
-> > explains why [2].
-> >
-> > Perf sampling is off-topic but somehow related, so I bring it up here just
-> > for your information.
-> >
-> > As this patch set goes v2, the PMU porting guide in [0] should be removed since
-> > it contains no useful information anymore.
-> >
-> > [0] Documentation/riscv/pmu.rst
-> > [1] https://www.youtube.com/watch?v=Onvlcl4e2IU
-> > [2] https://github.com/riscv/riscv-isa-manual/issues/402
-> >     This proposal has been posted in Privileged Spec Task Group, in
-> > https://lists.riscv.org/g/tech-privileged-archive/message/488?p=,,,20,0,0,0::Created,,Proposal,20,2,40,32306071
-> > but never receive any feedback.
-> > [3] https://lists.riscv.org/g/tech-unixplatformspec/message/84
-> >     I intended to discuss [2] in the Unixplatform Spec Task Group at the
-> > online meeting, but obviously people were too busy knowing who the new
-> > RISC-V CTO is and what he has done to even follow the agenda.
-> >
-> 
-> Sorry. The last meeting's agenda was derailed for numerous reasons.
-> Are you okay with discussing this during the next meeting ?
-> I have not scheduled one yet but will probably schedule it on next
-> Wednesday (8th July) if there is no objection.
-> I can check with Anup if he can present the SBI PMU extension as well.
+Ping for comments.
 
-Thanks for the oppertunity. 
-But I don't think that the time is enough for every important topic to be
-covered.  What I provided in the previous citation [2] is a proposal,
-which need expert to judge and critique after thorough reading.
+On 5/9/2020 7:05 PM, Xiaoyao Li wrote:
+> This series aims to add the virtualization of split lock detection in
+> KVM.
+> 
+> Due to the fact that split lock detection is tightly coupled with CPU
+> model and CPU model is configurable by host VMM, we elect to use
+> paravirt method to expose and enumerate it for guest.
+> 
+> Changes in v9
+>   - rebase to v5.7-rc4
+>   - Add one patch to rename TIF_SLD to TIF_SLD_DISABLED;
+>   - Add one patch to remove bogus case in handle_guest_split_lock;
+>   - Introduce flag X86_FEATURE_SPLIT_LOCK_DETECT_FATAL and thus drop
+>     sld_state;
+>   - Use X86_FEATURE_SPLIT_LOCK_DETECT and X86_FEATURE_SPLIT_LOCK_DETECT_FATAL
+>     to determine the SLD state of host;
+>   - Introduce split_lock_virt_switch() and two wrappers for KVM instead
+>     of sld_update_to();
+>   - Use paravirt to expose and enumerate split lock detection for guest;
+>   - Split lock detection can be exposed to guest when host is sld_fatal,
+>     even though host is SMT available.
+> 
+> Changes in v8:
+> https://lkml.kernel.org/r/20200414063129.133630-1-xiaoyao.li@intel.com
+>   - rebase to v5.7-rc1.
+>   - basic enabling of split lock detection already merged.
+>   - When host is sld_warn and nosmt, load guest's sld bit when in KVM
+>     context, i.e., between vmx_prepare_switch_to_guest() and before
+>     vmx_prepare_switch_to_host(), KVM uses guest sld setting.
+> 
+> Changes in v7:
+> https://lkml.kernel.org/r/20200325030924.132881-1-xiaoyao.li@intel.com
+>   - only pick patch 1 and patch 2, and hold all the left.
+>   - Update SLD bit on each processor based on sld_state.
+> 
+> Changes in v6:
+> https://lkml.kernel.org/r/20200324151859.31068-1-xiaoyao.li@intel.com
+>   - Drop the sld_not_exist flag and use X86_FEATURE_SPLIT_LOCK_DETECT to
+>     check whether need to init split lock detection. [tglx]
+>   - Use tglx's method to verify the existence of split lock detectoin.
+>   - small optimization of sld_update_msr() that the default value of
+>     msr_test_ctrl_cache has split_lock_detect bit cleared.
+>   - Drop the patch3 in v5 that introducing kvm_only option. [tglx]
+>   - Rebase patch4-8 to kvm/queue.
+>   - use the new kvm-cpu-cap to expose X86_FEATURE_CORE_CAPABILITIES in
+>     Patch 6.
+> 
+> Changes in v5:
+> https://lkml.kernel.org/r/20200315050517.127446-1-xiaoyao.li@intel.com
+>   - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
+>     detection is really supported.
+>   - Add and export sld related helper functions in their related usecase
+>     kvm patches.
+> 
+> Xiaoyao Li (8):
+>    x86/split_lock: Rename TIF_SLD to TIF_SLD_DISABLED
+>    x86/split_lock: Remove bogus case in handle_guest_split_lock()
+>    x86/split_lock: Introduce flag X86_FEATURE_SLD_FATAL and drop
+>      sld_state
+>    x86/split_lock: Introduce split_lock_virt_switch() and two wrappers
+>    x86/kvm: Introduce paravirt split lock detection enumeration
+>    KVM: VMX: Enable MSR TEST_CTRL for guest
+>    KVM: VMX: virtualize split lock detection
+>    x86/split_lock: Enable split lock detection initialization when
+>      running as an guest on KVM
+> 
+>   Documentation/virt/kvm/cpuid.rst     | 29 +++++++----
+>   arch/x86/include/asm/cpu.h           | 35 ++++++++++++++
+>   arch/x86/include/asm/cpufeatures.h   |  1 +
+>   arch/x86/include/asm/thread_info.h   |  6 +--
+>   arch/x86/include/uapi/asm/kvm_para.h |  8 ++--
+>   arch/x86/kernel/cpu/intel.c          | 59 ++++++++++++++++-------
+>   arch/x86/kernel/kvm.c                |  3 ++
+>   arch/x86/kernel/process.c            |  2 +-
+>   arch/x86/kvm/cpuid.c                 |  6 +++
+>   arch/x86/kvm/vmx/vmx.c               | 72 +++++++++++++++++++++++++---
+>   arch/x86/kvm/vmx/vmx.h               |  3 ++
+>   arch/x86/kvm/x86.c                   |  6 ++-
+>   arch/x86/kvm/x86.h                   |  7 +++
+>   13 files changed, 196 insertions(+), 41 deletions(-)
+> 
 
-The TG Chair should decide the priority of the items.  If there is any chance
-for our proposal, I can give brief introductions.
-
-> 
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-> 
-> 
-> -- 
-> Regards,
-> Atish
