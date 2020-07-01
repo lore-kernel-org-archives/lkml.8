@@ -2,48 +2,49 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8790C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814572073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE28620772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lW266t73"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N4t3YE2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgGALlI (ORCPT
+        id S1730402AbgGALlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:41:08 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:41039 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730374AbgGALlF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:41:05 -0400
+        Wed, 1 Jul 2020 07:41:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:55976 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730361AbgGALlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:41:10 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593603665; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jqNdzefTAdehLQ8LTA4BvpPDcWAceoPTN9qIVHE8Vu0=; b=lW266t73eCNLql6AjS7xEVqfYtL5sbUciwTl99D7WTJbzmJuC4mweNISCfFhekWwrFQNfFly
- 76B6cII11DKLELePambV7azqcXMo4kODHFDy/NPejY4eiT3zy0v2AVl7ic9YJGCa+trkYc4Z
- 1w0m5lj4mcE3UYVuLiC7naKYCDw=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ s=smtp; t=1593603669; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=f2ZgveMmLmjOnx677ddRlob8IZ+l/BvEfQTPXZC/oRY=; b=N4t3YE2SslU5eEKaZWnq5b6X9n6d6SfebF0bgg0UfxIhhT/EswGIoBCrNF3cJOUhV6FLIYVB
+ AdHxYOt+3VVNbTmRtBCB6+gFeuHfqF9mjnGVkuy1WRGeDowfjzLLkh9FJDz86m9gvNn6uMOI
+ xvp8Rhbew19+fWMEFgviReuyM8M=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
- 5efc7647bfb34e631ca9a0de (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:40:55
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5efc764da3d8a44743672df8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 11:41:01
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D5A7C4339C; Wed,  1 Jul 2020 11:40:54 +0000 (UTC)
+        id A3D52C43391; Wed,  1 Jul 2020 11:41:00 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DBFCC433C8;
-        Wed,  1 Jul 2020 11:40:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DBFCC433C8
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C6B8C433C6;
+        Wed,  1 Jul 2020 11:40:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8C6B8C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -52,43 +53,83 @@ To:     stanimir.varbanov@linaro.org, agross@kernel.org,
 Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 0/3] DVFS support for Venus
-Date:   Wed,  1 Jul 2020 17:10:35 +0530
-Message-Id: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH 2/3] arm64: dts: sdm845: Add OPP tables and power-domains for venus
+Date:   Wed,  1 Jul 2020 17:10:37 +0530
+Message-Id: <1593603638-19296-3-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
+References: <1593603638-19296-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches add DVFS support for Venus. Where posted
-earlier as part of a series with multiple different drivers [1]
-I have split them into specific driver changes in order to avoid
-confusion on dependencies. Also added the corresponding device tree
-changes for sdm845 and sc7180 platforms.
+Add the OPP tables in order to be able to vote on the performance state of
+a power-domain.
 
-These patches are dependent on the bindings update [2] which is still
-pending an ack from Rob.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-Patch 1/3 will need to be picked by Stan and pushed via the linux-media tree.
-
-DT patches (2/3 and 3/3) will need to land via the msm tree.
-
-[1] https://lkml.org/lkml/2020/6/15/535
-[2] https://lore.kernel.org/patchwork/patch/1241077/
-
-Rajendra Nayak (3):
-  media: venus: core: Add support for opp tables/perf voting
-  arm64: dts: sdm845: Add OPP tables and power-domains for venus
-  arm64: dts: sc7180: Add OPP tables and power-domains for venus
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi           | 35 ++++++++++++++++-
- arch/arm64/boot/dts/qcom/sdm845.dtsi           | 40 ++++++++++++++++++-
- drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
- drivers/media/platform/qcom/venus/core.h       |  5 +++
- drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
- 5 files changed, 163 insertions(+), 14 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 8eb5a31..b5bc885 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3206,8 +3206,10 @@
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+ 			power-domains = <&videocc VENUS_GDSC>,
+ 					<&videocc VCODEC0_GDSC>,
+-					<&videocc VCODEC1_GDSC>;
+-			power-domain-names = "venus", "vcodec0", "vcodec1";
++					<&videocc VCODEC1_GDSC>,
++					<&rpmhpd SDM845_CX>;
++			power-domain-names = "venus", "vcodec0", "vcodec1", "opp-pd";
++			operating-points-v2 = <&venus_opp_table>;
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+@@ -3229,6 +3231,40 @@
+ 			video-core1 {
+ 				compatible = "venus-encoder";
+ 			};
++
++			venus_opp_table: venus-opp-table {
++				compatible = "operating-points-v2";
++
++				opp-100000000 {
++					opp-hz = /bits/ 64 <100000000>;
++					required-opps = <&rpmhpd_opp_min_svs>;
++				};
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					required-opps = <&rpmhpd_opp_low_svs>;
++				};
++
++				opp-320000000 {
++					opp-hz = /bits/ 64 <320000000>;
++					required-opps = <&rpmhpd_opp_svs>;
++				};
++
++				opp-380000000 {
++					opp-hz = /bits/ 64 <380000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_nom>;
++				};
++
++				opp-533000000 {
++					opp-hz = /bits/ 64 <533000000>;
++					required-opps = <&rpmhpd_opp_turbo>;
++				};
++			};
+ 		};
+ 
+ 		videocc: clock-controller@ab00000 {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
