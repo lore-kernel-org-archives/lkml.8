@@ -2,137 +2,144 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8434EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D76C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5912A20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D722820760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 12:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSLl6gC1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BoqkqhP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbgGAMKm (ORCPT
+        id S1730507AbgGAMM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 08:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbgGAMKm (ORCPT
+        Wed, 1 Jul 2020 08:12:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48060 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbgGAMMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 08:10:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D1DC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 05:10:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s9so26565081ljm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 05:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W0W7BV8cUI7CuBuiHY2QDrSNw3SUVEmFQilJePOeK9o=;
-        b=iSLl6gC1LJlLK+whB5oyTs+OtzYClkNiWCwVhfxSa4nWWZE9cgvKbMs0t/oSHF7iif
-         zPmUIlXcMvtxLFJp7z6fFiMvN4YJ6rUqMYVlZIaaWTQoxWOm+QMIcyZygSGx8XPiwDiR
-         gY7xx5sSSox29urVygQAwHuiedYy8Nm/IOZPe3gvE6DoqVNuSSSCWKaIaDX0E1UeGtlv
-         cXHA7O36mWAvOHACXNpQMLAryoNFB+NCZ8eFL0SuWjoGzAh8PH+d+TdXqa7F2DjxpOFN
-         DhYOuea6pLyM5G9hE2ygiZH2kw6bz1SRw7/DtQZriZ+mAUU5ileGd3gp8xq6cQ+mfVVu
-         krIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W0W7BV8cUI7CuBuiHY2QDrSNw3SUVEmFQilJePOeK9o=;
-        b=gk81VN2aMR/o5pqN4kGLhPcb+KKbJUAfrcfi3TWrHVCPE/Au4tu//fwyWe9H24JGQK
-         FIR0ye+o314p+MR1WQAbHaUUmtgLPsVfl1WtHEdBLbfBGeEjU4d/Wjzszmq/7D9NiN8/
-         IBgUwMLAsL1aMB0v38jZ6YiF2a0lcIPZTBv82kY3kTpNgoT769M11FoFPKyhmnz49/9P
-         Idf6wQFqJbkYvZxsTgbIjyvhdOJKD/EhbaOHOKPmvvCELwF1eO2DaRG0AIKaEjTL9tn4
-         qDyF6/obxyFPfxPeBa8IYO7o7I+YiMxoU+GOIelkiONHzdPHVnXKcelg/wEqoSsXjhTV
-         plGA==
-X-Gm-Message-State: AOAM532Ponhw/WqPxnQ4QPw9A0wfFtf+gin4RCk751seuZGm7DfU/qDr
-        //0Cm3O6lfHGEjJ3d5GS6Q9Mbs9+2CEvIlY0i3kQyA==
-X-Google-Smtp-Source: ABdhPJwlyEUVszhEWkGK9ickVjMXKxSq5+Z9Y8911VTJDuTZvkJDrAcgHU7MCWtxM5ciiTIBdB+HA0Lphjo+oygwqUU=
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr8588845ljj.325.1593605440227;
- Wed, 01 Jul 2020 05:10:40 -0700 (PDT)
+        Wed, 1 Jul 2020 08:12:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061CCqVI114140;
+        Wed, 1 Jul 2020 07:12:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593605572;
+        bh=ujTJUKsmBwUaVQ8CAH63MRy30qquq/EoyVehAK2SpD4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BoqkqhP3kzDxqer2mSFyun7ws9C616eq+YzlVBzhBXmrXBe09OH83b/bRWyME8JWI
+         1kk0Qy6SQX7T9dUds/bh645w41Gl1EgpWCabOtzvM5yHWIv1cebb4jKLj+AKdqPtAE
+         sd5Q5JR0IMw4EWkiF5ndE7wCmvF/u5LXLlptBcZ0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061CCq9q064176
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Jul 2020 07:12:52 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 07:12:52 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 07:12:51 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061CCnaV121802;
+        Wed, 1 Jul 2020 07:12:49 -0500
+Subject: Re: [PATCH next 4/6] soc: ti: k3-ringacc: add request pair of rings
+ api.
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+ <20200701103030.29684-5-grygorii.strashko@ti.com>
+ <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <e3936c3c-eb60-35a5-6413-ceba273cdf1c@ti.com>
+Date:   Wed, 1 Jul 2020 15:12:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <20200625144509.17918-3-daniel.lezcano@linaro.org> <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
- <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org> <CAP245DUG-OsSD-_CucMMQ26HpzjJhn0emfq_go923NsDq6RqOg@mail.gmail.com>
- <c664d247-7f9b-603f-c318-48e534aedfc9@linaro.org>
-In-Reply-To: <c664d247-7f9b-603f-c318-48e534aedfc9@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 1 Jul 2020 17:40:28 +0530
-Message-ID: <CAP245DV8jT5vj7v6vybw3Eec7wGMXRwFm=Xum5i_n4sMCHHAfg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7e334685-7d98-9896-ef5b-3a2dfeb100a9@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 3:15 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 01/07/2020 11:33, Amit Kucheria wrote:
-> > On Wed, Jul 1, 2020 at 2:56 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 30/06/2020 13:47, Amit Kucheria wrote:
-> >>> On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
-> >>> <daniel.lezcano@linaro.org> wrote:
-> >>>>
 
-> >>>>  /* Adding event notification support elements */
-> >>>>  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
-> >>>> -#define THERMAL_GENL_VERSION                    0x01
-> >>>> +#define THERMAL_GENL_VERSION                    0x02
-> >>>
-> >>> This hunk should be removed since you set version back to 1 in the
-> >>> next patch and we don't actually intend to bump the version yet.
-> >>
-> >> Well, I've been very strict here for git-bisecting.
-> >>
-> >> I move to V2 because of the removal, but when adding the new genetlink
-> >> code, the family name changed, so we returned back to the V1 as it is a
-> >> new genetlink thermal brand.
-> >
-> > I don't understand the move to v2 for an empty skeleton UAPI. For the
-> > purposes of bisection, couldn't you just remove all the v1 UAPI (w/o
-> > bumping to v2) and then add a new UAPI in the next patch?
-> >
-> >> The name is change because it is no longer event based but also sampling
-> >> and commands.
-> >
-> > In this case, just to avoid any confusion, the new UAPI could be v2
-> > making the transition clear in case of bisection.
-> >
-> > I'm afraid the v1->v2->v1 is a bit more confusing.
->
-> Let me elaborate a bit:
->
-> Why there is this patch ?
-> - By removing this code first, the next patch will just contain
-> additions, I thought it would be clearer
->
-> Why increase the version here ?
-> - Code must continue to compile and as the 'thermal_event' family is now
-> different from V1, the version is changed
->
-> Why the version goes to V1 in the next patch ?
-> - The family name is changed as it is not doing event only, so it is a
-> new netlink thermal protocol and we begin at V1
->
-> So the main reason of this patch is to be very strict in the iteration
-> changes. May be it is too much, in this case I can merge this patch with
-> 4/5, the old netlink protocol removal will be lost in the addition of
-> the new protocol. I'm fine with that if you think it is simpler.
 
-Considering that there are no users of v1 currently, it feels a bit
-over engineered, IMHO.
+On 01/07/2020 14:54, Peter Ujfalusi wrote:
+> Hi Grygorii,
+> 
+> On 01/07/2020 13.30, Grygorii Strashko wrote:
+>> Add new API k3_ringacc_request_rings_pair() to request pair of rings at
+>> once, as in the most cases Rings are used with DMA channels, which need to
+>> request pair of rings - one to feed DMA with descriptors (TX/RX FDQ) and
+>> one to receive completions (RX/TX CQ). This will allow to simplify Ringacc
+>> API users.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   drivers/soc/ti/k3-ringacc.c       | 24 ++++++++++++++++++++++++
+>>   include/linux/soc/ti/k3-ringacc.h |  4 ++++
+>>   2 files changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+>> index 8a8f31d59e24..4cf1150de88e 100644
+>> --- a/drivers/soc/ti/k3-ringacc.c
+>> +++ b/drivers/soc/ti/k3-ringacc.c
+>> @@ -322,6 +322,30 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
+>>   }
+>>   EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
+>>   
+>> +int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
+>> +				  int fwd_id, int compl_id,
+>> +				  struct k3_ring **fwd_ring,
+>> +				  struct k3_ring **compl_ring)
+> 
+> Would you consider re-arranging the parameter list to:
+> int k3_ringacc_request_rings_pair(struct k3_ringacc *ringacc,
+> 				  struct k3_ring **fwd_ring, int fwd_id,
+> 				  struct k3_ring **compl_ring, int compl_id)
+> 
 
-Also, the new UAPI doesn't need to begin at v1. Just having it start
-at v2 will avoid this confusion, no?
+i think it's more common to have input parameters first.
+
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (!fwd_ring || !compl_ring)
+>> +		return -EINVAL;
+>> +
+>> +	*fwd_ring = k3_ringacc_request_ring(ringacc, fwd_id, 0);
+>> +	if (!(*fwd_ring))
+>> +		return -ENODEV;
+>> +
+>> +	*compl_ring = k3_ringacc_request_ring(ringacc, compl_id, 0);
+>> +	if (!(*compl_ring)) {
+>> +		k3_ringacc_ring_free(*fwd_ring);
+>> +		ret = -ENODEV;
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_ringacc_request_rings_pair);
+>> +
+
+
+
+-- 
+Best regards,
+grygorii
