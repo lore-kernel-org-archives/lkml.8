@@ -2,104 +2,66 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2860FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F54C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F2820771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="By1Sl2S8"
+	by mail.kernel.org (Postfix) with ESMTP id 8D2DD20780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGABex (ORCPT
+        id S1726114AbgGABhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:34:53 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38313 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgGABex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:34:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49xP0p6CHSz9sQt;
-        Wed,  1 Jul 2020 11:34:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593567291;
-        bh=3ukyBJG0kTFDpGGEh20Qlaet1jTzYAghsJP37TMFTYM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=By1Sl2S8F6G5C8OF0ZazNkhaMynOSO3zS6U3UXlXhyoj6N7LS0uHDtGWwrC756chH
-         gug3o/oMVwS2B3hx79kU74M/NDnJ9SmIT4HIBbDZl8kAaifPJT+JVI/8gduHbuLvST
-         h/qbcB7jlZk4pHzXBatOcFwYVuxrd+drd/a0YYRJ6DNafJgrgAWYTucAYsSkkJp7h8
-         qRmX5476NbVRwIBMSPmTUA9ZnxSXn+PoJUWf+bynRdE7LltxYFbZhSK6kMMQL+NYKC
-         ryETccobByXdzLllCKldMNZE+XxP4yJlWvoQ8DbjLr0ABuQb+eIjMNJDZ0r3oPNfrY
-         YwIdV4Ec7gVlw==
-Date:   Wed, 1 Jul 2020 11:34:48 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>
-Subject: linux-next: manual merge of the rcu tree with the kbuild tree
-Message-ID: <20200701113448.3119f64f@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LbbdNw.r9ne.vHhmNn7xx/+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 30 Jun 2020 21:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgGABhA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:37:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25821C061755;
+        Tue, 30 Jun 2020 18:37:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F240A128107E6;
+        Tue, 30 Jun 2020 18:36:58 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 18:36:58 -0700 (PDT)
+Message-Id: <20200630.183658.1733479085086002611.davem@davemloft.net>
+To:     dan.carpenter@oracle.com
+Cc:     bjorn.andersson@linaro.org, manivannan.sadhasivam@linaro.org,
+        kuba@kernel.org, wenhu.wang@vivo.com, wgong@codeaurora.org,
+        cjhuang@codeaurora.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH net] net: qrtr: Fix an out of bounds read
+ qrtr_endpoint_post()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200630114615.GA21891@mwanda>
+References: <20200628104623.GA3357@Mani-XPS-13-9360>
+        <20200630114615.GA21891@mwanda>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jun 2020 18:36:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LbbdNw.r9ne.vHhmNn7xx/+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Date: Tue, 30 Jun 2020 14:46:15 +0300
 
-Hi all,
+> This code assumes that the user passed in enough data for a
+> qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
+> the buffer is too small then it will read beyond the end.
+> 
+> Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
+> Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Today's linux-next merge of the rcu tree got a conflict in:
-
-  kernel/kcsan/Makefile
-
-between commit:
-
-  f7c28e224da6 ("kbuild: remove cc-option test of -fno-stack-protector")
-
-from the kbuild tree and commits:
-
-  2839a232071f ("kcsan: Simplify compiler flags")
-  61d56d7aa5ec ("kcsan: Disable branch tracing in core runtime")
-
-from the rcu tree.
-
-I fixed it up (I just used the rcu tree version) and can carry the fix
-as necessary. This is now fixed as far as linux-next is concerned, but
-any non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LbbdNw.r9ne.vHhmNn7xx/+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl776DgACgkQAVBC80lX
-0GzUyAf/b6pF4g88e7Ygc0CBSiGjsiSuBCPQdWRXNWgkSmeii+0Cu3nBmIHVaQNT
-BaN8HlMEk2wdKsjrZPqNaaSwamLeI3mpT5eS9tgkrL9VG2H/xGzvDgSVZ5TKMRmW
-FKODItOD8FDK+PCjFduJMuqYPlAE/6RdGDpCd3Dk9S3SsqNNf9nqyfDSoGZg3P4o
-+7yhdcy1Ir2gqfxOah9Y8kW6ImLrgRymgkFb41f39vxHESVVDyrste7jvUODHvoH
-zTFJv7WF4Tl244AASgpg8NyZpkbE9GtQgAjJ0/SYdmbu+7WrODjvYEOqR6sbpLa5
-ccXryN/SStERFQfVTOaWEq/ahPYmRg==
-=IDEy
------END PGP SIGNATURE-----
-
---Sig_/LbbdNw.r9ne.vHhmNn7xx/+--
+Applied and queued up for -stable, thanks Dan.
