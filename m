@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2892077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7430B2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="drxafeTD"
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Kcvik/5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgGAV4X (ORCPT
+        id S1727998AbgGAV4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:56:23 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:44555 "EHLO
+        Wed, 1 Jul 2020 17:56:39 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:2544 "EHLO
         o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgGAV4V (ORCPT
+        with ESMTP id S1727856AbgGAV4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:56:21 -0400
+        Wed, 1 Jul 2020 17:56:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
         h=from:subject:in-reply-to:references:to:cc:content-type:
         content-transfer-encoding;
-        s=001; bh=XmtEOL5z29rJknfytBNHORtHb2Nm7tVfN/Y1gB5MiiA=;
-        b=drxafeTDsC5oSNDY7yjcvf8tqadri3sgtKEdqyF3p+S0/tTU9Eu6m5kaDtCJ0NkGYPzN
-        r6L9AZt8GvVhnK/6/E9OFb1+J2kckUVk8qz3wY9LsDk5UPOwnCbELWTi0eBWHNJJB+zv7C
-        D5cG0ySxvywuHWZEt0onh+54SG2I3xmN4=
-Received: by filterdrecv-p3iad2-5b55dcd864-xvj6x with SMTP id filterdrecv-p3iad2-5b55dcd864-xvj6x-20-5EFD0684-32
-        2020-07-01 21:56:20.910063557 +0000 UTC m=+449225.017700609
+        s=001; bh=7H3DbOIR6DWUdA/y3YLDXdf//aCB9yI7dsoADDEwozU=;
+        b=Kcvik/5cXSTLA53WDTTVMGXhxNHcp5acdMhICJ2UqO8KfvhWBqBg0rqI8IKX5+iCS4Yd
+        T8oMHrbtUN5VANPskoLjqXlHz4mbcwNCTZj4vpSQWcIAX4PhBBHhMn+y8Fvf8EtEqYSREL
+        wdAVPVlIfVDOybau5IIn6pB03edoSlPWk=
+Received: by filterdrecv-p3iad2-5b55dcd864-n2v2l with SMTP id filterdrecv-p3iad2-5b55dcd864-n2v2l-20-5EFD0686-43
+        2020-07-01 21:56:22.80847321 +0000 UTC m=+449226.666074437
 Received: from bionic.localdomain (unknown)
         by ismtpd0001p1lon1.sendgrid.net (SG) with ESMTP
-        id ueJzYseqQZu-NjifuuudoQ
-        Wed, 01 Jul 2020 21:56:20.653 +0000 (UTC)
+        id EUQFfvG1TEmNXhiQgqGLxw
+        Wed, 01 Jul 2020 21:56:22.550 +0000 (UTC)
 From:   Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 1/9] media: rkvdec: h264: Support profile and level controls
-Date:   Wed, 01 Jul 2020 21:56:20 +0000 (UTC)
-Message-Id: <20200701215616.30874-2-jonas@kwiboo.se>
+Subject: [PATCH 5/9] media: v4l2-common: Add helpers to calculate bytesperline
+ and sizeimage
+Date:   Wed, 01 Jul 2020 21:56:22 +0000 (UTC)
+Message-Id: <20200701215616.30874-6-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200701215616.30874-1-jonas@kwiboo.se>
 References: <20200701215616.30874-1-jonas@kwiboo.se>
 X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h8KQq7f245XMvoJBQ?=
- =?us-ascii?Q?WbKyKxTBiTpCKA0QKio1XYIlmibAU6xWacJ7dcJ?=
- =?us-ascii?Q?g44E7Yr06rCX7G=2F4OP=2FeSiJ2W=2F9yL6HZYVhXLie?=
- =?us-ascii?Q?XhufT21r2UMhY7Tx23BJcuoAPDGbEASY=2FcUFZdP?=
- =?us-ascii?Q?6Can4a7qSmicI1c+7yHpQsGBfGOPixUEBaDTOFU?=
- =?us-ascii?Q?hTVoarwr7VyQWLgM65jJw=3D=3D?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h0uPT0Fcu4aS=2FJELx?=
+ =?us-ascii?Q?zmlrelv=2FRxNNGKdLUb6zfjLL5hY9lxvy0FnaZCc?=
+ =?us-ascii?Q?mavxY0dPQ+1i1s4MfBxbGo=2FrSq9p+VLgUJi7ec4?=
+ =?us-ascii?Q?lH+t2WYn=2FeUkl5btzpwnHjDHHkuMdY8T8=2FTZim1?=
+ =?us-ascii?Q?3z8bHNz+BmDC0vgHkN85K4Ei9W0DJt5WyHGia6U?=
+ =?us-ascii?Q?yrEp+t4MfJMdKp42O5c5A=3D=3D?=
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonas Karlman <jonas@kwiboo.se>,
@@ -65,44 +66,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Rockchip Video Decoder used in RK3399 supports H.264 profiles from
-Baseline to High 4:2:2 up to Level 5.1, except for the Extended profile.
+Add helper functions to calculate plane bytesperline and sizeimage, these
+new helpers consider block width and height when calculating plane
+bytesperline and sizeimage.
 
-Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE and the
-V4L2_CID_MPEG_VIDEO_H264_LEVEL control, so that userspace can query the
-driver for the list of supported profiles and level.
-
-In current state only Baseline to High profile is supported by the driver.
+This prepare support for new pixel formats added in next patch that make
+use of block width and height.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/staging/media/rkvdec/rkvdec.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/media/v4l2-core/v4l2-common.c | 77 +++++++++++++--------------
+ 1 file changed, 38 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 0f81b47792f6..b1de55aa6535 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -94,6 +94,19 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
- 		.cfg.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
- 		.cfg.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
- 	},
-+	{
-+		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
-+		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
-+		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+		.cfg.menu_skip_mask =
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-+		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
-+	},
-+	{
-+		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_LEVEL,
-+		.cfg.min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
-+		.cfg.max = V4L2_MPEG_VIDEO_H264_LEVEL_5_1,
-+	},
- };
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index 3dc17ebe14fa..4102c373b48a 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -333,6 +333,33 @@ static inline unsigned int v4l2_format_block_height(const struct v4l2_format_inf
+ 	return info->block_h[plane];
+ }
  
- static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
++static inline unsigned int v4l2_format_plane_width(const struct v4l2_format_info *info, int plane,
++						   unsigned int width)
++{
++	unsigned int hdiv = plane ? info->hdiv : 1;
++	unsigned int bytes = DIV_ROUND_UP(width * info->bpp[plane],
++				v4l2_format_block_width(info, plane) *
++				v4l2_format_block_height(info, plane));
++
++	return DIV_ROUND_UP(bytes, hdiv);
++}
++
++static inline unsigned int v4l2_format_plane_height(const struct v4l2_format_info *info, int plane,
++						    unsigned int height)
++{
++	unsigned int vdiv = plane ? info->vdiv : 1;
++	unsigned int lines = ALIGN(height, v4l2_format_block_height(info, plane));
++
++	return DIV_ROUND_UP(lines, vdiv);
++}
++
++static inline unsigned int v4l2_format_plane_size(const struct v4l2_format_info *info, int plane,
++						  unsigned int width, unsigned int height)
++{
++	return v4l2_format_plane_width(info, plane, width) *
++	       v4l2_format_plane_height(info, plane, height);
++}
++
+ void v4l2_apply_frmsize_constraints(u32 *width, u32 *height,
+ 				    const struct v4l2_frmsize_stepwise *frmsize)
+ {
+@@ -368,37 +395,19 @@ int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt,
+ 
+ 	if (info->mem_planes == 1) {
+ 		plane = &pixfmt->plane_fmt[0];
+-		plane->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0];
++		plane->bytesperline = v4l2_format_plane_width(info, 0, width);
+ 		plane->sizeimage = 0;
+ 
+-		for (i = 0; i < info->comp_planes; i++) {
+-			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-			unsigned int aligned_width;
+-			unsigned int aligned_height;
+-
+-			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+-			plane->sizeimage += info->bpp[i] *
+-				DIV_ROUND_UP(aligned_width, hdiv) *
+-				DIV_ROUND_UP(aligned_height, vdiv);
+-		}
++		for (i = 0; i < info->comp_planes; i++)
++			plane->sizeimage +=
++				v4l2_format_plane_size(info, i, width, height);
+ 	} else {
+ 		for (i = 0; i < info->comp_planes; i++) {
+-			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-			unsigned int aligned_width;
+-			unsigned int aligned_height;
+-
+-			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+ 			plane = &pixfmt->plane_fmt[i];
+ 			plane->bytesperline =
+-				info->bpp[i] * DIV_ROUND_UP(aligned_width, hdiv);
+-			plane->sizeimage =
+-				plane->bytesperline * DIV_ROUND_UP(aligned_height, vdiv);
++				v4l2_format_plane_width(info, i, width);
++			plane->sizeimage = plane->bytesperline *
++				v4l2_format_plane_height(info, i, height);
+ 		}
+ 	}
+ 	return 0;
+@@ -422,22 +431,12 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+ 	pixfmt->width = width;
+ 	pixfmt->height = height;
+ 	pixfmt->pixelformat = pixelformat;
+-	pixfmt->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0];
++	pixfmt->bytesperline = v4l2_format_plane_width(info, 0, width);
+ 	pixfmt->sizeimage = 0;
+ 
+-	for (i = 0; i < info->comp_planes; i++) {
+-		unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-		unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-		unsigned int aligned_width;
+-		unsigned int aligned_height;
+-
+-		aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-		aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+-		pixfmt->sizeimage += info->bpp[i] *
+-			DIV_ROUND_UP(aligned_width, hdiv) *
+-			DIV_ROUND_UP(aligned_height, vdiv);
+-	}
++	for (i = 0; i < info->comp_planes; i++)
++		pixfmt->sizeimage +=
++			v4l2_format_plane_size(info, i, width, height);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
 -- 
 2.17.1
 
