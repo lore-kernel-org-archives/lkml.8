@@ -2,106 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9973CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1244C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC7120760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+veirxC"
+	by mail.kernel.org (Postfix) with ESMTP id 8BE8620760
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgGAUDj (ORCPT
+        id S1726981AbgGAUEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGAUDi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:03:38 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96BBC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:03:38 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id j12so11445514pfn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LLlCSg3wFZxdInZpyFkkqv9fx47XurIkaRWTEZh/Vfg=;
-        b=N+veirxC6q9Jg43Xh5oVdvEX/Bl6N4PRWBWLZNBWmbtVsNuVbMdRgbl8JDbxTbhQtF
-         omFASxNcNrY2gU300IHgJa8SKI/SUWTuXzoucgKv6yrk8Bb3q/NxvCqLdhxTZEFW0M5Q
-         nUhFF9n6zVRjbsIakT1pFEFaFsHKrMC/7GHQ6LYmklPEvBqh4+15WXxilAzifDaZaMPY
-         5V6K1Wd4tyUd7LRRmtjDcqAJSpNbeNnDjNcqaCuLpv6VAEq47yQVRhlFLRmCv0oY40my
-         fqbqMTyYzRyhsyNQxSJvGle0dKCIZ+oUymQtHngEbhiR3oDLJKy4oq5OMdE/4gCoFLt1
-         lx5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LLlCSg3wFZxdInZpyFkkqv9fx47XurIkaRWTEZh/Vfg=;
-        b=scH7FGYRKkqBnK20MLBqfMnaEiJHrwVc8O2H+nfCVE56wVIhr0pmvL/SDoN6lkEZDa
-         obqeaDna2FxDBFTTQwgp3A7FPSHQzO2o1kdfToPDkbX2SciLy+Y+ynl807lcoKuDIAuB
-         Oyaoof3tAtok3bP3iTmyuXbUuV6U8a7ccBAxS/P5vRy7sNlpYgU0kpGQZs88xbhgtlDM
-         LcYP4IWxT7lCX+i0L3fgFiYlhUu/5cWXOT+URjPlVL6KS4k+ssyT+ODxJkfreRTaIDC7
-         bj71OEXd2Ttrr8URtYaLoJKJHtz9RUM8X3nmtOjRH+d+v5kv20UAkpTDsnBxf/y9X8Hd
-         sW+g==
-X-Gm-Message-State: AOAM531iWp+xhAI3RHnosNSnsxz/UOlTGF/iT4BqJECJ6EZmhMLeIGS3
-        DWiJ44AJYNW89i/M0FPQxsRw/Q==
-X-Google-Smtp-Source: ABdhPJxBAW8RzOdi9h7XE9ImdkUrGaumHlNPBkSMbKrMSH9JkKtgCbkfa6zCr63HCxxd+DiZIPurFg==
-X-Received: by 2002:a63:515a:: with SMTP id r26mr22767294pgl.204.1593633818169;
-        Wed, 01 Jul 2020 13:03:38 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id 8sm6058629pja.0.2020.07.01.13.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 13:03:37 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 13:03:36 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
-        akpm@linux-foundation.org, ying.huang@intel.com,
+        Wed, 1 Jul 2020 16:04:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17954 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgGAUEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 16:04:49 -0400
+IronPort-SDR: F+zGg31ecRnnrMLu4jm3FtWQOWt/r7xPyBICjU6N3cVxny9g3eoB3yDMA2oooiTfGwEzl7kt+P
+ 7lG3klIXeB4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="144875094"
+X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
+   d="scan'208";a="144875094"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 13:04:49 -0700
+IronPort-SDR: KRQVUdiyIf2tJNU3rFxi+VfhbLxczcnP2seiVBRUUfKXHTEoNGmZI4ZV4XvpOSdeui4dCGgtZB
+ qZKQ7qsb8ukw==
+X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
+   d="scan'208";a="481418338"
+Received: from sadedonx-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.134.113])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 13:04:48 -0700
+Date:   Wed, 1 Jul 2020 13:04:46 -0700
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        alex.shi@linux.alibaba.com, dwagner@suse.de, tobin@kernel.org,
+        cl@linux.com, akpm@linux-foundation.org, ying.huang@intel.com,
         dan.j.williams@intel.com, cai@lca.pw
-Subject: Re: [PATCH 2/3] mm/vmscan: move RECLAIM* bits to uapi header
-In-Reply-To: <20200701152624.D6FBDDA8@viggo.jf.intel.com>
-Message-ID: <alpine.DEB.2.23.453.2007011303250.1908531@chino.kir.corp.google.com>
-References: <20200701152621.D520E62B@viggo.jf.intel.com> <20200701152624.D6FBDDA8@viggo.jf.intel.com>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+Subject: Re: [PATCH 3/3] mm/vmscan: replace implicit RECLAIM_ZONE checks with
+ explicit checks
+Message-ID: <20200701200446.ki5hdgarcpmo2vuf@intel.com>
+Mail-Followup-To: David Rientjes <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        alex.shi@linux.alibaba.com, dwagner@suse.de, tobin@kernel.org,
+        cl@linux.com, akpm@linux-foundation.org, ying.huang@intel.com,
+        dan.j.williams@intel.com, cai@lca.pw
+References: <20200701152621.D520E62B@viggo.jf.intel.com>
+ <20200701152627.8761147E@viggo.jf.intel.com>
+ <alpine.DEB.2.23.453.2007011256280.1908531@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.23.453.2007011256280.1908531@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020, Dave Hansen wrote:
+On 20-07-01 13:03:01, David Rientjes wrote:
+> On Wed, 1 Jul 2020, Dave Hansen wrote:
+> 
+> > diff -puN include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper include/linux/swap.h
+> > --- a/include/linux/swap.h~mm-vmscan-node_reclaim_mode_helper	2020-07-01 08:22:13.650955330 -0700
+> > +++ b/include/linux/swap.h	2020-07-01 08:22:13.659955330 -0700
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/fs.h>
+> >  #include <linux/atomic.h>
+> >  #include <linux/page-flags.h>
+> > +#include <uapi/linux/mempolicy.h>
+> >  #include <asm/page.h>
+> >  
+> >  struct notifier_block;
+> > @@ -374,6 +375,12 @@ extern int sysctl_min_slab_ratio;
+> >  #define node_reclaim_mode 0
+> >  #endif
+> >  
+> > +static inline bool node_reclaim_enabled(void)
+> > +{
+> > +	/* Is any node_reclaim_mode bit set? */
+> > +	return node_reclaim_mode & (RECLAIM_ZONE|RECLAIM_WRITE|RECLAIM_UNMAP);
+> > +}
+> > +
+> >  extern void check_move_unevictable_pages(struct pagevec *pvec);
+> >  
+> >  extern int kswapd_run(int nid);
+> 
+> If a user writes a bit that isn't a RECLAIM_* bit to vm.zone_reclaim_mode 
+> today, it acts as though RECLAIM_ZONE is enabled: we try to reclaim in 
+> zonelist order before falling back to the next zone in the page allocator.  
+> The sysctl doesn't enforce any max value :/  I dont know if there is any 
+> such user, but this would break them if there is.
+> 
+> Should this simply be return !!node_reclaim_mode?
+> 
 
-> 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> It is currently not obvious that the RECLAIM_* bits are part of the
-> uapi since they are defined in vmscan.c.  Move them to a uapi header
-> to make it obvious.
-> 
-> This should have no functional impact.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Daniel Wagner <dwagner@suse.de>
-> Cc: "Tobin C. Harding" <tobin@kernel.org>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Daniel Wagner <dwagner@suse.de>
+I don't think so because I don't think anything else validates the unused bits
+remain unused.
 
-Acked-by: David Rientjes <rientjes@google.com>
