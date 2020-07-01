@@ -2,260 +2,235 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA582077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B92C207E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="T/EQ68wX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Clb1fkeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgGAX2u (ORCPT
+        id S1726871AbgGAXgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
+        Wed, 1 Jul 2020 19:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgGAX2u (ORCPT
+        with ESMTP id S1726413AbgGAXgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:28:50 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030C6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 16:28:49 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id m8so7634177qvk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 16:28:49 -0700 (PDT)
+        Wed, 1 Jul 2020 19:36:44 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA1FC08C5C1;
+        Wed,  1 Jul 2020 16:36:44 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m26so14724846lfo.13;
+        Wed, 01 Jul 2020 16:36:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w/6vsbQ9eQ9SYZyjzJjo7q2++dtmL7y8qUp3o/IY01o=;
-        b=T/EQ68wXN+j3TU28ZuKOoUhjEFIYaXWHzb4njqW0NqGdPOBA5aEudroRUdiJ8FrnLm
-         sY65BzCM/yuanryZ58uxsKIUzrwSqwtjuf2VsEFWNQSv/AmVYIZooAHnTVRGBhP4I1Na
-         ElhVC000WZYrhABgmHLOgVP6TzoVIFGNCtZBk=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TARMjYdHjjq3zj3UdYugq16yVCkI0yHEqNSthzPBnjA=;
+        b=Clb1fkeGHtH5meU1AUmTh/DrSXEJKzyyUHougWi7iLO/PnCVM/KT/Qfl5gObcxYIOf
+         poxGIyQtI77yF3t5Uu5k+sO3j+gtvSxhoNu++hYXaMAfbz87fNyEJUIgOl2Qor6XF8ZO
+         AOIYeudjgV+vLLwJA37SnQWJZ9bzmWP9L5JJASIJdhDVJWvLbQ76dz1UNHc9Cn6Ob7aJ
+         jjDYitbCsYIZH3BdqPaZY3cuPmTXRlb2p+eIQL1roJcLJzW9+A/ufuhvPMEjtcoM26Yx
+         LGkrRo+rktmXODPrvEPVbmy+A/4PTcxNhGXIJZj8rT/G9//GdE6zHSxE6yqdECukvJrN
+         ZE8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w/6vsbQ9eQ9SYZyjzJjo7q2++dtmL7y8qUp3o/IY01o=;
-        b=IlvNAipApPa4QrLXYIFVXb7gNqN8HR5EnY2/WcrUP29kWYSz+A7uZPvlx4mHPLPCS6
-         8nXpqS40wq21EsNADwBPkWMel0hPyv81SzZqH9W3H/7PuSZgsgFCOR4JoAiNMtIrWfov
-         nCXt92gXY6o8ZBp3NDzF2esPrOmj0Mv6q/+jHQ+nn+HBFlVfvjYeTb/sMz3BY5cK0SzO
-         F/Vm01cbDgLpRl0dDhvG/kvGkRofUTb0+i28x05eTdEbjhCs/m5XLai/hYId7oNFXW5h
-         hxExl057Hm6WPaCt39j/V+du/sx772bCyy2wKpZArInLg62EU7971E7a/Kuq1JuIBF0k
-         EHuw==
-X-Gm-Message-State: AOAM532At4ps3Ex9+qmAIu+1zvYuLJx5Temv0GoWtugK9EHvWRdcT4hq
-        /FipQNdyFim16EeKfzNcbyCHZQ==
-X-Google-Smtp-Source: ABdhPJySc8UKTCwLa3Lxp62I5q63tLwLgEuWArRfWcNItmojl1J1bW93G7TvXwlgr0hD/mXteORW/w==
-X-Received: by 2002:a0c:a992:: with SMTP id a18mr18028116qvb.211.1593646129011;
-        Wed, 01 Jul 2020 16:28:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id c7sm7780636qta.95.2020.07.01.16.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 16:28:48 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 19:28:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        mingo@kernel.org, fweisbec@gmail.com, keescook@chromium.org,
-        kerrnel@google.com, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineethrp@gmail.com,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>, paulmck@kernel.org
-Subject: Re: [RFC PATCH 06/16] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200701232847.GA439212@google.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <ed924e2cb450a4cce4a1b5a2c44d29e968467154.1593530334.git.vpillai@digitalocean.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TARMjYdHjjq3zj3UdYugq16yVCkI0yHEqNSthzPBnjA=;
+        b=fTzhxPi7LjEyIJJ75babB9jLbnNMJHxZa7Ts9y2No4K1dtHvwDA418UFbqUjC7Wdrt
+         JTnuS+MGQYYkZDCvqfYpwUCuBnQfnyTrbL7DZEs63rJklBhePh7kSA5GgY0oSy4G7nki
+         s9px/yxTKJbcPZuSTp+cEdnLQ5aS9kZigTvJRodN2aJtHbfcL9NAClFD+T1GCwSCVhnc
+         0nv5VblQKO4QNbJ63HeL8FATjw8fa1nWYqPxjzL6hTAqJKcshMotRnG29Wsgbe29qADF
+         dgpg/dQj2KG2gxQW0FSRt6o55rhZftVM9KCLFSwNVk8WaNVJ2V0YU8OmNOY5sKjhC7oN
+         AC8A==
+X-Gm-Message-State: AOAM5331pR8HSRiXQDtxXAXB35l92VPx7NOY5ha0/lmn+FfJLTIdOx3q
+        AyDhWbkZlaOA75Lm5H1/2lNYzTAMY3Y=
+X-Google-Smtp-Source: ABdhPJzpjVfIcRoIVtpwV3y58+IISkU9q95ir4JljE24TYlCKzQbPSQXrlZCICbOftVA0366nD51Fw==
+X-Received: by 2002:a19:4805:: with SMTP id v5mr16722713lfa.75.1593646602112;
+        Wed, 01 Jul 2020 16:36:42 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u19sm2551087lju.63.2020.07.01.16.36.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 16:36:41 -0700 (PDT)
+Subject: Re: [PATCH v4 28/37] memory: tegra: Register as interconnect provider
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <20200609131404.17523-29-digetx@gmail.com>
+ <aec831a6-a7ad-6bcc-4e15-c44582f7568e@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <82d27a47-f189-6609-a584-c9ca1b35a76c@gmail.com>
+Date:   Thu, 2 Jul 2020 02:36:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed924e2cb450a4cce4a1b5a2c44d29e968467154.1593530334.git.vpillai@digitalocean.com>
+In-Reply-To: <aec831a6-a7ad-6bcc-4e15-c44582f7568e@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:32:27PM +0000, Vineeth Remanan Pillai wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
+01.07.2020 20:12, Georgi Djakov пишет:
+> Hi Dmitry,
 > 
-> Instead of only selecting a local task, select a task for all SMT
-> siblings for every reschedule on the core (irrespective which logical
-> CPU does the reschedule).
+> Thank you for updating the patches!
+
+Hello, Georgi!
+
+Thank you for the review!
+
+> On 6/9/20 16:13, Dmitry Osipenko wrote:
+>> Now memory controller is a memory interconnection provider. This allows us
+>> to use interconnect API in order to change memory configuration.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/memory/tegra/Kconfig |   1 +
+>>  drivers/memory/tegra/mc.c    | 114 +++++++++++++++++++++++++++++++++++
+>>  drivers/memory/tegra/mc.h    |   8 +++
+>>  include/soc/tegra/mc.h       |   3 +
+>>  4 files changed, 126 insertions(+)
+>>
+>> diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
+>> index 5bf75b316a2f..7055fdef2c32 100644
+>> --- a/drivers/memory/tegra/Kconfig
+>> +++ b/drivers/memory/tegra/Kconfig
+>> @@ -3,6 +3,7 @@ config TEGRA_MC
+>>  	bool "NVIDIA Tegra Memory Controller support"
+>>  	default y
+>>  	depends on ARCH_TEGRA
+>> +	select INTERCONNECT
+>>  	help
+>>  	  This driver supports the Memory Controller (MC) hardware found on
+>>  	  NVIDIA Tegra SoCs.
+>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+>> index 772aa021b5f6..7ef7ac9e103e 100644
+>> --- a/drivers/memory/tegra/mc.c
+>> +++ b/drivers/memory/tegra/mc.c
+>> @@ -594,6 +594,118 @@ static __maybe_unused irqreturn_t tegra20_mc_irq(int irq, void *data)
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> +static int tegra_mc_icc_set(struct icc_node *src, struct icc_node *dst)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_mc_icc_aggregate(struct icc_node *node,
+>> +				  u32 tag, u32 avg_bw, u32 peak_bw,
+>> +				  u32 *agg_avg, u32 *agg_peak)
+>> +{
+>> +	*agg_avg = min((u64)avg_bw + (*agg_avg), (u64)U32_MAX);
+>> +	*agg_peak = max(*agg_peak, peak_bw);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * Memory Controller (MC) has few Memory Clients that are issuing memory
+>> + * bandwidth allocation requests to the MC interconnect provider. The MC
+>> + * provider aggregates the requests and then sends the aggregated request
+>> + * up to the External Memory Controller (EMC) interconnect provider which
+>> + * re-configures hardware interface to External Memory (EMEM) in accordance
+>> + * to the required bandwidth. Each MC interconnect node represents an
+>> + * individual Memory Client.
+>> + *
+>> + * Memory interconnect topology:
+>> + *
+>> + *               +----+
+>> + * +--------+    |    |
+>> + * | TEXSRD +--->+    |
+>> + * +--------+    |    |
+>> + *               |    |    +-----+    +------+
+>> + *    ...        | MC +--->+ EMC +--->+ EMEM |
+>> + *               |    |    +-----+    +------+
+>> + * +--------+    |    |
+>> + * | DISP.. +--->+    |
+>> + * +--------+    |    |
+>> + *               +----+
+>> + */
+>> +static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
+>> +{
+>> +	struct icc_onecell_data *data;
+>> +	struct icc_node *node;
+>> +	unsigned int num_nodes;
+>> +	unsigned int i;
+>> +	int err;
+>> +
+>> +	/* older device-trees don't have interconnect properties */
+>> +	if (!of_find_property(mc->dev->of_node, "#interconnect-cells", NULL))
+>> +		return 0;
+>> +
+>> +	num_nodes = mc->soc->num_clients;
+>> +
+>> +	data = devm_kzalloc(mc->dev, struct_size(data, nodes, num_nodes),
+>> +			    GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	mc->provider.dev = mc->dev;
+>> +	mc->provider.set = tegra_mc_icc_set;
 > 
-> There could be races in core scheduler where a CPU is trying to pick
-> a task for its sibling in core scheduler, when that CPU has just been
-> offlined.  We should not schedule any tasks on the CPU in this case.
-> Return an idle task in pick_next_task for this situation.
+> Hmm, maybe the core should not require a set() implementation and we can
+> just make it optional instead. Then the dummy function would not be needed.
+
+Eventually this dummy function might become populated with a memory
+latency allowness programming. I could add a comment into that function
+in the next version, saying that it's to-be-done for now.
+
+>> +	mc->provider.data = data;
+>> +	mc->provider.xlate = of_icc_xlate_onecell;
+>> +	mc->provider.aggregate = tegra_mc_icc_aggregate;
+>> +
+>> +	err = icc_provider_add(&mc->provider);
+>> +	if (err)
+>> +		goto err_msg;
 > 
-> NOTE: there is still potential for siblings rivalry.
-> NOTE: this is far too complicated; but thus far I've failed to
->       simplify it further.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
-> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
-> Signed-off-by: Aaron Lu <aaron.lu@linux.alibaba.com>
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> Nit: I am planning to re-organize some of the existing drivers to call
+> icc_provider_add() after the topology is populated. Could you please move
+> this after the nodes are created and linked.
 
-Hi Peter, Tim, all, the below patch fixes the hotplug issue described in the
-below patch's Link tag. Patch description below describes the issues fixed
-and it applies on top of this patch.
+Are you planning to remove the provider's list-head initialization from
+the icc_provider_add() [1] and move it to the individual provider
+drivers, correct?
 
-------8<----------
+[1]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/drivers/interconnect/core.c#L977
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH] sched: Fix CPU hotplug causing crashes in task selection logic
+If yes, then it should be easy to move the icc_provider_add() in the
+case of this driver. Otherwise, please give some more clarification.
 
-The selection logic does not run correctly if the current CPU is not in the
-cpu_smt_mask (which it is not because the CPU is offlined when the stopper
-finishes running and needs to switch to idle).  There are also other issues
-fixed by the patch I think such as: if some other sibling set core_pick to
-something, however the selection logic on current cpu resets it before
-selecting. In this case, we need to run the task selection logic again to
-make sure it picks something if there is something to run. It might end up
-picking the wrong task.  Yet another issue was, if the stopper thread is an
-unconstrained pick, then rq->core_pick is set. The next time task selection
-logic runs when stopper needs to switch to idle, the current CPU is not in
-the smt_mask. This causes the previous ->core_pick to be picked again which
-happens to be the unconstrained task! so the stopper keeps getting selected
-forever.
+Please notice that the same "node" variable is used for both creation
+and linking of the nodes to the provider here, making code nice and
+clean. And thus, the provider's list-head should be initialized before
+the linking.
 
-That and there are a few more safe guards and checks around checking/setting
-rq->core_pick. To test it, I ran rcutorture and made it tag all torture
-threads. Then ran it in hotplug mode (hotplugging every 200ms) and it hit the
-issue. Now it runs for an hour or so without issue. (Torture testing debug
-changes: https://bit.ly/38htfqK ).
+...
+> The rest looks good to me!
 
-Various fixes were tried causing varying degrees of crashes.  Finally I found
-that it is easiest to just add current CPU to the smt_mask's copy always.
-This is so that task selection logic always runs on the current CPU which
-called schedule().
-
-Link: lore.kernel.org/r/20200414133559.GT20730@hirez.programming.kicks-ass.net
-Reported-by: Tim Chen <tim.c.chen@linux.intel.com>
-Reported-by: Vineeth Pillai <vpillai@digitalocean.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/sched/core.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ede86fb37b4e8..a5604aa292e66 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4307,7 +4307,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- {
- 	struct task_struct *next, *max = NULL;
- 	const struct sched_class *class;
--	const struct cpumask *smt_mask;
-+	struct cpumask select_mask;
- 	int i, j, cpu, occ = 0;
- 	bool need_sync;
- 
-@@ -4334,7 +4334,14 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	finish_prev_task(rq, prev, rf);
- 
- 	cpu = cpu_of(rq);
--	smt_mask = cpu_smt_mask(cpu);
-+	/* Make a copy of cpu_smt_mask as we should not set that. */
-+	cpumask_copy(&select_mask, cpu_smt_mask(cpu));
-+
-+	/*
-+	 * Always make sure current CPU is added to smt_mask so that below
-+	 * selection logic runs on it.
-+	 */
-+	cpumask_set_cpu(cpu, &select_mask);
- 
- 	/*
- 	 * core->core_task_seq, core->core_pick_seq, rq->core_sched_seq
-@@ -4351,7 +4358,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	/* reset state */
- 	rq->core->core_cookie = 0UL;
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu(i, &select_mask) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		rq_i->core_pick = NULL;
-@@ -4371,7 +4378,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 */
- 	for_each_class(class) {
- again:
--		for_each_cpu_wrap(i, smt_mask, cpu) {
-+		for_each_cpu_wrap(i, &select_mask, cpu) {
- 			struct rq *rq_i = cpu_rq(i);
- 			struct task_struct *p;
- 
-@@ -4402,6 +4409,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 			 */
- 			if (i == cpu && !need_sync && !p->core_cookie) {
- 				next = p;
-+				rq_i->core_pick = next;
-+				rq_i->core_sched_seq = rq_i->core->core_pick_seq;
- 				goto done;
- 			}
- 
-@@ -4427,7 +4436,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 				max = p;
- 
- 				if (old_max) {
--					for_each_cpu(j, smt_mask) {
-+					for_each_cpu(j, &select_mask) {
- 						if (j == i)
- 							continue;
- 
-@@ -4452,6 +4461,10 @@ next_class:;
- 
- 	rq->core->core_pick_seq = rq->core->core_task_seq;
- 	next = rq->core_pick;
-+
-+	/* Something should have been selected for current CPU */
-+	WARN_ON_ONCE(!next);
-+
- 	rq->core_sched_seq = rq->core->core_pick_seq;
- 
- 	/*
-@@ -4462,7 +4475,7 @@ next_class:;
- 	 * their task. This ensures there is no inter-sibling overlap between
- 	 * non-matching user state.
- 	 */
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu(i, &select_mask) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		WARN_ON_ONCE(!rq_i->core_pick);
-@@ -4483,6 +4496,16 @@ next_class:;
- 	}
- 
- done:
-+	/*
-+	 * If we reset a sibling's core_pick, make sure that we picked a task
-+	 * for it, this is because we might have reset it though it was set to
-+	 * something by another selector. In this case we cannot leave it as
-+	 * NULL and should have found something for it.
-+	 */
-+	for_each_cpu(i, &select_mask) {
-+		WARN_ON_ONCE(!cpu_rq(i)->core_pick);
-+	}
-+
- 	set_next_task(rq, next);
- 	return next;
- }
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+Thanks!
