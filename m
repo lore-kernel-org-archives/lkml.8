@@ -2,105 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DED7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F36D20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le/SOV5q"
+	by mail.kernel.org (Postfix) with ESMTP id 6C5F620780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593619423;
+	bh=lsVbSj/ss2har/B90Io45Cd2wBUKELeZ+wmjiYF4Efg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ciw985aZ37gP7kSOqrMaDA+hd4gbsAmb02Fw0nM+bmuu+weeZp2jwHVh1ip7CvS/g
+	 h7Ituy28ywHdo5rl3m11R7Ak8ScomPcmxoA3I9jgQGE7XDdud8a1uREdACLelpUfIy
+	 ABR/3SskVfgTqCSNxvzDG60wqt4LvgHo/4quuMr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbgGAQDh (ORCPT
+        id S1732321AbgGAQDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731672AbgGAQDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:03:34 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80E9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:03:33 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id y22so8434945oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oyqqoU43QY3DailQWnD9ZPGpahswy6mkqS67kbUZfaU=;
-        b=Le/SOV5qRC746f+1Be4jz7UNkzudA5yDLBvhExxmi9OUAP1bKgFv+nOKQ3pg3wbpnJ
-         mZ9Sh2iOMjq0rDLMTDsv5FTRz8x5kg+G+GpSDR3FsmB7XBxaAiGLDraHQu06MKrTn/2q
-         60W04dUEmtRtON1wgw+qKmOawpgDYzqNuiL35Pu/C2jMLNpGMjzE50MKK+ENBRUCRoIg
-         RsuGG9/9rpW5xOXK+V3xgeD2H033BaVqsdOAuufu8icDMs/MP1JnA2OPNVmThWpBWjhk
-         NotZuyUOF81dbQ6ga/cbRSku//MBTfBclakIwbHmcYCFxeYfEBSuojeZbAXh3A9PKYxV
-         /6Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oyqqoU43QY3DailQWnD9ZPGpahswy6mkqS67kbUZfaU=;
-        b=QACpYQ6bAdWvN6LUnnYd4Elr8f1Thi0RMNbTiHsbhuvO3u0vB+xSb/SPEG15uBszhX
-         vB06DypPORPbz0cO9s8gXYoO/E/NgqEQjCy065r27ZPskB2X17TG+R2p78a2XNuoGY+g
-         XtOWNo0V5bNSeZLFve0as9b5A7EQQe44RV3QF6aIsItuKrK0gqygwQ+wB5w0xo1IwiSq
-         63ysf5J2q3XrMrBeFFg9hH1CzZenqOKIpaMXRrC4U0aJxvx8VO6MGyqEYyN3KZGjIjYf
-         zo4Cz16k+p50QNh20jq8i3DDJYzYYmQefjTSawu6nrCxgJRYkFcNKB9cvZ5hQFK/RZ7p
-         4dLg==
-X-Gm-Message-State: AOAM530LlUyh0IAq7qbXGHDwhCUHqmBcG5tcKXdaVY6NM0XcHTynwJ/c
-        w04vdvTtUPf6+6Z+AY877o1UBQTTZOeKlP979RM=
-X-Google-Smtp-Source: ABdhPJw4bKqlS34uca7Mjy9efaGo4eTqH93rFy3bV2x1L5461qN7L8hj6lRQMc/QnxPemH+hyBnKX5GxNLztvm9bS+M=
-X-Received: by 2002:aca:efc5:: with SMTP id n188mr1796727oih.77.1593619412923;
- Wed, 01 Jul 2020 09:03:32 -0700 (PDT)
+        Wed, 1 Jul 2020 12:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731672AbgGAQDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:03:38 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 776DA206C3;
+        Wed,  1 Jul 2020 16:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593619418;
+        bh=lsVbSj/ss2har/B90Io45Cd2wBUKELeZ+wmjiYF4Efg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ZHXG8ON1MQAVd0WWgmGngqjNTqPZiPz9LyxrPLzmg1Y9mxBRyPhX4Zk5/ivtnj4n3
+         eptU/PsHOZLsOUUXwHFNa+8Zr9742CVsM7nWCzeGKTuFDM4VzgjHe4h0BXahzgELZw
+         AFEbkSo/wshrekgHPJScGghJKuijNH54TSiSEgIg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5F00E3523108; Wed,  1 Jul 2020 09:03:38 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 09:03:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200701160338.GN9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
- <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
- <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com>
- <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
- <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
- <AM6PR0402MB36077C422DABCB4F2EA650A0FF6F0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAGngYiV9HqxSLV=PCPg10vqVC-SaayF5wakcWs2gBbXxgcUEPQ@mail.gmail.com>
- <AM6PR0402MB3607986330B844B161E271FAFF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAOMZO5B-XVaZ-t2T7UBdCqqde3bJREiQhR71ET8p=9EHJ-DQbA@mail.gmail.com>
- <AM6PR0402MB360717519B42A48A754691C8FF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAOMZO5CZMBeSY=0sa39wJsZpaCqWeCb4-HG4jjXO5pGeW64azg@mail.gmail.com>
- <CAGngYiWV93yWY-mWM-1YcRU71iWnP=qsLSD6Z5dZkz=Zb+iqRA@mail.gmail.com> <HE1PR0402MB3612B2111833521E571DC207FF6C0@HE1PR0402MB3612.eurprd04.prod.outlook.com>
-In-Reply-To: <HE1PR0402MB3612B2111833521E571DC207FF6C0@HE1PR0402MB3612.eurprd04.prod.outlook.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 1 Jul 2020 12:03:21 -0400
-Message-ID: <CAGngYiXfY0SBEm=H8KMTR+0ztLTEQ+bpjPpquac+igoCLHM=0A@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing
- of clk_enet_ref where possible
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy and Fabio,
+On Wed, Jul 01, 2020 at 05:05:12PM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 01, 2020 at 07:06:54AM -0700, Paul E. McKenney wrote:
+> 
+> > The current state in the C++ committee is that marking variables
+> > carrying dependencies is the way forward.  This is of course not what
+> > the Linux kernel community does, but it should not be hard to have a
+> > -fall-variables-dependent or some such that causes all variables to be
+> > treated as if they were marked.  Though I was hoping for only pointers.
+> > Are they -sure- that they -absolutely- need to carry dependencies
+> > through integers???
+> 
+> What's 'need'? :-)
 
-On Wed, Jul 1, 2020 at 11:30 AM Andy Duan <fugang.duan@nxp.com> wrote:
->
-> Discuss with Fabio, an existing(old) dtb in mainline has to work in future kernels,
-> without the need of being updated, so to add internal pll support for 6qp rgmii gtx,
-> and not to break 6qp old dtb, add new property is one solution.
+Turning off all dependency-killing optimizations on all pointers is
+likely a non-event.  Turning off all dependency-killing optimizations
+on all integers is not the road to happiness.
 
-Andy, many thanks for your time and attention on this issue, much appreciated !
+So whatever "need" might be, it would need to be rather earthshaking.  ;-)
+It is probably not -that- hard to convert to pointers, even if they
+are indexing multiple arrays.
 
-Fabio has already indicated that he's ok with adding a new property.
-Fabio, is that still the case?
+> I'm thinking __ktime_get_fast_ns() is better off with a dependent load
+> than it is with an extra smp_rmb().
+> 
+> Yes we can stick an smp_rmb() in there, but I don't like it. Like I
+> wrote earlier, if I wanted a control dependency, I'd have written one.
 
-If so, I will re-spin the patch to use a new property.
-Hopefully Rob Herring will be ok with this.
+No argument here.
+
+But it looks like we are going to have to tell the compiler.
+
+							Thanx, Paul
