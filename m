@@ -2,120 +2,137 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2460C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF51D20781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i7WQX0n+"
+	by mail.kernel.org (Postfix) with ESMTP id 7A67D20781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbgGAQbf (ORCPT
+        id S1732414AbgGAQcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731951AbgGAQbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:31:34 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664E8C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:31:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h5so24710426wrc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e8vy04L3oFjB+e/NYPznyy+y32Vl8W+XrBMmiEvQygo=;
-        b=i7WQX0n+MjYFWRQdP/C4E5Y8PrAvqnDQ+SRHQo1ZgBlWV9OTIaai3ugazH8MLJkVx1
-         zeTMNmJUTIJJptEvMMoQTz/UwYei08/DDc08TrlbZTUXyCYiOHLKoTXXpFHsLnfhUc6O
-         o5waCOOCPz4ai73p3a6QdYCaUDsKgLzrfV6lLC57MeJO1ubXc8waeRngBnB5tH9K6P4L
-         Ap4ldEgE27AZ60TDc1mv5XCEZOnryj7Q7PPOBaNSfmyHMStZV0FJKyztp/UpI/t8u/BT
-         JehJqzdjTNlJGIBAU7JS25hEN0U5uMV0UDc9FrpeJYYxxayPJEItBcElxldaTmH+eMdo
-         fFHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e8vy04L3oFjB+e/NYPznyy+y32Vl8W+XrBMmiEvQygo=;
-        b=iJq+5pgR5YVWQDDCaxjdFVQpIbWvrmM69b4XpYwJucaqjbj+9wAQaoOhJzltP3uDKk
-         yV6bO0hqkpvS6M5rAwKlY9fVAHehlzv3DhSo9VtACSqMhOXjv9+UiUygNSb0+k44Qyx2
-         4yZiGse1G/Nsr6YYRQ8uXGp5DjKkSsfaih+A9QpK37lMlm9ymBXXmWDakumMN9av7CjU
-         qh8UlIThu0rULAESoYsgOanRc7rVBt6lTxTQotja/2BMUdOhkBtE0Z+3bUh1iu32gHDN
-         OU79kn3N/Xh1vGlSNb5LQXvNGtzIPhNOwK0c0VD2DyIFps/FPtMHbOE6TLqXnjl9fBo5
-         wh1A==
-X-Gm-Message-State: AOAM533hC1tmjBSHv+x3gcl0h9FIXQFvmA1bfuvbmxD6KNZwaEKewt2H
-        69VC/Znl90osZ4nqRlGPHOHXdJLjEhM=
-X-Google-Smtp-Source: ABdhPJycStsO9NSKdJwwQC1Ey6TfMk0zkrit19oTnMJW6fodmR8V6XBI+iJZYojl6ReFnLaszZblJg==
-X-Received: by 2002:a5d:658a:: with SMTP id q10mr23546055wru.220.1593621090716;
-        Wed, 01 Jul 2020 09:31:30 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
-        by smtp.googlemail.com with ESMTPSA id n17sm7752105wrs.2.2020.07.01.09.31.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 09:31:30 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] thermal: core: genetlink support for
- events/cmd/sampling
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     rkumbako@codeaurora.org, amit.kucheria@linaro.org,
+        Wed, 1 Jul 2020 12:32:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:55902 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731770AbgGAQcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:32:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D41431B;
+        Wed,  1 Jul 2020 09:32:14 -0700 (PDT)
+Received: from [10.37.12.71] (unknown [10.37.12.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8133F68F;
+        Wed,  1 Jul 2020 09:32:11 -0700 (PDT)
+Subject: Re: [PATCH v6 0/2] sched: Optionally skip uclamp logic in fast path
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
         linux-kernel@vger.kernel.org
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <20200625144509.17918-4-daniel.lezcano@linaro.org>
- <73150ef4ca536368f087672b917dd9773417020e.camel@intel.com>
- <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
- <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
- <4c8abeb4ddff2355d9ba397f50b7844a7734c2e9.camel@linux.intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <8526622b-cb31-4d40-95b6-e209b3101563@linaro.org>
-Date:   Wed, 1 Jul 2020 18:31:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+References: <20200630112123.12076-1-qais.yousef@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <c7e1d57e-5388-aaf0-1cde-2ebc9fbdd8c0@arm.com>
+Date:   Wed, 1 Jul 2020 17:32:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <4c8abeb4ddff2355d9ba397f50b7844a7734c2e9.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200630112123.12076-1-qais.yousef@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2020 17:49, Srinivas Pandruvada wrote:
+Hi Qais,
+
+On 6/30/20 12:21 PM, Qais Yousef wrote:
+> This series attempts to address the report that uclamp logic could be expensive
+> sometimes and shows a regression in netperf UDP_STREAM under certain
+> conditions.
 > 
-> [...]
+> The first patch is a fix for how struct uclamp_rq is initialized which is
+> required by the 2nd patch which contains the real 'fix'.
 > 
->> Then I'd prefer we only introduce the events that are used or will be
->> used soon, like the tz disable/enable, to avoid some potential dead
->> code.
->> We can easily add more events when they are needed.
->>
->> Srinivas, do you have plan to use the trip add/delete events?
-> Yes and also trip modify.
+> Worth noting that the root cause of the overhead is believed to be system
+> specific or related to potential certain code/data layout issues, leading to
+> worse I/D $ performance.
+> 
+> Different systems exhibited different behaviors and the regression did
+> disappear in certain kernel version while attempting to reporoduce.
+> 
+> More info can be found here:
+> 
+> https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+> 
+> Having the static key seemed the best thing to do to ensure the effect of
+> uclamp is minimized for kernels that compile it in but don't have a userspace
+> that uses it, which will allow distros to distribute uclamp capable kernels by
+> default without having to compromise on performance for some systems that could
+> be affected.
+> 
+> Changes in v6:
+> 	* s/uclamp_is_enabled/uclamp_is_used/ + add comment
+> 	* Improve the bailout condition for the case where we could end up with
+> 	  unbalanced call of uclamp_rq_dec_id()
+> 	* Clarify some comments.
+> 
 
-Ok I will keep those then.
+I've tried this v6 series with mmtest netperf-udp (30x each UDP
+size) - the results are good.
 
-> Also I need to have one more event for heartbeat like event which needs
-> confirmation from user space to hardware the user process controlling
-> thermal is active not dead. So whenever hardware wants to check health 
-> it will send an event, which user space should acknowledge
+                       v5.7-rc7-base-noucl    v5.7-rc7-ucl-tsk-nofix 
+v5.7-rc7-ucl-tsk-grp-fix_v6
+Hmean     send-64          62.15 (   0.00%)       59.65 *  -4.02%* 
+65.87 *   5.99%*
+Hmean     send-128        122.88 (   0.00%)      119.37 *  -2.85%* 
+131.76 *   7.23%*
+Hmean     send-256        244.85 (   0.00%)      234.26 *  -4.32%* 
+259.87 *   6.14%*
+Hmean     send-1024       919.24 (   0.00%)      880.67 *  -4.20%* 
+975.48 *   6.12%*
+Hmean     send-2048      1689.45 (   0.00%)     1647.54 *  -2.48%* 
+1797.23 *   6.38%*
+Hmean     send-3312      2542.36 (   0.00%)     2485.23 *  -2.25%* 
+2665.69 *   4.85%*
+Hmean     send-4096      2935.69 (   0.00%)     2861.09 *  -2.54%* 
+3087.79 *   5.18%*
+Hmean     send-8192      4800.35 (   0.00%)     4680.09 *  -2.51%* 
+4966.50 *   3.46%*
+Hmean     send-16384     7473.66 (   0.00%)     7349.60 *  -1.66%* 
+7598.49 *   1.67%*
+Hmean     recv-64          62.15 (   0.00%)       59.65 *  -4.03%* 
+65.86 *   5.97%*
+Hmean     recv-128        122.88 (   0.00%)      119.37 *  -2.85%* 
+131.76 *   7.23%*
+Hmean     recv-256        244.84 (   0.00%)      234.26 *  -4.32%* 
+259.80 *   6.11%*
+Hmean     recv-1024       919.24 (   0.00%)      880.67 *  -4.20%* 
+975.42 *   6.11%*
+Hmean     recv-2048      1689.44 (   0.00%)     1647.54 *  -2.48%* 
+1797.18 *   6.38%*
+Hmean     recv-3312      2542.36 (   0.00%)     2485.23 *  -2.25%* 
+2665.53 *   4.84%*
+Hmean     recv-4096      2935.69 (   0.00%)     2861.09 *  -2.54%* 
+3087.79 *   5.18%*
+Hmean     recv-8192      4800.35 (   0.00%)     4678.15 *  -2.55%* 
+4966.48 *   3.46%*
+Hmean     recv-16384     7473.63 (   0.00%)     7349.52 *  -1.66%* 
+7597.90 *   1.66%*
 
-Could it be the opposite? The userspace sends periodically a message to
-tell it is alive instead of having the kernel asking the userspace?
+You can add:
 
-Is it ok if we add this in a separate series ?
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Regards,
+Lukasz
