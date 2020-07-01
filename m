@@ -2,118 +2,134 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9666AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26B206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593638898;
-	bh=Us/5Jy9tEk6lKrONtGQfRf0LzdvM7mLYjwXq0weXD2o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GVVA/Gh326V5J914/vvZq/juXepPnHsowqSXeblKI1pw6sMtZJln7q/6mr/y1MWuW
-	 B44JKnS6oF/6ONdvSTfDr7abpalfcNQV8DA4h0gV8E3nDaLcyh3ZB2W7m1KHY/KnBp
-	 vA2jURU41drtZ7OAEy1uU65oSKhMeomYR4Kxb9Uw=
+	by mail.kernel.org (Postfix) with ESMTP id 8DD0720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/lWe6IO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgGAV2R (ORCPT
+        id S1727915AbgGAV2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:28:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGAV2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:28:15 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5104206B7;
-        Wed,  1 Jul 2020 21:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593638895;
-        bh=Us/5Jy9tEk6lKrONtGQfRf0LzdvM7mLYjwXq0weXD2o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LkEgNJHnln0VSwyeu9MKg2oQSVELTF7r1btaK4RxPrGOUquprOxOqADHd3+0e6Rsd
-         yLrLwI2iCv968/h4T0d0jyDfrAq0V/1F8SN5Gk3q/fy3rwL6/0Me0nOLAbj4NtASkQ
-         8T5+TwNcXpLurasyEoJ8ru+lUDn+3LDyM2hSJcUM=
-Date:   Wed, 1 Jul 2020 16:28:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] vfio/pci: add qat devices to blocklist
-Message-ID: <20200701212812.GA3661715@bjorn-Precision-5520>
+        Wed, 1 Jul 2020 17:28:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGAV2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:28:35 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AA0C08C5C1;
+        Wed,  1 Jul 2020 14:28:35 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id dr13so26564710ejc.3;
+        Wed, 01 Jul 2020 14:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2y7y+Op5oyWYys3aPK2F6xIGs6iua31K9nYNmwmPnoM=;
+        b=g/lWe6IOtLO3rB1CxjsEcUq3cjJkeGrLeHIZFNFNgeNfCQ5HpBdaty+X1cOkhYRZ5V
+         kJVaPllB4ziNS9bU1AUITNm2fdPD4s/g2Mdl5Wqdj5pB+Fa6TXJruEG69iH+tKoTEXXN
+         MWy3uSRApMakoGx20EFsR0TQUVIijiTFFTF7md87TPFe1y3EbUNqVoCu0MfBvxpIFFmW
+         qgO/B33CbRxfFmZSue5/aCek25iw585DuAtW9B2L5+WA7Snwnltui6XjlukZ0POYw/Bg
+         5VoazkFd1QtjEgd1x3PerBj7SgM9zfDUkd5nP1BoS0S7zwI0Oep62F2M70Euw0BOp/ls
+         +ysQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2y7y+Op5oyWYys3aPK2F6xIGs6iua31K9nYNmwmPnoM=;
+        b=B9omv4d2l7QpcMbbLTwgCzJEYXaD3EWPBTNDoTIzGcK9zOQvmqwaD4K/pqNe5Qn9yC
+         T2fWXvRbNTRJx/CRz2/vozQaMqU2JSqmNNYbsHGMhRAACl9IrK5+EBLqS22nyaUkfjZo
+         OzljPrtjc7HbFij8An3r1d5lWfEawxT1F/WUGCCLT5QouH5QtcyMtbyxQwfLYF263SX7
+         CiUZz403MJPvzJEMqPQArRnKcXZBy47zn/J7MuCt1c+YO7JEuRA9jMYmalM2x+/5pabi
+         idMsSIKrBUjFlb78VOGLuLqrDdQQNXdpikwVYni+cdhkLU9TwQGzvkx5HY5iCaImYt/u
+         s8VA==
+X-Gm-Message-State: AOAM532AW3oi3oGyonpJP1wI7TS2utMmQM4iN9IlI7Af7SZ5f6y0R5Jk
+        0JbSun22Pnz9Uh6GTzXpHJPi6VDF
+X-Google-Smtp-Source: ABdhPJw3B2rMNk/DR5I6qjhCKexLix74eE5PGlG5zIl9//yDFNfM9XmhobXQiyiCyYNlyPe39SpAlw==
+X-Received: by 2002:a17:906:6959:: with SMTP id c25mr24373759ejs.375.1593638913724;
+        Wed, 01 Jul 2020 14:28:33 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:9c13:a547:3fe2:ec95? ([2a01:110f:b59:fd00:9c13:a547:3fe2:ec95])
+        by smtp.gmail.com with ESMTPSA id j89sm7698816edb.20.2020.07.01.14.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 14:28:33 -0700 (PDT)
+Subject: Re: [PATCH] leds: core: Use blocking op for system suspend
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, pavel@ucw.cz
+Cc:     anthony.wong@canonical.com, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200701093541.14191-1-kai.heng.feng@canonical.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <38622f5a-4518-cdb4-d1ca-581f470ce797@gmail.com>
+Date:   Wed, 1 Jul 2020 23:28:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701110302.75199-4-giovanni.cabiddu@intel.com>
+In-Reply-To: <20200701093541.14191-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:03:00PM +0100, Giovanni Cabiddu wrote:
-> The current generation of Intel® QuickAssist Technology devices
-> are not designed to run in an untrusted environment because of the
-> following issues reported in the release notes in
-> https://01.org/intel-quickassist-technology:
+Hi Kai-Heng,
 
-It would be nice if this link were directly clickable, e.g., if there
-were no trailing ":" or something.
+Thank you for the patch.
 
-And it would be even better if it went to a specific doc that
-described these issues.  I assume these are errata, and it's not easy
-to figure out which doc mentions them.
+On 7/1/20 11:35 AM, Kai-Heng Feng wrote:
+> Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
+> system suspend.
 
-> QATE-39220 - GEN - Intel® QAT API submissions with bad addresses that
->              trigger DMA to invalid or unmapped addresses can cause a
->              platform hang
-> QATE-7495  - GEN - An incorrectly formatted request to Intel® QAT can
->              hang the entire Intel® QAT Endpoint
+Just out of curiosity - are you experiencing that on some hardware?
+
+> led_set_brightness_nopm() uses schedule_work() to set LED brightness.
+> However, there's no guarantee that the scheduled work gets executed
+> because no one calls flush_scheduled_work().
 > 
-> This patch adds the following QAT devices to the blocklist: DH895XCC,
-> C3XXX and C62X.
+> As flush_scheduled_work() may affect other drivers' suspend routines,
+> take a more contained approach which uses blocking op to make sure the
+> LED gets turned off.
 > 
-> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/vfio/pci/vfio_pci.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>   drivers/leds/led-core.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index ea5904ca6cbf..dcac5408c764 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -75,6 +75,21 @@ static inline bool vfio_vga_disabled(void)
->  
->  static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
->  {
-> +	switch (pdev->vendor) {
-> +	case PCI_VENDOR_ID_INTEL:
-> +		switch (pdev->device) {
-> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C62X:
-> +		case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
-> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
-> +		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
-> +			return true;
-> +		default:
-> +			return false;
-> +		}
-> +	}
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index f1f718dbe0f8..9a5bfcd7a704 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -269,6 +269,11 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
+>   void led_set_brightness_nopm(struct led_classdev *led_cdev,
+>   			      enum led_brightness value)
+>   {
 > +
->  	return false;
->  }
->  
-> -- 
-> 2.26.2
-> 
+> +	if (led_cdev->flags & LED_SUSPENDED &&
+> +	    !__led_set_brightness_blocking(led_cdev, value))
+> +		return;
+> +
+
+This function is "nopm" for a reason - we do not make here any
+pm management related operations.
+
+Instead of that, please just add
+
+flush_work(&led_cdev->set_brightness_work);
+
+at the end of led_classdev_suspend()
+
+in drivers/leds/led-class.c.
+
+-- 
+Best regards,
+Jacek Anaszewski
