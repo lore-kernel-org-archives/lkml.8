@@ -2,127 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22590C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE40C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB16C20760
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="vqKoS74T"
+	by mail.kernel.org (Postfix) with ESMTP id 8A19920870
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 20:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593635966;
+	bh=Mv90pdTDmmCVPBQ+ilKuLGK6rDI94hGPVOU6z7qxgNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D25EbiyAUHUpHpKqXY+eTTBk6cjjWdDP3Y1oUQQRJUjuozkESgRtSXSbiHjDqaLd8
+	 Wty/DLsheuYbOmM8Iknneo2UNT3wnsoRVaJmG2rF/Ia0Gh3fnJjssR6XoFPub/xxUu
+	 pJCvnqponlfNtMOy3cTGJ5foIt2mxMfN1NrnNHVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgGAUg1 (ORCPT
+        id S1727064AbgGAUjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 16:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgGAUg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 16:36:26 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAFAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 13:36:26 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id m22so1907515pgv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 13:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Ml7h1RVx99WBpFKay7KhhYcDTfjcQtiJ3hL/JQFsxaw=;
-        b=vqKoS74TQnzmoAPXc661uI/GMGxdpNdaBZTZQxL1pSs4vIipZ2me8BZvCXyL13ghqf
-         MVMjyCat4XWCs/AfCxZQ1ZxDnnsY1CFSa2cWYUwDJ8RcUpS82qBYGyz7WH3N88QJe0km
-         S/WWPs78A/S12EzMphJGD3rjtuhoSIv0F+Un8H0tweuWLlqM9Mb8qFKjOOcZZZAGmR0w
-         3p/mE1XJEELSg8qArLrrz6/fkUGIZRWfteySCJYr6eY+OKOGYJJikHLLCWXSn8BklLFt
-         Lg0+IhvSPEgXxhOvG43Y88golPITpMAZu35/zVKkl5/cmUZAapILcpCCyb9T3onGDrZD
-         kzQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Ml7h1RVx99WBpFKay7KhhYcDTfjcQtiJ3hL/JQFsxaw=;
-        b=MR0SWD4c0WQdeH98VNz806ABSta0317vIcUc7VP//c3dAR3upX2x+hjU7Gs1XqeX3M
-         FvnoszZol4mVEspk9PTwnmFEpv5Q3p50Qc0KYZISMkQcpzgPbbKwVg7Qnhp+nLNjnf9a
-         Po6VT9M2qY06h/RWU3ogmLbXF4hyZfpPcguZYDiVv6aiDTBIcSKjmuBkMJ/lUshizZBo
-         7kI4FATdixTp46xuMjlfFlWVecDETZONfw/rym9gFLc1i6jbZi5J/mIJ+7ZKuZRO4aW1
-         MQH5GD3qM/uv3wye7xMaz4D/RArSvySOgBLAN/pIYK1lTlw7PLOF6cmC2zrJJXvc0U07
-         sYbg==
-X-Gm-Message-State: AOAM5300Mjry3wPYgqjaTgxObaogOlJrjAOC8NSS3Te/PsimxYT1BKrx
-        O/dHYUJGoDLo4el/LASc+/Inww==
-X-Google-Smtp-Source: ABdhPJx3Dfe+b8yBPt4IJWfAbi5YqL8m4kbq22oOyKhe1Ay3txvxSdOzlcoAnPFT0m/oEsjXe3LUwQ==
-X-Received: by 2002:aa7:871a:: with SMTP id b26mr19365029pfo.294.1593635785869;
-        Wed, 01 Jul 2020 13:36:25 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b04f:a97a:115b:a679:8f4f:946b? ([2600:1010:b04f:a97a:115b:a679:8f4f:946b])
-        by smtp.gmail.com with ESMTPSA id t126sm6565239pfd.214.2020.07.01.13.36.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 13:36:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: objtool clac/stac handling change..
-Date:   Wed, 1 Jul 2020 13:36:22 -0700
-Message-Id: <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
-References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: iPhone Mail (17F80)
+        Wed, 1 Jul 2020 16:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgGAUjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 16:39:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 395DA20760;
+        Wed,  1 Jul 2020 20:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593635962;
+        bh=Mv90pdTDmmCVPBQ+ilKuLGK6rDI94hGPVOU6z7qxgNo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vn7yonK6UORJ8OJ5CLMTZ2+x/gvdycGSabhl28wLOeWEfNZZtkdKMc0I9L12/I0dk
+         bB9jRJM9ZAsrHrmNUN0Xe9QCw5cG+b24CXLz5B4CAtKfE3rFp/wnozWmeRUhlpAwyP
+         D81gDHxv1SI3ntiRTx4ygWm8AtJKSXVEdFaatGao=
+Date:   Wed, 1 Jul 2020 21:39:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mm@kvack.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2 08/16] spi: davinci: Remove uninitialized_var() usage
+Message-ID: <20200701203920.GC3776@sirena.org.uk>
+References: <20200620033007.1444705-1-keescook@chromium.org>
+ <20200620033007.1444705-9-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
+Content-Disposition: inline
+In-Reply-To: <20200620033007.1444705-9-keescook@chromium.org>
+X-Cookie: "Ahead warp factor 1"
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--/Uq4LBwYP4y1W6pO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Jul 1, 2020, at 12:35 PM, Linus Torvalds <torvalds@linux-foundation.org=
-> wrote:
->=20
-> =EF=BB=BFOn Wed, Jul 1, 2020 at 11:29 AM Andy Lutomirski <luto@kernel.org>=
- wrote:
->>=20
->> Do we really want the exception handling to do the CLAC?  Having
->> unsafe_get_user() do CLAC seems surprising to me, and it will break
->> use cases like:
->>=20
->> if (!user_access_begin(...)
->>  goto out;
->>=20
->> ret =3D unsafe_get_user(...);
->>=20
->> user_access_end();
->>=20
->> check ret;
->=20
-> That's not how unsafe_get_user() works.
->=20
-> unsafe_get_user() always jumps to the error label, it never returns a
-> value. So the code is actually now what you claim above, but
->=20
->    if (!user_access_begin(...)
->       goto out;
->=20
->    unsafe_get_user(..., out_fault);
->    user_access_end();
->   .. this is good, use the value we got..
->=20
-> out_fault:
->    user_access_end();
-> out:
->    return -EFAULT;
+On Fri, Jun 19, 2020 at 08:29:59PM -0700, Kees Cook wrote:
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just remove this variable since it was
+> actually unused:
 
-Ugh, right. But maybe, with the asm goto magic, we can=E2=80=99t get rid of t=
-his. I=E2=80=99ve always disliked the pattern where we enable user access, d=
-o a bunch of accesses that branch on error, and finish up. We ought to be ab=
-le to do it the way I described and get decent code generation too.
+Please copy maintainers on patches :(
 
-If we do this extable change, we end up with a different mess: some exceptio=
-n handlers will clear AC and some won=E2=80=99t.  I=E2=80=99m sure objtool c=
-an deal with this with some effort, but I=E2=80=99m not convinced it=E2=80=99=
-s worth it.=
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--/Uq4LBwYP4y1W6pO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl789HcACgkQJNaLcl1U
+h9AfDgf/RKZyImjLhB9HvSTTPElSdnVo2uGyMkLMGX5E2rrBkIm+JRHNqfloV/46
+Mx7zbEttRmKiYixfSdmsDpbg56ljycPfGBLHIZxfW4p4HDkXI2rwNl6yNQwAFGfS
+xREw+xp//6eFOklwHHWspFdXjwvYVwxwCJbntC3mxtA44GrP1RcSNdlYSRlLMUqE
+b4V1aHQtulWHWcA6qc3e7e3VH7t/F4vy9AftF3S8ckIbrmZO6+HfcvGjITyILn0T
+0ReKIdfQ/UEHEeGXnai1E9efkWymKRW43Frx6JRO6Sd4KhBeHGohovlQ3mhKLfdg
+vH1jBuQdhXfJWc+yprXAcHmpsHpQZw==
+=XnWw
+-----END PGP SIGNATURE-----
+
+--/Uq4LBwYP4y1W6pO--
