@@ -2,78 +2,93 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F903C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7870C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A642206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF73820747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M5+AqbU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgGAJfu (ORCPT
+        id S1729510AbgGAJgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:35:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52862 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGAJfu (ORCPT
+        Wed, 1 Jul 2020 05:36:00 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:14631 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726715AbgGAJgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:35:50 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jqZ9d-0006Cn-B5; Wed, 01 Jul 2020 09:35:45 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc:     anthony.wong@canonical.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] leds: core: Use blocking op for system suspend
-Date:   Wed,  1 Jul 2020 17:35:40 +0800
-Message-Id: <20200701093541.14191-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Jul 2020 05:36:00 -0400
+X-UUID: af45b242b3df4cb99126d3925be38024-20200701
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=NCLao9xja/z/UOC7Zzg8iO34wroh+bPww07IWqMYaLk=;
+        b=M5+AqbU7Z2CzF+ADimNnNuC/fXnEWTSmmOiSlM8XlxrSiS2jVR4tDZcrlel/9foKKWvN//CING4jJa7IDoaOqww0B9RfhUnguF/bBwsyNHgl9lu65ruhzNPLZsFJqX/1WUy1GzqnOywnC44Q/+J4kOrUpzSG36OGb/Kx0JsaoYs=;
+X-UUID: af45b242b3df4cb99126d3925be38024-20200701
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yunfei.dong@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 871960600; Wed, 01 Jul 2020 17:35:55 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jul 2020 17:35:51 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 1 Jul 2020 17:35:51 +0800
+From:   Yunfei Dong <yunfei.dong@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Yunfei Dong <yunfei.dong@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v3,1/2] media: v4l UAPI: add V4L2_BUF_CAP_SUPPORTS_RO_REQUESTS
+Date:   Wed, 1 Jul 2020 17:35:21 +0800
+Message-ID: <20200701093522.8521-2-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200701093522.8521-1-yunfei.dong@mediatek.com>
+References: <20200701093522.8521-1-yunfei.dong@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
-system suspend.
-
-led_set_brightness_nopm() uses schedule_work() to set LED brightness.
-However, there's no guarantee that the scheduled work gets executed
-because no one calls flush_scheduled_work().
-
-As flush_scheduled_work() may affect other drivers' suspend routines,
-take a more contained approach which uses blocking op to make sure the
-LED gets turned off.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/leds/led-core.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..9a5bfcd7a704 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -269,6 +269,11 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
- void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 			      enum led_brightness value)
- {
-+
-+	if (led_cdev->flags & LED_SUSPENDED &&
-+	    !__led_set_brightness_blocking(led_cdev, value))
-+		return;
-+
- 	/* Use brightness_set op if available, it is guaranteed not to sleep */
- 	if (!__led_set_brightness(led_cdev, value))
- 		return;
--- 
-2.17.1
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBWNEwyX0JVRl9DQVBfU1VQUE9SVFNfUk9f
+UkVRVUVTVFMNCmZsYWcuIFRoaXMgZmxhZyBpcyB1c2VkIGZvciBSZWFkLW9ubHkoUm8pIFJlcXVl
+c3QuDQoNClNpZ25lZC1vZmYtYnk6IFl1bmZlaSBEb25nIDx5dW5mZWkuZG9uZ0BtZWRpYXRlay5j
+b20+DQotLS0NCiBEb2N1bWVudGF0aW9uL3VzZXJzcGFjZS1hcGkvbWVkaWEvdjRsL3ZpZGlvYy1y
+ZXFidWZzLnJzdCB8IDQgKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCg0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vdXNlcnNwYWNlLWFwaS9tZWRpYS92NGwvdmlkaW9j
+LXJlcWJ1ZnMucnN0IGIvRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBpL21lZGlhL3Y0bC92aWRp
+b2MtcmVxYnVmcy5yc3QNCmluZGV4IGI2ZDUyMDgzNzA3Yi4uN2M3NDUxNzczYjhlIDEwMDY0NA0K
+LS0tIGEvRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBpL21lZGlhL3Y0bC92aWRpb2MtcmVxYnVm
+cy5yc3QNCisrKyBiL0RvY3VtZW50YXRpb24vdXNlcnNwYWNlLWFwaS9tZWRpYS92NGwvdmlkaW9j
+LXJlcWJ1ZnMucnN0DQpAQCAtMTI2LDYgKzEyNiw3IEBAIGFib3J0aW5nIG9yIGZpbmlzaGluZyBh
+bnkgRE1BIGluIHByb2dyZXNzLCBhbiBpbXBsaWNpdA0KIC4uIF9WNEwyLUJVRi1DQVAtU1VQUE9S
+VFMtUkVRVUVTVFM6DQogLi4gX1Y0TDItQlVGLUNBUC1TVVBQT1JUUy1PUlBIQU5FRC1CVUZTOg0K
+IC4uIF9WNEwyLUJVRi1DQVAtU1VQUE9SVFMtTTJNLUhPTEQtQ0FQVFVSRS1CVUY6DQorLi4gX1Y0
+TDItQlVGLUNBUC1TVVBQT1JUUy1STy1SRVFVRVNUUzoNCiANCiAuLiBjc3NjbGFzczo6IGxvbmd0
+YWJsZQ0KIA0KQEAgLTE1Niw2ICsxNTcsOSBAQCBhYm9ydGluZyBvciBmaW5pc2hpbmcgYW55IERN
+QSBpbiBwcm9ncmVzcywgYW4gaW1wbGljaXQNCiAgICAgICAtIE9ubHkgdmFsaWQgZm9yIHN0YXRl
+bGVzcyBkZWNvZGVycy4gSWYgc2V0LCB0aGVuIHVzZXJzcGFjZSBjYW4gc2V0IHRoZQ0KICAgICAg
+ICAgYGBWNEwyX0JVRl9GTEFHX00yTV9IT0xEX0NBUFRVUkVfQlVGYGAgZmxhZyB0byBob2xkIG9m
+ZiBvbiByZXR1cm5pbmcgdGhlDQogCWNhcHR1cmUgYnVmZmVyIHVudGlsIHRoZSBPVVRQVVQgdGlt
+ZXN0YW1wIGNoYW5nZXMuDQorICAgICogLSBgYFY0TDJfQlVGX0NBUF9TVVBQT1JUU19ST19SRVFV
+RVNUU2BgDQorICAgICAgLSAweDAwMDAwMDQwDQorICAgICAgLSBUaGlzIGJ1ZmZlciB0eXBlIHN1
+cHBvcnRzIDpyZWY6YHJlcXVlc3RzIDxtZWRpYS1yZXF1ZXN0LWFwaT5gLg0KIA0KIFJldHVybiBW
+YWx1ZQ0KID09PT09PT09PT09PQ0KLS0gDQoyLjE4LjANCg==
 
