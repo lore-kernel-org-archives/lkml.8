@@ -2,82 +2,280 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ADEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC2220748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593622530;
-	bh=GvtsGp11yx4CyQuZ9RgW9RmPb9CbIpEadx+tC5GAmYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mFqO+rFXw44jQBMIKleBQUss5qeEk3AkgmteboMC7y7C/cGQGgUf6lXwc5Ngd/21I
-	 behhmei5urlBJvsb3OdvUOpKJTgcUwp4YDpYn7MESOPdwkyDI0eb6ZpryMcd9YOpO+
-	 Ue12LD4bTb9G65G/XvUPh/M1HTnMq87oiU8CMcUs=
+	by mail.kernel.org (Postfix) with ESMTP id 2EDEF20748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LggJquad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732619AbgGAQz2 (ORCPT
+        id S1732585AbgGAQ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730955AbgGAQz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:55:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 Jul 2020 12:56:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:63767 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732207AbgGAQ4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:56:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593622602; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=271+mSrCwkc1GCPrnTrrvdPUZMb/idFAy+FFyDR2n+g=; b=LggJquadpWWe8kpGpxwT8Fxda5/8iIVnJ8VwgyjOPmb0z1Nm+fTzGPJNPjKgmt6shXyA0lP+
+ xx7JriICJpOzHTt9CM5p5dvGiBFyxTkkxDXwtkdp3QqSLv42x2pA47YYnEHvBi8G09ZK5NVG
+ pT6SFl7EDW17i4KxyynMljS3JM8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5efcc0455866879c76d6ec8d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 16:56:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B6A95C433C8; Wed,  1 Jul 2020 16:56:37 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23D72071A;
-        Wed,  1 Jul 2020 16:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593622527;
-        bh=GvtsGp11yx4CyQuZ9RgW9RmPb9CbIpEadx+tC5GAmYc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wef9XUjzZgqElVeeA6mWBmPRS8DJOiCuCsDfm+qOciiluO0lS0zIQcl7Ga69d16hG
-         kMLS+YRdNuRemWr0BPaYksQuagE3DzG/PhEy+VeVyIAsCbzA6H/+IcdoLlR+PbvDFC
-         jIowDjMEDK75H9txsXow2QCgtEQTvKB5z2gMVQbo=
-Date:   Wed, 1 Jul 2020 18:55:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] fs: move kernel_read_file* to its own include file
-Message-ID: <20200701165513.GA3176669@kroah.com>
-References: <20200617161218.18487-1-scott.branden@broadcom.com>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0754C433C6;
+        Wed,  1 Jul 2020 16:56:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0754C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 1 Jul 2020 10:56:31 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        kbuild test robot <lkp@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:INTERCONNECT API" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC PATCH] interconnect: qcom: add functions to query addr/cmds
+ for a path
+Message-ID: <20200701165628.GA19996@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        kbuild test robot <lkp@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        "open list:INTERCONNECT API" <linux-pm@vger.kernel.org>
+References: <20200701042528.12321-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617161218.18487-1-scott.branden@broadcom.com>
+In-Reply-To: <20200701042528.12321-1-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:12:18AM -0700, Scott Branden wrote:
-> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-> include file. That header gets pulled in just about everywhere
-> and doesn't really need functions not related to the general fs interface.
+On Wed, Jul 01, 2020 at 12:25:25AM -0400, Jonathan Marek wrote:
+> The a6xx GMU can vote for ddr and cnoc bandwidth, but it needs to be able
+> to query the interconnect driver for bcm addresses and commands.
 > 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> I'm not sure what is the best way to go about implementing this, this is
+> what I came up with.
+> 
+> I included a quick example of how this can be used by the a6xx driver to
+> fill out the GMU bw_table (two ddr bandwidth levels in this example, note
+> this would be using the frequency table in dts and not hardcoded values).
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I would like to add my enthusiasm for this idea but I'm not much of an
+interconnect or RPMh expert so I would defer to them to be sure that the APIs
+are robust enough to cover all the corner cases.
+
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_hfi.c | 20 ++++-------
+>  drivers/interconnect/qcom/icc-rpmh.c  | 50 +++++++++++++++++++++++++++
+>  include/soc/qcom/icc.h                | 11 ++++++
+>  3 files changed, 68 insertions(+), 13 deletions(-)
+>  create mode 100644 include/soc/qcom/icc.h
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> index ccd44d0418f8..1fb8f0480be3 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_hfi.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/completion.h>
+>  #include <linux/circ_buf.h>
+>  #include <linux/list.h>
+> +#include <soc/qcom/icc.h>
+>  
+>  #include "a6xx_gmu.h"
+>  #include "a6xx_gmu.xml.h"
+> @@ -320,24 +321,18 @@ static void a640_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+>  	msg->cnoc_cmds_data[1][2] =  0x60000001;
+>  }
+>  
+> -static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+> +static void a650_build_bw_table(struct a6xx_hfi_msg_bw_table *msg, struct icc_path *path)
+>  {
+>  	/*
+>  	 * Send a single "off" entry just to get things running
+>  	 * TODO: bus scaling
+>  	 */
+> -	msg->bw_level_num = 1;
+> -
+> -	msg->ddr_cmds_num = 3;
+> +	msg->bw_level_num = 2;
+>  	msg->ddr_wait_bitmask = 0x01;
+
+We're going to need a API function for the wait bitmask too.
+ 
+> -	msg->ddr_cmds_addrs[0] = 0x50000;
+> -	msg->ddr_cmds_addrs[1] = 0x50004;
+> -	msg->ddr_cmds_addrs[2] = 0x5007c;
+> -
+> -	msg->ddr_cmds_data[0][0] =  0x40000000;
+> -	msg->ddr_cmds_data[0][1] =  0x40000000;
+> -	msg->ddr_cmds_data[0][2] =  0x40000000;
+> +	msg->ddr_cmds_num = qcom_icc_query_addr(path, msg->ddr_cmds_addrs);
+> +	qcom_icc_query_cmd(path, msg->ddr_cmds_data[0], 0, 0);
+> +	qcom_icc_query_cmd(path, msg->ddr_cmds_data[1], 0, 7216000);
+>  
+>  	/*
+>  	 * These are the CX (CNOC) votes - these are used by the GMU but the
+> @@ -388,7 +383,6 @@ static void a6xx_build_bw_table(struct a6xx_hfi_msg_bw_table *msg)
+>  	msg->cnoc_cmds_data[1][2] =  0x60000001;
+>  }
+>  
+> -
+>  static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+>  {
+>  	struct a6xx_hfi_msg_bw_table msg = { 0 };
+> @@ -400,7 +394,7 @@ static int a6xx_hfi_send_bw_table(struct a6xx_gmu *gmu)
+>  	else if (adreno_is_a640(adreno_gpu))
+>  		a640_build_bw_table(&msg);
+>  	else if (adreno_is_a650(adreno_gpu))
+> -		a650_build_bw_table(&msg);
+> +		a650_build_bw_table(&msg, adreno_gpu->base.icc_path);
+>  	else
+>  		a6xx_build_bw_table(&msg);
+>  
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> index 3ac5182c9ab2..3ce2920330f9 100644
+> --- a/drivers/interconnect/qcom/icc-rpmh.c
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -9,6 +9,7 @@
+>  
+>  #include "bcm-voter.h"
+>  #include "icc-rpmh.h"
+> +#include "../internal.h"
+>  
+>  /**
+>   * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
+> @@ -92,6 +93,55 @@ int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_icc_set);
+>  
+> +static u32 bcm_query(struct qcom_icc_bcm *bcm, u64 sum_avg, u64 max_peak)
+> +{
+> +	u64 temp, agg_peak = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < bcm->num_nodes; i++) {
+> +		temp = max_peak * bcm->aux_data.width;
+> +		do_div(temp, bcm->nodes[i]->buswidth);
+> +		agg_peak = max(agg_peak, temp);
+> +	}
+> +
+> +	temp = agg_peak * 1000ULL;
+> +	do_div(temp, bcm->aux_data.unit);
+> +
+> +	// TODO vote_x
+> +
+> +	return BCM_TCS_CMD(true, temp != 0, 0, temp);
+> +}
+> +
+> +int qcom_icc_query_addr(struct icc_path *path, u32 *addr)
+
+The leaf driver won't know the size of the path, so we'll likely need to kmalloc
+and return the array or allow addr to be NULL and have the leaf driver do the
+allocation itself once it knows what k is.
+
+> +{
+> +	struct qcom_icc_node *qn;
+> +	int i, j, k = 0;
+> +
+> +	for (i = 0; i < path->num_nodes; i++) {
+> +		qn = path->reqs[i].node->data;
+> +		for (j = 0; j < qn->num_bcms; j++, k++)
+> +			addr[k] = qn->bcms[j]->addr;
+> +	}
+> +
+> +	return k;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_query_addr);
+> +
+> +int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max)
+> +{
+> +	struct qcom_icc_node *qn;
+> +	int i, j, k = 0;
+> +
+> +	for (i = 0; i < path->num_nodes; i++) {
+> +		qn = path->reqs[i].node->data;
+> +		for (j = 0; j < qn->num_bcms; j++, k++)
+> +			cmd[k] = bcm_query(qn->bcms[j], avg, max);
+> +	}
+> +
+> +	return 0;
+> +}
+
+Same as above.  When downstream did this for their old bespoke bus API they had
+one function returns a struct with addrs / commands / wait bitmask.
+
+I don't mind splitting up the function, but either way something is going to
+have to query the number of commands in the path and allocate the buffers.
+
+Jordan
+
+> +EXPORT_SYMBOL_GPL(qcom_icc_query_cmd);
+> +
+>  /**
+>   * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
+>   * @bcm: bcm to be initialized
+> diff --git a/include/soc/qcom/icc.h b/include/soc/qcom/icc.h
+> new file mode 100644
+> index 000000000000..8d0ddde49739
+> --- /dev/null
+> +++ b/include/soc/qcom/icc.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __SOC_QCOM_ICC_H__
+> +#define __SOC_QCOM_ICC_H__
+> +
+> +#include <linux/interconnect.h>
+> +
+> +int qcom_icc_query_addr(struct icc_path *path, u32 *addr);
+> +int qcom_icc_query_cmd(struct icc_path *path, u32 *cmd, u64 avg, u64 max);
+> +
+> +#endif /* __SOC_QCOM_ICC_H__ */
+> -- 
+> 2.26.1
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
