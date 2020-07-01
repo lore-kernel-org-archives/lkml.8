@@ -2,212 +2,249 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E996CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44052073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7787206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aPd4B47o"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="yaQT+Kph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgGAIQO (ORCPT
+        id S1728609AbgGAIQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:16:14 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16514 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbgGAIQN (ORCPT
+        Wed, 1 Jul 2020 04:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728143AbgGAIQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:16:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efc461b0000>; Wed, 01 Jul 2020 01:15:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 Jul 2020 01:16:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 01 Jul 2020 01:16:13 -0700
-Received: from [10.26.73.166] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
- 2020 08:16:04 +0000
-Subject: Re: [PATCH v9 2/4] iommu/arm-smmu: add NVIDIA implementation for ARM
- MMU-500 usage
-To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <treding@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-References: <20200630235752.8737-1-vdumpa@nvidia.com>
- <20200630235752.8737-3-vdumpa@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ed35713b-ec24-db7b-7367-7873134f76ca@nvidia.com>
-Date:   Wed, 1 Jul 2020 09:16:01 +0100
+        Wed, 1 Jul 2020 04:16:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 031BAC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:16:47 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x8so8720373plm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6sRPWCGZn4I6LWPduoSl22RD8uLcsjX+VbKP3Iyrdgk=;
+        b=yaQT+Kphb6kQsWQl64aRMNdZJdszKVm58Wh7pd/+6h2IUFaIRQcjXEAKCr5jlPwccC
+         7BOODtrr+AUanGg++gnN70qhKuH3Of/UimL7K2F+067mnzqaQadmvmkFFA58nxynI0PW
+         NYYC0Q2Cg+wyQytzIHN2s1dhAyHyHb5H7CTG2irb+9ZpUesF2jmvWYUjq5b+smDSLwf/
+         HEc9WpJJ8Vey7pSgQioONG+OKfgM3IQhrYCMJT2yIarglvc3EBvRaX9Zs49Kqq8HRoJ8
+         FH3JatQdKFjin//vx+27HQTvnJ+ePrcmOndHOhBys1O0MsRVR2FmHJWlhnmh94cwht8m
+         eoyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6sRPWCGZn4I6LWPduoSl22RD8uLcsjX+VbKP3Iyrdgk=;
+        b=sXGswm3v7pe6o/VyFCzSabbKz9RofkEgiJe28e6/oNtN4BLeACg7Dgsa4jhYE4GYis
+         5IlAgHZXvALZt7sxBVx8m/eESnltf3XTXDnGWUKnO3aqgOPRJ9YRUh4rFohv54sXvSGU
+         AMLejR7Z/HbzkdJUZ56FEM9eYrZgh7bR7AjElJ/B4Azhwij/E/f1XsSI41O4pSCTJsOb
+         KSwZc9XAwrbVw07iUT+51lrafJeEisX7OmXYAwsS0g/yis2+rvtMvtE0ros3yN69BGGM
+         xta5eaZ12wYdjt+junQz0SNCWYsqdJkuJ2Uua/yEwOl2SLEK7XwoBH3yjjJByMGSUx4/
+         66Fg==
+X-Gm-Message-State: AOAM533SPBY2nJnbzRm4wzgMX9OLknsXF2rTdwcKbO6Z1FNN2FKu5dFn
+        8b1IJA1Netcg6oEzC9RF+Mg8owCIpc38oA==
+X-Google-Smtp-Source: ABdhPJzHkOZbSLlb3UXpC2C0JtcyFvxrVM+Yr+J2EN48QgqRut1KbVWiuvvTznDjC/vveSqAX6UNmQ==
+X-Received: by 2002:a17:90a:71c3:: with SMTP id m3mr20429726pjs.225.1593591406170;
+        Wed, 01 Jul 2020 01:16:46 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id r203sm5001910pfr.30.2020.07.01.01.16.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 01:16:45 -0700 (PDT)
+Subject: Re: [PATCH v2 5/6] powerpc/pseries/iommu: Make use of DDW even if it
+ does not map the partition
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200624062411.367796-1-leobras.c@gmail.com>
+ <20200624062411.367796-6-leobras.c@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <18df09c0-ef83-a0d8-1143-1cb4d50bf6b7@ozlabs.ru>
+Date:   Wed, 1 Jul 2020 18:16:40 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200630235752.8737-3-vdumpa@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200624062411.367796-6-leobras.c@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593591323; bh=4I8oqO18CDsJelJAvfh/7H1AvPcTauGIZI8cYK+8mV4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aPd4B47oOaZ0+he7yiJKIv2HwyBtSjF4hGrYa3pH4P333lHQsnzl8o1DTvuRFzPou
-         JsSdKo+HPDo7q6TktSYreIyoWLd/qJFaGILHFuhn/5inpVmmcDJ+HDYj3FeVkypHMO
-         /lpIhcdRquy/yqt/E3lwVQG+/epovLj7gUQtglLXE39vjP3FRtdySRn7AviWAExwNX
-         1kr+vRnuwS5URij1AUgbjgOyoTNX6EvdKSViJiszfOw+Xjdp5CKWkHslfB4OeVBIc5
-         R20WIcH1fC7jlvT5QF2b69owN4Qw5Q17JmLrkClYmRuEKSBOqfQwcqvpk1coMwH4pm
-         duWWjn/4T0jGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 01/07/2020 00:57, Krishna Reddy wrote:
-> NVIDIA's Tegra194 SoC has three ARM MMU-500 instances.
-> It uses two of ARM MMU-500s together to interleave IOVA accesses
-> across them and must be programmed identically.
-> The third SMMU instance is used as a regular ARM MMU-500 and it
-> can either be programmed independently or identical to other
-> two ARM MMU-500s.
+
+On 24/06/2020 16:24, Leonardo Bras wrote:
+> As of today, if a DDW is created and can't map the whole partition, it's
+> removed and the default DMA window "ibm,dma-window" is used instead.
 > 
-> This implementation supports programming two or three ARM MMU-500s
-> identically as per DT config.
+> Usually this DDW is bigger than the default DMA window, so it would be
+> better to make use of it instead.
 > 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 > ---
->  MAINTAINERS                     |   2 +
->  drivers/iommu/Makefile          |   2 +-
->  drivers/iommu/arm-smmu-impl.c   |   3 +
->  drivers/iommu/arm-smmu-nvidia.c | 206 ++++++++++++++++++++++++++++++++
->  drivers/iommu/arm-smmu.h        |   1 +
->  5 files changed, 213 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/iommu/arm-smmu-nvidia.c
+>  arch/powerpc/platforms/pseries/iommu.c | 28 +++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7b5ffd646c6b9..64c37dbdd4426 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16808,8 +16808,10 @@ F:	drivers/i2c/busses/i2c-tegra.c
+> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> index 4fcf00016fb1..2d217cda4075 100644
+> --- a/arch/powerpc/platforms/pseries/iommu.c
+> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> @@ -685,7 +685,7 @@ static void pci_dma_bus_setup_pSeriesLP(struct pci_bus *bus)
+>  	struct iommu_table *tbl;
+>  	struct device_node *dn, *pdn;
+>  	struct pci_dn *ppci;
+> -	const __be32 *dma_window = NULL;
+> +	const __be32 *dma_window = NULL, *alt_dma_window = NULL;
 >  
->  TEGRA IOMMU DRIVERS
->  M:	Thierry Reding <thierry.reding@gmail.com>
-> +R:	Krishna Reddy <vdumpa@nvidia.com>
->  L:	linux-tegra@vger.kernel.org
->  S:	Supported
-> +F:	drivers/iommu/arm-smmu-nvidia.c
->  F:	drivers/iommu/tegra*
+>  	dn = pci_bus_to_OF_node(bus);
 >  
->  TEGRA KBC DRIVER
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 342190196dfb0..2b8203db73ec3 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -15,7 +15,7 @@ obj-$(CONFIG_AMD_IOMMU) += amd/iommu.o amd/init.o amd/quirks.o
->  obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd/debugfs.o
->  obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
->  obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
-> -arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
-> +arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-nvidia.o arm-smmu-qcom.o
->  obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
->  obj-$(CONFIG_DMAR_TABLE) += intel/dmar.o
->  obj-$(CONFIG_INTEL_IOMMU) += intel/iommu.o intel/pasid.o
-> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-> index c75b9d957b702..f15571d05474e 100644
-> --- a/drivers/iommu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm-smmu-impl.c
-> @@ -171,6 +171,9 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->  	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
->  		smmu->impl = &calxeda_impl;
+> @@ -699,8 +699,13 @@ static void pci_dma_bus_setup_pSeriesLP(struct pci_bus *bus)
+>  			break;
+>  	}
 >  
-> +	if (of_device_is_compatible(np, "nvidia,tegra194-smmu"))
-> +		return nvidia_smmu_impl_init(smmu);
-> +
->  	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
->  	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
->  		return qcom_smmu_impl_init(smmu);
-> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
-> new file mode 100644
-> index 0000000000000..5c874912e1c1a
-> --- /dev/null
-> +++ b/drivers/iommu/arm-smmu-nvidia.c
-> @@ -0,0 +1,206 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// NVIDIA ARM SMMU v2 implementation quirks
-> +// Copyright (C) 2019-2020 NVIDIA CORPORATION.  All rights reserved.
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include "arm-smmu.h"
-> +
-> +/*
-> + * Tegra194 has three ARM MMU-500 Instances.
-> + * Two of them are used together for interleaved IOVA accesses and
-> + * used by non-isochronous HW devices for SMMU translations.
-> + * Third one is used for SMMU translations from isochronous HW devices.
-> + * It is possible to use this implementation to program either
-> + * all three or two of the instances identically as desired through
-> + * DT node.
-> + *
-> + * Programming all the three instances identically comes with redundant TLB
-> + * invalidations as all three never need to be TLB invalidated for a HW device.
-> + *
-> + * When Linux kernel supports multiple SMMU devices, the SMMU device used for
-> + * isochornous HW devices should be added as a separate ARM MMU-500 device
-> + * in DT and be programmed independently for efficient TLB invalidates.
-> + */
-
-We should address Robin's comment about the 'When' above.
-
-> +#define MAX_SMMU_INSTANCES 3
-> +
-> +struct nvidia_smmu {
-> +	struct arm_smmu_device	smmu;
-> +	unsigned int		num_inst;
-> +	void __iomem		*bases[MAX_SMMU_INSTANCES];
-> +};
-> +
-> +static inline struct nvidia_smmu *to_nvidia_smmu(struct arm_smmu_device *smmu)
-> +{
-> +	return container_of(smmu, struct nvidia_smmu, smmu);
-> +}
-> +
-> +static inline void __iomem *nvidia_smmu_page(struct arm_smmu_device *smmu,
-> +					     unsigned int inst, int page)
-> +{
-> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
-> +
-> +	if (!nvidia_smmu->bases[0])
-> +		nvidia_smmu->bases[0] = smmu->base;
+> +	/* If there is a DDW available, use it instead */
+> +	alt_dma_window = of_get_property(pdn, DIRECT64_PROPNAME, NULL);
 
 
-Robin said that he would accept a patch to move the
-devm_ioremap_resource() call in arm_smmu_device_probe() so that we do
-not need to do this. See the V7 series. I think that this would be a
-good improvement so that we could avoid doing the above.
+It is not necessarily "direct" anymore as the name suggests, you may
+want to change that. DMA64_PROPNAME, may be. Thanks,
 
-Cheers
-Jon
+
+> +	if (alt_dma_window)
+> +		dma_window = alt_dma_window;
+> +
+>  	if (dma_window == NULL) {
+> -		pr_debug("  no ibm,dma-window property !\n");
+> +		pr_debug("  no ibm,dma-window nor linux,direct64-ddr-window-info property !\n");
+>  		return;
+>  	}
+>  
+> @@ -1166,16 +1171,19 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  			  query.page_size);
+>  		goto out_failed;
+>  	}
+> +
+>  	/* verify the window * number of ptes will map the partition */
+> -	/* check largest block * page size > max memory hotplug addr */
+>  	max_addr = ddw_memory_hotplug_max();
+>  	if (query.largest_available_block < (max_addr >> page_shift)) {
+> -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+> -			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+> -			  1ULL << page_shift);
+> -		goto out_failed;
+> +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu %llu-sized pages\n",
+> +			max_addr, query.largest_available_block,
+> +			1ULL << page_shift);
+> +
+> +		len = order_base_2(query.largest_available_block << page_shift);
+> +	} else {
+> +		len = order_base_2(max_addr);
+>  	}
+> -	len = order_base_2(max_addr);
+> +
+>  	win64 = kzalloc(sizeof(struct property), GFP_KERNEL);
+>  	if (!win64) {
+>  		dev_info(&dev->dev,
+> @@ -1229,7 +1237,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  	list_add(&window->list, &direct_window_list);
+>  	spin_unlock(&direct_window_list_lock);
+>  
+> -	dma_addr = be64_to_cpu(ddwprop->dma_base);
+> +	/* Only returns the dma_addr if DDW maps the whole partition */
+> +	if (len == order_base_2(max_addr))
+> +		dma_addr = be64_to_cpu(ddwprop->dma_base);
+>  	goto out_unlock;
+>  
+>  out_free_window:
+> 
 
 -- 
-nvpublic
+Alexey
