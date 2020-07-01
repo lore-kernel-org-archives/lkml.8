@@ -2,78 +2,70 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F32C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731542085B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F348207D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593645650;
+	bh=JMCEhMGrZolS7Zo917Ex5jh02w1p5G8xc+SFAo0CiCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WvvGf4xDoiZP+WpM8ThNZKEHVu79OipEmBnmcyMIL84ewvazR1ze9VAAR71x14X23
+	 cugyfejd9slTlDf1mZOIdgfhfQKPqVuFoWQc3qYr57Dk9obfLGpTd7QF8kAViYH2qZ
+	 A9aPsBfcDKjPwjYsyqGIDang31xC4PW7HIgi9fig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgGAXS0 (ORCPT
+        id S1726831AbgGAXUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 19:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgGAXR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:17:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726131AbgGAXUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 19:20:48 -0400
+Received: from localhost (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34AF9208E4;
-        Wed,  1 Jul 2020 23:17:57 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jqlzI-0048za-8m; Wed, 01 Jul 2020 19:17:56 -0400
-Message-ID: <20200701231756.145707520@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 19:17:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>
-Subject: [for-next][PATCH 4/8] ktest.pl: Add a NOT operator
-References: <20200701231717.757834010@goodmis.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 11BE72077D;
+        Wed,  1 Jul 2020 23:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593645648;
+        bh=JMCEhMGrZolS7Zo917Ex5jh02w1p5G8xc+SFAo0CiCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=llSZRexV93ejjGN0yvBxMOZxe8/+ToIrAV28yxaWFhBs/haZX8ChHmTFqBdgb8toI
+         oIZLVOBchbqW/p8U9dVK/m7KSG87ILLqsXAC1Oh9PVqltWi07IdyxBWiHs/SXyJ/aW
+         C2gCSzG92yVBiLBXV0XA3iLx5kDgRd2uE2bQUx7c=
+Date:   Thu, 2 Jul 2020 01:20:46 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 01/10] timer: Prevent base->clk from moving backward
+Message-ID: <20200701232045.GA17670@lenoir>
+References: <20200701011030.14324-1-frederic@kernel.org>
+ <20200701011030.14324-2-frederic@kernel.org>
+ <20200701163504.GD9670@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701163504.GD9670@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Wed, Jul 01, 2020 at 06:35:04PM +0200, Juri Lelli wrote:
+> Guess you might be faster to understand what I'm missing. :-)
 
-There is a NOT DEFINED operator, but there is not an operator that can
-negate any other expression.
+So, did you port only this patch or the whole set in order to
+trigger this?
 
- For example: NOT (${FOO} == boot || ${BAR} == run)
+If it was the whole set, can you try this patch alone?
 
-Add the keyword NOT to allow the ktest.pl config files to negate operators.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/testing/ktest/ktest.pl | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index f99cf633ed84..0d04b8a2b5a2 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -911,6 +911,12 @@ sub process_expression {
- 	}
-     }
- 
-+    if ($val =~ s/^\s*NOT\s+(.*)//) {
-+	my $express = $1;
-+	my $ret = process_expression($name, $express);
-+	return !$ret;
-+    }
-+
-     if ($val =~ /^\s*0\s*$/) {
- 	return 0;
-     } elsif ($val =~ /^\s*\d+\s*$/) {
--- 
-2.26.2
-
-
+Thanks!
