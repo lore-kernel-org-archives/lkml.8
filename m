@@ -2,118 +2,136 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC90C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B669C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E79820775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EBZVsbt8"
+	by mail.kernel.org (Postfix) with ESMTP id 1DD7A20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgGAJLI (ORCPT
+        id S1729604AbgGAJLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:11:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        Wed, 1 Jul 2020 05:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729571AbgGAJLG (ORCPT
+        with ESMTP id S1726129AbgGAJLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:11:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8856C061755;
-        Wed,  1 Jul 2020 02:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6wLa3Z5Tnqc6pIqvd9Kuq9IIUcvVwIhLZPWeRnHbIeA=; b=EBZVsbt8QnQM1/nIz26KitisJv
-        1/eDkGMq6rQ6dFjtEOLryOxl9/2R75doGqasl9ZzuMjNGgYkxJYYMHUMNG4E6n09Gm//aQPvahyhB
-        p+3C2xeyUEBqpAC1GAkbGnjo0IAVtK9oQpwC/WxxI98dOzpe9P7CUV+ThLIauqvkrm1FWM7+2x2jJ
-        c9++4TT1vBaEWdzmoSBQ8OF24E3tQQ2du5JTeEtX0OsuBDeQLQKiztWWKJ979nB8hOz9pI+bYZH6S
-        yALNVqqvO3OdagdOb2OGHjX96PwUbqjI5NeBGkEmxGN8jLNiuZipV96hvXOkCQKlrSu67dIaS6kh2
-        mX80E9Ew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqYle-0002ST-A3; Wed, 01 Jul 2020 09:10:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33CD9305B23;
-        Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 170A4201CB82C; Wed,  1 Jul 2020 11:10:54 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 11:10:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200701091054.GW4781@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
- <20200625085745.GD117543@hirez.programming.kicks-ass.net>
- <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
+        Wed, 1 Jul 2020 05:11:16 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A3CC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:11:15 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 81E282A0D02
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v4 1/2] platform/chrome: cros_ec_typec: Use workqueue for
+ port update
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200629211329.2185342-1-pmalani@chromium.org>
+Message-ID: <37673887-70a6-ed1e-b864-419e690899be@collabora.com>
+Date:   Wed, 1 Jul 2020 11:11:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630203016.GI9247@paulmck-ThinkPad-P72>
+In-Reply-To: <20200629211329.2185342-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:30:16PM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
+Hi Prashant,
 
-> > I'm not convinced C11 memory_order_consume would actually work for us,
-> > even if it would work. That is, given:
-> > 
-> >   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
-> > 
-> > only pointers can have consume, but like I pointed out, we have code
-> > that relies on dependent loads from integers.
+Thank you for the patch. And thanks to Guenter and Heikki for reviewing it.
+
+On 29/6/20 23:13, Prashant Malani wrote:
+> Use a work queue to call the port update routines, instead of doing it
+> directly in the PD notifier callback. This will prevent other drivers
+> with PD notifier callbacks from being blocked on the port update routine
+> completing.
 > 
-> I agree that C11 memory_order_consume is not normally what we want,
-> given that it is universally promoted to memory_order_acquire.
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+
+Applied for 5.9 both patches with the corresponding reviewed tags.
+
+> ---
 > 
-> However, dependent loads from integers are, if anything, more difficult
-> to defend from the compiler than are control dependencies.  This applies
-> doubly to integers that are used to index two-element arrays, in which
-> case you are just asking the compiler to destroy your dependent loads
-> by converting them into control dependencies.
-
-Yes, I'm aware. However, as you might know, I'm firmly in the 'C is a
-glorified assembler' camp (as I expect most actual OS people are, out of
-necessity if nothing else) and if I wanted a control dependency I
-would've bloody well written one.
-
-I think an optimizing compiler is awesome, but only in so far as that
-optimization is actually helpful -- and yes, I just stepped into a giant
-twilight zone there. That is, any optimization that has _any_
-controversy should be controllable (like -fno-strict-overflow
--fno-strict-aliasing) and I'd very much like the same here.
-
-In a larger context, I still think that eliminating speculative stores
-is both necessary and sufficient to avoid out-of-thin-air. So I'd also
-love to get some control on that.
-
+> Changes in v4:
+> - Removed extra newline.
+> - Moved both variable declarations into one line.
+> 
+> Changes in v3:
+> - Use new 100 character line length limit.
+> 
+> Changes in v2:
+> - No changes.
+> 
+>  drivers/platform/chrome/cros_ec_typec.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 0c041b79cbba..69c4118e280c 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -58,6 +58,7 @@ struct cros_typec_data {
+>  	/* Array of ports, indexed by port number. */
+>  	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+>  	struct notifier_block nb;
+> +	struct work_struct port_work;
+>  };
+>  
+>  static int cros_typec_parse_port_props(struct typec_capability *cap,
+> @@ -619,18 +620,24 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+>  	return 0;
+>  }
+>  
+> -static int cros_ec_typec_event(struct notifier_block *nb,
+> -			       unsigned long host_event, void *_notify)
+> +static void cros_typec_port_work(struct work_struct *work)
+>  {
+> -	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+> -						     nb);
+> -	int ret, i;
+> +	struct cros_typec_data *typec = container_of(work, struct cros_typec_data, port_work);
+> +	int i, ret;
+>  
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		ret = cros_typec_port_update(typec, i);
+>  		if (ret < 0)
+>  			dev_warn(typec->dev, "Update failed for port: %d\n", i);
+>  	}
+> +}
+> +
+> +static int cros_ec_typec_event(struct notifier_block *nb,
+> +			       unsigned long host_event, void *_notify)
+> +{
+> +	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data, nb);
+> +
+> +	schedule_work(&typec->port_work);
+>  
+>  	return NOTIFY_OK;
+>  }
+> @@ -689,6 +696,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	INIT_WORK(&typec->port_work, cros_typec_port_work);
+> +
+> +	/*
+> +	 * Safe to call port update here, since we haven't registered the
+> +	 * PD notifier yet.
+> +	 */
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		ret = cros_typec_port_update(typec, i);
+>  		if (ret < 0)
+> 
