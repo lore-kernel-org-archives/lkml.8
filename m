@@ -2,137 +2,216 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AEDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A67D20781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188152082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="H/T1TXu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732414AbgGAQcQ (ORCPT
+        id S1732435AbgGAQcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:32:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:55902 "EHLO foss.arm.com"
+        Wed, 1 Jul 2020 12:32:31 -0400
+Received: from vps.xff.cz ([195.181.215.36]:52930 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbgGAQcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:32:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D41431B;
-        Wed,  1 Jul 2020 09:32:14 -0700 (PDT)
-Received: from [10.37.12.71] (unknown [10.37.12.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8133F68F;
-        Wed,  1 Jul 2020 09:32:11 -0700 (PDT)
-Subject: Re: [PATCH v6 0/2] sched: Optionally skip uclamp logic in fast path
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200630112123.12076-1-qais.yousef@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <c7e1d57e-5388-aaf0-1cde-2ebc9fbdd8c0@arm.com>
-Date:   Wed, 1 Jul 2020 17:32:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1731770AbgGAQca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:32:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593621147; bh=yQdyiwJG0A0w25TNt5S9+Tyx+rihJlmHrZ5Ch0iuRzo=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=H/T1TXu+32OpzHlT61UjI0935+8p6dAuEkqfx9vm7iFtVjPE4z/J+Zf3Eva+u61dD
+         lhphd6NgFd7dBXdwVuKBgneRowDJ2HWBkotWxkYXj6hEcv5K3Tm/bm1tAPiTooX6et
+         O7zdc3SpFdseCm+TyAwBulGGQ+w+KxdHGPvEHjFc=
+Date:   Wed, 1 Jul 2020 18:32:27 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>
+Cc:     linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: panel: Convert
+ rocktech,jh057n00900 to yaml
+Message-ID: <20200701163227.on7wo6fo5majket6@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <guido.gunther@puri.sm>,
+        linux-sunxi@googlegroups.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Icenowy Zheng <icenowy@aosc.io>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Samuel Holland <samuel@sholland.org>,
+        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
+        Bhushan Shah <bshah@kde.org>
+References: <20200701103126.1512615-1-megous@megous.com>
+ <20200701103126.1512615-3-megous@megous.com>
+ <20200701155857.GB174356@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630112123.12076-1-qais.yousef@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701155857.GB174356@bogon.m.sigxcpu.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+Hello Guido,
 
-On 6/30/20 12:21 PM, Qais Yousef wrote:
-> This series attempts to address the report that uclamp logic could be expensive
-> sometimes and shows a regression in netperf UDP_STREAM under certain
-> conditions.
+On Wed, Jul 01, 2020 at 05:58:57PM +0200, Guido Günther wrote:
+> Hi Ondrej,
+> On Wed, Jul 01, 2020 at 12:31:15PM +0200, Ondrej Jirman wrote:
+> > Convert Rocktech MIPI DSI panel driver from txt to yaml bindings.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../display/panel/rocktech,jh057n00900.txt    | 23 -------
+> >  .../display/panel/rocktech,jh057n00900.yaml   | 66 +++++++++++++++++++
+> >  2 files changed, 66 insertions(+), 23 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
 > 
-> The first patch is a fix for how struct uclamp_rq is initialized which is
-> required by the 2nd patch which contains the real 'fix'.
-> 
-> Worth noting that the root cause of the overhead is believed to be system
-> specific or related to potential certain code/data layout issues, leading to
-> worse I/D $ performance.
-> 
-> Different systems exhibited different behaviors and the regression did
-> disappear in certain kernel version while attempting to reporoduce.
-> 
-> More info can be found here:
-> 
-> https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
-> 
-> Having the static key seemed the best thing to do to ensure the effect of
-> uclamp is minimized for kernels that compile it in but don't have a userspace
-> that uses it, which will allow distros to distribute uclamp capable kernels by
-> default without having to compromise on performance for some systems that could
-> be affected.
-> 
-> Changes in v6:
-> 	* s/uclamp_is_enabled/uclamp_is_used/ + add comment
-> 	* Improve the bailout condition for the case where we could end up with
-> 	  unbalanced call of uclamp_rq_dec_id()
-> 	* Clarify some comments.
-> 
+> Thanks for the conversion! Shouldn't we switch to `sitronix-st7703.yaml`
+> as well in this patch?
 
-I've tried this v6 series with mmtest netperf-udp (30x each UDP
-size) - the results are good.
+Names of yaml files should be according to one of the compatibles.
 
-                       v5.7-rc7-base-noucl    v5.7-rc7-ucl-tsk-nofix 
-v5.7-rc7-ucl-tsk-grp-fix_v6
-Hmean     send-64          62.15 (   0.00%)       59.65 *  -4.02%* 
-65.87 *   5.99%*
-Hmean     send-128        122.88 (   0.00%)      119.37 *  -2.85%* 
-131.76 *   7.23%*
-Hmean     send-256        244.85 (   0.00%)      234.26 *  -4.32%* 
-259.87 *   6.14%*
-Hmean     send-1024       919.24 (   0.00%)      880.67 *  -4.20%* 
-975.48 *   6.12%*
-Hmean     send-2048      1689.45 (   0.00%)     1647.54 *  -2.48%* 
-1797.23 *   6.38%*
-Hmean     send-3312      2542.36 (   0.00%)     2485.23 *  -2.25%* 
-2665.69 *   4.85%*
-Hmean     send-4096      2935.69 (   0.00%)     2861.09 *  -2.54%* 
-3087.79 *   5.18%*
-Hmean     send-8192      4800.35 (   0.00%)     4680.09 *  -2.51%* 
-4966.50 *   3.46%*
-Hmean     send-16384     7473.66 (   0.00%)     7349.60 *  -1.66%* 
-7598.49 *   1.67%*
-Hmean     recv-64          62.15 (   0.00%)       59.65 *  -4.03%* 
-65.86 *   5.97%*
-Hmean     recv-128        122.88 (   0.00%)      119.37 *  -2.85%* 
-131.76 *   7.23%*
-Hmean     recv-256        244.84 (   0.00%)      234.26 *  -4.32%* 
-259.80 *   6.11%*
-Hmean     recv-1024       919.24 (   0.00%)      880.67 *  -4.20%* 
-975.42 *   6.11%*
-Hmean     recv-2048      1689.44 (   0.00%)     1647.54 *  -2.48%* 
-1797.18 *   6.38%*
-Hmean     recv-3312      2542.36 (   0.00%)     2485.23 *  -2.25%* 
-2665.53 *   4.84%*
-Hmean     recv-4096      2935.69 (   0.00%)     2861.09 *  -2.54%* 
-3087.79 *   5.18%*
-Hmean     recv-8192      4800.35 (   0.00%)     4678.15 *  -2.55%* 
-4966.48 *   3.46%*
-Hmean     recv-16384     7473.63 (   0.00%)     7349.52 *  -1.66%* 
-7597.90 *   1.66%*
+And thank you for your review of the patches.
 
-You can add:
+regards,
+	o.
 
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
+> Cheers,
+>  -- Guido
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> > deleted file mode 100644
+> > index a372c5d84695..000000000000
+> > --- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+> > +++ /dev/null
+> > @@ -1,23 +0,0 @@
+> > -Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
+> > -
+> > -Required properties:
+> > -- compatible: should be "rocktech,jh057n00900"
+> > -- reg: DSI virtual channel of the peripheral
+> > -- reset-gpios: panel reset gpio
+> > -- backlight: phandle of the backlight device attached to the panel
+> > -- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
+> > -- iovcc-supply: phandle of the regulator that provides the iovcc supply
+> > -  voltage.
+> > -
+> > -Example:
+> > -
+> > -	&mipi_dsi {
+> > -		panel@0 {
+> > -			compatible = "rocktech,jh057n00900";
+> > -			reg = <0>;
+> > -			backlight = <&backlight>;
+> > -			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> > -			vcc-supply = <&reg_2v8_p>;
+> > -			iovcc-supply = <&reg_1v8_p>;
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> > new file mode 100644
+> > index 000000000000..928ba42e7f8d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+> > @@ -0,0 +1,66 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/rocktech,jh057n00900.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rocktech JH057N00900 5.5" 720x1440 TFT LCD panel
+> > +
+> > +maintainers:
+> > +  - Ondrej Jirman <megi@xff.cz>
+> > +
+> > +description: |
+> > +             Rocktech JH057N00900 is a 720x1440 TFT LCD panel
+> > +             connected using a MIPI-DSI video interface.
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: rocktech,jh057n00900
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: DSI virtual channel
+> > +
+> > +  vcc-supply:
+> > +    description: Panel power supply
+> > +
+> > +  iovcc-supply:
+> > +    description: I/O voltage supply
+> > +
+> > +  reset-gpios:
+> > +    description: GPIO used for the reset pin
+> > +    maxItems: 1
+> > +
+> > +  backlight:
+> > +    description: Backlight used by the panel
+> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vcc-supply
+> > +  - iovcc-supply
+> > +  - reset-gpios
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    dsi {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +      panel@0 {
+> > +        compatible = "rocktech,jh057n00900";
+> > +        reg = <0>;
+> > +        vcc-supply = <&reg_2v8_p>;
+> > +        iovcc-supply = <&reg_1v8_p>;
+> > +        reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+> > +        backlight = <&backlight>;
+> > +      };
+> > +    };
+> > +...
+> > -- 
+> > 2.27.0
+> > 
