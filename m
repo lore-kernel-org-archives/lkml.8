@@ -2,146 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA224206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E209F20780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbgGAQC1 (ORCPT
+        id S1732300AbgGAQCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:02:27 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:34414 "EHLO honk.sigxcpu.org"
+        Wed, 1 Jul 2020 12:02:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32450 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbgGAQC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:02:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 9CCCFFB04;
-        Wed,  1 Jul 2020 18:02:24 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vPbvHeupN1Nh; Wed,  1 Jul 2020 18:02:23 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3891B40972; Wed,  1 Jul 2020 18:02:23 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 18:02:23 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v6 07/13] drm/panel: st7703: Move code specific to jh057n
- closer together
-Message-ID: <20200701160223.GF174356@bogon.m.sigxcpu.org>
-References: <20200701103126.1512615-1-megous@megous.com>
- <20200701103126.1512615-8-megous@megous.com>
+        id S1728534AbgGAQCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 12:02:40 -0400
+IronPort-SDR: oPQk2KjJTxdhAIrJdhJfKE3U+Mk3po5GUGg7bZ5X4Qy6nSGCQBiIFsG6NohY+p6KIPmw9P953g
+ 09CQLphQDBvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="231485760"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="231485760"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 09:02:39 -0700
+IronPort-SDR: ZcviTmx0GjBbTjiBy/FptFLT8hUSAb497LyTs9c/MS18fT5GZuhan++auHp8V++DrenSEhFqYd
+ r/Qm4mKS2CqA==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="455152950"
+Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 09:02:37 -0700
+Subject: Re: [RFC][PATCH 8/8] mm/numa: new reclaim mode to enable
+ reclaim-based migration
+To:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rientjes@google.com, dan.j.williams@intel.com
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+ <20200629234517.A7EC4BD3@viggo.jf.intel.com>
+ <87v9j9ow3a.fsf@yhuang-dev.intel.com>
+ <29c67873-3cb9-e121-382c-9b81491016bc@linux.alibaba.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
+ 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
+ K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
+ VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
+ e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
+ ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
+ kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
+ rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
+ f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
+ mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
+ UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
+ sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
+ 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
+ cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
+ UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
+ db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
+ lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
+ kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
+ gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
+ AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
+ XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
+ e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
+ pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
+ YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
+ lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
+ M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
+ 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
+ 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
+ OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
+ ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
+ z5cecg==
+Message-ID: <0f9617f6-1cdf-fd45-4898-64d36b7bdd26@intel.com>
+Date:   Wed, 1 Jul 2020 09:02:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701103126.1512615-8-megous@megous.com>
+In-Reply-To: <29c67873-3cb9-e121-382c-9b81491016bc@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Jul 01, 2020 at 12:31:20PM +0200, Ondrej Jirman wrote:
-> It's better than having it spread around the driver.
+On 6/30/20 10:50 AM, Yang Shi wrote:
+> So, I'm supposed you need check if node_reclaim is enabled before doing
+> migration in shrink_page_list() and also need make node reclaim to adopt
+> the new mode.
+> 
+> Please refer to
+> https://lore.kernel.org/linux-mm/1560468577-101178-6-git-send-email-yang.shi@linux.alibaba.com/
+> 
+> I copied the related chunks here:
 
-Reviewed-by: Guido Günther <agx@sigxcpu.org> 
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-sitronix-st7703.c | 50 +++++++++----------
->  1 file changed, 25 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> index 08cbc316266c..d03aab10cfef 100644
-> --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-> @@ -153,6 +153,31 @@ static int jh057n_init_sequence(struct st7703 *ctx)
->  	return 0;
->  }
->  
-> +static const struct drm_display_mode jh057n00900_mode = {
-> +	.hdisplay    = 720,
-> +	.hsync_start = 720 + 90,
-> +	.hsync_end   = 720 + 90 + 20,
-> +	.htotal	     = 720 + 90 + 20 + 20,
-> +	.vdisplay    = 1440,
-> +	.vsync_start = 1440 + 20,
-> +	.vsync_end   = 1440 + 20 + 4,
-> +	.vtotal	     = 1440 + 20 + 4 + 12,
-> +	.vrefresh    = 60,
-> +	.clock	     = 75276,
-> +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +	.width_mm    = 65,
-> +	.height_mm   = 130,
-> +};
-> +
-> +struct st7703_panel_desc jh057n00900_panel_desc = {
-> +	.mode = &jh057n00900_mode,
-> +	.lanes = 4,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO |
-> +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.init_sequence = jh057n_init_sequence,
-> +};
-> +
->  static int st7703_enable(struct drm_panel *panel)
->  {
->  	struct st7703 *ctx = panel_to_st7703(panel);
-> @@ -226,31 +251,6 @@ static int st7703_prepare(struct drm_panel *panel)
->  	return ret;
->  }
->  
-> -static const struct drm_display_mode jh057n00900_mode = {
-> -	.hdisplay    = 720,
-> -	.hsync_start = 720 + 90,
-> -	.hsync_end   = 720 + 90 + 20,
-> -	.htotal	     = 720 + 90 + 20 + 20,
-> -	.vdisplay    = 1440,
-> -	.vsync_start = 1440 + 20,
-> -	.vsync_end   = 1440 + 20 + 4,
-> -	.vtotal	     = 1440 + 20 + 4 + 12,
-> -	.vrefresh    = 60,
-> -	.clock	     = 75276,
-> -	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> -	.width_mm    = 65,
-> -	.height_mm   = 130,
-> -};
-> -
-> -struct st7703_panel_desc jh057n00900_panel_desc = {
-> -	.mode = &jh057n00900_mode,
-> -	.lanes = 4,
-> -	.mode_flags = MIPI_DSI_MODE_VIDEO |
-> -		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE,
-> -	.format = MIPI_DSI_FMT_RGB888,
-> -	.init_sequence = jh057n_init_sequence,
-> -};
-> -
->  static int st7703_get_modes(struct drm_panel *panel,
->  			    struct drm_connector *connector)
->  {
-> -- 
-> 2.27.0
-> 
+Thanks for those!  I'll incorporate them for the next version.
