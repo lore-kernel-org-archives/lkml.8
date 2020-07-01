@@ -2,141 +2,348 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A296020675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C795206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="chq0FyjS"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="f7kp1c3Z";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="f7kp1c3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgGAIPf (ORCPT
+        id S1728556AbgGAIPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:15:35 -0400
-Received: from mout.web.de ([217.72.192.78]:38697 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgGAIPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:15:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593591322;
-        bh=LsbgrN+XbOhH1YYBuyAJlJARrHXNo7sXYiwieN7tSUQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=chq0FyjS2nN4JEFWKftqPr0N1OtdhMvKlJt382LWzxsNLOrLyyPCAumgFEMkcAXbJ
-         2P5gPgJczoOQI4dubwc7530bqbbubKpIL5PPUy/L8HpYkmUWbk4eajM5GDLOmUJuCE
-         0it7CdFwICSgQ+83w+nPyL/Or03EaOJt8Rg3puHY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.41.17]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MOm0r-1jS1Yr0pR9-00QEpa; Wed, 01
- Jul 2020 10:15:22 +0200
-Subject: Re: [PATCH v4 04/14] irqchip/davinci-aintc: Fix potential resource
- leaks
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
- <1593569786-11500-5-git-send-email-yangtiezhu@loongson.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <08cad331-0a17-586c-07a7-6e3843cb61a1@web.de>
-Date:   Wed, 1 Jul 2020 10:15:19 +0200
+        Wed, 1 Jul 2020 04:15:46 -0400
+Received: from mail-eopbgr20076.outbound.protection.outlook.com ([40.107.2.76]:15017
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728143AbgGAIPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:15:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CRx8kYHZufOIqhZYbL574uFb/KVqp1zI5q93j0FehyE=;
+ b=f7kp1c3Z0SeaqVG24UY3wV5ePVhbPtnfv4cqUgWxyCxmAEpQv8TwA+Osu1qjoL2bOgbrQnQTM1NCOPIqtDVV1Q+c40r/r3OdZjPuG7e2Tp7Be/7vgup2JLDw6DjIsXnQU8ChQyLwwQOQS/QtaGNChl3aMixJtA7ue8S1wj6n0Gw=
+Received: from DB6PR0202CA0047.eurprd02.prod.outlook.com (2603:10a6:4:a5::33)
+ by DB6PR08MB2903.eurprd08.prod.outlook.com (2603:10a6:6:25::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Wed, 1 Jul
+ 2020 08:13:05 +0000
+Received: from DB5EUR03FT044.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:a5:cafe::ef) by DB6PR0202CA0047.outlook.office365.com
+ (2603:10a6:4:a5::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20 via Frontend
+ Transport; Wed, 1 Jul 2020 08:13:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT044.mail.protection.outlook.com (10.152.21.167) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3131.20 via Frontend Transport; Wed, 1 Jul 2020 08:13:04 +0000
+Received: ("Tessian outbound 7fd8d0809508:v61"); Wed, 01 Jul 2020 08:13:04 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 4d5bb1ede1bb4d0c
+X-CR-MTA-TID: 64aa7808
+Received: from b03614350a89.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4841E48D-18F5-434C-9D72-D3CEE37EEC40.1;
+        Wed, 01 Jul 2020 08:12:58 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b03614350a89.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 01 Jul 2020 08:12:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bKBi+m0fwdU5ChhO6CQz3EskeUvl6RCg2nYlOMOpMxhRkoDUfJ04chNSWIgTjfl7E404zrGQ+ueDr+gfWcDSLAvEm1dCv3fRqWbeZNnJJKbmFH+/SF2rxkykA0sVdv5QlzeO7yWmxzpIrrnj3mGovJ0ivXGPWGC794TctmQQQfSaugDb2EMWnIHCvIXkVIVgruHWYGedJWuB/eGoUrjsuUPDNPwCZDAGxHTPtpgXraCjmRImH7sxtsCBi0bDmywFP7y7pQcN2Ln9j2zErIoB1JzNUnNsU2sxgCnzIuf9d4JkmHgaiX7k89/CNsQ6WjI+HE72YWfg/mgEbK9Qd1a7fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CRx8kYHZufOIqhZYbL574uFb/KVqp1zI5q93j0FehyE=;
+ b=j/2PBOAmggIH+mG1OAgDi2wvFKcDSMQDk6NCoi6TF2aKw4/QDrcC8EkJqrBQG+m0jg6tFq/Lveaa4+hoGsUVKpVDMYn4WXJ4opaGj/H6RZCAQMTQ2wpWbmzFGSAJin8p0ZJtxjAshb+1Crki04+lb58I5bHgDwPwHXVSBpvBB3zFPSrJPPjVUkEGx5pXt4/jFs7xAIyZS3id/OjbPffxkdwA54tD2g5OiI7EHBsRnvsNwIIPjdR/hbps9cC2VvyfaPtyy6+q0uH2HYHvd8bedSZJOfKieA4IBms9krRjK6fYlhupkQpdpZNKH3ZwOUx1Opa1AXwniWo+WLri8++Hkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CRx8kYHZufOIqhZYbL574uFb/KVqp1zI5q93j0FehyE=;
+ b=f7kp1c3Z0SeaqVG24UY3wV5ePVhbPtnfv4cqUgWxyCxmAEpQv8TwA+Osu1qjoL2bOgbrQnQTM1NCOPIqtDVV1Q+c40r/r3OdZjPuG7e2Tp7Be/7vgup2JLDw6DjIsXnQU8ChQyLwwQOQS/QtaGNChl3aMixJtA7ue8S1wj6n0Gw=
+Authentication-Results-Original: vger.kernel.org; dkim=none (message not
+ signed) header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from AM6PR08MB4149.eurprd08.prod.outlook.com (2603:10a6:20b:b0::27)
+ by AM5PR0801MB1827.eurprd08.prod.outlook.com (2603:10a6:203:3c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Wed, 1 Jul
+ 2020 08:12:57 +0000
+Received: from AM6PR08MB4149.eurprd08.prod.outlook.com
+ ([fe80::95a:fa75:ba76:dcb5]) by AM6PR08MB4149.eurprd08.prod.outlook.com
+ ([fe80::95a:fa75:ba76:dcb5%5]) with mapi id 15.20.3131.030; Wed, 1 Jul 2020
+ 08:12:57 +0000
+Subject: Re: [PATCH v4 00/14] arm64: Optimise and update memcpy, user copy and
+ string routines
+From:   Oli Swede <oli.swede@arm.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200630194822.1082-1-oli.swede@arm.com>
+Message-ID: <f52401d9-787c-667b-c1ec-8b91106d6d14@arm.com>
+Date:   Wed, 1 Jul 2020 09:12:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.4.1
+In-Reply-To: <20200630194822.1082-1-oli.swede@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR16CA0067.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::44) To AM6PR08MB4149.eurprd08.prod.outlook.com
+ (2603:10a6:20b:b0::27)
 MIME-Version: 1.0
-In-Reply-To: <1593569786-11500-5-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8Icnu5aEb3po0rBvNg7cDRQrqF+/3jZzVKct0fb/Ue2DliZMVxX
- a+qCDr2WU+sL9ASuw9NAKciHCDJH0Kv+YMU51lxA9bgeAc3b70mYFbyU3Wwc5YzuMFdbYWn
- S8Ro7fNuuahr5LSi44/Na54nDzSud0uG6EuPRYtVjdxzLTuvCths1YV/1scmfBzqRiCcG9b
- YrYmm+L5DTB93xogL5PDQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+YDvWG6y2lQ=:N5niptZWb7Bb9sbeGe8I/9
- uI/K88dbtyD6x2ehT7wHHcpjHrGn+/nFgFyOmL+ys9i3yUGyu1jfPdxPqYdi9nnYvPCteY7bH
- gy1ZqI/nSzuK1gS24kB4FTKvtC42mGCQrgf74ZIAUyR67hz4OiuGREnjttRVOrTGMUkvb+gZ+
- NPL3UfGptfXk45q96pW8Kjdk8kB4lPMJ+IPnbvjHFhc67c1zYgVKMKJ3lABmq83OTBukHluYx
- DWFi/79A5mRdetYXQISnxdTwo9e2NHy1XelmVccftVgYhIz6veSEXvWw3v9bIc19TjRnw8ct+
- uFyRkRHD6aHzZ0e70DqJHRWY9PxZ4imr+hjkp+c/pSUX9tWUxZLzn9LuhcHM1Obl6d/xx1MyY
- IQ9KmZAE5yxRk/o24yNIXWKF/kNTUHA7Cg+R5fHeVaNuuddIwY+i5U77+ErgeUaG8tCLeWKDH
- joDTUTDsyG0QhfOiteFoQtzDyiFhFRVZgUBcqQZ3ee8JxOdBFjqjrOMGepkl+e2unDpDkVEAt
- kfL04YANjDNaDCC73E9YfpquZryIVskLFwO0yQkowDxE7XYZak5xBd5JAghnoahp7MThIusLB
- vxwPVUu6gn3ns7X+Brw6cLoq9mTBfOfLRqOQ0eTkw26+sBUqztl77R9WnnSwGLb62J8p0S1Ys
- CWfFIfvmN8Y9iHhv7eSqYZ4t+kR37hOskh2t4vJaSRJqfn2A/A+CsRU9GqhBrfTZ++9sgHoR1
- pBMDzOeFERtNNfr5Z6TNzE20m+onbxFSNVzLpqTngYqsvqWP1G5pNYsq/8TiWb6xKp7T79NKe
- DlMuBy9zV+Xeoqwi+V+YDN08CaKKDACUB6rQahrblL6qYsF5Y4BpZ/a0zDJzwwNDzQ5qrcjvR
- mvUCnqcaFFCmZnPR6RZLxz7RaZ260arEzI74LgAKrmuSZQ3pUVOKztVilpqk5dhrK8LrmsJlU
- shKE5g/z/IwPTkoFNfyFyM8jnKhRb1sVM/V4+wTEt3IJqAp3JPoPNXC4gZZI4CoEopyDFFE4k
- 20uk7DPADEXrKH5TQi/w0wf9qyO+v8RJ2RflyUaRGdAbK2QkWBjP0+janrszR15efePsMYHs2
- HYEscfgfSFTsqnRAIabHUzYu6lgkjdf5IMKwKrF1EtnZsRyLi3yQDxTnRwKT3r/H0frouT/HN
- pbYO9daSQgYdSlPI4NgTQd0IMt48dpsAEFp4hP7+1/OY64wqAu61ahjr/leNk4SjtVe4y0Wbg
- 8bUj4UAHjCWcI/YKI
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.57.20.213] (217.140.99.251) by SN6PR16CA0067.namprd16.prod.outlook.com (2603:10b6:805:ca::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22 via Frontend Transport; Wed, 1 Jul 2020 08:12:55 +0000
+X-Originating-IP: [217.140.99.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 07c14bdc-3241-4517-5e4f-08d81d9694c7
+X-MS-TrafficTypeDiagnostic: AM5PR0801MB1827:|DB6PR08MB2903:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR08MB2903FB2865A3AF7046F2A6C6EF6C0@DB6PR08MB2903.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
+X-Forefront-PRVS: 04519BA941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: bvbC7bPyc9ZGdb636rrzDPB9WpycnMXr/jxLoonh9kztOMs03HQK+sHVwSLMPzx8klbIqMHk7r6eF6OqRwFXT+eobF1HIYeVRMOum5gS/lQEuohX2pS1ZtDoiSKqDN2rHaTb0tQDFR1GKJnufneBzn98REsGiihywLSl1AxQHmMvUqDLI3rK0F9e6+I3lf365SGHwswclViN0EfZpHHlRPk3CkMzpDnoKVo2wqbm4Sf368fK4gP10URrBGJPSDbRWTr2fRyHhTIsW/vzCtHuP7s2hqRfszPeGTDqOorfYZnWIZj6FrLtNyh0sgaAgLOl9LZFZJU+QYFxBfAOJqI86JI5j7i6FC54fDklhhQRASLy0wlnurOzqvhjEtKF8V6XRrQBcCSgco2Vl0JBH9gKEX+VqMgutAXoyiJVKtZmr/linzrgA7NGOSaUzMAd/9ztcptZRf5OKYxipG/a8acQpA==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4149.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(16576012)(26005)(83380400001)(31686004)(316002)(16526019)(86362001)(110136005)(8936002)(15650500001)(4326008)(478600001)(52116002)(6486002)(66946007)(956004)(6636002)(8676002)(36756003)(2616005)(66476007)(66556008)(5660300002)(53546011)(2906002)(186003)(966005)(31696002)(6666004)(44832011)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: K0Ls6hAjRy+6LRCz6rz1PjilNNzAcaP+V+GV/zGAyrFXl2uVgtk997vmguUHSNWn88MgduJYUYWmKhbvvDa4AwQewc0vVfKOqfwDqkeB5r3bPcYfZrvriaXuGZUGiSIJN7uBIfwfiEqYRK1ugy5VLW7MHHEF+0HslqzoJHGy9p4Z+RZipMFb6nRa4+ljIRz6PZeCBRZTV3wrT6P62i0zFot46mcM0QaM+hvQpdaEKdsyVGfyzHJWWcyqGM1AZszZ/qOsVPYiVwm00c4uahTn7KfA0s6ArjFb9c7ymP3v9NM/ZPrIBrAsfga+udt0zkIEqUpYTwO5hdGGK6AXhvHZsIfNxJSOoYtFa+KiNPtdNCgXDT2TbbiPTbs+AmhdZ1s84q+BR9SWtt18fhPEht7RCmP6/wvnOAjMDWPErgvN/ietzaYPLh0/sr7ABOrdbxpFnlmvfPcPEGY9nnFawWi3YlZOdUtxGwqZmLPMPvorH64=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1827
+Original-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT044.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966005)(83380400001)(70206006)(8936002)(70586007)(8676002)(316002)(966005)(36756003)(186003)(336012)(26005)(16526019)(81166007)(6486002)(2616005)(16576012)(5660300002)(82310400002)(956004)(478600001)(6666004)(44832011)(6636002)(2906002)(31696002)(86362001)(82740400003)(47076004)(15650500001)(110136005)(4326008)(53546011)(356005)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 32420ca2-654c-4a6f-f192-08d81d968fd9
+X-Forefront-PRVS: 04519BA941
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F4200EMxhxUvgrFVvaOrNQf08j6IcMd2ziAl2FFIxNeRzjP6Kl2K1JLTuTMtA9/MRVj2gUAW5Z3CXnXH+bnqbKjn34i6dE+QbL8TiwnIkKNrRY5J9QN+grwq5wqowxYDyhz8gBpIEov+JRla4NU+R2ArsGxsnXgPtQiD21Nt/hvdb1POSGU+MYIhVNrOsO72PYoihem/yGZFjIs1/ZaPPRR4InlQLYTCGR47h0tY7u6szSnuF8wRDHlJvlVRpElctIzYDePHr+tl9tiyH+ruqaufofmoOWOsuSTAD+PZsUtFE2US5RDFTjPWeSwJIk97yWqWFDMKXWVld6m2yT1HyLS2oD6Xt/qWp9j2HX41gg0OCaN8WcmCJcC83zSy+KSYkmHlu8pmhWbE/I/AxQwwiyEf2iJJprZt1NDsL53eogyB2YUQHgUfev8/mDMOu99MhXNpaCXhxk8Pl3arMHnJI7OdPE8U79e64wZzDehSq/c5y28NEPrckTUfc0AssgNH
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 08:13:04.9459
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07c14bdc-3241-4517-5e4f-08d81d9694c7
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT044.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/drivers/irqchip/irq-davinci-aintc.c
-> @@ -96,7 +96,7 @@ void __init davinci_aintc_init(const struct davinci_ai=
-ntc_config *config)
->  				     resource_size(&config->reg));
->  	if (!davinci_aintc_base) {
->  		pr_err("%s: unable to ioremap register range\n", __func__);
-> -		return;
-> +		goto err_release;
->  	}
-=E2=80=A6
+Hi all,
 
-Can it help to return any error codes?
-Would you like to reconsider the function return type?
+(Apologies if you have already received this follow-up, please ignore 
+any previous duplicates; I am re-sending this with the lists in the CC 
+as the formatting filters caught me out :) Thanks ]
 
-Regards,
-Markus
+ > Version 3 addressed this but I later found some issues with the fixup
+ > correctness after further testing, and have partially re-written them
+ > here, and addressed some other behaviours of the copy algorithm.
+
+Further to the above description from the cover letter I have expanded 
+on this below.
+
+The approach introduced in this version redirects the faulting 
+instruction to one of multiple fixup subroutines, depending on 
+properties of the instance of the instruction in the copy template: if 
+it specifies the target address relative to the start or end of the 
+buffer, and if the algorithm has reached a stage where the destination 
+address has been set to be 16-byte aligned (this is more relevant for 
+longer copies).
+
+These two properties are both in relation to the copy algorithm's aim at 
+reducing the number of total instruction by making accesses that may 
+overlap, and thus copy the same data multiple times. This is in contrast 
+to the current algorithm which may need to branch to subroutines that 
+complete an odd number of bytes that isn't divisible by the initial unit 
+that was directed to. E.g. with the new algorithm, 17 bytes will 
+complete with two load and two store instructions, by coping the first 
+16 bytes from the start of the buffer, then the last 16 bytes to the 
+left of the end of the buffer.
+
+There appear to be two types of overlapping copies within a source or 
+destination buffer:
+1. If src is initially non-16-byte aligned, then it is re-set to (src &~ 
+15), and the copying then resumes from aligned_src+16. In this scenario 
+any data between aligned_src+16 and src+16 could repeat in the 
+overlapping instruction.
+2. If the target address is specified relative to the end of the buffer 
+(e.g. [srcend, -16]) then an overlap is taking place, so it should check 
+the fault address against the threshold known to have already been 
+copied up to.
+
+In particular, encapsulating these properties through separate fixups 
+allows for:
+
+a) Accurate rounding-down to the base of the block within which the 
+fault occurred.
+The assumption here is that load and and store instructions are 
+single-copy atomic, so a fault in one instruction will not result in any 
+of the other bytes succeeding. For instance, the copy unit size could be 
+1, 4, 8, or 16, depending on the instruction (ldrb/strb, ldr/str, or 
+ldp/stp), but any threshold prior to which copying may have succeeded 
+will be the target address, i.e. the base of this block.
+If the fixup routing itself implies certain information about the target 
+address, then the scenario shouldn't occur where it faults on an address 
+but the backtracking to the target is inaccurate (as a result of copy 
+overlaps within the buffer).
+
+b) All data copied up to some address to be taken into account, in the 
+case where a page is swapped out immediately before the same address is 
+accessed as a result of an overlap.
+This is somewhat related to the above, but addresses a specific 
+situation, where a page could be swapped out mid-way through a copy and 
+result in the same address faulting on its second copy, even if the 
+algorithm has succeeded up to a threshold address beyond the fault.
+
+Within each fixup is the calculation for the number of bytes remaining 
+is performed, with the knowledge about the stage of the algorithm that 
+has been reached and any previous steps before the fault, and the 
+information retrieved from the stack, which contains the original 
+arguments to the usercopy function. It is then able to determine the 
+accurate return value. For systems implementing UAO, due to the ldp/stp 
+instructions being substituted for 2x ldtr/sttr instructions, a fault in 
+the second half of the doubleword needs to to take any completion of the 
+first half into account, and there are in-line modifications for this 
+(but they are not necessary for the load instruction fixups).
+
+The categorization of the fixups based on the algorithm's behaviour may 
+also provide a general approach to replacing the fixups for future copy 
+imports, as they are fairly modular. However, there is an open question 
+as to whether it would be easy to replace them given this framework, as 
+the fixup subroutines are relatively long for the store instructions. I 
+have added comments to explain the calculations, but I am wondering if 
+it would be possible to divert the fixup logic to make it easier to 
+modify, if the aim is to reduce the coupling between the fixup routines 
+and the copy algorithm.
+
+I am waiting on access to the relevant machine before posting the 
+benchmark results for this optimized memcpy, but Sam reported the 
+following with the similar (but now slightly older) cortex-strings version:
+   * copy_from_user: 13.17%
+   * copy_to_user: 4.8%
+   * memcpy: 27.88%
+   * copy_in_user: Didn't appear in the test results.
+This machine will also be used to check the fixups are accurate on a 
+system with UAO - they appear to be exact on a non-UAO system with PAN 
+that I've been working on locally.
+
+I should also mention that the correctness of these routines were tested 
+using a selftest test module akin to lib/test_user_copy.c (whose 
+usercopy functionality checks these patches do pass) but which is more 
+specific to the fixup accuracy, in that it compares the return value 
+with the true number of bytes remaining in the destination buffer at the 
+point of a fault.
+
+Thanks in advance,
+Oliver
+
+On 6/30/20 8:48 PM, Oliver Swede wrote:
+> Hi,
+> 
+> This contains an update to the cortex-strings patchset: the
+> correctness of the fixup routines are improved, with the aim being to
+> return the exact number of remaining bytes for all copy sizes.
+> To ensure they are exact - which the current fixups are not for some
+> copy sizes and are off by a few byes - is an extension to the
+> original intention of fixing an issue reported by an LTP run last
+> year, where the fixup routine in v2 of this patchset (which was
+> importing the cortex-strings memcpy implementation) would over-report
+> the number of bytes that successfully copied.
+> Version 3 addressed this but I later found some issues with the fixup
+> correctness after further testing, and have partially re-written them
+> here, and addressed some other behaviours of the copy algorithm.
+> 
+> Comments welcome,
+> 
+> Thanks
+> Oliver
+> 
+> v1: https://lore.kernel.org/linux-arm-kernel/cover.1571073960.git.robin.murphy@arm.com/
+> v2: https://lore.kernel.org/linux-arm-kernel/cover.1571421836.git.robin.murphy@arm.com/
+> v3: https://lore.kernel.org/linux-arm-kernel/20200514143227.605-1-oli.swede@arm.com/
+> 
+> Changes since v3:
+> * Improves the accuracy of the fixups in response to issues that
+>    arose during futher testing
+> * Accounts for faults on store instructions on systems with UAO
+>    enabled
+> * Expands on comments detailing the implementation
+> 
+> Changes since v2:
+> * Adds Robin's separate patch that fixes a compilation issue with
+>    KProbes fixup [1]
+> * Imports the most recent memcpy implementation by updating Sam's
+>    patch (and moves this patch to occur after the cortex-strings
+>    importing so that it's closer to the patches containing its
+>    corresponding fixups)
+> * Uses the stack to preserve the initial parameters
+> * Replaces the usercopy fixup routine in v2 with multiple longer
+>    fixups that each make use of the fault address to return the exact
+>    number of bytes that haven't yet copied.
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/e70f7b9de7e601b9e4a6fedad8eaf64d304b1637.1571326276.git.robin.murphy@arm.com/
+> 
+> Oliver Swede (5):
+>    arm64: Store the arguments to copy_*_user on the stack
+>    arm64: Use additional memcpy macros and fixups
+>    arm64: Add fixup routines for usercopy load exceptions
+>    arm64: Add fixup routines for usercopy store exceptions
+>    arm64: Improve accuracy of fixup for UAO cases
+> 
+> Robin Murphy (2):
+>    arm64: kprobes: Drop open-coded exception fixup
+>    arm64: Tidy up _asm_extable_faultaddr usage
+> 
+> Sam Tebbs (7):
+>    arm64: Allow passing fault address to fixup handlers
+>    arm64: Import latest version of Cortex Strings' memcmp
+>    arm64: Import latest version of Cortex Strings' memmove
+>    arm64: Import latest version of Cortex Strings' strcmp
+>    arm64: Import latest version of Cortex Strings' strlen
+>    arm64: Import latest version of Cortex Strings' strncmp
+>    arm64: Import latest optimization of memcpy
+> 
+>   arch/arm64/include/asm/alternative.h |  36 ---
+>   arch/arm64/include/asm/assembler.h   |  13 +
+>   arch/arm64/include/asm/extable.h     |  10 +-
+>   arch/arm64/kernel/probes/kprobes.c   |   7 -
+>   arch/arm64/lib/copy_from_user.S      | 272 +++++++++++++++--
+>   arch/arm64/lib/copy_in_user.S        | 287 ++++++++++++++++--
+>   arch/arm64/lib/copy_template.S       | 377 +++++++++++++----------
+>   arch/arm64/lib/copy_template_user.S  |  50 ++++
+>   arch/arm64/lib/copy_to_user.S        | 273 +++++++++++++++--
+>   arch/arm64/lib/copy_user_fixup.S     | 433 +++++++++++++++++++++++++++
+>   arch/arm64/lib/memcmp.S              | 333 ++++++++------------
+>   arch/arm64/lib/memcpy.S              | 127 ++++++--
+>   arch/arm64/lib/memmove.S             | 232 +++++---------
+>   arch/arm64/lib/strcmp.S              | 272 +++++++----------
+>   arch/arm64/lib/strlen.S              | 247 ++++++++++-----
+>   arch/arm64/lib/strncmp.S             | 363 ++++++++++------------
+>   arch/arm64/mm/extable.c              |  13 +-
+>   arch/arm64/mm/fault.c                |   2 +-
+>   18 files changed, 2228 insertions(+), 1119 deletions(-)
+>   create mode 100644 arch/arm64/lib/copy_template_user.S
+>   create mode 100644 arch/arm64/lib/copy_user_fixup.S
+> 
