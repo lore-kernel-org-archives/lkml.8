@@ -2,203 +2,199 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2523C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A730AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A544207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83496207F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0mHdEqui"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCOcOlpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGAWNw (ORCPT
+        id S1727798AbgGAWOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:13:52 -0400
-Received: from mail-co1nam11on2054.outbound.protection.outlook.com ([40.107.220.54]:6248
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726419AbgGAWNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:13:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jcOHRop9DZiFG21j8Uh+NWJqWDGnsp9YuP08uXskeA6NhaXcRuqhVrw1wHZfG87xj4igjf/1JLKBMyPXbOs/ADLjPDMhFU5t0NuqZNWKl+14a7MVFizwcxTnvrh2hUFqAy5EMKJi+ibaXrFMqgLHIUM0bBxrxwuaIcwPqwKne+zeudr3IQ9ubUAVT/8T3giIepLwhuV/Lqcp0ZRMDD8QxfIU4Wfq8dfvPGgCuQpAUC3kYrtV+/yJZE4dWeD6+QmOd1E7IPqSQJ3ExuVXZ4S5FWVC6xnvSU2WVW068kw9xi7/gYAaRgBZ8qpFHZDiR8tczg6k21P1DyYpaSm0x3aaSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZe/3S7Dl7AJ5f/MbRSrO287BzpU/F2z0ZGBChqERo4=;
- b=I0OajqvjdtO7DTF7pqQ68J8tTD94DTXN5okvvx+I86h64YfpTlcSdREp1LZCBjueMWI4oz0mxZpgEkD7NSWI13vfeCEWsnpxAp/AJYSJcjw1JPmRoodnexP8yD7XAqGYxjviXmDp2C4xzoS+CM0KGwmh/rcYqHw2Xc4i507A4LtFyQqEXEMVWogENwdd8toeW7ZlXCcAdZOu1lvDEfIONLNPRQKCqjMY9u96yxbN9HNL1kx0MC8HAN2bBw/qd2AMWUGBal7YOz5tYeS3j9Lvwh7Gd+B/shhZOIuc7SVbeT3SS2+dYWyl7PG4Jq2wMTwgFfnqulxbSlcl2VSw0DOaRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZe/3S7Dl7AJ5f/MbRSrO287BzpU/F2z0ZGBChqERo4=;
- b=0mHdEquiOH5Begb0LIGnBO0KiJacb5lyglqtfF90GrVzgTJDL9b64GsknBsGaXH7wJAzWRmv0OG1vG8MsP9Es1ZcJhZI9hgqAPsAZQV+MKnB79x+Oznwfnn3athRfdINNgrbpFsoXnGVwF4+U3xLaM/HwY/sH9neCiVJRM+/tng=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=amd.com;
-Received: from MW2PR12MB2556.namprd12.prod.outlook.com (2603:10b6:907:a::11)
- by MWHPR12MB1341.namprd12.prod.outlook.com (2603:10b6:300:11::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 1 Jul
- 2020 22:13:48 +0000
-Received: from MW2PR12MB2556.namprd12.prod.outlook.com
- ([fe80::9c8e:f3d8:eb8a:255c]) by MW2PR12MB2556.namprd12.prod.outlook.com
- ([fe80::9c8e:f3d8:eb8a:255c%6]) with mapi id 15.20.3153.022; Wed, 1 Jul 2020
- 22:13:48 +0000
-Subject: [PATCH] x86/resctrl: Fix memory bandwidth counter width for AMD
-From:   Babu Moger <babu.moger@amd.com>
-To:     fenghua.yu@intel.com, stable@vger.kernel.org, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, tglx@linutronix.de,
-        reinette.chatre@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 01 Jul 2020 17:13:45 -0500
-Message-ID: <159364160826.31030.7457664122034606608.stgit@bmoger-ubuntu>
-User-Agent: StGit/0.17.1-dirty
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0201CA0004.namprd02.prod.outlook.com
- (2603:10b6:803:2b::14) To MW2PR12MB2556.namprd12.prod.outlook.com
- (2603:10b6:907:a::11)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [127.0.1.1] (165.204.77.1) by SN4PR0201CA0004.namprd02.prod.outlook.com (2603:10b6:803:2b::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23 via Frontend Transport; Wed, 1 Jul 2020 22:13:46 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 15d1a596-37d2-4c67-f37d-08d81e0c0703
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1341:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB13412D8F9F7403F32DE86904956C0@MWHPR12MB1341.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:175;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R5Sr6FBpEpwy/55kA4unG2pXa+BWi5or+SEGjrfudXqJ3bjo6KyMTlvlR5F9sLm4vSiGHwO7NQ4RBbu8cadi3/4oURsiwBEYJ8nEmosewzzFP0jt7Jv1mHc7uql6vO6IcHvLoPpBwuZGcozNZO/uglMzmLHaA21Fh5TaCsDgyr+5asrEjn5Iu9vzAKvjoVFQMoLQGtqHNY0FXXWEG0CBv08nQVlDj4yYPRUAEkVJ4pNp57qNYWZsYuXTl0pyEb6trb0Bk/Od7uIR4MM+CyveP9hKuhtGqmzytXOWecfBjWM+MeS9VbQbqysxE4zQiTjzCFfpssKJnzLCOEpmZrGCb7FW2WWzFVDPa+i6+41cB285MGGmc+EC3hFvQQHlu4npl6gffJgJEdwY2PEntsbqGA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2556.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(396003)(39860400002)(376002)(346002)(366004)(136003)(66946007)(16526019)(186003)(66556008)(52116002)(66476007)(103116003)(16576012)(26005)(478600001)(316002)(956004)(9686003)(2906002)(8676002)(8936002)(83380400001)(6486002)(44832011)(966005)(86362001)(5660300002)(4326008)(33716001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: zc2BO259uCm584i9o1Ei5bpOc7fD0age9yKx1MslprXfp+rAU8Y3vsyU/5qK+Uy7BTiFYUZCmTADRinpdkMTmtAyfcM/1NIUibbfJQONUcCPjU3/2Rou2hUBLkcVYE2KvCXRq8TlstImkP9syIytLbvErQ+sVFyvlXmnJ2oEYr2CJdZrKPpP6Dua0LqEVP2cSXRv3JYSSEdj8i+XHpB+cg5uJercoVejFplf2L7GjF59Qhv8FdbeCzp+oIQYuMeQfEbiTC1lg6n+RRMrjjxZfEe7Xqmoe1nwQkPmCrfDCXmp9fkr02T2+HjHuBKIQ1KWmekBi5YMM9n2kDdHC/T/GhuWn0vkyHlo5ylCIiC23LlMk3OoJWvKvsoOuXCaBtqpLjazIYujGLuyFr/YNWJbxioBgb8hJjnC/R9+JL583kDOH3d8JZa6do4YjydjNClCL+VTnD2OPYPWrJVmqzPwJz/aN4wKgQNQSytAhMj6neE=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15d1a596-37d2-4c67-f37d-08d81e0c0703
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2556.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 22:13:48.0764
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Uc7H3b5opqKbr8rAmSRI64D8l4HggAmTLwF1a0dW8GdEf4amrxur9XEx6iTDj0Cz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1341
+        Wed, 1 Jul 2020 18:14:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43529 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726960AbgGAWOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:14:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593641688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=bQb32/SaJZufmc/q7s+tyKjNogq0Gy4EIBWlQy//p8M=;
+        b=DCOcOlpvRWMyQgBQaLNnookoSHX9aJHC6SYXSS3jFWsfWFCRMVcmieNai24dL5F5mlOhNH
+        EkcpAYetlVrWabuhg3XIx+rexyJ4vkXBs3nvpYyHYBXrQERjTQmz6yjhN4eYV/XdUYAdU7
+        TODN4DbUPIdFmh0dFL0Vi6z8RHwXKS8=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-ySXXF1pHMs29UTV9Hblo7w-1; Wed, 01 Jul 2020 18:14:46 -0400
+X-MC-Unique: ySXXF1pHMs29UTV9Hblo7w-1
+Received: by mail-pg1-f199.google.com with SMTP id e22so18991302pgl.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 15:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bQb32/SaJZufmc/q7s+tyKjNogq0Gy4EIBWlQy//p8M=;
+        b=e9X/PvwWacj1/M8r8k7XYxd3dHkCly98dKbc7ZMovDpjRxXk7GOpE3cKhlIvBn/Y9/
+         /7E2Oeb2xYakO2iCkMcxH+lX4NpAAfnMt2zNJdXV9npdZC9UuA0owP3qRvj82I60vV0D
+         x4ga2eBYxAgsbgLpJoHLxlgWq/Kbj7bJCGVNNCQUeS/D+FGZ5DcKuQ8LEvDku34fwZOV
+         pHREUaTpyOgsPHm9elNSzD6cWXfikV+12l6vHibLLlW8eTaIYWPiSoqnb1c1Z0OcBWEZ
+         JLKtjzrqcg0s62DNJw4Q6CMlI+dwJRcIPmDYYTH2oGy3THkWzweGU/6Ttc3v5scR3tRO
+         WPzQ==
+X-Gm-Message-State: AOAM530lAhRTXO/wa6QviQCEEmwvvo1C0y26ngh542U4AtVti8Tds1/m
+        Quhmb7yujkYXHdACv5zTnfcu4CGLqtt/XZbr8i3S2diGDgZxPSMwRmVHHtd2XNKtwLElKa6OEBg
+        wAb5kkL15KdYEosF1oJTIogui
+X-Received: by 2002:a17:902:fe11:: with SMTP id g17mr24013379plj.145.1593641684951;
+        Wed, 01 Jul 2020 15:14:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyFdvc/WtQ+mMt1LPHoxqyDf9VjA9s5BpTGQK1trOcKSTKxk2LHBrXcJPTmY4MjY2gBSv/yxw==
+X-Received: by 2002:a17:902:fe11:: with SMTP id g17mr24013361plj.145.1593641684671;
+        Wed, 01 Jul 2020 15:14:44 -0700 (PDT)
+Received: from localhost ([110.227.183.4])
+        by smtp.gmail.com with ESMTPSA id m12sm6091920pjf.17.2020.07.01.15.14.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jul 2020 15:14:44 -0700 (PDT)
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+To:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: [PATCH 1/2] mm/memcontrol: Fix OOPS inside mem_cgroup_get_nr_swap_pages()
+Date:   Thu,  2 Jul 2020 03:44:19 +0530
+Message-Id: <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2c18bd525c47f882f033b0a813ecd09c93e1ecdf ]
+Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
+function in a corner case seen on some arm64 boards when kdump kernel
+runs with "cgroup_disable=memory" passed to the kdump kernel via
+bootargs.
 
-Memory bandwidth is calculated reading the monitoring counter
-at two intervals and calculating the delta. It is the software’s
-responsibility to read the count often enough to avoid having
-the count roll over _twice_ between reads.
+The root-cause behind the same is that currently mem_cgroup_swap_init()
+function is implemented as a subsys_initcall() call instead of a
+core_initcall(), this means 'cgroup_memory_noswap' still
+remains set to the default value (false) even when memcg is disabled via
+"cgroup_disable=memory" boot parameter.
 
-The current code hardcodes the bandwidth monitoring counter's width
-to 24 bits for AMD. This is due to default base counter width which
-is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
-to adjust the counter width. But, the AMD hardware supports much
-wider bandwidth counter with the default width of 44 bits.
+This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
+function in corner cases:
 
-Kernel reads these monitoring counters every 1 second and adjusts the
-counter value for overflow. With 24 bits and scale value of 64 for AMD,
-it can only measure up to 1GB/s without overflowing. For the rates
-above 1GB/s this will fail to measure the bandwidth.
+  [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
+  [    0.274495] Mem abort info:
+  [    0.277311]   ESR = 0x96000006
+  [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
+  [    0.285751]   SET = 0, FnV = 0
+  [    0.288830]   EA = 0, S1PTW = 0
+  [    0.291995] Data abort info:
+  [    0.294897]   ISV = 0, ISS = 0x00000006
+  [    0.298765]   CM = 0, WnR = 0
+  [    0.301757] [0000000000000188] user address but active_mm is swapper
+  [    0.308174] Internal error: Oops: 96000006 [#1] SMP
+  [    0.313097] Modules linked in:
+  <..snip..>
+  [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
+  [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+  [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
+  [    0.347564] sp : fffffe0012b6f800
+  [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
+  [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
+  [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
+  [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
+  [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
+  [    0.377720] x19: 0000000000000000 x18: 0000000000000010
+  [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
+  [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
+  [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
+  [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
+  [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
+  [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
+  [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
+  [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
+  [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
+  [    0.431346] Call trace:
+  [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+  [    0.438735]  shrink_lruvec+0x404/0x4f8
+  [    0.442516]  shrink_node+0x1a8/0x688
+  [    0.446121]  do_try_to_free_pages+0xe8/0x448
+  [    0.450429]  try_to_free_pages+0x110/0x230
+  [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
+  [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
+  [    0.464938]  alloc_page_interleave+0x20/0x90
+  [    0.469246]  alloc_pages_current+0xdc/0xf8
+  [    0.473379]  atomic_pool_expand+0x60/0x210
+  [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
+  [    0.481910]  dma_atomic_pool_init+0xac/0x158
+  [    0.486220]  do_one_initcall+0x50/0x218
+  [    0.490091]  kernel_init_freeable+0x22c/0x2d0
+  [    0.494489]  kernel_init+0x18/0x110
+  [    0.498007]  ret_from_fork+0x10/0x18
+  [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
+  [    0.507770] ---[ end trace 9795948475817de4 ]---
+  [    0.512429] Kernel panic - not syncing: Fatal exception
+  [    0.517705] Rebooting in 10 seconds..
 
-Fix the issue setting the default width to 44 bits by adjusting the
-offset.
-
-AMD future products will implement CPUID 0xF.[ECX=1]:EAX.
-
- [ bp: Let the line stick out and drop {}-brackets around a single
-   statement. ]
-
-Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
-Signed-off-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
+ mm/memcontrol.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Note:
- This commit is already queued for 5.7 stable kernel.
- Backporting it t 5.6 stable and older kernels now.
- Had to make some changes in data structure to make it work on older kernels
-
- arch/x86/kernel/cpu/resctrl/core.c     |    2 ++
- arch/x86/kernel/cpu/resctrl/internal.h |    3 +++
- arch/x86/kernel/cpu/resctrl/monitor.c  |    3 ++-
- 3 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 89049b343c7a..5fb0b84cda30 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -260,6 +260,7 @@ static bool __get_mem_config_intel(struct rdt_resource *r)
- 	r->num_closid = edx.split.cos_max + 1;
- 	r->membw.max_delay = eax.split.max_delay + 1;
- 	r->default_ctrl = MAX_MBA_BW;
-+	r->membw.mbm_width = MBM_CNTR_WIDTH;
- 	if (ecx & MBA_IS_LINEAR) {
- 		r->membw.delay_linear = true;
- 		r->membw.min_bw = MAX_MBA_BW - r->membw.max_delay;
-@@ -289,6 +290,7 @@ static bool __rdt_get_mem_config_amd(struct rdt_resource *r)
- 	/* AMD does not use delay */
- 	r->membw.delay_linear = false;
- 
-+	r->membw.mbm_width = MBM_CNTR_WIDTH_AMD;
- 	r->membw.min_bw = 0;
- 	r->membw.bw_gran = 1;
- 	/* Max value is 2048, Data width should be 4 in decimal */
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 181c992f448c..2cfc4f5aceee 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -32,6 +32,7 @@
- #define CQM_LIMBOCHECK_INTERVAL	1000
- 
- #define MBM_CNTR_WIDTH			24
-+#define MBM_CNTR_WIDTH_AMD		44
- #define MBM_OVERFLOW_INTERVAL		1000
- #define MAX_MBA_BW			100u
- #define MBA_IS_LINEAR			0x4
-@@ -368,6 +369,7 @@ struct rdt_cache {
-  * @min_bw:		Minimum memory bandwidth percentage user can request
-  * @bw_gran:		Granularity at which the memory bandwidth is allocated
-  * @delay_linear:	True if memory B/W delay is in linear scale
-+ * @mbm_width:		memory B/W monitor counter width
-  * @mba_sc:		True if MBA software controller(mba_sc) is enabled
-  * @mb_map:		Mapping of memory B/W percentage to memory B/W delay
-  */
-@@ -376,6 +378,7 @@ struct rdt_membw {
- 	u32		min_bw;
- 	u32		bw_gran;
- 	u32		delay_linear;
-+	u32		mbm_width;
- 	bool		mba_sc;
- 	u32		*mb_map;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 19622328e4b5..8323e4b7b390 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
+ 	{ },	/* terminate */
  };
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 773124b0e18a..0cf4f87f6012 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -216,8 +216,9 @@ void free_rmid(u32 rmid)
  
- static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr)
++/*
++ * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
++ * instead of a core_initcall(), this could mean cgroup_memory_noswap still
++ * remains set to false even when memcg is disabled via "cgroup_disable=memory"
++ * boot parameter. This may result in premature OOPS inside 
++ * mem_cgroup_get_nr_swap_pages() function in corner cases.
++ */
+ static int __init mem_cgroup_swap_init(void)
  {
--	u64 shift = 64 - MBM_CNTR_WIDTH, chunks;
-+	u64 shift, chunks;
+ 	/* No memory control -> no swap control */
+@@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
  
-+	shift = 64 - rdt_resources_all[RDT_RESOURCE_MBA].membw.mbm_width;
- 	chunks = (cur_msr << shift) - (prev_msr << shift);
- 	return chunks >>= shift;
+ 	return 0;
  }
+-subsys_initcall(mem_cgroup_swap_init);
++core_initcall(mem_cgroup_swap_init);
+ 
+ #endif /* CONFIG_MEMCG_SWAP */
+-- 
+2.7.4
 
