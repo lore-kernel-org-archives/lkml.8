@@ -2,89 +2,165 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D085C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F7A20780
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593563237;
-	bh=s51hg7DVq4LITz9OJ0nBaJQcRxH37RA3OJVW6egZ62c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZkUMu7z/+ME9aTdqn0gWBpiaaTO8q16MtTJZ0chP5Etbv3YPyVIyyMeaRug5JGyqj
-	 nBvWbrnzIZ+j0WPN63XRwodNEBuuDtauWgXgzF9khAkC36eUO8qBeM5gLitEZ8w8mf
-	 C1Sb60xQPa/5cBfvZPy7Y+xmL8nJvofERUrt1SoE=
+	by mail.kernel.org (Postfix) with ESMTP id BC9F220771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 00:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgGAA1Q (ORCPT
+        id S1726273AbgGAA33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 20:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgGAA1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 20:27:15 -0400
-Received: from X1 (071-093-078-081.res.spectrum.com [71.93.78.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF28D20771;
-        Wed,  1 Jul 2020 00:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593563235;
-        bh=s51hg7DVq4LITz9OJ0nBaJQcRxH37RA3OJVW6egZ62c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=adfbTt1JnkZmsaJpyxYWFFC5TwNnaUvfrvC/ABvv5qMkUC4i7a3g1wvXmJFM5qlp7
-         qArBvp0Mu8FyTup6cc60fTTKzi3+HSd9ZNxhMZwg2AQEzIHKh4tHYpXvQ1djrqF/s7
-         UqtRysuPnKOuUz5MTb8NTphpaFd/iZk0KRtRHYO4=
-Date:   Tue, 30 Jun 2020 17:27:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Vladimir Davydov <vdavydov@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ying Huang <ying.huang@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch] mm: Increase pagevec size on large system
-Message-Id: <20200630172713.496590a923744c0e0160d36b@linux-foundation.org>
-In-Reply-To: <6260c66e-68a3-ab3e-4bd9-4a290d068e1f@linux.intel.com>
-References: <d1cc9f12a8ad6c2a52cb600d93b06b064f2bbc57.1593205965.git.tim.c.chen@linux.intel.com>
-        <20200627031304.GC25039@casper.infradead.org>
-        <20200626204704.f023988699421db00e9bdab7@linux-foundation.org>
-        <6260c66e-68a3-ab3e-4bd9-4a290d068e1f@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Jun 2020 20:29:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725930AbgGAA32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 20:29:28 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06103Cui003802;
+        Tue, 30 Jun 2020 20:29:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycjagr6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 20:29:12 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0610HYUc048543;
+        Tue, 30 Jun 2020 20:29:12 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycjagr6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 20:29:12 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0610Gn9V032016;
+        Wed, 1 Jul 2020 00:29:10 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 31wwch3y1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 00:29:10 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0610T8IR55246888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 00:29:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E648042041;
+        Wed,  1 Jul 2020 00:29:07 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 666004203F;
+        Wed,  1 Jul 2020 00:29:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.162.223])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Jul 2020 00:29:06 +0000 (GMT)
+Message-ID: <1593563340.5057.14.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 00/11] ima: Fix rule parsing bugs and extend
+ KEXEC_CMDLINE rule support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org, Casey Schaufler <casey@schaufler-ca.com>
+Date:   Tue, 30 Jun 2020 20:29:00 -0400
+In-Reply-To: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 suspectscore=2 adultscore=0
+ cotscore=-2147483648 bulkscore=0 clxscore=1015 mlxscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 09:57:42 -0700 Tim Chen <tim.c.chen@linux.intel.com> wrote:
+On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
+> This series ultimately extends the supported IMA rule conditionals for
+> the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
+> IMA language conditional support for KEXEC_CMDLINE rules in comparison
+> to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
+> rules do not support *any* conditionals so you cannot have a sequence of
+> rules like this:
+> 
+>  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>  measure func=KEXEC_KERNEL_CHECK
+>  measure func=KEXEC_INITRAMFS_CHECK
+>  measure func=KEXEC_CMDLINE
+> 
+> Instead, KEXEC_CMDLINE rules can only be measured or not measured and
+> there's no additional flexibility in today's implementation of the
+> KEXEC_CMDLINE hook function.
+> 
+> With this series, the above sequence of rules becomes valid and any
+> calls to kexec_file_load() with a kernel and initramfs inode type of
+> foo_t will not be measured (that includes the kernel cmdline buffer)
+> while all other objects given to a kexec_file_load() syscall will be
+> measured. There's obviously not an inode directly associated with the
+> kernel cmdline buffer but this patch series ties the inode based
+> decision making for KEXEC_CMDLINE to the kernel's inode. I think this
+> will be intuitive to policy authors.
+> 
+> While reading IMA code and preparing to make this change, I realized
+> that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
+> quite special in comparison to longer standing hook functions. These
+> buffer based hook functions can only support measure actions and there
+> are some restrictions on the conditionals that they support. However,
+> the rule parser isn't enforcing any of those restrictions and IMA policy
+> authors wouldn't have any immediate way of knowing that the policy that
+> they wrote is invalid. For example, the sequence of rules above parses
+> successfully in today's kernel but the
+> "dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
+> ima_match_rules(). The dont_measure rule is *always* considered to be a
+> match so, surprisingly, no KEXEC_CMDLINE measurements are made.
+> 
+> While making the rule parser more strict, I realized that the parser
+> does not correctly free all of the allocated memory associated with an
+> ima_rule_entry when going down some error paths. Invalid policy loaded
+> by the policy administrator could result in small memory leaks.
+> 
+> I envision patches 1-6 going to stable. The series is ordered in a way
+> that has all the fixes up front, followed by cleanups, followed by the
+> feature patch. The breakdown of patches looks like so:
+> 
+>  Memory leak fixes: 1-3
+>  Parser strictness fixes: 4-6
+>  Code cleanups made possible by the fixes: 7-10
+>  Extend KEXEC_CMDLINE rule support: 11
+> 
+> Perhaps the most logical ordering for code review is:
+> 
+>  1, 2, 3, 7, 8, 4, 5, 6, 9, 10, 11
+> 
+> If you'd like me to re-order or split up the series, just let me know.
+> Thanks for considering these patches!
+> 
+> * Series-wide v2 changes
+>   - Rebased onto next-integrity-testing
+>   - Squashed patches 2 and 3 from v1
+>     + Updated this cover letter to account for changes to patch index
+>       changes
+>     + See patch 2 for specific code changes
 
-> 
-> 
-> I am okay with Matthew's suggestion of keeping the stack pagevec size unchanged.
-> Andrew, do you have a preference?
-> 
-> I was assuming that for people who really care about saving the kernel memory
-> usage, they would make CONFIG_NR_CPUS small. I also have a hard time coming
-> up with a better scheme.
-> 
-> Otherwise, we will have to adjust the pagevec size when we actually 
-> found out how many CPUs we have brought online.  It seems like a lot
-> of added complexity for going that route.
+Other than the comment on 9/11 the patch set looks good.
 
-Even if we were to do this, the worst-case stack usage on the largest
-systems might be an issue.  If it isn't then we might as well hard-wire
-it to 31 elements anyway,
+thanks!
 
-I dunno.  An extra 128 bytes of stack doesn't sound toooo bad, and the
-performance benefit is significant.  Perhaps we just go with the
-original patch.  If there are any on-stack pagevecs in the page reclaim
-path then perhaps we could create a new mini-pagevec for just those.  or
-look at simply removing the pagevec optimization in there altogether.
+Mimi
