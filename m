@@ -2,103 +2,148 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B037DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 592C220781
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9089520781
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 16:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUGb8M2s"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ePYUg6XT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbgGAQjQ (ORCPT
+        id S1732522AbgGAQjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 12:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGAQjP (ORCPT
+        Wed, 1 Jul 2020 12:39:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32958 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732255AbgGAQjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 12:39:15 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A72C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 09:39:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f8so15647773ljc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 09:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a7kT5F1paIOXtpsQCDYS2bbm2+dXVLidR6UuRvcT11A=;
-        b=VUGb8M2sRp9MktZRa+49xew8Ula6N3Ge4GvW92FvXNjlV3/SPDafMdmr05p6HSq+dm
-         pQkmECirCAuGgZYlVrUI+MfpG6owRa3aNijbDsqSU1ok9tIJXS+lwoVDeP2RT+t7bJKc
-         f5Mig6qrizSSSVkF4Z9LDQF7Row19zadX+eqCVB1vK/kPSMVrydwspXPX3XGquIh7/pH
-         7udxcXSvFu+JDDJbZyWhKzfJNGU0ij/tx7+BVVLYm/5tMo2m/qcZLCL6dZ4gnr3AyGht
-         9vRiXbPDCLxOh4yC2oDlqvfiqsxYRi3TRsXjF0D5q4t/XVIB63xDYK8MeqjVJNdi96Sf
-         mWHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a7kT5F1paIOXtpsQCDYS2bbm2+dXVLidR6UuRvcT11A=;
-        b=M8E2C4YDVycOcVRtqpnVbMl7zledSOoC3guV4VhftIyhV1vaRaIvSuZ8lZa1fDql77
-         SHvHmagmihBNKsHN/xxpKUkj80SYAHmsU4TOnEO5mmyGDLX4SFL+iNqoTzlih/d3dPQ9
-         jcgoLZD4ZIzWPxqXbbMmhZSmvq/0pIkOvdHxjh/213OStq7dCBJWsJj4KIWR57ilyd0I
-         8Rt6kOScy1H0hazQL0/lTCuiY5PpphKPfZXS5qOa3AAaonQLAZlSy3rclnypA+3H2wXb
-         8OvvQipfmXstlgZzPl4EnJ/sh3RVbaWzAN1ycC47NChHbewVaRttrBRT4NDa0fICnp7N
-         c/ig==
-X-Gm-Message-State: AOAM5304dC76uLVR0XheYY3t092qhLOL/D3Rrykd7mNsuaZ2V4jAUfoa
-        +CXWhQQb2PyvAJ0S5n7Nkboo+8MVERIM8TkYb52I1Zm2
-X-Google-Smtp-Source: ABdhPJxMPtrmjkS2q4us3NvqfvWD4lT5Z0qs9SrLAyN2GMZcWupyaAUAD5uQFIKQN054L5pi629YU6PQCEDoALoePZA=
-X-Received: by 2002:a2e:880e:: with SMTP id x14mr4037902ljh.218.1593621553512;
- Wed, 01 Jul 2020 09:39:13 -0700 (PDT)
+        Wed, 1 Jul 2020 12:39:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061GddNU031024;
+        Wed, 1 Jul 2020 11:39:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593621579;
+        bh=xbBcjsRuj6VdBiPscvdL+9rTLp0gEqf+2hxn3Z6d4tU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ePYUg6XTP+wPLfdwmIh9352+UIumOXtAnllySUpF0m2zqpdhwJFoFI33pQtH5ncpt
+         8UB0DQSuAkJD+7vmhaH8JOSzBBY1Z6EklyEgSoRbT/zipSRwldcV1QVcfI+G3L/hC4
+         qmLnj87An9WR1Y4+GzLy0MtZG486N1D4wOxDv1aE=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061GddhM095151
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Jul 2020 11:39:39 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
+ 2020 11:39:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 1 Jul 2020 11:39:39 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061GddEm060242;
+        Wed, 1 Jul 2020 11:39:39 -0500
+Subject: Re: [PATCH v14 1/4] power_supply: Add additional health properties to
+ the header
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
+        <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
+References: <20200630215426.26450-1-r-rivera-matos@ti.com>
+ <20200630215426.26450-2-r-rivera-matos@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <938bd51f-0551-38f0-c17c-19c7b42ec411@ti.com>
+Date:   Wed, 1 Jul 2020 11:39:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
- <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
- <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com>
- <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
- <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
- <AM6PR0402MB36077C422DABCB4F2EA650A0FF6F0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAGngYiV9HqxSLV=PCPg10vqVC-SaayF5wakcWs2gBbXxgcUEPQ@mail.gmail.com>
- <AM6PR0402MB3607986330B844B161E271FAFF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAOMZO5B-XVaZ-t2T7UBdCqqde3bJREiQhR71ET8p=9EHJ-DQbA@mail.gmail.com>
- <AM6PR0402MB360717519B42A48A754691C8FF6C0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
- <CAOMZO5CZMBeSY=0sa39wJsZpaCqWeCb4-HG4jjXO5pGeW64azg@mail.gmail.com>
- <CAGngYiWV93yWY-mWM-1YcRU71iWnP=qsLSD6Z5dZkz=Zb+iqRA@mail.gmail.com>
- <HE1PR0402MB3612B2111833521E571DC207FF6C0@HE1PR0402MB3612.eurprd04.prod.outlook.com>
- <CAGngYiXfY0SBEm=H8KMTR+0ztLTEQ+bpjPpquac+igoCLHM=0A@mail.gmail.com>
-In-Reply-To: <CAGngYiXfY0SBEm=H8KMTR+0ztLTEQ+bpjPpquac+igoCLHM=0A@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 1 Jul 2020 13:39:02 -0300
-Message-ID: <CAOMZO5BYC3DmE_G0XRwRH9vSJiVVvKbtznODyntsAuorF=HoqA@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing
- of clk_enet_ref where possible
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Andy Duan <fugang.duan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200630215426.26450-2-r-rivera-matos@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sven,
+Sebastian
 
-On Wed, Jul 1, 2020 at 1:03 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+On 6/30/20 4:54 PM, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
 >
-> Fabio has already indicated that he's ok with adding a new property.
-> Fabio, is that still the case?
+> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+>
+> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
+> from JEITA specification JISC8712:2015
+>
+> Acked-by: Andrew F. Davis <afd@ti.com>
+> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   Documentation/ABI/testing/sysfs-class-power | 3 ++-
+>   drivers/power/supply/power_supply_sysfs.c   | 3 +++
+>   include/linux/power_supply.h                | 3 +++
+>   3 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index 216d61a22f1e..40213c73bc9c 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -205,7 +205,8 @@ Description:
+>   		Valid values: "Unknown", "Good", "Overheat", "Dead",
+>   			      "Over voltage", "Unspecified failure", "Cold",
+>   			      "Watchdog timer expire", "Safety timer expire",
+> -			      "Over current", "Calibration required"
+> +			      "Over current", "Calibration required", "Warm",
+> +			      "Cool", "Hot"
+>   
+>   What:		/sys/class/power_supply/<supply_name>/precharge_current
+>   Date:		June 2017
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> index bc79560229b5..4d6e1d5015d6 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -101,6 +101,9 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
+>   	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   = "Safety timer expire",
+>   	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
+>   	[POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED]  = "Calibration required",
+> +	[POWER_SUPPLY_HEALTH_WARM]		    = "Warm",
+> +	[POWER_SUPPLY_HEALTH_COOL]		    = "Cool",
+> +	[POWER_SUPPLY_HEALTH_HOT]		    = "Hot",
+>   };
+>   
+>   static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index ac1345a48ad0..b5ee35d3c304 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -62,6 +62,9 @@ enum {
+>   	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+>   	POWER_SUPPLY_HEALTH_OVERCURRENT,
+>   	POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED,
+> +	POWER_SUPPLY_HEALTH_WARM,
+> +	POWER_SUPPLY_HEALTH_COOL,
+> +	POWER_SUPPLY_HEALTH_HOT,
+>   };
+>   
+>   enum {
 
-Yes, please proceed with adding the new device tree property.
 
-This way we prevent existing imx6qp dtb's breakage.
+Can you apply this patch?
 
-Thanks
+We have other charger drivers we want to submit for review but they all 
+depend on this single patch.
+
+If you do not want to apply this patch then please let us know how we 
+can submit our other drivers so that build bots don't start spamming us 
+with build failures
+
+Dan
+
