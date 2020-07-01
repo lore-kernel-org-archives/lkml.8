@@ -2,135 +2,114 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4228EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA5720747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292682078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732732AbgGARRQ (ORCPT
+        id S1731588AbgGARRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 13:17:16 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:43496 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbgGARRP (ORCPT
+        Wed, 1 Jul 2020 13:17:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41009 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgGARRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 13:17:15 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jqgMA-0003Fl-5f; Wed, 01 Jul 2020 11:17:10 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jqgM9-0004As-5q; Wed, 01 Jul 2020 11:17:10 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-        <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
-        <87eepwzqhd.fsf@x220.int.ebiederm.org>
-        <20200630165256.i7wdfjxmqu73fewc@ast-mbp.dhcp.thefacebook.com>
-Date:   Wed, 01 Jul 2020 12:12:35 -0500
-In-Reply-To: <20200630165256.i7wdfjxmqu73fewc@ast-mbp.dhcp.thefacebook.com>
-        (Alexei Starovoitov's message of "Tue, 30 Jun 2020 09:52:56 -0700")
-Message-ID: <87lfk3w458.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 1 Jul 2020 13:17:48 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k15so21958879otp.8;
+        Wed, 01 Jul 2020 10:17:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4DeJKT3rF87H8O2OZ1E1YXv2QMAJ3DSeaSi7+IyNvX0=;
+        b=OkLCFK/7dazsHs3C/Lif6TQIX9HAbvJEOC/R7WYIkbiQDycXW2jgHVt1JIJubuxWFH
+         qjlKe0HpENn0H5QkVMw5my6ObH1vAZGwkVlpajsq+0QAW0G0/OzZxVPVXGvxHvr1uaEN
+         bwCG+d3EuDWvG3TAifX93jupQBW3vUg88heLLqBr6uVydM6hnqLoqs/aKN5+n5wzQQMC
+         gN2bDV2cx3SrnuvyCKfxdPLlmQQu7YaEnhY8NjjAa7BWVPkRze2zy5fLc8cOHKGpczFv
+         eGIO82YsC2WMLsrxR2ZuXnYiU//tpUAkWiXTC3Sm4nIYk/hqATiBobDNj49LJ8IJPftV
+         fA9w==
+X-Gm-Message-State: AOAM533RaLAxAfW5BLoR5iloaHaofUn1D/E+E+nnthoYX0UxV7kWqQZl
+        8zQ599wt8yEJW0pBAV3RhY9K6OUGFunYka7g9x0=
+X-Google-Smtp-Source: ABdhPJwI1jpyvfp6Syqw8VPHxjayT22lizXhfFASeRsifC+fTjXmjqOeKnVBTI4zyPXPDV+t6Og7OsZoD6/VwVAjvLA=
+X-Received: by 2002:a9d:6254:: with SMTP id i20mr23441092otk.145.1593623867483;
+ Wed, 01 Jul 2020 10:17:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jqgM9-0004As-5q;;;mid=<87lfk3w458.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/OTl4+7uj9gmckES4vam8J/yGBVetut8Y=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Jul 2020 19:17:36 +0200
+Message-ID: <CAMuHMdWU7kVJMuNMSGxZSjErmj7rB=tvXH3GANmPRjYz+=JP1g@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+Hi Prabhakar,
 
-> On Tue, Jun 30, 2020 at 07:29:34AM -0500, Eric W. Biederman wrote:
->> 
->> diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
->> index 91474884ddb7..3e1874030daa 100644
->> --- a/net/bpfilter/bpfilter_kern.c
->> +++ b/net/bpfilter/bpfilter_kern.c
->> @@ -19,8 +19,8 @@ static void shutdown_umh(void)
->>         struct pid *tgid = info->tgid;
->>  
->>         if (tgid) {
->> -               kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
->> -               wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
->> +               kill_pid(tgid, SIGKILL, 1);
->> +               wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
->>                 bpfilter_umh_cleanup(info);
->>         }
->>  }
->> 
->> > And then did:
->> > while true; do iptables -L;rmmod bpfilter; done
->> >  
->> > Unfortunately sometimes 'rmmod bpfilter' hangs in wait_event().
->> 
->> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
->> release_task is called so there is a race.  As it is possible to wake
->> up and then go back to sleep before pid_has_task becomes false.
->> 
->> So I think I need a friendly helper that does:
->> 
->> bool task_has_exited(struct pid *tgid)
->> {
->> 	bool exited = false;
->> 
->> 	rcu_read_lock();
->>         tsk = pid_task(tgid, PIDTYPE_TGID);
->>         exited = !!tsk;
->>         if (tsk) {
->>         	exited = !!tsk->exit_state;
->> out:
->> 	rcu_unlock();
->> 	return exited;
->> }
+On Wed, Jul 1, 2020 at 5:42 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> serial core expects the spinlock to be initialized by the controller
+> driver for serial console, this patch makes sure the spinlock is
+> initialized, fixing the below issue:
 >
-> All makes sense to me.
-> If I understood the race condition such helper should indeed solve it.
-> Are you going to add such patch to your series?
-> I'll proceed with my work on top of your series and will ignore this
-> race for now, but I think it should be fixed before we land this set
-> into multiple trees.
+> [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
+> [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+> [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
+> [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
+> [    0.865968] Call trace:
+> [    0.865979]  dump_backtrace+0x0/0x1d8
+> [    0.865985]  show_stack+0x14/0x20
+> [    0.865996]  dump_stack+0xe8/0x130
+> [    0.866006]  spin_dump+0x6c/0x88
+> [    0.866012]  do_raw_spin_lock+0xb0/0xf8
+> [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
+> [    0.866032]  uart_add_one_port+0x3a4/0x4e0
+> [    0.866039]  sci_probe+0x504/0x7c8
+> [    0.866048]  platform_drv_probe+0x50/0xa0
+> [    0.866059]  really_probe+0xdc/0x330
+> [    0.866066]  driver_probe_device+0x58/0xb8
+> [    0.866072]  device_driver_attach+0x6c/0x90
+> [    0.866078]  __driver_attach+0x88/0xd0
+> [    0.866085]  bus_for_each_dev+0x74/0xc8
+> [    0.866091]  driver_attach+0x20/0x28
+> [    0.866098]  bus_add_driver+0x14c/0x1f8
+> [    0.866104]  driver_register+0x60/0x110
+> [    0.866109]  __platform_driver_register+0x40/0x48
+> [    0.866119]  sci_init+0x2c/0x34
+> [    0.866127]  do_one_initcall+0x88/0x428
+> [    0.866137]  kernel_init_freeable+0x2c0/0x328
+> [    0.866143]  kernel_init+0x10/0x108
+> [    0.866150]  ret_from_fork+0x10/0x18
 
-Yes. I am just finishing it up now.
+Interesting...
 
-Eric
+How can I reproduce that? I do have CONFIG_DEBUG_SPINLOCK=y.
+I'm wondering why haven't we seen this before...
 
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
