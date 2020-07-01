@@ -6,94 +6,43 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C08C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98698C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA7020773
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82CAE206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgGAHKm (ORCPT
+        id S1728120AbgGAHLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:10:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41056 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727847AbgGAHKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:10:42 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B0C0A65D660C38B54DB0;
-        Wed,  1 Jul 2020 15:10:40 +0800 (CST)
-Received: from [10.174.178.86] (10.174.178.86) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 1 Jul 2020
- 15:10:36 +0800
-Subject: Re: [PATCH v2 4/4] mm/vmalloc: Hugepage vmalloc mappings
-To:     Nicholas Piggin <npiggin@gmail.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>, <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200413125303.423864-1-npiggin@gmail.com>
- <20200413125303.423864-5-npiggin@gmail.com>
-From:   Zefan Li <lizefan@huawei.com>
-Message-ID: <d148f86c-b27b-63fb-31d2-35b8f52ec540@huawei.com>
-Date:   Wed, 1 Jul 2020 15:10:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 03:11:39 -0400
+Received: from verein.lst.de ([213.95.11.211]:38919 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727847AbgGAHLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 03:11:37 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id EBE5868B02; Wed,  1 Jul 2020 09:11:35 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 09:11:35 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: remove not needed fields from struct block_device
+Message-ID: <20200701071135.GA29425@lst.de>
+References: <20200626080158.1998621-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200413125303.423864-5-npiggin@gmail.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.86]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626080158.1998621-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  static void *__vmalloc_node(unsigned long size, unsigned long align,
-> -			    gfp_t gfp_mask, pgprot_t prot,
-> -			    int node, const void *caller);
-> +			gfp_t gfp_mask, pgprot_t prot, unsigned long vm_flags,
-> +			int node, const void *caller);
->  static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
-> -				 pgprot_t prot, int node)
-> +				 pgprot_t prot, unsigned int page_shift,
-> +				 int node)
->  {
->  	struct page **pages;
-> +	unsigned long addr = (unsigned long)area->addr;
-> +	unsigned long size = get_vm_area_size(area);
-> +	unsigned int page_order = page_shift - PAGE_SHIFT;
->  	unsigned int nr_pages, array_size, i;
->  	const gfp_t nested_gfp = (gfp_mask & GFP_RECLAIM_MASK) | __GFP_ZERO;
->  	const gfp_t alloc_mask = gfp_mask | __GFP_NOWARN;
->  	const gfp_t highmem_mask = (gfp_mask & (GFP_DMA | GFP_DMA32)) ?
-> -					0 :
-> -					__GFP_HIGHMEM;
-> +					0 : __GFP_HIGHMEM;
->  
-> -	nr_pages = get_vm_area_size(area) >> PAGE_SHIFT;
-> +	nr_pages = size >> page_shift;
+Any more comments on this series?
 
-while try out this patchset, we encountered a BUG_ON in account_kernel_stack()
-in kernel/fork.c.
-
-BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
-
-which obviously should be updated accordingly.
-
->  	array_size = (nr_pages * sizeof(struct page *));
->  
->  	/* Please note that the recursion is strictly bounded. */
->  	if (array_size > PAGE_SIZE) {
->  		pages = __vmalloc_node(array_size, 1, nested_gfp|highmem_mask,
-> -				PAGE_KERNEL, node, area->caller);
-> +				PAGE_KERNEL, 0, node, area->caller);
->  	} else {
->  		pages = kmalloc_node(array_size, nested_gfp, node);
->  	}
-
+On Fri, Jun 26, 2020 at 10:01:51AM +0200, Christoph Hellwig wrote:
+> Hi Jens,
+> 
+> this series put struct block_device on a bit of a diet by removing
+> fields that are unused or rather pointless.
+---end quoted text---
