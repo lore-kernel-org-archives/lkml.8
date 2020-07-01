@@ -2,185 +2,89 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F060C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A08C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332952073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190662067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hiRSb5Yt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wbqk8Ph9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgGAJpq (ORCPT
+        id S1729647AbgGAJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        Wed, 1 Jul 2020 05:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729125AbgGAJpq (ORCPT
+        with ESMTP id S1729564AbgGAJqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:45:46 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1511C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:45:45 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so21719852wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:45:45 -0700 (PDT)
+        Wed, 1 Jul 2020 05:46:04 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF33C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:46:03 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id f7so20099091wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:46:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6VkV+wbco7PMo2lrx2pWkKGDXAggcNMM6AGCXcdqnrg=;
-        b=hiRSb5YtCTCYJXD4xuWILS0OgVMj5jSL9PZ+ZswTZO25rKabPqPkdc1LzvwF3lIiyr
-         C5c6VZax5MG6lpW2/PZ8TkPt6nd4uwb4p0lFMrJIF++V07/sxOOP8mWVZZ9Gmr7mhhSI
-         rkiZkoyyVHP2obLKQrNlH8pi/nS95nCR8e/9Q+Y/ifsLDHEhd3xQbXSoe9JZw0436aAT
-         yE6bzjghW9ovcNixvKN8vXLA3nI1u42g4bRgz1M+BlRRhgrdb0isQzkzFn1rB2AdU0MV
-         5e6F3gUfScBIZ0OwKD6M30aIg/SXuZFO8nuT48BQ8X3cOQIuY12XWrIqsP3SShe58uS4
-         FWLg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WsaJCqMmyft0xsDXaDX0E0lFydjZ70ccL/4pSLdMeMc=;
+        b=wbqk8Ph9l/AGhRL3xUbGbNhLrunVeFNmXALYi0Gg56El/K1rrk3zzHtIf/sL1VdR3D
+         b3pBroqn4YTxTHIIg1cvze/q+fzpvAhGEZDjCHSYCcq3D5LN9cY+N8oqtoWmi3wp1Zi/
+         /2XzsEcLLsPKDqNJ0Iv8Pt5nWZ6zDwps1akv3mKqrH2Cy82IA0v1BCdPm4SgSazw/GwS
+         nlL23SjmZepHaJdtV+jbzGPq7hH9hZaEBSgS1gTZjMW3gva2JtXqB+uVIkeRsrWE8+iR
+         53WDNdZ+PSHEoUKREoeFk7IeT7n9qSzJiWpx1Q/aBY/EIKHhYk8bNIF+wmeGtkT/lul2
+         P7Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6VkV+wbco7PMo2lrx2pWkKGDXAggcNMM6AGCXcdqnrg=;
-        b=FsAvOtK5EUTo9AJMVNfsz1Eeyc+1Un3cmY/VgNXCPVFwZROsXEZJOKpvUgCqWPWiej
-         p25asHCZxuuhLpjC0uEFO41Mruere4cg2ziO+oT6KTrdJmgFOe891+3VDALB2rY2OiOn
-         g2F6+RGjFg9lYFYQYinEW9MyTDCam3LLa+9UTzzjpI+JYXTKvWS6xhenhJRs7mti0Jy/
-         HeZJqvwVmwKgMZ1IBgo60Og2kVeiCeswKzmJrj4AiWSvr/46zCAJnmmRn9u9GH0LMwPx
-         7o/yDksdlwzA2LLhCTIzecCngPxQh1uTVpQHZ8Y1deXxNXU6FpYJp7zMLZRhigNL2Uai
-         LvqQ==
-X-Gm-Message-State: AOAM532ggj0OIFIJnxg0OXmLlWZCfPQHn4yg6Du0nwMSHR3an0SNnca8
-        mOvLmUdpcM+sr1hnWM2KxRb7ql2wOA0=
-X-Google-Smtp-Source: ABdhPJzyXvtz+lTTpNdu32MAj1FLMURsJ8+tDmEox8kYVm5CuY66aCjaqa1zO7wtqrwlDeiOEbT2pw==
-X-Received: by 2002:a1c:3546:: with SMTP id c67mr26090842wma.102.1593596744035;
-        Wed, 01 Jul 2020 02:45:44 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
-        by smtp.googlemail.com with ESMTPSA id c206sm6860256wmf.36.2020.07.01.02.45.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 02:45:43 -0700 (PDT)
-Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <20200625144509.17918-3-daniel.lezcano@linaro.org>
- <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
- <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org>
- <CAP245DUG-OsSD-_CucMMQ26HpzjJhn0emfq_go923NsDq6RqOg@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c664d247-7f9b-603f-c318-48e534aedfc9@linaro.org>
-Date:   Wed, 1 Jul 2020 11:45:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        bh=WsaJCqMmyft0xsDXaDX0E0lFydjZ70ccL/4pSLdMeMc=;
+        b=EKgmxmPDV/X6q1SFDxIgJEqlrs1vOYb8NcHNaWxEhbhrBBQR/6QPLcF/RzuhIaHpRK
+         IDNOIRH2kzxSk3VuTt+Py4YhMIiMGwe7V71JPWx7/1D2yffISwlegXZoQLC428wF3o8U
+         ARjMFP2zkgL8jgo9lhuB6rOfHFR2vXDknJA97HaUP7pSPS7uaTZBneOSYoZ4Hww53pzN
+         x0ZMO599sWdbHAeQZuO5yvpanxy7htGPW11JWlICS23oJhRXCitkbeVqoLRtCNf8cAAC
+         +JqByjcq1nJF0db/F13txygKP/tm7m6PMkqenAsV2HiD0sAY5/1Ir5Ghz0YPsl65X3l4
+         xy8w==
+X-Gm-Message-State: AOAM5316P+Z0GlgyAmv9I+Jjz9odZNE3GRPMRTDOyuhJfqMDEyqxwK0W
+        gejW/8WH+mJSjDB7kllgG/VFpw==
+X-Google-Smtp-Source: ABdhPJxK5vIN7UeAUbYNFQLTvAZEkw2V7bkjRvhqNfHoOiZLWbl8nRVLfm7/OR/9iJN3Dm6TZLb17Q==
+X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr2853363wru.147.1593596762403;
+        Wed, 01 Jul 2020 02:46:02 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id f13sm6270472wmb.33.2020.07.01.02.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 02:46:01 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: dts: meson: odroid-n2: update sound card
+Date:   Wed,  1 Jul 2020 11:45:54 +0200
+Message-Id: <20200701094556.194498-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <CAP245DUG-OsSD-_CucMMQ26HpzjJhn0emfq_go923NsDq6RqOg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2020 11:33, Amit Kucheria wrote:
-> On Wed, Jul 1, 2020 at 2:56 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>
->> On 30/06/2020 13:47, Amit Kucheria wrote:
->>> On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
->>> <daniel.lezcano@linaro.org> wrote:
->>>>
->>>> In order to set the scene for the new generic netlink thermal
->>>> management and notifications, let remove the old dead code remaining
->>>
->>> s/management/management api/
->>>
->>> s/let/let's/
->>>
->>>> in the uapi headers.
->>>>
->>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> ---
->>>>  include/linux/thermal.h      |  5 -----
->>>>  include/uapi/linux/thermal.h | 12 +-----------
->>>>  2 files changed, 1 insertion(+), 16 deletions(-)
->>>>
->>>> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
->>>> index faf7ad031e42..fc93a6348082 100644
->>>> --- a/include/linux/thermal.h
->>>> +++ b/include/linux/thermal.h
->>>> @@ -302,11 +302,6 @@ struct thermal_zone_params {
->>>>         int offset;
->>>>  };
->>>>
->>>> -struct thermal_genl_event {
->>>> -       u32 orig;
->>>> -       enum events event;
->>>> -};
->>>> -
->>>>  /**
->>>>   * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
->>>>   *
->>>> diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
->>>> index 96218378dda8..22df67ed9e9c 100644
->>>> --- a/include/uapi/linux/thermal.h
->>>> +++ b/include/uapi/linux/thermal.h
->>>> @@ -6,21 +6,12 @@
->>>>
->>>>  /* Adding event notification support elements */
->>>>  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
->>>> -#define THERMAL_GENL_VERSION                    0x01
->>>> +#define THERMAL_GENL_VERSION                    0x02
->>>
->>> This hunk should be removed since you set version back to 1 in the
->>> next patch and we don't actually intend to bump the version yet.
->>
->> Well, I've been very strict here for git-bisecting.
->>
->> I move to V2 because of the removal, but when adding the new genetlink
->> code, the family name changed, so we returned back to the V1 as it is a
->> new genetlink thermal brand.
-> 
-> I don't understand the move to v2 for an empty skeleton UAPI. For the
-> purposes of bisection, couldn't you just remove all the v1 UAPI (w/o
-> bumping to v2) and then add a new UAPI in the next patch?
-> 
->> The name is change because it is no longer event based but also sampling
->> and commands.
-> 
-> In this case, just to avoid any confusion, the new UAPI could be v2
-> making the transition clear in case of bisection.
-> 
-> I'm afraid the v1->v2->v1 is a bit more confusing.
+This patchset adds the support for the TDM loopback and audio on the jack
+output using the internal codec.
 
-Let me elaborate a bit:
+Jerome Brunet (2):
+  arm64: dts: meson: odroid-n2: enable audio loopback
+  arm64: dts: meson: odroid-n2: add jack audio output support
 
-Why there is this patch ?
-- By removing this code first, the next patch will just contain
-additions, I thought it would be clearer
-
-Why increase the version here ?
-- Code must continue to compile and as the 'thermal_event' family is now
-different from V1, the version is changed
-
-Why the version goes to V1 in the next patch ?
-- The family name is changed as it is not doing event only, so it is a
-new netlink thermal protocol and we begin at V1
-
-So the main reason of this patch is to be very strict in the iteration
-changes. May be it is too much, in this case I can merge this patch with
-4/5, the old netlink protocol removal will be lost in the addition of
-the new protocol. I'm fine with that if you think it is simpler.
-
-
-
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 136 +++++++++++++++++-
+ 1 file changed, 131 insertions(+), 5 deletions(-)
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.25.4
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
