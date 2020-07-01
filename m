@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223022074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5837E2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C6emcavX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/961bqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgGAIcp (ORCPT
+        id S1729099AbgGAIcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
+        Wed, 1 Jul 2020 04:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbgGAIbv (ORCPT
+        with ESMTP id S1728888AbgGAIbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:31:51 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE620C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:50 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so19876102wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:50 -0700 (PDT)
+        Wed, 1 Jul 2020 04:31:47 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71899C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 01:31:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so22891915wrv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 01:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9c9u4tDA/tuITz0x9b4sRgCY6xDvpdYsLA/gKX2PRak=;
-        b=C6emcavXrS0sAJaB4EgwHG2NIfC2Z95Q9QyMrS8UgRqBviZqvwM4fTokhxLJkdolsU
-         ayLDvmDKSKxZ4jconTmjB8Au7duak0T46ngmaX8SlHU0mWo81f+DapSXhIwJdhacCE90
-         2eBi10ThTRMy7vtoK2iMSkiVSS0zbyQjQhJKKX61D8gyFDVBovOqDRTDnsY+u4D9svFg
-         GjrpJenuLdbKnGvZ2QHjzvNkS9WDC+ubM1hUnDbP2ZHWXU5ifERbl+5Wy64rjMlfMIhZ
-         EQ/NNAxhrnH7V54AsExg327jCMiL/AQ9mlD7y61YyvRRYZM5zvzKuR67yTreVCXMN/7E
-         8cZA==
+        bh=DZzcRr+il6B7Wb5szs9514Q011nYXDt2b1eWYEXToMg=;
+        b=T/961bqfLhKvkYLxSnHHWpEfPBVLQHZP8JmP9cDGKQgDJKxp2PSYH0sNvAslRP8Rh6
+         Qio/3x7UgE+n4G1rJQwVtFnLhuw7mQ+0ePSBVqN8owOWFqgwtKTWvGJ0E3or5afJYfaK
+         +R00WyNEkoWOvADs8PSOfJyZq43uqzhUBensqR5HWPyo+RV87EKZKeRwzFACq9/qV7cm
+         hEQVKgbV6U+0Pl8qVpufSrK5d7z3Jc7qb+hQp9w2Dhxv1PQqYkkwDsdlnPzyfjCntTlN
+         dR+47xS8X/mdxH7P6m8ibWTUdPuHGDfzH/CM+HkuJ0GrNoOAEwxTqqJHKRQ2e6TZAKjl
+         2kvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9c9u4tDA/tuITz0x9b4sRgCY6xDvpdYsLA/gKX2PRak=;
-        b=mwpgVJwgnBJ6n4jTInc/K4WRz8X4+HqtQ652dg7Ts2uwqQBVzrkrn3Riy4dDgplRbe
-         ivcq9qsVCwMAILOSrW2GSJobPWyfzJeqoZPZgaMOYfmPx8rQTLpzxX1A9hsazlaDJROY
-         6IzOji8euwTEhiVpn4Z9j57s2JgQPzEeJsPYBH2bjUPvSqxBi3e8iy6ZZPsk4FvjshcY
-         ajZMD4LZ/JFw7kG1vIKSYzGSazS6jU2wM5oQ5cSbh9tjNFkb5SXT9gzTonTogQVXELtH
-         ofCiL2wNhW6jdP3PHb9u1Cav46j9upqVnbmtDWBw2/CWc+ZjYp3mLtRGNhmCK64k7x1V
-         cZPQ==
-X-Gm-Message-State: AOAM530qrni0lC1geJ4bwgXxRj3uO12Z2A/i60I4Ki2JF99d+Som94tm
-        KJABll566kuOTin/rOFCALhMBSnD0ZU=
-X-Google-Smtp-Source: ABdhPJw/xbj3QdGCPwDaRKsmvYF3w1E8/+ksO90aiaHfPoWccdmsiuuaGqHGu/YIHpNih12W8WjpRA==
-X-Received: by 2002:adf:dc90:: with SMTP id r16mr26041731wrj.264.1593592309531;
-        Wed, 01 Jul 2020 01:31:49 -0700 (PDT)
+        bh=DZzcRr+il6B7Wb5szs9514Q011nYXDt2b1eWYEXToMg=;
+        b=hgkb+4AS890O51a03me1cX4O62xJp47aVfO41C5cRI8emBJQVUKWjz8DiZT8z5jmRq
+         wV/Wf2/aEMFCbOkkjiwcGajfThI8QyleqjF4uHl0pTv73ZutOP0/2y3pmjUQYQIbmck1
+         ZKGJ2E+b+wtFIusN9xk4qjo5G4arXniWRVJqtkwme+hJO6ZOPifKBbf+WIjq/I2SF3Aj
+         hSa53O4sLWkFeBhuywyTGcOUHqhF4pEwHWUdiZg+nttxTv23lWnlQ5ec/7N8N0tDSazv
+         NNBGehjGnt9XTLbKEvYKcaHPI0fmx+dqHokduHhNwxOl+HtW6ubrPquo4kEilBi2Rmkl
+         sjqw==
+X-Gm-Message-State: AOAM531i+tYaaDvjcWqtTMWxhdf98VMikyGzt1SL0QG/Kn5qDVVzoJ7R
+        JOfrrNY8Y44CpKWb2Du4L6mkow==
+X-Google-Smtp-Source: ABdhPJxqVgReTrmNRgeGnposdJbFETiC9GzH6pknz4+2saBKDurPy8FBUajeS2RPoThNqCEbqUTLtg==
+X-Received: by 2002:adf:b6a4:: with SMTP id j36mr26072060wre.260.1593592306136;
+        Wed, 01 Jul 2020 01:31:46 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.48
+        by smtp.gmail.com with ESMTPSA id 59sm6717816wrj.37.2020.07.01.01.31.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 01:31:48 -0700 (PDT)
+        Wed, 01 Jul 2020 01:31:45 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 22/30] misc: mic: scif: scif_nm: Supply various kerneldoc fix-ups
-Date:   Wed,  1 Jul 2020 09:31:10 +0100
-Message-Id: <20200701083118.45744-23-lee.jones@linaro.org>
+Subject: [PATCH v2 19/30] misc: mic: scif: scif_api: Demote scif_accept() function header
+Date:   Wed,  1 Jul 2020 09:31:07 +0100
+Message-Id: <20200701083118.45744-20-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200701083118.45744-1-lee.jones@linaro.org>
 References: <20200701083118.45744-1-lee.jones@linaro.org>
@@ -75,71 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Includes; missing descriptions for function args, the promotion
-of obvious kerneldoc headers and the mis-formatting of existing
-argument descriptions.
+The correct format is not used and no attempt has been made
+to document the function arguments.  Makes sense to just demote
+the header back down to a simple comment.
 
-Fixes the following W=1 kernel build warnings:
+Fixes the following W=1 warnings:
 
- drivers/misc/mic/scif/scif_nm.c:19: warning: Function parameter or member 'node' not described in 'scif_invalidate_ep'
- drivers/misc/mic/scif/scif_nm.c:173: warning: Function parameter or member 'node_id' not described in 'scif_disconnect_node'
+ drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'epd' not described in 'scif_accept'
+ drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'peer' not described in 'scif_accept'
+ drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'newepd' not described in 'scif_accept'
+ drivers/misc/mic/scif/scif_api.c:739: warning: Function parameter or member 'flags' not described in 'scif_accept'
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/mic/scif/scif_nm.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/misc/mic/scif/scif_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mic/scif/scif_nm.c b/drivers/misc/mic/scif/scif_nm.c
-index c537df84539a9..c4d9422082b7d 100644
---- a/drivers/misc/mic/scif/scif_nm.c
-+++ b/drivers/misc/mic/scif/scif_nm.c
-@@ -14,6 +14,8 @@
- /**
-  * scif_invalidate_ep() - Set state for all connected endpoints
-  * to disconnected and wake up all send/recv waitqueues
-+ *
-+ * @node: Node to invalidate
-  */
- static void scif_invalidate_ep(int node)
- {
-@@ -99,11 +101,10 @@ void scif_send_acks(struct scif_dev *dev)
- 	}
+diff --git a/drivers/misc/mic/scif/scif_api.c b/drivers/misc/mic/scif/scif_api.c
+index d7faffdd87e92..9cc6b2a6cf229 100644
+--- a/drivers/misc/mic/scif/scif_api.c
++++ b/drivers/misc/mic/scif/scif_api.c
+@@ -713,7 +713,7 @@ int scif_connect(scif_epd_t epd, struct scif_port_id *dst)
  }
+ EXPORT_SYMBOL_GPL(scif_connect);
  
--/*
-- * scif_cleanup_scifdev
-- *
-+/**
-+ * scif_cleanup_scifdev - Uninitialize SCIF data structures for remote
-+ *                        SCIF device.
-  * @dev: Remote SCIF device.
-- * Uninitialize SCIF data structures for remote SCIF device.
-  */
- void scif_cleanup_scifdev(struct scif_dev *dev)
- {
-@@ -136,8 +137,8 @@ void scif_cleanup_scifdev(struct scif_dev *dev)
- 	scif_cleanup_qp(dev);
- }
- 
--/*
-- * scif_remove_node:
-+/**
-+ * scif_remove_node
+-/**
++/*
+  * scif_accept() - Accept a connection request from the remote node
   *
-  * @node: Node to remove
-  */
-@@ -162,9 +163,9 @@ static int scif_send_rmnode_msg(int node, int remove_node)
- }
- 
- /**
-- * scif_node_disconnect:
-+ * scif_node_disconnect
-  *
-- * @node_id[in]: source node id.
-+ * @node_id: source node id [in]
-  * @mgmt_initiated: Disconnection initiated from the mgmt node
-  *
-  * Disconnect a node from the scif network.
+  * The function accepts a connection request from the remote node.  Successful
 -- 
 2.25.1
 
