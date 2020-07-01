@@ -2,142 +2,131 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0C92078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE912073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgGAJz7 (ORCPT
+        id S1729719AbgGAJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:55:59 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2422 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729109AbgGAJz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:55:58 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id E005BCE4174E1060B27B;
-        Wed,  1 Jul 2020 10:55:56 +0100 (IST)
-Received: from localhost (10.52.123.12) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 1 Jul 2020
- 10:55:56 +0100
-Date:   Wed, 1 Jul 2020 10:54:54 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     David Gow <davidgow@google.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        <linux-iio@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: Specify IOMEM dependency for adi-axi-adc
- driver
-Message-ID: <20200701105454.00002ca0@Huawei.com>
-In-Reply-To: <CABVgOSnOo4iauOBGpJUZ4NRihCUU-1vue8hajZTCKAcH98_Lrw@mail.gmail.com>
-References: <20200630070552.1110864-1-davidgow@google.com>
-        <20200630110654.00001d40@Huawei.com>
-        <CABVgOSnOo4iauOBGpJUZ4NRihCUU-1vue8hajZTCKAcH98_Lrw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 1 Jul 2020 05:57:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20571 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729332AbgGAJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:57:50 -0400
+IronPort-SDR: 1A3Q9ey3bFzkFE2+bWsI66/08coGxjPulEDFygyy7wIeGUthqrql5woZ0NUFpLe+FqgTAHW9lf
+ DLKEMyOKdJLA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164527274"
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="164527274"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 02:57:49 -0700
+IronPort-SDR: eLaADTkcKhiOvG4JlSZ0Sxp3y0KdIygaZBalh8sTPTeY0Cingbus4yq/wDFE49FVZ/AkvAyNXD
+ pQ0TrId8spCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="303788511"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 02:57:48 -0700
+Subject: Re: 0001-Fix-CQE-task-queue-timeout.patch
+To:     chen jiangnan <chen.jiangnan@zlingsmart.com>
+Cc:     "riteshh@codeaurora.org" <riteshh@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "ulf.hansson@linaro.or" <ulf.hansson@linaro.or>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <5a7b5ad9-bb3a-4281-a065-f57f9cf71a5a.chen.jiangnan@zlingsmart.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <40cccbed-1cbf-c709-9d5b-b87e796b07e5@intel.com>
+Date:   Wed, 1 Jul 2020 12:57:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.123.12]
-X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <5a7b5ad9-bb3a-4281-a065-f57f9cf71a5a.chen.jiangnan@zlingsmart.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 11:04:42 +0800
-David Gow <davidgow@google.com> wrote:
+On 22/06/20 8:44 am, chen jiangnan wrote:
+> From 547e5635c04f4f9d62cbc1e3a4b4527f87c4e83b Mon Sep 17 00:00:00 2001
+> From: JiangnanChen <chen.jiangnan@zlingsmart.com>
+> Date: Mon, 22 Jun 2020 05:32:21 +0000
+> Subject: [PATCH] Fix CQE task queue timeout. CQE notifies the software that
 
-> On Tue, Jun 30, 2020 at 6:07 PM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Tue, 30 Jun 2020 00:05:52 -0700
-> > David Gow <davidgow@google.com> wrote:
-> >  
-> > > The Analog Devices AXI ADC driver uses the devm_ioremap_resource
-> > > function, but does not specify a dependency on IOMEM in Kconfig. This
-> > > causes a build failure on architectures without IOMEM, for example, UML
-> > > (notably with make allyesconfig).
-> > >
-> > > Fix this by making CONFIG_ADI_AXI_ADC depend on CONFIG_IOMEM.
-> > >
-> > > Signed-off-by: David Gow <davidgow@google.com>  
-> > Hi David,
-> >
-> > Could you confirm what the build error is?  I thought the stubs added in
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1bcbfbfdeb
-> > were meant to allow us to avoid having lots of depends on IOMEM lines for the
-> > few architectures who don't support it.  
+Please separate subject from commit message.
+
+>  task has completed through task completion notification (TCN), but some CQE
+>  will occasionally mark the task in the pending state (via DPT). At this time,
+>  if a QBR task (such as flush cache) is followed, the entire command queue
+>  will be blocked, causing the mmc subsystem to report a timeout error, and cqe
+>  enters the recovery process.
+
+It seems like this is a workaround for broken HW, so you could create a quirk for
+this, but making use of the ->write_l host op is cleaner for cqhci.
+
+e.g. in your driver, for the broken controller set cqhci_host_ops write_l to use
+the following:
+
+static void ???_cqhci_writel(struct cqhci_host *cq_host, u32 val, int reg)
+{
+	writel_relaxed(val, cq_host->mmio + reg);
+
+	if (reg == CQHCI_TCN) {
+               u32 pend_status = cqhci_readl(cq_host, CQHCI_DPT);
+               if (val & pend_status) {
+                       pr_debug("%s: cqhci conflict: TCN: 0x%08lx DPT: 0x%08lx\n",
+                                mmc_hostname(cq_host->mmc), val, pend_status);
+                       cqhci_writel(cq_host, val & pend_status, CQHCI_TCLR);
+               }
+	}
+}
+
 > 
-> No worries:
-> /usr/bin/ld: drivers/iio/adc/adi-axi-adc.o: in function `adi_axi_adc_probe':
-> torvalds-linux/drivers/iio/adc/adi-axi-adc.c:415: undefined reference
-> to `devm_platform_ioremap_resource'
-> 
-> Alas, the devm_platform_ioremap_resource function isn't handled by the
-> UML stubs: it all seems to be in drivers/base/platform.c and
-> lib/devres.c, behind #ifdef HAS_IOMEM.
-> 
-> In any case, improving IOMEM support for UML (at least for the KUnit
-> test case, which is my use case) is something I'd like to do. There
-> are only three drivers[1,2] upstream at the moment which fail to build
-> as-is, though, so it seemed worth trying to fix them in the meantime.
-> That being said, I tried just getting rid of the few #ifdef HAS_IOMEMs
-> around the various devm_*_ioremap functions, and everything seems to
-> be working... So maybe that's a false dependency given the various
-> stubs (at least on UML). I used this (hideously hacky) patch:
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index c0d0a5490ac6..b6f08c88e2b6 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -61,7 +61,7 @@ struct resource *platform_get_resource(struct
-> platform_device *dev,
-> }
-> EXPORT_SYMBOL_GPL(platform_get_resource);
-> 
-> -#ifdef CONFIG_HAS_IOMEM
-> +#if 1//def CONFIG_HAS_IOMEM
-> /**
->  * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
->  *                                         platform device and get resource
-> diff --git a/lib/Makefile b/lib/Makefile
-> index b1c42c10073b..35c21af33b93 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -115,7 +115,7 @@ obj-y += math/ crypto/
-> 
-> obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
-> obj-$(CONFIG_GENERIC_PCI_IOMAP) += pci_iomap.o
-> -obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
-> +obj-y += iomap_copy.o devres.o
-> obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
-> obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
-> 
+> Signed-off-by: JiangnanChen <chen.jiangnan@zlingsmart.com>
 > ---
+>  drivers/mmc/host/cqhci.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> If this seems to work more broadly, I may try to clean it up and post
-> it for broader review.
-
-Looks like a good approach to me!
-
-Jonathan
-
-> 
-> Cheers,
-> -- David
-
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index 75934f3c117e..b8c7f6119ac4 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -760,7 +760,7 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
+>                       int data_error)
+>  {
+>         u32 status;
+> -       unsigned long tag = 0, comp_status;
+> +       unsigned long tag = 0, comp_status, pend_status;
+>         struct cqhci_host *cq_host = mmc->cqe_private;
+>  
+>         status = cqhci_readl(cq_host, CQHCI_IS);
+> @@ -778,6 +778,13 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
+>                 pr_debug("%s: cqhci: TCN: 0x%08lx\n",
+>                          mmc_hostname(mmc), comp_status);
+>  
+> +               pend_status = cqhci_readl(cq_host, CQHCI_DPT);
+> +               if (comp_status & pend_status) {
+> +                       pr_debug("%s: cqhci conflict: TCN: 0x%08lx DPT: 0x%08lx\n",
+> +                                mmc_hostname(mmc), comp_status, pend_status);
+> +                       cqhci_writel(cq_host, comp_status & pend_status, CQHCI_TCLR);
+> +               }
+> +
+>                 spin_lock(&cq_host->lock);
+>  
+>                 for_each_set_bit(tag, &comp_status, cq_host->num_slots) {
+> -- 
+> 2.17.1
 
