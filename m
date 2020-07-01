@@ -2,92 +2,124 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0406E20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E64B20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593600890;
+	bh=7GNTkyFGL6BaU9SyC5X2Zxuq8NsIiZjrUMKn2rPmExw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VNIqBYXQpCIb4dWRwROcSEZIBLzyJCdx6JBjf53/e/B9cEGWR6SeHfoerS9wCNLCt
+	 HcYtBcYJv7O5+4sWwjDpB5MoiYeN+xmTsfgFAftokbZS4JHPCb7YKa9BAufFO1eIjP
+	 uwhTyJpfWCTy/Wwa6Cq7Rdz7wfJh4bGgx7KuYamI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgGAKxO (ORCPT
+        id S1730105AbgGAKys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:53:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:57020 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgGAKxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:53:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B597030E;
-        Wed,  1 Jul 2020 03:53:12 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB9483F73C;
-        Wed,  1 Jul 2020 03:53:08 -0700 (PDT)
-Subject: Re: [PATCH v3 00/34] iommu: Move iommu_group setup to IOMMU core code
-To:     Qian Cai <cai@lca.pw>, Joerg Roedel <joro@8bytes.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        jonathan.derrick@intel.com, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        virtualization@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
- <20200701004020.GA6221@lca.pw>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9b0ef27a-f249-a90b-9899-e53b946f83cc@arm.com>
-Date:   Wed, 1 Jul 2020 11:53:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 06:54:48 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:33241 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729892AbgGAKyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:54:47 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 061AsSZ4011733;
+        Wed, 1 Jul 2020 19:54:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 061AsSZ4011733
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593600869;
+        bh=A6uk0LVabw4p6RBBaWE+21lAHhKMnw5ycMt+myfy300=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=10ODLjJribOWq7jnMmdg7a61KeFnyMcyXY6t8C4AQqMldAB+PKznauq6RK4LsG1FL
+         ExOqOlWA2GvpiPWzW2A4OzbXfzoYCNPThTPG+oqYSXoqmnS/Cqgic4o2v67YisbuBu
+         yZqUL74U0U5RyppWtfD2kffTG/guhR4/IHZw0zu3knI5lM9bCtbhf8EzAskdfOLnw1
+         60gsALE4FVDM7iYRUFmKsnm+BrS/3PsDhfvxKXYTkAdkb28BL4A3foEic4vEzz2b+n
+         P3LpoVQuxgoVH+u6TEo3BUn9Elqb1AouVMBbIu7vG2NdqikGN5zKc9krqzhImoalpF
+         gfUvnpI3dpq0Q==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id d64so5361534vke.4;
+        Wed, 01 Jul 2020 03:54:28 -0700 (PDT)
+X-Gm-Message-State: AOAM5327zwgIrDasXkkyJgSMko2UrpRJHo/h875kXtk6rqqe3JFDrPXz
+        NwTWYW69mTGCjWrGx4UMLoKCopefZLTV/15iJu0=
+X-Google-Smtp-Source: ABdhPJzEbQbvlLwPi5eSQ/ja5pxAvFFGm84VH74ihD+yI+MOGCFmZrnPrx5yRl/8Ih8eFU6t/Ku3k0hujk5aZQt+b3I=
+X-Received: by 2002:ac5:c74b:: with SMTP id b11mr4735766vkn.73.1593600867304;
+ Wed, 01 Jul 2020 03:54:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200701004020.GA6221@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200701113448.3119f64f@canb.auug.org.au> <CANpmjNMz0rtC7AnXUnZKfg+egqqQ3BKPznsWUdEqJQDLTgAaAQ@mail.gmail.com>
+In-Reply-To: <CANpmjNMz0rtC7AnXUnZKfg+egqqQ3BKPznsWUdEqJQDLTgAaAQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 1 Jul 2020 19:53:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ_X2Kmgqc3B1m7g1K8Xnvo+ja3A11eZXRFAOqDC4Jxcw@mail.gmail.com>
+Message-ID: <CAK7LNAQ_X2Kmgqc3B1m7g1K8Xnvo+ja3A11eZXRFAOqDC4Jxcw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the rcu tree with the kbuild tree
+To:     Marco Elver <elver@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-01 01:40, Qian Cai wrote:
-> Looks like this patchset introduced an use-after-free on arm-smmu-v3.
-> 
-> Reproduced using mlx5,
-> 
-> # echo 1 > /sys/class/net/enp11s0f1np1/device/sriov_numvfs
-> # echo 0 > /sys/class/net/enp11s0f1np1/device/sriov_numvfs
-> 
-> The .config,
-> https://github.com/cailca/linux-mm/blob/master/arm64.config
-> 
-> Looking at the free stack,
-> 
-> iommu_release_device->iommu_group_remove_device
-> 
-> was introduced in 07/34 ("iommu: Add probe_device() and release_device()
-> call-backs").
+On Wed, Jul 1, 2020 at 2:52 PM Marco Elver <elver@google.com> wrote:
+>
+> On Wed, 1 Jul 2020 at 03:34, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > Today's linux-next merge of the rcu tree got a conflict in:
+> >
+> >   kernel/kcsan/Makefile
+> >
+> > between commit:
+> >
+> >   f7c28e224da6 ("kbuild: remove cc-option test of -fno-stack-protector")
+>
+> Is it possible that this patch drops the KCSAN portion?
 
-Right, iommu_group_remove_device can tear down the group and call 
-->domain_free before the driver has any knowledge of the last device 
-going away via the ->release_device call.
 
-I guess the question is do we simply flip the call order in 
-iommu_release_device() so drivers can easily clean up their internal 
-per-device state first, or do we now want them to be robust against 
-freeing domains with devices still nominally attached?
+Done.
 
-Robin.
+Thanks.
+
+
+> The patch
+> "kcsan: Simplify compiler flags" does the same, but is part of a
+> future pull request intended for 5.9.
+>
+> The KCSAN changes had been in -next for well over a week. Also, I'm
+> sorry I hadn't seen your patch before, otherwise I would have noticed
+> this.
+>
+> Please see: https://lkml.kernel.org/r/20200624190236.GA6603@paulmck-ThinkPad-P72
+>
+> > from the kbuild tree and commits:
+> >
+> >   2839a232071f ("kcsan: Simplify compiler flags")
+> >   61d56d7aa5ec ("kcsan: Disable branch tracing in core runtime")
+> >
+> > from the rcu tree.
+> >
+> > I fixed it up (I just used the rcu tree version) and can carry the fix
+> > as necessary. This is now fixed as far as linux-next is concerned, but
+> > any non trivial conflicts should be mentioned to your upstream maintainer
+> > when your tree is submitted for merging.  You may also want to consider
+> > cooperating with the maintainer of the conflicting tree to minimise any
+> > particularly complex conflicts.
+>
+> Thank you!
+>
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
