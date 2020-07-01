@@ -2,154 +2,281 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B77E20722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:40:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xhrcp2PX"
+	by mail.kernel.org (Postfix) with ESMTP id 4F71620722
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 07:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgGAHk2 (ORCPT
+        id S1728283AbgGAHlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 03:40:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44779 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727836AbgGAHk0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 03:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593589225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=izZP1MGTnUa71zOMjrTosKXYO8Y0RHaKMcIyCK6vJao=;
-        b=Xhrcp2PXk3QzkokwRd3QcmIaftFPwO/YJi9DekMEzv+Mkxhe0GEqAuborXTAbp+71HxP6B
-        FDvMURzahDw1jTcQrjvLPdQKQzrswl2OjbVXMs3PGTKzbSjPgEJMZPvkoF4TPK50AblijS
-        Sj0PC6+eGQ7Y5RvJRIUPiLTnX/bm3DI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-MtDWQ3oVPeK49MAHXPiNSA-1; Wed, 01 Jul 2020 03:40:23 -0400
-X-MC-Unique: MtDWQ3oVPeK49MAHXPiNSA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F29A2CCC;
-        Wed,  1 Jul 2020 07:40:21 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-207.pek2.redhat.com [10.72.12.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E639060FC2;
-        Wed,  1 Jul 2020 07:40:15 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 15:40:12 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
-Message-ID: <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Wed, 1 Jul 2020 03:41:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8453 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727836AbgGAHlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 03:41:45 -0400
+IronPort-SDR: +UcjXXmJDNP5MiNiFXDrA2H7sR1YRnqna3+2Q5oScNzTltRzeZ/gcnsqk1k3Q7OBeO6lC66Dw5
+ v+wExmZjLndQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="164500568"
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="164500568"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 00:41:41 -0700
+IronPort-SDR: rVcSInZhrUsHCDl2NJ5vd8cM+dsiOSVeH/3hm3lHBzxspj/ivNrFEaRQY2/xjpLqcjqHlPAAvC
+ t45prp1INMOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,299,1589266800"; 
+   d="scan'208";a="277687655"
+Received: from yumao-mobl1.ccr.corp.intel.com ([10.255.29.220])
+  by orsmga003.jf.intel.com with ESMTP; 01 Jul 2020 00:41:39 -0700
+Message-ID: <171936e84c416d7647756d9b453ef2d4475ebdc8.camel@intel.com>
+Subject: Re: [PATCH v2 4/5] thermal: core: genetlink support for
+ events/cmd/sampling
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
+Date:   Wed, 01 Jul 2020 15:41:38 +0800
+In-Reply-To: <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+         <20200625144509.17918-4-daniel.lezcano@linaro.org>
+         <73150ef4ca536368f087672b917dd9773417020e.camel@intel.com>
+         <23458be6-1e5f-7397-4935-c5268b9f52a6@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hari,
-On 06/27/20 at 12:35am, Hari Bathini wrote:
-> crashkernel region could have an overlap with special memory regions
-> like  opal, rtas, tce-table & such. These regions are referred to as
-> exclude memory ranges. Setup this ranges during image probe in order
-> to avoid them while finding the buffer for different kdump segments.
-> Implement kexec_locate_mem_hole_ppc64() that locates a memory hole
-> accounting for these ranges. Also, override arch_kexec_add_buffer()
-> to locate a memory hole & later call __kexec_add_buffer() function
-> with kbuf->mem set to skip the generic locate memory hole lookup.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/crashdump-ppc64.h |   10 +
->  arch/powerpc/include/asm/kexec.h           |    7 -
->  arch/powerpc/kexec/elf_64.c                |    7 +
->  arch/powerpc/kexec/file_load_64.c          |  292 ++++++++++++++++++++++++++++
->  4 files changed, 312 insertions(+), 4 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
-> 
-[snip]
->  /**
-> + * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
-> + *                             regions like opal/rtas, tce-table, initrd,
-> + *                             kernel, htab which should be avoided while
-> + *                             setting up kexec load segments.
-> + * @mem_ranges:                Range list to add the memory ranges to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
-> +{
-> +	int ret;
-> +
-> +	ret = add_tce_mem_ranges(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_initrd_mem_range(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_htab_mem_range(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_kernel_mem_range(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_rtas_mem_range(mem_ranges, false);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_opal_mem_range(mem_ranges, false);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = add_reserved_ranges(mem_ranges);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* exclude memory ranges should be sorted for easy lookup */
-> +	sort_memory_ranges(*mem_ranges);
-> +out:
-> +	if (ret)
-> +		pr_err("Failed to setup exclude memory ranges\n");
-> +	return ret;
-> +}
+Hi, Daniel,
 
-I'm confused about the "overlap with crashkernel memory", does that mean
-those normal kernel used memory could be put in crashkernel reserved
-memory range?  If so why can't just skip those areas while crashkernel
-doing the reservation?
+On Tue, 2020-06-30 at 20:32 +0200, Daniel Lezcano wrote:
+> Hi Zhang,
+> 
+> thanks for taking the time to review
+> 
+> 
+> On 30/06/2020 18:12, Zhang Rui wrote:
+> 
+> [ ... ]
+> 
+> > > +int thermal_notify_tz_enable(int tz_id);
+> > > +int thermal_notify_tz_disable(int tz_id);
+> > 
+> > these two will be used after merging the mode enhancement patches
+> > from
+> > Andrzej Pietrasiewicz, right?
+> 
+> Yes, that is correct.
+> 
+> > > +int thermal_notify_tz_trip_down(int tz_id, int id);
+> > > +int thermal_notify_tz_trip_up(int tz_id, int id);
+> > > +int thermal_notify_tz_trip_delete(int tz_id, int id);
+> > > +int thermal_notify_tz_trip_add(int tz_id, int id, int type,
+> > > +			       int temp, int hyst);
+> > 
+> > is there any case we need to use these two?
+> 
+> There is the initial proposal to add/del trip points via sysfs which
+> is
+> not merged because of no comments and the presentation from Srinivas
+> giving the 'add' and 'del' notification description, so I assumed the
+> feature would be added soon.
+> 
+> These functions are here ready to be connected to the core code. If
+> anyone is planning to implement add/del trip point, he won't have to
+> implement these two notifications as they will be ready to be called.
+> 
+Then I'd prefer we only introduce the events that are used or will be
+used soon, like the tz disable/enable, to avoid some potential dead
+code.
+We can easily add more events when they are needed.
 
-Thanks
-Dave
+Srinivas, do you have plan to use the trip add/delete events?
+
+> > > +int thermal_notify_tz_trip_change(int tz_id, int id, int type,
+> > > +				  int temp, int hyst);
+> > > +int thermal_notify_cdev_update(int cdev_id, int state);
+> > 
+> > This is used when the cdev cur_state is changed.
+> > what about cases that cdev->max_state changes? I think we need an
+> > extra
+> > event for it, right?
+> 
+> Sure, I can add:
+> 
+> int thermal_notify_cdev_change(...)
+
+thermal_notify_cdev_change() and thermal_notify_cdev_update() looks
+confusing to me.
+Can we use thermal_notify_cdev_update_cur() and
+thermal_notify_cdev_update_max()?
+Or can we use one event, with updated cur_state and max_state?
+
+> > > +int thermal_notify_cdev_add(int cdev_id, const char *name,
+> > > +			    int min_state, int max_state);
+> > > +int thermal_notify_cdev_delete(int cdev_id);
+> > 
+> > These two should be used in patch 5/5.
+> 
+> Sure.
+> 
+> > > +int thermal_notify_tz_gov_change(int tz_id, const char *name);
+> > > +int thermal_genl_sampling_temp(int id, int temp);
+> > > +
+> > 
+> >  struct thermal_attr {
+> > >  	struct device_attribute attr;
+> > >  	char name[THERMAL_NAME_LENGTH];
+> > > diff --git a/drivers/thermal/thermal_netlink.c
+> > > b/drivers/thermal/thermal_netlink.c
+> > > new file mode 100644
+> > > index 000000000000..a8d6a815a21d
+> > > --- /dev/null
+> > > +++ b/drivers/thermal/thermal_netlink.c
+> > > @@ -0,0 +1,645 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright 2020 Linaro Limited
+> > > + *
+> > > + * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > + *
+> > > + * Generic netlink for thermal management framework
+> > > + */
+> > > +#include <linux/module.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <net/genetlink.h>
+> > > +#include <uapi/linux/thermal.h>
+> > > +
+> > > +#include "thermal_core.h"
+> > > +
+> > > +static const struct genl_multicast_group thermal_genl_mcgrps[] =
+> > > {
+> > > +	{ .name = THERMAL_GENL_SAMPLING_GROUP_NAME, },
+> > > +	{ .name = THERMAL_GENL_EVENT_GROUP_NAME,  },
+> > > +};
+> > > +
+> > > +static const struct nla_policy
+> > > thermal_genl_policy[THERMAL_GENL_ATTR_MAX + 1] = {
+> > > +	/* Thermal zone */
+> > > +	[THERMAL_GENL_ATTR_TZ]			= { .type =
+> > > NLA_NESTED },
+> > > +	[THERMAL_GENL_ATTR_TZ_ID]		= { .type = NLA_U32 },
+> > > +	[THERMAL_GENL_ATTR_TZ_TEMP]		= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_TZ_TRIP]		= { .type =
+> > > NLA_NESTED },
+> > > +	[THERMAL_GENL_ATTR_TZ_TRIP_ID]		= { .type =
+> > > NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_TZ_TRIP_TEMP]	= { .type = NLA_U32 },
+> > > +	[THERMAL_GENL_ATTR_TZ_TRIP_TYPE]	= { .type = NLA_U32 },
+> > > +	[THERMAL_GENL_ATTR_TZ_TRIP_HYST]	= { .type = NLA_U32 },
+> > > +	[THERMAL_GENL_ATTR_TZ_MODE]		= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_TZ_CDEV_WEIGHT]	= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_TZ_NAME]		= { .type =
+> > > NLA_STRING,
+> > > +						    .len =
+> > > THERMAL_NAME_LENGTH },
+> > > +	/* Governor(s) */
+> > > +	[THERMAL_GENL_ATTR_TZ_GOV]		= { .type =
+> > > NLA_NESTED },
+> > > +	[THERMAL_GENL_ATTR_TZ_GOV_NAME]		= { .type =
+> > > NLA_STRING,
+> > > +						    .len =
+> > > THERMAL_NAME_LENGTH },
+> > > +	/* Cooling devices */
+> > > +	[THERMAL_GENL_ATTR_CDEV]		= { .type = NLA_NESTED },
+> > > +	[THERMAL_GENL_ATTR_CDEV_ID]		= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_CDEV_CUR_STATE]	= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_CDEV_MAX_STATE]	= { .type = NLA_U32
+> > > },
+> > > +	[THERMAL_GENL_ATTR_CDEV_MIN_STATE]	= { .type = NLA_U32
+> > > },
+> > 
+> > is there any case that min_state does not equal 0?
+> 
+> You are right, there is no min state for a cooling device, only for
+> the
+> instances in the thermal zones. I will fix that.
+> 
+> > > +	[THERMAL_GENL_ATTR_CDEV_NAME]		= { .type =
+> > > NLA_STRING,
+> > > +						    .len =
+> > > THERMAL_NAME_LENGTH },
+> > > +};
+> > > +
+> > 
+> > [...]
+> > > +
+> > > +static cb_t cmd_cb[] = {
+> > > +	[THERMAL_GENL_CMD_TZ_GET]	= thermal_genl_cmd_tz_get,
+> > > +	[THERMAL_GENL_CMD_TZ_GET_TRIP]	=
+> > > thermal_genl_cmd_tz_get_trip,
+> > > +	[THERMAL_GENL_CMD_TZ_GET_TEMP]	=
+> > > thermal_genl_cmd_tz_get_temp,
+> > > +	[THERMAL_GENL_CMD_TZ_GET_GOV]	=
+> > > thermal_genl_cmd_tz_get_gov,
+> > 
+> > A dumb question, can we share the same command for the above three?
+> > Say,
+> > THERMAL_GENL_CMD_GET_ALL_TZ or THERMAL_GENL_CMD_GET_TZS returns the
+> > id
+> > && name of all the thermal zones.
+> > THERMAL_GENL_CMD_GET_TZ returns general information of a specified
+> > thermal zone, include trip points, governor and temperature. My
+> > understanding is that all these information will be queried once,
+> > in
+> > the very beginning, and then userpsace relies on the netlink events
+> > to
+> > give updated information, right?
+> > 
+> > This could simplify the kernel code and also userspace a bit.
+> 
+> Actually the userspace still need a 'get temp' or 'get trip'
+> commands.
+> 
+> get temp : Get the temperature at any time, like reading the sysfs
+> temperature
+> 
+> get trip : Get the trip point information when a trip event happens,
+> no
+> need to get a full discovery of the thermal zones before.
+> 
+> If I send a bulk message containing all the thermal zones, their
+> trips
+> point, the governors and the cooling devices, that will force the
+> userspace to deal with multiple level of nested arrays. With netlinks
+> that makes the code really more complicated and prone to errors.
+> 
+> With this approach, if the userspace is interested only on "gpu", it
+> can
+> get the thermal zone id when getting all the thermal zones <id, name>
+> and then ask for the information it is interested in.
+> 
+> Well I thought that is be more flexible.
+
+Then I'm totally okay with this implementation. Thanks for the
+explanation.
+
+thanks,
+rui
+> 
+> 
+> 
+> 
+> 
 
