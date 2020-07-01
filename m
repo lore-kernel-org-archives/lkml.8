@@ -2,132 +2,131 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 702B020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219F1206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RPefHxRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgGALjU (ORCPT
+        id S1730358AbgGALki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:39:20 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48480 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730196AbgGALjT (ORCPT
+        Wed, 1 Jul 2020 07:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730196AbgGALkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:39:19 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A9B848030868;
-        Wed,  1 Jul 2020 11:39:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Qs3WUKcY0GC5; Wed,  1 Jul 2020 14:39:08 +0300 (MSK)
-Date:   Wed, 1 Jul 2020 14:39:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Daniel Winkler <danielwinkler@google.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-serial@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Aaron Sierra <asierra@xes-inc.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wed, 1 Jul 2020 07:40:37 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB77C061755;
+        Wed,  1 Jul 2020 04:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HcAuVDWEpmiLqpe0YNpYLGZ4fmq8QzKs/ZIuj2kkH8Y=; b=RPefHxRrCTySSxthpCiwJtUQ3p
+        sehdVUh/OXlcD2v/g6AxiKxksqOrSjRiJ3RqUoq5JvswSrlFwUahiev5FWK/uvACmhnWZcX96iaAj
+        WVqWxdhoftAZ4iiqY0ToHDJjZkiN1ml6ykH6Gd0nxYOevhI98eCLIhsTljU6lq3B56wQQRmi47Kgn
+        2LXfsp8FLDVW0Y91r/ZhmJ1DxlRIfNCq4WjGOYr1KTJtkpVrIUjrB3ZLhTgikLeGURhbDlKKsizky
+        W2kk0nblBpf9RF7AABwI4KnH5A2qlS/QhSpfLWCJdNS/WllrJd29THxB6xyaqhGxdP1buQGCuqnSh
+        sM+SK4uQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqb6M-0005ut-DO; Wed, 01 Jul 2020 11:40:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ECCE9301AC6;
+        Wed,  1 Jul 2020 13:40:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D969D2BB58971; Wed,  1 Jul 2020 13:40:27 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 13:40:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "serial: 8250: Fix max baud limit in generic 8250
- port"
-Message-ID: <20200701113904.7zh534vmlvjvojia@mobilestation>
-References: <20200630164204.1.I2cc415fa5793b3e55acfd521ba8f0a71e79aa5f1@changeid>
- <20200701043001.73qhxyyjx6bayn2m@wunner.de>
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701043001.73qhxyyjx6bayn2m@wunner.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lukas,
+On Wed, Jul 01, 2020 at 11:41:17AM +0200, Marco Elver wrote:
+> On Tue, 30 Jun 2020 at 22:30, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
+> > > On Tue, Jun 30, 2020 at 09:19:31PM +0200, Marco Elver wrote:
 
-On Wed, Jul 01, 2020 at 06:30:01AM +0200, Lukas Wunner wrote:
-> On Tue, Jun 30, 2020 at 04:42:11PM -0700, Daniel Winkler wrote:
-> > This reverts commit 0eeaf62981ecc79e8395ca8caa1570eaf3a12257.
+> > > > Thoughts?
+> > >
+> > > How hard would it be to creates something that analyzes a build and
+> > > looks for all 'dependent load -> control dependency' transformations
+> > > headed by a volatile (and/or from asm) load and issues a warning for
+> > > them?
 > 
-> That is not an upstream commit.  You probably mean:
+> I was thinking about this, but in the context of the "auto-promote to
+> acquire" which you didn't like. Issuing a warning should certainly be
+> simpler.
 > 
->     commit 7b668c064ec33f3d687c3a413d05e355172e6c92
->     Author: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->     Date:   Thu May 7 02:31:32 2020 +0300
-> 
->     serial: 8250: Fix max baud limit in generic 8250 port
-> 
-> And you didn't cc the commit author (hereby fixed).
-> 
-> Thanks,
-> 
-> Lukas
+> I think there is no one place where we know these transformations
+> happen, but rather, need to analyze the IR before transformations,
+> take note of all the dependent loads headed by volatile+asm, and then
+> run an analysis after optimizations checking the dependencies are
+> still there.
 
-Thanks for Cc'ing me.
+Urgh, that sounds nasty. The thing is, as I've hinted at in my other
+reply, I would really like a compiler switch to disable this
+optimization entirely -- knowing how relevant the trnaformation is, is
+simply a first step towards that.
 
+In order to control the tranformation, you have to actually know where
+in the optimization passes it happens.
+
+Also, if (big if in my book) we find the optimization is actually
+beneficial, we can invert the warning when using the switch and warn
+about lost optimization possibilities and manually re-write the code to
+use control deps.
+
+> > > This would give us an indication of how valuable this transformation is
+> > > for the kernel. I'm hoping/expecting it's vanishingly rare, but what do
+> > > I know.
+> >
+> > This could be quite useful!
 > 
-> > 
-> > The change regresses the QCA6174A-3 bluetooth chip, preventing
-> > firmware from being properly loaded. We have verified that without
-> > this patch, the chip works as intended.
+> We might then even be able to say, "if you get this warning, turn on
+> CONFIG_ACQUIRE_READ_DEPENDENCIES" (or however the option will be
+> named). 
 
-That text doesn't say what is really wrong and why the firmware couldn't be loaded.
-The original commit gets back the 8250 port baud rate limitation so if the baud
-gets out of the range [uartclk / 16 / UART_DIV_MAX; (port->uartclk + tolerance) /
-16], then it will be clamped to be within it. That range is what the standard
-8250 port supports. Acceptance of out of that range values will cause a
-problem further in calling serial8250_get_divisor() and uart_get_divisor()
-methods (see the original patch log message) for standard 8250 ports. Any different
-behavior must be taken into account by a custom set_termios() callbacks or at
-least must be workarounded so the standard 8250 ports wouldn't be affected. So in
-order to investigate the root cause of the problem it would be good to at least
-know what your platform was and what UART port has been used in the attempt to
-load the QCA6174A-3 chip firmware.
-
--Sergey
-
-> > 
-> > Signed-off-by: Daniel Winkler <danielwinkler@google.com>
-> > ---
-> > 
-> >  drivers/tty/serial/8250/8250_port.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> > index 1632f7d25acca..e057c65ac1580 100644
-> > --- a/drivers/tty/serial/8250/8250_port.c
-> > +++ b/drivers/tty/serial/8250/8250_port.c
-> > @@ -2618,8 +2618,6 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
-> >  					     struct ktermios *termios,
-> >  					     struct ktermios *old)
-> >  {
-> > -	unsigned int tolerance = port->uartclk / 100;
-> > -
-> >  	/*
-> >  	 * Ask the core to calculate the divisor for us.
-> >  	 * Allow 1% tolerance at the upper limit so uart clks marginally
-> > @@ -2628,7 +2626,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
-> >  	 */
-> >  	return uart_get_baud_rate(port, termios, old,
-> >  				  port->uartclk / 16 / UART_DIV_MAX,
-> > -				  (port->uartclk + tolerance) / 16);
-> > +				  port->uartclk);
-> >  }
-> >  
-> >  void
-> > -- 
-> > 2.27.0.212.ge8ba1cc988-goog
+I was going to suggest: if this happens, employ -fno-wreck-dependencies
+:-)
