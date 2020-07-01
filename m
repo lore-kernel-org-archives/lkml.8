@@ -2,125 +2,237 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75344C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF1A207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593614404;
-	bh=BqxH0cMOs/4FiCTI+vy8Y4QYi2z24pQRraMa1mojDnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rjd8roPPrxYbt+7Q0oNOUTuA0mVLJbOg0zVlgE8l3I02PRM5K3V2KKi/6MyMFXEqX
-	 Yzij/1ljl8ZGfSv+Et2Ykehu0wdh5XRiW/GasSy0QgdNpPpgVIyvbMYOlVZkoccxGV
-	 YxPRfON7CreMWhOgwnqCXnLeq9xLJp4eUAYv1Uxc=
+	by mail.kernel.org (Postfix) with ESMTP id ADA77207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IyRr1HgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731491AbgGAOkD (ORCPT
+        id S1731557AbgGAOkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgGAOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:40:03 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1D3206BE;
-        Wed,  1 Jul 2020 14:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593614402;
-        bh=BqxH0cMOs/4FiCTI+vy8Y4QYi2z24pQRraMa1mojDnk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IiIEvHvhiwOTdc0aHz4sbZAnKys7xXxlDUPWvhtTZw6crBqCk4jzufMoywpIE4364
-         sQQrOLvbQLxn7ougLHKjDsKUiP9GLNzXtnl6vGyXcXR2jKJbR94jENdQoYsQptloS9
-         iKo13pDMt/l0zDPiyKDAMp+GKuGAABbhxOjNEgLE=
-Date:   Wed, 1 Jul 2020 10:40:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-Message-ID: <20200701144000.GC2687961@sasha-vm>
-References: <20200629151818.2493727-1-sashal@kernel.org>
- <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
- <20200629231826.GT1931@sasha-vm>
- <20200630083845.GA637154@kroah.com>
- <20200630151248.GY1931@sasha-vm>
- <20200630153325.GA1785141@kroah.com>
+        Wed, 1 Jul 2020 10:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgGAOkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:40:17 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7591AC08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:40:17 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id q17so11087389pfu.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 07:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4FgHvZZVgdyymM92Fb8vFGltB0PHWsBIdWxw1r3qvTY=;
+        b=IyRr1HgUNMV3/xnbSCQxeCuxy2EJN9HtE45fI+v7gDCsax9UYXeGK9WTxy0ep/ariD
+         AIg0EACGMY0bHwmGZZTDSImAPh2NBw46oP3AELBeZBBVp9fTSIOq7S0xfaj7D9LCRNrD
+         VPSNrkMdWZO4HHiAgtCYTPxaEDdyULOv08lSI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4FgHvZZVgdyymM92Fb8vFGltB0PHWsBIdWxw1r3qvTY=;
+        b=rmU74FV7iGArlEWV3+3sVzjs89mzBBEYyJf3hxHkrONOYN4yNDH0AjjmvPngAy6H2z
+         90/BXf3aoWq6zbuhTrncrWyRpwGB1dAnnw7rUKPA2IRTrycnPBUvhi2bbzK3+e7FXRO0
+         8DDY2zep+Fvfdfoh56Cy1qWW3akvYJSmnoxSaTweZX2n7mDHcAbC4cb83AFXfqm5DTls
+         2vLCxjJwUJnR4yhgTwsq96muX7Fc7z4pSUueAM2lWDyG71srA46ywhgB3L/rPnfQXeo+
+         Yr4gCD6tiG+T0lfxCIucM5NKSt88DocqizbT4Ax2/sV6R+fZbSYjEljrZtz/drs0YbHG
+         qbxA==
+X-Gm-Message-State: AOAM530X+KEuIXOnJcLKpZxllzO5DHawcqMwNtMALFXS/+U/a887ZUrI
+        ilqzj05MswmChfWVDrpGpa57Mw==
+X-Google-Smtp-Source: ABdhPJw/TrycudhK3joRFzMe3f9wBtswJZJ2CWFhSU541t27z78CDDV3NqneU8UsRpI+evS4jbinqw==
+X-Received: by 2002:a62:768d:: with SMTP id r135mr22440868pfc.198.1593614416917;
+        Wed, 01 Jul 2020 07:40:16 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
+        by smtp.gmail.com with ESMTPSA id r4sm5818107pgp.60.2020.07.01.07.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 07:40:16 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 07:40:15 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] usb: typec: Add num_altmodes partner attribute
+Message-ID: <20200701144015.GD235106@google.com>
+References: <20200701003149.3101219-1-pmalani@chromium.org>
+ <20200701082230.GF856968@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630153325.GA1785141@kroah.com>
+In-Reply-To: <20200701082230.GF856968@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 05:33:25PM +0200, Greg Kroah-Hartman wrote:
->On Tue, Jun 30, 2020 at 11:12:48AM -0400, Sasha Levin wrote:
->> On Tue, Jun 30, 2020 at 10:38:45AM +0200, Greg Kroah-Hartman wrote:
->> > On Mon, Jun 29, 2020 at 07:18:26PM -0400, Sasha Levin wrote:
->> > > On Mon, Jun 29, 2020 at 02:37:53PM -0600, Shuah Khan wrote:
->> > > > Hi Sasha,
->> > > >
->> > > > On 6/29/20 9:13 AM, Sasha Levin wrote:
->> > > > >
->> > > > > This is the start of the stable review cycle for the 5.7.7 release.
->> > > > > There are 265 patches in this series, all will be posted as a response
->> > > > > to this one.  If anyone has any issues with these being applied, please
->> > > > > let me know.
->> > > > >
->> > > > > Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
->> > > > > Anything received after that time might be too late.
->> > > > >
->> > > > > The whole patch series can be found in one patch at:
->> > > > > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
->> > > > >
->> > > >
->> > > > Looks like patch naming convention has changed. My scripts look
->> > > > for the following convention Greg uses. Are you planning to use
->> > > > the above going forward? My scripts failed looking for the usual
->> > > > naming convention.
->> > > >
->> > > > The whole patch series can be found in one patch at:
->> > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
->> > > > or in the git tree and branch at:
->> > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
->> > > > and the diffstat can be found below.
->> > >
->> > > Sorry for that. I was hoping to avoid using the signed upload mechanism
->> > > Greg was using by simply pointing the links to automatically generated
->> > > patches on cgit (the git.kernel.org interface).
->> > >
->> > > Would it be ok to change the pattern matching here? Something like this
->> > > should work for both Greg's format and my own (and whatever may come
->> > > next):
->> > >
->> > > 	grep -A1 "The whole patch series can be found in one patch at:" | tail -n1 | sed 's/\t//'
->> >
->> > If those don't work, I can still push out -rc1 patches.
->> >
->> > It might be best given that the above -rc.git tree is unstable and can,
->> > and will, change, and patches stored on kernel.org will not.
->>
->> That's a good point. Maybe we should push tags for -rc releases too?
->> that would allow us to keep stable links using the git.kernel.org
->> interface.
->
->If we really want to do this, then yes, we could.  But that kind of goes
->against what we (well I) have been doing in the past with that tree...
+Hi Heikki,
 
-We've been force pushing it, yes, but if we add tags it would just keep
-older version around so I don't think it would change much for our
-workflow, but it would make it easy to get to older versions.
+Thanks a lot for reviewing the patch.
 
--- 
-Thanks,
-Sasha
+On Wed, Jul 01, 2020 at 11:22:30AM +0300, Heikki Krogerus wrote:
+> Hi Prashant,
+> 
+> On Tue, Jun 30, 2020 at 05:31:48PM -0700, Prashant Malani wrote:
+> > Add a user-visible attribute for the number of alt modes available in a
+> > partner. This allows userspace to determine whether there are any
+> > remaining alt modes left to be registered by the kernel driver. It can
+> > begin implementing any policy state machine after all available alt
+> > modes have been registered with the connector class framework.
+> > 
+> > This value is set to "-1" initially, which is an invalid value,
+> > signifying that a valid number of alt modes haven't been set for the
+> > partner.
+> > 
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > Cc: Benson Leung <bleung@chromium.org>
+> > ---
+> >  drivers/usb/typec/class.c | 34 ++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/typec.h |  1 +
+> >  2 files changed, 35 insertions(+)
+> 
+> You need to add documentation for the file. Add an entry for it to
+> Documentation/ABI/testing/sysfs-class-typec
+> 
+
+Ack.
+Will add this in v2.
+> > diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> > index c9234748537a..680cbcfbd427 100644
+> > --- a/drivers/usb/typec/class.c
+> > +++ b/drivers/usb/typec/class.c
+> > @@ -33,6 +33,7 @@ struct typec_partner {
+> >  	struct usb_pd_identity		*identity;
+> >  	enum typec_accessory		accessory;
+> >  	struct ida			mode_ids;
+> > +	int				num_altmodes;
+> >  };
+> >  
+> >  struct typec_port {
+> > @@ -532,9 +533,18 @@ static ssize_t supports_usb_power_delivery_show(struct device *dev,
+> >  }
+> >  static DEVICE_ATTR_RO(supports_usb_power_delivery);
+> >  
+> > +static ssize_t num_altmodes_show(struct device *dev, struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct typec_partner *p = to_typec_partner(dev);
+> > +
+> > +	return sprintf(buf, "%d\n", p->num_altmodes);
+> > +}
+> > +static DEVICE_ATTR_RO(num_altmodes);
+> 
+> This is up to you, but please consider naming the file
+> "number_of_alternate_modes".
+> 
+Ack. Will update the name in v2.
+
+> So now user space needs to understand that value -1 means "unknown",
+> right?
+> 
+> If so, then I think it would probable be better to just hide the file
+> until the actual number of alternate modes is known.
+> 
+
+SGTM.
+> >  static struct attribute *typec_partner_attrs[] = {
+> >  	&dev_attr_accessory_mode.attr,
+> >  	&dev_attr_supports_usb_power_delivery.attr,
+> > +	&dev_attr_num_altmodes.attr,
+> >  	NULL
+> >  };
+> >  ATTRIBUTE_GROUPS(typec_partner);
+> 
+> -ATTRIBUTE_GROUPS(typec_partner);
+> 
+> static umode_t typec_partner_attr_is_visible(struct kobject *kobj,
+>                                              struct attribute *attr, int n)
+> {
+>         struct typec_partner *partner = to_typec_partner(kobj_to_dev(kobj));
+> 
+>         if (attr == &dev_attr_num_altmodes.attr) {
+>                 if (partner->num_altmodes < 0)
+>                         return 0;
+>         }
+> 
+>         return attr->mode;
+> }
+> 
+> static struct attribute_group typec_partner_group = {
+>         .is_visible = typec_partner_attr_is_visible,
+>         .attrs = typec_partner_attrs
+> };
+> 
+> static const struct attribute_group *typec_partner_groups[] = {
+>         &typec_partner_group,
+>         NULL
+> };
+> 
+
+Nice, this is cool. Will make the modification in v2.
+
+Best regards,
+
+> > @@ -570,6 +580,29 @@ int typec_partner_set_identity(struct typec_partner *partner)
+> >  }
+> >  EXPORT_SYMBOL_GPL(typec_partner_set_identity);
+> >  
+> > +/**
+> > + * typec_partner_set_num_altmodes - Update number of available altmodes
+> > + * @partner: The partner to be updated
+> > + * @num_alt_modes: The number of altmodes we want to specify as available
+> > + *
+> > + * This routine is used to report the number of alternate modes supported by the
+> > + * partner. This value is *not* enforced in alt mode registration routines.
+> > + *
+> > + * @partner.num_altmodes is set to -1 on partner registration, denoting that
+> > + * a valid value has not been set for it yet.
+> > + */
+> > +int typec_partner_set_num_altmodes(struct typec_partner *partner, int num_altmodes)
+> > +{
+> > +	if (num_altmodes < 0)
+> > +		return -EINVAL;
+> > +
+> > +	partner->num_altmodes = num_altmodes;
+> > +	sysfs_notify(&partner->dev.kobj, NULL, "num_altmodes");
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(typec_partner_set_num_altmodes);
+> > +
+> >  /**
+> >   * typec_partner_register_altmode - Register USB Type-C Partner Alternate Mode
+> >   * @partner: USB Type-C Partner that supports the alternate mode
+> > @@ -612,6 +645,7 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
+> >  	ida_init(&partner->mode_ids);
+> >  	partner->usb_pd = desc->usb_pd;
+> >  	partner->accessory = desc->accessory;
+> > +	partner->num_altmodes = -1;
+> >  
+> >  	if (desc->identity) {
+> >  		/*
+> > diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+> > index 5daa1c49761c..ab523caa23a4 100644
+> > --- a/include/linux/usb/typec.h
+> > +++ b/include/linux/usb/typec.h
+> > @@ -112,6 +112,7 @@ struct typec_altmode_desc {
+> >  	enum typec_port_data	roles;
+> >  };
+> >  
+> > +int typec_partner_set_num_altmodes(struct typec_partner *partner, int num_altmodes);
+> >  struct typec_altmode
+> >  *typec_partner_register_altmode(struct typec_partner *partner,
+> >  				const struct typec_altmode_desc *desc);
+> 
+> thanks,
+> 
+> -- 
+> heikki
