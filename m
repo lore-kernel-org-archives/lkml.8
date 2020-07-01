@@ -2,117 +2,135 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B98C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A49A2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932BD2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwBpvJCt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fJXH5kgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgGACR2 (ORCPT
+        id S1725937AbgGACSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
+        Tue, 30 Jun 2020 22:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgGACQf (ORCPT
+        with ESMTP id S1726110AbgGACR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:16:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52D8C03E979;
-        Tue, 30 Jun 2020 19:16:34 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y18so12641545lfh.11;
-        Tue, 30 Jun 2020 19:16:34 -0700 (PDT)
+        Tue, 30 Jun 2020 22:17:59 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C4EC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:17:59 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id e197so7142744yba.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 19:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vapTfDZ2f1tAvfpKmc+ZWDOZuBAyLK5G5gnKE1dsXng=;
-        b=XwBpvJCtsnnsnuaueMAfzetWsRY7ZOzou4jP71fGDWF3pG796loCN0qXhchF2sgu84
-         edWAmjAvruo+Bs0X8kE5aDgm7DD2IzGRyhEn66nySzPGXYTgAu331v/qx8sx0mv03iFV
-         sdQtshunNKY9AYMqCIZrfxtMv+N1zXb29khQh5iJo8DEf9ZfEXqMjTGqawmDqwh+JB1E
-         ZKz84KGiwitlYGRQ7OyP1Knp+MMRs3jKRCPiE1dQWOINtvy4os+twMHyAfg8OAohSJwI
-         pLnP0JvMUjxvtYIiAyMeHVqofEI6cEwhkPc6anWD8ODFk5KdlbA1C9pI88zjI3teKNpK
-         RIOA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QQ3KRdyNKq0NjChcDS5Efh5/mojKWckJwK+l+KsphhM=;
+        b=fJXH5kgAaIYzB9rvTW3U8j5fmccmSA2+BZfNUdfYIAtTuU56W7Y0oFU3fczx2+skFX
+         0Jm11JvxZahtDz5DQF5DRP8qBedrTLySaMN8TKxxdRFNEz0vc3XOtEx5yOb2mWzEZrTj
+         bnneqqERieACLYgpzOV3LEI2+4or2SnpV+9bZdt+nE1Q61ZZowJ1BzVAMJdS/zn+YqE1
+         6PqJ+RDkkuB5TiDQiaK/XwClyG4Jp8BA5ss9XY9UStTr8e5p184j7g6VoNUaly9io3jX
+         MD+FViLQmQsp0CjbZNld+lhsKFPu8hRdWZaiqEOlJYgJ9dPwV4s+gaDtVzTva3vsVHPD
+         7FPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vapTfDZ2f1tAvfpKmc+ZWDOZuBAyLK5G5gnKE1dsXng=;
-        b=QNmvRF1pPuz9e4z7+FJmSFbvuLH9jcd80B5XSIcAy4QaqlDI+LWsW2fl5nVjmsBo7s
-         p4EbE9dtFVOiwE7pr5b7vBIx5OaXOuFPpKPYjQ5XU2rOrtxkCKr7cF3scIiKC4prtlmT
-         IiDDqvY5S2tUbvtjEyyTjJ5JFYrbxxjYRFmVkQhEWRPoshs/45HL/4jDcsCFof/aGaG+
-         Eo8XD93jMUJR+BHqZ2TwXkkWugwYjjwZ/41fRjlY0y4GO7DnRkTSKb+ASUyT6Vqs3kwH
-         Y6lkQnyDBjyTae01Y8nPDQTwzs69sfftUheCEd6cX57kjSKN9vNtef/QdsQXKQqQn11e
-         V2Ng==
-X-Gm-Message-State: AOAM532Dks+CHI172ET5wMeMeyYsgXM6sHkb00lbFaI81devO8/LgP6/
-        C4yBjx/0jNv59gS/SVVBMjQ=
-X-Google-Smtp-Source: ABdhPJxhbSKKq0FhmJrE9dy8QVFhZlrI2NTNt76+0Z8xz5UeHKJ8xcWUitnVVvXISrjygrzzMjHiVQ==
-X-Received: by 2002:a19:f20a:: with SMTP id q10mr13842463lfh.89.1593569793367;
-        Tue, 30 Jun 2020 19:16:33 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id i2sm1296892lji.59.2020.06.30.19.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 19:16:32 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 2/2] drm/of: Make drm_of_find_panel_or_bridge() to check graph's presence
-Date:   Wed,  1 Jul 2020 05:16:17 +0300
-Message-Id: <20200701021617.12030-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200701021617.12030-1-digetx@gmail.com>
-References: <20200701021617.12030-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QQ3KRdyNKq0NjChcDS5Efh5/mojKWckJwK+l+KsphhM=;
+        b=L1yp95rrVayQ5lMbuUgz6tq+4eMIeFiYLOwpGI9opu20Id1MBuTdDJRQ1YxDFO4ZoE
+         uFVqOkzuIawx558PHc+UtBmG4mnVx3o9gbZE6Slc5Es5eQJQRFhJGIgZGJURPiZXEtJY
+         53AkL8JemIDbEXNgbBNe6Ad/x49/CMtDTmmd4I9tbd+9JdFrGykMb9jwOoPVMy0dKBGp
+         4oaDuBvXr1SQMOjSv9RfGDarwF7R5Nx9oNMfHYgQ3sGtd4RnPiGqb+j/ndPOGjxWKORp
+         uuZ2MexOG4XsfRTCfyNnFbjtSPJ5Hf+clpvL+yzBMuH2H7x5bbG11gM1kQgbPmSEBZrm
+         RLbQ==
+X-Gm-Message-State: AOAM532OvIHlJliRg978igNVYQJNIb+Xxky2DMlEt+cWIXYHhxLkcS3z
+        eRqmePatyAxvxizSNdZ3VYI9TVt311hlPOwctIlrMr8bHSE=
+X-Google-Smtp-Source: ABdhPJxb/7CdKcnOoMbFkhx1mIWpXPOIVNhLUOE+TiuUBaE3PllWXwaKAgIIzzFvXdXbDTh1SASNn48H5oBd2F6SqD8=
+X-Received: by 2002:a25:ca4a:: with SMTP id a71mr17561581ybg.101.1593569878306;
+ Tue, 30 Jun 2020 19:17:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+ <20200701020211.GA6875@gondor.apana.org.au>
+In-Reply-To: <20200701020211.GA6875@gondor.apana.org.au>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 30 Jun 2020 19:17:46 -0700
+Message-ID: <CANn89iKP-evuLxeLo6p_98T+FuJ-J5YaMTRG230nqj3R=43tVA@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When graph isn't defined in a device-tree, the of_graph_get_remote_node()
-prints a noisy error message, telling that port node is not found. This is
-undesirable behaviour in our case because absence of a panel/bridge graph
-is a valid case. Let's check the graph's presence in a device-tree before
-proceeding with parsing of the graph.
+On Tue, Jun 30, 2020 at 7:02 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> > index 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
+> > 100644
+> > --- a/net/ipv4/tcp.c
+> > +++ b/net/ipv4/tcp.c
+> > @@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+> > int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
+> > tcp_md5sig_key *key)
+> > {
+> >        struct scatterlist sg;
+> > +       u8 keylen = key->keylen;
+> >
+> > -       sg_init_one(&sg, key->key, key->keylen);
+> > -       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
+> > +       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+> > +
+> > +       sg_init_one(&sg, key->key, keylen);
+> > +       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
+> >        return crypto_ahash_update(hp->md5_req);
+> > }
+> > EXPORT_SYMBOL(tcp_md5_hash_key);
+> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> > index ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
+> > 100644
+> > --- a/net/ipv4/tcp_ipv4.c
+> > +++ b/net/ipv4/tcp_ipv4.c
+> > @@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
+> > tcp_md5_addr *addr,
+> >        if (key) {
+> >                /* Pre-existing entry - just update that one. */
+> >                memcpy(key->key, newkey, newkeylen);
+> > +
+> > +               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
+> > +
+> >                key->keylen = newkeylen;
+> >                return 0;
+> >        }
+>
+> This doesn't make sense.  Your smp_rmb only guarantees that you
+> see a version of key->key that's newer than keylen.  What if the
+> key got changed twice? You could still read more than what's in
+> the key (if that's what you're trying to protect against).
 
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpu/drm/drm_of.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The worst that can happen is a dropped packet.
 
-diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-index b50b44e76279..fdb05fbf72a0 100644
---- a/drivers/gpu/drm/drm_of.c
-+++ b/drivers/gpu/drm/drm_of.c
-@@ -246,6 +246,15 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
- 	if (panel)
- 		*panel = NULL;
- 
-+	/*
-+	 * of_graph_get_remote_node() produces a noisy error message if port
-+	 * node isn't found and the absence of the port is a legit case here,
-+	 * so at first we silently check whether graph presents in the
-+	 * device-tree node.
-+	 */
-+	if (!of_graph_is_present(np))
-+		return -ENODEV;
-+
- 	remote = of_graph_get_remote_node(np, port, endpoint);
- 	if (!remote)
- 		return -ENODEV;
--- 
-2.26.0
+Which is anyway going to happen anyway eventually if an application
+changes a TCP MD5 key on a live flow.
 
+The main issue of the prior code was the double read of key->keylen in
+tcp_md5_hash_key(), not that few bytes could change under us.
+
+I used smp_rmb() to ease backports, since old kernels had no
+READ_ONCE()/WRITE_ONCE(), but ACCESS_ONCE() instead.
