@@ -2,121 +2,110 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ADCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA404C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE4820748
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAUGuF/b"
+	by mail.kernel.org (Postfix) with ESMTP id A3F46207CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593638207;
+	bh=yqcCUEC8nfgHouSGRrdvAT45NLmgQ8sLV2KP9vvzvko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=EhHfOz3y4P3HAaMKXg1UHvSI1jUHcRyzJW3tmLrP89Wkfd1GmJ+po62hAQ2jinBKj
+	 w70KSXRFu+OmPhoD9ZRr+vuUd+iBH5eYUnBXApsV8iqL75mGXAMErUBi2wKLvB5QN2
+	 xAAcBJzyifWp7gvN60567GSmZMqX1sHBGsYG75ZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgGAVNx (ORCPT
+        id S1727050AbgGAVQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgGAVNr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:13:47 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8FBC08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:13:47 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id ee9so14555257qvb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=quzZPMbm7PpMHF0Uc8MBUiav44rFFBJoy1a7Ni+U048=;
-        b=cAUGuF/bBZXzPwqEA2KmnUAiIBZh74Axkc9kR9B2TU+pfmr0Ih1xclQdRWGsusUH4P
-         aQzareypjNzLHXiV125/yObqrFXl50tJFV/rUKCZRWbD/D/1d0v4lzxP6KOcZXlgjjmi
-         sgNNbvNdLJJHNlKCd14hQXkgYAlLrBsKFbkHvUNF/F6nxwrpT8jdvRZYXVdR0PC1eAI+
-         4S16qlMArXxPc8oAS/ZA1yBh3hZnNw3KUW8jxg5bA8R+t6SFI15vBdFvk1Iceo4cfGw7
-         X0DgYL+QU5n2iQQVkAwshCPeU4e8v2RIOl8RM6la4Auqki927z9rPEsuDYZvWCyThq2u
-         QdDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=quzZPMbm7PpMHF0Uc8MBUiav44rFFBJoy1a7Ni+U048=;
-        b=GJCakvOEaj6qx+XbAkqB78A6R/LRFv4HNPvwQZL+UF06h//8NBWOx16suXX0k3UNkO
-         ue47JLlQmu2cXfZvIyiTE2QA6g4OKIOfRtrdUsPRQH6xbjjooLJiRbYljZAbXahDwMPl
-         k77HL0rCHYVIBQ2fpIOpnkRmeuWB1Fwxhq+wYY10+ohp2GSihpeNjHOGwNVKDoq4aYCl
-         agQGbfPFLD9+OeZQr/Zc3l+2O7VXtZBu/zfNwJPgzR+QUM5HUrd9ZxhYZC1OCM+64Mw9
-         NHL98fSH2RApcODswrEGPjiJPz2Azk5e2IZVppsUf9JdEm2vr5SAmCmKEQr3/gt6PPkw
-         BxzA==
-X-Gm-Message-State: AOAM533sLM0Oc+x4dBlN3WzG6BJGdWMEQdsoQDNZQaQw0lX87AedXMU9
-        ND68vykGZ+BWO1iOGKurk1m65lGyjtREITs6sBBf
-X-Google-Smtp-Source: ABdhPJweymvrG4WnmmEfQGpTdGKKPJnK+/o6UKqXb9nuHShRn93/877F29RoxTj0lr9gwAW3khi4TR681cXl8z12ryNZ
-X-Received: by 2002:a05:6214:10e1:: with SMTP id q1mr25772358qvt.78.1593638026665;
- Wed, 01 Jul 2020 14:13:46 -0700 (PDT)
-Date:   Wed,  1 Jul 2020 14:13:37 -0700
-In-Reply-To: <20200701211337.3027448-1-danielwinkler@google.com>
-Message-Id: <20200701141329.v2.1.I2cc415fa5793b3e55acfd521ba8f0a71e79aa5f1@changeid>
-Mime-Version: 1.0
-References: <20200701211337.3027448-1-danielwinkler@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 1/1] Revert "serial: 8250: Fix max baud limit in generic
- 8250 port"
-From:   Daniel Winkler <danielwinkler@google.com>
-To:     linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc:     BlueZ <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        stable@vger.kernel.org, abhishekpandit@chromium.org,
-        Daniel Winkler <danielwinkler@google.com>,
-        Aaron Sierra <asierra@xes-inc.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Lukas Wunner <lukas@wunner.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
+        Wed, 1 Jul 2020 17:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgGAVQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:16:45 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942C6206DD;
+        Wed,  1 Jul 2020 21:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593638204;
+        bh=yqcCUEC8nfgHouSGRrdvAT45NLmgQ8sLV2KP9vvzvko=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qUF14IjzVJOUcBQNw2iXejzu+oMXcWIle9BD00FgE+DLF+9zFscGD8EHT/6Gi6REv
+         9X0mdNcAXiageGtlO9TCW2tBPhuWK8ckKvIyYlo+dSFFmYftmuvob2ExE9iTJ7Lvcf
+         4C4DN+LeTjCA/AkE9OKDk16dYWLVWoYGAoM81VEw=
+Date:   Wed, 1 Jul 2020 16:16:43 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 1/5] PCI: add Intel QuickAssist device IDs
+Message-ID: <20200701211643.GA3660000@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701110302.75199-2-giovanni.cabiddu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 7b668c064ec33f3d687c3a413d05e355172e6c92.
+Please follow the subject line convention, e.g.,
 
-Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
-port")
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Winkler <danielwinkler@google.com>
----
+  PCI: Add Intel QuickAssist Device IDs
 
- drivers/tty/serial/8250/8250_port.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 1632f7d25acca..e057c65ac1580 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2618,8 +2618,6 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 					     struct ktermios *termios,
- 					     struct ktermios *old)
- {
--	unsigned int tolerance = port->uartclk / 100;
--
- 	/*
- 	 * Ask the core to calculate the divisor for us.
- 	 * Allow 1% tolerance at the upper limit so uart clks marginally
-@@ -2628,7 +2626,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 	 */
- 	return uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / UART_DIV_MAX,
--				  (port->uartclk + tolerance) / 16);
-+				  port->uartclk);
- }
- 
- void
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+On Wed, Jul 01, 2020 at 12:02:58PM +0100, Giovanni Cabiddu wrote:
+> Add device IDs for the following Intel QuickAssist devices: DH895XCC,
+> C3XXX and C62X.
+> 
+> The defines in this patch are going to be referenced in two independent
+> drivers, qat and vfio-pci.
+> 
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> ---
+>  include/linux/pci_ids.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0ad57693f392..f3166b1425ca 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2659,6 +2659,8 @@
+>  #define PCI_DEVICE_ID_INTEL_80332_1	0x0332
+>  #define PCI_DEVICE_ID_INTEL_80333_0	0x0370
+>  #define PCI_DEVICE_ID_INTEL_80333_1	0x0372
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC	0x0435
+> +#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF	0x0443
+>  #define PCI_DEVICE_ID_INTEL_82375	0x0482
+>  #define PCI_DEVICE_ID_INTEL_82424	0x0483
+>  #define PCI_DEVICE_ID_INTEL_82378	0x0484
+> @@ -2708,6 +2710,8 @@
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
+>  #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
+>  #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
+> +#define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
+>  #define PCI_DEVICE_ID_INTEL_82840_HB	0x1a21
+>  #define PCI_DEVICE_ID_INTEL_82845_HB	0x1a30
+>  #define PCI_DEVICE_ID_INTEL_IOAT	0x1a38
+> @@ -2924,6 +2928,8 @@
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF7	0x3717
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF8	0x3718
+>  #define PCI_DEVICE_ID_INTEL_IOAT_JSF9	0x3719
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X	0x37c8
+> +#define PCI_DEVICE_ID_INTEL_QAT_C62X_VF	0x37c9
+>  #define PCI_DEVICE_ID_INTEL_ICH10_0	0x3a14
+>  #define PCI_DEVICE_ID_INTEL_ICH10_1	0x3a16
+>  #define PCI_DEVICE_ID_INTEL_ICH10_2	0x3a18
+> -- 
+> 2.26.2
+> 
