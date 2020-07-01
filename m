@@ -2,125 +2,336 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0287C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70F232073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B362078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BuuC+9cV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QZc1N9HV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NW28tl32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgGAIFa (ORCPT
+        id S1728391AbgGAIFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:05:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36284 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbgGAIEy (ORCPT
+        Wed, 1 Jul 2020 04:05:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42738 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728633AbgGAIEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:04:54 -0400
-Date:   Wed, 01 Jul 2020 08:04:51 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593590691;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        Wed, 1 Jul 2020 04:04:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593590675;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=IvMAvsvlOHXgIaP9uXRm4GizD/b8qi+pyRXSRNr1ifw=;
-        b=BuuC+9cVaJUDz+bA/n3jYi0FrVzY4I69SarTQ626MqpznD2z6IZSIl92CLJw45lX/+4xAo
-        yF92yRdN9IFUfsA0c3npmIA2HuHdKd9bT0Ty4cQE/NQsIKrh1ewFsG2T1JFGW+FscskWKi
-        tfHxxHnHny4/t00OsCdhRhJNMQ5MqHulRsbuwJ+r7EaFBwcmsON9zTx5EmkVkAjQIVq4HR
-        EfJamwrYg7EiwdB3pe4r9QzJEMo69+eVunA28gWJz6l31YE2lh6i9mZsZ2Qs88sAokzJGE
-        lokAOyObY6jc0a64IMx9K9I1h/22njceqF0xQDwNRxpHg+ba7YlOfX/pMCUvLg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593590691;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IvMAvsvlOHXgIaP9uXRm4GizD/b8qi+pyRXSRNr1ifw=;
-        b=QZc1N9HVDh7AbIIjn4sQZpo2XK6g9OzF+fpwQ1H7vjzxhSIVVOXiaJinENO4nHjT5Erewq
-        RZi7N6+KfU3CG6Cg==
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] selftests/x86/syscall_nt: Add more flag combinations
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <12924e2fe2c5826568b7fc9436d85ca7f5eb1743.1593191971.git.luto@kernel.org>
-References: <12924e2fe2c5826568b7fc9436d85ca7f5eb1743.1593191971.git.luto@kernel.org>
+        bh=kCynkoFy3XzG6kNN02gtrhqcsZ1FKd7XfZ+X5cMlfpk=;
+        b=NW28tl32Mt2lluifhm6PPpHvdvERpgfZIW39Fb9KXQQ/GBESZRPE9zpqAPFoWQVFd9MFYP
+        wJ8MmxVhmoyldhxKRVXBbIIZg7gn38VQa7hLQXoWTbWCh+AE9VzEOhr2mnyrYCT7R1zX1p
+        ShJDiFu2mOzP6o9LnJ4cQbvgRv7EALc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-2H4RS7wNPJ2dbCKECCFJ1g-1; Wed, 01 Jul 2020 04:04:27 -0400
+X-MC-Unique: 2H4RS7wNPJ2dbCKECCFJ1g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0411E87950B;
+        Wed,  1 Jul 2020 08:04:26 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-207.pek2.redhat.com [10.72.12.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33215BEA5;
+        Wed,  1 Jul 2020 08:04:19 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 16:04:16 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        kexec@lists.infradead.org, James Morris <jmorris@namei.org>,
+        linux-kernel@vger.kernel.org,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-integrity@vger.kernel.org,
+        "Serge E . Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH v2 11/11] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+Message-ID: <20200701080416.GC3878@dhcp-128-65.nay.redhat.com>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-12-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
-Message-ID: <159359069113.4006.10361236382568138234.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626223900.253615-12-tyhicks@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi,
+On 06/26/20 at 05:39pm, Tyler Hicks wrote:
+> Take the properties of the kexec kernel's inode and the current task
+> ownership into consideration when matching a KEXEC_CMDLINE operation to
+> the rules in the IMA policy. This allows for some uniformity when
+> writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
+> and KEXEC_CMDLINE operations.
+> 
+> Prior to this patch, it was not possible to write a set of rules like
+> this:
+> 
+>  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>  measure func=KEXEC_KERNEL_CHECK
+>  measure func=KEXEC_INITRAMFS_CHECK
+>  measure func=KEXEC_CMDLINE
+> 
+> The inode information associated with the kernel being loaded by a
+> kexec_kernel_load(2) syscall can now be included in the decision to
+> measure or not
+> 
+> Additonally, the uid, euid, and subj_* conditionals can also now be
+> used in KEXEC_CMDLINE rules. There was no technical reason as to why
+> those conditionals weren't being considered previously other than
+> ima_match_rules() didn't have a valid inode to use so it immediately
+> bailed out for KEXEC_CMDLINE operations rather than going through the
+> full list of conditional comparisons.
+> 
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> ---
+> 
+> * v2
+>   - Moved the inode parameter of process_buffer_measurement() to be the
+>     first parameter so that it more closely matches process_masurement()
+> 
+>  include/linux/ima.h                          |  4 ++--
+>  kernel/kexec_file.c                          |  2 +-
+>  security/integrity/ima/ima.h                 |  2 +-
+>  security/integrity/ima/ima_api.c             |  2 +-
+>  security/integrity/ima/ima_appraise.c        |  2 +-
+>  security/integrity/ima/ima_asymmetric_keys.c |  2 +-
+>  security/integrity/ima/ima_main.c            | 23 +++++++++++++++-----
+>  security/integrity/ima/ima_policy.c          | 17 +++++----------
+>  security/integrity/ima/ima_queue_keys.c      |  2 +-
+>  9 files changed, 31 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 9164e1534ec9..d15100de6cdd 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -25,7 +25,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  			      enum kernel_read_file_id id);
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+>  extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+> -extern void ima_kexec_cmdline(const void *buf, int size);
+> +extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> @@ -103,7 +103,7 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> -static inline void ima_kexec_cmdline(const void *buf, int size) {}
+> +static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
+>  #endif /* CONFIG_IMA */
+>  
+>  #ifndef CONFIG_IMA_KEXEC
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index bb05fd52de85..07df431c1f21 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -287,7 +287,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			goto out;
+>  		}
+>  
+> -		ima_kexec_cmdline(image->cmdline_buf,
+> +		ima_kexec_cmdline(kernel_fd, image->cmdline_buf,
+>  				  image->cmdline_buf_len - 1);
+>  	}
+>  
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 59ec28f5c117..ff2bf57ff0c7 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -265,7 +265,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+>  			   struct evm_ima_xattr_data *xattr_value,
+>  			   int xattr_len, const struct modsig *modsig, int pcr,
+>  			   struct ima_template_desc *template_desc);
+> -void process_buffer_measurement(const void *buf, int size,
+> +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  				const char *eventname, enum ima_hooks func,
+>  				int pcr, const char *keyring);
+>  void ima_audit_measurement(struct integrity_iint_cache *iint,
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index bf22de8b7ce0..4f39fb93f278 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -162,7 +162,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>  
+>  /**
+>   * ima_get_action - appraise & measure decision based on policy.
+> - * @inode: pointer to inode to measure
+> + * @inode: pointer to the inode associated with the object being validated
+>   * @cred: pointer to credentials structure to validate
+>   * @secid: secid of the task being validated
+>   * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXEC,
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index a9649b04b9f1..6c52bf7ea7f0 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -328,7 +328,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
+>  
+>  		rc = is_binary_blacklisted(digest, digestsize);
+>  		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
+> -			process_buffer_measurement(digest, digestsize,
+> +			process_buffer_measurement(NULL, digest, digestsize,
+>  						   "blacklisted-hash", NONE,
+>  						   pcr, NULL);
+>  	}
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+> index aaae80c4e376..1c68c500c26f 100644
+> --- a/security/integrity/ima/ima_asymmetric_keys.c
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -58,7 +58,7 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+>  	 * if the IMA policy is configured to measure a key linked
+>  	 * to the given keyring.
+>  	 */
+> -	process_buffer_measurement(payload, payload_len,
+> +	process_buffer_measurement(NULL, payload, payload_len,
+>  				   keyring->description, KEY_CHECK, 0,
+>  				   keyring->description);
+>  }
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 8351b2fd48e0..8a91711ca79b 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -726,6 +726,7 @@ int ima_load_data(enum kernel_load_data_id id)
+>  
+>  /*
+>   * process_buffer_measurement - Measure the buffer to ima log.
+> + * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
+>   * @buf: pointer to the buffer that needs to be added to the log.
+>   * @size: size of buffer(in bytes).
+>   * @eventname: event name to be used for the buffer entry.
+> @@ -735,7 +736,7 @@ int ima_load_data(enum kernel_load_data_id id)
+>   *
+>   * Based on policy, the buffer is measured into the ima log.
+>   */
+> -void process_buffer_measurement(const void *buf, int size,
+> +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  				const char *eventname, enum ima_hooks func,
+>  				int pcr, const char *keyring)
+>  {
+> @@ -768,7 +769,7 @@ void process_buffer_measurement(const void *buf, int size,
+>  	 */
+>  	if (func) {
+>  		security_task_getsecid(current, &secid);
+> -		action = ima_get_action(NULL, current_cred(), secid, 0, func,
+> +		action = ima_get_action(inode, current_cred(), secid, 0, func,
+>  					&pcr, &template, keyring);
+>  		if (!(action & IMA_MEASURE))
+>  			return;
+> @@ -823,16 +824,26 @@ void process_buffer_measurement(const void *buf, int size,
+>  
+>  /**
+>   * ima_kexec_cmdline - measure kexec cmdline boot args
+> + * @kernel_fd: file descriptor of the kexec kernel being loaded
+>   * @buf: pointer to buffer
+>   * @size: size of buffer
+>   *
+>   * Buffers can only be measured, not appraised.
+>   */
+> -void ima_kexec_cmdline(const void *buf, int size)
+> +void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
+>  {
+> -	if (buf && size != 0)
+> -		process_buffer_measurement(buf, size, "kexec-cmdline",
+> -					   KEXEC_CMDLINE, 0, NULL);
+> +	struct fd f;
+> +
+> +	if (!buf || !size)
+> +		return;
+> +
+> +	f = fdget(kernel_fd);
+> +	if (!f.file)
+> +		return;
+> +
+> +	process_buffer_measurement(file_inode(f.file), buf, size,
+> +				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL);
+> +	fdput(f);
+>  }
+>  
+>  static int __init init_ima(void)
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 5eb14b567a31..294323b36d06 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -443,13 +443,9 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  {
+>  	int i;
+>  
+> -	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
+> -		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
+> -			if (func == KEY_CHECK)
+> -				return ima_match_keyring(rule, keyring, cred);
+> -			return true;
+> -		}
+> -		return false;
+> +	if (func == KEY_CHECK) {
+> +		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
+> +		       ima_match_keyring(rule, keyring, cred);
+>  	}
+>  	if ((rule->flags & IMA_FUNC) &&
+>  	    (rule->func != func && func != POST_SETATTR))
+> @@ -1007,10 +1003,9 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  			if (entry->action & ~(MEASURE | DONT_MEASURE))
+>  				return false;
+>  
+> -			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
+> -				return false;
+> -
+> -			if (ima_rule_contains_lsm_cond(entry))
+> +			if (entry->flags & ~(IMA_FUNC | IMA_FSMAGIC | IMA_UID |
+> +					     IMA_FOWNER | IMA_FSUUID |
+> +					     IMA_EUID | IMA_PCR | IMA_FSNAME))
+>  				return false;
+>  
+>  			break;
+> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+> index 56ce24a18b66..69a8626a35c0 100644
+> --- a/security/integrity/ima/ima_queue_keys.c
+> +++ b/security/integrity/ima/ima_queue_keys.c
+> @@ -158,7 +158,7 @@ void ima_process_queued_keys(void)
+>  
+>  	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
+>  		if (!timer_expired)
+> -			process_buffer_measurement(entry->payload,
+> +			process_buffer_measurement(NULL, entry->payload,
+>  						   entry->payload_len,
+>  						   entry->keyring_name,
+>  						   KEY_CHECK, 0,
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
-Commit-ID:     e4ef7de160c6b12639c4fc49bcacb25b860ac76d
-Gitweb:        https://git.kernel.org/tip/e4ef7de160c6b12639c4fc49bcacb25b860ac76d
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Fri, 26 Jun 2020 10:21:14 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 01 Jul 2020 10:00:26 +02:00
+Although I still do not understand the deep knowledge of IMA, I
+still wonder to know what is the effect to the behavior changes end user
+visible.   Does it work with a kernel built-in commandline? eg no
+cmdlien passed at all.
 
-selftests/x86/syscall_nt: Add more flag combinations
+Thanks
+Dave
 
-Add EFLAGS.AC to the mix.
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/12924e2fe2c5826568b7fc9436d85ca7f5eb1743.1593191971.git.luto@kernel.org
-
----
- tools/testing/selftests/x86/syscall_nt.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/tools/testing/selftests/x86/syscall_nt.c b/tools/testing/selftests/x86/syscall_nt.c
-index 02309a1..f060534 100644
---- a/tools/testing/selftests/x86/syscall_nt.c
-+++ b/tools/testing/selftests/x86/syscall_nt.c
-@@ -73,6 +73,12 @@ int main(void)
- 	printf("[RUN]\tSet NT and issue a syscall\n");
- 	do_it(X86_EFLAGS_NT);
- 
-+	printf("[RUN]\tSet AC and issue a syscall\n");
-+	do_it(X86_EFLAGS_AC);
-+
-+	printf("[RUN]\tSet NT|AC and issue a syscall\n");
-+	do_it(X86_EFLAGS_NT | X86_EFLAGS_AC);
-+
- 	/*
- 	 * Now try it again with TF set -- TF forces returns via IRET in all
- 	 * cases except non-ptregs-using 64-bit full fast path syscalls.
-@@ -80,8 +86,17 @@ int main(void)
- 
- 	sethandler(SIGTRAP, sigtrap, 0);
- 
-+	printf("[RUN]\tSet TF and issue a syscall\n");
-+	do_it(X86_EFLAGS_TF);
-+
- 	printf("[RUN]\tSet NT|TF and issue a syscall\n");
- 	do_it(X86_EFLAGS_NT | X86_EFLAGS_TF);
- 
-+	printf("[RUN]\tSet AC|TF and issue a syscall\n");
-+	do_it(X86_EFLAGS_AC | X86_EFLAGS_TF);
-+
-+	printf("[RUN]\tSet NT|AC|TF and issue a syscall\n");
-+	do_it(X86_EFLAGS_NT | X86_EFLAGS_AC | X86_EFLAGS_TF);
-+
- 	return nerrs == 0 ? 0 : 1;
- }
