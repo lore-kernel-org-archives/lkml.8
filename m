@@ -2,150 +2,74 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D030C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25265C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A42C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593590927;
-	bh=TiD5QRE8thatHCQG5rAJYxG5gqOGvYmSCBd/C5D2dj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tTZaCFNBg+hQMycxzWtn2okWYqmNnYVbdvSNO4zjbGdfONQTBnQ/OXcJ/f+kBpIat
-	 OOaMEwIBe5CZUxRhHfOhuX9eBf/VFhzAiLyH9nq3AuSHYjCdczc+jsvxzAPXxdXFRS
-	 /d/uVJ+G57AAXHIwNAeWSTvMvfzI2ogaFrCwXBsw=
+	by mail.kernel.org (Postfix) with ESMTP id 102D12065D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgGAIIp (ORCPT
+        id S1728542AbgGAIKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbgGAIIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:08:44 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC97A206A1;
-        Wed,  1 Jul 2020 08:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593590924;
-        bh=TiD5QRE8thatHCQG5rAJYxG5gqOGvYmSCBd/C5D2dj0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NsoWZqW8i2SPBdjU5yNdZH/0A7YB18OhTiJv/L2UjlEjFUBMq6nZt0Ojfc2X6Xyh5
-         GHIdfTrzaHPj7A+Leb2Cc8IKm9neML7wie4Sxe7h57LuUUMQ7++XNRZj0iVBYIJxV+
-         NCKJdBpFngy96TSlf7ZgWbzTT/8CCF/XprHUkSWs=
-Received: by pali.im (Postfix)
-        id 1A366102D; Wed,  1 Jul 2020 10:08:42 +0200 (CEST)
-Date:   Wed, 1 Jul 2020 10:08:41 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200701080841.azvlx2ijwxf5iyfl@pali>
-References: <20200630140420.7qkuq7wturmaafzf@pali>
- <20200630145848.GA3419143@bjorn-Precision-5520>
+        Wed, 1 Jul 2020 04:10:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59528 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728143AbgGAIKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:10:16 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 35897AED521D87ABDEB2;
+        Wed,  1 Jul 2020 16:10:14 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 1 Jul 2020 16:10:08 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <bvanassche@acm.org>, <osandov@fb.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, John Garry <john.garry@huawei.com>
+Subject: [PATCH] sbitmap: Consider cleared bits in sbitmap_bitmap_show()
+Date:   Wed, 1 Jul 2020 16:06:25 +0800
+Message-ID: <1593590785-191512-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200630145848.GA3419143@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 30 June 2020 09:58:48 Bjorn Helgaas wrote:
-> On Tue, Jun 30, 2020 at 04:04:20PM +0200, Pali Rohár wrote:
-> > On Tuesday 30 June 2020 08:51:27 Bjorn Helgaas wrote:
-> > > On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> > > > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > > > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > > > > root bridge, the aardvark driver throws the following error message:
-> > > > > > 
-> > > > > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > > > > 
-> > > > > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > > > > 
-> > > > > > Extend check in advk_pcie_valid_device() function for validating
-> > > > > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > > > > as Not Found and the driver does not try to access these registers.
-> > > > > > 
-> > > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > > > > >  1 file changed, 3 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > > > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > > > > >  		return false;
-> > > > > >  
-> > > > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > > > > +		return false;
-> > > > > 
-> > > > > I don't think this is the right fix.  This makes it racy because the
-> > > > > link may go down after we call advk_pcie_valid_device() but before we
-> > > > > perform the config read.
-> > > > 
-> > > > Yes, it is racy, but I do not think it cause problems. Trying to read
-> > > > PCIe registers when device is not connected cause just those timeouts,
-> > > > printing error message and increased delay in advk_pcie_wait_pio() due
-> > > > to polling loop. This patch reduce unnecessary access to PCIe registers
-> > > > when advk_pcie_wait_pio() polling just fail.
-> > > 
-> > > What happens when the device is removed after advk_pcie_link_up()
-> > > returns true, but before we actually do the config access?
-> > 
-> > Do you mean to remove device physically at runtime? I was told that our
-> > board would crash or issue reset. Removing device from mini PCIe slot
-> > without power off is not supported.
-> 
-> Right, I don't think PCIe mini cards support hotplug.
-> 
-> > Anyway, currently we are trying to read from device registers even when
-> > no device is connected. So when advk_pcie_link_up() returns true and
-> > after that device is not connected (somehow board and kernel would be
-> > still alive) I guess that it would behave as without applying this
-> > patch. So kernel starts reading from register and would wait until
-> > timeout expires. As device is not connected there would be no answer,
-> > so kernel print error message to dmesg (same as in commit message) and
-> > returns error that read failed.
-> 
-> OK, so if I understand correctly, checking advk_pcie_link_up() is
-> strictly an optimization.  If we guess wrong (e.g., after calling
-> advk_pcie_link_up(), the link went down because the card was removed,
-> DPC triggered, etc), the only bad thing is that we wait for a timeout;
-> it never causes a crash.
+sbitmap works by maintaining separate bitmaps of set and cleared bits.
+The set bits are cleared in a batch, to save the burden of continuously
+locking the "word" map to unset.
 
-Yes.
+sbitmap_bitmap_show() only shows the set bits (in "word"), which is not
+too much use, so mask out the cleared bits.
 
-> If that's the case, I'm fine with this.  But please add a comment to
-> that effect.
+Fixes: ea86ea2cdced ("sbitmap: ammortize cost of clearing bits")
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-Ok, I will send V2 with updated commit message.
+diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+index af88d1346dd7..267aa7709416 100644
+--- a/lib/sbitmap.c
++++ b/lib/sbitmap.c
+@@ -292,8 +292,11 @@ void sbitmap_bitmap_show(struct sbitmap *sb, struct seq_file *m)
+ 
+ 	for (i = 0; i < sb->map_nr; i++) {
+ 		unsigned long word = READ_ONCE(sb->map[i].word);
++		unsigned long cleared = READ_ONCE(sb->map[i].cleared);
+ 		unsigned int word_bits = READ_ONCE(sb->map[i].depth);
+ 
++		word &= ~cleared;
++
+ 		while (word_bits > 0) {
+ 			unsigned int bits = min(8 - byte_bits, word_bits);
+ 
+-- 
+2.26.2
 
-> I think several other drivers check for the link being up because we
-> actually crash if we try to read config space when the link is down.
-> That's what I was trying to avoid here.
-> 
-> Bjorn
