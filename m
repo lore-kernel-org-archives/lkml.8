@@ -2,122 +2,102 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CD0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF811208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3772082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EwL7oan4"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mUSxAdlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGAWij (ORCPT
+        id S1727853AbgGAWja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:38:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34051 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgGAWij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:38:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49xx2z1zgrz9sR4;
-        Thu,  2 Jul 2020 08:38:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593643117;
-        bh=56kkZWfTbbU44VtbMKX6G3us6NnUdwyya0+ubSH0zvM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EwL7oan4ciMK5fL2OM4dxkApV9lHHZ6Os/huvXrCSK6Orlv10cHBYZcJl/6AO1o52
-         6EIkH4c7/1gdNDFzgS+hB+N/wbUbu4+yDb1d3MiRf6150cf6rfzCJ73hq/K85X4G1I
-         3AmNu1m06v5crQ62SNWDjt0oFqr5RTLNiEM1TKV07e3A5pk9U2JD67lO3v7R+L57oI
-         NAl5CDiSGtlavrhH54VhA5BMphH8bVFqaxQ+bm5huHTqX/fsBo4dT3Jytd1d1lvLvy
-         g7HXc1umYWRPc5/qTYe7J5vXImwcA8N6VnoWNzkTveJJyhm9+kZI+mnWr4QBe48D8t
-         I0RJZ2XZKdGLw==
-Date:   Thu, 2 Jul 2020 08:38:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH -mmotm] mm/memory-failure: remove stub function
-Message-ID: <20200702083833.1f71c272@canb.auug.org.au>
-In-Reply-To: <adb60490-484f-a154-e163-725e35a821dc@infradead.org>
-References: <20200701045312.af2lR%akpm@linux-foundation.org>
-        <adb60490-484f-a154-e163-725e35a821dc@infradead.org>
+        Wed, 1 Jul 2020 18:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgGAWj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:39:29 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BF4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 15:39:29 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9104E8066C;
+        Thu,  2 Jul 2020 10:39:25 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593643165;
+        bh=XOd3RqAUK0HBEktw78iETxnsAIeZRaLFIqsEsFjCVc0=;
+        h=From:To:Cc:Subject:Date;
+        b=mUSxAdltir2ZdBOVEZrUgKtyR9UslVDksYpYoDJxlpOQz4p/Q9/ub1af8KyObSACD
+         FN/GPSjAxkdJ12Pva2Ly3rwAtffyfsB7+v7uVBm9ycnwjtvd7287s/futX/3YFlZ+B
+         msJ6Wzo+6CM/KGEmC59TEhJ2U/3TRCtCnP8KXj1bilX0a6JAMS+xTCQ0tJ1aWRmC5B
+         lfBQVeflHmVLQqF4MCl9TO4kocZfyz0ikDoIVLvzsJsbIpugEfVU82f23NzmabgvPo
+         Z0cymIBkpzr2VZSI+FYya/I6HQm9f2SyOYR9KNgJ1gYuzuu/fKBz/d1v2SM3mTQdht
+         gmtYBT2fd9g4g==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efd109d0000>; Thu, 02 Jul 2020 10:39:25 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id CCCBA13EDDC;
+        Thu,  2 Jul 2020 10:39:23 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 4C734280081; Thu,  2 Jul 2020 10:39:25 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     wsa@kernel.org, andriy.shevchenko@linux.intel.com
+Cc:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] i2c: algo-pca: Add 0x78 as SCL stuck low status
+Date:   Thu,  2 Jul 2020 10:39:11 +1200
+Message-Id: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VR5G_wXkj+V7Hl9wfElARea";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VR5G_wXkj+V7Hl9wfElARea
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The PCA9665 datasheet says that I2CSTA =3D 78h indicates that SCL is stuc=
+k
+low, this differs to the PCA9564 which uses 90h for this indication.
+Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
 
-Hi Randy,
+Based on looking through the PCA9564 and PCA9665 datasheets this should
+be safe for both chips. The PCA9564 should not return 0x78 for any valid
+state and the PCA9665 should not return 0x90.
 
-On Wed, 1 Jul 2020 08:47:30 -0700 Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> This stub is no longer needed since the function is no longer
-> inside an #ifdef/#endif block.
->=20
-> Fixes this build error:
->=20
-> ../mm/memory-failure.c:180:13: error: redefinition of =E2=80=98page_handl=
-e_poison=E2=80=99
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> ---
->  mm/memory-failure.c |    4 ----
->  1 file changed, 4 deletions(-)
->=20
-> --- mmotm-2020-0630-2152.orig/mm/memory-failure.c
-> +++ mmotm-2020-0630-2152/mm/memory-failure.c
-> @@ -169,10 +169,6 @@ int hwpoison_filter(struct page *p)
->  	return 0;
->  }
-> =20
-> -static bool page_handle_poison(struct page *page, bool hugepage_or_freep=
-age, bool release)
-> -{
-> -	return true;
-> -}
->  #endif
-> =20
->  EXPORT_SYMBOL_GPL(hwpoison_filter);
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v2:
+- Note which status corresponds to which chip
+- Move patch commentary to commit message
 
-Added to linux-next today.
+ drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-alg=
+o-pca.c
+index 7f10312d1b88..388978775be0 100644
+--- a/drivers/i2c/algos/i2c-algo-pca.c
++++ b/drivers/i2c/algos/i2c-algo-pca.c
+@@ -314,7 +314,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
+ 			DEB2("BUS ERROR - SDA Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
+-		case 0x90: /* Bus error - SCL stuck low */
++		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
++		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
+ 			DEB2("BUS ERROR - SCL Stuck low\n");
+ 			pca_reset(adap);
+ 			goto out;
 --=20
-Cheers,
-Stephen Rothwell
+2.27.0
 
---Sig_/VR5G_wXkj+V7Hl9wfElARea
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl79EGkACgkQAVBC80lX
-0Gyltwf+INFvxklNVE+y18MHcQE7vPpPq9Q6Gxojn0PoSy80x0j2hHHxT74mfg3L
-t5yN0fshRh4JfvFBrigvRn2NxS5dKTuo3TrBOmjAWwc4bZx6KkpqfPU5sMrkMgeN
-A8HEDWExOXl75U/tICF4esOVG7lVXFvDuBF8tMczysKZlqUA4fNqgkH3rJ7n+lSG
-GKbTSjFCEdI1pbICuyohp4ttUAJqSL6APL6qMjtuYlTB5oWgRGe7vBv3uZZ8o1Qq
-WHvG/lIR3X9kvGLAYhhYi2ii1il/WDZJSp7o3Ftj0UTw+3NoxaKdpucOGk/8nJfu
-49xC19PqDfK4OFG9EjFoPgEnvrDP1A==
-=239s
------END PGP SIGNATURE-----
-
---Sig_/VR5G_wXkj+V7Hl9wfElARea--
