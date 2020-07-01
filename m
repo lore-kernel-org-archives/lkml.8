@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A4EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A33BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD8C20775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9B52078A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cG9uWeax"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vfpo6dKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgGAJAA (ORCPT
+        id S1729119AbgGAJAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
+        Wed, 1 Jul 2020 05:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgGAI74 (ORCPT
+        with ESMTP id S1729015AbgGAI7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:59:56 -0400
+        Wed, 1 Jul 2020 04:59:55 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0D9C061755;
-        Wed,  1 Jul 2020 01:59:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5AA7C061755;
+        Wed,  1 Jul 2020 01:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=nyRpegl2g2GPLIzpDQmlwzdY5HJ2Dd3E7fu8tgbKXsw=; b=cG9uWeaxaNO/1MVPIWmhvQXLAG
-        iSkoMG+mDqCp5Fas05hxeEwDFJzbgUVjvM+qHyRdAModBVUY6niFiW0rnnavhFRNyz1pykeOhxkhZ
-        NZVGVYHrmpq04hvVgiUtI5yX1wM+7igRvEMydnCoRQeuacqPuZqBQw3s5pqynfJWw1cXYywN0/bxi
-        7SwIJoZIPt4nm/r/GiOvJKRN2dJAAkG6ZSJj5j6m8j6Tra0NHETrtGEustOMES2x9BE2MEDdvPFxf
-        /+IEWPO5yHD5avrdkfbZhwAa30i/liOzJ70LhshoWEaD5sgYOPmU7O855Wq//djMSdTtULqhfhiaU
-        2SXkVv7Q==;
+        bh=mXzFKc+c1347jb3Dn9ppL+M5YgGcOuGfnfqDijAsZ3Y=; b=vfpo6dKX6pcfkXojO7MEBdP8I+
+        86AaePADZXUJsTBKwuUgnpCIP5Z0XAZQGW6c/Kb9F/JPuY9WyJ3Rl/BaIzYlOubo09Ei7FzSnqQI0
+        gfCEMoloEjs6P3LEQnwVlzRHhUGadgcFRuv65T0aKFTLTXDZaxWyzGyBQkhXiSfyB+vRqn/1Jc5k2
+        zTH1Kh5OVuZJjkBVSpDk9P2/NeNvS/14c0tl9qqr7KZlHRN3w6sOvy5/jKp8AvIrsjxMcqV3gxYja
+        FugjR0mjktszsGn1XDTbj9LDx0mg0iBf25yLxb9OisE3KCivktdJc3E9LZFZgcvuzMqVbMum3MmEs
+        upxKYJvw==;
 Received: from [2001:4bb8:184:76e3:ea38:596b:3e9e:422a] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqYav-00087h-DT; Wed, 01 Jul 2020 08:59:53 +0000
+        id 1jqYau-00087W-24; Wed, 01 Jul 2020 08:59:52 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
         linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
         linux-s390@vger.kernel.org
-Subject: [PATCH 03/20] drbd: stop using ->queuedata
-Date:   Wed,  1 Jul 2020 10:59:30 +0200
-Message-Id: <20200701085947.3354405-4-hch@lst.de>
+Subject: [PATCH 02/20] simdisk: stop using ->queuedata
+Date:   Wed,  1 Jul 2020 10:59:29 +0200
+Message-Id: <20200701085947.3354405-3-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200701085947.3354405-1-hch@lst.de>
 References: <20200701085947.3354405-1-hch@lst.de>
@@ -66,35 +66,31 @@ field.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/drbd/drbd_main.c | 1 -
- drivers/block/drbd/drbd_req.c  | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ arch/xtensa/platforms/iss/simdisk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 45fbd526c453bc..26f4e0aa7393b4 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2805,7 +2805,6 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 	if (!q)
- 		goto out_no_q;
- 	device->rq_queue = q;
--	q->queuedata   = device;
+diff --git a/arch/xtensa/platforms/iss/simdisk.c b/arch/xtensa/platforms/iss/simdisk.c
+index 49322b66cda931..31b5020077a059 100644
+--- a/arch/xtensa/platforms/iss/simdisk.c
++++ b/arch/xtensa/platforms/iss/simdisk.c
+@@ -103,7 +103,7 @@ static void simdisk_transfer(struct simdisk *dev, unsigned long sector,
  
- 	disk = alloc_disk(1);
- 	if (!disk)
-diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
-index c80a2f1c3c2a73..3f09b2ab977822 100644
---- a/drivers/block/drbd/drbd_req.c
-+++ b/drivers/block/drbd/drbd_req.c
-@@ -1595,7 +1595,7 @@ void do_submit(struct work_struct *ws)
- 
- blk_qc_t drbd_make_request(struct request_queue *q, struct bio *bio)
+ static blk_qc_t simdisk_make_request(struct request_queue *q, struct bio *bio)
  {
--	struct drbd_device *device = (struct drbd_device *) q->queuedata;
-+	struct drbd_device *device = bio->bi_disk->private_data;
- 	unsigned long start_jif;
+-	struct simdisk *dev = q->queuedata;
++	struct simdisk *dev = bio->bi_disk->private_data;
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
+ 	sector_t sector = bio->bi_iter.bi_sector;
+@@ -273,8 +273,6 @@ static int __init simdisk_setup(struct simdisk *dev, int which,
+ 		goto out_alloc_queue;
+ 	}
  
- 	blk_queue_split(q, &bio);
+-	dev->queue->queuedata = dev;
+-
+ 	dev->gd = alloc_disk(SIMDISK_MINORS);
+ 	if (dev->gd == NULL) {
+ 		pr_err("alloc_disk failed\n");
 -- 
 2.26.2
 
