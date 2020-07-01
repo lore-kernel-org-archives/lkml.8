@@ -2,147 +2,139 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1073AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B21520702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2DB2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbgGAOTl (ORCPT
+        id S1731631AbgGAOUS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:19:41 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:64530 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731324AbgGAOSa (ORCPT
+        Wed, 1 Jul 2020 10:20:18 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49767 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731623AbgGAOUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:18:30 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061E3clS002775;
-        Wed, 1 Jul 2020 14:17:36 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0b-002e3701.pphosted.com with ESMTP id 320r3bhy2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 14:17:35 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 596C057;
-        Wed,  1 Jul 2020 14:17:34 +0000 (UTC)
-Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-        id 3024D2015E3C2; Wed,  1 Jul 2020 09:17:33 -0500 (CDT)
-Message-ID: <20200701141733.081104906@hpe.com>
-User-Agent: quilt/0.66
-Date:   Wed, 01 Jul 2020 09:17:44 -0500
-From:   steve.wahl@hpe.com
-To:     Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
+        Wed, 1 Jul 2020 10:20:18 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-16-BVV8QEx9N7etV0JoaSvqjg-1; Wed, 01 Jul 2020 15:20:14 +0100
+X-MC-Unique: BVV8QEx9N7etV0JoaSvqjg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 1 Jul 2020 15:20:13 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 1 Jul 2020 15:20:13 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+CC:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Masahiro Yamada" <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         Kees Cook <keescook@chromium.org>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Austin Kim <austindh.kim@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org
-Cc:     Russ Anderson <rja@hpe.com>
-Subject: [patch 13/13] Remove (now unused) EFI_UV1_MEMMAP from efi.h
-References: <20200701141731.377252388@hpe.com>
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: RE: [PATCH 00/22] add support for Clang LTO
+Thread-Topic: [PATCH 00/22] add support for Clang LTO
+Thread-Index: AQHWT4eVR3DE4y9c50++UkzL75GurajywsMg
+Date:   Wed, 1 Jul 2020 14:20:13 +0000
+Message-ID: <4427b0f825324da4b1640e32265b04bd@AcuMS.aculab.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+ <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <20200701091054.GW4781@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200701091054.GW4781@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=2 impostorscore=0 mlxscore=0 spamscore=0 malwarescore=0
- bulkscore=0 mlxlogscore=999 cotscore=-2147483648 adultscore=0
- clxscore=1015 priorityscore=1501 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010102
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With UV1 support removed, EFI_UV1_MEMMAP is no longer used.
+From: Peter Zijlstra
+> Sent: 01 July 2020 10:11
+> On Tue, Jun 30, 2020 at 01:30:16PM -0700, Paul E. McKenney wrote:
+> > On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
+> 
+> > > I'm not convinced C11 memory_order_consume would actually work for us,
+> > > even if it would work. That is, given:
+> > >
+> > >   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
+> > >
+> > > only pointers can have consume, but like I pointed out, we have code
+> > > that relies on dependent loads from integers.
+> >
+> > I agree that C11 memory_order_consume is not normally what we want,
+> > given that it is universally promoted to memory_order_acquire.
+> >
+> > However, dependent loads from integers are, if anything, more difficult
+> > to defend from the compiler than are control dependencies.  This applies
+> > doubly to integers that are used to index two-element arrays, in which
+> > case you are just asking the compiler to destroy your dependent loads
+> > by converting them into control dependencies.
+> 
+> Yes, I'm aware. However, as you might know, I'm firmly in the 'C is a
+> glorified assembler' camp (as I expect most actual OS people are, out of
+> necessity if nothing else) and if I wanted a control dependency I
+> would've bloody well written one.
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/include/asm/efi.h |   20 ++------------------
- 1 file changed, 2 insertions(+), 18 deletions(-)
+I write in C because doing register tracking is hard :-)
+I've got an hdlc implementation in C that is carefully adjusted
+so that the worst case path is bounded.
+I probably know every one of the 1000 instructions in it.
 
---- linux.orig/arch/x86/include/asm/efi.h	2020-06-17 14:21:49.798542440 -0500
-+++ linux/arch/x86/include/asm/efi.h	2020-06-17 14:28:55.830071857 -0500
-@@ -22,17 +22,7 @@ extern unsigned long efi_fw_vendor, efi_
-  *
-  * This is the main reason why we're doing stable VA mappings for RT
-  * services.
-- *
-- * SGI UV1 machines are known to be incompatible with this scheme, so we
-- * provide an opt-out for these machines via a DMI quirk that sets the
-- * attribute below.
-  */
--#define EFI_UV1_MEMMAP         EFI_ARCH_1
+Would an asm statement that uses the same 'register' for input and
+output but doesn't actually do anything help?
+It won't generate any code, but the compiler ought to assume that
+it might change the value - so can't do optimisations that track
+the value across the call.
+
+> I think an optimizing compiler is awesome, but only in so far as that
+> optimization is actually helpful -- and yes, I just stepped into a giant
+> twilight zone there. That is, any optimization that has _any_
+> controversy should be controllable (like -fno-strict-overflow
+> -fno-strict-aliasing) and I'd very much like the same here.
+
+I'm fed up of gcc generating the code that uses SIMD instructions
+for the 'tail' loop at the end of a function that is already doing
+SIMD operations for the main part of the loop.
+And compilers that convert a byte copy loop to 'rep movsb'.
+If I'm copying 3 or 4 bytes I don't want a 40 clock overhead.
+
+	David
+
 -
--static inline bool efi_have_uv1_memmap(void)
--{
--	return IS_ENABLED(CONFIG_X86_UV) && efi_enabled(EFI_UV1_MEMMAP);
--}
- 
- #define EFI32_LOADER_SIGNATURE	"EL32"
- #define EFI64_LOADER_SIGNATURE	"EL64"
-@@ -122,9 +112,7 @@ struct efi_scratch {
- 	efi_sync_low_kernel_mappings();					\
- 	kernel_fpu_begin();						\
- 	firmware_restrict_branch_speculation_start();			\
--									\
--	if (!efi_have_uv1_memmap())					\
--		efi_switch_mm(&efi_mm);					\
-+	efi_switch_mm(&efi_mm);						\
- })
- 
- #define arch_efi_call_virt(p, f, args...)				\
-@@ -132,9 +120,7 @@ struct efi_scratch {
- 
- #define arch_efi_call_virt_teardown()					\
- ({									\
--	if (!efi_have_uv1_memmap())					\
--		efi_switch_mm(efi_scratch.prev_mm);			\
--									\
-+	efi_switch_mm(efi_scratch.prev_mm);				\
- 	firmware_restrict_branch_speculation_end();			\
- 	kernel_fpu_end();						\
- })
-@@ -176,8 +162,6 @@ extern void efi_delete_dummy_variable(vo
- extern void efi_switch_mm(struct mm_struct *mm);
- extern void efi_recover_from_page_fault(unsigned long phys_addr);
- extern void efi_free_boot_services(void);
--extern pgd_t * __init efi_uv1_memmap_phys_prolog(void);
--extern void __init efi_uv1_memmap_phys_epilog(pgd_t *save_pgd);
- 
- /* kexec external ABI */
- struct efi_setup_data {
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
