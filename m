@@ -2,129 +2,115 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9676EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E31C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7271420663
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D48220663
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jtL5O4+7"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qymYWIhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgGAOBO (ORCPT
+        id S1731259AbgGAOC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgGAOBN (ORCPT
+        Wed, 1 Jul 2020 10:02:28 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:16326 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731069AbgGAOC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:01:13 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9352FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 07:01:13 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 07809556;
-        Wed,  1 Jul 2020 16:01:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593612072;
-        bh=XA2+VD+CcVvmHi+egZz6MPHuCoj4THiqmknNDsUNyBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jtL5O4+7rk+wQJ+1SotrLZ/SfiXTTgHQZI8AaUdiJlu/oqzFCCVct4aycicrd2RA4
-         +VS4igVdSaBT57VBCoJEsKQ0pCervuGDaIMz0zV2aOcPN9EEfVa0olVednn+zJAqZf
-         ZjsQiFR6YBXP2TEG6acmi+BBDNIFGM0FRKi6cHgg=
-Date:   Wed, 1 Jul 2020 17:01:08 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] phy: zynqmp: Fix unused-function compiler warning
-Message-ID: <20200701140108.GF27013@pendragon.ideasonboard.com>
-References: <20200701090438.21224-1-tklauser@distanz.ch>
- <20200701131902.GC27013@pendragon.ideasonboard.com>
- <20200701133643.GZ2599@vkoul-mobl>
- <20200701134443.GE27013@pendragon.ideasonboard.com>
- <20200701140026.ziplawf6oimjyssh@distanz.ch>
+        Wed, 1 Jul 2020 10:02:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593612148; x=1625148148;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=5zs5lyxU5AtUdWhiM9M4OnXzAKmqv7biVE/Gy/y7dYc=;
+  b=qymYWIhBE249CPHiO7/xKER7PcOnbQjc1tVkv7Sf5xLWwaFuiAnhD+B/
+   Eg1UBEXAjKh96i/oKDN0CyCM5ywgq/3vy7M2+JkfQddKN+m3/JCgZl3z0
+   V7z3IqXuIyT8xxJryKD4MycoX9UMDkeK85BUaXbjxjgnB/OqqnCmP4T9E
+   4=;
+IronPort-SDR: /W76JCUcLQtk7wQg9wwmfEH4BUJ0N5VwiTtPu0r4q1nWt0lIbl7VZ5lLBHNJhWL0Do5IzhbSQw
+ 5Haek1aXZJcQ==
+X-IronPort-AV: E=Sophos;i="5.75,300,1589241600"; 
+   d="scan'208";a="48368723"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 01 Jul 2020 14:02:20 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id AA33CA26D8;
+        Wed,  1 Jul 2020 14:02:16 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 1 Jul 2020 14:02:15 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.85) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 1 Jul 2020 14:02:13 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     <kvmarm@lists.cs.columbia.edu>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH] KVM: arm64: Change default caching mode for {PEND,PROP}BASER.outer
+Date:   Wed, 1 Jul 2020 16:02:06 +0200
+Message-ID: <20200701140206.8664-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701140026.ziplawf6oimjyssh@distanz.ch>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.85]
+X-ClientProxiedBy: EX13D06UWA003.ant.amazon.com (10.43.160.13) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 04:00:26PM +0200, Tobias Klauser wrote:
-> On 2020-07-01 at 15:44:43 +0200, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> > On Wed, Jul 01, 2020 at 07:06:43PM +0530, Vinod Koul wrote:
-> > > On 01-07-20, 16:19, Laurent Pinchart wrote:
-> > > > On Wed, Jul 01, 2020 at 11:04:38AM +0200, Tobias Klauser wrote:
-> > > > > This fixes the following compiler warning when building with
-> > > > > CONFIG_PM && !CONFIG_PM_SLEEP:
-> > > > > 
-> > > > > drivers/phy/xilinx/phy-zynqmp.c:830:12: warning: ‘xpsgtr_resume’ defined but not used [-Wunused-function]
-> > > > >   830 | static int xpsgtr_resume(struct device *dev)
-> > > > >       |            ^~~~~~~~~~~~~
-> > > > > drivers/phy/xilinx/phy-zynqmp.c:819:12: warning: ‘xpsgtr_suspend’ defined but not used [-Wunused-function]
-> > > > >   819 | static int xpsgtr_suspend(struct device *dev)
-> > > > >       |            ^~~~~~~~~~~~~~
-> > > > 
-> > > > Oops :-S Sorry about that.
-> > > > 
-> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Thanks for the review Laurent.
-> 
-> > > > Vinod or Kishon, can you pick this patch up, or do I need to send a pull
-> > > > request ? (It's my first driver in the PHY subsystem so I don't know
-> > > > what the usual practices are there)
-> > > 
-> > > patches are welcome :-)
-> > > 
-> > > > 
-> > > > > Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-> > > > > ---
-> > > > >  drivers/phy/xilinx/phy-zynqmp.c | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
-> > > > > index 8babee2ce9ec..22a0ae635797 100644
-> > > > > --- a/drivers/phy/xilinx/phy-zynqmp.c
-> > > > > +++ b/drivers/phy/xilinx/phy-zynqmp.c
-> > > > > @@ -815,7 +815,7 @@ static struct phy *xpsgtr_xlate(struct device *dev,
-> > > > >   * Power Management
-> > > > >   */
-> > > > >  
-> > > > > -#ifdef CONFIG_PM
-> > > > > +#ifdef CONFIG_PM_SLEEP
-> > > 
-> > > How about marking it as __maybe_unused instead?
-> > 
-> > I don't mind either, I'll let Tobias decide, but his patch seems fine,
-> > is there a drawback in his approach ? If it's just a matter of personal
-> > preference, I'd rather not require a v2.
-> 
-> I don't mind either, it was just what seemed the more straight-forward
-> fix. On the other hand, it seems that marking these functions as
-> __maybe_unused is the more widely used method in other PHY drivers. In
-> addition it would have the nice side-effect of the code always being
-> compile-checked regardless of the value of CONFIG_PM_SLEEP.
+PENDBASER and PROPBASER define the outer caching mode for LPI tables.
+The memory backing them may not be outer sharable, so we mark them as nC
+by default. This however, breaks Windows on ARM which only accepts
+SameAsInner or RaWaWb as values for outer cachability.
 
-That's a good point, haven't thought about it.
+We do today already allow the outer mode to be set to SameAsInner
+explicitly, so the easy fix is to default to that instead of nC for
+situations when an OS asks for a not fulfillable cachability request.
 
-> Will send a v2 using __maybe_unused and will let you decide which one to
-> pick :)
+This fixes booting Windows in KVM with vgicv3 and ITS enabled for me.
 
-You can keep my R-b :-)
+Signed-off-by: Alexander Graf <graf@amazon.com>
+---
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+index d2339a2b9fb9..5c786b915cd3 100644
+--- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
++++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+@@ -389,7 +389,7 @@ u64 vgic_sanitise_outer_cacheability(u64 field)
+ 	case GIC_BASER_CACHE_nC:
+ 		return field;
+ 	default:
+-		return GIC_BASER_CACHE_nC;
++		return GIC_BASER_CACHE_SameAsInner;
+ 	}
+ }
+ 
 -- 
-Regards,
+2.17.1
 
-Laurent Pinchart
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
