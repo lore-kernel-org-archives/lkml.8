@@ -2,254 +2,165 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A28C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F024CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549882073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12682073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:11:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hxZkYjsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgGAKKa (ORCPT
+        id S1729854AbgGAKLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:10:30 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:55528 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729358AbgGAKKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:10:30 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id E7B6DF445EE771926D20;
-        Wed,  1 Jul 2020 18:10:27 +0800 (CST)
-Received: from dggeme768-chm.china.huawei.com (10.3.19.114) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 1 Jul 2020 18:10:27 +0800
-Received: from [10.174.177.240] (10.174.177.240) by
- dggeme768-chm.china.huawei.com (10.3.19.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 1 Jul 2020 18:10:26 +0800
-Subject: Re: [PATCH] drm: fix double free for gbo in drm_gem_vram_init and
- drm_gem_vram_create
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20200620062134.82961-1-jiayang5@huawei.com>
- <b6410a5e-2649-ba17-b4fe-eb24dab45253@huawei.com>
- <9ab7bd1e-93b2-6867-aea8-239fb848b3bb@suse.de>
-From:   Jia Yang <jiayang5@huawei.com>
-Message-ID: <ab274c09-b5e8-5e5e-77e1-1f0ba3d23ead@huawei.com>
-Date:   Wed, 1 Jul 2020 18:10:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 1 Jul 2020 06:11:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33469 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729358AbgGAKLN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:11:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593598273; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=amiqoJGPjX9RNHOLVHTe5Q2mOjhh5iGIl3d/MtXJOIs=;
+ b=hxZkYjsvcv0XKZNZlVGTt7XYWZKobYzl9037lBe50uq6cPLFGiPLLcJ3JHBBFAYrHwxWhApA
+ OUpDwFoLCTYV6zUdFyx1POC43JXsD3fYf2AEwjXc2cBntmb5pxoLcXlvrzUyKZoRGCLGwxEK
+ c22YieittPBkxLNT1uqrNV4Wgj8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5efc6139117610c7ff405ea9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Jul 2020 10:11:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2A470C433AD; Wed,  1 Jul 2020 10:11:05 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6F35C433C8;
+        Wed,  1 Jul 2020 10:11:03 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <9ab7bd1e-93b2-6867-aea8-239fb848b3bb@suse.de>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.240]
-X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
- dggeme768-chm.china.huawei.com (10.3.19.114)
-X-CFilter-Loop: Reflected
+Date:   Wed, 01 Jul 2020 15:41:03 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Shawn Guo <shawn.guo@linaro.org>, Takashi Iwai <tiwai@suse.de>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v9 0/7] iommu/arm-smmu: Enable split pagetable support
+In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
+References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+Message-ID: <bdc2a4348230f430138d320e49e188c0@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your suggestion, I can make the patch. But the
-problem is reported by tool "Hulk Robot" and only happen
-one time. No scripts are left, so I have no exact environment
-to test.
+Hi Will, Robin,
 
+On 2020-06-27 01:30, Jordan Crouse wrote:
+> Another iteration of the split-pagetable support for arm-smmu and the 
+> Adreno GPU
+> SMMU. After email discussions [1] we opted to make a arm-smmu 
+> implementation for
+> specifically for the Adreno GPU and use that to enable split pagetable 
+> support
+> and later other implementation specific bits that we need.
+> 
+> On the hardware side this is very close to the same code from before 
+> [2] only
+> the TTBR1 quirk is turned on by the implementation and not a domain 
+> attribute.
+> In drm/msm we use the returned size of the aperture as a clue to let us 
+> know
+> which virtual address space we should use for global memory objects.
+> 
+> There are two open items that you should be aware of. First, in the
+> implementation specific code we have to check the compatible string of 
+> the
+> device so that we only enable TTBR1 for the GPU (SID 0) and not the GMU 
+> (SID 4).
+> I went back and forth trying to decide if I wanted to use the 
+> compatible string
+> or the SID as the filter and settled on the compatible string but I 
+> could be
+> talked out of it.
+> 
+> The other open item is that in drm/msm the hardware only uses 49 bits 
+> of the
+> address space but arm-smmu expects the address to be sign extended all 
+> the way
+> to 64 bits. This isn't a problem normally unless you look at the 
+> hardware
+> registers that contain a IOVA and then the upper bits will be zero. I 
+> opted to
+> restrict the internal drm/msm IOVA range to only 49 bits and then sign 
+> extend
+> right before calling iommu_map / iommu_unmap. This is a bit wonky but I 
+> thought
+> that matching the hardware would be less confusing when debugging a 
+> hang.
+> 
+> v9: Fix bot-detected merge conflict
+> v7: Add attached device to smmu_domain to pass to implementation 
+> specific
+> functions
+> 
+> [1] 
+> https://lists.linuxfoundation.org/pipermail/iommu/2020-May/044537.html
+> [2] https://patchwork.kernel.org/patch/11482591/
+> 
+> 
+> Jordan Crouse (7):
+>   iommu/arm-smmu: Pass io-pgtable config to implementation specific
+>     function
+>   iommu/arm-smmu: Add support for split pagetables
+>   dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+>   iommu/arm-smmu: Add a pointer to the attached device to smmu_domain
+>   iommu/arm-smmu: Add implementation for the adreno GPU SMMU
+>   drm/msm: Set the global virtual address range from the IOMMU domain
+>   arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.yaml   |  4 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 13 +++++-
+>  drivers/gpu/drm/msm/msm_iommu.c               |  7 +++
+>  drivers/iommu/arm-smmu-impl.c                 |  6 ++-
+>  drivers/iommu/arm-smmu-qcom.c                 | 45 ++++++++++++++++++-
+>  drivers/iommu/arm-smmu.c                      | 38 +++++++++++-----
+>  drivers/iommu/arm-smmu.h                      | 30 ++++++++++---
+>  8 files changed, 120 insertions(+), 25 deletions(-)
 
-On 2020/7/1 14:56, Thomas Zimmermann wrote:
-> Hi
-> 
-> Thanks for the patch and apologies for being late with the review.
-> 
-> The fix is good, but I'd like to see different approach. I'd rather have
-> drm_gem_vram_init() being integrated into drm_gem_vram_create().
-> 
-> Do you prefer to make the patch or shall I type up something? Would you
-> be able to test?
-> 
-> I have some comments on the resulting changes below.
-> 
-> Am 01.07.20 um 04:32 schrieb Jia Yang:
->> Ping...
->>
->> On 2020/6/20 14:21, Jia Yang wrote:
->>> I got a use-after-free report when doing some fuzz test:
->>>
->>> If ttm_bo_init() fails, the "gbo" and "gbo->bo.base" will be
->>> freed by ttm_buffer_object_destroy() in ttm_bo_init(). But
->>> then drm_gem_vram_create() and drm_gem_vram_init() will free
->>> "gbo" and "gbo->bo.base" again.
->>>
->>> BUG: KMSAN: use-after-free in drm_vma_offset_remove+0xb3/0x150
->>> CPU: 0 PID: 24282 Comm: syz-executor.1 Tainted: G    B   W         5.7.0-rc4-msan #2
->>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
->>> Call Trace:
->>>  __dump_stack
->>>  dump_stack+0x1c9/0x220
->>>  kmsan_report+0xf7/0x1e0
->>>  __msan_warning+0x58/0xa0
->>>  drm_vma_offset_remove+0xb3/0x150
->>>  drm_gem_free_mmap_offset
->>>  drm_gem_object_release+0x159/0x180
->>>  drm_gem_vram_init
->>>  drm_gem_vram_create+0x7c5/0x990
->>>  drm_gem_vram_fill_create_dumb
->>>  drm_gem_vram_driver_dumb_create+0x238/0x590
->>>  drm_mode_create_dumb
->>>  drm_mode_create_dumb_ioctl+0x41d/0x450
->>>  drm_ioctl_kernel+0x5a4/0x710
->>>  drm_ioctl+0xc6f/0x1240
->>>  vfs_ioctl
->>>  ksys_ioctl
->>>  __do_sys_ioctl
->>>  __se_sys_ioctl+0x2e9/0x410
->>>  __x64_sys_ioctl+0x4a/0x70
->>>  do_syscall_64+0xb8/0x160
->>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>> RIP: 0033:0x4689b9
->>> Code: fd e0 fa ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb e0 fa ff c3 66 2e 0f 1f 84 00 00 00 00
->>> RSP: 002b:00007f368fa4dc98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>> RAX: ffffffffffffffda RBX: 000000000076bf00 RCX: 00000000004689b9
->>> RDX: 0000000020000240 RSI: 00000000c02064b2 RDI: 0000000000000003
->>> RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
->>> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->>> R13: 00000000004d17e0 R14: 00007f368fa4e6d4 R15: 000000000076bf0c
->>>
->>> Uninit was created at:
->>>  kmsan_save_stack_with_flags
->>>  kmsan_internal_poison_shadow+0x66/0xd0
->>>  kmsan_slab_free+0x6e/0xb0
->>>  slab_free_freelist_hook
->>>  slab_free
->>>  kfree+0x571/0x30a0
->>>  drm_gem_vram_destroy
->>>  ttm_buffer_object_destroy+0xc8/0x130
->>>  ttm_bo_release
->>>  kref_put
->>>  ttm_bo_put+0x117d/0x23e0
->>>  ttm_bo_init_reserved+0x11c0/0x11d0
->>>  ttm_bo_init+0x289/0x3f0
->>>  drm_gem_vram_init
->>>  drm_gem_vram_create+0x775/0x990
->>>  drm_gem_vram_fill_create_dumb
->>>  drm_gem_vram_driver_dumb_create+0x238/0x590
->>>  drm_mode_create_dumb
->>>  drm_mode_create_dumb_ioctl+0x41d/0x450
->>>  drm_ioctl_kernel+0x5a4/0x710
->>>  drm_ioctl+0xc6f/0x1240
->>>  vfs_ioctl
->>>  ksys_ioctl
->>>  __do_sys_ioctl
->>>  __se_sys_ioctl+0x2e9/0x410
->>>  __x64_sys_ioctl+0x4a/0x70
->>>  do_syscall_64+0xb8/0x160
->>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>
->>> If ttm_bo_init() fails, the "gbo" will be freed by
->>> ttm_buffer_object_destroy() in ttm_bo_init(). But then
->>> drm_gem_vram_create() and drm_gem_vram_init() will free
->>> "gbo" again.
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Jia Yang <jiayang5@huawei.com>
->>> ---
->>>  drivers/gpu/drm/drm_gem_vram_helper.c | 28 +++++++++++++++------------
->>>  1 file changed, 16 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
->>> index 8b2d5c945c95..1d85af9a481a 100644
->>> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
->>> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
->>> @@ -175,6 +175,10 @@ static void drm_gem_vram_placement(struct drm_gem_vram_object *gbo,
->>>  	}
->>>  }
->>>  
->>> +/*
->>> + * Note that on error, drm_gem_vram_init will free the buffer object.
->>> + */
->>> +
-> 
-> This comment could go away.
-> 
->>>  static int drm_gem_vram_init(struct drm_device *dev,
->>>  			     struct drm_gem_vram_object *gbo,
->>>  			     size_t size, unsigned long pg_align)
->>> @@ -184,15 +188,19 @@ static int drm_gem_vram_init(struct drm_device *dev,
->>>  	int ret;
->>>  	size_t acc_size;
->>>  
->>> -	if (WARN_ONCE(!vmm, "VRAM MM not initialized"))
->>> +	if (WARN_ONCE(!vmm, "VRAM MM not initialized")) {
->>> +		kfree(gbo);
->>>  		return -EINVAL;
->>> +	}
-> 
-> This test can go to the top of drm_gem_vram_create()
-> 
->>>  	bdev = &vmm->bdev;
->>>  
->>>  	gbo->bo.base.funcs = &drm_gem_vram_object_funcs;
->>>  
->>>  	ret = drm_gem_object_init(dev, &gbo->bo.base, size);
->>> -	if (ret)
->>> +	if (ret) {
->>> +		kfree(gbo);
->>>  		return ret;
->>> +	}
->>>  
->>>  	acc_size = ttm_bo_dma_acc_size(bdev, size, sizeof(*gbo));
->>>  
->>> @@ -203,13 +211,13 @@ static int drm_gem_vram_init(struct drm_device *dev,
->>>  			  &gbo->placement, pg_align, false, acc_size,
->>>  			  NULL, NULL, ttm_buffer_object_destroy);
->>>  	if (ret)
->>> -		goto err_drm_gem_object_release;
->>> +		/*
->>> +		 * A failing ttm_bo_init will call ttm_buffer_object_destroy
->>> +		 * to release gbo->bo.base and kfree gbo.
->>> +		 */
->>> +		return ret;
-> 
-> The rest of this function would be inlined where the call to
-> drm_gem_vram_init() currently happens.
-> 
->>>  
->>>  	return 0;
->>> -
->>> -err_drm_gem_object_release:
->>> -	drm_gem_object_release(&gbo->bo.base);
->>> -	return ret;
->>>  }
->>>  
->>>  /**
->>> @@ -243,13 +251,9 @@ struct drm_gem_vram_object *drm_gem_vram_create(struct drm_device *dev,
->>>  
->>>  	ret = drm_gem_vram_init(dev, gbo, size, pg_align);
->>>  	if (ret < 0)
->>> -		goto err_kfree;
->>> +		return ERR_PTR(ret);
->>>  
->>>  	return gbo;
->>> -
->>> -err_kfree:
->>> -	kfree(gbo);
->>> -	return ERR_PTR(ret);
-> 
-> All inlined code up to ttm_bo_init() would jump to error labels on
-> errors. ttm_bo_init() would return directly.
-> 
-> Best regards
-> Thomas
-> 
-> 
->>>  }
->>>  EXPORT_SYMBOL(drm_gem_vram_create);
->>>  
->>>
-> 
+Any chance reviewing this?
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
