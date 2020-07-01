@@ -2,111 +2,111 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E67C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC2B2078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:20:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RGNBtsFV"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCDA20775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 08:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593591660;
+	bh=mvYYmiZD0lRjkcahXyyE68VrSfxPw8nxlENouGT4zFU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qpeSfQ3O0WcQtNvzRUqHIixMRA6lLNh0eSuI1AlF8PovEzIOwC3mRg7OGagRmjz3o
+	 8QWNBgfekYSEEeO5N0kq3awXYfUxxmf/IJmTiXH9fLwrjfgIaaR/vTzk2yJ/pN1IMH
+	 krsWHkP4lTpPQMVlXs0FDhBv4f8pj+fJ1YTrcLgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgGAIUE (ORCPT
+        id S1728662AbgGAIU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 04:20:04 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13419 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgGAIUE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 04:20:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efc46d00000>; Wed, 01 Jul 2020 01:18:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 Jul 2020 01:20:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 01 Jul 2020 01:20:03 -0700
-Received: from [10.26.73.166] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
- 2020 08:19:56 +0000
-Subject: Re: [PATCH v9 3/4] dt-bindings: arm-smmu: add binding for Tegra194
- SMMU
-To:     Krishna Reddy <vdumpa@nvidia.com>, <joro@8bytes.org>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
-        <treding@nvidia.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <yhsu@nvidia.com>,
-        <snikam@nvidia.com>, <praithatha@nvidia.com>, <talho@nvidia.com>,
-        <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-References: <20200630235752.8737-1-vdumpa@nvidia.com>
- <20200630235752.8737-4-vdumpa@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <689714e8-a5bb-7d13-f2f2-ee26b2c53811@nvidia.com>
-Date:   Wed, 1 Jul 2020 09:19:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 04:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728477AbgGAIU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 04:20:58 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8370120722;
+        Wed,  1 Jul 2020 08:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593591657;
+        bh=mvYYmiZD0lRjkcahXyyE68VrSfxPw8nxlENouGT4zFU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p+kvMzaED0bKnFHQXu5Z+wC4wUKy/MUOj/uldXaRx3i0CNI7f7jy4bfVAgAZ5gk/0
+         GTOBdWnhcO35n66pQL3FL1SnBRHNwv0zobP6wsJlT16PsQNvFNV6xWHS0aQkoPRxUm
+         H8cKiVbzSmPeIY+RND3X6F5hpIkCr4VCjyJVtLEA=
+Received: by pali.im (Postfix)
+        id 8FA80102D; Wed,  1 Jul 2020 10:20:55 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card connected
+Date:   Wed,  1 Jul 2020 10:20:44 +0200
+Message-Id: <20200701082044.4494-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200528143141.29956-1-pali@kernel.org>
+References: <20200528143141.29956-1-pali@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630235752.8737-4-vdumpa@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593591504; bh=tSDe8LeboRnurzjwRe+5HLTMPSrGI8/MJArXEKpfbZA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RGNBtsFVGdCPynKZU03jKlzrlB0P6BJ0aS4u/xPTgAr9viUfOO9j1Gn0xEnUfgsxJ
-         fewKSXXv83xcmBHZh7d2x98lh6f8toxAI1QtW3Jn0bPT5Sf1iE6jZiP9DQppUv18vH
-         T144o3M9HGregS5DROpZ6yBnKTJ7flIQ1Mlgue5rUqYMzq46v0YM40OYMMLBw1+Mo+
-         BY5QjGQMfJMT0I28dtMaVCUgMgkkzVhDz5dgANA3kihh+lJ3K5yPR+mUAx4Uvd3TEI
-         k2HPo9MnnuXnGUlbpHGWsTNA0Xf1GNPAmFAFIsPs9cwzG5swAOhYOVDvEhrdpA6B4E
-         3xU9gkacrP2hw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When there is no PCIe card connected and advk_pcie_rd_conf() or
+advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+root bridge, the aardvark driver throws the following error message:
 
-On 01/07/2020 00:57, Krishna Reddy wrote:
-> Add binding for NVIDIA's Tegra194 SoC SMMU topology that is based
-> on ARM MMU-500.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
-> ---
->  .../devicetree/bindings/iommu/arm,smmu.yaml    | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index d7ceb4c34423b..662c46e16f07d 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -38,6 +38,11 @@ properties:
->                - qcom,sc7180-smmu-500
->                - qcom,sdm845-smmu-500
->            - const: arm,mmu-500
-> +      - description: NVIDIA SoCs that use more than one "arm,mmu-500"
-> +        items:
-> +          - enum:
-> +              - nvidia,tegra194-smmu
-> +          - const: arm,mmu-500
+  advk-pcie d0070000.pcie: config read/write timed out
 
-We should also address Robin's comments here. I don't think that we ever
-want to fail back to just the regular 'arm,mmu-500' and should be should
-probably just drop this part.
+Obviously accessing PCIe registers of disconnected card is not possible.
 
-Jon
+Extend check in advk_pcie_valid_device() function for validating
+availability of PCIe bus. If PCIe link is down, then the device is marked
+as Not Found and the driver does not try to access these registers.
 
+This is just an optimization to prevent accessing PCIe registers when card
+is disconnected. Trying to access PCIe registers of disconnected card does
+not cause any crash, kernel just needs to wait for a timeout. So if card
+disappear immediately after checking for PCIe link (before accessing PCIe
+registers), it does not cause any problems.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+
+---
+Changes in V2:
+* Update commit message, mention that this is optimization
+---
+ drivers/pci/controller/pci-aardvark.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..53a4cfd7d377 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+ 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+ 		return false;
+ 
++	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
++		return false;
++
+ 	return true;
+ }
+ 
 -- 
-nvpublic
+2.20.1
+
