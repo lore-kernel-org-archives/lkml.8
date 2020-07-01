@@ -2,336 +2,125 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8399DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75344C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61FA2207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:39:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Fr0xM2dP"
+	by mail.kernel.org (Postfix) with ESMTP id 5AF1A207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 14:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593614404;
+	bh=BqxH0cMOs/4FiCTI+vy8Y4QYi2z24pQRraMa1mojDnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rjd8roPPrxYbt+7Q0oNOUTuA0mVLJbOg0zVlgE8l3I02PRM5K3V2KKi/6MyMFXEqX
+	 Yzij/1ljl8ZGfSv+Et2Ykehu0wdh5XRiW/GasSy0QgdNpPpgVIyvbMYOlVZkoccxGV
+	 YxPRfON7CreMWhOgwnqCXnLeq9xLJp4eUAYv1Uxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgGAOi6 (ORCPT
+        id S1731491AbgGAOkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 10:38:58 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44218 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgGAOi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 10:38:58 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C88CF20B717A;
-        Wed,  1 Jul 2020 07:38:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C88CF20B717A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593614335;
-        bh=XI2DYzqVH+85ZlYkvoBj3U6K4g5Gt6k9k4N9Zb/43/o=;
+        Wed, 1 Jul 2020 10:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgGAOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:40:03 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1D3206BE;
+        Wed,  1 Jul 2020 14:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593614402;
+        bh=BqxH0cMOs/4FiCTI+vy8Y4QYi2z24pQRraMa1mojDnk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fr0xM2dPU+ABOnfSwdPnDi7HE8X3JbRVI1astupYEFqoBABy2Ty7qbs0vaRdC3gX/
-         AN0xls0BvLNj5qw5/iyGAemLhZa1pngHWt4beQG+B9OXd4KgTTQlJrJQ6hyShyEQfX
-         QD3vkkyenTtvmKVr75LRgtr0+1FLeQeXib44MCdY=
-Date:   Wed, 1 Jul 2020 09:38:52 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        kexec@lists.infradead.org, James Morris <jmorris@namei.org>,
-        linux-kernel@vger.kernel.org,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-security-module@vger.kernel.org,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-integrity@vger.kernel.org,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v2 11/11] ima: Support additional conditionals in the
- KEXEC_CMDLINE hook function
-Message-ID: <20200701143852.GG4694@sequoia>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
- <20200626223900.253615-12-tyhicks@linux.microsoft.com>
- <20200701080416.GC3878@dhcp-128-65.nay.redhat.com>
+        b=IiIEvHvhiwOTdc0aHz4sbZAnKys7xXxlDUPWvhtTZw6crBqCk4jzufMoywpIE4364
+         sQQrOLvbQLxn7ougLHKjDsKUiP9GLNzXtnl6vGyXcXR2jKJbR94jENdQoYsQptloS9
+         iKo13pDMt/l0zDPiyKDAMp+GKuGAABbhxOjNEgLE=
+Date:   Wed, 1 Jul 2020 10:40:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
+Message-ID: <20200701144000.GC2687961@sasha-vm>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+ <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
+ <20200629231826.GT1931@sasha-vm>
+ <20200630083845.GA637154@kroah.com>
+ <20200630151248.GY1931@sasha-vm>
+ <20200630153325.GA1785141@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200701080416.GC3878@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200630153325.GA1785141@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-01 16:04:16, Dave Young wrote:
-> Hi,
-> On 06/26/20 at 05:39pm, Tyler Hicks wrote:
-> > Take the properties of the kexec kernel's inode and the current task
-> > ownership into consideration when matching a KEXEC_CMDLINE operation to
-> > the rules in the IMA policy. This allows for some uniformity when
-> > writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
-> > and KEXEC_CMDLINE operations.
-> > 
-> > Prior to this patch, it was not possible to write a set of rules like
-> > this:
-> > 
-> >  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
-> >  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
-> >  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
-> >  measure func=KEXEC_KERNEL_CHECK
-> >  measure func=KEXEC_INITRAMFS_CHECK
-> >  measure func=KEXEC_CMDLINE
-> > 
-> > The inode information associated with the kernel being loaded by a
-> > kexec_kernel_load(2) syscall can now be included in the decision to
-> > measure or not
-> > 
-> > Additonally, the uid, euid, and subj_* conditionals can also now be
-> > used in KEXEC_CMDLINE rules. There was no technical reason as to why
-> > those conditionals weren't being considered previously other than
-> > ima_match_rules() didn't have a valid inode to use so it immediately
-> > bailed out for KEXEC_CMDLINE operations rather than going through the
-> > full list of conditional comparisons.
-> > 
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: kexec@lists.infradead.org
-> > ---
-> > 
-> > * v2
-> >   - Moved the inode parameter of process_buffer_measurement() to be the
-> >     first parameter so that it more closely matches process_masurement()
-> > 
-> >  include/linux/ima.h                          |  4 ++--
-> >  kernel/kexec_file.c                          |  2 +-
-> >  security/integrity/ima/ima.h                 |  2 +-
-> >  security/integrity/ima/ima_api.c             |  2 +-
-> >  security/integrity/ima/ima_appraise.c        |  2 +-
-> >  security/integrity/ima/ima_asymmetric_keys.c |  2 +-
-> >  security/integrity/ima/ima_main.c            | 23 +++++++++++++++-----
-> >  security/integrity/ima/ima_policy.c          | 17 +++++----------
-> >  security/integrity/ima/ima_queue_keys.c      |  2 +-
-> >  9 files changed, 31 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/include/linux/ima.h b/include/linux/ima.h
-> > index 9164e1534ec9..d15100de6cdd 100644
-> > --- a/include/linux/ima.h
-> > +++ b/include/linux/ima.h
-> > @@ -25,7 +25,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
-> >  			      enum kernel_read_file_id id);
-> >  extern void ima_post_path_mknod(struct dentry *dentry);
-> >  extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
-> > -extern void ima_kexec_cmdline(const void *buf, int size);
-> > +extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
-> >  
-> >  #ifdef CONFIG_IMA_KEXEC
-> >  extern void ima_add_kexec_buffer(struct kimage *image);
-> > @@ -103,7 +103,7 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> >  	return -EOPNOTSUPP;
-> >  }
-> >  
-> > -static inline void ima_kexec_cmdline(const void *buf, int size) {}
-> > +static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
-> >  #endif /* CONFIG_IMA */
-> >  
-> >  #ifndef CONFIG_IMA_KEXEC
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index bb05fd52de85..07df431c1f21 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -287,7 +287,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
-> >  			goto out;
-> >  		}
-> >  
-> > -		ima_kexec_cmdline(image->cmdline_buf,
-> > +		ima_kexec_cmdline(kernel_fd, image->cmdline_buf,
-> >  				  image->cmdline_buf_len - 1);
-> >  	}
-> >  
-> > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> > index 59ec28f5c117..ff2bf57ff0c7 100644
-> > --- a/security/integrity/ima/ima.h
-> > +++ b/security/integrity/ima/ima.h
-> > @@ -265,7 +265,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
-> >  			   struct evm_ima_xattr_data *xattr_value,
-> >  			   int xattr_len, const struct modsig *modsig, int pcr,
-> >  			   struct ima_template_desc *template_desc);
-> > -void process_buffer_measurement(const void *buf, int size,
-> > +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
-> >  				const char *eventname, enum ima_hooks func,
-> >  				int pcr, const char *keyring);
-> >  void ima_audit_measurement(struct integrity_iint_cache *iint,
-> > diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-> > index bf22de8b7ce0..4f39fb93f278 100644
-> > --- a/security/integrity/ima/ima_api.c
-> > +++ b/security/integrity/ima/ima_api.c
-> > @@ -162,7 +162,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
-> >  
-> >  /**
-> >   * ima_get_action - appraise & measure decision based on policy.
-> > - * @inode: pointer to inode to measure
-> > + * @inode: pointer to the inode associated with the object being validated
-> >   * @cred: pointer to credentials structure to validate
-> >   * @secid: secid of the task being validated
-> >   * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXEC,
-> > diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> > index a9649b04b9f1..6c52bf7ea7f0 100644
-> > --- a/security/integrity/ima/ima_appraise.c
-> > +++ b/security/integrity/ima/ima_appraise.c
-> > @@ -328,7 +328,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
-> >  
-> >  		rc = is_binary_blacklisted(digest, digestsize);
-> >  		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
-> > -			process_buffer_measurement(digest, digestsize,
-> > +			process_buffer_measurement(NULL, digest, digestsize,
-> >  						   "blacklisted-hash", NONE,
-> >  						   pcr, NULL);
-> >  	}
-> > diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-> > index aaae80c4e376..1c68c500c26f 100644
-> > --- a/security/integrity/ima/ima_asymmetric_keys.c
-> > +++ b/security/integrity/ima/ima_asymmetric_keys.c
-> > @@ -58,7 +58,7 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> >  	 * if the IMA policy is configured to measure a key linked
-> >  	 * to the given keyring.
-> >  	 */
-> > -	process_buffer_measurement(payload, payload_len,
-> > +	process_buffer_measurement(NULL, payload, payload_len,
-> >  				   keyring->description, KEY_CHECK, 0,
-> >  				   keyring->description);
-> >  }
-> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> > index 8351b2fd48e0..8a91711ca79b 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -726,6 +726,7 @@ int ima_load_data(enum kernel_load_data_id id)
-> >  
-> >  /*
-> >   * process_buffer_measurement - Measure the buffer to ima log.
-> > + * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
-> >   * @buf: pointer to the buffer that needs to be added to the log.
-> >   * @size: size of buffer(in bytes).
-> >   * @eventname: event name to be used for the buffer entry.
-> > @@ -735,7 +736,7 @@ int ima_load_data(enum kernel_load_data_id id)
-> >   *
-> >   * Based on policy, the buffer is measured into the ima log.
-> >   */
-> > -void process_buffer_measurement(const void *buf, int size,
-> > +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
-> >  				const char *eventname, enum ima_hooks func,
-> >  				int pcr, const char *keyring)
-> >  {
-> > @@ -768,7 +769,7 @@ void process_buffer_measurement(const void *buf, int size,
-> >  	 */
-> >  	if (func) {
-> >  		security_task_getsecid(current, &secid);
-> > -		action = ima_get_action(NULL, current_cred(), secid, 0, func,
-> > +		action = ima_get_action(inode, current_cred(), secid, 0, func,
-> >  					&pcr, &template, keyring);
-> >  		if (!(action & IMA_MEASURE))
-> >  			return;
-> > @@ -823,16 +824,26 @@ void process_buffer_measurement(const void *buf, int size,
-> >  
-> >  /**
-> >   * ima_kexec_cmdline - measure kexec cmdline boot args
-> > + * @kernel_fd: file descriptor of the kexec kernel being loaded
-> >   * @buf: pointer to buffer
-> >   * @size: size of buffer
-> >   *
-> >   * Buffers can only be measured, not appraised.
-> >   */
-> > -void ima_kexec_cmdline(const void *buf, int size)
-> > +void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
-> >  {
-> > -	if (buf && size != 0)
-> > -		process_buffer_measurement(buf, size, "kexec-cmdline",
-> > -					   KEXEC_CMDLINE, 0, NULL);
-> > +	struct fd f;
-> > +
-> > +	if (!buf || !size)
-> > +		return;
-> > +
-> > +	f = fdget(kernel_fd);
-> > +	if (!f.file)
-> > +		return;
-> > +
-> > +	process_buffer_measurement(file_inode(f.file), buf, size,
-> > +				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL);
-> > +	fdput(f);
-> >  }
-> >  
-> >  static int __init init_ima(void)
-> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > index 5eb14b567a31..294323b36d06 100644
-> > --- a/security/integrity/ima/ima_policy.c
-> > +++ b/security/integrity/ima/ima_policy.c
-> > @@ -443,13 +443,9 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
-> >  {
-> >  	int i;
-> >  
-> > -	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
-> > -		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
-> > -			if (func == KEY_CHECK)
-> > -				return ima_match_keyring(rule, keyring, cred);
-> > -			return true;
-> > -		}
-> > -		return false;
-> > +	if (func == KEY_CHECK) {
-> > +		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
-> > +		       ima_match_keyring(rule, keyring, cred);
-> >  	}
-> >  	if ((rule->flags & IMA_FUNC) &&
-> >  	    (rule->func != func && func != POST_SETATTR))
-> > @@ -1007,10 +1003,9 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> >  			if (entry->action & ~(MEASURE | DONT_MEASURE))
-> >  				return false;
-> >  
-> > -			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
-> > -				return false;
-> > -
-> > -			if (ima_rule_contains_lsm_cond(entry))
-> > +			if (entry->flags & ~(IMA_FUNC | IMA_FSMAGIC | IMA_UID |
-> > +					     IMA_FOWNER | IMA_FSUUID |
-> > +					     IMA_EUID | IMA_PCR | IMA_FSNAME))
-> >  				return false;
-> >  
-> >  			break;
-> > diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-> > index 56ce24a18b66..69a8626a35c0 100644
-> > --- a/security/integrity/ima/ima_queue_keys.c
-> > +++ b/security/integrity/ima/ima_queue_keys.c
-> > @@ -158,7 +158,7 @@ void ima_process_queued_keys(void)
-> >  
-> >  	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
-> >  		if (!timer_expired)
-> > -			process_buffer_measurement(entry->payload,
-> > +			process_buffer_measurement(NULL, entry->payload,
-> >  						   entry->payload_len,
-> >  						   entry->keyring_name,
-> >  						   KEY_CHECK, 0,
-> > -- 
-> > 2.25.1
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> 
-> Although I still do not understand the deep knowledge of IMA, I
-> still wonder to know what is the effect to the behavior changes end user
-> visible.   Does it work with a kernel built-in commandline? eg no
-> cmdlien passed at all.
+On Tue, Jun 30, 2020 at 05:33:25PM +0200, Greg Kroah-Hartman wrote:
+>On Tue, Jun 30, 2020 at 11:12:48AM -0400, Sasha Levin wrote:
+>> On Tue, Jun 30, 2020 at 10:38:45AM +0200, Greg Kroah-Hartman wrote:
+>> > On Mon, Jun 29, 2020 at 07:18:26PM -0400, Sasha Levin wrote:
+>> > > On Mon, Jun 29, 2020 at 02:37:53PM -0600, Shuah Khan wrote:
+>> > > > Hi Sasha,
+>> > > >
+>> > > > On 6/29/20 9:13 AM, Sasha Levin wrote:
+>> > > > >
+>> > > > > This is the start of the stable review cycle for the 5.7.7 release.
+>> > > > > There are 265 patches in this series, all will be posted as a response
+>> > > > > to this one.  If anyone has any issues with these being applied, please
+>> > > > > let me know.
+>> > > > >
+>> > > > > Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
+>> > > > > Anything received after that time might be too late.
+>> > > > >
+>> > > > > The whole patch series can be found in one patch at:
+>> > > > > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
+>> > > > >
+>> > > >
+>> > > > Looks like patch naming convention has changed. My scripts look
+>> > > > for the following convention Greg uses. Are you planning to use
+>> > > > the above going forward? My scripts failed looking for the usual
+>> > > > naming convention.
+>> > > >
+>> > > > The whole patch series can be found in one patch at:
+>> > > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
+>> > > > or in the git tree and branch at:
+>> > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+>> > > > and the diffstat can be found below.
+>> > >
+>> > > Sorry for that. I was hoping to avoid using the signed upload mechanism
+>> > > Greg was using by simply pointing the links to automatically generated
+>> > > patches on cgit (the git.kernel.org interface).
+>> > >
+>> > > Would it be ok to change the pattern matching here? Something like this
+>> > > should work for both Greg's format and my own (and whatever may come
+>> > > next):
+>> > >
+>> > > 	grep -A1 "The whole patch series can be found in one patch at:" | tail -n1 | sed 's/\t//'
+>> >
+>> > If those don't work, I can still push out -rc1 patches.
+>> >
+>> > It might be best given that the above -rc.git tree is unstable and can,
+>> > and will, change, and patches stored on kernel.org will not.
+>>
+>> That's a good point. Maybe we should push tags for -rc releases too?
+>> that would allow us to keep stable links using the git.kernel.org
+>> interface.
+>
+>If we really want to do this, then yes, we could.  But that kind of goes
+>against what we (well I) have been doing in the past with that tree...
 
-Ah, very good question. This IMA hook (KEXEC_CMDLINE) only measures the
-string passed to the cmdline argument of the kexec_file_load(2) syscall.
-However, kernel commandline options injected into a kernel with the
-CONFIG_CMDLINE or CONFIG_CMDLINE_EXTEND Kconfig options would still be
-measured, as part of the vmlinux as a whole, by the KEXEC_KERNEL_CHECK
-IMA hook.
+We've been force pushing it, yes, but if we add tags it would just keep
+older version around so I don't think it would change much for our
+workflow, but it would make it easy to get to older versions.
 
-Tyler
-
-> 
-> Thanks
-> Dave
+-- 
+Thanks,
+Sasha
