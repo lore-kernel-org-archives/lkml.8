@@ -2,389 +2,144 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4699C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95DA62067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DCD206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593604717;
+	bh=nDHkQnF3GE7LeSK4D2XQD+Jb5LeVxf5LtuLUx72bPl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=it62Ee67UONcZK9tD4ruVrmVpGRsmq763w7y27aXOacZBhynX/NunTYzIcfUfHPfQ
+	 vXobDKz4YAX1HuqnZa3bfCMfwpmrxhBhAWJmu5hRNvecoTZr9LnkDCkzB1emd1k3cF
+	 6vsW0/Jf+0nW8WTHyU4BV1qihY7qb7qGcKmfoR0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgGAL6X (ORCPT
+        id S1730482AbgGAL6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:58:23 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:53304 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730381AbgGAL6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:58:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U1MtS5r_1593604696;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1MtS5r_1593604696)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Jul 2020 19:58:16 +0800
-Date:   Wed, 1 Jul 2020 19:58:16 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        dan.j.williams@intel.com, akpm@linux-foundation.org,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/sparse: only sub-section aligned range would be
- populated
-Message-ID: <20200701115816.GB4979@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200630021436.43281-1-richard.weiyang@linux.alibaba.com>
- <202007010217.Rut2zTnF%lkp@intel.com>
+        Wed, 1 Jul 2020 07:58:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730133AbgGAL6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:58:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B7342067D;
+        Wed,  1 Jul 2020 11:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593604715;
+        bh=nDHkQnF3GE7LeSK4D2XQD+Jb5LeVxf5LtuLUx72bPl0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UQcpx0io+u/a7HSMAtKB8tJpIHuA9tVGeE/1lhqC+fzTxXp/XFbgQWyziKZCMUo4V
+         9OmPXcF+enzCZDJ7tdbDXIq4TLpdl1kiP+3Fm8W6H/jzJqqM0PqwUVP/kzwmM7HC3u
+         ALCWydllZlvVZhfCIR7+pO9v/EQ96aN/uME61ewI=
+Date:   Wed, 1 Jul 2020 13:58:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [V2 PATCH] usb: mtu3: fix NULL pointer dereference
+Message-ID: <20200701115821.GA2184169@kroah.com>
+References: <1593502942-24455-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202007010217.Rut2zTnF%lkp@intel.com>
+In-Reply-To: <1593502942-24455-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 02:11:10AM +0800, kernel test robot wrote:
->Hi Wei,
->
->Thank you for the patch! Perhaps something to improve:
->
->[auto build test WARNING on mmotm/master]
->
->url:    https://github.com/0day-ci/linux/commits/Wei-Yang/mm-sparse-only-sub-section-aligned-range-would-be-populated/20200630-101713
->base:   git://git.cmpxchg.org/linux-mmotm.git master
->config: x86_64-allnoconfig (attached as .config)
->compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project cf1d04484344be52ada8178e41d18fd15a9b880c)
->reproduce (this is a W=1 build):
->        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->        chmod +x ~/bin/make.cross
->        # install x86_64 cross compiling tool for clang build
->        # apt-get install binutils-x86-64-linux-gnu
->        # save the attached .config to linux build tree
->        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
->
->If you fix the issue, kindly add following tag as appropriate
->Reported-by: kernel test robot <lkp@intel.com>
->
+On Tue, Jun 30, 2020 at 03:42:22PM +0800, Chunfeng Yun wrote:
+> Some pointers are dereferenced before successful checks.
+> 
+> Reported-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v2: nothing changed, but abandon another patch
+> ---
+>  drivers/usb/mtu3/mtu3_gadget.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+> index f93732e..1689ca8 100644
+> --- a/drivers/usb/mtu3/mtu3_gadget.c
+> +++ b/drivers/usb/mtu3/mtu3_gadget.c
+> @@ -332,14 +332,21 @@ static int mtu3_gadget_queue(struct usb_ep *ep,
+>  
+>  static int mtu3_gadget_dequeue(struct usb_ep *ep, struct usb_request *req)
+>  {
+> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
+> -	struct mtu3_request *mreq = to_mtu3_request(req);
+> +	struct mtu3_ep *mep;
+> +	struct mtu3_request *mreq;
+>  	struct mtu3_request *r;
+> +	struct mtu3 *mtu;
+>  	unsigned long flags;
+>  	int ret = 0;
+> -	struct mtu3 *mtu = mep->mtu;
+>  
+> -	if (!ep || !req || mreq->mep != mep)
+> +	if (!ep || !req)
+> +		return -EINVAL;
 
-Sorry, I don't follow up with this error report.
+How will either of those ever be NULL?  The kernel will not call this
+function with either of them being NULL, right?
 
-It looks like a build error, while I just removes some check and the build
-pass from my side. Confused with this error report.
+> +
+> +	mep = to_mtu3_ep(ep);
+> +	mtu = mep->mtu;
+> +
+> +	mreq = to_mtu3_request(req);
+> +	if (mreq->mep != mep)
+>  		return -EINVAL;
+>  
+>  	dev_dbg(mtu->dev, "%s : req=%p\n", __func__, req);
+> @@ -373,8 +380,8 @@ static int mtu3_gadget_dequeue(struct usb_ep *ep, struct usb_request *req)
+>   */
+>  static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
+>  {
+> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
+> -	struct mtu3 *mtu = mep->mtu;
+> +	struct mtu3_ep *mep;
+> +	struct mtu3 *mtu;
+>  	struct mtu3_request *mreq;
+>  	unsigned long flags;
+>  	int ret = 0;
+> @@ -382,6 +389,9 @@ static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
+>  	if (!ep)
+>  		return -EINVAL;
 
->All warnings (new ones prefixed by >>):
->
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->   case 1: ^
->   include/linux/signal.h:177:1: warning: unannotated fall-through between switch labels
->   _SIG_SET_OP(signotset, _sig_not)
->   ^
->   include/linux/signal.h:167:2: note: expanded from macro '_SIG_SET_OP'
->   case 2: = ^
->   include/linux/signal.h:177:1: warning: unannotated fall-through between switch labels
->   include/linux/signal.h:169:2: note: expanded from macro '_SIG_SET_OP'
->   case 1: = ^
->   include/linux/signal.h:190:2: warning: unannotated fall-through between switch labels
->   case 1: = 0;
->   ^
->   include/linux/jhash.h:95:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 6: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:95:2: note: insert 'break;' to avoid fall-through
->   case 6: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:96:2: warning: unannotated fall-through between switch labels
->   case 5: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   15include/linux/signal.h:190:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 1: = 0;
->   ^
->   __attribute__((fallthrough));
->   include/linux/signal.h:190:2: note: insert 'break;' to avoid fall-through
->   case 1: = 0;
->   ^
->   break;
->   include/linux/signal.h:203:2: warninginclude/linux/jhash.h:96:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 5: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:96:2: note: insert 'break;' to avoid fall-through
->   case 5: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:97:2: warning: unannotated fall-through between switch labels
->   case 4: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   : unannotated fall-through between switch labels
->   case 1: = -1;
->   ^
->   warnings generated.
->   include/linux/signal.h:203:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 1: = -1;
->   ^
->   __attribute__((fallthrough));
->   include/linux/signal.h:15203:2: note: insert 'break;' to avoid fall-through
->   case 1: = -1;
->   ^
->   break;
->   include/linux/jhash.h:97:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 4: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:97:2: note: insert 'break;' to avoid fall-through
->   case 4: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:98:2: warning: unannotated fall-through between switch labels
->   case 3: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   include/linux/signal.h:233:2: warning: unannotated fall-through between switch labels
->   case 1: ;
->   ^
->   warnings generated.
->   In file included from kernel/printk/printk.c:61:
->   kernel/printk/internal.h:54:20: warninginclude/linux/jhash.h:98:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 3: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:98:2: note: no previous prototype for function 'vprintk_func'
->   __printf(1, 0) int vprintk_func(const char va_list args) { return 0; }
->   ^
->   kernel/printk/internal.h: insert 'break;' to avoid fall-through
->   case 3: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:99:2: warning: unannotated fall-through between switch labels
->   case 2: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   :54:16: note: declare 'static' if the function is not intended to be used outside of this translation unit
->   __printf(1, 0) int vprintk_func(const char va_list args) { return 0; }
->   ^
->   static
->   kernel/printk/printk.cinclude/linux/signal.h:233:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 1: ;
->   ^
->   __attribute__((fallthrough));
->   include/linux/signal.h:233:2: note: insert 'break;' to avoid fall-through
->   case 1: ;
->   ^
->   break;
->   include/linux/signal.h:245:2: warning: unannotated fall-through between switch labels
->   case 1: ;
->   ^
->>> :165:5: warning: no previous prototype for function 'devkmsg_sysctl_set_loglvl'
->   int devkmsg_sysctl_set_loglvl(struct ctl_table int write,
->   ^
->   kernel/printk/printk.c:165:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
->   int devkmsg_sysctl_set_loglvl(struct ctl_table int write,
->   ^
->   static
->   include/linux/jhash.h:99:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 2: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:99:2: note: insert 'break;' to avoid fall-through
->   case 2: a += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:100:2: warning: unannotated fall-through between switch labels
->   case 1: a +=
->   ^
->   include/linux/signal.h:245:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 1: ;
->   ^
->   __attribute__((fallthrough));
->   include/linux/signal.h:245:2: note: insert 'break;' to avoid fall-through
->   case 1: ;
->   ^
->   break;
->   kernel/printk/printk.cinclude/linux/jhash.h:100:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 1: a +=
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:100:2: note: insert 'break;' to avoid fall-through
->   case 1: a +=
->   ^
->   break;
->   include/linux/jhash.h:102:2: warning: unannotated fall-through between switch labels
->   case 0: /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var Nothing left to add arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   include/linux/jhash.h:102:2: note: insert 'break;' to avoid fall-through
->   case 0: /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var Nothing left to add arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   :2406:10: warning: 'sprintf' will always overflow; destination buffer has size 0, but format string expands to at least 33
->   len = sprintf(text,
->   ^
->   include/linux/jhash.h:136:2: warning: unannotated fall-through between switch labels
->   case 2: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   include/linux/jhash.h:136:2: note: insert '__attribute__((fallthrough));' to silence this warning
->   case 2: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   __attribute__((fallthrough));
->   include/linux/jhash.h:136:2: note: insert 'break;' to avoid fall-through
->   case 2: b += /Dockerfile /Gemfile /Gemfile.lock /bin /boot /c /cephfs /dev /etc /home /htmldocs /include /kbuild /lib /lib32 /lib64 /libx32 /lkp-cloud /lkp-src /media /mnt /opt /patch /pkg /proc /root /run /sbin /share /srv /sys /tmp /usr /var fall through arch/ block/ certs/ crypto/ drivers/ fs/ include/ init/ ipc/ kernel/ lib/ mm/ net/ scripts/ security/ sound/ source/ tools/ usr/ virt/
->   ^
->   break;
->   include/linux/jhash.h:137:2: warning: unannotated fall-through between switch labels
->   case 1: a +=
->   ^
->   In file included from kernel/capability.c:13:
->   In file included from include/linux/audit.h:13:
->   In file included from include/linux/ptrace.h:7:
->   In file included from include/linux/sched/signal.h:6:
->   include/linux/signal.h:147:1: warning: unannotated fall-through between switch labels
->   _SIG_SET_BINOP(sigorsets, _sig_or)
->   ^
->   include/linux/signal.h:133:2: note: expanded from macro '_SIG_SET_BINOP'
->   case 2: ^
->   include/linux/signal.h:147:1: warning: unannotated fall-through between switch labels
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->   case 1: ^
->   include/linux/signal.h:150:1: warning: unannotated fall-through between switch labels
->   _SIG_SET_BINOP(sigandsets, _sig_and)
->   ^
->   include/linux/signal.h:133:2:In file included from note: expanded from macro '_SIG_SET_BINOP'
->   case 2: ^
->   include/linux/signal.h:150:1: warning: unannotated fall-through between switch labels
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->   case 1: ^
->   include/linux/signal.h:153:1: warning: unannotated fall-through between switch labels
->   _SIG_SET_BINOP(sigandnsets, _sig_andn)
->   ^
->   include/linux/signal.h:133:2: note: expanded from macro '_SIG_SET_BINOP'
->   case 2: kernel/sysctl_binary.c:15:
->   In file included from include/linux/netdevice.h:37:
->   In file included from include/linux/ethtool.h:18:
->   In file included from include/uapi/linux/ethtool.h:19:
->   In file included from include/linux/if_ether.h:19:
->   include/linux/skbuff.h:3690:2: warning: unannotated fall-through between switch labels
->   case 24: diffs |= __it_diff(a, b, 64);
->   ^
->--
->           ^
->           __attribute__((fallthrough)); 
->   include/linux/mm.h:166:2: note: insert 'break;' to avoid fall-through
->           case 56:
->           ^
->           break; 
->   In file included from kernel/printk/printk.c:36:
->   In file included from include/linux/syscalls.h:76:
->   include/linux/signal.h:147:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   _SIG_SET_BINOP(sigorsets, _sig_or)
->   ^
->   include/linux/signal.h:133:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 2:                                                         \
->           ^
->   include/linux/signal.h:147:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 1:                                                         \
->           ^
->   include/linux/signal.h:150:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   _SIG_SET_BINOP(sigandsets, _sig_and)
->   ^
->   include/linux/signal.h:133:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 2:                                                         \
->           ^
->   include/linux/signal.h:150:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 1:                                                         \
->           ^
->   include/linux/signal.h:153:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   _SIG_SET_BINOP(sigandnsets, _sig_andn)
->   ^
->   include/linux/signal.h:133:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 2:                                                         \
->           ^
->   include/linux/signal.h:153:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   include/linux/signal.h:137:2: note: expanded from macro '_SIG_SET_BINOP'
->           case 1:                                                         \
->           ^
->   include/linux/signal.h:177:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   _SIG_SET_OP(signotset, _sig_not)
->   ^
->   include/linux/signal.h:167:2: note: expanded from macro '_SIG_SET_OP'
->           case 2: set->sig[1] = op(set->sig[1]);                          \
->           ^
->   include/linux/signal.h:177:1: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->   include/linux/signal.h:169:2: note: expanded from macro '_SIG_SET_OP'
->           case 1: set->sig[0] = op(set->sig[0]);                          \
->           ^
->   include/linux/signal.h:190:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->           case 1: set->sig[0] = 0;
->           ^
->   include/linux/signal.h:190:2: note: insert '__attribute__((fallthrough));' to silence this warning
->           case 1: set->sig[0] = 0;
->           ^
->           __attribute__((fallthrough)); 
->   include/linux/signal.h:190:2: note: insert 'break;' to avoid fall-through
->           case 1: set->sig[0] = 0;
->           ^
->           break; 
->   include/linux/signal.h:203:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->           case 1: set->sig[0] = -1;
->           ^
->   include/linux/signal.h:203:2: note: insert '__attribute__((fallthrough));' to silence this warning
->           case 1: set->sig[0] = -1;
->           ^
->           __attribute__((fallthrough)); 
->   include/linux/signal.h:203:2: note: insert 'break;' to avoid fall-through
->           case 1: set->sig[0] = -1;
->           ^
->           break; 
->   include/linux/signal.h:233:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->           case 1: ;
->           ^
->   include/linux/signal.h:233:2: note: insert '__attribute__((fallthrough));' to silence this warning
->           case 1: ;
->           ^
->           __attribute__((fallthrough)); 
->   include/linux/signal.h:233:2: note: insert 'break;' to avoid fall-through
->           case 1: ;
->           ^
->           break; 
->   include/linux/signal.h:245:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
->           case 1: ;
->           ^
->   include/linux/signal.h:245:2: note: insert '__attribute__((fallthrough));' to silence this warning
->           case 1: ;
->           ^
->           __attribute__((fallthrough)); 
->   include/linux/signal.h:245:2: note: insert 'break;' to avoid fall-through
->           case 1: ;
->           ^
->           break; 
->   In file included from kernel/printk/printk.c:61:
->   kernel/printk/internal.h:54:20: warning: no previous prototype for function 'vprintk_func' [-Wmissing-prototypes]
->   __printf(1, 0) int vprintk_func(const char *fmt, va_list args) { return 0; }
->                      ^
->   kernel/printk/internal.h:54:16: note: declare 'static' if the function is not intended to be used outside of this translation unit
->   __printf(1, 0) int vprintk_func(const char *fmt, va_list args) { return 0; }
->                  ^
->                  static 
->>> kernel/printk/printk.c:165:5: warning: no previous prototype for function 'devkmsg_sysctl_set_loglvl' [-Wmissing-prototypes]
->   int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
->       ^
->   kernel/printk/printk.c:165:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
->   int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
->   ^
->   static 
->   kernel/printk/printk.c:2406:10: warning: 'sprintf' will always overflow; destination buffer has size 0, but format string expands to at least 33 [-Wfortify-source]
->                           len = sprintf(text,
->                                 ^
->   18 warnings generated.
->
->---
->0-DAY CI Kernel Test Service, Intel Corporation
->https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Same here, how can that ever happen?
 
+>  
+> +	mep = to_mtu3_ep(ep);
+> +	mtu = mep->mtu;
+> +
+>  	dev_dbg(mtu->dev, "%s : %s...", __func__, ep->name);
+>  
+>  	spin_lock_irqsave(&mtu->lock, flags);
+> @@ -422,11 +432,12 @@ static int mtu3_gadget_ep_set_halt(struct usb_ep *ep, int value)
+>  /* Sets the halt feature with the clear requests ignored */
+>  static int mtu3_gadget_ep_set_wedge(struct usb_ep *ep)
+>  {
+> -	struct mtu3_ep *mep = to_mtu3_ep(ep);
+> +	struct mtu3_ep *mep;
+>  
+>  	if (!ep)
+>  		return -EINVAL;
 
+Again, same here.
 
--- 
-Wei Yang
-Help you, Help me
+thanks,
+
+greg k-h
