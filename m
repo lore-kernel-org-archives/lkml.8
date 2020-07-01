@@ -2,129 +2,109 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3431C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B92020747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5C020656
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 04:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vn6shSyE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AR+QzRyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgGAEiD (ORCPT
+        id S1726048AbgGAEkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 00:38:03 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46205 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGAEiC (ORCPT
+        Wed, 1 Jul 2020 00:40:20 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2038 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgGAEkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 00:38:02 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A22C8066C;
-        Wed,  1 Jul 2020 16:37:58 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1593578278;
-        bh=Wi84TLx1F2NEUOgl/mdFakSQYpQaxC9CQ4JIFp7pX/0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=vn6shSyEMotsJ1TblFLlIJudTTkfwIh8+C8kvDAyIe3ou+PhC6tlPJrdxg/o1b1lp
-         eXMDtKk6P+2hDUXKWftMqTkpEKOjwqEXtffLcxQqaH9xB9Ve7XUVgyuX4ODKilW0Dy
-         1ELZpGT8NutJmPEBGPubBMbXWpil2heV8yvtKxtiiaNPz1H7qEhdfDmcFDTfcYtGM9
-         aPjJIbMn06DkJixWrhFlhxgr77kzVlIhaGo2KERmvNWCkvkIVyPWYeCwqfiSCUgOOR
-         ynMkkyzq2cghwldmM8sQkUZR5CXME8K4QQr6rzHILrfEG4qCIDUC7CAtisGhuauXZ4
-         JaQCB3UxDAXQw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5efc13260000>; Wed, 01 Jul 2020 16:37:58 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 1 Jul 2020 16:37:54 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 1 Jul 2020 16:37:54 +1200
-From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
-To:     "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Topic: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Index: AQHWTyWf+OJCQzu0tUG0OUfiNa14/6jw7mWAgABHbYCAAA44gIAAF0UA
-Date:   Wed, 1 Jul 2020 04:37:54 +0000
-Message-ID: <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
-References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
-         <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
-         <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
-         <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
-In-Reply-To: <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:23:899d:a7e9:b35a:a1ab]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F7788E01D7A1BF43A0671BC8590FC233@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 1 Jul 2020 00:40:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efc13810000>; Tue, 30 Jun 2020 21:39:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 21:40:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 21:40:19 -0700
+Received: from [172.20.40.91] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Jul
+ 2020 04:40:18 +0000
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Ben Skeggs <bskeggs@redhat.com>
+CC:     Dave Airlie <airlied@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box>
+X-Nvconfidentiality: public
+From:   James Jones <jajones@nvidia.com>
+Message-ID: <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+Date:   Tue, 30 Jun 2020 21:40:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200630230808.wj2xlt44vrszqfzx@box>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593578369; bh=+EcA5Zf1+TGhpdgcqoYfsJmtAG2eWp3seOejdMxbEHA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AR+QzRyyjlLzFHQBKv6n2phZPIaaf/68YMPvMbEUu6ogLteDSj7Lisu6zFq+SwnY8
+         rxs5NhwgypkI+uRm4SeQp393V6l2EwDAc8Dtubi6N8OdJstp0I+dlJI7TxofaJmOk/
+         nd2iMCKA8x+9sdgAm6JhZfFaE2m+/AcD4Tc95+GALYEOi0sEBxqVuwMDgMJZNbx1Dv
+         vERu7Go6dY9frmC4VZUFcv8NOM9yf/1+BBZwpX7bcRfC8eFZPuGkswI3nKjr4PnIk9
+         4TBDQp/fG0+rn6K/1/ntmfPiG9Mxg2pcvz4tGRIrhPoURtwgSpzXeUss/CsZ2ZC07/
+         ukwjjZrOj0PAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTMwIGF0IDIwOjE0IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiBTb3JyeSwgaXQgbG9va3MgbGlrZSBJIG1hZGUgYSBtaXN0YWtlIGluIG15IHRlc3Rpbmcg
-KG9yIEkgd2FzIGx1Y2t5KSwNCj4gPiBhbmQgdGhpcyBwYXRjaCBkb2Vzbid0IGZpeCB0aGUgaXNz
-dWUuIFdoYXQgaXMgaGFwcGVuaW5nIGlzOg0KPiA+IDEpIG5zcC1waW5tdXggZHJpdmVyIGlzIHJl
-Z2lzdGVyZWQgKGFyY2hfaW5pdGNhbGwpLg0KPiA+IDIpIG5zcC1ncGlvLWEgZHJpdmVyIGlzIHJl
-Z2lzdGVyZWQgKGFyY2hfaW5pdGNhbGxfc3luYykuDQo+ID4gMykgb2ZfcGxhdGZvcm1fZGVmYXVs
-dF9wb3B1bGF0ZV9pbml0KCkgaXMgY2FsbGVkIChhbHNvIGF0IGxldmVsDQo+ID4gYXJjaF9pbml0
-Y2FsbF9zeW5jKSwgd2hpY2ggc2NhbnMgdGhlIGRldmljZSB0cmVlLCBhZGRzIHRoZSBuc3AtZ3Bp
-by1hDQo+ID4gZGV2aWNlLCBydW5zIGl0cyBwcm9iZSwgYW5kIHRoaXMgcmV0dXJucyAtRVBST0JF
-X0RFRkVSIHdpdGggdGhlIGVycm9yDQo+ID4gbWVzc2FnZS4NCj4gPiA0KSBPbmx5IG5vdyBuc3At
-cGlubXV4IGRldmljZSBpcyBwcm9iZWQuDQo+ID4gDQo+ID4gQ2hhbmdpbmcgdGhlICdhcmNoX2lu
-aXRjYWxsX3N5bmMnIHRvICdkZXZpY2VfaW5pdGNhbGwnIGluIG5zcC1ncGlvLWENCj4gPiBlbnN1
-cmVzIHRoYXQgdGhlIHBpbm11eCBpcyBwcm9iZWQgZmlyc3Qgc2luY2UNCj4gPiBvZl9wbGF0Zm9y
-bV9kZWZhdWx0X3BvcHVsYXRlX2luaXQoKSB3aWxsIGJlIGNhbGxlZCBiZXR3ZWVuIHRoZSB0d28N
-Cj4gPiByZWdpc3RlciBjYWxscywgYW5kIHRoZSBlcnJvciBnb2VzIGF3YXkuIElzIHRoaXMgY2hh
-bmdlIGFjY2VwdGFibGUgYXMgYQ0KPiA+IHNvbHV0aW9uPw0KPiANCj4gSWYgcHJvYmUgZGVmZXJy
-YWwgZGlkIG5vdCB3b3JrLCBjZXJ0YWlubHkgYnV0IGl0IHNvdW5kcyBsaWtlIHRoaXMgaXMNCj4g
-YmVpbmcgZG9uZSBqdXN0IGZvciB0aGUgc2FrZSBvZiBlbGltaW5hdGluZyBhIHJvdW5kIG9mIHBy
-b2JlIGRlZmVycmFsLA0KPiBpcyB0aGVyZSBhIGZ1bmN0aW9uYWwgcHJvYmxlbSB0aGlzIGlzIGZp
-eGluZz8NCg0KTm8sIEknbSBqdXN0IHRyeWluZyB0byBwcmV2ZW50IGFuICJlcnJvciIgbWVzc2Fn
-ZSBhcHBlYXJpbmcgaW4gc3lzbG9nLg0KDQo+ID4gVGhlIGFjdHVhbCBlcnJvciBtZXNzYWdlIGlu
-IHN5c2xvZyBpczoNCj4gPiANCj4gPiBrZXJuLmVyciBrZXJuZWw6IGdwaW9jaGlwX2FkZF9kYXRh
-X3dpdGhfa2V5OiBHUElPcyA0ODAuLjUxMQ0KPiA+ICgxODAwMDAyMC5ncGlvKSBmYWlsZWQgdG8g
-cmVnaXN0ZXIsIC01MTcNCj4gPiANCj4gPiBTbyBhbiBlbmQgdXNlciBzZWVzICJlcnIiIGFuZCAi
-ZmFpbGVkIiwgYW5kIGRvZXNuJ3Qga25vdyB3aGF0ICItNTE3Ig0KPiA+IG1lYW5zLg0KPiANCj4g
-SG93IGFib3V0IHRoaXMgaW5zdGVhZDoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8v
-Z3Bpb2xpYi5jIGIvZHJpdmVycy9ncGlvL2dwaW9saWIuYw0KPiBpbmRleCA0ZmEwNzVkNDlmYmMu
-LjEwZDlkMGMxN2M5ZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncGlvL2dwaW9saWIuYw0KPiAr
-KysgYi9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi5jDQo+IEBAIC0xODE4LDkgKzE4MTgsMTAgQEAgaW50
-IGdwaW9jaGlwX2FkZF9kYXRhX3dpdGhfa2V5KHN0cnVjdCBncGlvX2NoaXANCj4gKmdjLCB2b2lk
-ICpkYXRhLA0KPiAgICAgICAgIGlkYV9zaW1wbGVfcmVtb3ZlKCZncGlvX2lkYSwgZ2Rldi0+aWQp
-Ow0KPiAgZXJyX2ZyZWVfZ2RldjoNCj4gICAgICAgICAvKiBmYWlsdXJlcyBoZXJlIGNhbiBtZWFu
-IHN5c3RlbXMgd29uJ3QgYm9vdC4uLiAqLw0KPiAtICAgICAgIHByX2VycigiJXM6IEdQSU9zICVk
-Li4lZCAoJXMpIGZhaWxlZCB0byByZWdpc3RlciwgJWRcbiIsIF9fZnVuY19fLA0KPiAtICAgICAg
-ICAgICAgICBnZGV2LT5iYXNlLCBnZGV2LT5iYXNlICsgZ2Rldi0+bmdwaW8gLSAxLA0KPiAtICAg
-ICAgICAgICAgICBnYy0+bGFiZWwgPyA6ICJnZW5lcmljIiwgcmV0KTsNCj4gKyAgICAgICBpZiAo
-cmV0ICE9IC1FUFJPQkVfREVGRVIpDQo+ICsgICAgICAgICAgICAgICBwcl9lcnIoIiVzOiBHUElP
-cyAlZC4uJWQgKCVzKSBmYWlsZWQgdG8gcmVnaXN0ZXIsICVkXG4iLA0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICBfX2Z1bmNfXywgZ2Rldi0+YmFzZSwgZ2Rldi0+YmFzZSArIGdkZXYtPm5ncGlv
-IC0gMSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZ2MtPmxhYmVsID8gOiAiZ2VuZXJpYyIs
-IHJldCk7DQo+ICAgICAgICAga2ZyZWUoZ2Rldik7DQo+ICAgICAgICAgcmV0dXJuIHJldDsNCj4g
-IH0NCj4gDQpUaGF0IHdhcyBvbmUgb2YgbXkgdGhvdWdodHMgdG9vLiBJIGZvdW5kIHNvbWVvbmUg
-aGFkIHRyaWVkIHRoYXQNCmVhcmxpZXIsIGJ1dCBpdCB3YXMgcmVqZWN0ZWQ6DQoNCg0KaHR0cHM6
-Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L2xpbnV4LWdwaW8vcGF0Y2gvMTUxNjU2Njc3
-NC0xNzg2LTEtZ2l0LXNlbmQtZW1haWwtZGF2aWRAbGVjaG5vbG9neS5jb20vDQoNCg==
+This implies something is trying to use one of the old 
+DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK format modifiers with DRM-KMS without 
+first checking whether it is supported by the kernel.  I had tried to 
+force an Xorg+Mesa stack without my userspace patches to hit this error 
+when testing, but must have missed some permutation.  If the stalled 
+Mesa patches go in, this would stop happening of course, but those were 
+held up for a long time in review, and are now waiting on me to make 
+some modifications.
+
+Are you using the modesetting driver in X?  If so, with glamor I 
+presume?  What version of Mesa?  Any distro patches?  Any non-default 
+xorg.conf options that would affect modesetting, your X driver if it 
+isn't modesetting, or glamour?
+
+Thanks,
+-James
+
+On 6/30/20 4:08 PM, Kirill A. Shutemov wrote:
+> On Tue, Jun 02, 2020 at 04:06:32PM +1000, Dave Airlie wrote:
+>> James Jones (4):
+> ...
+>>        drm/nouveau/kms: Support NVIDIA format modifiers
+> 
+> This commit is the first one that breaks Xorg startup for my setup:
+> GTX 1080 + Dell UP2414Q (4K DP MST monitor).
+> 
+> I believe this is the crucial part of dmesg (full dmesg is attached):
+> 
+> [   29.997140] [drm:nouveau_framebuffer_new] Unsupported modifier: 0x300000000000014
+> [   29.997143] [drm:drm_internal_framebuffer_create] could not create framebuffer
+> [   29.997145] [drm:drm_ioctl] pid=3393, ret = -22
+> 
+> Any suggestions?
+> 
