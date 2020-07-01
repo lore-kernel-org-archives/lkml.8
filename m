@@ -2,115 +2,70 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0049C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B87FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5FED207E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:41:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIOsGHd2"
+	by mail.kernel.org (Postfix) with ESMTP id 3EB99207E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgGAXlI (ORCPT
+        id S1726958AbgGAXoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgGAXlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:41:07 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DF3C08C5C1;
-        Wed,  1 Jul 2020 16:41:07 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id s16so9296602lfp.12;
-        Wed, 01 Jul 2020 16:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RRbpFTrpv2CAyc73C39i4Eh5fUq8y8ua8EeETi+isng=;
-        b=rIOsGHd2+UGL+iszD1JJDQkzBEEDzUF0t4Ww/jguiyg3EmeFGYUlODeIQcGLWkMBU6
-         F4c6vdB9WBAxG8nc5C4n2l8rhBxP47vpZ7xH5yBRJlLx1ed0vD5uB+h7jUGmprpZ2Vi6
-         eN20HFNMgQfmODS7LwYGJd5KtpGUElA2mAtmWVQACQWUK9B2e7QuYRcr6/RgyuSRvDFh
-         L2E/BDeJBHN/0Mt18JmoeStrgbMHA+5aaYWbGSOoHE53KYOOlhavE9GqfyT3SjHgIiOj
-         Jhk/q6w18OQxpkxz6LDXO6P7kox7XYZc8KAsr9iZgqUi7+lcR3uWnbt6HzOpJaIZRKBl
-         muPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RRbpFTrpv2CAyc73C39i4Eh5fUq8y8ua8EeETi+isng=;
-        b=qrS4rK2+gpZuNqvp/pB8zfGOsJw9pPyDpQHB9xSOz/hjEUjfxz8d+81ALBw0SmzvE3
-         bTuvD54FCMLLuHyEJN5oAYoVhab0toJAPPjstjExfj9sQiTW8JYGCqI2ZtQCjpqDJRSM
-         +Si1vV5wMdGLcum3C9ODcz/QRNbOi7I5W3qL8TWYDOfvgSjlQ1jIzGoVHeFqYJj+K/b3
-         zSYuWa5MKULTewavTHRLipqgWRO3bQCnyOH7OAtNzs/KuYoexYJacUYDXGO2wv76UuEU
-         bOKBrb1DVwTm3GWW+NDHY8Au4loj2rScHDVyf1/6HhkgkPPayXq/Z6vJULhMu4t95qiB
-         QD6w==
-X-Gm-Message-State: AOAM533UCAuGqNMTWmV0WVb1R+oxD3X9Ij5wy6Esl4AyHSDTrjihoXVn
-        zQkcEgeMs1Wav/FBT8fEhF9gGxjIDJc=
-X-Google-Smtp-Source: ABdhPJz6pai9jEk4qOJM3yHcyoJZJ3X5EJNiH6TMgrwAtCtMNVi1xc0abdH95NFEfjbBLreScuwj3A==
-X-Received: by 2002:a19:23cc:: with SMTP id j195mr16661019lfj.210.1593646865567;
-        Wed, 01 Jul 2020 16:41:05 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id l5sm2864306lfp.9.2020.07.01.16.41.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 16:41:04 -0700 (PDT)
-Subject: Re: [PATCH v4 27/37] interconnect: Relax requirement in
- of_icc_get_from_provider()
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200609131404.17523-1-digetx@gmail.com>
- <20200609131404.17523-28-digetx@gmail.com>
- <3b410ea3-26d3-6f7a-213c-40dbabbde8d1@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <95f476ce-081d-a222-2b98-96e6f8217c30@gmail.com>
-Date:   Thu, 2 Jul 2020 02:41:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 1 Jul 2020 19:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbgGAXob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 19:44:31 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2CE2207E8;
+        Wed,  1 Jul 2020 23:44:30 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 19:44:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [for-next][PATCH 7/8] ktest.pl: Add the log of last test in
+ email on failure
+Message-ID: <20200701194429.44baae92@oasis.local.home>
+In-Reply-To: <20200701231756.619246244@goodmis.org>
+References: <20200701231717.757834010@goodmis.org>
+        <20200701231756.619246244@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <3b410ea3-26d3-6f7a-213c-40dbabbde8d1@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.07.2020 20:10, Georgi Djakov пишет:
-> Hi Dmitry,
-> 
-> On 6/9/20 16:13, Dmitry Osipenko wrote:
->> From: Artur Świgoń <a.swigon@samsung.com>
->>
->> This patch relaxes the condition in of_icc_get_from_provider() so that it
->> is no longer required to set #interconnect-cells = <1> in the DT. In case
->> of the devfreq driver for exynos-bus, #interconnect-cells is always zero.
->>
->> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
->> [digetx@gmail.com: added cells_num checking for of_icc_xlate_onecell()]
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> I have already applied the original patch by Artur, so please make the cells_num
-> check a separate patch.
+On Wed, 01 Jul 2020 19:17:24 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Okay, I'll update this patch! Thank you!
+> +    }
+> +
+> +    $mail_command =~ s/\$HEADER_FILE/$header_file/g;
+>      $mail_command =~ s/\$MAILER/$mailer/g;
+>      $mail_command =~ s/\$MAIL_PATH/$mail_path/g;
+>      $mail_command =~ s/\$MAILTO/$mailto/g;
+>      $mail_command =~ s/\$SUBJECT/$subject/g;
+>      $mail_command =~ s/\$MESSAGE/$message/g;
+>  
+> +	    print ">$mail_command<\n";
+
+Oops, left in this debug print statement.
+
+I nuked it before pushing to linux-next.
+
+-- Steve
+
+>      run_command $mail_command;
+>  }
+>  
+> @@ -4352,6 +4382,11 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
+>      }
