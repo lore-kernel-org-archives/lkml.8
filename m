@@ -2,87 +2,316 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAF6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5672078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD2A2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgGAJTn (ORCPT
+        id S1729232AbgGAJTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:19:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57150 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726715AbgGAJTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:19:41 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axb+ggVfxe8p1NAA--.11813S3;
-        Wed, 01 Jul 2020 17:19:29 +0800 (CST)
-Subject: Re: [PATCH v4 04/14] irqchip/davinci-aintc: Fix potential resource
- leaks
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
- <1593569786-11500-5-git-send-email-yangtiezhu@loongson.cn>
- <08cad331-0a17-586c-07a7-6e3843cb61a1@web.de>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <879ce976-042d-b8d7-676e-304e02e7c965@loongson.cn>
-Date:   Wed, 1 Jul 2020 17:19:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 1 Jul 2020 05:19:48 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51952 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgGAJTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:19:46 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B6A0C80503;
+        Wed,  1 Jul 2020 11:19:41 +0200 (CEST)
+Date:   Wed, 1 Jul 2020 11:19:40 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     narmstrong@baylibre.com, Ken-Sue.Tan@taec.toshiba.com,
+        Chris.Cheng@taec.toshiba.com, Bhushan.Patel@taec.toshiba.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Message-ID: <20200701091940.GB266726@ravnborg.org>
+References: <20200701070344.6330-1-simhavcs@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <08cad331-0a17-586c-07a7-6e3843cb61a1@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Axb+ggVfxe8p1NAA--.11813S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrGr1fuF1kZw1DGr15ZryUGFg_yoWxWrgEgF
-        y2gry7Gw4DG345Ja4jgrWvyFsFg3y7u3WxJryxZa13K3y3XwnxJrWkGF9xZa47KFZ3ur4D
-        CFZIvrWYy343ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbc8YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAI
-        w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
-        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
-        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701070344.6330-1-simhavcs@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7oS1v-cyAAAA:8 a=pGLkceISAAAA:8 a=gEfo2CItAAAA:8
+        a=e5mUnYsNAAAA:8 a=dHiIaXZRstW55kd5OMIA:9 a=ie3UdB0zIniZHkjz:21
+        a=LqGCcjRVTOAnRfX9:21 a=CjuIK1q_8ugA:10 a=PcM2qe9_4d1tJnOwuzRa:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/01/2020 04:15 PM, Markus Elfring wrote:
-> …
->> +++ b/drivers/irqchip/irq-davinci-aintc.c
->> @@ -96,7 +96,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
->>   				     resource_size(&config->reg));
->>   	if (!davinci_aintc_base) {
->>   		pr_err("%s: unable to ioremap register range\n", __func__);
->> -		return;
->> +		goto err_release;
->>   	}
-> …
->
-> Can it help to return any error codes?
-> Would you like to reconsider the function return type?
+Hi Vinay.
 
-No, the initial aim of this patch is just to fix the potential resource 
-leaks,
-so I think maybe no need to consider the function return type now.
+On Wed, Jul 01, 2020 at 12:33:36PM +0530, Vinay Simha BN wrote:
+> This driver is tested with two panels with Apq8016-IFC6309 board
+> https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
+> 
+> 1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
+> 2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
+> 
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> 
+> ---
+> v1:
+>  Initial version wast .txt file
+> 
+> v2:
+>  From txt to yaml file format
+> 
+> v3:
+> * Andrzej Hajda review comments incorporated
+>   dual port lvds implemented
+> 
+> * Laurent Pinchart review comments incorporated
+>   dsi lanes property removed and it is dynamically
+>   picked from the dsi ports
+>   VESA/JEIDA format picked from panel-lvds dts
+> ---
+>  .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
+>  1 file changed, 204 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> new file mode 100644
+> index 000000000000..ec53d62d408b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> @@ -0,0 +1,204 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +
+> +maintainers:
+> + - Vinay Simha BN <simhavcs@gmail.com>
+> +
+> +description: |
+> + This binding supports DSI to LVDS bridge TC358775
+> +
+> +properties:
+> +  compatible:
+> +    const: toshiba,tc358775
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: i2c address of the bridge, 0x0f
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +    description:  1.2V LVDS Power Supply
+> +
+> +  vddio-supply:
+> +    maxItems: 1
+> +    description: 1.8V IO Power Supply
+> +
+> +  stby-gpios:
+> +    maxItems: 1
+> +    description: Standby pin, Low active
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Hardware reset, Low active
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          DSI Input. The remote endpoint phandle should be a
+> +          reference to a valid mipi_dsi_host device node.
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS output (panel or connector).
+> +
+> +      port@2:
+> +        type: object
+> +        description: |
+> +          Video port for Dual link LVDS output (panel or connector).
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - vdd-supply
+> + - vddio-supply
+> + - stby-gpios
+> + - reset-gpios
+> + - ports
+> +
+> +examples:
+> + - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        tc_bridge: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_test: endpoint {
+> +                        remote-endpoint = <&dsi0_out>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds_out: endpoint {
+> +                        remote-endpoint = <&panel_in>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out: endpoint {
+> +                    remote-endpoint = <&d2l_in_test>;
+> +                        data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+> +
+Fix indent. One of the '}' is indented one space too much.
 
->
-> Regards,
-> Markus
 
+> + - |
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+What is the purpose with the second example?
+Does it explain the binding better in some way?
+
+The examples shall help understanding the binding, not help
+understanding the HW. The latter is the role of the binding.
+
+
+> +
+> +        tc_bridge_dual: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_dual: endpoint {
+> +                        remote-endpoint = <&dsi0_out_dual>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds0_out: endpoint {
+> +                        remote-endpoint = <&panel_in0>;
+> +                    };
+> +                };
+> +
+> +                port@2 {
+> +                    reg = <2>;
+> +                    lvds1_out: endpoint {
+> +                        remote-endpoint = <&panel_in1>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out_dual: endpoint {
+> +                    remote-endpoint = <&d2l_in_dual>;
+> +                        data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+If this example is kept then fix indent of '}'.
+
+	Sam
+> +...
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
