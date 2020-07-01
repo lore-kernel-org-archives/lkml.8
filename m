@@ -2,124 +2,119 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA0CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1192020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593602531;
-	bh=S1NAV77dXwv+fjwoqyD9mo/JlNrWtWQH78lHIrJHCRA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=R+UzS/e0Sea9vhNjOleCO1tcRwwYj1HaRK8ok0ycj4/kEgxJ3KU1hOtNBcU6asoSd
-	 mbY/xUc+Kc6DL72/ja6KpSc6fqHrPAatNzwYntjD2Z/Ssn3lDKcRGaCXRByE0M5Qfm
-	 mZJYlrWdNUFx4djSHi18ajLBx9paVPQQxMnoJdqs=
+	by mail.kernel.org (Postfix) with ESMTP id 4F24420780
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgGALWK (ORCPT
+        id S1730296AbgGALXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbgGALWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:22:09 -0400
-Received: from ziggy.cz (unknown [213.195.114.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 1 Jul 2020 07:23:09 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44544 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730169AbgGALXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 07:23:08 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A67C20702;
-        Wed,  1 Jul 2020 11:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593602528;
-        bh=S1NAV77dXwv+fjwoqyD9mo/JlNrWtWQH78lHIrJHCRA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oSO9TszIlrcVn+okb5AAX78/ETthqH1FmT2U+ld2nI39STpo0xmVnUM1NsXTTlPVo
-         k6S182Y6hNn284JH0svEkZikLvr5bOP8qVu1K6raiVyLBPr+OKaK9/HgARfWT2Qn8W
-         zMol/oRSi/kXaGFAwPZW24eO3GE9kWGV/OUt/7cI=
-From:   matthias.bgg@kernel.org
-To:     arend.vanspriel@broadcom.com, kvalo@codeaurora.org,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
-        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
-        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        wright.feng@cypress.com, matthias.bgg@kernel.org,
-        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
-Subject: [PATCH v3] brcmfmac: Transform compatible string for FW loading
-Date:   Wed,  1 Jul 2020 13:22:00 +0200
-Message-Id: <20200701112201.6449-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3BBDA27DAFB;
+        Wed,  1 Jul 2020 12:23:06 +0100 (BST)
+Date:   Wed, 1 Jul 2020 13:23:03 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [RESEND PATCH 1/3] drm/mediatek: mtk_dpi: Rename bridge to
+ next_bridge
+Message-ID: <20200701132303.047ea605@collabora.com>
+In-Reply-To: <20200518173909.2259259-2-enric.balletbo@collabora.com>
+References: <20200518173909.2259259-1-enric.balletbo@collabora.com>
+        <20200518173909.2259259-2-enric.balletbo@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+On Mon, 18 May 2020 19:39:07 +0200
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-The driver relies on the compatible string from DT to determine which
-FW configuration file it should load. The DTS spec allows for '/' as
-part of the compatible string. We change this to '-' so that we will
-still be able to load the config file, even when the compatible has a
-'/'. This fixes explicitly the firmware loading for
-"solidrun,cubox-i/q".
+> This is really a cosmetic change just to make a bit more readable the
+> code after convert the driver to drm_bridge. The bridge variable name
+> will be used by the encoder drm_bridge, and the chained bridge will be
+> named next_bridge.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> ---
+> 
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 7fbfa95bab09..7112125dc3d1 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -61,7 +61,7 @@ enum mtk_dpi_out_color_format {
+>  struct mtk_dpi {
+>  	struct mtk_ddp_comp ddp_comp;
+>  	struct drm_encoder encoder;
+> -	struct drm_bridge *bridge;
+> +	struct drm_bridge *next_bridge;
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Did you consider moving the drm_of_find_panel_or_bridge() call to
+mtk_dpi_bind() so you can get rid of this field?
 
----
+This makes we realize there's no refcounting on bridges, which means
+the bridge can vanish between the drm_of_find_panel_or_bridge() and
+drm_bridge_attach() calls :-/.
 
-Changes in v3:
-- use len variable to store length of string (Hans de Goede)
-- fix for loop to stop on first NULL-byte (Hans de Goede)
-
-Changes in v2:
-- use strscpy instead of strncpy (Hans de Goede)
-- use strlen(tmp) + 1 for allocation (Hans de Goede, kernel test robot)
-
- .../wireless/broadcom/brcm80211/brcmfmac/of.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-index b886b56a5e5a..a7554265f95f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
-@@ -17,7 +17,6 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
- {
- 	struct brcmfmac_sdio_pd *sdio = &settings->bus.sdio;
- 	struct device_node *root, *np = dev->of_node;
--	struct property *prop;
- 	int irq;
- 	u32 irqf;
- 	u32 val;
-@@ -25,8 +24,22 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
- 	/* Set board-type to the first string of the machine compatible prop */
- 	root = of_find_node_by_path("/");
- 	if (root) {
--		prop = of_find_property(root, "compatible", NULL);
--		settings->board_type = of_prop_next_string(prop, NULL);
-+		int i, len;
-+		char *board_type;
-+		const char *tmp;
-+
-+		of_property_read_string_index(root, "compatible", 0, &tmp);
-+
-+		/* get rid of '/' in the compatible string to be able to find the FW */
-+		len = strlen(tmp) + 1;
-+		board_type = devm_kzalloc(dev, len, GFP_KERNEL);
-+		strscpy(board_type, tmp, len);
-+		for (i = 0; i < board_type[i]; i++) {
-+			if (board_type[i] == '/')
-+				board_type[i] = '-';
-+		}
-+		settings->board_type = board_type;
-+
- 		of_node_put(root);
- 	}
- 
--- 
-2.27.0
+>  	void __iomem *regs;
+>  	struct device *dev;
+>  	struct clk *engine_clk;
+> @@ -607,7 +607,7 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
+>  	/* Currently DPI0 is fixed to be driven by OVL1 */
+>  	dpi->encoder.possible_crtcs = BIT(1);
+>  
+> -	ret = drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
+> +	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to attach bridge: %d\n", ret);
+>  		goto err_cleanup;
+> @@ -747,11 +747,11 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+> -					  NULL, &dpi->bridge);
+> +					  NULL, &dpi->next_bridge);
+>  	if (ret)
+>  		return ret;
+>  
+> -	dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
+> +	dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_node);
+>  
+>  	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
+>  	if (comp_id < 0) {
 
