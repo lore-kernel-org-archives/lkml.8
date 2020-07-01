@@ -2,60 +2,74 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E80C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1070EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E06420771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3F02074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgGACy2 (ORCPT
+        id S1726724AbgGACyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:54:28 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:35470 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbgGACy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:54:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xhao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0U1Dur.y_1593572065;
-Received: from localhost.localdomain(mailfrom:xhao@linux.alibaba.com fp:SMTPD_---0U1Dur.y_1593572065)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Jul 2020 10:54:25 +0800
-From:   Xin Hao <xhao@linux.alibaba.com>
-To:     rjw@rjwysocki.net
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH]  cpufreq: CPPC: fix some unreasonable codes in cppc_cpufreq_perf_to_khz()
-Date:   Wed,  1 Jul 2020 10:54:23 +0800
-Message-Id: <20200701025423.10206-1-xhao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 30 Jun 2020 22:54:53 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2621 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbgGACyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 22:54:53 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 3938AD9B095F7E5FE054;
+        Wed,  1 Jul 2020 10:54:51 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 1 Jul 2020 10:54:51 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 1 Jul 2020 10:54:50 +0800
+Subject: Re: [PATCH net] hinic: fix passing non negative value to ERR_PTR
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
+        <chiqijun@huawei.com>
+References: <20200630063554.14639-1-luobin9@huawei.com>
+ <20200630092041.55d8a245@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <17c8110c-5cf8-1140-a877-faf74489542b@huawei.com>
+Date:   Wed, 1 Jul 2020 10:54:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630092041.55d8a245@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Xin Hao <xhao@linux.alibaba.com>
----
- drivers/cpufreq/cppc_cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-index 257d726a4456..444ee76a6bae 100644
---- a/drivers/cpufreq/cppc_cpufreq.c
-+++ b/drivers/cpufreq/cppc_cpufreq.c
-@@ -161,7 +161,7 @@ static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
- 		if (!max_khz)
- 			max_khz = cppc_get_dmi_max_khz();
- 		mul = max_khz;
--		div = cpu->perf_caps.highest_perf;
-+		div = caps->highest_perf;
- 	}
- 	return (u64)perf * mul / div;
- }
---
-2.24.1
+On 2020/7/1 0:20, Jakub Kicinski wrote:
+> On Tue, 30 Jun 2020 14:35:54 +0800 Luo bin wrote:
+>> get_dev_cap and set_resources_state functions may return a positive
+>> value because of hardware failure, and the positive return value
+>> can not be passed to ERR_PTR directly.
+>>
+>> Fixes: 7dd29ee12865 ("net-next/hinic: add sriov feature support")
+>> Signed-off-by: Luo bin <luobin9@huawei.com>
+> 
+> Fixes tag: Fixes: 7dd29ee12865 ("net-next/hinic: add sriov feature support")
+> Has these problem(s):
+> 	- Subject does not match target commit subject
+> 	  Just use
+> 		git log -1 --format='Fixes: %h ("%s")'
+> .
+> 
+Will fix. Thanks.
