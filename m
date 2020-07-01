@@ -2,126 +2,118 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E534C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B682078A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6365207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 17:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593624897;
+	bh=7gRGt637RJr7xqh8m9IFhKHH4colOY8f4NtES4RwwhY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dX0OXV2/xGkTkqPkm2654wZO6nA+67k03Kqpl9RmM6NkuD19cmrtKSXEY2DCbTdew
+	 gOs1Km1buEgpPYqY+eWDI0E9hDvu04zj+BtiWNC7Ec6hp0/lIKskevWRs5TaTT6QwI
+	 CHXOe9Ml2JigSoExrAxuMS7ANiKArTMeTKmw08ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732780AbgGARdK (ORCPT
+        id S1732597AbgGARe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 13:33:10 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:38306 "EHLO smtp.al2klimov.de"
+        Wed, 1 Jul 2020 13:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730645AbgGARdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 13:33:10 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id CE781BC122;
-        Wed,  1 Jul 2020 17:33:05 +0000 (UTC)
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kdump
-To:     Dave Young <dyoung@redhat.com>
-Cc:     bhe@redhat.com, vgoyal@redhat.com, corbet@lwn.net,
-        kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200627103151.71942-1-grandmaster@al2klimov.de>
- <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <1de76ef5-e447-2274-c45a-3b0356bd63ae@al2klimov.de>
-Date:   Wed, 1 Jul 2020 19:33:04 +0200
+        id S1726432AbgGARez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 13:34:55 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CDCB20781;
+        Wed,  1 Jul 2020 17:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593624894;
+        bh=7gRGt637RJr7xqh8m9IFhKHH4colOY8f4NtES4RwwhY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=s4JTo+sHZ5kueHTuTEAo2QGy2uhqmeAHdidNDEG2j3pV3VxRg5Xv6wKav2TR+6t4b
+         XUiS73u1pvO97HpBjUcfEuJ+XpBhQ0M0mFiLtwwqKmYcxdiCP4RGhschpBHp6VSQJP
+         m93SVv9K90jHvPW8nUrDpWPn4XcEaTHFUj4sKDZM=
+Date:   Wed, 1 Jul 2020 10:34:53 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     Stefano Stabellini <sstabellini@kernel.org>, jgross@suse.com,
+        Peng Fan <peng.fan@nxp.com>, x86@kernel.org,
+        konrad.wilk@oracle.com, jasowang@redhat.com,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-imx@nxp.com,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+In-Reply-To: <20200701133456.GA23888@infradead.org>
+Message-ID: <alpine.DEB.2.21.2007011020320.8121@sstabellini-ThinkPad-T480s>
+References: <20200624091732.23944-1-peng.fan@nxp.com> <20200624050355-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s> <20200624163940-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s> <20200626110629-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006291621300.8121@sstabellini-ThinkPad-T480s>
+ <20200701133456.GA23888@infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 1 Jul 2020, Christoph Hellwig wrote:
+> On Mon, Jun 29, 2020 at 04:46:09PM -0700, Stefano Stabellini wrote:
+> > > I could imagine some future Xen hosts setting a flag somewhere in the
+> > > platform capability saying "no xen specific flag, rely on
+> > > "VIRTIO_F_ACCESS_PLATFORM". Then you set that accordingly in QEMU.
+> > > How about that?
+> > 
+> > Yes, that would be fine and there is no problem implementing something
+> > like that when we get virtio support in Xen. Today there are still no
+> > virtio interfaces provided by Xen to ARM guests (no virtio-block/net,
+> > etc.)
+> > 
+> > In fact, in both cases we are discussing virtio is *not* provided by
+> > Xen; it is a firmware interface to something entirely different:
+> > 
+> > 1) virtio is used to talk to a remote AMP processor (RPMesg)
+> > 2) virtio is used to talk to a secure-world firmware/OS (Trusty)
+> >
+> > VIRTIO_F_ACCESS_PLATFORM is not set by Xen in these cases but by RPMesg
+> > and by Trusty respectively. I don't know if Trusty should or should not
+> > set VIRTIO_F_ACCESS_PLATFORM, but I think Linux should still work
+> > without issues.
+> > 
+> 
+> Any virtio implementation that is not in control of the memory map
+> (aka not the hypervisor) absolutely must set VIRTIO_F_ACCESS_PLATFORM,
+> else it is completely broken.
+
+Lots of broken virtio implementations out there it would seem :-(
 
 
-Am 01.07.20 um 09:58 schrieb Dave Young:
-> On 06/27/20 at 12:31pm, Alexander A. Klimov wrote:
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>            If both the HTTP and HTTPS versions
->>            return 200 OK and serve the same content:
->>              Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
->>   If there are any URLs to be removed completely or at least not HTTPSified:
->>   Just clearly say so and I'll *undo my change*.
->>   See also https://lkml.org/lkml/2020/6/27/64
->>
->>   If there are any valid, but yet not changed URLs:
->>   See https://lkml.org/lkml/2020/6/26/837
->>
->>   Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
->>   1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
->> index 2da65fef2a1c..8cfa35f777f5 100644
->> --- a/Documentation/admin-guide/kdump/kdump.rst
->> +++ b/Documentation/admin-guide/kdump/kdump.rst
->> @@ -65,20 +65,20 @@ Install kexec-tools
->>   
->>   2) Download the kexec-tools user-space package from the following URL:
->>   
->> -http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
->> +https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
->>   
->>   This is a symlink to the latest version.
->>   
->>   The latest kexec-tools git tree is available at:
->>   
->>   - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
->> -- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
->> +- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
->>   
->>   There is also a gitweb interface available at
->> -http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
->> +https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
->>   
->>   More information about kexec-tools can be found at
->> -http://horms.net/projects/kexec/
->> +https://horms.net/projects/kexec/
->>   
->>   3) Unpack the tarball with the tar command, as follows::
->>   
->> @@ -511,7 +511,7 @@ dump kernel.
->>   You can also use the Crash utility to analyze dump files in Kdump
->>   format. Crash is available on Dave Anderson's site at the following URL:
->>   
->> -   http://people.redhat.com/~anderson/
->> +   https://people.redhat.com/~anderson/
+> > The xen_domain() check in Linux makes it so that vring_use_dma_api
+> > returns the opposite value on native Linux compared to Linux as Xen/ARM
+> > DomU by "accident". By "accident" because there is no architectural
+> > reason why Linux Xen/ARM DomU should behave differently compared to
+> > native Linux in this regard.
+> > 
+> > I hope that now it is clearer why I think the if (xen_domain()) check
+> > needs to be improved anyway, even if we fix generic dma_ops with virtio
+> > interfaces missing VIRTIO_F_ACCESS_PLATFORM.
 > 
-> Would you mind to update above url as well?
-I'll update all of the URLs not changed yet, but (please) not in this 
-patch round.
+> IMHO that Xen quirk should never have been added in this form..
 
-See also https://lkml.org/lkml/2020/6/26/837
+Would you be in favor of a more flexible check along the lines of the
+one proposed in the patch that started this thread:
 
-> 
-> Dave have moved it to below url instead:
-> https://crash-utility.github.io/
-> 
-> Thanks
-> Dave
-> 
+    if (xen_vring_use_dma())
+            return true;
+
+
+xen_vring_use_dma would be implemented so that it returns true when
+xen_swiotlb is required and false otherwise.
