@@ -2,106 +2,163 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72895C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F90C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37DC92073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A642073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMhSMyxL"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="TKjUYKLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgGAJvA (ORCPT
+        id S1729658AbgGAJvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
+        Wed, 1 Jul 2020 05:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbgGAJvA (ORCPT
+        with ESMTP id S1729109AbgGAJvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:51:00 -0400
+        Wed, 1 Jul 2020 05:51:36 -0400
 Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224F5C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:51:00 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so23130120wrv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:51:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7286EC03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:51:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so23119051wrc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:51:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fj366YBf1wK9fUUm8pn/f0wRLN+C66RzqNPCkZkGdjo=;
-        b=nMhSMyxLW+hfjvf+9wE+aYTChw1AUe5uCsbBDN47Bph9DBmfp6xkym7AH9V0eMZ4Gp
-         vTdyyWsn9qX6oQ1skTbDz5CPBWg/5H7sQi3HCq11Kwx/lCGNIdlLKYPsRmENTLRoAe/4
-         tXrbJIhwRf+kHyy8txD/NXLpk+c50J5U4+SZZqTnCNJixNn7TUbG6k62Byp2fF/CL6QI
-         Ir11nyjrRBmR317O9zoZLtWf30Hk6/QxqD7pjySLVy18VlqE0yNtaMOEBzIzJMmKwSxi
-         i/haR5+S/kC3RbqNtrUhcdEjIamEqfvgoUsqpHzXLUSBRJeP8HjkQRaA9hbDj57/8VDN
-         5Qmw==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=0kXRdSJAJ2w4NQlFklwwTlNh4niyvAaA7nq0nb1Nl9w=;
+        b=TKjUYKLX6JQ1Vx3Tgm8MEFxB00Q/s6wjCbaTl6fB6p1083zS9fGrr4QNE60EbE+zh8
+         pqjBvxntdr4CRSOS3SAQ5HMGPVXCmQICT0jLF8ETNh5N3vS88001cu6PLG5DhRuQDNFy
+         uiPqZRC0HChlt9qzVlENXWvQ+YJJv3gw+PoCo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Fj366YBf1wK9fUUm8pn/f0wRLN+C66RzqNPCkZkGdjo=;
-        b=hEsBZcz9LKk5BasyqbmuceK0TP4AXKbP7vxTjrnKJkFBb0MxDzj8w44FQFIL3S3wrK
-         ixoDYHnIkmHv7iw0q2T4SP+I3EfxSAANecfbQn7ZnNrJC7cKzOS63ob9GAxOqFKBZbC2
-         iBP8rx0g59uk4LuLnuCoKNdiDnEPpmoiP6p1mMcah2Hv/KEsexjzNk7OZmP2JtDHYkEf
-         Do0cdtyHi3FhmwrWjK7egjuZSi9WEBRl1vNf6EcERo5ztUuTOzP7q348gdvu0rDD+XsR
-         CXMQy1pIoj2eFys8C8S3PSdKcrhAKAcOUT4VTu3QQb73Grr8VZt1BtRTe/ng87EEQKsO
-         QZDg==
-X-Gm-Message-State: AOAM530+46rHV85dRgrYFx4x8MXOcfc30WUninxWCq1r6pvoqnoNsD1M
-        Pjbld1Xcecb6sCtVSBxHcVron85DrxM=
-X-Google-Smtp-Source: ABdhPJwKd+H9pffZ/9biDVwYMaSTSADwLWkbHkqt28Zyy1I0nO7Lgwt+43pu3oDpKM98rzn5c1d31A==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr25971083wrp.412.1593597058461;
-        Wed, 01 Jul 2020 02:50:58 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07? ([2a01:e34:ed2f:f020:54f4:a99f:ab88:bc07])
-        by smtp.googlemail.com with ESMTPSA id b18sm6883975wmb.18.2020.07.01.02.50.57
+        bh=0kXRdSJAJ2w4NQlFklwwTlNh4niyvAaA7nq0nb1Nl9w=;
+        b=fJdje9Qk4m/VMnDX/gJ1XxESthYIsfGMvgIiwHZUe+zFVTxj5DND9z70mfKV4FXB2i
+         lFooGbB1zZWEPFWy156dPPS4Ixhd8+UdP/aF71H7W0s66agbf0Yih5uS6G3QgDFsXFQz
+         /0h3Gu+FQ6Z7zbA+86w33t+I2QcMVdAxoqzLZDGRGsBIwiyQOn9bstDeAPhz1TTYKUoE
+         rjZ22TbEeQ+eervFLcskSdBRTy3+IN9tF/bDM87pLzowupuDscwdnEwSyCDjEm+5WjjQ
+         zUiwqnQWyxPa7wH9NYu6m/T3m9lVpFKht8o5sGOc2yezLEZRWUSOEZ0IHBciQuZgIH2U
+         eTQw==
+X-Gm-Message-State: AOAM533BfktW38fF68vS4H85T82XwqMbNx1sjwx2rjvgh6hw0QbnhSIn
+        HzL/wXUXYF3s952T6vN1r2UaXQ==
+X-Google-Smtp-Source: ABdhPJwuwimRu1nf6gCK1pRymKF3cc10Mgf7AOZ3RL+DeuwqswesPCQkj9zAM+M+TJdQcO1li9fJ6Q==
+X-Received: by 2002:a05:6000:1107:: with SMTP id z7mr25496107wrw.355.1593597095035;
+        Wed, 01 Jul 2020 02:51:35 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id n125sm6614837wme.30.2020.07.01.02.51.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 02:50:57 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] thermal: core: Add helpers to browse the cdev, tz
- and governor list
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
- <CAP245DVy+Z9D+6=-cX4TaGFoK-e2N+mWwOvNYOe_E9Fh=7vnaA@mail.gmail.com>
- <bed1d41f81f369e7123a2eab7fde3e81a3b063aa.camel@intel.com>
- <143d954f-2ecf-c4d3-cb7d-f2ea75da8276@linaro.org>
- <766cbdeb2a0f9d9df4f68a71b4b0defd1e95e0be.camel@intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <18b3139c-725a-017a-4bb1-367c306440b0@linaro.org>
-Date:   Wed, 1 Jul 2020 11:50:57 +0200
+        Wed, 01 Jul 2020 02:51:34 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 3/3] bridge: Extend br_fill_ifinfo to return
+ MPR status
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@mellanox.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org,
+        UNGLinuxDriver@microchip.com
+References: <20200701072239.520807-1-horatiu.vultur@microchip.com>
+ <20200701072239.520807-4-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <a861340c-8d80-6cff-39ec-1a80ee578813@cumulusnetworks.com>
+Date:   Wed, 1 Jul 2020 12:51:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <766cbdeb2a0f9d9df4f68a71b4b0defd1e95e0be.camel@intel.com>
+In-Reply-To: <20200701072239.520807-4-horatiu.vultur@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/07/2020 09:57, Zhang Rui wrote:
-
-[ ... ]
-
->> Do you want to move them out?
+On 01/07/2020 10:22, Horatiu Vultur wrote:
+> This patch extends the function br_fill_ifinfo to return also the MRP
+> status for each instance on a bridge. It also adds a new filter
+> RTEXT_FILTER_MRP to return the MRP status only when this is set, not to
+> interfer with the vlans. The MRP status is return only on the bridge
+> interfaces.
 > 
-> Then no. I don't have any objection of removing thermal_helper.c, so
-> you can just leave these functions in thermal_core.c
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  include/uapi/linux/rtnetlink.h |  1 +
+>  net/bridge/br_netlink.c        | 29 ++++++++++++++++++++++++++++-
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/rtnetlink.h b/include/uapi/linux/rtnetlink.h
+> index 879e64950a0a2..9b814c92de123 100644
+> --- a/include/uapi/linux/rtnetlink.h
+> +++ b/include/uapi/linux/rtnetlink.h
+> @@ -778,6 +778,7 @@ enum {
+>  #define RTEXT_FILTER_BRVLAN	(1 << 1)
+>  #define RTEXT_FILTER_BRVLAN_COMPRESSED	(1 << 2)
+>  #define	RTEXT_FILTER_SKIP_STATS	(1 << 3)
+> +#define RTEXT_FILTER_MRP	(1 << 4)
+>  
+>  /* End of information exported to user level */
+>  
+> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+> index 240e260e3461c..6ecb7c7453dcb 100644
+> --- a/net/bridge/br_netlink.c
+> +++ b/net/bridge/br_netlink.c
+> @@ -453,6 +453,32 @@ static int br_fill_ifinfo(struct sk_buff *skb,
+>  		rcu_read_unlock();
+>  		if (err)
+>  			goto nla_put_failure;
+> +
+> +		nla_nest_end(skb, af);
+> +	}
+> +
+> +	if (filter_mask & RTEXT_FILTER_MRP) {
+> +		struct nlattr *af;
+> +		int err;
+> +
+> +		/* RCU needed because of the VLAN locking rules (rcu || rtnl) */
+> +		rcu_read_lock();
 
-Shall I consider that as an ack for this patch ?
+If you're using RCU, then in the previous patch (02) you should be using RCU primitives
+to walk the list and deref the ports.
+Alternatively if you rely on rtnl only then drop these RCU locks here as they're misleading.
 
+I'd prefer to just use RCU for it in case we drop rtnl one day when dumping.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> +		if (!br_mrp_enabled(br) || port) {
+> +			rcu_read_unlock();
+> +			goto done;
+> +		}
+> +		af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
+> +		if (!af) {
+> +			rcu_read_unlock();
+> +			goto nla_put_failure;
+> +		}
+> +
+> +		err = br_mrp_fill_info(skb, br);
+> +
+> +		rcu_read_unlock();
+> +		if (err)
+> +			goto nla_put_failure;
+> +
+>  		nla_nest_end(skb, af);
+>  	}
+>  
+> @@ -516,7 +542,8 @@ int br_getlink(struct sk_buff *skb, u32 pid, u32 seq,
+>  	struct net_bridge_port *port = br_port_get_rtnl(dev);
+>  
+>  	if (!port && !(filter_mask & RTEXT_FILTER_BRVLAN) &&
+> -	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED))
+> +	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED) &&
+> +	    !(filter_mask & RTEXT_FILTER_MRP))
+>  		return 0;
+>  
+>  	return br_fill_ifinfo(skb, port, pid, seq, RTM_NEWLINK, nlflags,
+> 
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
