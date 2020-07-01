@@ -8,68 +8,68 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1810C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA82720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE25E20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfwMdqRY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQfCb1ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgGAVsU (ORCPT
+        id S1727821AbgGAVsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
+        Wed, 1 Jul 2020 17:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgGAVsL (ORCPT
+        with ESMTP id S1726114AbgGAVsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:48:11 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F18C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:48:11 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id k15so14595128lfc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:48:11 -0700 (PDT)
+        Wed, 1 Jul 2020 17:48:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FF2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 14:48:10 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f8so16762537ljc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 14:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J9rFOX4unP5nBgvG05w8Nh93w4oi+5njXBMQpyfTq0A=;
-        b=WfwMdqRYyQR1/jAnjAn5QQHbnoCJQjpDegbdVUSnhOX32OS3xbA2a1JNGivlJZkdPf
-         VbmVOGLoBvz0Qt2F+wKT8GB4cVCMVdvfUg9Q2rX7znhEk/X5A0L41onfb51/nql8UUSI
-         eM04I+YdE6jnJBly6/jDOV3j34p/LMc5o48BjjkFBXuEscNC8Ez8ZdH3rIWVfotg/+3V
-         OkIxmoN1bMTz6lxeuKxUVW7LZ/CQAzkZxRq0nszL6SgccG/WtdKX0xJA5wty6hhUWa38
-         wtz5UruGLTp7gTSqtHkdJwdJo1Yej2pEAX1ika5ibQv6TiNWRY3OVxduug7xIKnS+xHf
-         fsyQ==
+        bh=axFDwmUrhb02IUraOR62rJzCuqXcldOGAtu7bDtO0Uk=;
+        b=XQfCb1otxyPFt9biXqz6uNV2LwI0sJ3gE03jZETQ+mbZN69hqpHORRA1juvy6XbIVZ
+         k5dRdXA7VGj7pe+JWzGF6QoKqLZ7dXaDjo4y/g5chKj5Ptro7ttCBgxhdY0c4tqtpYd1
+         EGd/p66BgyeyEDJr9Vf/JKUuTxUpcvrPjzlquVxywABUZ0zVZi2pq+s6nyNijB3wtSKU
+         PiZVo1TfNVoOQSDGTychYP03ItetMuLMb+WhUfSmNXMGIU6W61r5CBeM83RjYSIFFZWM
+         /nv6xFphtJBkkBhrRFMb105yuG3cbyjAdlmXGHhrI4e2LgbgC4bPAwMnXF9bfatZEzUu
+         DEtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J9rFOX4unP5nBgvG05w8Nh93w4oi+5njXBMQpyfTq0A=;
-        b=gWkdGukmEJoWm2q6ZIw0Q4zpH/u+6cHDK5SPnj2pS/cqj0tAy3PyTLxzwo2zWEvjQl
-         ELYOkqP/gPX4c7CFluido/pPKDOCVdf1jQLKJAje8AFxPpR3DG8wRZFOV9Bs5z0d58dL
-         sSuskj6CYQDYqT6X2ETesQSlW1Fl1rTbZC4owWr6JGOZQQPCB2Pt9KUs/5mJs5cMn6Az
-         ytNjvRhs6YE69sxFdvVEUvsdqqKQUTCGXupm6PlFeO1QyVTJm2R005C4HbYZxLWGB7Mt
-         m6uj8wewtyVKn/LPQ6K+1hDwY/vN6/kcNky7vClxxv8NB0RKdbIIXm/jFhxr0FzZ+PuU
-         2/2g==
-X-Gm-Message-State: AOAM532ttJ5bUQdjtKyqEm4D/yEzr2AEA5KwiIKc6yqUR35ej9IOsE9x
-        lYTY6cvcEzX+yeZrA6DvOH0=
-X-Google-Smtp-Source: ABdhPJx5Hl3zlIV7Nzlb1xZR+0N3fNWWyCqqAgo2mBQhcAuuNOkk7i5WAC9OS+1JbQrVF9XuoBqVGA==
-X-Received: by 2002:ac2:51a1:: with SMTP id f1mr16457842lfk.173.1593640090094;
-        Wed, 01 Jul 2020 14:48:10 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-181-241.NA.cust.bahnhof.se. [98.128.181.241])
-        by smtp.gmail.com with ESMTPSA id d3sm2476812lfe.93.2020.07.01.14.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=axFDwmUrhb02IUraOR62rJzCuqXcldOGAtu7bDtO0Uk=;
+        b=F/9lpIhiym0XlqMOMWlEaa9H/XHfqSsGrgA7q9h5i9QcjTYE2rmWkJLBpQ5a8mFH5N
+         w5akFIRXVBLNoux7DpfhyL40cab4/pfxl+VablkcSainbDl8uGMFQFI/9SnTTBL4Ikf1
+         SafY9ILejx846I9bk6EJpKYAYp4qSqaF6Ql3t8ztW2k9e8Yk4hbm+7E2HiI32BPrhMX4
+         JvxIz3nbn17JEKLzh9u9O47x/xehDyQY/RciEDa+RYz10n/gNMHvXeCqcrRfNvBws8sE
+         N85WR0Ac3Tuvd2wUf6YrKr4wN7CzlscsR30MToy7VQMfpQS19djNRgujb9w8IDHEKEzg
+         R/NA==
+X-Gm-Message-State: AOAM533wfCKR+woUcjNljGzsMD/vAfzOCVqZoo8Chk3WENHTEi7fHDXH
+        qzaUK7kTSGHwYmy9ojBDxnw=
+X-Google-Smtp-Source: ABdhPJz3sso470+bXN+itUWZ6r1Cq8Fj0poy/kou5+OBT3IO3MZq3tOQiOhIstHXKexpUkKGDXkpFg==
+X-Received: by 2002:a2e:9cd5:: with SMTP id g21mr15764799ljj.9.1593640089072;
         Wed, 01 Jul 2020 14:48:09 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-241.NA.cust.bahnhof.se. [98.128.181.241])
+        by smtp.gmail.com with ESMTPSA id d3sm2476812lfe.93.2020.07.01.14.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 14:48:08 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>
 Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Amit Shah <amit@kernel.org>,
-        virtualization@lists.linux-foundation.org,
+        Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] virtio_console: Constify some static variables
-Date:   Wed,  1 Jul 2020 22:09:50 +0200
-Message-Id: <20200701200950.30314-6-rikard.falkeborn@gmail.com>
+Subject: [PATCH 4/5] ipmi: watchdog: Constify ident
+Date:   Wed,  1 Jul 2020 22:09:49 +0200
+Message-Id: <20200701200950.30314-5-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200701200950.30314-1-rikard.falkeborn@gmail.com>
 References: <20200701200950.30314-1-rikard.falkeborn@gmail.com>
@@ -80,56 +80,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The id_table and feature_table pointers in struct virtio_driver are
-pointers to const. Mark the corresponding static variables const to
-allow the compiler to put them in read-only memory.
+ident is not modified and can be made const to allow the compiler to put
+it in read-only memory.
 
 Before:
    text    data     bss     dec     hex filename
-  25447     713      76   26236    667c drivers/char/virtio_console.o
+  14067    3188      64   17319    43a7 drivers/char/ipmi/ipmi_watchdog.o
 
 After:
    text    data     bss     dec     hex filename
-  25488     673      76   26237    667d drivers/char/virtio_console.o
+  14115    3148      64   17327    43af drivers/char/ipmi/ipmi_watchdog.o
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/char/virtio_console.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_watchdog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 00c5e3acee46..896f0ba9ba3c 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -2112,24 +2112,24 @@ static int virtcons_probe(struct virtio_device *vdev)
- 	return err;
+diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
+index 55986e10a124..3df13c3da5f9 100644
+--- a/drivers/char/ipmi/ipmi_watchdog.c
++++ b/drivers/char/ipmi/ipmi_watchdog.c
+@@ -654,7 +654,7 @@ static int ipmi_heartbeat(void)
+ 	return rv;
  }
  
--static struct virtio_device_id id_table[] = {
-+static const struct virtio_device_id id_table[] = {
- 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
- };
- 
--static unsigned int features[] = {
-+static const unsigned int features[] = {
- 	VIRTIO_CONSOLE_F_SIZE,
- 	VIRTIO_CONSOLE_F_MULTIPORT,
- };
- 
--static struct virtio_device_id rproc_serial_id_table[] = {
-+static const struct virtio_device_id rproc_serial_id_table[] = {
- #if IS_ENABLED(CONFIG_REMOTEPROC)
- 	{ VIRTIO_ID_RPROC_SERIAL, VIRTIO_DEV_ANY_ID },
- #endif
- 	{ 0 },
- };
- 
--static unsigned int rproc_serial_features[] = {
-+static const unsigned int rproc_serial_features[] = {
- };
- 
- #ifdef CONFIG_PM_SLEEP
+-static struct watchdog_info ident = {
++static const struct watchdog_info ident = {
+ 	.options	= 0,	/* WDIOF_SETTIMEOUT, */
+ 	.firmware_version = 1,
+ 	.identity	= "IPMI"
 -- 
 2.27.0
 
