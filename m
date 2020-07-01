@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B666BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58315207BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC14207BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgGACQ6 (ORCPT
+        id S1726961AbgGACRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:16:58 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47692 "EHLO loongson.cn"
+        Tue, 30 Jun 2020 22:17:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47664 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbgGACQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726739AbgGACQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jun 2020 22:16:37 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S16;
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2r68fteU2dNAA--.5801S14;
         Wed, 01 Jul 2020 10:16:31 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -29,16 +29,16 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH v4 14/14] irqchip/xilinx-intc: Fix potential resource leak
-Date:   Wed,  1 Jul 2020 10:16:26 +0800
-Message-Id: <1593569786-11500-15-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 12/14] irqchip/riscv-intc: Fix potential resource leak
+Date:   Wed,  1 Jul 2020 10:16:24 +0800
+Message-Id: <1593569786-11500-13-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S16
-X-Coremail-Antispam: 1UD129KBjvdXoWrKFy7Kry5CF4fZryDuw1kuFg_yoWkXrb_Cr
-        1Sgws3GrW0vr17Gw4xtr43Z3sYyFykW3Z2qF4IvF9xA39rWw1xAFsFvw4rAryFkrW0kFs3
-        C3y5Zryjyr17ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: AQAAf9Dxz2r68fteU2dNAA--.5801S14
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF48KFyDJFW7tF1kArWrZrb_yoW3Crg_Cr
+        12gFn3Gry8trsxAFyIyr45WFy2y34kWFWqgF1I9Fy3K3s8Gw1xCw12yFyft3W8Kr4Fkrs3
+        CrW8ZrWSyr17ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
         9fnUUIcSsGvfJTRUUUbhxYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
         6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
         IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
@@ -58,38 +58,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function xilinx_intc_of_init(), system resource "irqc->root_domain"
-was not released in the error case. Thus add jump target for the completion
-of the desired exception handling.
+In the function riscv_intc_init(), system resource "intc_domain"
+was not released in the error case, fix it.
 
-Fixes: 9689c99e4950 ("irqchip/xilinx: Add support for parent intc")
+Fixes: 6b7ce8927b5a ("irqchip: RISC-V per-HART local interrupt controller driver")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-xilinx-intc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-riscv-intc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index 1d3d273..dcc51e0 100644
---- a/drivers/irqchip/irq-xilinx-intc.c
-+++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -241,7 +241,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		} else {
- 			pr_err("irq-xilinx: interrupts property not in DT\n");
- 			ret = -EINVAL;
--			goto error;
-+			goto error_domain_remove;
- 		}
- 	} else {
- 		primary_intc = irqc;
-@@ -250,6 +250,8 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index a6f97fa..8d6286c 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -122,6 +122,7 @@ static int __init riscv_intc_init(struct device_node *node,
+ 	rc = set_handle_irq(&riscv_intc_irq);
+ 	if (rc) {
+ 		pr_err("failed to set irq handler\n");
++		irq_domain_remove(intc_domain);
+ 		return rc;
+ 	}
  
- 	return 0;
- 
-+error_domain_remove:
-+	irq_domain_remove(irqc->root_domain);
- error:
- 	iounmap(irqc->base);
- 	kfree(irqc);
 -- 
 2.1.0
 
