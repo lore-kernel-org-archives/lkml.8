@@ -2,166 +2,364 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B79DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95D472067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043102077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 11:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fVQ98MAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgGALHi (ORCPT
+        id S1730313AbgGALIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 07:07:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43083 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbgGALHa (ORCPT
+        Wed, 1 Jul 2020 07:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbgGALIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 07:07:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 95so10435647otw.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:07:28 -0700 (PDT)
+        Wed, 1 Jul 2020 07:08:05 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE112C03E979
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 04:08:04 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id b15so19252856edy.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QP5FcPoiY5gXfyecRZBIW+zJ5fFtp0kaGdHXnp9CMG4=;
+        b=fVQ98MAxkuz/crY3rTB1m+oOjUydIVeHv9NbArEHstkqBmEIb/9rO61DiEQhfBrkN5
+         6Kw4mYd4I3+pbZPHm3jXGj4RgdvT/Hl59047J0u5/D1TiG4iV5StiJUh8kcGNYp7tY7c
+         S7MBaqP1XdnMPhv2TTyK5WYdIyU/EUWeQ1H2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vMeRA4TWS6d4CG6LX/ZB/EulnsLDVlwPVCGPppXOk6s=;
-        b=g5fBzhLOcV5Ur6/GTsywf09WqTGRKxZNy+jrV1vmXUzQuw8keJAqgcfWWmcsCwp13m
-         rjfv6sur9iAdXA6HqfAjEQaJzekN6w841/SjaNO0AqIFzS9EeoDKxAr0/b53yjLEQcVj
-         +EuXY55secbysS8uk9/va96aS01fob8vl1v5Aqxjvrq+FKMq0390/oQHVzzBA17FtOlK
-         iegtEMXop0LhAc4ep+j1Kt+XcdTcIMbMOifxgnYslEJeurK23AP+WiVjIi1oHjMm/C08
-         ha/1UGKP3wPiSxVbnPqNwNdaxaUa5vhADZlkgqOlSNFor4gJ5Lve+wRjENqfjZpzbEHQ
-         dz+A==
-X-Gm-Message-State: AOAM530NTTSTcft/l1/cRFJgjqupSQ0OaafljFZPEybJ0exT0i+vhutp
-        njP9+b2n4hFGNTOPpVzAf/ImfBCz9gZhkqJTYTo=
-X-Google-Smtp-Source: ABdhPJz5uEqXQ920c1KA4Cy2kl2l3AIynVsvItimSXuKgoo5OqS0Q7q0opk1CwLTs67ofxhXbDf190s9FSHqtNlx9tU=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr20806307otb.107.1593601648228;
- Wed, 01 Jul 2020 04:07:28 -0700 (PDT)
+        bh=QP5FcPoiY5gXfyecRZBIW+zJ5fFtp0kaGdHXnp9CMG4=;
+        b=rKB0weC3aaku8hGvh2CWrDl5NCVoBAwp5TXv5i/JviuS+xIYIus3dx9yr7tcHz5Pk/
+         dopAjG5sijhsyTeiIf++gcP4iJ2UX5Roh7/JbxQswBJmH1ZClB4uUur8v4Ul3mfjBGKi
+         AmIzTER7phbnz5QaNs8EeZN7CLGpaBNHNuqMjZHfGTwTQvAzOWwq12g7o2xnpMSttUMM
+         cCLBa7gEZV4CIymnkmB8sjwizpatyJ10NcmwFaJVJDq8nXC41YmvKR4XbfUwBs2dZ2mT
+         3INcBTcN1VvMxq82riDhRotv6+I0y0W6svUVtycDXp9bAGGlT+BhRHbXbZtmU4QxVM1O
+         Tefg==
+X-Gm-Message-State: AOAM531ZOkDnejJTOJUVWFGwGI2CtfohsYj7WkIqI+B2iG4le3RQqBlf
+        cDOwGW0eLKs7TQmGeBHWG+XI9bldd7miAA==
+X-Google-Smtp-Source: ABdhPJyg8pO/WJsaN9ML8lSpQC/MJBUrx1MleEqnaP6Y11pqBKdbUvDmeR8hyfbHsA+XfkF1xxYptQ==
+X-Received: by 2002:a50:9dc4:: with SMTP id l4mr29219936edk.52.1593601683163;
+        Wed, 01 Jul 2020 04:08:03 -0700 (PDT)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id d12sm6130449edx.80.2020.07.01.04.08.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 04:08:01 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id o11so23363003wrv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 04:08:01 -0700 (PDT)
+X-Received: by 2002:adf:f34f:: with SMTP id e15mr26582689wrp.415.1593601680393;
+ Wed, 01 Jul 2020 04:08:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
- <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
- <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
- <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com>
- <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
- <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
- <CAJZ5v0ju58LxvRckv2T=H0D=aDooGUoGfqFze5zWQ1ARAAJcag@mail.gmail.com>
- <CAGETcx8KknvzZxfW4o=siswB__c9yeh=1wOVyvtM2112WEBizQ@mail.gmail.com>
- <CAMuHMdXbzXnWQSaQ44p-cL9TA=ng20UB=vjscRDjpf7N=S4fjg@mail.gmail.com>
- <CAJZ5v0joi2YDgAPrPhT8SMXTu-Va7s9DXVs7YDYf87JY_ntONQ@mail.gmail.com>
- <20200630153850.GE1785141@kroah.com> <CAJZ5v0jQYK8LHaaJ4-GeJpzGdGY2Csmp_jmHfgc7BOaXyfsZCg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jQYK8LHaaJ4-GeJpzGdGY2Csmp_jmHfgc7BOaXyfsZCg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Jul 2020 13:07:16 +0200
-Message-ID: <CAMuHMdW_g4ODMH6zx0f8KHvy7MnFE=K1zPU=uRk02D9g2UP8Ow@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
- deferred probe
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-20-xia.jiang@mediatek.com> <20200611184640.GC8694@chromium.org>
+ <1593485781.20112.43.camel@mhfsdcap03> <20200630165301.GA1212092@chromium.org>
+ <1593592121.4007.33.camel@mhfsdcap03>
+In-Reply-To: <1593592121.4007.33.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 1 Jul 2020 13:07:48 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5DJsB70-Zr2asUCAMY9-eKHjE-nki5EsvUwzsPgL7WKmQ@mail.gmail.com>
+Message-ID: <CAAFQd5DJsB70-Zr2asUCAMY9-eKHjE-nki5EsvUwzsPgL7WKmQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v9 18/18] media: platform: Add jpeg enc feature
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        mojahsu@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        =?UTF-8?B?TWFvZ3VhbmcgTWVuZyAo5a2f5q+b5bm/KQ==?= 
+        <maoguang.meng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On Wed, Jul 1, 2020 at 10:29 AM Xia Jiang <xia.jiang@mediatek.com> wrote:
+>
+> On Tue, 2020-06-30 at 16:53 +0000, Tomasz Figa wrote:
+> > Hi Xia,
+> >
+> > On Tue, Jun 30, 2020 at 10:56:21AM +0800, Xia Jiang wrote:
+> > > On Thu, 2020-06-11 at 18:46 +0000, Tomasz Figa wrote:
+> > > > Hi Xia,
+> > > >
+> > > > On Thu, Jun 04, 2020 at 05:05:53PM +0800, Xia Jiang wrote:
+> > [snip]
+> > > > > +static void mtk_jpeg_enc_device_run(void *priv)
+> > > > > +{
+> > > > > +       struct mtk_jpeg_ctx *ctx = priv;
+> > > > > +       struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> > > > > +       struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> > > > > +       enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> > > > > +       unsigned long flags;
+> > > > > +       struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > > > > +       struct mtk_jpeg_enc_bs enc_bs;
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > > > +       dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > > > > +       jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> > > > > +
+> > > > > +       ret = pm_runtime_get_sync(jpeg->dev);
+> > > > > +       if (ret < 0)
+> > > > > +               goto enc_end;
+> > > > > +
+> > > > > +       spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > > > +
+> > > > > +       /*
+> > > > > +        * Resetting the hardware every frame is to ensure that all the
+> > > > > +        * registers are cleared. This is a hardware requirement.
+> > > > > +        */
+> > > > > +       mtk_jpeg_enc_reset(jpeg->reg_base);
+> > > > > +
+> > > > > +       mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf, &enc_bs);
+> > > > > +       mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf);
+> > > > > +       mtk_jpeg_enc_set_config(jpeg->reg_base, ctx->out_q.fmt->hw_format,
+> > > > > +                               ctx->enable_exif, ctx->enc_quality,
+> > > > > +                               ctx->restart_interval);
+> > > > > +       mtk_jpeg_enc_start(jpeg->reg_base);
+> > > >
+> > > > Could we just move the above 5 functions into one function inside
+> > > > mtk_jpeg_enc_hw.c that takes mtk_jpeg_dev pointer as its argument, let's
+> > > > say mtk_jpeg_enc_hw_run() and simply program all the data to the registers
+> > > > directly, without the extra level of abstractions?
+> > > I can move the 5 functions into one function(mtk_jpeg_enc_hw_run()), but
+> > > this function will be very long, because it contains computation code
+> > > such as setting dst addr, blk_num, quality.
+> > > In v4, you have adviced the following architecture:
+> > > How about the following model, as used by many other drivers:
+> > >
+> > > mtk_jpeg_enc_set_src()
+> > > {
+> > >         // Set any registers related to source format and buffer
+> > > }
+> > >
+> > > mtk_jpeg_enc_set_dst()
+> > > {
+> > >         // Set any registers related to destination format and buffer
+> > > }
+> > >
+> > > mtk_jpeg_enc_set_params()
+> > > {
+> > >         // Set any registers related to additional encoding parameters
+> > > }
+> > >
+> > > mtk_jpeg_enc_device_run(enc, ctx)
+> > > {
+> > >         mtk_jpeg_enc_set_src(enc, src_buf, src_fmt);
+> > >         mtk_jpeg_enc_set_dst(enc, dst_buf, dst_fmt);
+> > >         mtk_jpeg_enc_set_params(enc, ctx);
+> > >         // Trigger the hardware run
+> > > }
+> > > I think that this architecture is more clear(mtk_jpeg_enc_set_config is
+> > > equivalent to mtk_jpeg_enc_set_params).
+> > > Should I keep the original architecture or move 5 functions into
+> > > mtk_jpeg_enc_hw_run?
+> >
+> > Sounds good to me.
+> >
+> > My biggest issue with the code that it ends up introducing one more
+> > level of abstraction, but with the approach you suggested, the arguments
+> > just accept standard structs, which avoids that problem.
+> Dear Tomasz,
+>
+> Sorry for that I didn't understand your final preference.
+>
+> As you mentioned, using mtk_jpeg_dev pointer as its argument, but some
+> arguments come from mtk_jpeg_ctx pointer, such as ctx->enable_exif/
+> ctx->enc_quality/ctx->restart_interval. Should we use  mtk_jpeg_ctx
+> pointer as its argument? Should we use src_dma_addr/dst_dma_addr as its
+> arguments too? Because that src_dma_addr/dst_dma_addr need to be getted
+> by v4l2 interfaces(
+> src_buf=v4l2_m2m_next_src_buf();
+> src_dma_ddr=vb2_dma_contig_plane_dma_addr();).
+> Using V4L2 interfaces in mtk_jpeg_enc_hw.c doesn't seem reasonable.
+>
+> solution 1:
+> mtk_jpeg_enc_hw_run(ctx, src_dma_addr, dst_dma_addr)
+> {
+>         //Set all the registers
+> without one more level of abstraction
+> }
+>
+> solution 2:
+> mtk_jpeg_enc_reset(jpeg)
+> {
+>         //set the reset register
+> }
+>
+> mtk_jpeg_set_enc_dst(ctx, dst_dma_addr)
+> {
+>
+>         //Set any registers related to destination format and buffer
+> without one more level of abstraction
+> }
+> mtk_jpeg_set_enc_src(ctx, src_dma_addr)
+> {
+>
+>         //Set any registers related to source format and buffer     without one
+> more level of abstraction
+> }
+> mtk_jpeg_enc_set_config(ctx)
+> {
+>         // Set any registers related to additional encoding parameters
+> without one more level of abstraction
+> }
+> mtk_jpeg_enc_start(jpeg)
+> {
+>         //set the trigger register
+> }
+>
+> Solution 1 or Solution 2?
 
-On Tue, Jun 30, 2020 at 6:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Tue, Jun 30, 2020 at 5:39 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Jun 30, 2020 at 03:50:58PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Jun 26, 2020 at 10:53 PM Geert Uytterhoeven
-> > > <geert@linux-m68k.org> wrote:
-> > > > On Fri, Jun 26, 2020 at 10:34 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > On Fri, Jun 26, 2020 at 4:27 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > On Thu, Jun 25, 2020 at 7:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > > On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > > > Note that deferred probing gets in the way here and so the problem is
-> > > > > > > > related to it.
-> > > > > > >
-> > > > > > > I mean, we officially support deferred probing. Shouldn't we fix it so
-> > > > > > > that it doesn't break suspend/resume?
-> > > > > >
-> > > > > > Yes, we should fix deferred probing.
+I like your previous proposal the most. Let me quote it below:
+
+mtk_jpeg_enc_set_src()
+{
+        // Set any registers related to source format and buffer
+}
+
+mtk_jpeg_enc_set_dst()
+{
+        // Set any registers related to destination format and buffer
+}
+
+mtk_jpeg_enc_set_params()
+{
+        // Set any registers related to additional encoding parameters
+}
+
+mtk_jpeg_enc_device_run(enc, ctx)
+{
+        mtk_jpeg_enc_set_src(enc, src_buf, src_fmt);
+        mtk_jpeg_enc_set_dst(enc, dst_buf, dst_fmt);
+        mtk_jpeg_enc_set_params(enc, ctx);
+        // Trigger the hardware run
+}
+
+That is assuming src/dst_buf would be vb2_buffer and src/dst_fmt
+v4l2_pix_format_mplane. Does it make sense?
+
+Best regards,
+Tomasz
+
+>
+> Best Regards,
+> Xia Jiang
+> >
+> > [snip]
+> > > > > +
+> > > > > +       ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> > > > > +       ctx->colorspace = V4L2_COLORSPACE_JPEG,
+> > > > > +       ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > > > +       ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > > > +       ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
 > > > >
-> > > > Please take into account that breakage is an actual regression.
+> > > > Since we already have a v4l2_pix_format_mplane struct which has fields for
+> > > > the above 4 values, could we just store them there?
 > > > >
-> > > > > > > Also, it's pretty easy to have
-> > > > > > > cases where one module probes multiple device instances and loading it
-> > > > > > > in one order would break dpm_list order for one device and loading it
-> > > > > > > in another order would break it for another device. And there would be
-> > > > > > > no "proper" order to load modules (because module order != device
-> > > > > > > order).
-> > > > > >
-> > > > > > I'm not saying that the current code is perfect.  I'm saying that the
-> > > > > > fix as proposed adds too much cost for everybody who may not care IMO.
+> > > > Also, I don't see this driver handling the colorspaces in any way, but it
+> > > > seems to allow changing them from the userspace. This is incorrect, because
+> > > > the userspace has no way to know that the colorspace is not handled.
+> > > > Instead, the try_fmt implementation should always override the
+> > > > userspace-provided colorspace configuration with the ones that the driver
+> > > > assumes.
+> > > >
+> > > > > +       pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> > > > > +       pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> > > > > +
+> > > > > +       q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUYV,
+> > > > > +                                     MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> > > > > +       vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> > > > > +                                   fmt.pix_mp), q->fmt);
+> > > > > +       q->w = pix_mp->width;
+> > > > > +       q->h = pix_mp->height;
+> > > > > +       q->crop_rect.width = pix_mp->width;
+> > > > > +       q->crop_rect.height = pix_mp->height;
+> > > > > +       q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> > > > > +       q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> > > >
+> > > > Actually, do we need this custom mtk_jpeg_q_data struct? Why couldn't we
+> > > > just keep the same values inside the standard v4l2_pix_format_mplane
+> > > > struct?
+> > > I think that we need mtk_jpeg_q_data struct.If we delete it, how can we
+> > > know these values(w, h, sizeimage, bytesperline, mtk_jpeg_fmt) belong to
+> > > output or capture(output and capture's sizeimages are different, width
+> > > and height are differnt too for jpeg dec )?We have
+> > > s_fmt_vid_out_mplane/cap_mplane function to set these values.
+> > >
+> > > But we can use standard v4l2_pix_format_mplane struct replacing the w, h
+> > > bytesperline, sizeimage in mtk_jpeg_q_data struct like this:
+> > > struct mtk_jpeg_q_data{
+> > >     struct mtk_jpeg_fmt *fmt;
+> > >     struct v4l2_pix_format_mplane pix_mp;
+> > >     struct v4l2_rect enc_crop_rect
+> > > }
+> > > Then delete ctx->colorspace ctx->ycbcr_enc ctx->quantization
+> > > ctx->xfer_func, becuase v4l2_pix_format_mplane in q_data has contained
+> > > them and assign them for out_q and cap_q separately.
+> > >
+> > > WDYT?
+> >
+> > Sounds good to me. I was considering just making it like
+> >
+> > struct mtk_jpeg_ctx {
+> >       struct mtk_jpeg_fmt *src_fmt;
+> >       struct v4l2_pix_format_mplane src_pix_mp;
+> >       struct v4l2_rect src_crop;
+> >
+> >       struct mtk_jpeg_fmt *dst_fmt;
+> >       struct v4l2_pix_format_mplane dst_pix_mp;
+> >       struct v4l2_rect dst_crop;
+> > };
+> >
+> > but I like your suggestion as well, as long as custom data structures
+> > are not used to store standard information.
+> > [snip]
+> > > > > @@ -1042,8 +1619,12 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+> > > > >                 return jpeg_irq;
+> > > > >         }
 > > > > >
-> > > > > Ok, how about I don't do this reordering until we see the first
-> > > > > deferred probe request? Will that work for you? In that case, systems
-> > > > > with no deferred probing will not incur any reordering cost. Or if
-> > > > > reordering starts only towards the end, all the previous probes won't
-> > > > > incur reordering cost.
+> > > > > -       ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq, 0,
+> > > > > -                              pdev->name, jpeg);
+> > > > > +       if (jpeg->variant->is_encoder)
+> > > > > +               ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_enc_irq,
+> > > > > +                                      0, pdev->name, jpeg);
+> > > > > +       else
+> > > > > +               ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq,
+> > > > > +                                      0, pdev->name, jpeg);
 > > > >
-> > > > That first deferred probe request is more or less as of the first probe,
-> > > > since commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing when
-> > > > adding all top level devices"), at least on DT systems.
-> > >
-> > > The deferred probe reordering of devices to the end of dpm_list
-> > > started in 2012, so it is nothing new, and it demonstrably works for
-> > > devices where the dependencies are known to the driver core.
-> > >
-> > > That said, in the cases when the dependencies are known to the driver
-> > > core, it is also unnecessary to reorder dpm_list in
-> > > deferred_probe_work_func(), because the right ordering of it is going
-> > > to be determined elsewhere.
-> > >
-> > > Also commit 494fd7b7ad10 ("PM / core: fix deferred probe breaking
-> > > suspend resume order") is not the source of the problem here, because
-> > > the problem would have still been there without it, due to the
-> > > device_pm_move_last() that was there before, so the Fixes: tag
-> > > pointing to that commit is misleading.
-> > >
-> > > Now, because 716a7a259690 ("driver core: fw_devlink: Add support for
-> > > batching fwnode parsing") is an optimization and the regression is
-> > > present because of it AFAICS, the best way to address it at that point
-> > > would be to revert commit 716a7a259690 for 5.8 and maybe do the
-> > > optimization more carefully.
-> > >
-> > > Greg, what do you think?
+> > > > Rather than having "is_encoder" in the variant struct, would it make more
+> > > > sense to have "irq_handler" instead? That would avoid the explicit if.
+> > > Do you mean to delete "is_encoder"? It is used 8 times in the
+> > > driver.Should I move them all to the match data?
 > >
-> > I've been ignoreing this and letting you all sort it out :)
+> > Yes. It would make the code linear and the varability between the
+> > decoder and encoder would be self-contained in the variant struct.
 > >
-> > But if you think that patch should be reverted, I'll not object and will
-> > be glad to to it if this solves the issue.
+> > Best regards,
+> > Tomasz
 >
-> Well, if Geert can confirm that reverting commit 716a7a259690 makes
-> the problem go away, IMO this would be the most reasonable thing to do
-> at this stage of the cycle without risking that more regressions will
-> be introduced.
->
-> Geert?
-
-Reverting commit 716a7a25969003d8 ("driver core: fw_devlink: Add support
-for batching fwnode parsing") requires reverting commits
-fefcfc968723caf9 ("driver core: Remove check in
-driver_deferred_probe_force_trigger()") and 93d2e4322aa74c1a ("of:
-platform: Batch fwnode parsing when adding all top level devices"),
-too.
-
-While reverting the latter is sufficient to fix the regression for me, I
-can confirm that reverting all three fixes the issue, too.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
