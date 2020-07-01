@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE10AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802762073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B766020890
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 02:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcFylXjO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOZH3Nn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgGACYC (ORCPT
+        id S1726980AbgGACYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 22:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50948 "EHLO
+        Tue, 30 Jun 2020 22:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGACX6 (ORCPT
+        with ESMTP id S1726847AbgGACX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 22:23:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC9BC061755;
-        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s1so25093772ljo.0;
-        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
+        Tue, 30 Jun 2020 22:23:59 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A33C03E979;
+        Tue, 30 Jun 2020 19:23:58 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t9so12655218lfl.5;
+        Tue, 30 Jun 2020 19:23:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
-        b=ZcFylXjOLKEs1YEHNYW5SEnwvyP1m2KYyDK40/iSh+wd1xzgRYRzAkZ02SDRdHlvKS
-         FgrWvv/f3DqvqBTjLmLMu4Vgb37oufCQuhSiLv7Q8iMnxlMii3z2EN99y3ogpR5LzBEt
-         0fn0iX2x4kpfMChJJ1RtTXPIBNkK0+CXoEQIIOnJgB9wcneA3QNTxl5UBz6qmXB4MpD1
-         qLT+F+1ONyFbEv9w+pZzH42FrR1hpE8wt08Gr9xjhZWw4kJmx47RfgK8qOhTzI3Usqvf
-         EUJDevskWnGxAUq5YBorUMVQzkr7/o32+e8vp7FaZrropV+fV4n2v7q6GABdOBvgbR1r
-         CbKA==
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=WOZH3Nn9evGdNfNdegsmScfv681f/RyxGofCEPnYWGfspTEyGhonNre+yGBHn5bFfa
+         sxTcaYeEaMnRWVLKe6dvl953jlQGCQ90o4ua4ivcGyBeLWZRJOINabmsrtxixKEvjfTs
+         rbOv9o6+OeD7sJ5vR+COPvihHs5V3r5hDipoEF41JSOpjhY4i1iU3acV2Zg4TXZ1LabF
+         J/TkePIkZrTOmGmyxPRnEKauahz/hGAbNE3AhAXj+cq3pUaNCKcoSaLRj/r2e3ZlZj3b
+         NageNukvNfawQfIsidTyucHIEs5hhntMok1Rxq3MsKd2uiw0jxmGMBHY+EAUfqj4e1Jt
+         6Dzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
-        b=AmZve8DvSTjSPmOxmPGPcOevznLoFzJA/pmVZWjHK+oPjGzyqTtIO8WoPDvmylaUpL
-         SK+5+dxLBBQPxcOEyzGuBS5HXJmx/SNDtKTkIQ3PTZveul99tIh7YGI9JlCNmUKZowyT
-         ohD7w4tu8/0tJRMCY/UIl6QhonZF0zGkaIckKaF8QpEqZyYj5fvVbGU5eTceUfSFVP3u
-         wv0s5dh1QeRcHCj7AASAWWigxEb8f77jxad3+di6P0lNTbW71g8tF89mfQzUGMJhmiMT
-         uT3QFKrwUHCf3Mbm1ZV45FITFMIVDfmx3UkDSqYOD55DzR0gl6+CK6Vd/h1psjM3Tb/X
-         IEfA==
-X-Gm-Message-State: AOAM531adIjyQN0mNxptzElLSk59h3dJKBH61WDdxq3Rv1AL5Qll/u46
-        ujDPYL7Suym3z3cJ+K+eyldPU9O8TtM=
-X-Google-Smtp-Source: ABdhPJzLVu+pc8eNoqlmFJWxGvBMY4WUCgYsygKPGHe9uic2XNC86UNcEKaXm3lAtRK2Rl63z8Fk0Q==
-X-Received: by 2002:a05:651c:3cf:: with SMTP id f15mr9939751ljp.365.1593570236235;
-        Tue, 30 Jun 2020 19:23:56 -0700 (PDT)
+        bh=a5nZg8KheWIS8ObVaNA2RcCFchGpMXgRR/HHGM1BHBw=;
+        b=WRTcdkOqwiIHdrLnBxCfFqRZI+cw7tifWscqCCwKKflQBATydbJWRHHR4dflvNuS3h
+         tgmumx29mbYJAU5ljYq6BpbQ6Ddd/aT5n/TuCBiYhLDXp5ck2NW02XPmKr3BhdcgMaKY
+         viZxcL6Zl+r2n56cJW7Cq1qVWCADCNWrrP4txZHf9CbCvmtjZ2NhwHUCS75LutT8MeUx
+         eKioCEk7rdmvnn43Pe3udX6LlgOk+eS6G6R4ajJYWsHNcHbfpS5o2c9IilGZFoch43AF
+         kw5fy9cyzTkBA2dnVLwBkdQD0eh/bScJq576TLdctZs2BnyaQfxw2WIpcYswTR8dQ4aO
+         h9ng==
+X-Gm-Message-State: AOAM530voMtzvE2OqEnnI06v+aCyGJHIZXRKM5AMf+vkP+sg5uIr0p3O
+        3I/cEo2l8DejvuKXjRnYDYQ=
+X-Google-Smtp-Source: ABdhPJxLkVvzwxeFv14SPpaqlsYj0gMEYB9Z7wtPKtzeNL3g1IL8KbUjYp/yAgjzyzyrDcB8Hs5VPA==
+X-Received: by 2002:ac2:569c:: with SMTP id 28mr13540340lfr.195.1593570237240;
+        Tue, 30 Jun 2020 19:23:57 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id f21sm1303557ljj.121.2020.06.30.19.23.55
+        by smtp.gmail.com with ESMTPSA id f21sm1303557ljj.121.2020.06.30.19.23.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 19:23:55 -0700 (PDT)
+        Tue, 30 Jun 2020 19:23:56 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/4] drm/tegra: output: Don't leak OF node on error
-Date:   Wed,  1 Jul 2020 05:21:25 +0300
-Message-Id: <20200701022128.12968-2-digetx@gmail.com>
+Subject: [PATCH v9 2/4] drm/tegra: output: Support DRM bridges
+Date:   Wed,  1 Jul 2020 05:21:26 +0300
+Message-Id: <20200701022128.12968-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200701022128.12968-1-digetx@gmail.com>
 References: <20200701022128.12968-1-digetx@gmail.com>
@@ -79,49 +79,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OF node should be put before returning error in tegra_output_probe(),
-otherwise node's refcount will be leaked.
+Newer Tegra device-trees will specify a video output graph which involves
+a bridge. This patch adds initial support for the DRM bridges to the Tegra
+DRM output.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/output.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/tegra/drm.h    |  2 ++
+ drivers/gpu/drm/tegra/output.c | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
+diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+index b25443255be6..f38de08e0c95 100644
+--- a/drivers/gpu/drm/tegra/drm.h
++++ b/drivers/gpu/drm/tegra/drm.h
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/consumer.h>
+ 
+ #include <drm/drm_atomic.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
+@@ -116,6 +117,7 @@ struct tegra_output {
+ 	struct device_node *of_node;
+ 	struct device *dev;
+ 
++	struct drm_bridge *bridge;
+ 	struct drm_panel *panel;
+ 	struct i2c_adapter *ddc;
+ 	const struct edid *edid;
 diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index e36e5e7c2f69..a6a711d54e88 100644
+index a6a711d54e88..ccd1421f1b24 100644
 --- a/drivers/gpu/drm/tegra/output.c
 +++ b/drivers/gpu/drm/tegra/output.c
-@@ -102,10 +102,10 @@ int tegra_output_probe(struct tegra_output *output)
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_of.h>
+ #include <drm/drm_panel.h>
+ #include <drm/drm_simple_kms_helper.h>
+ 
+@@ -99,8 +100,19 @@ int tegra_output_probe(struct tegra_output *output)
+ 	if (!output->of_node)
+ 		output->of_node = output->dev->of_node;
+ 
++	err = drm_of_find_panel_or_bridge(output->of_node, -1, -1,
++					  &output->panel, &output->bridge);
++	if (err && err != -ENODEV)
++		return err;
++
  	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
  	if (panel) {
++		/*
++		 * Don't mix nvidia,panel phandle with the graph in a
++		 * device-tree.
++		 */
++		WARN_ON(output->panel || output->bridge);
++
  		output->panel = of_drm_find_panel(panel);
-+		of_node_put(panel);
-+
- 		if (IS_ERR(output->panel))
- 			return PTR_ERR(output->panel);
--
--		of_node_put(panel);
- 	}
+ 		of_node_put(panel);
  
- 	output->edid = of_get_property(output->of_node, "nvidia,edid", &size);
-@@ -113,13 +113,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	ddc = of_parse_phandle(output->of_node, "nvidia,ddc-i2c-bus", 0);
- 	if (ddc) {
- 		output->ddc = of_find_i2c_adapter_by_node(ddc);
-+		of_node_put(ddc);
-+
- 		if (!output->ddc) {
- 			err = -EPROBE_DEFER;
--			of_node_put(ddc);
- 			return err;
- 		}
--
--		of_node_put(ddc);
- 	}
- 
- 	output->hpd_gpio = devm_gpiod_get_from_of_node(output->dev,
 -- 
 2.26.0
 
