@@ -2,122 +2,104 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44616C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2860FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A69120771
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F2820771
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 01:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="Ze5edmsz"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="By1Sl2S8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgGABd4 (ORCPT
+        id S1726382AbgGABex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 21:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgGABdy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 21:33:54 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC05C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id lx13so4052782ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=Ze5edmszHxmHc+eoA3XPuNrJory3gisovndE6X2LIUGAgs7R+rm/wiwrUx+/NZ4nDv
-         MlW9lobaAbeZfQDHOVVeHB6gGZr3XIpDhsJDzU8ZKuSNl4P520bybbN+UVOBJq5cKfrT
-         2W4YyqS7MChAYDWrygjxus6SVOnqHtgSUKO8qHbQtIy9RFh2IvcUAw1HT+uS3xE8AuEX
-         TGtbH1+dlihzi4qyO2pJQgZU3FztFCbk10RLDxiwT7oUPaJYOLabSbf+l3JLPupZyvFj
-         od+0TgOoXJR3YH9kaH8tek0LF9MMhMEbSDVyvbZd/F5/WG1yz9e1YNHiWXwkZafTdX7R
-         hOJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=HhPjOSMV8e4X3fezL24eOlhfAScarSdREvfIYq2nv/6YhEZb5HOwQxyuMIte+AihEe
-         hzinM5vPT3XT1hN41GPywWiCoiXZRQZa98GeSymzBCgd6b8XbwmBSK1+ZwwbCfYjQR4h
-         XqoPPjp3ux6qwRh8GW3gUx0p5v83x9dCXmuq7gWfNLsL5GOoBWVwVFF1T3gkmMeNx/h/
-         HSvgI76zwDNxUIEqljaI3k0fcMSFqR9Tgh8+ERyaEEFe9TDxCKyGs29N3MZIP3fXgeSo
-         MDvizKdcYGKo2hWYx1QFQ6Q1dCsycRKDWdiWs352MmJdJbKE6LReNDaETO5wZG9kJ/96
-         eEgg==
-X-Gm-Message-State: AOAM533EKw2YMiMFTfKpgyLNzj39pZPAoCr7lSbUlOUkR4h36VzHLTKm
-        mHTFBe29WctLRxijDNGCQXFN8Q==
-X-Google-Smtp-Source: ABdhPJxI0WQk14+Ivo5cdeI8jHa73I3z+K18yjH+Q4Lpumd9g0c4kuF6XkdkxR7cidzvTjndU+H8pg==
-X-Received: by 2002:a17:906:b354:: with SMTP id cd20mr18663123ejb.296.1593567232608;
-        Tue, 30 Jun 2020 18:33:52 -0700 (PDT)
-Received: from localhost.localdomain ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
-        by smtp.gmail.com with ESMTPSA id d23sm3348571eja.27.2020.06.30.18.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 18:33:51 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-Date:   Wed,  1 Jul 2020 03:33:20 +0200
-Message-Id: <20200701013320.130441-3-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
-References: <20200701013320.130441-1-drew@beagleboard.org>
+        Tue, 30 Jun 2020 21:34:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38313 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgGABex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 21:34:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49xP0p6CHSz9sQt;
+        Wed,  1 Jul 2020 11:34:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593567291;
+        bh=3ukyBJG0kTFDpGGEh20Qlaet1jTzYAghsJP37TMFTYM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=By1Sl2S8F6G5C8OF0ZazNkhaMynOSO3zS6U3UXlXhyoj6N7LS0uHDtGWwrC756chH
+         gug3o/oMVwS2B3hx79kU74M/NDnJ9SmIT4HIBbDZl8kAaifPJT+JVI/8gduHbuLvST
+         h/qbcB7jlZk4pHzXBatOcFwYVuxrd+drd/a0YYRJ6DNafJgrgAWYTucAYsSkkJp7h8
+         qRmX5476NbVRwIBMSPmTUA9ZnxSXn+PoJUWf+bynRdE7LltxYFbZhSK6kMMQL+NYKC
+         ryETccobByXdzLllCKldMNZE+XxP4yJlWvoQ8DbjLr0ABuQb+eIjMNJDZ0r3oPNfrY
+         YwIdV4Ec7gVlw==
+Date:   Wed, 1 Jul 2020 11:34:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: linux-next: manual merge of the rcu tree with the kbuild tree
+Message-ID: <20200701113448.3119f64f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/LbbdNw.r9ne.vHhmNn7xx/+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
-requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
-conf and pin mux values separate.
+--Sig_/LbbdNw.r9ne.vHhmNn7xx/+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
- include/dt-bindings/pinctrl/omap.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index a9cbefc80c0c..3141590e5889 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -278,7 +278,7 @@ scm: scm@0 {
- 				am33xx_pinmux: pinmux@800 {
- 					compatible = "pinctrl-single";
- 					reg = <0x800 0x238>;
--					#pinctrl-cells = <1>;
-+					#pinctrl-cells = <2>;
- 					pinctrl-single,register-width = <32>;
- 					pinctrl-single,function-mask = <0x7f>;
- 				};
-diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-index 625718042413..2d2a8c737822 100644
---- a/include/dt-bindings/pinctrl/omap.h
-+++ b/include/dt-bindings/pinctrl/omap.h
-@@ -65,7 +65,7 @@
- #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
--#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
-+#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
- 
- /*
-  * Macros to allow using the offset from the padconf physical address
--- 
-2.25.1
+Today's linux-next merge of the rcu tree got a conflict in:
 
+  kernel/kcsan/Makefile
+
+between commit:
+
+  f7c28e224da6 ("kbuild: remove cc-option test of -fno-stack-protector")
+
+from the kbuild tree and commits:
+
+  2839a232071f ("kcsan: Simplify compiler flags")
+  61d56d7aa5ec ("kcsan: Disable branch tracing in core runtime")
+
+from the rcu tree.
+
+I fixed it up (I just used the rcu tree version) and can carry the fix
+as necessary. This is now fixed as far as linux-next is concerned, but
+any non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LbbdNw.r9ne.vHhmNn7xx/+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl776DgACgkQAVBC80lX
+0GzUyAf/b6pF4g88e7Ygc0CBSiGjsiSuBCPQdWRXNWgkSmeii+0Cu3nBmIHVaQNT
+BaN8HlMEk2wdKsjrZPqNaaSwamLeI3mpT5eS9tgkrL9VG2H/xGzvDgSVZ5TKMRmW
+FKODItOD8FDK+PCjFduJMuqYPlAE/6RdGDpCd3Dk9S3SsqNNf9nqyfDSoGZg3P4o
++7yhdcy1Ir2gqfxOah9Y8kW6ImLrgRymgkFb41f39vxHESVVDyrste7jvUODHvoH
+zTFJv7WF4Tl244AASgpg8NyZpkbE9GtQgAjJ0/SYdmbu+7WrODjvYEOqR6sbpLa5
+ccXryN/SStERFQfVTOaWEq/ahPYmRg==
+=IDEy
+-----END PGP SIGNATURE-----
+
+--Sig_/LbbdNw.r9ne.vHhmNn7xx/+--
