@@ -2,155 +2,82 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B02DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE70C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0036B20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593638682;
-	bh=y7Tj7NAUhvu0M9VijaEG0Jdd9zOA89epyoyiU3TDZxM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=yH/Oa91XlerwE+0wyLW+OUf5eNIVujiGdC6B5fDU0lxfiy0w7J5a0/l06r2wJLLaK
-	 L6ooUIqDcXdwfhRhzosXew+VNUB6G12Kgd/akYHa8FrHH1KHdFo8uFkltAzphuR50a
-	 MhQDu9Fxz1LrCTky3ELRTUcDgIsEdHW1vfHS42jo=
+	by mail.kernel.org (Postfix) with ESMTP id 7BB34206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:25:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgGAVYk (ORCPT
+        id S1727848AbgGAVZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 17:25:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48842 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGAVYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:24:40 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3C9B2085B;
-        Wed,  1 Jul 2020 21:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593638679;
-        bh=y7Tj7NAUhvu0M9VijaEG0Jdd9zOA89epyoyiU3TDZxM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=j1Z+d1i5LcEvbJzOmf03DnZGUtej26H5zKgrH68wE1n1Gb5zYpaO77D08hZfYD3SA
-         a/bPOI2iSGCNdUI9smIf6JON7/ej/h0E5t3Dvq2CQtJqTqVbtAZuiFzFGEV9N7PDqU
-         kQHb7jW7OsaqMSAq9/65dw3B6Nwpfx4sdE3xXs/8=
-Date:   Wed, 1 Jul 2020 16:24:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] vfio/pci: add device blocklist
-Message-ID: <20200701212437.GA3660694@bjorn-Precision-5520>
+        id S1725915AbgGAVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:25:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BB761AAE8;
+        Wed,  1 Jul 2020 21:25:14 +0000 (UTC)
+Subject: Re: [PATCH v6 3/6] mm/workingset: extend the workingset detection for
+ anon LRU
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592371583-30672-4-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <8d12fc23-8731-c5f5-e38c-f40bfecb067f@suse.cz>
+Date:   Wed, 1 Jul 2020 23:25:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701110302.75199-3-giovanni.cabiddu@intel.com>
+In-Reply-To: <1592371583-30672-4-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:02:59PM +0100, Giovanni Cabiddu wrote:
-> Add blocklist of devices that by default are not probed by vfio-pci.
+On 6/17/20 7:26 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-> Devices in this list may be susceptible to untrusted application, even
-> if the IOMMU is enabled. 
+Hi,
 
-I can't quite parse this sentence.  I think it means something about
-these devices being able to bypass an IOMMU or otherwise cause
-problems via DMA.  It would be nice to know exactly what problem this
-is avoiding.
+I would adjust the subject, as it sounds like the patch does the whole
+workingset detection, not just preparation.
+How about:
 
-I assume *all* applications are untrusted, right?  The wording above
-makes it sound like there may be a class of trusted applications in
-addition to the untrusted ones.  But I don't see anything like that in
-the patch.
+mm/workingset: prepare the workingset infrastructure for anon LRU
 
-> To be accessed via vfio-pci, the user has to
-> explicitly disable the blocklist.
-> 
-> The blocklist can be disabled via the module parameter disable_blocklist.
-> 
-> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 7c0779018b1b..ea5904ca6cbf 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
->  MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
->  #endif
->  
-> +static bool disable_blocklist;
-> +module_param(disable_blocklist, bool, 0444);
-> +MODULE_PARM_DESC(disable_blocklist, "Disable device blocklist. If set, i.e. blocklist disabled, then blocklisted devices are allowed to be probed by vfio-pci.");
-> +
->  static inline bool vfio_vga_disabled(void)
->  {
->  #ifdef CONFIG_VFIO_PCI_VGA
-> @@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
->  #endif
->  }
->  
-> +static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
-> +{
-> +	return false;
-> +}
-> +
-> +static bool vfio_pci_is_blocklisted(struct pci_dev *pdev)
-> +{
-> +	if (!vfio_pci_dev_in_blocklist(pdev))
-> +		return false;
-> +
-> +	if (disable_blocklist) {
-> +		pci_warn(pdev,
-> +			 "device blocklist disabled - allowing device %04x:%04x.\n",
-> +			 pdev->vendor, pdev->device);
-> +		return false;
-> +	}
-> +
-> +	pci_warn(pdev, "%04x:%04x is blocklisted - probe will fail.\n",
-> +		 pdev->vendor, pdev->device);
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * Our VGA arbiter participation is limited since we don't know anything
->   * about the device itself.  However, if the device is the only VGA device
-> @@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	struct iommu_group *group;
->  	int ret;
->  
-> +	if (vfio_pci_is_blocklisted(pdev))
-> +		return -EINVAL;
-> +
->  	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
->  		return -EINVAL;
->  
-> @@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
->  
->  	vfio_pci_fill_ids();
->  
-> +	if (disable_blocklist)
-> +		pr_warn("device blocklist disabled.\n");
-> +
->  	return 0;
->  
->  out_driver:
-> -- 
-> 2.26.2
-> 
+> In the following patch, workingset detection will be applied to
+> anonymous LRU. To prepare it, this patch adds some code to
+> distinguish/handle the both LRUs.
+
+How about:
+To prepare for this, this patch splits workingset event counters for refault,
+activate and restore into anon and file variants, as well as the refaults
+counter in struct lruvec.
+
+> v6: do not introduce a new nonresident_age for anon LRU since
+> we need to use *unified* nonresident_age to implement workingset
+> detection for anon LRU.
+
+Again, v6 update info shouldn't go to changelog. In this case I think it doesn't
+need mentioning at all, at least not in this patch.
+
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
