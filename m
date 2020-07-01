@@ -2,110 +2,146 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C68AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFA620722
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593596001;
-	bh=Q7gpEoPkh6bA0z/x1q2X8NK5Oy7GN6NSJUFo0hDV3Ng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IBuVcAInEctIyAOf2/3nWPII520CKKtvkeU0Z639KcSnLN0PFJ+PxYrZnb6fMTxSU
-	 JR6vjpfEGgGDJZZAZZRWp1a+VVoT56kNwhu+elsC8oMHr6n01eVm9hGkr4ePlJW77I
-	 vbD3N7ZVUC+OTjFG36u4EajAs97DZ7dYAD/aDStk=
+	by mail.kernel.org (Postfix) with ESMTP id 3A00E20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 09:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+MWlv5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgGAJdU (ORCPT
+        id S1729243AbgGAJdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 05:33:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgGAJdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 05:33:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E30D20722;
-        Wed,  1 Jul 2020 09:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593595998;
-        bh=Q7gpEoPkh6bA0z/x1q2X8NK5Oy7GN6NSJUFo0hDV3Ng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PrJBBnhirtBPQWA1S4Fe5yOp4m1YwcWuw+kJWJzQeh8DmWBMvOrftcVAB2jzQZq3I
-         Yv6fql3efRC0U3g4T0nYdGG3FEh4PMtNJnglU76jgyiBCfdDHIblP4PpGtEo+0SdT2
-         T/oapkBtbN3MvbHxUtzPFCToKaXzGJzI/uSncBY4=
-Date:   Wed, 1 Jul 2020 10:33:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "dianders@chromium.org" <dianders@chromium.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "swboyd@chromium.org" <swboyd@chromium.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bleung@chromium.org" <bleung@chromium.org>
-Subject: Re: [PATCH] spi: Avoid setting the chip select if we don't need to
-Message-ID: <20200701093316.GA5385@sirena.org.uk>
-References: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
- <522b1d9297604a1cfa93fdc54a3cd0773cf7580a.camel@analog.com>
+        Wed, 1 Jul 2020 05:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgGAJdv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 05:33:51 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0E6C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 02:33:50 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f8so13842292ljc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 02:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FXVNWOucI6EFBlae54Jt5ATW+9aYYLThSen8wW5XL98=;
+        b=N+MWlv5d/FXup8ILTXoea15sJMo76qgGssVMC0+yvlLxtz7pDBS5PLLHzyAj3OG/qd
+         cnmy9y+V66jkAnPsSAYNwjs31IaaDYtbX4jAiQXT0YrAiWigSY2NxRnY+3L0tQ02cIey
+         7FlHiDGkQ96aaZ/s6KiERKxjurCUzmVnoQ2z73cMGvr3dsvJipEAlRzYRaK3phM+xTfM
+         M4HXFPPBjmOFZAxxRJfooqx7q8Lt6BNXCEi3zazHg8iTSZQc4QaBl5pst/U/p3p8xbiJ
+         m7qUo8sa+9ExT4OOLIHAhvaIgWZv+WgOUf3kqvWL6BwxS/Sd5KypFOc3tHSCKlHlvLbN
+         hEFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FXVNWOucI6EFBlae54Jt5ATW+9aYYLThSen8wW5XL98=;
+        b=UpJ9hGcatOX6YA4zEcm1Teshg/Rs2XSB39xIaQjWtsNO+36U73SJI5lNce8jxTCTnM
+         IaX+8VrlXMzBExWPpzDxHRPr7ryhy7N7Jpi3oHhbxtPkFs2/cwvErATjNBt8H9OIrzm5
+         QKWr9ygoOoTb4mQxxN+GiwvRB/T6ZL8mDbbqaExNFQQhMG5FTk4Rg2fF+M+dFetpzPe6
+         dBx8ro2QFw8KjPnMUg0j7QsAyMX6e67qCOh4wKIAcPgz/lQygRnfRUuk4Vmj6Q8l5bi+
+         tHG4OCHE30cU9dBU/Mr9JQEhJ7N/nmfV2uNlXMAL15YQ7k/CNZ3fxOXxUfV5POdxHBIu
+         XyAA==
+X-Gm-Message-State: AOAM533XL0hCXEkDJkPdSUmSIRl9JF91nQ2OGujYLiOOuNdHtIMDLpJi
+        9jXmD0JGwnvLwo3oRsGHcO+LjhtAi2c040pO0dQt2Q==
+X-Google-Smtp-Source: ABdhPJzWLRNJD27Z7gbJanMdExaMCHQCltjsFuFwRAFU8qXv/ZmPe2JLRAGFSFeyuTZDcu0xZDwmNUF3OBw1bqThA5w=
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr13337944lja.152.1593596029145;
+ Wed, 01 Jul 2020 02:33:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
-Content-Disposition: inline
-In-Reply-To: <522b1d9297604a1cfa93fdc54a3cd0773cf7580a.camel@analog.com>
-X-Cookie: marriage, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+ <20200625144509.17918-3-daniel.lezcano@linaro.org> <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
+ <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org>
+In-Reply-To: <0fe6837f-9b44-4578-23f2-3e4932d01122@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 1 Jul 2020 15:03:38 +0530
+Message-ID: <CAP245DUG-OsSD-_CucMMQ26HpzjJhn0emfq_go923NsDq6RqOg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 1, 2020 at 2:56 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> On 30/06/2020 13:47, Amit Kucheria wrote:
+> > On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> In order to set the scene for the new generic netlink thermal
+> >> management and notifications, let remove the old dead code remaining
+> >
+> > s/management/management api/
+> >
+> > s/let/let's/
+> >
+> >> in the uapi headers.
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+> >>  include/linux/thermal.h      |  5 -----
+> >>  include/uapi/linux/thermal.h | 12 +-----------
+> >>  2 files changed, 1 insertion(+), 16 deletions(-)
+> >>
+> >> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> >> index faf7ad031e42..fc93a6348082 100644
+> >> --- a/include/linux/thermal.h
+> >> +++ b/include/linux/thermal.h
+> >> @@ -302,11 +302,6 @@ struct thermal_zone_params {
+> >>         int offset;
+> >>  };
+> >>
+> >> -struct thermal_genl_event {
+> >> -       u32 orig;
+> >> -       enum events event;
+> >> -};
+> >> -
+> >>  /**
+> >>   * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
+> >>   *
+> >> diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
+> >> index 96218378dda8..22df67ed9e9c 100644
+> >> --- a/include/uapi/linux/thermal.h
+> >> +++ b/include/uapi/linux/thermal.h
+> >> @@ -6,21 +6,12 @@
+> >>
+> >>  /* Adding event notification support elements */
+> >>  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
+> >> -#define THERMAL_GENL_VERSION                    0x01
+> >> +#define THERMAL_GENL_VERSION                    0x02
+> >
+> > This hunk should be removed since you set version back to 1 in the
+> > next patch and we don't actually intend to bump the version yet.
+>
+> Well, I've been very strict here for git-bisecting.
+>
+> I move to V2 because of the removal, but when adding the new genetlink
+> code, the family name changed, so we returned back to the V1 as it is a
+> new genetlink thermal brand.
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't understand the move to v2 for an empty skeleton UAPI. For the
+purposes of bisection, couldn't you just remove all the v1 UAPI (w/o
+bumping to v2) and then add a new UAPI in the next patch?
 
-On Wed, Jul 01, 2020 at 06:26:24AM +0000, Ardelean, Alexandru wrote:
-> On Mon, 2020-06-29 at 16:41 -0700, Douglas Anderson wrote:
+> The name is change because it is no longer event based but also sampling
+> and commands.
 
-> > +	spi->controller->last_cs_enable = enable;
-> > +	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
+In this case, just to avoid any confusion, the new UAPI could be v2
+making the transition clear in case of bisection.
 
-> I don't feel like this is the best approach for the SPI CS handling,
-> because it's pretty difficult to guess the last CS state, and whether this
-> return would cause other weirder issues [like not toggling CS when it
-> should].
+I'm afraid the v1->v2->v1 is a bit more confusing.
 
-There's no guesswork involved here - the only thing that should be
-setting the chip select is the SPI core so other than at startup we
-always know the state of the chip select.
-
-> Maybe a question is: when should this CS be toggled [or not]?
-> Is it between 2 calls of spi_transfer_one_message() or between 2
-> spi_transfers?
-> Or, is "xfer->cs_change == 1" where it shouldn't be?
-
-This is well documented, it's asserted while a message is being
-transferred unless changed by cs_change in which case we do whatever the
-opposite of the default action is.
-
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl78WFgACgkQJNaLcl1U
-h9CK7gf+Mr0ecVOXY5ISDr+Ey9IaXHmxgN6V0Z8Clkb7HJ6BM3T1BaHq9IoB8Sag
-ZluyKjIzXpzKgUwXHwWuwVAB+N4TNMsNn8tvDsEDtqw+Bdt0TSrDCp8jHsNIkq4g
-vDCqDsjiVNe67ouQLATkV1hMfn4GN72hNvjLR7waEnztE0e0GbIkVjq5Qa+zcXta
-6fUl9EKYcoTUFqeFgp8b1WuIuvi4zLW7ryiQLYDEIKVJOrmdYrE5t7PWbmLfeivJ
-uGCFHgUCdHRhc1wOGVd+7DZZo404A+AobO+/gBj7mzx8sDnbr6vCtEOt2iUA3rFZ
-C+6N6Xh4an71mefmNEqWH2YJ08kHVw==
-=KyJ9
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
+/Amit
