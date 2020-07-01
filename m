@@ -2,390 +2,155 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B02DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1662C20853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="X82jdnmb"
+	by mail.kernel.org (Postfix) with ESMTP id 0036B20853
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 21:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593638682;
+	bh=y7Tj7NAUhvu0M9VijaEG0Jdd9zOA89epyoyiU3TDZxM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=yH/Oa91XlerwE+0wyLW+OUf5eNIVujiGdC6B5fDU0lxfiy0w7J5a0/l06r2wJLLaK
+	 L6ooUIqDcXdwfhRhzosXew+VNUB6G12Kgd/akYHa8FrHH1KHdFo8uFkltAzphuR50a
+	 MhQDu9Fxz1LrCTky3ELRTUcDgIsEdHW1vfHS42jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgGAVYH (ORCPT
+        id S1727845AbgGAVYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 17:24:07 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39553 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGAVYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 17:24:06 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Wed, 1 Jul 2020 17:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgGAVYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 17:24:40 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1343D22EDB;
-        Wed,  1 Jul 2020 23:24:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593638643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+3aEdivimryDZBSKjFuPi0PkZcAYhem+hA7t/pdN/sY=;
-        b=X82jdnmbqI/hR8u+2IN9Ggbgl5DkVS5CdNPWFss7FGcvl+RXWvdXiy1l9Cm8G0U/eOH4/Y
-        Qw5DmCy9P6SF8jxSqSD4Zi4ASzpLGah1WH3MzaN40cyeaNRPlNXGJnRBBMoitoitbUuu/b
-        bfHfBASiwaOWvE1hwMmObX1DxDOjDwc=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Michael Walle <michael@walle.cc>,
-        Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] mfd: remove smsc-ece1099 MFD driver
-Date:   Wed,  1 Jul 2020 23:23:48 +0200
-Message-Id: <20200701212348.8085-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C9B2085B;
+        Wed,  1 Jul 2020 21:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593638679;
+        bh=y7Tj7NAUhvu0M9VijaEG0Jdd9zOA89epyoyiU3TDZxM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=j1Z+d1i5LcEvbJzOmf03DnZGUtej26H5zKgrH68wE1n1Gb5zYpaO77D08hZfYD3SA
+         a/bPOI2iSGCNdUI9smIf6JON7/ej/h0E5t3Dvq2CQtJqTqVbtAZuiFzFGEV9N7PDqU
+         kQHb7jW7OsaqMSAq9/65dw3B6Nwpfx4sdE3xXs/8=
+Date:   Wed, 1 Jul 2020 16:24:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
+        cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] vfio/pci: add device blocklist
+Message-ID: <20200701212437.GA3660694@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701110302.75199-3-giovanni.cabiddu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This MFD driver has no user. The keypad driver of this device never made
-it into the kernel. Therefore, this driver is useless. Remove it.
+On Wed, Jul 01, 2020 at 12:02:59PM +0100, Giovanni Cabiddu wrote:
+> Add blocklist of devices that by default are not probed by vfio-pci.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Cc: Sourav Poddar <sourav.poddar@ti.com>
----
- Documentation/driver-api/index.rst        |   1 -
- Documentation/driver-api/smsc_ece1099.rst |  60 -------------
- drivers/mfd/Kconfig                       |  12 ---
- drivers/mfd/Makefile                      |   1 -
- drivers/mfd/smsc-ece1099.c                |  87 ------------------
- include/linux/mfd/smsc.h                  | 104 ----------------------
- 6 files changed, 265 deletions(-)
- delete mode 100644 Documentation/driver-api/smsc_ece1099.rst
- delete mode 100644 drivers/mfd/smsc-ece1099.c
- delete mode 100644 include/linux/mfd/smsc.h
+> Devices in this list may be susceptible to untrusted application, even
+> if the IOMMU is enabled. 
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 6567187e7687..1397a30188eb 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -98,7 +98,6 @@ available subsections can be seen below.
-    rfkill
-    serial/index
-    sm501
--   smsc_ece1099
-    switchtec
-    sync_file
-    vfio-mediated-device
-diff --git a/Documentation/driver-api/smsc_ece1099.rst b/Documentation/driver-api/smsc_ece1099.rst
-deleted file mode 100644
-index 079277421eaf..000000000000
---- a/Documentation/driver-api/smsc_ece1099.rst
-+++ /dev/null
-@@ -1,60 +0,0 @@
--=================================================
--Msc Keyboard Scan Expansion/GPIO Expansion device
--=================================================
--
--What is smsc-ece1099?
------------------------
--
--The ECE1099 is a 40-Pin 3.3V Keyboard Scan Expansion
--or GPIO Expansion device. The device supports a keyboard
--scan matrix of 23x8. The device is connected to a Master
--via the SMSC BC-Link interface or via the SMBus.
--Keypad scan Input(KSI) and Keypad Scan Output(KSO) signals
--are multiplexed with GPIOs.
--
--Interrupt generation
----------------------
--
--Interrupts can be generated by an edge detection on a GPIO
--pin or an edge detection on one of the bus interface pins.
--Interrupts can also be detected on the keyboard scan interface.
--The bus interrupt pin (BC_INT# or SMBUS_INT#) is asserted if
--any bit in one of the Interrupt Status registers is 1 and
--the corresponding Interrupt Mask bit is also 1.
--
--In order for software to determine which device is the source
--of an interrupt, it should first read the Group Interrupt Status Register
--to determine which Status register group is a source for the interrupt.
--Software should read both the Status register and the associated Mask register,
--then AND the two values together. Bits that are 1 in the result of the AND
--are active interrupts. Software clears an interrupt by writing a 1 to the
--corresponding bit in the Status register.
--
--Communication Protocol
------------------------
--
--- SMbus slave Interface
--	The host processor communicates with the ECE1099 device
--	through a series of read/write registers via the SMBus
--	interface. SMBus is a serial communication protocol between
--	a computer host and its peripheral devices. The SMBus data
--	rate is 10KHz minimum to 400 KHz maximum
--
--- Slave Bus Interface
--	The ECE1099 device SMBus implementation is a subset of the
--	SMBus interface to the host. The device is a slave-only SMBus device.
--	The implementation in the device is a subset of SMBus since it
--	only supports four protocols.
--
--	The Write Byte, Read Byte, Send Byte, and Receive Byte protocols are the
--	only valid SMBus protocols for the device.
--
--- BC-LinkTM Interface
--	The BC-Link is a proprietary bus that allows communication
--	between a Master device and a Companion device. The Master
--	device uses this serial bus to read and write registers
--	located on the Companion device. The bus comprises three signals,
--	BC_CLK, BC_DAT and BC_INT#. The Master device always provides the
--	clock, BC_CLK, and the Companion device is the source for an
--	independent asynchronous interrupt signal, BC_INT#. The ECE1099
--	supports BC-Link speeds up to 24MHz.
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index be8053d6fa1f..7e72ed3441f1 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1193,18 +1193,6 @@ config MFD_SKY81452
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called sky81452.
- 
--config MFD_SMSC
--	bool "SMSC ECE1099 series chips"
--	depends on I2C=y
--	select MFD_CORE
--	select REGMAP_I2C
--	help
--	  If you say yes here you get support for the
--	  ece1099 chips from SMSC.
--
--	  To compile this driver as a module, choose M here: the
--	  module will be called smsc.
--
- config MFD_SC27XX_PMIC
- 	tristate "Spreadtrum SC27xx PMICs"
- 	depends on ARCH_SPRD || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9e6e18336f14..7e26e7f98ac2 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -127,7 +127,6 @@ obj-$(CONFIG_MFD_CPCAP)		+= motorola-cpcap.o
- obj-$(CONFIG_MCP)		+= mcp-core.o
- obj-$(CONFIG_MCP_SA11X0)	+= mcp-sa11x0.o
- obj-$(CONFIG_MCP_UCB1200)	+= ucb1x00-core.o
--obj-$(CONFIG_MFD_SMSC)        += smsc-ece1099.o
- obj-$(CONFIG_MCP_UCB1200_TS)	+= ucb1x00-ts.o
- 
- ifeq ($(CONFIG_SA1100_ASSABET),y)
-diff --git a/drivers/mfd/smsc-ece1099.c b/drivers/mfd/smsc-ece1099.c
-deleted file mode 100644
-index 57b792eb58fd..000000000000
---- a/drivers/mfd/smsc-ece1099.c
-+++ /dev/null
-@@ -1,87 +0,0 @@
--/*
-- * TI SMSC MFD Driver
-- *
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
-- *
-- * Author: Sourav Poddar <sourav.poddar@ti.com>
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under  the terms of the GNU General  Public License as published by the
-- *  Free Software Foundation;  GPL v2.
-- *
-- */
--
--#include <linux/init.h>
--#include <linux/slab.h>
--#include <linux/i2c.h>
--#include <linux/gpio.h>
--#include <linux/workqueue.h>
--#include <linux/irq.h>
--#include <linux/regmap.h>
--#include <linux/err.h>
--#include <linux/mfd/core.h>
--#include <linux/mfd/smsc.h>
--#include <linux/of_platform.h>
--
--static const struct regmap_config smsc_regmap_config = {
--		.reg_bits = 8,
--		.val_bits = 8,
--		.max_register = SMSC_VEN_ID_H,
--		.cache_type = REGCACHE_RBTREE,
--};
--
--static int smsc_i2c_probe(struct i2c_client *i2c,
--			const struct i2c_device_id *id)
--{
--	struct smsc *smsc;
--	int devid, rev, venid_l, venid_h;
--	int ret;
--
--	smsc = devm_kzalloc(&i2c->dev, sizeof(*smsc), GFP_KERNEL);
--	if (!smsc)
--		return -ENOMEM;
--
--	smsc->regmap = devm_regmap_init_i2c(i2c, &smsc_regmap_config);
--	if (IS_ERR(smsc->regmap))
--		return PTR_ERR(smsc->regmap);
--
--	i2c_set_clientdata(i2c, smsc);
--	smsc->dev = &i2c->dev;
--
--#ifdef CONFIG_OF
--	of_property_read_u32(i2c->dev.of_node, "clock", &smsc->clk);
--#endif
--
--	regmap_read(smsc->regmap, SMSC_DEV_ID, &devid);
--	regmap_read(smsc->regmap, SMSC_DEV_REV, &rev);
--	regmap_read(smsc->regmap, SMSC_VEN_ID_L, &venid_l);
--	regmap_read(smsc->regmap, SMSC_VEN_ID_H, &venid_h);
--
--	dev_info(&i2c->dev, "SMSCxxx devid: %02x rev: %02x venid: %02x\n",
--		devid, rev, (venid_h << 8) | venid_l);
--
--	ret = regmap_write(smsc->regmap, SMSC_CLK_CTRL, smsc->clk);
--	if (ret)
--		return ret;
--
--#ifdef CONFIG_OF
--	if (i2c->dev.of_node)
--		ret = devm_of_platform_populate(&i2c->dev);
--#endif
--
--	return ret;
--}
--
--static const struct i2c_device_id smsc_i2c_id[] = {
--	{ "smscece1099", 0},
--	{},
--};
--
--static struct i2c_driver smsc_i2c_driver = {
--	.driver = {
--		   .name = "smsc",
--	},
--	.probe = smsc_i2c_probe,
--	.id_table = smsc_i2c_id,
--};
--builtin_i2c_driver(smsc_i2c_driver);
-diff --git a/include/linux/mfd/smsc.h b/include/linux/mfd/smsc.h
-deleted file mode 100644
-index 83944124e886..000000000000
---- a/include/linux/mfd/smsc.h
-+++ /dev/null
-@@ -1,104 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * SMSC ECE1099
-- *
-- * Copyright 2012 Texas Instruments Inc.
-- *
-- * Author: Sourav Poddar <sourav.poddar@ti.com>
-- */
--
--#ifndef __LINUX_MFD_SMSC_H
--#define __LINUX_MFD_SMSC_H
--
--#include <linux/regmap.h>
--
--#define SMSC_ID_ECE1099			1
--#define SMSC_NUM_CLIENTS		2
--
--#define SMSC_BASE_ADDR			0x38
--#define OMAP_GPIO_SMSC_IRQ		151
--
--#define SMSC_MAXGPIO         32
--#define SMSC_BANK(offs)      ((offs) >> 3)
--#define SMSC_BIT(offs)       (1u << ((offs) & 0x7))
--
--struct smsc {
--	struct device *dev;
--	struct i2c_client *i2c_clients[SMSC_NUM_CLIENTS];
--	struct regmap *regmap;
--	int clk;
--	/* Stored chip id */
--	int id;
--};
--
--struct smsc_gpio;
--struct smsc_keypad;
--
--static inline int smsc_read(struct device *child, unsigned int reg,
--	unsigned int *dest)
--{
--	struct smsc     *smsc = dev_get_drvdata(child->parent);
--
--	return regmap_read(smsc->regmap, reg, dest);
--}
--
--static inline int smsc_write(struct device *child, unsigned int reg,
--	unsigned int value)
--{
--	struct smsc     *smsc = dev_get_drvdata(child->parent);
--
--	return regmap_write(smsc->regmap, reg, value);
--}
--
--/* Registers for SMSC */
--#define SMSC_RESET						0xF5
--#define SMSC_GRP_INT						0xF9
--#define SMSC_CLK_CTRL						0xFA
--#define SMSC_WKUP_CTRL						0xFB
--#define SMSC_DEV_ID						0xFC
--#define SMSC_DEV_REV						0xFD
--#define SMSC_VEN_ID_L						0xFE
--#define SMSC_VEN_ID_H						0xFF
--
--/* CLK VALUE */
--#define SMSC_CLK_VALUE						0x13
--
--/* Registers for function GPIO INPUT */
--#define SMSC_GPIO_DATA_IN_START					0x00
--
--/* Registers for function GPIO OUPUT */
--#define SMSC_GPIO_DATA_OUT_START                                       0x05
--
--/* Definitions for SMSC GPIO CONFIGURATION REGISTER*/
--#define SMSC_GPIO_INPUT_LOW					0x01
--#define SMSC_GPIO_INPUT_RISING					0x09
--#define SMSC_GPIO_INPUT_FALLING					0x11
--#define SMSC_GPIO_INPUT_BOTH_EDGE				0x19
--#define SMSC_GPIO_OUTPUT_PP					0x21
--#define SMSC_GPIO_OUTPUT_OP					0x31
--
--#define GRP_INT_STAT						0xf9
--#define	SMSC_GPI_INT						0x0f
--#define SMSC_CFG_START						0x0A
--
--/* Registers for SMSC GPIO INTERRUPT STATUS REGISTER*/
--#define SMSC_GPIO_INT_STAT_START                                  0x32
--
--/* Registers for SMSC GPIO INTERRUPT MASK REGISTER*/
--#define SMSC_GPIO_INT_MASK_START                               0x37
--
--/* Registers for SMSC function KEYPAD*/
--#define SMSC_KP_OUT						0x40
--#define SMSC_KP_IN						0x41
--#define SMSC_KP_INT_STAT					0x42
--#define SMSC_KP_INT_MASK					0x43
--
--/* Definitions for keypad */
--#define SMSC_KP_KSO           0x70
--#define SMSC_KP_KSI           0x51
--#define SMSC_KSO_ALL_LOW        0x20
--#define SMSC_KP_SET_LOW_PWR        0x0B
--#define SMSC_KP_SET_HIGH           0xFF
--#define SMSC_KSO_EVAL           0x00
--
--#endif /*  __LINUX_MFD_SMSC_H */
--- 
-2.20.1
+I can't quite parse this sentence.  I think it means something about
+these devices being able to bypass an IOMMU or otherwise cause
+problems via DMA.  It would be nice to know exactly what problem this
+is avoiding.
 
+I assume *all* applications are untrusted, right?  The wording above
+makes it sound like there may be a class of trusted applications in
+addition to the untrusted ones.  But I don't see anything like that in
+the patch.
+
+> To be accessed via vfio-pci, the user has to
+> explicitly disable the blocklist.
+> 
+> The blocklist can be disabled via the module parameter disable_blocklist.
+> 
+> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 7c0779018b1b..ea5904ca6cbf 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
+>  MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
+>  #endif
+>  
+> +static bool disable_blocklist;
+> +module_param(disable_blocklist, bool, 0444);
+> +MODULE_PARM_DESC(disable_blocklist, "Disable device blocklist. If set, i.e. blocklist disabled, then blocklisted devices are allowed to be probed by vfio-pci.");
+> +
+>  static inline bool vfio_vga_disabled(void)
+>  {
+>  #ifdef CONFIG_VFIO_PCI_VGA
+> @@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
+>  #endif
+>  }
+>  
+> +static bool vfio_pci_dev_in_blocklist(struct pci_dev *pdev)
+> +{
+> +	return false;
+> +}
+> +
+> +static bool vfio_pci_is_blocklisted(struct pci_dev *pdev)
+> +{
+> +	if (!vfio_pci_dev_in_blocklist(pdev))
+> +		return false;
+> +
+> +	if (disable_blocklist) {
+> +		pci_warn(pdev,
+> +			 "device blocklist disabled - allowing device %04x:%04x.\n",
+> +			 pdev->vendor, pdev->device);
+> +		return false;
+> +	}
+> +
+> +	pci_warn(pdev, "%04x:%04x is blocklisted - probe will fail.\n",
+> +		 pdev->vendor, pdev->device);
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * Our VGA arbiter participation is limited since we don't know anything
+>   * about the device itself.  However, if the device is the only VGA device
+> @@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct iommu_group *group;
+>  	int ret;
+>  
+> +	if (vfio_pci_is_blocklisted(pdev))
+> +		return -EINVAL;
+> +
+>  	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
+>  		return -EINVAL;
+>  
+> @@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
+>  
+>  	vfio_pci_fill_ids();
+>  
+> +	if (disable_blocklist)
+> +		pr_warn("device blocklist disabled.\n");
+> +
+>  	return 0;
+>  
+>  out_driver:
+> -- 
+> 2.26.2
+> 
