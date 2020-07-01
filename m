@@ -2,142 +2,99 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B001C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B43520702
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593601058;
-	bh=qAAic7vs2yVMNd1JQknrRGHfHt4gS1Aw4pbTIJlwvsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CpEEXFTB3Viu0x+D8ffgxKaeS7ggOAruOqObLWJIhDww6T7ODhYq9rRxSlC9tPP21
-	 78W8d0Y/2Zd46zz85lljG2JC2adNWsaF/YJooQY9wO9vkpwsuoPnVvWBJ0w4F8EcAd
-	 G66h7HDojevktkA1/opWxeV28JvRgMRJ41E+Pj28=
+	by mail.kernel.org (Postfix) with ESMTP id 5F802206CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 10:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QpGAjU/2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T/YpZQJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgGAK5h (ORCPT
+        id S1730165AbgGAK6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 06:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbgGAK53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:57:29 -0400
+        Wed, 1 Jul 2020 06:58:39 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:36625 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729908AbgGAK6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 06:58:39 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2B9815C0178;
+        Wed,  1 Jul 2020 06:58:38 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 01 Jul 2020 06:58:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=X
+        ko+oYoxVUadlpUjLxJMgaxQWoXDIOXW6NjXCYSOOgU=; b=QpGAjU/2N5JU/CSb+
+        YBxI7Dozy1Xr//JBPKtC55L92RXUTQ+FguOKC5SiguA7ls7i2SWdJfJZMAXJXkYX
+        h6M9BtCWXUP2u4WRhEPMe6WeNTz8k5XJqoBlp407xgrGNC7Yztz+7b3aZMQ6HDyd
+        o4vU0NAIziKExdvL/OTor4KwkiaA6ZvpcB4uTcAhpg6P65RHlsiRt8SsNxoZYh8d
+        I6Iuv/YrFRhgahQaQbkaSIIawMQDR/4EWi2DAeIZ6MAMpybWHH8Lt962q/92la+1
+        fjYeDoJr0n/YmYklJYWWnX90sTE2RDKslPHqaGAZpcHcEvfxY28f7SOI1ezr7LVB
+        BJ6uA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Xko+oYoxVUadlpUjLxJMgaxQWoXDIOXW6NjXCYSOO
+        gU=; b=T/YpZQJG0XCOKJAmY+/kKtLtWNLcWqtKYVUaxRmh8EHjch7Ye6etfydqg
+        w8YCSO8D0x3evpnlFrxpVNTrnWs5sXEpZGNF8791sx5MvPUebTyw7qutLKuj0nAR
+        q+dbQe0r7h8dqKCzU/6OSET6DG6xZlsHQ2BEgQD1cm5AnibZzx94+4RNPYvJ/fvM
+        nAEbppisJ0c3ekUSinNF6IdO7avSCIbS/CJXGyVscoket1lqw4mpnV0bSYEXPCP5
+        XzK35DcVJbh6AoTHU2k+XLlig5fctg0zHeiak6zK5ayIccZjdp/8wic1RPzpbLkF
+        xS7M63RoKmw6rHiab9ZMSQxrFnZtw==
+X-ME-Sender: <xms:XWz8XrCckiIRwR_Qbuh0dtvApWfbZOL3FJo-VNQWsNiRybG7d6zgbA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtddvgdefhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuheekhe
+    elffefieduteefkeejffdvueehjeejffehledugfetkedvleekudduvdenucfkphepkeef
+    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:XWz8XhjzaMvV0F4Ax5r32B08FXraJzcdj-l7tqb5MFRG12q3lrTBLw>
+    <xmx:XWz8Xmlpl8eWaybwafLpcLK9wFbQMPkphm8TAlUFXFjPI2WcKIsrZQ>
+    <xmx:XWz8Xtyj24OYc5k0ihhf1jg5kwXPuz3NIhJdlr5Qx71ScvZyn4yVrw>
+    <xmx:Xmz8XvNwv-HRGR8wz1fEVqisHUKvHCMdMryJDLizMfuNEisP6p5Myw>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D80C206CB;
-        Wed,  1 Jul 2020 10:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593601048;
-        bh=qAAic7vs2yVMNd1JQknrRGHfHt4gS1Aw4pbTIJlwvsU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H7vQIgD/P/I08yV5G1Fpjot1JnoS83yrvzBZtKfCOQQnUNvod1VWTSWtVpmdeHUpx
-         FXTKsbPpQcW+PbZS5swhQEWKyoxPHXGQRqPCyYjeozsxxaCbHMrJIH4w3dNaont+QG
-         XZCYdJnPRmNr0okB3mW1z++RwCnHWyfTg+YvxNIM=
-Date:   Wed, 1 Jul 2020 12:57:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Rajat Jain <rajatja@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-Message-ID: <20200701105714.GA2098169@kroah.com>
-References: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
- <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
- <20200605080229.GC2209311@kroah.com>
- <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
- <20200607113632.GA49147@kroah.com>
- <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
- <20200630214559.GA7113@duo.ucw.cz>
- <20200701065426.GC2044019@kroah.com>
- <20200701084750.GA7144@amd>
+        by mail.messagingengine.com (Postfix) with ESMTPA id 860023060066;
+        Wed,  1 Jul 2020 06:58:37 -0400 (EDT)
+Date:   Wed, 1 Jul 2020 12:58:24 +0200
+From:   Greg KH <greg@kroah.com>
+To:     =?utf-8?B?5a2Z5LiW6b6Z?= sunshilong <sunshilong369@gmail.com>
+Cc:     Kernelnewbies@kernelnewbies.org, linux-kernel@vger.kernel.org
+Subject: Re: Are there some potentially serious problems that I should be
+ aware of if I totally disable the CONFIG_ACPI option on the X86_64 platform?
+Message-ID: <20200701105824.GB2098169@kroah.com>
+References: <CAAvDm6bGBbN=EiJxO9Fq9HqLz6F=hSQqjKms_G6qPHzbZ6G3zg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200701084750.GA7144@amd>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAvDm6bGBbN=EiJxO9Fq9HqLz6F=hSQqjKms_G6qPHzbZ6G3zg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 10:47:50AM +0200, Pavel Machek wrote:
-> Hi!
+On Wed, Jul 01, 2020 at 05:15:52PM +0800, 孙世龙 sunshilong wrote:
+> Hi, list
 > 
-> > > We normally trust the hardware NOT to be malicious. (Because if hacker
-> > > has physical access to hardware and lot of resources, you lost).
-> > 
-> > That is what we originally thought, however the world has changed and we
-> > need to be better about this, now that it is trivial to create a "bad"
-> > device.
-> 
-> I'm not disagreeing.
-> 
-> > > This is still true today, but maybe trusting USB devices is bad idea,
-> > > so drivers are being cleaned up. PCI drivers will be WORSE in this
-> > > regard. And you can't really protect against malicious CPU, and it is
-> > > very very hard to protect against malicous RAM (probably not practical
-> > > without explicit CPU support).
-> > > 
-> > > Linux was designed with "don't let hackers near your hardware" threat
-> > > model in mind.
-> > 
-> > Yes, it originally was designed that way, but again, the world has
-> > changed so we have to change with it.  That is why USB has for a long
-> > time now, allowed you to not bind drivers to devices that you do not
-> > "trust", and that trust can be determined by userspace.  That all came
-> > about thanks to the work done by the wireless USB spec people and kernel
-> > authors, which showed that maybe you just don't want to trust any device
-> > that comes within range of your system :)
-> 
-> Again, not disagreeing; but note the scale here.
-> 
-> It is mandatory to defend against malicious wireless USB devices.
+> Are there some potentially serious problems that I should be aware of
+> if I totally disable the CONFIG_ACPI option on the X86_64 platform?
 
-Turns out there are no more wireless USB devices in the world, and the
-code for that is gone from Linux :)
+Yes, your ACPI-based system will not boot.
 
-> We probably should work on robustness against malicious USB devices.
+> Would it do harm to the hardware?
 
-We are, and do have, that support today.
+It might, try it and see :)
 
-> Malicious PCI-express devices are lot less of concern.
-
-Not really, they are a lot of concern to some people.  Valid attacks are
-out there today, see the thunderbolt attacks that numerous people have
-done and published recently and for many years.
-
-> Defending against malicious CPU/RAM does not make much sense.
-
-That's what the spectre and rowhammer fixes have been for :)
-
-thanks,
+good luck!!!
 
 greg k-h
