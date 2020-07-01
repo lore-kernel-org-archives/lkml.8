@@ -2,312 +2,373 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC38C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5151C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEC820853
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593628930;
-	bh=SGzBlv6qFvyDNHfk7aechs86/O7qr6E6QM6Q0HVdS7w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SCtlQ3OtIVO+fzv/01OXcGCdX1TmRtbROzj+wRteW2JRYDMQ4XdfScyQtbNh2ixTA
-	 yoQd1JRRyP9OTFGVCaYIieW0BxkCH6PoaSMbGROZ88KNCqQd1fxViZ71DARxSWRObw
-	 2pAW/scDaCk3IMRW1jc3sicTzKDXlhCv5kYQljt0=
+	by mail.kernel.org (Postfix) with ESMTP id 6E4A820748
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 18:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lElscGEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgGASmI (ORCPT
+        id S1726707AbgGASnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 14:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgGASmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 14:42:08 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2B2020748;
-        Wed,  1 Jul 2020 18:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593628926;
-        bh=SGzBlv6qFvyDNHfk7aechs86/O7qr6E6QM6Q0HVdS7w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eOLnsih+XR6nvj9wm2mPrE03duUQ1rtTdnCPVrM1pnHLXCBNw5HjBVL2xeLmre15K
-         0s3F9w6ekTVKqf4lBFj0suigXV7Q/YY8F5MmAFkjwluGsKk6Ibu13QJJdlniUZNGeF
-         Hkb0qk79CGkHV41W/aRZykzZdbq4SLTg6r85Qmkw=
-Date:   Wed, 1 Jul 2020 19:42:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH v4 4/7] iio: core: move debugfs data on the private iio
- dev info
-Message-ID: <20200701194200.716a263b@archlinux>
-In-Reply-To: <3ad8e37bc439f0619f63010809fb0080b61a1b56.camel@analog.com>
-References: <20200630045708.14166-1-alexandru.ardelean@analog.com>
-        <20200630045708.14166-5-alexandru.ardelean@analog.com>
-        <3ad8e37bc439f0619f63010809fb0080b61a1b56.camel@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 1 Jul 2020 14:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgGASnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 14:43:20 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768B8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 11:43:20 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id p22so27012354ybg.21
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 11:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=jzvVHAVDjQWkbttGzq+G73N0zxy309OQK8N7nl1L2ag=;
+        b=lElscGEoU4AgQsYCEGA6a8SQSBaWO6YnOrQEP1DrFBSekigr3s+KfE19PQv3hBIbBK
+         yWpgHKl66RgulMB4ratX0xulY7OImDUdr8wrA0Cfu5D3T641b4NCioz04yYsQFcFqUVT
+         PIlwLZp3HLd/RqEO4/O6Mk1pkHyRud1MJsdStLeYlPSsE/9eywof/jNSSMR83jJ4GLd3
+         AR5UoJE6UqJKpIxbFol1lCh60IdpYiyGnUbllt7gbODoC0jFMQu3pA4G3rJ+hhwUrnf/
+         2PGglb7xAap/eKzg9W/oJOXYv+2Y7rXyeq+XAVJY1ysobdpFbJnaQmenuxohDUSnsjjJ
+         n2EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=jzvVHAVDjQWkbttGzq+G73N0zxy309OQK8N7nl1L2ag=;
+        b=aTgnTQaklLwer1Zn/sGGsOysW6SBZaGZkT1YpgNxrW2zktCo/Hmi9IFaKuWWXxtH2W
+         8wOZ7LsY+9QGGRzKSnyXOKbtAc6uyiFaGejcCU3qdbEtCA8990ZQb4uzSS4+ZMeuO89M
+         MlVXe4kyF8lckj7dzAmZ0cGc3MIKt4anSzc3Qq2rnTO+KNko7I3Rmdil+ATu3yHmBou3
+         1MvoG5/x3uYh4iwU3PkBGEMFZ6Ie20guxwUhQfxcRa/NtpbIUo27VqaQdzD0XwO9tJyz
+         Y2egr3mLhUOiZnYLmmW67Ugd2M1J1g0uGJeC57rV1vSsegM/ZwAgND0U2adoHIxIexP2
+         Tiig==
+X-Gm-Message-State: AOAM530o85NsWXw12PYFJb2bRK56KjoLotSYXYNrSMIskaor7o7MlM51
+        DvvD7pCFyQjOAjs7wiIv5tLRNhwiti6mibsY
+X-Google-Smtp-Source: ABdhPJx61zaVzccAiQfS/Ys0VFGE9BokBxlMU1nhbHU7vcJMIa4BFc4WtOWee38xbZNj8mD48K7r9VYUg//4yYR4
+X-Received: by 2002:a25:c284:: with SMTP id s126mr33133620ybf.346.1593628999669;
+ Wed, 01 Jul 2020 11:43:19 -0700 (PDT)
+Date:   Wed,  1 Jul 2020 18:43:01 +0000
+In-Reply-To: <20200630174350.2842555-1-linchuyuan@google.com>
+Message-Id: <20200701184301.4035572-1-linchuyuan@google.com>
+Mime-Version: 1.0
+References: <20200630174350.2842555-1-linchuyuan@google.com>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH] hwmon:max6697: Allow max6581 to set temperature read offset
+From:   Chu Lin <linchuyuan@google.com>
+To:     linux@roeck-us.net, jdelvare@suse.com, linchuyuan@google.com,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jasonling@google.com, belgaied@google.com, zhongqil@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 04:58:06 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+Per max6581, reg 4d and reg 4e is used for temperature read offset.
+This patch will let the user specify the temperature read offset for
+max6581. This patch is tested on max6581 and only applies to max6581.
 
-> On Tue, 2020-06-30 at 07:57 +0300, Alexandru Ardelean wrote:
-> > This change moves all iio_dev debugfs fields to the iio_dev_priv object.
-> > It's not the biggest advantage yet (to the whole thing of
-> > abstractization)
-> > but it's a start.
-> > 
-> > The iio_get_debugfs_dentry() function (which is moved in
-> > industrialio-core.c) needs to also be guarded against the CONFIG_DEBUG_FS
-> > symbol, when it isn't defined. We do want to keep the inline definition
-> > in
-> > the iio.h header, so that the compiler can better infer when to compile
-> > out
-> > debugfs code that is related to the IIO debugfs directory.
-> >   
-> 
-> Well, pretty much only this patch changed since V3.
-> I thought about maybe re-doing just this patch, then I thought maybe I'd
-> get a minor complaint that I should re-send the series.
-> 
-> Either way, I prefer a complaint on this V4 series-re-send than if I were
-> to have re-sent just this patch.
+Testing:
+echo 16250 > temp2_offset
+cat temp2_offset
+16250
 
-Either way worked.
+echo 17500 > temp3_offset
+cat temp3_offset
+17500
+cat temp4_offset
+0
+cat temp2_offset
+17500
 
-However this doesn't pass my basic build test. Config condition
-is reversed. 
+echo 0 > temp2_offset
+cat temp2_offset
+0
+cat temp3_offset
+17500
 
-Fixed up and pushed out as testing.
+echo -0 > temp2_offset
+cat temp2_offset
+0
 
+echo -100000 > temp2_offset
+-sh: echo: write error: Invalid argument
 
-Jonathan
+cat temp2_input
+37000
 
-> 
-> 
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> >  drivers/iio/industrialio-core.c | 46 +++++++++++++++++++++++----------
-> >  include/linux/iio/iio-opaque.h  | 10 +++++++
-> >  include/linux/iio/iio.h         | 13 +---------
-> >  3 files changed, 44 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-
-> > core.c
-> > index 27005ba4d09c..64174052641a 100644
-> > --- a/drivers/iio/industrialio-core.c
-> > +++ b/drivers/iio/industrialio-core.c
-> > @@ -165,6 +165,19 @@ static const char * const iio_chan_info_postfix[] =
-> > {
-> >  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
-> >  };
-> >  
-> > +#if !defined(CONFIG_DEBUG_FS)
+echo 10000 > temp2_offset
+cat temp2_input
+47125
 
-Don't we want this if it is defined.
+echo -2000 > temp2_offset
+cat temp2_input
+34875
 
-> > +/**
-> > + * There's also a CONFIG_DEBUG_FS guard in include/linux/iio/iio.h for
-> > + * iio_get_debugfs_dentry() to make it inline if CONFIG_DEBUG_FS is
-> > undefined
-> > + */
-> > +struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
-> > +{
-> > +	struct iio_dev_opaque *iio_dev_opaque =
-> > to_iio_dev_opaque(indio_dev);
-> > +	return iio_dev_opaque->debugfs_dentry;
-> > +}
-> > +EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
-> > +#endif
-> > +
-> >  /**
-> >   * iio_find_channel_from_si() - get channel from its scan index
-> >   * @indio_dev:		device
-> > @@ -308,35 +321,37 @@ static ssize_t iio_debugfs_read_reg(struct file
-> > *file, char __user *userbuf,
-> >  			      size_t count, loff_t *ppos)
-> >  {
-> >  	struct iio_dev *indio_dev = file->private_data;
-> > +	struct iio_dev_opaque *iio_dev_opaque =
-> > to_iio_dev_opaque(indio_dev);
-> >  	unsigned val = 0;
-> >  	int ret;
-> >  
-> >  	if (*ppos > 0)
-> >  		return simple_read_from_buffer(userbuf, count, ppos,
-> > -					       indio_dev->read_buf,
-> > -					       indio_dev->read_buf_len);
-> > +					       iio_dev_opaque->read_buf,
-> > +					       iio_dev_opaque-  
-> > >read_buf_len);  
-> >  
-> >  	ret = indio_dev->info->debugfs_reg_access(indio_dev,
-> > -						  indio_dev-  
-> > >cached_reg_addr,  
-> > +						  iio_dev_opaque-  
-> > >cached_reg_addr,  
-> >  						  0, &val);
-> >  	if (ret) {
-> >  		dev_err(indio_dev->dev.parent, "%s: read failed\n",
-> > __func__);
-> >  		return ret;
-> >  	}
-> >  
-> > -	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
-> > -					   sizeof(indio_dev->read_buf),
-> > -					   "0x%X\n", val);
-> > +	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
-> > +					      sizeof(iio_dev_opaque-  
-> > >read_buf),  
-> > +					      "0x%X\n", val);
-> >  
-> >  	return simple_read_from_buffer(userbuf, count, ppos,
-> > -				       indio_dev->read_buf,
-> > -				       indio_dev->read_buf_len);
-> > +				       iio_dev_opaque->read_buf,
-> > +				       iio_dev_opaque->read_buf_len);
-> >  }
-> >  
-> >  static ssize_t iio_debugfs_write_reg(struct file *file,
-> >  		     const char __user *userbuf, size_t count, loff_t
-> > *ppos)
-> >  {
-> >  	struct iio_dev *indio_dev = file->private_data;
-> > +	struct iio_dev_opaque *iio_dev_opaque =
-> > to_iio_dev_opaque(indio_dev);
-> >  	unsigned reg, val;
-> >  	char buf[80];
-> >  	int ret;
-> > @@ -351,10 +366,10 @@ static ssize_t iio_debugfs_write_reg(struct file
-> > *file,
-> >  
-> >  	switch (ret) {
-> >  	case 1:
-> > -		indio_dev->cached_reg_addr = reg;
-> > +		iio_dev_opaque->cached_reg_addr = reg;
-> >  		break;
-> >  	case 2:
-> > -		indio_dev->cached_reg_addr = reg;
-> > +		iio_dev_opaque->cached_reg_addr = reg;
-> >  		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
-> >  							  val, NULL);
-> >  		if (ret) {
-> > @@ -378,23 +393,28 @@ static const struct file_operations
-> > iio_debugfs_reg_fops = {
-> >  
-> >  static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
-> >  {
-> > -	debugfs_remove_recursive(indio_dev->debugfs_dentry);
-> > +	struct iio_dev_opaque *iio_dev_opaque =
-> > to_iio_dev_opaque(indio_dev);
-> > +	debugfs_remove_recursive(iio_dev_opaque->debugfs_dentry);
-> >  }
-> >  
-> >  static void iio_device_register_debugfs(struct iio_dev *indio_dev)
-> >  {
-> > +	struct iio_dev_opaque *iio_dev_opaque;
-> > +
-> >  	if (indio_dev->info->debugfs_reg_access == NULL)
-> >  		return;
-> >  
-> >  	if (!iio_debugfs_dentry)
-> >  		return;
-> >  
-> > -	indio_dev->debugfs_dentry =
-> > +	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-> > +
-> > +	iio_dev_opaque->debugfs_dentry =
-> >  		debugfs_create_dir(dev_name(&indio_dev->dev),
-> >  				   iio_debugfs_dentry);
-> >  
-> >  	debugfs_create_file("direct_reg_access", 0644,
-> > -			    indio_dev->debugfs_dentry, indio_dev,
-> > +			    iio_dev_opaque->debugfs_dentry, indio_dev,
-> >  			    &iio_debugfs_reg_fops);
-> >  }
-> >  #else
-> > diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-
-> > opaque.h
-> > index 1375674f14cd..b3f234b4c1e9 100644
-> > --- a/include/linux/iio/iio-opaque.h
-> > +++ b/include/linux/iio/iio-opaque.h
-> > @@ -6,9 +6,19 @@
-> >  /**
-> >   * struct iio_dev_opaque - industrial I/O device opaque information
-> >   * @indio_dev:			public industrial I/O device
-> > information
-> > + * @debugfs_dentry:		device specific debugfs dentry
-> > + * @cached_reg_addr:		cached register address for debugfs reads
-> > + * @read_buf:			read buffer to be used for the
-> > initial reg read
-> > + * @read_buf_len:		data length in @read_buf
-> >   */
-> >  struct iio_dev_opaque {
-> >  	struct iio_dev			indio_dev;
-> > +#if defined(CONFIG_DEBUG_FS)
-> > +	struct dentry			*debugfs_dentry;
-> > +	unsigned			cached_reg_addr;
-> > +	char				read_buf[20];
-> > +	unsigned int			read_buf_len;
-> > +#endif
-> >  };
-> >  
-> >  #define to_iio_dev_opaque(indio_dev)		\
-> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > index 86112e35ae5f..bb0aae11a111 100644
-> > --- a/include/linux/iio/iio.h
-> > +++ b/include/linux/iio/iio.h
-> > @@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
-> >   * @groups:		[INTERN] attribute groups
-> >   * @groupcounter:	[INTERN] index of next attribute group
-> >   * @flags:		[INTERN] file ops related flags including busy
-> > flag.
-> > - * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
-> > - * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
-> >   * @priv:		[DRIVER] reference to driver's private information
-> >   *			**MUST** be accessed **ONLY** via iio_priv() helper
-> >   */
-> > @@ -567,12 +565,6 @@ struct iio_dev {
-> >  	int				groupcounter;
-> >  
-> >  	unsigned long			flags;
-> > -#if defined(CONFIG_DEBUG_FS)
-> > -	struct dentry			*debugfs_dentry;
-> > -	unsigned			cached_reg_addr;
-> > -	char				read_buf[20];
-> > -	unsigned int			read_buf_len;
-> > -#endif
-> >  	void				*priv;
-> >  };
-> >  
-> > @@ -727,10 +719,7 @@ static inline bool iio_buffer_enabled(struct iio_dev
-> > *indio_dev)
-> >   * @indio_dev:		IIO device structure for device
-> >   **/
-> >  #if defined(CONFIG_DEBUG_FS)
-> > -static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev
-> > *indio_dev)
-> > -{
-> > -	return indio_dev->debugfs_dentry;
-> > -}
-> > +struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
-> >  #else
-> >  static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev
-> > *indio_dev)
-> >  {  
+echo -0 > temp2_offset
+cat temp2_input
+37000
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+---
+ drivers/hwmon/max6697.c | 131 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 126 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
+index 743752a2467a..d9f3f0c41495 100644
+--- a/drivers/hwmon/max6697.c
++++ b/drivers/hwmon/max6697.c
+@@ -41,6 +41,14 @@ static const u8 MAX6697_REG_CRIT[] = {
+ #define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+ 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
+ 
++#define MAX6581_OFFSET_TO_MILLIC(reg)	(16000 * (((reg) & (1<<6)) >> 6) + \
++					 8000 * (((reg) & (1<<5)) >> 5) + \
++					 4000 * (((reg) & (1<<4)) >> 4) + \
++					 2000 * (((reg) & (1<<3)) >> 3) + \
++					 1000 * (((reg) & (1<<2)) >> 2) + \
++					 500 * (((reg) & (1<<1)) >> 1) + \
++					 250 * ((reg) & 1))
++
+ #define MAX6697_REG_STAT(n)		(0x44 + (n))
+ 
+ #define MAX6697_REG_CONFIG		0x41
+@@ -56,6 +64,9 @@ static const u8 MAX6697_REG_CRIT[] = {
+ #define MAX6581_REG_IDEALITY_SELECT	0x4c
+ #define MAX6581_REG_OFFSET		0x4d
+ #define MAX6581_REG_OFFSET_SELECT	0x4e
++#define MAX6581_OFFSET_MIN		-31750
++#define MAX6581_OFFSET_MAX		-MAX6581_OFFSET_MIN
++
+ 
+ #define MAX6697_CONV_TIME		156	/* ms per channel, worst case */
+ 
+@@ -316,6 +327,94 @@ static ssize_t temp_store(struct device *dev,
+ 	return ret < 0 ? ret : count;
+ }
+ 
++static ssize_t offset_store(struct device *dev,
++			    struct device_attribute *devattr, const char *buf,
++			    size_t count)
++{
++	long temp;
++	u8 val, select;
++	int i, temp_frac, temp_int, ret, index;
++	bool sign;
++	struct max6697_data *data;
++
++	index = to_sensor_dev_attr(devattr)->index;
++	data = dev_get_drvdata(dev);
++	select = i2c_smbus_read_byte_data(data->client,
++					  MAX6581_REG_OFFSET_SELECT);
++	if (select < 0)
++		return -ENODATA;
++	ret = kstrtol(buf, 10, &temp);
++	if (ret < 0)
++		return ret;
++	if (temp > MAX6581_OFFSET_MAX || temp < MAX6581_OFFSET_MIN)
++		return -EINVAL;
++
++	/* disable the offset for channel */
++	if (temp == 0) {
++		ret = i2c_smbus_write_byte_data(data->client,
++						MAX6581_REG_OFFSET_SELECT,
++						select & ~(1<<(index-1)));
++		return ret < 0 ? ret : count;
++	}
++	sign = temp < 0 ? false : true;
++	temp = abs(temp);
++	temp_int = temp / 1000;
++	temp_frac = temp % 1000;
++	for (i = 4; i >= 0 && temp_int > 0; --i) {
++		if (temp_int >= 1<<i) {
++			temp_int -= 1<<i;
++			val |= 1 << (i+2);
++		}
++	}
++	/* special handle the fraction */
++	if (temp_frac % 250 != 0)
++		return -EINVAL;
++	if (temp_frac == 750)
++		val |= 0x3;
++	else if (temp_frac == 500)
++		val |= 0x2;
++	else if (temp_frac)
++		val |= 0x1;
++	ret = i2c_smbus_write_byte_data(data->client,
++					MAX6581_REG_OFFSET_SELECT,
++					select | 1<<(index-1));
++	if (ret < 0)
++		return ret;
++	ret = i2c_smbus_write_byte_data(data->client,
++					MAX6581_REG_OFFSET,
++					sign?val:(~val + 1));
++	return ret < 0 ? ret : count;
++}
++
++static ssize_t offset_show(struct device *dev, struct device_attribute *devattr,
++			   char *buf)
++{
++	int select, ret, index, temp;
++	struct max6697_data *data;
++
++	index = to_sensor_dev_attr(devattr)->index;
++	data = dev_get_drvdata(dev);
++	select = i2c_smbus_read_byte_data(data->client,
++				       MAX6581_REG_OFFSET_SELECT);
++	if (select < 0)
++		return -ENODATA;
++	if (select & (1<<(index-1))) {
++		ret = i2c_smbus_read_byte_data(data->client,
++					       MAX6581_REG_OFFSET);
++		if (ret < 0)
++			return -ENODATA;
++	} else {
++		return sprintf(buf, "%d\n", 0);
++	}
++	if (1<<7 & ret) {
++		ret = ~ret + 1;
++		temp = -MAX6581_OFFSET_TO_MILLIC(ret);
++	} else {
++		temp = MAX6581_OFFSET_TO_MILLIC(ret);
++	}
++	return sprintf(buf, "%d\n", temp);
++}
++
+ static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
+ static SENSOR_DEVICE_ATTR_2_RW(temp1_max, temp, 0, MAX6697_TEMP_MAX);
+ static SENSOR_DEVICE_ATTR_2_RW(temp1_crit, temp, 0, MAX6697_TEMP_CRIT);
+@@ -374,6 +473,16 @@ static SENSOR_DEVICE_ATTR_RO(temp6_fault, alarm, 5);
+ static SENSOR_DEVICE_ATTR_RO(temp7_fault, alarm, 6);
+ static SENSOR_DEVICE_ATTR_RO(temp8_fault, alarm, 7);
+ 
++/* There is no offset for local temperature so starting from temp2 */
++static SENSOR_DEVICE_ATTR_RW(temp1_offset, offset, 0);
++static SENSOR_DEVICE_ATTR_RW(temp2_offset, offset, 1);
++static SENSOR_DEVICE_ATTR_RW(temp3_offset, offset, 2);
++static SENSOR_DEVICE_ATTR_RW(temp4_offset, offset, 3);
++static SENSOR_DEVICE_ATTR_RW(temp5_offset, offset, 4);
++static SENSOR_DEVICE_ATTR_RW(temp6_offset, offset, 5);
++static SENSOR_DEVICE_ATTR_RW(temp7_offset, offset, 6);
++static SENSOR_DEVICE_ATTR_RW(temp8_offset, offset, 7);
++
+ static DEVICE_ATTR(dummy, 0, NULL, NULL);
+ 
+ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
+@@ -382,8 +491,8 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+ 	struct max6697_data *data = dev_get_drvdata(dev);
+ 	const struct max6697_chip_data *chip = data->chip;
+-	int channel = index / 6;	/* channel number */
+-	int nr = index % 6;		/* attribute index within channel */
++	int channel = index / 8;	/* channel number */
++	int nr = index % 7;		/* attribute index within channel */
+ 
+ 	if (channel >= chip->channels)
+ 		return 0;
+@@ -392,6 +501,10 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
+ 		return 0;
+ 	if (nr == 5 && !(chip->have_fault & (1 << channel)))
+ 		return 0;
++	/* offset reg is only supported on max6581 remote channels */
++	if (nr == 6)
++		if (data->type != max6581 || channel == 0)
++			return 0;
+ 
+ 	return attr->mode;
+ }
+@@ -408,6 +521,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp1_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp1_crit_alarm.dev_attr.attr,
+ 	&dev_attr_dummy.attr,
++	&sensor_dev_attr_temp1_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp2_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp2_max.dev_attr.attr,
+@@ -415,6 +529,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp2_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp2_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp2_fault.dev_attr.attr,
++	&sensor_dev_attr_temp2_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp3_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp3_max.dev_attr.attr,
+@@ -422,6 +537,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp3_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp3_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp3_fault.dev_attr.attr,
++	&sensor_dev_attr_temp3_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp4_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp4_max.dev_attr.attr,
+@@ -429,6 +545,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp4_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp4_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp4_fault.dev_attr.attr,
++	&sensor_dev_attr_temp4_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp5_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp5_max.dev_attr.attr,
+@@ -436,6 +553,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp5_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp5_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp5_fault.dev_attr.attr,
++	&sensor_dev_attr_temp5_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp6_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp6_max.dev_attr.attr,
+@@ -443,6 +561,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp6_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp6_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp6_fault.dev_attr.attr,
++	&sensor_dev_attr_temp6_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp7_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp7_max.dev_attr.attr,
+@@ -450,6 +569,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp7_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp7_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp7_fault.dev_attr.attr,
++	&sensor_dev_attr_temp7_offset.dev_attr.attr,
+ 
+ 	&sensor_dev_attr_temp8_input.dev_attr.attr,
+ 	&sensor_dev_attr_temp8_max.dev_attr.attr,
+@@ -457,6 +577,7 @@ static struct attribute *max6697_attributes[] = {
+ 	&sensor_dev_attr_temp8_crit.dev_attr.attr,
+ 	&sensor_dev_attr_temp8_crit_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_temp8_fault.dev_attr.attr,
++	&sensor_dev_attr_temp8_offset.dev_attr.attr,
+ 	NULL
+ };
+ 
+@@ -493,8 +614,8 @@ static void max6697_get_config_of(struct device_node *node,
+ 	}
+ 	prop = of_get_property(node, "transistor-ideality", &len);
+ 	if (prop && len == 2 * sizeof(u32)) {
+-			pdata->ideality_mask = be32_to_cpu(prop[0]);
+-			pdata->ideality_value = be32_to_cpu(prop[1]);
++		pdata->ideality_mask = be32_to_cpu(prop[0]);
++		pdata->ideality_value = be32_to_cpu(prop[1]);
+ 	}
+ }
+ 
+@@ -689,7 +810,7 @@ MODULE_DEVICE_TABLE(of, max6697_of_match);
+ static struct i2c_driver max6697_driver = {
+ 	.class = I2C_CLASS_HWMON,
+ 	.driver = {
+-		.name	= "max6697",
++		.name	= "max6697_test",
+ 		.of_match_table = of_match_ptr(max6697_of_match),
+ 	},
+ 	.probe = max6697_probe,
+-- 
+2.27.0.212.ge8ba1cc988-goog
 
