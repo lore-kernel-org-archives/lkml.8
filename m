@@ -2,132 +2,92 @@ Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55642C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B58207F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgu2wjxM"
+	by mail.kernel.org (Postfix) with ESMTP id 40B732082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 22:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593642160;
+	bh=mxx7Gg/ZIeVDV4tXevq1kBD2WMrxAhSo/UjofIGOOwU=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=IU933Dj7bNt4mCyjH0NNLDJPqaOlXPBf4kX3NsG1BxgzCT8DG+yQl8Nw4/Wy/rIso
+	 j/9zU7IfXNeFknIuW53uUENYd/vFT6BzLlLKdy6uMsY3EYZjpdqaDi6W+MlwEsE8eH
+	 4W9fCbqBLcTJVfS90ZrJvR8TfGdbh/wYz0NkI6as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgGAWRY (ORCPT
+        id S1726687AbgGAWWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 18:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgGAWRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 18:17:21 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5076BC08C5C1;
-        Wed,  1 Jul 2020 15:17:21 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z24so4210425ljn.8;
-        Wed, 01 Jul 2020 15:17:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0hjOP2xWJYBFB1lJ44pZ1iwrgg794l/jK5E/p4AXI4Y=;
-        b=Xgu2wjxM8gR3RdyappZ8oWPk1hZNwzaHxbRsdwv1ih9IYYRvRIqKdKk+NPPFJMIgGf
-         tuGmbf6th2afvmfrQgZ17KsSvoXzw3M/DdERL+haWnWYQ/yivIh04Il/0SVpOwIJChfl
-         nXaI+90956OkrqnzY6idFn3fR1CkNiI5oxM4OI6aNVN+5CqeuerOXeXz9wcOK4mEwFS2
-         U56SI4t7ivgqYcuMz2DZjhfloweXi09Cjg5M/y/YDMDXPgOxjXBlw2JdLi09TJrwyhFJ
-         day/jgYuHZH1a/2z0VXf3QdBEoV+fYkMqyeFxhJwrcFsfZvEJ/UtDGJgzS0li4MLQMx+
-         A5Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0hjOP2xWJYBFB1lJ44pZ1iwrgg794l/jK5E/p4AXI4Y=;
-        b=tEggY2p9BWi6NCXwIeCK+9b1GLianUnoRbEoDcSz6TiF5G4PFWKBogJSjTHCFzUZdz
-         jA0x0HknrpKx5kOH9UJ8bERPQ7cor4LnZXZKFfEWRRWp+x4xnS80aIUKRqKJdNMt0Q4d
-         klGwKrqNFq/2RYk8pDKtqZW5Hxh/jUqBY13nJfZHXUnel06iGS8Kl3j9u+0S0ZUOvfGW
-         1/L9vq66m0ZY6BVj5n+SiUXrK9T5oekQLkD2gtF6Aaf6LiBryn2VgOb1x/QkvQe1aG2v
-         WPs8/LEEL9JLPXySfxgVi4GC79K8x/BcMwhqryQW4xNqQRF0pfmCWVVCjSlpNGpP8EsU
-         Ou9g==
-X-Gm-Message-State: AOAM533A/LUpocLk4YMG6jg1Ofl17r70xz+ituTUXxEWG19TwBz8owyw
-        8bjVbOpX6utFYI24JR0SEKLYw+PU4D8FdcWEDqg=
-X-Google-Smtp-Source: ABdhPJy5vPSx7u8xpYmsgb/HuUaDybMaWgfQGMlx4w2etWh/E2gQtbxZbUoCO0Vwt7DaK6VEGMyi7t2ve6zYyr4FuE8=
-X-Received: by 2002:a2e:9bc3:: with SMTP id w3mr6345365ljj.121.1593641839001;
- Wed, 01 Jul 2020 15:17:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701175315.1161242-1-haoluo@google.com> <aab03e4b-2779-3b71-44ea-735a7b92a70f@fb.com>
-In-Reply-To: <aab03e4b-2779-3b71-44ea-735a7b92a70f@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 1 Jul 2020 15:17:07 -0700
-Message-ID: <CAADnVQK5o1uhJOXLKAbf9Hp_Y0fVsowD3DwRWwBd_++KTTOJHw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Switch test_vmlinux to use hrtimer_range_start_ns.
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Hao Luo <haoluo@google.com>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 Jul 2020 18:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbgGAWWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 18:22:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D78220780;
+        Wed,  1 Jul 2020 22:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593642157;
+        bh=mxx7Gg/ZIeVDV4tXevq1kBD2WMrxAhSo/UjofIGOOwU=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=04e4khGICYM7F2fV318l7QGiET8eig6XK+gokuFooZFgBJouu8gJBd14/TIBQ+mpv
+         UblTZxZI4UIzLu5D+bDdMao2CAFWavi/aJo7FRezwwFJsbLKP9Ot1rvINT9cGhR1eh
+         xjrE1pqQI/7VEA7Ht2y6mPk1Zc4zXv7HCyhsAZf4=
+Date:   Wed, 01 Jul 2020 23:22:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     perex@perex.cz, alsa-devel@alsa-project.org, tiwai@suse.com,
+        Xiubo.Lee@gmail.com, timur@kernel.org, lgirdwood@gmail.com,
+        festevam@gmail.com, nicoleotsuka@gmail.com,
+        Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1593525367-23221-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1593525367-23221-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH v3] ASoC: fsl_asrc: Add an option to select internal ratio mode
+Message-Id: <159364215575.10630.16163829958912302210.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 11:04 AM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 7/1/20 10:53 AM, Hao Luo wrote:
-> > The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
-> > programs. But in a kernel built by clang, which performs more aggresive
-> > inlining, that function gets inlined into its caller SyS_nanosleep.
-> > Therefore, even though fentry and kprobe do hook on the function,
-> > they aren't triggered by the call to nanosleep in the test.
-> >
-> > A possible fix is switching to use a function that is less likely to
-> > be inlined, such as hrtimer_range_start_ns. The EXPORT_SYMBOL functions
-> > shouldn't be inlined based on the description of [1], therefore safe
-> > to use for this test. Also the arguments of this function include the
-> > duration of sleep, therefore suitable for test verification.
-> >
-> > [1] af3b56289be1 time: don't inline EXPORT_SYMBOL functions
-> >
-> > Tested:
-> >   In a clang build kernel, before this change, the test fails:
-> >
-> >   test_vmlinux:PASS:skel_open 0 nsec
-> >   test_vmlinux:PASS:skel_attach 0 nsec
-> >   test_vmlinux:PASS:tp 0 nsec
-> >   test_vmlinux:PASS:raw_tp 0 nsec
-> >   test_vmlinux:PASS:tp_btf 0 nsec
-> >   test_vmlinux:FAIL:kprobe not called
-> >   test_vmlinux:FAIL:fentry not called
-> >
-> >   After switching to hrtimer_range_start_ns, the test passes:
-> >
-> >   test_vmlinux:PASS:skel_open 0 nsec
-> >   test_vmlinux:PASS:skel_attach 0 nsec
-> >   test_vmlinux:PASS:tp 0 nsec
-> >   test_vmlinux:PASS:raw_tp 0 nsec
-> >   test_vmlinux:PASS:tp_btf 0 nsec
-> >   test_vmlinux:PASS:kprobe 0 nsec
-> >   test_vmlinux:PASS:fentry 0 nsec
-> >
-> > Signed-off-by: Hao Luo <haoluo@google.com>
-> > Acked-by: Andrii Nakryiko <andriin@fb.com>
->
-> Thanks!
-> Acked-by: Yonghong Song <yhs@fb.com>
+On Tue, 30 Jun 2020 21:56:07 +0800, Shengjiu Wang wrote:
+> The ASRC not only supports ideal ratio mode, but also supports
+> internal ratio mode.
+> 
+> For internal rato mode, the rate of clock source should be divided
+> with no remainder by sample rate, otherwise there is sound
+> distortion.
+> 
+> [...]
 
-Applied. Thanks
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: fsl_asrc: Add an option to select internal ratio mode
+      commit: d0250cf4f2abfbea64ed247230f08f5ae23979f0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
