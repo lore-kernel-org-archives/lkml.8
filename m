@@ -3,147 +3,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BC720899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593676210;
-	bh=OPwzfImFs/6d/wxmTj/SDF/k3f/jGxD4d+RjrzyjUhY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XUKWPTbfjIplCgF5Pel5R8CYqMm1pKq8JCE5t5zdh4Gpt7p4dTIJ87MvsLQjrVvd0
-	 gOMbPVo/hFIO4bz3o9DOV3BH1Xj5obxXHxbjsTw+qlla4CAonZBl/FAZcAsuZFnjLn
-	 Xc6wbG6nGt3QfNFUdvQkhles1wK641fkdqr3EfXU=
+	by mail.kernel.org (Postfix) with ESMTP id 859C720899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iy6q1YUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgGBHuJ (ORCPT
+        id S1728126AbgGBHuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgGBHuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:50:08 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 2 Jul 2020 03:50:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59857 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726042AbgGBHuc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:50:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593676230;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=siZTOIfPD9T2MnCdUtEwr4YB3Ao/TtbkwOBgLqvQBKk=;
+        b=Iy6q1YUMaAawWYkEIDew9xHSJ3TS1n9GcWCn+QLy1Z+xMtEHJGmUMsZi5ncRkgwg8gMpnL
+        ZsZdPPtxCGzJtRyiUTt7BNXImWytLLLdG3yaKb7nuZsle9aZ1mEG8EGJJ9C0DhOvydplUR
+        VS8SxlacVC7lOumjXzOTokUiY0jQKKs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-YfE5AYJQMdOWPk_ilgXALg-1; Thu, 02 Jul 2020 03:50:25 -0400
+X-MC-Unique: YfE5AYJQMdOWPk_ilgXALg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F9EB20936;
-        Thu,  2 Jul 2020 07:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593676207;
-        bh=OPwzfImFs/6d/wxmTj/SDF/k3f/jGxD4d+RjrzyjUhY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1tzmwO6bBgv8e1nwdoCor7eoYs88C56cCi+b1LCWxsslV3Obsc9H5N3DTD0s4kOVb
-         nkn4R3y7DQPj5Agqp5PfpNJs4ca/7dhafI+z0F6Kcb9Mkvdl0vYkOTgV86DU6NajuG
-         s2sQPFWem5d6mVKrB7CLIcoWue9AxNGe9AlfXe3E=
-Date:   Thu, 2 Jul 2020 08:50:02 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 2/2] arm64: Allocate crashkernel always in ZONE_DMA
-Message-ID: <20200702075001.GA16113@willie-the-truck>
-References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
- <1593641660-13254-3-git-send-email-bhsharma@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BC7819253C0;
+        Thu,  2 Jul 2020 07:50:23 +0000 (UTC)
+Received: from [10.36.112.70] (ovpn-112-70.ams2.redhat.com [10.36.112.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 691291002397;
+        Thu,  2 Jul 2020 07:50:21 +0000 (UTC)
+Subject: Re: [PATCH v3 4/7] iommu/vt-d: Handle non-page aligned address
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>
+References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1593617636-79385-5-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <40a83912-f8ad-9887-38d0-39a70ecc062c@redhat.com>
+Date:   Thu, 2 Jul 2020 09:50:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593641660-13254-3-git-send-email-bhsharma@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1593617636-79385-5-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:44:20AM +0530, Bhupesh Sharma wrote:
-> commit bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in
-> ZONE_DMA32") allocates crashkernel for arm64 in the ZONE_DMA32.
+Hi Jacob,
+
+On 7/1/20 5:33 PM, Jacob Pan wrote:
+> From: Liu Yi L <yi.l.liu@intel.com>
 > 
-> However as reported by Prabhakar, this breaks kdump kernel booting in
-> ThunderX2 like arm64 systems. I have noticed this on another ampere
-> arm64 machine. The OOM log in the kdump kernel looks like this:
+> Address information for device TLB invalidation comes from userspace
+> when device is directly assigned to a guest with vIOMMU support.
+> VT-d requires page aligned address. This patch checks and enforce
+> address to be page aligned, otherwise reserved bits can be set in the
+> invalidation descriptor. Unrecoverable fault will be reported due to
+> non-zero value in the reserved bits.
+on the other hand if user space sends unaligned invalidations, shouldn't
+it be reported in some way?
 > 
->   [    0.240552] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
->   [    0.247713] swapper/0: page allocation failure: order:1, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
->   <..snip..>
->   [    0.274706] Call trace:
->   [    0.277170]  dump_backtrace+0x0/0x208
->   [    0.280863]  show_stack+0x1c/0x28
->   [    0.284207]  dump_stack+0xc4/0x10c
->   [    0.287638]  warn_alloc+0x104/0x170
->   [    0.291156]  __alloc_pages_slowpath.constprop.106+0xb08/0xb48
->   [    0.296958]  __alloc_pages_nodemask+0x2ac/0x2f8
->   [    0.301530]  alloc_page_interleave+0x20/0x90
->   [    0.305839]  alloc_pages_current+0xdc/0xf8
->   [    0.309972]  atomic_pool_expand+0x60/0x210
->   [    0.314108]  __dma_atomic_pool_init+0x50/0xa4
->   [    0.318504]  dma_atomic_pool_init+0xac/0x158
->   [    0.322813]  do_one_initcall+0x50/0x218
->   [    0.326684]  kernel_init_freeable+0x22c/0x2d0
->   [    0.331083]  kernel_init+0x18/0x110
->   [    0.334600]  ret_from_fork+0x10/0x18
+> Fixes: 61a06a16e36d8 ("iommu/vt-d: Support flushing more translation
+> cache types")
+> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > 
-> This patch limits the crashkernel allocation to the first 1GB of
-> the RAM accessible (ZONE_DMA), as otherwise we might run into OOM
-> issues when crashkernel is executed, as it might have been originally
-> allocated from either a ZONE_DMA32 memory or mixture of memory chunks
-> belonging to both ZONE_DMA and ZONE_DMA32.
-
-How does this interact with this ongoing series:
-
-https://lore.kernel.org/r/20200628083458.40066-1-chenzhou10@huawei.com
-
-(patch 4, in particular)
-
-> Fixes: bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in ZONE_DMA32")
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  arch/arm64/mm/init.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
+>  drivers/iommu/intel/dmar.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 1e93cfc7c47a..02ae4d623802 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -91,8 +91,15 @@ static void __init reserve_crashkernel(void)
->  	crash_size = PAGE_ALIGN(crash_size);
->  
->  	if (crash_base == 0) {
-> -		/* Current arm64 boot protocol requires 2MB alignment */
-> -		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
-> +		/* Current arm64 boot protocol requires 2MB alignment.
-> +		 * Also limit the crashkernel allocation to the first
-> +		 * 1GB of the RAM accessible (ZONE_DMA), as otherwise we
-> +		 * might run into OOM issues when crashkernel is executed,
-> +		 * as it might have been originally allocated from
-> +		 * either a ZONE_DMA32 memory or mixture of memory
-> +		 * chunks belonging to both ZONE_DMA and ZONE_DMA32.
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index d9f973fa1190..3899f3161071 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -1455,9 +1455,25 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  	 * Max Invs Pending (MIP) is set to 0 for now until we have DIT in
+>  	 * ECAP.
+>  	 */
+> -	desc.qw1 |= addr & ~mask;
+> -	if (size_order)
+> +	if (addr & ~VTD_PAGE_MASK)
+> +		pr_warn_ratelimited("Invalidate non-page aligned address %llx\n", addr);
+> +
+> +	/* Take page address */
+> +	desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr);
+> +
+> +	if (size_order) {
+> +		/*
+> +		 * Existing 0s in address below size_order may be the least
+> +		 * significant bit, we must set them to 1s to avoid having
+> +		 * smaller size than desired.
+Shouldn't you test the input addr against the size_order. Aren't they
+supposed to be consistent? Otherwise one should emit a warning at least?
 > +		 */
+> +		desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT,
+> +					VTD_PAGE_SHIFT);
+nit: instead of working directly on .qw1, couldn't you perform all those
+manipulations directly on addr? and eventually override qw1 at the end?
+> +		/* Clear size_order bit to indicate size */
+> +		desc.qw1 &= ~mask;
+> +		/* Set the S bit to indicate flushing more than 1 page */
+>  		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
+> +	}
+>  
+>  	qi_submit_sync(iommu, &desc, 1, 0);
+>  }
+> 
+Thanks
 
-This comment needs help. Why does putting the crashkernel in ZONE_DMA
-prevent "OOM issues"?
+Eric
 
-Will
