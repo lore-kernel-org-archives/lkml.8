@@ -7,146 +7,135 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9159C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6F520836
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B782620724
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIDObpBZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mg2X3xJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgGBFkj (ORCPT
+        id S1726199AbgGBFnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
+        Thu, 2 Jul 2020 01:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgGBFki (ORCPT
+        with ESMTP id S1726010AbgGBFnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:40:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940C0C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 22:40:38 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e18so12908061pgn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 22:40:38 -0700 (PDT)
+        Thu, 2 Jul 2020 01:43:15 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F79BC08C5C1;
+        Wed,  1 Jul 2020 22:43:15 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id n2so13260485edr.5;
+        Wed, 01 Jul 2020 22:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=joxvKotI6picrAUcS02GkmtYLqsOXW4f1Zm4dCFSTkM=;
-        b=ZIDObpBZEn6qdf4iGXJO9sFOOMqprwvBQx/LmZm1l+NI17ooFzASttkYT4J/BmuTBl
-         eeLcLF5Yn0zMKww/p7euG+QSNHgCbxiw2Dsvwu8sHFApxDpvxKdcuMCv6zHxHofz2KLx
-         T5sey77dv6SmHBdwozwxPOBuPwYITzgEJy5bvBEt9cNFqkWAwapDz2ogqxfrxcOUV8kl
-         uwDV9fWX4S2V8QMuibLNvV3OuiadaWIXo0GuAadCTg7Eqew/3dcM/NzzABgSQzzWCMST
-         Nray+KQAF9/tPMlMeB6G1aq/0zhh708PJIQt9pr+Md0kfWU5r7XZiH0FZziB0/69ywlf
-         quKw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mtjw6ui/18TL1nfopaGxavsYfqOS3W2EnIEUiFfp6xw=;
+        b=mg2X3xJLj6ZYbXlN/J/8VDmx5fZmXiFAvQ2DK1MvHv+BTDx6X4UhPUWjziUEO43UBM
+         s6LFeprRxelk5RRbu+tGnKJuhgwJbZsZPp6BBQalAuijr2VOITxZ5iuhZrcs7q6U4PXT
+         zXGyVfHlUOjFXGjBr324/b3ZsDMLonyUXD+lHFeBDXAk3gPkN0nipBLOpOi3bwVpnHJ4
+         jz9uzOWfMAw1XDDBHUwL/RCdPxdKaqe+Qbpu+Lu7PS1yj9ojoTx2JHch1Ke/9q5XETku
+         ABmve3gTyQoxgBHNjW45447bqXKZ2MFreIrgz726G+e4FEX0EVP1zOYYcgf+FlRYjwxg
+         WX0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=joxvKotI6picrAUcS02GkmtYLqsOXW4f1Zm4dCFSTkM=;
-        b=ESlvW/FoOSbW9wBK7bhab37pGbKbFdwdNRKJaobyUc81DbHC2Zd2xTVBswrfPGjj0o
-         5AnDkHVDyP2uwWxH3Dr0F8GrIetHGbtLmwxKmiNXp9ILPfSvndFPgilaG/IhHnf6JSWQ
-         38DfnX7H2HS4Hg7NI3szm2S4EbvPDTQlhMGpTg4qCWp+N3YEVgyxkEjlxmeVgB3mjvyR
-         y3A7WgWHlJ4WOqNwEPlsJ2C6A47pbiosQ9HeBxvjAfLP9+PIVl9wKmcHcbxkIQJzLaWa
-         iWiXYxRQ8qRLjv03hbTEd5rF42SMmqN6BCPUaJSn3gYNzlkSkSDJWK4y/V+dBhNkt5yE
-         154g==
-X-Gm-Message-State: AOAM530ZxEwqZMbr13sgrE8p5izL4UXd6S663c7jQQ4tCd3i9Wq7rg0r
-        pWmilOF8+U8rI7bf1XKnBnY=
-X-Google-Smtp-Source: ABdhPJwW+LPezYKBPME+QT/SS3oi5Ex2zMGUpnQ3dLqn4v/c862WuDoAh/rYoC4V1p2CnKnAM13y8Q==
-X-Received: by 2002:a63:725c:: with SMTP id c28mr22457908pgn.156.1593668438031;
-        Wed, 01 Jul 2020 22:40:38 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id a3sm7275161pgd.73.2020.07.01.22.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 22:40:37 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 2 Jul 2020 14:40:33 +0900
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Raul Rangel <rrangel@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: UART/TTY console deadlock
-Message-ID: <20200702054033.GC3450@jagdpanzerIV.localdomain>
-References: <CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com>
- <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
- <20200630035816.GA21591@jagdpanzerIV.localdomain>
- <20200630102141.GA11587@alley>
- <20200630105512.GA530@jagdpanzerIV.localdomain>
- <20200630122239.GD6173@alley>
- <20200630130534.GB145027@jagdpanzerIV.localdomain>
- <20200630180255.GD37466@atomide.com>
- <20200702051213.GB3450@jagdpanzerIV.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mtjw6ui/18TL1nfopaGxavsYfqOS3W2EnIEUiFfp6xw=;
+        b=hVPzjpePRvWcaUZ4q9NQy44OStdTwPXoSmUiq2VKWz5EdZ0GmeWoBTg0Iths0Z1lg4
+         LNU3rkQ/H/1rDYphT3ZSf6ire8ziKVpTX09Koz6HcNNzNXyyqzmobk2wXmhUIznpcOZ+
+         1+K1ibVkojVwtb1KKdk0ZdlWrN1N3uKI7dq/OVV1yRRaph/uHY3HBO3dQNn5fZavN/69
+         ezt6h9uYZe4kcR959b1N+Wqhg0APPW4gyPEgyH9kkNNoFqErCAJNnh/t8YXopL1ecCeI
+         VlgRDRk6da/sWDJnN57Psvlw0KHKiPu0qUvWh80ThSpPakIGbvrcOqoK/Nih7w5So/yD
+         5GFg==
+X-Gm-Message-State: AOAM533RHAZUNu0E/t6cvOnF8kEpSPc9erTw89Obd8fGE80QzosFF3XE
+        cuesQLSkepl6XmD4cV8Hmb5VAtrEiuV436Kbzsw=
+X-Google-Smtp-Source: ABdhPJxVPRZ5soPcPEPtvHh/3w7o/dz7zDNB/VortJAz8xs6lV1ibpAjrf6VmCI9zBAn+j2H6ys31mbKowR/O9QG7tc=
+X-Received: by 2002:a50:f08c:: with SMTP id v12mr32253507edl.119.1593668594000;
+ Wed, 01 Jul 2020 22:43:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702051213.GB3450@jagdpanzerIV.localdomain>
+References: <1593656074-10092-1-git-send-email-Anson.Huang@nxp.com>
+ <1593656074-10092-6-git-send-email-Anson.Huang@nxp.com> <CAA+hA=T1+F-oTfWdV22ztUT3Ru-dFPDzhC7aJsdj0R3yP4wzbA@mail.gmail.com>
+ <DB3PR0402MB3916713CC9AF95251A3A2BFAF56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916713CC9AF95251A3A2BFAF56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Thu, 2 Jul 2020 13:29:12 +0800
+Message-ID: <CAA+hA=RqvRVm9c635NXFQSeDekBPz9DU=eP4+LrBQpRR=-swZw@mail.gmail.com>
+Subject: Re: [PATCH V4 5/5] clk: imx8qxp: Support building i.MX8QXP clock
+ driver as module
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/02 14:12), Sergey Senozhatsky wrote:
-> Date: Thu, 2 Jul 2020 14:12:13 +0900
-> From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> To: Tony Lindgren <tony@atomide.com>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Petr Mladek
->  <pmladek@suse.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Raul
->  Rangel <rrangel@google.com>, Sergey Senozhatsky
->  <sergey.senozhatsky.work@gmail.com>, linux-kernel
->  <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman
->  <gregkh@linuxfoundation.org>, Andy Shevchenko
->  <andriy.shevchenko@linux.intel.com>, kurt@linutronix.de, "S, Shirish"
->  <Shirish.S@amd.com>, Peter Zijlstra <peterz@infradead.org>, John Ogness
->  <john.ogness@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>
-> Subject: Re: UART/TTY console deadlock
-> Message-ID: <20200702051213.GB3450@jagdpanzerIV.localdomain>
-> 
-> On (20/06/30 11:02), Tony Lindgren wrote:
-> > This conditional disable for irq_shared does not look nice to me
-> > from the other device point of view :)
-> > 
-> > Would it be possible to just set up te dummy interrupt handler
-> > for the startup, then change it back afterwards? See for example
-> > omap8250_no_handle_irq().
-> 
-> I think we can do it. serial8250_do_startup() and irq handler take
-> port->lock, so they should be synchronized.
+On Thu, Jul 2, 2020 at 11:55 AM Anson Huang <anson.huang@nxp.com> wrote:
+[...]
+> > > +{
+> > > +       return platform_driver_register(&imx8qxp_lpcg_clk_driver);
+> > > +}
+> > > +device_initcall(imx8qxp_lpcg_clk_init);
+> >
+> > Any reason to change to device_initcall which looks a bit strange?
+> > Is it because the following line?
+> > +obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
+> > But it looks to me they're still two modules. Aren't they?
+>
+> It is suggested by Arnd to NOT use builtin_platform_driver(), in order to support module
+> unload, although the clock driver normally does NOT support remove, but it is better to
+> follow the right way.
+>
 
-Hmm, hold on. Why does it disable IRQ in the first place? IRQ handlers
-should grab the port->lock. So if there is already running IRQ, then
-serial8250_do_startup() will wait until IRQ handler unlocks the port->lock.
-If serial8250_do_startup() grabs the port->lock first, then IRQ will wait
-for serial8250_do_startup() to unlock it. serial8250_do_startup() does
-not release the port->unlock until its done:
+By expanding builtin_platform_driver() marcro, you will find your
+patch is exactly doing the same thing
+as buildin_platform_driver() which obivously is unneccesary.
 
-		spin_lock_irqsave(&port->lock, flags);
+#define builtin_platform_driver(__platform_driver) \
+        builtin_driver(__platform_driver, platform_driver_register)
+#define builtin_driver(__driver, __register, ...) \
 
-		wait_for_xmitr(up, UART_LSR_THRE);
-		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
-		udelay(1); /* allow THRE to set */
-		iir1 = serial_port_in(port, UART_IIR);
-		serial_port_out(port, UART_IER, 0);
-		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
-		udelay(1); /* allow a working UART time to re-assert THRE */
-		iir = serial_port_in(port, UART_IIR);
-		serial_port_out(port, UART_IER, 0);
+static int __init __driver##_init(void) \
+{ \
+        return __register(&(__driver) , ##__VA_ARGS__); \
+} \
+device_initcall(__driver##_init);
 
-		spin_unlock_irqrestore(&port->lock, flags);
+If we want to support unload, we need a .remove() callback as current
+clocks are not allocated by devm_().
+If don't support,  we probably can use builtin_platform_driver() first
+and switch to module_platform_driver()
+in the future once the driver supports release resource properly.
 
-so IRQ will not see the inconsistent device state.
+Regards
+Aisheng
 
-What exactly is the purpose of disable_irq_nosync()? Can we just remove
-disable_irq_nosync()/enable_irq() instead? Are there any IRQ handlers
-that don't acquire the port->lock?
-
-	-ss
+> The change in Makefile is just to link scu/lpcg library to i.MX8QXP clk driver, so that we can
+> get rid of exports and below 2 .ko are needed for all i.MX SoCs with SCU inside as per your
+> saying of i.MX8QXP clock driver can be extended for future SoCs with SCU.
+>
+> clk-imx-lpcg-scu.ko
+> clk-imx-scu.ko
+>
+> Thanks,
+> Anson
