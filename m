@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD585C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E161212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4102067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7SXqjqr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxMpXkgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgGBOtA (ORCPT
+        id S1729925AbgGBOtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
+        Thu, 2 Jul 2020 10:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729986AbgGBOqs (ORCPT
+        with ESMTP id S1729985AbgGBOqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 10:46:48 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158C5C08C5EE
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:47 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so27098783wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:47 -0700 (PDT)
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF2BC08C5E1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:44 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z13so28794003wrw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sONund+v6m72UXA2k3mTvsnzOlUrvp8LHJR6S/5dS2c=;
-        b=A7SXqjqrCM16AVWVbtxBs+8Q7KGVv5itBId7jsXn1AHLh3Veja6uzD8SFiMxl2t4vW
-         rRF59UeX210MC4awzP8qxatLAoLaTqe+g6NZB5Y9eStTCYo9NLjEoQKDNzzXMjoXbeok
-         CiVBADgITsgHMUKr55N6uCwjVEVtVYDES7xmS/ui20fUJ1IbAEhYec63OQgoF1LafLc0
-         5SV9rFD21yf03RMLcybreux5P78eLRfpg6B+F6tQv7FYQOagpviBnjHwu0Pw0RRSZyfX
-         jlsCnKv9/Ig3pejOEJF3CzbQdz/Ab06ku9zTCfDTG3urmvKVx1uSkSnq22manAl0mLN8
-         eTtA==
+        bh=K724gNBq1+8gJuUosuyXSMvH+REcJBS2sGMOEUVIfWc=;
+        b=bxMpXkgMVaIQhUosfclwMUUcexKCyxfNvmHDbmWxGE6fnfTamN5u0EjbZj6xscXTJO
+         KIqwSDdDoUdpSQjaH5gfR2j3bPAjelzx07KQNxL5h1MuR11ckg4jcR5+LCNbnF7m0LyX
+         uc+hTJBCiFR8J/aHBmIrhWw+iCM8BO8LXIO9UZm+GQk+ettGaEC+svC5PHWO9knyxcxq
+         Eyx45/1OtfW7w8v3xhWVQYzHpRGQvw0Iu6TXfXbdmUcCnnO7yuLErpt3TcRveMRqx4t5
+         9j6tlz681kwT2hbuts1GpJis58KKUpqBVck9dSa7i7jQ4OzcB3v+7hlHUu2FUQP7ik3B
+         tWIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sONund+v6m72UXA2k3mTvsnzOlUrvp8LHJR6S/5dS2c=;
-        b=CiXDX0H8lyxhVQDe3Ugu/i1kExtd0SG1e+eTN0vU6QDl9MBi1B+/uPp5LmvFlIczsl
-         cfYi0aM0RIIhn0HjPwcqvAvotOWhqisFYlddDj5gHbWQeH4oEqX9JC11rMYptMNB1U+Q
-         iIFdUpchSaknE2D/6Vu2eHG6IoSgWVYzUeQfgyLstLUP8wZlrrHvGXpHhJ0c93jgZ68T
-         FGrWsDCetNH3NDVBr/jvo0CbPmrvZ3oJTwJIuzOxriVZs+XcyOODIrhnsduTQuoWDvH3
-         niVCbgpjr5DzwM4hnMB16X+hW6R6yRPAbNR/aUO3JNnElLEu3R6IqGkux80XnSlieZAh
-         +5jw==
-X-Gm-Message-State: AOAM532Wh0m1TpUVDTSJMR7P0kD61k2riXxoBIVsPMzXxYfBuKvOoxPB
-        2IcKu/7xSn6sGFlggVqnGF8T5w==
-X-Google-Smtp-Source: ABdhPJzRi4BPfjzXaW8qFukfmFtIxWbM/JfxYDBuDyf0+vYOnyYhbkx/MYyV1XQriU0Sd2wBnDG/MA==
-X-Received: by 2002:a1c:b4c2:: with SMTP id d185mr30552073wmf.57.1593701204872;
-        Thu, 02 Jul 2020 07:46:44 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=K724gNBq1+8gJuUosuyXSMvH+REcJBS2sGMOEUVIfWc=;
+        b=soda8/k2KA6USTPNuHxBiOpu9i6AmYYt9dRrE3wT38gMNiFrpqj9Mu0xKtTVaQd8V/
+         1+TLkD3dLYgzFrcCdFtyDVYWxMF30MCElnUX5+CscczXh2dAhRx7WshyXWvbwEM3ZGky
+         aOdkRhAL3SSKndTwfmF/veJtlHyn3sE1NEgpn5jB2BM8jp15oaOTJiqBGJ1qsvS2z58p
+         kwys5/z6KyQWjpIlV/4wX0z90ztDmWFykEnqRVpJyG9w1TG0azoDHAGYbczCwliNf6Sb
+         Cm8s1mz+Xs7VMX1Ef6f+vtGkq8j6Lo6bxIbmqNC3lFnfTQ2yRCgcTcVE9uiVEtZ484HR
+         ridg==
+X-Gm-Message-State: AOAM53033bw9khkS5UquKVNERjD3KlApSwBzuOHSAT69MmVtP4VICzKb
+        lRvx4aO3vCVFq5vh9gpXudNU8w==
+X-Google-Smtp-Source: ABdhPJy4S926IqfqG9+GjXBGJlktkqEcFIY2+P6+GBBzSak8NQL0ghDJYlnEAQjhrd4dBc3MisUR1Q==
+X-Received: by 2002:a5d:4051:: with SMTP id w17mr30549831wrp.183.1593701203410;
         Thu, 02 Jul 2020 07:46:43 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 07:46:42 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Minas Harutyunyan <hminas@synopsys.com>,
         Ben Dooks <ben@simtec.co.uk>
-Subject: [PATCH 10/30] usb: dwc2: gadget: Remove assigned but never used 'maxsize'
-Date:   Thu,  2 Jul 2020 15:46:05 +0100
-Message-Id: <20200702144625.2533530-11-lee.jones@linaro.org>
+Subject: [PATCH 09/30] usb: dwc2: gadget: Do not read GINTMSK2
+Date:   Thu,  2 Jul 2020 15:46:04 +0100
+Message-Id: <20200702144625.2533530-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
@@ -79,39 +79,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of 'maxsize' has not been checked since commit 729cac693eecf
-("usb: dwc2: Change ISOC DDMA flow") back in 2018, so remove the set but
-unused variable, which fixes the following W=1 kernel build warning:
+The value of GINTMSK2 hasn't been checked since the inception of
+dwc2_gadget_wkup_alert_handler() in 2018.
 
- drivers/usb/dwc2/gadget.c: In function ‘dwc2_gadget_fill_isoc_desc’:
- drivers/usb/dwc2/gadget.c:885:6: warning: variable ‘maxsize’ set but not used [-Wunused-but-set-variable]
- 885 | u32 maxsize = 0;
- | ^~~~~~~
+Fixes the following W=1 warning:
+
+ drivers/usb/dwc2/gadget.c: In function ‘dwc2_gadget_wkup_alert_handler’:
+ drivers/usb/dwc2/gadget.c:259:6: warning: variable ‘gintmsk2’ set but not used [-Wunused-but-set-variable]
+ 259 | u32 gintmsk2;
+ | ^~~~~~~~
 
 Cc: Minas Harutyunyan <hminas@synopsys.com>
 Cc: Ben Dooks <ben@simtec.co.uk>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/dwc2/gadget.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/usb/dwc2/gadget.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 14c422ee6a069..116e6175c7a48 100644
+index 12b98b4662872..14c422ee6a069 100644
 --- a/drivers/usb/dwc2/gadget.c
 +++ b/drivers/usb/dwc2/gadget.c
-@@ -880,11 +880,10 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
- 	struct dwc2_dma_desc *desc;
- 	struct dwc2_hsotg *hsotg = hs_ep->parent;
- 	u32 index;
--	u32 maxsize = 0;
- 	u32 mask = 0;
- 	u8 pid = 0;
+@@ -256,10 +256,8 @@ int dwc2_hsotg_tx_fifo_total_depth(struct dwc2_hsotg *hsotg)
+ static void dwc2_gadget_wkup_alert_handler(struct dwc2_hsotg *hsotg)
+ {
+ 	u32 gintsts2;
+-	u32 gintmsk2;
  
--	maxsize = dwc2_gadget_get_desc_params(hs_ep, &mask);
-+	dwc2_gadget_get_desc_params(hs_ep, &mask);
+ 	gintsts2 = dwc2_readl(hsotg, GINTSTS2);
+-	gintmsk2 = dwc2_readl(hsotg, GINTMSK2);
  
- 	index = hs_ep->next_desc;
- 	desc = &hs_ep->desc_list[index];
+ 	if (gintsts2 & GINTSTS2_WKUP_ALERT_INT) {
+ 		dev_dbg(hsotg->dev, "%s: Wkup_Alert_Int\n", __func__);
 -- 
 2.25.1
 
