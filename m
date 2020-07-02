@@ -2,112 +2,135 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F582067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A313C2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="rl1tlBZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgGBWad (ORCPT
+        id S1726371AbgGBWjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:30:33 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33166 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbgGBWac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:30:32 -0400
-IronPort-SDR: /+uu6vBm3TTkeELGuzMiELa0hCwBhECRETk+u41TuMzmWKvRQsMZiHFBms2a2K28I7XR9u9Ii/
- 4N45HfwVcfUQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165105694"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="165105694"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:30:32 -0700
-IronPort-SDR: AoX6z7b952IgJfuZpUh7lLEbsAT13vsfdzjjbueafDO/JsHVoWA2qFNKpfVSocNGFgEyqp6LVd
- W+HHxOQhD7FQ==
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="426100622"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.34]) ([10.255.31.34])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:30:29 -0700
-Subject: Re: [PATCH v2 7/7] KVM: X86: Move kvm_apic_set_version() to
- kvm_update_vcpu_model()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200623115816.24132-1-xiaoyao.li@intel.com>
- <20200623115816.24132-8-xiaoyao.li@intel.com>
- <20200702190009.GJ3575@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <e3f0b5dd-b82b-55ce-6a89-2bffc89c9c72@intel.com>
-Date:   Fri, 3 Jul 2020 06:30:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200702190009.GJ3575@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Thu, 2 Jul 2020 18:39:07 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:21615 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgGBWjG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:39:06 -0400
+Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 6328640186E;
+        Thu,  2 Jul 2020 15:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1593729546;
+        bh=ZVKT4xgQY8MAj9CulrPs/cabyZqtX2jpxJZx1/Wsnmo=;
+        h=Date:To:Subject:From:From;
+        b=rl1tlBZHsyj+T4ch+Pt9WXVyWpeqkSHxK4M1AZj+fn+EK+dxJ4VIA916sX9lRBlBO
+         Jv7CzsqJeG5U08MIY3ZbZoyyJY6tZt1Cu0qOwj8x6LtgDQxb8UUpJ3rNzBVjPBIOT1
+         Zc6thvjTasuaEmXKSoGk6/jxsRXunWfCu61wYQzdXAEvSSOIsm2qgQGkjfyNyd3R5h
+         Oo68nc18Vo4qtamsk7AzX/SwPvHQFOtsAYPnjX34/mfJJRNWadUo/oSmz/3AMeankf
+         SNzTsIRfx8eYbPwpHjyaf49BnG1Dh+PwbEByI9NOZEAw36OgqOhSFF+qtIrHdWMp+e
+         40agvPS1SSqvA==
+Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
+        id 42B6C95C0494; Thu,  2 Jul 2020 15:39:06 -0700 (PDT)
+Date:   Thu, 02 Jul 2020 15:39:06 -0700
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, kuba@kernel.org,
+        davem@davemloft.net, jeffrey.t.kirsher@intel.com,
+        fruggeri@arista.com
+Subject: [PATCH v2] igb: reinit_locked() should be called with rtnl_lock
+User-Agent: Heirloom mailx 12.5 7/5/10
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+Message-Id: <20200702223906.42B6C95C0494@us180.sjc.aristanetworks.com>
+From:   fruggeri@arista.com (Francesco Ruggeri)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/2020 3:00 AM, Sean Christopherson wrote:
-> On Tue, Jun 23, 2020 at 07:58:16PM +0800, Xiaoyao Li wrote:
->> Obviously, kvm_apic_set_version() fits well in kvm_update_vcpu_model().
-> 
-> Same as the last patch, it would be nice to explicitly document that there
-> are no dependencies between kvm_apic_set_version() and kvm_update_cpuid().
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-Sure, will do.
+	kworker			reboot -f
 
-Thanks!
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
 
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/kvm/cpuid.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index 5decc2dd5448..3428f4d84b42 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -129,6 +129,8 @@ void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
->>   			apic->lapic_timer.timer_mode_mask = 3 << 17;
->>   		else
->>   			apic->lapic_timer.timer_mode_mask = 1 << 17;
->> +
->> +		kvm_apic_set_version(vcpu);
->>   	}
->>   
->>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
->> @@ -226,7 +228,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
->>   	}
->>   
->>   	cpuid_fix_nx_cap(vcpu);
->> -	kvm_apic_set_version(vcpu);
->>   	kvm_update_cpuid(vcpu);
->>   	kvm_update_vcpu_model(vcpu);
->>   
->> @@ -255,7 +256,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->>   		goto out;
->>   	}
->>   
->> -	kvm_apic_set_version(vcpu);
->>   	kvm_update_cpuid(vcpu);
->>   	kvm_update_vcpu_model(vcpu);
->>   out:
->> -- 
->> 2.18.2
->>
+The second panic (a divide error) is caused by this race:
 
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+v2: add fix for second race condition above.
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+
+---
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 8bb3db2cbd41..6e5861bfb0fa 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -6224,9 +6224,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
+ 
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
++	}
++
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
+ }
+ 
+ /**
