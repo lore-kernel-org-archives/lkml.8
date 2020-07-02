@@ -2,125 +2,86 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B61AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C64C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F7D20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="EfqiGped";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hnVWUEOl"
+	by mail.kernel.org (Postfix) with ESMTP id 5D36D2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGBXjf (ORCPT
+        id S1726194AbgGBXws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:39:35 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55243 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725915AbgGBXjf (ORCPT
+        Thu, 2 Jul 2020 19:52:48 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:50211 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGBXws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:39:35 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id B03BD5C016C;
-        Thu,  2 Jul 2020 19:39:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 02 Jul 2020 19:39:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=aUKX8t6lKl6VE3fnEcWtgjKc9b
-        ud69PiShCeCobiMYA=; b=EfqiGpedOuskUcm4EYggaVqmYhJKSGz/JT+V1rLHHO
-        EBJyNtsEaVWjnQHclxQSxKC5csQrwkNjFvfaoO8wOZnP2EFTw8uooWBZ4gE1T4dB
-        o3qz0myHQrb2aGJGkKemJTN3E0l+2bO/uHd5W43MZK3klSDbNzHF5EYoZpLxFtq8
-        j9Cc3P6RzVmqLDez/C3v1hCl2PMsPGeOq/JNMsgAk1jxyLIry7wLCScmQNhkMAU/
-        dj5aD3TZbguT40rUYuAEumoAYnV5NfWvs3btSUC9cbl7i2KOr8R9bUl2/4F1I1VQ
-        /EXpobCJOB8p1/5pPC5WxH4MYVvH4/HUEaLStrL5fiFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=aUKX8t6lKl6VE3fnE
-        cWtgjKc9bud69PiShCeCobiMYA=; b=hnVWUEOlXL9MpHbzPilmVr6Ns3AIQlBc/
-        t6NYU8RoJ5e+//X/RQ+IKPWsbda+rVzPqpE4MmhHKQlCGxfpWKiw6+/folOusKyA
-        s4xSdjIRpnhTp8mSqolGznbIsQ/Esxl7vsYX5PA4LtY2Z1xwtQuclutAsNeV7tjR
-        1tsqJSrR3cK+iU6n81RvZ/fIBg0f4bn8bAXF7PioQ0mUgD453oXIY1MLOswyX7JZ
-        0Sp5zAOc1Y+NH3eu+hQQQO9fQMDdsj6fC7WoA5IeELNE1ZNvHH32XUDxmWavtrA8
-        vic71hzk9XSYs3JzN1hKTQWWgNotL9Zf2wq6mYB25syrZZbWyX9BQ==
-X-ME-Sender: <xms:NXD-XuZeMR37LUGBjXDqnFo00b4-iImzVw5qNA57BMEwTmjPTzwSaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicunfhi
-    nhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpefhie
-    fhgfelgfdufedvudelvdefvdefgfeiueeufeegteffudekgefhvedtieefteenucfkphep
-    jeefrddvvdehrdegrddufeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepuggrnhhnhieskhgurhgrghdtnhdruggvvh
-X-ME-Proxy: <xmx:NXD-XhYoRgFHzPYXbeGD-BtTtrNjTFYOUXne_n3qQGL2f1oKk0rh3A>
-    <xmx:NXD-Xo8ti5JKCJ2v9ooAJOhFnirmiJCVOW0aECqr9A1zXcbSXDEU8g>
-    <xmx:NXD-XgpM6LaAjKo8wnOoOkcHSysMIFsHDUGtSLOrqMBJQ_vlCh9lCQ>
-    <xmx:NXD-XqdJ7Lcm-mxjvRYKFuf07E542AmxUkvWXIi6T4nW9AIU-jyp_w>
-Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F0DB73060062;
-        Thu,  2 Jul 2020 19:39:31 -0400 (EDT)
-From:   Danny Lin <danny@kdrag0n.dev>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
+        Thu, 2 Jul 2020 19:52:48 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 062NpYvX013592;
+        Fri, 3 Jul 2020 08:51:34 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
+ Fri, 03 Jul 2020 08:51:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 062NpXER013497
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 3 Jul 2020 08:51:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v3 00/16] Make the user mode driver code a better citizen
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Danny Lin <danny@kdrag0n.dev>
-Subject: [PATCH] kbuild: Allow Clang global merging if !MODULES
-Date:   Thu,  2 Jul 2020 16:39:29 -0700
-Message-Id: <20200702233929.181409-1-danny@kdrag0n.dev>
-X-Mailer: git-send-email 2.27.0
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <20200625095725.GA3303921@kroah.com>
+ <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+ <20200625120725.GA3493334@kroah.com>
+ <20200625.123437.2219826613137938086.davem@davemloft.net>
+ <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+ <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+ <87y2oac50p.fsf@x220.int.ebiederm.org>
+ <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+ <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7f6f0c1a-360a-c37f-de4e-854f0b97f3d3@i-love.sakura.ne.jp>
+Date:   Fri, 3 Jul 2020 08:51:32 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old reasoning for disabling Clang's global merging optimization is
-that it breaks modpost by coalescing many symbols into _MergedGlobals.
-However, modpost is only used in builds with dynamic modules;
-vmlinux.symvers is still created during standalone builds, but it's
-effectively just an empty dummy file.
+On 2020/07/03 1:40, Eric W. Biederman wrote:
+> 
+> This is the third round of my changeset to split the user mode driver
+> code from the user mode helper code, and to make the code use common
+> facilities to get things done instead of recreating them just
+> for the user mode driver code.
 
-Enabling the optimization whenever possible allows us to reap the
-benefits of reduced register pressure when many global variables are
-used in the same function.
-
-An x86 defconfig kernel built with this optimization boots fine in qemu,
-and a downstream 4.14 kernel has been used on arm64 for nearly a year
-without any issues caused by this optimization.
-
-Signed-off-by: Danny Lin <danny@kdrag0n.dev>
----
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Makefile b/Makefile
-index a60c98519c37..f04c3639cf61 100644
---- a/Makefile
-+++ b/Makefile
-@@ -772,10 +772,13 @@ ifdef CONFIG_CC_IS_CLANG
- KBUILD_CPPFLAGS += -Qunused-arguments
- KBUILD_CFLAGS += -Wno-format-invalid-specifier
- KBUILD_CFLAGS += -Wno-gnu
-+
-+ifdef CONFIG_MODULES
- # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
- # source of a reference will be _MergedGlobals and not on of the whitelisted names.
- # See modpost pattern 2
- KBUILD_CFLAGS += -mno-global-merge
-+endif
- else
- 
- # These warnings generated too much noise in a regular build.
--- 
-2.27.0
-
+I won't test this version, for you are ignoring my comments.
