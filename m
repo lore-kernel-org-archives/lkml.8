@@ -2,109 +2,78 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0336C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A134FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B781720C56
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653128;
-	bh=hVnObDxVcx1RGwFLMx3QUPjXV49Wc2ghcsfqJzOTPC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StktejAGE3Bj1No1mjQ0caJR+8hVsfHO3Q4AMr/4h5RBx2axbAEMRSLb2dW1JHl/n
-	 x7DPKnkMT3cEQ1jB39iY3eoBlQd6RPyDfdwFw5vLpVmvMWDgevtZ11reow2LfM6L81
-	 WbbGq9jrOHqUQ05rs82uAbV0zkm7lperheF45OO4=
+	by mail.kernel.org (Postfix) with ESMTP id 851E3214F1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgGBBZ1 (ORCPT
+        id S1728829AbgGBBZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgGBBXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:44 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2F620885;
-        Thu,  2 Jul 2020 01:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653023;
-        bh=hVnObDxVcx1RGwFLMx3QUPjXV49Wc2ghcsfqJzOTPC0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HbT+18n77Dp4VD448UuLPBCw5oukfo1SXQXVtRnflduA9ShOVyDi9ic8vBLwto6U
-         Ey98YBOQJkzamtsrCjUg6cH2NPQF/VNAy0s7cqDQeAfFFOuuNUx3sD45yK/nS3iSDZ
-         O2kOja7fEC7muaij5pw6U3LQ3IvC/HNnie8ViO6M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 39/53] io_uring: fix io_sq_thread no schedule when busy
-Date:   Wed,  1 Jul 2020 21:21:48 -0400
-Message-Id: <20200702012202.2700645-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
-References: <20200702012202.2700645-1-sashal@kernel.org>
+        Wed, 1 Jul 2020 21:25:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6794 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728427AbgGBBXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:42 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8754BC6A2447C86627A7;
+        Thu,  2 Jul 2020 09:23:37 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 2 Jul 2020 09:23:29 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <inuxarm@huawei.com>
+Subject: [PATCH] drm/hisilicon: Use drmm_kzalloc() instead of devm_kzalloc()
+Date:   Thu, 2 Jul 2020 09:21:54 +0800
+Message-ID: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+using the new API drmm_kzalloc() instead of devm_kzalloc()
 
-[ Upstream commit b772f07add1c0b22e02c0f1e96f647560679d3a9 ]
-
-When the user consumes and generates sqe at a fast rate,
-io_sqring_entries can always get sqe, and ret will not be equal to -EBUSY,
-so that io_sq_thread will never call cond_resched or schedule, and then
-we will get the following system error prompt:
-
-rcu: INFO: rcu_sched self-detected stall on CPU
-or
-watchdog: BUG: soft lockup-CPU#23 stuck for 112s! [io_uring-sq:1863]
-
-This patch checks whether need to call cond_resched() by checking
-the need_resched() function every cycle.
-
-Suggested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
 ---
- fs/io_uring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 1829be7f63a35..6cf9d509371e2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6071,7 +6071,7 @@ static int io_sq_thread(void *data)
- 		 * If submit got -EBUSY, flag us as needing the application
- 		 * to enter the kernel to reap and flush events.
- 		 */
--		if (!to_submit || ret == -EBUSY) {
-+		if (!to_submit || ret == -EBUSY || need_resched()) {
- 			/*
- 			 * Drop cur_mm before scheduling, we can't hold it for
- 			 * long periods (or over schedule()). Do this before
-@@ -6087,7 +6087,7 @@ static int io_sq_thread(void *data)
- 			 * more IO, we should wait for the application to
- 			 * reap events and wake us up.
- 			 */
--			if (!list_empty(&ctx->poll_list) ||
-+			if (!list_empty(&ctx->poll_list) || need_resched() ||
- 			    (!time_after(jiffies, timeout) && ret != -EBUSY &&
- 			    !percpu_ref_is_dying(&ctx->refs))) {
- 				if (current->task_works)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index a6fd0c2..2f20704 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -23,6 +23,7 @@
+ #include <drm/drm_print.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
++#include <drm/drm_managed.h>
+ 
+ #include "hibmc_drm_drv.h"
+ #include "hibmc_drm_regs.h"
+@@ -267,7 +268,7 @@ static int hibmc_load(struct drm_device *dev)
+ 	struct hibmc_drm_private *priv;
+ 	int ret;
+ 
+-	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
++	priv = drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv) {
+ 		DRM_ERROR("no memory to allocate for hibmc_drm_private\n");
+ 		return -ENOMEM;
 -- 
-2.25.1
+2.7.4
 
