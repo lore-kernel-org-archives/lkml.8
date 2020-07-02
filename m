@@ -2,87 +2,169 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7270BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16302C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D450208D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CE4206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgGBQ7h (ORCPT
+        id S1727065AbgGBRCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:59:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59112 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbgGBQ7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:59:23 -0400
-IronPort-SDR: 8bfqraMKyd9wdlZbsgRiiqBtsV+2p7tEKVQ3ZsWnSdrmfVlafH8JUZOD5pG5vknAf38R768fgy
- 5u8CiaBPFhxA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="146051857"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="146051857"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:59:22 -0700
-IronPort-SDR: pzbZZcBN80J3dCNKD5PVu1O5ighELMNMf2O0sGtwLEpgGN4rb01n+bh9dvzjajtD43mdwoulcU
- jMZRFeWX8Q7g==
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="426014892"
-Received: from nzbastur-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.231.182])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:59:21 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 6/8] ASoC: sunxi: sun4i-spdif: fix kernel-doc
-Date:   Thu,  2 Jul 2020 11:58:59 -0500
-Message-Id: <20200702165901.164100-7-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
-References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 2 Jul 2020 13:02:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32850 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgGBRCA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:02:00 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 001DC2A0641
+Subject: Re: [PATCH v3 5/9] media: staging: rkisp1: remove unecessary clocks
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com,
+        tfiga@chromium.org, eddie.cai.linux@gmail.com,
+        zhengsq@rock-chips.com
+References: <20200702165410.2583375-1-helen.koike@collabora.com>
+ <20200702165410.2583375-6-helen.koike@collabora.com>
+Message-ID: <c70b55a4-c33c-226b-2596-a7bbba199346@collabora.com>
+Date:   Thu, 2 Jul 2020 14:01:50 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702165410.2583375-6-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 warning - typo in field description
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- sound/soc/sunxi/sun4i-spdif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdif.c
-index 86779a99df75..326dd45e39da 100644
---- a/sound/soc/sunxi/sun4i-spdif.c
-+++ b/sound/soc/sunxi/sun4i-spdif.c
-@@ -167,7 +167,7 @@
- /**
-  * struct sun4i_spdif_quirks - Differences between SoC variants.
-  *
-- * @reg_dac_tx_data: TX FIFO offset for DMA config.
-+ * @reg_dac_txdata: TX FIFO offset for DMA config.
-  * @has_reset: SoC needs reset deasserted.
-  * @val_fctl_ftx: TX FIFO flush bitmask.
-  */
--- 
-2.25.1
+On 7/2/20 1:54 PM, Helen Koike wrote:
+> aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+> hclk_isp, thus we can remove parents from the list, with the goal to
+> cleanup the dt-bindings and remove it from staging.
+> 
+> For reference, this is the isp clock topology:
+> 
+>  xin24m
+>     pll_npll
+>        npll
+>           clk_isp1
+>           clk_isp0
+>     pll_cpll
+>        cpll
+>           aclk_isp1
+>              aclk_isp1_noc
+>              hclk_isp1
+>                 aclk_isp1_wrapper
+>                 hclk_isp1_noc
+>           aclk_isp0
+>              hclk_isp1_wrapper
+>              aclk_isp0_wrapper
+>              aclk_isp0_noc
+>              hclk_isp0
+>                 hclk_isp0_wrapper
+>                 hclk_isp0_noc
+>  pclkin_isp1_wrapper
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> Changes in V3:
+> - this is a new patch in the series
+> ---
+>  .../bindings/media/rockchip-isp1.yaml         | 33 ++++++++++---------
+>  drivers/staging/media/rkisp1/rkisp1-dev.c     |  2 --
+>  2 files changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> index 4d111ef2e89c7..f806820eb8153 100644
+> --- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> @@ -24,20 +24,21 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    items:
+> -      - description: ISP clock
+> -      - description: ISP AXI clock clock
+> -      - description: ISP AXI clock  wrapper clock
+> -      - description: ISP AHB clock clock
+> -      - description: ISP AHB wrapper clock
+> +    maxItems: 5
+> +    minItems: 3
 
+Sorry, I forgot to mentioned that, as discussed previously on https://patchwork.kernel.org/patch/11475007/ ,
+this is prepared to add rk3288 support, this is why maxItems is 5 (since rk3288 has 5 clocks).
+
+> +    description:
+> +      rk3399 isp0 clocks
+> +        ISP clock
+> +        ISP AXI wrapper clock
+> +        ISP AHB wrapper clock
+>  
+>    clock-names:
+> -    items:
+> -      - const: clk_isp
+> -      - const: aclk_isp
+> -      - const: aclk_isp_wrap
+> -      - const: hclk_isp
+> -      - const: hclk_isp_wrap
+> +    oneOf:
+
+Same for this "oneOf", so we can add "rk3399 isp1 clocks" and "rk3288 clocks" later.
+
+Regards,
+Helen
+
+> +      # rk3399 isp0 clocks
+> +      - items:
+> +        - const: clk_isp
+> +        - const: aclk_isp_wrap
+> +        - const: hclk_isp_wrap
+>  
+>    iommus:
+>      maxItems: 1
+> @@ -135,11 +136,11 @@ examples:
+>              reg = <0x0 0xff910000 0x0 0x4000>;
+>              interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>              clocks = <&cru SCLK_ISP0>,
+> -                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> -                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +                     <&cru ACLK_ISP0_WRAPPER>,
+> +                     <&cru HCLK_ISP0_WRAPPER>;
+>              clock-names = "clk_isp",
+> -                          "aclk_isp", "aclk_isp_wrap",
+> -                          "hclk_isp", "hclk_isp_wrap";
+> +                          "aclk_isp_wrap",
+> +                          "hclk_isp_wrap";
+>              iommus = <&isp0_mmu>;
+>              phys = <&dphy>;
+>              phy-names = "dphy";
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> index f38801fea10d9..36f5f3b97a9b9 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+> @@ -407,8 +407,6 @@ static irqreturn_t rkisp1_isr(int irq, void *ctx)
+>  
+>  static const char * const rk3399_isp_clks[] = {
+>  	"clk_isp",
+> -	"aclk_isp",
+> -	"hclk_isp",
+>  	"aclk_isp_wrap",
+>  	"hclk_isp_wrap",
+>  };
+> 
