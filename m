@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61936C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 219D7206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A27E206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653496;
-	bh=98pMvrajOhsYk1Q0QIM9Xgjzsao1llACBREviGeiU08=;
+	s=default; t=1593653498;
+	bh=heowfcsnZuEYIFC4+rps4mV3IVoeNQ5q+r10S12/lso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRw3esx8yOdzD1/o1wzGh6k3gY+rSFR18IN3g5qxXn66QFxReMG2hpU/sFqa8bMGG
-	 OsXAm4256gUnIiD1Rwl/odQX2C0TIMpOv/J2nTke8i++HCEF0CbG633eIlDZn2NqsC
-	 GtfoqK4vDGn4RRl31LfAIoTVkq1kgpk12LeL9bII=
+	b=xOu9UPfY1GYuAoYoEnLZtatnmB8Q6WRn2slGgfuJIZ2XcGi4MtMtTlv6fZnL7YvpG
+	 uidS9Fli686aAkvsxD2RerVk4HJCsLHPuRO7tY+nrU78/Kx/vQgwg+BgTIXryVnAnu
+	 H04lx06U4mp0XPmsyef7P9tgoU+fCQe4AWp52FTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbgGBBbe (ORCPT
+        id S1729504AbgGBBbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgGBB0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:33 -0400
+        id S1729068AbgGBB0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CFE20884;
-        Thu,  2 Jul 2020 01:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0798206BE;
+        Thu,  2 Jul 2020 01:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653193;
-        bh=98pMvrajOhsYk1Q0QIM9Xgjzsao1llACBREviGeiU08=;
+        s=default; t=1593653190;
+        bh=heowfcsnZuEYIFC4+rps4mV3IVoeNQ5q+r10S12/lso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drckTU4/7NGwYdcbgJgtCvrDLYzCyb/bS0/e7QQz2OQDtJ5mtJUy9V05CG0Ug90Hc
-         zTmI++ak49xiBL7HFRKcd0h/D7mJ5pcvBCNmQeift3E0ri4vOfAZ+wIDKbm6OGv8CW
-         P8uXLePT6pKAzIG9vvFSiwX0wWQG2NVe7wb6vY8w=
+        b=h9Itgr8VXkBGGi+o3I8OGqRQaqXv07jiw5OVyHAVYi8nKe7vBsosk6TZHQwcFsRAL
+         ZYXse5sUhEN5yJkKkeZNtz7v/YcVsUPTTBsEd/gnJVTnHRCcKDvAtlckorvKquuV2Z
+         h9yFyWmlL8DSgtbUR6kk/2mOSu8vsSAB9IHocESs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
+Cc:     Ciara Loftus <ciara.loftus@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 14/27] drm: panel-orientation-quirks: Add quirk for Asus T101HA panel
-Date:   Wed,  1 Jul 2020 21:26:02 -0400
-Message-Id: <20200702012615.2701532-14-sashal@kernel.org>
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/27] i40e: protect ring accesses with READ- and WRITE_ONCE
+Date:   Wed,  1 Jul 2020 21:26:00 -0400
+Message-Id: <20200702012615.2701532-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
 References: <20200702012615.2701532-1-sashal@kernel.org>
@@ -60,39 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ciara Loftus <ciara.loftus@intel.com>
 
-[ Upstream commit 6c22bc18a3b93a38018844636557ad02e588e055 ]
+[ Upstream commit d59e267912cd90b0adf33b4659050d831e746317 ]
 
-Like the Asus T100HA the Asus T101HA also uses a panel which has been
-mounted 90 degrees rotated, albeit in the opposite direction.
-Add a quirk for this.
+READ_ONCE should be used when reading rings prior to accessing the
+statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
+usage when allocating and freeing the rings, to ensure protected access.
 
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-1-hdegoede@redhat.com
+Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 29 ++++++++++++++-------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index cc354b4917742..de7837efbbfce 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -107,6 +107,12 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100HAN"),
- 		},
- 		.driver_data = (void *)&asus_t100ha,
-+	}, {	/* Asus T101HA */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T101HA"),
-+		},
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 23b31b2ff5ccd..a74b01bf581e9 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -446,11 +446,15 @@ static void i40e_get_netdev_stats_struct(struct net_device *netdev,
+ 		i40e_get_netdev_stats_struct_tx(ring, stats);
+ 
+ 		if (i40e_enabled_xdp_vsi(vsi)) {
+-			ring++;
++			ring = READ_ONCE(vsi->xdp_rings[i]);
++			if (!ring)
++				continue;
+ 			i40e_get_netdev_stats_struct_tx(ring, stats);
+ 		}
+ 
+-		ring++;
++		ring = READ_ONCE(vsi->rx_rings[i]);
++		if (!ring)
++			continue;
+ 		do {
+ 			start   = u64_stats_fetch_begin_irq(&ring->syncp);
+ 			packets = ring->stats.packets;
+@@ -793,6 +797,8 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 	for (q = 0; q < vsi->num_queue_pairs; q++) {
+ 		/* locate Tx ring */
+ 		p = READ_ONCE(vsi->tx_rings[q]);
++		if (!p)
++			continue;
+ 
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+@@ -806,8 +812,11 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 		tx_linearize += p->tx_stats.tx_linearize;
+ 		tx_force_wb += p->tx_stats.tx_force_wb;
+ 
+-		/* Rx queue is part of the same block as Tx queue */
+-		p = &p[1];
++		/* locate Rx ring */
++		p = READ_ONCE(vsi->rx_rings[q]);
++		if (!p)
++			continue;
++
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+ 			packets = p->stats.packets;
+@@ -10196,10 +10205,10 @@ static void i40e_vsi_clear_rings(struct i40e_vsi *vsi)
+ 	if (vsi->tx_rings && vsi->tx_rings[0]) {
+ 		for (i = 0; i < vsi->alloc_queue_pairs; i++) {
+ 			kfree_rcu(vsi->tx_rings[i], rcu);
+-			vsi->tx_rings[i] = NULL;
+-			vsi->rx_rings[i] = NULL;
++			WRITE_ONCE(vsi->tx_rings[i], NULL);
++			WRITE_ONCE(vsi->rx_rings[i], NULL);
+ 			if (vsi->xdp_rings)
+-				vsi->xdp_rings[i] = NULL;
++				WRITE_ONCE(vsi->xdp_rings[i], NULL);
+ 		}
+ 	}
+ }
+@@ -10233,7 +10242,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		if (vsi->back->hw_features & I40E_HW_WB_ON_ITR_CAPABLE)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->tx_rings[i] = ring++;
++		WRITE_ONCE(vsi->tx_rings[i], ring++);
+ 
+ 		if (!i40e_enabled_xdp_vsi(vsi))
+ 			goto setup_rx;
+@@ -10251,7 +10260,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		set_ring_xdp(ring);
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->xdp_rings[i] = ring++;
++		WRITE_ONCE(vsi->xdp_rings[i], ring++);
+ 
+ setup_rx:
+ 		ring->queue_index = i;
+@@ -10264,7 +10273,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		ring->size = 0;
+ 		ring->dcb_tc = 0;
+ 		ring->itr_setting = pf->rx_itr_default;
+-		vsi->rx_rings[i] = ring;
++		WRITE_ONCE(vsi->rx_rings[i], ring);
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
