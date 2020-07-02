@@ -2,263 +2,129 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6211C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66824208D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B6520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TYz0Jvut"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="HwiYMHSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgGBL0E (ORCPT
+        id S1728806AbgGBL11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46960 "EHLO
+        Thu, 2 Jul 2020 07:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbgGBLZo (ORCPT
+        with ESMTP id S1728502AbgGBL10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:25:44 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E1BC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:25:44 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e64so23554452iof.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:25:44 -0700 (PDT)
+        Thu, 2 Jul 2020 07:27:26 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E54C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:27:26 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w2so12526865pgg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YLxlyC8xC2oohqQ3SQ/sJ9I/B5ThQ+eLGnUYm9WmZtk=;
-        b=TYz0Jvutqptt2OJP3sa1jjDjKiNUvQZ7mxjNSqSwKzJG+Jxedzq1Xa652kPmD4t8Z+
-         7mGzyY9KHnT/c4udkOl6SYTpASBxb+OtMG9CUf1bb8Z1leaRPGxwj5XnS3Dz0E3mXX1n
-         U0U/7CnTyaaAxtohmq/XVwNuvJ8lDszu/kV5JGe4gK9OKTkzPtrpwXpkdhq+6URq60Ce
-         8TyjK1IQT4RornDjJu+2uPttWRudqccVmQRS2J37rFmjPYArXdt6s6GhFApJR/2R8OTh
-         rhWpsJknpKWMP4yQ00+DpLDmoIJUkDe0mVMrQkyDJwUO3Hn1dJBOEnexF5IjJgoWYjD9
-         LUOQ==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xxVvosb2amin9BFIRGrxAO+BSau+UIIa0mUkKu+/RSI=;
+        b=HwiYMHSNLGiPTj+eLoFYYCv8STpwSN+aakDFtwggFi06ZTR2rO9t4ieR6D8DYjOnFF
+         CvtbEtrGTAyfxb4OVQhaeoHY0A4C5Oyt96WExj+7OQhIjay3oIbipdAZkjWqKoVKvdvu
+         jD8rD+Pps9oMy05HYAhqiociLu200xBOfYthTHu04k5Y6Lg3jnXDh6sg+aOXm30V6Tpy
+         LsgniJQH7U8PCY6WgucdlS6pUhxa1xf4IMN+Q0iRzF+OIU8Lksk0jJTArBvZFp3EvfO1
+         7fidzsSCCg4bpmWczHlIYqiujSidsEdQ4q7HCdhSmzwX+oV7/DSaDvpkIuLmntvxfFMv
+         oXSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YLxlyC8xC2oohqQ3SQ/sJ9I/B5ThQ+eLGnUYm9WmZtk=;
-        b=NmCjfzUsiEX6JrLzGho1BvQ38E10DYdQ5IncKVnPDXDfbMc/JDnRtThKN5qOlwNCbG
-         LmY4lO6DRygTcNvtnaV9Y8gHY5O1ZobBU69NOR/A7I5VIUgxPwHEEhBngaq/LCl1/xER
-         QHKfYKuUpMCe2+T6DPNvXs27qurDLBodCFvTZhKN7VeGr/wcseghOheZCXn7hWfeL6j0
-         H70Cy2wyeeQapkaBYSpwGVwD5EcJPvk133wjh01VfG+8zjaoGWvZiXDe5uKiRMAWnR5e
-         +pzLHGrZ7/UH5j/sGA5vNUJ1fUSlNI+eqBFSSAwoKwB+VEN+xD6Vz6ryfTJeWAHKd7ye
-         iVUw==
-X-Gm-Message-State: AOAM5301JNQOywPPyfUt41htFFDEqfrXLJS7qmqn0n2iyT/uAbnxwUrp
-        eHRPFhyH6OrHy9pf38PV/F+HjA==
-X-Google-Smtp-Source: ABdhPJz3TJtKCG/TK1CEIY5pjpNyL6ied9Er7csKDIw0l9vkaorc7+VhMsk4ejyDnpGI+J/OKCDZgA==
-X-Received: by 2002:a02:b0d5:: with SMTP id w21mr21206761jah.27.1593689143741;
-        Thu, 02 Jul 2020 04:25:43 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id c3sm4692842ilj.31.2020.07.02.04.25.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xxVvosb2amin9BFIRGrxAO+BSau+UIIa0mUkKu+/RSI=;
+        b=QDR3Xg5RPQjZIzlT9t93psZfmZpYNjt6HrD+MS5SCiBqKuDqcfy9GpB0UxH0nuFg9d
+         inn9oDcfdknBLiBt6HgB4dIlo+lySoAShhDN4RZwOTVzyj2wbgv05PxPTms+S7hOOl4o
+         PjuAWGM4XzlOrhl0qtPfF7zKwSSe62eEYWpNMLVeV/Nz4cfQiqdON4W9MYlztogaARFp
+         1Wp752BWBzLSXexwy7I6wb2dTjyne3HuYcFuTkswr7DbY7JuyyMET3u7MjvBUZjuQRud
+         bBmH1XoudvXdPuvvoN80jjj2v8sv5LK+4CN/h68HA3mSqCWkZg6Hb0t9JcQf0mk6ju6k
+         fOmg==
+X-Gm-Message-State: AOAM531wMI5Ru1i3U+37OFXLy8Uc5SbKxVicxBhF4xkqLn2eqnma6LS7
+        qjb/r7uh3GPaFJmSuMSOvivO5Q==
+X-Google-Smtp-Source: ABdhPJx0kIoo4VzR6JkF+6ePeKECGCTXNBmGrMrL+khrUcm1al6vHhwWigbEzCR55cqth/kw9a2/1g==
+X-Received: by 2002:a65:478a:: with SMTP id e10mr23853468pgs.146.1593689246428;
+        Thu, 02 Jul 2020 04:27:26 -0700 (PDT)
+Received: from localhost ([2406:7400:73:3271:908:f18a:1156:5c38])
+        by smtp.gmail.com with ESMTPSA id k92sm7885691pje.30.2020.07.02.04.27.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 04:25:43 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/4] net: ipa: always handle suspend workaround
-Date:   Thu,  2 Jul 2020 06:25:35 -0500
-Message-Id: <20200702112537.347994-3-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702112537.347994-1-elder@linaro.org>
-References: <20200702112537.347994-1-elder@linaro.org>
+        Thu, 02 Jul 2020 04:27:25 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 07:27:18 -0400
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     B K Karthik <karthik.bk2000@live.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] staging: rtl8188eu: include: rtw_pwrctrl.h: fixed a
+ blank space coding style issue.
+Message-ID: <20200702112718.igdpcicprid74pyj@pesu-pes-edu>
+References: <20200702112210.th4aiiszhdtufbpe@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="il2oqzpbqvyo7t3t"
+Content-Disposition: inline
+In-Reply-To: <20200702112210.th4aiiszhdtufbpe@pesu-pes-edu>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPA version 3.5.1 has a hardware quirk that requires special
-handling if an RX endpoint is suspended while aggregation is active.
-This handling is implemented by ipa_endpoint_suspend_aggr().
 
-Have ipa_endpoint_program_suspend() be responsible for calling
-ipa_endpoint_suspend_aggr() if suspend mode is being enabled on
-an endpoint.  If the endpoint does not support aggregation, or if
-aggregation isn't active, this call will continue to have no effect.
+--il2oqzpbqvyo7t3t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Move the definition of ipa_endpoint_suspend_aggr() up in the file so
-its definition precedes the new earlier reference to it.  This
-requires ipa_endpoint_aggr_active() and ipa_endpoint_force_close()
-to be moved as well.
+add blank spaces to improve code readability.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
 ---
- drivers/net/ipa/ipa_endpoint.c | 125 +++++++++++++++++----------------
- 1 file changed, 63 insertions(+), 62 deletions(-)
+ drivers/staging/rtl8188eu/include/rtw_pwrctrl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 7f4bea18bd02..d6ef5b8647bf 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -323,13 +323,73 @@ ipa_endpoint_program_delay(struct ipa_endpoint *endpoint, bool enable)
- 		(void)ipa_endpoint_init_ctrl(endpoint, enable);
- }
- 
--/* Returns previous suspend state (true means it was enabled) */
-+static bool ipa_endpoint_aggr_active(struct ipa_endpoint *endpoint)
-+{
-+	u32 mask = BIT(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
-+	u32 offset;
-+	u32 val;
-+
-+	/* assert(mask & ipa->available); */
-+	offset = ipa_reg_state_aggr_active_offset(ipa->version);
-+	val = ioread32(ipa->reg_virt + offset);
-+
-+	return !!(val & mask);
-+}
-+
-+static void ipa_endpoint_force_close(struct ipa_endpoint *endpoint)
-+{
-+	u32 mask = BIT(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
-+
-+	/* assert(mask & ipa->available); */
-+	iowrite32(mask, ipa->reg_virt + IPA_REG_AGGR_FORCE_CLOSE_OFFSET);
-+}
-+
-+/**
-+ * ipa_endpoint_suspend_aggr() - Emulate suspend interrupt
-+ * @endpoint_id:	Endpoint on which to emulate a suspend
-+ *
-+ *  Emulate suspend IPA interrupt to unsuspend an endpoint suspended
-+ *  with an open aggregation frame.  This is to work around a hardware
-+ *  issue in IPA version 3.5.1 where the suspend interrupt will not be
-+ *  generated when it should be.
-+ */
-+static void ipa_endpoint_suspend_aggr(struct ipa_endpoint *endpoint)
-+{
-+	struct ipa *ipa = endpoint->ipa;
-+
-+	if (!endpoint->data->aggregation)
-+		return;
-+
-+	/* Nothing to do if the endpoint doesn't have aggregation open */
-+	if (!ipa_endpoint_aggr_active(endpoint))
-+		return;
-+
-+	/* Force close aggregation */
-+	ipa_endpoint_force_close(endpoint);
-+
-+	ipa_interrupt_simulate_suspend(ipa->interrupt);
-+}
-+
-+/* Returns previous suspend state (true means suspend was enabled) */
- static bool
- ipa_endpoint_program_suspend(struct ipa_endpoint *endpoint, bool enable)
- {
-+	bool suspended;
-+
- 	/* assert(!endpoint->toward_ipa); */
- 
--	return ipa_endpoint_init_ctrl(endpoint, enable);
-+	suspended = ipa_endpoint_init_ctrl(endpoint, enable);
-+
-+	/* A client suspended with an open aggregation frame will not
-+	 * generate a SUSPEND IPA interrupt.  If enabling suspend, have
-+	 * ipa_endpoint_suspend_aggr() handle this.
-+	 */
-+	if (enable && !suspended)
-+		ipa_endpoint_suspend_aggr(endpoint);
-+
-+	return suspended;
- }
- 
- /* Enable or disable delay or suspend mode on all modem endpoints */
-@@ -1144,29 +1204,6 @@ void ipa_endpoint_default_route_clear(struct ipa *ipa)
- 	ipa_endpoint_default_route_set(ipa, 0);
- }
- 
--static bool ipa_endpoint_aggr_active(struct ipa_endpoint *endpoint)
--{
--	u32 mask = BIT(endpoint->endpoint_id);
--	struct ipa *ipa = endpoint->ipa;
--	u32 offset;
--	u32 val;
--
--	/* assert(mask & ipa->available); */
--	offset = ipa_reg_state_aggr_active_offset(ipa->version);
--	val = ioread32(ipa->reg_virt + offset);
--
--	return !!(val & mask);
--}
--
--static void ipa_endpoint_force_close(struct ipa_endpoint *endpoint)
--{
--	u32 mask = BIT(endpoint->endpoint_id);
--	struct ipa *ipa = endpoint->ipa;
--
--	/* assert(mask & ipa->available); */
--	iowrite32(mask, ipa->reg_virt + IPA_REG_AGGR_FORCE_CLOSE_OFFSET);
--}
--
- /**
-  * ipa_endpoint_reset_rx_aggr() - Reset RX endpoint with aggregation active
-  * @endpoint:	Endpoint to be reset
-@@ -1366,34 +1403,6 @@ void ipa_endpoint_disable_one(struct ipa_endpoint *endpoint)
- 			endpoint->endpoint_id);
- }
- 
--/**
-- * ipa_endpoint_suspend_aggr() - Emulate suspend interrupt
-- * @endpoint_id:	Endpoint on which to emulate a suspend
-- *
-- *  Emulate suspend IPA interrupt to unsuspend an endpoint suspended
-- *  with an open aggregation frame.  This is to work around a hardware
-- *  issue in IPA version 3.5.1 where the suspend interrupt will not be
-- *  generated when it should be.
-- */
--static void ipa_endpoint_suspend_aggr(struct ipa_endpoint *endpoint)
--{
--	struct ipa *ipa = endpoint->ipa;
--
--	/* assert(ipa->version == IPA_VERSION_3_5_1); */
--
--	if (!endpoint->data->aggregation)
--		return;
--
--	/* Nothing to do if the endpoint doesn't have aggregation open */
--	if (!ipa_endpoint_aggr_active(endpoint))
--		return;
--
--	/* Force close aggregation */
--	ipa_endpoint_force_close(endpoint);
--
--	ipa_interrupt_simulate_suspend(ipa->interrupt);
--}
--
- void ipa_endpoint_suspend_one(struct ipa_endpoint *endpoint)
- {
- 	struct device *dev = &endpoint->ipa->pdev->dev;
-@@ -1409,16 +1418,8 @@ void ipa_endpoint_suspend_one(struct ipa_endpoint *endpoint)
- 
- 	/* IPA v3.5.1 doesn't use channel stop for suspend */
- 	stop_channel = endpoint->ipa->version != IPA_VERSION_3_5_1;
--	if (!endpoint->toward_ipa && !stop_channel) {
--		/* Due to a hardware bug, a client suspended with an open
--		 * aggregation frame will not generate a SUSPEND IPA
--		 * interrupt.  We work around this by force-closing the
--		 * aggregation frame, then simulating the arrival of such
--		 * an interrupt.
--		 */
-+	if (!endpoint->toward_ipa && !stop_channel)
- 		(void)ipa_endpoint_program_suspend(endpoint, true);
--		ipa_endpoint_suspend_aggr(endpoint);
--	}
- 
- 	ret = gsi_channel_suspend(gsi, endpoint->channel_id, stop_channel);
- 	if (ret)
--- 
-2.25.1
+diff --git a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
+index c89328142731..b4cf0f1ce6d3 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
++++ b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
+@@ -84,7 +84,7 @@ struct reportpwrstate_parm {
+        unsigned short rsvd;
+ };
 
+-#define LPS_DELAY_TIME (1*HZ) /*  1 sec */
++#define LPS_DELAY_TIME (1 * HZ) /*  1 sec */
+
+ #define EXE_PWR_NONE   0x01
+ #define EXE_PWR_IPS            0x02
+--
+2.20.1
+
+
+--il2oqzpbqvyo7t3t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79xJUACgkQ471Q5AHe
+Z2os7wv+NYI8O0JJ4pDIYcg7pg3GvyVcwoP6mQWhqjP8V6ffl4iQ81Fra9bVxY3D
+Zk6il9x7b1OQPpg1IcroQ26+asY/i7m6cPyYEOCmZbm89NmHNY9jFNtZB6tGMWp+
+vQeCf8Bxh0VVlKB1/pDdSq3xYLR5xvFwYwsLT77bHjxIDuB2JPw5UauJdluPDmOH
+7+/cP48TcWe+xR77TNWCnL+ldOStSCOJ3IlmxZqXyX4gsVyIKoXFGyg4YK8rPNR7
+efKbpdwK761IfpfzW2FYiakJculdkQ2xtQWvgvLdqai5KMv+r1hcChVCOo3kYch0
+oGfVol+YaONoLlSFkKuB8oS2rbhHKePSsPuoLKIcSVke6hGulUVq7zfR6NMXmnQw
+wnPDsubkTlRRTxcMoVF5TEWWPGxi72TLFgZZengE9q6zdbkCmCN7cyFg4Xr17qT2
+/6FHmJNt45tvOFDMhywLAb9z/uB3HOY/7NyczbZ6gTtn396CwV/xMpjrPNcj8THm
+Ku0TDAFC
+=P3nI
+-----END PGP SIGNATURE-----
+
+--il2oqzpbqvyo7t3t--
