@@ -2,103 +2,117 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E60C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62422C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC3F20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334A220720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IHna+nXu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z8kwD0sC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgGBDF4 (ORCPT
+        id S1728129AbgGBDGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 23:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgGBDFz (ORCPT
+        Wed, 1 Jul 2020 23:06:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50133 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726094AbgGBDGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 23:05:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBBDC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 20:05:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so4134866plk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 20:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LSIXeJkTyhS8zDoxVph+aH1Bdmz06pqtIU5eHol2+kg=;
-        b=IHna+nXuiFtXsW8Y44jarGOecmrNRjmRg+BPWhVHX8oo0+pm750A347UxP8cdyRZtz
-         1rpywCjS09JJX3W5xYBHW4fN6qh+vM7hi/H2OD6gpAR1d3u9DiA5Pm47zTSAAtfjjdt+
-         DZn8k+LOezD7Jt0KucWr934HnBmU0a1UWPHWGTBh8BAcZHGguAvIeqc/nh3qnVhehZlm
-         GWaWs1LN+68mh6kQISH/hddLDYkvv5FgdSG3ICOb2papaV+z/hAE8QEkPQaFCdRM7+Kx
-         9c25ktltyB+cMJEEt0dgNCB6qWPzOBd9cjrq/NU7P6fCRV5baY33f4wuYawgduP7EGxd
-         XeZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LSIXeJkTyhS8zDoxVph+aH1Bdmz06pqtIU5eHol2+kg=;
-        b=RkHknAzqfFcq2dLFjc9boVI7Jy1WdUyNjx4LVkd1J/YR/aplkgzpRBHwRzUA/8vhVG
-         muw3aRMJOuNjnNjQMAQt1vs92k/Pp70GJpfz1zqoSm6D6STvAaV+RlU2LbmzOeZUwMb8
-         dUO6eGXZFIBoQjgv95u8YTFZM6qdyGlbEOlGp8LsvV9OOlJMSqUMqEMLMLsUVmO/beh5
-         SX3AyeWQolr/rVpj4RUbCEQ13lmktc/Zup5q11Mh/7AYri4Rzr8+2hRX5PWEOFykYQ4d
-         KtwrMJrVMyapfz3jMPxutdZxOs8GzZC3YxrWuCKb7GpdNaboyjboSIo1OA5mWH0D9OTE
-         zW7w==
-X-Gm-Message-State: AOAM531FER/TFlqPoNaA4OyFv2slWpzIeJL/Mw5L6hxR7nW3GboRNvCv
-        g6HPKa5LAapeqXKzkRXT1wu3wA==
-X-Google-Smtp-Source: ABdhPJxvwixRnu5/bd9/OEJGu9MtVDUrqOpsYEcjxi3jhAkd3T2UijJV0Xq35KWKIh1AqiCM6n9Qlw==
-X-Received: by 2002:a17:902:a987:: with SMTP id bh7mr12452608plb.197.1593659154871;
-        Wed, 01 Jul 2020 20:05:54 -0700 (PDT)
-Received: from localhost ([223.235.247.110])
-        by smtp.gmail.com with ESMTPSA id n9sm2804781pjo.53.2020.07.01.20.05.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jul 2020 20:05:54 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:35:51 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
-        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 4/8] cpufreq,vexpress-spc: fix Frequency Invariance (FI)
- for bL switching
-Message-ID: <20200702030551.p4cevaahgfvpum4o@vireshk-i7>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-5-ionela.voinescu@arm.com>
- <20200701095414.2wjcnyhndgcedk2q@vireshk-i7>
- <20200701140735.GB32736@arm.com>
+        Wed, 1 Jul 2020 23:06:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593659181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qeIaIEJc94t9oaVvAhehA4A3clx6kWGL/yNP4QpP1wc=;
+        b=Z8kwD0sCmFQLJ8g6Ljk4s9YvmFCSEoQe7qAWygGTCnl2+yaGx5rsZnfgvaIGo2XKKppWTT
+        y4w+MDkSg3fvveVmCss5s/V8UFZm1+n+C18MDVeI1caHNSSneOzy6fk50gnClTpR2NlZKO
+        L0H4lWdgmYCP8CVD4+sKGxwHT3k2kL0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-5_ARSzpKPziJDyNbg8kvtA-1; Wed, 01 Jul 2020 23:06:18 -0400
+X-MC-Unique: 5_ARSzpKPziJDyNbg8kvtA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8C5B800D5C;
+        Thu,  2 Jul 2020 03:06:17 +0000 (UTC)
+Received: from [10.72.13.248] (ovpn-13-248.pek2.redhat.com [10.72.13.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B237079233;
+        Thu,  2 Jul 2020 03:06:12 +0000 (UTC)
+Subject: Re: [PATCH 2/2] virtio-mmio: Reject invalid IRQ 0 command line
+ argument
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org
+References: <20200701221040.3667868-1-helgaas@kernel.org>
+ <20200701221040.3667868-3-helgaas@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <032d0424-4876-6322-76d2-d733db28addb@redhat.com>
+Date:   Thu, 2 Jul 2020 11:06:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701140735.GB32736@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200701221040.3667868-3-helgaas@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-07-20, 15:07, Ionela Voinescu wrote:
-> On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
-> > Is there anyone who cares for this driver and EAS ? I will just skip doing the
-> > FIE thing here and mark it skipped.
-> 
-> That is a good question. The vexpress driver is still used for TC2, but
-> I don't know of any users of this bL switcher functionality that's part
-> of the driver. I think there were a few people wondering recently if
-> it's still used [1].
 
-Even if it is used by some, there is no need, I believe, to enable
-freq-invariance for it, which wasn't enabled until now.
+On 2020/7/2 上午6:10, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> The "virtio_mmio.device=" command line argument allows a user to specify
+> the size, address, and IRQ of a virtio device.  Previously the only
+> requirement for the IRQ was that it be an unsigned integer.
+>
+> Zero is an unsigned integer but an invalid IRQ number, and after
+> a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid"),
+> attempts to use IRQ 0 cause warnings.
+>
+> If the user specifies IRQ 0, return failure instead of registering a device
+> with IRQ 0.
+>
+> Fixes: a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: virtualization@lists.linux-foundation.org
+> ---
+>   drivers/virtio/virtio_mmio.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 9d16aaffca9d..627ac0487494 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -641,11 +641,11 @@ static int vm_cmdline_set(const char *device,
+>   			&vm_cmdline_id, &consumed);
+>   
+>   	/*
+> -	 * sscanf() must processes at least 2 chunks; also there
+> +	 * sscanf() must process at least 2 chunks; also there
+>   	 * must be no extra characters after the last chunk, so
+>   	 * str[consumed] must be '\0'
+>   	 */
+> -	if (processed < 2 || str[consumed])
+> +	if (processed < 2 || str[consumed] || irq == 0)
+>   		return -EINVAL;
+>   
+>   	resources[0].flags = IORESOURCE_MEM;
 
-And considering that we are going to enable the flag only for the
-interested parties now, as from the discussion on 1/8, this shouldn't
-be required.
 
--- 
-viresh
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
