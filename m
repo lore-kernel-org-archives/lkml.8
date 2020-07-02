@@ -2,53 +2,109 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3496C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ED3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9182E20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DCC20885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ijOtvO5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgGBNZY (ORCPT
+        id S1729318AbgGBNZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:25:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43624 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgGBNZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:25:24 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jqzDJ-003KHp-0E; Thu, 02 Jul 2020 15:25:17 +0200
-Date:   Thu, 2 Jul 2020 15:25:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Subject: Re: [net-next,PATCH 1/4] net: mdio-ipq4019: change defines to upper
- case
-Message-ID: <20200702132516.GH730739@lunn.ch>
-References: <20200702103001.233961-1-robert.marko@sartura.hr>
- <20200702103001.233961-2-robert.marko@sartura.hr>
+        Thu, 2 Jul 2020 09:25:41 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:51576 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728851AbgGBNZk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:25:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593696340; x=1625232340;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YaxDvS8jDu2VQTjokUgNcdOotzhnd0DUR1G1UJzTGVE=;
+  b=ijOtvO5zz5Pq/ydNL2n/P3w8jBaO8KIHf+1u2IVvJzn7T5bJ59abGjTU
+   G1e/BvPLlEBqe28SXp4dMWGn3hbEX5NEEz3rg8Qb4LDgQjUn8DiqO/4y1
+   17lA9Xx0j0Rsn9HRI3JpVXZj8twrZ/Yx7pKRX+tF6uhna7lJNjx8hs+Mw
+   Lvn3YQs7dPE37ZqeTJ3wtABsau43IjJhaezR5UFbC3hrph0eYJCcp75Cq
+   HOmIj9lDJQgNeDFxXacpKoMOUiknLmO++JTNcCpAgXd4iU75ZN1qCGfaa
+   OKVFhft1by5cZVolCNV+sdvpLCEUGD69tUSvPmEjh6dWI1MnaTcUrOvNN
+   A==;
+IronPort-SDR: 2ZlXcmkfo9X4AvA3wPImu7YRM49/Tofkm72itfPfSijReVXXdR+KFluJuGKRiRJkmZHhAGHnCS
+ WrvMp1qZJOuSIgkOcrIF5WGIebVPe8YlcYHn6VSyAdvvuFAM+B5vEOzNmpIu0gKdoYxaRYhqAl
+ 2uv/x/7JpBaP58X5KQYW/rlH/8uAbFFoHqcM1F03LEIWk5y+uib+mkEoDZM2Du10OFAoF+rdB3
+ yO0hptHgl12uqt5QGde0q2JWZTl23WkMF+HW+krpySIrwT+ZEUNTAf80YCmrQ0wplMAFiw/LPu
+ EtU=
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="80498545"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:25:39 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 06:25:39 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 06:25:19 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <mchehab@kernel.org>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH 0/4] media: introduce microchip csi2dc driver
+Date:   Thu, 2 Jul 2020 16:23:55 +0300
+Message-ID: <20200702132359.122844-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702103001.233961-2-robert.marko@sartura.hr>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:29:58PM +0200, Robert Marko wrote:
-> In the commit adding the IPQ4019 MDIO driver, defines for timeout and sleep partially used lower case.
-> Lets change it to upper case in line with the rest of driver defines.
-> 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Hi,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+This series adds support for the Microchip csi2dc csi-2 demux controller.
 
-    Andrew
+I was not fully sure where is the best place for such a helper chip, thus
+I added the driver in a separate 'misc' menu under the media menu.
+
+There are references in the binding driver to the Synopsys IDI interface,
+which is not yet in kernel mainline, as per the patch series at [1].
+
+As this driver is still new, it still can get plenty of improvement, so,
+waiting for feedback.
+
+Thanks everyone for reviewing !
+
+[1] https://lwn.net/Articles/790917/
+
+Eugen Hristev (4):
+  dt-bindings: media: csi2dc: add bindings for microchip csi2dc
+  media: misc: introduce miscellaneous menu for helper chips
+  media: misc: introduce microchip_csi2dc driver
+  MAINTAINERS: add microchip csi2dc
+
+ .../bindings/media/microchip,csi2dc.yaml      | 186 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/media/Kconfig                         |   1 +
+ drivers/media/Makefile                        |   2 +-
+ drivers/media/misc/Kconfig                    |  22 +
+ drivers/media/misc/Makefile                   |   2 +
+ drivers/media/misc/microchip_csi2dc.c         | 705 ++++++++++++++++++
+ 7 files changed, 924 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+ create mode 100644 drivers/media/misc/Kconfig
+ create mode 100644 drivers/media/misc/Makefile
+ create mode 100644 drivers/media/misc/microchip_csi2dc.c
+
+-- 
+2.25.1
+
