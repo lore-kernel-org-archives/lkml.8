@@ -2,92 +2,123 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F63AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F4C20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC2320737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1jP+8L6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4rYlUDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgGBL7V (ORCPT
+        id S1728873AbgGBL7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:59:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52614 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726475AbgGBL7V (ORCPT
+        Thu, 2 Jul 2020 07:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgGBL70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:59:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593691160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z4B17+WYNTMSxF7tB4AKTsJ+zC29K7PjVCzxXK3zdDw=;
-        b=N1jP+8L6Cav+bEx5Qb58SG23obcNGaD6kgfDOYCACchDLx4nATnFf2lz32pBt2WY/ghZ0+
-        3V0DyrHpNYHRddTIzRG9bD3L+Us5cywd9duBGDzrPs6aGwRvw8lfz2ykHY6MAiBzevXlAR
-        tXJdQjp/hFG/omRFmeRjVlVYUfTtl4c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-ULjAwMrOM6iJWe1gqQ8w7g-1; Thu, 02 Jul 2020 07:59:18 -0400
-X-MC-Unique: ULjAwMrOM6iJWe1gqQ8w7g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78AA4186A20F;
-        Thu,  2 Jul 2020 11:59:16 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-13-96.pek2.redhat.com [10.72.13.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 590CF7925B;
-        Thu,  2 Jul 2020 11:59:11 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 19:59:07 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     piliu <piliu@redhat.com>
-Cc:     Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
-Message-ID: <20200702115907.GC21026@dhcp-128-65.nay.redhat.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
- <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
- <bc8fe308-5ce9-1ca6-c832-7c3a75a732d2@redhat.com>
+        Thu, 2 Jul 2020 07:59:26 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C71DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:59:26 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id w16so779737qts.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mdEoyg5cz5gqKw5XA1ird4Jwpq42Fb0cYp9G68e5U8k=;
+        b=A4rYlUDqufFtk3BWPSKmxkjmWJniPMPBX+Azpwopdu0pJnbXDuoB1EGnDXYJyp3FUR
+         fiyUMV3zo8XvAQDWX8QIeeKZvfPHlwEMWra+sZJ3lOxF1mdPnpV+W4Ekiacq3xI0qFeI
+         LKgJt6jpqVfstXbYSqXstgvIsp35o6za3BtPdCtWUwB0InIMCIoeByhVm9n3S+ZwJiv6
+         Qeon25PCtJfOM1SLPwcvWIX1+GD0Dk6GjwrscF+1m+EUrL7y2J4a/8CmYp1YvtI+EiQX
+         K1xPMJH6YLihVypYT4LdQDEsQs3l2ivPDSeCbFZ9jGrq1XvQADo91m7nCwqcuvnxvJAb
+         fHlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mdEoyg5cz5gqKw5XA1ird4Jwpq42Fb0cYp9G68e5U8k=;
+        b=AQVwYgR5BWjdRk3COz7Da9rHJUH+PT4Qsd3ceuerZemzgON1h7LdDu+ArrPbr08wwF
+         iJY/j5YAdqwiB3+xzFSs0omK3f35l9T5sWUjZAKwSEmrk7iNPFs1XwnIs4tk4FD3SJbe
+         72Kiez0WyHWwCZbDedXwX8a4mfjh0fJmVy/VGkhbNUfEWCC4q1Z3Z9ftDp4TSCOZbp9p
+         LFr7rZ5T6FdINwQ6ryS7fLKrw+SSc6WNnRypRdN36oXdrRMarJju3MPDJHB+MQy9hXTV
+         xnjyL7h3OmNjBMWLsdHVIan0TTSCzjIu+9Z/JTBzWs6Sif4puQWtX7T0c9b9RCKYGdfq
+         XghQ==
+X-Gm-Message-State: AOAM531Z5L0WJveP63qPMn4wPNezOVidrbblY07IKidWtSB8PPNFDIB4
+        OxbOCVcSZ9xSNVzsr60CZ1pYux6lXwnkMfq1vd9811eP
+X-Google-Smtp-Source: ABdhPJxE5hLn/2Xwu5PYobN8sCXVCTbkkX2J9Tvr2Tg3TcwVzfzulqt0c7NW+md/LMSebK41q+4uZUaZXkMgr2cUG08=
+X-Received: by 2002:aed:3201:: with SMTP id y1mr30549256qtd.156.1593691165663;
+ Thu, 02 Jul 2020 04:59:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc8fe308-5ce9-1ca6-c832-7c3a75a732d2@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+In-Reply-To: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Thu, 2 Jul 2020 14:59:07 +0300
+Message-ID: <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial objects
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I'm confused about the "overlap with crashkernel memory", does that mean
-> > those normal kernel used memory could be put in crashkernel reserved
-> > memory range?  If so why can't just skip those areas while crashkernel
-> > doing the reservation?
-> I raised the same question in another mail. As Hari's answer, "kexec -p"
-> skips these ranges in user space. And the same logic should be done in
-> "kexec -s -p"
+On Thu, Jul 2, 2020 at 11:32 AM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
+> The node list_lock in count_partial() spend long time iterating
+> in case of large amount of partial page lists, which can cause
+> thunder herd effect to the list_lock contention, e.g. it cause
+> business response-time jitters when accessing "/proc/slabinfo"
+> in our production environments.
 
-See it, thanks!  The confusion also applied to the userspace
-implementation though.  Seems they have to be special cases because of 
-the powerpc crashkernel reservation implemtation in kernel limitation
+Would you have any numbers to share to quantify this jitter? I have no
+objections to this approach, but I think the original design
+deliberately made reading "/proc/slabinfo" more expensive to avoid
+atomic operations in the allocation/deallocation paths. It would be
+good to understand what is the gain of this approach before we switch
+to it. Maybe even run some slab-related benchmark (not sure if there's
+something better than hackbench these days) to see if the overhead of
+this approach shows up.
 
-Thanks
-Dave
+> This patch introduces two counters to maintain the actual number
+> of partial objects dynamically instead of iterating the partial
+> page lists with list_lock held.
+>
+> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
+> The main operations are under list_lock in slow path, its performance
+> impact is minimal.
+>
+> Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
+> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+> ---
+>  mm/slab.h |  2 ++
+>  mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 7e94700..5935749 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -616,6 +616,8 @@ struct kmem_cache_node {
+>  #ifdef CONFIG_SLUB
+>         unsigned long nr_partial;
+>         struct list_head partial;
+> +       atomic_long_t pfree_objects; /* partial free objects */
+> +       atomic_long_t ptotal_objects; /* partial total objects */
 
+You could rename these to "nr_partial_free_objs" and
+"nr_partial_total_objs" for readability.
+
+- Pekka
