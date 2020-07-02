@@ -2,118 +2,137 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02638C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A78BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE44820771
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Af0DT3tX"
+	by mail.kernel.org (Postfix) with ESMTP id DCB8F20885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593705120;
+	bh=apLz+zrhUgxyrfqkQLdEuC5ASVc2V3MNWdOwzPav1VI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WXs8Y+w/s3qNeJYblZjh3cIa9+S4fEGKuDDor1TL4qDCfKkOdS20VA0tkerSizvIs
+	 1IpRQ9DtAIjBdT5MLc1krWVEF1Yf7uOe8YM+lWWt0yM0vYpMQjm+9WFXahpYUnNx4v
+	 vxweRXNQL4ormy4yoEqBL2uuYkl62EYRGUGIj0Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgGBPvp (ORCPT
+        id S1726273AbgGBPv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:51:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28353 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726187AbgGBPvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593705103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3VZY2zDbwBbzLtxgPU26SXjP7JkefPkdEkB2jqODvmQ=;
-        b=Af0DT3tXG3+oqpR3j1ZsBx/Rtcv/mzOG5z7bJQQAew+6sMt7IqblPlKmiZmFDEqBzYgUMu
-        N8R174HmmM3Lslmtgv4nX0fwv1T5SeTADarmWOLuHEgWjhiFpVql4I2GkZzYbqCiS0a6kS
-        dWCdw75wP+/+6B5lt7t/iZI31tfcgTs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-P9_Ur8O7MH2efJ2D0UyRcw-1; Thu, 02 Jul 2020 11:51:37 -0400
-X-MC-Unique: P9_Ur8O7MH2efJ2D0UyRcw-1
-Received: by mail-qt1-f198.google.com with SMTP id d45so11770490qte.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:51:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3VZY2zDbwBbzLtxgPU26SXjP7JkefPkdEkB2jqODvmQ=;
-        b=VruEBGA9FTGJSaX7BHXBgskmcFE50D13iYp2DHNBgWyZA5OAFvqShyJljbkGO2roUi
-         NjWaiuYyDYiTaoOOFLFtgNFXP8XFFymj5Fs06xm4WyBe3i+ynjWvqHjTYhU4L3+148KV
-         vlOqf392rRfA7ETqOECSBD5Q5BOc/fT+n1qyveLfhXBwI1zo/8xFHoJPFWTn7us6wYKx
-         eyzf62hXkyRuFKvhcwznr7+eGfCJwnvnpoNs/+n8daxhNodKUs36CKPolk075+0KTXw8
-         AV9SlrQnrZEZSv5fOTbLOu6fvidoN2e4ijiz9Z5W9ToYT3Br4MgBacvIMEJU13Rc3t/p
-         adkQ==
-X-Gm-Message-State: AOAM53211SdqQyNtVC29NE16AMh7AKqzpZJLLEvHuvf6ZBVlWFR1vJEe
-        D3JRYst4YCmlsZ92iAb8U+hkyYZwLI8mc8G6UKAmlrrwl9ZbAfS1vUZR8MkkpE/jeHuFJKzJoLM
-        4mv41dElaE0Mtuia1PTRzoXYC
-X-Received: by 2002:a37:5bc4:: with SMTP id p187mr31620570qkb.166.1593705095717;
-        Thu, 02 Jul 2020 08:51:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxKAr0yUH8hYYhDsr4DruYkVLRU9FgSh469c3MauYeix84ykqUuFOOZU7bgix90YvCz9q//0g==
-X-Received: by 2002:a37:5bc4:: with SMTP id p187mr31620555qkb.166.1593705095513;
-        Thu, 02 Jul 2020 08:51:35 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id x13sm8044078qts.57.2020.07.02.08.51.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 08:51:33 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 11:51:32 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Pekka Enberg <penberg@gmail.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 17/26] mm/riscv: Use general page fault accounting
-Message-ID: <20200702155132.GJ40675@xz-x1>
-References: <20200626223130.199227-1-peterx@redhat.com>
- <20200626223625.199813-1-peterx@redhat.com>
- <CAOJsxLEYHzjgMtXgbkoWYvU+Lf_08GPkMAFqibnEwARNzxJZxQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOJsxLEYHzjgMtXgbkoWYvU+Lf_08GPkMAFqibnEwARNzxJZxQ@mail.gmail.com>
+        Thu, 2 Jul 2020 11:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgGBPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:51:58 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226ED20771;
+        Thu,  2 Jul 2020 15:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593705117;
+        bh=apLz+zrhUgxyrfqkQLdEuC5ASVc2V3MNWdOwzPav1VI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bY6BgyAp1lfg3CkxpD7UVA6yNiwl/Pu74JlyfZdlt7G/VwPG7Ww04+pPn9V7tORU6
+         SJc5dq1zFueUWiw1cIqs2eym1caoWtp3VyhhS19iLX82N/6QYj+MyNPPkOWzpq3lq+
+         oGbrGr06R1STimaY8RUBRciMx6n5iDrWw+HQnnn8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH v2 1/8] dt-bindings: pwm: samsung: Do not require interrupts on Exynos SoCs
+Date:   Thu,  2 Jul 2020 17:51:42 +0200
+Message-Id: <20200702155149.12854-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 02:46:24PM +0300, Pekka Enberg wrote:
-> Hi Peter,
+The bindings required interrupts for all SoCs but actually only the PWM
+timer clocksource (for S3C/S5P SoCs) was using them.  This PWM timer
+clocksource driver is not used on Exynos SoCs thus the interrupts can be
+marked as optional.
 
-Hi, Pekka,
+Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> 
-> On Sat, Jun 27, 2020 at 1:36 AM Peter Xu <peterx@redhat.com> wrote:
-> > Use the general page fault accounting by passing regs into handle_mm_fault().
-> > It naturally solve the issue of multiple page fault accounting when page fault
-> > retry happened.
-> 
-> I sent a patch to fix up riscv page fault accounting some days ago:
-> 
-> http://lists.infradead.org/pipermail/linux-riscv/2020-June/000775.html
+---
 
-Yes, this is a valid fix too.
+Changes since v1:
+1. New patch
+---
+ .../devicetree/bindings/pwm/pwm-samsung.yaml  | 23 +++++++++++++++----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-> 
-> However, your fix is obviously even better. For the generic and riscv parts:
-> 
-> Reviewed-by: Pekka Enberg <penberg@kernel.org>
-
-Thanks!
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+index fc799b0577d4..188679cb8b8c 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+@@ -18,9 +18,6 @@ description: |+
+ 
+   Be aware that the clocksource driver supports only uniprocessor systems.
+ 
+-allOf:
+-  - $ref: pwm.yaml#
+-
+ properties:
+   compatible:
+     enum:
+@@ -63,7 +60,8 @@ properties:
+ 
+   interrupts:
+     description:
+-      One interrupt per timer, starting at timer 0.
++      One interrupt per timer, starting at timer 0. Necessary only for SoCs which
++      use PWM clocksource.
+     minItems: 1
+     maxItems: 5
+ 
+@@ -88,12 +86,27 @@ required:
+   - clocks
+   - clock-names
+   - compatible
+-  - interrupts
+   - "#pwm-cells"
+   - reg
+ 
+ additionalProperties: false
+ 
++allOf:
++  - $ref: pwm.yaml#
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - samsung,s3c2410-pwm
++              - samsung,s3c6400-pwm
++              - samsung,s5p6440-pwm
++              - samsung,s5pc100-pwm
++    then:
++      required:
++        - interrupts
++
+ examples:
+   - |
+     pwm@7f006000 {
 -- 
-Peter Xu
+2.17.1
 
