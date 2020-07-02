@@ -4,62 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4DF208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502CA20885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593704833;
-	bh=QzXEbm91ZHjeK+U2ufKA+zyN3DYIjWJ/5Ng9zrnJgPU=;
+	s=default; t=1593704837;
+	bh=zO6lsUH3BX1EoZvnnJnj2cBADGvCQxrV3R/tlze7duc=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=lhLmxp689pm0wT1O18uwGegfdh9h9qWphHm28uzcz5hwjlB8xzq6HI7m1oRUvGKIw
-	 IJ4+xRb5RyXbux/znbwhAAKVGOpBXgMa3kkYfTBYOP0ApnImIzyur/EwnYq2chZWNy
-	 U4tZtmW2BGlYpAJiFE42GovzHJ+r2Y7E7rjama8A=
+	b=DJnk0Y6iA0DZaIHpF5jNgw/y5Tfqa/076brOUkiDsODwa1FBJhqfHpQBsazw0O2Yl
+	 SrMrAcjQ5WWeppwjuPjjOdtJyUGcqNpe3a0ZwivBafUZi9Sx8swZFwduGvyN99K1lx
+	 o0gh2VxGlLEc2p1xWuHsUOjq0zcfP6kgvasngHrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGBPrL (ORCPT
+        id S1726534AbgGBPrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59944 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 11:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgGBPrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:47:10 -0400
+        id S1725878AbgGBPrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:47:15 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23ECB2088E;
-        Thu,  2 Jul 2020 15:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D8FA2088E;
+        Thu,  2 Jul 2020 15:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593704829;
-        bh=QzXEbm91ZHjeK+U2ufKA+zyN3DYIjWJ/5Ng9zrnJgPU=;
+        s=default; t=1593704834;
+        bh=zO6lsUH3BX1EoZvnnJnj2cBADGvCQxrV3R/tlze7duc=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=I/da2YHGzWZ+Auh0JgtvgMU4K3Q2xGbjFSad2+s+VaG9S7CRXzGy7ILl6bYjstoCP
-         GGtyA1VW3Dut6mB/3BHxLqx7jkcAt7XYwS3KkH/5syFoVfVV4Uk8qRVTnrB5MOYEuL
-         +UjHfeV2TBIT9aBuSFi7bxXiNac+D5u/BLRN1tdk=
-Date:   Thu, 02 Jul 2020 16:47:07 +0100
+        b=UNqy8vYYzquHchdVdbPwptvTxz3R5O+Psg8/e4I2DpaThOHJjQimvqKTVO8g5nAUr
+         zGZ7zUHfWEl0n5mpYkj9TlzcmM2dxbYVIeW2vlngQk0J8YktREIZbAGc21Nff55vZ1
+         nLaiTs8XQXlaZiB6yGbX/rkqPS+QufSIAztPo3KE=
+Date:   Thu, 02 Jul 2020 16:47:12 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Andy Gross <agross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wesley Cheng <wcheng@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Colin King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200702115659.38208-1-colin.king@canonical.com>
-References: <20200702115659.38208-1-colin.king@canonical.com>
-Subject: Re: [PATCH][next] regulator: fix null pointer check on regmap
-Message-Id: <159370481231.5599.12177973052182986447.b4-ty@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+In-Reply-To: <20200702100200.1a4c65d1@xhacker.debian>
+References: <20200702100200.1a4c65d1@xhacker.debian>
+Subject: Re: [PATCH] regulator: mp886x: use .probe_new
+Message-Id: <159370481231.5599.5069783449499652840.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 12:56:59 +0100, Colin King wrote:
-> The null pointer check on regmap that checks for a dev_get_regmap failure
-> is currently returning -ENOENT if the regmap succeeded. Fix this by adding
-> in the missing ! operator.
+On Thu, 2 Jul 2020 10:02:00 +0800, Jisheng Zhang wrote:
+> Use the new .probe_new for mp886x. It does not use the const
+> struct i2c_device_id * argument, so convert it to utilise the
+> simplified i2c driver registration.
 
 Applied to
 
@@ -67,8 +63,8 @@ Applied to
 
 Thanks!
 
-[1/1] regulator: fix null pointer check on regmap
-      commit: 94462138f368a5e079d53d578509276e4366d0c1
+[1/1] regulator: mp886x: use .probe_new
+      commit: e2c6678bd836861093eecd733610f77b2d87e9f8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
