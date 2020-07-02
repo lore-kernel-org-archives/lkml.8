@@ -2,182 +2,97 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14CCC2088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E723F20890
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:58:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfP+3NH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbgGBT5m (ORCPT
+        id S1726157AbgGBT6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:57:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41098 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726003AbgGBT5m (ORCPT
+        Thu, 2 Jul 2020 15:58:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgGBT6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:57:42 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062JXUsX151752;
-        Thu, 2 Jul 2020 15:57:33 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3212ats6h7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 15:57:33 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062JqXDi044429;
-        Thu, 2 Jul 2020 15:57:33 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3212ats6g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 15:57:33 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062JqIBL030815;
-        Thu, 2 Jul 2020 19:57:30 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 31wwch61y9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 19:57:30 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062JvRng65142992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jul 2020 19:57:27 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30C90A4054;
-        Thu,  2 Jul 2020 19:57:27 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14184A4062;
-        Thu,  2 Jul 2020 19:57:24 +0000 (GMT)
-Received: from hbathini.in.ibm.com (unknown [9.102.21.221])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Jul 2020 19:57:23 +0000 (GMT)
-Subject: [PATCH v2 12/12] ppc64/kexec_file: fix kexec load failure with lack
- of memory hole
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Date:   Fri, 03 Jul 2020 01:27:23 +0530
-Message-ID: <159371982816.21555.14889636057215515048.stgit@hbathini.in.ibm.com>
-In-Reply-To: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 2 Jul 2020 15:58:20 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D536EC08C5C1;
+        Thu,  2 Jul 2020 12:58:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l17so28716654wmj.0;
+        Thu, 02 Jul 2020 12:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=wC+zZCNyKVhch9fm+otFty88VRPg/0Jc+M1DZ5xEFf4=;
+        b=gfP+3NH252b3V7MJrH3IOUF/KOnB4tPiudsZzWOw7IOLrLh9hGuWFf+AGDnXQAzEH8
+         RvqJ9xBO29et9XUf9Wmz0/VDVg7y48eBcJ335U/XjAOLE4XqXamZaLqwwTWoKxtRJ+gl
+         9q52aacbZwZcpK2XK7p8NcR6hjjLSj0B/Ytdll6gjwOC/62S9/p8ewg82vDXQKVAI0rW
+         asRFbHU56HcVBZytz+Q15PFANd2iJ7dZBm1qAAUzaFDzHZCMoNCavOKv/t6yZm4mS/x0
+         1JWbUvQro9c+vPq9AwhC0DT1NDy6zuHP+vS53FlSu3ZoqKD9MNnww852aMcm0VoIpujk
+         CtSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wC+zZCNyKVhch9fm+otFty88VRPg/0Jc+M1DZ5xEFf4=;
+        b=hNrpXMZuArYW6vRNhoB9XcqfyJ0x3kHysJsfIVIYhM19W0lpsxGlv8ao5bFCU9O01J
+         Tt+bN21h8/YqU7+oVkuXiK3U3IWnLbXOinAF0JQZ3gD3jKpDA1NnXJQKVQBX/ei2E0PU
+         IcmHzUhv8usQd4gTG2DvIR1fcWKJIYgBLK9toczebWdrNxT/2v+lz/m6vIGqnhiuW7rN
+         QWLeAgpvZTtoKqZO9otjOuSqtRqycfTvepWEgrRCNjZn7U19CpGEKr8zX8E5Z21TOqRc
+         bSq/rWFrE/Em+HUMs4JBqNlgKRh5bhiFC65T1qesLze5GvYzunKSEsqFHsYyz2PbsP7b
+         zVgg==
+X-Gm-Message-State: AOAM5300WnQ54ZaApmDryyWamIZTO3YZVK+/3uRLeLLNCLhuCy1PLAe1
+        99LWt/3v555eZXf3E3bc1a8=
+X-Google-Smtp-Source: ABdhPJyS5o3QkxtoTq28hJhbwfOeQRJTZO9mu/ToqnB5o0vBUapCv4R7pRaM0IUtJw+vYOTlm/ojsg==
+X-Received: by 2002:a7b:c841:: with SMTP id c1mr13922306wml.25.1593719898535;
+        Thu, 02 Jul 2020 12:58:18 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id y77sm1178183wmd.36.2020.07.02.12.58.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 12:58:17 -0700 (PDT)
+Subject: Re: [net-next,PATCH 1/4] net: mdio-ipq4019: change defines to upper
+ case
+To:     Robert Marko <robert.marko@sartura.hr>, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+References: <20200702103001.233961-1-robert.marko@sartura.hr>
+ <20200702103001.233961-2-robert.marko@sartura.hr>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <52169697-d7e8-6c28-01d4-eb02b92ae552@gmail.com>
+Date:   Thu, 2 Jul 2020 12:58:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200702103001.233961-2-robert.marko@sartura.hr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
- mlxlogscore=999 suspectscore=2 lowpriorityscore=0 mlxscore=0 adultscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007020132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kexec purgatory has to run in real mode. Only the first memory
-block maybe accessible in real mode. And, unlike the case with panic
-kernel, no memory is set aside for regular kexec load. Another thing
-to note is, the memory for crashkernel is reserved at an offset of
-128MB. So, when crashkernel memory is reserved, the memory ranges to
-load kexec segments shrink further as the generic code only looks for
-memblock free memory ranges and in all likelihood only a tiny bit of
-memory from 0 to 128MB would be available to load kexec segments.
-
-With kdump being used by default in general, kexec file load is likely
-to fail almost always. This can be fixed by changing the memory hole
-lookup logic for regular kexec to use the same method as kdump. This
-would mean that most kexec segments will overlap with crashkernel
-memory region. That should still be ok as the pages, whose destination
-address isn't available while loading, are placed in an intermediate
-location till a flush to the actual destination address happens during
-kexec boot sequence.
-
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
-
-Changes in v2:
-* New patch to fix locating memory hole for kexec_file_load (kexec -s -l)
-  when memory is reserved for crashkernel.
 
 
- arch/powerpc/kexec/file_load_64.c |   33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
+On 7/2/2020 3:29 AM, Robert Marko wrote:
+> In the commit adding the IPQ4019 MDIO driver, defines for timeout and sleep partially used lower case.
+> Lets change it to upper case in line with the rest of driver defines.
+> 
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index d3b29e0..746c16f 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -1326,13 +1326,6 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	u64 buf_min, buf_max;
- 	int ret;
- 
--	/*
--	 * Use the generic kexec_locate_mem_hole for regular
--	 * kexec_file_load syscall
--	 */
--	if (kbuf->image->type != KEXEC_TYPE_CRASH)
--		return kexec_locate_mem_hole(kbuf);
--
- 	/* Look up the exclude ranges list while locating the memory hole */
- 	emem = &(kbuf->image->arch.exclude_ranges);
- 	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
-@@ -1340,11 +1333,15 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 		return 0;
- 	}
- 
-+	buf_min = kbuf->buf_min;
-+	buf_max = kbuf->buf_max;
- 	/* Segments for kdump kernel should be within crashkernel region */
--	buf_min = (kbuf->buf_min < crashk_res.start ?
--		   crashk_res.start : kbuf->buf_min);
--	buf_max = (kbuf->buf_max > crashk_res.end ?
--		   crashk_res.end : kbuf->buf_max);
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH) {
-+		buf_min = (buf_min < crashk_res.start ?
-+			   crashk_res.start : buf_min);
-+		buf_max = (buf_max > crashk_res.end ?
-+			   crashk_res.end : buf_max);
-+	}
- 
- 	if (buf_min > buf_max) {
- 		pr_err("Invalid buffer min and/or max values\n");
-@@ -1477,15 +1474,13 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 				  unsigned long buf_len)
- {
--	if (image->type == KEXEC_TYPE_CRASH) {
--		int ret;
-+	int ret;
- 
--		/* Get exclude memory ranges needed for setting up kdump segments */
--		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
--		if (ret) {
--			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
--			return ret;
--		}
-+	/* Get exclude memory ranges needed for setting up kexec segments */
-+	ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
-+	if (ret) {
-+		pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
-+		return ret;
- 	}
- 
- 	return kexec_image_probe_default(image, buf, buf_len);
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
