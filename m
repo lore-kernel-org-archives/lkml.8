@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B50BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5970F2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1B820748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653670;
-	bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
+	s=default; t=1593653675;
+	bh=PicvQyCmYjbabjebAGQywoanKUquUwhTmz7YPtq97PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DenBMWHE/Tz/m29zJoX4nTGL07MtsylMMpADVQAjosnZ5s0gkR9+OT9S0iPaLAk7X
-	 S2qHLR5fttvMwUon0ZQvfMQGJBhsnqio0e//dA1i6oytRNhmUjDFZlnJMUiaUrLx3h
-	 xatmLH8pQtR6o81VWov/2dlK7IjQRJWMQAfF6Qsk=
+	b=V5F+4RBJvSjqXsS+zYLbOy/G1Ksd8QsTpS2xYDQQqyo2GQCbus8KOvdkjTAVdL3sm
+	 WO+1m8UGNOABUTor+gLST+nQ0ORhHj50afgnvdJAC1IpjbiZv7oo3hrfjsOU2vcCh9
+	 BE6qOmYU/Elq823F1qRsYwFTkGIZRY4f1k2A0TCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgGBBe2 (ORCPT
+        id S1728254AbgGBBed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56482 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728816AbgGBBZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728808AbgGBBZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Jul 2020 21:25:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2E220748;
-        Thu,  2 Jul 2020 01:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A820520C56;
+        Thu,  2 Jul 2020 01:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653133;
-        bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
+        s=default; t=1593653132;
+        bh=PicvQyCmYjbabjebAGQywoanKUquUwhTmz7YPtq97PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZX+EHSL3CxRL4meXo5nLgSx+46MuW/fmNNNJRIrHTgTCJ17NwK9WZWaz4jSLtKz1b
-         fwHUI+AxEWGAbef/3ur5oYStRj+QI9TwZ0xtfQ1iocwzSD+ybDcugy5CZ+vSE+vsig
-         eXdFbBBVoEf2sCBb9/rKic3WwrzGWHS9Iqe7NXc8=
+        b=hsrYzcm6lGSXW9KlfV0FRyEFczRuWPU7C7q0GYgAheFFpgAhwzrvEYsmor/0PN6ZP
+         rsbTaW6OdtIs/nInB2JyuXQNAAnwUgRHr5YY1H05H5kgvFsQhJvRrq/MjVNM35LsAW
+         1h7N7u1GddLreigST9oFE3UAMckU0+natiow7WlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/40] gpu: host1x: Detach driver on unregister
-Date:   Wed,  1 Jul 2020 21:23:28 -0400
-Message-Id: <20200702012402.2701121-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/40] drm/tegra: hub: Do not enable orphaned window group
+Date:   Wed,  1 Jul 2020 21:23:27 -0400
+Message-Id: <20200702012402.2701121-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -60,53 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
 
-[ Upstream commit d9a0a05bf8c76e6dc79230669a8b5d685b168c30 ]
+[ Upstream commit ef4e417eb3ec7fe657928f10ac1d2154d8a5fb38 ]
 
-Currently when a host1x device driver is unregistered, it is not
-detached from the host1x controller, which means that the device
-will stay around and when the driver is registered again, it may
-bind to the old, stale device rather than the new one that was
-created from scratch upon driver registration. This in turn can
-cause various weird crashes within the driver core because it is
-confronted with a device that was already deleted.
+Though the unconditional enable/disable code is not a final solution,
+we don't want to run into a NULL pointer situation when window group
+doesn't link to its DC parent if the DC is disabled in Device Tree.
 
-Fix this by detaching the driver from the host1x controller when
-it is unregistered. This ensures that the deleted device also is
-no longer present in the device list that drivers will bind to.
+So this patch simply adds a check to make sure that window group has
+a valid parent before running into tegra_windowgroup_enable/disable.
 
-Reported-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/bus.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/tegra/hub.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-index 742aa9ff21b87..fcda8621ae6f9 100644
---- a/drivers/gpu/host1x/bus.c
-+++ b/drivers/gpu/host1x/bus.c
-@@ -686,8 +686,17 @@ EXPORT_SYMBOL(host1x_driver_register_full);
-  */
- void host1x_driver_unregister(struct host1x_driver *driver)
- {
-+	struct host1x *host1x;
-+
- 	driver_unregister(&driver->driver);
+diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
+index 839b49c40e514..767fb440a79d9 100644
+--- a/drivers/gpu/drm/tegra/hub.c
++++ b/drivers/gpu/drm/tegra/hub.c
+@@ -141,7 +141,9 @@ int tegra_display_hub_prepare(struct tegra_display_hub *hub)
+ 	for (i = 0; i < hub->soc->num_wgrps; i++) {
+ 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
  
-+	mutex_lock(&devices_lock);
-+
-+	list_for_each_entry(host1x, &devices, list)
-+		host1x_detach_driver(host1x, driver);
-+
-+	mutex_unlock(&devices_lock);
-+
- 	mutex_lock(&drivers_lock);
- 	list_del_init(&driver->list);
- 	mutex_unlock(&drivers_lock);
+-		tegra_windowgroup_enable(wgrp);
++		/* Skip orphaned window group whose parent DC is disabled */
++		if (wgrp->parent)
++			tegra_windowgroup_enable(wgrp);
+ 	}
+ 
+ 	return 0;
+@@ -158,7 +160,9 @@ void tegra_display_hub_cleanup(struct tegra_display_hub *hub)
+ 	for (i = 0; i < hub->soc->num_wgrps; i++) {
+ 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
+ 
+-		tegra_windowgroup_disable(wgrp);
++		/* Skip orphaned window group whose parent DC is disabled */
++		if (wgrp->parent)
++			tegra_windowgroup_disable(wgrp);
+ 	}
+ }
+ 
 -- 
 2.25.1
 
