@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA1B820748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBD020748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653675;
-	bh=PicvQyCmYjbabjebAGQywoanKUquUwhTmz7YPtq97PY=;
+	s=default; t=1593653681;
+	bh=t14ieBLjcRC8mGAiZegb7Cr7kUc2KlBM9DA1w+vutoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5F+4RBJvSjqXsS+zYLbOy/G1Ksd8QsTpS2xYDQQqyo2GQCbus8KOvdkjTAVdL3sm
-	 WO+1m8UGNOABUTor+gLST+nQ0ORhHj50afgnvdJAC1IpjbiZv7oo3hrfjsOU2vcCh9
-	 BE6qOmYU/Elq823F1qRsYwFTkGIZRY4f1k2A0TCA=
+	b=itC+Y7K+o0oUxdp0mz8iLzc44IoFdUYq8fEg893wQXuODMBpoFMAY62ybEQRsEKw0
+	 WOutLFIe9LxmLDl7pj/SEYPhhTWg36u7OdnuQTp1wNcdaqtIrNLYWaFsj81O3+pykc
+	 hPE7ZiB4t4jmPz+5U3pQm0NNZ5NJwc03iVW8+uug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgGBBed (ORCPT
+        id S1729231AbgGBBej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56456 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:34:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgGBBZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:33 -0400
+        id S1727917AbgGBBZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A820520C56;
-        Thu,  2 Jul 2020 01:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4868B20884;
+        Thu,  2 Jul 2020 01:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653132;
-        bh=PicvQyCmYjbabjebAGQywoanKUquUwhTmz7YPtq97PY=;
+        s=default; t=1593653131;
+        bh=t14ieBLjcRC8mGAiZegb7Cr7kUc2KlBM9DA1w+vutoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hsrYzcm6lGSXW9KlfV0FRyEFczRuWPU7C7q0GYgAheFFpgAhwzrvEYsmor/0PN6ZP
-         rsbTaW6OdtIs/nInB2JyuXQNAAnwUgRHr5YY1H05H5kgvFsQhJvRrq/MjVNM35LsAW
-         1h7N7u1GddLreigST9oFE3UAMckU0+natiow7WlM=
+        b=1oXUp9wzNcRNNnwrckzit2GEfwWFu+UfjWuR9nCt19oi7MXiGAIdU5pz+4bswUwtI
+         j3Z/A7ECNwnqIqUmFzLvit4dJ6ZrQ5KpXfIXdmclBUwKX5HB0XykY8LwVdic0sm9od
+         WV0QX9DlyE0hFD1lbfD5S9J3a9xjciVdSV8f70Vc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/40] drm/tegra: hub: Do not enable orphaned window group
-Date:   Wed,  1 Jul 2020 21:23:27 -0400
-Message-Id: <20200702012402.2701121-6-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 5.4 05/40] drm/ttm: Fix dma_fence refcnt leak when adding move fence
+Date:   Wed,  1 Jul 2020 21:23:26 -0400
+Message-Id: <20200702012402.2701121-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,49 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit ef4e417eb3ec7fe657928f10ac1d2154d8a5fb38 ]
+[ Upstream commit 11425c4519e2c974a100fc984867046d905b9380 ]
 
-Though the unconditional enable/disable code is not a final solution,
-we don't want to run into a NULL pointer situation when window group
-doesn't link to its DC parent if the DC is disabled in Device Tree.
+ttm_bo_add_move_fence() invokes dma_fence_get(), which returns a
+reference of the specified dma_fence object to "fence" with increased
+refcnt.
 
-So this patch simply adds a check to make sure that window group has
-a valid parent before running into tegra_windowgroup_enable/disable.
+When ttm_bo_add_move_fence() returns, local variable "fence" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+The reference counting issue happens in one exception handling path of
+ttm_bo_add_move_fence(). When no_wait_gpu flag is equals to true, the
+function forgets to decrease the refcnt increased by dma_fence_get(),
+causing a refcnt leak.
+
+Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
+equals to true.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/370221/
+Signed-off-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/hub.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-index 839b49c40e514..767fb440a79d9 100644
---- a/drivers/gpu/drm/tegra/hub.c
-+++ b/drivers/gpu/drm/tegra/hub.c
-@@ -141,7 +141,9 @@ int tegra_display_hub_prepare(struct tegra_display_hub *hub)
- 	for (i = 0; i < hub->soc->num_wgrps; i++) {
- 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index abf165b2f64fc..3ce8ad7603c7f 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -941,8 +941,10 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+ 	if (!fence)
+ 		return 0;
  
--		tegra_windowgroup_enable(wgrp);
-+		/* Skip orphaned window group whose parent DC is disabled */
-+		if (wgrp->parent)
-+			tegra_windowgroup_enable(wgrp);
- 	}
+-	if (no_wait_gpu)
++	if (no_wait_gpu) {
++		dma_fence_put(fence);
+ 		return -EBUSY;
++	}
  
- 	return 0;
-@@ -158,7 +160,9 @@ void tegra_display_hub_cleanup(struct tegra_display_hub *hub)
- 	for (i = 0; i < hub->soc->num_wgrps; i++) {
- 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
- 
--		tegra_windowgroup_disable(wgrp);
-+		/* Skip orphaned window group whose parent DC is disabled */
-+		if (wgrp->parent)
-+			tegra_windowgroup_disable(wgrp);
- 	}
- }
+ 	dma_resv_add_shared_fence(bo->base.resv, fence);
  
 -- 
 2.25.1
