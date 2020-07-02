@@ -5,69 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A247C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E463C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321412067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF40206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIkTP97L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c53RgvRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgGBOrA (ORCPT
+        id S1730234AbgGBOsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
+        Thu, 2 Jul 2020 10:48:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730020AbgGBOqy (ORCPT
+        with ESMTP id S1730057AbgGBOrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:54 -0400
+        Thu, 2 Jul 2020 10:47:00 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8585EC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q15so27103489wmj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA10C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:47:00 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g75so27085650wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LuydmHRHncRiKpEKLiFPz7smS3ISdpVCQYiyoW4VCQc=;
-        b=cIkTP97Ltc4F26LRPd0k0vH8rCSPhi/svFlkgm7iKd4rUBiebH/6UsCDSQMTEs+DqV
-         DP49K7VEoXDEQN+3y9DARzbaESZ5W1uuHqmbciLtfPHolTD+ucYN8BVDgQfyKWGbO6HD
-         756KA9mM2iutxpw1ZJI7PuolhFV1232juQjtiTlEXKWJP33njo4EmHVOVLegPykn9Pat
-         y/0yk4CPL7Cso65VaaRKexs5m2cpIXhiY2futiEY2jISvBCohLLdgn/Euz4eV2lRNfKB
-         qHTdgXFbJnl4A+V4gHCMnLhhvAb2xZkinyaYH5F3rAEh7Tim5eHnqwp8tci0JCnaHOvh
-         saCw==
+        bh=H2cePmcpx5tsP4U3KYd+LqwzZEatzdvDVRzwm5J/30A=;
+        b=c53RgvRD10yT154GgQgeIyna2QYPrbkI+WTnp2UMoFo9CT36rTCyqrDngBqvuckw3S
+         +oNa3YdgsimKjvPoCH/30TsKQMdDJPLwl5KHWSs/fy5BFSSaYO5/F8t+s9fUmd1kfbTt
+         joQnwQce5qZ1EBcSIkEdbgflYXu4hOxUS6yHZw1bkvsDOdZNN1Lvp9vhf7mjC2cttpwR
+         UMLjHgsZgsLUt6CM3mwFLJczW2/G2TFbYlK31eHuAJ0WUZDimWF74sk72FwUIAoR9soG
+         5nDZgi3NL2ZhkzfWwoPAK4IyiU44YXnPmkhwRZ/mQsAqgQkNxutA+aNeEwTG27koO4xd
+         N+ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LuydmHRHncRiKpEKLiFPz7smS3ISdpVCQYiyoW4VCQc=;
-        b=dycDnroCliaGk8cvwFEx5oOERDpydHipiq/ssmUUtDkpqVj54ugqE04pfUj6dIbkCN
-         +lTJABH8D7MWHREQmxwgOCgfcJ66m5M9UdLntyDH2H4nYAkq8LYIV09XJplzVebFIBz+
-         Y1NS/APfEubxZ6NYvYcH0ZBSkOIxTog2D80sdv2QViXa3wCkOYgB87aeUYKFQQyNCIXa
-         EHVNh0ikd9kvZp8CIf3nv0K4fQJXaTASf7QjkOi0buFAKRIP4PqKMjPbBj3K3RP9PQw3
-         WpE6LxNaSbPoAB80BHeIfMQb/6lonXzTdw0NpbhD9mR1r7rKX3WGzS32TCfE+I5Q507t
-         r3sQ==
-X-Gm-Message-State: AOAM5330KB42uRLWHPjzOgBf5fKwyGzGnH7vmV9S/gLDi7NIomuHInRR
-        a8t9l78ffBboo8leJp6jPXs8MQ==
-X-Google-Smtp-Source: ABdhPJwt4BB5QN+0+VYuAyZoPm9sDJXGV16TynQZBiUxLCJhmyDebIEU0rFkq/UKkGjxIQm03YHAJA==
-X-Received: by 2002:a1c:7402:: with SMTP id p2mr20867799wmc.117.1593701213215;
-        Thu, 02 Jul 2020 07:46:53 -0700 (PDT)
+        bh=H2cePmcpx5tsP4U3KYd+LqwzZEatzdvDVRzwm5J/30A=;
+        b=mTHindwold6Dgy+9F2//QChJ35t+9x6KNeouBjY5MK+wE41gSomEPiJJFvnHRa8CWt
+         fSVEFKgASEMWU6qf0p0fgb/rdG5fkzX+1LQsLYdeljeQwAylFQ6iNQ/y+1LhVpyWzQQa
+         H1LJCoGAxrK0JCu4F0PHHpwEFt90ameHLtDNGVC6xNAb0Y/Ecaf+0BS+Op8fogoTa9pF
+         zo3PHx9CMWjd1dtaeKHBQPmLPZKepIkDbSsq0JcTO3k1L93bk5sUKG9F/5SwV1ibsGU7
+         wKnYmOhhv9zIhmxzoaNI8M8dlMAQqBK1+qCq/AkLXmg/NR8LaI7viRFR8Ru57LyNcbas
+         /pVA==
+X-Gm-Message-State: AOAM531utSqBPQwvozrInse9BKPv+izLV5fmjzq29Df+FzFt+3nXogkt
+        iQl9LD/dh5MiqXfGnmso1UXTQg==
+X-Google-Smtp-Source: ABdhPJw0wDnk30+GzymRe6m8MX4bgQkP+1HG/vAC/QIiYL0ssvI94FAnR4CJhMTZpP/sPRSbJk6tYA==
+X-Received: by 2002:a7b:c775:: with SMTP id x21mr17240384wmk.34.1593701218885;
+        Thu, 02 Jul 2020 07:46:58 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.52
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:52 -0700 (PDT)
+        Thu, 02 Jul 2020 07:46:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Pawel Laszczak <pawell@cadence.com>,
         Pawel Jez <pjez@cadence.com>, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 17/30] usb: cdns3: gadget: Fix a bunch of kernel doc issues
-Date:   Thu,  2 Jul 2020 15:46:12 +0100
-Message-Id: <20200702144625.2533530-18-lee.jones@linaro.org>
+Subject: [PATCH 22/30] usb: cdns3: ep0: Move 'zlp' description to appropriate function header
+Date:   Thu,  2 Jul 2020 15:46:17 +0100
+Message-Id: <20200702144625.2533530-23-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
@@ -78,86 +78,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mainline misspelled function argument descriptions.  Also one
-formatting issue with a missing '@' identifier.
+'zlp' was documented, but in the wrong place.
 
-Fixes the following W=1 build warnings:
+Fixes the following W=1 kernel build warning(s):
 
- drivers/usb/cdns3/gadget.c:653: warning: Function parameter or member 'priv_ep' not described in 'cdns3_wa2_descmissing_packet'
- drivers/usb/cdns3/gadget.c:653: warning: Excess function parameter 'priv_dev' description in 'cdns3_wa2_descmissing_packet'
- drivers/usb/cdns3/gadget.c:1088: warning: Function parameter or member 'request' not described in 'cdns3_ep_run_transfer'
- drivers/usb/cdns3/gadget.c:2574: warning: Function parameter or member 'priv_ep' not described in '__cdns3_gadget_ep_set_halt'
- drivers/usb/cdns3/gadget.c:2574: warning: Excess function parameter 'ep' description in '__cdns3_gadget_ep_set_halt'
- drivers/usb/cdns3/gadget.c:2595: warning: Function parameter or member 'priv_ep' not described in '__cdns3_gadget_ep_clear_halt'
- drivers/usb/cdns3/gadget.c:2595: warning: Excess function parameter 'ep' description in '__cdns3_gadget_ep_clear_halt'
- drivers/usb/cdns3/gadget.c:2898: warning: Function parameter or member 'priv_dev' not described in 'cdns3_init_eps'
- drivers/usb/cdns3/gadget.c:2898: warning: Excess function parameter 'cdns3' description in 'cdns3_init_eps'
- drivers/usb/cdns3/gadget.c:3210: warning: Function parameter or member 'cdns' not described in 'cdns3_gadget_init'
+ drivers/usb/cdns3/ep0.c:36: warning: Function parameter or member 'zlp' not described in 'cdns3_ep0_run_transfer'
+ drivers/usb/cdns3/ep0.c:705: warning: Excess function parameter 'zlp' description in 'cdns3_gadget_ep0_queue'
 
 Cc: Pawel Laszczak <pawell@cadence.com>
 Cc: Pawel Jez <pjez@cadence.com>
 Cc: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/cdns3/gadget.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/usb/cdns3/ep0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-index 5e24c2e57c0d8..bfb1cbd492892 100644
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -644,7 +644,7 @@ static void cdns3_wa2_remove_old_request(struct cdns3_endpoint *priv_ep)
- 
- /**
-  * cdns3_wa2_descmissing_packet - handles descriptor missing event.
-- * @priv_dev: extended gadget object
-+ * @priv_ep: extended gadget object
-  *
-  * This function is used only for WA2. For more information see Work around 2
-  * description.
-@@ -1080,6 +1080,7 @@ static int cdns3_ep_run_stream_transfer(struct cdns3_endpoint *priv_ep,
- /**
-  * cdns3_ep_run_transfer - start transfer on no-default endpoint hardware
-  * @priv_ep: endpoint object
-+ * @request: request object
-  *
-  * Returns zero on success or negative value on failure
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index 5b3f682338e50..5b1aec80b2d7f 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -29,6 +29,7 @@ static struct usb_endpoint_descriptor cdns3_gadget_ep0_desc = {
+  * @length: data length
+  * @erdy: set it to 1 when ERDY packet should be sent -
+  *        exit from flow control state
++ * @zlp: add zero length packet
   */
-@@ -2568,7 +2569,7 @@ int cdns3_gadget_ep_dequeue(struct usb_ep *ep,
- /**
-  * __cdns3_gadget_ep_set_halt Sets stall on selected endpoint
-  * Should be called after acquiring spin_lock and selecting ep
-- * @ep: endpoint object to set stall on.
-+ * @priv_ep: endpoint object to set stall on.
-  */
- void __cdns3_gadget_ep_set_halt(struct cdns3_endpoint *priv_ep)
- {
-@@ -2589,7 +2590,7 @@ void __cdns3_gadget_ep_set_halt(struct cdns3_endpoint *priv_ep)
- /**
-  * __cdns3_gadget_ep_clear_halt Clears stall on selected endpoint
-  * Should be called after acquiring spin_lock and selecting ep
-- * @ep: endpoint object to clear stall on
-+ * @priv_ep: endpoint object to clear stall on
-  */
- int __cdns3_gadget_ep_clear_halt(struct cdns3_endpoint *priv_ep)
- {
-@@ -2890,7 +2891,7 @@ static void cdns3_free_all_eps(struct cdns3_device *priv_dev)
- 
- /**
-  * cdns3_init_eps Initializes software endpoints of gadget
-- * @cdns3: extended gadget object
-+ * @priv_dev: extended gadget object
+ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
+ 				   dma_addr_t dma_addr,
+@@ -695,7 +696,6 @@ static int cdns3_gadget_ep0_set_halt(struct usb_ep *ep, int value)
+  * @ep: pointer to endpoint zero object
+  * @request: pointer to request object
+  * @gfp_flags: gfp flags
+- * @zlp: add zero length packet
   *
   * Returns 0 on success, error code elsewhere
-  */
-@@ -3202,7 +3203,7 @@ static int cdns3_gadget_resume(struct cdns3 *cdns, bool hibernated)
- /**
-  * cdns3_gadget_init - initialize device structure
-  *
-- * cdns: cdns3 instance
-+ * @cdns: cdns3 instance
-  *
-  * This function initializes the gadget.
   */
 -- 
 2.25.1
