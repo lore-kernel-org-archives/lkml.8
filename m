@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F75C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6ED20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5273B20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c7fmKlSS"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gqArI3DQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgGBSXd (ORCPT
+        id S1728291AbgGBSXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:23:33 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:38543 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgGBSXY (ORCPT
+        Thu, 2 Jul 2020 14:23:45 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:16415 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgGBSXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:23:24 -0400
+        Thu, 2 Jul 2020 14:23:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593714204; x=1625250204;
+  t=1593714218; x=1625250218;
   h=date:from:to:subject:message-id:references:mime-version:
    in-reply-to;
-  bh=I7turOllMrL/CNEMBFGxOPTAV9RKwwcOD5Qzsp0RMCI=;
-  b=c7fmKlSS9D6/IpT70PI5fH9mttjKMj5kvfM9pbdiE05xxjXwgnLe847s
-   +vjzfqCLbXAwpMN9LnXKImKE5DG6XVgYNmdgsn5DvvPKGcUM/kIDFvp9r
-   kknU0wIyk2LNukqQ9w0I+YFgMrW5O5TEQH2VjwpiHqPVuYdcBIutRKMO/
-   c=;
-IronPort-SDR: gtZOu0dMiB3ehEJQSAxthJy8slH3FlYoulPxQjoZIUWyHzAH9qA9TfOTryU3wg6sLJrulv+kzq
- yxHeXV2LgO7A==
+  bh=42TBP3y4PhPFoPiNAsOF6sq0ISwy0yvaTgprwGJN3gs=;
+  b=gqArI3DQHtn1L2MkSfq/YBuf/AiCtMbE6j8vOQleOTW18+umcSBh8b1X
+   fWQhO2254GD1Yx+wItnv1LzeF5PkT5/7Pz/dUbzITx+cf6WwmgfyY7uEq
+   pSpHMVd4YThvuOvnqu4Z1YCdOUZ6bg6zufvGvQt8bnFf/5zW5ht3pAjbX
+   A=;
+IronPort-SDR: LmEWe+lBjje6IkAwKMPzWi2nEZ4tgqKNfXE84BMIprWb5gWec64tizT5QYDEjeSJ/XdZT9iLjF
+ RRHpr+GD/3WQ==
 X-IronPort-AV: E=Sophos;i="5.75,305,1589241600"; 
-   d="scan'208";a="39736466"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Jul 2020 18:23:16 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id A0D51A2540;
-        Thu,  2 Jul 2020 18:23:14 +0000 (UTC)
-Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 18:22:51 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 18:22:51 +0000
+   d="scan'208";a="55693384"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Jul 2020 18:23:37 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 7E718A255A;
+        Thu,  2 Jul 2020 18:23:35 +0000 (UTC)
+Received: from EX13D10UWB004.ant.amazon.com (10.43.161.121) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Jul 2020 18:23:28 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D10UWB004.ant.amazon.com (10.43.161.121) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Jul 2020 18:23:28 +0000
 Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 2 Jul 2020 18:22:51 +0000
+ (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 2 Jul 2020 18:23:28 +0000
 Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 651F840844; Thu,  2 Jul 2020 18:22:51 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 18:22:51 +0000
+        id 8E2C940844; Thu,  2 Jul 2020 18:23:28 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 18:23:28 +0000
 From:   Anchal Agarwal <anchalag@amazon.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
@@ -67,9 +67,9 @@ To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
         <benh@kernel.crashing.org>
-Subject: [PATCH v2 08/11] x86/xen: save and restore steal clock during PM
- hibernation
-Message-ID: <20200702182251.GA3606@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Subject: [PATCH v2 10/11] xen: Update sched clock offset to avoid system
+ instability in hibernation
+Message-ID: <20200702182328.GA3751@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 References: <cover.1593665947.git.anchalag@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -81,61 +81,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save/restore steal times in syscore suspend/resume during PM
-hibernation. Commit '5e25f5db6abb9: ("xen/time: do not
-decrease steal time after live migration on xen")' fixes xen
-guest steal time handling during migration. A similar issue is seen
-during PM hibernation.
-Currently, steal time accounting code in scheduler expects steal clock
-callback to provide monotonically increasing value. If the accounting
-code receives a smaller value than previous one, it uses a negative
-value to calculate steal time and results in incorrectly updated idle
-and steal time accounting. This breaks userspace tools which read
-/proc/stat.
-
-top - 08:05:35 up  2:12,  3 users,  load average: 0.00, 0.07, 0.23
-Tasks:  80 total,   1 running,  79 sleeping,   0 stopped,   0 zombie
-Cpu(s):  0.0%us,  0.0%sy,  0.0%ni,30100.0%id,  0.0%wa,  0.0%hi, 0.0%si,-1253874204672.0%st
-
-This can actually happen when a Xen PVHVM guest gets restored from
-hibernation, because such a restored guest is just a fresh domain from
-Xen perspective and the time information in runstate info starts over
-from scratch.
-
-Changelog:
-v1->v2: Removed patches that introduced new function calls for saving/restoring
-        sched clock offset and using existing ones that are used during LM
+Save/restore xen_sched_clock_offset in syscore suspend/resume during PM
+hibernation. Commit '867cefb4cb1012: ("xen: Fix x86 sched_clock() interface
+for xen")' fixes xen guest time handling during migration. A similar issue
+is seen during PM hibernation when system runs CPU intensive workload.
+Post resume pvclock resets the value to 0 however, xen sched_clock_offset
+is never updated. System instability is seen during resume from hibernation
+when system is under heavy CPU load. Since xen_sched_clock_offset is not
+updated, system does not see the monotonic clock value and the scheduler
+would then think that heavy CPU hog tasks need more time in CPU, causing
+the system to freeze
 
 Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
 ---
- arch/x86/xen/suspend.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/xen/suspend.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
-index e8c924e93fc5..10cd14326472 100644
+index 10cd14326472..4d8b1d2390b9 100644
 --- a/arch/x86/xen/suspend.c
 +++ b/arch/x86/xen/suspend.c
-@@ -94,10 +94,9 @@ static int xen_syscore_suspend(void)
- 	int ret;
+@@ -95,6 +95,7 @@ static int xen_syscore_suspend(void)
  
  	gnttab_suspend();
--
-+	xen_manage_runstate_time(-1);
+ 	xen_manage_runstate_time(-1);
++	xen_save_sched_clock_offset();
  	xrfp.domid = DOMID_SELF;
  	xrfp.gpfn = __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
--
  	ret = HYPERVISOR_memory_op(XENMEM_remove_from_physmap, &xrfp);
- 	if (!ret)
- 		HYPERVISOR_shared_info = &xen_dummy_shared_info;
-@@ -111,7 +110,7 @@ static void xen_syscore_resume(void)
+@@ -110,6 +111,12 @@ static void xen_syscore_resume(void)
  	xen_hvm_map_shared_info();
  
  	pvclock_resume();
--
-+	xen_manage_runstate_time(0);
++	/*
++	 * Restore xen_sched_clock_offset during resume to maintain
++	 * monotonic clock value
++	 */
++	xen_restore_sched_clock_offset();
++
+ 	xen_manage_runstate_time(0);
  	gnttab_resume();
  }
- 
 -- 
 2.20.1
 
