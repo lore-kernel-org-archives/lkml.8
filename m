@@ -2,154 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E793EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D30FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBF520780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A4E20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmvJf2X/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGBQvI (ORCPT
+        id S1726906AbgGBQv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:51:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:43094 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgGBQvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:51:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E9D11FB;
-        Thu,  2 Jul 2020 09:51:07 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 772803F71E;
-        Thu,  2 Jul 2020 09:51:05 -0700 (PDT)
-Subject: Re: [PATCH RFT] iio: adc: xilinx-xadc: use devm_krealloc()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200702162509.11254-1-brgl@bgdev.pl>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b3456494-ce89-f981-a76e-fcb1b252a0bd@arm.com>
-Date:   Thu, 2 Jul 2020 17:51:04 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 2 Jul 2020 12:51:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44206 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726300AbgGBQv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:51:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593708687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AS1biAZZYrc6DCalhh6zy/9YtnCnXv1oypGIRKow0Tc=;
+        b=QmvJf2X/YUbQo00Zm3znJUBFZaoMsq5MQ21OkZv0mgRgug0MJYJ1KcrPMbFdeF27FB2FnL
+        Fr/AS1Rll9fcm0t1eb46bM12wNcPPII2TfZrcWMKDdA7O/5HHv/A99YbAWeK+fJyheQoM8
+        XVPQbbQYxXRs03m7cqXNfI3dq03WtKM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-ySEhn9NpMCaMKedzkGkJtQ-1; Thu, 02 Jul 2020 12:51:25 -0400
+X-MC-Unique: ySEhn9NpMCaMKedzkGkJtQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94898107ACF5;
+        Thu,  2 Jul 2020 16:51:24 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.192.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7822379231;
+        Thu,  2 Jul 2020 16:51:22 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [RFC 0/4] Fix gfs2 readahead deadlocks
+Date:   Thu,  2 Jul 2020 18:51:16 +0200
+Message-Id: <20200702165120.1469875-1-agruenba@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702162509.11254-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02 17:25, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Use the managed variant of krealloc() and shrink the code a bit.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-> NOTE: this patch depends on the series adding devm_krealloc() which is
-> not yet accepted.
-> 
-> Greg,
-> 
-> here's just a quick example of a second user of devm_krealloc(). This time
-> we're reallocing memory allocated with devm_kmemdup(). Hopefully this is
-> enough to prove this helper is useful enough to merge it.
+Hi all,
 
-Ooh, interesting - I also had to open-code an effective devm_krealloc() 
-to subclass an devres-managed allocation in cavium_smmu_impl_init() 
-(drivers/iommu/arm-smmu-impl.c), and we've got patches in-flight for 
-another SMMU quirk that wants to follow the same pattern. I'd gladly 
-have the extra clarity of a proper helper (and save a couple of lines) 
-for those cases as well.
+commit d4388340ae0b ("fs: convert mpage_readpages to mpage_readahead")
+converted gfs2 and other filesystems from the ->readpages to the
+->readahead address space operation.  Due to gfs2 doing its locking in
+the ->readpage and ->readahead address space operations rather than at a
+higher level, this is leading to deadlocks.  Switching to a trylock
+operation in ->readahead improves things but doesn't eliminate all
+deadlocks; the only reasonable fix seems to be to lift gfs2's locking to
+the ->fault vm operation and ->read_iter file operation.
 
-Robin.
+However, gfs2 includes an optimization that allows reads to be served
+out of the page cache without any filesystem locking.  This optimization
+is important in concurrent read scenarios.  The best way we could find
+to preserve this optimization is by introducing a new IOCB_NOIO flag for
+generic_file_read_iter.
 
-> I can't test it due to lack of HW though.
-> 
->   drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-> index d7fecab9252e..5bdbe502e983 100644
-> --- a/drivers/iio/adc/xilinx-xadc-core.c
-> +++ b/drivers/iio/adc/xilinx-xadc-core.c
-> @@ -1094,6 +1094,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
->   static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
->   	unsigned int *conf)
->   {
-> +	struct device *dev = indio_dev->dev.parent;
->   	struct xadc *xadc = iio_priv(indio_dev);
->   	struct iio_chan_spec *channels, *chan;
->   	struct device_node *chan_node, *child;
-> @@ -1138,7 +1139,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
->   		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
->   	}
->   
-> -	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
-> +	channels = devm_kmemdup(dev, xadc_channels,
-> +				sizeof(xadc_channels), GFP_KERNEL);
->   	if (!channels)
->   		return -ENOMEM;
->   
-> @@ -1174,8 +1176,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
->   	of_node_put(chan_node);
->   
->   	indio_dev->num_channels = num_channels;
-> -	indio_dev->channels = krealloc(channels, sizeof(*channels) *
-> -					num_channels, GFP_KERNEL);
-> +	indio_dev->channels = devm_krealloc(dev, channels,
-> +					    sizeof(*channels) * num_channels,
-> +					    GFP_KERNEL);
->   	/* If we can't resize the channels array, just use the original */
->   	if (!indio_dev->channels)
->   		indio_dev->channels = channels;
-> @@ -1229,14 +1232,14 @@ static int xadc_probe(struct platform_device *pdev)
->   
->   	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
->   	if (ret)
-> -		goto err_device_free;
-> +		return ret;
->   
->   	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
->   		ret = iio_triggered_buffer_setup(indio_dev,
->   			&iio_pollfunc_store_time, &xadc_trigger_handler,
->   			&xadc_buffer_ops);
->   		if (ret)
-> -			goto err_device_free;
-> +			return ret;
->   
->   		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
->   		if (IS_ERR(xadc->convst_trigger)) {
-> @@ -1354,8 +1357,6 @@ static int xadc_probe(struct platform_device *pdev)
->   err_triggered_buffer_cleanup:
->   	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
->   		iio_triggered_buffer_cleanup(indio_dev);
-> -err_device_free:
-> -	kfree(indio_dev->channels);
->   
->   	return ret;
->   }
-> @@ -1375,7 +1376,6 @@ static int xadc_remove(struct platform_device *pdev)
->   	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
->   	clk_disable_unprepare(xadc->clk);
->   	kfree(xadc->data);
-> -	kfree(indio_dev->channels);
->   
->   	return 0;
->   }
-> 
+Introducing this new flag may be too big a change for 5.8.  So this
+patch queue takes a different approach:  it first walks back gfs2's
+conversion to ->readahead.  Then it introduces IOCB_NOIO, fixes the
+locking, and re-applies the readahead conversion.
+
+Of this patch queue, either only the first patch or all four patches can
+be applied to fix gfs2's current issues in 5.8.  Please let me know what
+you think.
+
+Thanks,
+Andreas
+
+Andreas Gruenbacher (4):
+  gfs2: Revert readahead conversion
+  fs: Add IOCB_NOIO flag for generic_file_read_iter
+  gfs2: Rework read and page fault locking
+  gfs2: Reinstate readahead conversion
+
+ fs/gfs2/aops.c     | 45 +------------------------------------
+ fs/gfs2/file.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fs.h |  1 +
+ mm/filemap.c       | 16 ++++++++++++--
+ 4 files changed, 69 insertions(+), 48 deletions(-)
+
+-- 
+2.26.2
+
