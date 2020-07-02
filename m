@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B35C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4D720781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786D7207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653719;
-	bh=Vo3x2TRiXq5ViMr6k5CcJOTSHhyC2Yca1owqTu51t0U=;
+	s=default; t=1593653729;
+	bh=ORPv43D/MfkF8nCaY6eTl41d5n0TRntKOvuBRXLyLPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4KDZiCSYTVlf4zJjRlu05rTHblPOhY4BS/5JICTOhyAwlPaCY97dZteIm5O3tfd9
-	 uaextPedjoxI0DH1x2OX38EQbQEX4ApkmcG3LmPaX4LKFovp+UkD89DOcFfJWAfHET
-	 BpgyYibRdkP2grBgPvYE5wMEua8cgb+7K6/LWaOM=
+	b=lpKJBNAopT333RKD7k9BHXoIUMBS6OGtK0BVrwSrXaZ5nVW1v5mKkiNh42C8fRQ/Y
+	 1nHaC07/Jz6nJ5NdQF91eeiBf6HHxL8k/WflrpSsmtfBJY3YXwWH95WOmnFh5ffFQ1
+	 adjxWgnA/tGeH1M2lunJ09/zu6yOEzrcLtbatvKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgGBBfR (ORCPT
+        id S1729500AbgGBBf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:35:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgGBBXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:32 -0400
+        id S1728350AbgGBBX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5E22082F;
-        Thu,  2 Jul 2020 01:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF722082F;
+        Thu,  2 Jul 2020 01:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653011;
-        bh=Vo3x2TRiXq5ViMr6k5CcJOTSHhyC2Yca1owqTu51t0U=;
+        s=default; t=1593653007;
+        bh=ORPv43D/MfkF8nCaY6eTl41d5n0TRntKOvuBRXLyLPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umyc41LhZIIa0ZUERPq850jeBO7C9lVSvomXEWcmiSsjrnPbrXXe3Bdtr9Mzfik7o
-         1UTVy/xQf+5lP6Nj6a3f3+UXT17KvH1W+Fnz2o2VEgcJIRVLLGfH4/Dd8VaxFF5ZEl
-         mt9p3ji1+e5BK3DSlYc7UeV4QSW7L0qCCEEwzmMw=
+        b=yGr/jOHaa4V4iXHdx+2xpuIBRNH9nH6Z2TnK7EVMwcMohISwxkp1J35C551ykpU09
+         d3L44dcp4ZG0/TRGV/EPxFSI2fdHfg8oBqpm+6BADN/EYcqfilIU6mCP1QPnsyQP8W
+         zQ6soI1ix7wvYuChq+ly8QXlnHVC6jJ4xjb2FnnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 29/53] powerpc/kvm/book3s64: Fix kernel crash with nested kvm & DEBUG_VIRTUAL
-Date:   Wed,  1 Jul 2020 21:21:38 -0400
-Message-Id: <20200702012202.2700645-29-sashal@kernel.org>
+Cc:     Ciara Loftus <ciara.loftus@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 26/53] i40e: protect ring accesses with READ- and WRITE_ONCE
+Date:   Wed,  1 Jul 2020 21:21:35 -0400
+Message-Id: <20200702012202.2700645-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -60,68 +62,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Ciara Loftus <ciara.loftus@intel.com>
 
-[ Upstream commit c1ed1754f271f6b7acb1bfdc8cfb62220fbed423 ]
+[ Upstream commit d59e267912cd90b0adf33b4659050d831e746317 ]
 
-With CONFIG_DEBUG_VIRTUAL=y, __pa() checks for addr value and if it's
-less than PAGE_OFFSET it leads to a BUG().
+READ_ONCE should be used when reading rings prior to accessing the
+statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
+usage when allocating and freeing the rings, to ensure protected access.
 
-  #define __pa(x)
-  ({
-  	VIRTUAL_BUG_ON((unsigned long)(x) < PAGE_OFFSET);
-  	(unsigned long)(x) & 0x0fffffffffffffffUL;
-  })
-
-  kernel BUG at arch/powerpc/kvm/book3s_64_mmu_radix.c:43!
-  cpu 0x70: Vector: 700 (Program Check) at [c0000018a2187360]
-      pc: c000000000161b30: __kvmhv_copy_tofrom_guest_radix+0x130/0x1f0
-      lr: c000000000161d5c: kvmhv_copy_from_guest_radix+0x3c/0x80
-  ...
-  kvmhv_copy_from_guest_radix+0x3c/0x80
-  kvmhv_load_from_eaddr+0x48/0xc0
-  kvmppc_ld+0x98/0x1e0
-  kvmppc_load_last_inst+0x50/0x90
-  kvmppc_hv_emulate_mmio+0x288/0x2b0
-  kvmppc_book3s_radix_page_fault+0xd8/0x2b0
-  kvmppc_book3s_hv_page_fault+0x37c/0x1050
-  kvmppc_vcpu_run_hv+0xbb8/0x1080
-  kvmppc_vcpu_run+0x34/0x50
-  kvm_arch_vcpu_ioctl_run+0x2fc/0x410
-  kvm_vcpu_ioctl+0x2b4/0x8f0
-  ksys_ioctl+0xf4/0x150
-  sys_ioctl+0x28/0x80
-  system_call_exception+0x104/0x1d0
-  system_call_common+0xe8/0x214
-
-kvmhv_copy_tofrom_guest_radix() uses a NULL value for to/from to
-indicate direction of copy.
-
-Avoid calling __pa() if the value is NULL to avoid the BUG().
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-[mpe: Massage change log a bit to mention CONFIG_DEBUG_VIRTUAL]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200611120159.680284-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 29 ++++++++++++++-------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index bc6c1aa3d0e92..ef40addd52c65 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -40,7 +40,8 @@ unsigned long __kvmhv_copy_tofrom_guest_radix(int lpid, int pid,
- 	/* Can't access quadrants 1 or 2 in non-HV mode, call the HV to do it */
- 	if (kvmhv_on_pseries())
- 		return plpar_hcall_norets(H_COPY_TOFROM_GUEST, lpid, pid, eaddr,
--					  __pa(to), __pa(from), n);
-+					  (to != NULL) ? __pa(to): 0,
-+					  (from != NULL) ? __pa(from): 0, n);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 2a037ec244b94..80dc5fcb82db7 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -439,11 +439,15 @@ static void i40e_get_netdev_stats_struct(struct net_device *netdev,
+ 		i40e_get_netdev_stats_struct_tx(ring, stats);
  
- 	quadrant = 1;
- 	if (!pid)
+ 		if (i40e_enabled_xdp_vsi(vsi)) {
+-			ring++;
++			ring = READ_ONCE(vsi->xdp_rings[i]);
++			if (!ring)
++				continue;
+ 			i40e_get_netdev_stats_struct_tx(ring, stats);
+ 		}
+ 
+-		ring++;
++		ring = READ_ONCE(vsi->rx_rings[i]);
++		if (!ring)
++			continue;
+ 		do {
+ 			start   = u64_stats_fetch_begin_irq(&ring->syncp);
+ 			packets = ring->stats.packets;
+@@ -787,6 +791,8 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 	for (q = 0; q < vsi->num_queue_pairs; q++) {
+ 		/* locate Tx ring */
+ 		p = READ_ONCE(vsi->tx_rings[q]);
++		if (!p)
++			continue;
+ 
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+@@ -800,8 +806,11 @@ static void i40e_update_vsi_stats(struct i40e_vsi *vsi)
+ 		tx_linearize += p->tx_stats.tx_linearize;
+ 		tx_force_wb += p->tx_stats.tx_force_wb;
+ 
+-		/* Rx queue is part of the same block as Tx queue */
+-		p = &p[1];
++		/* locate Rx ring */
++		p = READ_ONCE(vsi->rx_rings[q]);
++		if (!p)
++			continue;
++
+ 		do {
+ 			start = u64_stats_fetch_begin_irq(&p->syncp);
+ 			packets = p->stats.packets;
+@@ -10816,10 +10825,10 @@ static void i40e_vsi_clear_rings(struct i40e_vsi *vsi)
+ 	if (vsi->tx_rings && vsi->tx_rings[0]) {
+ 		for (i = 0; i < vsi->alloc_queue_pairs; i++) {
+ 			kfree_rcu(vsi->tx_rings[i], rcu);
+-			vsi->tx_rings[i] = NULL;
+-			vsi->rx_rings[i] = NULL;
++			WRITE_ONCE(vsi->tx_rings[i], NULL);
++			WRITE_ONCE(vsi->rx_rings[i], NULL);
+ 			if (vsi->xdp_rings)
+-				vsi->xdp_rings[i] = NULL;
++				WRITE_ONCE(vsi->xdp_rings[i], NULL);
+ 		}
+ 	}
+ }
+@@ -10853,7 +10862,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		if (vsi->back->hw_features & I40E_HW_WB_ON_ITR_CAPABLE)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->tx_rings[i] = ring++;
++		WRITE_ONCE(vsi->tx_rings[i], ring++);
+ 
+ 		if (!i40e_enabled_xdp_vsi(vsi))
+ 			goto setup_rx;
+@@ -10871,7 +10880,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 			ring->flags = I40E_TXR_FLAGS_WB_ON_ITR;
+ 		set_ring_xdp(ring);
+ 		ring->itr_setting = pf->tx_itr_default;
+-		vsi->xdp_rings[i] = ring++;
++		WRITE_ONCE(vsi->xdp_rings[i], ring++);
+ 
+ setup_rx:
+ 		ring->queue_index = i;
+@@ -10884,7 +10893,7 @@ static int i40e_alloc_rings(struct i40e_vsi *vsi)
+ 		ring->size = 0;
+ 		ring->dcb_tc = 0;
+ 		ring->itr_setting = pf->rx_itr_default;
+-		vsi->rx_rings[i] = ring;
++		WRITE_ONCE(vsi->rx_rings[i], ring);
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
