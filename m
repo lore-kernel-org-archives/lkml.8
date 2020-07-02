@@ -2,137 +2,112 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A51C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55556C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3395A20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC5E20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5Eg11Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgGBW2p (ORCPT
+        id S1726415AbgGBW3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:28:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50847 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgGBW2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:28:44 -0400
-IronPort-SDR: q1svIC/YizTQ8ydy7ch0L9qAarSa0Odr+qyCSqeC4fZzQFI9WTj2xylQf1VoRGb51u6IE4Z/gB
- Mei0qIZRNJzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212067387"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="212067387"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:28:43 -0700
-IronPort-SDR: +1ViAuCQOuQdfSMX2B6BmxcYDEibA9bsT17rtsST1DOrzyDSk9PLkOOWAwW4iNwPFAZTNXqp4R
- I+2QHHdq2MVA==
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="426100146"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.34]) ([10.255.31.34])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:28:41 -0700
-Subject: Re: [PATCH v2 2/7] KVM: X86: Go on updating other CPUID leaves when
- leaf 1 is absent
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200623115816.24132-1-xiaoyao.li@intel.com>
- <20200623115816.24132-3-xiaoyao.li@intel.com>
- <20200702185403.GH3575@linux.intel.com>
- <20200702190237.GK3575@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <54c1cea0-75d5-c38f-c3e5-a8a0679c5fcf@intel.com>
-Date:   Fri, 3 Jul 2020 06:28:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 18:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgGBW3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:29:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1CFC08C5C1;
+        Thu,  2 Jul 2020 15:29:41 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h22so27101620lji.9;
+        Thu, 02 Jul 2020 15:29:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
+        b=H5Eg11Z9hn0nAlgWO7xYNhfv0JqaLDjFb6T3TNFC4HAhEYM+NAykFGb40mVhLCEyP8
+         89J6eu0fEwy/nisaUDezq6zLhobof7rGWCcDy5p0cCVTOXcIu91LT30adquKyk1RDcpo
+         R5Za4WEURUdOtucQnivvJbaFYfMj1p1AiBdGYkZobOlKsMz4CJb9Ka5vqgX3hio6nEU4
+         LApjtLJ4mIuzgwD1Y67rCWqyTi0T9ViqnT9MwX/X1hWv+OdjGDDvjuKJNvyfqdALZyHz
+         0mSG7VtcmsjqA6JIA87D7xXr4IJ1fsqhQNS3ljpAHMYqKSLCfPIHnHNt2Yc6kXHAekRe
+         UYig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
+        b=CSibwBh/B0WsD7+B82rXM6+1vIXOLEhiI2gh5BrIOX1NRaPN87smcsBiA7oaIaK5KV
+         XeaUkL8flzwozIPN0oyDlz7q79aCFiGEwX8hjqoReYJ4BZEey5mHI7PvTuomkoay5Ahq
+         l6anU8UtU9LWyob9V00++5CfXGDqfX9+Ib/k2ZWFMmBe/AQbQccFuBbCQ1Qtrn9fFqDx
+         cWifNg/TzxJo4ly4oFISCoX5YwhZ48tYvMnEYN8C+gIpTO30YBvxXxyX6BKbH2ZkmAdO
+         LgL01WHbtkfAwH0qiacnm2NHXCE3R+VAMkDw+CsoC6rfsPKmKUN6s8M6Fa06McyKqCHO
+         82lg==
+X-Gm-Message-State: AOAM530smaHNs+5c0HEGujinBLUCOsoMgvL1xaihhLU/Q5gBtXJpbC7w
+        +VtW/QG37zujmIwL5LzEIYFatjCO4eA2nKCQtLU=
+X-Google-Smtp-Source: ABdhPJw63DHFOW+2oJ387eLmT45jEZ5gsdDYBXDveJ+O6iDUw8rDJqoTS4F60kuHr07mYRB3M3UDRSi7vwC3QvZSNpQ=
+X-Received: by 2002:a2e:9e87:: with SMTP id f7mr18422139ljk.44.1593728980418;
+ Thu, 02 Jul 2020 15:29:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702190237.GK3575@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+In-Reply-To: <20200702175352.19223-3-TheSven73@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 Jul 2020 19:29:29 -0300
+Message-ID: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
+ of clk_enet_ref
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/2020 3:02 AM, Sean Christopherson wrote:
-> On Thu, Jul 02, 2020 at 11:54:03AM -0700, Sean Christopherson wrote:
->> On Tue, Jun 23, 2020 at 07:58:11PM +0800, Xiaoyao Li wrote:
->>> As handling of bits other leaf 1 added over time, kvm_update_cpuid()
->>> should not return directly if leaf 1 is absent, but should go on
->>> updateing other CPUID leaves.
->>>
->>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>
->> This should probably be marked for stable.
->>
->>> ---
->>>   arch/x86/kvm/cpuid.c | 23 +++++++++++------------
->>>   1 file changed, 11 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>> index 1d13bad42bf9..0164dac95ef5 100644
->>> --- a/arch/x86/kvm/cpuid.c
->>> +++ b/arch/x86/kvm/cpuid.c
->>> @@ -60,22 +60,21 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>>   	struct kvm_lapic *apic = vcpu->arch.apic;
->>>   
->>>   	best = kvm_find_cpuid_entry(vcpu, 1, 0);
->>> -	if (!best)
->>> -		return 0;
->>
->> Rather than wrap the existing code, what about throwing it in a separate
->> helper?  That generates an easier to read diff and also has the nice
->> property of getting 'apic' out of the common code.
-> 
-> Hrm, that'd be overkill once the apic code is moved in a few patches.
-> What if you keep the cpuid updates wrapped (as in this patch), but then
-> do
-> 
-> 	if (best && apic) {
-> 	}
-> 
-> for the apic path?  That'll minimize churn for code that is disappearing,
-> e.g. will make future git archaeologists happy :-).
+Hi Sven,
 
-Sure. I'll do it in next version.
+On Thu, Jul 2, 2020 at 2:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
 
->>> -
->>> -	/* Update OSXSAVE bit */
->>> -	if (boot_cpu_has(X86_FEATURE_XSAVE) && best->function == 0x1)
->>> -		cpuid_entry_change(best, X86_FEATURE_OSXSAVE,
->>> +	if (best) {
->>> +		/* Update OSXSAVE bit */
->>> +		if (boot_cpu_has(X86_FEATURE_XSAVE))
->>> +			cpuid_entry_change(best, X86_FEATURE_OSXSAVE,
->>>   				   kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE));
->>>   
->>> -	cpuid_entry_change(best, X86_FEATURE_APIC,
->>> +		cpuid_entry_change(best, X86_FEATURE_APIC,
->>>   			   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
->>>   
->>> -	if (apic) {
->>> -		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->>> -			apic->lapic_timer.timer_mode_mask = 3 << 17;
->>> -		else
->>> -			apic->lapic_timer.timer_mode_mask = 1 << 17;
->>> +		if (apic) {
->>> +			if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
->>> +				apic->lapic_timer.timer_mode_mask = 3 << 17;
->>> +			else
->>> +				apic->lapic_timer.timer_mode_mask = 1 << 17;
->>> +		}
->>>   	}
->>>   
->>>   	best = kvm_find_cpuid_entry(vcpu, 7, 0);
->>> -- 
->>> 2.18.2
->>>
+> +       /*
+> +        * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
+> +        * be the PTP clock source, instead of having to be routed through
+> +        * pads.
+> +        */
+> +       if (of_machine_is_compatible("fsl,imx6qp")) {
+> +               clksel = of_property_read_bool(np, "fsl,ptpclk-bypass-pad") ?
+> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PLL :
+> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PAD;
+> +               regmap_update_bits(gpr, IOMUXC_GPR5,
+> +                                  IMX6Q_GPR5_ENET_TXCLK_SEL_MASK, clksel);
+> +       }
 
+With the device tree approach, I think that a better place to touch
+GPR5 would be inside the fec driver.
+
+You can refer to drivers/pci/controller/dwc/pci-imx6.c and follow the
+same approach for accessing the GPR register:
+...
+/* Grab GPR config register range */
+imx6_pcie->iomuxc_gpr =
+syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr")
+
+For the property name, what about fsl,txclk-from-pll?
