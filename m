@@ -2,152 +2,166 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFCAC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5552EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB8132089D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312F920899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jqWlLeQ9"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="L0zwwvq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGBIWr (ORCPT
+        id S1728450AbgGBIWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:22:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59442 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbgGBIWo (ORCPT
+        Thu, 2 Jul 2020 04:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728423AbgGBIWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:22:44 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628MVLp081794;
-        Thu, 2 Jul 2020 03:22:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593678151;
-        bh=IPYADznch2oF3OT/2Ql57mNeeC/uA2ZY2VCc9l5fLDQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jqWlLeQ9s6a2LzJ90q0eTRXI5o1EmG8SozWZzBplGqsuBatOB7Zko1A+JOTHZj22m
-         9DGm7+CujGMVyKRoLMYgkJHUNzoFaqWqAdgztVhdGI1jwaNFR+IxX+ZEnx9G/DHKPQ
-         2PbN+666Ca0qrF+bUCdRBfv2TAG8DeJST3AMvhxw=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628MV1X030784
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jul 2020 03:22:31 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
- 2020 03:22:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 2 Jul 2020 03:22:31 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYJ006145;
-        Thu, 2 Jul 2020 03:22:24 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-Subject: [RFC PATCH 07/22] virtio_pci: Use request_threaded_irq() instead of request_irq()
-Date:   Thu, 2 Jul 2020 13:51:28 +0530
-Message-ID: <20200702082143.25259-8-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
-References: <20200702082143.25259-1-kishon@ti.com>
+        Thu, 2 Jul 2020 04:22:46 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB69FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:22:45 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id j4so24640448wrp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 01:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3t9GLwryJTaOdXMZTnjC4mjz71cq4jtvm6cibUFNxhQ=;
+        b=L0zwwvq4BVdjvUIxi+uPw5MuIa6xxrKv8PXWwwOqBnqQQayVI8X4r7GkFILmCbJVyx
+         mGgsy107fK8syh3GtAmoXiKVwyVnUX5lFUIp3s9ZYD4uD3Yx903cMfVj48UJTzTmUTqh
+         vKf8CinW3GqwTCffXrOsQH08fw02qBc+ShhaX3aMyDutoBmCQelhqd/pK9U9prEpvsyD
+         4mnkRzzurB/44dgQElYhlUjjV4Qh0YcqpRbdA2sxhXAlW2fR9j1XcDe9jT6ErKzD7sWH
+         HBcord3lfJqekNCuTV0MWM8j/1Po4uHSF5gpOIrseByAyfBFfmb/R0id4E+U7V7joXar
+         cH1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3t9GLwryJTaOdXMZTnjC4mjz71cq4jtvm6cibUFNxhQ=;
+        b=mSZOf30exmD5YtZETPQeUfuE1wL+dLaK3hcokCPu7rGtyO6dkigpeAZ4+yPbhJ0WT1
+         8scUMMwHCA3n8ag7bEQGEwZ4DeYERSkiGh1dMKZEft05sifFyFq12SFOwFrDrN33Nm5J
+         Zwh6dpV9A39cp03aLeUQHvaeSqAccvonB8QAkTAa1xS9hZe4nzMhfJqu6DfcYnJ87xGM
+         nSFlOw/qx6T7VhzIAOEcG++ZIt5Xq35z5XQfpNB73wCEWiuM8uFeAwheTb3se5jVxuuI
+         CfITlyQ/0TP3+M5NJRAXKeX8hcJQJpTqHUEcJxKI6KuHJLe0RhBDnZKzNYfHJNQSt7wY
+         pVpg==
+X-Gm-Message-State: AOAM531xrGG9zDgEpXEdm6UXVLElk8YPbbb7C18haEEkgI0Tc2Gai83n
+        1jwwRY652YuD2vkyXB6Ks2uukUrGP6B9kyoYkVNO4w==
+X-Google-Smtp-Source: ABdhPJyIghecqPkmAYT+NI4s3yizDvT3Zx51BClqfp89CAi6K5ZYAPyQ1gPIGKCHrwC6RltmFFPoxv5AIS11N9RWTM0=
+X-Received: by 2002:a5d:6288:: with SMTP id k8mr29524832wru.373.1593678163746;
+ Thu, 02 Jul 2020 01:22:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box> <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+ <20200701075719.p7h5zypdtlhqxtgv@box> <20200701075902.hhmaskxtjsm4bcx7@box> <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
+In-Reply-To: <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Thu, 2 Jul 2020 09:22:32 +0100
+Message-ID: <CAPj87rOrUHBZZR3cw+iqUMtZL1ZQyjd=RoM2yHt5oUeRO5uDTA@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     James Jones <jajones@nvidia.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the virtio drivers (like virtio_rpmsg_bus.c) use sleeping
-functions like mutex_*() in the virtqueue callback. Use
-request_threaded_irq() instead of request_irq() in order for
-the virtqueue callbacks to be executed in thread context instead
-of interrupt context.
+Hi,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/virtio/virtio_pci_common.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+On Wed, 1 Jul 2020 at 20:45, James Jones <jajones@nvidia.com> wrote:
+> OK, I think I see what's going on.  In the Xorg modesetting driver, the
+> logic is basically:
+>
+> if (gbm_has_modifiers && DRM_CAP_ADDFB2_MODIFIERS != 0) {
+>    drmModeAddFB2WithModifiers(..., gbm_bo_get_modifier(bo->gbm));
+> } else {
+>    drmModeAddFB(...);
+> }
 
-diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
-index 222d630c41fc..60998b4f1f30 100644
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -140,9 +140,9 @@ static int vp_request_msix_vectors(struct virtio_device *vdev, int nvectors,
- 	v = vp_dev->msix_used_vectors;
- 	snprintf(vp_dev->msix_names[v], sizeof *vp_dev->msix_names,
- 		 "%s-config", name);
--	err = request_irq(pci_irq_vector(vp_dev->pci_dev, v),
--			  vp_config_changed, 0, vp_dev->msix_names[v],
--			  vp_dev);
-+	err = request_threaded_irq(pci_irq_vector(vp_dev->pci_dev, v), 0,
-+				   vp_config_changed, 0, vp_dev->msix_names[v],
-+				   vp_dev);
- 	if (err)
- 		goto error;
- 	++vp_dev->msix_used_vectors;
-@@ -159,9 +159,9 @@ static int vp_request_msix_vectors(struct virtio_device *vdev, int nvectors,
- 		v = vp_dev->msix_used_vectors;
- 		snprintf(vp_dev->msix_names[v], sizeof *vp_dev->msix_names,
- 			 "%s-virtqueues", name);
--		err = request_irq(pci_irq_vector(vp_dev->pci_dev, v),
--				  vp_vring_interrupt, 0, vp_dev->msix_names[v],
--				  vp_dev);
-+		err = request_threaded_irq(pci_irq_vector(vp_dev->pci_dev, v),
-+					   0, vp_vring_interrupt, 0,
-+					   vp_dev->msix_names[v], vp_dev);
- 		if (err)
- 			goto error;
- 		++vp_dev->msix_used_vectors;
-@@ -336,10 +336,11 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned nvqs,
- 			 sizeof *vp_dev->msix_names,
- 			 "%s-%s",
- 			 dev_name(&vp_dev->vdev.dev), names[i]);
--		err = request_irq(pci_irq_vector(vp_dev->pci_dev, msix_vec),
--				  vring_interrupt, 0,
--				  vp_dev->msix_names[msix_vec],
--				  vqs[i]);
-+		err = request_threaded_irq(pci_irq_vector(vp_dev->pci_dev,
-+							  msix_vec),
-+					   0, vring_interrupt, 0,
-+					   vp_dev->msix_names[msix_vec],
-+					   vqs[i]);
- 		if (err)
- 			goto error_find;
- 	}
-@@ -361,8 +362,8 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned nvqs,
- 	if (!vp_dev->vqs)
- 		return -ENOMEM;
- 
--	err = request_irq(vp_dev->pci_dev->irq, vp_interrupt, IRQF_SHARED,
--			dev_name(&vdev->dev), vp_dev);
-+	err = request_threaded_irq(vp_dev->pci_dev->irq, 0, vp_interrupt,
-+				   IRQF_SHARED, dev_name(&vdev->dev), vp_dev);
- 	if (err)
- 		goto out_del_vqs;
- 
--- 
-2.17.1
+I read this thread expecting to explain the correct behaviour we
+implement in Weston and how modesetting needs to be fixed, but ...
+that seems OK to me? As long as `gbm_has_modifiers` is a proxy for 'we
+used gbm_(bo|surface)_create_with_modifiers to allocate the buffer'.
 
+> There's no attempt to verify the DRM-KMS device supports the modifier,
+> but then, why would there be?  GBM presumably chose a supported modifier
+> at buffer creation time, and we don't know which plane the FB is going
+> to be used with yet.  GBM doesn't actually ask the kernel which
+> modifiers it supports here either though.
+
+Right, it doesn't ask, because userspace tells it which modifiers to
+use. The correct behaviour is to take the list from the KMS
+`IN_FORMATS` property and then pass that to
+`gbm_(bo|surface)_create_with_modifiers`; GBM must then select from
+that list and only that list. If that call does not succeed and Xorg
+falls back to `gbm_surface_create`, then it must not call
+`gbm_bo_get_modifier` - so that would be a modesetting bug. If that
+call does succeed and `gbm_bo_get_modifier` subsequently reports a
+modifier which was not in the list, that's a Mesa driver bug.
+
+> It just goes into Mesa via
+> DRI and reports the modifier (unpatched) Mesa chose on its own.  Mesa
+> just hard-codes the modifiers in its driver backends since its thinking
+> in terms of a device's 3D engine, not display.  In theory, Mesa's DRI
+> drivers could query KMS for supported modifiers if allocating from GBM
+> using the non-modifiers path and the SCANOUT flag is set (perhaps some
+> drivers do this or its equivalent?  Haven't checked.), but that seems
+> pretty gnarly and doesn't fix the modifier-based GBM allocation path
+> AFAIK.  Bit of a mess.
+
+Two options for GBM users:
+* call gbm_*_create_with_modifiers, it succeeds, call
+gbm_bo_get_modifier, pass modifier into AddFB
+* call gbm_*_create (without modifiers), it succeeds, do not call
+gbm_bo_get_modifier, do not pass a modifier into AddFB
+
+Anything else is a bug in the user. Note that falling back from 1 to 2
+is fine: if `gbm_*_create_with_modifiers()` fails, you can fall back
+to the non-modifier path, provided you don't later try to get a
+modifier back out.
+
+> For a quick userspace fix that could probably be pushed out everywhere
+> (Only affects Xorg server 1.20+ AFAIK), just retrying
+> drmModeAddFB2WithModifiers() without the DRM_MODE_FB_MODIFIERS flag on
+> failure should be sufficient.
+
+This would break other drivers.
+
+> Still need to verify as I'm having
+> trouble wrangling my Xorg build at the moment and I'm pressed for time.
+> A more complete fix would be quite involved, as modesetting isn't really
+> properly plumbed to validate GBM's modifiers against KMS planes, and it
+> doesn't seem like GBM/Mesa/DRI should be responsible for this as noted
+> above given the general modifier workflow/design.
+>
+> Most importantly, options I've considered for fixing from the kernel side:
+>
+> -Accept "legacy" modifiers in nouveau in addition to the new modifiers,
+> though avoid reporting them to userspace as supported to avoid further
+> proliferation.  This is pretty straightforward.  I'll need to modify
+> both the AddFB2 handler (nouveau_validate_decode_mod) and the mode set
+> plane validation logic (nv50_plane_format_mod_supported), but it should
+> end up just being a few lines of code.
+
+I do think that they should also be reported to userspace if they are
+accepted. Other users can and do look at the modifier list to see if
+the buffer is acceptable for a given plane, so the consistency is good
+here. Of course, in Mesa you would want to prioritise the new
+modifiers over the legacy ones, and not allocate or return the legacy
+ones unless that was all you were asked for. This would involve
+tracking the used modifier explicitly through Mesa, rather than
+throwing it away at alloc time and then later divining it from the
+tiling mode.
+
+Cheers,
+Daniel
