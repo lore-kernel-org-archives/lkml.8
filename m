@@ -2,165 +2,148 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AABBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3624120771
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593705154;
-	bh=I36yVrLD52E/RNQ64kKYCYzRpU8aZRVCVCHAH3Jt6To=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXhd9GIq8x+PXcsV487WYlzCRkBRJq+vMGyCV5HTQJGNyREQzJ1Xo+NCnMe1Ffzf3
-	 ZQ1tjSp1WiChAAvPNHN1MNnFsUFY8GDROBQmE3/FwASp6tFSkzvqbjr80g01qBpeqQ
-	 YpSq3iqFhgLo1ZSFwJ4YwcB+6xS6pHwCEUck8EB8=
+	by mail.kernel.org (Postfix) with ESMTP id F3FD72088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KwW+/U9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgGBPwc (ORCPT
+        id S1726352AbgGBPxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgGBPw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:52:28 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 951392088E;
-        Thu,  2 Jul 2020 15:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593705147;
-        bh=I36yVrLD52E/RNQ64kKYCYzRpU8aZRVCVCHAH3Jt6To=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdPw6mCwzH8sNJ1IKEERZj30LyaFqfuu1D/+fYhA841U3Rj9qCsBltZXGQVICjD9T
-         m78dIvqGCPo+D6KsOoArSyU3JcLRGqnUaTzm9QmTqp1zrQRNuH4y9mLE9uE10zVX7g
-         MNh5mpDTIEEUkYf1RhFeOUWNNy9cn/mZLMTeoMew=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH v2 8/8] ARM: dts: exynos: Define fixed regulators in root node for consistency in SMDK5420
-Date:   Thu,  2 Jul 2020 17:51:49 +0200
-Message-Id: <20200702155149.12854-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702155149.12854-1-krzk@kernel.org>
-References: <20200702155149.12854-1-krzk@kernel.org>
+        Thu, 2 Jul 2020 11:53:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbgGBPw7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:52:59 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCE2C08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:52:59 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so18151404ljl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
+        b=KwW+/U9fkM+srFlFPvkKz4V3jEnKIKH8ygaroNt4YXgCxeue/VrdTKoJwmcn9oXIVs
+         4DY0ZVk34mPlw7u4KLu6rGjhvnrQL6/lofTS76CSIpt1KUwe2M3VISdDz83TvG8iTXSI
+         W47Pw8OTk/hC0zb2MZaQ1r596h7N8T5A23JSQkaU9RWiYgGd5Xav7JwLesO4IqMIFUZL
+         2VuieIxaw/GaR9iMUF6CkG5lHBbOPJgWIfkSCxXHB48wkXOO7uuaIH8G93d6r33rKKeJ
+         p2LG1w2EFwjJvNEP/726kUUAmMNBPXMl5+BvhQTxMO/S6XCBw/1QqIdNdExANIirUL/4
+         +A/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
+        b=UGvfmvrW2e08/vnrNzYWLqmr+k5CDM0JLZaExVIs0DEWqbviwn3sGluMAQ3245G75P
+         ztPJ1lONL95AW36KkClaZJXG2K8M4Yglnjf/Da0v0qth8z6O9TYzSthBxaC7s19YrveO
+         9PJLFmWkFDAi+zrYjHUv/v1SOO0TF3ESma6uwpt3uEeBY1jKDlictJ/2neCUTGm51YTV
+         FNff+XCxcUmQmCw280JuL414XvqErrTHXA4ksqVFIUeFXdUzEeLWwDM2SuEXNFAJEciC
+         FMp72S+ubMu0XDpxpfPIIgCjDX3oB/5b6d6Hryk3gWnI/CqREg3Nzj5ydNggOzt7Tleu
+         5wQg==
+X-Gm-Message-State: AOAM533HtrqaJnr3cnENTBpt8oS7+bWeiZiOO9Jaim12OJ1jzJyFdOBy
+        kSykNgqS5uKWuGgWPd+2s+xHOIjNCdhRU+moaoq4fA==
+X-Google-Smtp-Source: ABdhPJz3ABkPWjkv8L0FIiK+Kjjg6BO4eaaimJnKQo1xzAYZPxzmmzDpXVUF4bLDPypwEcFJ8kmLmaUrHoL1B8Z52PM=
+X-Received: by 2002:a2e:b88c:: with SMTP id r12mr16463205ljp.266.1593705177353;
+ Thu, 02 Jul 2020 08:52:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-19-hch@lst.de>
+ <20200702141001.GA3834@lca.pw> <20200702151453.GA1799@lst.de>
+In-Reply-To: <20200702151453.GA1799@lst.de>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 2 Jul 2020 21:22:46 +0530
+Message-ID: <CA+G9fYv6DfJB=DeQFVptAuaVv1Ng-BK0fRHgFZ=DNzymu8LVvw@mail.gmail.com>
+Subject: Re: [PATCH 18/20] block: refator submit_bio_noacct
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Qian Cai <cai@lca.pw>, Jens Axboe <axboe@kernel.dk>,
+        dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the regulators node and define fixed regulators directly under
-the root node.  This makes SMDK5420 board consistent with other Exynos
-boards.
+On Thu, 2 Jul 2020 at 20:45, Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, Jul 02, 2020 at 10:10:10AM -0400, Qian Cai wrote:
+> > On Mon, Jun 29, 2020 at 09:39:45PM +0200, Christoph Hellwig wrote:
+> > > Split out a __submit_bio_noacct helper for the actual de-recursion
+> > > algorithm, and simplify the loop by using a continue when we can't
+> > > enter the queue for a bio.
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Reverting this commit and its dependencies,
+> >
+> > 5a6c35f9af41 block: remove direct_make_request
+> > ff93ea0ce763 block: shortcut __submit_bio_noacct for blk-mq drivers
+> >
+> > fixed the stack-out-of-bounds during boot,
+> >
+> > https://lore.kernel.org/linux-block/000000000000bcdeaa05a97280e4@google.com/
+>
+> Yikes.  bio_alloc_bioset pokes into bio_list[1] in a totally
+> undocumented way.  But even with that the problem should only show
+> up with "block: shortcut __submit_bio_noacct for blk-mq drivers".
+>
+> Can you try this patch?
 
-Name the fixed regulator nodes consistently.
+Applied your patch on top of linux-next 20200702 and tested on
+arm64 and x86_64 devices and the reported BUG fixed.
 
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
----
+>
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index bf882b8d84450c..9f1bf8658b611a 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1155,11 +1155,10 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
+>  static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
+>  {
+>         struct gendisk *disk = bio->bi_disk;
+> -       struct bio_list bio_list;
+> +       struct bio_list bio_list[2] = { };
+>         blk_qc_t ret = BLK_QC_T_NONE;
+>
+> -       bio_list_init(&bio_list);
+> -       current->bio_list = &bio_list;
+> +       current->bio_list = bio_list;
+>
+>         do {
+>                 WARN_ON_ONCE(bio->bi_disk != disk);
+> @@ -1174,7 +1173,7 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
+>                 }
+>
+>                 ret = blk_mq_submit_bio(bio);
+> -       } while ((bio = bio_list_pop(&bio_list)));
+> +       } while ((bio = bio_list_pop(&bio_list[0])));
+>
+>         current->bio_list = NULL;
+>         return ret;
 
-Changes since v1:
-1. New patch
----
- arch/arm/boot/dts/exynos5420-smdk5420.dts | 56 ++++++++++-------------
- 1 file changed, 25 insertions(+), 31 deletions(-)
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1538359#L288
+https://lkft.validation.linaro.org/scheduler/job/1538360#L572
 
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index e3f2afe8359a..d703c603c45a 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -32,40 +32,34 @@
- 		};
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		vdd: fixed-regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "vdd-supply";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
-+	vdd: regulator-0 {
-+		compatible = "regulator-fixed";
-+		reg = <0>;
-+		regulator-name = "vdd-supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
- 
--		dbvdd: fixed-regulator@1 {
--			compatible = "regulator-fixed";
--			reg = <1>;
--			regulator-name = "dbvdd-supply";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
--		};
-+	dbvdd: regulator-1 {
-+		compatible = "regulator-fixed";
-+		reg = <1>;
-+		regulator-name = "dbvdd-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
- 
--		spkvdd: fixed-regulator@2 {
--			compatible = "regulator-fixed";
--			reg = <2>;
--			regulator-name = "spkvdd-supply";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			regulator-always-on;
--		};
-+	spkvdd: regulator-2 {
-+		compatible = "regulator-fixed";
-+		reg = <2>;
-+		regulator-name = "spkvdd-supply";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
- 	};
- 
--	usb300_vbus_reg: regulator-usb300 {
-+	usb300_vbus_reg: regulator-3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VBUS0";
- 		regulator-min-microvolt = <5000000>;
-@@ -76,7 +70,7 @@
- 		enable-active-high;
- 	};
- 
--	usb301_vbus_reg: regulator-usb301 {
-+	usb301_vbus_reg: regulator-4 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VBUS1";
- 		regulator-min-microvolt = <5000000>;
--- 
-2.17.1
 
+- Naresh
