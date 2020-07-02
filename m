@@ -2,161 +2,105 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56488C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 041E4207E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336832073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dguFQFTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGBGoa (ORCPT
+        id S1726513AbgGBGtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:44:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726169AbgGBGo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:44:29 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0626W4fT082159;
-        Thu, 2 Jul 2020 02:44:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmp2je5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 02:44:16 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0626fftQ118902;
-        Thu, 2 Jul 2020 02:44:16 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmp2jdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 02:44:16 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0626aPZb016144;
-        Thu, 2 Jul 2020 06:44:13 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 31wwch5bu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 06:44:13 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0626iBVI58196136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jul 2020 06:44:11 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43DC45204F;
-        Thu,  2 Jul 2020 06:44:11 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id C8DD352052;
-        Thu,  2 Jul 2020 06:44:08 +0000 (GMT)
-Date:   Thu, 2 Jul 2020 12:14:08 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200702064408.GD17918@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
- <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
- <20200701084200.GN2369@dhcp22.suse.cz>
- <20200701100442.GB17918@linux.vnet.ibm.com>
- <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
+        Thu, 2 Jul 2020 02:49:17 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33528 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgGBGtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:49:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593672555; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=Z1FQKJa+CcrDHMyZpRsA52XudrtWn5rPp4C8kePR6JE=; b=dguFQFTL6RoLG4ykuSuU5/5fjvL5PxkQDeqeApq20gGGmNDXiVhQG3S8s5ZEJGjGg4fihJko
+ P0OY2Qf3gsYzDChSYTm/YATU+5nsqac5N32RHMM+LeqGLtD5GHtYbJbL4DFkuGoSbVd6j5YB
+ ZfSNjMU8KNjU0XJ09HrT/q3gwgk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5efd83636f2ee827dadb7f1d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 06:49:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0A487C43395; Thu,  2 Jul 2020 06:49:07 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 317DDC433C6;
+        Thu,  2 Jul 2020 06:49:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 317DDC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     <Nicolas.Ferre@microchip.com>
+Cc:     <luc.vanoostenryck@gmail.com>, <adham.abozaeid@microchip.com>,
+        <Ajay.Kathat@microchip.com>, <gregkh@linuxfoundation.org>,
+        <linux-wireless@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging/wilc1000: let wilc_mac_xmit() to NETDEV_TX_OK
+References: <20200628183237.74749-1-luc.vanoostenryck@gmail.com>
+        <8a2f50dc-2cbe-64e4-438c-4320bb574f4f@microchip.com>
+Date:   Thu, 02 Jul 2020 09:48:59 +0300
+In-Reply-To: <8a2f50dc-2cbe-64e4-438c-4320bb574f4f@microchip.com> (Nicolas
+        Ferre's message of "Mon, 29 Jun 2020 07:58:09 +0000")
+Message-ID: <87eepubeec.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200701122110.GT2369@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_02:2020-07-01,2020-07-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 adultscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007020046
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michal Hocko <mhocko@kernel.org> [2020-07-01 14:21:10]:
+<Nicolas.Ferre@microchip.com> writes:
 
-> > >>>>>>
-> > >>>>>> 2. Also existence of dummy node also leads to inconsistent information. The
-> > >>>>>> number of online nodes is inconsistent with the information in the
-> > >>>>>> device-tree and resource-dump
-> > >>>>>>
-> > >>>>>> 3. When the dummy node is present, single node non-Numa systems end up showing
-> > >>>>>> up as NUMA systems and numa_balancing gets enabled. This will mean we take
-> > >>>>>> the hit from the unnecessary numa hinting faults.
-> > >>>>>
-> > >>>>> I have to say that I dislike the node online/offline state and directly
-> > >>>>> exporting that to the userspace. Users should only care whether the node
-> > >>>>> has memory/cpus. Numa nodes can be online without any memory. Just
-> > >>>>> offline all the present memory blocks but do not physically hot remove
-> > >>>>> them and you are in the same situation. If users are confused by an
-> > >>>>> output of tools like numactl -H then those could be updated and hide
-> > >>>>> nodes without any memory&cpus.
-> > >>>>>
-> > >>>>> The autonuma problem sounds interesting but again this patch doesn't
-> > >>>>> really solve the underlying problem because I strongly suspect that the
-> > >>>>> problem is still there when a numa node gets all its memory offline as
-> > >>>>> mentioned above.
-> 
-> I would really appreciate a feedback to these two as well.
+> Luc,
+>
+> Thanks for your patch...
+>
+> On 28/06/2020 at 20:32, Luc Van Oostenryck wrote:
+>> The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+>> which is a typedef for an enum type defining 'NETDEV_TX_OK' but this
+>> driver returns '0' instead of 'NETDEV_TX_OK'.
+>> 
+>> Fix this by returning ''NETDEV_TX_OK' instead of 0.
+>> 
+>> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+>> ---
+>>   drivers/staging/wilc1000/netdev.c | 6 +++---
+>
+> ... would it be possible that you re-spin it so that it applies to the 
+> new location of this driver:
+> drivers/net/wireless/microchip/wilc1000/netdev.c
+>
+> You can rebase your patch on the wireless-driver-next tree with 
+> wilc1000-move-out-of-staging branch:
+>
+> tree: 
+> git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git
+> branch: wilc1000-move-out-of-staging
+>
+> (Then you can also review the subject line of your patch, BTW)
 
-1. Its not just numactl that's to be fixed but all tools/utilities that
-depend on /sys/devices/system/node/online. Are we saying to not rely/believe
-in the output given by the kernel but do further verification?  
-
-Also how would the user space differentiate between the case where the
-Kernel missed marking a node as offline to the case where the memory was
-offlined on a cpuless node but node wasn't offline?.
-
-2. Regarding the autonuma, the case of offline memory is user/admin driven,
-so if there is a performance hit, its something that's driven by his
-user/admin actions. Also how often do we see users offline complete memory
-of cpuless node on a 2 node system?
-
-> 
-> > [    0.009726] SRAT: PXM 1 -> APIC 0x00 -> Node 0
-> > [    0.009727] SRAT: PXM 1 -> APIC 0x01 -> Node 0
-> > [    0.009727] SRAT: PXM 1 -> APIC 0x02 -> Node 0
-> > [    0.009728] SRAT: PXM 1 -> APIC 0x03 -> Node 0
-> > [    0.009731] ACPI: SRAT: Node 0 PXM 1 [mem 0x00000000-0x0009ffff]
-> > [    0.009732] ACPI: SRAT: Node 0 PXM 1 [mem 0x00100000-0xbfffffff]
-> > [    0.009733] ACPI: SRAT: Node 0 PXM 1 [mem 0x100000000-0x13fffffff]
-> 
-> This begs a question whether ppc can do the same thing?
-
-Certainly ppc can be made to adapt to this situation but that would be a
-workaround. Do we have a reason why we think node 0 is unique and special?
-If yes can we document it so that in future also people know why we consider
-node 0 to be special. I do understand the *fear of the unknown* but when we
-are unable to theoretically or practically come up a case, then it may
-probably be better we hit the situation to understand what that unknown is?
-
-> I would swear that we've had x86 system with node 0 but I cannot really
-> find it and it is possible that it was not x86 after all...
+And also cc linux-wireless so that our patchwork sees it (not sure if
+the original patch had it or not, just making sure), more info in the
+link below.
 
 -- 
-Thanks and Regards
-Srikar Dronamraju
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
