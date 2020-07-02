@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F867C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15B9420874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3923A2089D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpO8j+oo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U6AY+0Ik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGBGXu (ORCPT
+        id S1726617AbgGBGX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
+        Thu, 2 Jul 2020 02:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGBGXt (ORCPT
+        with ESMTP id S1726254AbgGBGXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:23:49 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018B0C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:23:49 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id h10so3527742ybk.19
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:23:48 -0700 (PDT)
+        Thu, 2 Jul 2020 02:23:55 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B344C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:23:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e192so28615971ybf.17
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MaFXFUTySiLKYk3Z8Ey8ljkWyigRLA9QlN8KpEVxaas=;
-        b=HpO8j+ooh+DAxXHg28sv9p6lhCrB1r7AJwKn3FWvCL7Paa0RV1y7CZudbCkjxY0KV+
-         n72PRRaqDGQhUZQHNggZCAWf7jI+GiM6bpUiRpXsNkrvTrI6WpupwUDmvs6ayML5k9hA
-         uWuCFog9HN3f7U6A3Ch77vna3rMlKTNhfdfWrCbG3KJc9LXr1fbsrLjvHAbeazQmzTrD
-         Qeya3T0QHKtAWY5tfs04Ewd9Fqqvh+LsDCBn2pnd6xoeOrTCHYtQGCkG/CJ2e5AIyOd9
-         14OCWdylxbNxCvsVJyeGHS6zkW5Uox2NesJFpP2g6rzPGStCszqKfAdz7mbYVKv9fpu8
-         pasA==
+        bh=Capr5djsyEnhWv3S70+sKnIxhHZKvTK2BCpibA16Fik=;
+        b=U6AY+0IkBOoVPB2dSzvaxlfM89ciV2yrEH7+K/7aph/MHWU0rQICZPTeIH4We4nZEM
+         lQh+TmddQt/DLQW9PTHOMHjOutneoY9KxRCFcVKFZfj1QfBpGOb49wPJ3YRTUjaVJ751
+         v40vf43BI2pl5zr84D0dutjVhDJTAdL/xnmpi4q0siBr09JPhiy8Hpfe0A7wI4qkwR6d
+         H50JZc3Ml9AbyVUpYBWk22gKfQntqu6JMD8/vDS7DOO9RrTsbUfXzmP0Fr9ilKR4igq1
+         xiLcXoZvgB3t2gtiqW1v7IsWPfbcLyLCv7oOzSL6rGnrVoJtQXsSEI1wNfTgUo3ouaIo
+         C/EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MaFXFUTySiLKYk3Z8Ey8ljkWyigRLA9QlN8KpEVxaas=;
-        b=nhFlNNPxlJEcCbdI5htejXAaW/x2OcFwKXu3rdFor7ldawLc4oJZ+YqenP/HMFXRZj
-         3EP5OnEW2iL70ohR0M6aAH2buGNpJVvGRrF1F00mAJxq/+gWCtIuFsXT7JKK3R9OPJ+s
-         lYzzrImJ+bDUMDKOMIqHdquqsFVa6ykacdYWrYkrU/LOBC5dONHkkwZ9isK+eMANA7uS
-         1zY79p6Wf8rF0uonOxjPffBB4ccv4mEU2qd4YWdxnyu2BHyGB/d4FFvKVL6bgf5rCpQ6
-         SI4WXUWX+a83hy6cenMaGwXRdIoSMtkzvqgLFTrtF4C3GqNfJkOiI6v1TFYn7vIKNfk8
-         8vxg==
-X-Gm-Message-State: AOAM532bDrVLUTIkekdg/PP3g43aa/FRFz+R+lRrphj1MrcbjicqhZmW
-        Bb+3qY4T3gddQhrlFKJ42BFy5KUQlzBN
-X-Google-Smtp-Source: ABdhPJyX4ZwBQKR2MfzfX9ehWTPofcH8pisBfi1+UkVEQTv0xTZgjt23xNzESqt2av4NzoI9gb5MuUXtyPXs
-X-Received: by 2002:a25:9904:: with SMTP id z4mr47219203ybn.146.1593671028182;
- Wed, 01 Jul 2020 23:23:48 -0700 (PDT)
-Date:   Thu,  2 Jul 2020 16:23:17 +1000
+        bh=Capr5djsyEnhWv3S70+sKnIxhHZKvTK2BCpibA16Fik=;
+        b=rOk6RcMJDm2BYJodZU91wZVRNkB/MrPewHOVhLlQUy/yhJN7CYtKKRHCdck7dKUug7
+         jwkFAHCuJjQFCbCWvF04UpWXL9WKiKMEgIOX1XiCE/9E+hoRkeHanWIz3eC8okkMij2B
+         uQX338FGzBpIM2wEbpm2xunrxmw3j1YZoaJNkhsvsgJMWZGFODZDqFX46grp9FsLzAN2
+         RlAEhwk3645opgQc9R1Q9GhN4xTt4WoHAyEImrnX4HduwSgY3pnmf5enn4iv8ju5bho5
+         XK4ImrJJlywJkr4z+2mdQ2tpBfNelFQiFIDQd/a++f/CM5RY61aFTyTS0vG9ep/Bkesn
+         KiCA==
+X-Gm-Message-State: AOAM530Dl0JSXL3OgLz+sTj8LUvYCy4Q0Xv4as8tBwgJ4S5kMdbVE1Ml
+        TXcwtd2R4GeUaA2L/mHqc6LwFdh7XGAs
+X-Google-Smtp-Source: ABdhPJy7W3Ner6I27HbAR57C4mAp+BrPPho3YMhBs5gzoadgRkL+9hBU76n9YuqygWflTzhiTwqEwLmhnULw
+X-Received: by 2002:a25:77cb:: with SMTP id s194mr36730723ybc.216.1593671034543;
+ Wed, 01 Jul 2020 23:23:54 -0700 (PDT)
+Date:   Thu,  2 Jul 2020 16:23:18 +1000
 In-Reply-To: <20200702062320.2903147-1-amistry@google.com>
-Message-Id: <20200702162231.v2.1.Icf69e2041b1af4548347018186c3ba6310f53e66@changeid>
+Message-Id: <20200702162231.v2.2.I0a814b246cfe47f8dd1e25553ee881cbcfd0d8eb@changeid>
 Mime-Version: 1.0
 References: <20200702062320.2903147-1-amistry@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 1/4] regulator: mt6397: Move buck modes into header file
+Subject: [PATCH v2 2/4] dt-bindings: regulator: mt6397: Document valid modes
 From:   Anand K Mistry <amistry@google.com>
 To:     linux-mediatek@lists.infradead.org
 Cc:     hsin-hsiung.wang@mediatek.com, drinkcat@chromium.org,
@@ -77,54 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will allow device trees to make use of these constants.
+Document valid mode values for BUCK regulators.
 
 Signed-off-by: Anand K Mistry <amistry@google.com>
 ---
 
 Changes in v2: None
 
- drivers/regulator/mt6397-regulator.c              |  4 +---
- .../regulator/mediatek,mt6397-regulator.h         | 15 +++++++++++++++
- 2 files changed, 16 insertions(+), 3 deletions(-)
- create mode 100644 include/dt-bindings/regulator/mediatek,mt6397-regulator.h
+ .../devicetree/bindings/regulator/mt6397-regulator.txt         | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
-index 269c2a6028e8..d51e98ce1138 100644
---- a/drivers/regulator/mt6397-regulator.c
-+++ b/drivers/regulator/mt6397-regulator.c
-@@ -13,9 +13,7 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/mt6397-regulator.h>
- #include <linux/regulator/of_regulator.h>
--
--#define MT6397_BUCK_MODE_AUTO	0
--#define MT6397_BUCK_MODE_FORCE_PWM	1
-+#include <dt-bindings/regulator/mediatek,mt6397-regulator.h>
+diff --git a/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+index 01141fb00875..c080086d3e62 100644
+--- a/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
+@@ -16,6 +16,9 @@ LDO:
+   ldo_vemc3v3, ldo_vgp1, ldo_vgp2, ldo_vgp3, ldo_vgp4, ldo_vgp5, ldo_vgp6,
+   ldo_vibr
  
- /*
-  * MT6397 regulators' information
-diff --git a/include/dt-bindings/regulator/mediatek,mt6397-regulator.h b/include/dt-bindings/regulator/mediatek,mt6397-regulator.h
-new file mode 100644
-index 000000000000..99869a8665cf
---- /dev/null
-+++ b/include/dt-bindings/regulator/mediatek,mt6397-regulator.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++BUCK regulators can set regulator-initial-mode and regulator-allowed-modes to
++values specified in dt-bindings/regulator/mediatek,mt6397-regulator.h
 +
-+#ifndef _DT_BINDINGS_REGULATOR_MEDIATEK_MT6397_H_
-+#define _DT_BINDINGS_REGULATOR_MEDIATEK_MT6397_H_
-+
-+/*
-+ * Buck mode constants which may be used in devicetree properties (eg.
-+ * regulator-initial-mode, regulator-allowed-modes).
-+ * See the manufacturer's datasheet for more information on these modes.
-+ */
-+
-+#define MT6397_BUCK_MODE_AUTO		0
-+#define MT6397_BUCK_MODE_FORCE_PWM	1
-+
-+#endif
+ Example:
+ 	pmic {
+ 		compatible = "mediatek,mt6397";
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
