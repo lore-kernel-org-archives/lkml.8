@@ -2,248 +2,110 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35394C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A39207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b3sxOBpj"
+	by mail.kernel.org (Postfix) with ESMTP id 1850220772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgGBOYH (ORCPT
+        id S1729826AbgGBOYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:24:07 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57510 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgGBOYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:24:06 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200702142405euoutp026d6714f512dd864076c191c9c2ad1ca6~d9ZC75vqp2515725157euoutp02y
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 14:24:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200702142405euoutp026d6714f512dd864076c191c9c2ad1ca6~d9ZC75vqp2515725157euoutp02y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593699845;
-        bh=//LXM4/HTvL6WYgoxxkZWqAQvhLUGYM0Ek5/xXeKpMo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=b3sxOBpjDvjPa42ZZy3qlEKHj60BMAduJIBnu4dOjDEgvGz7GQSHP8HHh5Vt2ZGUn
-         nda93IUni2XkOmBhv2jGWok7BW9+N8xDoUC7dBBqGlXZblKKeGO+Uoxg0Y/YuiUA/I
-         qxnLk3urTGx3XSMg8tZ/4R0avLubp0bk+7sGORf0=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200702142404eucas1p2c09b4e5243d0565547e6ed3773ab92b8~d9ZCrBVRR1436014360eucas1p29;
-        Thu,  2 Jul 2020 14:24:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id EF.79.05997.40EEDFE5; Thu,  2
-        Jul 2020 15:24:04 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200702142404eucas1p29aad1027cfe7f37f7978bcdde2bff421~d9ZCR_LfI1430314303eucas1p2r;
-        Thu,  2 Jul 2020 14:24:04 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200702142404eusmtrp106891f7824aab08f5fa46ca96bab1f79~d9ZCRNbh62233522335eusmtrp1N;
-        Thu,  2 Jul 2020 14:24:04 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-54-5efdee04a6c2
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id FC.9C.06314.40EEDFE5; Thu,  2
-        Jul 2020 15:24:04 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200702142403eusmtip1efda640323c7e185c7a51b53422d6bf3~d9ZBOK-NU0493804938eusmtip1X;
-        Thu,  2 Jul 2020 14:24:02 +0000 (GMT)
-Subject: Re: [RFC PATCH v5 2/6] interconnect: Add generic interconnect
- driver for Exynos SoCs
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     cw00.choi@samsung.com, krzk@kernel.org, a.swigon@samsung.com,
-        myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <0320bbbe-6e51-e5ef-1a2a-a2a2fd815514@samsung.com>
-Date:   Thu, 2 Jul 2020 16:24:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Thu, 2 Jul 2020 10:24:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:57178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729437AbgGBOYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:24:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599A331B;
+        Thu,  2 Jul 2020 07:24:37 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABB2A3F68F;
+        Thu,  2 Jul 2020 07:24:35 -0700 (PDT)
+References: <20200624195811.435857-1-maz@kernel.org> <20200624195811.435857-7-maz@kernel.org> <jhjimffgfyt.mognet@arm.com> <f9502c41d941e56ffcc30c51f2d23ab9@kernel.org> <jhjmu4i830n.mognet@arm.com> <1f3ac757acd15f6804917e222194c9cf@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: Re: [PATCH v2 06/17] irqchip/gic-v3: Configure SGIs as standard interrupts
+In-reply-to: <1f3ac757acd15f6804917e222194c9cf@kernel.org>
+Date:   Thu, 02 Jul 2020 15:24:30 +0100
+Message-ID: <jhjlfk28069.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <d3a45a91-d223-d3a2-a9fb-adadca98c80d@linaro.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRzlu7u7u4rT67T8YVY0JDBKsyJu+SilPwb+I0FE4aMtb2q6Kbtq
-        KUQT38+GUtpS85FlA1OXqGn2WOaQLS1Ny3ysUAsDs3BBpWbbrpL/nXN+5/CdAx/JEw3yPcl4
-        RQqjVEgTxYQj3tH/e3Af/m01an/DiC9trslBdFtlC59+Z/nCp9/+XCToil4dQZeZ1Tg9NNQq
-        oHUzY3x6pLuKoCuHnmB0c9+UgJ7IbLLS8nniuFCi0xYQksmxx4TEXGTAJA/vXJWUtmuRZEm3
-        I5w46xgYwyTGpzFKv+BzjnH17d/x5BXxZZVxAlehJq9C5EACdQh6G+qwQuRIiqgmBIaSPB5H
-        LAgKJrIEHFlCMNzTw9+IaE1Tdiyi7iFYrHDnTD8QPNfoke3gRkXD9fuPBDbsTu2FxlvLuM3E
-        o0wYXBtvwWwHgvKHkpel9oCQCobsG6O4DeOUN6iq2wgb3kJFQmljLcF5XGHg5qzd42D15/YP
-        27M8ygM+zN7GOLwTOheq7BuAmheAsbBawNU+AXmZFozDbvDV0L6ue4GxvBjnAlkIinsmBBxR
-        IzAbahHnCoDJwT/WGqT1CR9o6fbj5BB49rkZs8lAOcP7BVeuhDOUdVTwOFkI+bkizu0Ny9qK
-        9QqeUDS7hquRWLNpmmbTHM2mOZr/79YiXIs8mFRWHsuwBxTMJV9WKmdTFbG+55PkOmT9Zca/
-        BksX6l6R6RFFIrGTUG1YjRLxpWlsulyPgOSJ3YWhr4xRImGMND2DUSZFK1MTGVaPtpG42EN4
-        sH4+UkTFSlOYBIZJZpQbV4x08FShIJ+jmBvh+/FFwmicfDBi+kysOcx9awxjOmYyzfGqy+ZE
-        a+FBng4XSmXLu7bPkxcPv6lSufxiI06VLL9WDAWra5ZkvSf5JrlTWH5fjDGsrvnu2HhbeHYA
-        +2kmNW13SXzviPeca4glsDOIcAFZ6JHW02kDD5grjTmR00+7/MMyxDgbJ/Xfw1Oy0n8K02rf
-        YQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsVy+t/xu7os7/7GGbxaLWpxf14ro8XGGetZ
-        La5/ec5qceXrezaL6Xs3sVlMuj+BxeL8+Q3sFpseX2O1uLxrDpvFjPP7mCzWHrnLbnG7cQWQ
-        O/klmwOvx6ZVnWwed67tYfO4332cyWPzknqPvi2rGD0+b5ILYIvSsynKLy1JVcjILy6xVYo2
-        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy1i05QNLwR+liobTt1kaGFfIdDFy
-        ckgImEisOnOXtYuRi0NIYCmjxN5tb9i7GDmAElIS81uUIGqEJf5c62KDqHnPKLFn8j8mkISw
-        QLzE0SkHmEFsEQEdiaWzf7OAFDELnGGSOLrsKSNExz0mic5tPSwgVWwChhK9R/sYQWxeATuJ
-        lmlXweIsAioSDXM3soHYogKxEt/ubWGDqBGUODnzCVgNJ1B927FLYL3MAuoSf+ZdYoawxSVu
-        PZnPBGHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5
-        mxiBsbvt2M/NOxgvbQw+xCjAwajEwzvh+N84IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW
-        5ccXleakFh9iNAV6biKzlGhyPjCt5JXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0t
-        SC2C6WPi4JRqYExoP2Z56N9P6Q/JT7c+lrBMYdmeF7Fz3qTmJWlZq2UOff11Pc6TT084K2TJ
-        7J6bmbXX2sWDL+YbP9pvwdii+cPIu0C5sJ35rsKxDA7j5cnHTP7+2negrP1GdvVxnRne3CLB
-        xvcuB+qse/5oZ/bLVSuDz3A5uv8zcAqXcz7N9i/y2//WawbCPEosxRmJhlrMRcWJAHiDkMDz
-        AgAA
-X-CMS-MailID: 20200702142404eucas1p29aad1027cfe7f37f7978bcdde2bff421
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200529163223eucas1p2f663280abb499b4114b2f2930b43a4e5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200529163223eucas1p2f663280abb499b4114b2f2930b43a4e5
-References: <20200529163200.18031-1-s.nawrocki@samsung.com>
-        <CGME20200529163223eucas1p2f663280abb499b4114b2f2930b43a4e5@eucas1p2.samsung.com>
-        <20200529163200.18031-3-s.nawrocki@samsung.com>
-        <f7f76798-4ee7-6e4a-fa3e-1acb0af76c2e@linaro.org>
-        <1c277836-efdf-f7b8-aa62-7369349fe21f@samsung.com>
-        <d3a45a91-d223-d3a2-a9fb-adadca98c80d@linaro.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.2020 14:33, Georgi Djakov wrote:
-> On 7/2/20 15:01, Sylwester Nawrocki wrote:
->> On 01.07.2020 14:50, Georgi Djakov wrote:
->>> On 5/29/20 19:31, Sylwester Nawrocki wrote:
 
->>>> +static int exynos_generic_icc_remove(struct platform_device *pdev)
->>>> +{
->>>> +	struct exynos_icc_priv *priv = platform_get_drvdata(pdev);
->>>> +	struct icc_node *parent_node, *node = priv->node;
->>>> +
->>>> +	parent_node = exynos_icc_get_parent(priv->dev->parent->of_node);
->>>> +	if (parent_node && !IS_ERR(parent_node))
+On 02/07/20 14:48, Marc Zyngier wrote:
+> On 2020-07-02 14:23, Valentin Schneider wrote:
+>> On 30/06/20 11:15, Marc Zyngier wrote:
+>>> On 2020-06-25 19:25, Valentin Schneider wrote:
+>>>> Also, while staring at this it dawned on me that IPI's don't need the
+>>>> eoimode=0 isb(): due to how the IPI flow-handler is structured, we'll
+>>>> get a
+>>>> gic_eoi_irq() just before calling into the irqaction. Dunno how much
+>>>> we
+>>>> care about it.
 >>>
->>> Nit: !IS_ERR_OR_NULL?
->>
->> It was left on purpose that way but I changed it now to IS_ERR_OR_NULL.
-> 
-> Well, i have no strong opinion on that, it's up to you.
-
-I will leave it as you suggested, otherwise we are likely to see
-"clean up" patches sooner or later.
- 
->>>> +		icc_link_destroy(node, parent_node);
->>>> +
->>>> +	icc_nodes_remove(&priv->provider);
->>>> +	icc_provider_del(&priv->provider);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int exynos_generic_icc_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct device *bus_dev = pdev->dev.parent;
->>>> +	struct exynos_icc_priv *priv;
->>>> +	struct icc_provider *provider;
->>>> +	struct icc_node *icc_node, *icc_parent_node;
->>>> +	int ret;
->>>> +
->>>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->>>> +	if (!priv)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	priv->dev = &pdev->dev;
->>>> +	platform_set_drvdata(pdev, priv);
->>>> +
->>>> +	provider = &priv->provider;
->>>> +
->>>> +	provider->set = exynos_generic_icc_set;
->>>> +	provider->aggregate = icc_std_aggregate;
->>>> +	provider->xlate = exynos_generic_icc_xlate;
->>>> +	provider->dev = bus_dev;
->>>> +	provider->inter_set = true;
->>>> +	provider->data = priv;
->>>> +
->>>> +	ret = icc_provider_add(provider);
+>>> That's interesting. This ISB is a leftover from the loop we had before
+>>> the pseudo-NMI code, where we had to make sure the write to EOIR was
+>>> ordered with the read from IAR.
 >>>
->>> Nit: Maybe it would be better to move this after the node is created. The
->>> idea is to create the nodes first and add the provider when the topology is
->>> populated. It's fine either way here, but i am planning to change this in
->>> some of the existing provider drivers.
+>>> Given that we have an exception return right after the interrupt
+>>> handling, I *think* we could get rid of it (but that would need
+>>> mode checking on broken systems such as TX1...).  I don't think
+>>> this is specific to IPIs though.
+>>>
 >>
->> OK, it makes the clean up path a bit less straightforward. And still we need 
->> to register the provider before calling icc_node_add().
->> I made a change as below.
+>> If I got this one right:
 >>
->> --------------8<------------------
->> @@ -124,14 +123,14 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
->>  	provider->inter_set = true;
->>  	provider->data = priv;
->>  
->> +	icc_node = icc_node_create(pdev->id);
->> +	if (IS_ERR(icc_node))
->> +		return PTR_ERR(icc_node);
->> +
->>  	ret = icc_provider_add(provider);
->> -	if (ret < 0)
->> +	if (ret < 0) {
->> +		icc_node_destroy(icc_node->id);
->>  		return ret;
->> -
->> -	icc_node = icc_node_create(pdev->id);
->> -	if (IS_ERR(icc_node)) {
->> -		ret = PTR_ERR(icc_node);
->> -		goto err_prov_del;
->>  	}
->>  
->>  	priv->node = icc_node;
->> @@ -171,9 +170,7 @@ static int exynos_generic_icc_probe(struct platform_device *pdev)
->>  		icc_link_destroy(icc_node, icc_parent_node);
->>  err_node_del:
->>  	icc_nodes_remove(provider);
->> -err_prov_del:
->>  	icc_provider_del(provider);
->> -
->>  	return ret;
->>  }
->> --------------8<------------------
-> 
-> Actually i need to post some patches first, so maybe keep it as is for now and
-> we will update it afterwards. Sorry for the confusion.
-
-OK, anyway this helped me to remove a memory leak, which was there since
-icc_nodes_remove() was used before a call to icc_node_add() in order 
-to free the node allocated with icc_node_create(), instead of 
-icc_node_destroy().
-
->>> All looks good to me, but it seems that the patch-set is not on
->>> Rob's radar currently, so please re-send and CC the DT mailing list.
+>>   39a06b67c2c1 ("irqchip/gic: Ensure we have an ISB between ack and
+>> ->handle_irq")
 >>
->> Thanks, indeed I missed some mailing list when posting. I will make sure
->> Rob and DT ML list is on Cc, especially that I have added new "bus-width" 
->> property in v6.
-> 
-> Ok, good. I have been thinking about bus-width and we might want to make it
-> even a generic DT property if there are multiple platforms which want to
-> use it - maybe if the bus-width is the same across the whole interconnect
-> provider. But as most of the existing drivers have different bus-widths, i
-> haven't done it yet, but let's see and start a discussion.
+>> you're describing case 2, which is indeed gone on gic-v3. However IIUC
+>> we
+>> also want an ISB between poking IAR and calling into the irqaction
+>> (case 1)
+>> - we get just that with IPIs due to the early gic_eoi_irq(), but we
+>> don't
+>> for the other flows.
+>
+> You just made me realise something amazing: I've started to forget about
+> all this crap. Which is wonderful! ;-)
+>
 
-I see, it sounds good to me. Having an array property to allow specifying
-bus width for each node is probably not so good idea.
+:)
 
--- 
-Regards,
-Sylwester
+> More seriously, you are absolutely right. If we wanted to address this,
+> we'd probably have to give IPIs their own irqchip so that they get their
+> own eoi callback. Not sure that's worth it.
+>
+
+I was initially thinking of something like
+
+        if (static_branch_likely(&supports_deactivate_key))
+                gic_write_eoir(irqnr);
+        else if (__get_intid_range(irqnr) != SGI_RANGE)
+                isb();
+
+which is not particularly pretty, so maybe we should just slap this to the
+isb():
+
+                /* Superfluous for SGIs, but who cares */
+
+>          M.
