@@ -2,379 +2,238 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8478D20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0362084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rg0c5Qky"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iyC70taf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgGBQ2A (ORCPT
+        id S1726839AbgGBQ2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgGBQ15 (ORCPT
+        Thu, 2 Jul 2020 12:28:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59746 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726379AbgGBQ2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:27:57 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72219C08C5DD;
-        Thu,  2 Jul 2020 09:27:57 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a1so30464639ejg.12;
-        Thu, 02 Jul 2020 09:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i8zRxsZ03W4MZ/W4O2Fq3y+CKd8g6LKB6bomOI5V1KI=;
-        b=Rg0c5QkyFVVC3hpcP6JfDUACrpZLiFiQFYV/Inkf5rRWpxMXI4CzrO58NXYwFOkb3Q
-         9B8IUSvsCNoNhi6NcnM3wGIIRZ7OYJ4KmU5d8nDjZIZr50G4L37oYf/7lRv4OknQFawf
-         t9+Fe/Ysnenkv1RcH1bMN19b7MpgWUsH33jXSLk2ictGENmr1sBCkUtuJKvcCuXV3ADg
-         VaLEKPG0bTGBR7TFyyQX3vTqTKVMorYDGnqfgHCinudGlgDnp4ycL2bDPObmP0BSfeSY
-         +LOno+NzlzkH/YFrsoBMn6B3069mTIibJXL1XElJsl236HWks4VxXFa4gHATDIT3+kRi
-         09Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i8zRxsZ03W4MZ/W4O2Fq3y+CKd8g6LKB6bomOI5V1KI=;
-        b=kQAbFoES7bmwdF9C/dGYFVcDo2SqCx+nnZNJMQIsGwWqWD4Cs07IM0MV6IYLS+n4Qz
-         NqOup20pbgLLTkJhqbgl4NpkGk/g2fTKx3wrg1z9N7oMaWbNX1VV/MnvX8r8MLZVxPT2
-         kWkSsdOUM+ueB7OGfsHYozTTObPbwcNor2wjzmspkYzn+R2XxbSdcDZmCY2mqPCU6mP+
-         2I9/zIz0r1Pyivg0FCjqYFr7Jz9cVCqY9oRVmFMreBEg6kollJKsvudkG0m5jXzZg5fZ
-         fiCD6oJPhY7iDGLePZbmBlEOBT6C2KHziQGcHOO4GYO8R880m/0gQx3tZ1lnB8qhB3WI
-         mVUg==
-X-Gm-Message-State: AOAM533E85F6BTB79y978U8DS6LUE9Ig9eJJ7q1CSD1CnCaNLAvgIm0d
-        BImK4cMDaWqpL/V0qpuhnVAtmnlY
-X-Google-Smtp-Source: ABdhPJwOb2b1vWM+l4Zdz7nA5b92Roq+WXWivgniKCvDR4klbZpErABvdTdOKYkU0m0iput7Luc9WA==
-X-Received: by 2002:a17:906:3c42:: with SMTP id i2mr30104959ejg.14.1593707276042;
-        Thu, 02 Jul 2020 09:27:56 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:4932:71ef:3c73:a14f])
-        by smtp.gmail.com with ESMTPSA id gu15sm7375188ejb.111.2020.07.02.09.27.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 09:27:55 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH v2 1/3] pci: use 'pci_channel_state_t' instead of 'enum pci_channel_state'
-Date:   Thu,  2 Jul 2020 18:26:49 +0200
-Message-Id: <20200702162651.49526-2-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702162651.49526-1-luc.vanoostenryck@gmail.com>
-References: <20200702162651.49526-1-luc.vanoostenryck@gmail.com>
+        Thu, 2 Jul 2020 12:28:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593707308;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=pnlNDy7ujCkThYhfgbphAy3jEPnIKMybqtU8WhwBYYU=;
+        b=iyC70tafS2g7u24Yt+bl+t2DCIXaDIV0jnFIlcUySopDgr9UtTc/NRNfsSO8BjzSneZ26C
+        wzupZWyU+2ALFaDQbBWauWOS1NWKPR+vjPMIS/W5DolwjUYh4mIcu8ldNypNiLQIIVWfwq
+        GzKORWWJECvn8sn2EYTcxiTicgGKFPk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-UImTSbjUPxWwzxl1EfVJlg-1; Thu, 02 Jul 2020 12:28:24 -0400
+X-MC-Unique: UImTSbjUPxWwzxl1EfVJlg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDD2180058A;
+        Thu,  2 Jul 2020 16:28:22 +0000 (UTC)
+Received: from [10.36.114.38] (ovpn-114-38.ams2.redhat.com [10.36.114.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CF9D7BEAC;
+        Thu,  2 Jul 2020 16:28:20 +0000 (UTC)
+Subject: Re: [PATCH] mm: define pte_add_end for consistency
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        akpm@linux-foundation.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org
+References: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
+ <40362e99-a354-c44f-8645-e2326a6df680@redhat.com>
+ <20200701021113.GA51306@L-31X9LVDL-1304.local>
+ <da4a470e-f34c-fbf8-c95a-93a7d30a215b@redhat.com>
+ <20200701115441.GA4979@L-31X9LVDL-1304.local>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <7562991b-c1e7-4037-a3f0-124acd0669b7@redhat.com>
+Date:   Thu, 2 Jul 2020 18:28:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701115441.GA4979@L-31X9LVDL-1304.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The method struct pci_error_handlers::error_detected() is defined and
-documented as taking an 'enum pci_channel_state' for the second
-argument but most drivers use 'pci_channel_state_t' instead.
-This 'pci_channel_state_t' is not a typedef for the enum but a typedef
-for a bitwise type in order to have better/stricter typechecking.
+On 01.07.20 13:54, Wei Yang wrote:
+> On Wed, Jul 01, 2020 at 10:29:08AM +0200, David Hildenbrand wrote:
+>> On 01.07.20 04:11, Wei Yang wrote:
+>>> On Tue, Jun 30, 2020 at 02:44:00PM +0200, David Hildenbrand wrote:
+>>>> On 30.06.20 05:18, Wei Yang wrote:
+>>>>> When walking page tables, we define several helpers to get the address of
+>>>>> the next boundary. But we don't have one for pte level.
+>>>>>
+>>>>> Let's define it and consolidate the code in several places.
+>>>>>
+>>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>>>>> ---
+>>>>>  arch/x86/mm/init_64.c   | 6 ++----
+>>>>>  include/linux/pgtable.h | 7 +++++++
+>>>>>  mm/kasan/init.c         | 4 +---
+>>>>>  3 files changed, 10 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+>>>>> index dbae185511cd..f902fbd17f27 100644
+>>>>> --- a/arch/x86/mm/init_64.c
+>>>>> +++ b/arch/x86/mm/init_64.c
+>>>>> @@ -973,9 +973,7 @@ remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end,
+>>>>>  
+>>>>>  	pte = pte_start + pte_index(addr);
+>>>>>  	for (; addr < end; addr = next, pte++) {
+>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>> -		if (next > end)
+>>>>> -			next = end;
+>>>>> +		next = pte_addr_end(addr, end);
+>>>>>  
+>>>>>  		if (!pte_present(*pte))
+>>>>>  			continue;
+>>>>> @@ -1558,7 +1556,7 @@ void register_page_bootmem_memmap(unsigned long section_nr,
+>>>>>  		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
+>>>>>  
+>>>>>  		if (!boot_cpu_has(X86_FEATURE_PSE)) {
+>>>>> -			next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>> +			next = pte_addr_end(addr, end);
+>>>>>  			pmd = pmd_offset(pud, addr);
+>>>>>  			if (pmd_none(*pmd))
+>>>>>  				continue;
+>>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>>> index 32b6c52d41b9..0de09c6c89d2 100644
+>>>>> --- a/include/linux/pgtable.h
+>>>>> +++ b/include/linux/pgtable.h
+>>>>> @@ -706,6 +706,13 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>>>>>  })
+>>>>>  #endif
+>>>>>  
+>>>>> +#ifndef pte_addr_end
+>>>>> +#define pte_addr_end(addr, end)						\
+>>>>> +({	unsigned long __boundary = ((addr) + PAGE_SIZE) & PAGE_MASK;	\
+>>>>> +	(__boundary - 1 < (end) - 1) ? __boundary : (end);		\
+>>>>> +})
+>>>>> +#endif
+>>>>> +
+>>>>>  /*
+>>>>>   * When walking page tables, we usually want to skip any p?d_none entries;
+>>>>>   * and any p?d_bad entries - reporting the error before resetting to none.
+>>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+>>>>> index fe6be0be1f76..89f748601f74 100644
+>>>>> --- a/mm/kasan/init.c
+>>>>> +++ b/mm/kasan/init.c
+>>>>> @@ -349,9 +349,7 @@ static void kasan_remove_pte_table(pte_t *pte, unsigned long addr,
+>>>>>  	unsigned long next;
+>>>>>  
+>>>>>  	for (; addr < end; addr = next, pte++) {
+>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+>>>>> -		if (next > end)
+>>>>> -			next = end;
+>>>>> +		next = pte_addr_end(addr, end);
+>>>>>  
+>>>>>  		if (!pte_present(*pte))
+>>>>>  			continue;
+>>>>>
+>>>>
+>>>> I'm not really a friend of this I have to say. We're simply iterating
+>>>> over single pages, not much magic ....
+>>>
+>>> Hmm... yes, we are iterating on Page boundary, while we many have the case
+>>> when addr or end is not PAGE_ALIGN.
+>>
+>> I really do wonder if not having page aligned addresses actually happens
+>> in real life. Page tables operate on page granularity, and
+>> adding/removing unaligned parts feels wrong ... and that's also why I
+>> dislike such a helper.
+>>
+>> 1. kasan_add_zero_shadow()/kasan_remove_zero_shadow(). If I understand
+>> the logic (WARN_ON()) correctly, we bail out in case we would ever end
+>> up in such a scenario, where we would want to add/remove things not
+>> aligned to PAGE_SIZE.
+>>
+>> 2. remove_pagetable()...->remove_pte_table()
+>>
+>> vmemmap_free() should never try to de-populate sub-pages. Even with
+>> sub-section hot-add/remove (2MB / 512 pages), with valid struct page
+>> sizes (56, 64, 72, 80), we always end up with full pages.
+>>
+>> kernel_physical_mapping_remove() is only called via
+>> arch_remove_memory(). That will never remove unaligned parts.
+>>
+> 
+> I don't have a very clear mind now, while when you look into
+> remove_pte_table(), it has two cases based on alignment of addr and next.
+> 
+> If we always remove a page, the second case won't happen?
 
-So, consolidate everything by using 'pci_channel_state_t' in the
-method's definition, in the related helpers and in the drivers.
+So, the code talks about that the second case can only happen for
+vmemmap, never for direct mappings.
 
-Note: Currently, from a typechecking point of view this patch change
-      nothing because only the constants defined by the enum
-      are bitwise, not the enum itself (sparse doesn't have
-      the notion of 'bitwise enum'). This may change in some
-      not too far future, hence the patch.
+I don't see a way how this could ever happen with current page sizes,
+even with sub-section hotadd (2MB). Maybe that is a legacy leftover or
+was never relevant? Or I am missing something important, where we could
+have sub-4k-page vmemmap data.
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- Documentation/PCI/pci-error-recovery.rst    | 4 ++--
- arch/powerpc/kernel/eeh_driver.c            | 2 +-
- drivers/block/rsxx/core.c                   | 2 +-
- drivers/dma/ioat/init.c                     | 2 +-
- drivers/media/pci/ngene/ngene-cards.c       | 2 +-
- drivers/misc/genwqe/card_base.c             | 2 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
- drivers/net/ethernet/intel/ice/ice_main.c   | 2 +-
- drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
- drivers/net/ethernet/sfc/efx.c              | 2 +-
- drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
- drivers/pci/pci.h                           | 2 +-
- drivers/pci/pcie/err.c                      | 4 ++--
- drivers/pci/pcie/portdrv_pci.c              | 2 +-
- drivers/scsi/aacraid/linit.c                | 2 +-
- drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
- drivers/staging/qlge/qlge_main.c            | 2 +-
- include/linux/pci.h                         | 2 +-
- 18 files changed, 21 insertions(+), 21 deletions(-)
-
-diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-index 13beee23cb04..c055deec8c56 100644
---- a/Documentation/PCI/pci-error-recovery.rst
-+++ b/Documentation/PCI/pci-error-recovery.rst
-@@ -79,7 +79,7 @@ This structure has the form::
- 
- 	struct pci_error_handlers
- 	{
--		int (*error_detected)(struct pci_dev *dev, enum pci_channel_state);
-+		int (*error_detected)(struct pci_dev *dev, pci_channel_state_t);
- 		int (*mmio_enabled)(struct pci_dev *dev);
- 		int (*slot_reset)(struct pci_dev *dev);
- 		void (*resume)(struct pci_dev *dev);
-@@ -348,7 +348,7 @@ STEP 6: Permanent Failure
- -------------------------
- A "permanent failure" has occurred, and the platform cannot recover
- the device.  The platform will call error_detected() with a
--pci_channel_state value of pci_channel_io_perm_failure.
-+pci_channel_state_t value of pci_channel_io_perm_failure.
- 
- The device driver should, at this point, assume the worst. It should
- cancel all pending I/O, refuse all new I/O, returning -EIO to
-diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-index 7b048cee767c..ab8806d2e03e 100644
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -214,7 +214,7 @@ static void eeh_dev_save_state(struct eeh_dev *edev, void *userdata)
- 	pci_save_state(pdev);
- }
- 
--static void eeh_set_channel_state(struct eeh_pe *root, enum pci_channel_state s)
-+static void eeh_set_channel_state(struct eeh_pe *root, pci_channel_state_t s)
- {
- 	struct eeh_pe *pe;
- 	struct eeh_dev *edev, *tmp;
-diff --git a/drivers/block/rsxx/core.c b/drivers/block/rsxx/core.c
-index 10f6368117d8..34e937dd6bca 100644
---- a/drivers/block/rsxx/core.c
-+++ b/drivers/block/rsxx/core.c
-@@ -625,7 +625,7 @@ static int rsxx_eeh_fifo_flush_poll(struct rsxx_cardinfo *card)
- }
- 
- static pci_ers_result_t rsxx_error_detected(struct pci_dev *dev,
--					    enum pci_channel_state error)
-+					    pci_channel_state_t error)
- {
- 	int st;
- 
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 58d13564f88b..089893f2bbb8 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -1267,7 +1267,7 @@ static void ioat_resume(struct ioatdma_device *ioat_dma)
- #define DRV_NAME "ioatdma"
- 
- static pci_ers_result_t ioat_pcie_error_detected(struct pci_dev *pdev,
--						 enum pci_channel_state error)
-+						 pci_channel_state_t error)
- {
- 	dev_dbg(&pdev->dev, "%s: PCIe AER error %d\n", DRV_NAME, error);
- 
-diff --git a/drivers/media/pci/ngene/ngene-cards.c b/drivers/media/pci/ngene/ngene-cards.c
-index 6185806a00e0..8bfb3d8ea610 100644
---- a/drivers/media/pci/ngene/ngene-cards.c
-+++ b/drivers/media/pci/ngene/ngene-cards.c
-@@ -1186,7 +1186,7 @@ MODULE_DEVICE_TABLE(pci, ngene_id_tbl);
- /****************************************************************************/
- 
- static pci_ers_result_t ngene_error_detected(struct pci_dev *dev,
--					     enum pci_channel_state state)
-+					     pci_channel_state_t state)
- {
- 	dev_err(&dev->dev, "PCI error\n");
- 	if (state == pci_channel_io_perm_failure)
-diff --git a/drivers/misc/genwqe/card_base.c b/drivers/misc/genwqe/card_base.c
-index 1dc6c7c5cbce..97b8ecc42383 100644
---- a/drivers/misc/genwqe/card_base.c
-+++ b/drivers/misc/genwqe/card_base.c
-@@ -1240,7 +1240,7 @@ static void genwqe_remove(struct pci_dev *pci_dev)
-  * error is detected.
-  */
- static pci_ers_result_t genwqe_err_error_detected(struct pci_dev *pci_dev,
--						 enum pci_channel_state state)
-+						 pci_channel_state_t state)
- {
- 	struct genwqe_dev *cd;
- 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 5d807c8004f8..f0de2d1842b4 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15465,7 +15465,7 @@ static void i40e_remove(struct pci_dev *pdev)
-  * remediation.
-  **/
- static pci_ers_result_t i40e_pci_error_detected(struct pci_dev *pdev,
--						enum pci_channel_state error)
-+						pci_channel_state_t error)
- {
- 	struct i40e_pf *pf = pci_get_drvdata(pdev);
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 082825e3cb39..4dd9226a12df 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3586,7 +3586,7 @@ static void ice_remove(struct pci_dev *pdev)
-  * is in progress.  Allows the driver to gracefully prepare/handle PCI errors.
-  */
- static pci_ers_result_t
--ice_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state err)
-+ice_pci_err_detected(struct pci_dev *pdev, pci_channel_state_t err)
- {
- 	struct ice_pf *pf = pci_get_drvdata(pdev);
- 
-diff --git a/drivers/net/ethernet/intel/ixgb/ixgb_main.c b/drivers/net/ethernet/intel/ixgb/ixgb_main.c
-index b64e91ea3465..00db4b5863b1 100644
---- a/drivers/net/ethernet/intel/ixgb/ixgb_main.c
-+++ b/drivers/net/ethernet/intel/ixgb/ixgb_main.c
-@@ -82,7 +82,7 @@ static int ixgb_vlan_rx_kill_vid(struct net_device *netdev,
- static void ixgb_restore_vlan(struct ixgb_adapter *adapter);
- 
- static pci_ers_result_t ixgb_io_error_detected (struct pci_dev *pdev,
--                             enum pci_channel_state state);
-+                             pci_channel_state_t state);
- static pci_ers_result_t ixgb_io_slot_reset (struct pci_dev *pdev);
- static void ixgb_io_resume (struct pci_dev *pdev);
- 
-@@ -2194,7 +2194,7 @@ ixgb_restore_vlan(struct ixgb_adapter *adapter)
-  * a PCI bus error is detected.
-  */
- static pci_ers_result_t ixgb_io_error_detected(struct pci_dev *pdev,
--                                               enum pci_channel_state state)
-+                                               pci_channel_state_t state)
- {
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct ixgb_adapter *adapter = netdev_priv(netdev);
-diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-index 256807c28ff7..ed627aff7b36 100644
---- a/drivers/net/ethernet/sfc/efx.c
-+++ b/drivers/net/ethernet/sfc/efx.c
-@@ -1519,7 +1519,7 @@ static const struct dev_pm_ops efx_pm_ops = {
-  * Stop the software path and request a slot reset.
-  */
- static pci_ers_result_t efx_io_error_detected(struct pci_dev *pdev,
--					      enum pci_channel_state state)
-+					      pci_channel_state_t state)
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_RECOVERED;
- 	struct efx_nic *efx = pci_get_drvdata(pdev);
-diff --git a/drivers/net/ethernet/sfc/falcon/efx.c b/drivers/net/ethernet/sfc/falcon/efx.c
-index 42bcd34fc508..f8979991970e 100644
---- a/drivers/net/ethernet/sfc/falcon/efx.c
-+++ b/drivers/net/ethernet/sfc/falcon/efx.c
-@@ -3118,7 +3118,7 @@ static const struct dev_pm_ops ef4_pm_ops = {
-  * Stop the software path and request a slot reset.
-  */
- static pci_ers_result_t ef4_io_error_detected(struct pci_dev *pdev,
--					      enum pci_channel_state state)
-+					      pci_channel_state_t state)
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_RECOVERED;
- 	struct ef4_nic *efx = pci_get_drvdata(pdev);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6d3f75867106..c6c0c455f59f 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -555,7 +555,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
- 
- /* PCI error reporting and recovery */
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
--			enum pci_channel_state state,
-+			pci_channel_state_t state,
- 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
- 
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..467686ee2d8b 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -46,7 +46,7 @@ static pci_ers_result_t merge_result(enum pci_ers_result orig,
- }
- 
- static int report_error_detected(struct pci_dev *dev,
--				 enum pci_channel_state state,
-+				 pci_channel_state_t state,
- 				 enum pci_ers_result *result)
- {
- 	pci_ers_result_t vote;
-@@ -147,7 +147,7 @@ static int report_resume(struct pci_dev *dev, void *data)
- }
- 
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
--			enum pci_channel_state state,
-+			pci_channel_state_t state,
- 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 3acf151ae015..3a3ce40ae1ab 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -146,7 +146,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
- }
- 
- static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
--					enum pci_channel_state error)
-+					pci_channel_state_t error)
- {
- 	/* Root Port has no impact. Always recovers. */
- 	return PCI_ERS_RESULT_CAN_RECOVER;
-diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-index a308e86a97f1..37f65602b0ec 100644
---- a/drivers/scsi/aacraid/linit.c
-+++ b/drivers/scsi/aacraid/linit.c
-@@ -2002,7 +2002,7 @@ static void aac_remove_one(struct pci_dev *pdev)
- }
- 
- static pci_ers_result_t aac_pci_error_detected(struct pci_dev *pdev,
--					enum pci_channel_state error)
-+					pci_channel_state_t error)
- {
- 	struct Scsi_Host *shost = pci_get_drvdata(pdev);
- 	struct aac_dev *aac = shost_priv(shost);
-diff --git a/drivers/scsi/sym53c8xx_2/sym_glue.c b/drivers/scsi/sym53c8xx_2/sym_glue.c
-index 2ca018ce796f..f455243bdb9b 100644
---- a/drivers/scsi/sym53c8xx_2/sym_glue.c
-+++ b/drivers/scsi/sym53c8xx_2/sym_glue.c
-@@ -1743,7 +1743,7 @@ static void sym2_remove(struct pci_dev *pdev)
-  * @state: current state of the PCI slot
-  */
- static pci_ers_result_t sym2_io_error_detected(struct pci_dev *pdev,
--                                         enum pci_channel_state state)
-+                                         pci_channel_state_t state)
- {
- 	/* If slot is permanently frozen, turn everything off */
- 	if (state == pci_channel_io_perm_failure) {
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 402edaeffe12..ac30aefe49a1 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -4678,7 +4678,7 @@ static void ql_eeh_close(struct net_device *ndev)
-  * a PCI bus error is detected.
-  */
- static pci_ers_result_t qlge_io_error_detected(struct pci_dev *pdev,
--					       enum pci_channel_state state)
-+					       pci_channel_state_t state)
- {
- 	struct net_device *ndev = pci_get_drvdata(pdev);
- 	struct ql_adapter *qdev = netdev_priv(ndev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c79d83304e52..7ee85e89e8ed 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -785,7 +785,7 @@ enum pci_ers_result {
- struct pci_error_handlers {
- 	/* PCI bus error detected on this device */
- 	pci_ers_result_t (*error_detected)(struct pci_dev *dev,
--					   enum pci_channel_state error);
-+					   pci_channel_state_t error);
- 
- 	/* MMIO has been re-enabled, but not DMA */
- 	pci_ers_result_t (*mmio_enabled)(struct pci_dev *dev);
 -- 
-2.27.0
+Thanks,
+
+David / dhildenb
 
