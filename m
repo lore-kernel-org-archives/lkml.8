@@ -2,137 +2,82 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C454C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB192C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A86020720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83622088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593706305;
+	bh=/y2qX4twvgax/vSIk5ikbxnbfpuh3lgVLY3u5KycooU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pamZFZmHi/h18CrKhtRp1i9btLG9wvHRxL+WTRGpEz1loxyAa+BcGge2H3rygs5Ta
+	 o0HS0JmFXPDBDl7tLmKlr27gDSNcpg5M6FzPcYatgKXR2ighQhbhHV11tAIhwlJ5+R
+	 NVjx0Xnubf+quIZEkpMRqc2whF58n4p+l2VQ0sxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgGBQLU (ORCPT
+        id S1726469AbgGBQLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:11:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:39468 "EHLO foss.arm.com"
+        Thu, 2 Jul 2020 12:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgGBQLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:11:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87B131FB;
-        Thu,  2 Jul 2020 09:11:19 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F8083F71E;
-        Thu,  2 Jul 2020 09:11:18 -0700 (PDT)
-References: <20200702144258.19326-1-vincent.guittot@linaro.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: handle case of task_h_load() returning 0
-In-reply-to: <20200702144258.19326-1-vincent.guittot@linaro.org>
-Date:   Thu, 02 Jul 2020 17:11:15 +0100
-Message-ID: <jhjh7up99ss.mognet@arm.com>
+        id S1726082AbgGBQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:11:43 -0400
+Received: from earth.universe (dyndsl-037-138-186-086.ewe-ip-backbone.de [37.138.186.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56E1B2084C;
+        Thu,  2 Jul 2020 16:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593706303;
+        bh=/y2qX4twvgax/vSIk5ikbxnbfpuh3lgVLY3u5KycooU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ixoMB58Rtg3tN/Pd6CdCLra/Hfk0I1CQgnhhdmehdmsOFQv81Dyyq+3dbJw5eWu0E
+         bwEF0KHfUTLET9sHvFzCyFTLMM/T0/zvwX5amVHdshn5BVVj3gD7i/NyYzclyxa51E
+         k/LKhnb3odHHKCFxylqL5KB1KHlhOVFq2B4PEiQM=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6DD653C08CE; Thu,  2 Jul 2020 18:11:41 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 18:11:41 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     nicolas.ferre@microchip.com, linux-arm-kernel@lists.infradead.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH] MAINTAINERS: Change Maintainer for some at91 drivers
+Message-ID: <20200702161141.xwvwoxjph7l2tpeq@earth.universe>
+References: <20200702134224.3750-1-nicolas.ferre@microchip.com>
+ <20200702143909.GH4483@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702143909.GH4483@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 02/07/20 15:42, Vincent Guittot wrote:
-> task_h_load() can return 0 in some situations like running stress-ng
-> mmapfork, which forks thousands of threads, in a sched group on a 224 cores
-> system. The load balance doesn't handle this correctly because
-> env->imbalance never decreases and it will stop pulling tasks only after
-> reaching loop_max, which can be equal to the number of running tasks of
-> the cfs. Make sure that imbalance will be decreased by at least 1.
->
-> misfit task is the other feature that doesn't handle correctly such
-> situation although it's probably more difficult to face the problem
-> because of the smaller number of CPUs and running tasks on heterogenous
-> system.
->
-> We can't simply ensure that task_h_load() returns at least one because it
-> would imply to handle underrun in other places.
+On Thu, Jul 02, 2020 at 03:39:09PM +0100, Mark Brown wrote:
+> On Thu, Jul 02, 2020 at 03:42:24PM +0200, nicolas.ferre@microchip.com wrote:
+> 
+> > I kept these entries together as it may generate conflicts if handled
+> > separately. I suggest that Mark take the chunk as maintainer of SPI and
+> > Audio sub-systems.
+> > Anyway, don't hesitate to tell me if I should handle this change
+> > differently or at another time during the development cycle.
+> 
+> That works for me (though I'd be a bit surprised if it generated
+> conflicts), Sebastian?
 
-Nasty one, that...
+Also works for me.
 
-Random thought: isn't that the kind of thing we have scale_load() and
-scale_load_down() for? There's more uses of task_h_load() than I would like
-for this, but if we upscale its output (or introduce an upscaled variant),
-we could do something like:
-
----
-detach_tasks()
-{
-        long imbalance = env->imbalance;
-
-        if (env->migration_type == migrate_load)
-                imbalance = scale_load(imbalance);
-
-        while (!list_empty(tasks)) {
-                /* ... */
-                switch (env->migration_type) {
-                case migrate_load:
-                        load = task_h_load_upscaled(p);
-                        /* ... usual bits here ...*/
-                        lsub_positive(&env->imbalance, load);
-                        break;
-                        /* ... */
-                }
-
-                if (!scale_load_down(env->imbalance))
-                        break;
-        }
-}
----
-
-It's not perfect, and there's still the misfit situation to sort out -
-still, do you think this is something we could go towards?
-
->
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->  kernel/sched/fair.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 6fab1d17c575..62747c24aa9e 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4049,7 +4049,13 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
->               return;
->       }
->
-> -	rq->misfit_task_load = task_h_load(p);
-> +	/*
-> +	 * Make sure that misfit_task_load will not be null even if
-> +	 * task_h_load() returns 0. misfit_task_load is only used to select
-> +	 * rq with highest load so adding 1 will not modify the result
-> +	 * of the comparison.
-> +	 */
-> +	rq->misfit_task_load = task_h_load(p) + 1;
->  }
->
->  #else /* CONFIG_SMP */
-> @@ -7664,6 +7670,16 @@ static int detach_tasks(struct lb_env *env)
->                           env->sd->nr_balance_failed <= env->sd->cache_nice_tries)
->                               goto next;
->
-> +			/*
-> +			 * Depending of the number of CPUs and tasks and the
-> +			 * cgroup hierarchy, task_h_load() can return a null
-> +			 * value. Make sure that env->imbalance decreases
-> +			 * otherwise detach_tasks() will stop only after
-> +			 * detaching up to loop_max tasks.
-> +			 */
-> +			if (!load)
-> +				load = 1;
-> +
->                       env->imbalance -= load;
->                       break;
+-- Sebastian
