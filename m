@@ -2,84 +2,107 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67722C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F308B207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354052088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593697080;
+	bh=hduG8RcoB6Y0lE+3g7jHFto84R1rHz9MylAR+LshBOc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YZR1cj5GmszcP/8t8n4kQlenPHJLDamtxD6Wmvi944AO2zKsL95VnLztALrw8EpYM
+	 5bGOcsig20463WMYgp08Zu68yijt+2LSnrU/bF9r9Gobdh/OxHdqyU+ImlWwIYX3mP
+	 PuZPJWnfWV2oknDzRkYXsrm2NJ04CFmFxFEKWclc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgGBNhf (ORCPT
+        id S1729420AbgGBNh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:37:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40990 "EHLO mx2.suse.de"
+        Thu, 2 Jul 2020 09:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbgGBNhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:37:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8D555ADE4;
-        Thu,  2 Jul 2020 13:37:34 +0000 (UTC)
-Subject: Re: [PATCH v6 5/6] mm/swap: implement workingset detection for
- anonymous LRU
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592371583-30672-6-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <47989e98-ecd2-3ea8-871c-88583e55a4dc@suse.cz>
-Date:   Thu, 2 Jul 2020 15:37:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1729115AbgGBNh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:37:58 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 241AB207CD;
+        Thu,  2 Jul 2020 13:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593697078;
+        bh=hduG8RcoB6Y0lE+3g7jHFto84R1rHz9MylAR+LshBOc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zgOjKcUtHepkmiGPnnMypO3ZHYmIPQwOSjfm2PlTGeeBxzYdF06w0SutUeXmu87aB
+         LNh8CcC9Yy/K94gU0rOqthG9sGlweSt6OvULqUmhJXQMYow3JnlkPcSiYTjgrTOUTC
+         engaWLbImiQRSPFea/6wJBYoWUqhREYrcQpe3ryY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqzPY-008Px1-NH; Thu, 02 Jul 2020 14:37:56 +0100
 MIME-Version: 1.0
-In-Reply-To: <1592371583-30672-6-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 Jul 2020 14:37:56 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: Re: [PATCH v2 14/17] arm64: Kill __smp_cross_call and co
+In-Reply-To: <jhjh7uzgfyj.mognet@arm.com>
+References: <20200624195811.435857-1-maz@kernel.org>
+ <20200624195811.435857-15-maz@kernel.org> <jhjh7uzgfyj.mognet@arm.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <b43910de5fa3bedbea69e1ca9a682a15@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 7:26 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On 2020-06-25 19:25, Valentin Schneider wrote:
+> On 24/06/20 20:58, Marc Zyngier wrote:
+>> @@ -852,8 +841,7 @@ void arch_send_wakeup_ipi_mask(const struct 
+>> cpumask *mask)
+>>  #ifdef CONFIG_IRQ_WORK
+>>  void arch_irq_work_raise(void)
+>>  {
+>> -	if (__smp_cross_call)
+>> -		smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
+>> +	smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
 > 
-> This patch implements workingset detection for anonymous LRU.
-> All the infrastructure is implemented by the previous patches so this patch
-> just activates the workingset detection by installing/retrieving
-> the shadow entry.
+> AIU the following commit:
 > 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-> diff --git a/mm/workingset.c b/mm/workingset.c
-> index 8395e60..3769ae6 100644
-> --- a/mm/workingset.c
-> +++ b/mm/workingset.c
-> @@ -353,8 +353,9 @@ void workingset_refault(struct page *page, void *shadow)
->  	/*
->  	 * Compare the distance to the existing workingset size. We
->  	 * don't activate pages that couldn't stay resident even if
-> -	 * all the memory was available to the page cache. Whether
-> -	 * cache can compete with anon or not depends on having swap.
-> +	 * all the memory was available to the workingset. Whether
-> +	 * workingset competetion need to consider anon or not depends
-
-                      competition needs
-
-> +	 * on having swap.
->  	 */
->  	workingset_size = lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
->  	if (mem_cgroup_get_nr_swap_pages(memcg) > 0) {
+>   eb631bb5bf5b ("arm64: Support arch_irq_work_raise() via self IPIs")
 > 
+> It seems arm64 hasn't needed that check since
+> 
+>   4b3dc9679cf7 ("arm64: force CONFIG_SMP=y and remove redundant 
+> #ifdefs")
+> 
+> Did I get that right?
 
+Indeed. SMP implies being able to IPI, and thus the check has been
+irrelevant for some time now.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
