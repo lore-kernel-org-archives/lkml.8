@@ -2,130 +2,117 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853D920702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2324120702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgGBJX4 (ORCPT
+        id S1726795AbgGBJ22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:23:56 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35220 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGBJXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:23:55 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k4so23132504oik.2;
-        Thu, 02 Jul 2020 02:23:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wCkBw3oirGVCWmjI/nTGUzVc7Xs3iHGv9e1O9Q6s09o=;
-        b=MP7oqvcD8TQKBP99o4o1QkIoLNPrN49j441P1gCP1a+YnoSaIzlYruP2movZULeGWr
-         3ogHW4Ra0SeG1gO0t4dZyw4joj5QcHpraNrq+fKX7mABOanN7L2h9Ydfu1x27U54QDvz
-         ZUlWDMZCH+K6rshgO85WhBpvINF1baojpWctqQ3gGAeOeHJ9EQB8HVanFtSTa5qt1DL1
-         y6Qfl1/Ka3Gm4RSSLFAkpQwuX1D+7vpySQsJi2E5VqcOI/a1ns6Cy4WWhArpGluoHpUh
-         fUqYEdY/klyqnCjovYUUuZutSGRVb7cX2CoG9UZ79TBL8KpZl/gmFRfw5PvT5VeSF2ur
-         Kmqg==
-X-Gm-Message-State: AOAM533ozLJ6g2euFbMUVvjIdUalmrF8XREbjZfFk0MH/RNIk8sNBkLE
-        OCn4ZD9qs2xQxpzMTrJ4UospF7l88d2jWdAbIoE=
-X-Google-Smtp-Source: ABdhPJw7jZ2OCXYtQuwzO2vBYZO9WzxgfjqQAWCOrpQ0MQBQ23VXQWCzTcLKpgk/3C8CRK2ZBGKgvLN1JG/aS54Niis=
-X-Received: by 2002:aca:1801:: with SMTP id h1mr18281530oih.148.1593681834441;
- Thu, 02 Jul 2020 02:23:54 -0700 (PDT)
+        Thu, 2 Jul 2020 05:28:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:58526 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbgGBJ22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:28:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7771331B;
+        Thu,  2 Jul 2020 02:28:27 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B38553F71E;
+        Thu,  2 Jul 2020 02:28:25 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: update_pick_idlest() Select group with lowest
+ group_util when idle_cpus are equal
+To:     Peter Puhov <peter.puhov@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Robert Foley <robert.foley@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+References: <20200616164801.18644-1-peter.puhov@linaro.org>
+ <jhjo8pidl01.mognet@arm.com>
+ <CAMDPZ0iNtaZ7p3bre31-m6E4Rb92EFshxrcsTjj3cm6=yr_ctw@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <106350c5-c2b7-a63c-2b06-761f523ee67c@arm.com>
+Date:   Thu, 2 Jul 2020 11:27:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWU7kVJMuNMSGxZSjErmj7rB=tvXH3GANmPRjYz+=JP1g@mail.gmail.com> <CA+V-a8v+2fhqwRNCaGYbmh8E1FDyc2Xss3PHk12dpTt_pgmCFg@mail.gmail.com>
-In-Reply-To: <CA+V-a8v+2fhqwRNCaGYbmh8E1FDyc2Xss3PHk12dpTt_pgmCFg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Jul 2020 11:23:42 +0200
-Message-ID: <CAMuHMdVdCH-r-xMnDgUYzJfDCzUJCYt8CkSDp9E=tgfP01FrKw@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMDPZ0iNtaZ7p3bre31-m6E4Rb92EFshxrcsTjj3cm6=yr_ctw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On 17/06/2020 16:52, Peter Puhov wrote:
+> On Wed, 17 Jun 2020 at 06:50, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+>>
+>>
+>> On 16/06/20 17:48, peter.puhov@linaro.org wrote:
+>>> From: Peter Puhov <peter.puhov@linaro.org>
+>>> We tested this patch with following benchmarks:
+>>>   perf bench -f simple sched pipe -l 4000000
+>>>   perf bench -f simple sched messaging -l 30000
+>>>   perf bench -f simple  mem memset -s 3GB -l 15 -f default
+>>>   perf bench -f simple futex wake -s -t 640 -w 1
+>>>   sysbench cpu --threads=8 --cpu-max-prime=10000 run
+>>>   sysbench memory --memory-access-mode=rnd --threads=8 run
+>>>   sysbench threads --threads=8 run
+>>>   sysbench mutex --mutex-num=1 --threads=8 run
+>>>   hackbench --loops 20000
+>>>   hackbench --pipe --threads --loops 20000
+>>>   hackbench --pipe --threads --loops 20000 --datasize 4096
+>>>
+>>> and found some performance improvements in:
+>>>   sysbench threads
+>>>   sysbench mutex
+>>>   perf bench futex wake
+>>> and no regressions in others.
+>>>
+>>
+>> One nitpick for the results of those: condensing them in a table form would
+>> make them more reader-friendly. Perhaps something like:
+>>
+>> | Benchmark        | Metric   | Lower is better? | BASELINE | SERIES | DELTA |
+>> |------------------+----------+------------------+----------+--------+-------|
+>> | Sysbench threads | # events | No               |    45526 |  56567 |  +24% |
+>> | Sysbench mutex   | ...      |                  |          |        |       |
+>>
+>> If you want to include more stats for each benchmark, you could have one table
+>> per (e.g. see [1]) - it'd still be a more readable form (or so I believe).
 
-On Wed, Jul 1, 2020 at 7:28 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Wed, Jul 1, 2020 at 6:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Jul 1, 2020 at 5:42 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > serial core expects the spinlock to be initialized by the controller
-> > > driver for serial console, this patch makes sure the spinlock is
-> > > initialized, fixing the below issue:
-> > >
-> > > [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
-> > > [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> > > [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
-> > > [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
-> > > [    0.865968] Call trace:
-> > > [    0.865979]  dump_backtrace+0x0/0x1d8
-> > > [    0.865985]  show_stack+0x14/0x20
-> > > [    0.865996]  dump_stack+0xe8/0x130
-> > > [    0.866006]  spin_dump+0x6c/0x88
-> > > [    0.866012]  do_raw_spin_lock+0xb0/0xf8
-> > > [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
-> > > [    0.866032]  uart_add_one_port+0x3a4/0x4e0
-> > > [    0.866039]  sci_probe+0x504/0x7c8
-> > > [    0.866048]  platform_drv_probe+0x50/0xa0
-> > > [    0.866059]  really_probe+0xdc/0x330
-> > > [    0.866066]  driver_probe_device+0x58/0xb8
-> > > [    0.866072]  device_driver_attach+0x6c/0x90
-> > > [    0.866078]  __driver_attach+0x88/0xd0
-> > > [    0.866085]  bus_for_each_dev+0x74/0xc8
-> > > [    0.866091]  driver_attach+0x20/0x28
-> > > [    0.866098]  bus_add_driver+0x14c/0x1f8
-> > > [    0.866104]  driver_register+0x60/0x110
-> > > [    0.866109]  __platform_driver_register+0x40/0x48
-> > > [    0.866119]  sci_init+0x2c/0x34
-> > > [    0.866127]  do_one_initcall+0x88/0x428
-> > > [    0.866137]  kernel_init_freeable+0x2c0/0x328
-> > > [    0.866143]  kernel_init+0x10/0x108
-> > > [    0.866150]  ret_from_fork+0x10/0x18
-> >
-> > Interesting...
-> >
-> > How can I reproduce that? I do have CONFIG_DEBUG_SPINLOCK=y.
-> > I'm wondering why haven't we seen this before...
-> >
-> I have attached .config for your reference.
+Wouldn't Unix Bench's 'execl' and 'spawn' be the ultimate test cases
+for those kind of changes?
 
-Thank you!
+I only see minor improvements with tip/sched/core as base on hikey620
+(Arm64 octa-core).
 
-I gave it a try with v5.8-rc1 on Salvator-XS with R-Car H3 ES2.0.
-However, I couldn't reproduce the issue.
-Does it happen on that specific board only? Is this serdev-related?
-Note that I had to disable CONFIG_EXTRA_FIRMWARE, as I don't have the
-firmware blobs it referenced.  Do I need them to trigger the issue?
-As the .config has a few non-upstream options, do you have any patches
-applied that might impact the issue?
+				base		w/ patch
+./Run spawn -c 8 -i 10		 633.6		 635.1
 
-Thanks again!
+./Run execl -c 8 -i 10		1187.5		1190.7	
 
-Gr{oetje,eeting}s,
 
-                        Geert
+At the end of find_idlest_group(), when comparing local and idlest, it
+is explicitly mentioned that number of idle_cpus is used instead of
+utilization.
+The comparision between potential idle groups and local & idlest group
+should probably follow the same rules.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I haven't tested it with 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+https://lkml.kernel.org/r/20200624154422.29166-1-vincent.guittot@linaro.org
+
+which might have an influence here too.
