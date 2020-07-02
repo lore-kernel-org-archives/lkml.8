@@ -2,117 +2,210 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E47C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1015AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6DC20899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593678687;
-	bh=QGpdAyRMoNsVdtVoCbNXP1VWmICFLyANXqWYO+rUTTs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5lllI4EsIaaC/V1Va3oeiOuJJJlqdXzt9WlRmgmf1j/i44QfJWBM5y8AAmY28pQb
-	 cO5/FAmEOMIlMs0yBzS0YU/QxRLwEyIjZzTgMHqVIaEHtaFVoPhmu+AQIEtW4SDll8
-	 0RyjB3xki52q2gMJaeo5ojq4HtVW6y9dJnmmAhr8=
+	by mail.kernel.org (Postfix) with ESMTP id E7772206A1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgGBIb0 (ORCPT
+        id S1726855AbgGBIcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgGBIbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:31:25 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08AE8206A1;
-        Thu,  2 Jul 2020 08:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593678685;
-        bh=QGpdAyRMoNsVdtVoCbNXP1VWmICFLyANXqWYO+rUTTs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1epipgTDmBHHxSLs1kheGHs/9TjzD4Pzu+GyUKLJ143corYoaQnOjaV6M4AZG8Cl
-         yaZqpViNj9UGoHkMZv/XMoDNCfiECTq00dmdP1Qkv3FUTuZgvkP26Ki5JBNnQbBpYT
-         hGB4gfDrBgh7bdE3oezH9cl61u67W2SDkluwi/4g=
-Received: by pali.im (Postfix)
-        id 2A905E92; Thu,  2 Jul 2020 10:31:23 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card connected
-Date:   Thu,  2 Jul 2020 10:30:36 +0200
-Message-Id: <20200702083036.12230-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200528143141.29956-1-pali@kernel.org>
-References: <20200528143141.29956-1-pali@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 Jul 2020 04:32:12 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:59293 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725263AbgGBIcM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:32:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U1TJPN7_1593678728;
+Received: from localhost(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U1TJPN7_1593678728)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 02 Jul 2020 16:32:08 +0800
+From:   Xunlei Pang <xlpang@linux.alibaba.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] mm/slub: Introduce two counters for the partial objects
+Date:   Thu,  2 Jul 2020 16:32:07 +0800
+Message-Id: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is no PCIe card connected and advk_pcie_rd_conf() or
-advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-root bridge, the aardvark driver throws the following error message:
+The node list_lock in count_partial() spend long time iterating
+in case of large amount of partial page lists, which can cause
+thunder herd effect to the list_lock contention, e.g. it cause
+business response-time jitters when accessing "/proc/slabinfo"
+in our production environments.
 
-  advk-pcie d0070000.pcie: config read/write timed out
+This patch introduces two counters to maintain the actual number
+of partial objects dynamically instead of iterating the partial
+page lists with list_lock held.
 
-Obviously accessing PCIe registers of disconnected card is not possible.
+New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
+The main operations are under list_lock in slow path, its performance
+impact is minimal.
 
-Extend check in advk_pcie_valid_device() function for validating
-availability of PCIe bus. If PCIe link is down, then the device is marked
-as Not Found and the driver does not try to access these registers.
-
-This is just an optimization to prevent accessing PCIe registers when card
-is disconnected. Trying to access PCIe registers of disconnected card does
-not cause any crash, kernel just needs to wait for a timeout. So if card
-disappear immediately after checking for PCIe link (before accessing PCIe
-registers), it does not cause any problems.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-
+Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
+Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
 ---
-Changes in V3:
-* Add comment to the code
-Changes in V2:
-* Update commit message, mention that this is optimization
----
- drivers/pci/controller/pci-aardvark.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ mm/slab.h |  2 ++
+ mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..d18f389b36a1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
- 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
- 		return false;
- 
-+	/*
-+	 * If the link goes down after we check for link-up, nothing bad
-+	 * happens but the config access times out.
-+	 */
-+	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-+		return false;
+diff --git a/mm/slab.h b/mm/slab.h
+index 7e94700..5935749 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -616,6 +616,8 @@ struct kmem_cache_node {
+ #ifdef CONFIG_SLUB
+ 	unsigned long nr_partial;
+ 	struct list_head partial;
++	atomic_long_t pfree_objects; /* partial free objects */
++	atomic_long_t ptotal_objects; /* partial total objects */
+ #ifdef CONFIG_SLUB_DEBUG
+ 	atomic_long_t nr_slabs;
+ 	atomic_long_t total_objects;
+diff --git a/mm/slub.c b/mm/slub.c
+index 6589b41..53890f3 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1775,10 +1775,24 @@ static void discard_slab(struct kmem_cache *s, struct page *page)
+ /*
+  * Management of partially allocated slabs.
+  */
 +
- 	return true;
++static inline void
++__update_partial_free(struct kmem_cache_node *n, long delta)
++{
++	atomic_long_add(delta, &n->pfree_objects);
++}
++
++static inline void
++__update_partial_total(struct kmem_cache_node *n, long delta)
++{
++	atomic_long_add(delta, &n->ptotal_objects);
++}
++
+ static inline void
+ __add_partial(struct kmem_cache_node *n, struct page *page, int tail)
+ {
+ 	n->nr_partial++;
++	__update_partial_total(n, page->objects);
+ 	if (tail == DEACTIVATE_TO_TAIL)
+ 		list_add_tail(&page->slab_list, &n->partial);
+ 	else
+@@ -1798,6 +1812,7 @@ static inline void remove_partial(struct kmem_cache_node *n,
+ 	lockdep_assert_held(&n->list_lock);
+ 	list_del(&page->slab_list);
+ 	n->nr_partial--;
++	__update_partial_total(n, -page->objects);
  }
  
+ /*
+@@ -1842,6 +1857,7 @@ static inline void *acquire_slab(struct kmem_cache *s,
+ 		return NULL;
+ 
+ 	remove_partial(n, page);
++	__update_partial_free(n, -*objects);
+ 	WARN_ON(!freelist);
+ 	return freelist;
+ }
+@@ -2174,8 +2190,11 @@ static void deactivate_slab(struct kmem_cache *s, struct page *page,
+ 				"unfreezing slab"))
+ 		goto redo;
+ 
+-	if (lock)
++	if (lock) {
++		if (m == M_PARTIAL)
++			__update_partial_free(n, page->objects - page->inuse);
+ 		spin_unlock(&n->list_lock);
++	}
+ 
+ 	if (m == M_PARTIAL)
+ 		stat(s, tail);
+@@ -2241,6 +2260,7 @@ static void unfreeze_partials(struct kmem_cache *s,
+ 			discard_page = page;
+ 		} else {
+ 			add_partial(n, page, DEACTIVATE_TO_TAIL);
++			__update_partial_free(n, page->objects - page->inuse);
+ 			stat(s, FREE_ADD_PARTIAL);
+ 		}
+ 	}
+@@ -2915,6 +2935,14 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+ 		head, new.counters,
+ 		"__slab_free"));
+ 
++	if (!was_frozen && prior) {
++		if (n)
++			__update_partial_free(n, cnt);
++		else
++			__update_partial_free(get_node(s, page_to_nid(page)),
++					cnt);
++	}
++
+ 	if (likely(!n)) {
+ 
+ 		/*
+@@ -2944,6 +2972,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+ 	if (!kmem_cache_has_cpu_partial(s) && unlikely(!prior)) {
+ 		remove_full(s, n, page);
+ 		add_partial(n, page, DEACTIVATE_TO_TAIL);
++		__update_partial_free(n, page->objects - page->inuse);
+ 		stat(s, FREE_ADD_PARTIAL);
+ 	}
+ 	spin_unlock_irqrestore(&n->list_lock, flags);
+@@ -2955,6 +2984,7 @@ static void __slab_free(struct kmem_cache *s, struct page *page,
+ 		 * Slab on the partial list.
+ 		 */
+ 		remove_partial(n, page);
++		__update_partial_free(n, page->inuse - page->objects);
+ 		stat(s, FREE_REMOVE_PARTIAL);
+ 	} else {
+ 		/* Slab must be on the full list */
+@@ -3364,6 +3394,8 @@ static inline int calculate_order(unsigned int size)
+ 	n->nr_partial = 0;
+ 	spin_lock_init(&n->list_lock);
+ 	INIT_LIST_HEAD(&n->partial);
++	atomic_long_set(&n->pfree_objects, 0);
++	atomic_long_set(&n->ptotal_objects, 0);
+ #ifdef CONFIG_SLUB_DEBUG
+ 	atomic_long_set(&n->nr_slabs, 0);
+ 	atomic_long_set(&n->total_objects, 0);
+@@ -3437,6 +3469,7 @@ static void early_kmem_cache_node_alloc(int node)
+ 	 * initialized and there is no concurrent access.
+ 	 */
+ 	__add_partial(n, page, DEACTIVATE_TO_HEAD);
++	__update_partial_free(n, page->objects - page->inuse);
+ }
+ 
+ static void free_kmem_cache_nodes(struct kmem_cache *s)
+@@ -3747,6 +3780,7 @@ static void free_partial(struct kmem_cache *s, struct kmem_cache_node *n)
+ 	list_for_each_entry_safe(page, h, &n->partial, slab_list) {
+ 		if (!page->inuse) {
+ 			remove_partial(n, page);
++			__update_partial_free(n, page->objects - page->inuse);
+ 			list_add(&page->slab_list, &discard);
+ 		} else {
+ 			list_slab_objects(s, page,
+@@ -4045,6 +4079,8 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ 			if (free == page->objects) {
+ 				list_move(&page->slab_list, &discard);
+ 				n->nr_partial--;
++				__update_partial_free(n, -free);
++				__update_partial_total(n, -free);
+ 			} else if (free <= SHRINK_PROMOTE_MAX)
+ 				list_move(&page->slab_list, promote + free - 1);
+ 		}
 -- 
-2.20.1
+1.8.3.1
 
