@@ -2,186 +2,126 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D71C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1177C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E543520884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PknMzdJw"
+	by mail.kernel.org (Postfix) with ESMTP id B6F862088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgGBKFm (ORCPT
+        id S1728048AbgGBKJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:05:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:17783 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGBKFm (ORCPT
+        Thu, 2 Jul 2020 06:09:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:54637 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgGBKJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:05:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593684342; x=1625220342;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=RBWjTChbCjPvUe1E+aZiJAR02zh0ahhxuDu7LpVx5kc=;
-  b=PknMzdJwCv7TuAhf28UOgMZJbawmCE9ZdKQmfdWHnLKTJlHUDPfxSal1
-   ZD8igghzOqLm6ROAAvXRPQRVjKfbxgzlRFODmxwsU6tGy+yQZsODXUvcj
-   4lr61xxXjtuREXl6KeX9oPBUBvAEbk0qDwnsumR/fzyHEoslOwJgAe890
-   e7uJQXB+zg/nC2lTvTtVWTvza4fyT9XsIlZABcX9YBF+WEobj3HCZ+F4W
-   Ck7KgqVFenekofGQ8uYhfd/XFiWrESc8dFWorf69odg8QZ5VnqcQBUoDm
-   gb7hYvhp8xnwentBylyqqs6hvYrSFSFMM5a8aVvXNW35zXEX3ovEWCGDh
-   Q==;
-IronPort-SDR: VLUqmLLE5o47q9NlTPvtAiIaITBHkG8uGV4ylYG0DsMy6+P2erE9W/WtNilmUrJNwFm6GKCF53
- wP847YZnw82CvZmjPjH+0FK9hHwyefm7ayfXUwHRQ+LWwdZE7XhLgc1J4ivuk00UfHv83Z0j5j
- ox7fYWxHTVuhyQ6vuqwGN/Y+gG+kOYn5Zc5tM4ur/HWFTe2dCaa+5BGWqyRoUIYzoThudV4JW8
- yQi32t+6Ag/mBPrTGipK4A8Y8pN9K4QoCYU6QYtALLZ3GmQnCnx+Qn0cjNKp7L+EZXGI2nfjmp
- QgA=
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82368183"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:05:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 03:05:17 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Thu, 2 Jul 2020 03:05:34 -0700
-References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk> <87imfjxtrq.fsf@soft-dev15.microsemi.net> <20200622121706.GF4560@sirena.org.uk> <878sgddh2l.fsf@soft-dev15.microsemi.net> <20200623140815.GF5582@sirena.org.uk>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
-In-Reply-To: <20200623140815.GF5582@sirena.org.uk>
-Date:   Thu, 2 Jul 2020 12:05:32 +0200
-Message-ID: <874kqqkz9v.fsf@soft-dev15.microsemi.net>
+        Thu, 2 Jul 2020 06:09:00 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MW9zm-1jKVqS3CQM-00XYGX; Thu, 02 Jul 2020 12:08:58 +0200
+Received: by mail-qk1-f180.google.com with SMTP id 80so25055449qko.7;
+        Thu, 02 Jul 2020 03:08:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531PkRDYUMsbMGZyVS7rRI1yUby9/+mxlfVN/Tpre4DVwxWWZpaK
+        BJ2BXm+ESDFTHm29CjFdKBGv57qrQhJ1UAd3e1I=
+X-Google-Smtp-Source: ABdhPJx5SOJMuDfQwJVKZB5+m6bRsdErAkrfs1PX1uiM9LM3hcJxJy3YrlJL+419fren+MgMc2n134OOOUrPQ10mHDg=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr22857877qko.138.1593684537553;
+ Thu, 02 Jul 2020 03:08:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-5-will@kernel.org>
+ <20200702093239.GA15391@C02TD0UTHF1T.local> <20200702094833.GA16248@willie-the-truck>
+In-Reply-To: <20200702094833.GA16248@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 2 Jul 2020 12:08:41 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a07G1dLC+RUBDkzDbCRCP_gwZAaVK+k1UxvXT+7Kj=o+g@mail.gmail.com>
+Message-ID: <CAK8P3a07G1dLC+RUBDkzDbCRCP_gwZAaVK+k1UxvXT+7Kj=o+g@mail.gmail.com>
+Subject: Re: [PATCH 04/18] alpha: Override READ_ONCE() with barriered implementation
+To:     Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mak3dDZGE897vFH26+b5q7gq+C9l0V+pMqglMWHu/Q3+hoWWsQL
+ xPZsW2vJLjdnX0ffEaN+PZA5LvLOVs3+tb35xMqpgv7Uu57I/nY/ocnByKIJ0KVUghpM9sn
+ iqdQHunTum1PIsvRdRJtHU5arZEvkrIIet19DkYGTwksXPgcyoa4jr67S9xe6Ak0a1e66vS
+ Trp6IMhJR7WwpddXYowLA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7+KeRQCHiCM=:yeMFSuZ4NMCzmVlkyLf4eP
+ V1i9z4kDSFbhrvkjg3nEvwolq9WxGBAMZBOmhWxv2zS/uhU1r+w7YsTvSbx8R9A93vzHmPiWp
+ PD1DyGCHL3oQZ6gpaTgLMRJ2bi2e6LQqi5ryq+mTA1jOY0+Br6P5MdIeYdJfm8dQg1H65MTXQ
+ ehwy5QEtN/FWWd/ILZfki1w7i8APiy8x7zZSi7x2bFqKy/C+2aN0ALldLuntBKWAGWZef3UcX
+ Y3W4EKHp5lUurDgRi6HtR6MsnfMykmovV+PHa0t1WBot0SEhFgVjdCG/RpIpChW+nQYf2QJZf
+ g4tVY5uG0AvU3dOicuCBZlDlN++6Ct49N81rFX+nojmEbUTf6Jz00j/qs4T90b7hGPavxve9P
+ WpmURyeuMqZW4o0sa2r+ImUQG7Vh/z2ivJneyKUgShBIPO5sbGnUtWUjR4b0zq6+r51TezSw3
+ qTQT0Cn30sPcQcLjISuoY6Vl4do7qNoI8nEShFwj3liWRJuETYrWQpzVuIJTshsN1jviKFkZ9
+ uo3jl0yZKMsr9YknI2LAnlA0SPgGRUiGamDMtePsFy3KPtdXN9oNnap9IR7x2ixmhgzcz+ibj
+ BBmPfO5vAhh0yFqCcxOBKfMsubG1FWUrXod1cHEnmnwwT0gM3IzaXFmB96uP0J7LYl7FRMha0
+ XIqyUqhfmpcDL3ijIGWqBzuHZNnKiotti3pG0Bh1jzNhnBvq5bHdS6TfPYR0D7/Vk2W0h6Sug
+ Ya4RpMI4FiakX2NWROb+I8Po4vnwhEfsOOvsRA90DSlMDH5i1l7EiiOf0sderst9S7EDwzqrb
+ KHeGoOVEiNQa5gBB3+WeFZm4nQWoWnf3qiXrbUKgxrW/3Oad7I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 2, 2020 at 11:48 AM Will Deacon <will@kernel.org> wrote:
+> On Thu, Jul 02, 2020 at 10:32:39AM +0100, Mark Rutland wrote:
+> > On Tue, Jun 30, 2020 at 06:37:20PM +0100, Will Deacon wrote:
+> > > -#define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
+> > > +#define __smp_load_acquire(p)                                              \
+> > > +({                                                                 \
+> > > +   __unqual_scalar_typeof(*p) ___p1 =                              \
+> > > +           (*(volatile typeof(___p1) *)(p));                       \
+> > > +   compiletime_assert_atomic_type(*p);                             \
+> > > +   ___p1;                                                          \
+> > > +})
+> >
+> > Sorry if I'm being thick, but doesn't this need a barrier after the
+> > volatile access to provide the acquire semantic?
+> >
+> > IIUC prior to this commit alpha would have used the asm-generic
+> > __smp_load_acquire, i.e.
+> >
+> > | #ifndef __smp_load_acquire
+> > | #define __smp_load_acquire(p)                                           \
+> > | ({                                                                      \
+> > |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+> > |         compiletime_assert_atomic_type(*p);                             \
+> > |         __smp_mb();                                                     \
+> > |         (typeof(*p))___p1;                                              \
+> > | })
+> > | #endif
 
-Mark Brown writes:
+I also have a question that I didn't dare ask when the same
+code came up before (I guess it's also what's in the kernel today):
 
-> On Tue, Jun 23, 2020 at 03:53:22PM +0200, Lars Povlsen wrote:
-> > Mark Brown writes:
-> 
-> > >If there's a mux that needs to be handled specially that mux should be
-> > >described in DT on the relevant boards, there shouldn't just be
-> > >something hard coded in the controller driver.
-> 
-> > I looked at the spi-mux driver, but that is more for muxing the CS's, as
-> > I understand - not the actual bus segment. I could use it, but it would
-> 
-> It doesn't matter that much exactly what signals get switched I think,
-> we can't really tell by the time we get back to the controller.
-> 
-> > require encoding the bus segment into the CS (double the normal
-> > range). Also, selecting the bus interface is tightly coupled to the
-> > controller - its not an externally constructed board mux.
-> 
-> It sounds like this controller should be describing a mux all the time -
-> if there's completely separate output buses that you can switch between
-> then we'll need to know about that if someone wires up a GPIO chip
-> select.
+With the cast to 'typeof(*p)' at the end, doesn't that mean we
+lose the effect of __unqual_scalar_typeof() again, so any "volatile"
+pointer passed into __READ_ONCE_SCALAR() or
+__smp_load_acquire() still leads to a volatile load of the original
+variable, plus another volatile access to ___p1 after
+spilling it to the stack as a non-volatile variable?
 
-Mark,
+I hope I'm missing something obvious here.
 
-I had to tinker a bit with this to get my head around it.
-
-I added the mux driver, and made the cs/bus configuration reside here -
-all well and done.
-
-For our reference config we have something like:
-
-  mux: mux-controller {
-          compatible = "microchip,sparx5-spi-mux";
-          #mux-control-cells = <0>;
-          mux@0 {
-                  reg = <0>;
-                  microchip,bus-interface = <0>;
-          };
-          mux@e {
-                  reg = <14>;
-                  microchip,bus-interface = <1>;
-          };
-  };
-
-Then I tried to use the existing spi-mux as you suggested. But I
-realized as its really designed for CS muxing I had to instantiate each
-SPI device in its own spi-mux instance, repeating the CS (as we don't
-want that to change). The result was kinda bulky.
-
-An example would be:
-
-  spi0: spi@600104000 {
-          compatible = "microchip,sparx5-spi";
-          spi@0 {
-                  compatible = "spi-mux";
-                  mux-controls = <&mux>;
-                  reg = <0>;
-                  spi-flash@0 {
-                          compatible = "jedec,spi-nor";
-                          reg = <0>;
-                  };
-          };
-          spi@e {
-                  compatible = "spi-mux";
-                  mux-controls = <&mux>;
-                  reg = <14>;
-                  spi-flash@e {
-                          compatible = "spi-nand";
-                          reg = <14>;
-                  };
-          };
-  };
-
-I then looked a bit at other users of the mux framework,
-drivers/mtd/hyperbus/hbmc-am654.c specifically.
-
-I then added direct use of a mux, by the well-established "mux-controls"
-DT property. The result was much cleaner, IMHO, and allows the spi and
-mux to be connected directly in the base sparx5 DT. Code impact was
-really small.
-
-Both examples use the same mux configuration, and as the "mux-controls"
-is established by default in the base spi0 node, this (directly) yields:
-
-&spi0 {
-	spi-flash@0 {
-		compatible = "jedec,spi-nor";
-		reg = <0>;
-	};
-	spi-flash@e {
-		compatible = "spi-nand";
-		reg = <14>;
-	};
-};
-
-I will be sending the new revision of the patches shortly. I look
-forward to your comments.
-
-I also CC'ed Peter Rosin as the MUX subsystem maintainer. Peter, sorry
-for sticking you halfway into a conversation, but I thought you might
-want to be informed. You are also on the recipient list of the v3
-patches, so now you know why...
-
-Sincerely,
-
--- 
-Lars Povlsen,
-Microchip
+        Arnd
