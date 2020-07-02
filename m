@@ -2,106 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48440C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D99CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F7E20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kKX0pWMw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eTwEnRvl"
+	by mail.kernel.org (Postfix) with ESMTP id 30CFE20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgGBOM1 (ORCPT
+        id S1729687AbgGBOM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729348AbgGBOMV (ORCPT
+        Thu, 2 Jul 2020 10:12:59 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:34808 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbgGBOM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:12:21 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EA4C08C5DC;
-        Thu,  2 Jul 2020 07:12:21 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 16:12:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593699138;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cwTVNjRP46CGgsTBRixpnycU9jLYSLhEYRlI1gaMWYo=;
-        b=kKX0pWMwnPp5WQSJFDYNNGgxzoRwWlwHYx/dhsfi59qGaidMG9d5j4G/jHrvmVzaQU4UXv
-        9v6nFNe1//vG8mHw1b2wwwZVhTz/v0swjoBwp+yTu/0lT3IgLDlJWuiRXetM2Tj8im7OpH
-        lbBGLs/PwcT+lutRhvAflyZnIhGgloQnY3ZEl1hOjzD0zFClc+NrKAqiZt97XM1iinwMlo
-        8qGbo6W8sycMjh8ld8q3YrSSWglUkuiEkeH+i2JP6cYYsfkeYUAd4dMcMb23K7JGCr1eGx
-        63L8wTpCvPqqpawrKzQ5jSwFUNZBbh8x5KCmRzQlCftWRzK3QlIK4sMUY5zrlw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593699138;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cwTVNjRP46CGgsTBRixpnycU9jLYSLhEYRlI1gaMWYo=;
-        b=eTwEnRvlYJS0kZTlP2TOH/CU4wZd1QyZzsY1ezBUN8Y5EG4wmE1qY4MIBe3C6xl68JAhGa
-        pIVv6XMIN0n+AWAg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
+        Thu, 2 Jul 2020 10:12:58 -0400
+Received: by mail-ej1-f65.google.com with SMTP id y10so29815893eje.1;
+        Thu, 02 Jul 2020 07:12:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4r4v5c89GnZeM3QVUO8j4lUJ1Gquc8ZGtP+s3D/cQtU=;
+        b=Fl4hAAT6a6wkIITVqcPGXsy2YjeTNEBsdhyJ2dtnjZOtQx8vqUZd+8im+yxizvE39j
+         4abOg4Pn8ZUs9ik4bOPIoSOrMUcALGrUPiMaFfygip12AlWd5fiaAkjpi6bZBSaE+Qyn
+         aOI29xpvoivYoba7HgCZMpTzkTITlfMT8EVFOWaL8xL2xa3/17y2h536sBP+mzotIy58
+         //4CVUqQados9Bq9jaA983yT+NHMQScSheipnUgVesCzhi0KIsRQfBJEqXM263cBJVM8
+         1apVO+akbKPPg3LiQHVbt2oPShqRqJP7Hed/aWF2W/y8LeJNyDyN/mKh8ymHDkPw8pzY
+         bDUA==
+X-Gm-Message-State: AOAM5325xN95syysFnTVLdYTlJZiFMHxbaKAIWghrf8lMIlsA5Qx4wqb
+        uB/QSIuHNtMAy51LormuwNL0C5GyY+1yMw==
+X-Google-Smtp-Source: ABdhPJzA23lTgTl/podxE17idOaydmlq2gsf7H7fAeyukmLrDb+FWpqgB4bQ1uD6lvFTl75Y86iA/w==
+X-Received: by 2002:a17:906:5243:: with SMTP id y3mr29411310ejm.193.1593699176311;
+        Thu, 02 Jul 2020 07:12:56 -0700 (PDT)
+Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
+        by smtp.gmail.com with ESMTPSA id fi29sm6841274ejb.83.2020.07.02.07.12.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 07:12:55 -0700 (PDT)
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH net-next v2 0/5] mvpp2: XDP support
+Date:   Thu,  2 Jul 2020 16:12:39 +0200
+Message-Id: <20200702141244.51295-1-mcroce@linux.microsoft.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200630183534.GG9247@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
-> > This is not going to work together with the "wait context validator"
-> > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> > printk() which is why it is still disabled by default.
-> 
-> Fixing that should be "interesting".  In particular, RCU CPU stall
-> warnings rely on the raw spin lock to reduce false positives due
-> to race conditions.  Some thought will be required here.
+From: Matteo Croce <mcroce@microsoft.com>
 
-I don't get this part. Can you explain/give me an example where to look
-at?
+From: Matteo Croce <mcroce@microsoft.com>
 
-> > So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> > complain that you have a raw_spinlock_t acquired (the one from patch
-> > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-> 
-> Given that the slab allocator doesn't acquire any locks until it gets
-> a fair way in, wouldn't it make sense to allow a "shallow" allocation
-> while a raw spinlock is held?  This would require yet another GFP_ flag,
-> but that won't make all that much of a difference in the total.  ;-)
+Add XDP support to mvpp2. This series converts the driver to the
+page_pool API for RX buffer management, and adds native XDP support.
 
-That would be one way of dealing with. But we could go back to
-spinlock_t and keep the memory allocation even for RT as is. I don't see
-a downside of this. And we would worry about kfree_rcu() from real
-IRQ-off region once we get to it.
+XDP support comes with extack error reporting and statistics as well.
 
-> 							Thanx, Paul
-> 
-> > >  			bnode = (struct kfree_rcu_bulk_data *)
-> > >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> > >  		}
+These are the performance numbers, as measured by Sven:
 
-Sebastian
+SKB fwd page pool:
+Rx bps     390.38 Mbps
+Rx pps     762.46 Kpps
+
+XDP fwd:
+Rx bps     1.39 Gbps
+Rx pps     2.72 Mpps
+
+XDP Drop:
+eth0: 12.9 Mpps
+eth1: 4.1 Mpps
+
+Matteo Croce (4):
+  mvpp2: refactor BM pool init percpu code
+  mvpp2: use page_pool allocator
+  mvpp2: add basic XDP support
+  mvpp2: XDP TX support
+
+Sven Auhagen (1):
+  mvpp2: xdp ethtool stats
+
+ drivers/net/ethernet/marvell/Kconfig          |   1 +
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  57 +-
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 730 ++++++++++++++++--
+ 3 files changed, 718 insertions(+), 70 deletions(-)
+
+-- 
+2.26.2
+
