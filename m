@@ -2,185 +2,107 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA224C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72570C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF09206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WBlUeMpg"
+	by mail.kernel.org (Postfix) with ESMTP id 55502206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgGBWPR (ORCPT
+        id S1726347AbgGBWPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgGBWPQ (ORCPT
+        Thu, 2 Jul 2020 18:15:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45562 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgGBWPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:15:16 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808D6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 15:15:16 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id k6so25594263ili.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 15:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lcJAZjj8xewF97TwahN5y7Et+lrdL5BLJ9rAmJHlt1A=;
-        b=WBlUeMpgJQDKEDr6LjGfbHL+WCZTjSL7sdTk3Er+AOhPtLqBsqC8FMT3017u+4ojX4
-         NMLBegMXmRc6lbCAfWFJf75lGJnl9q5EP6QDTszdA9UcYkQyysEpsbtLr1iC7Xx0qsah
-         rUeoDIYTMOeWWLfa8FBqN4StcBcX89Qv6PPJsVkB8QNMlV9WmT67j3517lvJpCcntFhm
-         uBVmKsHhCyiEKXjai1Dpu9CwVlCVCAL97IiCiChQhWYRp5RR6MxKfyhMjGOZ0dWBheRJ
-         JyWtYovv+ZQAcoFrBYibIKxIt7hvLCSLv4zV4GRNLwPkJnf1lbnOvi2uwNwytCpODpCB
-         n4vw==
+        Thu, 2 Jul 2020 18:15:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l63so14102225pge.12;
+        Thu, 02 Jul 2020 15:15:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lcJAZjj8xewF97TwahN5y7Et+lrdL5BLJ9rAmJHlt1A=;
-        b=rOHXFFCAHFfcxrz9wBW8rWW3FSMfIffm2FoPgIxvroqCNyke5nS/6R9soRp/KK+EO4
-         4ZKvSXebh4Uew+lAA2kVI+YobhHWaKwFOUmPf0HfMye4Hv1e/60fZoWdpOjDiGanhKhN
-         dIj9uZLy2HpGKSi0a9dTVReMFwqkf8bjvyp6zhcqLhZNSnycJye0cXdEJf0oo3wvKGdJ
-         j7+GN0x7oeYQxbv1U4X5bEwrISrerz1AuWw66+r1ILiZr/B6skMob5hIJ+8zhpQkUqU1
-         urX0Ik/zu5FCefqW4LOX6APl5CsFdM/R8SmHUFhRA/vV6ee8sIMEpRPLniht1josFFF7
-         zTkg==
-X-Gm-Message-State: AOAM532HUUKDIjeejgUcOvnR6ECFCORSyw9C1DrolYJ6Wd00TGjO29Wz
-        an6prIpCaZev17ixF3GUO//zYe/ONzcigOGGUbnbIA==
-X-Google-Smtp-Source: ABdhPJwutdoMSAMPPZKN4tGNoXxVk81W7gmwa77ORx/9+vAJ3jHdPFToEHlBk3Jz0SPEj3C1/QpsDK9V8T2HdSvwIXM=
-X-Received: by 2002:a92:cd01:: with SMTP id z1mr14965787iln.103.1593728115606;
- Thu, 02 Jul 2020 15:15:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cIIMlqNaO5Unw1RzIf81LBsODZ5TPRnfcppyapVK2+8=;
+        b=baCryEPMc2o9h6sPJV2L9WDBPDa7Ab4XG012UyS2Ylkds3kNFpcFhuKQvLxGjFVv70
+         3S6PE4plnY6LouzFa5698EgS07womE1Sza+C1/vJCQvZ7nfb0V3TUPFd3pc7aRjmKgER
+         C7YUWZDbyAMOPdGPcYA2ZDgLvaeBSyTVZjApltkHiwhQf3LgyrK6Cs+y0yFRuW4kp+hy
+         fQ0LddFdaDDr2wJjxrlsJ3/1t/yRt25teh8DdZTW7FmYNXfWBQBVygaJnaLPcZHjVAS6
+         8UrQO2ayKIOjPsOCZUpsWBNup8e4Umn7r+2lbsBv0fLpNs0FUTBwuZnvJCB58ZoNNN49
+         pDQg==
+X-Gm-Message-State: AOAM532W9TwTcqT/IpoUHkMwg2ocaL3JCTYOrosHMf4kDrYS18B1KdH8
+        II+J3ukg5v9hLuA8YC/IuYgi07YE
+X-Google-Smtp-Source: ABdhPJx0l7QL1nHWSKOp/IBbD2Z+tjawC6rDDB+Qqd61qUaYwon66FNhvOJsrOo9YHIfr5rKiD4lfA==
+X-Received: by 2002:a63:d848:: with SMTP id k8mr12692149pgj.119.1593728151066;
+        Thu, 02 Jul 2020 15:15:51 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:18f8:9053:b0e3:60d4? ([2601:647:4802:9070:18f8:9053:b0e3:60d4])
+        by smtp.gmail.com with ESMTPSA id j17sm9157032pgn.87.2020.07.02.15.15.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 15:15:50 -0700 (PDT)
+Subject: Re: [PATCH 4.19 082/131] nvme: fix possible deadlock when I/O is
+ blocked
+To:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Anton Eidelman <anton@lightbitslabs.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200629153502.2494656-1-sashal@kernel.org>
+ <20200629153502.2494656-83-sashal@kernel.org> <20200702211743.GE5787@amd>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <e05ddf9e-1804-d297-47f4-c422d4f98cfb@grimberg.me>
+Date:   Thu, 2 Jul 2020 15:15:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200702213807.2511503-1-abhishekbh@google.com> <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
-In-Reply-To: <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
-From:   Abhishek Bhardwaj <abhishekbh@google.com>
-Date:   Thu, 2 Jul 2020 15:14:38 -0700
-Message-ID: <CA+noqojQ9FmvQ3k7r1Yh5bdrtDF4+eDd-Spo4PG7fdMSVxVP1w@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702211743.GE5787@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 3:01 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Hi--
->
-> On 7/2/20 2:38 PM, Abhishek Bhardwaj wrote:
-> > This change adds a new kernel configuration that sets the l1d cache
-> > flush setting at compile time rather than at run time.
-> >
-> > Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
-> >
-> > ---
-> >
-> > Changes in v2:
-> > - Fix typo in the help of the new KConfig.
-> >
-> >  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
-> >  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
-> >  2 files changed, 25 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> > index 0b71970d2d3d2..1dcc875cf5547 100644
-> > --- a/arch/x86/kernel/cpu/bugs.c
-> > +++ b/arch/x86/kernel/cpu/bugs.c
-> > @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
-> >  #if IS_ENABLED(CONFIG_KVM_INTEL)
-> >  EXPORT_SYMBOL_GPL(l1tf_mitigation);
-> >  #endif
-> > +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
-> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
-> > +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
-> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
-> > +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
-> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
-> > +#else
-> >  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
-> > +#endif
-> >  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
-> >
-> >  /*
-> > diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> > index b277a2db62676..d375dcedd447d 100644
-> > --- a/arch/x86/kvm/Kconfig
-> > +++ b/arch/x86/kvm/Kconfig
-> > @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
-> >        This option adds a R/W kVM module parameter 'mmu_audit', which allows
-> >        auditing of KVM MMU events at runtime.
-> >
-> > +config KVM_VMENTRY_L1D_FLUSH
-> > +     int "L1D cache flush settings (1-3)"
-> > +     range 1 3
-> > +     default "2"
-> > +     depends on KVM && X86 && X86_64
->
-> Why does this apply only to KVM?
-Sorry, I don't know what this means. The runtime options this aims to
-emulate applied to kvm driver.
-Hence, this kernel config applies to KVM ?
 
->
-> and the "X86 && X86_64" is more than is needed. Just "X86_64" alone
-> should be enough.
-Fixed in v3.
+> Hi!
+> 
+>> From: Sagi Grimberg <sagi@grimberg.me>
+>>
+>> [ Upstream commit 3b4b19721ec652ad2c4fe51dfbe5124212b5f581 ]
+>>
+>> Revert fab7772bfbcf ("nvme-multipath: revalidate nvme_ns_head gendisk
+>> in nvme_validate_ns")
+>>
+>> When adding a new namespace to the head disk (via nvme_mpath_set_live)
+>> we will see partition scan which triggers I/O on the mpath device node.
+>> This process will usually be triggered from the scan_work which holds
+>> the scan_lock. If I/O blocks (if we got ana change currently have only
+>> available paths but none are accessible) this can deadlock on the head
+>> disk bd_mutex as both partition scan I/O takes it, and head disk revalidation
+>> takes it to check for resize (also triggered from scan_work on a different
+>> path). See trace [1].
+>>
+>> The mpath disk revalidation was originally added to detect online disk
+>> size change, but this is no longer needed since commit cb224c3af4df
+>> ("nvme: Convert to use set_capacity_revalidate_and_notify") which already
+>> updates resize info without unnecessarily revalidating the disk (the
+> 
+> Unfortunately, v4.19-stable does not contain cb224c3af4df. According
+> to changelog, it seems it should be cherry-picked?
 
->
->
-> > +     help
-> > +      This setting determines the L1D cache flush behavior before a VMENTER.
-> > +      This is similar to setting the option / parameter to
-> > +      kvm-intel.vmentry_l1d_flush.
-> > +      1 - Never flush.
-> > +      2 - Conditionally flush.
-> > +      3 - Always flush.
-> > +
-> > +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-> > +# the virtualization menu.
-> > +source "drivers/vhost/Kconfig"
-This was a bad copy paste. Removed in v3.
->
->
-> I don't quite understand why this 'source' line is here.
-> Can you explain more about that, please?
->
-> It puts "VHOST drivers" in the menu 2 times, in 2 totally unrelated
-> places.  Seems like it could be confusing.
->
-> > +
-> >  endif # VIRTUALIZATION
->
->
-> --
-> ~Randy
->
+You are absolutely right,
 
+The reference commit is a part of the series:
+78317c5d58e6 ("scsi: Convert to use set_capacity_revalidate_and_notify")
+cb224c3af4df ("nvme: Convert to use set_capacity_revalidate_and_notify")
+3cbc28bb902b ("xen-blkfront.c: Convert to use 
+set_capacity_revalidate_and_notify")
+662155e2898d ("virtio_blk.c: Convert to use 
+set_capacity_revalidate_and_notify")
+e598a72faeb5 ("block/genhd: Notify udev about capacity change")
 
--- 
-Abhishek
+It would be cool if they are cherry picked, although they don't qualify
+as stable patches per se...
