@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E81CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EC120885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF06F2082F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653029;
-	bh=ONj7aKbHlOlgWW2rGPQ0J/OhBHcYbrSt/+Ss/muTSBQ=;
+	s=default; t=1593653032;
+	bh=ibe6rDC+3EONaG/gxl39s6UPgR4hUHTl63PztKAWdqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AzAH8bZYbXLzcQ/mjAU3rrviwRXhDnC+Eo+CxG3OgTifmAUggWSkkPi+ZQeVssDGY
-	 AR3nVRFA/TW53Zebg+Fy8IRTizEsViIFKp3jf1tOp5gRoguuRaT/XLI0ITSHJxn+jH
-	 NlPl+yC4dEs5CvDpGjEZ+ioGBluKWZ3HrCZMtHew=
+	b=pwfNVwcwmhwS783awN4/kq/G6LimiZ2KLMQcvvKDV/W1jCZ5QOnDPMCnBR6CFUxaX
+	 gD6/wzkGLUKLon2n5xyF8e0lTiVL7uQQ+dcqSUACr1Nstcx30pQkFx4OJKpqenrTW8
+	 eUc1eHnWEmIKLvb7y95uruuD3VLlUFOKrIXA3V8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgGBBXq (ORCPT
+        id S1728494AbgGBBXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728411AbgGBBXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:39 -0400
+        id S1728403AbgGBBXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B422083E;
-        Thu,  2 Jul 2020 01:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EC42085B;
+        Thu,  2 Jul 2020 01:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653018;
-        bh=ONj7aKbHlOlgWW2rGPQ0J/OhBHcYbrSt/+Ss/muTSBQ=;
+        s=default; t=1593653015;
+        bh=ibe6rDC+3EONaG/gxl39s6UPgR4hUHTl63PztKAWdqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2uwEfIuxQEe4d1vHrxOJ7TvJO8s4QfgyLUvmknhf9xO39+/33f7kmmXxJWjRgemUt
-         koLb4gpJE1u/Yf2WoGT1oFuyt5d1G3Nri3hO/XMuuaIV0fUJEydem0gjhOvbVVe59V
-         MqCFeog9hWAj8kIins1AwporA2vikWe0FB6mf1wM=
+        b=iTLgrp5aPN4Ilg53I+byGii9URIKuYqtXcHAEUGGU0D5FOyGIptL5Hamqi+4E90h4
+         Tj9GH8ao5v748d+sNoTik8Wa2ugVxIsVopTG71bb3YIeGszhgDa38CxCNi5Ox60rS0
+         IpRweK3Imc4/gdwD2AsxDJiNKm7DDdeFwm35C8m4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 35/53] s390/kasan: fix early pgm check handler execution
-Date:   Wed,  1 Jul 2020 21:21:44 -0400
-Message-Id: <20200702012202.2700645-35-sashal@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>, Ashok Raj <ashok.raj@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.7 32/53] iommu/vt-d: Don't apply gfx quirks to untrusted devices
+Date:   Wed,  1 Jul 2020 21:21:41 -0400
+Message-Id: <20200702012202.2700645-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -60,40 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Rajat Jain <rajatja@google.com>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit 67e8a5b18d41af9298db5c17193f671f235cce01 ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-4-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index cd241ee66eff4..0782772318580 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -170,6 +170,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index fde7aba49b746..a29ed14839c41 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -6200,6 +6200,23 @@ intel_iommu_domain_set_attr(struct iommu_domain *domain,
+ 	return ret;
+ }
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
++/*
++ * Check that the device does not live on an external facing PCI port that is
++ * marked as untrusted. Such devices should not be able to apply quirks and
++ * thus not be able to bypass the IOMMU restrictions.
++ */
++static bool risky_device(struct pci_dev *pdev)
++{
++	if (pdev->untrusted) {
++		pci_info(pdev,
++			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
++			 pdev->vendor, pdev->device);
++		pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
++		return true;
++	}
++	return false;
++}
++
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+@@ -6229,6 +6246,9 @@ const struct iommu_ops intel_iommu_ops = {
+ 
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6270,6 +6290,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6300,6 +6323,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (risky_device(dev))
++		return;
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6333,6 +6359,12 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6342,6 +6374,11 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
 -- 
 2.25.1
 
