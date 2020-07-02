@@ -2,63 +2,66 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E88C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898CD20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B9420874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpxj/6h7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpO8j+oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgGBGXa (ORCPT
+        id S1726460AbgGBGXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
+        Thu, 2 Jul 2020 02:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGBGX3 (ORCPT
+        with ESMTP id S1726254AbgGBGXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:23:29 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F06C08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:23:29 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id u186so18852459qka.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:23:29 -0700 (PDT)
+        Thu, 2 Jul 2020 02:23:49 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018B0C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:23:49 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id h10so3527742ybk.19
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=POlxROtWP+TdhSt/IwD+NQVip9L3Y5x9YnPtFWg67x4=;
-        b=rpxj/6h7LxbFJdRPv4XUXmB3CwjKxdzrNxrDw479CqOJvCJBa15OGqM6qLMrR+P2hV
-         /ZnsX4v6hMyD7EThA1EX0nPBd92+MTQq4vMrWxCKUC6IiIPD/MHr4xj34XM0Izk3HgUZ
-         yDd2TgxNnkowIC3h7jOoe7mNev/g75SAz4x1RxRc/m1Hqa2GqJUB/B2v/lK0HMBrRiZn
-         ehiKDNUi05kNQiJtsQSDHt/ZY7KORFmfB5eedBikViLh061NVy0Ejfu2S7JLg+MxNaY1
-         bYCE0U5smeuCVoWoApxKSkUbfIT3tDjD/y+M5jRqHDoy2G8EObzbhe6DDRCDqVyv8Y4D
-         SeWQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=MaFXFUTySiLKYk3Z8Ey8ljkWyigRLA9QlN8KpEVxaas=;
+        b=HpO8j+ooh+DAxXHg28sv9p6lhCrB1r7AJwKn3FWvCL7Paa0RV1y7CZudbCkjxY0KV+
+         n72PRRaqDGQhUZQHNggZCAWf7jI+GiM6bpUiRpXsNkrvTrI6WpupwUDmvs6ayML5k9hA
+         uWuCFog9HN3f7U6A3Ch77vna3rMlKTNhfdfWrCbG3KJc9LXr1fbsrLjvHAbeazQmzTrD
+         Qeya3T0QHKtAWY5tfs04Ewd9Fqqvh+LsDCBn2pnd6xoeOrTCHYtQGCkG/CJ2e5AIyOd9
+         14OCWdylxbNxCvsVJyeGHS6zkW5Uox2NesJFpP2g6rzPGStCszqKfAdz7mbYVKv9fpu8
+         pasA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=POlxROtWP+TdhSt/IwD+NQVip9L3Y5x9YnPtFWg67x4=;
-        b=pmNM/fO4OaqYmO/AI7vtPg6HnGaEnGt8Zx2zm/0iADJwmATBdP9JnzyoSx92oukeMW
-         nleH+Dq0Ps6KBG4mihhoi3IvlW4S62R2iYdiBLRZTn95D9qzzB4MKQnN3Y0/x86Fo6hl
-         VJyH7ot3TFeDEfrvdupj79tPOIFcPLpVO/ZQhK4GEmbIDGLC55aRdApWXHILSRAbWZ/i
-         xGDtElpc5WsmYMz1sIhbfN1ClG5pvwaZBQdeNS4+KnkxFdfssO9eZn98kHHGs/b/ywou
-         /Zxd4OXdgA9cQCSE+4n0MfguDSwdYOec8kRCu/9LWwzWUomFZAp7Aho3lgA0h+6m8fAM
-         iT0A==
-X-Gm-Message-State: AOAM533km8ojPvrqu6Llm5kzGmnYZCIxOdjXzgfh2NOQ1BClBnlglJll
-        2Xa7gCn/NYsSnll6hVWnjO+75kz/N5Q5
-X-Google-Smtp-Source: ABdhPJy5eHr/trRqCcGcW58GmHYqTpcc6XIc1oWgRIjo/XEkCmsHA7/SrT3ezbzBSGmGU44rU6GXmA+dLl80
-X-Received: by 2002:ad4:4645:: with SMTP id y5mr29421993qvv.163.1593671008207;
- Wed, 01 Jul 2020 23:23:28 -0700 (PDT)
-Date:   Thu,  2 Jul 2020 16:23:16 +1000
-Message-Id: <20200702062320.2903147-1-amistry@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=MaFXFUTySiLKYk3Z8Ey8ljkWyigRLA9QlN8KpEVxaas=;
+        b=nhFlNNPxlJEcCbdI5htejXAaW/x2OcFwKXu3rdFor7ldawLc4oJZ+YqenP/HMFXRZj
+         3EP5OnEW2iL70ohR0M6aAH2buGNpJVvGRrF1F00mAJxq/+gWCtIuFsXT7JKK3R9OPJ+s
+         lYzzrImJ+bDUMDKOMIqHdquqsFVa6ykacdYWrYkrU/LOBC5dONHkkwZ9isK+eMANA7uS
+         1zY79p6Wf8rF0uonOxjPffBB4ccv4mEU2qd4YWdxnyu2BHyGB/d4FFvKVL6bgf5rCpQ6
+         SI4WXUWX+a83hy6cenMaGwXRdIoSMtkzvqgLFTrtF4C3GqNfJkOiI6v1TFYn7vIKNfk8
+         8vxg==
+X-Gm-Message-State: AOAM532bDrVLUTIkekdg/PP3g43aa/FRFz+R+lRrphj1MrcbjicqhZmW
+        Bb+3qY4T3gddQhrlFKJ42BFy5KUQlzBN
+X-Google-Smtp-Source: ABdhPJyX4ZwBQKR2MfzfX9ehWTPofcH8pisBfi1+UkVEQTv0xTZgjt23xNzESqt2av4NzoI9gb5MuUXtyPXs
+X-Received: by 2002:a25:9904:: with SMTP id z4mr47219203ybn.146.1593671028182;
+ Wed, 01 Jul 2020 23:23:48 -0700 (PDT)
+Date:   Thu,  2 Jul 2020 16:23:17 +1000
+In-Reply-To: <20200702062320.2903147-1-amistry@google.com>
+Message-Id: <20200702162231.v2.1.Icf69e2041b1af4548347018186c3ba6310f53e66@changeid>
 Mime-Version: 1.0
+References: <20200702062320.2903147-1-amistry@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 0/4] regulator: mt6397: Implement of_map_mode
- regulator_desc function
+Subject: [PATCH v2 1/4] regulator: mt6397: Move buck modes into header file
 From:   Anand K Mistry <amistry@google.com>
 To:     linux-mediatek@lists.infradead.org
 Cc:     hsin-hsiung.wang@mediatek.com, drinkcat@chromium.org,
@@ -74,34 +77,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for being able to change regulator modes for
-the mt6397 regulator. This is needed to allow the voltage scaling
-support in the MT8173 SoC to be used on the elm (Acer Chromebook R13)
-and hana (several Lenovo Chromebooks) devices.
+This will allow device trees to make use of these constants.
 
-Without a of_map_mode implementation, the regulator-allowed-modes
-devicetree field is skipped, and attempting to change the regulator mode
-results in an error:
-[    1.439165] vpca15: mode operation not allowed
+Signed-off-by: Anand K Mistry <amistry@google.com>
+---
 
-Changes in v2:
-- Introduce constants in dt-bindings
-- Improve conditional readability
+Changes in v2: None
 
-Anand K Mistry (4):
-  regulator: mt6397: Move buck modes into header file
-  dt-bindings: regulator: mt6397: Document valid modes
-  regulator: mt6397: Implement of_map_mode
-  arm64: dts: mediatek: Update allowed mt6397 regulator modes for elm
-    boards
-
- .../bindings/regulator/mt6397-regulator.txt     |  3 +++
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi    |  4 +++-
- drivers/regulator/mt6397-regulator.c            | 17 ++++++++++++++---
- .../regulator/mediatek,mt6397-regulator.h       | 15 +++++++++++++++
- 4 files changed, 35 insertions(+), 4 deletions(-)
+ drivers/regulator/mt6397-regulator.c              |  4 +---
+ .../regulator/mediatek,mt6397-regulator.h         | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
  create mode 100644 include/dt-bindings/regulator/mediatek,mt6397-regulator.h
 
+diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
+index 269c2a6028e8..d51e98ce1138 100644
+--- a/drivers/regulator/mt6397-regulator.c
++++ b/drivers/regulator/mt6397-regulator.c
+@@ -13,9 +13,7 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/mt6397-regulator.h>
+ #include <linux/regulator/of_regulator.h>
+-
+-#define MT6397_BUCK_MODE_AUTO	0
+-#define MT6397_BUCK_MODE_FORCE_PWM	1
++#include <dt-bindings/regulator/mediatek,mt6397-regulator.h>
+ 
+ /*
+  * MT6397 regulators' information
+diff --git a/include/dt-bindings/regulator/mediatek,mt6397-regulator.h b/include/dt-bindings/regulator/mediatek,mt6397-regulator.h
+new file mode 100644
+index 000000000000..99869a8665cf
+--- /dev/null
++++ b/include/dt-bindings/regulator/mediatek,mt6397-regulator.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _DT_BINDINGS_REGULATOR_MEDIATEK_MT6397_H_
++#define _DT_BINDINGS_REGULATOR_MEDIATEK_MT6397_H_
++
++/*
++ * Buck mode constants which may be used in devicetree properties (eg.
++ * regulator-initial-mode, regulator-allowed-modes).
++ * See the manufacturer's datasheet for more information on these modes.
++ */
++
++#define MT6397_BUCK_MODE_AUTO		0
++#define MT6397_BUCK_MODE_FORCE_PWM	1
++
++#endif
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
