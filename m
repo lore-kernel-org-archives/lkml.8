@@ -2,173 +2,119 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C484FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14C120870
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kPgariWQ"
+	by mail.kernel.org (Postfix) with ESMTP id 627D620720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgGBQZS (ORCPT
+        id S1726736AbgGBQZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgGBQZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:25:17 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAFCC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 09:25:17 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so27665717wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 09:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7AvexTnflQTx+HPLZVCvwg7Wb7VYLoxDJot1+g9yUDc=;
-        b=kPgariWQ1He9Btx0hrJy3AppzHXfqTkj15F3Qsuo8IWxk8m6yiKbqO8elL/FsOszcJ
-         A4acPaHcp9u7XtZlLpr4OnGnj6majx9m7L23go8BKcWrq8xmiGjAFcdjJgKtOaQ0AQN7
-         wZJeLz+fcaGmCTPqlgAFEyVkqjYHN3aI+p3/GnWLZh6NWLQi4suVrqeyFOy76dO8u/E+
-         wLeXCOcM4Sziet7tPPAkMZTWGQIUiez7YJScOmXog1s3DPRxJi0o7gBYJ7UD2ZKSWbPg
-         b9+3lmqZkKso7p7g1B3cXtdtn7ICVqOV0FtV7EjIH1DTSQWuXztVqyby6Hwsh7XXWxw+
-         JzVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7AvexTnflQTx+HPLZVCvwg7Wb7VYLoxDJot1+g9yUDc=;
-        b=TKZVTVwtK/wwIdW8HiK8gTAeDOFUiuVP5Ix8CkRa6nJbGdUxVhWFQi+JSwPuGzI5Og
-         JP3sCM5ZtQJne41WmJIZc63wO2kn4QzgDJaSaexsMyyMnsWIeggr7YTS3V5Vb3EDQ7F6
-         qXgabdsI1FunB9MPBZLGH18YbbYWsmN6T6+GwPK3TelDLIGU7YYiFaQ39ETjY4lIvTa9
-         IdM3Kouuku/Xque7cn5tm4ybQjMN7LurnkJcIRNZCd8EEFXB23lGlMMMy0cSW6fyXu/X
-         3Z0U286WcwnXry+Q795loOlw9eFAvund2RxadoTZca9q5O2czSSKXBepxFSw2OCKhwUD
-         O37w==
-X-Gm-Message-State: AOAM5336nkxr3e09KgvLJKjjExH1drJ686juu46Sys913Kmo4IKIegxY
-        7iMqlEoQ9Yb4GAr9lekEmxicsA==
-X-Google-Smtp-Source: ABdhPJzm9+NQZ1kati+9qc7RUkch8SPFB0vQJEmu3uSKR9jiTNVW/G/QZ8yYF+/SqdYJzZDF+Ylv+A==
-X-Received: by 2002:a05:600c:2249:: with SMTP id a9mr31061773wmm.163.1593707115947;
-        Thu, 02 Jul 2020 09:25:15 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id z25sm10428001wmk.28.2020.07.02.09.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 09:25:15 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH RFT] iio: adc: xilinx-xadc: use devm_krealloc()
-Date:   Thu,  2 Jul 2020 18:25:09 +0200
-Message-Id: <20200702162509.11254-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Thu, 2 Jul 2020 12:25:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:40712 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgGBQZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:25:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E17621FB;
+        Thu,  2 Jul 2020 09:25:47 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E07CC3F71E;
+        Thu,  2 Jul 2020 09:25:46 -0700 (PDT)
+References: <20200701190656.10126-1-valentin.schneider@arm.com> <20200701190656.10126-3-valentin.schneider@arm.com> <20200702121536.GA765585@google.com> <jhjk0zm7zv8.mognet@arm.com> <20200702154514.GA1072702@google.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH v3 2/7] sched/topology: Define and assign sched_domain flag metadata
+In-reply-to: <20200702154514.GA1072702@google.com>
+Date:   Thu, 02 Jul 2020 17:25:41 +0100
+Message-ID: <jhjfta9994q.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use the managed variant of krealloc() and shrink the code a bit.
+On 02/07/20 16:45, Quentin Perret wrote:
+> On Thursday 02 Jul 2020 at 15:31:07 (+0100), Valentin Schneider wrote:
+>> There an "interesting" quirk of asym_cpu_capacity_level() in that it does
+>> something slightly different than what it says on the tin: it detects
+>> the lowest topology level where *the biggest* CPU capacity is visible by
+>> all CPUs. That works just fine on big.LITTLE, but there are questionable
+>> DynamIQ topologies that could hit some issues.
+>>
+>> Consider:
+>>
+>> DIE [                   ]
+>> MC  [             ][    ] <- sd_asym_cpucapacity
+>>      0   1   2   3  4  5
+>>      L   L   B   B  B  B
+>>
+>> asym_cpu_capacity_level() would pick MC as the asymmetric topology level,
+>> and you can argue either way: it should be DIE, because that's where CPUs 4
+>> and 5 can see a LITTLE, or it should be MC, at least for CPUs 0-3 because
+>> there they see all CPU capacities.
+>
+> Right, I am not looking forward to these topologies...
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-NOTE: this patch depends on the series adding devm_krealloc() which is
-not yet accepted.
+I'll try my best to prevent those from seeing the light of day, but you
+know how this works...
 
-Greg,
+>> Say there are two clusters in the system, one with a lone big CPU and the
+>> other with a mix of big and LITTLE CPUs:
+>>
+>> DIE [                ]
+>> MC  [             ][ ]
+>>      0   1   2   3  4
+>>      L   L   B   B  B
+>>
+>> asym_cpu_capacity_level() will figure out that the MC level is the one
+>> where all CPUs can see a CPU of max capacity, and we will thus set
+>> SD_ASYM_CPUCAPACITY at MC level for all CPUs.
+>>
+>> That lone big CPU will degenerate its MC domain, since it would be alone in
+>> there, and will end up with just a DIE domain. Since the flag was only set
+>> at MC, this CPU ends up not seeing any SD with the flag set, which is
+>> broken.
+>
+> +1
+>
+>> Rather than clearing dflags at every topology level, clear it before
+>> entering the topology level loop. This will properly propagate upwards
+>> flags that are set starting from a certain level.
+>
+> I'm feeling a bit nervous about that asymmetry -- in your example
+> select_idle_capacity() on, say, CPU3 will see less CPUs than on CPU4.
+> So, you might get fun side-effects where all task migrated to CPUs 0-3
+> will be 'stuck' there while CPU 4 stays mostly idle.
+>
 
-here's just a quick example of a second user of devm_krealloc(). This time
-we're reallocing memory allocated with devm_kmemdup(). Hopefully this is
-enough to prove this helper is useful enough to merge it.
+It's actually pretty close to what happens with the LLC domain on SMP -
+select_idle_sibling() doesn't look outside of it. The wake_affine() stuff
+might steer the task towards a different LLC, but that's about it for
+wakeups. We rely on load balancing (fork/exec, newidle, nohz and periodic)
+to spread this further - and we would here too.
 
-I can't test it due to lack of HW though.
+It gets "funny" for EAS when we aren't overutilized and thus can't rely on
+load balancing; at least misfit ought to still work. It *is* a weird
+topology, for sure.
 
- drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> I have a few ideas to avoid that (e.g. looking at the rd span in
+> select_idle_capacity() instead of sd_asym_cpucapacity) but all this is
+> theoretical, so I'm happy to wait for a real platform to be released
+> before we worry too much about it.
+>
+> In the meantime:
+>
+> Reviewed-by: Quentin Perret <qperret@google.com>
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index d7fecab9252e..5bdbe502e983 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1094,6 +1094,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
- static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	unsigned int *conf)
- {
-+	struct device *dev = indio_dev->dev.parent;
- 	struct xadc *xadc = iio_priv(indio_dev);
- 	struct iio_chan_spec *channels, *chan;
- 	struct device_node *chan_node, *child;
-@@ -1138,7 +1139,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
- 	}
- 
--	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
-+	channels = devm_kmemdup(dev, xadc_channels,
-+				sizeof(xadc_channels), GFP_KERNEL);
- 	if (!channels)
- 		return -ENOMEM;
- 
-@@ -1174,8 +1176,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	of_node_put(chan_node);
- 
- 	indio_dev->num_channels = num_channels;
--	indio_dev->channels = krealloc(channels, sizeof(*channels) *
--					num_channels, GFP_KERNEL);
-+	indio_dev->channels = devm_krealloc(dev, channels,
-+					    sizeof(*channels) * num_channels,
-+					    GFP_KERNEL);
- 	/* If we can't resize the channels array, just use the original */
- 	if (!indio_dev->channels)
- 		indio_dev->channels = channels;
-@@ -1229,14 +1232,14 @@ static int xadc_probe(struct platform_device *pdev)
- 
- 	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
- 	if (ret)
--		goto err_device_free;
-+		return ret;
- 
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
- 		ret = iio_triggered_buffer_setup(indio_dev,
- 			&iio_pollfunc_store_time, &xadc_trigger_handler,
- 			&xadc_buffer_ops);
- 		if (ret)
--			goto err_device_free;
-+			return ret;
- 
- 		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
- 		if (IS_ERR(xadc->convst_trigger)) {
-@@ -1354,8 +1357,6 @@ static int xadc_probe(struct platform_device *pdev)
- err_triggered_buffer_cleanup:
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
- 		iio_triggered_buffer_cleanup(indio_dev);
--err_device_free:
--	kfree(indio_dev->channels);
- 
- 	return ret;
- }
-@@ -1375,7 +1376,6 @@ static int xadc_remove(struct platform_device *pdev)
- 	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	clk_disable_unprepare(xadc->clk);
- 	kfree(xadc->data);
--	kfree(indio_dev->channels);
- 
- 	return 0;
- }
--- 
-2.26.1
-
+Thanks!
