@@ -2,181 +2,101 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E32C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A416C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6DD207E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NTUQWz78"
+	by mail.kernel.org (Postfix) with ESMTP id 7BB2F20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgGBGnq (ORCPT
+        id S1726823AbgGBGoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:43:46 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:44303 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726382AbgGBGnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:43:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593672221; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=6f1hBImubSguouxbGX6vkeK05F05hauxyhVr5E0zwrU=; b=NTUQWz78mvzqqVJccKICzjdos4zaWm09imXkTD20HuxY2T7/6XLtkeI4G8u6vS0pnRSgOJMT
- TdXA5XHNVjftmi1JsdWwyBi9zOfDv+f7PORqYw98+UU7DHGbRi2+9bUns57J6yWDliGVs9ET
- 5wmwgGKUVU96zSWmqOZ4i+GqHa8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5efd8205c76a4e7a2a8c81a3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 06:43:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B350FC4339C; Thu,  2 Jul 2020 06:43:16 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6580EC433CA;
-        Thu,  2 Jul 2020 06:43:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6580EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
-        <viktor_jaegerskuepper@freenet.de>
-Cc:     Roman Mamedov <rm@romanrm.net>, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
-References: <20200404041838.10426-1-hqjagain@gmail.com>
-        <20200404041838.10426-6-hqjagain@gmail.com>
-        <20200621020428.6417d6fb@natsu> <87lfkff9qe.fsf@codeaurora.org>
-        <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de>
-Date:   Thu, 02 Jul 2020 09:43:11 +0300
-In-Reply-To: <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de> ("Viktor
-        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Wed, 1 Jul 2020
- 17:53:27 +0200")
-Message-ID: <87imf6beo0.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 2 Jul 2020 02:44:00 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2267 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgGBGoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:44:00 -0400
+IronPort-SDR: sK27BxKgkpmISPrlVOPWObmx+4PFGybaT8u+bCESPR4u7QPASZ0ZM0sKDgRRzAfl3D/nBgQOS2
+ SEIkPrWRKYRg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="164869501"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="164869501"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 23:43:59 -0700
+IronPort-SDR: rHXL0bKhROcvkEdkF2ZKwjC3xqd7t/KLFz9uDJIbOqWn8hBk9exjsQ3r0r4ETueAaQIKkKQqz6
+ 3f7CdnJwMwNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="425846485"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by orsmga004.jf.intel.com with ESMTP; 01 Jul 2020 23:43:57 -0700
+Subject: Re: [PATCH 14/15] mmc: host: cqhci: Demote faux kerneldoc header down
+ to basic comment block
+To:     Lee Jones <lee.jones@linaro.org>, ulf.hansson@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>
+References: <20200701124702.908713-1-lee.jones@linaro.org>
+ <20200701124702.908713-15-lee.jones@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <049e68ad-50fb-31d6-0a94-3f7c676a75e7@intel.com>
+Date:   Thu, 2 Jul 2020 09:43:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <20200701124702.908713-15-lee.jones@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
+On 1/07/20 3:47 pm, Lee Jones wrote:
+> cqhci_host_alloc_tdl()'s function header is the only one in
+> kerneldoc format.  Which seems odd as it's not part of an
+> external API and isn't referenced anywhere else.  Seeing as
+> there has also been no attempt to describe the expected
+> function arguments either, we're going to assume that this is
+> not actually a bona fide kerneldoc use-case.
+> 
+> Fixes the following W=1 kernel build warning:
+> 
+>  drivers/mmc/host/cqhci.c:163: warning: Function parameter or member 'cq_host' not described in 'cqhci_host_alloc_tdl'
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ritesh Harjani <riteshh@codeaurora.org>
+> Cc: Asutosh Das <asutoshd@codeaurora.org>
+> Cc: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-> Kalle Valo writes:
->> Roman Mamedov <rm@romanrm.net> writes:
->>=20
->>> On Sat,  4 Apr 2020 12:18:38 +0800
->>> Qiujun Huang <hqjagain@gmail.com> wrote:
->>>
->>>> In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
->>>> usb_ifnum_to_if(urb->dev, 0)
->>>> But it isn't always true.
->>>>
->>>> The case reported by syzbot:
->>>> https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.=
-com
->>>> usb 2-1: new high-speed USB device number 2 using dummy_hcd
->>>> usb 2-1: config 1 has an invalid interface number: 2 but max is 0
->>>> usb 2-1: config 1 has no interface number 0
->>>> usb 2-1: New USB device found, idVendor=3D0cf3, idProduct=3D9271, bcdD=
-evice=3D
->>>> 1.08
->>>> usb 2-1: New USB device strings: Mfr=3D1, Product=3D2, SerialNumber=3D3
->>>> general protection fault, probably for non-canonical address
->>>> 0xdffffc0000000015: 0000 [#1] SMP KASAN
->>>> KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
->>>> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
->>>>
->>>> Call Trace
->>>> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
->>>> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
->>>> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
->>>> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
->>>> expire_timers kernel/time/timer.c:1449 [inline]
->>>> __run_timers kernel/time/timer.c:1773 [inline]
->>>> __run_timers kernel/time/timer.c:1740 [inline]
->>>> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
->>>> __do_softirq+0x21e/0x950 kernel/softirq.c:292
->>>> invoke_softirq kernel/softirq.c:373 [inline]
->>>> irq_exit+0x178/0x1a0 kernel/softirq.c:413
->>>> exiting_irq arch/x86/include/asm/apic.h:546 [inline]
->>>> smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
->>>> apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->>>>
->>>> Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotm=
-ail.com
->>>> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
->>>
->>> This causes complete breakage of ath9k operation across all the stable =
-kernel
->>> series it got backported to, and I guess the mainline as well. Please s=
-ee:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
->>> https://bugzilla.redhat.com/show_bug.cgi?id=3D1848631
->>=20
->> So there's no fix for this? I was under impression that someone fixed
->> this, but maybe I'm mixing with something else.
->>=20
->> If this is not fixed can someone please submit a patch to revert the
->> offending commit (or commits) so that we get ath9k working again?
->>=20
->
-> This reverts commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 ("ath9k: Fix=
- general protection fault
-> in ath9k_hif_usb_rx_cb") because the driver gets stuck like this:
->
->   [    5.778803] usb 1-5: Manufacturer: ATHEROS
->   [   21.697488] usb 1-5: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.fw=
- requested
->   [   21.701377] usbcore: registered new interface driver ath9k_htc
->   [   22.053705] usb 1-5: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1=
-.4.0.fw, size: 51008
->   [   22.306182] ath9k_htc 1-5:1.0: ath9k_htc: HTC initialized with 33 cr=
-edits
->   [  115.708513] ath9k_htc: Failed to initialize the device
->   [  115.708683] usb 1-5: ath9k_htc: USB layer deinitialized
->
-> Reported-by: Roman Mamedov <rm@romanrm.net>
-> Ref: https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
-> Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_us=
-b_rx_cb")
-> Tested-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.d=
-e>
-> Signed-off-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freen=
-et.de>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->
-> I couldn't find any fix for this, so here is the patch which reverts the
-> offending commit. I have tested it with 5.8.0-rc3 and with 5.7.4.
->
-> Feel free to change the commit message if it is necessary or appropriate,=
- I am
-> just a user affected by this bug.
+>  drivers/mmc/host/cqhci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index 75934f3c117eb..8cc277b4ffe9e 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -144,7 +144,7 @@ static void cqhci_dumpregs(struct cqhci_host *cq_host)
+>  		CQHCI_DUMP(": ===========================================\n");
+>  }
+>  
+> -/**
+> +/*
+>   * The allocated descriptor table for task, link & transfer descritors
+>   * looks like:
+>   * |----------|
+> 
 
-This was badly formatted:
-
-https://patchwork.kernel.org/patch/11636783/
-
-But v2 looks correct:
-
-https://patchwork.kernel.org/patch/11637341/
-
-Thanks, I'll take a closer look at this as soon as I can.
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
