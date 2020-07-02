@@ -2,473 +2,270 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28625C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2255C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7812073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x+EHr3Cg"
+	by mail.kernel.org (Postfix) with ESMTP id 99A132089D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593675145;
+	bh=9uMGCANmWxBqzGlyaZHnPio5yurOzxTiArpPB34Pebc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vziYAk4llCFi1J9QYlwWl2CEl02H2hu8z8dZMFkVxQujkOzuD5EZEOMT0AZAO/EvT
+	 OOhxk1bErg5DP+FJHKsNlV71mVdLC2/rowVheqzA1kS8cNRDmJdV7KglsljEFDlALs
+	 oVk4jkN8Q5CBy4xHweYM3j0HYmVtY8Hp0XIVuOE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgGBHbL (ORCPT
+        id S1727936AbgGBHcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgGBHbJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:31:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8966C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:31:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so26894323wrv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TeNO9fvZBv4kp0oe/KUun/TtlQ2KC3o5EXDHauIoTOY=;
-        b=x+EHr3Cg3DlzD0LJJmEIY4F3k9HhgNMafAXT5KX39PMsPJmnc14UFZ9bgosN9aoky5
-         qBYQUXGbSh64n6AguwEpujbGGTRK9o0T2LTllFDViR6MG7X83v3SjRx/WxJHgtJzl4C/
-         ViXhV7Kt8f23Q6XIzrnPwJgQCCYSYaeBjoT8Ck+iVROygtkFTsOvfMwG4/PjIHkS3mae
-         RA/C4XMW5EnrCPbZWiyh2lYxPlilJi1ZbJGxS7T0I+uKunDfaShj9zWfJG6osVDs/+up
-         e7pb5a8IDd9+ySOq4+zjhVqVwpmgcO9ENh2tR16Qx7Lv2XlI4CrzniyuM/EF+nAwVtCs
-         OKEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TeNO9fvZBv4kp0oe/KUun/TtlQ2KC3o5EXDHauIoTOY=;
-        b=PDggJvmntXEb3XWeFIN13Fnkys8KT/nFCcTe5IeFEPs1pVG+Azoe7M3eAirRuFEwuh
-         JW4LqWiFux3hW6Wkbf2PZXFR7pVvdsIGZ1rZo8Ln9WRC8xa7dAGajBr0XVfL+o/OivpB
-         4PE0oJwi47ruilPLumxQZEaTR4Exfr0F8bKKYBWLONx4LbE1FdVUFjkZ/H2IzZmOpLNd
-         xuIprCvRT1jD1kxdwkHPvxIK57g5qnASPayPPbEP8j82bDFI9scLTTzBKgCWwUU+aY+X
-         gkWXgGJHSJEBtwu+F/3DhO3mFvifv7DyN271Q9GSqD5MkdJ+5qXBpeNQa2SR8qlfudr1
-         D1ww==
-X-Gm-Message-State: AOAM530VRoooPBRq0Y/hKS91mLoBCREdnlClk1arE4DfnnQ1rYt7FJYB
-        Y+pZ0Z4roFDWtSZNjskpIV4VsiZX6nA=
-X-Google-Smtp-Source: ABdhPJwbGVQD75dvLJX42ivcJBkDhhpTJYy3DStS2YXIVX1ehCFXTgp374qjs/I2K1Vju+loXr9fog==
-X-Received: by 2002:adf:9148:: with SMTP id j66mr27968405wrj.311.1593675067451;
-        Thu, 02 Jul 2020 00:31:07 -0700 (PDT)
-Received: from apalos.home (athedsl-4423884.home.otenet.gr. [79.130.240.188])
-        by smtp.gmail.com with ESMTPSA id n14sm10252956wro.81.2020.07.02.00.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 00:31:06 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 10:31:04 +0300
-From:   ilias.apalodimas@linaro.org
-To:     Matteo Croce <mcroce@linux.microsoft.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
-        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH net-next 2/4] mvpp2: use page_pool allocator
-Message-ID: <20200702073104.GA496703@apalos.home>
-References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
- <20200630180930.87506-3-mcroce@linux.microsoft.com>
+        Thu, 2 Jul 2020 03:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbgGBHcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:32:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A882073E;
+        Thu,  2 Jul 2020 07:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593675142;
+        bh=9uMGCANmWxBqzGlyaZHnPio5yurOzxTiArpPB34Pebc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xtAUKiF9XpawbXtRL3SVO2WstqWIFh8gKEXMnezWRDH6VBXFMuet1kN0lJRAQGk7U
+         wks4t4KltOcfWeoBt7MF071uhuTRxXBqaKUmCS7Pxc+jKmXfoVm13MoUwax5Yz+1Qa
+         3Kp5HekQXyKIgWlreAnE1+523V+MlF/l2UlGjnVA=
+Date:   Thu, 2 Jul 2020 09:32:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oliver O'Halloran <oohall@gmail.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+Message-ID: <20200702073226.GB1073011@kroah.com>
+References: <20200630044943.3425049-1-rajatja@google.com>
+ <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com>
+ <20200630125216.GA1109228@kroah.com>
+ <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+ <20200630153816.GD1785141@kroah.com>
+ <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+ <20200630170012.GB1894898@kroah.com>
+ <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
+ <CAOSf1CEZ82iXhYnig0UScS+oRRaxHzSCge9LbA1hW3NaQAiSxQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630180930.87506-3-mcroce@linux.microsoft.com>
+In-Reply-To: <CAOSf1CEZ82iXhYnig0UScS+oRRaxHzSCge9LbA1hW3NaQAiSxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matteo, 
-
-Thanks for working on this!
-
-On Tue, Jun 30, 2020 at 08:09:28PM +0200, Matteo Croce wrote:
-> From: Matteo Croce <mcroce@microsoft.com>
+On Thu, Jul 02, 2020 at 03:23:23PM +1000, Oliver O'Halloran wrote:
+> On Thu, Jul 2, 2020 at 4:07 AM Rajat Jain <rajatja@google.com> wrote:
+> >
+> > *snip*
+> >
+> > > > I guess it would make sense to have an attribute for user space to
+> > > > write to in order to make the kernel reject device plug-in events
+> > > > coming from a given port or connector, but the kernel has no reliable
+> > > > means to determine *which* ports or connectors are "safe", and even if
+> > > > there was a way for it to do that, it still may not agree with user
+> > > > space on which ports or connectors should be regarded as "safe".
+> > >
+> > > Again, we have been doing this for USB devices for a very long time, PCI
+> > > shouldn't be any different.  Why people keep ignoring working solutions
+> > > is beyond me, there's nothing "special" about PCI devices here for this
+> > > type of "worry" or reasoning to try to create new solutions.
+> > >
+> > > So, again, I ask, go do what USB does, and to do that, take the logic
+> > > out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
+> > > code. Why the original submitter keeps ignoring my request to do this
+> > > is beyond me, I guess they like making patches that will get rejected :(
+> >
+> > IMHO I'm actually trying to precisely do what I think was the
+> > conclusion of our discussion, and then some changes because of the
+> > further feedback I received on those patches. Let's take a step back
+> > and please allow me to explain how I got here (my apologies but this
+> > spans a couple of threads, and I"m trying to tie them all together
+> > here):
 > 
-> Use the page_pool API for memory management. This is a prerequisite for
-> native XDP support.
+> The previous thread had some suggestions, but no real conclusions.
+> That's probably why we're still arguing about it...
 > 
-> Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-> Signed-off-by: Matteo Croce <mcroce@microsoft.com>
-> ---
->  drivers/net/ethernet/marvell/Kconfig          |   1 +
->  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   8 +
->  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 155 +++++++++++++++---
->  3 files changed, 139 insertions(+), 25 deletions(-)
+> > GOAL: To allow user space to control what (PCI) drivers he wants to
+> > allow on external (thunderbolt) ports. There was a lot of debate about
+> > the need for such a policy at
+> > https://lore.kernel.org/linux-pci/CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com/
+> > with the final conclusion that it should be OK to implement such a
+> > policy in userspace, as long as the policy is not implemented in the
+> > kernel. The kernel only needs to expose bits & info that is needed by
+> > the userspace to implement such a policy, and it can be used in
+> > conjunction with "drivers_autoprobe" to implement this policy:
+> > --------------------------------------------------------------------
+> > ....
+> > That's an odd thing, but sure, if you want to write up such a policy for
+> > your systems, great.  But that policy does not belong in the kernel, it
+> > belongs in userspace.
+> > ....
+> > --------------------------------------------------------------------
+> > 1) The post https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
+> > lists out the approach that was agreed on. Replicating it here:
+> > -----------------------------------------------------------------------
+> >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+> >     today, but doing so would be trivial.  I think I would prefer a
+> >     sysfs name like "external" so it's more descriptive and less of a
+> >     judgment.
+> >
+> >     This comes from either the DT "external-facing" property or the
+> >     ACPI "ExternalFacingPort" property.
+> >
+> >   - All devices present at boot are enumerated.  Any statically built
+> >     drivers will bind to them before any userspace code runs.
+> >
+> >     If you want to keep statically built drivers from binding, you'd
+> >     need to invent some mechanism so pci_driver_init() could clear
+> >     drivers_autoprobe after registering pci_bus_type.
+> >
+> >   - Early userspace code prevents modular drivers from automatically
+> >     binding to PCI devices:
+> >
+> >       echo 0 > /sys/bus/pci/drivers_autoprobe
+> >
+> >     This prevents modular drivers from binding to all devices, whether
+> >     present at boot or hot-added.
+> >
+> >   - Userspace code uses the sysfs "bind" file to control which drivers
+> >     are loaded and can bind to each device, e.g.,
+> >
+> >       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
 > 
-> diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
-> index cd8ddd1ef6f2..ef4f35ba077d 100644
-> --- a/drivers/net/ethernet/marvell/Kconfig
-> +++ b/drivers/net/ethernet/marvell/Kconfig
-> @@ -87,6 +87,7 @@ config MVPP2
->  	depends on ARCH_MVEBU || COMPILE_TEST
->  	select MVMDIO
->  	select PHYLINK
-> +	select PAGE_POOL
->  	help
->  	  This driver supports the network interface units in the
->  	  Marvell ARMADA 375, 7K and 8K SoCs.
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-> index 543a310ec102..4c16c9e9c1e5 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-> @@ -15,6 +15,7 @@
->  #include <linux/phy.h>
->  #include <linux/phylink.h>
->  #include <net/flow_offload.h>
-> +#include <net/page_pool.h>
->  
->  /* Fifo Registers */
->  #define MVPP2_RX_DATA_FIFO_SIZE_REG(port)	(0x00 + 4 * (port))
-> @@ -820,6 +821,9 @@ struct mvpp2 {
->  
->  	/* RSS Indirection tables */
->  	struct mvpp2_rss_table *rss_tables[MVPP22_N_RSS_TABLES];
-> +
-> +	/* page_pool allocator */
-> +	struct page_pool *page_pool[MVPP2_PORT_MAX_RXQ];
->  };
->  
->  struct mvpp2_pcpu_stats {
-> @@ -1161,6 +1165,10 @@ struct mvpp2_rx_queue {
->  
->  	/* Port's logic RXQ number to which physical RXQ is mapped */
->  	int logic_rxq;
-> +
-> +	/* XDP memory accounting */
-> +	struct xdp_rxq_info xdp_rxq_short;
-> +	struct xdp_rxq_info xdp_rxq_long;
->  };
->  
->  struct mvpp2_bm_pool {
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 027de7291f92..9e2e8fb0a0b8 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -95,6 +95,22 @@ static inline u32 mvpp2_cpu_to_thread(struct mvpp2 *priv, int cpu)
->  	return cpu % priv->nthreads;
->  }
->  
-> +static struct page_pool *
-> +mvpp2_create_page_pool(struct device *dev, int num, int len)
-> +{
-> +	struct page_pool_params pp_params = {
-> +		/* internal DMA mapping in page_pool */
-> +		.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
-> +		.pool_size = num,
-> +		.nid = NUMA_NO_NODE,
-> +		.dev = dev,
-> +		.dma_dir = DMA_FROM_DEVICE,
-> +		.max_len = len,
-> +	};
-> +
-> +	return page_pool_create(&pp_params);
-> +}
-> +
->  /* These accessors should be used to access:
->   *
->   * - per-thread registers, where each thread has its own copy of the
-> @@ -327,17 +343,26 @@ static inline int mvpp2_txq_phys(int port, int txq)
->  	return (MVPP2_MAX_TCONT + port) * MVPP2_MAX_TXQ + txq;
->  }
->  
-> -static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool)
-> +/* Returns a struct page if page_pool is set, otherwise a buffer */
-> +static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool,
-> +			      struct page_pool *page_pool)
->  {
-> +	if (page_pool)
-> +		return page_pool_alloc_pages(page_pool,
-> +					     GFP_ATOMIC | __GFP_NOWARN);
+> I think this is a reasonable suggestion. However, as Greg pointed out
+> it's gratuitously different to what USB does for no real reason.
 
-page_pool_dev_alloc_pages() can set these flags for you, instead of explicitly
-calling them
+Agreed.
 
-> +
->  	if (likely(pool->frag_size <= PAGE_SIZE))
->  		return netdev_alloc_frag(pool->frag_size);
-> -	else
-> -		return kmalloc(pool->frag_size, GFP_ATOMIC);
-> +
-> +	return kmalloc(pool->frag_size, GFP_ATOMIC);
->  }
->  
-> -static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool, void *data)
-> +static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool,
-> +			    struct page_pool *page_pool, void *data)
->  {
-> -	if (likely(pool->frag_size <= PAGE_SIZE))
-> +	if (page_pool)
-> +		page_pool_put_full_page(page_pool, virt_to_head_page(data), false);
-> +	else if (likely(pool->frag_size <= PAGE_SIZE))
->  		skb_free_frag(data);
->  	else
->  		kfree(data);
-> @@ -442,6 +467,7 @@ static void mvpp2_bm_bufs_get_addrs(struct device *dev, struct mvpp2 *priv,
->  static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
->  			       struct mvpp2_bm_pool *bm_pool, int buf_num)
->  {
-> +	struct page_pool *pp = NULL;
->  	int i;
->  
->  	if (buf_num > bm_pool->buf_num) {
-> @@ -450,6 +476,9 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
->  		buf_num = bm_pool->buf_num;
->  	}
->  
-> +	if (priv->percpu_pools)
-> +		pp = priv->page_pool[bm_pool->id];
-> +
->  	for (i = 0; i < buf_num; i++) {
->  		dma_addr_t buf_dma_addr;
->  		phys_addr_t buf_phys_addr;
-> @@ -458,14 +487,15 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
->  		mvpp2_bm_bufs_get_addrs(dev, priv, bm_pool,
->  					&buf_dma_addr, &buf_phys_addr);
->  
-> -		dma_unmap_single(dev, buf_dma_addr,
-> -				 bm_pool->buf_size, DMA_FROM_DEVICE);
-> +		if (!pp)
-> +			dma_unmap_single(dev, buf_dma_addr,
-> +					 bm_pool->buf_size, DMA_FROM_DEVICE);
->  
->  		data = (void *)phys_to_virt(buf_phys_addr);
->  		if (!data)
->  			break;
->  
-> -		mvpp2_frag_free(bm_pool, data);
-> +		mvpp2_frag_free(bm_pool, pp, data);
->  	}
->  
->  	/* Update BM driver with number of buffers removed from pool */
-> @@ -496,6 +526,9 @@ static int mvpp2_bm_pool_destroy(struct device *dev, struct mvpp2 *priv,
->  	int buf_num;
->  	u32 val;
->  
-> +	if (priv->percpu_pools)
-> +		page_pool_destroy(priv->page_pool[bm_pool->id]);
-> +
->  	buf_num = mvpp2_check_hw_buf_num(priv, bm_pool);
->  	mvpp2_bm_bufs_free(dev, priv, bm_pool, buf_num);
->  
-> @@ -548,8 +581,20 @@ static int mvpp2_bm_init(struct device *dev, struct mvpp2 *priv)
->  {
->  	int i, err, poolnum = MVPP2_BM_POOLS_NUM;
->  
-> -	if (priv->percpu_pools)
-> +	if (priv->percpu_pools) {
->  		poolnum = mvpp2_get_nrxqs(priv) * 2;
-> +		for (i = 0; i < poolnum; i++) {
-> +			/* the pool in use */
-> +			int pn = i / (poolnum / 2);
-> +
-> +			priv->page_pool[i] =
-> +				mvpp2_create_page_pool(dev,
-> +						       mvpp2_pools[pn].buf_num,
-> +						       mvpp2_pools[pn].pkt_size);
-> +			if (IS_ERR(priv->page_pool[i]))
-> +				return PTR_ERR(priv->page_pool[i]);
-> +		}
-> +	}
->  
->  	dev_info(dev, "using %d %s buffers\n", poolnum,
->  		 priv->percpu_pools ? "per-cpu" : "shared");
-> @@ -632,23 +677,31 @@ static void mvpp2_rxq_short_pool_set(struct mvpp2_port *port,
->  
->  static void *mvpp2_buf_alloc(struct mvpp2_port *port,
->  			     struct mvpp2_bm_pool *bm_pool,
-> +			     struct page_pool *page_pool,
->  			     dma_addr_t *buf_dma_addr,
->  			     phys_addr_t *buf_phys_addr,
->  			     gfp_t gfp_mask)
->  {
->  	dma_addr_t dma_addr;
-> +	struct page *page;
->  	void *data;
->  
-> -	data = mvpp2_frag_alloc(bm_pool);
-> +	data = mvpp2_frag_alloc(bm_pool, page_pool);
->  	if (!data)
->  		return NULL;
->  
-> -	dma_addr = dma_map_single(port->dev->dev.parent, data,
-> -				  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
-> -				  DMA_FROM_DEVICE);
-> -	if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
-> -		mvpp2_frag_free(bm_pool, data);
-> -		return NULL;
-> +	if (page_pool) {
-> +		page = (struct page *)data;
-> +		dma_addr = page_pool_get_dma_addr(page);
-> +		data = page_to_virt(page);
-> +	} else {
-> +		dma_addr = dma_map_single(port->dev->dev.parent, data,
-> +					  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
-> +					  DMA_FROM_DEVICE);
-> +		if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
-> +			mvpp2_frag_free(bm_pool, NULL, data);
-> +			return NULL;
-> +		}
->  	}
->  	*buf_dma_addr = dma_addr;
->  	*buf_phys_addr = virt_to_phys(data);
-> @@ -706,6 +759,7 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
->  	int i, buf_size, total_size;
->  	dma_addr_t dma_addr;
->  	phys_addr_t phys_addr;
-> +	struct page_pool *pp = NULL;
->  	void *buf;
->  
->  	if (port->priv->percpu_pools &&
-> @@ -726,8 +780,10 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
->  		return 0;
->  	}
->  
-> +	if (port->priv->percpu_pools)
-> +		pp = port->priv->page_pool[bm_pool->id];
->  	for (i = 0; i < buf_num; i++) {
-> -		buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr,
-> +		buf = mvpp2_buf_alloc(port, bm_pool, pp, &dma_addr,
->  				      &phys_addr, GFP_KERNEL);
->  		if (!buf)
->  			break;
-> @@ -2374,10 +2430,11 @@ static int mvpp2_aggr_txq_init(struct platform_device *pdev,
->  /* Create a specified Rx queue */
->  static int mvpp2_rxq_init(struct mvpp2_port *port,
->  			  struct mvpp2_rx_queue *rxq)
-> -
->  {
-> +	struct mvpp2 *priv = port->priv;
->  	unsigned int thread;
->  	u32 rxq_dma;
-> +	int err;
->  
->  	rxq->size = port->rx_ring_size;
->  
-> @@ -2415,7 +2472,41 @@ static int mvpp2_rxq_init(struct mvpp2_port *port,
->  	/* Add number of descriptors ready for receiving packets */
->  	mvpp2_rxq_status_update(port, rxq->id, 0, rxq->size);
->  
-> +	if (priv->percpu_pools) {
-> +		err = xdp_rxq_info_reg(&rxq->xdp_rxq_short, port->dev, rxq->id);
-> +		if (err < 0)
-> +			goto err_free_dma;
-> +
-> +		err = xdp_rxq_info_reg(&rxq->xdp_rxq_long, port->dev, rxq->id);
-> +		if (err < 0)
-> +			goto err_unregister_rxq_short;
-> +
-> +		/* Every RXQ has a pool for short and another for long packets */
-> +		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_short,
-> +						 MEM_TYPE_PAGE_POOL,
-> +						 priv->page_pool[rxq->logic_rxq]);
-> +		if (err < 0)
-> +			goto err_unregister_rxq_short;
-> +
-> +		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_long,
-> +						 MEM_TYPE_PAGE_POOL,
-> +						 priv->page_pool[rxq->logic_rxq +
-> +								 port->nrxqs]);
-> +		if (err < 0)
-> +			goto err_unregister_rxq_long;
-
-Since mvpp2_rxq_init() will return an error shouldn't we unregister the short 
-memory pool as well?
-
-> +	}
-> +
->  	return 0;
-> +
-> +err_unregister_rxq_long:
-> +	xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
-> +err_unregister_rxq_short:
-> +	xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
-> +err_free_dma:
-> +	dma_free_coherent(port->dev->dev.parent,
-> +			  rxq->size * MVPP2_DESC_ALIGNED_SIZE,
-> +			  rxq->descs, rxq->descs_dma);
-> +	return err;
->  }
->  
->  /* Push packets received by the RXQ to BM pool */
-> @@ -2449,6 +2540,12 @@ static void mvpp2_rxq_deinit(struct mvpp2_port *port,
->  {
->  	unsigned int thread;
->  
-> +	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_short))
-> +		xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
-> +
-> +	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_long))
-> +		xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
-> +
->  	mvpp2_rxq_drop_pkts(port, rxq);
->  
->  	if (rxq->descs)
-> @@ -2890,14 +2987,15 @@ static void mvpp2_rx_csum(struct mvpp2_port *port, u32 status,
->  
->  /* Allocate a new skb and add it to BM pool */
->  static int mvpp2_rx_refill(struct mvpp2_port *port,
-> -			   struct mvpp2_bm_pool *bm_pool, int pool)
-> +			   struct mvpp2_bm_pool *bm_pool,
-> +			   struct page_pool *page_pool, int pool)
->  {
->  	dma_addr_t dma_addr;
->  	phys_addr_t phys_addr;
->  	void *buf;
->  
-> -	buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr, &phys_addr,
-> -			      GFP_ATOMIC);
-> +	buf = mvpp2_buf_alloc(port, bm_pool, page_pool,
-> +			      &dma_addr, &phys_addr, GFP_ATOMIC);
->  	if (!buf)
->  		return -ENOMEM;
->  
-> @@ -2956,6 +3054,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
->  	while (rx_done < rx_todo) {
->  		struct mvpp2_rx_desc *rx_desc = mvpp2_rxq_next_desc_get(rxq);
->  		struct mvpp2_bm_pool *bm_pool;
-> +		struct page_pool *pp = NULL;
->  		struct sk_buff *skb;
->  		unsigned int frag_size;
->  		dma_addr_t dma_addr;
-> @@ -2989,6 +3088,9 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
->  					DMA_FROM_DEVICE);
->  		prefetch(data);
->  
-> +		if (port->priv->percpu_pools)
-> +			pp = port->priv->page_pool[pool];
-> +
->  		if (bm_pool->frag_size > PAGE_SIZE)
->  			frag_size = 0;
->  		else
-> @@ -3000,15 +3102,18 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
->  			goto err_drop_frame;
->  		}
->  
-> -		err = mvpp2_rx_refill(port, bm_pool, pool);
-> +		err = mvpp2_rx_refill(port, bm_pool, pp, pool);
->  		if (err) {
->  			netdev_err(port->dev, "failed to refill BM pools\n");
->  			goto err_drop_frame;
->  		}
->  
-> -		dma_unmap_single_attrs(dev->dev.parent, dma_addr,
-> -				       bm_pool->buf_size, DMA_FROM_DEVICE,
-> -				       DMA_ATTR_SKIP_CPU_SYNC);
-> +		if (pp)
-> +			page_pool_release_page(pp, virt_to_page(data));
-> +		else
-> +			dma_unmap_single_attrs(dev->dev.parent, dma_addr,
-> +					       bm_pool->buf_size, DMA_FROM_DEVICE,
-> +					       DMA_ATTR_SKIP_CPU_SYNC);
->  
->  		rcvd_pkts++;
->  		rcvd_bytes += rx_bytes;
-> -- 
-> 2.26.2
+> > -----------------------------------------------------------------------
+> > 2) As part of implementing the above agreed approach, when I exposed
+> > PCI "untrusted" attribute to userspace, it ran into discussion that
+> > concluded that instead of this, the device core should be enhanced
+> > with a location attribute.
+> > https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
+> > -----------------------------------------------------------------------
+> > ...
+> > The attribute should be called something like "location" or something
+> > like that (naming is hard), as you don't always know if something is
+> > external or not (it could be internal, it could be unknown, it could be
+> > internal to an external device that you trust (think PCI drawers for
+> > "super" computers that are hot pluggable but yet really part of the
+> > internal bus).
+> > ....
+> > "trust" has no direct relation to the location, except in a policy of
+> > what you wish to do with that device, so as long as you keep them
+> > separate that way, I am fine with it.
+> > ...
+> > -----------------------------------------------------------------------
+> >
+> > And hence this patch. I don't see an attribute in USB comparable to
+> > this new attribute, except for the boolean "removable" may be. Are you
+> > suggesting to pull that into the device core instead of adding this
+> > "physical_location" attribute?
 > 
+> He's suggesting you pull the "authorized" attribute into the driver
+> core. That's the mechanism USB uses to block drivers binding unless
+> userspace authorizes them. I don't see any reason why we can't re-use
+> that sysfs interface for PCI devices since the problem being solved is
+> fundamentally the same. The main question is what we should do as a
+> default policy in the kernel. For USB the default comes from the
+> "authorized_default" module param of usbcore:
+> 
+> > /* authorized_default behaviour:
+> >  * -1 is authorized for all devices except wireless (old behaviour)
+> >  * 0 is unauthorized for all devices
+> >  * 1 is authorized for all devices
+> >  * 2 is authorized for internal devices
+> >  */
+> > #define USB_AUTHORIZE_WIRED   -1
+> > #define USB_AUTHORIZE_NONE    0
+> > #define USB_AUTHORIZE_ALL     1
+> > #define USB_AUTHORIZE_INTERNAL        2
+> >
+> > static int authorized_default = USB_AUTHORIZE_WIRED;
+> > module_param(authorized_default, int, S_IRUGO|S_IWUSR);
+> 
+> So the default policy for USB is to authorize any wired USB device and
+> we can optionally restrict that to just integrated devices. Sounding
+> familiar?
+
+Thank you, that is what I have been trying to get across here, obviously
+I didn't do a good job.  :)
+
+Thanks for the summary.
+
+> The internal / external status is still useful to know so we might
+> want to make a sysfs attribute for that too. However, I'd like to
+> point out that internal / external isn't the whole story. As I
+> mentioned in the last thread if I have a BMC device I *really* don't
+> want it to be authorized by default even though it's an internal
+> device. Similarly, if I know all my internal cards support PCIe
+> Component Authentication then I might choose not to trust any PCI
+> devices unless they authenticate successfully.
+
+Agreed.
+
+> > 3) The one deviation from the agreed approach in (1) is
+> > https://patchwork.kernel.org/patch/11633095/ . The reason is I
+> > realized that contrary to what I earlier believed, we might not be
+> > able to disable the PCI link to all external PCI devices at boot. So
+> > external PCI devices may actually bind to drivers before userspace
+> > comes up and does "echo 0 > /sys/bus/pci/drivers_autoprobe").
+> 
+> Yep, that's a problem. If we want to provide a useful mechanism to
+> userspace then the default behaviour of the kernel can't undermine
+> that mechanism. If that means we need another kernel command line
+> parameter then I guess we just have to live with it.
+
+I really do not want yet-another-kernel-command-line-option if we can
+help it at all.  Sane defaults are the best thing to do here.  Userspace
+comes up really early, put your policy in there, not in blobs passed
+from your bootloader.
+
+thanks,
+
+greg k-h
