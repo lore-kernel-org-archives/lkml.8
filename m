@@ -2,32 +2,31 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2553BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A41902067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2352067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="NKoZQqD3"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TuDIr0w+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgGBIOy (ORCPT
+        id S1728290AbgGBIO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:14:54 -0400
-Received: from vps.xff.cz ([195.181.215.36]:39358 "EHLO vps.xff.cz"
+        Thu, 2 Jul 2020 04:14:56 -0400
+Received: from vps.xff.cz ([195.181.215.36]:39322 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgGBIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725379AbgGBIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 04:14:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593677689; bh=ct3WCETUhO2fBq7dbPZ7Ee7p2JVAC0DgiR8id7bupFc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=NKoZQqD3CaxGMgUTALdSJmmTNH4Rf1sD3m6RaODw/qTu0ZGA1AvnoP43C/hM/sZlT
-         tsPexv9LquJ4QWweUl9F3E8M8qTr57YaVZE+iMrYkbPzH6IcCZzTNFtWBJV7oWazdq
-         syt1tuRj3FpZhxgS91ybuPSljWJ+fCFVYcWlqPMA=
+        t=1593677688; bh=a2NHJHG5QFB78AfgGChp//7c+qQXotdIBgRIWgVfJDE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TuDIr0w+fvaEOEp60tG2KqaKHJVb92lJc4yrQ0nKOjryG4ilZm9tHPPVcTCAzrkin
+         bpjLMe/r/Q0o8YvLMcIUnIgHLLLp98RTlQzymcEaHoX3N9OUW5servjpbjFikeAIQv
+         3beDDnDl50a/QmKRZ3/YbMhgduvkQVEyF8LHALLc=
 From:   Ondrej Jirman <megous@megous.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -36,13 +35,10 @@ Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v8 2/2] arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-Date:   Thu,  2 Jul 2020 10:14:32 +0200
-Message-Id: <20200702081432.1727696-3-megous@megous.com>
-In-Reply-To: <20200702081432.1727696-1-megous@megous.com>
-References: <20200702081432.1727696-1-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v8 0/2] Add support for PinePhone LCD panel
+Date:   Thu,  2 Jul 2020 10:14:30 +0200
+Message-Id: <20200702081432.1727696-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,45 +46,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinephone has a Goodix GT917S capacitive touchscreen controller on
-I2C0 bus. Add support for it.
+This patchset adds support for the LCD panel of PinePhone.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+I've tested this on PinePhone 1.0 and 1.2.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index a89425ad3727..5c7386566053 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -121,6 +121,25 @@ &ehci1 {
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt917s";
-+		reg = <0x5d>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>; /* PH11 */
-+		AVDD28-supply = <&reg_ldo_io0>;
-+		VDDIO-supply = <&reg_ldo_io0>;
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1440>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Changes in v8:
+- Drop goodix,gt911 fallback compatible (Icenowy)
+- Drop address/size-cells from &dsi node (Maxime)
+- Drop already applied patches
+- v7->v8 diff: https://megous.com/dl/tmp/v7-v8.patch
+
+Changes in v7:
+- Removed mode.vrefresh, rebased onto next-20200701
+- v6->v7 diff: https://megous.com/dl/tmp/v6-v7.patch
+
+Changes in v6:
+- Fixed spacing in yaml
+- Fixed wrong vccio->iovcc supply name in the bindings doc
+- I noticed that the original driver uses a delay of 20ms in the init
+  function to achieve a combined total of 120ms required from post-reset
+  to display_on. I've added a similar delay to xbd599_init, so that
+  xbd599 panel also has the right timing. (patch 9)
+- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
+- Added review/ack tags
+- Learned to run dt_binding_check by myself ;)
+
+Changes in v5:
+- rewritten on top of rocktech-jh057n00900 driver
+- rocktech-jh057n00900 renamed to st7703 (controller name)
+- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
+
+Changes in v4:
+- use ->type from the mode instead of hardcoding (Samuel)
+- move init_sequence to ->prepare (Samuel)
+- move anti-flicker delay to ->enable, explain it (Samuel)
+- add enter_sleep after display_off (Samuel)
+- drop ->disable (move code to ->unprepare)
+- add ID bytes dumping (Linus)
+  (I can't test it since allwinner DSI driver has a broken
+   dcs_read function, and I didn't manage to fix it.)
+- document magic bytes (Linus)
+- assert reset during powerup
+- cleanup powerup timings according to the datasheet
+
+Changes in v3:
+- Panel driver renamed to the name of the LCD controller
+- Re-organize the driver slightly to more easily support more panels
+  based on the same controller.
+- Add patch to enable the touchscreen to complete the LCD support
+  on PinePhone.
+- Dropped the "DSI fix" patch (the driver seems to work for me without it)
+- Improved brightness levels handling:
+  - PinePhone 1.0 uses default levels generated by the driver
+  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+    default levels can't be used. Martijn Braam came up with a
+    list of duty cycle values that lead to perception of linear
+    brigtness level <-> light intensity on PinePhone 1.1
+- There was some feedback on v2 about this being similar to st7701.
+  It's only similar in name. Most of the "user commands" are different,
+  so I opted to keep this in a new driver instead of creating st770x.
+  
+  Anyone who likes to check the differences, here are datasheets:
+
+  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+  - https://megous.com/dl/tmp/ST7701.pdf
+
+Changes in v2:
+- DT Example fix.
+- DT Format fix.
+- Raised copyright info to 2020.
+- Sort panel operation functions.
+- Sort inclusion.
+
+
+-- For phone owners: --
+
+There's an open question on how to set the backlight brightness values
+on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+to backlight being black. It would be nice if more people can test
+the various backlight levels on 1.1 and 1.2 revision with this change
+in dts:
+
+       brightness-levels = <0 1000>;
+       num-interpolated-steps = <1000>;
+
+and report at what brightness level the backlight turns on. So far it
+seems this has a wide range. Lowest useable duty cycle for me is ~7%
+on 1.2 and for Martijn ~20% on 1.1.
+
+Icenowy Zheng (1):
+  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+
+Ondrej Jirman (1):
+  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 +++++++
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 52 +++++++++++++++++++
+ 2 files changed, 71 insertions(+)
+
 -- 
 2.27.0
 
