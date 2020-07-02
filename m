@@ -2,87 +2,107 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFD62075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFCD20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdNYyNcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgGBKyk (ORCPT
+        id S1728520AbgGBKzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:54:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:38268 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgGBKyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:54:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82FB61FB;
-        Thu,  2 Jul 2020 03:54:39 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63C613F71E;
-        Thu,  2 Jul 2020 03:54:38 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 11:54:36 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH v2] Sched: Add a tracepoint to track rq->nr_running
-Message-ID: <20200702105435.na2vumpnov5w5tis@e107158-lin.cambridge.arm.com>
-References: <20200619141120.1476-1-pauld@redhat.com>
- <20200629192303.GC120228@lorien.usersys.redhat.com>
+        Thu, 2 Jul 2020 06:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728477AbgGBKzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:55:12 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53E1C08C5C1;
+        Thu,  2 Jul 2020 03:55:12 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x8so10279674plm.10;
+        Thu, 02 Jul 2020 03:55:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zVDLoXI8L+yFA0AKDZ7bUdoOmqmHzhsfGkRFres4Vo8=;
+        b=hdNYyNcYxBMGp0vsVUVonQjCpRwp++MyCLX9Du8x4iyfHlecQ3mb2EMkm/m/IRvvZg
+         xYlhVFm8LAbWcdOZh/gw0VTE60cuCuVZsNil/9zRwJBa1t9v+SEArbG5G+lATbyMuurC
+         lBeVipe3KDJyN/pcqw0qvyF+czgN2bbwgAVBHHuF8HO0gr5lkOMhwW58KXF0rdAuQEL1
+         CpCI6J2bR8HsWTADn+oPoV4ckqy/yAk7O1crJe08+MVmGyvDNbF2vKgz/NPPK1cHAsoT
+         oJOCKClxm16+jGJcCrY+xmMUcrZ6+E5U5SHFSDISL8179bkNn6vaLzok3MU9/KpSCIG/
+         DwUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zVDLoXI8L+yFA0AKDZ7bUdoOmqmHzhsfGkRFres4Vo8=;
+        b=pvcHOo503MEC4q8bVG3HyB8OjXOkWUCfbLgHmVyIX3Id0T2wTc9nO3ziJCHGqlnk3N
+         NaGJBe2GqQmgcogDlXDD5mgbKLNB/GeodGtXo8OFBl1m4LYgpsC3t1NS/W+HMk4+scMO
+         8hpBtlgmZKCLbFotgCLqESBXbV75hvtEGaZniyFd4DWCtDKr0qWMga3v/Wj0oUh0vmNw
+         k9szx5ehRMkpyeJi3Z3Wcm2mMgTKv+OvnoHg/SMWy9KIiNIlnkdCed9edyMF/bLij9uS
+         87zLx1f+e6QHAaZVKOmn/P4Pe32Gukpr9h2w0aIaJOYCoa14jgU5QR53IwA8YjR6Hs99
+         SEbA==
+X-Gm-Message-State: AOAM530lQufr6FAfEODo3UPmUmgkjjyi2AB2/WXm7JpvuZ5XslEMiK47
+        dJig18ajVTXBDuDll2mX2bpWWCKIE/ycnA==
+X-Google-Smtp-Source: ABdhPJxp+jQqbymWxFOlaBxL4wvWCrVMPfYTU4e2ktouEmQs2F9WH9ppF7JvRDsVQrDg7te85eQ/lA==
+X-Received: by 2002:a17:90a:d104:: with SMTP id l4mr32286340pju.65.1593687312256;
+        Thu, 02 Jul 2020 03:55:12 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id z13sm8702393pfq.220.2020.07.02.03.55.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:55:11 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steve Glendinning <steve.glendinning@shawell.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 0/2] smsc: use generic power management
+Date:   Thu,  2 Jul 2020 16:23:49 +0530
+Message-Id: <20200702105351.363880-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629192303.GC120228@lorien.usersys.redhat.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/29/20 15:23, Phil Auld wrote:
-> Add a bare tracepoint trace_sched_update_nr_running_tp which tracks
-> ->nr_running CPU's rq. This is used to accurately trace this data and
-> provide a visualization of scheduler imbalances in, for example, the
-> form of a heat map.  The tracepoint is accessed by loading an external
-> kernel module. An example module (forked from Qais' module and including
-> the pelt related tracepoints) can be found at:
-> 
->   https://github.com/auldp/tracepoints-helpers.git
-> 
-> A script to turn the trace-cmd report output into a heatmap plot can be
-> found at:
-> 
->   https://github.com/jirvoz/plot-nr-running
-> 
-> The tracepoints are added to add_nr_running() and sub_nr_running() which
-> are in kernel/sched/sched.h. In order to avoid CREATE_TRACE_POINTS in
-> the header a wrapper call is used and the trace/events/sched.h include
-> is moved before sched.h in kernel/sched/core.
-> 
-> Signed-off-by: Phil Auld <pauld@redhat.com>
-> CC: Qais Yousef <qais.yousef@arm.com>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: Vincent Guittot <vincent.guittot@linaro.org>
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: linux-kernel@vger.kernel.org
-> ---
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-LGTM.
+The purpose of this patch series is to remove legacy power management callbacks
+from smsc ethernet drivers.
 
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the power management
+themselves, which is not recommended.
 
-Thanks
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
 
---
-Qais Yousef
+All patches are compile-tested only.
+
+Vaibhav Gupta (2):
+  epic100: use generic power management
+  smsc9420: use generic power management
+
+ drivers/net/ethernet/smsc/epic100.c  | 19 +++++---------
+ drivers/net/ethernet/smsc/smsc9420.c | 39 +++++++---------------------
+ 2 files changed, 16 insertions(+), 42 deletions(-)
+
+-- 
+2.27.0
+
