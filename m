@@ -2,179 +2,159 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1AD20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D32620836
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OHI23XSw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqmofHQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgGBFHX (ORCPT
+        id S1726447AbgGBFH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
+        Thu, 2 Jul 2020 01:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgGBFHW (ORCPT
+        with ESMTP id S1726184AbgGBFHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:07:22 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F9DC08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 22:07:22 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i25so27627003iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 22:07:22 -0700 (PDT)
+        Thu, 2 Jul 2020 01:07:24 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C868DC08C5C1;
+        Wed,  1 Jul 2020 22:07:23 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s1so30047531ljo.0;
+        Wed, 01 Jul 2020 22:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pEqgfz4dMPy0M8UdIl/OP3qCi5/0HDdWhm7+x1JpE8k=;
-        b=OHI23XSwOoCtKab9Yrumej03I6gMMsQ5SpRG7rrzTOpLPZPhQBysLX48g5rqWJUmR8
-         QrBW5CeLisMKbOFKtg8gbHTK50mBkqkv7GZiOxihU/SU3qE+QAeq6z9A9jASZ+geI9Ib
-         wpCuDzRKDdfr0EEUrvTKzx4t0U8xDkCAR91o4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K8qAxukp9RFHBdE6WbPdUscXd1LN37Q3w/L7nkVqajo=;
+        b=VqmofHQSAPlBpUCxL4rTflz7VqMU9XTFBswSFaT0mDdL6H43EXQ6FW5GHx4GlI7qGQ
+         fEWxbeqBLWdHdB3DYZYDwPVZ0TiKrh8ErZ7LQelQzlLERoz5pvCKWWqfZaEFF2S7Qfxi
+         nTsyD4aCv1sdijFfHId/0snc/8sfXCxZIWVg45Q9+5LcS+t2jODYxnCfWthpcsa1xAMi
+         wUPvrBa4VAWOIzAfn3408W/wDQyJMf+AWsYE39v3QnoIg8h6UBoemF34AiS3v2wY97B3
+         +G8SYZZqXujqM4GXX1thRU7Z0izEwGNmZA27wVvteuiL68sk+Y/utUm12dBmn44goyca
+         d19Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pEqgfz4dMPy0M8UdIl/OP3qCi5/0HDdWhm7+x1JpE8k=;
-        b=PcS8dHP2avM4RAk34KVytx1x4mttY0ltswxjq0DxO6l/vKtbk++EqzVBgHdQfI1PD/
-         HdDcyYmCvQgsmJG62ypIiOZ6TebHqNiXoIzBtDfjQBbqCW/JX6lLypNW+oPwMVmaTnl+
-         W5noWaLKZKQ2ZH/4LuaTV9BvVychfT0wlgmvSO03rtW4PlKpXre2WhCy+55rVTKyOjEg
-         tyb+b1fl1g2d/5CRl0gsilXkT8uvUcbYNiHvm9o4Uil/2t9CheXWMQ2nJ+fatOqVue9O
-         4z8Zap/TCnbtHK782e68yYDdpDRZgwVJpit35joBbsIwvpBDuvSPVCtBpjyhT30bNcw8
-         KEPg==
-X-Gm-Message-State: AOAM530j1PBNG5Vq1qdgztyaMxulpD5GgcG91rLJM1fThtahKRLnmEM3
-        n7EQ27IFmqw4aLM1LuPvOEou1UQKCVNkDMlZWWkZFA==
-X-Google-Smtp-Source: ABdhPJzARNPpL/MZGeCd0M+vUHJWSbbCFc9ks584J5OlpKLVXK1oxKo3tdUOmzXarQh4NOVw2SgC++mS/VX9KJKONhk=
-X-Received: by 2002:a02:30c4:: with SMTP id q187mr31283874jaq.102.1593666441584;
- Wed, 01 Jul 2020 22:07:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625101757.101775-1-enric.balletbo@collabora.com> <20200625101757.101775-7-enric.balletbo@collabora.com>
-In-Reply-To: <20200625101757.101775-7-enric.balletbo@collabora.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 2 Jul 2020 13:06:55 +0800
-Message-ID: <CAJMQK-iocK5eH9QTQQKNFHtBvpc1C2=U=3kFPXkXiUOiRxrucA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] arm64: dts: mt8183: Add USB3.0 support
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        erwanaliasr1@gmail.com, Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K8qAxukp9RFHBdE6WbPdUscXd1LN37Q3w/L7nkVqajo=;
+        b=oEM7oMR4lWJMyqV451Zwlx02i5lgkpKZJoP9/jm44OKIDV+0M9OCqVy/o3DH9ruzU4
+         2WU6sVqTD5i1eSPWoWyglMOKPO0l8FEKK9BAB+M5qz/2woBor+mLqNCFQn6O0aYjyEKf
+         AuzXvfJnufDB9yCe5HGWgcz6Y9mwYxTUNY6hK1OEQyxM3+8ZdyqQHK7KOPAOdW+7G8CY
+         sMzGYJpMQhxm+XmHJzlJ6x1+SnAo0Nv+SN1ZfllgLBboWsQktKWdWYM8HfNGZUWbaG4c
+         AdfW+Gp43EXWf2T/nOniWtRlkJS3iWZSJJxyTH56kOCEHnskYUkNb0VIhQ64JwjbiiJA
+         TzaQ==
+X-Gm-Message-State: AOAM5334G8lK1a7xcI/4L2rSwHDyrewD2AltK5IhkowigPqXQkvudNWP
+        Hn3gYiYOv3KN6+8zux/KRWBf0HnyslA=
+X-Google-Smtp-Source: ABdhPJwLKDqPP4hbBy1c68/UE02Q/XfYccws317CV11krxYDMmfgvP+z/OUQQesuwn5uoDx9F/1QfA==
+X-Received: by 2002:a2e:9b94:: with SMTP id z20mr13271728lji.404.1593666441965;
+        Wed, 01 Jul 2020 22:07:21 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id w19sm1331770ljm.120.2020.07.01.22.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 22:07:20 -0700 (PDT)
+Subject: Re: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for
+ building OPP table
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <CGME20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0@epcas1p2.samsung.com>
+ <20200609131404.17523-13-digetx@gmail.com>
+ <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4b22d3ee-f303-d81d-e261-187d4a46e749@gmail.com>
+Date:   Thu, 2 Jul 2020 08:07:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 6:18 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Add the USB3.0 phyter and controller for the MediaTek's MT8183 SoC.
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->
-> Changes in v2:
-> - Move adding #phy-cells to this patch. (Matthias Brugger)
->
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 58 ++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 6c00ffa275202..102105871db25 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -9,6 +9,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/reset-controller/mt8183-resets.h>
-> +#include <dt-bindings/phy/phy.h>
->  #include "mt8183-pinfunc.h"
->
->  / {
-> @@ -648,6 +649,36 @@ i2c8: i2c@1101b000 {
->                         status = "disabled";
->                 };
->
-> +               ssusb: usb@11201000 {
-> +                       compatible ="mediatek,mt8183-mtu3", "mediatek,mtu3";
-> +                       reg = <0 0x11201000 0 0x2e00>,
-> +                             <0 0x11203e00 0 0x0100>;
-> +                       reg-names = "mac", "ippc";
-> +                       interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-> +                       phys = <&u2port0 PHY_TYPE_USB2>,
-> +                              <&u3port0 PHY_TYPE_USB3>;
-> +                       clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-> +                                <&infracfg CLK_INFRA_USB>;
-> +                       clock-names = "sys_ck", "ref_ck";
-> +                       mediatek,syscon-wakeup = <&pericfg 0x400 0>;
-> +                       #address-cells = <2>;
-> +                       #size-cells = <2>;
-> +                       ranges;
-> +                       status = "disabled";
-> +
-> +                       usb_host: xhci@11200000 {
-> +                               compatible = "mediatek,mt8183-xhci",
-> +                                            "mediatek,mtk-xhci";
-> +                               reg = <0 0x11200000 0 0x1000>;
-> +                               reg-names = "mac";
-> +                               interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-> +                               clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-> +                                        <&infracfg CLK_INFRA_USB>;
-> +                               clock-names = "sys_ck", "ref_ck";
-> +                               status = "disabled";
-> +                       };
-> +               };
-> +
->                 audiosys: syscon@11220000 {
->                         compatible = "mediatek,mt8183-audiosys", "syscon";
->                         reg = <0 0x11220000 0 0x1000>;
-> @@ -684,6 +715,33 @@ efuse: efuse@11f10000 {
->                         reg = <0 0x11f10000 0 0x1000>;
->                 };
->
-> +               u3phy: usb-phy@11f40000 {
-> +                       compatible = "mediatek,mt8183-tphy",
-> +                                    "mediatek,generic-tphy-v2";
-> +                       #address-cells = <1>;
-> +                       #phy-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0 0 0x11f40000 0x1000>;
-> +                       status = "okay";
-> +
-> +                       u2port0: usb-phy@0 {
-> +                               reg = <0x0 0x700>;
-> +                               clocks = <&clk26m>;
-> +                               clock-names = "ref";
-> +                               #phy-cells = <1>;
-> +                               mediatek,discth = <15>;
-> +                               status = "okay";
-> +                       };
-> +
-> +                       u3port0: usb-phy@0700 {
-> +                               reg = <0x0700 0x900>;
-> +                               clocks = <&clk26m>;
-> +                               clock-names = "ref";
-> +                               #phy-cells = <1>;
-> +                               status = "okay";
-> +                       };
-> +               };
-> +
->                 mfgcfg: syscon@13000000 {
->                         compatible = "mediatek,mt8183-mfgcfg", "syscon";
->                         reg = <0 0x13000000 0 0x1000>;
-> --
-> 2.27.0
->
+02.07.2020 07:18, Chanwoo Choi пишет:
+> Hi Dmitry,
+> 
+> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+>> The clk_round_rate() won't be usable for building OPP table once
+>> interconnect support will be added to the EMC driver because that CLK API
+>> function limits the rounded rate based on the clk rate that is imposed by
+>> active clk-users, and thus, the rounding won't work as expected if
+>> interconnect will set the minimum EMC clock rate before devfreq driver is
+>> loaded. The struct tegra_mc contains memory timings which could be used by
+>> the devfreq driver for building up OPP table instead of rounding clock
+>> rate, this patch implements this idea.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
+>>  1 file changed, 11 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+>> index 6469dc69c5e0..bf504ca4dea2 100644
+>> --- a/drivers/devfreq/tegra20-devfreq.c
+>> +++ b/drivers/devfreq/tegra20-devfreq.c
+>> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  {
+>>  	struct tegra_devfreq *tegra;
+>>  	struct tegra_mc *mc;
+>> -	unsigned long max_rate;
+>> -	unsigned long rate;
+>> +	unsigned int i;
+>>  	int err;
+>>  
+>>  	mc = tegra_get_memory_controller();
+>> @@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  
+>>  	tegra->regs = mc->regs;
+>>  
+>> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+>> -
+>> -	for (rate = 0; rate <= max_rate; rate++) {
+>> -		rate = clk_round_rate(tegra->emc_clock, rate);
+>> +	if (!mc->num_timings) {
+> 
+> Could you explain what is meaning of 'num_timing?
+
+The num_timings is the number of memory timings defined in a
+device-tree. One timing configuration per memory clock rate.
+
+> Also, why add the opp entry in case of mc->num_timings is zero?
+
+Timings may be not defined in some device-trees at all and in this case
+memory always running on a fixed clock rate.
+
+The devfreq driver won't be practically useful if mc->num_timings is
+zero since memory frequency can't be changed, but anyways we'd want to
+load the devfreq driver in order to prevent confusion about why it's not
+loaded.
+
+For example, you may ask somebody to show contents of
+/sys/class/devfreq/tegra20-devfreq/trans_stat and the person says to you
+that this file doesn't exist, now you'll have to figure out what
+happened to the devfreq driver.
