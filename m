@@ -2,133 +2,124 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB39C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90353C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 026FB2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593708510;
-	bh=gWp3jFwoo4iUwOhF7lEopC3ZlQExz1kCNh2JXCd9Fcg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2EaPbuU9RVBfdRvlFgakQoGLPKfGUXXxNfmuXX3RnEGicFH9cqacoWmliwLyzm6/5
-	 DkbuOQOQdZQrrMl/k/9PGHsONRTepq9xrLDJqg+xg4VXocyPhlFvN//GekkPuc9t2t
-	 y9duSLLRLqxXeniw67NEDnZCbMaCT4LhGhehJQwY=
+	by mail.kernel.org (Postfix) with ESMTP id 71F1720720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGBQs2 (ORCPT
+        id S1727812AbgGBQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgGBQs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:48:27 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E362084C;
-        Thu,  2 Jul 2020 16:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593708506;
-        bh=gWp3jFwoo4iUwOhF7lEopC3ZlQExz1kCNh2JXCd9Fcg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=2b+9C9Nyes63VcSQV+cryOA7jsr1vqfWy4nwf81la+HGYN7YnBVUyFaf6P20GtKk1
-         qfbrvZKpCWKVPpdhe7T1sk4GaZ7M3aWrCUo//dt4fStvpVZzJQjJj9eUTdC4E4cdgV
-         77Xa30CfU8RtOF8TOrvOgs16YElPGsco2vw9q4vM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 909F435232F8; Thu,  2 Jul 2020 09:48:26 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 09:48:26 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200702164826.GQ9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
- <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
+        Thu, 2 Jul 2020 12:48:42 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:35290 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgGBQsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:48:37 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jr2O4-0007e6-OQ; Thu, 02 Jul 2020 10:48:36 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.int.ebiederm.org)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jr2Nx-0007up-Jp; Thu, 02 Jul 2020 10:48:30 -0600
+From:   "Eric W. Biederman" <ebiederm@xmission.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Date:   Thu,  2 Jul 2020 11:41:40 -0500
+Message-Id: <20200702164140.4468-16-ebiederm@xmission.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-XM-SPF: eid=1jr2Nx-0007up-Jp;;;mid=<20200702164140.4468-16-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18OB1SGxTOeo4/dzJbPeWbHPytle+s5LkM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v3 16/16] umd: Stop using split_argv
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 04:12:16PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
-> > > This is not going to work together with the "wait context validator"
-> > > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> > > printk() which is why it is still disabled by default.
-> > 
-> > Fixing that should be "interesting".  In particular, RCU CPU stall
-> > warnings rely on the raw spin lock to reduce false positives due
-> > to race conditions.  Some thought will be required here.
-> 
-> I don't get this part. Can you explain/give me an example where to look
-> at?
+There is exactly one argument so there is nothing to split.  All
+split_argv does now is cause confusion and avoid the need for a cast
+when passing a "const char *" string to call_usermodehelper_setup.
 
-Starting from the scheduler-clock interrupt's call into RCU,
-we have rcu_sched_clock_irq() which calls rcu_pending() which
-calls check_cpu_stall() which calls either print_cpu_stall() or
-print_other_cpu_stall(), depending on whether the stall is happening on
-the current CPU or on some other CPU, respectively.
+So avoid confusion and the possibility of an odd driver name causing
+problems by just using a fixed argv array with a cast in the call to
+call_usermodehelper_setup.
 
-Both of these last functions acquire the rcu_node structure's raw ->lock
-and expect to do printk()s while holding it.
+v1: https://lkml.kernel.org/r/87sged3a9n.fsf_-_@x220.int.ebiederm.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ kernel/usermode_driver.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-Not that the lock matters all that much given that all of this code is
-in hardirq context.  Which is necessary if RCU CPU stall warnings are
-to be at all reliable.  Yeah, yeah, they would be even more reliable if
-invoked in NMI context but that would prevent them from acquiring the
-->lock that is used to resolve races between multiple concurrent stall
-warnings and between a stall warning and the end of that stall.  ;-)
+diff --git a/kernel/usermode_driver.c b/kernel/usermode_driver.c
+index cd136f86f799..0b35212ffc3d 100644
+--- a/kernel/usermode_driver.c
++++ b/kernel/usermode_driver.c
+@@ -160,27 +160,21 @@ static void umd_cleanup(struct subprocess_info *info)
+ int fork_usermode_driver(struct umd_info *info)
+ {
+ 	struct subprocess_info *sub_info;
+-	char **argv = NULL;
++	const char *argv[] = { info->driver_name, NULL };
+ 	int err;
+ 
+ 	if (WARN_ON_ONCE(info->tgid))
+ 		return -EBUSY;
+ 
+ 	err = -ENOMEM;
+-	argv = argv_split(GFP_KERNEL, info->driver_name, NULL);
+-	if (!argv)
+-		goto out;
+-
+-	sub_info = call_usermodehelper_setup(info->driver_name, argv, NULL,
+-					     GFP_KERNEL,
++	sub_info = call_usermodehelper_setup(info->driver_name,
++					     (char **)argv, NULL, GFP_KERNEL,
+ 					     umd_setup, umd_cleanup, info);
+ 	if (!sub_info)
+ 		goto out;
+ 
+ 	err = call_usermodehelper_exec(sub_info, UMH_WAIT_EXEC);
+ out:
+-	if (argv)
+-		argv_free(argv);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(fork_usermode_driver);
+-- 
+2.25.0
 
-I could imagine accumulating the data in hardirq context and then
-using a workqueue or some such to print it all out, but that
-requires that workqueues be fully operational for RCU CPU stall
-warnings to appear.  :-(
-
-Thoughts?
-
-> > > So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> > > complain that you have a raw_spinlock_t acquired (the one from patch
-> > > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-> > 
-> > Given that the slab allocator doesn't acquire any locks until it gets
-> > a fair way in, wouldn't it make sense to allow a "shallow" allocation
-> > while a raw spinlock is held?  This would require yet another GFP_ flag,
-> > but that won't make all that much of a difference in the total.  ;-)
-> 
-> That would be one way of dealing with. But we could go back to
-> spinlock_t and keep the memory allocation even for RT as is. I don't see
-> a downside of this. And we would worry about kfree_rcu() from real
-> IRQ-off region once we get to it.
-
-Once we get to it, your thought would be to do per-CPU queuing of
-memory from IRQ-off kfree_rcu(), and have IRQ work or some such clean
-up after it?  Or did you have some other trick in mind?
-
-							Thanx, Paul
-
-> > > >  			bnode = (struct kfree_rcu_bulk_data *)
-> > > >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> > > >  		}
-> 
-> Sebastian
