@@ -2,157 +2,128 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44403C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D487C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 177F32088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8FE2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dKQMuoA7"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ON/Ul8j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGBJCb (ORCPT
+        id S1727782AbgGBJDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:02:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        Thu, 2 Jul 2020 05:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgGBJC1 (ORCPT
+        with ESMTP id S1726042AbgGBJDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:02:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DB3C08C5DE
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 02:02:27 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k6so27256103wrn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 02:02:27 -0700 (PDT)
+        Thu, 2 Jul 2020 05:03:34 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86A2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 02:03:33 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j19so6291863pgm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 02:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GTjBc/hGNzcdceABAK8fzhzIDZV3nXCY7b4Mavy/ci4=;
-        b=dKQMuoA7HIpaNtUkzWhx3mdsNLhbCrlZ8RJbekzqaLKEnDgAEfs7o+4ek33OUTza6K
-         HWx3pqxLSLn9RV93satwEB/+SQ3Na376tQj223LP6YbnuU8xwEcSePDqdOq8MeS0e224
-         cyTkt7uofZrXzLv5ZgPL8TZWOj8B1klRB2+/rj6JvZqqNJixZ23RCIuF0j0zm93KpaJc
-         W4oqYuu8T+SRmOpGgqBJ1VNDYXcFuk9MvR+M6vUNTh0x91SgHqVYwFva6P0tbC/mL1Gq
-         sh/NkHdsTSfW7ZKnoB5Mg8knSpLVOhGQs1UA+0HCOgpo8806bKYCbePRUSD/kBa9dr9D
-         w2Aw==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
+        b=ON/Ul8j0o0JNHF2o/1DvmtpFLhAUE8RtMf1CyujbGLJ/IZ/TdWmSeyQpdm68wMyz88
+         54AnCx5tqWP50x9DvQTOGkR2icvM5j4pw/hgMISV79yE7rngu6CkjpqgOyxWS0bf8aXd
+         /zXU9/Wp7OpjxGbcYPW8lCUzedugMJxnhFBsQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GTjBc/hGNzcdceABAK8fzhzIDZV3nXCY7b4Mavy/ci4=;
-        b=PgcpAPuEBd4wUWmwzwbeEBYizoFeC6YHxv1dozHsTGro1+HUOurEoVy97+a1Rze29k
-         QYL1cwW/eYDhu0cX5sMEbRkQyv0EU0Wl3mgoC7tog0PMqSFjACwJ45lRrBpvSQk932vs
-         5l+1jeP1lO8v8TXnCyhHvH20Wcook7jF709far46yGR4K9m121b2VpfW/2jzy5szvAPg
-         w6sYMAZWldNq/F7gzwkas+hE/fKA4JtsUGpKIjt8QG5+Qyi8jNGk1lfefWM1pq39UCXX
-         jjgad6GpxHn/H5Fz81siEPQVfmK31IB0dFCe86su5veSDAFtmuhoiyNoO+U6hFxTAkBW
-         V4Wg==
-X-Gm-Message-State: AOAM530gTs6CvnPfV5LXzYa1VARVMWnomTI+260Ih6XoWZPiDOn8a6AS
-        VLu46M/bCCgzdXP9/vvVbOGNRAy7kP8=
-X-Google-Smtp-Source: ABdhPJzxHeV5yMLoBrPWiPRB1A0Q06rRRCdhwyYMDS5EvocURzJNJalrdw6sGQYsUIaP6YcsrRltFQ==
-X-Received: by 2002:adf:dd4a:: with SMTP id u10mr30173514wrm.169.1593680545840;
-        Thu, 02 Jul 2020 02:02:25 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b17sm9919016wrp.32.2020.07.02.02.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 02:02:25 -0700 (PDT)
-Subject: Re: [PATCH 1/4] interconnect: qcom: Support bcm-voter-specific TCS
- wait behavior
-To:     Mike Tipton <mdtipton@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200623040814.23791-1-mdtipton@codeaurora.org>
- <20200623040814.23791-2-mdtipton@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <fee03dda-4c17-701b-bb1a-bf9482cc476d@linaro.org>
-Date:   Thu, 2 Jul 2020 12:02:23 +0300
+        bh=YjUk73CIPNmxb/gdoNk6S5t7bf881nraTdpuxxoiTMI=;
+        b=QEjjpoy9Pl6hIlPT2awALmcOqN6XdFsqEoHVrwX3ZoUk8YktMLIPg6N85oN96sU8QG
+         IDnv5ZO6D94W+v2UOoQgmf3ID9yzLA6/35fHFVFLoL3J8sy6rWwAWLqZt4pg3Lwpfq1q
+         Wy033AmIjb9EvGjbw7Sb9vp8GA38pQ8OlZ52nePpZh0RJ3TKXeaPpr7Y3/BsktKtC120
+         OuwzCWQbMozQt083MmY0xNt0YCh6LFeuVY7STp4wIQM0WwW2XCPz8+O0Km6tTxTrFv4+
+         lThJiQL4tuy+UN7wxhIM9K7sVAC/b3WXm+BsO4lk4SfBimrWJT/pzF7wCGXcHsRu8lhi
+         FHZA==
+X-Gm-Message-State: AOAM533038SBpoc4k3agY65QG0DzF6qgfE99ToxIbwKtG7F0uCuiapgw
+        WO6wiLQ4IY5jx+MSmnlGjBov/g==
+X-Google-Smtp-Source: ABdhPJw6Koh/B5/rpA4HQqjMOhYVzJ/2d/c9CUB3NCC7j0V6gZGi+4cBT5v8CIzZQiKZ+68ySxna8A==
+X-Received: by 2002:aa7:9a84:: with SMTP id w4mr16671552pfi.13.1593680613239;
+        Thu, 02 Jul 2020 02:03:33 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:a961:9b2e:1b93:8ca7])
+        by smtp.gmail.com with ESMTPSA id y7sm7594800pjy.21.2020.07.02.02.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 02:03:32 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        mylene.josserand@collabora.com
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>
+Subject: [PATCH] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
+Date:   Thu,  2 Jul 2020 14:32:59 +0530
+Message-Id: <20200702090259.36595-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200623040814.23791-2-mdtipton@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+rk3288 and rk3288w have a usb host0 ohci controller.
 
-On 6/23/20 07:08, Mike Tipton wrote:
-> Currently, all bcm-voters set tcs_cmd::wait=true for the last VCD
-> command in each TCS (AMC, WAKE, and SLEEP). However, some bcm-voters
-> don't need the completion and instead need to optimize for latency. For
-> instance, disabling wait-for-completion in the WAKE set can decrease
-> resume latency and allow for certain operations to occur in parallel
-> with the WAKE TCS triggering. This is only safe in very specific
-> situations. Keep the default behavior of always waiting, but allow it to
-> be overridden in devicetree.
-> 
-> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/bcm-voter.c | 32 ++++++++++++++++++---------
->  1 file changed, 21 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-[..]
-> @@ -336,7 +342,11 @@ static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	voter->dev = &pdev->dev;
-> -	voter->np = pdev->dev.of_node;
-> +	voter->np = np;
-> +
-> +	if (of_property_read_u32(np, "qcom,tcs-wait", &voter->tcs_wait))
+Although rk3288 ohci doesn't actually work on hardware, but
+rk3288w ohci can work well.
 
-This DT property needs to be documented.
+So add usb host0 ohci node in rk3288 dtsi and the quirk in
+ohci platform driver will disable ohci on rk3288.
 
-Thanks,
-Georgi
+The bootloader must update the compatible in order to bypass
+host0_ohci in legacy rk3288 platform.
+
+Cc: William Wu <william.wu@rock-chips.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Note:
+- U-Boot patch for compatible update
+https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
+
+ arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0cd88774db95..fd0066d07dfc 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -614,7 +614,19 @@ usb_host0_ehci: usb@ff500000 {
+ 		status = "disabled";
+ 	};
+ 
+-	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
++	/**
++	 * NOTE: ohci@ff520000 doesn't actually work on hardware
++	 * hardware, but can work on rk3288w hardware.
++	 */
++	usb_host0_ohci: usb@ff520000 {
++		compatible = "generic-ohci";
++		reg = <0x0 0xff520000 0x0 0x100>;
++		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_USBHOST0>;
++		phys = <&usbphy1>;
++		phy-names = "usb";
++		status = "disabled";
++	};
+ 
+ 	usb_host1: usb@ff540000 {
+ 		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
+-- 
+2.25.1
+
