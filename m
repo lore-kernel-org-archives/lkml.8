@@ -2,106 +2,122 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E9A208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DBA207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgGBS6j (ORCPT
+        id S1726122AbgGBS7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:58:39 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34237 "EHLO mga07.intel.com"
+        Thu, 2 Jul 2020 14:59:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34250 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGBS6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:58:38 -0400
-IronPort-SDR: MuT7qF1Z1+ZAqKitiuNUw39awLRHLTo4ULM2Uo7UsxwKxQphxO8VnROVJLaOIXxOlTXZZfRleN
- ii3+TS6jE+7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212034676"
+        id S1725994AbgGBS7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:59:13 -0400
+IronPort-SDR: TDfCyntwCHs/CwtxGutyY37rHGD6SsdRhnnDmMMlyyedVF5eumzxL2kM+bJFlu8oYmysXsME/m
+ dpUeKTfAp8VA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212034711"
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="212034676"
+   d="scan'208";a="212034711"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:58:38 -0700
-IronPort-SDR: lpwT6pJPC5PjRflArA+/3lgxlDyec4K5HEJsvVM/paf0VakxL3G/r98Qo/e1nZ8z7PP+PdJgBq
- HgquvVKCOZOA==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:59:13 -0700
+IronPort-SDR: YzTLt/T+mK9N9RTGwbAy/S5tmgEKsO7bJREBpaOjScr8Lf/fBZF6lvAWWk9T+KKDLC2G6r81MO
+ d8g2cqceqIsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="314226948"
-Received: from mylinen-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.43.38])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Jul 2020 11:58:35 -0700
-Date:   Thu, 2 Jul 2020 21:58:13 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org, dhowells@redhat.com
-Subject: [GIT PULL] tpmdd updates for Linux v5.8-rc4
-Message-ID: <20200702185813.GA25571@linux.intel.com>
+   d="scan'208";a="278207421"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 11:59:13 -0700
+Date:   Thu, 2 Jul 2020 11:59:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] KVM: X86: Move kvm_x86_ops.update_vcpu_model()
+ into kvm_update_vcpu_model()
+Message-ID: <20200702185913.GI3575@linux.intel.com>
+References: <20200623115816.24132-1-xiaoyao.li@intel.com>
+ <20200623115816.24132-7-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200623115816.24132-7-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jun 23, 2020 at 07:58:15PM +0800, Xiaoyao Li wrote:
+> kvm_x86_ops.update_vcpu_model() is used to update vmx/svm vcpu settings
+> based on updated CPUID settings. So it's supposed to be called after
+> CPUIDs are fully updated, i.e., kvm_update_cpuid().
+> 
+> Move it in kvm_update_vcpu_model().
 
-These are just fixes for bugs found lately. All of them are small scale
-things here and there, and all of them are for previous kernel releases
-(the oldest appeared in v2.6.17).
+The changelog needs to provide an in-depth analysis of VMX and SVM to prove
+that there are no existing dependencies in the ordering.  I've done the
+analysis a few times over the past few years for a similar chage I carried
+in my SGX code, but dropped that code a while back and haven't done the
+analysis since.  Anyways, it should be documented.
 
-/Jarkko
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+> ---
+>  arch/x86/kvm/cpuid.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index d2f93823f9fd..5decc2dd5448 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -121,6 +121,8 @@ void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  	struct kvm_cpuid_entry2 *best;
+>  
+> +	kvm_x86_ops.update_vcpu_model(vcpu);
+> +
+>  	best = kvm_find_cpuid_entry(vcpu, 1, 0);
+>  	if (best && apic) {
+>  		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+> @@ -136,6 +138,7 @@ void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+>  		vcpu->arch.guest_supported_xcr0 =
+>  			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+>  
+> +
 
-The following changes since commit cd77006e01b3198c75fb7819b3d0ff89709539bb:
+Spurious whitespace.
 
-  Merge tag 'hyperv-fixes-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux (2020-07-01 12:56:05 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-v5.8-rc4
-
-for you to fetch changes up to e918e570415ced9898a51109000a3f39a6e03be5:
-
-  tpm_tis: Remove the HID IFX0102 (2020-07-02 17:49:00 +0300)
-
-----------------------------------------------------------------
-tpmdd updates for Linux v5.8-rc4
-
-----------------------------------------------------------------
-Binbin Zhou (1):
-      tpm/st33zp24: fix spelling mistake "drescription" -> "description"
-
-David Gibson (1):
-      tpm: ibmvtpm: Wait for ready buffer before probing for TPM2 attributes
-
-Douglas Anderson (2):
-      tpm_tis_spi: Don't send anything during flow control
-      tpm_tis_spi: Prefer async probe
-
-James Bottomley (1):
-      tpm: Fix TIS locality timeout problems
-
-Jarkko Sakkinen (1):
-      tpm_tis: Remove the HID IFX0102
-
-Vasily Averin (1):
-      tpm_tis: extra chip->ops check on error path in tpm_tis_core_init
-
- drivers/char/tpm/st33zp24/i2c.c      |  2 +-
- drivers/char/tpm/st33zp24/spi.c      |  4 ++--
- drivers/char/tpm/st33zp24/st33zp24.c |  2 +-
- drivers/char/tpm/tpm-dev-common.c    | 19 +++++++++----------
- drivers/char/tpm/tpm_ibmvtpm.c       | 14 +++++++-------
- drivers/char/tpm/tpm_tis.c           |  1 -
- drivers/char/tpm/tpm_tis_core.c      |  2 +-
- drivers/char/tpm/tpm_tis_spi_main.c  | 10 +++++-----
- 8 files changed, 26 insertions(+), 28 deletions(-)
-
+>  	/* Note, maxphyaddr must be updated before tdp_level. */
+>  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+>  	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+> @@ -224,7 +227,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  
+>  	cpuid_fix_nx_cap(vcpu);
+>  	kvm_apic_set_version(vcpu);
+> -	kvm_x86_ops.update_vcpu_model(vcpu);
+>  	kvm_update_cpuid(vcpu);
+>  	kvm_update_vcpu_model(vcpu);
+>  
+> @@ -254,7 +256,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  	}
+>  
+>  	kvm_apic_set_version(vcpu);
+> -	kvm_x86_ops.update_vcpu_model(vcpu);
+>  	kvm_update_cpuid(vcpu);
+>  	kvm_update_vcpu_model(vcpu);
+>  out:
+> -- 
+> 2.18.2
+> 
