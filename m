@@ -2,86 +2,197 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02285C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E52820724
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60DB20760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="LpHBpy/6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7yLVEUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGBUUa (ORCPT
+        id S1726102AbgGBUWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
+        Thu, 2 Jul 2020 16:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBUUa (ORCPT
+        with ESMTP id S1725937AbgGBUWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:20:30 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318EAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:20:30 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id r22so26870519qke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:20:30 -0700 (PDT)
+        Thu, 2 Jul 2020 16:22:07 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493D1C08C5C1;
+        Thu,  2 Jul 2020 13:22:07 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id d18so19660839edv.6;
+        Thu, 02 Jul 2020 13:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Dg7b2Gpb1xwhbPPAs3f/5zlrWsmCaI8VPFPJDIO7oCs=;
-        b=LpHBpy/61tYHcbDhOlQTjymqaKpK8J7rjMk4O+FxTS5NK5wsajUBEDiNHJEIxDNrmb
-         A/vjKlla5gFM9d87viW/fHklmhK1tz+CtGJjuLrOgKm1ZEF2DF0uohGaSUa3Od6uFgwF
-         IwHbe9Uqjfw7uPuVBoh6o2uO3A9wCt0Y8mEwBxwU9GfTM8E8u1sUqDN/34Q6gUmbE6EE
-         ziMKMEkt0n4svSAzY7929lErAeLqCQMYa4VIMUTzg5NGv46LiX8uJXvBZ8rB8C3++1H4
-         P9iDLw5QIGqyZfad3TJGYKL8vyWL6exkLjaf4NXLoRBjSGaOQyIA7Z8ANbrxEJFmW8s1
-         EKsw==
+        bh=LJqRalz8nhd1uucT/hW2AoacNEdXpfTo9tORErtQ+CY=;
+        b=A7yLVEUdkzu0U9R4Gydu8ALB+orKv8jxKoFtu9XmVALASxtFPW+Va6LJ5qJhI72YNO
+         9Xv4iYY5bNsUh4qm4m+LioK2uUta+u/jnJbYpH5humUCWvYsMBgJboDYhKhHZZUx+Y2t
+         CDichgejEQLfWBWPDxoXBh4pejxijkeFbK9MuXnJAFs5KNJlHJCDWrK9c/h1hkSFn1Q4
+         i5mh2FvofLz5G0TU14GFgd8kGAENZrFOlC0+nycGxTpVBcCABFThDjY47tWqwP7ogWZm
+         0gGGJU4NXyM42SPgXXtcGIsWvfmWkLee6PiI8Na2c1rFNSlo/xXzsM8i1cmZ6bAwIOqg
+         4fkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Dg7b2Gpb1xwhbPPAs3f/5zlrWsmCaI8VPFPJDIO7oCs=;
-        b=E+RRIJJYJPwrfwwWx8XJS8ft7hSQb28kIp0y+PkTEe8Uah8PYTmkKzgwRvBF6cpzhn
-         Qor9DO2Sfzmp/LnLqqIXu7TaKSmIDzHNtaDbCmuN1TlK0Fr3cKLwnseTXJbKvQe/Z0v5
-         75DqhsRlW1VII2ht5cBAFnxErOATKb6iReOrsX7b/7mvjpEeElXdMv0dYYE105jkMTIS
-         gM2vNQKn7xvi7grKk3e5HqddyHWDjwd2pxlGK5jpJuh8NxkneMrwf6jSiRfD/93/HcJ8
-         Nrs7PvQl/dUMYA5Y3Tw/PbPEsi5WPZdkI99scpb7TbKYcDqQCoXl3bT5YllxP5IzeS29
-         QS4Q==
-X-Gm-Message-State: AOAM531ReMoZ1GBiIq/jTQgR14mgYvLr2k7nUm4SlfQ0zo3AXzjgy5OT
-        LxBh9Isuef8+WwoMYgsUoGeaaeIz8zvRCempOvbc2A==
-X-Google-Smtp-Source: ABdhPJzESDQ4tCGpwJuT9gwjDr5sMmtLBgj+5Xday1tr8AbXF/DNxfrO2eOsGxU2iUNCm4NFuhVI4oXEJD/1BRXoKqY=
-X-Received: by 2002:a37:a5cc:: with SMTP id o195mr32699648qke.326.1593721229404;
- Thu, 02 Jul 2020 13:20:29 -0700 (PDT)
+        bh=LJqRalz8nhd1uucT/hW2AoacNEdXpfTo9tORErtQ+CY=;
+        b=C9Xr9tTivuCaC8wgLRz7/pN/3lqlyjiCVKqZpfvQOPaCFWYQpk6yxpUnNjRnbQLjgs
+         H4/+LrFHaWCAMlwcuEo/4UOi4f61NYnpkMhVS5aA3p98e7qKIujs5yoPIpzROdLmTYwk
+         1zlynbe+QqyGiV8OjdSTj/Kc01G8ve9EycZh+4tmZD2sDitqQGy1MXX0FpnnO1k7j/NX
+         +JhXuNf9sy/TqwZlfemCUh8ueonhLx0q9XH1BjsJBVWlbLlkbeerp3nvqMysHuoV4ngu
+         Z679KZQqqOHHo3cCrIdts6CMivTe9xV0PMuE5BUan634E8JzU03tsVyQZhIqIFlJsajC
+         NqaQ==
+X-Gm-Message-State: AOAM5332Eau2wUtf/ecfcgSwl/uZPFBWWTY/VySu6rwbjUe3VlM8Hwri
+        GzjJ53J/CZJv9tcxpLwNQVPQfjlwJZttbOFMLCYOx8s+
+X-Google-Smtp-Source: ABdhPJzZ45bUaTYoAMc4+7tytjU6jg5rAHFG6yHcGC5gt16WN/ceKbzpc4PdmYV+WosMNX1otFsQabXOGlQkVzfbrmw=
+X-Received: by 2002:a50:f392:: with SMTP id g18mr14487895edm.151.1593721325980;
+ Thu, 02 Jul 2020 13:22:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200629211801.C3D7095C0900@us180.sjc.aristanetworks.com>
- <20200629171612.49efbdaa@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CA+HUmGjHQPUh1frfy5E28Om9WTVr0W+UQVDsm99beC_mbTeMog@mail.gmail.com>
- <61CC2BC414934749BD9F5BF3D5D940449874358A@ORSMSX112.amr.corp.intel.com>
- <CA+HUmGhfxYY5QiwF8_UYbp0TY-k3u+cTYZDSqV1s=SUFnGCn8g@mail.gmail.com> <61CC2BC414934749BD9F5BF3D5D9404498748B57@ORSMSX112.amr.corp.intel.com>
-In-Reply-To: <61CC2BC414934749BD9F5BF3D5D9404498748B57@ORSMSX112.amr.corp.intel.com>
-From:   Francesco Ruggeri <fruggeri@arista.com>
-Date:   Thu, 2 Jul 2020 13:20:18 -0700
-Message-ID: <CA+HUmGi6D8Ci5fk7vyengJN4qOEH6zz18Kw6B9Us-Kav-78oAg@mail.gmail.com>
-Subject: Re: [PATCH] igb: reinit_locked() should be called with rtnl_lock
-To:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-Cc:     "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+References: <20200626200042.13713-1-jcrouse@codeaurora.org> <20200626200042.13713-3-jcrouse@codeaurora.org>
+In-Reply-To: <20200626200042.13713-3-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 2 Jul 2020 13:22:36 -0700
+Message-ID: <CAF6AEGuN6b5a0=Ava53vyv8E57=XCPBTZAjYrRNxtNv41VOp4Q@mail.gmail.com>
+Subject: Re: [PATCH v9 2/7] iommu/arm-smmu: Add support for split pagetables
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 1:01 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> So will you be sending a v2 of your patch to include the second fix?
+> Enable TTBR1 for a context bank if IO_PGTABLE_QUIRK_ARM_TTBR1 is selected
+> by the io-pgtable configuration.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/iommu/arm-smmu.c | 21 ++++++++++++++++-----
+>  drivers/iommu/arm-smmu.h | 25 +++++++++++++++++++------
+>  2 files changed, 35 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 8a3a6c8c887a..048de2681670 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -555,11 +555,15 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>                         cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+>                         cb->ttbr[1] = 0;
+>                 } else {
+> -                       cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> -                       cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> -                                                 cfg->asid);
+> +                       cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> +                               cfg->asid);
+>                         cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> -                                                cfg->asid);
+> +                               cfg->asid);
 
-Yes, I am working on it. Just to confirm, v2 should include both fixes, right?
+above looks like stray whitespace changes?
 
-Thanks,
-Francesco
+> +
+> +                       if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
+> +                               cb->ttbr[1] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +                       else
+> +                               cb->ttbr[0] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+>                 }
+>         } else {
+>                 cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+> @@ -824,7 +828,14 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>
+>         /* Update the domain's page sizes to reflect the page table format */
+>         domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> -       domain->geometry.aperture_end = (1UL << ias) - 1;
+> +
+> +       if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +               domain->geometry.aperture_start = ~0UL << ias;
+> +               domain->geometry.aperture_end = ~0UL;
+> +       } else {
+> +               domain->geometry.aperture_end = (1UL << ias) - 1;
+> +       }
+> +
+>         domain->geometry.force_aperture = true;
+>
+>         /* Initialise the context bank with our page table cfg */
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 38b041530a4f..5f2de20e883b 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -168,10 +168,12 @@ enum arm_smmu_cbar_type {
+>  #define ARM_SMMU_CB_TCR                        0x30
+>  #define ARM_SMMU_TCR_EAE               BIT(31)
+>  #define ARM_SMMU_TCR_EPD1              BIT(23)
+> +#define ARM_SMMU_TCR_A1                        BIT(22)
+>  #define ARM_SMMU_TCR_TG0               GENMASK(15, 14)
+>  #define ARM_SMMU_TCR_SH0               GENMASK(13, 12)
+>  #define ARM_SMMU_TCR_ORGN0             GENMASK(11, 10)
+>  #define ARM_SMMU_TCR_IRGN0             GENMASK(9, 8)
+> +#define ARM_SMMU_TCR_EPD0              BIT(7)
+>  #define ARM_SMMU_TCR_T0SZ              GENMASK(5, 0)
+>
+>  #define ARM_SMMU_VTCR_RES1             BIT(31)
+> @@ -347,12 +349,23 @@ struct arm_smmu_domain {
+>
+>  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+>  {
+> -       return ARM_SMMU_TCR_EPD1 |
+> -              FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> -              FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> -              FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> -              FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> -              FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +       u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> +               FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> +               FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> +               FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> +               FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +
+> +       /*
+> +       * When TTBR1 is selected shift the TCR fields by 16 bits and disable
+> +       * translation in TTBR0
+> +       */
+> +       if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +               tcr = (tcr << 16) & ~ARM_SMMU_TCR_A1;
+> +               tcr |= ARM_SMMU_TCR_EPD0;
+> +       } else
+> +               tcr |= ARM_SMMU_TCR_EPD1;
+
+I'm not personally a fan of if/else ladders that mix {}'s, but
+Will/Robin may have a different opinion
+
+BR,
+-R
+
+> +
+> +       return tcr;
+>  }
+>
+>  static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
+> --
+> 2.17.1
+>
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
