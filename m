@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3293CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB9C221E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173F421D82
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGBTWE (ORCPT
+        id S1726152AbgGBTWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:22:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9166 "EHLO mga14.intel.com"
+        Thu, 2 Jul 2020 15:22:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9175 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgGBTWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:22:01 -0400
-IronPort-SDR: D71IRy7cOGi+JH7syY6DvD0Z+mqFYoyZozHl0QbIMN1WWXMbRnq4BVYeW1eMlNdpkEN6RF+VMh
- y9pKaPgz9nJg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="146092706"
+        id S1726106AbgGBTWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:22:05 -0400
+IronPort-SDR: usXyaS2Bo6gQ2s9dyCwk9Lht+v6qSphkQ/xv1LF48nZSv9q9oRkMy8DQQGaPNhbTtfRFVtc8RS
+ p2L2XLAMILnw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="146092719"
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="146092706"
+   d="scan'208";a="146092719"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:22:01 -0700
-IronPort-SDR: 0MSZc4j1NtUdgXXi5+xmqcpzvZwHrMwZQnSlT16ycjSqUBDlJ8mmTkpngi2o7urnIiGnDR63yM
- etVW3YfwFSwQ==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:22:04 -0700
+IronPort-SDR: RTZSIGG3RcfVFOGwPmrE/3GFiGylgY/qObQYSPNhRs+TrbIui73N0dDMyIFhuHJuYCmCsnLJBb
+ 0HBNGGNmZU5Q==
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="304345301"
+   d="scan'208";a="304345336"
 Received: from dhprice-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.75.219])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:21:59 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:22:03 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
@@ -47,9 +47,9 @@ Cc:     tiwai@suse.de, broonie@kernel.org,
         Takashi Iwai <tiwai@suse.com>,
         linuxppc-dev@lists.ozlabs.org (open list:FREESCALE SOC SOUND DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/6] ASoC: fsl: fsl_spdif: fix kernel-doc
-Date:   Thu,  2 Jul 2020 14:21:39 -0500
-Message-Id: <20200702192141.168018-5-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 6/6] ASoC: fsl: fsl_esai: fix kernel-doc
+Date:   Thu,  2 Jul 2020 14:21:41 -0500
+Message-Id: <20200702192141.168018-7-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702192141.168018-1-pierre-louis.bossart@linux.intel.com>
 References: <20200702192141.168018-1-pierre-louis.bossart@linux.intel.com>
@@ -60,37 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 warnings. kernel-doc syntax was not followed and missing parameter
+Fix W=1 warnings. Fix kernel-doc syntax and add missing parameters.
 
 Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/fsl/fsl_spdif.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/fsl/fsl_esai.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 5b2689ae63d4..9fb95c6ee7ba 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -81,8 +81,8 @@ struct spdif_mixer_control {
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index cbcb70d6f8c8..b8fbd7ba94af 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -22,8 +22,7 @@
+ 				SNDRV_PCM_FMTBIT_S24_LE)
+ 
+ /**
+- * fsl_esai_soc_data: soc specific data
+- *
++ * struct fsl_esai_soc_data - soc specific data
+  * @imx: for imx platform
+  * @reset_at_xrun: flags for enable reset operaton
+  */
+@@ -33,8 +32,7 @@ struct fsl_esai_soc_data {
  };
  
  /**
-- * fsl_spdif_priv: Freescale SPDIF private data
+- * fsl_esai: ESAI private data
 - *
-+ * struct fsl_spdif_priv - Freescale SPDIF private data
-+ * @soc: SPDIF soc data
-  * @fsl_spdif_control: SPDIF control data
-  * @cpu_dai_drv: cpu dai driver
-  * @pdev: platform device pointer
-@@ -100,6 +100,7 @@ struct spdif_mixer_control {
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @dma_params_tx: DMA parameters for transmit channel
++ * struct fsl_esai - ESAI private data
   * @dma_params_rx: DMA parameters for receive channel
-+ * @regcache_srpc: regcache for SRPC
+  * @dma_params_tx: DMA parameters for transmit channel
+  * @pdev: platform device pointer
+@@ -49,6 +47,8 @@ struct fsl_esai_soc_data {
+  * @fifo_depth: depth of tx/rx FIFO
+  * @slot_width: width of each DAI slot
+  * @slots: number of slots
++ * @tx_mask: slot mask for TX
++ * @rx_mask: slot mask for RX
+  * @channels: channel num for tx or rx
+  * @hck_rate: clock rate of desired HCKx clock
+  * @sck_rate: clock rate of desired SCKx clock
+@@ -157,13 +157,15 @@ static irqreturn_t esai_isr(int irq, void *devid)
+ }
+ 
+ /**
+- * This function is used to calculate the divisors of psr, pm, fp and it is
+- * supposed to be called in set_dai_sysclk() and set_bclk().
++ * fsl_esai_divisor_cal - This function is used to calculate the
++ * divisors of psr, pm, fp and it is supposed to be called in
++ * set_dai_sysclk() and set_bclk().
+  *
++ * @dai: pointer to DAI
++ * @tx: current setting is for playback or capture
+  * @ratio: desired overall ratio for the paticipating dividers
+  * @usefp: for HCK setting, there is no need to set fp divider
+  * @fp: bypass other dividers by setting fp directly if fp != 0
+- * @tx: current setting is for playback or capture
   */
- struct fsl_spdif_priv {
- 	const struct fsl_spdif_soc_data *soc;
+ static int fsl_esai_divisor_cal(struct snd_soc_dai *dai, bool tx, u32 ratio,
+ 				bool usefp, u32 fp)
+@@ -250,13 +252,12 @@ static int fsl_esai_divisor_cal(struct snd_soc_dai *dai, bool tx, u32 ratio,
+ }
+ 
+ /**
+- * This function mainly configures the clock frequency of MCLK (HCKT/HCKR)
+- *
+- * @Parameters:
+- * clk_id: The clock source of HCKT/HCKR
++ * fsl_esai_set_dai_sysclk - configure the clock frequency of MCLK (HCKT/HCKR)
++ * @dai: pointer to DAI
++ * @clk_id: The clock source of HCKT/HCKR
+  *	  (Input from outside; output from inside, FSYS or EXTAL)
+- * freq: The required clock rate of HCKT/HCKR
+- * dir: The clock direction of HCKT/HCKR
++ * @freq: The required clock rate of HCKT/HCKR
++ * @dir: The clock direction of HCKT/HCKR
+  *
+  * Note: If the direction is input, we do not care about clk_id.
+  */
+@@ -358,7 +359,10 @@ static int fsl_esai_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+ }
+ 
+ /**
+- * This function configures the related dividers according to the bclk rate
++ * fsl_esai_set_bclk - configure the related dividers according to the bclk rate
++ * @dai: pointer to DAI
++ * @tx: direction boolean
++ * @freq: bclk freq
+  */
+ static int fsl_esai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
+ {
 -- 
 2.25.1
 
