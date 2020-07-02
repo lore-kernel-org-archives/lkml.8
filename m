@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728EA20B80
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539B02083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653160;
-	bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
+	s=default; t=1593653169;
+	bh=mVT1nm+k/l19rJIVXm8NMTgjChCxlRFDhy6XAsQx29g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f2Tav6m6kIh8U4YKWdfJ1hXNZpIAP9j8jVxPMTXhPYjR1GdiaOCbZE+SAAap9lmZf
-	 Ricyz14Mrp6TA4tlUy3h7gtv2XqMk89g01TUYpqy6qvKonleP2tJyYgAZme87tr9t5
-	 DSmKDSbBFH87l3jxVm/ktj7OahlX1L4LkFPkkbww=
+	b=xiXTeKv8URiwMZhRjo7G3dWZcizlQqROG1r2inZcHlM2Y74Hh5g6/E7cmMo3hwSVT
+	 7DDUrL77FPvJo1/go4qAGbuXHGDOHabU7nf0GKUspd2K6aWxfJ7pX+6afnDJol/Oxk
+	 QAJye0RoYfH5SvwIwmoJWY66zVRE0zYg4Ktw9UZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgGBBZ7 (ORCPT
+        id S1729078AbgGBB0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgGBBZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:47 -0400
+        id S1728987AbgGBBZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B9120874;
-        Thu,  2 Jul 2020 01:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6268206BE;
+        Thu,  2 Jul 2020 01:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653147;
-        bh=tdynT2JV7a0+gxRc6IFSgh5pZhbM6pNqj5JJ3tzCOCs=;
+        s=default; t=1593653153;
+        bh=mVT1nm+k/l19rJIVXm8NMTgjChCxlRFDhy6XAsQx29g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnsWHoGsgFWO0TBTM07Mp/aBytLz/KonrE105BQQVKhwMnOU1fDlL1WLXWEgNCeqw
-         /jwzhmTzVbaDAfFtAQgN3tiDrVMM+j+mXCt7iWD68gKuiVMe4JtaVCoZdRfPzJ9aXW
-         EqbeoEAejREj1Qw2DZMpsGRuaoAran1PpD3RaKDE=
+        b=ZjSj7zFAtjSXzS/bofwywL9xBccP+LztiaSsA4AOx5Fm3UPnwZP9Dw7tj0RCN/A6J
+         wacgJutl8FQPe152KAVpgBHyNj8Lw28b67PIUEqk4qDrlrO/7YiLhrv1WiJ2gpkZAQ
+         +h1vkrem64cMImiPOfJ48VyFinPxKqWYq6tg6NWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/40] net: ethernet: mvneta: Add 2500BaseX support for SoCs without comphy
-Date:   Wed,  1 Jul 2020 21:23:39 -0400
-Message-Id: <20200702012402.2701121-18-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 23/40] powerpc/kvm/book3s64: Fix kernel crash with nested kvm & DEBUG_VIRTUAL
+Date:   Wed,  1 Jul 2020 21:23:44 -0400
+Message-Id: <20200702012402.2701121-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -59,48 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 1a642ca7f38992b086101fe204a1ae3c90ed8016 ]
+[ Upstream commit c1ed1754f271f6b7acb1bfdc8cfb62220fbed423 ]
 
-The older SoCs like Armada XP support a 2500BaseX mode in the datasheets
-referred to as DR-SGMII (Double rated SGMII) or HS-SGMII (High Speed
-SGMII). This is an upclocked 1000BaseX mode, thus
-PHY_INTERFACE_MODE_2500BASEX is the appropriate mode define for it.
-adding support for it merely means writing the correct magic value into
-the MVNETA_SERDES_CFG register.
+With CONFIG_DEBUG_VIRTUAL=y, __pa() checks for addr value and if it's
+less than PAGE_OFFSET it leads to a BUG().
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  #define __pa(x)
+  ({
+  	VIRTUAL_BUG_ON((unsigned long)(x) < PAGE_OFFSET);
+  	(unsigned long)(x) & 0x0fffffffffffffffUL;
+  })
+
+  kernel BUG at arch/powerpc/kvm/book3s_64_mmu_radix.c:43!
+  cpu 0x70: Vector: 700 (Program Check) at [c0000018a2187360]
+      pc: c000000000161b30: __kvmhv_copy_tofrom_guest_radix+0x130/0x1f0
+      lr: c000000000161d5c: kvmhv_copy_from_guest_radix+0x3c/0x80
+  ...
+  kvmhv_copy_from_guest_radix+0x3c/0x80
+  kvmhv_load_from_eaddr+0x48/0xc0
+  kvmppc_ld+0x98/0x1e0
+  kvmppc_load_last_inst+0x50/0x90
+  kvmppc_hv_emulate_mmio+0x288/0x2b0
+  kvmppc_book3s_radix_page_fault+0xd8/0x2b0
+  kvmppc_book3s_hv_page_fault+0x37c/0x1050
+  kvmppc_vcpu_run_hv+0xbb8/0x1080
+  kvmppc_vcpu_run+0x34/0x50
+  kvm_arch_vcpu_ioctl_run+0x2fc/0x410
+  kvm_vcpu_ioctl+0x2b4/0x8f0
+  ksys_ioctl+0xf4/0x150
+  sys_ioctl+0x28/0x80
+  system_call_exception+0x104/0x1d0
+  system_call_common+0xe8/0x214
+
+kvmhv_copy_tofrom_guest_radix() uses a NULL value for to/from to
+indicate direction of copy.
+
+Avoid calling __pa() if the value is NULL to avoid the BUG().
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[mpe: Massage change log a bit to mention CONFIG_DEBUG_VIRTUAL]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200611120159.680284-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/kvm/book3s_64_mmu_radix.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index b0599b205b36e..9799253948281 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -108,6 +108,7 @@
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -3199,6 +3200,11 @@ static int mvneta_config_interface(struct mvneta_port *pp,
- 			mvreg_write(pp, MVNETA_SERDES_CFG,
- 				    MVNETA_SGMII_SERDES_PROTO);
- 			break;
-+
-+		case PHY_INTERFACE_MODE_2500BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_HSGMII_SERDES_PROTO);
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+index 43b56f8f6bebd..da8375437d161 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -38,7 +38,8 @@ unsigned long __kvmhv_copy_tofrom_guest_radix(int lpid, int pid,
+ 	/* Can't access quadrants 1 or 2 in non-HV mode, call the HV to do it */
+ 	if (kvmhv_on_pseries())
+ 		return plpar_hcall_norets(H_COPY_TOFROM_GUEST, lpid, pid, eaddr,
+-					  __pa(to), __pa(from), n);
++					  (to != NULL) ? __pa(to): 0,
++					  (from != NULL) ? __pa(from): 0, n);
+ 
+ 	quadrant = 1;
+ 	if (!pid)
 -- 
 2.25.1
 
