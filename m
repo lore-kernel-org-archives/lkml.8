@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0FDC433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D8BC433E2
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529A8207E8
+	by mail.kernel.org (Postfix) with ESMTP id 34F5E206A1
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:52:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="RTgR1R4p"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="RpxYDqla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgGBEvc (ORCPT
+        id S1726142AbgGBEuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 00:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42776 "EHLO
+        Thu, 2 Jul 2020 00:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBEvb (ORCPT
+        with ESMTP id S1725994AbgGBEuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 00:51:31 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77A6DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 21:51:31 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w2so12051388pgg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 21:51:31 -0700 (PDT)
+        Thu, 2 Jul 2020 00:50:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692B6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 21:50:13 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c1so4716558pja.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 21:50:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
         h=from:date:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=/YARYDgAoocQGIiJPdXQ/OBNzg9SVquA525nyFPetjI=;
-        b=RTgR1R4pF0FKxBMUiO1ySajqUMjzwSomk7BeRnUlSAheR8sN1yghpi81c7QzAPi30S
-         Cd2RmKtaz1EAHX928beEqY8698DBkIlTm2d57H/jz+09SFQRZjqSqegfpIeMkrBc02J5
-         4l2oLR8Vzl733jEo0n66VgSt6BHqpX0gTOWQyWroO5eocilGBNUjVV0k9z73iCmB1opi
-         aC2bUeo3vIBOSQfgKiB2ixtz38ZfYEnkngbjD4S3Ei1vTRGufTAbIuRpjNV+ppWyT5fn
-         W67O7zmu8DxPmnMFWrDKgh3+L1D4/Huhbp3sj/PNp6aT7/jqy4p4OBpM+u7XUdJdIsEk
-         pA7g==
+        bh=F6LmeZX+6/twUDfqjCU4/+RVNpb2JuA2WcOC1ESyj6M=;
+        b=RpxYDqlaOg+aSsozjdEH7TQfJZAZ7oKftHWfuxeffKsxYulJ4iEsGsetssji0IFCWG
+         /eJO3DqsNCPVlsX6A771WSE0FkGM2pTwP9l6HhqEegFWErxXjuDHnHgmU1rJRhYn3WSV
+         FgFeynLee6MaVCHNzoCM82jlqbnqv6LGQAczZ3FJJkmawahIfFFzq9ahnLyZckCx3eO+
+         +VJkl684m9o4DqxjzYoqzkh+6bFFQePdr7gOpFQQSjk46VSZzhSbF/HI9981AcAjdk3j
+         hrdEFlVlmylgQ06nTVqF3Bf6i2t7hcWCP0FQSSRegAd3fwVKPIZeYJCs8CVWWN0TQn8H
+         5OeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=/YARYDgAoocQGIiJPdXQ/OBNzg9SVquA525nyFPetjI=;
-        b=F5poInzeFiX/2w+C/yNXgci3LhbBmDWSAI5tfV+zDYXO81D5LWB5f77vRm018yh4Gs
-         lfyTaaewqhGF8EQT4Ak5+YRJ8ebJg/0vEWPzogy7CRA2YUWwSyLrQX2rG900ZPFmWPAC
-         0ZMt5JR/TgfTHveOg7bB/XwAMEGuOJDY8Ht/Y8a0g0T6tqGaNfg2cbuQJDbTnCQIqmkv
-         UY5YT8bRXcAAmb0H7xIRkTZvZFUlUxtuek2amI/3Z3iXqs5PaOdiL3jss8HRpVX/JwuR
-         ijJ3ZpNpQJsa2RdZ/D/CcwXCd/97KAGYP3NL7Gnr/lh5ocNoII0bzBq6ELa3chhLa8Jt
-         k8zQ==
-X-Gm-Message-State: AOAM532hUa51WwCX5hUMhki0s48m2YFoITl+bJB0ZqORgfjSzJtgr7zg
-        TsCvW1yKgzK/PGzF+lwy9YHNeCTJkyE=
-X-Google-Smtp-Source: ABdhPJxPTZPC3w/d59Fp37ZizB8i5GBUp8REhCRxOQW8S18y3Z2Rbc7ie3Ym+iWR58XPlJoEGQBCoA==
-X-Received: by 2002:a62:cf07:: with SMTP id b7mr25710527pfg.33.1593665490994;
-        Wed, 01 Jul 2020 21:51:30 -0700 (PDT)
+        bh=F6LmeZX+6/twUDfqjCU4/+RVNpb2JuA2WcOC1ESyj6M=;
+        b=QZD/vQcluqaH4erRGUJrcw038uDsRkFde/WKINa4gfPdLwTF6W2tQs4IXRZcWFsXt5
+         +SW6/YQxsVz45K0nMKLxpMd2gCqNc69eUW00esUAbUlVBMvGwCBw5g2JiH/QJ46CH6o9
+         n3Tsy2wDVe4pCas2w7tjd1vt4n/FmFCNb6b3CxNrlTHi8CECXKzv9ZKO23uL0n8xkXim
+         dCDjHIziHbc1VraQPa9WcaSxoBuQl/qXCsqv8hZ89l1Q+v+9XCO8koUFcB4K6T6TZsyu
+         enlgwYpWMI0mHyhdOOOG2N7FzMKDS+E73tdR7R2XO+Swakux97T3g43pFq4DJzyH9VxA
+         zvAQ==
+X-Gm-Message-State: AOAM531j5lxqPiylA+baObu20bG2GucNuHme8vbJpMFj7uas1hls1h3+
+        moOHmDHG1rc95Hjx6Us01BsH/w==
+X-Google-Smtp-Source: ABdhPJw/dn0+RNR+K+qxXnTc0cST1WTsW5nKfm6ePohk8OsZskJJix5DKMHIdYwJwJgsb5nitMHv1g==
+X-Received: by 2002:a17:90a:3a81:: with SMTP id b1mr25434275pjc.217.1593665412996;
+        Wed, 01 Jul 2020 21:50:12 -0700 (PDT)
 Received: from localhost ([2406:7400:73:3271:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id br9sm6310418pjb.56.2020.07.01.21.51.29
+        by smtp.gmail.com with ESMTPSA id l9sm6119303pjy.2.2020.07.01.21.50.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 21:51:30 -0700 (PDT)
+        Wed, 01 Jul 2020 21:50:12 -0700 (PDT)
 From:   B K Karthik <bkkarthik@pesu.pes.edu>
 X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 2 Jul 2020 00:51:22 -0400
+Date:   Thu, 2 Jul 2020 00:50:04 -0400
 To:     Larry Finger <Larry.Finger@lwfinger.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] staging: rtl8188eu: include: rtw_pwrctrl.h: fixed
- multiple parentheses coding style issues.
-Message-ID: <20200702045122.xysl7ctdke6wxedz@pesu-pes-edu>
+Subject: [PATCH] staging: rtl8188eu: include: rtw_cmd.h: fixed a blank space
+ coding style issue.
+Message-ID: <20200702045004.5wp7fnzw5pg4yov5@pesu-pes-edu>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ks6c27hjdea646tv"
+        protocol="application/pgp-signature"; boundary="zygqjcf6nxczcpxr"
 Content-Disposition: inline
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,59 +79,50 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ks6c27hjdea646tv
+--zygqjcf6nxczcpxr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-add parentheses since complex valued macros must be enclosed within parentheses.
+add blank spaces for improved code readability.
 
 Signed-off-by: B K Karthik <karthik.bk2000@live.com>
 ---
- drivers/staging/rtl8188eu/include/rtw_pwrctrl.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/include/rtw_cmd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-index 404634999e35..c89328142731 100644
---- a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-@@ -84,7 +84,7 @@ struct reportpwrstate_parm {
- 	unsigned short rsvd;
- };
+diff --git a/drivers/staging/rtl8188eu/include/rtw_cmd.h b/drivers/staging/rtl8188eu/include/rtw_cmd.h
+index fa5e212fc9e0..002a797c6d0a 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_cmd.h
++++ b/drivers/staging/rtl8188eu/include/rtw_cmd.h
+@@ -115,7 +115,7 @@ struct	setopmode_parm {
+  */
 
--#define LPS_DELAY_TIME	1*HZ /*  1 sec */
-+#define LPS_DELAY_TIME	(i*HZ) /*  1 sec */
-
- #define EXE_PWR_NONE	0x01
- #define EXE_PWR_IPS		0x02
-@@ -201,7 +201,7 @@ struct pwrctrl_priv {
- };
-
- #define rtw_get_ips_mode_req(pwrctrlpriv) \
--	(pwrctrlpriv)->ips_mode_req
-+	((pwrctrlpriv)->ips_mode_req)
-
- #define rtw_ips_mode_req(pwrctrlpriv, ips_mode) \
- 	((pwrctrlpriv)->ips_mode_req = (ips_mode))
+ #define RTW_SSID_SCAN_AMOUNT 9 /*  for WEXT_CSCAN_AMOUNT 9 */
+-#define RTW_CHANNEL_SCAN_AMOUNT (14+37)
++#define RTW_CHANNEL_SCAN_AMOUNT (14 + 37)
+ struct sitesurvey_parm {
+ 	int scan_mode;	/* active: 1, passive: 0 */
+ 	u8 ssid_num;
 --
 2.20.1
 
 
---ks6c27hjdea646tv
+--zygqjcf6nxczcpxr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79Z8oACgkQ471Q5AHe
-Z2oL3Qv/Y9lIZMUuMYffWsvo/dS/mAzAgBEYtZmXv8NFysaG6SLLXr5euK0SRAtT
-u5sziSw40waWJfp4O/DYMiTshprA8tTojvCjoSZP+jdLj/H/aduVAalCRvF8oCNU
-ASaEip5GZUcFYKhFVEa/9qfjUd3gbZBEBuWpJhDyC3jx6cxeX+d7RKseKApNbF7j
-aE7uXtGaZY14l8b0QPJWXbzN7aqVEIwkJujJKR6/0rLDxYtXD5GVYpW3+mTF103c
-e9L3yGZCn/PMMnoE2eTB4oEXZhJWmcOj2lKVa17V0+ZFdkytmxhofxlYBfgRVUSR
-yUI6keUD2Y3nO1Eh/xdCuxnCBFzl/sPk4ylYZLMn5RqI/icpNfhcuzCv/FsdkdHo
-nLMHg/+TgyVFPDpj9uRSAQ8Nuuk17h/PE3fhgK3BklT+vcosH8YI2NKmN0MtEZkY
-7Y3E8YJ+Rr5wG8KIER14sm6d721DGlJxjacCOVJu7jbTQtr/Y4sg7xD7mrjH7PZz
-IR5raRTj
-=fmwW
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79Z3wACgkQ471Q5AHe
+Z2o58gwAg8Y6R1M+CQCan4VuSvGWvCvzR4lR/I2qDwvNYyK0oKRvch/PWcYex/cz
+xaSHE4YHRJONZAbtkNM+twahIBfysdb2ZoHzKsQnSOa3oSmMpP6E5jsmi9yAfNJO
+IgwqnU3bYNGr2ocA8tSLsq+MhbcdKy9ftu1GL7+bzdpUlmVb/muWZiRewq2CBjkE
+CnNUFEemCpBOn5bORWNepScnl5siOzXBWOlxM8nt1t+XDs9qtSsYXLoTNNnaiL9u
+YZ/I6NM6jMha7g44mO1+QxXZMbEtN3GAuqr+BF2kxaWo5y20W5ABPhNOU6CDrl2c
+pC5BHmrEuSb8U4kiWtfGAyXOAKbdByKiOSFkjjgkJ5vRWxPWKXnfr/vWHJ4MILTU
+Ydh+6v6cw4wygnTr8TClx64q/FyBHk4CE1VhGDTT+bg2SpgHLXxZRqvaxu1wJen2
+D0c2Wf1k1p48ZEMFS7IBOuQ3H586BQQ7jZh0hYcBPJJj1MSlSqyP0WdU24MSvLai
+rO+rrgcX
+=x9Gc
 -----END PGP SIGNATURE-----
 
---ks6c27hjdea646tv--
+--zygqjcf6nxczcpxr--
