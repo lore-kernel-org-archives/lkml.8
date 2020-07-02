@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C527C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D929BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE7520781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B358820781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653737;
-	bh=V6Pmu3m83SA+fn0VRBHhHKrR+JTh1Ner59R44FVUyEw=;
+	s=default; t=1593653753;
+	bh=KWQ4e3p+UIInG0QsWaTKjw4uJUmUUZQzFdKT60LPMKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CZYJeelY0TDgNFW1mDZUwGsfja0fj+GF3pglHVhAVg+u3uouxgcJCzzBcVvnbodpD
-	 5hkzolpfLytpscORWyIIv3WSNny6Bq7PWlZNApypEfLwL2auxz3vyfw/fzI3F6LrKx
-	 lla4efD1t2v0T9lqZWd53PCAmQvCMhMlA4/FV5AU=
+	b=w3X06QIY7dCqC+y4LP+EtWJ0OxCuJIy7SSsj/rCDr5ewn+ZY72yMAdyqGyOEwIB5C
+	 caHrhDYaZeClqFbNjKRRl1Yo7URImTChbnAnB97GvGtqOKE4pihOe3wl7WrPgaRmJy
+	 +vm6IvFXiwHZ9M4mCWeW5JxcGtqx6LQnxHgV7hfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgGBBfZ (ORCPT
+        id S1728887AbgGBBfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgGBBX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:29 -0400
+        id S1728316AbgGBBXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9922083E;
-        Thu,  2 Jul 2020 01:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C5720748;
+        Thu,  2 Jul 2020 01:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653008;
-        bh=V6Pmu3m83SA+fn0VRBHhHKrR+JTh1Ner59R44FVUyEw=;
+        s=default; t=1593653003;
+        bh=KWQ4e3p+UIInG0QsWaTKjw4uJUmUUZQzFdKT60LPMKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQZV06qbtg6MkAq5TEi69YA1NQYfj12bpoY9rl+kCIWPTm7CccVd6oV8pe7y3zmHN
-         qN0CTIduWwyKatekHCM7H64OEzcxpI48wswEmtwONcD93sDJdR3+F2j27G1F2fE9gw
-         xqE530hk3lmCPLu1wkVv9vVqncpcHEAURJVesQFw=
+        b=Yy3it853cghdNRbF9XTBt2aPNvrQfUClzx4xpBjFSWdHCtVHpo2YFxAR5+R29gSHw
+         KMYk9ms4sns9EdfEoYwGuWSXaMs9ue1i3h1pqBANBZjO+Kp0w1+5txJumekHhqF21i
+         CE4PE+GM2fKr4TSsI4yzYPrqJs+CuJTtDVaLgK7I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ciara Loftus <ciara.loftus@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 27/53] ice: protect ring accesses with WRITE_ONCE
-Date:   Wed,  1 Jul 2020 21:21:36 -0400
-Message-Id: <20200702012202.2700645-27-sashal@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 23/53] net: ethernet: mvneta: Add 2500BaseX support for SoCs without comphy
+Date:   Wed,  1 Jul 2020 21:21:32 -0400
+Message-Id: <20200702012202.2700645-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -62,77 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ciara Loftus <ciara.loftus@intel.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit b1d95cc2391ffac0c5b27256a4fb0d2cfb021a29 ]
+[ Upstream commit 1a642ca7f38992b086101fe204a1ae3c90ed8016 ]
 
-The READ_ONCE macro is used when reading rings prior to accessing the
-statistics pointer. The corresponding WRITE_ONCE usage when allocating and
-freeing the rings to ensure protected access was not in place. Introduce
-this.
+The older SoCs like Armada XP support a 2500BaseX mode in the datasheets
+referred to as DR-SGMII (Double rated SGMII) or HS-SGMII (High Speed
+SGMII). This is an upclocked 1000BaseX mode, thus
+PHY_INTERFACE_MODE_2500BASEX is the appropriate mode define for it.
+adding support for it merely means writing the correct magic value into
+the MVNETA_SERDES_CFG register.
 
-Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_lib.c  | 8 ++++----
- drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index 2f256bf45efcf..6dd839b325259 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -1063,7 +1063,7 @@ static void ice_vsi_clear_rings(struct ice_vsi *vsi)
- 		for (i = 0; i < vsi->alloc_txq; i++) {
- 			if (vsi->tx_rings[i]) {
- 				kfree_rcu(vsi->tx_rings[i], rcu);
--				vsi->tx_rings[i] = NULL;
-+				WRITE_ONCE(vsi->tx_rings[i], NULL);
- 			}
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 401eeeca89660..af578a5813bd2 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -110,6 +110,7 @@
+ #define MVNETA_SERDES_CFG			 0x24A0
+ #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+ #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
++#define      MVNETA_HSGMII_SERDES_PROTO		 0x1107
+ #define MVNETA_TYPE_PRIO                         0x24bc
+ #define      MVNETA_FORCE_UNI                    BIT(21)
+ #define MVNETA_TXQ_CMD_1                         0x24e4
+@@ -3558,6 +3559,11 @@ static int mvneta_config_interface(struct mvneta_port *pp,
+ 			mvreg_write(pp, MVNETA_SERDES_CFG,
+ 				    MVNETA_SGMII_SERDES_PROTO);
+ 			break;
++
++		case PHY_INTERFACE_MODE_2500BASEX:
++			mvreg_write(pp, MVNETA_SERDES_CFG,
++				    MVNETA_HSGMII_SERDES_PROTO);
++			break;
+ 		default:
+ 			return -EINVAL;
  		}
- 	}
-@@ -1071,7 +1071,7 @@ static void ice_vsi_clear_rings(struct ice_vsi *vsi)
- 		for (i = 0; i < vsi->alloc_rxq; i++) {
- 			if (vsi->rx_rings[i]) {
- 				kfree_rcu(vsi->rx_rings[i], rcu);
--				vsi->rx_rings[i] = NULL;
-+				WRITE_ONCE(vsi->rx_rings[i], NULL);
- 			}
- 		}
- 	}
-@@ -1104,7 +1104,7 @@ static int ice_vsi_alloc_rings(struct ice_vsi *vsi)
- 		ring->vsi = vsi;
- 		ring->dev = dev;
- 		ring->count = vsi->num_tx_desc;
--		vsi->tx_rings[i] = ring;
-+		WRITE_ONCE(vsi->tx_rings[i], ring);
- 	}
- 
- 	/* Allocate Rx rings */
-@@ -1123,7 +1123,7 @@ static int ice_vsi_alloc_rings(struct ice_vsi *vsi)
- 		ring->netdev = vsi->netdev;
- 		ring->dev = dev;
- 		ring->count = vsi->num_rx_desc;
--		vsi->rx_rings[i] = ring;
-+		WRITE_ONCE(vsi->rx_rings[i], ring);
- 	}
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 69e50331e08e9..7fd2ec63f128e 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -1701,7 +1701,7 @@ static int ice_xdp_alloc_setup_rings(struct ice_vsi *vsi)
- 		xdp_ring->netdev = NULL;
- 		xdp_ring->dev = dev;
- 		xdp_ring->count = vsi->num_tx_desc;
--		vsi->xdp_rings[i] = xdp_ring;
-+		WRITE_ONCE(vsi->xdp_rings[i], xdp_ring);
- 		if (ice_setup_tx_ring(xdp_ring))
- 			goto free_xdp_rings;
- 		ice_set_ring_xdp(xdp_ring);
 -- 
 2.25.1
 
