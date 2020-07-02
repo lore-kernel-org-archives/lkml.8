@@ -2,206 +2,133 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC918C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB39C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F082088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026FB2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593708510;
+	bh=gWp3jFwoo4iUwOhF7lEopC3ZlQExz1kCNh2JXCd9Fcg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=2EaPbuU9RVBfdRvlFgakQoGLPKfGUXXxNfmuXX3RnEGicFH9cqacoWmliwLyzm6/5
+	 DkbuOQOQdZQrrMl/k/9PGHsONRTepq9xrLDJqg+xg4VXocyPhlFvN//GekkPuc9t2t
+	 y9duSLLRLqxXeniw67NEDnZCbMaCT4LhGhehJQwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGBQsS (ORCPT
+        id S1727116AbgGBQs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:48:18 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:49616 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgGBQsH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:48:07 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr2Na-0005oh-HP; Thu, 02 Jul 2020 10:48:06 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.int.ebiederm.org)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr2NZ-0007up-F8; Thu, 02 Jul 2020 10:48:06 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Thu,  2 Jul 2020 11:41:34 -0500
-Message-Id: <20200702164140.4468-10-ebiederm@xmission.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
-References: <87y2o1swee.fsf_-_@x220.int.ebiederm.org>
+        Thu, 2 Jul 2020 12:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbgGBQs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:48:27 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E362084C;
+        Thu,  2 Jul 2020 16:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593708506;
+        bh=gWp3jFwoo4iUwOhF7lEopC3ZlQExz1kCNh2JXCd9Fcg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=2b+9C9Nyes63VcSQV+cryOA7jsr1vqfWy4nwf81la+HGYN7YnBVUyFaf6P20GtKk1
+         qfbrvZKpCWKVPpdhe7T1sk4GaZ7M3aWrCUo//dt4fStvpVZzJQjJj9eUTdC4E4cdgV
+         77Xa30CfU8RtOF8TOrvOgs16YElPGsco2vw9q4vM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 909F435232F8; Thu,  2 Jul 2020 09:48:26 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 09:48:26 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200702164826.GQ9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+ <20200624201226.21197-3-paulmck@kernel.org>
+ <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
+ <20200630183534.GG9247@paulmck-ThinkPad-P72>
+ <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1jr2NZ-0007up-F8;;;mid=<20200702164140.4468-10-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19I2zv1ELlhLqv1GXWB9t4A7j0C1O9/nC0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v3 10/16] exec: Remove do_execve_file
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the last callser has been removed remove this code from exec.
+On Thu, Jul 02, 2020 at 04:12:16PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
+> > > This is not going to work together with the "wait context validator"
+> > > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
+> > > printk() which is why it is still disabled by default.
+> > 
+> > Fixing that should be "interesting".  In particular, RCU CPU stall
+> > warnings rely on the raw spin lock to reduce false positives due
+> > to race conditions.  Some thought will be required here.
+> 
+> I don't get this part. Can you explain/give me an example where to look
+> at?
 
-For anyone thinking of resurrecing do_execve_file please note that
-the code was buggy in several fundamental ways.
+Starting from the scheduler-clock interrupt's call into RCU,
+we have rcu_sched_clock_irq() which calls rcu_pending() which
+calls check_cpu_stall() which calls either print_cpu_stall() or
+print_other_cpu_stall(), depending on whether the stall is happening on
+the current CPU or on some other CPU, respectively.
 
-- It did not ensure the file it was passed was read-only and that
-  deny_write_access had been called on it.  Which subtlely breaks
-  invaniants in exec.
+Both of these last functions acquire the rcu_node structure's raw ->lock
+and expect to do printk()s while holding it.
 
-- The caller of do_execve_file was expected to hold and put a
-  reference to the file, but an extra reference for use by exec was
-  not taken so that when exec put it's reference to the file an
-  underflow occured on the file reference count.
+Not that the lock matters all that much given that all of this code is
+in hardirq context.  Which is necessary if RCU CPU stall warnings are
+to be at all reliable.  Yeah, yeah, they would be even more reliable if
+invoked in NMI context but that would prevent them from acquiring the
+->lock that is used to resolve races between multiple concurrent stall
+warnings and between a stall warning and the end of that stall.  ;-)
 
-- The point of the interface was so that a pathname did not need to
-  exist.  Which breaks pathname based LSMs.
+I could imagine accumulating the data in hardirq context and then
+using a workqueue or some such to print it all out, but that
+requires that workqueues be fully operational for RCU CPU stall
+warnings to appear.  :-(
 
-Tetsuo Handa originally reported these issues[1].  While it was clear
-that deny_write_access was missing the fundamental incompatibility
-with the passed in O_RDWR filehandle was not immediately recognized.
+Thoughts?
 
-All of these issues were fixed by modifying the usermode driver code
-to have a path, so it did not need this hack.
+> > > So assume that this is fixed and enabled then on !PREEMPT_RT it will
+> > > complain that you have a raw_spinlock_t acquired (the one from patch
+> > > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
+> > 
+> > Given that the slab allocator doesn't acquire any locks until it gets
+> > a fair way in, wouldn't it make sense to allow a "shallow" allocation
+> > while a raw spinlock is held?  This would require yet another GFP_ flag,
+> > but that won't make all that much of a difference in the total.  ;-)
+> 
+> That would be one way of dealing with. But we could go back to
+> spinlock_t and keep the memory allocation even for RT as is. I don't see
+> a downside of this. And we would worry about kfree_rcu() from real
+> IRQ-off region once we get to it.
 
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-[1] https://lore.kernel.org/linux-fsdevel/2a8775b4-1dd5-9d5c-aa42-9872445e0942@i-love.sakura.ne.jp/
-v1: https://lkml.kernel.org/r/871rm2f0hi.fsf_-_@x220.int.ebiederm.org
-v2: https://lkml.kernel.org/r/87lfk54p0m.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c               | 38 +++++++++-----------------------------
- include/linux/binfmts.h |  1 -
- 2 files changed, 9 insertions(+), 30 deletions(-)
+Once we get to it, your thought would be to do per-CPU queuing of
+memory from IRQ-off kfree_rcu(), and have IRQ work or some such clean
+up after it?  Or did you have some other trick in mind?
 
-diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..23dfbb820626 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1818,13 +1818,14 @@ static int exec_binprm(struct linux_binprm *bprm)
- /*
-  * sys_execve() executes a new program.
-  */
--static int __do_execve_file(int fd, struct filename *filename,
--			    struct user_arg_ptr argv,
--			    struct user_arg_ptr envp,
--			    int flags, struct file *file)
-+static int do_execveat_common(int fd, struct filename *filename,
-+			      struct user_arg_ptr argv,
-+			      struct user_arg_ptr envp,
-+			      int flags)
- {
- 	char *pathbuf = NULL;
- 	struct linux_binprm *bprm;
-+	struct file *file;
- 	struct files_struct *displaced;
- 	int retval;
- 
-@@ -1863,8 +1864,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	check_unsafe_exec(bprm);
- 	current->in_execve = 1;
- 
--	if (!file)
--		file = do_open_execat(fd, filename, flags);
-+	file = do_open_execat(fd, filename, flags);
- 	retval = PTR_ERR(file);
- 	if (IS_ERR(file))
- 		goto out_unmark;
-@@ -1872,9 +1872,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	sched_exec();
- 
- 	bprm->file = file;
--	if (!filename) {
--		bprm->filename = "none";
--	} else if (fd == AT_FDCWD || filename->name[0] == '/') {
-+	if (fd == AT_FDCWD || filename->name[0] == '/') {
- 		bprm->filename = filename->name;
- 	} else {
- 		if (filename->name[0] == '\0')
-@@ -1935,8 +1933,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	kfree(pathbuf);
--	if (filename)
--		putname(filename);
-+	putname(filename);
- 	if (displaced)
- 		put_files_struct(displaced);
- 	return retval;
-@@ -1967,27 +1964,10 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	if (displaced)
- 		reset_files_struct(displaced);
- out_ret:
--	if (filename)
--		putname(filename);
-+	putname(filename);
- 	return retval;
- }
- 
--static int do_execveat_common(int fd, struct filename *filename,
--			      struct user_arg_ptr argv,
--			      struct user_arg_ptr envp,
--			      int flags)
--{
--	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
--}
--
--int do_execve_file(struct file *file, void *__argv, void *__envp)
--{
--	struct user_arg_ptr argv = { .ptr.native = __argv };
--	struct user_arg_ptr envp = { .ptr.native = __envp };
--
--	return __do_execve_file(AT_FDCWD, NULL, argv, envp, 0, file);
--}
--
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index 4a20b7517dd0..7c27d7b57871 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -141,6 +141,5 @@ extern int do_execveat(int, struct filename *,
- 		       const char __user * const __user *,
- 		       const char __user * const __user *,
- 		       int);
--int do_execve_file(struct file *file, void *__argv, void *__envp);
- 
- #endif /* _LINUX_BINFMTS_H */
--- 
-2.25.0
+							Thanx, Paul
 
+> > > >  			bnode = (struct kfree_rcu_bulk_data *)
+> > > >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> > > >  		}
+> 
+> Sebastian
