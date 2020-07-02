@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D11C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF5D20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06FA20720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iCY0E9W7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hKh4Ycc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgGBIYf (ORCPT
+        id S1728874AbgGBIZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:24:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59768 "EHLO
+        Thu, 2 Jul 2020 04:25:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59580 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728755AbgGBIYF (ORCPT
+        with ESMTP id S1728529AbgGBIX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:24:05 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628Nt6b082238;
-        Thu, 2 Jul 2020 03:23:55 -0500
+        Thu, 2 Jul 2020 04:23:27 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628NGhc082008;
+        Thu, 2 Jul 2020 03:23:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593678235;
-        bh=2Ps3sR9VF/LqByb34nV2fM7x0C723HV4lrdTJSaPtuA=;
+        s=ti-com-17Q1; t=1593678196;
+        bh=z96ye//Mg15JHZ1ndtZxlE33lV8uirQIl1DtUAPpCNk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iCY0E9W7YtWImyjACut0NGZBKOpaf22G78SdPYYg8vG5CI0IfbPCrAZ/V5/Wqr0ek
-         8lX40jte/wRY2JN8ardU2oSSftFNtSPIesQSJizfY8pkyhecWg5VidgZWPsuJ9vn10
-         7CU7+V1dA0D5K+DoWGKlSxkziCwP9B9jOImc4hIc=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628NtLg087605;
-        Thu, 2 Jul 2020 03:23:55 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=hKh4Ycc0nsKdDPMU7zvoAF1INSmeh72IPvQS5QOFMq4Kc9z2De6UHyUGJQsMmlqry
+         DYgZNo1XEM+w2AaJimrzgI0NKEC9A5VRpDP9utmTyIV6VPFwKtQ/btpKPHG9wxz8/X
+         /BiKQoNwEaAmwJLbq3/wJAlgDVSeBWOF5IKKiAxk=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628NFj5066600
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jul 2020 03:23:15 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
- 2020 03:23:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:23:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 2 Jul 2020 03:23:54 -0500
+ Frontend Transport; Thu, 2 Jul 2020 03:23:15 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYY006145;
-        Thu, 2 Jul 2020 03:23:49 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYR006145;
+        Thu, 2 Jul 2020 03:23:10 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -65,9 +66,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <netdev@vger.kernel.org>
-Subject: [RFC PATCH 22/22] NTB: Describe ntb_virtio and ntb_vhost client in the documentation
-Date:   Thu, 2 Jul 2020 13:51:43 +0530
-Message-ID: <20200702082143.25259-23-kishon@ti.com>
+Subject: [RFC PATCH 15/22] samples/rpmsg: Setup delayed work to send message
+Date:   Thu, 2 Jul 2020 13:51:36 +0530
+Message-ID: <20200702082143.25259-16-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
 References: <20200702082143.25259-1-kishon@ti.com>
@@ -79,35 +80,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a blurb in Documentation/ntb.txt to describe the ntb_virtio and
-ntb_vhost client
+Let us not send any message to the remote processor before
+announce_create() callback has been invoked. Since announce_create() is
+only invoked after ->probe() is completed, setup delayed work to start
+sending message to the remote processor.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- Documentation/driver-api/ntb.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ samples/rpmsg/rpmsg_client_sample.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/driver-api/ntb.rst b/Documentation/driver-api/ntb.rst
-index 87d1372da879..f84b81625397 100644
---- a/Documentation/driver-api/ntb.rst
-+++ b/Documentation/driver-api/ntb.rst
-@@ -227,6 +227,17 @@ test client is interacted with through the debugfs filesystem:
- 	specified peer. That peer's interrupt's occurrence file
- 	should be incremented.
+diff --git a/samples/rpmsg/rpmsg_client_sample.c b/samples/rpmsg/rpmsg_client_sample.c
+index ae5081662283..514a51945d69 100644
+--- a/samples/rpmsg/rpmsg_client_sample.c
++++ b/samples/rpmsg/rpmsg_client_sample.c
+@@ -20,6 +20,8 @@ module_param(count, int, 0644);
  
-+NTB Vhost Client (ntb\_vhost) and NTB Virtio Client (ntb\_virtio)
-+------------------------------------------------------------------
+ struct instance_data {
+ 	int rx_count;
++	struct delayed_work send_msg_work;
++	struct rpmsg_device *rpdev;
+ };
+ 
+ static int rpmsg_sample_cb(struct rpmsg_device *rpdev, void *data, int len,
+@@ -48,9 +50,21 @@ static int rpmsg_sample_cb(struct rpmsg_device *rpdev, void *data, int len,
+ 	return 0;
+ }
+ 
+-static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
++static void rpmsg_sample_send_msg_work(struct work_struct *work)
+ {
++	struct instance_data *idata = container_of(work, struct instance_data,
++						   send_msg_work.work);
++	struct rpmsg_device *rpdev = idata->rpdev;
+ 	int ret;
 +
-+When two hosts are connected via NTB, one of the hosts should use NTB Vhost
-+Client and the other host should use NTB Virtio Client. The NTB Vhost client
-+interfaces with the Linux Vhost Framework and lets it to be used with any
-+vhost client driver. The NTB Virtio client interfaces with the Linux Virtio
-+Framework and lets it to be used with any virtio client driver. The Vhost
-+client driver and Virtio client driver creates a logic cink to exchange data
-+with each other.
++	/* send a message to our remote processor */
++	ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
++	if (ret)
++		dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
++}
 +
- NTB Hardware Drivers
- ====================
++static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
++{
+ 	struct instance_data *idata;
+ 
+ 	dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x!\n",
+@@ -62,18 +76,18 @@ static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
+ 
+ 	dev_set_drvdata(&rpdev->dev, idata);
+ 
+-	/* send a message to our remote processor */
+-	ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
+-	if (ret) {
+-		dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
+-		return ret;
+-	}
++	idata->rpdev = rpdev;
++	INIT_DELAYED_WORK(&idata->send_msg_work, rpmsg_sample_send_msg_work);
++	schedule_delayed_work(&idata->send_msg_work, msecs_to_jiffies(500));
+ 
+ 	return 0;
+ }
+ 
+ static void rpmsg_sample_remove(struct rpmsg_device *rpdev)
+ {
++	struct instance_data *idata = dev_get_drvdata(&rpdev->dev);
++
++	cancel_delayed_work_sync(&idata->send_msg_work);
+ 	dev_info(&rpdev->dev, "rpmsg sample client driver is removed\n");
+ }
  
 -- 
 2.17.1
