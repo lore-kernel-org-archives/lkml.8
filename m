@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1F7206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09CE206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653306;
-	bh=MrnB04y5tDP3oh3CHtwgC9d4aQ4bXUX1BfesiJAAPLA=;
+	s=default; t=1593653308;
+	bh=kQawHBNVMSSb8e69wjh80bcPFS1Nv4IuBqHQlqEPkYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWRmymkzZ4B+VVQmDWHuja2D7pZI9S7J8c8QfsH2Tc0ajfsTH2Ooy8SZWoRBxfMjw
-	 x7I+jvs6fVaprW19tHev+aCd1rUBo2L5CaLhfX5Dd9la41abddc/+efYVpYC8U40GS
-	 V6pEzSpPmYZpsyukTEwjwSdfogMOe9r8gur6lYkc=
+	b=BW+XFGh6FRUCtvXua77nXIwB6JnHms4Ie4IzvPeO2sS49Zrh2CIIstPmPITHNrHBu
+	 IJR4l7iICYWKi48OnDT6Hop9I+UBDT6aIvGJRwP5emLRXc2cNXP5D2aACGtl70Wwtk
+	 eWBA+sWKprv+vpzyxGTLkXKXwNjGIWCmfli5cSog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgGBB16 (ORCPT
+        id S1729626AbgGBB1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59292 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbgGBB1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:25 -0400
+        id S1729224AbgGBB1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F382083E;
-        Thu,  2 Jul 2020 01:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7682720874;
+        Thu,  2 Jul 2020 01:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653245;
-        bh=MrnB04y5tDP3oh3CHtwgC9d4aQ4bXUX1BfesiJAAPLA=;
+        s=default; t=1593653235;
+        bh=kQawHBNVMSSb8e69wjh80bcPFS1Nv4IuBqHQlqEPkYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9hyE8M7xVIBrH7z12qCyex24cw/UTYugKLvFDrUX70dpHaMYKplQv/DGPOEdysX1
-         KgRsYDUAmIumH8wVTHQOZcVt/rmhA/HTSMDhXyuL037q5L2jQfLAp3jOuzNsO6HMeU
-         zJiSawpcJxrU05KL88BgZ52OqEnq5Q5V4K+fV7Gg=
+        b=iiiJD5XEUnIeF6uYAolFOWx70HrC+uNlB+EETg4AaVeB3wuR87PN+9dJA0nA9NwCH
+         1ouYq0OpslCzbm8/TfaIE0Fdmr9NrHOOtzR73No7CfOmfO37eVxpP69ts6jmkCUaHe
+         q/TwfEStw8Z91y6R8iFZGtIamsb4JMNdGt13kkH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.9 10/13] cifs: update ctime and mtime during truncate
-Date:   Wed,  1 Jul 2020 21:27:09 -0400
-Message-Id: <20200702012712.2701986-10-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 02/13] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Wed,  1 Jul 2020 21:27:01 -0400
+Message-Id: <20200702012712.2701986-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
 References: <20200702012712.2701986-1-sashal@kernel.org>
@@ -61,47 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-It lead the xfstests generic/313 failed.
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
 
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
+Those last two bytes - 96 1f - aren't part of the original packet.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index dfa85ad5b4814..5478902a01009 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2188,6 +2188,15 @@ cifs_set_file_size(struct inode *inode, struct iattr *attrs,
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
- 	}
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 559af8e6ad90f..0434ecf677122 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1396,10 +1396,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
  
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1408,8 +1408,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
