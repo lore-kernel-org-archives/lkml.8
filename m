@@ -2,165 +2,245 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B20C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF6F20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593698094;
-	bh=7f0we9ToVtC2sB/gdoGDHjfbF4K+7/v+D6292TCX25E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vt0j+qM9eqTwH4kDYowgN6Ny3GOOX/aN/2QrEEdvHuVV64Rge2G59z+C4wVAvwRT+
-	 2m6hXLVe8eoFe6nxh05ds7S6WYlvaekBJBpiBhbpsrY0pvXSHvrUOZEGa0mOrsuD5A
-	 V5Kv3hryCwb5w0u/iTAYSSa3yAq/C6FV3E/l+rHk=
+	by mail.kernel.org (Postfix) with ESMTP id 1520020772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nwUoKSLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgGBNyw (ORCPT
+        id S1729534AbgGBNyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Jul 2020 09:54:55 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:33129 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729210AbgGBNyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 09:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgGBNyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:54:51 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FDBE20772;
-        Thu,  2 Jul 2020 13:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593698090;
-        bh=7f0we9ToVtC2sB/gdoGDHjfbF4K+7/v+D6292TCX25E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TMhYWWiElbIT4MnoxMMc2yeXHbclF3cBqeSF6fmbCBYSbEO+aY+CbSdySqW0V8fvo
-         ycnjnEQa3WoARnXi7AxW76aPgELnTAMwpm5wPK+8fjG99FwJhNc1aX5pJatA6XlvNM
-         mtsabmyslhxC/JeAOsYyqei532h0UHDIMHuRYRQ0=
-Received: by mail-oi1-f177.google.com with SMTP id t4so5901737oij.9;
-        Thu, 02 Jul 2020 06:54:50 -0700 (PDT)
-X-Gm-Message-State: AOAM530MFN78fIHpJoMgo5M6OBy06Bt3NXwxoaAbd9UWVQu1kYQI+2gt
-        2ywIXS9AfuuXNihRuQZ6mGDBZGbXASwFL/rtog==
-X-Google-Smtp-Source: ABdhPJy7BdwSxiiHUlLu0FDHVe4/hH1/gMKwhpieAKy6KDx+1Ei/7xR4sh7fMT9qpGAHCKX7iWPY0s5PGl9LLdj/tRo=
-X-Received: by 2002:aca:6004:: with SMTP id u4mr24951403oib.106.1593698089642;
- Thu, 02 Jul 2020 06:54:49 -0700 (PDT)
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id qzfpjmz6o40yDqzfsjenTt; Thu, 02 Jul 2020 15:54:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593698089; bh=JXy9S9EFKh754KQxF9C4q8ICFD46pAeOzhR4AkdLf7o=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=nwUoKSLUlNVqWjIvTY2WwOsi8/95XfDmCp7uCu1YsNQMvIXunqZwtbyr+4ODyUO6r
+         gOxxgw3rLP5VnAOSNRdhdChlaRPq2uW+oFAvLiIavPbOL152SS2breZtyagqSULQV+
+         ttO1Kclc7ivJYILY/XVmRpjeUHE2XRjGCcHBdWzdUortP0lf80JB47u93GRNbraIst
+         b/9yOeoSBZyKheS/vfXT8GYLcUuKEpxYop+3sTAm/5fZPdTdQfAh8h00oSmVSUBnrT
+         svGZc9Y76lh3qkXy8Tm8B6ogA2Dw8bzTP4dExaZZ9i+mMs25IejAHUjNAb+0JnqjDo
+         3TYw8eP9n3YKw==
+Subject: Re: [RFC PATCH v2 12/18] media: tegra-video: Add support for
+ selection ioctl ops
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-13-git-send-email-skomatineni@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <efc84cff-76d5-78a2-e84e-0342459d3756@xs4all.nl>
+Date:   Thu, 2 Jul 2020 15:54:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <87pnay3ptb.wl-kuninori.morimoto.gx@renesas.com>
- <20200528223916.GA804926@bogus> <87imgfzclq.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87imgfzclq.wl-kuninori.morimoto.gx@renesas.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 2 Jul 2020 07:54:38 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+UX9c2rr+yj3E5HywhG5aWxDit1MObceVSp2UCL=MvnA@mail.gmail.com>
-Message-ID: <CAL_Jsq+UX9c2rr+yj3E5HywhG5aWxDit1MObceVSp2UCL=MvnA@mail.gmail.com>
-Subject: Re: Question about "xxx,yyy" style property
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1592358094-23459-13-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPaR373dt6+A25Gd0pjQvnETJQ+BwEOViqqw20Lb16D1ffk7XoBWsLKAD6EthvNL8cp3aRBpVMzPdniOULqs5GG9Utp0ca5K3eTlcZhD3ezgt1LWVy3b
+ Hg2X1pD2FROPXPI+0/GvEqillcMQkOv6bMT0TAHpODXYFHOoGmmxJUj/cTnnS8h3zdsuJOhSyzjd6UvAvhhvnuh83FE9WWV/eYRdVBgdsPUYDwJDgQ3+ejMG
+ FVWzfSxsvbExj9Ojjb+eY3Qzt+R3qYLndSH9/Smo9wyU7KqAGCbitrjD4a9TuwTh1XKmQg0Ja+kfAoHFW4H8sLfJaJRfIDjIgAghOTt6UOoGDmCHWsrLeW5V
+ UFc2u1BOZDn20rNipxT8Z2etP5Oh209YZx0gTH/2KPT8x6UAFQaGVB/FFJVHP/vfA9d/OHSYzJE0bPq0s0iP64cDrCzFus0UMlvubj2fnou3VCKZtOgtYBSO
+ Clsz2Bu+GfmfV0VBVkF2+1QcI1UAjzHMfkU8OUl3gPzdmt7iPqKNH9LOVSz43nOBFxDnXvLAMXEni6CxeAqg0y7I7to22Pp7J/H821lnKNE29YsmDKaZpfTP
+ rALXObO6fGopNeAhQvDHYnHXM9Wx3OTCVN4W4hsHT5AHhTLiGlSvQx0yYhcTStD6FiQ2PFp97JfVEh6D1m3lDAiZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 8:41 PM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
->
-> The Subject was "Re: [PATCH] ASoC: dt-bindings: simple-card: care missing address #address-cells"
->
-> Hi Rob
->
-> I'm trying to create v2 of simple-card patch,
-> And got issue which I can't solve by myself.
->
-> I think "xxx,yyy" (= which has "," at the property name)
-> needs special care, but it is very un-understandable...
-> Now, I'm give up.
-> So, can I ask you 2 things about Yaml Doc "xxx,yyy" type property ?
->
-> ========================
-> 1) reference own definitions from "xxx,yyy"
-> ========================
->
-> I guess "xxx,yyy" naming property needs to has "description", right ?
->
-> But, it is OK if it references "/schemas/xxxx"
->
->         --- OK ------
->         xxx,yyy:
->           description: xxx
->           $ref: /schemas/types.yaml#/definitions/phandle-array
->         -------------
->
-> but, will be error if it references own definitions
->
->         --- NG ------
->         xxx,yyy:
->           description: xxx
->           $ref: "#/definitions/mydef"
->         -------------
->
-> This is the related error
->
->         -- error(?) --
->         xxx.yaml: properties:xxx,yyy:\
->           $ref: '#/definitions/mydef' does not match 'types.yaml#[/]{0,1}definitions/.*'
->         --------------
->
-> # but, there is no problem if it was defined as "patternProperties"
->
-> Q. The "xxx,yyy" property can't references own definitions,
->    or needs some magical extra settings ??
+On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+> This patch adds selection v4l2 ioctl operations to allow configuring
+> a selection rectangle in the sensor through the Tegra video device
+> node.
+> 
+> Some sensor drivers supporting crop uses try_crop rectangle from
+> v4l2_subdev_pad_config during try format for computing binning.
+> 
+> So with selection ops support, this patch also updates try format
+> to use try crop rectangle either from subdev frame size enumeration
+> or from subdev crop boundary.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+> 
+> diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+> index 506c263..f9eb96b 100644
+> --- a/drivers/staging/media/tegra-video/vi.c
+> +++ b/drivers/staging/media/tegra-video/vi.c
+> @@ -427,6 +427,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>  	struct v4l2_subdev *subdev;
+>  	struct v4l2_subdev_format fmt;
+>  	struct v4l2_subdev_pad_config *pad_cfg;
+> +	struct v4l2_subdev_frame_size_enum fse = {
+> +		.which = V4L2_SUBDEV_FORMAT_TRY,
+> +	};
+> +	struct v4l2_subdev_selection sdsel = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +		.target = V4L2_SEL_TGT_CROP_BOUNDS,
+> +	};
+>  	int ret;
+>  
+>  	subdev = tegra_channel_get_remote_subdev(chan, true);
+> @@ -449,6 +456,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>  	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
+>  	fmt.pad = 0;
+>  	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
+> +
+> +	/*
+> +	 * Attempt to obtain the format size from subdev.
+> +	 * If not available, try to get crop boundary from subdev.
+> +	 */
+> +	fse.code = fmtinfo->code;
+> +	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
+> +	if (ret) {
+> +		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+> +		if (ret)
+> +			return -EINVAL;
+> +		pad_cfg->try_crop.width = sdsel.r.width;
+> +		pad_cfg->try_crop.height = sdsel.r.height;
+> +	} else {
+> +		pad_cfg->try_crop.width = fse.max_width;
+> +		pad_cfg->try_crop.height = fse.max_height;
+> +	}
+> +
+>  	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -540,6 +565,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
+>  	return 0;
+>  }
+>  
+> +static int tegra_channel_g_selection(struct file *file, void *priv,
+> +				     struct v4l2_selection *sel)
+> +{
+> +	struct tegra_vi_channel *chan = video_drvdata(file);
+> +	struct v4l2_subdev *subdev;
+> +	struct v4l2_subdev_format fmt = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +	};
+> +	struct v4l2_subdev_selection sdsel = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +		.target = sel->target,
+> +	};
+> +	int ret;
+> +
+> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+> +		return -ENOTTY;
+> +
+> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +		return -EINVAL;
+> +	/*
+> +	 * Try the get selection operation and fallback to get format if not
+> +	 * implemented.
+> +	 */
+> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+> +	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+> +	if (!ret)
+> +		sel->r = sdsel.r;
+> +	if (ret != -ENOIOCTLCMD)
+> +		return ret;
+> +
+> +	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	sel->r.left = 0;
+> +	sel->r.top = 0;
+> +	sel->r.width = fmt.format.width;
+> +	sel->r.height = fmt.format.height;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_channel_s_selection(struct file *file, void *fh,
+> +				     struct v4l2_selection *sel)
+> +{
+> +	struct tegra_vi_channel *chan = video_drvdata(file);
+> +	struct v4l2_subdev *subdev;
+> +	int ret;
+> +	struct v4l2_subdev_selection sdsel = {
+> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+> +		.target = sel->target,
+> +		.flags = sel->flags,
+> +		.r = sel->r,
+> +	};
+> +
 
-No, it can't. The problem with definitions is we can't really check
-and do fixups on the definitions with the meta-schema.
+This function doesn't check if the subdev actually supports set_selection.
+The imx219 is one such driver: it supports get_selection, but not set_selection.
 
-> ========================
-> 2) phandle for "xxx,yyy"
-> ========================
->
-> I noticed that it seems "xxx,yyy" property can't be referenced.
-> Here, "xxx,yyy" has "type: object" and "additionalProperties: false"
-> (below didn't happen if it doesn't have "additionalProperties: false")
->
-> If "xxx,yyy" has phandle, but not referenced,
-> This is not a problem.
->
->         --- OK ---
->         ...
->         foo = <&bar>;
->         ...
->         xxx_yyy: xxx,yyy {
->           ...
->         };
->         --------------
->
-> But will be error if it is referenced.
->
->         --- NG ---
->         foo = <&xxx_yyy>;
->         ...
->         xxx_yyy: xxx,yyy {
->           ...
->         };
->         ------------
->
-> The error is
->
->         -- error ---
->         xxx.yaml: xxx.yyy: \
->         Additional properties are not allowed ('phandle' was unexpected)
->         ------------
->
-> Q. The "xxx,yyy" needs magical settings to be referenced, or can't be ?
+So this code should add these lines to fix the v4l2-compliance fail:
 
-'phandle' (among other things) is automatically added by the tools. If
-'xxx,yyy' is defined thru a 'definitions' then that fix-up is not
-going to happen.
+       subdev = tegra_channel_get_remote_subdev(chan, true);
 
-Rob
+       if (!v4l2_subdev_has_op(subdev, pad, set_selection))
+               return -ENOTTY;
+
+
+> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+> +		return -ENOTTY;
+> +
+> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +		return -EINVAL;
+> +
+> +	if (vb2_is_busy(&chan->queue))
+> +		return -EBUSY;
+> +
+> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+
+And this line can be dropped.
+
+Regards,
+
+	Hans
+
+> +	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
+> +	if (!ret) {
+> +		sel->r = sdsel.r;
+> +		/*
+> +		 * Subdev active format resolution may have changed during
+> +		 * set selection operation. So, update channel format to
+> +		 * the sub-device active format.
+> +		 */
+> +		return tegra_channel_set_subdev_active_fmt(chan);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int tegra_channel_enum_input(struct file *file, void *fh,
+>  				    struct v4l2_input *inp)
+>  {
+> @@ -597,6 +701,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
+>  	.vidioc_streamoff		= vb2_ioctl_streamoff,
+>  	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+>  	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+> +	.vidioc_g_selection		= tegra_channel_g_selection,
+> +	.vidioc_s_selection		= tegra_channel_s_selection,
+>  };
+>  
+>  /*
+> 
+
