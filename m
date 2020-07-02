@@ -7,117 +7,95 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A49C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D8D20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAB52075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593723620;
-	bh=N+X6/X27H/LWjqL+ft4VkAxUgWsLTCCQVIggwf2dB4I=;
+	s=default; t=1593723673;
+	bh=HOKLh1kvOiLd6N3FEcD4fsrcJUgdCZlq2q4qET2N92I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yF1H/gBaXv4a43gcpD0qSh8E4jJJsvf9pZc1fKnHPXtCn0mbQCJRd3S/10b2P2Kbd
-	 8BpMBhSkhYO5TOlELECJMc2IbjcRCfsv7B3kmlZmhGwrYfx+Pa+DGZqfLI7syhbT2v
-	 xhHMxLDMXV23IdruFMG3EiypwVT65XBv2j+3BqlA=
+	b=Ew7SwNIhl9CZYxYXYsgfe9fPkK1pT9JjcpxHA2zcoUI93fEdankjzjesrfa6s93NC
+	 9c27C9BrDgf1kTFmSGY9d+v539XpIZa7uGsvOLcjnblf2tY5/A9urd7Mf4HJd5YOyF
+	 waE0DELKGsXgqhAbgORYxB6RGYywNfo2oTG946Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgGBVAS (ORCPT
+        id S1726206AbgGBVBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:00:18 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45862 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgGBVAR (ORCPT
+        Thu, 2 Jul 2020 17:01:12 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37639 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgGBVBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:00:17 -0400
-Received: by mail-il1-f196.google.com with SMTP id o3so8077643ilo.12;
-        Thu, 02 Jul 2020 14:00:17 -0700 (PDT)
+        Thu, 2 Jul 2020 17:01:11 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so18254962ilh.4;
+        Thu, 02 Jul 2020 14:01:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7QtfLSG5iCWPjoGkb/dcO4GKpTdA5wfHStXRPpTbvZk=;
-        b=cXipTB0LRZOzF1JnhvRqnl1LXNSQKvh3Rz0ADICmdduGvjkqAf98m+BmUlS7j3Qnxw
-         VwASuUEmCoi6xi3xk7/swq+LljtUC7NZJlMXdKqytidnqnbhp27Bzxrmv8lmvpEYuPaF
-         k+MUWZkVoJpOioFE6IhHmtZdfBzLsxFBtG265a6IC/kQ3chzMGrgjyFKR9jwp0l4rOLp
-         uPZ2DNj3/tukseB9oFQPa5qsdDHsyo49D6Za0sThOK34If6J4FjsG8uAPLqO1ptfdeIF
-         ijfCg+FutRaaZS/8ng/hyxYNfHpls6WbM5MNCLOoqOn3g+WItCmqf8QyTKxoB9JkAEC9
-         AlWQ==
-X-Gm-Message-State: AOAM533A6NWe06dlSfpqGFa/pODLjBB/i/iRw89In7T+Z193IEr707iY
-        hjtjZUpJIp477pjpTCO+vw==
-X-Google-Smtp-Source: ABdhPJx4JIDBC5UZXyrO0sUArTcLxJrGCbl1Te2M8TG8q68takA1sojfUFtwJPO7crhAeVasbkKPLg==
-X-Received: by 2002:a05:6e02:1253:: with SMTP id j19mr14732392ilq.145.1593723616609;
-        Thu, 02 Jul 2020 14:00:16 -0700 (PDT)
+        bh=pscTNcsjG1XyDNybUCclf+10YKpfbDpJLW+4tpO0I0g=;
+        b=DscBjMpD5Esl9EJdSnGB+jxWPVxUupU/DRz/J7S4i4zrlgVnHykRrkVbK4lRO0se79
+         YWzS41bQ3PNw2s1BqlerVl7QjqfpPCajAaAvefQpYcyx9pkMSwRW0K8ixousiD542EuO
+         6qpeHBgcDNkkUwiBPhUKhQQ5dxVkjF9KxIxV1D/1+tR5fDLih+uYI20JjJ+DqM1QScfR
+         q9NSu3mGbitNGtEcRhzQtM+wD3GIsK+BkiuIsrDHF6CH7fBe5BstWW+3ZPm9nDTw/i3C
+         and4x7nfY5nEFhA9aJ+qMq1KumI4YgE/mNGwHERdJPUQjl4NV0iMociAkt0tWhzbVyq9
+         0m4g==
+X-Gm-Message-State: AOAM531cc+JpmZwbYUUgWVFjWhZA1UNpBjDiIxyhE15US+fi/YZ11ECs
+        ZEHrIySGT7ryG76vRglTLw==
+X-Google-Smtp-Source: ABdhPJx8jwlcMouahR/BuXTgcuLkyDO9yZTlxRTMKgJ5NjIwLEuwuuawN9mS4qRzGHIaU+GVKuFSmg==
+X-Received: by 2002:a05:6e02:1043:: with SMTP id p3mr13788707ilj.245.1593723670409;
+        Thu, 02 Jul 2020 14:01:10 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id v4sm5382970ilo.44.2020.07.02.14.00.15
+        by smtp.gmail.com with ESMTPSA id q15sm5487720ilt.60.2020.07.02.14.01.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 14:00:16 -0700 (PDT)
-Received: (nullmailer pid 1685550 invoked by uid 1000);
-        Thu, 02 Jul 2020 21:00:14 -0000
-Date:   Thu, 2 Jul 2020 15:00:14 -0600
+        Thu, 02 Jul 2020 14:01:09 -0700 (PDT)
+Received: (nullmailer pid 1687042 invoked by uid 1000);
+        Thu, 02 Jul 2020 21:01:07 -0000
+Date:   Thu, 2 Jul 2020 15:01:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, afaerber@suse.de,
-        andre.przywara@arm.com, cristian.ciocaltea@gmail.com,
-        robh+dt@kernel.org, vkoul@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        manivannan.sadhasivam@linaro.org, dan.j.williams@intel.com,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 01/10] dt-bindings: dmaengine: convert Actions Semi
- Owl SoCs bindings to yaml
-Message-ID: <20200702210014.GA1685248@bogus>
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
- <1593701576-28580-2-git-send-email-amittomer25@gmail.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     will@kernel.org, festevam@gmail.com, vkoul@kernel.org,
+        dan.j.williams@intel.com, kernel@pengutronix.de,
+        catalin.marinas@arm.com, robh+dt@kernel.org, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, angelo@sysam.it, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 6/9] dt-bindings: dma: add fsl-edma3 yaml
+Message-ID: <20200702210107.GA1686199@bogus>
+References: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
+ <1593702489-21648-7-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593701576-28580-2-git-send-email-amittomer25@gmail.com>
+In-Reply-To: <1593702489-21648-7-git-send-email-yibin.gong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jul 2020 20:22:47 +0530, Amit Singh Tomar wrote:
-> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-> Controller over to YAML schemas.
+On Thu, 02 Jul 2020 23:08:06 +0800, Robin Gong wrote:
+> Add device binding doc for fsl-edma3 driver.
 > 
-> It also adds new compatible string "actions,s700-dma".
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > ---
-> Changes since v4:
-> 	* Added Rob's Reviewed-by tag.
-> 	* Re-order it from 05/10 to 01/10.
-> Changes since v3:
->         * No change.
-> Changes since v2:
->         * Addressed Rob's comments:
->            - removed unnecessary description.
->            - added unevaluatedProperties
->            - added relevant information about
->              dma-channels and dma-request
->         * Added power-domain property.
-> Change since v1:
->         * Updated the description field to reflect
->           only the necessary information.
->         * replaced the maxItems field with description for each
->           controller attribute(except interrupts).
->         * Replaced the clock macro with number to keep the example
->           as independent as possible.
-> ---
->  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
->  Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
->  2 files changed, 79 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+>  .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 129 +++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/owl-dma.example.dt.yaml: example-0: dma-controller@e0260000:reg:0: [0, 3760586752, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: 'power-domain-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:1: 'edma2-chan9-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:3: 'edma2-chan11-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:5: 'edma2-chan13-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:7: 'edma2-chan15-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: reg: [[1512570880, 65536], [1512636416, 65536], [1512701952, 65536], [1512767488, 65536], [1512833024, 65536], [1512898560, 65536], [1512964096, 65536], [1513029632, 65536]] is too long
 
 
-See https://patchwork.ozlabs.org/patch/1321538
+See https://patchwork.ozlabs.org/patch/1321003
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
