@@ -2,156 +2,218 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F2E2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C967A20760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGBWog (ORCPT
+        id S1726358AbgGBWtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:44:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39414 "EHLO mx2.suse.de"
+        Thu, 2 Jul 2020 18:49:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8943 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgGBWof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:44:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EE276ABCE;
-        Thu,  2 Jul 2020 22:44:33 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 08:44:22 +1000
-From:   Aleksa Sarai <asarai@suse.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        netdev@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Matt Bennett <matt.bennett@alliedtelesis.co.nz>,
-        zbr@ioremap.net
-Subject: Re: [PATCH 0/5] RFC: connector: Add network namespace awareness
-Message-ID: <20200702224422.rtbzxuock523o4ls@yavin.dot.cyphar.com>
-References: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz>
- <87h7uqukct.fsf@x220.int.ebiederm.org>
- <20200702191025.bqxqwsm6kwnhm2p7@wittgenstein>
+        id S1725937AbgGBWtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:49:25 -0400
+IronPort-SDR: eeWz484en9/FO5UjkR4Eqx0wma/xtfo7Lo1I90FcfZYh22Ab4qZCAEG8M525Gyh4MKhNldjAOu
+ IFR7jWieCM5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148577460"
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="148577460"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:49:24 -0700
+IronPort-SDR: 6k/FKsd7bzJKv0v+vuS/lymYbeVc/A0w6e5Eg7TY5ztVjG8p8lZcWck0XUoSCQod9FwrJhpYtz
+ rsBUDfz1XWcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="426104153"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2020 15:49:24 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 2518258077A;
+        Thu,  2 Jul 2020 15:49:24 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     shyjumon.n@intel.com, dan.j.williams@intel.com, rjw@rjwysocki.net,
+        lenb@kernel.org, kbusch@kernel.org, axboe@fb.com, hch@lst.de,
+        sagi@grimberg.me
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Subject: [PATCH v4] drivers/nvme: Add support for ACPI StorageD3Enable property
+Date:   Thu,  2 Jul 2020 15:50:11 -0700
+Message-Id: <20200702225011.10932-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200612204820.20111-1-david.e.box@linux.intel.com>
+References: <20200612204820.20111-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7yvvc7bj43wjipa4"
-Content-Disposition: inline
-In-Reply-To: <20200702191025.bqxqwsm6kwnhm2p7@wittgenstein>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch implements a solution for a BIOS hack used on some currently
+shipping Intel systems to change driver power management policy for PCIe
+NVMe drives. Some newer Intel platforms, like some Comet Lake systems,
+require that PCIe devices use D3 when doing suspend-to-idle in order to
+allow the platform to realize maximum power savings. This is particularly
+needed to support ATX power supply shutdown on desktop systems. In order to
+ensure this happens for root ports with storage devices, Microsoft
+apparently created this ACPI _DSD property as a way to influence their
+driver policy. To my knowledge this property has not been discussed with
+the NVME specification body.
 
---7yvvc7bj43wjipa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Though the solution is not ideal, it addresses a problem that also affects
+Linux since the NVMe driver's default policy of using NVMe APST during
+suspend-to-idle prevents the PCI root port from going to D3 and leads to
+higher power consumption for these platforms. The power consumption
+difference may be negligible on laptop systems, but many watts on desktop
+systems when the ATX power supply is blocked from powering down.
 
-On 2020-07-02, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> On Thu, Jul 02, 2020 at 08:17:38AM -0500, Eric W. Biederman wrote:
-> > Matt Bennett <matt.bennett@alliedtelesis.co.nz> writes:
-> >=20
-> > > Previously the connector functionality could only be used by processe=
-s running in the
-> > > default network namespace. This meant that any process that uses the =
-connector functionality
-> > > could not operate correctly when run inside a container. This is a dr=
-aft patch series that
-> > > attempts to now allow this functionality outside of the default netwo=
-rk namespace.
-> > >
-> > > I see this has been discussed previously [1], but am not sure how my =
-changes relate to all
-> > > of the topics discussed there and/or if there are any unintended side=
- effects from my draft
-> > > changes.
-> >=20
-> > Is there a piece of software that uses connector that you want to get
-> > working in containers?
-> >=20
-> > I am curious what the motivation is because up until now there has been
-> > nothing very interesting using this functionality.  So it hasn't been
-> > worth anyone's time to make the necessary changes to the code.
->=20
-> Imho, we should just state once and for all that the proc connector will
-> not be namespaced. This is such a corner-case thing and has been
-> non-namespaced for such a long time without consistent push for it to be
-> namespaced combined with the fact that this needs quite some code to
-> make it work correctly that I fear we end up buying more bugs than we're
-> selling features. And realistically, you and I will end up maintaining
-> this and I feel this is not worth the time(?). Maybe I'm being too
-> pessimistic though.
+The patch creates a new nvme_acpi_storage_d3 function to check for the
+StorageD3Enable property during probe and enables D3 as a quirk if set.  It
+also provides a 'noacpi' module parameter to allow skipping the quirk if
+needed.
 
-It would be nice to have the proc connector be namespaced, because it
-would allow you to have init systems that don't depend on cgroups to
-operate -- and it would allow us to have a subset of FreeBSD's kqueue
-functionality that doesn't exist today under Linux. However, arguably
-pidfds might be a better path forward toward implementing such events
-these days -- and is maybe something we should look into.
+Tested on:
+PM961 NVMe SED Samsung 512GB
+INTEL SSDPEKKF512G8
 
-All of that being said, I agree that doing this is going to be
-particularly hairy and likely not worth the effort. In particular, the
-proc connector is:
+Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+Changes from V3:
+ 	- Use pcie_find_root_port() instead of pci_find_pcie_root_port(),
+ 	  changed in 5.8.
+ 	- Remove "Cc:" emails that ended up at top of V3 commit message.
+ 	- Fix changelog numbering.
+ 
+Changes from V2:
+	- Remove check for "not yet bound" ACPI companion device since
+	  this will not be a concern at driver probe time per Rafael.
+	- Move storage_d3 function out of PCI core and into NVMe driver
+	  since there's nothing the PCI core can do with this code as
+	  noted by Bjorn.
+ 
+Changes from V1:
+	- Export the pci_acpi_storage_d3 function for use by drivers as
+	  needed instead of modifying the pci header.
+	- Add missing put on acpi device handle.
+	- Add 'noacpi' module parameter to allow undoing this change.
+	- Add info message that this is a platform quirk.
 
- * Almost entirely unused (and largely unknown) by userspace.
+ drivers/acpi/property.c |  3 +++
+ drivers/nvme/host/pci.c | 55 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
 
- * Fairly fundamentally broken right now (the "security feature" of
-   PROC_CN_MCAST_LISTEN doesn't work because once there is one listener,
-   anyone who opens an cn_proc socket can get all events on the system
-   -- and if the process which opened the socket dies with calling
-   PROC_CN_MCAST_IGNORE then that information is now always streaming).
-   So if we end up supporting this, we'll need to fix those bugs too.
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index e601c4511a8b..c2e2ae774a19 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
+ 	/* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
+ 	GUID_INIT(0x6c501103, 0xc189, 0x4296,
+ 		  0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
++	/* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
++	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
++		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
+ };
+ 
+ /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index e2bacd369a88..a3d3a82b0437 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -4,6 +4,7 @@
+  * Copyright (c) 2011-2014, Intel Corporation.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/aer.h>
+ #include <linux/async.h>
+ #include <linux/blkdev.h>
+@@ -94,6 +95,10 @@ static unsigned int poll_queues;
+ module_param_cb(poll_queues, &io_queue_count_ops, &poll_queues, 0644);
+ MODULE_PARM_DESC(poll_queues, "Number of queues to use for polled IO.");
+ 
++static bool noacpi;
++module_param(noacpi, bool, 0444);
++MODULE_PARM_DESC(noacpi, "disable acpi bios quirks");
++
+ struct nvme_dev;
+ struct nvme_queue;
+ 
+@@ -2757,6 +2762,46 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
++static bool nvme_acpi_storage_d3(struct pci_dev *dev)
++{
++	const struct fwnode_handle *fwnode;
++	struct acpi_device *adev;
++	struct pci_dev *root;
++	acpi_handle handle;
++	acpi_status status;
++	bool ret = false;
++	u8 val;
++
++	/*
++	 * Look for _DSD property specifying that the storage device on
++	 * the port must use D3 to support deep platform power savings during
++	 * suspend-to-idle
++	 */
++	root = pcie_find_root_port(dev);
++	if (!root)
++		return false;
++
++	adev = ACPI_COMPANION(&root->dev);
++	if (!adev)
++		return false;
++
++	status = acpi_get_handle(adev->handle, "PXSX", &handle);
++	if (ACPI_FAILURE(status))
++		return false;
++
++	adev = acpi_bus_get_acpi_device(handle);
++	if (!adev)
++		return false;
++
++	fwnode = acpi_fwnode_handle(adev);
++	if (!fwnode_property_read_u8(fwnode, "StorageD3Enable", &val))
++		ret = (val == 1);
++
++	acpi_bus_put_acpi_device(adev);
++
++	return ret;
++}
++
+ static void nvme_async_probe(void *data, async_cookie_t cookie)
+ {
+ 	struct nvme_dev *dev = data;
+@@ -2806,6 +2851,16 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	quirks |= check_vendor_combination_bug(pdev);
+ 
++	if (!noacpi && nvme_acpi_storage_d3(pdev)) {
++		/*
++		 * Some systems use a bios work around to ask for D3 on
++		 * platforms that support kernel managed suspend.
++		 */
++		dev_info(&pdev->dev,
++			 "platform quirk: setting simple suspend\n");
++		quirks |= NVME_QUIRK_SIMPLE_SUSPEND;
++	}
++
+ 	/*
+ 	 * Double check that our mempool alloc size will cover the biggest
+ 	 * command we support.
+-- 
+2.20.1
 
- * Is so deeply intertwined with netlink and thus is so deeply embedded
-   with network namespaces (rather than pid namespaces) meaning that
-   getting it to correctly handle shared-network-namespace cases is
-   going to be a nightmare. I agree with Eric that this patchset looks
-   like it doesn't approach the problem from the right angle (and
-   thinking about how you could fix it makes me a little nervous).
-
-Not to mention that when I brought this up with the maintainer listed in
-MAINTAINERS a few years ago (soon after I posted [1]), I was told that
-they no longer maintain this code -- so whoever touches it next is the
-new maintainer.
-
-In 2017, I wrote that GNU Shepherd uses cn_proc, however I'm pretty sure
-(looking at the code now) that it wasn't true then and isn't true now
-(Shepherd seems to just do basic pidfile liveliness checks). So even the
-niche example I used then doesn't actually use cn_proc.
-
-[1]: https://lore.kernel.org/lkml/a2fa1602-2280-c5e8-cac9-b718eaea5d22@suse=
-=2Ede/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---7yvvc7bj43wjipa4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl7+Y0MACgkQnhiqJn3b
-jbQK2w//RnV3LBW6JLU3tXpsEaAW5AWmGYwVXGYOJcz8qZ/svfbKtAiHomv/fZzZ
-VKqpeZylQQjWO/QFQbwKqKAzaLKmt0w0Y9DtlPtjmvp53c3JsJkG0swDAbPMOt4V
-N9wqtKeHxGWQ7JaxT79EN2eehE7/HV8aSSg9FFHKRvvxF5XBdesDJbyVRVCLCdPy
-555+HK315dHBCjp4xf/mrn30/Nmb3mMITuv8jKZ3fNUYicdLikK8S9k759u3pWm0
-hGzKuPjiUfJYXhY5rvNnri2oBvGaBAIWjQqZpzFNgpjP3YWEYxPyIcQaJvqrPHit
-XjJI0XEEqiu3ENwqeeL4qPvbDuIzSRj//2JkZzZpP/RF3gVPBkFkKygyMt0/84NB
-cB9N2GXSK3xeWhRLTlwiUAQjyj7VsrAkPcgDGKrkdF6OuG/OLk4csU5K/iWVi4zj
-rUnBu48OAdZA+FD5rl+sNsNXLDM77MS0Zn5y0fOexD9lfKGq6H7lUFvCaN1E1OxQ
-n5wSYfnpElfw87eS7GSOO/24S1s/gS3tY81iJcqGHjXS7CD78D9+alu/mamDnvKL
-PyPMhRnuelFbUjKpWOyr+jKULaUEwszq3H9EcKoYIibbOiqQrAr04w1CN2bJE6yw
-8uNBUom8o89umkBpuM1GO6S4lsKgymaWzG/frRdAHqG1e6EgrvE=
-=vMyH
------END PGP SIGNATURE-----
-
---7yvvc7bj43wjipa4--
