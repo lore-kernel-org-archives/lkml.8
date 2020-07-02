@@ -2,186 +2,335 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1939FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D297C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1D5120702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Z5NTFwts"
+	by mail.kernel.org (Postfix) with ESMTP id 3D8C420702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgGBJM7 (ORCPT
+        id S1728038AbgGBJOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGBJM7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:12:59 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8278C08C5C1;
-        Thu,  2 Jul 2020 02:12:58 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AC46622EEB;
-        Thu,  2 Jul 2020 11:12:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593681177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sYkGBHvaNTyBI74MG9qO6W/wGpDKi9edSCvGAhgdkmw=;
-        b=Z5NTFwtsFTYlze4XpyzMl067BvWkIbwhHTjSbiqKRE16dig9ea7I8Zhk/I9+hsAgGHhoHk
-        4pPkMKBrrjJp3+gbmZNXUe5DHCPV8JllhP1smmyGy3tt6bg4fn+kz2tky67/5dmfpzXYK1
-        eiaDSv/hOT3BDEbjpFFUsNa07btoD34=
+        Thu, 2 Jul 2020 05:14:22 -0400
+Received: from mga02.intel.com ([134.134.136.20]:23382 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgGBJOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:14:21 -0400
+IronPort-SDR: 1pM0XYQ8czn6/azOdUo2KdUeB0M5AWbwiUg8fazHGaG0ZyF8/5KtBLnYDkAaj7au1yjdEXGfZU
+ 0USz0wvMkX7w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="135136498"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="135136498"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 02:14:21 -0700
+IronPort-SDR: ob2KALT8d+veQd2xjJsrWCqHjkNAnIaBniEu2PpOTlPr2EEQ1sHr6T0lEfZxdPvxxOGzm6mDb4
+ DtsqNS8JZUjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="295840816"
+Received: from ranger.igk.intel.com ([10.102.21.164])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jul 2020 02:14:17 -0700
+Date:   Thu, 2 Jul 2020 11:09:56 +0200
+From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+To:     ilias.apalodimas@linaro.org
+Cc:     Matteo Croce <mcroce@linux.microsoft.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH net-next 3/4] mvpp2: add basic XDP support
+Message-ID: <20200702090956.GA7682@ranger.igk.intel.com>
+References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+ <20200630180930.87506-4-mcroce@linux.microsoft.com>
+ <20200702080819.GA499364@apalos.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jul 2020 11:12:56 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-In-Reply-To: <20200702081825.GR1179328@dell>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
- <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
- <f505c52d565ba7dbf05eef895782c410@walle.cc> <20200701070434.GP1179328@dell>
- <5d1d41504172d86d395b0135923f6f02@walle.cc> <20200702065412.GO1179328@dell>
- <c20e8009fadbdc032090a493074396c8@walle.cc> <20200702081825.GR1179328@dell>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <58ae64ebf22707ad1725987615b355c2@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702080819.GA499364@apalos.home>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-07-02 10:18, schrieb Lee Jones:
-> On Thu, 02 Jul 2020, Michael Walle wrote:
+On Thu, Jul 02, 2020 at 11:08:19AM +0300, ilias.apalodimas@linaro.org wrote:
+> On Tue, Jun 30, 2020 at 08:09:29PM +0200, Matteo Croce wrote:
+> > From: Matteo Croce <mcroce@microsoft.com>
+> > 
+> > Add XDP native support.
+> > By now only XDP_DROP, XDP_PASS and XDP_REDIRECT
+> > verdicts are supported.
+> > 
+> > Co-developed-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> > Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> > Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> > ---
 > 
->> Am 2020-07-02 08:54, schrieb Lee Jones:
->> > On Wed, 01 Jul 2020, Michael Walle wrote:
->> >
->> > > Am 2020-07-01 09:04, schrieb Lee Jones:
->> > > > On Wed, 01 Jul 2020, Michael Walle wrote:
->> > > >
->> > > > > Hi Lee,
->> > > > >
->> > > > > Am 2020-06-30 11:16, schrieb Michael Walle:
->> > > > > > I'm just trying to use this for my sl28 driver. Some remarks, see below.
->> > > > > >
->> > > > > > Am 2020-06-22 09:51, schrieb Lee Jones:
->> > > > > > > The existing SYSCON implementation only supports MMIO (memory mapped)
->> > > > > > > accesses, facilitated by Regmap.  This extends support for registers
->> > > > > > > held behind I2C busses.
->> > > > > > >
->> > > > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> > > > > > > ---
->> > > > > > > Changelog:
->> > > > > > >
->> > > > > > > v3 => v4
->> > > > > > >   - Add ability to provide a non-default Regmap configuration
->> > > > > > >
->> > > > > > > v2 => v3
->> > > > > > >   - Change 'is CONFIG' present check to include loadable modules
->> > > > > > >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
->> > > > > > > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
->> > > > > > >
->> > > > > > > v1 => v2
->> > > > > > >   - Remove legacy references to OF
->> > > > > > >   - Allow building as a module (fixes h8300 0-day issue)
->> > > > > > >
->> > > > > > > drivers/mfd/Kconfig            |   7 +++
->> > > > > > >  drivers/mfd/Makefile           |   1 +
->> > > > > > >  drivers/mfd/syscon-i2c.c       | 104
->> > > > > > > +++++++++++++++++++++++++++++++++
->> > > > > > >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
->> > > > > > >  4 files changed, 148 insertions(+)
->> > > > > > >  create mode 100644 drivers/mfd/syscon-i2c.c
->> > > > > > >  create mode 100644 include/linux/mfd/syscon-i2c.h
->> >
->> > [...]
->> >
->> > > > > > This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
->> > > > > > to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
->> > > > > > all over again in all sub drivers.
->> > > > > >
->> > > > > > So you could just do a
->> > > > > >   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
->> > > > > >
->> > > > > > I've also noticed that the mmio syscon uses device_node as parameter.
->> > > > > > What
->> > > > > > was the reason to divert from that? Just curious.
->> > > > >
->> > > > > How is this supposed to be used?
->> > > > >
->> > > > > I had something like the following in mind:
->> > > > >
->> > > > > &i2c {
->> > > > >   cpld@4a {
->> > > > >     compatible = "simple-mfd";
->> > > > >     reg = <0x4a>;
->> > > > >
->> > > > >     gpio@4 {
->> > > > >       compatible = "vendor,gpio";
->> > > > >       reg = <0x4>;
->> > > > >     };
->> > > > >   };
->> > > > > };
->> > > >
->> > > > Yes, that was the idea.
->> > > >
->> > > > > But I think the childen are not enumerated if its an I2C device. And
->> > > > > the actual i2c driver is also missing.
->> > > >
->> > > > What do you mean?  Can you elaborate?
->> > >
->> > > There is no i2c_driver instance who would create the regmap.
->> >
->> > The regmap is created by the first caller of:
->> >
->> >  syscon_i2c_to_regmap{_config}()
->> 
->> But which one is an i2c_driver? All the sub devices are platform 
->> drivers
->> and there should be no need for them to know that they are behind an
->> i2c driver (or spi driver or just mmio). All they have to know is how
->> to access the registers.
->> 
->> > > If I'm
->> > > reading the I2C code correctly, it won't probe any i2c device of a
->> > > bus if there is no i2c_driver with an associated .probe() or
->> > > .probe_new().
->> >
->> > Why wouldn't the children be registered using i2c_driver?
->> 
->> Where is the code which enumerates the children?
+> [...]
 > 
-> Yes, I see the problem now.  So I2C devices depend on a device
-> registering with the i2c_driver framework, which then probes the
-> device accordingly.  Thus a physical driver is required to convert I2C
-> devices to platform devices.  So this stops being an MFD problem and
-> starts being a 'simple-i2c' issue. :)
+> >  }
+> >  
+> > +static int
+> > +mvpp2_run_xdp(struct mvpp2_port *port, struct mvpp2_rx_queue *rxq,
+> > +	      struct bpf_prog *prog, struct xdp_buff *xdp,
+> > +	      struct page_pool *pp)
+> > +{
+> > +	unsigned int len, sync, err;
+> > +	struct page *page;
+> > +	u32 ret, act;
+> > +
+> > +	len = xdp->data_end - xdp->data_hard_start - MVPP2_SKB_HEADROOM;
+> > +	act = bpf_prog_run_xdp(prog, xdp);
+> > +
+> > +	/* Due xdp_adjust_tail: DMA sync for_device cover max len CPU touch */
+> > +	sync = xdp->data_end - xdp->data_hard_start - MVPP2_SKB_HEADROOM;
+> > +	sync = max(sync, len);
+> > +
+> > +	switch (act) {
+> > +	case XDP_PASS:
+> > +		ret = MVPP2_XDP_PASS;
+> > +		break;
+> > +	case XDP_REDIRECT:
+> > +		err = xdp_do_redirect(port->dev, xdp, prog);
+> > +		if (unlikely(err)) {
+> > +			ret = MVPP2_XDP_DROPPED;
+> > +			page = virt_to_head_page(xdp->data);
+> > +			page_pool_put_page(pp, page, sync, true);
+> > +		} else {
+> > +			ret = MVPP2_XDP_REDIR;
+> > +		}
+> > +		break;
+> > +	default:
+> > +		bpf_warn_invalid_xdp_action(act);
+> > +		fallthrough;
+> > +	case XDP_ABORTED:
+> > +		trace_xdp_exception(port->dev, prog, act);
+> > +		fallthrough;
+> > +	case XDP_DROP:
+> > +		page = virt_to_head_page(xdp->data);
+> > +		page_pool_put_page(pp, page, sync, true);
+> > +		ret = MVPP2_XDP_DROPPED;
+> > +		break;
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  /* Main rx processing */
+> >  static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+> >  		    int rx_todo, struct mvpp2_rx_queue *rxq)
+> >  {
+> >  	struct net_device *dev = port->dev;
+> > +	struct bpf_prog *xdp_prog;
+> > +	struct xdp_buff xdp;
+> >  	int rx_received;
+> >  	int rx_done = 0;
+> > +	u32 xdp_ret = 0;
+> >  	u32 rcvd_pkts = 0;
+> >  	u32 rcvd_bytes = 0;
+> >  
+> > +	rcu_read_lock();
+> > +
+> > +	xdp_prog = READ_ONCE(port->xdp_prog);
+> > +
+> >  	/* Get number of received packets and clamp the to-do */
+> >  	rx_received = mvpp2_rxq_received(port, rxq->id);
+> >  	if (rx_todo > rx_received)
+> > @@ -3060,7 +3115,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+> >  		dma_addr_t dma_addr;
+> >  		phys_addr_t phys_addr;
+> >  		u32 rx_status;
+> > -		int pool, rx_bytes, err;
+> > +		int pool, rx_bytes, err, ret;
+> >  		void *data;
+> >  
+> >  		rx_done++;
+> > @@ -3096,6 +3151,33 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+> >  		else
+> >  			frag_size = bm_pool->frag_size;
+> >  
+> > +		if (xdp_prog) {
+> > +			xdp.data_hard_start = data;
+> > +			xdp.data = data + MVPP2_MH_SIZE + MVPP2_SKB_HEADROOM;
+> > +			xdp.data_end = xdp.data + rx_bytes;
+> > +			xdp.frame_sz = PAGE_SIZE;
+> > +
+> > +			if (bm_pool->pkt_size == MVPP2_BM_SHORT_PKT_SIZE)
+> > +				xdp.rxq = &rxq->xdp_rxq_short;
+> > +			else
+> > +				xdp.rxq = &rxq->xdp_rxq_long;
+> > +
+> > +			xdp_set_data_meta_invalid(&xdp);
+> > +
+> > +			ret = mvpp2_run_xdp(port, rxq, xdp_prog, &xdp, pp);
+> > +
+> > +			if (ret) {
+> > +				xdp_ret |= ret;
+> > +				err = mvpp2_rx_refill(port, bm_pool, pp, pool);
+> > +				if (err) {
+> > +					netdev_err(port->dev, "failed to refill BM pools\n");
+> > +					goto err_drop_frame;
+> > +				}
+> > +
+> > +				continue;
+> > +			}
+> > +		}
+> > +
+> >  		skb = build_skb(data, frag_size);
+> >  		if (!skb) {
+> >  			netdev_warn(port->dev, "skb build failed\n");
+> > @@ -3118,7 +3200,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+> >  		rcvd_pkts++;
+> >  		rcvd_bytes += rx_bytes;
+> >  
+> > -		skb_reserve(skb, MVPP2_MH_SIZE + NET_SKB_PAD);
+> > +		skb_reserve(skb, MVPP2_MH_SIZE + MVPP2_SKB_HEADROOM);
+> >  		skb_put(skb, rx_bytes);
+> >  		skb->protocol = eth_type_trans(skb, dev);
+> >  		mvpp2_rx_csum(port, rx_status, skb);
+> > @@ -3133,6 +3215,8 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+> >  		mvpp2_bm_pool_put(port, pool, dma_addr, phys_addr);
+> >  	}
+> >  
+> > +	rcu_read_unlock();
+> > +
+> >  	if (rcvd_pkts) {
+> >  		struct mvpp2_pcpu_stats *stats = this_cpu_ptr(port->stats);
+> >  
+> > @@ -3608,6 +3692,8 @@ static void mvpp2_start_dev(struct mvpp2_port *port)
+> >  	}
+> >  
+> >  	netif_tx_start_all_queues(port->dev);
+> > +
+> > +	clear_bit(0, &port->state);
+> >  }
+> >  
+> >  /* Set hw internals when stopping port */
+> > @@ -3615,6 +3701,8 @@ static void mvpp2_stop_dev(struct mvpp2_port *port)
+> >  {
+> >  	int i;
+> >  
+> > +	set_bit(0, &port->state);
+> > +
+> >  	/* Disable interrupts on all threads */
+> >  	mvpp2_interrupts_disable(port);
+> >  
+> > @@ -4021,6 +4109,10 @@ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+> >  	}
+> >  
+> >  	if (MVPP2_RX_PKT_SIZE(mtu) > MVPP2_BM_LONG_PKT_SIZE) {
+> > +		if (port->xdp_prog) {
+> > +			netdev_err(dev, "Jumbo frames are not supported with XDP\n");
+> 
+> Does it make sense to switch to NL_SET_ERR_MSG_MOD() here, so the user can get
+> an immediate feedback?
 
-Yes, but this is still MFD specifc, because no other normal (in lack of
-a better word, think of one-function-devices) I2C device has sub-nodes.
-Thus my proposal for that simple-mfd-i2c driver. And keep in mind that
-this likely isn't specific to I2C but also to SPI (without having
-looked at it). So in theory that simple-mfd-i2c, could also register
-a spi_driver which then registers an SPI regmap and enumerates the
-children. So this is not only an I2C topic, but IMHO still MFD.
+ndo_change_mtu does not provide netlink's extack, so that's not possible
+here AFAIK.
 
--michael
+> 
+> > +			return -EINVAL;
+> > +		}
+> >  		if (priv->percpu_pools) {
+> >  			netdev_warn(dev, "mtu %d too high, switching to shared buffers", mtu);
+> >  			mvpp2_bm_switch_buffers(priv, false);
+> > @@ -4159,6 +4251,73 @@ static int mvpp2_set_features(struct net_device *dev,
+> >  	return 0;
+> >  }
+> >  
+> > +static int mvpp2_xdp_setup(struct mvpp2_port *port, struct netdev_bpf *bpf)
+> > +{
+> > +	struct bpf_prog *prog = bpf->prog, *old_prog;
+> > +	bool running = netif_running(port->dev);
+> > +	bool reset = !prog != !port->xdp_prog;
+> > +
+> > +	if (port->dev->mtu > ETH_DATA_LEN) {
+> > +		netdev_err(port->dev, "Jumbo frames are not supported by XDP, current MTU %d.\n",
+> > +			   port->dev->mtu);
+> 
+> ditto
+
+Here I agree and for every other netdev_err within mvpp2_xdp_setup().
+
+> 
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	if (!port->priv->percpu_pools) {
+> > +		netdev_err(port->dev, "Per CPU Pools required for XDP");
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	/* device is up and bpf is added/removed, must setup the RX queues */
+> > +	if (running && reset) {
+> > +		mvpp2_stop_dev(port);
+> > +		mvpp2_cleanup_rxqs(port);
+> > +		mvpp2_cleanup_txqs(port);
+> > +	}
+> > +
+> > +	old_prog = xchg(&port->xdp_prog, prog);
+> > +	if (old_prog)
+> > +		bpf_prog_put(old_prog);
+> > +
+> > +	/* bpf is just replaced, RXQ and MTU are already setup */
+> > +	if (!reset)
+> > +		return 0;
+> > +
+> > +	/* device was up, restore the link */
+> > +	if (running) {
+> > +		int ret = mvpp2_setup_rxqs(port);
+> > +
+> > +		if (ret) {
+> > +			netdev_err(port->dev, "mvpp2_setup_rxqs failed\n");
+> > +			return ret;
+> > +		}
+> > +		ret = mvpp2_setup_txqs(port);
+> > +		if (ret) {
+> > +			netdev_err(port->dev, "mvpp2_setup_txqs failed\n");
+> > +			return ret;
+> > +		}
+> > +
+> > +		mvpp2_start_dev(port);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mvpp2_xdp(struct net_device *dev, struct netdev_bpf *xdp)
+> > +{
+> > +	struct mvpp2_port *port = netdev_priv(dev);
+> > +
+> > +	switch (xdp->command) {
+> > +	case XDP_SETUP_PROG:
+> > +		return mvpp2_xdp_setup(port, xdp);
+> > +	case XDP_QUERY_PROG:
+> > +		xdp->prog_id = port->xdp_prog ? port->xdp_prog->aux->id : 0;
+> > +		return 0;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> >  /* Ethtool methods */
+> >  
+> >  static int mvpp2_ethtool_nway_reset(struct net_device *dev)
+> > @@ -4509,6 +4668,7 @@ static const struct net_device_ops mvpp2_netdev_ops = {
+> >  	.ndo_vlan_rx_add_vid	= mvpp2_vlan_rx_add_vid,
+> >  	.ndo_vlan_rx_kill_vid	= mvpp2_vlan_rx_kill_vid,
+> >  	.ndo_set_features	= mvpp2_set_features,
+> > +	.ndo_bpf		= mvpp2_xdp,
+> >  };
+> >  
+> >  static const struct ethtool_ops mvpp2_eth_tool_ops = {
+> > -- 
+> > 2.26.2
+> > 
