@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB229C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA9820748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1361520748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653591;
-	bh=hhgV1S39/KwoIvsw3LlMcbHsFuKXUIs8erzHTOy83tM=;
+	s=default; t=1593653597;
+	bh=aLKc2SmUfn8SIjJJkUSZ8J7RkjL7/t9i+FwVY1Z71rM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qoi34fO/fp/7uMUF7zV0bRKtrefmUx/DMoWjIQjumpD//lZ3BEMiAulx6CGFDd8Bz
-	 q5xjBJD3WYceJzzfxyp4zH+oic2uZ6IFzAOKNU1ZFNp8Umyjc/4c1lqo7dBlRHWv8b
-	 66jC5tFv4nW2lbuVEPj6duQ2HdbYE5G1UrEJq0gw=
+	b=QfcB+9/VefFyQG9NFmLxzb83jegD7kLDX+KnualxE/50yfpB93/l7+SE5zaTCFE4+
+	 FsXT9IgT+OdEBXkHAXBlEhPgdqOeEggp0xsj9Hc7tW8juLy+wRP7g+npPN76CMN4by
+	 P1QEHmPAYDP7aVTsc/RrcZF6f8/nKzZE95sugmYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgGBBZz (ORCPT
+        id S1729567AbgGBBdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56826 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgGBBZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:46 -0400
+        id S1729018AbgGBBZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FE220899;
-        Thu,  2 Jul 2020 01:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB76F2083E;
+        Thu,  2 Jul 2020 01:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653146;
-        bh=hhgV1S39/KwoIvsw3LlMcbHsFuKXUIs8erzHTOy83tM=;
+        s=default; t=1593653157;
+        bh=aLKc2SmUfn8SIjJJkUSZ8J7RkjL7/t9i+FwVY1Z71rM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCWqdZDGvMVIUHO5m0xaNzMztUwu7B3HfPxf5r+L+HRUSxPPM4+icy2a57NmPQ7i0
-         Q8GVgThK758ZDFGV7spOlX3aaBo24q0cwqTVlmLxjNESPOA3l+nn6xqvEXSppaCWoW
-         R/MygiJDChpvQ5lGYlGQeWniVoODnlYTIZ7pF2JI=
+        b=th0ihVE7I/xAInhZfTREgiGGDTaT/qzkZVnjMyiYnKmbZU0KoweKE9D9+BF5Bu4kT
+         +Q73SjmI1v0QFTaUAf0+QeU+AaYGICKJeHK6IE3/3X2RTDCHIPZZ5wOJF2VuFmQxRg
+         N46r+GctZLhzW1gc9gq6GB7wrV8E6Jk569wXbvQk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/40] net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy
-Date:   Wed,  1 Jul 2020 21:23:38 -0400
-Message-Id: <20200702012402.2701121-17-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 26/40] drm: panel-orientation-quirks: Add quirk for Asus T101HA panel
+Date:   Wed,  1 Jul 2020 21:23:47 -0400
+Message-Id: <20200702012402.2701121-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -60,168 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit b4748553f53f2971e07d2619f13d461daac0f3bb ]
+[ Upstream commit 6c22bc18a3b93a38018844636557ad02e588e055 ]
 
-The MVNETA_SERDES_CFG register is only available on older SoCs like the
-Armada XP. On newer SoCs like the Armada 38x the fields are moved to
-comphy. This patch moves the writes to this register next to the comphy
-initialization, so that depending on the SoC either comphy or
-MVNETA_SERDES_CFG is configured.
-With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
-doesn't exist.
+Like the Asus T100HA the Asus T101HA also uses a panel which has been
+mounted 90 degrees rotated, albeit in the opposite direction.
+Add a quirk for this.
 
-Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
- 1 file changed, 44 insertions(+), 36 deletions(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index a10ae28ebc8aa..b0599b205b36e 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -104,6 +104,7 @@
- #define      MVNETA_TX_IN_PRGRS                  BIT(1)
- #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
- #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-+/* Only exists on Armada XP and Armada 370 */
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-@@ -3164,26 +3165,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
- 	return 0;
- }
- 
--static int mvneta_comphy_init(struct mvneta_port *pp)
-+static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
- {
- 	int ret;
- 
--	if (!pp->comphy)
--		return 0;
--
--	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
--			       pp->phy_interface);
-+	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
- 	if (ret)
- 		return ret;
- 
- 	return phy_power_on(pp->comphy);
- }
- 
-+static int mvneta_config_interface(struct mvneta_port *pp,
-+				   phy_interface_t interface)
-+{
-+	int ret = 0;
-+
-+	if (pp->comphy) {
-+		if (interface == PHY_INTERFACE_MODE_SGMII ||
-+		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-+		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-+			ret = mvneta_comphy_init(pp, interface);
-+		}
-+	} else {
-+		switch (interface) {
-+		case PHY_INTERFACE_MODE_QSGMII:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_QSGMII_SERDES_PROTO);
-+			break;
-+
-+		case PHY_INTERFACE_MODE_SGMII:
-+		case PHY_INTERFACE_MODE_1000BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_SGMII_SERDES_PROTO);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	pp->phy_interface = interface;
-+
-+	return ret;
-+}
-+
- static void mvneta_start_dev(struct mvneta_port *pp)
- {
- 	int cpu;
- 
--	WARN_ON(mvneta_comphy_init(pp));
-+	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
- 
- 	mvneta_max_rx_size_set(pp, pp->pkt_size);
- 	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-@@ -3561,14 +3591,10 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
- 	if (state->speed == SPEED_2500)
- 		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
- 
--	if (pp->comphy && pp->phy_interface != state->interface &&
--	    (state->interface == PHY_INTERFACE_MODE_SGMII ||
--	     state->interface == PHY_INTERFACE_MODE_1000BASEX ||
--	     state->interface == PHY_INTERFACE_MODE_2500BASEX)) {
--		pp->phy_interface = state->interface;
--
--		WARN_ON(phy_power_off(pp->comphy));
--		WARN_ON(mvneta_comphy_init(pp));
-+	if (pp->phy_interface != state->interface) {
-+		if (pp->comphy)
-+			WARN_ON(phy_power_off(pp->comphy));
-+		WARN_ON(mvneta_config_interface(pp, state->interface));
- 	}
- 
- 	if (new_ctrl0 != gmac_ctrl0)
-@@ -4464,20 +4490,10 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
- }
- 
- /* Power up the port */
--static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-+static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- {
- 	/* MAC Cause register should be cleared */
- 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
--
--	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
--	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
--		 phy_interface_mode_is_8023z(phy_mode))
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
--	else if (!phy_interface_mode_is_rgmii(phy_mode))
--		return -EINVAL;
--
--	return 0;
- }
- 
- /* Device initialization routine */
-@@ -4661,11 +4677,7 @@ static int mvneta_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		goto err_netdev;
- 
--	err = mvneta_port_power_up(pp, phy_mode);
--	if (err < 0) {
--		dev_err(&pdev->dev, "can't power up port\n");
--		goto err_netdev;
--	}
-+	mvneta_port_power_up(pp, phy_mode);
- 
- 	/* Armada3700 network controller does not support per-cpu
- 	 * operation, so only single NAPI should be initialized.
-@@ -4818,11 +4830,7 @@ static int mvneta_resume(struct device *device)
- 		}
- 	}
- 	mvneta_defaults_set(pp);
--	err = mvneta_port_power_up(pp, pp->phy_interface);
--	if (err < 0) {
--		dev_err(device, "can't power up port\n");
--		return err;
--	}
-+	mvneta_port_power_up(pp, pp->phy_interface);
- 
- 	netif_device_attach(dev);
- 
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index ffd95bfeaa94c..d11d83703931e 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -121,6 +121,12 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100HAN"),
+ 		},
+ 		.driver_data = (void *)&asus_t100ha,
++	}, {	/* Asus T101HA */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T101HA"),
++		},
++		.driver_data = (void *)&lcd800x1280_rightside_up,
+ 	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
 -- 
 2.25.1
 
