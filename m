@@ -2,182 +2,71 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2735CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F995C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55172065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA572065F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgGBOgd (ORCPT
+        id S1729796AbgGBOg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:36:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729047AbgGBOgd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:36:33 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062EaABb170333;
-        Thu, 2 Jul 2020 10:36:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320wfgh49q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 10:36:18 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062EaHFU170740;
-        Thu, 2 Jul 2020 10:36:17 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320wfgh3p8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 10:36:16 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062EQKOT006404;
-        Thu, 2 Jul 2020 14:32:33 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8e88m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 14:32:33 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062EWU0K45613128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jul 2020 14:32:30 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C88AE4C044;
-        Thu,  2 Jul 2020 14:32:30 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 523C24C050;
-        Thu,  2 Jul 2020 14:32:28 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu,  2 Jul 2020 14:32:28 +0000 (GMT)
-Date:   Thu, 2 Jul 2020 20:02:27 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200702143227.GE17918@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
- <20200701084200.GN2369@dhcp22.suse.cz>
- <20200701100442.GB17918@linux.vnet.ibm.com>
- <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
- <20200701110145.GC17918@linux.vnet.ibm.com>
- <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
- <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
- <20200701122110.GT2369@dhcp22.suse.cz>
- <20200702064408.GD17918@linux.vnet.ibm.com>
- <20200702084123.GC18446@dhcp22.suse.cz>
+        Thu, 2 Jul 2020 10:36:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7358 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729482AbgGBOg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:36:56 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BC290DC5CBB87568F7A4;
+        Thu,  2 Jul 2020 22:36:54 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 2 Jul 2020 22:36:46 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] scftorture: Make symbol 'scf_torture_rand' static
+Date:   Thu, 2 Jul 2020 22:47:00 +0800
+Message-ID: <20200702144700.3602-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200702084123.GC18446@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- suspectscore=0 impostorscore=0 mlxlogscore=999 cotscore=-2147483648
- adultscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007020100
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Michal Hocko <mhocko@kernel.org> [2020-07-02 10:41:23]:
+Fix sparse build warning:
 
-> On Thu 02-07-20 12:14:08, Srikar Dronamraju wrote:
-> > * Michal Hocko <mhocko@kernel.org> [2020-07-01 14:21:10]:
-> > 
-> > > > >>>>> The autonuma problem sounds interesting but again this patch doesn't
-> > > > >>>>> really solve the underlying problem because I strongly suspect that the
-> > > > >>>>> problem is still there when a numa node gets all its memory offline as
-> > > > >>>>> mentioned above.
-> > > 
-> > > I would really appreciate a feedback to these two as well.
-> > 
-> > 1. Its not just numactl that's to be fixed but all tools/utilities that
-> > depend on /sys/devices/system/node/online. Are we saying to not rely/believe
-> > in the output given by the kernel but do further verification?  
-> 
-> No, what we are saying is that even an online node might have zero
-> number of online pages/cpus. So the online status is not really
-> something that matters. If people are confused by that output then user
-> space tools can make their confusion go away. I really do not understand
-> why the kernel should do any logic there.
+kernel/scftorture.c:124:1: warning:
+ symbol '__pcpu_scope_scf_torture_rand' was not declared. Should it be static?
 
-The user facing teams are saying they are getting queries from the users who
-are unable to understand from the tools/sysfs files why a node is online and
-but has no attached resources. Its the amount of time that is being spent on
-these issues that triggered the patch. Initially even I was skeptical that
-this was a non-issue.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ kernel/scftorture.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > Also how would the user space differentiate between the case where the
-> > Kernel missed marking a node as offline to the case where the memory was
-> > offlined on a cpuless node but node wasn't offline?.
-> 
-> What I am arguing is that those two shouldn't be any different. Really!
-> 
-> > 2. Regarding the autonuma, the case of offline memory is user/admin driven,
-> > so if there is a performance hit, its something that's driven by his
-> > user/admin actions. Also how often do we see users offline complete memory
-> > of cpuless node on a 2 node system?
-> 
-> How often do we see crippled HW configurations like that? Really if
-> autonuma should be made more clever for one case it should recognize the
-> other as well.
-> 
+diff --git a/kernel/scftorture.c b/kernel/scftorture.c
+index 52750c564404..d63d700ad297 100644
+--- a/kernel/scftorture.c
++++ b/kernel/scftorture.c
+@@ -121,7 +121,7 @@ static unsigned long scf_sel_totweight;
+ static atomic_t n_started;
+ static atomic_t n_errs;
+ 
+-DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
++static DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
+ 
+ // Print torture statistics.  Caller must ensure serialization.
+ static void scf_torture_stats_print(void)
 
-Lets take a 16 socket PowerVM system and assume that 32 lpars are created
-on that socket, i.e 2 lpars for each socket. (PowerVM has the final say on
-how the lpars are created.) In such a case, we can expect 30 out of the 32
-lpars to face this problem, with the only 2 lpars that actually run on
-socket 0 having the correct configuration.
-
-> > > 
-> > > This begs a question whether ppc can do the same thing?
-> > 
-> > Certainly ppc can be made to adapt to this situation but that would be a
-> > workaround. Do we have a reason why we think node 0 is unique and special?
-> 
-> It is not. As replied in other email in this thread. I would hope for
-> having less hacks in the numa initialization. Cleaning up the mess is
-> would be a lot of work and testing on all NUMA capable architectures.
-> This is a heritage from the past I am afraid. All that I am arguing here
-> is that your touch to the generic code with a very simple looking patch
-> might have side effects which are pretty much impossible to review.
-> Moreover it seems that nothing but ppc really needs this treatment.
-> So fixing it in ppc specific code sounds much more safe.
-> 
-> Normally I would really push for a generic solution but after getting
-> burned several times in this area I do not dare anymore. The problem is
-> not in the code complexity but in how spread it is in places where you
-> do not expect side effects.
-> 
-
-I do understand and respect your viewpoint.
-
-> -- 
-> Michal Hocko
-> SUSE Labs
-
--- 
-Thanks and Regards
-Srikar Dronamraju
