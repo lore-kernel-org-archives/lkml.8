@@ -2,166 +2,590 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5552EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F085DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312F920899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD7A2089D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="L0zwwvq4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AoUMUelO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgGBIWx (ORCPT
+        id S1728486AbgGBIW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgGBIWq (ORCPT
+        Thu, 2 Jul 2020 04:22:58 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55256 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbgGBIWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:22:46 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB69FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:22:45 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id j4so24640448wrp.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 01:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3t9GLwryJTaOdXMZTnjC4mjz71cq4jtvm6cibUFNxhQ=;
-        b=L0zwwvq4BVdjvUIxi+uPw5MuIa6xxrKv8PXWwwOqBnqQQayVI8X4r7GkFILmCbJVyx
-         mGgsy107fK8syh3GtAmoXiKVwyVnUX5lFUIp3s9ZYD4uD3Yx903cMfVj48UJTzTmUTqh
-         vKf8CinW3GqwTCffXrOsQH08fw02qBc+ShhaX3aMyDutoBmCQelhqd/pK9U9prEpvsyD
-         4mnkRzzurB/44dgQElYhlUjjV4Qh0YcqpRbdA2sxhXAlW2fR9j1XcDe9jT6ErKzD7sWH
-         HBcord3lfJqekNCuTV0MWM8j/1Po4uHSF5gpOIrseByAyfBFfmb/R0id4E+U7V7joXar
-         cH1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3t9GLwryJTaOdXMZTnjC4mjz71cq4jtvm6cibUFNxhQ=;
-        b=mSZOf30exmD5YtZETPQeUfuE1wL+dLaK3hcokCPu7rGtyO6dkigpeAZ4+yPbhJ0WT1
-         8scUMMwHCA3n8ag7bEQGEwZ4DeYERSkiGh1dMKZEft05sifFyFq12SFOwFrDrN33Nm5J
-         Zwh6dpV9A39cp03aLeUQHvaeSqAccvonB8QAkTAa1xS9hZe4nzMhfJqu6DfcYnJ87xGM
-         nSFlOw/qx6T7VhzIAOEcG++ZIt5Xq35z5XQfpNB73wCEWiuM8uFeAwheTb3se5jVxuuI
-         CfITlyQ/0TP3+M5NJRAXKeX8hcJQJpTqHUEcJxKI6KuHJLe0RhBDnZKzNYfHJNQSt7wY
-         pVpg==
-X-Gm-Message-State: AOAM531xrGG9zDgEpXEdm6UXVLElk8YPbbb7C18haEEkgI0Tc2Gai83n
-        1jwwRY652YuD2vkyXB6Ks2uukUrGP6B9kyoYkVNO4w==
-X-Google-Smtp-Source: ABdhPJyIghecqPkmAYT+NI4s3yizDvT3Zx51BClqfp89CAi6K5ZYAPyQ1gPIGKCHrwC6RltmFFPoxv5AIS11N9RWTM0=
-X-Received: by 2002:a5d:6288:: with SMTP id k8mr29524832wru.373.1593678163746;
- Thu, 02 Jul 2020 01:22:43 -0700 (PDT)
+        Thu, 2 Jul 2020 04:22:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628Mf2X042283;
+        Thu, 2 Jul 2020 03:22:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593678161;
+        bh=1qzLaSMoiyDzc/yo3NiznOfrfn9/79kRBidf51KJ/xI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=AoUMUelOmFc5FPX9IU+fY6fjWX3sgrqH1xuDnj8KojzU6hdjZidfBzI6cD5FkVdjU
+         Ke05qNugUzId+5+HcudcK8PJh8VDYAmJBW4JE+Xuz7Xq/L2kSgdfSUGjGB1F6TDFQn
+         FwGXsclS9ET5atdfPLjYMPSlVCutKefYklblq5R0=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628Mfc5065436
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jul 2020 03:22:41 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
+ 2020 03:22:41 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 2 Jul 2020 03:22:41 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYL006145;
+        Thu, 2 Jul 2020 03:22:36 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>
+Subject: [RFC PATCH 09/22] rpmsg: Introduce configfs entry for configuring rpmsg
+Date:   Thu, 2 Jul 2020 13:51:30 +0530
+Message-ID: <20200702082143.25259-10-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
+References: <20200702082143.25259-1-kishon@ti.com>
 MIME-Version: 1.0
-References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
- <20200630230808.wj2xlt44vrszqfzx@box> <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
- <20200701075719.p7h5zypdtlhqxtgv@box> <20200701075902.hhmaskxtjsm4bcx7@box> <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
-In-Reply-To: <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
-From:   Daniel Stone <daniel@fooishbar.org>
-Date:   Thu, 2 Jul 2020 09:22:32 +0100
-Message-ID: <CAPj87rOrUHBZZR3cw+iqUMtZL1ZQyjd=RoM2yHt5oUeRO5uDTA@mail.gmail.com>
-Subject: Re: [git pull] drm for 5.8-rc1
-To:     James Jones <jajones@nvidia.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Create a configfs entry for each "struct rpmsg_device_id" populated
+in rpmsg client driver and create a configfs entry for each rpmsg
+device. This will be used to bind a rpmsg client driver to a rpmsg
+device in order to create a new rpmsg channel.
 
-On Wed, 1 Jul 2020 at 20:45, James Jones <jajones@nvidia.com> wrote:
-> OK, I think I see what's going on.  In the Xorg modesetting driver, the
-> logic is basically:
->
-> if (gbm_has_modifiers && DRM_CAP_ADDFB2_MODIFIERS != 0) {
->    drmModeAddFB2WithModifiers(..., gbm_bo_get_modifier(bo->gbm));
-> } else {
->    drmModeAddFB(...);
-> }
+This is used for creating channel for VHOST based rpmsg bus (channels
+are created in VIRTIO based bus during namespace announcement).
 
-I read this thread expecting to explain the correct behaviour we
-implement in Weston and how modesetting needs to be fixed, but ...
-that seems OK to me? As long as `gbm_has_modifiers` is a proxy for 'we
-used gbm_(bo|surface)_create_with_modifiers to allocate the buffer'.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/rpmsg/Makefile         |   2 +-
+ drivers/rpmsg/rpmsg_cfs.c      | 394 +++++++++++++++++++++++++++++++++
+ drivers/rpmsg/rpmsg_core.c     |   7 +
+ drivers/rpmsg/rpmsg_internal.h |  16 ++
+ include/linux/rpmsg.h          |   5 +
+ 5 files changed, 423 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/rpmsg/rpmsg_cfs.c
 
-> There's no attempt to verify the DRM-KMS device supports the modifier,
-> but then, why would there be?  GBM presumably chose a supported modifier
-> at buffer creation time, and we don't know which plane the FB is going
-> to be used with yet.  GBM doesn't actually ask the kernel which
-> modifiers it supports here either though.
+diff --git a/drivers/rpmsg/Makefile b/drivers/rpmsg/Makefile
+index ae92a7fb08f6..047acfda518a 100644
+--- a/drivers/rpmsg/Makefile
++++ b/drivers/rpmsg/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_RPMSG)		+= rpmsg_core.o
++obj-$(CONFIG_RPMSG)		+= rpmsg_core.o rpmsg_cfs.o
+ obj-$(CONFIG_RPMSG_CHAR)	+= rpmsg_char.o
+ obj-$(CONFIG_RPMSG_MTK_SCP)	+= mtk_rpmsg.o
+ obj-$(CONFIG_RPMSG_QCOM_GLINK_RPM) += qcom_glink_rpm.o
+diff --git a/drivers/rpmsg/rpmsg_cfs.c b/drivers/rpmsg/rpmsg_cfs.c
+new file mode 100644
+index 000000000000..a5c77aba00ee
+--- /dev/null
++++ b/drivers/rpmsg/rpmsg_cfs.c
+@@ -0,0 +1,394 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * configfs to configure RPMSG
++ *
++ * Copyright (C) 2020 Texas Instruments
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ */
++
++#include <linux/configfs.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/idr.h>
++#include <linux/slab.h>
++
++#include "rpmsg_internal.h"
++
++static struct config_group *channel_group;
++static struct config_group *virtproc_group;
++
++enum rpmsg_channel_status {
++	STATUS_FREE,
++	STATUS_BUSY,
++};
++
++struct rpmsg_channel {
++	struct config_item item;
++	struct device *dev;
++	enum rpmsg_channel_status status;
++};
++
++struct rpmsg_channel_group {
++	struct config_group group;
++};
++
++struct rpmsg_virtproc_group {
++	struct config_group group;
++	struct device *dev;
++	const struct rpmsg_virtproc_ops *ops;
++};
++
++static inline
++struct rpmsg_channel *to_rpmsg_channel(struct config_item *channel_item)
++{
++	return container_of(channel_item, struct rpmsg_channel, item);
++}
++
++static inline struct rpmsg_channel_group
++*to_rpmsg_channel_group(struct config_group *channel_group)
++{
++	return container_of(channel_group, struct rpmsg_channel_group, group);
++}
++
++static inline
++struct rpmsg_virtproc_group *to_rpmsg_virtproc_group(struct config_item *item)
++{
++	return container_of(to_config_group(item), struct rpmsg_virtproc_group,
++			    group);
++}
++
++/**
++ * rpmsg_virtproc_channel_link() - Create softlink of rpmsg client device
++ *   directory to virtproc configfs directory
++ * @virtproc_item: Config item representing configfs entry of virtual remote
++ *   processor
++ * @channel_item: Config item representing configfs entry of rpmsg client
++ *   driver
++ *
++ * Bind rpmsg client device to virtual remote processor by creating softlink
++ * between rpmsg client device directory to virtproc configfs directory
++ * in order to create a new rpmsg channel.
++ */
++static int rpmsg_virtproc_channel_link(struct config_item *virtproc_item,
++				       struct config_item *channel_item)
++{
++	struct rpmsg_virtproc_group *vgroup;
++	struct rpmsg_channel *channel;
++	struct config_group *cgroup;
++	struct device *dev;
++
++	vgroup = to_rpmsg_virtproc_group(virtproc_item);
++	channel = to_rpmsg_channel(channel_item);
++
++	if (channel->status == STATUS_BUSY)
++		return -EBUSY;
++
++	cgroup = channel_item->ci_group;
++
++	if (vgroup->ops && vgroup->ops->create_channel) {
++		dev = vgroup->ops->create_channel(vgroup->dev,
++						  cgroup->cg_item.ci_name);
++		if (IS_ERR_OR_NULL(dev))
++			return PTR_ERR(dev);
++	}
++
++	channel->dev = dev;
++	channel->status = STATUS_BUSY;
++
++	return 0;
++}
++
++/**
++ * rpmsg_virtproc_channel_unlink() - Remove softlink of rpmsg client device
++ *   directory from virtproc configfs directory
++ * @virtproc_item: Config item representing configfs entry of virtual remote
++ *   processor
++ * @channel_item: Config item representing configfs entry of rpmsg client
++ *   driver
++ *
++ * Unbind rpmsg client device from virtual remote processor by removing softlink
++ * of rpmsg client device directory from virtproc configfs directory which
++ * deletes the rpmsg channel.
++ */
++static void rpmsg_virtproc_channel_unlink(struct config_item *virtproc_item,
++					  struct config_item *channel_item)
++{
++	struct rpmsg_virtproc_group *vgroup;
++	struct rpmsg_channel *channel;
++
++	channel = to_rpmsg_channel(channel_item);
++	vgroup = to_rpmsg_virtproc_group(virtproc_item);
++
++	if (vgroup->ops && vgroup->ops->delete_channel)
++		vgroup->ops->delete_channel(channel->dev);
++
++	channel->status = STATUS_FREE;
++}
++
++static struct configfs_item_operations rpmsg_virtproc_item_ops = {
++	.allow_link	= rpmsg_virtproc_channel_link,
++	.drop_link	= rpmsg_virtproc_channel_unlink,
++};
++
++static const struct config_item_type rpmsg_virtproc_item_type = {
++	.ct_item_ops	= &rpmsg_virtproc_item_ops,
++	.ct_owner	= THIS_MODULE,
++};
++
++/**
++ * rpmsg_cfs_add_virtproc_group() - Add new configfs directory for virtproc
++ *   device
++ * @dev: Device representing the virtual remote processor
++ * @ops: rpmsg_virtproc_ops to create or delete rpmsg channel
++ *
++ * Add new configfs directory for virtproc device. The rpmsg client driver's
++ * configfs entry can be linked with this directory for creating a new
++ * rpmsg channel and the link can be removed for deleting the rpmsg channel.
++ */
++struct config_group *
++rpmsg_cfs_add_virtproc_group(struct device *dev,
++			     const struct rpmsg_virtproc_ops *ops)
++{
++	struct rpmsg_virtproc_group *vgroup;
++	struct config_group *group;
++	struct device *vdev;
++	int ret;
++
++	vgroup = kzalloc(sizeof(*vgroup), GFP_KERNEL);
++	if (!vgroup)
++		return ERR_PTR(-ENOMEM);
++
++	group = &vgroup->group;
++	config_group_init_type_name(group, dev_name(dev),
++				    &rpmsg_virtproc_item_type);
++	ret = configfs_register_group(virtproc_group, group);
++	if (ret)
++		goto err_register_group;
++
++	if (!try_module_get(ops->owner)) {
++		ret = -EPROBE_DEFER;
++		goto err_module_get;
++	}
++
++	vdev = get_device(dev);
++	vgroup->dev = vdev;
++	vgroup->ops = ops;
++
++	return group;
++
++err_module_get:
++	configfs_unregister_group(group);
++
++err_register_group:
++	kfree(vgroup);
++
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL(rpmsg_cfs_add_virtproc_group);
++
++/**
++ * rpmsg_cfs_remove_virtproc_group() - Remove the configfs directory for
++ *   virtproc device
++ * @group: config_group of the virtproc device
++ *
++ * Remove the configfs directory for virtproc device.
++ */
++void rpmsg_cfs_remove_virtproc_group(struct config_group *group)
++{
++	struct rpmsg_virtproc_group *vgroup;
++
++	if (!group)
++		return;
++
++	vgroup = container_of(group, struct rpmsg_virtproc_group, group);
++	put_device(vgroup->dev);
++	module_put(vgroup->ops->owner);
++	configfs_unregister_group(&vgroup->group);
++	kfree(vgroup);
++}
++EXPORT_SYMBOL(rpmsg_cfs_remove_virtproc_group);
++
++static const struct config_item_type rpmsg_channel_item_type = {
++	.ct_owner	= THIS_MODULE,
++};
++
++/**
++ * rpmsg_channel_make() - Allow user to create sub-directory of rpmsg client
++ *   driver
++ * @name: Name of the sub-directory created by the user.
++ *
++ * Invoked when user creates a sub-directory to the configfs directory
++ * representing the rpmsg client driver. This can be linked with the virtproc
++ * directory for creating a new rpmsg channel.
++ */
++static struct config_item *
++rpmsg_channel_make(struct config_group *group, const char *name)
++{
++	struct rpmsg_channel *channel;
++
++	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
++	if (!channel)
++		return ERR_PTR(-ENOMEM);
++
++	channel->status = STATUS_FREE;
++
++	config_item_init_type_name(&channel->item, name, &rpmsg_channel_item_type);
++	return &channel->item;
++}
++
++/**
++ * rpmsg_channel_drop() - Allow user to delete sub-directory of rpmsg client
++ *   driver
++ * @item: Config item representing the sub-directory the user created returned
++ *   by rpmsg_channel_make()
++ *
++ * Invoked when user creates a sub-directory to the configfs directory
++ * representing the rpmsg client driver. This can be linked with the virtproc
++ * directory for creating a new rpmsg channel.
++ */
++static void rpmsg_channel_drop(struct config_group *group, struct config_item *item)
++{
++	struct rpmsg_channel *channel;
++
++	channel = to_rpmsg_channel(item);
++	kfree(channel);
++}
++
++static struct configfs_group_operations rpmsg_channel_group_ops = {
++	.make_item     = &rpmsg_channel_make,
++	.drop_item      = &rpmsg_channel_drop,
++};
++
++static const struct config_item_type rpmsg_channel_group_type = {
++	.ct_group_ops	= &rpmsg_channel_group_ops,
++	.ct_owner	= THIS_MODULE,
++};
++
++/**
++ * rpmsg_cfs_add_channel_group() - Create a configfs directory for each
++ *   registered rpmsg client driver
++ * @name: The name of the rpmsg client driver
++ *
++ * Create a configfs directory for each registered rpmsg client driver. The
++ * user can create sub-directory within this directory for creating
++ * rpmsg channels to be used by the rpmsg client driver.
++ */
++struct config_group *rpmsg_cfs_add_channel_group(const char *name)
++{
++	struct rpmsg_channel_group *cgroup;
++	struct config_group *group;
++	int ret;
++
++	cgroup = kzalloc(sizeof(*cgroup), GFP_KERNEL);
++	if (!cgroup)
++		return ERR_PTR(-ENOMEM);
++
++	group = &cgroup->group;
++	config_group_init_type_name(group, name, &rpmsg_channel_group_type);
++	ret = configfs_register_group(channel_group, group);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return group;
++}
++EXPORT_SYMBOL(rpmsg_cfs_add_channel_group);
++
++/**
++ * rpmsg_cfs_remove_channel_group() - Remove the configfs directory associated
++ *   with the rpmsg client driver
++ * @group: Config group representing the rpmsg client driver
++ *
++ * Remove the configfs directory associated with the rpmsg client driver.
++ */
++void rpmsg_cfs_remove_channel_group(struct config_group *group)
++{
++	struct rpmsg_channel_group *cgroup;
++
++	if (IS_ERR_OR_NULL(group))
++		return;
++
++	cgroup = to_rpmsg_channel_group(group);
++	configfs_unregister_default_group(group);
++	kfree(cgroup);
++}
++EXPORT_SYMBOL(rpmsg_cfs_remove_channel_group);
++
++static const struct config_item_type rpmsg_channel_type = {
++	.ct_owner	= THIS_MODULE,
++};
++
++static const struct config_item_type rpmsg_virtproc_type = {
++	.ct_owner	= THIS_MODULE,
++};
++
++static const struct config_item_type rpmsg_type = {
++	.ct_owner	= THIS_MODULE,
++};
++
++static struct configfs_subsystem rpmsg_cfs_subsys = {
++	.su_group = {
++		.cg_item = {
++			.ci_namebuf = "rpmsg",
++			.ci_type = &rpmsg_type,
++		},
++	},
++	.su_mutex = __MUTEX_INITIALIZER(rpmsg_cfs_subsys.su_mutex),
++};
++
++static int __init rpmsg_cfs_init(void)
++{
++	int ret;
++	struct config_group *root = &rpmsg_cfs_subsys.su_group;
++
++	config_group_init(root);
++
++	ret = configfs_register_subsystem(&rpmsg_cfs_subsys);
++	if (ret) {
++		pr_err("Error %d while registering subsystem %s\n",
++		       ret, root->cg_item.ci_namebuf);
++		goto err;
++	}
++
++	channel_group = configfs_register_default_group(root, "channel",
++							&rpmsg_channel_type);
++	if (IS_ERR(channel_group)) {
++		ret = PTR_ERR(channel_group);
++		pr_err("Error %d while registering channel group\n",
++		       ret);
++		goto err_channel_group;
++	}
++
++	virtproc_group =
++		configfs_register_default_group(root, "virtproc",
++						&rpmsg_virtproc_type);
++	if (IS_ERR(virtproc_group)) {
++		ret = PTR_ERR(virtproc_group);
++		pr_err("Error %d while registering virtproc group\n",
++		       ret);
++		goto err_virtproc_group;
++	}
++
++	return 0;
++
++err_virtproc_group:
++	configfs_unregister_default_group(channel_group);
++
++err_channel_group:
++	configfs_unregister_subsystem(&rpmsg_cfs_subsys);
++
++err:
++	return ret;
++}
++module_init(rpmsg_cfs_init);
++
++static void __exit rpmsg_cfs_exit(void)
++{
++	configfs_unregister_default_group(virtproc_group);
++	configfs_unregister_default_group(channel_group);
++	configfs_unregister_subsystem(&rpmsg_cfs_subsys);
++}
++module_exit(rpmsg_cfs_exit);
++
++MODULE_DESCRIPTION("PCI RPMSG CONFIGFS");
++MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index e330ec4dfc33..68569fec03e2 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -563,8 +563,15 @@ EXPORT_SYMBOL(rpmsg_unregister_device);
+  */
+ int __register_rpmsg_driver(struct rpmsg_driver *rpdrv, struct module *owner)
+ {
++	const struct rpmsg_device_id *ids = rpdrv->id_table;
+ 	rpdrv->drv.bus = &rpmsg_bus;
+ 	rpdrv->drv.owner = owner;
++
++	while (ids && ids->name[0]) {
++		rpmsg_cfs_add_channel_group(ids->name);
++		ids++;
++	}
++
+ 	return driver_register(&rpdrv->drv);
+ }
+ EXPORT_SYMBOL(__register_rpmsg_driver);
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index 3fc83cd50e98..39b3a5caf242 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -68,6 +68,18 @@ struct rpmsg_endpoint_ops {
+ 			     poll_table *wait);
+ };
+ 
++/**
++ * struct rpmsg_virtproc_ops - indirection table for rpmsg_virtproc operations
++ * @create_channel: Create a new rpdev channel
++ * @delete_channel: Delete the rpdev channel
++ * @owner: Owner of the module holding the ops
++ */
++struct rpmsg_virtproc_ops {
++	struct device *(*create_channel)(struct device *dev, const char *name);
++	void (*delete_channel)(struct device *dev);
++	struct module *owner;
++};
++
+ int rpmsg_register_device(struct rpmsg_device *rpdev);
+ int rpmsg_unregister_device(struct device *parent,
+ 			    struct rpmsg_channel_info *chinfo);
+@@ -75,6 +87,10 @@ int rpmsg_unregister_device(struct device *parent,
+ struct device *rpmsg_find_device(struct device *parent,
+ 				 struct rpmsg_channel_info *chinfo);
+ 
++struct config_group *
++rpmsg_cfs_add_virtproc_group(struct device *dev,
++			     const struct rpmsg_virtproc_ops *ops);
++
+ /**
+  * rpmsg_chrdev_register_device() - register chrdev device based on rpdev
+  * @rpdev:	prepared rpdev to be used for creating endpoints
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d1c018..b9d9283b46ac 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -135,6 +135,7 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+ 			poll_table *wait);
+ 
++struct config_group *rpmsg_cfs_add_channel_group(const char *name);
+ #else
+ 
+ static inline int register_rpmsg_device(struct rpmsg_device *dev)
+@@ -242,6 +243,10 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+ 	return 0;
+ }
+ 
++static inline struct config_group *rpmsg_cfs_add_channel_group(const char *name)
++{
++	return NULL;
++}
+ #endif /* IS_ENABLED(CONFIG_RPMSG) */
+ 
+ /* use a macro to avoid include chaining to get THIS_MODULE */
+-- 
+2.17.1
 
-Right, it doesn't ask, because userspace tells it which modifiers to
-use. The correct behaviour is to take the list from the KMS
-`IN_FORMATS` property and then pass that to
-`gbm_(bo|surface)_create_with_modifiers`; GBM must then select from
-that list and only that list. If that call does not succeed and Xorg
-falls back to `gbm_surface_create`, then it must not call
-`gbm_bo_get_modifier` - so that would be a modesetting bug. If that
-call does succeed and `gbm_bo_get_modifier` subsequently reports a
-modifier which was not in the list, that's a Mesa driver bug.
-
-> It just goes into Mesa via
-> DRI and reports the modifier (unpatched) Mesa chose on its own.  Mesa
-> just hard-codes the modifiers in its driver backends since its thinking
-> in terms of a device's 3D engine, not display.  In theory, Mesa's DRI
-> drivers could query KMS for supported modifiers if allocating from GBM
-> using the non-modifiers path and the SCANOUT flag is set (perhaps some
-> drivers do this or its equivalent?  Haven't checked.), but that seems
-> pretty gnarly and doesn't fix the modifier-based GBM allocation path
-> AFAIK.  Bit of a mess.
-
-Two options for GBM users:
-* call gbm_*_create_with_modifiers, it succeeds, call
-gbm_bo_get_modifier, pass modifier into AddFB
-* call gbm_*_create (without modifiers), it succeeds, do not call
-gbm_bo_get_modifier, do not pass a modifier into AddFB
-
-Anything else is a bug in the user. Note that falling back from 1 to 2
-is fine: if `gbm_*_create_with_modifiers()` fails, you can fall back
-to the non-modifier path, provided you don't later try to get a
-modifier back out.
-
-> For a quick userspace fix that could probably be pushed out everywhere
-> (Only affects Xorg server 1.20+ AFAIK), just retrying
-> drmModeAddFB2WithModifiers() without the DRM_MODE_FB_MODIFIERS flag on
-> failure should be sufficient.
-
-This would break other drivers.
-
-> Still need to verify as I'm having
-> trouble wrangling my Xorg build at the moment and I'm pressed for time.
-> A more complete fix would be quite involved, as modesetting isn't really
-> properly plumbed to validate GBM's modifiers against KMS planes, and it
-> doesn't seem like GBM/Mesa/DRI should be responsible for this as noted
-> above given the general modifier workflow/design.
->
-> Most importantly, options I've considered for fixing from the kernel side:
->
-> -Accept "legacy" modifiers in nouveau in addition to the new modifiers,
-> though avoid reporting them to userspace as supported to avoid further
-> proliferation.  This is pretty straightforward.  I'll need to modify
-> both the AddFB2 handler (nouveau_validate_decode_mod) and the mode set
-> plane validation logic (nv50_plane_format_mod_supported), but it should
-> end up just being a few lines of code.
-
-I do think that they should also be reported to userspace if they are
-accepted. Other users can and do look at the modifier list to see if
-the buffer is acceptable for a given plane, so the consistency is good
-here. Of course, in Mesa you would want to prioritise the new
-modifiers over the legacy ones, and not allocate or return the legacy
-ones unless that was all you were asked for. This would involve
-tracking the used modifier explicitly through Mesa, rather than
-throwing it away at alloc time and then later divining it from the
-tiling mode.
-
-Cheers,
-Daniel
