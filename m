@@ -2,80 +2,75 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D56C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D983C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C33C20724
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593668189;
-	bh=w80HNCQd43j8lsfGDknlfMWRCtxh8+ZfOTuzLjUb+Tg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FSeK6DK7q13GZA869gSXTrKPn20tsyJaf35rpKGZKdbS8RWlBMS7O3RmaD6GSyr0F
-	 U66aQ3iaf87nE9ibwYdB2NAZ+zd65B916fh+qVa3X2WycKVqfHcjnF+n4fQi6Etspc
-	 VuAA5kUxu6oG5p/TJfad2z9THzoGL78hTQQsTOQY=
+	by mail.kernel.org (Postfix) with ESMTP id 185AE20724
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgGBFg1 (ORCPT
+        id S1726174AbgGBFkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgGBFg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:36:27 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B51120724;
-        Thu,  2 Jul 2020 05:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593668186;
-        bh=w80HNCQd43j8lsfGDknlfMWRCtxh8+ZfOTuzLjUb+Tg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CiLGW4fQE83/yPSoaLNjNXxWdQztSEnfSUvobWj5SL08wFtpj7ITwNpTCpr8fXJG6
-         v6LQ82S6Iopo0IEnBC03ZMkH1MPLHvkJL0OmNAg4PDKmTLqsnglMl5I7VLK6hBNzY0
-         Hln49f0USlhkO3bp1JcuqHNbQ5T9o97V4VbFqjxw=
-Received: by mail-lj1-f181.google.com with SMTP id 9so30093459ljv.5;
-        Wed, 01 Jul 2020 22:36:26 -0700 (PDT)
-X-Gm-Message-State: AOAM5302EguksHGyx96McGzP+vV2RAVmZBDx1EaWZ+TwumcXBHDsn2h5
-        R3h7HgXRHajHkaz9f7jIRk/c+HS3t9Ql2rUoykU=
-X-Google-Smtp-Source: ABdhPJymqO+8A/ON6cgRlyAmaadzhb/A3ETkgEahkbFx3Wp1rU/jFwtY3MDkzrSEOGWene4L2hOwuUlW51s/XrqmVQI=
-X-Received: by 2002:a2e:7f06:: with SMTP id a6mr4621445ljd.446.1593668184748;
- Wed, 01 Jul 2020 22:36:24 -0700 (PDT)
+        Thu, 2 Jul 2020 01:40:21 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:50893 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbgGBFkU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 01:40:20 -0400
+X-IronPort-AV: E=Sophos;i="5.75,303,1589234400"; 
+   d="scan'208";a="457763334"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 07:40:18 +0200
+Date:   Thu, 2 Jul 2020 07:40:18 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-doc@vger.kernel.org, Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
+In-Reply-To: <20200702000843.GV25523@casper.infradead.org>
+Message-ID: <alpine.DEB.2.22.394.2007020739270.2478@hadrien>
+References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org> <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de> <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org> <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de> <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
+ <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de> <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org> <20200702000843.GV25523@casper.infradead.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200701090622.3354860-1-hch@lst.de> <20200701090622.3354860-5-hch@lst.de>
-In-Reply-To: <20200701090622.3354860-5-hch@lst.de>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 1 Jul 2020 22:36:13 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7QShNMnbCK-OrKkE8F5XyH45-ML-w5qKLVrO=VTt6npw@mail.gmail.com>
-Message-ID: <CAPhsuW7QShNMnbCK-OrKkE8F5XyH45-ML-w5qKLVrO=VTt6npw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] writeback: remove bdi->congested_fn
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        dm-devel@redhat.com, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-btrfs@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 2:06 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Except for pktdvd, the only places setting congested bits are file
-> systems that allocate their own backing_dev_info structures.  And
-> pktdvd is a deprecated driver that isn't useful in stack setup
-> either.  So remove the dead congested_fn stacking infrastructure.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-For md bits:
 
-Acked-by: Song Liu <song@kernel.org>
+On Thu, 2 Jul 2020, Matthew Wilcox wrote:
+
+> On Wed, Jul 01, 2020 at 07:52:58AM -0700, Randy Dunlap wrote:
+> > On 7/1/20 6:32 AM, Markus Elfring wrote:
+> > >>> How do you think about to use the following command variant
+> > >>> for the adjustment of the software documentation?
+> > >>>
+> > >>> +    make C=1 CHECK='scripts/coccicheck' 'path/to/file.o'
+> > >>
+> > >> I don't understand the reason for that change...
+> >
+> > IOW, your "patch" needs justification and/or explanation. It was missing that info.
+>
+> What Markus is trying so completely ineptly to say is that
+>   make C=1 CHECK=scripts/coccicheck path/to/file.c
+> doesn't work.  You need to use the .o suffix to check the .c file.
+
+Thanks Matthew for this very helpful information.
+
+julia
