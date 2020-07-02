@@ -2,123 +2,116 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0330420899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9982065F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgGBOhB (ORCPT
+        id S1729850AbgGBOih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:37:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:42838 "EHLO mga14.intel.com"
+        Thu, 2 Jul 2020 10:38:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:58548 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgGBOhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:37:00 -0400
-IronPort-SDR: xO8tR+mowZn4yl3flv0a/xv2gmfy6RHxIVwX/X9Rkv5YkZ5jgiYSgLBhtZuK5YD/KK5+9NMUm3
- 1OnDx79CB4qg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145983041"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="145983041"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 07:36:58 -0700
-IronPort-SDR: CM3DPPkyiJe3vZfIlaCmnewZRAKk5YPUkoRGcE7QBybvRLtdhW5RJJyrKnQtmfWFVSnytDV68M
- XVzKzjSILfbw==
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="455540658"
-Received: from rapyeatx-mobl3.amr.corp.intel.com (HELO [10.255.2.31]) ([10.255.2.31])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 07:36:57 -0700
-Subject: Re: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
-To:     "Huang, Ying" <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
-        akpm@linux-foundation.org, dan.j.williams@intel.com, cai@lca.pw,
-        stable@vger.kernel.org
-References: <20200701152621.D520E62B@viggo.jf.intel.com>
- <20200701152623.384AF0A7@viggo.jf.intel.com>
- <87d05ejgug.fsf@yhuang-dev.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <0c1e01bb-bd10-50ab-ded0-9d4f37951f25@intel.com>
-Date:   Thu, 2 Jul 2020 07:36:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728179AbgGBOig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:38:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E15A531B;
+        Thu,  2 Jul 2020 07:38:35 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66DA13F68F;
+        Thu,  2 Jul 2020 07:38:33 -0700 (PDT)
+Subject: Re: [PATCH] usb: host: ohci-platform: Disable ohci for rk3288
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        mylene.josserand@collabora.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+References: <20200702090504.36670-1-jagan@amarulasolutions.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f0ae5915-9cb8-9550-f05c-6cebad191a14@arm.com>
+Date:   Thu, 2 Jul 2020 15:38:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <87d05ejgug.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <20200702090504.36670-1-jagan@amarulasolutions.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 4:28 AM, Huang, Ying wrote:
->> But, when the bit was removed (bit 0) the _other_ bit locations also
->> got changed.  That's not OK because the bit values are documented to
->> mean one specific thing and users surely rely on them meaning that one
->> thing and not changing from kernel to kernel.  The end result is that
->> if someone had a script that did:
->>
->> 	sysctl vm.zone_reclaim_mode=1
->>
->> That script went from doing nothing
-> Per my understanding, this script would have enabled node reclaim for
-> clean unmapped pages before commit 648b5cf368e0 ("mm/vmscan: remove
-> unused RECLAIM_OFF/RECLAIM_ZONE").  So we should revise the description
-> here?
+On 2020-07-02 10:05, Jagan Teki wrote:
+> rk3288 has usb host0 ohci controller but doesn't actually work
+> on real hardware but it works with new revision chip rk3288w.
+> 
+> So, disable ohci for rk3288.
+> 
+> For rk3288w chips the compatible update code is handled by bootloader.
+> 
+> Cc: William Wu <william.wu@rock-chips.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Note:
+> - U-Boot patch for compatible update
+> https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
+> 
+>   drivers/usb/host/ohci-platform.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> index 7addfc2cbadc..24655ed6a7e0 100644
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -96,7 +96,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>   	struct ohci_hcd *ohci;
+>   	int err, irq, clk = 0;
+>   
+> -	if (usb_disabled())
+> +	if (usb_disabled() || of_machine_is_compatible("rockchip,rk3288"))
 
-Yes, you're right.  I updated the patch with the updated understanding
-about the implicit use of the bit but didn't update the changelog.  I'll
-do that for v3.
+This seems unnecessary to me - if we've even started probing a driver 
+for a broken piece of hardware to the point that we need magic checks to 
+bail out again, then something is already fundamentally wrong.
 
+Old boards only sold with the original SoC variant have no reason to 
+enable the OHCI (since it never worked originally), thus will never 
+execute this check.
+
+New boards designed around the W variant to make use of the OHCI can 
+freely enable it either way.
+
+The only relative-edge-case where it might matter is older board designs 
+still in production which have shipped with both SoC variants. Enabling 
+OHCI can't be *necessary* given that it's still broken on a lot of 
+deployed boards, so at best it must be an opportunistic nice-to-have. 
+Since we're already having to rely on the bootloader to patch up the 
+devicetree for other low-level differences in this case, it should be 
+part of that responsibility for it to only enable the OHCI on the 
+appropriate SoC variant too. Statically enabling it in the DTS for a 
+board where it may well not work is just bad.
+
+As soon as a DTB with a broken piece of hardware enabled gets passed to 
+an OS, then the damage is already done. A driver patch in a future 
+version of Linux that magically knows better and ignores it isn't going 
+to help a user booting an older kernel image, or some other OS entirely.
+
+Robin.
+
+>   		return -ENODEV;
+>   
+>   	/*
+> 
