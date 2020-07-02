@@ -2,143 +2,133 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92751C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CECC2088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:19:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dsHAlvNM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+9j4rmT8"
+	by mail.kernel.org (Postfix) with ESMTP id 75CA42088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGBUTN (ORCPT
+        id S1726317AbgGBUTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBUTN (ORCPT
+        Thu, 2 Jul 2020 16:19:21 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:47470 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725937AbgGBUTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:19:13 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 588B1C08C5C1;
-        Thu,  2 Jul 2020 13:19:11 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 22:19:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593721150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NHcHHOfu1jSeEknaYtdDpWniCj0/u4/s6M6KwnTpcsc=;
-        b=dsHAlvNM0vIrsjkOgti9Yzdx7SDL5bCd4q+aSP7Q0hSY/PJZQKuM1r2/uIiCvYr3gDG+Gh
-        YUBaDl8bAPd3SJpIgW8tujcUMixvm4ojCa2AWkc95/vTpEcKnqB2YTedrCJXNDSkmtu6n3
-        mSSrkou2HNtIDfBJj8eBFlHKx2UJfL1xm9PWJI7s9Zlz0KJw0LoHP98yfWXyWHB0VDT1ip
-        a8PZW5MRPvgnE+RSNV/U4gPNhN5m1L6NrHra5c94hVIqH90lrJdcjhxNaiuJlA3fCmDqAi
-        0aKl73CRYqea5lcvNHQShEpNNbYbXXCOboYgUxBVpwEXsTT28xadxRfX2pZuRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593721150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NHcHHOfu1jSeEknaYtdDpWniCj0/u4/s6M6KwnTpcsc=;
-        b=+9j4rmT8q/2x/Qm3/hEbQCNEhekY1t3FqLlhPDfvACust2St4iEcP7o69y7TwgZtOtM67X
-        e/klwLVav4ghqbDA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200702201908.jfiacgvion6a4nmj@linutronix.de>
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
- <20200630183534.GG9247@paulmck-ThinkPad-P72>
- <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
- <20200702164826.GQ9247@paulmck-ThinkPad-P72>
+        Thu, 2 Jul 2020 16:19:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E89C7100E7B40;
+        Thu,  2 Jul 2020 20:19:18 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: feast33_4f102f026e8c
+X-Filterd-Recvd-Size: 3791
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  2 Jul 2020 20:19:14 +0000 (UTC)
+Message-ID: <66df632598aeafc48ecb15434e3d997438414e7f.camel@perches.com>
+Subject: Re: PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+From:   Joe Perches <joe@perches.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        bhelgaas@google.com, robh+dt@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, m-karicheri2@ti.com, songxiaowei@hisilicon.com,
+        wangbinghui@hisilicon.com, amurray@thegoodpenguin.co.uk,
+        sathyanarayanan.kuppuswamy@linux.intel.com, hkallweit1@gmail.com,
+        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 02 Jul 2020 13:19:12 -0700
+In-Reply-To: <707b05c95ae3292a6b9eb04e146b1f1f6d52c125.camel@perches.com>
+References: <20200627103050.71712-1-grandmaster@al2klimov.de>
+         <20200630180917.GA3455699@bjorn-Precision-5520>
+         <20200630140417.3a2dba67@lwn.net>
+         <707b05c95ae3292a6b9eb04e146b1f1f6d52c125.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200702164826.GQ9247@paulmck-ThinkPad-P72>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02 09:48:26 [-0700], Paul E. McKenney wrote:
-> On Thu, Jul 02, 2020 at 04:12:16PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
-> > > > This is not going to work together with the "wait context validator"
-> > > > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> > > > printk() which is why it is still disabled by default.
-> > >=20
-> > > Fixing that should be "interesting".  In particular, RCU CPU stall
-> > > warnings rely on the raw spin lock to reduce false positives due
-> > > to race conditions.  Some thought will be required here.
-> >=20
-> > I don't get this part. Can you explain/give me an example where to look
-> > at?
->=20
-> Starting from the scheduler-clock interrupt's call into RCU,
-> we have rcu_sched_clock_irq() which calls rcu_pending() which
-> calls check_cpu_stall() which calls either print_cpu_stall() or
-> print_other_cpu_stall(), depending on whether the stall is happening on
-> the current CPU or on some other CPU, respectively.
->=20
-> Both of these last functions acquire the rcu_node structure's raw ->lock
-> and expect to do printk()s while holding it.
+On Tue, 2020-06-30 at 22:35 -0700, Joe Perches wrote:
+> On Tue, 2020-06-30 at 14:04 -0600, Jonathan Corbet wrote:
+> > On Tue, 30 Jun 2020 13:09:17 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > > PCI: Replace lkml.org, spinics, gmane with lore.kernel.org
+> > > 
+> > > The lkml.org, spinics.net, and gmane.org archives are not very reliable
+> > > and, in some cases, not even easily accessible.  Replace links to them with
+> > > links to lore.kernel.org, the archives hosted by kernel.org.
+> > > 
+> > > I found the gmane items via the Wayback Machine archive at
+> > > https://web.archive.org/.
+> > 
+> > Heh...now *that* sounds like a project that could generate a lot of churn,
+> > and perhaps even be worth it.  Settling on a consistent (and working!)
+> > email archive would improve the docs quite a bit.  I'll add that to the
+> > list...
+> 
+> At least for the lkml.org/lkml links
+> here's the current -next diff done by a
+> script that looks at the message-id of
+> each lkml.org link.
 
-=E2=80=A6
-> Thoughts?
+btw: if you want to run the script for specific
+paths, here's the script.
 
-Okay. So in the RT queue there is a printk() rewrite which fixes this
-kind of things. Upstream the printk() interface is still broken in this
-regard and therefore CONFIG_PROVE_RAW_LOCK_NESTING is disabled.
-[Earlier the workqueue would also trigger a warning but this has been
-fixed as of v5.8-rc1.]
-This was just me explaining why this bad, what debug function would
-report it and why it is not enabled by default.
+You could run it using:
 
-> > > > So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> > > > complain that you have a raw_spinlock_t acquired (the one from patch
-> > > > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-> > >=20
-> > > Given that the slab allocator doesn't acquire any locks until it gets
-> > > a fair way in, wouldn't it make sense to allow a "shallow" allocation
-> > > while a raw spinlock is held?  This would require yet another GFP_ fl=
-ag,
-> > > but that won't make all that much of a difference in the total.  ;-)
-> >=20
-> > That would be one way of dealing with. But we could go back to
-> > spinlock_t and keep the memory allocation even for RT as is. I don't see
-> > a downside of this. And we would worry about kfree_rcu() from real
-> > IRQ-off region once we get to it.
->=20
-> Once we get to it, your thought would be to do per-CPU queuing of
-> memory from IRQ-off kfree_rcu(), and have IRQ work or some such clean
-> up after it?  Or did you have some other trick in mind?
+bash convert_lkml_to_lore.sh <path>
 
-So for now I would very much like to revert the raw_spinlock_t back to
-the spinlock_t and add a migrate_disable() just avoid the tiny
-possible migration between obtaining the CPU-ptr and acquiring the lock
-(I think Joel was afraid of performance hit).
+---
+$ cat convert_lkml_to_lore.sh
+#!/bin/bash
 
-Should we get to a *real* use case where someone must invoke kfree_rcu()
-=66rom a hard-IRQ-off region then we can think what makes sense. per-CPU
-queues and IRQ-work would be one way of dealing with it.
+cvt_lkml_to_lore ()
+{
+    tmpfile=$(mktemp ./.cvt_links.XXXXXXX)
 
-> 							Thanx, Paul
->=20
-Sebastian
+    header=$(echo $1 | sed 's@/lkml/@/lkml/headers/@')
+
+    wget -qO - $header > $tmpfile
+    if [[ $? == 0 ]] ; then 
+	link=$(grep -i '^Message-Id:' $tmpfile | head -1 | \
+		   sed -r -e 's/^\s*Message-Id:\s*<\s*//' -e  's/\s*>\s*$//' -e 's@^@https://lore.kernel.org/r/@')
+	#    echo "testlink: $link"
+	if [ -n "$link" ] ; then
+	    wget -qO - $link > /dev/null
+	    if [[ $? == 0 ]] ; then
+		echo $link
+	    fi
+	fi
+    fi
+
+    rm -f $tmpfile
+}
+
+git grep -P -o "\bhttps?://(?:www.)?lkml.org/lkml[\/\w]+" $@ |
+    while read line ; do
+	echo $line
+	file=$(echo $line | cut -f1 -d':')
+	link=$(echo $line | cut -f2- -d':')
+	newlink=$(cvt_lkml_to_lore $link)
+	if [[ -n "$newlink" ]] ; then
+	    sed -i -e "s#\b$link\b#$newlink#" $file
+	fi
+    done
+
+
