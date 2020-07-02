@@ -2,102 +2,133 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60678C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956EA2082F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZ3i4lz4"
+	by mail.kernel.org (Postfix) with ESMTP id 34E142082F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593650884;
+	bh=XEyn4rciJR68bCOMhcqvZPsUAaqbl3LjFAxVl5+yEJ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O4TGdiMxj4YRt95MRN1uR/ryqwVW3d511VhT8JxruCndDMKB2+/m4TNL/Du4Oos1t
+	 1yZSIuuQ/VpMPX1Q9Op716HxIrob+mSEKmWYSDXcdrIxecMafN2lkbxXiKG9th4pWv
+	 ahb9IOb7sDNf+YmrGuaR7lqdkzPaTSE3sVP2kNko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgGBArB (ORCPT
+        id S1727898AbgGBAsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGBArA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:47:00 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D75C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:47:00 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 80so24124270qko.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=QkFpAqHIEwjnDZzlaTT8UYrxvp33BFcnJrcQL30nIPA=;
-        b=UZ3i4lz4YGIqh8LxR98d8rkht9xMQ0quD9UlveG9LZH2vjLD9qj3oSfRuxQwi6SgW7
-         7KjIBPlRzgQVKjuRbeNPX/dSjtoRbW+wR3qT+me1d1SKHMec7LFbkT/nwJurndd8wtFx
-         h0wvGYiX3LSAhqfKBXk7+Xk7a5fEYYAiZrzY3XwmyBtM0RuCPU7B2ir2r1gn6Iwa+gAn
-         Xz8woox1ZNCq0tr25hZygYEW1QHbGoSF07QYS0GBCZKXt98E8b53isIUMePGv3wuyrcw
-         mlQwAPuiu7B/VH2K/rnFVDFq9P/xaMWdWLPTfrqCF6EX2XOV2n2XoVZfjVNEnEQcZ6iq
-         SIbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=QkFpAqHIEwjnDZzlaTT8UYrxvp33BFcnJrcQL30nIPA=;
-        b=oM7ggOqeRh4f6vycMdBxn47vMoPbFCgSFDz0BUJ/eOG7aCT6xaqxwNEfmF4Pudq41t
-         bUvyZMhkmywO6Plybti9HneZPGgTYLhleA4vw5RlFulfGRff1ziQug92i+yDScxzWOz6
-         zVZGtLe5sPBV2DxTSY3Hf6CkCcnady4p9VCsPMQHA0qsh7q2vXhiahPc7moL3/lhH0pz
-         k05LTAqWMd0DpItA9kMld5A11qhBTNv58OtMdz5RIGKPAoMQcmN8grwkFMO6OxF7Ow3L
-         K5vZ25eXS1zkXVMDlKN16xD0B4r3yVEZnKZcmzhGGBs3FuZMTGm7MFMm7a/X2Pk3biFw
-         2i0g==
-X-Gm-Message-State: AOAM53369cvjyrigZ4tsX+NN5xj6SKYPw5KJPB+m6Odtky6/AotfQc7w
-        80/i01olRXUefTzEDS0IWqw=
-X-Google-Smtp-Source: ABdhPJwM0hUcN8GwxMqMSwDdQ+uVuPc9qd1xHZ8avHfJ4mP4hIDMt0ZTFiItRktTT17lKMzeGATKWA==
-X-Received: by 2002:a37:b206:: with SMTP id b6mr28062822qkf.22.1593650819671;
-        Wed, 01 Jul 2020 17:46:59 -0700 (PDT)
-Received: from LeoBras (200-236-245-17.dynamic.desktop.com.br. [200.236.245.17])
-        by smtp.gmail.com with ESMTPSA id q32sm7306960qte.31.2020.07.01.17.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 17:46:59 -0700 (PDT)
-Message-ID: <6ed28aedbad029f107721e2ea4701e5b05233dd9.camel@gmail.com>
-Subject: Re: [PATCH v2 1/6] powerpc/pseries/iommu: Create defines for
- operations in ibm,ddw-applicable
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 01 Jul 2020 21:46:54 -0300
-In-Reply-To: <0d3ee444-f528-673e-48f9-633138398543@ozlabs.ru>
-References: <20200624062411.367796-1-leobras.c@gmail.com>
-         <20200624062411.367796-2-leobras.c@gmail.com>
-         <b0caaaa0-14c9-51de-bb92-5be8ccaa418d@ozlabs.ru>
-         <01443a2f1d58a595ddff03fd14fd56f4c26171bf.camel@gmail.com>
-         <a884da45-7778-95cf-d65b-a6c82d2024a7@ozlabs.ru>
-         <f1f0563dae4c81620b53bcc258f2960a7948a583.camel@gmail.com>
-         <0d3ee444-f528-673e-48f9-633138398543@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 1 Jul 2020 20:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbgGBAsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:48:02 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 823CB2083E
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593650881;
+        bh=XEyn4rciJR68bCOMhcqvZPsUAaqbl3LjFAxVl5+yEJ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L0xUkYlUw943INWmd8Up0ldWkOlWr7zMj1L52awGzU4rl7zqrhskjKCw/nOnaWLLS
+         WzCMhOa6hdmImfVBvVzZ67H8cGVCqDdSWG/Py6Ny2ffr6ia6kxYwghKafHnjssq1Kl
+         8l2fUs/3R+dErhPCz7GqiXsTvsNoGdeIv7RMtE64=
+Received: by mail-wm1-f48.google.com with SMTP id o8so24630999wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:48:01 -0700 (PDT)
+X-Gm-Message-State: AOAM532/vqXb7D8yKezmdj5PI0JrAUBACcezgebyxvrs5aHUqxx/sTuM
+        edtu0xhEZIJ3JrU7uK3wFh+fPejrC9hhXSsRZyHQcQ==
+X-Google-Smtp-Source: ABdhPJy/HEndSetfwvrT6mNXQnAH45hzDb8dDLtpYyndeldFdAxMTjx1eo18q6uOa+xzdpbjx95LmJarr/FnbO4zKow=
+X-Received: by 2002:a1c:2402:: with SMTP id k2mr29132297wmk.138.1593650880105;
+ Wed, 01 Jul 2020 17:48:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
+ <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net> <CAHk-=wh0X1YBQm8b6dqu=FpE8jgHriisXDeqJ7jai41Ob+sJDA@mail.gmail.com>
+In-Reply-To: <CAHk-=wh0X1YBQm8b6dqu=FpE8jgHriisXDeqJ7jai41Ob+sJDA@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 1 Jul 2020 17:47:48 -0700
+X-Gmail-Original-Message-ID: <CALCETrXpKAR2A0+96b+RWUE0vUmoPwmp-mfF1u=g2270DNi96w@mail.gmail.com>
+Message-ID: <CALCETrXpKAR2A0+96b+RWUE0vUmoPwmp-mfF1u=g2270DNi96w@mail.gmail.com>
+Subject: Re: objtool clac/stac handling change..
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000009b04ad05a96ac2b9"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-02 at 10:43 +1000, Alexey Kardashevskiy wrote:
-> > Or should one stick to #define in this case?
-> 
-> imho a matter of taste but after some grepping it feels like #define is
-> mostly used which does not mean it is a good idea. Keep it enum and see
-> if it passed mpe's filter :)
+--0000000000009b04ad05a96ac2b9
+Content-Type: text/plain; charset="UTF-8"
 
-Good idea :)
+On Wed, Jul 1, 2020 at 1:51 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, Jul 1, 2020 at 1:36 PM Andy Lutomirski <luto@amacapital.net> wrote:
+> >
+> > We ought to be able to do it the way I described and get decent code generation too.
+>
+> No, we really can't.
+>
+> Each access really needs to jump to an exception label. Otherwise any
+> time you have multiple operations (think "strncpy()" and friends) you
+> have to test in between each access.
+>
+> That is why *fundamnetally* the interface to "unsafe_get/put_user()"
+> takes a label for the error case. There is absolutely no way to make
+> any other interface work efficiently.
 
-Thanks !
+You inspired me to mock it up.  I don't think I did anything special
+here, except that I mocked up unsafe_put_user() and a fudged it a
+little bit because I'm using gcc 9.3.1 which doesn't support asm goto
+outputs.  Code like this:
 
+    if (unsafe_put_user(&a, user_a))
+        goto error;
+    if (unsafe_put_user(&b, user_b))
+        goto error;
+    if (unsafe_put_user(&c, user_c))
+        goto error;
+    if (unsafe_put_user(&d, user_d))
+        goto error;
+
+generates a series of movs.  The conditions are entirely omitted from
+the generated assembly output because gcc is smart enough to figure
+out that the return value of unsafe_put_user() indicates which way the
+asm goto went.  I don't think I could generate better output by hand
+than gcc generated from my test.
+
+So I stand by my claim. :)  Each access does need to jump, but that
+jump can be entirely within the exception entry, and we don't need to
+generate any actual jump instructions.
+
+--Andy
+
+--0000000000009b04ad05a96ac2b9
+Content-Type: text/x-csrc; charset="US-ASCII"; name="asm_goto_opt.c"
+Content-Disposition: attachment; filename="asm_goto_opt.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kc42gtow0>
+X-Attachment-Id: f_kc42gtow0
+
+I2RlZmluZSBFRkFVTFQgMTQKCnN0YXRpYyBpbnQgdW5zYWZlX3B1dF91c2VyKGludCAqdmFsdWUs
+IGludCAqcHRyKQp7Cglhc20gZ290byAoIjE6IG1vdmwgJVt2YWx1ZV0sICVbbWVtXVxuXHQiCgkJ
+ICAiLnB1c2hzZWN0aW9uIF9fZXhfdGFibGVcblx0IgoJCSAgIi5sb25nIDFiIC0gLlxuXHQiCgkJ
+ICAiLmxvbmcgZXJyIC0gLlxuXHQiCgkJICAiLnBvcHNlY3Rpb24iCgkJICA6OiBbdmFsdWVdICJy
+bWkiICgqdmFsdWUpLCBbbWVtXSAibSIgKCpwdHIpCgkJICA6OiBlcnIgKTsKCXJldHVybiAwOwoK
+ZXJyOgoJcmV0dXJuIC1FRkFVTFQ7Cn0KCmludCB0ZXN0KGludCAqdXNlcl9hLCBpbnQgKnVzZXJf
+YiwgaW50ICp1c2VyX2MsIGludCAqdXNlcl9kKQp7CglpbnQgYSA9IDEsIGIgPSAyLCBjID0gMywg
+ZCA9IDQ7CgoJaWYgKHVuc2FmZV9wdXRfdXNlcigmYSwgdXNlcl9hKSkKCQlnb3RvIGVycm9yOwoJ
+aWYgKHVuc2FmZV9wdXRfdXNlcigmYiwgdXNlcl9iKSkKCQlnb3RvIGVycm9yOwoJaWYgKHVuc2Fm
+ZV9wdXRfdXNlcigmYywgdXNlcl9jKSkKCQlnb3RvIGVycm9yOwoJaWYgKHVuc2FmZV9wdXRfdXNl
+cigmZCwgdXNlcl9kKSkKCQlnb3RvIGVycm9yOwoKCXJldHVybiAwOwoJCmVycm9yOgoJcmV0dXJu
+IC1FRkFVTFQ7Cn0K
+--0000000000009b04ad05a96ac2b9--
