@@ -2,105 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D038BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292CE20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0D20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PdPQALN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGBIq6 (ORCPT
+        id S1726978AbgGBIrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:46:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46981 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgGBIq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:46:57 -0400
-IronPort-SDR: SMm7EsYoyGOCw1VH5AY5MYxjoaW32H29P1oECYocvko45IY5F5b95UUmHgEiCVDdbXD7I/6b+L
- oqc/XQVNs4sQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="211871600"
-X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="211871600"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 01:46:57 -0700
-IronPort-SDR: 8v773znlm029UZL/qcOa676PS5qX3eVR1JOuEsIfC/o5+P9qUYXJro3MDuwBkXM9lWFBy+Zfy4
- emMN3tj3kZLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="455443914"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 01:46:53 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jqurt-00HAon-VD; Thu, 02 Jul 2020 11:46:53 +0300
-Date:   Thu, 2 Jul 2020 11:46:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Daniel Winkler <danielwinkler@google.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        stable@vger.kernel.org, abhishekpandit@chromium.org,
-        Aaron Sierra <asierra@xes-inc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/1] Revert "serial: 8250: Fix max baud limit in
- generic 8250 port"
-Message-ID: <20200702084653.GG3703480@smile.fi.intel.com>
-References: <20200701211337.3027448-1-danielwinkler@google.com>
- <20200701223713.gavale4aramu3xnb@mobilestation>
- <20200702041152.e5csvbodojzwnagx@wunner.de>
+        Thu, 2 Jul 2020 04:47:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35222 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726089AbgGBIrs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:47:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593679666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YVJt7Z/dNToOF5ECqIk3Tpf0aOSwxuJgI3T+TZ2/jJ0=;
+        b=PdPQALN+zYe8LqwDdkFW4BrapubuWWiNaPfju6QSQII5Y9uAB9lnaYNAM2dHJaHoPi54rb
+        XjJSNYM1KjhLyL6PWnvPhrafyACleyRCCyQ1nwuUNzsakPOWkqMQp5z5Eqt2sMxUoRTm5e
+        L3guueBce11Pf03LCo6SV68tpmjWXcM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-PV0_D8l2O-2aESY3krrdog-1; Thu, 02 Jul 2020 04:47:45 -0400
+X-MC-Unique: PV0_D8l2O-2aESY3krrdog-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 768B7BFC0;
+        Thu,  2 Jul 2020 08:47:43 +0000 (UTC)
+Received: from [10.36.112.70] (ovpn-112-70.ams2.redhat.com [10.36.112.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A5675C296;
+        Thu,  2 Jul 2020 08:47:41 +0000 (UTC)
+Subject: Re: [PATCH v3 6/7] iommu/vt-d: Warn on out-of-range invalidation
+ address
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>
+References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1593617636-79385-7-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7c265689-a23c-021b-27e7-beb3cd667a5f@redhat.com>
+Date:   Thu, 2 Jul 2020 10:47:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702041152.e5csvbodojzwnagx@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1593617636-79385-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:11:52AM +0200, Lukas Wunner wrote:
-> On Thu, Jul 02, 2020 at 01:37:13AM +0300, Serge Semin wrote:
-> > 1) Add a new capability like UART_CAP_NO16DIV and take it into account
-> >    in the serial8250_get_baud_rate() method.
-> >  
-> > I don't have a documentation for the Mediatek UART port, but it seems to me
-> > that that controller calculates the baud rate differently from the standard
-> > 8250 port. A standard 8250 port does that by the next formulae:
-> >   baud = uartclk / (16 * divisor).
-> > While it seems to me that the Mediatek port uses the formulae like:
-> >   baud = uartclk / divisor. (Please, correct me if I'm wrong)
+Hi,
+
+On 7/1/20 5:33 PM, Jacob Pan wrote:
+> For guest requested IOTLB invalidation, address and mask are provided as
+> part of the invalidation data. VT-d HW silently ignores any address bits
+> below the mask. SW shall also allow such case but give warning if
+> address does not align with the mask. This patch relax the fault
+> handling from error to warning and proceed with invalidation request
+> with the given mask.
+What I don't really get is the guest shouldn't do that. Don't we want to
+be more strict in that case and return an error?
+
+Thanks
+
+Eric
 > 
-> 8250_bcm2835aux.c seems to suffer from a similar issue and
-> solves it like this in the ->probe hook:
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> 	/* the HW-clock divider for bcm2835aux is 8,
-> 	 * but 8250 expects a divider of 16,
-> 	 * so we have to multiply the actual clock by 2
-> 	 * to get identical baudrates.
-> 	 */
-> 	up.port.uartclk = clk_get_rate(data->clk) * 2;
-
-8250_mid for example lies about UART clock due to this. It has a comment in the
-code in its ->set_termios().
-
-Yes, we have a lot of possibilities here to fix, I guess. We have custom
-termios callback, also get and set divisor and so on.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 6a0c62c7395c..2e1b53ade784 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>  
+>  		switch (BIT(cache_type)) {
+>  		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> +			/* HW will ignore LSB bits based on address mask */
+>  			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+>  			    size &&
+>  			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> -				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
+> -						   inv_info->addr_info.addr, size);
+> -				ret = -ERANGE;
+> -				goto out_unlock;
+> +				pr_err_ratelimited("User address not aligned, 0x%llx, size order %llu\n",
+> +					  inv_info->addr_info.addr, size);
+>  			}
+>  
+>  			/*
+> 
 
