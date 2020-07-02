@@ -2,74 +2,103 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63543C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7805920747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB6120780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593686012;
-	bh=qSuu7uAkT+1gy0iK1Dx2XV1S5skvkvweaOvFMBrx8ro=;
+	s=default; t=1593686114;
+	bh=e2d7EoUGfBMQ8iAjxxfS9uLE6JsRVlpFYnf0i0i/9QQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GMsuppjzcxVvWhS2rLSyN8DVEXfMHcxSqV68bXtEpKBe4ZesRp7CEu2SJxEl/pF6W
-	 L+/qq+6HS1z/3X5msmMWJgiDzbg8ylhHGgCLCfoddV8XbeCWJIRIT/6ySavZU0yBfi
-	 Zzq6+rYm5A1t3k25rHj3Mub7jqkv2Fo4wWKWa0eo=
+	b=xYjfKY5MOCaa92fBTz4U0WilUThaH4WBh/mbX3NApYM3mZ2N4DNfvqoXEHBW5uBwN
+	 j0Zc/43QyuEV5rn/Ns8Re1gYoc6vhMyqgcZvqHgP+Gyv5D/WPHycwKN3EcSmWV72ld
+	 zkPc8/OTPAyuRrGCN6v1Wunya4MlGiOpRt0UbazI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgGBKdb (ORCPT
+        id S1728414AbgGBKfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 06:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbgGBKda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:33:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727769AbgGBKfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:35:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67DA42073E;
-        Thu,  2 Jul 2020 10:33:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF482073E;
+        Thu,  2 Jul 2020 10:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593686010;
-        bh=qSuu7uAkT+1gy0iK1Dx2XV1S5skvkvweaOvFMBrx8ro=;
+        s=default; t=1593686111;
+        bh=e2d7EoUGfBMQ8iAjxxfS9uLE6JsRVlpFYnf0i0i/9QQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=koKawob6+XsVXkTQSAtYP8+72nOIXIb2Xug5YeT7iiutUefkwpUA7ASVoKvy+4LkF
-         aUWgAWnfPqian/HcPyZY8gOdSrn+bWIqk8ylr2CncwgNbw5dUxALqn8Iasq7pPZ240
-         nl+6TodZNPE2hHgdlY6IDRrcYZkUA8SnELY2xMtk=
-Date:   Thu, 2 Jul 2020 12:33:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "balbi@kernel.org" <balbi@kernel.org>,
-        Ran Wang <ran.wang_1@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] USB: phy: fsl-usb: remove character device usage
-Message-ID: <20200702103333.GA1313090@kroah.com>
-References: <20200702072914.1072878-1-gregkh@linuxfoundation.org>
- <20200702072914.1072878-2-gregkh@linuxfoundation.org>
- <AM7PR04MB71575977E680A7F6405D8B3F8B6D0@AM7PR04MB7157.eurprd04.prod.outlook.com>
+        b=zx19RhhCYndjeyr3Ntyuk/b/dG1YRNEW2u11qyAF1MnPiVC3uoqkfkflQnUQ20Q/V
+         BRTJ4Go1k5kA4mHEeVWUTjblN4KXUh4EbOTxrozGkgaGXWwXaH767ODZtDY1/VBx5m
+         Bh2iVabMtfwri5eKLtL7CGst/N2IPX3sUadygBbk=
+Date:   Thu, 2 Jul 2020 11:35:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 5/8] powerpc/64s: implement queued spinlocks and rwlocks
+Message-ID: <20200702103506.GA16418@willie-the-truck>
+References: <20200702074839.1057733-1-npiggin@gmail.com>
+ <20200702074839.1057733-6-npiggin@gmail.com>
+ <20200702080219.GB16113@willie-the-truck>
+ <1593685459.r2tfxtfdp6.astroid@bobo.none>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM7PR04MB71575977E680A7F6405D8B3F8B6D0@AM7PR04MB7157.eurprd04.prod.outlook.com>
+In-Reply-To: <1593685459.r2tfxtfdp6.astroid@bobo.none>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 09:07:43AM +0000, Peter Chen wrote:
->  
+On Thu, Jul 02, 2020 at 08:25:43PM +1000, Nicholas Piggin wrote:
+> Excerpts from Will Deacon's message of July 2, 2020 6:02 pm:
+> > On Thu, Jul 02, 2020 at 05:48:36PM +1000, Nicholas Piggin wrote:
+> >> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
+> >> new file mode 100644
+> >> index 000000000000..f84da77b6bb7
+> >> --- /dev/null
+> >> +++ b/arch/powerpc/include/asm/qspinlock.h
+> >> @@ -0,0 +1,20 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +#ifndef _ASM_POWERPC_QSPINLOCK_H
+> >> +#define _ASM_POWERPC_QSPINLOCK_H
+> >> +
+> >> +#include <asm-generic/qspinlock_types.h>
+> >> +
+> >> +#define _Q_PENDING_LOOPS	(1 << 9) /* not tuned */
+> >> +
+> >> +#define smp_mb__after_spinlock()   smp_mb()
+> >> +
+> >> +static __always_inline int queued_spin_is_locked(struct qspinlock *lock)
+> >> +{
+> >> +	smp_mb();
+> >> +	return atomic_read(&lock->val);
+> >> +}
 > > 
-> > No idea why this driver is using a char device node, statically allocated, with no
-> > dynamic allocation or hook up with devtmpfs, along with a reserverd major number,
-> > for "special" operations, not all of which ever were implemented.
-> > 
-> > So just rip it out, as no one must be using it because no modern system will ever
-> > actually create the /dev/ node it needs.
-> > 
+> > Why do you need the smp_mb() here?
 > 
-> Add related people from NXP.
+> A long and sad tale that ends here 51d7d5205d338
+> 
+> Should probably at least refer to that commit from here, since this one 
+> is not going to git blame back there. I'll add something.
 
-If there are related people, MAINTAINERS should have reflected that :)
+Is this still an issue, though?
+
+See 38b850a73034 (where we added a similar barrier on arm64) and then
+c6f5d02b6a0f (where we removed it).
+
+Will
