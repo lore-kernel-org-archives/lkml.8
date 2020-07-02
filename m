@@ -2,107 +2,145 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86754C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD172084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C851120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJtMhqlQ"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G5QBFu1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgGBSXV (ORCPT
+        id S1728267AbgGBSXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:23:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32424 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728148AbgGBSXS (ORCPT
+        Thu, 2 Jul 2020 14:23:36 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:38581 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgGBSX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:23:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593714198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N4n2qeDClQPShAlOepg3+xUXJF0gLP+gI9YS4+e3wWo=;
-        b=UJtMhqlQ9GgiUVGjEoKEI6yxDOQMBua1vYQv8Z895+zWEc9/oCd7XnDjOQA1KvVY1ShgaB
-        iplx0W6PPwqfvhtGEew6NNRN+ce76yIdIU8AXdeI6t5ndDyo3SqwCcU9UMxUfSzjy8jm57
-        y3hEK5iUneQrzOOVqTrYul9o2u+e6O0=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-SvaBzjqvNkWb_BXtGgUtWQ-1; Thu, 02 Jul 2020 14:23:15 -0400
-X-MC-Unique: SvaBzjqvNkWb_BXtGgUtWQ-1
-Received: by mail-ot1-f72.google.com with SMTP id j37so6407362ota.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:23:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N4n2qeDClQPShAlOepg3+xUXJF0gLP+gI9YS4+e3wWo=;
-        b=jn1oU4xEKN+KCSk/4FwkDELnq4i3w77pvUQx3kKCOQ/jILlLFtnBpo5huMEc9hDs1c
-         FoiXAXJpIlfZxvWo9cRxZ0wwgPv1BMP5D857IkMTX8Tw1newC3kfKwEcjx6m528n/Tl6
-         +sOp+Cucdie1t2i4JBEzoOi3kEXnuhS9vSNK4SJPWWcoW5Ce5WTHd+RUJfokWYvzMRcg
-         4r8QzwXahfjqbJHgw9CosR4Hyj7PB9ZkxXtETmn28eBIr+abbtphcRbkiRmyxYJKv1ET
-         pFBfaUMCOc9o2hssC9zcYdgHiqGlfjFyPfS0rQD9Xa9WdWzJnBJTy362O9naW866amJV
-         bXrA==
-X-Gm-Message-State: AOAM531MafEXuxXgoSRc6sEItXGVZPwVQkBDiGxtADrDRu38HUHxvLKA
-        MOaOVAogX0FG5G+FVvmXQVy4xut29YOuQ+/GSCTxAlHyo6JFZtiMsi1uR9AFNhWg83anDukvo2a
-        +OMUHaiXruEd1vpET4WmJOWMC2EMVSIvS1WH03aOr
-X-Received: by 2002:a9d:5f92:: with SMTP id g18mr12102135oti.95.1593714194841;
-        Thu, 02 Jul 2020 11:23:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxvm7EcRvsfCto8/PgbdopuIxxPcMOqqa27XvyoeidGOQ9Dab1I7ij1VwHb4T6hC4Paewj6S+oUpsnH5rz8W5I=
-X-Received: by 2002:a9d:5f92:: with SMTP id g18mr12102114oti.95.1593714194564;
- Thu, 02 Jul 2020 11:23:14 -0700 (PDT)
+        Thu, 2 Jul 2020 14:23:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593714209; x=1625250209;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=H8un5fMu7aydEquICqxLlc2CreWzZQt/df8398cfX/c=;
+  b=G5QBFu1XZtub8JpstyL2QlKQp57hPWR7lqnhOhNSlyN/wOI/Ibuw0BhC
+   sMhzqy9evvRRBNsi3rX1O3eZKds2Hcg9hrT4HyYPUxl8P2XywwkvsimME
+   ImNkQOmxmXZrV8/tgiCu17RbThtJg1yEbXBZFsnA/uOqWeDnImdJ7nHBS
+   o=;
+IronPort-SDR: +nUVv9fjNo7jApSiBsxQulNLtThEWcq31zBbfQPBu6bZu2P9FKOrUT141gBiLH5vsliubVIDL4
+ w1fvvS1czfgA==
+X-IronPort-AV: E=Sophos;i="5.75,305,1589241600"; 
+   d="scan'208";a="39736489"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Jul 2020 18:23:26 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id 93042A2655;
+        Thu,  2 Jul 2020 18:23:24 +0000 (UTC)
+Received: from EX13D10UWA001.ant.amazon.com (10.43.160.216) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Jul 2020 18:23:12 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D10UWA001.ant.amazon.com (10.43.160.216) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Jul 2020 18:23:12 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 2 Jul 2020 18:23:12 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id BB32E40844; Thu,  2 Jul 2020 18:23:12 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 18:23:12 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH v2 09/11] xen: Introduce wrapper for save/restore sched clock
+ offset
+Message-ID: <20200702182312.GA3699@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <cover.1593665947.git.anchalag@amazon.com>
 MIME-Version: 1.0
-References: <20200702165120.1469875-1-agruenba@redhat.com> <CAHk-=whb4H3ywKcwGxgjFSTEap_WuFj5SW7CYw0J2j=WGUs4nQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whb4H3ywKcwGxgjFSTEap_WuFj5SW7CYw0J2j=WGUs4nQ@mail.gmail.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 2 Jul 2020 20:23:03 +0200
-Message-ID: <CAHc6FU7ZWJb308yfMaskFeSwNxgxqn89pxT4F7Ud4HthhrC5CA@mail.gmail.com>
-Subject: Re: [RFC 0/4] Fix gfs2 readahead deadlocks
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1593665947.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 8:11 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Thu, Jul 2, 2020 at 9:51 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> >
-> > Of this patch queue, either only the first patch or all four patches can
-> > be applied to fix gfs2's current issues in 5.8.  Please let me know what
-> > you think.
->
-> I think the IOCB_NOIO flag looks fine (apart from the nit I pointed
-> out), and we could do that.
+Introduce wrappers for save/restore xen_sched_clock_offset to be
+used by PM hibernation code to avoid system instability during resume.
 
-Ok, that's a step forward.
+Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+---
+ arch/x86/xen/time.c    | 15 +++++++++++++--
+ arch/x86/xen/xen-ops.h |  2 ++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-> However, is the "revert and reinstate" looks odd. Is the reinstate so
-> different from the original that it makes sense to do that way?
->
-> Or was it done that way only to give the choice of just doing the revert?
->
-> Because if so, I think I'd rather just see a "fix" rather than
-> "revert+reinstate".
-
-I only did the "revert and reinstate" so that the revert alone will
-give us a working gfs2 in 5.8. If there's agreement to add the
-IOCB_NOIO flag, then we can just fix gfs2 (basically
-https://lore.kernel.org/linux-fsdevel/20200619093916.1081129-3-agruenba@redhat.com/
-with IOCB_CACHED renamed to IOCB_NOIO).
-
-Thanks,
-Andreas
+diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
+index c8897aad13cd..676950eb0cb5 100644
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -386,12 +386,23 @@ static const struct pv_time_ops xen_time_ops __initconst = {
+ static struct pvclock_vsyscall_time_info *xen_clock __read_mostly;
+ static u64 xen_clock_value_saved;
+ 
++/*This is needed to maintain a monotonic clock value during PM hibernation */
++void xen_save_sched_clock_offset(void)
++{
++	xen_clock_value_saved = xen_clocksource_read() - xen_sched_clock_offset;
++}
++
++void xen_restore_sched_clock_offset(void)
++{
++	xen_sched_clock_offset = xen_clocksource_read() - xen_clock_value_saved;
++}
++
+ void xen_save_time_memory_area(void)
+ {
+ 	struct vcpu_register_time_memory_area t;
+ 	int ret;
+ 
+-	xen_clock_value_saved = xen_clocksource_read() - xen_sched_clock_offset;
++	xen_save_sched_clock_offset();
+ 
+ 	if (!xen_clock)
+ 		return;
+@@ -434,7 +445,7 @@ void xen_restore_time_memory_area(void)
+ out:
+ 	/* Need pvclock_resume() before using xen_clocksource_read(). */
+ 	pvclock_resume();
+-	xen_sched_clock_offset = xen_clocksource_read() - xen_clock_value_saved;
++	xen_restore_sched_clock_offset();
+ }
+ 
+ static void xen_setup_vsyscall_time_info(void)
+diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+index 41e9e9120f2d..f4b78b19493b 100644
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -70,6 +70,8 @@ void xen_save_time_memory_area(void);
+ void xen_restore_time_memory_area(void);
+ void xen_init_time_ops(void);
+ void xen_hvm_init_time_ops(void);
++void xen_save_sched_clock_offset(void);
++void xen_restore_sched_clock_offset(void);
+ 
+ irqreturn_t xen_debug_interrupt(int irq, void *dev_id);
+ 
+-- 
+2.20.1
 
