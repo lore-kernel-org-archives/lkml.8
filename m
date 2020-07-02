@@ -2,157 +2,82 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF683C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9761FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDB920760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:25:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BmP2SKNQ"
+	by mail.kernel.org (Postfix) with ESMTP id 72330206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593732356;
+	bh=yjixGqCbQqizOhwkX+oBxN8uiaT9Rl72gyAx9twRioU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SD+lkZzYRHDH0vk1GUXRbAeKMwmFzgQO1pAovJXj84+/PxBrEIKsUMPxcbbM//9kH
+	 BzteMQuiqBcDSaJeGhQD0HUkrWihKXUz3JZ8KYrujfrfKsVcLurFWOS8ETcecyRzSn
+	 fa1/pkDRzVqvC8AQk/vC63xModXRT/QuqtyGYA7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgGBXZI (ORCPT
+        id S1726451AbgGBXZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:25:08 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:42973 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGBXZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:25:06 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200702232502epoutp016f547bb79bed5b44d3d0f1bf3bd6ae4b~eExXMdWMp2434524345epoutp01f
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:25:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200702232502epoutp016f547bb79bed5b44d3d0f1bf3bd6ae4b~eExXMdWMp2434524345epoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593732302;
-        bh=Ef6z+BYrVNvEtpfdpNOMBycjh5kFbQ9tKidtwH6Adw4=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=BmP2SKNQJMSPbGlgd5vyS1MrmR1dGyuEo0Sfrnk0LNu4AaKD/PcET8ngkbweqE9XO
-         tQRgAP0J5CuVD7f5Qq/KimNGzO4nhr+44HP+Ajr/7jGzwQxY4Xs36A5S1kmuYuKcaT
-         OtGAunpC1qSYjvQCHhPXH5AePxQGpBPJjFKKwUJE=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200702232502epcas1p1b2b6e60309b0a556c674d45a8cf975bc~eExWxg31j1764017640epcas1p1t;
-        Thu,  2 Jul 2020 23:25:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v5 1/5] scsi: ufs: Add UFS feature related parameter
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01593732302018.JavaMail.epsvc@epcpadp1>
-Date:   Fri, 03 Jul 2020 08:23:54 +0900
-X-CMS-MailID: 20200702232354epcms2p21b1f24b5fbe1d5a0926422c11021106b
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
-References: <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
-        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p2>
+        Thu, 2 Jul 2020 19:25:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgGBXZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 19:25:54 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D79E206DD;
+        Thu,  2 Jul 2020 23:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593732354;
+        bh=yjixGqCbQqizOhwkX+oBxN8uiaT9Rl72gyAx9twRioU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TzHl0SuNXddjIn7adaK/gB2eDWn2zSB1svslIh52TIx1Ibfnd7M5MrI77WlnfU9th
+         Ne0vXYXjowLbyx3kXGEut3jWpcPkWUj1XawanyllOmEVfF92lVvciim4YS/kisjhUN
+         TG4jvND9hRewl2jIGaukLyqap0tMNzYqZRIrABns=
+Received: by mail-lj1-f170.google.com with SMTP id e8so142959ljb.0;
+        Thu, 02 Jul 2020 16:25:54 -0700 (PDT)
+X-Gm-Message-State: AOAM531dxgNe0L8sLFKHBH+Au2Ltl/WhRUFBRppSxB0erOgNv9Cg++Xo
+        DLaAopSI0/kjQ2XPzUWfsi+golPAPYV9k9ddqTo=
+X-Google-Smtp-Source: ABdhPJxMtBWljIidCscK5kHHrsz8s6hweN4HmlrGmEOtX0q4UYxV0MJIWWoEijgckwbyRHUHgDPdm2LMy43I4CXy/Y4=
+X-Received: by 2002:a2e:b175:: with SMTP id a21mr15299515ljm.10.1593732352498;
+ Thu, 02 Jul 2020 16:25:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615125323.930983-1-hch@lst.de> <20200615125323.930983-2-hch@lst.de>
+In-Reply-To: <20200615125323.930983-2-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 2 Jul 2020 16:25:41 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com>
+Message-ID: <CAPhsuW6chy6uMpow3L1WvBW8xCsUYw4SbLHQQXcANqBVcqoULg@mail.gmail.com>
+Subject: Re: [PATCH 01/16] init: remove the bstat helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for parameters to be used for UFS features layer and HPB
-module.
+Hi Christoph,
 
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufs.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On Mon, Jun 15, 2020 at 5:53 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> The only caller of the bstat function becomes cleaner and simpler when
+> open coding the function.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index f8ab16f30fdc..ae557b8d3eba 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -122,6 +122,7 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-+	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
- };
- 
- /* Attribute idn for Query requests */
-@@ -195,6 +196,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
- 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
-@@ -235,6 +239,8 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
- 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-@@ -283,6 +289,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
-+	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
-+	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
-+	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
- 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
- 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
- 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-@@ -327,6 +337,7 @@ enum {
- 
- /* Possible values for dExtendedUFSFeaturesSupport */
- enum {
-+	UFS_DEV_HPB_SUPPORT		= BIT(7),
- 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
- };
- 
-@@ -537,6 +548,7 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u8 b_ufs_feature_sup;
- 	u32 d_ext_ufs_feature_sup;
- 	u8 b_wb_buffer_type;
- 	u32 d_wb_alloc_units;
--- 
-2.17.1
+Thanks for the set. md parts of the set look good to me.
 
+How should we route this set, as it touches multiple subsystems?
 
+Thanks,
+Song
