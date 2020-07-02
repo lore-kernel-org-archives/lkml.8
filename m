@@ -2,183 +2,167 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE362208B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li/iRMGK"
+	by mail.kernel.org (Postfix) with ESMTP id DD33B2068F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593701745;
+	bh=nbXe6nJCNrMku6QIpQkPDTVx3nVSr/HZ3tO6LrfZY8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z4DVRj/whRPT9AhSnI6xoxlE7J23KA//XeiiIUGdDm5ZFQzAupOoqZ64XL+j8yGtN
+	 ZdBe7WPHodC58OmZo9Qf3nmweey6ZF8P6pGe4/hA5YlMS2s44zTVDZcaRmzZAnskIl
+	 09aIu+QJrw7o85lFLj0wZTp+UqZM07+yr8r8M0a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgGBOyG (ORCPT
+        id S1729872AbgGBOzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbgGBOyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:54:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA24DC08C5C1;
-        Thu,  2 Jul 2020 07:54:03 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cm21so3227192pjb.3;
-        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
-        b=li/iRMGK1qmwA85z7TyIQB8rzEwcpW3lVJcAwYVcxGy4xXPWlYZow+e6hNmEH1nMaG
-         caz3keLrkucWhYLsNYp8n+S3KIGktp5D2yilmH9iggZS3ktNjMmxscQm2cAETwAqCOr0
-         uReKfSFCTZi0153Rr03CYwo0/xl6fhWtbqOIT0TU/WN5/2G2ykhCgwkq7hUyr+mVg0FT
-         eZ+kOMoKaIONivxGMmrqfeyTb3a7RzDLpsvzwDwCQBOSORNGB8LVNRCgIPTiMzxjRawu
-         CBflcAO7xFc/qbxsjUo5cFleKTk0qHiAwL/gRMM72HUtgzH+QpjER/jtDXxPD0j3wgUX
-         3b9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
-        b=GB/nnJv8IQvF0BVMyNHnzA+LEy61GiOVB/XWzWEk0+5331WLW6Z7HGYMFRLGWCHxBo
-         9xCJC0pMwfxWiPV0wRu7BjLnyF6qaNxuaozu/QlgRjHjt7HzACxQfd800lCb7bXQnV33
-         QHI20c4zBrpZgjX0PWhX5/jTFJSQI6i7zT2Qr+UP1UICNWn8y+3QdbG5yd+/xhshRkSh
-         TMzdvgUJQR/Clw4YjZcUqeDAaPlQ49BlBfhCbQIHLb2EKKv5MLFXpSUxMRw4sAgkaqBz
-         imMOU4AmVV0OAL47q4TAiBCygZD3vlX9LMnIWCSuYJSVIKzW8qioRE22JyZSf5FHni6o
-         oKmA==
-X-Gm-Message-State: AOAM533VKyd7lW7nZAr14MQemQHZ4GMhaPx8xqCQsKqP5LpWcSvPTEnA
-        w4mehUl5mjmLAZetV1O7C7w=
-X-Google-Smtp-Source: ABdhPJzteWrhGhXZLrpA2r7Wt2Dm1p8TiSi9Df05rcAtFbe3Dju+8vv5u638WNYUlvV80s05qtO+NA==
-X-Received: by 2002:a17:90b:4c91:: with SMTP id my17mr30750529pjb.81.1593701643332;
-        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
-Received: from localhost.localdomain ([223.190.0.253])
-        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 07:54:02 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
-Date:   Thu,  2 Jul 2020 20:22:56 +0530
-Message-Id: <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+        Thu, 2 Jul 2020 10:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgGBOzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:55:42 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1105F2075D;
+        Thu,  2 Jul 2020 14:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593701741;
+        bh=nbXe6nJCNrMku6QIpQkPDTVx3nVSr/HZ3tO6LrfZY8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PcEiNPxuhlEyLh2HMXcrpBV1EC5XLsFjtMKSlRSdePnrAVWjczQYEysgptdOEIbNb
+         QjfUU6jDXo4nj7OwF7ffPzJvSQ1L4KMCNuYjhVu7foez1h5841jqZdO+/Wfss7iN0Y
+         tyFLYFMHbSNeYbjpimnr2GDt6pYflThH5++ITr0w=
+Date:   Thu, 2 Jul 2020 15:55:33 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: [PATCH 04/18] alpha: Override READ_ONCE() with barriered
+ implementation
+Message-ID: <20200702145532.GB16999@willie-the-truck>
+References: <20200630173734.14057-1-will@kernel.org>
+ <20200630173734.14057-5-will@kernel.org>
+ <CAJWu+oqs-d0oDswB2Owyh-4Zo4WXAqKhKU0L=1HEwEfQbc1izw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJWu+oqs-d0oDswB2Owyh-4Zo4WXAqKhKU0L=1HEwEfQbc1izw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds uSD support for Cubieboard7 board based on Actions Semi
-S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
-added yet, fixed regulator has been used as a regulator node.
+Hi Joel,
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v4:
-	* No change.
-Changes since v3:
-        * No change.
-Changes since v2:
-        * No change.
-Changes since v1:
-        * No change.
-Changes since RFC:
-        * No change.
----
- arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
- arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
- 2 files changed, 42 insertions(+)
+On Thu, Jul 02, 2020 at 10:43:55AM -0400, Joel Fernandes wrote:
+> On Tue, Jun 30, 2020 at 1:38 PM Will Deacon <will@kernel.org> wrote:
+> > diff --git a/arch/alpha/include/asm/barrier.h b/arch/alpha/include/asm/barrier.h
+> > index 92ec486a4f9e..2ecd068d91d1 100644
+> > --- a/arch/alpha/include/asm/barrier.h
+> > +++ b/arch/alpha/include/asm/barrier.h
+> > - * For example, the following code would force ordering (the initial
+> > - * value of "a" is zero, "b" is one, and "p" is "&a"):
+> > - *
+> > - * <programlisting>
+> > - *     CPU 0                           CPU 1
+> > - *
+> > - *     b = 2;
+> > - *     memory_barrier();
+> > - *     p = &b;                         q = p;
+> > - *                                     read_barrier_depends();
+> > - *                                     d = *q;
+> > - * </programlisting>
+> > - *
+> > - * because the read of "*q" depends on the read of "p" and these
+> > - * two reads are separated by a read_barrier_depends().  However,
+> > - * the following code, with the same initial values for "a" and "b":
+> > - *
+> 
+> Would it be Ok to keep this example in the kernel sources? I think it
+> serves as good documentation and highlights the issue in the Alpha
+> architecture well.
 
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 63e375cd9eb4..ec117eb12f3a 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -13,6 +13,7 @@
- 
- 	aliases {
- 		serial3 = &uart3;
-+		mmc0 = &mmc0;
- 	};
- 
- 	chosen {
-@@ -28,6 +29,23 @@
- 		device_type = "memory";
- 		reg = <0x1 0xe0000000 0x0 0x0>;
- 	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	vcc_3v1: vcc-3v1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+	};
-+
-+	/* Fixed regulator used in the absence of PMIC */
-+	sd_vcc: sd-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.1V";
-+		regulator-min-microvolt = <3100000>;
-+		regulator-max-microvolt = <3100000>;
-+		regulator-always-on;
-+	};
- };
- 
- &i2c0 {
-@@ -81,6 +99,14 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	mmc0_default: mmc0_default {
-+		pinmux {
-+			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-+				 "sd0_cmd_mfp", "sd0_clk_mfp";
-+			function = "sd0";
-+		};
-+	};
- };
- 
- &timer {
-@@ -90,3 +116,18 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+/* uSD */
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_default>;
-+	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-+	no-sdio;
-+	no-mmc;
-+	no-1-8-v;
-+	bus-width = <4>;
-+	vmmc-supply = <&sd_vcc>;
-+	vqmmc-supply = <&sd_vcc>;
-+};
-+
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 9ed88aafc2da..ba498cf9217d 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/actions,s700-cmu.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s700-powergate.h>
- #include <dt-bindings/reset/actions,s700-reset.h>
--- 
-2.7.4
+I'd _really_ like to remove it, as I think it only serves to confuse people
+on a topic that is confusing enough already. Paul's perfbook [1] already has
+plenty of information about this, so I don't think we need to repeat that
+here. I could add a citation, perhaps?
 
+> > - * <programlisting>
+> > - *     CPU 0                           CPU 1
+> > - *
+> > - *     a = 2;
+> > - *     memory_barrier();
+> > - *     b = 3;                          y = b;
+> > - *                                     read_barrier_depends();
+> > - *                                     x = a;
+> > - * </programlisting>
+> > - *
+> > - * does not enforce ordering, since there is no data dependency between
+> > - * the read of "a" and the read of "b".  Therefore, on some CPUs, such
+> > - * as Alpha, "y" could be set to 3 and "x" to 0.  Use rmb()
+> > - * in cases like this where there are no data dependencies.
+> > - */
+> > -#define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
+> > +#define __smp_load_acquire(p)                                          \
+> > +({                                                                     \
+> > +       __unqual_scalar_typeof(*p) ___p1 =                              \
+> > +               (*(volatile typeof(___p1) *)(p));                       \
+> > +       compiletime_assert_atomic_type(*p);                             \
+> > +       ___p1;                                                          \
+> > +})
+> 
+> I had the same question as Mark about the need for a memory barrier
+> here, otherwise alpha will again break right? Looking forward to the
+> future fix you mentioned.
+
+Yeah, sorry about that. It went missing somehow during the rebase, it seems.
+
+> BTW,  do you know any architecture where speculative execution of
+> address-dependent loads can cause similar misorderings? That would be
+> pretty insane though. In Alpha's case it is not speculation but rather
+> the split local cache design as the docs mention.   The reason I ask
+> is it is pretty amusing that control-dependent loads do have such
+> misordering issues due to speculative branch execution and I wondered
+> what other games the CPUs are playing. FWIW I ran into [1] which talks
+> about analogy between memory dependence and control dependence.
+
+I think you're asking about value prediction, and the implications it would
+have on address-dependent loads where the address can itself be predicted.
+I'm not aware of an CPUs where that is observable architecturally.
+
+arm64 has some load instructions that do not honour address dependencies,
+but I believe that's mainly to enable alternative cache designs for things
+like non-temporal and large vector loads.
+
+Will
+
+[1] https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html
