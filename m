@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381B72085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C142085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653467;
-	bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
+	s=default; t=1593653468;
+	bh=SY38ldM89iKKMo7OdUVyuJSiLrQblXLpZRagEc9anDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dEe2vm6GImYqxOdEFgyYv94GzyTIt7ncgiOqBRtXYcVev3gqn8dsmfxhLB6g+c0Yp
-	 IHGfYEeOkwBbxIDlzP7W2cqkd1vvXJr3hBQYXMt1MSoAB/gIe3TXRLhpdrwgseYIxs
-	 L9/mq0O15s32jMWqcLQjZPTCkjvE59nKjyNV9Z2I=
+	b=tg7xZP20ZHJz7XQvaLwxL3I/B+i3eDC4y/GYG6eMtIqSi8ZEyfX20gG6l1iYWMdcK
+	 OxgqMBpDBeqrplb2hBH9k6pcbdm8NxmKA1v8hCLV/sTQ/3NAPqQiZTIvSKUKraknK3
+	 G/brtfpqwZd8q5rb63WKhAG/5gBkI2substg0W4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgGBBbF (ORCPT
+        id S1729245AbgGBB0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58278 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbgGBB0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:44 -0400
+        id S1729111AbgGBB0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D19820748;
-        Thu,  2 Jul 2020 01:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52E55206BE;
+        Thu,  2 Jul 2020 01:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653204;
-        bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
+        s=default; t=1593653173;
+        bh=SY38ldM89iKKMo7OdUVyuJSiLrQblXLpZRagEc9anDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qV+PrXrRji4Rblx7Oiyf8szpi2GWir0LjCpjzVI9Z88lQGZLjORkxcr/sL/pco1iE
-         wt02atfxZpTUzAkP/yTretEyajAOZxTF3ySSaqyfTwdYCpxUrRiiypJXZtV6j07ixr
-         iXmxNYl1V2qccm720UUoUjqen1hELQYHhEzUrPQM=
+        b=MhRCIKST3sgnICFUnjvYhSW1HiVZpBCX+qVsBhS0fOlNfIsbacBtFXr3QoL/W6b0E
+         20PI8MzN7XcHQc9qSHJrfKRcWvGmCMlZ0qeAV/aD7dQhuE/5a1LeOfM/PR8bI8SegK
+         2Cz7dZWV+HFZIwBu1gmOoN/EmwGpwCh3VPhtSr0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/27] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
-Date:   Wed,  1 Jul 2020 21:26:11 -0400
-Message-Id: <20200702012615.2701532-23-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 39/40] kgdb: Avoid suspicious RCU usage warning
+Date:   Wed,  1 Jul 2020 21:24:00 -0400
+Message-Id: <20200702012402.2701121-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
-References: <20200702012615.2701532-1-sashal@kernel.org>
+In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
+References: <20200702012402.2701121-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,37 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 2655971ad4b34e97dd921df16bb0b08db9449df7 ]
+[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
 
-dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
-the reference counter. In case of failure, decrement the reference
-before returning.
+At times when I'm using kgdb I see a splat on my console about
+suspicious RCU usage.  I managed to come up with a case that could
+reproduce this that looked like this:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+  WARNING: suspicious RCU usage
+  5.7.0-rc4+ #609 Not tainted
+  -----------------------------
+  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
+
+  other info that might help us debug this:
+
+    rcu_scheduler_active = 2, debug_locks = 1
+  3 locks held by swapper/0/1:
+   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
+   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
+   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
+
+  stack backtrace:
+  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
+  Hardware name: Google Cheza (rev3+) (DT)
+  Call trace:
+   dump_backtrace+0x0/0x1b8
+   show_stack+0x1c/0x24
+   dump_stack+0xd4/0x134
+   lockdep_rcu_suspicious+0xf0/0x100
+   find_task_by_pid_ns+0x5c/0x80
+   getthread+0x8c/0xb0
+   gdb_serial_stub+0x9d4/0xd04
+   kgdb_cpu_enter+0x284/0x7ac
+   kgdb_handle_exception+0x174/0x20c
+   kgdb_brk_fn+0x24/0x30
+   call_break_hook+0x6c/0x7c
+   brk_handler+0x20/0x5c
+   do_debug_exception+0x1c8/0x22c
+   el1_sync_handler+0x3c/0xe4
+   el1_sync+0x7c/0x100
+   rpmh_rsc_probe+0x38/0x420
+   platform_drv_probe+0x94/0xb4
+   really_probe+0x134/0x300
+   driver_probe_device+0x68/0x100
+   __device_attach_driver+0x90/0xa8
+   bus_for_each_drv+0x84/0xcc
+   __device_attach+0xb4/0x13c
+   device_initial_probe+0x18/0x20
+   bus_probe_device+0x38/0x98
+   device_add+0x38c/0x420
+
+If I understand properly we should just be able to blanket kgdb under
+one big RCU read lock and the problem should go away.  We'll add it to
+the beast-of-a-function known as kgdb_cpu_enter().
+
+With this I no longer get any splats and things seem to work fine.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/debug/debug_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index b2fd505938a0c..389ec4c689c44 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -204,8 +204,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
- 	int ret;
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 7d54c7c280544..2222f3225e53d 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -546,6 +546,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 		arch_kgdb_ops.disable_hw_break(regs);
  
- 	ret = pm_runtime_get_sync(&dwc3->dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put_sync_autosuspend(&dwc3->dev);
- 		return;
-+	}
+ acquirelock:
++	rcu_read_lock();
+ 	/*
+ 	 * Interrupts will be restored by the 'trap return' code, except when
+ 	 * single stepping.
+@@ -602,6 +603,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 			atomic_dec(&slaves_in_kgdb);
+ 			dbg_touch_watchdogs();
+ 			local_irq_restore(flags);
++			rcu_read_unlock();
+ 			return 0;
+ 		}
+ 		cpu_relax();
+@@ -620,6 +622,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 		raw_spin_unlock(&dbg_master_lock);
+ 		dbg_touch_watchdogs();
+ 		local_irq_restore(flags);
++		rcu_read_unlock();
  
- 	pm_runtime_mark_last_busy(&dwc3->dev);
- 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
+ 		goto acquirelock;
+ 	}
+@@ -743,6 +746,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	raw_spin_unlock(&dbg_master_lock);
+ 	dbg_touch_watchdogs();
+ 	local_irq_restore(flags);
++	rcu_read_unlock();
+ 
+ 	return kgdb_info[cpu].ret_state;
+ }
 -- 
 2.25.1
 
