@@ -2,250 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A62C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99EB220A8B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A74208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vIYTYR0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgGBS5i (ORCPT
+        id S1726474AbgGBS5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgGBS5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:57:07 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3118C21919;
-        Thu,  2 Jul 2020 18:57:06 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jr4OP-004BFU-8N; Thu, 02 Jul 2020 14:57:05 -0400
-Message-ID: <20200702185705.127175788@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Thu, 02 Jul 2020 14:53:55 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Cartwright <julia@ni.com>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Subject: [PATCH v2 11/15] tools lib traceevent: Add plugin for decoding
- syscalls/sys_enter_futex
-References: <20200702185344.913492689@goodmis.org>
+        Thu, 2 Jul 2020 14:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgGBS5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:57:40 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F8BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 11:57:40 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f2so11654051plr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=hz4Mj/iQWQ1Gm0J6ofti89mpz3pTQ7LpeTX5svYgVDU=;
+        b=vIYTYR0m8trV9lrGh8PSvAGnzTxA5G6rFm/vi7ItU7DM4fvPTm/3Rl6ME1n7it2B1M
+         T30gPbuZtIE6zll34iGAqLPSdG6bmMkAT7qZrHG23Iy2IrCRlFaNzAsYQxUBUtDS7maR
+         lsMpgjIPLbqvPDQlAxBB7JqNjvFBayTSyW6uH39IJTaZMduCtQ7pwgshj2ZogHfR0AYK
+         rC+JXeUG8Ftfy0mqFWAjEeGKNCPSA+bU+DULdd9p41k1p8IbO6nixuAiWR3klbBC35vM
+         ims47ez4t1jO7VNTh6Q4ji0M92+FQztMbbM3vX5S4RlQYC9J2EyktcqMDI2JKUeROJQS
+         ApcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hz4Mj/iQWQ1Gm0J6ofti89mpz3pTQ7LpeTX5svYgVDU=;
+        b=cexo+GpSiqeoefb3kboLb2hb20nillkRQrDCwpfCme27gNEkDgj3VeLFkWKXG/iuWs
+         /7fqPlagKYu2F4//OCd2MWfbjEO0y/I/iWqWWCeTEKldnBW9kpt3Hj2oR5eK4OnYid0e
+         SqJnKw+dA33EPWrog6ynabSKJa/nvhBEAOVrxO3A57kvAaXpu2/xpF2sI6iWtk0zmnPA
+         J9dtBJEg0FGAj6GRXGT/ovoejewXWqNvV4G9gT8bGCQaPzrOpU52MDgg4IdcxhgsbjBX
+         1maY5a50h3See+hC5KF8sgXST4uwSSXcxPoNKolIGjqUW3VBqqSAVSkO3ehqWjPt+oEl
+         a9YQ==
+X-Gm-Message-State: AOAM533zJyd4JHBi1N6XfTYdnHMKHcT2Ko1cfzi3EDwaKjBb2QSFORVD
+        N8HYA4YyXpbtG8mmVtE62beo5Q==
+X-Google-Smtp-Source: ABdhPJy7+DRCrQWC1YEAlkN5Qs9h2rvj2F4QBQqw8k6R6J/7z34EhuVEi87Gs/fBbFtsm5CKS4/LNw==
+X-Received: by 2002:a17:90a:f695:: with SMTP id cl21mr35145208pjb.86.1593716260173;
+        Thu, 02 Jul 2020 11:57:40 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id c71sm7396890pje.32.2020.07.02.11.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 11:57:39 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org
+Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 0/6] drm/meson: add support for Amlogic Video FBC
+In-Reply-To: <20200702074759.32356-1-narmstrong@baylibre.com>
+References: <20200702074759.32356-1-narmstrong@baylibre.com>
+Date:   Thu, 02 Jul 2020 11:57:38 -0700
+Message-ID: <7himf5iw2l.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Cartwright <julia@ni.com>
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-The futex syscall is a complicated one.  It supports thirteen
-multiplexed operations, each with different semantics and encodings for
-the syscalls six arguments.
+> Amlogic uses a proprietary lossless image compression protocol and format
+> for their hardware video codec accelerators, either video decoders or
+> video input encoders.
+>
+> It considerably reduces memory bandwidth while writing and reading
+> frames in memory.
+>
+> The underlying storage is considered to be 3 components, 8bit or 10-bit
+> per component, YCbCr 420, single plane :
+> - DRM_FORMAT_YUV420_8BIT
+> - DRM_FORMAT_YUV420_10BIT
+>
+> This modifier will be notably added to DMA-BUF frames imported from the V4L2
+> Amlogic VDEC decoder.
+>
+> At least two layout are supported :
+> - Basic: composed of a body and a header
+> - Scatter: the buffer is filled with a IOMMU scatter table referring
+>   to the encoder current memory layout. This mode if more efficient in terms
+>   of memory allocation but frames are not dumpable and only valid during until
+>   the buffer is freed and back in control of the encoder
+>
+> At least two options are supported :
+> - Memory saving: when the pixel bpp is 8b, the size of the superblock can
+>   be reduced, thus saving memory.
+>
+> This serie adds the missing register, updated the FBC decoder registers
+> content to be committed by the crtc code.
+>
+> The Amlogic FBC has been tested with compressed content from the Amlogic
+> HW VP9 decoder on S905X (GXL), S905D2 (G12A) and S905X3 (SM1) in 8bit
+> (Scatter+Mem Saving on G12A/SM1, Mem Saving on GXL) and 10bit
+> (Scatter on G12A/SM1, default on GXL).
+>
+> It's expected to work as-is on GXM and G12B SoCs.
 
-Manually decoding these arguments is tedious and error prone.
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 
-This plugin provides symbolic names for futex operations, futex flags,
-and tries to be intelligent about the intent of specific arguments (for
-example, waking operations use 'val' as an integer count, not just an
-arbitrary value).
-
-It doesn't do a full decode of the FUTEX_WAKE_OP's 'val3' argument,
-however, this is a good starting point.
-
-Link: http://lkml.kernel.org/r/20171207025649.12160-1-julia@ni.com
-Link: http://lore.kernel.org/linux-trace-devel/20200702174950.123454-3-tz.stoyanov@gmail.com
-
-Signed-off-by: Julia Cartwright <julia@ni.com>
-[ Ported from trace-cmd.git ]
-Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/lib/traceevent/plugins/Build          |   1 +
- tools/lib/traceevent/plugins/Makefile       |   1 +
- tools/lib/traceevent/plugins/plugin_futex.c | 137 ++++++++++++++++++++
- 3 files changed, 139 insertions(+)
- create mode 100644 tools/lib/traceevent/plugins/plugin_futex.c
-
-diff --git a/tools/lib/traceevent/plugins/Build b/tools/lib/traceevent/plugins/Build
-index b866f231a536..dd4da823c38f 100644
---- a/tools/lib/traceevent/plugins/Build
-+++ b/tools/lib/traceevent/plugins/Build
-@@ -5,6 +5,7 @@ plugin_kvm-y          += plugin_kvm.o
- plugin_mac80211-y     += plugin_mac80211.o
- plugin_sched_switch-y += plugin_sched_switch.o
- plugin_function-y     += plugin_function.o
-+plugin_futex-y        += plugin_futex.o
- plugin_xen-y          += plugin_xen.o
- plugin_scsi-y         += plugin_scsi.o
- plugin_cfg80211-y     += plugin_cfg80211.o
-diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
-index 8e72707e8630..946a4d31fcaf 100644
---- a/tools/lib/traceevent/plugins/Makefile
-+++ b/tools/lib/traceevent/plugins/Makefile
-@@ -134,6 +134,7 @@ PLUGINS += plugin_kvm.so
- PLUGINS += plugin_mac80211.so
- PLUGINS += plugin_sched_switch.so
- PLUGINS += plugin_function.so
-+PLUGINS += plugin_futex.so
- PLUGINS += plugin_xen.so
- PLUGINS += plugin_scsi.so
- PLUGINS += plugin_cfg80211.so
-diff --git a/tools/lib/traceevent/plugins/plugin_futex.c b/tools/lib/traceevent/plugins/plugin_futex.c
-new file mode 100644
-index 000000000000..5d76df141401
---- /dev/null
-+++ b/tools/lib/traceevent/plugins/plugin_futex.c
-@@ -0,0 +1,137 @@
-+/*
-+ * Copyright (C) 2017 National Instruments Corp.
-+ *
-+ * Author: Julia Cartwright <julia@ni.com>
-+ *
-+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public
-+ * License as published by the Free Software Foundation;
-+ * version 2.1 of the License (not later!)
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this program; if not,  see <http://www.gnu.org/licenses>
-+ *
-+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/futex.h>
-+
-+#include "event-parse.h"
-+
-+#define ARRAY_SIZE(_a) (sizeof(_a) / sizeof((_a)[0]))
-+
-+struct futex_args {
-+	unsigned long long	uaddr;
-+	unsigned long long	op;
-+	unsigned long long	val;
-+	unsigned long long	utime; /* or val2 */
-+	unsigned long long	uaddr2;
-+	unsigned long long	val3;
-+};
-+
-+struct futex_op {
-+	const char	*name;
-+	const char	*fmt_val;
-+	const char	*fmt_utime;
-+	const char	*fmt_uaddr2;
-+	const char	*fmt_val3;
-+};
-+
-+static const struct futex_op futex_op_tbl[] = {
-+	{            "FUTEX_WAIT", " val=0x%08llx", " utime=0x%08llx",               NULL,             NULL },
-+	{            "FUTEX_WAKE",     " val=%llu",              NULL,               NULL,             NULL },
-+	{              "FUTEX_FD",     " val=%llu",              NULL,               NULL,             NULL },
-+	{         "FUTEX_REQUEUE",     " val=%llu",      " val2=%llu", " uaddr2=0x%08llx",             NULL },
-+	{     "FUTEX_CMP_REQUEUE",     " val=%llu",      " val2=%llu", " uaddr2=0x%08llx", " val3=0x%08llx" },
-+	{         "FUTEX_WAKE_OP",     " val=%llu",      " val2=%llu", " uaddr2=0x%08llx", " val3=0x%08llx" },
-+	{         "FUTEX_LOCK_PI",            NULL, " utime=0x%08llx",               NULL,             NULL },
-+	{       "FUTEX_UNLOCK_PI",            NULL,              NULL,               NULL,             NULL },
-+	{      "FUTEX_TRYLOCK_PI",            NULL,              NULL,               NULL,             NULL },
-+	{     "FUTEX_WAIT_BITSET", " val=0x%08llx", " utime=0x%08llx",               NULL, " val3=0x%08llx" },
-+	{     "FUTEX_WAKE_BITSET",     " val=%llu",              NULL,               NULL, " val3=0x%08llx" },
-+	{ "FUTEX_WAIT_REQUEUE_PI", " val=0x%08llx", " utime=0x%08llx", " uaddr2=0x%08llx", " val3=0x%08llx" },
-+	{  "FUTEX_CMP_REQUEUE_PI",     " val=%llu",      " val2=%llu", " uaddr2=0x%08llx", " val3=0x%08llx" },
-+};
-+
-+
-+static void futex_print(struct trace_seq *s, const struct futex_args *args,
-+			const struct futex_op *fop)
-+{
-+	trace_seq_printf(s, " uaddr=0x%08llx", args->uaddr);
-+
-+	if (fop->fmt_val)
-+		trace_seq_printf(s, fop->fmt_val, args->val);
-+
-+	if (fop->fmt_utime)
-+		trace_seq_printf(s,fop->fmt_utime, args->utime);
-+
-+	if (fop->fmt_uaddr2)
-+		trace_seq_printf(s, fop->fmt_uaddr2, args->uaddr2);
-+
-+	if (fop->fmt_val3)
-+		trace_seq_printf(s, fop->fmt_val3, args->val3);
-+}
-+
-+static int futex_handler(struct trace_seq *s, struct tep_record *record,
-+			 struct tep_event *event, void *context)
-+{
-+	const struct futex_op *fop;
-+	struct futex_args args;
-+	unsigned long long cmd;
-+
-+	if (tep_get_field_val(s, event, "uaddr", record, &args.uaddr, 1))
-+		return 1;
-+
-+	if (tep_get_field_val(s, event, "op", record, &args.op, 1))
-+		return 1;
-+
-+	if (tep_get_field_val(s, event, "val", record, &args.val, 1))
-+		return 1;
-+
-+	if (tep_get_field_val(s, event, "utime", record, &args.utime, 1))
-+		return 1;
-+
-+	if (tep_get_field_val(s, event, "uaddr2", record, &args.uaddr2, 1))
-+		return 1;
-+
-+	if (tep_get_field_val(s, event, "val3", record, &args.val3, 1))
-+		return 1;
-+
-+	cmd = args.op & FUTEX_CMD_MASK;
-+	if (cmd >= ARRAY_SIZE(futex_op_tbl))
-+		return 1;
-+
-+	fop = &futex_op_tbl[cmd];
-+
-+	trace_seq_printf(s, "op=%s", fop->name);
-+
-+	if (args.op & FUTEX_PRIVATE_FLAG)
-+		trace_seq_puts(s, "|FUTEX_PRIVATE_FLAG");
-+
-+	if (args.op & FUTEX_CLOCK_REALTIME)
-+		trace_seq_puts(s, "|FUTEX_CLOCK_REALTIME");
-+
-+	futex_print(s, &args, fop);
-+	return 0;
-+}
-+
-+int TEP_PLUGIN_LOADER(struct tep_handle *tep)
-+{
-+	tep_register_event_handler(tep, -1, "syscalls", "sys_enter_futex",
-+				   futex_handler, NULL);
-+	return 0;
-+}
-+
-+void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
-+{
-+	tep_unregister_event_handler(tep, -1, "syscalls", "sys_enter_futex",
-+				     futex_handler, NULL);
-+}
--- 
-2.26.2
-
-
+Kevin
