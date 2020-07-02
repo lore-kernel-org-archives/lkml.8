@@ -2,181 +2,109 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F8620772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CE42145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8T/FHGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgGBN5f (ORCPT
+        id S1729501AbgGBN7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:57:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7355 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729585AbgGBN5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:57:33 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 887BE1F41B7E81547404;
-        Thu,  2 Jul 2020 21:56:10 +0800 (CST)
-Received: from DESKTOP-5IS4806.china.huawei.com (10.174.187.22) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 21:56:04 +0800
-From:   Keqian Zhu <zhukeqian1@huawei.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
-        <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH v2 3/8] KVM: arm64: Modify stage2 young mechanism to support hw DBM
-Date:   Thu, 2 Jul 2020 21:55:51 +0800
-Message-ID: <20200702135556.36896-4-zhukeqian1@huawei.com>
-X-Mailer: git-send-email 2.8.4.windows.1
-In-Reply-To: <20200702135556.36896-1-zhukeqian1@huawei.com>
-References: <20200702135556.36896-1-zhukeqian1@huawei.com>
+        Thu, 2 Jul 2020 09:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgGBN7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:59:09 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BADC08C5C1;
+        Thu,  2 Jul 2020 06:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gl1jKq2wcYbRMLXz2bIDCOo5JcG5MyTdy5yY3rjDs6A=; b=m8T/FHGXVQuNDN0fShATSEBI4v
+        gdrv0UOm+Qc/TVk/hko/YWkvsicyavkQ7T9kgB1cXA3f7SjZGveySW1lNZ9pj7AAP82GfbQIZyFHG
+        zIE/4hT4rRZHeOu0DKsXG9q2FaZhCLNucDE/UC0Nd/S35IgBPjOvQksaJDcpvMVzz1T3OuEJBqp/Y
+        65ZZ5ev6vizlBoY4BgFQw8w3IoiMECG3nxictrZc5jD3AMR8gm9YDJ4ph+8dg4ZqKeiWnkvUBInFh
+        hRtFgvtrFhaZLOIBTYl8vUlDtHnDdTrCDeaVSN3VUb9IY4fvK5ibZneIRU4p0OvqMhjBx74ZuS5SV
+        PXmXmfMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqzjh-0003A1-DO; Thu, 02 Jul 2020 13:58:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4321730015A;
+        Thu,  2 Jul 2020 15:58:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3057B203DA8CF; Thu,  2 Jul 2020 15:58:42 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 15:58:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
+Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
+Message-ID: <20200702135842.GR4800@hirez.programming.kicks-ass.net>
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+ <20200702074059.GX4781@hirez.programming.kicks-ass.net>
+ <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.187.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marking PTs young (set AF bit) should be atomic to avoid cover
-dirty status set by hardware.
+On Thu, Jul 02, 2020 at 09:11:06AM -0400, Liang, Kan wrote:
+> On 7/2/2020 3:40 AM, Peter Zijlstra wrote:
+> > On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
+> > > Like Xu (10):
+> > >    perf/x86/core: Refactor hw->idx checks and cleanup
+> > >    perf/x86/lbr: Add interface to get LBR information
+> > >    perf/x86: Add constraint to create guest LBR event without hw counter
+> > >    perf/x86: Keep LBR records unchanged in host context for guest usage
+> > 
+> > > Wei Wang (1):
+> > >    perf/x86: Fix variable types for LBR registers
+> > 
+> > >   arch/x86/events/core.c            |  26 +--
+> > >   arch/x86/events/intel/core.c      | 109 ++++++++-----
+> > >   arch/x86/events/intel/lbr.c       |  51 +++++-
+> > >   arch/x86/events/perf_event.h      |   8 +-
+> > >   arch/x86/include/asm/perf_event.h |  34 +++-
+> > 
+> > These look good to me; but at the same time Kan is sending me
+> > Architectural LBR patches.
+> > 
+> > Kan, if I take these perf patches and stick them in a tip/perf/vlbr
+> > topic branch, can you rebase the arch lbr stuff on top, or is there
+> > anything in the arch-lbr series that badly conflicts with this work?
+> > 
+> 
+> Yes, I can rebase the arch lbr patches on top of them.
+> Please push the tip/perf/vlbr branch, so I can pull and rebase my patches.
 
-Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-Signed-off-by: Peng Liang <liangpeng10@huawei.com>
----
- arch/arm64/include/asm/kvm_mmu.h | 31 ++++++++++++++++++++++---------
- arch/arm64/kvm/mmu.c             | 15 ++++++++-------
- 2 files changed, 30 insertions(+), 16 deletions(-)
+For now I have:
 
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index 4c12b7ad8ae8..a1b6131d980c 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -219,6 +219,18 @@ static inline void kvm_set_s2pte_readonly(pte_t *ptep)
- 	} while (pteval != old_pteval);
- }
- 
-+static inline void kvm_set_s2pte_young(pte_t *ptep)
-+{
-+	pteval_t old_pteval, pteval;
-+
-+	pteval = READ_ONCE(pte_val(*ptep));
-+	do {
-+		old_pteval = pteval;
-+		pteval |= PTE_AF;
-+		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, pteval);
-+	} while (pteval != old_pteval);
-+}
-+
- static inline bool kvm_s2pte_readonly(pte_t *ptep)
- {
- 	return (READ_ONCE(pte_val(*ptep)) & PTE_S2_RDWR) == PTE_S2_RDONLY;
-@@ -234,6 +246,11 @@ static inline void kvm_set_s2pmd_readonly(pmd_t *pmdp)
- 	kvm_set_s2pte_readonly((pte_t *)pmdp);
- }
- 
-+static inline void kvm_set_s2pmd_young(pmd_t *pmdp)
-+{
-+	kvm_set_s2pte_young((pte_t *)pmdp);
-+}
-+
- static inline bool kvm_s2pmd_readonly(pmd_t *pmdp)
- {
- 	return kvm_s2pte_readonly((pte_t *)pmdp);
-@@ -249,6 +266,11 @@ static inline void kvm_set_s2pud_readonly(pud_t *pudp)
- 	kvm_set_s2pte_readonly((pte_t *)pudp);
- }
- 
-+static inline void kvm_set_s2pud_young(pud_t *pudp)
-+{
-+	kvm_set_s2pte_young((pte_t *)pudp);
-+}
-+
- static inline bool kvm_s2pud_readonly(pud_t *pudp)
- {
- 	return kvm_s2pte_readonly((pte_t *)pudp);
-@@ -259,15 +281,6 @@ static inline bool kvm_s2pud_exec(pud_t *pudp)
- 	return !(READ_ONCE(pud_val(*pudp)) & PUD_S2_XN);
- }
- 
--static inline pud_t kvm_s2pud_mkyoung(pud_t pud)
--{
--	return pud_mkyoung(pud);
--}
--
--static inline bool kvm_s2pud_young(pud_t pud)
--{
--	return pud_young(pud);
--}
- 
- static inline bool arm_mmu_hw_dbm_supported(void)
- {
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index b3cb8b6da4c2..ab8a6ceecbd8 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -2008,8 +2008,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-  * Resolve the access fault by making the page young again.
-  * Note that because the faulting entry is guaranteed not to be
-  * cached in the TLB, we don't need to invalidate anything.
-- * Only the HW Access Flag updates are supported for Stage 2 (no DBM),
-- * so there is no need for atomic (pte|pmd)_mkyoung operations.
-+ *
-+ * Note: Both DBM and HW AF updates are supported for Stage2, so
-+ * young operations should be atomic.
-  */
- static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
- {
-@@ -2027,15 +2028,15 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
- 		goto out;
- 
- 	if (pud) {		/* HugeTLB */
--		*pud = kvm_s2pud_mkyoung(*pud);
-+		kvm_set_s2pud_young(pud);
- 		pfn = kvm_pud_pfn(*pud);
- 		pfn_valid = true;
- 	} else	if (pmd) {	/* THP, HugeTLB */
--		*pmd = pmd_mkyoung(*pmd);
-+		kvm_set_s2pmd_young(pmd);
- 		pfn = pmd_pfn(*pmd);
- 		pfn_valid = true;
--	} else {
--		*pte = pte_mkyoung(*pte);	/* Just a page... */
-+	} else {		/* Just a page... */
-+		kvm_set_s2pte_young(pte);
- 		pfn = pte_pfn(*pte);
- 		pfn_valid = true;
- 	}
-@@ -2280,7 +2281,7 @@ static int kvm_test_age_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *
- 		return 0;
- 
- 	if (pud)
--		return kvm_s2pud_young(*pud);
-+		return pud_young(*pud);
- 	else if (pmd)
- 		return pmd_young(*pmd);
- 	else
--- 
-2.19.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/vlbr
 
+Once the 0day robot comes back all-green, I'll push it out to
+tip/perf/vlbr and merge it into tip/perf/core.
+
+Thanks!
