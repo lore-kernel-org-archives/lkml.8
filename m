@@ -2,131 +2,137 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9B020771
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="Ga4jYOuv"
+	by mail.kernel.org (Postfix) with ESMTP id F0FEE20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593684635;
+	bh=ntQgir5cl10DBpt6WAUChT2AUsd3rbf4E8v18mU8684=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vzlnAM43UyamKXx1hQNAWLmV+eiVZC1QL+aIYJ/cOCL+00eMw4l3IizSyJrNGcxem
+	 3pOco09eKEUoYs2aocRfdoJ+4Pl5AjgJE4bBQvKEX9p8qy/N2w8ig1ngi/x5UpzhoB
+	 H1rKYOx2tvF+ehW1+HYMmVAcdDLtSNR5cL8+YwGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGBKKM (ORCPT
+        id S1728277AbgGBKKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgGBKKL (ORCPT
+        Thu, 2 Jul 2020 06:10:34 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:42377 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgGBKKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:10:11 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20FDDC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 03:10:11 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b4so25028065qkn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MNkwKZ84Zrawk816auciDQTYwDrs9ybRS0FVRLuLd9I=;
-        b=Ga4jYOuvR8MX3nF2I6L7nPH0rm/ZyxshqRb5F4+rL33+Dnnyb7FevBZZ90KDsvrHKV
-         WgfFd92ZJh5hmBt1OEWYUt4vNpzYROC9C4LhqphBIgEmjRIuA2uLoAqnId7O9xEpBOUs
-         Nla0Wih4ZFy2hHQ3+TBKtg2SY7KBhlFLwmoyxSWCgb0u9AhCwZrAPgE2nWZbdmGIRdHO
-         Bn+d7Dg/YVemE9LvZSnqhR+jUeppn8wUwMia4TUXkC/w3ps8MVS8IgrrSDC0yol2L1RR
-         2t/1JL25f6Pb6bomI8yC4grazve3xpODK2cXQrPtDv5FgiCe0uQ6kj9ytlhs6OXRwq6F
-         X/eQ==
+        Thu, 2 Jul 2020 06:10:33 -0400
+Received: by mail-ej1-f67.google.com with SMTP id f12so2413965eja.9;
+        Thu, 02 Jul 2020 03:10:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MNkwKZ84Zrawk816auciDQTYwDrs9ybRS0FVRLuLd9I=;
-        b=CKye+JRNarVNS1ecMl3M7YjPpl1irH53Rly4FIbO6xjNbrBfHotUZopzc4613290Wh
-         lNkKLor1kr2XUB8ZKIxfFAv1IItPCj1Kev7+ctDXbthd9mNJ97K7Sbke9zj2DLgT9Eny
-         nzy87QON4RqYY/nOl2N4N7zWt+V+0zbrgQE6h02clY9uitiBnqtbNqEDm1ML4aCBhDt0
-         vheASt58Qje3I7ALTThXy55oUsIhs2nXjgN4/dZ7qOaPgLNnoVday8r2Ywxq2QECrGCJ
-         S/FDNjW4fluRvlMH1fuB6j/UeiKMQ7Nokhslyab8EzrOoOqf2iQEM8EI4yGPmstW8Nk3
-         r8Kw==
-X-Gm-Message-State: AOAM5308J09xWd2JLOVDL2jkTXqWWBERLy98f+8TY2mzeRKjn8q4soeA
-        xNc5Y4ky3vd0znZAWx0zeKCQD+aBmApJ1y/UAoNyNg==
-X-Google-Smtp-Source: ABdhPJxSCrlGDF8VbOkF76c527VsV7+BA6AZM2DosVAXwrPnrjTB9/lEdURnS2JpeZC7MdKZXtTdxC39Y9vZxDerRRc=
-X-Received: by 2002:a37:2781:: with SMTP id n123mr29703103qkn.106.1593684610371;
- Thu, 02 Jul 2020 03:10:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7d50t2/RpZ/PiovsO4JjL17UaNTTmolWjPQh23qo5pE=;
+        b=oMey2+O5+1bdfJKXMUEZO8Y5ACk/bTTp18+8b+47sPQmpryJ79WP6w1LwLbc3q24FD
+         dUI0Cgb2xXbK0j7zH18v7fljAFV3QL5lTDyR3DhICz2+V/AyTqJGEkf/ykvKVWvBraJ4
+         ht7D3AqmsaTSESMc42yFCue0NmoDNZrAwZPfhrANq2Yjgm1AGqm6OK02EBJRvVncxcdT
+         fwmoBAe1FLxbKjIu9VlUv1UVMWKURc77vmfg9eshXK9Gdkto5uqP7XH/RZ9b+8QNHEtk
+         QrL4rr35LF+1IsdHrK72GCTUS55nRHJjc+aQyjSwbx5vuwBd3p+AeCw8O2y1UBWe68N8
+         OczQ==
+X-Gm-Message-State: AOAM5301sDY7+t9nGtiTMxi+7l4DyhFeNt4YuFx1miEacE/NooE4cy3v
+        yveJ0YWWxp8g+lo3Rrab3i4=
+X-Google-Smtp-Source: ABdhPJxI/V8uEi3oMTLgVbbtsoAsRym2GpSEjCa8GEntdArvfCRjcWgCA9SFGnytSDnB0RlEftu4Wg==
+X-Received: by 2002:a17:906:7cc4:: with SMTP id h4mr10504032ejp.339.1593684631010;
+        Thu, 02 Jul 2020 03:10:31 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id w18sm8988609edv.11.2020.07.02.03.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:10:30 -0700 (PDT)
+From:   Ricardo Ribalda <ribalda@kernel.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Ricardo Ribalda <ribalda@kernel.org>
+Subject: [PATCH v4] i2c: designware: platdrv: Set class based on DMI
+Date:   Thu,  2 Jul 2020 12:10:28 +0200
+Message-Id: <20200702101028.2088666-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200521162518.1809995-1-lma@semihalf.com> <3c89e614-81f5-ba87-19a9-fbe9f5c73925@linux.intel.com>
- <CAFJ_xbr8TN3ynfELJ3NQnkuRg0VRbkjB7=Cyb8yu2L==JGXJiw@mail.gmail.com>
- <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com> <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
- <268b11b6-9f4c-d769-a7f9-536d77198705@linux.intel.com> <CAFJ_xboUTDtnpvskb2dY4fGhGLNkEgT0sH3dU0NYJV_Cb_gqPw@mail.gmail.com>
- <BY5PR11MB4307284BAE6DA415CFC0865CFD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
- <CAFJ_xbq3DU8NMmymYHLjy0z+QbGRAOmB4NaiXPphAr2Zu0MPAg@mail.gmail.com>
- <BY5PR11MB4307CBA736456853777A9FD9FD6E0@BY5PR11MB4307.namprd11.prod.outlook.com>
- <BY5PR11MB4307C20278F32D17551112FAFD6C0@BY5PR11MB4307.namprd11.prod.outlook.com>
- <7e38bb2e-2132-d305-e94d-043fa53bd836@linux.intel.com> <BY5PR11MB4307BBBCAA78A0506BBC5F74FD6C0@BY5PR11MB4307.namprd11.prod.outlook.com>
- <b2236769-6957-dc41-21b2-aca238994b4b@linux.intel.com>
-In-Reply-To: <b2236769-6957-dc41-21b2-aca238994b4b@linux.intel.com>
-From:   =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@semihalf.com>
-Date:   Thu, 2 Jul 2020 12:09:59 +0200
-Message-ID: <CAFJ_xboZp02M3XAzTXMyUJU50CZDNBnrd_oOnYBWxFfMpr=1pg@mail.gmail.com>
-Subject: Re: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     "N, Harshapriya" <harshapriya.n@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        Ross Zwisler <zwisler@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "M R, Sathya Prakash" <sathya.prakash.m.r@intel.com>,
-        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
-        Alex Levin <levinale@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-I am also ok with Harsha patch. I have checked it on my Eve and it looks ok=
-.
+With this patch we re-enable autodetection of hwmon-alike devices, so
+lm-sensors will be able to work automatically.
 
-Best regards,
+It does not affect the boot-time of embedded devices, as the class is
+set based on the DMI information.
 
-Lukasz
+DMI is probed only on Qtechnology QT5222 Industrial Camera Platform
 
-=C5=9Br., 1 lip 2020 o 19:08 Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> napisa=C5=82(a):
->
->
-> >>> Tested and the following is something we can use without creating a n=
-ew
-> >> dailink.
-> >>>             struct snd_soc_dai *codec_dai =3D asoc_rtd_to_codec(rtd, =
-0);
-> >>>     if (!strcmp(codec_dai->name, KBL_REALTEK_DMIC_CODEC_DAI)) {
-> >>>             if (params_channels(params) =3D=3D 2 ||
-> >> DMIC_CH(dmic_constraints) =3D=3D 2)
-> >>>                     channels->min =3D channels->max =3D 2;
-> >>>             else
-> >>>                     channels->min =3D channels->max =3D 4;
-> >>>     } else {
-> >>>             rate->min =3D rate->max =3D 48000;
-> >>>             channels->min =3D channels->max =3D 2;
-> >>>             snd_mask_none(fmt);
-> >>>             snd_mask_set_format(fmt, pcm_fmt);
-> >>>     }
-> >>>
-> >>> Pierre, thoughts?
-> >>
-> >> thanks Harsha, that looks like what I had in mind, but my earlier ques=
-tion was
-> >> why we deal with the rates and formats only in the last case?
-> > The speaker codec supported only 16 bit.  (Vendor mentioned)
-> > For playback on this platform, only 48Khz was used.
->
-> ok then, as long as Harsha and Lukasz are aligned I'm fine. Thanks!
->
+DocLink: https://qtec.com/camera-technology-camera-platforms/
+Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+---
+v2: Comments by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  - dmi -> DMI
+  - Doclink
+  - CodeStyle
+  (I do not know what you meant by redundant in the dmi match list ...)
+
+
+ drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index c2efaaaac252..630e28ef2412 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -12,6 +12,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+@@ -191,6 +192,18 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+ 	return ret;
+ }
+ 
++static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
++	{
++		.ident = "Qtechnology QT5222",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
++		},
++	},
++
++	{ } /* terminate list */
++};
++
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
+ 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -267,7 +280,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 
+ 	adap = &dev->adapter;
+ 	adap->owner = THIS_MODULE;
+-	adap->class = I2C_CLASS_DEPRECATED;
++	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
++					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
+ 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->nr = -1;
+-- 
+2.27.0
+
