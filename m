@@ -2,293 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4040C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7A207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B912083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593657774;
+	bh=DhUcWSC96FEQw4xwxDy4zXC0QqBUfHK/Nz9yf9s1acc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1lqGYUxSbDXA6N8tu97P2AMgDZlM7lSVD/fFRvk4pCFcix+C4NSax/7xiwEEfZAed
+	 DB2RxIvYc/zOQOR8tjawhCZs7+nrgQqboTXbdFsuFp579vVSOM5Jr+t+/fH7rs7z6d
+	 zBMBEFu97vI0UPDef70z8g8X0+FKdcxpmQVZe4NA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgGBCkv (ORCPT
+        id S1726786AbgGBCmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 22:40:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55147 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgGBCku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 22:40:50 -0400
-IronPort-SDR: hjQbQsEza1t2Q6v0u1W/2B4dp0GWuMzjvdR6FvIo8UdWqAKVC84jl6879fQbaTSWTMPRmOIxCC
- Z5W8Pt3QpBEw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="135062905"
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="135062905"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 19:40:48 -0700
-IronPort-SDR: 3rWF4o7dj0Ks55pw/e1j1+Rko8fpP3l2gbGQ7Q1uLw7AYQbvftMP/JPf6pEccmeDYQLmXVdYJS
- KZSN34a2rj8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="304080014"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 19:40:45 -0700
-Cc:     baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20200627031532.28046-1-baolu.lu@linux.intel.com>
- <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
- <5dc1cece-6111-9b56-d04c-9553d592675b@linux.intel.com>
- <48dd9f1e-c18b-77b7-650a-c35ecbb69f2b@arm.com>
- <c38784ad-9dba-0840-3a61-e2c21e781f1e@linux.intel.com>
- <ffbb405b-5617-5659-3fc1-302c530aceef@arm.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <5f3ad162-647c-1295-880b-6b104807ba9a@linux.intel.com>
-Date:   Thu, 2 Jul 2020 10:36:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 1 Jul 2020 22:42:53 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:35206 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGBCmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 22:42:52 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0622gTPN016475;
+        Thu, 2 Jul 2020 11:42:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0622gTPN016475
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593657750;
+        bh=mDVif8MiOGCjLLlZ8k21oCwqqxD9Plyy3x2UlM47NDM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mPwKLGhQ2fosA/zx9ft3qDN9ZYBXwYdIhqOK74QH+1I4Aqo5ioqzgVxKApQ5CQIv4
+         sUyyPu4qK0o7EywlHvEkcPYoLawgLgoO6WE6Q9s72mYXSNH3USJULCWuyF/guZi7P2
+         AgezzD9N3jkpeNo8c2upA0py5HI29+OFFPI7qplbuWHrbNzloUNRx+dEWcFpma+gOh
+         +da6p4qnN04oyJqusFpJHWHam5gGadlsp2OtRmWAcmpy7DClvENC/8Hzoou5YswA8Z
+         twLps9kM2P6CZYyg5bC1b9v05X0hdj6pXtz7CV6tZK6VbClTfGtMn/hBrBWS3iXg31
+         011qrQ9SHW8qg==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id 64so8194802vsl.3;
+        Wed, 01 Jul 2020 19:42:30 -0700 (PDT)
+X-Gm-Message-State: AOAM532JhHXD5yuSAAM7Pq99bgb0SGiJYTYvtzG2hoFDUxr8OvGBS6WO
+        twgztORL24rIusJhUafPSV1VknHxQ2jFsvGmrh4=
+X-Google-Smtp-Source: ABdhPJwgdLfTp8ApgAzTWHhd+PoMDRZpPwRvMlt9tqC0CraL525IFfWskW5GLpHlUALcpvZ1CCpFRjSMX+TG2K5nJIM=
+X-Received: by 2002:a67:694d:: with SMTP id e74mr22283923vsc.155.1593657749034;
+ Wed, 01 Jul 2020 19:42:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ffbb405b-5617-5659-3fc1-302c530aceef@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200701192936.1397152-1-masahiroy@kernel.org> <CAMo8Bf+w2ikVxEJecE_DpAbBQFNhY=K1jWpg9y4uDw9jEb5=MQ@mail.gmail.com>
+In-Reply-To: <CAMo8Bf+w2ikVxEJecE_DpAbBQFNhY=K1jWpg9y4uDw9jEb5=MQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 2 Jul 2020 11:41:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ6SdeWvXj7nNtzMBN2E-s4PmGg6gj7OZHug2_TBKTg1w@mail.gmail.com>
+Message-ID: <CAK7LNAQ6SdeWvXj7nNtzMBN2E-s4PmGg6gj7OZHug2_TBKTg1w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: do not export LDFLAGS_vmlinux
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Guan Xuetao <gxt@pku.edu.cn>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On Thu, Jul 2, 2020 at 5:14 AM Max Filippov <jcmvbkbc@gmail.com> wrote:
+>
+> On Wed, Jul 1, 2020 at 12:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> [...]
+>
+> > diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
+> > index 12ae1e91cb75..c6538d3321b9 100644
+> > --- a/arch/xtensa/boot/boot-elf/Makefile
+> > +++ b/arch/xtensa/boot/boot-elf/Makefile
+> > @@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
+> >                 $(OBJS) $@
+> >
+> >  $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
+> > -       $(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
+> > +       $(LD) $(KBUILD_LDFLAGS) \
+>
+> Can that $(Q) be retained, please?
+> The rest LGTM.
 
-On 7/1/20 8:18 PM, Robin Murphy wrote:
-> On 2020-07-01 08:32, Lu Baolu wrote:
->> Hi Robin,
->>
->> On 2020/7/1 0:51, Robin Murphy wrote:
->>> On 2020-06-30 02:03, Lu Baolu wrote:
->>>> Hi Robin,
->>>>
->>>> On 6/29/20 7:56 PM, Robin Murphy wrote:
->>>>> On 2020-06-27 04:15, Lu Baolu wrote:
->>>>>> The hardware assistant vfio mediated device is a use case of iommu
->>>>>> aux-domain. The interactions between vfio/mdev and iommu during mdev
->>>>>> creation and passthr are:
->>>>>>
->>>>>> - Create a group for mdev with iommu_group_alloc();
->>>>>> - Add the device to the group with
->>>>>>          group = iommu_group_alloc();
->>>>>>          if (IS_ERR(group))
->>>>>>                  return PTR_ERR(group);
->>>>>>
->>>>>>          ret = iommu_group_add_device(group, &mdev->dev);
->>>>>>          if (!ret)
->>>>>>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->>>>>>                           iommu_group_id(group));
->>>>>> - Allocate an aux-domain
->>>>>>     iommu_domain_alloc()
->>>>>> - Attach the aux-domain to the physical device from which the mdev is
->>>>>>    created.
->>>>>>     iommu_aux_attach_device()
->>>>>>
->>>>>> In the whole process, an iommu group was allocated for the mdev 
->>>>>> and an
->>>>>> iommu domain was attached to the group, but the group->domain leaves
->>>>>> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
->>>>>>
->>>>>> This adds iommu_group_get/set_domain() so that group->domain could be
->>>>>> managed whenever a domain is attached or detached through the 
->>>>>> aux-domain
->>>>>> api's.
->>>>>
->>>>> Letting external callers poke around directly in the internals of 
->>>>> iommu_group doesn't look right to me.
->>>>
->>>> Unfortunately, it seems that the vifo iommu abstraction is deeply bound
->>>> to the IOMMU subsystem. We can easily find other examples:
->>>>
->>>> iommu_group_get/set_iommudata()
->>>> iommu_group_get/set_name()
->>>> ...
->>>
->>> Sure, but those are ways for users of a group to attach useful 
->>> information of their own to it, that doesn't matter to the IOMMU 
->>> subsystem itself. The interface you've proposed gives callers rich 
->>> new opportunities to fundamentally break correct operation of the API:
->>>
->>>      dom = iommu_domain_alloc();
->>>      iommu_attach_group(dom, grp);
->>>      ...
->>>      iommu_group_set_domain(grp, NULL);
->>>      // oops, leaked and can't ever detach properly now
->>>
->>> or perhaps:
->>>
->>>      grp = iommu_group_alloc();
->>>      iommu_group_add_device(grp, dev);
->>>      iommu_group_set_domain(grp, dom);
->>>      ...
->>>      iommu_detach_group(dom, grp);
->>>      // oops, IOMMU driver might not handle this
->>>
->>>>> If a regular device is attached to one or more aux domains for 
->>>>> PASID use, iommu_get_domain_for_dev() is still going to return the 
->>>>> primary domain, so why should it be expected to behave differently 
->>>>> for mediated
->>>>
->>>> Unlike the normal device attach, we will encounter two devices when it
->>>> comes to aux-domain.
->>>>
->>>> - Parent physical device - this might be, for example, a PCIe device
->>>> with PASID feature support, hence it is able to tag an unique PASID
->>>> for DMA transfers originated from its subset. The device driver hence
->>>> is able to wrapper this subset into an isolated:
->>>>
->>>> - Mediated device - a fake device created by the device driver 
->>>> mentioned
->>>> above.
->>>>
->>>> Yes. All you mentioned are right for the parent device. But for 
->>>> mediated
->>>> device, iommu_get_domain_for_dev() doesn't work even it has an valid
->>>> iommu_group and iommu_domain.
->>>>
->>>> iommu_get_domain_for_dev() is a necessary interface for device drivers
->>>> which want to support aux-domain. For example,
->>>
->>> Only if they want to follow this very specific notion of using 
->>> made-up devices and groups to represent aux attachments. Even if a 
->>> driver managing its own aux domains entirely privately does create 
->>> child devices for them, it's not like it can't keep its domain 
->>> pointers in drvdata if it wants to ;)
->>>
->>> Let's not conflate the current implementation of vfio_mdev with the 
->>> general concepts involved here.
->>>
->>>>            struct iommu_domain *domain;
->>>>            struct device *dev = mdev_dev(mdev);
->>>>        unsigned long pasid;
->>>>
->>>>            domain = iommu_get_domain_for_dev(dev);
->>>>            if (!domain)
->>>>                    return -ENODEV;
->>>>
->>>>            pasid = iommu_aux_get_pasid(domain, dev->parent);
->>>>        if (pasid == IOASID_INVALID)
->>>>            return -EINVAL;
->>>>
->>>>        /* Program the device context with the PASID value */
->>>>        ....
->>>>
->>>> Without this fix, iommu_get_domain_for_dev() always returns NULL and 
->>>> the
->>>> device driver has no means to support aux-domain.
->>>
->>> So either the IOMMU API itself is missing the ability to do the right 
->>> thing internally, or the mdev layer isn't using it appropriately. 
->>> Either way, simply punching holes in the API for mdev to hack around 
->>> its own mess doesn't seem like the best thing to do.
->>>
->>> The initial impression I got was that it's implicitly assumed here 
->>> that the mdev itself is attached to exactly one aux domain and 
->>> nothing else, at which point I would wonder why it's using aux at 
->>> all, but are you saying that in fact no attach happens with the mdev 
->>> group either way, only to the parent device?
->>>
->>> I'll admit I'm not hugely familiar with any of this, but it seems to 
->>> me that the logical flow should be:
->>>
->>>      - allocate domain
->>>      - attach as aux to parent
->>>      - retrieve aux domain PASID
->>>      - create mdev child based on PASID
->>>      - attach mdev to domain (normally)
->>>
->>> Of course that might require giving the IOMMU API a proper 
->>> first-class notion of mediated devices, such that it knows the mdev 
->>> represents the PASID, and can recognise the mdev attach is equivalent 
->>> to the earlier parent aux attach so not just blindly hand it down to 
->>> an IOMMU driver that's never heard of this new device before. Or 
->>> perhaps the IOMMU drivers do their own bookkeeping for the mdev bus, 
->>> such that they do handle the attach call, and just validate it 
->>> internally based on the associated parent device and PASID. Either 
->>> way, the inside maintains self-consistency and from the outside it 
->>> looks like standard API usage without nasty hacks.
->>>
->>> I'm pretty sure I've heard suggestions of using mediated devices 
->>> beyond VFIO (e.g. within the kernel itself), so chances are this is a 
->>> direction that we'll have to take at some point anyway.
->>>
->>> And, that said, even if people do want an immediate quick fix 
->>> regardless of technical debt, I'd still be a lot happier to see 
->>> iommu_group_set_domain() lightly respun as iommu_attach_mdev() ;)
->>
->> Get your point and I agree with your concerns.
->>
->> To maintain the relationship between mdev's iommu_group and
->> iommu_domain, how about extending below existing aux_attach api
->>
->> int iommu_aux_attach_device(struct iommu_domain *domain,
->>                  struct device *dev)
->>
->> by adding the mdev's iommu_group?
->>
->> int iommu_aux_attach_device(struct iommu_domain *domain,
->>                  struct device *dev,
->>                  struct iommu_group *group)
->>
->> And, in iommu_aux_attach_device(), we require,
->>   - @group only has a single device;
->>   - @group hasn't been attached by any devices;
->>   - Set the @domain to @group
->>
->> Just like what we've done in iommu_attach_device().
->>
->> Any thoughts?
-> 
-> Rather than pass a bare iommu_group with implicit restrictions, it might 
-> be neater to just pass an mdev_device, so that the IOMMU core can also 
-> take care of allocating and setting up the group. Then we flag the group 
-> internally as a special "mdev group" such that we can prevent callers 
-> from subsequently trying to add/remove devices or attach/detach its 
-> domain directly. That seems like it would make a pretty straightforward 
-> and robust API extension, as long as the mdev argument here is optional 
-> so that SVA and other aux users don't have to care. Other than the 
-> slightly different ordering where caller would have to allocate the mdev 
-> first, then finish it's PASID-based configuration afterwards, I guess 
-> it's not far off what I was thinking yesterday :)
 
-It looks good to me if we pass an *optional* made-up device instead of
-iommu_group. But it seems that vfio/mdev assumes an iommu_group first
-and then attaches domains to the groups. Hence, it's hard to move the
-group allocation and setting up into the attach interface.
+Oops, I temporarily deleted $(Q) for debugging,
+then accidentally committed it.
 
-As proposed, the new iommu_aux_attach_device() might look like this:
+I will restore $(Q) when this patch is applied.
 
-int iommu_aux_attach_device(struct iommu_domain *domain,
-                             struct device *phys_dev,
-                             struct device *dev)
+Thanks.
 
-where,
 
-@phys_dev: The physical device which supports IOMMU_DEV_FEAT_AUX;
-@dev: a made-up device which presents the subset resources binding to
-       the aux-domain. An example use case is vfio/mdev. For cases where
-       no made-up devices are used, pass NULL instead.
 
-With @dev passed, we can require
 
-- single device in group;
-- no previous attaching;
-- set up internal logistics between group and domain;
 
-The iommu_aux_detach_device() needs the equivalent extensions.
+> >                 -T $(obj)/boot.lds \
+> >                 --build-id=none \
+> >                 -o $@ $(obj)/Image.o
+>
+> --
+> Thanks.
+> -- Max
 
-Best regards,
-baolu
+
+
+-- 
+Best Regards
+Masahiro Yamada
