@@ -2,74 +2,41 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC49C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3672F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F06A206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ec9+I5ho"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="sBmrw1y3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgGBOrh (ORCPT
+        id S1730178AbgGBOrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729867AbgGBOrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:47:06 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240D9C08C5DF
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:47:06 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so28761777wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tMwEsthS2XYuYqGurNM6AKehw8G1mrvga4W0hde7UB4=;
-        b=Ec9+I5hoL4c/OhbpQoBFb0y/CZVujjYmRsG/1zskUnSQq8YXfTxz90ThqQYnal+8DG
-         q9ZnLOIeC0Y/oOcogCkBJL2g4xr6q75hsSFPpXIRVaWXOdizoz2be1Z5wgaXaTcZiTK9
-         YZRONflM9w29AwuNQ/AcRDs5Lv6oRcj6CI8ycLh1AeT/5ElyI6syYd2uy+U+X+pfBqxZ
-         shRBecxJWCSOZLUfRifV1q3PVl+kl9TW7VEbPnqwP2BQEd8p+t35ZDnT1SBdK25xWKvh
-         5OI0Mfcv1M37zgWEDFdhWdMpVFiuIlRDKUGFF891sC232jg1ZlgkdUIgF5MAqOhVBMzW
-         T4Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tMwEsthS2XYuYqGurNM6AKehw8G1mrvga4W0hde7UB4=;
-        b=hu58ckGbsi28ud+3WUiNrdGYDGRyFP/Jok7Oo2Ke2Hk8aRfnvoCNFibPfctEa6tJbX
-         cOpY9pAbQKZWna1Qe3Tj0TZyLWs+bP8MagBOBIeIz58sCf7juZkGO5KgiXqc3ysgV5xf
-         GH9Ga6S8FRpvJ1RezlinGZuJY8hwJc1ryhjj6IdX16SuNdBidSB6BJ08aQEW4zQ+g3kW
-         f0jCGVJl7NMz6ycIPGBo455SeyP6hWsp7GTK3jbauxczPSOWm3p+KC2xfPZXd35qNuXF
-         mpW1cqlNe7hk319LNLBCdOTek+WZKHhW6HCJgK7kdAApTAmw3XIlYbNDzCluCrnbp6a1
-         h05g==
-X-Gm-Message-State: AOAM532VgHSKDFp7HWGPEi5dIXKX6PpnWevfO3/7slxJfuP3duX9ZfAB
-        1DKlNBt2NXp9l/qWYNpO+ldtvKysnhw=
-X-Google-Smtp-Source: ABdhPJw7EjXi0Slg9JA5tb8YCf/T1dmVYfymH7vJT4eCDqjnytPxyDPB10JCVTRNqKL+qKYBCha9jw==
-X-Received: by 2002:adf:a507:: with SMTP id i7mr34858253wrb.0.1593701224905;
-        Thu, 02 Jul 2020 07:47:04 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.47.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:47:04 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 27/30] usb: class: cdc-wdm: Provide description for usb_cdc_wdm_register()'s manage_power arg
-Date:   Thu,  2 Jul 2020 15:46:22 +0100
-Message-Id: <20200702144625.2533530-28-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
+        Thu, 2 Jul 2020 10:47:41 -0400
+Received: from vps.xff.cz ([195.181.215.36]:46886 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730171AbgGBOri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:47:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593701256; bh=uDf9d/uRJiCtCt1AKubcJLejRj1GRrlsMFGfiGhHhXQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sBmrw1y3Ge453s/b6duoEIXe2POYkrOzZJaYL8FeCWY463xCsUurnLS8sONz2cBlT
+         TSBlhuShDIyYHOYS0GSD76SQCtKKzw8SP3rbDuWRBcA2wk1tM0SLTISlAGO3FT7xHi
+         EuL4TmVsgJGT2xKBpvFq6vxbOMZnYfHTTL8Sp7I8=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM)
+Subject: [PATCH RFC] leds: Add support for per-LED device triggers
+Date:   Thu,  2 Jul 2020 16:47:11 +0200
+Message-Id: <20200702144712.1994685-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,32 +44,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A good attempt was made to document everything else.
+Some LED controllers may come with an internal HW triggering mechanism
+for the LED and an ability to switch between user control of the LED,
+or the internal control. One such example is AXP20X PMIC, that allows
+wither for user control of the LED, or for internal control based on
+the state of the battery charger.
 
-Fixes the following W=1 kernel build warning(s):
+Add support for registering per-LED device trigger.
 
- drivers/usb/class/cdc-wdm.c:961: warning: Function parameter or member 'manage_power' not described in 'usb_cdc_wdm_register'
+Names of private triggers need to be globally unique, but may clash
+with other private triggers. This is enforced during trigger
+registration. Developers can register private triggers just like
+the normal triggers, by setting private_led to a classdev
+of the LED the trigger is associated with.
 
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/usb/class/cdc-wdm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/leds/led-triggers.c | 12 +++++++++---
+ include/linux/leds.h        |  3 +++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-index e3db6fbeadef8..4dceaeca46e73 100644
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -940,7 +940,8 @@ static int wdm_probe(struct usb_interface *intf, const struct usb_device_id *id)
-  * @intf: usb interface the subdriver will associate with
-  * @ep: interrupt endpoint to monitor for notifications
-  * @bufsize: maximum message size to support for read/write
-- *
-+ * @manage_power: call-back invoked during open and release to
-+ *                manage the device's power 
-  * Create WDM usb class character device and associate it with intf
-  * without binding, allowing another driver to manage the interface.
-  *
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 79e30d2cb7a5..3011e2658404 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -50,7 +50,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+ 
+ 	down_read(&triggers_list_lock);
+ 	list_for_each_entry(trig, &trigger_list, next_trig) {
+-		if (sysfs_streq(buf, trig->name)) {
++		if (sysfs_streq(buf, trig->name) &&
++		    (!trig->private_led || trig->private_led == led_cdev)) {
+ 			down_write(&led_cdev->trigger_lock);
+ 			led_trigger_set(led_cdev, trig);
+ 			up_write(&led_cdev->trigger_lock);
+@@ -96,6 +97,9 @@ static int led_trigger_format(char *buf, size_t size,
+ 		bool hit = led_cdev->trigger &&
+ 			!strcmp(led_cdev->trigger->name, trig->name);
+ 
++		if (trig->private_led && trig->private_led != led_cdev)
++			continue;
++
+ 		len += led_trigger_snprintf(buf + len, size - len,
+ 					    " %s%s%s", hit ? "[" : "",
+ 					    trig->name, hit ? "]" : "");
+@@ -243,7 +247,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+ 	down_read(&triggers_list_lock);
+ 	down_write(&led_cdev->trigger_lock);
+ 	list_for_each_entry(trig, &trigger_list, next_trig) {
+-		if (!strcmp(led_cdev->default_trigger, trig->name)) {
++		if (!strcmp(led_cdev->default_trigger, trig->name) &&
++		    (!trig->private_led || trig->private_led == led_cdev)) {
+ 			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
+ 			led_trigger_set(led_cdev, trig);
+ 			break;
+@@ -280,7 +285,8 @@ int led_trigger_register(struct led_trigger *trig)
+ 	down_write(&triggers_list_lock);
+ 	/* Make sure the trigger's name isn't already in use */
+ 	list_for_each_entry(_trig, &trigger_list, next_trig) {
+-		if (!strcmp(_trig->name, trig->name)) {
++		if (!strcmp(_trig->name, trig->name) &&
++		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
+ 			up_write(&triggers_list_lock);
+ 			return -EEXIST;
+ 		}
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 2451962d1ec5..0d7577c752ad 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -345,6 +345,9 @@ struct led_trigger {
+ 	int		(*activate)(struct led_classdev *led_cdev);
+ 	void		(*deactivate)(struct led_classdev *led_cdev);
+ 
++	/* LED-private triggers have the LED device set here. */
++	struct led_classdev *private_led;
++
+ 	/* LEDs under control by this trigger (for simple triggers) */
+ 	rwlock_t	  leddev_list_lock;
+ 	struct list_head  led_cdevs;
 -- 
-2.25.1
+2.27.0
 
