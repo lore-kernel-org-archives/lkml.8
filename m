@@ -2,132 +2,120 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F58B20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593683323;
-	bh=8To++DcBmhQUuz2eqkOVWHaWbqWUTZ6jhRKebFqKYqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B+yWn40pUqcH0Rt8ETK4phWz/lu0axqT3IHgan98FpfxBqbbVfxvMVWlwldGzkZZs
-	 Mf+wzjTzT308IlyAsSV0WvK9LLgxAC55OBdCDuNL9IuQpn3YUhxBgOBx5tLNCtTzZt
-	 FoE/3Qazsb3kGos1hOaU9jTapY+HJHAtBEorKlvA=
+	by mail.kernel.org (Postfix) with ESMTP id 3FC7A20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgGBJsl (ORCPT
+        id S1728115AbgGBJuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 05:50:01 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41396 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgGBJsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:48:41 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E995020874;
-        Thu,  2 Jul 2020 09:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593683320;
-        bh=8To++DcBmhQUuz2eqkOVWHaWbqWUTZ6jhRKebFqKYqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pvvSqoKuX6EoQp3iR1pOFMS1VuWVSn9bXK/IVDhTQ1Bb8G4k5KaaptoPD6grev0aX
-         fNdI68lGWQGkuhsT0oBuiB3hXEx9ZLANBXAgOTDc+ixQmjHmi9pG8qTts8l/Xw1PHx
-         R1JOSfYU0SMNZ/OPMRKZNPdqf1Ztg/D9u+MRtgqw=
-Date:   Thu, 2 Jul 2020 10:48:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: Re: [PATCH 04/18] alpha: Override READ_ONCE() with barriered
- implementation
-Message-ID: <20200702094833.GA16248@willie-the-truck>
-References: <20200630173734.14057-1-will@kernel.org>
- <20200630173734.14057-5-will@kernel.org>
- <20200702093239.GA15391@C02TD0UTHF1T.local>
+        id S1726475AbgGBJuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:50:00 -0400
+IronPort-SDR: 0zSfAUnuC4l0WCGHZw1rWCFrqGpXBmN20c40sUwQz0ch9RJ+7nILsaK7UmREFDMQmb9r5TPj3s
+ +yyKCcLNMr+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="231714604"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="231714604"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 02:49:59 -0700
+IronPort-SDR: w9kj9NDzTtkykBa7/zC0z5r+hsQ2eXMt9ev/7o9ZxjlZ6+RtQ4YDIKjh7O8Jc/CPweKH78hgU3
+ BhzNTWPOyP6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="481947976"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 02:49:57 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jqvqw-00HBIe-AB; Thu, 02 Jul 2020 12:49:58 +0300
+Date:   Thu, 2 Jul 2020 12:49:58 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ricardo Ribalda <ribalda@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v3] i2c: designware: platdrv: Set class based on dmi
+Message-ID: <20200702094958.GQ3703480@smile.fi.intel.com>
+References: <20200702093832.2077252-1-ribalda@kernel.org>
+ <20200702094808.GP3703480@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702093239.GA15391@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200702094808.GP3703480@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:32:39AM +0100, Mark Rutland wrote:
-> On Tue, Jun 30, 2020 at 06:37:20PM +0100, Will Deacon wrote:
-> > -#define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
-> > +#define __smp_load_acquire(p)						\
-> > +({									\
-> > +	__unqual_scalar_typeof(*p) ___p1 =				\
-> > +		(*(volatile typeof(___p1) *)(p));			\
-> > +	compiletime_assert_atomic_type(*p);				\
-> > +	___p1;								\
-> > +})
+On Thu, Jul 02, 2020 at 12:48:08PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 02, 2020 at 11:38:32AM +0200, Ricardo Ribalda wrote:
+> > Current AMD's zen-based APUs use this core for some of its i2c-buses.
+> > 
+> > With this patch we re-enable autodetection of hwmon-alike devices, so
+> > lm-sensors will be able to work automatically.
+> > 
+> > It does not affect the boot-time of embedded devices, as the class is
+> > set based on the dmi information.
 > 
-> Sorry if I'm being thick, but doesn't this need a barrier after the
-> volatile access to provide the acquire semantic?
+> dmi -> DMI
+
+...and in the Subject.
+
+> > Dmi is probed only on Qtechnology QT5222 Industrial Camera Platform
 > 
-> IIUC prior to this commit alpha would have used the asm-generic
-> __smp_load_acquire, i.e.
+> Dmi -> DMI
+
+...and period at the end of sentence.
+
+> > https://qtec.com/camera-technology-camera-platforms/
 > 
-> | #ifndef __smp_load_acquire
-> | #define __smp_load_acquire(p)                                           \
-> | ({                                                                      \
-> |         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
-> |         compiletime_assert_atomic_type(*p);                             \
-> |         __smp_mb();                                                     \
-> |         (typeof(*p))___p1;                                              \
-> | })
-> | #endif
+> Use DocLink: tag.
 > 
-> ... where the __smp_mb() would be alpha's mb() from earlier in the patch
-> context, i.e.
+> ...
 > 
-> | #define mb() __asm__ __volatile__("mb": : :"memory")
+> > +static const struct dmi_system_id allow_probe[] = {
 > 
-> ... so don't we need similar before returning ___p1 above in
-> __smp_load_acquire() (and also matching the old read_barrier_depends())?
+> allow_probe -> dw_i2c_hwmon_class_dmi
 > 
-> [...]
+> > +	{
+> > +		.ident = "Qtechnology QT5222",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
 > 
-> > +#include <asm/barrier.h>
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222")
+> 
+> Comma is missed.
+> 
+> > +		}
+> > +	},
+> 
 > > +
-> > +/*
-> > + * Alpha is apparently daft enough to reorder address-dependent loads
-> > + * on some CPU implementations. Knock some common sense into it with
-> > + * a memory barrier in READ_ONCE().
-> > + */
-> > +#define __READ_ONCE(x)	__smp_load_acquire(&(x))
 > 
-> As above, I don't see a memory barrier implied here, so this doesn't
-> look quite right.
+> Redundant.
+> 
+> > +	{ }
+> > +};
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
-You're right, and Peter spotted the same thing off-list. I've reworked
-locally so that the mb() ends up in __READ_ONCE() and __smp_load_acquire()
-calles __READ_ONCE() instead of the other way round (which made more
-sense before the rework in the merge window).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Will
+
