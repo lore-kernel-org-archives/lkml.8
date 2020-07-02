@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F88C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0178A20899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6955820899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pn/arElG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHtjEuJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgGBXLR (ORCPT
+        id S1726762AbgGBXLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43398 "EHLO
+        Thu, 2 Jul 2020 19:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgGBXLI (ORCPT
+        with ESMTP id S1726670AbgGBXLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:11:08 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B36FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:08 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id by13so15890107edb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:08 -0700 (PDT)
+        Thu, 2 Jul 2020 19:11:14 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E67C08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:13 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id y10so31769726eje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cF8b+JGj0G/772jPhd4SDBLuCY+ZY7XeryhECDKmgiQ=;
-        b=pn/arElGtg5eB90cYPdDoALC1siCVqPz7KObfKp54Hjg7VKCnls+8NhfEhUcZvGanz
-         EnH4I5N47gKiQSEo8/5PQdjdvHMwmQT7cHAhAAVgr+XdX2YL/KkUWlTvC+h0h1tQqIxQ
-         6a4toepB5CyTd/MRubkykCS7DDjlzBuQJlO14Unu2xD4vllImDNrVz35RLBx5cXkHiu1
-         p9rn773ksvy+3yG6+CI88ptHTf2YFW0x/S2yOP/ZwMdsvVO3LcmLfF1SQVoiaa42/WHZ
-         zCjaxRIAE6+LhXagIEM2HHwIQPPQDmcP5pIdgVhtFN+DXxAQYCIdbMTQgpQGoKqHDvLF
-         80hw==
+        bh=NsicvXfpt7PNM+/jTMxK0Bp4xt7OL8ToB67LePdR5mU=;
+        b=NHtjEuJDnTMpHCLKavWKwsJb24QHHZrBMRpgc+I8sqsor/oLwKDAE+Q9X+l/Afvdlr
+         mVKgI7ywbCnNsmmNpHbfKmSp5cPd1l6AtBH4aSkYrRDV3cqPGuRSGtVkTfi1+ocZGN9f
+         KgZ3BNOyBDFvvE1z1MmZyZcJyinfztbRnAQ1WXdCy69e0ti1NHTeyoplchPyezbEgnBL
+         ElB154PGOPVmOiCNnajA3Hsdb6dxtdgKSr3bxniX98j/a6mIDiGd68hu4CWLtqeVLwsn
+         gxKGmwn0M7S0OQ4b48/VuPCdJeZFeTCB75qgGbgEyyuWZcmxB66GnkBGrR9LcasDHUQZ
+         mkUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cF8b+JGj0G/772jPhd4SDBLuCY+ZY7XeryhECDKmgiQ=;
-        b=JBqssf8o7T1nGSSbQcD68mTHWpV3qbD81aKVeY6MyIq2q32HQCfXoCe3QEUOo6vBW3
-         WRcY9pnt4aqODRII8A6HL2xYjnW7+L89PShFDJzTiEWKWiuJusTX1YtDTyQMKt/+GZlj
-         r65HFYE+akasLIrC+PGtRXz5hVlC8Bh9vdujFx45exkiM+P4xhOqulix3mo7dUTG3n5+
-         bN7SXCBJQ/nBG+A3NmAv4XBtrk0L8jDSr7Q7nXSiU3wEwZDex03OGyQb0rdToqu22aA+
-         ebPjQbybW8ReiLS1Ei7DLqWr9e2uDEbQcl/dKMuCkqVK+zLQTLpPSoPXPcoHKiMs3QnQ
-         qW5w==
-X-Gm-Message-State: AOAM530BMiSgFGaJtJU3hodVAvjKwnB9xuRwpGkDh89c9sC6lFhYvEwp
-        nmMyNorpTCBfaB7QgeMrrhsZ7e0F
-X-Google-Smtp-Source: ABdhPJxSzehsKeD58/A6Om/ciYJAjaaUlpmPYcR+wcLSebDyLRwiioRHpUw5/Jyeo4swZ2pBUxXLog==
-X-Received: by 2002:aa7:d88e:: with SMTP id u14mr21213224edq.11.1593731466943;
-        Thu, 02 Jul 2020 16:11:06 -0700 (PDT)
+        bh=NsicvXfpt7PNM+/jTMxK0Bp4xt7OL8ToB67LePdR5mU=;
+        b=FzXz81JtNHnu8JFkNf7DBFJCC/lrrZTgWHHTpPoDm82RgaayvRjWzG/QAaQJzyFrPI
+         Irj5db8OuzoVfe6BlYwh04qYCU5saVIyrZiWnXX5vFucWAF65ujBj1dBjtWufibtigHA
+         BjNwVoRYcvLv8phe3vqYMwtH5IQcTLobdtUPDcuZwlKzM4Uf3+/awT+BOykmTznQicN3
+         0WiCOOSabomozqU4V5+vTugBJx8/Z7Tg4li2TJIpFYAI/aHbrTZkVbdmbXaMxKFW1iVO
+         vgPia/yWm490pY87S9s9M4OvklM9yrEcNx70qdzzUdgo2yzH1uOCfEzdEMRcpk7qHCOm
+         7HsA==
+X-Gm-Message-State: AOAM533jni24U3pSZKH7/vk/7V1ZrKiaHNbEaptYKTK1JDKO4LhPnNK2
+        PDDz0A8Uu25aOrKLFe8Cgq1h3VBO
+X-Google-Smtp-Source: ABdhPJx8JXRF49wE8KI2y6jRgg/VHCKyWGyzpUJrqm0m5hGkiIOm9WMcZgLvH0yY9T03Vcc5nhAqCw==
+X-Received: by 2002:a17:906:2a91:: with SMTP id l17mr30635313eje.539.1593731472055;
+        Thu, 02 Jul 2020 16:11:12 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:bd38:c82d:5283:9f1])
-        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.06
+        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 16:11:06 -0700 (PDT)
+        Thu, 02 Jul 2020 16:11:11 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 02/15] options: move -Wsparse-all's processing out of handle_onoff_switch()
-Date:   Fri,  3 Jul 2020 01:10:26 +0200
-Message-Id: <20200702231039.55015-3-luc.vanoostenryck@gmail.com>
+Subject: [PATCH 07/15] options: alphasort the handle_switch_[a-zA_Z]()
+Date:   Fri,  3 Jul 2020 01:10:31 +0200
+Message-Id: <20200702231039.55015-8-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
 References: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
@@ -76,50 +76,777 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since handle_onoff_switch() can be used for other flags than the
-warnings, the processing of -Wsparse-all should move elsewhere.
+These function have probably been added in 'historical order' and
+as result it's not easy to quickly see where they're defined.
 
-So move it into handle_switch_W().
+Change this arranging them in asciibetical order.
 
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- lib.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ lib.c | 656 +++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 327 insertions(+), 329 deletions(-)
 
 diff --git a/lib.c b/lib.c
-index 709dd5176112..5128a5b64e9e 100644
+index 4868154fa3de..5f4e6b2d76c8 100644
 --- a/lib.c
 +++ b/lib.c
-@@ -535,14 +535,6 @@ static char **handle_onoff_switch(char *arg, char **next, const struct flag warn
- 	char *p = arg + 1;
- 	unsigned i;
+@@ -568,6 +568,14 @@ OPT_NUMERIC(uint, unsigned int, strtoul)
+ ////////////////////////////////////////////////////////////////////////////////
+ // Option parsing
  
--	if (!strcmp(p, "sparse-all")) {
++static char **handle_switch_a(char *arg, char **next)
++{
++	if (!strcmp (arg, "ansi"))
++		standard = STANDARD_C89;
++
++	return next;
++}
++
+ static char **handle_switch_D(char *arg, char **next)
+ {
+ 	const char *name = arg + 1;
+@@ -595,6 +603,37 @@ static char **handle_switch_D(char *arg, char **next)
+ 	return next;
+ }
+ 
++static char **handle_switch_d(char *arg, char **next)
++{
++	char *arg_char = arg + 1;
++
++	/*
++	 * -d<CHARS>, where <CHARS> is a sequence of characters, not preceded
++	 * by a space. If you specify characters whose behaviour conflicts,
++	 * the result is undefined.
++	 */
++	while (*arg_char) {
++		switch (*arg_char) {
++		case 'M': /* dump just the macro definitions */
++			dump_macros_only = 1;
++			dump_macro_defs = 0;
++			break;
++		case 'D': /* like 'M', but also output pre-processed text */
++			dump_macro_defs = 1;
++			dump_macros_only = 0;
++			break;
++		case 'N': /* like 'D', but only output macro names not bodies */
++			break;
++		case 'I': /* like 'D', but also output #include directives */
++			break;
++		case 'U': /* like 'D', but only output expanded macros */
++			break;
++		}
++		arg_char++;
++	}
++	return next;
++}
++
+ static char **handle_switch_E(char *arg, char **next)
+ {
+ 	if (arg[1] == '\0')
+@@ -602,6 +641,146 @@ static char **handle_switch_E(char *arg, char **next)
+ 	return next;
+ }
+ 
++static int handle_ftabstop(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	unsigned long val;
++	char *end;
++
++	if (*opt == '\0')
++		die("error: missing argument to \"%s\"", arg);
++
++	/* we silently ignore silly values */
++	val = strtoul(opt, &end, 10);
++	if (*end == '\0' && 1 <= val && val <= 100)
++		tabstop = val;
++
++	return 1;
++}
++
++static int handle_fpasses(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	unsigned long mask;
++
++	mask = flag->mask;
++	if (*opt == '\0') {
++		if (options & OPT_INVERSE)
++			fpasses &= ~mask;
++		else
++			fpasses |=  mask;
++		return 1;
++	}
++	if (options & OPT_INVERSE)
++		return 0;
++	if (!strcmp(opt, "-enable")) {
++		fpasses |= mask;
++		return 1;
++	}
++	if (!strcmp(opt, "-disable")) {
++		fpasses &= ~mask;
++		return 1;
++	}
++	if (!strcmp(opt, "=last")) {
++		// clear everything above
++		mask |= mask - 1;
++		fpasses &= mask;
++		return 1;
++	}
++	return 0;
++}
++
++static int handle_fdiagnostic_prefix(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	switch (*opt) {
++	case '\0':
++		diag_prefix = "sparse: ";
++		return 1;
++	case '=':
++		diag_prefix = xasprintf("%s: ", opt+1);
++		return 1;
++	default:
++		return 0;
++	}
++}
++
++static int handle_fdump_ir(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	static const struct mask_map dump_ir_options[] = {
++		{ "",			PASS_LINEARIZE },
++		{ "linearize",		PASS_LINEARIZE },
++		{ "mem2reg",		PASS_MEM2REG },
++		{ "final",		PASS_FINAL },
++		{ },
++	};
++
++	return handle_suboption_mask(arg, opt, dump_ir_options, &fdump_ir);
++}
++
++static int handle_fmemcpy_max_count(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	opt_ullong(arg, opt, &fmemcpy_max_count, OPTNUM_ZERO_IS_INF|OPTNUM_UNLIMITED);
++	return 1;
++}
++
++static int handle_fmax_warnings(const char *arg, const char *opt, const struct flag *flag, int options)
++{
++	opt_uint(arg, opt, &fmax_warnings, OPTNUM_UNLIMITED);
++	return 1;
++}
++
++static struct flag fflags[] = {
++	{ "diagnostic-prefix",	NULL,	handle_fdiagnostic_prefix },
++	{ "dump-ir",		NULL,	handle_fdump_ir },
++	{ "freestanding",	&fhosted, NULL, OPT_INVERSE },
++	{ "hosted",		&fhosted },
++	{ "linearize",		NULL,	handle_fpasses,	PASS_LINEARIZE },
++	{ "max-warnings=",	NULL,	handle_fmax_warnings },
++	{ "mem-report",		&fmem_report },
++	{ "memcpy-max-count=",	NULL,	handle_fmemcpy_max_count },
++	{ "tabstop=",		NULL,	handle_ftabstop },
++	{ "mem2reg",		NULL,	handle_fpasses,	PASS_MEM2REG },
++	{ "optim",		NULL,	handle_fpasses,	PASS_OPTIM },
++	{ "pic",		&fpic,	handle_switch_setval, 1 },
++	{ "PIC",		&fpic,	handle_switch_setval, 2 },
++	{ "pie",		&fpie,	handle_switch_setval, 1 },
++	{ "PIE",		&fpie,	handle_switch_setval, 2 },
++	{ "signed-char",	&funsigned_char, NULL,	OPT_INVERSE },
++	{ "short-wchar",	&fshort_wchar },
++	{ "unsigned-char",	&funsigned_char, NULL, },
++	{ },
++};
++
++static char **handle_switch_f(char *arg, char **next)
++{
++	if (handle_switches(arg-1, arg+1, fflags))
++		return next;
++
++	return next;
++}
++
++static char **handle_switch_G(char *arg, char **next)
++{
++	if (!strcmp (arg, "G") && *next)
++		return next + 1; // "-G 0"
++	else
++		return next;     // "-G0" or (bogus) terminal "-G"
++}
++
++static char **handle_base_dir(char *arg, char **next)
++{
++	gcc_base_dir = *++next;
++	if (!gcc_base_dir)
++		die("missing argument for -gcc-base-dir option");
++	return next;
++}
++
++static char **handle_switch_g(char *arg, char **next)
++{
++	if (!strcmp (arg, "gcc-base-dir"))
++		return handle_base_dir(arg, next);
++
++	return next;
++}
++
+ static char **handle_switch_I(char *arg, char **next)
+ {
+ 	char *path = arg+1;
+@@ -659,15 +838,7 @@ static char **handle_switch_M(char *arg, char **next)
+ 	return next;
+ }
+ 
+-static char **handle_multiarch_dir(char *arg, char **next)
+-{
+-	multiarch_dir = *++next;
+-	if (!multiarch_dir)
+-		die("missing argument for -multiarch-dir option");
+-	return next;
+-}
+-
+-static int handle_cmodel(const char *opt, const char *arg, const struct flag *flag, int options)
++static int handle_mcmodel(const char *opt, const char *arg, const struct flag *flag, int options)
+ {
+ 	static const struct val_map cmodels[] = {
+ 		{ "kernel",	CMODEL_KERNEL },
+@@ -682,7 +853,7 @@ static int handle_cmodel(const char *opt, const char *arg, const struct flag *fl
+ 	return handle_subopt_val(opt, arg, cmodels, flag->flag);
+ }
+ 
+-static int handle_float_abi(const char *opt, const char *arg, const struct flag *flag, int options) {
++static int handle_mfloat_abi(const char *opt, const char *arg, const struct flag *flag, int options) {
+ 	static const struct val_map fp_abis[] = {
+ 		{ "hard",		FP_ABI_HARD },
+ 		{ "soft",		FP_ABI_SOFT },
+@@ -692,6 +863,14 @@ static int handle_float_abi(const char *opt, const char *arg, const struct flag
+ 	return handle_subopt_val(opt, arg, fp_abis, flag->flag);
+ }
+ 
++static char **handle_multiarch_dir(char *arg, char **next)
++{
++	multiarch_dir = *++next;
++	if (!multiarch_dir)
++		die("missing argument for -multiarch-dir option");
++	return next;
++}
++
+ static const struct flag mflags[] = {
+ 	{ "64", &arch_m64, NULL, OPT_VAL, ARCH_LP64 },
+ 	{ "32", &arch_m64, NULL, OPT_VAL, ARCH_LP32 },
+@@ -702,8 +881,8 @@ static const struct flag mflags[] = {
+ 	{ "size-long", &arch_msize_long },
+ 	{ "big-endian", &arch_big_endian, NULL },
+ 	{ "little-endian", &arch_big_endian, NULL, OPT_INVERSE },
+-	{ "cmodel", &arch_cmodel, handle_cmodel },
+-	{ "float-abi", &arch_fp_abi, handle_float_abi },
++	{ "cmodel", &arch_cmodel, handle_mcmodel },
++	{ "float-abi", &arch_fp_abi, handle_mfloat_abi },
+ 	{ "hard-float", &arch_fp_abi, NULL, OPT_VAL, FP_ABI_HARD },
+ 	{ "soft-float", &arch_fp_abi, NULL, OPT_VAL, FP_ABI_SOFT },
+ 	{ }
+@@ -720,6 +899,30 @@ static char **handle_switch_m(char *arg, char **next)
+ 	return next;
+ }
+ 
++static char **handle_nostdinc(char *arg, char **next)
++{
++	add_pre_buffer("#nostdinc\n");
++	return next;
++}
++
++static char **handle_switch_n(char *arg, char **next)
++{
++	if (!strcmp (arg, "nostdinc"))
++		return handle_nostdinc(arg, next);
++
++	return next;
++}
++
++static char **handle_switch_O(char *arg, char **next)
++{
++	int level = 1;
++	if (arg[1] >= '0' && arg[1] <= '9')
++		level = arg[1] - '0';
++	optimize_level = level;
++	optimize_size = arg[1] == 's';
++	return next;
++}
++
+ static char **handle_switch_o(char *arg, char **next)
+ {
+ 	if (!strcmp (arg, "o")) {       // "-o foo"
+@@ -743,304 +946,6 @@ static char **handle_switch_p(char *arg, char **next)
+ 	return next;
+ }
+ 
+-static const struct flag warnings[] = {
+-	{ "address", &Waddress },
+-	{ "address-space", &Waddress_space },
+-	{ "bitwise", &Wbitwise },
+-	{ "bitwise-pointer", &Wbitwise_pointer},
+-	{ "cast-from-as", &Wcast_from_as },
+-	{ "cast-to-as", &Wcast_to_as },
+-	{ "cast-truncate", &Wcast_truncate },
+-	{ "constant-suffix", &Wconstant_suffix },
+-	{ "constexpr-not-const", &Wconstexpr_not_const},
+-	{ "context", &Wcontext },
+-	{ "decl", &Wdecl },
+-	{ "declaration-after-statement", &Wdeclarationafterstatement },
+-	{ "default-bitfield-sign", &Wdefault_bitfield_sign },
+-	{ "designated-init", &Wdesignated_init },
+-	{ "do-while", &Wdo_while },
+-	{ "enum-mismatch", &Wenum_mismatch },
+-	{ "external-function-has-definition", &Wexternal_function_has_definition },
+-	{ "implicit-int", &Wimplicit_int },
+-	{ "init-cstring", &Winit_cstring },
+-	{ "int-to-pointer-cast", &Wint_to_pointer_cast },
+-	{ "memcpy-max-count", &Wmemcpy_max_count },
+-	{ "non-pointer-null", &Wnon_pointer_null },
+-	{ "newline-eof", &Wnewline_eof },
+-	{ "old-initializer", &Wold_initializer },
+-	{ "old-style-definition", &Wold_style_definition },
+-	{ "one-bit-signed-bitfield", &Wone_bit_signed_bitfield },
+-	{ "override-init", &Woverride_init },
+-	{ "override-init-all", &Woverride_init_all },
+-	{ "paren-string", &Wparen_string },
+-	{ "pedantic", &Wpedantic },
+-	{ "pointer-to-int-cast", &Wpointer_to_int_cast },
+-	{ "ptr-subtraction-blows", &Wptr_subtraction_blows },
+-	{ "return-void", &Wreturn_void },
+-	{ "shadow", &Wshadow },
+-	{ "shift-count-negative", &Wshift_count_negative },
+-	{ "shift-count-overflow", &Wshift_count_overflow },
+-	{ "sizeof-bool", &Wsizeof_bool },
+-	{ "strict-prototypes", &Wstrict_prototypes },
+-	{ "pointer-arith", &Wpointer_arith },
+-	{ "sparse-error", &Wsparse_error },
+-	{ "tautological-compare", &Wtautological_compare },
+-	{ "transparent-union", &Wtransparent_union },
+-	{ "typesign", &Wtypesign },
+-	{ "undef", &Wundef },
+-	{ "uninitialized", &Wuninitialized },
+-	{ "universal-initializer", &Wuniversal_initializer },
+-	{ "unknown-attribute", &Wunknown_attribute },
+-	{ "vla", &Wvla },
+-	{ }
+-};
+-
+-static char **handle_switch_W(char *arg, char **next)
+-{
+-	char ** ret = handle_onoff_switch(arg, next, warnings);
+-	if (ret)
+-		return ret;
+-
+-	if (!strcmp(arg, "Wsparse-all")) {
+-		int i;
 -		for (i = 0; warnings[i].name; i++) {
--			if (*warnings[i].flag != WARNING_FORCE_OFF && warnings[i].flag != &Wsparse_error)
--				*warnings[i].flag = WARNING_ON;
+-			if (*warnings[i].flag != FLAG_FORCE_OFF)
+-				*warnings[i].flag = FLAG_ON;
 -		}
--		return NULL;
 -	}
 -
- 	// Prefixes "no" and "no-" mean to turn warning off.
- 	if (p[0] == 'n' && p[1] == 'o') {
- 		p += 2;
-@@ -798,6 +790,14 @@ static char **handle_switch_W(char *arg, char **next)
- 	if (ret)
- 		return ret;
+-	// Unknown.
+-	return next;
+-}
+-
+-static struct flag debugs[] = {
+-	{ "compound", &dbg_compound},
+-	{ "dead", &dbg_dead},
+-	{ "domtree", &dbg_domtree},
+-	{ "entry", &dbg_entry},
+-	{ "ir", &dbg_ir},
+-	{ "postorder", &dbg_postorder},
+-	{ }
+-};
+-
+-
+-static char **handle_switch_v(char *arg, char **next)
+-{
+-	char ** ret = handle_onoff_switch(arg, next, debugs);
+-	if (ret)
+-		return ret;
+-
+-	// Unknown.
+-	do {
+-		verbose++;
+-	} while (*++arg == 'v');
+-	return next;
+-}
+-
+-static char **handle_switch_d(char *arg, char **next)
+-{
+-	char *arg_char = arg + 1;
+-
+-	/*
+-	 * -d<CHARS>, where <CHARS> is a sequence of characters, not preceded
+-	 * by a space. If you specify characters whose behaviour conflicts,
+-	 * the result is undefined.
+-	 */
+-	while (*arg_char) {
+-		switch (*arg_char) {
+-		case 'M': /* dump just the macro definitions */
+-			dump_macros_only = 1;
+-			dump_macro_defs = 0;
+-			break;
+-		case 'D': /* like 'M', but also output pre-processed text */
+-			dump_macro_defs = 1;
+-			dump_macros_only = 0;
+-			break;
+-		case 'N': /* like 'D', but only output macro names not bodies */
+-			break;
+-		case 'I': /* like 'D', but also output #include directives */
+-			break;
+-		case 'U': /* like 'D', but only output expanded macros */
+-			break;
+-		}
+-		arg_char++;
+-	}
+-	return next;
+-}
+-
+-
+-static void handle_switch_W_finalize(void)
+-{
+-	handle_onoff_switch_finalize(warnings);
+-
+-	/* default Wdeclarationafterstatement based on the C dialect */
+-	if (-1 == Wdeclarationafterstatement) {
+-		switch (standard) {
+-			case STANDARD_C89:
+-			case STANDARD_C94:
+-				Wdeclarationafterstatement = 1;
+-				break;
+-			default:
+-				Wdeclarationafterstatement = 0;
+-				break;
+-		}
+-	}
+-}
+-
+-static void handle_switch_v_finalize(void)
+-{
+-	handle_onoff_switch_finalize(debugs);
+-}
+-
+-static char **handle_switch_U(char *arg, char **next)
+-{
+-	const char *name = arg + 1;
+-	add_pre_buffer ("#undef %s\n", name);
+-	return next;
+-}
+-
+-static char **handle_switch_O(char *arg, char **next)
+-{
+-	int level = 1;
+-	if (arg[1] >= '0' && arg[1] <= '9')
+-		level = arg[1] - '0';
+-	optimize_level = level;
+-	optimize_size = arg[1] == 's';
+-	return next;
+-}
+-
+-static int handle_ftabstop(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	unsigned long val;
+-	char *end;
+-
+-	if (*opt == '\0')
+-		die("error: missing argument to \"%s\"", arg);
+-
+-	/* we silently ignore silly values */
+-	val = strtoul(opt, &end, 10);
+-	if (*end == '\0' && 1 <= val && val <= 100)
+-		tabstop = val;
+-
+-	return 1;
+-}
+-
+-static int handle_fpasses(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	unsigned long mask;
+-
+-	mask = flag->mask;
+-	if (*opt == '\0') {
+-		if (options & OPT_INVERSE)
+-			fpasses &= ~mask;
+-		else
+-			fpasses |=  mask;
+-		return 1;
+-	}
+-	if (options & OPT_INVERSE)
+-		return 0;
+-	if (!strcmp(opt, "-enable")) {
+-		fpasses |= mask;
+-		return 1;
+-	}
+-	if (!strcmp(opt, "-disable")) {
+-		fpasses &= ~mask;
+-		return 1;
+-	}
+-	if (!strcmp(opt, "=last")) {
+-		// clear everything above
+-		mask |= mask - 1;
+-		fpasses &= mask;
+-		return 1;
+-	}
+-	return 0;
+-}
+-
+-static int handle_fdiagnostic_prefix(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	switch (*opt) {
+-	case '\0':
+-		diag_prefix = "sparse: ";
+-		return 1;
+-	case '=':
+-		diag_prefix = xasprintf("%s: ", opt+1);
+-		return 1;
+-	default:
+-		return 0;
+-	}
+-}
+-
+-static int handle_fdump_ir(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	static const struct mask_map dump_ir_options[] = {
+-		{ "",			PASS_LINEARIZE },
+-		{ "linearize",		PASS_LINEARIZE },
+-		{ "mem2reg",		PASS_MEM2REG },
+-		{ "final",		PASS_FINAL },
+-		{ },
+-	};
+-
+-	return handle_suboption_mask(arg, opt, dump_ir_options, &fdump_ir);
+-}
+-
+-static int handle_fmemcpy_max_count(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	opt_ullong(arg, opt, &fmemcpy_max_count, OPTNUM_ZERO_IS_INF|OPTNUM_UNLIMITED);
+-	return 1;
+-}
+-
+-static int handle_fmax_warnings(const char *arg, const char *opt, const struct flag *flag, int options)
+-{
+-	opt_uint(arg, opt, &fmax_warnings, OPTNUM_UNLIMITED);
+-	return 1;
+-}
+-
+-static struct flag fflags[] = {
+-	{ "diagnostic-prefix",	NULL,	handle_fdiagnostic_prefix },
+-	{ "dump-ir",		NULL,	handle_fdump_ir },
+-	{ "freestanding",	&fhosted, NULL, OPT_INVERSE },
+-	{ "hosted",		&fhosted },
+-	{ "linearize",		NULL,	handle_fpasses,	PASS_LINEARIZE },
+-	{ "max-warnings=",	NULL,	handle_fmax_warnings },
+-	{ "mem-report",		&fmem_report },
+-	{ "memcpy-max-count=",	NULL,	handle_fmemcpy_max_count },
+-	{ "tabstop=",		NULL,	handle_ftabstop },
+-	{ "mem2reg",		NULL,	handle_fpasses,	PASS_MEM2REG },
+-	{ "optim",		NULL,	handle_fpasses,	PASS_OPTIM },
+-	{ "pic",		&fpic,	handle_switch_setval, 1 },
+-	{ "PIC",		&fpic,	handle_switch_setval, 2 },
+-	{ "pie",		&fpie,	handle_switch_setval, 1 },
+-	{ "PIE",		&fpie,	handle_switch_setval, 2 },
+-	{ "signed-char",	&funsigned_char, NULL,	OPT_INVERSE },
+-	{ "short-wchar",	&fshort_wchar },
+-	{ "unsigned-char",	&funsigned_char, NULL, },
+-	{ },
+-};
+-
+-static char **handle_switch_f(char *arg, char **next)
+-{
+-	if (handle_switches(arg-1, arg+1, fflags))
+-		return next;
+-
+-	return next;
+-}
+-
+-static char **handle_switch_G(char *arg, char **next)
+-{
+-	if (!strcmp (arg, "G") && *next)
+-		return next + 1; // "-G 0"
+-	else
+-		return next;     // "-G0" or (bogus) terminal "-G"
+-}
+-
+-static char **handle_switch_a(char *arg, char **next)
+-{
+-	if (!strcmp (arg, "ansi"))
+-		standard = STANDARD_C89;
+-
+-	return next;
+-}
+-
+ static char **handle_switch_s(const char *arg, char **next)
+ {
+ 	if ((arg = match_option(arg, "std="))) {
+@@ -1087,36 +992,129 @@ static char **handle_switch_s(const char *arg, char **next)
+ 	return next;
+ }
+ 
+-static char **handle_nostdinc(char *arg, char **next)
++static char **handle_switch_U(char *arg, char **next)
+ {
+-	add_pre_buffer("#nostdinc\n");
++	const char *name = arg + 1;
++	add_pre_buffer ("#undef %s\n", name);
+ 	return next;
+ }
+ 
+-static char **handle_switch_n(char *arg, char **next)
++static struct flag debugs[] = {
++	{ "compound", &dbg_compound},
++	{ "dead", &dbg_dead},
++	{ "domtree", &dbg_domtree},
++	{ "entry", &dbg_entry},
++	{ "ir", &dbg_ir},
++	{ "postorder", &dbg_postorder},
++	{ }
++};
++
++static char **handle_switch_v(char *arg, char **next)
+ {
+-	if (!strcmp (arg, "nostdinc"))
+-		return handle_nostdinc(arg, next);
++	char ** ret = handle_onoff_switch(arg, next, debugs);
++	if (ret)
++		return ret;
+ 
++	// Unknown.
++	do {
++		verbose++;
++	} while (*++arg == 'v');
+ 	return next;
+ }
+ 
+-static char **handle_base_dir(char *arg, char **next)
++static void handle_switch_v_finalize(void)
+ {
+-	gcc_base_dir = *++next;
+-	if (!gcc_base_dir)
+-		die("missing argument for -gcc-base-dir option");
+-	return next;
++	handle_onoff_switch_finalize(debugs);
+ }
+ 
+-static char **handle_switch_g(char *arg, char **next)
++static const struct flag warnings[] = {
++	{ "address", &Waddress },
++	{ "address-space", &Waddress_space },
++	{ "bitwise", &Wbitwise },
++	{ "bitwise-pointer", &Wbitwise_pointer},
++	{ "cast-from-as", &Wcast_from_as },
++	{ "cast-to-as", &Wcast_to_as },
++	{ "cast-truncate", &Wcast_truncate },
++	{ "constant-suffix", &Wconstant_suffix },
++	{ "constexpr-not-const", &Wconstexpr_not_const},
++	{ "context", &Wcontext },
++	{ "decl", &Wdecl },
++	{ "declaration-after-statement", &Wdeclarationafterstatement },
++	{ "default-bitfield-sign", &Wdefault_bitfield_sign },
++	{ "designated-init", &Wdesignated_init },
++	{ "do-while", &Wdo_while },
++	{ "enum-mismatch", &Wenum_mismatch },
++	{ "external-function-has-definition", &Wexternal_function_has_definition },
++	{ "implicit-int", &Wimplicit_int },
++	{ "init-cstring", &Winit_cstring },
++	{ "int-to-pointer-cast", &Wint_to_pointer_cast },
++	{ "memcpy-max-count", &Wmemcpy_max_count },
++	{ "non-pointer-null", &Wnon_pointer_null },
++	{ "newline-eof", &Wnewline_eof },
++	{ "old-initializer", &Wold_initializer },
++	{ "old-style-definition", &Wold_style_definition },
++	{ "one-bit-signed-bitfield", &Wone_bit_signed_bitfield },
++	{ "override-init", &Woverride_init },
++	{ "override-init-all", &Woverride_init_all },
++	{ "paren-string", &Wparen_string },
++	{ "pedantic", &Wpedantic },
++	{ "pointer-to-int-cast", &Wpointer_to_int_cast },
++	{ "ptr-subtraction-blows", &Wptr_subtraction_blows },
++	{ "return-void", &Wreturn_void },
++	{ "shadow", &Wshadow },
++	{ "shift-count-negative", &Wshift_count_negative },
++	{ "shift-count-overflow", &Wshift_count_overflow },
++	{ "sizeof-bool", &Wsizeof_bool },
++	{ "strict-prototypes", &Wstrict_prototypes },
++	{ "pointer-arith", &Wpointer_arith },
++	{ "sparse-error", &Wsparse_error },
++	{ "tautological-compare", &Wtautological_compare },
++	{ "transparent-union", &Wtransparent_union },
++	{ "typesign", &Wtypesign },
++	{ "undef", &Wundef },
++	{ "uninitialized", &Wuninitialized },
++	{ "universal-initializer", &Wuniversal_initializer },
++	{ "unknown-attribute", &Wunknown_attribute },
++	{ "vla", &Wvla },
++	{ }
++};
++
++static char **handle_switch_W(char *arg, char **next)
+ {
+-	if (!strcmp (arg, "gcc-base-dir"))
+-		return handle_base_dir(arg, next);
++	char ** ret = handle_onoff_switch(arg, next, warnings);
++	if (ret)
++		return ret;
  
 +	if (!strcmp(arg, "Wsparse-all")) {
 +		int i;
 +		for (i = 0; warnings[i].name; i++) {
-+			if (*warnings[i].flag != WARNING_FORCE_OFF && warnings[i].flag != &Wsparse_error)
-+				*warnings[i].flag = WARNING_ON;
++			if (*warnings[i].flag != FLAG_FORCE_OFF)
++				*warnings[i].flag = FLAG_ON;
 +		}
 +	}
 +
- 	// Unknown.
++	// Unknown.
  	return next;
  }
+ 
++static void handle_switch_W_finalize(void)
++{
++	handle_onoff_switch_finalize(warnings);
++
++	/* default Wdeclarationafterstatement based on the C dialect */
++	if (-1 == Wdeclarationafterstatement) {
++		switch (standard) {
++			case STANDARD_C89:
++			case STANDARD_C94:
++				Wdeclarationafterstatement = 1;
++				break;
++			default:
++				Wdeclarationafterstatement = 0;
++				break;
++		}
++	}
++}
++
+ static char **handle_switch_x(char *arg, char **next)
+ {
+ 	if (!*++next)
+@@ -1139,12 +1137,6 @@ static char **handle_arch(char *arg, char **next)
+ 	return next;
+ }
+ 
+-static char **handle_version(char *arg, char **next)
+-{
+-	printf("%s\n", SPARSE_VERSION);
+-	exit(0);
+-}
+-
+ static char **handle_param(char *arg, char **next)
+ {
+ 	char *value = NULL;
+@@ -1162,6 +1154,12 @@ static char **handle_param(char *arg, char **next)
+ 	return next;
+ }
+ 
++static char **handle_version(char *arg, char **next)
++{
++	printf("%s\n", SPARSE_VERSION);
++	exit(0);
++}
++
+ struct switches {
+ 	const char *name;
+ 	char **(*fn)(char *, char **);
 -- 
 2.27.0
 
