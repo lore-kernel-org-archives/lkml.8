@@ -2,445 +2,98 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB35C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20210C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1A420884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W9Z/V86B"
+	by mail.kernel.org (Postfix) with ESMTP id E355720884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593722882;
+	bh=K1oPAo5Mz0TFFhjYrNCWMniNyQihghksZ0mQyVA3CDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gwMSC41da26bmYefvaZfJZJEKun8GLs41eFYaiII+OOG4pIJBITPGZi0rHW77tOGb
+	 PrIk5E99vi1+/O0eUwgZdQM+m7wlVACUodr5ll5aL4mWyGkGYUcvX21Qf+bWNKKv3N
+	 4tOP8G4Uzf5mwPTuXFlzUHnEbD7jtcLlljlOV9zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgGBUrB (ORCPT
+        id S1726265AbgGBUsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:47:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40314 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGBUrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:47:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593722819; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=evpzgmaJ5bULjz7nlrhANdLqiu2Qm23vHt8NH1MMxng=; b=W9Z/V86BwG2wg9S51WM8T5CFzPvulsP36WO01vpqhWuDgOUmvrhMs6ZnJSgOscsIzTBLXQw6
- 8CAItp1V55f3DkMrY4FOt5IHwmd087OymEQOw6H5owW+dS2EgsakcpZ079HiDCiCaNXzzfBe
- 3JtNhN0GmyoEOoVCM1xn+2orjbk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5efe47c25866879c768736e2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 20:46:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 66A8AC433C6; Thu,  2 Jul 2020 20:46:58 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40C9CC433C8;
-        Thu,  2 Jul 2020 20:46:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40C9CC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, saravanak@google.com,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, robdclark@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: qcom: sdm845: Add cpu OPP tables
-Date:   Fri,  3 Jul 2020 02:16:43 +0530
-Message-Id: <20200702204643.25785-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Thu, 2 Jul 2020 16:48:00 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43140 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGBUsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 16:48:00 -0400
+Received: by mail-il1-f195.google.com with SMTP id i18so25450897ilk.10;
+        Thu, 02 Jul 2020 13:48:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=j1yxY9w2G0JH7eLYcGH9QwyTEXy3U6l8gD1SgwfkI04=;
+        b=AEbHIITstXE7khfgmafMWAuJaxqqfK0uC5Bg2NIx9V6erj5PXdj/TothOzBFiUHtGp
+         B06w9KK2LRY6hI5byj9fv5T1QTBSrQUUjf+aQHKBHFAaT2jTftINttXP/T+wxABRNfZI
+         Y2ABGMXlHty5yjYicQqWiLdviyWeyiyCGydG0IuAp5wjtAKm23ktrOGn3aCLf/oBFqyC
+         SompqvFovre6kO/uZ6iyIzuNR2WQwlpw6ZuXsdAOIjo4O9wzSvT4q7hDZJ2Jwr3/sGNV
+         yn7V2AaQ8PCq2T5WDlxElYw2R1v2e5gjpl333WqmIhbjLXht+Oig6DVkodNEFo8GtiPH
+         AaaQ==
+X-Gm-Message-State: AOAM533StEuCdkur2uwHy0Roq412Lw+UVJwx1pKUo4zzyDECY/61gS5W
+        Y1xK7F53h8PpP3zeRfCpxw==
+X-Google-Smtp-Source: ABdhPJy4b9+p/Hb1STLVnu17+0DErUUOFe1/yUfp0AF2GZxEa4Co/j7n7em7RC9H7qtWSAkf3s7C/Q==
+X-Received: by 2002:a92:5ecf:: with SMTP id f76mr13730600ilg.281.1593722879810;
+        Thu, 02 Jul 2020 13:47:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id a24sm4949711ioe.46.2020.07.02.13.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 13:47:59 -0700 (PDT)
+Received: (nullmailer pid 1665628 invoked by uid 1000);
+        Thu, 02 Jul 2020 20:47:58 -0000
+Date:   Thu, 2 Jul 2020 14:47:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        kishon@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
+Message-ID: <20200702204758.GA1665250@bogus>
+References: <20200630092729.15346-1-rogerq@ti.com>
+ <20200630092729.15346-2-rogerq@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630092729.15346-2-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add OPP tables required to scale DDR/L3 per freq-domain on SDM845 SoCs.
+On Tue, 30 Jun 2020 12:27:27 +0300, Roger Quadros wrote:
+> Move ti,omap-usb2 to its own YAML schema.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/phy/ti,omap-usb2.yaml | 69 +++++++++++++++++++
+>  .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+>  2 files changed, 69 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> 
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
 
-v2:
- * Drop interconnect tags
- * Add all possible cpu opps from supported frequency list
+My bot found errors running 'make dt_binding_check' on your patch:
 
-v1: https://patchwork.kernel.org/patch/11527589/
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/ti,omap-usb2.example.dt.yaml: example-0: phy@4100000:reg:0: [0, 68157440, 0, 84] is too long
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 285 +++++++++++++++++++++++++++
- 1 file changed, 285 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31346d28..9a7e27ede7186 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -12,6 +12,7 @@
- #include <dt-bindings/clock/qcom,lpass-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sdm845.h>
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interconnect/qcom,sdm845.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-@@ -198,6 +199,9 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <607>;
- 			dynamic-power-coefficient = <100>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
-@@ -220,6 +224,9 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <607>;
- 			dynamic-power-coefficient = <100>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
-@@ -239,6 +246,9 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <607>;
- 			dynamic-power-coefficient = <100>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
-@@ -258,6 +268,9 @@ &LITTLE_CPU_SLEEP_1
- 			capacity-dmips-mhz = <607>;
- 			dynamic-power-coefficient = <100>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
-@@ -277,6 +290,9 @@ &BIG_CPU_SLEEP_1
- 					   &CLUSTER_SLEEP_0>;
- 			dynamic-power-coefficient = <396>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-+			operating-points-v2 = <&cpu4_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
-@@ -296,6 +312,9 @@ &BIG_CPU_SLEEP_1
- 					   &CLUSTER_SLEEP_0>;
- 			dynamic-power-coefficient = <396>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-+			operating-points-v2 = <&cpu4_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
-@@ -315,6 +334,9 @@ &BIG_CPU_SLEEP_1
- 					   &CLUSTER_SLEEP_0>;
- 			dynamic-power-coefficient = <396>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-+			operating-points-v2 = <&cpu4_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
-@@ -334,6 +356,9 @@ &BIG_CPU_SLEEP_1
- 					   &CLUSTER_SLEEP_0>;
- 			dynamic-power-coefficient = <396>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
-+			operating-points-v2 = <&cpu4_opp_table>;
-+			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
-+					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
- 			#cooling-cells = <2>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
-@@ -433,6 +458,266 @@ CLUSTER_SLEEP_0: cluster-sleep-0 {
- 		};
- 	};
- 
-+	cpu0_opp_table: cpu0_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu0_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-peak-kBps = <800000 4800000>;
-+		};
-+
-+		cpu0_opp2: opp-403200000 {
-+			opp-hz = /bits/ 64 <403200000>;
-+			opp-peak-kBps = <800000 4800000>;
-+		};
-+
-+		cpu0_opp3: opp-480000000 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			opp-peak-kBps = <800000 6451200>;
-+		};
-+
-+		cpu0_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <800000 6451200>;
-+		};
-+
-+		cpu0_opp5: opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			opp-peak-kBps = <800000 7680000>;
-+		};
-+
-+		cpu0_opp6: opp-748800000 {
-+			opp-hz = /bits/ 64 <748800000>;
-+			opp-peak-kBps = <1804000 9216000>;
-+		};
-+
-+		cpu0_opp7: opp-825600000 {
-+			opp-hz = /bits/ 64 <825600000>;
-+			opp-peak-kBps = <1804000 9216000>;
-+		};
-+
-+		cpu0_opp8: opp-902400000 {
-+			opp-hz = /bits/ 64 <902400000>;
-+			opp-peak-kBps = <1804000 10444800>;
-+		};
-+
-+		cpu0_opp9: opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			opp-peak-kBps = <1804000 11980800>;
-+		};
-+
-+		cpu0_opp10: opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-peak-kBps = <1804000 11980800>;
-+		};
-+
-+		cpu0_opp11: opp-1132800000 {
-+			opp-hz = /bits/ 64 <1132800000>;
-+			opp-peak-kBps = <2188000 13516800>;
-+		};
-+
-+		cpu0_opp12: opp-1228800000 {
-+			opp-hz = /bits/ 64 <1228800000>;
-+			opp-peak-kBps = <2188000 15052800>;
-+		};
-+
-+		cpu0_opp13: opp-1324800000 {
-+			opp-hz = /bits/ 64 <1324800000>;
-+			opp-peak-kBps = <2188000 16588800>;
-+		};
-+
-+		cpu0_opp14: opp-1420800000 {
-+			opp-hz = /bits/ 64 <1420800000>;
-+			opp-peak-kBps = <3072000 18124800>;
-+		};
-+
-+		cpu0_opp15: opp-1516800000 {
-+			opp-hz = /bits/ 64 <1516800000>;
-+			opp-peak-kBps = <3072000 19353600>;
-+		};
-+
-+		cpu0_opp16: opp-1612800000 {
-+			opp-hz = /bits/ 64 <1612800000>;
-+			opp-peak-kBps = <4068000 19353600>;
-+		};
-+
-+		cpu0_opp17: opp-1689600000 {
-+			opp-hz = /bits/ 64 <1689600000>;
-+			opp-peak-kBps = <4068000 20889600>;
-+		};
-+
-+		cpu0_opp18: opp-1766400000 {
-+			opp-hz = /bits/ 64 <1766400000>;
-+			opp-peak-kBps = <4068000 22425600>;
-+		};
-+	};
-+
-+	cpu4_opp_table: cpu4_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cpu4_opp1: opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-peak-kBps = <800000 4800000>;
-+		};
-+
-+		cpu4_opp2: opp-403200000 {
-+			opp-hz = /bits/ 64 <403200000>;
-+			opp-peak-kBps = <800000 4800000>;
-+		};
-+
-+		cpu4_opp3: opp-480000000 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			opp-peak-kBps = <1804000 4800000>;
-+		};
-+
-+		cpu4_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <1804000 4800000>;
-+		};
-+
-+		cpu4_opp5: opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			opp-peak-kBps = <1804000 4800000>;
-+		};
-+
-+		cpu4_opp6: opp-748800000 {
-+			opp-hz = /bits/ 64 <748800000>;
-+			opp-peak-kBps = <1804000 4800000>;
-+		};
-+
-+		cpu4_opp7: opp-825600000 {
-+			opp-hz = /bits/ 64 <825600000>;
-+			opp-peak-kBps = <2188000 9216000>;
-+		};
-+
-+		cpu4_opp8: opp-902400000 {
-+			opp-hz = /bits/ 64 <902400000>;
-+			opp-peak-kBps = <2188000 9216000>;
-+		};
-+
-+		cpu4_opp9: opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			opp-peak-kBps = <2188000 9216000>;
-+		};
-+
-+		cpu4_opp10: opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-peak-kBps = <3072000 9216000>;
-+		};
-+
-+		cpu4_opp11: opp-1132800000 {
-+			opp-hz = /bits/ 64 <1132800000>;
-+			opp-peak-kBps = <3072000 11980800>;
-+		};
-+
-+		cpu4_opp12: opp-1209600000 {
-+			opp-hz = /bits/ 64 <1209600000>;
-+			opp-peak-kBps = <4068000 11980800>;
-+		};
-+
-+		cpu4_opp13: opp-1286400000 {
-+			opp-hz = /bits/ 64 <1286400000>;
-+			opp-peak-kBps = <4068000 11980800>;
-+		};
-+
-+		cpu4_opp14: opp-1363200000 {
-+			opp-hz = /bits/ 64 <1363200000>;
-+			opp-peak-kBps = <4068000 15052800>;
-+		};
-+
-+		cpu4_opp15: opp-1459200000 {
-+			opp-hz = /bits/ 64 <1459200000>;
-+			opp-peak-kBps = <4068000 15052800>;
-+		};
-+
-+		cpu4_opp16: opp-1536000000 {
-+			opp-hz = /bits/ 64 <1536000000>;
-+			opp-peak-kBps = <5412000 15052800>;
-+		};
-+
-+		cpu4_opp17: opp-1612800000 {
-+			opp-hz = /bits/ 64 <1612800000>;
-+			opp-peak-kBps = <5412000 15052800>;
-+		};
-+
-+		cpu4_opp18: opp-1689600000 {
-+			opp-hz = /bits/ 64 <1689600000>;
-+			opp-peak-kBps = <5412000 19353600>;
-+		};
-+
-+		cpu4_opp19: opp-1766400000 {
-+			opp-hz = /bits/ 64 <1766400000>;
-+			opp-peak-kBps = <6220000 19353600>;
-+		};
-+
-+		cpu4_opp20: opp-1843200000 {
-+			opp-hz = /bits/ 64 <1843200000>;
-+			opp-peak-kBps = <6220000 19353600>;
-+		};
-+
-+		cpu4_opp21: opp-1920000000 {
-+			opp-hz = /bits/ 64 <1920000000>;
-+			opp-peak-kBps = <7216000 19353600>;
-+		};
-+
-+		cpu4_opp22: opp-1996800000 {
-+			opp-hz = /bits/ 64 <1996800000>;
-+			opp-peak-kBps = <7216000 20889600>;
-+		};
-+
-+		cpu4_opp23: opp-2092800000 {
-+			opp-hz = /bits/ 64 <2092800000>;
-+			opp-peak-kBps = <7216000 20889600>;
-+		};
-+
-+		cpu4_opp24: opp-2169600000 {
-+			opp-hz = /bits/ 64 <2169600000>;
-+			opp-peak-kBps = <7216000 20889600>;
-+		};
-+
-+		cpu4_opp25: opp-2246400000 {
-+			opp-hz = /bits/ 64 <2246400000>;
-+			opp-peak-kBps = <7216000 20889600>;
-+		};
-+
-+		cpu4_opp26: opp-2323200000 {
-+			opp-hz = /bits/ 64 <2323200000>;
-+			opp-peak-kBps = <7216000 20889600>;
-+		};
-+
-+		cpu4_opp27: opp-2400000000 {
-+			opp-hz = /bits/ 64 <2400000000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu4_opp28: opp-2476800000 {
-+			opp-hz = /bits/ 64 <2476800000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu4_opp29: opp-2553600000 {
-+			opp-hz = /bits/ 64 <2553600000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu4_opp30: opp-2649600000 {
-+			opp-hz = /bits/ 64 <2649600000>;
-+			opp-peak-kBps = <7216000 22425600>;
-+		};
-+
-+		cpu4_opp31: opp-2745600000 {
-+			opp-hz = /bits/ 64 <2745600000>;
-+			opp-peak-kBps = <7216000 25497600>;
-+		};
-+
-+		cpu4_opp32: opp-2803200000 {
-+			opp-hz = /bits/ 64 <2803200000>;
-+			opp-peak-kBps = <7216000 25497600>;
-+		};
-+	};
-+
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+See https://patchwork.ozlabs.org/patch/1319665
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
