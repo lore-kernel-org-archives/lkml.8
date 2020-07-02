@@ -2,78 +2,139 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED680C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE5C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C704A212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81ABF2068F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgGBQFp (ORCPT
+        id S1726435AbgGBQG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:05:45 -0400
-Received: from winnie.ispras.ru ([83.149.199.91]:16121 "EHLO smtp.ispras.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726119AbgGBQFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:05:45 -0400
-Received: from home.intra.ispras.ru (unknown [10.10.165.12])
-        by smtp.ispras.ru (Postfix) with ESMTP id C2875201D0;
-        Thu,  2 Jul 2020 19:05:41 +0300 (MSK)
-From:   Evgeny Novikov <novikov@ispras.ru>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Evgeny Novikov <novikov@ispras.ru>, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Subject: [PATCH] fbdev: da8xx-fb: go to proper label on error handling paths in probe
-Date:   Thu,  2 Jul 2020 19:05:40 +0300
-Message-Id: <20200702160540.24546-1-novikov@ispras.ru>
-X-Mailer: git-send-email 2.16.4
+        Thu, 2 Jul 2020 12:06:57 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:35464 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgGBQG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:06:57 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jr1je-0001Ce-Ig; Thu, 02 Jul 2020 10:06:50 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jr1jd-0001tc-9M; Thu, 02 Jul 2020 10:06:50 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+        <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
+        <87eepwzqhd.fsf@x220.int.ebiederm.org>
+        <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
+        <87pn9euks9.fsf@x220.int.ebiederm.org>
+        <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
+Date:   Thu, 02 Jul 2020 11:02:13 -0500
+In-Reply-To: <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
+        (Tetsuo Handa's message of "Thu, 2 Jul 2020 22:40:09 +0900")
+Message-ID: <87h7upucqi.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jr1jd-0001tc-9M;;;mid=<87h7upucqi.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+Qp30pcQd+q4FhKljd+sR/8XsbQDCsYXo=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fb_probe() can successfully allocate a new frame buffer, but then fail
-to perform some operations with regulator. In these cases fb_probe()
-goes to label err_pm_runtime_disable where the frame buffer is not
-released. The patch makes fb_probe() to go to label err_release_fb on
-corresponding error handling paths.
+Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+> On 2020/07/02 22:08, Eric W. Biederman wrote:
+>> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
+>> 
+>>> On 2020/06/30 21:29, Eric W. Biederman wrote:
+>>>> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
+>>>> release_task is called so there is a race.  As it is possible to wake
+>>>> up and then go back to sleep before pid_has_task becomes false.
+>>>
+>>> What is the reason we want to wait until pid_has_task() becomes false?
+>>>
+>>> - wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
+>>> + while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
+>> 
+>> So that it is safe to call bpfilter_umh_cleanup.  The previous code
+>> performed the wait by having a callback in do_exit.
+>
+> But bpfilter_umh_cleanup() does only
+>
+> 	fput(info->pipe_to_umh);
+> 	fput(info->pipe_from_umh);
+> 	put_pid(info->tgid);
+> 	info->tgid = NULL;
+>
+> which is (I think) already safe regardless of the usermode process because
+> bpfilter_umh_cleanup() merely closes one side of two pipes used between
+> two processes and forgets about the usermode process.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
----
- drivers/video/fbdev/da8xx-fb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It is not safe.
 
-diff --git a/drivers/video/fbdev/da8xx-fb.c b/drivers/video/fbdev/da8xx-fb.c
-index 73c3c4c8cc12..e38c0e3f9c61 100644
---- a/drivers/video/fbdev/da8xx-fb.c
-+++ b/drivers/video/fbdev/da8xx-fb.c
-@@ -1402,14 +1402,14 @@ static int fb_probe(struct platform_device *device)
- 	if (IS_ERR(par->lcd_supply)) {
- 		if (PTR_ERR(par->lcd_supply) == -EPROBE_DEFER) {
- 			ret = -EPROBE_DEFER;
--			goto err_pm_runtime_disable;
-+			goto err_release_fb;
- 		}
- 
- 		par->lcd_supply = NULL;
- 	} else {
- 		ret = regulator_enable(par->lcd_supply);
- 		if (ret)
--			goto err_pm_runtime_disable;
-+			goto err_release_fb;
- 	}
- 
- 	fb_videomode_to_var(&da8xx_fb_var, lcdc_info);
--- 
-2.16.4
+Baring bugs there is only one use of shtudown_umh that matters.  The one
+in fini_umh.  The use of the file by the mm must be finished before
+umd_unload_blob.  AKA unmount.  Which completely frees the filesystem.
 
+>> It might be possible to call bpf_umh_cleanup early but I have not done
+>> that analysis.
+>> 
+>> To perform the test correctly what I have right now is:
+>
+> Waiting for the termination of a SIGKILLed usermode process is not
+> such simple.
+
+The waiting is that simple.
+
+You are correct it might not be a quick process.
+
+A good general principle is to start with something simple and correct
+for what it does, and then to make it more complicated when real world
+cases show up, and it can be understood what the real challenges are.
+
+I am not going to merge known broken code but I am also not going to
+overcomplicate it.
+
+Dealing with very rare and pathological cases that are not handled or
+considered today is out of scope for my patchset.
+
+Eric
