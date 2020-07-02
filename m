@@ -2,139 +2,186 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A56C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81ABF2068F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877BB2068F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYCgLK9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgGBQG5 (ORCPT
+        id S1726409AbgGBQJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:06:57 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:35464 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgGBQG5 (ORCPT
+        Thu, 2 Jul 2020 12:09:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgGBQI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:06:57 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr1je-0001Ce-Ig; Thu, 02 Jul 2020 10:06:50 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr1jd-0001tc-9M; Thu, 02 Jul 2020 10:06:50 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-        <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
-        <87eepwzqhd.fsf@x220.int.ebiederm.org>
-        <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
-        <87pn9euks9.fsf@x220.int.ebiederm.org>
-        <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
-Date:   Thu, 02 Jul 2020 11:02:13 -0500
-In-Reply-To: <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
-        (Tetsuo Handa's message of "Thu, 2 Jul 2020 22:40:09 +0900")
-Message-ID: <87h7upucqi.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Jul 2020 12:08:59 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7638C08C5C1;
+        Thu,  2 Jul 2020 09:08:58 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id e22so24538550edq.8;
+        Thu, 02 Jul 2020 09:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8Kfuc5CARnznbS/qlVEzSK3r70q6/7pjU8+G3Y0ONZI=;
+        b=ZYCgLK9qiGagOawdqT3P3TYcEgNthQX8uAwqYFVMVmhWg4mEBJcJcfKopH1dxnFCZG
+         d06E7zXNUBwOlwmjbZJlzAHFAr4h7440/Na31kpFSlzojkZCQG5q92KcXyBVc0MZgB4w
+         Hp6Cy8oBy3wYmwaBlXQ/Ij84Bf6swq+s4cxM9Z87KrrhWpgFfHqLByP3fpkuoac/2dyM
+         R+FgZQ/14l38ozg7gzJj02rfIErZMvdmqeOGEbuvqyD2C7aXi1FZkt8kWNptfgWzKt8t
+         BVm2N7Mu1QZkfD6NN05GifskD6BlfGDJD0rWKI2V+/6mixyLm/w8rsPFnbg1/TqnLPG9
+         fRQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8Kfuc5CARnznbS/qlVEzSK3r70q6/7pjU8+G3Y0ONZI=;
+        b=lC9mTbppVQYxIgJ9yWc6lBminlTRfP6lD5Vydp+u+2GCYsMUOrN2nQYRj//mnPPNzp
+         nYG+k7rALDjeOJX2snmPAJVD53aEGlP/TadzGg33Q4JFYXL0P5YanHRfGBfH4oJPQ3cp
+         O4PXAZh8R0w6tl3lpAq9JzzPUFz47iya3Q/adhl6Ipia6VhxwfGmrmm2TefvE1qSGzPU
+         KXIOSatJTihVnJmvz5kvkUdwu8nBPPSPHq3dkCO2OY541cRKPQ2FUu+QiJkRQkBWqFXa
+         syNfhdmGr+wgZj1uys9cshOAb9xYY3GKcC4gtxb62/AP6rDK6WCMlmxFilySnsbZCqrx
+         yxIg==
+X-Gm-Message-State: AOAM532H1xQ/LVrYPb9XKJDmWeT65Wm2UQE4/ceZaS3FVrf7JVsa53um
+        WTCKvGKuS19auMvCc/L8TWo5gcKqO1shTw6PQw==
+X-Google-Smtp-Source: ABdhPJy0waChbv7GcIB7p+vu56ctYGZl91rMkT00jMJlYf9qe5Yl7H0hV7JxcPSfML8h0lgVzwXZWnf2is39PO0vCDU=
+X-Received: by 2002:a50:cbcd:: with SMTP id l13mr19086813edi.384.1593706137348;
+ Thu, 02 Jul 2020 09:08:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jr1jd-0001tc-9M;;;mid=<87h7upucqi.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+Qp30pcQd+q4FhKljd+sR/8XsbQDCsYXo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200702012202.2700645-1-sashal@kernel.org> <20200702012202.2700645-37-sashal@kernel.org>
+In-Reply-To: <20200702012202.2700645-37-sashal@kernel.org>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Thu, 2 Jul 2020 09:08:45 -0700
+Message-ID: <CAKywueRGSriwuMGtG53i3Bm_ek_k1LMAK0fojf9++7=ar+6u8Q@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.7 37/53] cifs: Fix double add page to memcg when cifs_readpages
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
-
-> On 2020/07/02 22:08, Eric W. Biederman wrote:
->> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
->> 
->>> On 2020/06/30 21:29, Eric W. Biederman wrote:
->>>> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
->>>> release_task is called so there is a race.  As it is possible to wake
->>>> up and then go back to sleep before pid_has_task becomes false.
->>>
->>> What is the reason we want to wait until pid_has_task() becomes false?
->>>
->>> - wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
->>> + while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
->> 
->> So that it is safe to call bpfilter_umh_cleanup.  The previous code
->> performed the wait by having a callback in do_exit.
+=D1=81=D1=80, 1 =D0=B8=D1=8E=D0=BB. 2020 =D0=B3. =D0=B2 18:35, Sasha Levin =
+<sashal@kernel.org>:
 >
-> But bpfilter_umh_cleanup() does only
+> From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 >
-> 	fput(info->pipe_to_umh);
-> 	fput(info->pipe_from_umh);
-> 	put_pid(info->tgid);
-> 	info->tgid = NULL;
+> [ Upstream commit 95a3d8f3af9b0d63b43f221b630beaab9739d13a ]
 >
-> which is (I think) already safe regardless of the usermode process because
-> bpfilter_umh_cleanup() merely closes one side of two pipes used between
-> two processes and forgets about the usermode process.
-
-It is not safe.
-
-Baring bugs there is only one use of shtudown_umh that matters.  The one
-in fini_umh.  The use of the file by the mm must be finished before
-umd_unload_blob.  AKA unmount.  Which completely frees the filesystem.
-
->> It might be possible to call bpf_umh_cleanup early but I have not done
->> that analysis.
->> 
->> To perform the test correctly what I have right now is:
+> When xfstests generic/451, there is an BUG at mm/memcontrol.c:
+>   page:ffffea000560f2c0 refcount:2 mapcount:0 mapping:000000008544e0ea
+>        index:0xf
+>   mapping->aops:cifs_addr_ops dentry name:"tst-aio-dio-cycle-write.451"
+>   flags: 0x2fffff80000001(locked)
+>   raw: 002fffff80000001 ffffc90002023c50 ffffea0005280088 ffff88815cda021=
+0
+>   raw: 000000000000000f 0000000000000000 00000002ffffffff ffff88817287d00=
+0
+>   page dumped because: VM_BUG_ON_PAGE(page->mem_cgroup)
+>   page->mem_cgroup:ffff88817287d000
+>   ------------[ cut here ]------------
+>   kernel BUG at mm/memcontrol.c:2659!
+>   invalid opcode: 0000 [#1] SMP
+>   CPU: 2 PID: 2038 Comm: xfs_io Not tainted 5.8.0-rc1 #44
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_
+>     073836-buildvm-ppc64le-16.ppc.4
+>   RIP: 0010:commit_charge+0x35/0x50
+>   Code: 0d 48 83 05 54 b2 02 05 01 48 89 77 38 c3 48 c7
+>         c6 78 4a ea ba 48 83 05 38 b2 02 05 01 e8 63 0d9
+>   RSP: 0018:ffffc90002023a50 EFLAGS: 00010202
+>   RAX: 0000000000000000 RBX: ffff88817287d000 RCX: 0000000000000000
+>   RDX: 0000000000000000 RSI: ffff88817ac97ea0 RDI: ffff88817ac97ea0
+>   RBP: ffffea000560f2c0 R08: 0000000000000203 R09: 0000000000000005
+>   R10: 0000000000000030 R11: ffffc900020237a8 R12: 0000000000000000
+>   R13: 0000000000000001 R14: 0000000000000001 R15: ffff88815a1272c0
+>   FS:  00007f5071ab0800(0000) GS:ffff88817ac80000(0000) knlGS:00000000000=
+00000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 000055efcd5ca000 CR3: 000000015d312000 CR4: 00000000000006e0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    mem_cgroup_charge+0x166/0x4f0
+>    __add_to_page_cache_locked+0x4a9/0x710
+>    add_to_page_cache_locked+0x15/0x20
+>    cifs_readpages+0x217/0x1270
+>    read_pages+0x29a/0x670
+>    page_cache_readahead_unbounded+0x24f/0x390
+>    __do_page_cache_readahead+0x3f/0x60
+>    ondemand_readahead+0x1f1/0x470
+>    page_cache_async_readahead+0x14c/0x170
+>    generic_file_buffered_read+0x5df/0x1100
+>    generic_file_read_iter+0x10c/0x1d0
+>    cifs_strict_readv+0x139/0x170
+>    new_sync_read+0x164/0x250
+>    __vfs_read+0x39/0x60
+>    vfs_read+0xb5/0x1e0
+>    ksys_pread64+0x85/0xf0
+>    __x64_sys_pread64+0x22/0x30
+>    do_syscall_64+0x69/0x150
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>   RIP: 0033:0x7f5071fcb1af
+>   Code: Bad RIP value.
+>   RSP: 002b:00007ffde2cdb8e0 EFLAGS: 00000293 ORIG_RAX: 0000000000000011
+>   RAX: ffffffffffffffda RBX: 00007ffde2cdb990 RCX: 00007f5071fcb1af
+>   RDX: 0000000000001000 RSI: 000055efcd5ca000 RDI: 0000000000000003
+>   RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
+>   R10: 0000000000001000 R11: 0000000000000293 R12: 0000000000000001
+>   R13: 000000000009f000 R14: 0000000000000000 R15: 0000000000001000
+>   Modules linked in:
+>   ---[ end trace 725fa14a3e1af65c ]---
 >
-> Waiting for the termination of a SIGKILLed usermode process is not
-> such simple.
+> Since commit 3fea5a499d57 ("mm: memcontrol: convert page cache to a new
+> mem_cgroup_charge() API") not cancel the page charge, the pages maybe
+> double add to pagecache:
+> thread1                       | thread2
+> cifs_readpages
+> readpages_get_pages
+>  add_to_page_cache_locked(head,index=3Dn)=3D0
+>                               | readpages_get_pages
+>                               | add_to_page_cache_locked(head,index=3Dn+1=
+)=3D0
+>  add_to_page_cache_locked(head, index=3Dn+1)=3D-EEXIST
+>  then, will next loop with list head page's
+>  index=3Dn+1 and the page->mapping not NULL
+> readpages_get_pages
+> add_to_page_cache_locked(head, index=3Dn+1)
+>  commit_charge
+>   VM_BUG_ON_PAGE
+>
+> So, we should not do the next loop when any page add to page cache
+> failed.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+> Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-The waiting is that simple.
+Hi Sasha,
 
-You are correct it might not be a quick process.
+The patch description mentions the commit 3fea5a499d57 that changed
+the behavior and was introduced in v5.8-rc1. I noticed that you are
+targeting this patch for 4.9, 4.14, 4.19, 5.4 and 5.7 stable branches.
+Are you going to backport the commit 3fea5a499d57 as well?
 
-A good general principle is to start with something simple and correct
-for what it does, and then to make it more complicated when real world
-cases show up, and it can be understood what the real challenges are.
-
-I am not going to merge known broken code but I am also not going to
-overcomplicate it.
-
-Dealing with very rare and pathological cases that are not handled or
-considered today is out of scope for my patchset.
-
-Eric
+--
+Best regards,
+Pavel Shilovsky
