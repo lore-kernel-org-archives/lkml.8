@@ -5,138 +5,106 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28773C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8127820899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE99220772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GiK2yuMf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UH/FEPUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgGBOrF (ORCPT
+        id S1730103AbgGBOrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50276 "EHLO
+        Thu, 2 Jul 2020 10:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbgGBOq7 (ORCPT
+        with ESMTP id S1730078AbgGBOrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2855AC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:59 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o8so27100069wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:59 -0700 (PDT)
+        Thu, 2 Jul 2020 10:47:04 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B75EEC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:47:03 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so27100563wmh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:47:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Tk9qHYg/pg0juZNf3DyUaHaFVykgS42nSPkB38BS4VI=;
-        b=GiK2yuMf9VW7Z19uG5zEvbRFhcxtXMkMeY4rPH9Zx9s8uYWAYCMypKVT6Y+yt/6rpf
-         WAMPgaN9U6Wb1hOUUyF6qS2KpVrIESS0jlVC/cZiI8MECown7OC4GobHQPZTQbGyz8ZB
-         7fvGBsjm6+LwOPTbQneEItoMZe1tX4XEGxdu0PNP4t+fYFBmNOEZ3xFE1sZrfX6U57so
-         CsjeTWoXQxLX8Q7saQaBB7p8LTSLNTov4O5gqDMpRaYJstZKlvKa/a3L7R7Xz1KrFIR7
-         8h0MKN445JU+sOn0Cy2a2snY9PgjV8i9RE4MkV55pirdqCbmMjSFkawux/M2RHJ4vmHm
-         diuQ==
+        bh=j3qxTGweigJBwA2Dcfmp6Oj8j3v23FLWhOhHeBcgW7I=;
+        b=UH/FEPUuaJiocBixPJWaxF19GJofrsYjNd0ZwLFDYiM8v2DNvddLqbfFEcoEIAgua9
+         bP2+NQ5D2EnmEmmOkQbHI1JvyYJ/o4zFDERtjZF/Uu9t+zeH9dUNXTfGa/pdIk4yUPVT
+         vvgPEaa1aFKNK273L+hRW9C1Ev04KveXHYXLiyNdzpToBUXws7X15l+6DSLce7p6jeiD
+         K1WSC+eCuZhhTPH1+Xzr3/PN1YghnkO1pOilzPFlhWeP9jW6k+/D1ZIAemdOPEOqmxJa
+         Sfo4YYjZUP2FR65boUwbWOUyS/gbbcgDSJusheHBjW1mniiBCNgNVkiP4pZ6pixHLMGz
+         YoDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Tk9qHYg/pg0juZNf3DyUaHaFVykgS42nSPkB38BS4VI=;
-        b=S0wiAKBS9bPbr7ye2lW3sHiuepn6/yUKb3TnN+jQCGCOa0yYao1Eu1o2ZUTF0AePht
-         E4WUD3MGWDp1Ma7z3250aQVqxvTfNJVVstUjXbAfoikmXhzyMzT9GdcNU3qJUP8ktnx8
-         jl54HlM/ziDwSq7IUPoBZU7rYj6Fw6c/9pZ0wwm4r/PY85mBq6K5ufYyLwtHvqXsADoL
-         oxp3ZNO18MBSrr6hKWcP+yh8sVRzYntMqRtkw6J6e/0ZNlIQ7vjb5Piqje6nqr6bTuu4
-         igman8KtLAi4A4eJFJiBsoVZyaQC+P4QGAev4tlJhRcY/NGxE2AHlkM6oOLe1YJaPBcX
-         pDKg==
-X-Gm-Message-State: AOAM532+EgSrcsqNRZNphuK15z3Fd0T/Qv/whhRwpYlJljUPlIb84ptz
-        IcSOCQzjYl3uWPyDC79UuZZm8Q==
-X-Google-Smtp-Source: ABdhPJwr5kCUGPxhCkk8QXKgz4YnAOyGhc74VvsL45wpZKCwBUEyj4mXBP6XM5Epl9ziHR3pE3GVuw==
-X-Received: by 2002:a05:600c:2187:: with SMTP id e7mr31551586wme.171.1593701217878;
-        Thu, 02 Jul 2020 07:46:57 -0700 (PDT)
+        bh=j3qxTGweigJBwA2Dcfmp6Oj8j3v23FLWhOhHeBcgW7I=;
+        b=KMay9jNGRRXj4p8/hTilFi2h3qLQOMv+k/zNYJ+j8SYVgaj9Ts+AuDFJOyqq+mXGjC
+         fx2+EnbT+y+bkZRWrz//HqQu29ymuITU1A0rEDkFBOtBpCAK1TORtlFPEC3S+Ydo9ksj
+         7cYLleF3Y4IN1DvDq2kAAhqCScCvPSLU7GDTYPkynLicVrrTqq5oUi3rqHFRE9YoS4sg
+         DZr74YWV4ComsEDgjO3nI0K3WFpSW2K4OpLwx984DxuKG4tL1Atq2QTHZpCjYa3AeCV9
+         ZEcHqOgqoQiUdZQ+qx8AI2vfEFwBLtgcVK7ERZcPdzVN6HSPseJIZogFBjt10XkAPSDp
+         xI8Q==
+X-Gm-Message-State: AOAM5336kZ/HfoWJRRwAKOYg5FU8IA7J1oQgO64JA7+u9/LdbBRTdffQ
+        gdtu018+B77X0ZeZ0/RmxqNxBg==
+X-Google-Smtp-Source: ABdhPJwSKu/tDOvAvRT809W5s5eyOxbUaM/7UBHj3f8+fnH4iRC5julZ8NEXw3uo/stZQZBYv3h22Q==
+X-Received: by 2002:a1c:7402:: with SMTP id p2mr20868613wmc.117.1593701222460;
+        Thu, 02 Jul 2020 07:47:02 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.56
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.47.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:57 -0700 (PDT)
+        Thu, 02 Jul 2020 07:47:01 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Roman Weissgaerber <weissg@vienna.at>,
-        David Brownell <dbrownell@users.sourceforge.net>
-Subject: [PATCH 21/30] usb: host: ohci: Mark cc_to_error as __maybe_unused
-Date:   Thu,  2 Jul 2020 15:46:16 +0100
-Message-Id: <20200702144625.2533530-22-lee.jones@linaro.org>
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 25/30] usb: mtu3: mtu3_core: Demote obvious misuse of kerneldoc to standard comment block
+Date:   Thu,  2 Jul 2020 15:46:20 +0100
+Message-Id: <20200702144625.2533530-26-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/usb/host/ohci.h in included by a whole much of different
-sourcefiles.  Not all of them make use of cc_to_error.  So mark
-it as __maybe_used to convey that this behaviour is not only
-acceptable it's expected.
+No attempt has been made to document the function.
 
-Fixes the following kernel build warning(s):
+Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/usb/host/ohci-pci.c:25:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-platform.c:32:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-exynos.c:20:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-spear.c:22:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-st.c:26:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-at91.c:31:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
- In file included from drivers/usb/host/ohci-s3c2410.c:32:
- drivers/usb/host/ohci.h:165:18: warning: ‘cc_to_error’ defined but not used [-Wunused-const-variable=]
- 165 | static const int cc_to_error 1 = {
- | ^~~~~~~~~~~
+ drivers/usb/mtu3/mtu3_core.c:805: warning: Function parameter or member 'mtu' not described in 'mtu3_set_dma_mask'
 
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Roman Weissgaerber <weissg@vienna.at>
-Cc: David Brownell <dbrownell@users.sourceforge.net>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/host/ohci.h | 2 +-
+ drivers/usb/mtu3/mtu3_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ohci.h b/drivers/usb/host/ohci.h
-index b85a39588f9d9..aac6285b37f80 100644
---- a/drivers/usb/host/ohci.h
-+++ b/drivers/usb/host/ohci.h
-@@ -162,7 +162,7 @@ struct td {
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 9dd02160cca97..6d515eb67ea79 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -797,7 +797,7 @@ static void mtu3_hw_exit(struct mtu3 *mtu)
+ 	mtu3_mem_free(mtu);
+ }
  
- 
- /* map OHCI TD status codes (CC) to errno values */
--static const int cc_to_error [16] = {
-+static const int __maybe_unused cc_to_error [16] = {
- 	/* No  Error  */               0,
- 	/* CRC Error  */               -EILSEQ,
- 	/* Bit Stuff  */               -EPROTO,
+-/**
++/*
+  * we set 32-bit DMA mask by default, here check whether the controller
+  * supports 36-bit DMA or not, if it does, set 36-bit DMA mask.
+  */
 -- 
 2.25.1
 
