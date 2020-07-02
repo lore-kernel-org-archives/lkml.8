@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D226EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38090C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B758520885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1456D2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgGBPpZ (ORCPT
+        id S1726208AbgGBPpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:45:25 -0400
-Received: from muru.com ([72.249.23.125]:60308 "EHLO muru.com"
+        Thu, 2 Jul 2020 11:45:30 -0400
+Received: from muru.com ([72.249.23.125]:60328 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgGBPpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:45:21 -0400
+        id S1726129AbgGBPp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:45:26 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 213C080B0;
-        Thu,  2 Jul 2020 15:46:13 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 802A980BD;
+        Thu,  2 Jul 2020 15:46:17 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
         Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
-Date:   Thu,  2 Jul 2020 08:45:08 -0700
-Message-Id: <20200702154513.31859-2-tony@atomide.com>
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 4/6] soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
+Date:   Thu,  2 Jul 2020 08:45:11 -0700
+Message-Id: <20200702154513.31859-5-tony@atomide.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702154513.31859-1-tony@atomide.com>
 References: <20200702154513.31859-1-tony@atomide.com>
@@ -43,33 +43,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PRM (Power and Reset Module) has a register to enable and disable
-the related power domain, so let's update the binding for that.
+Let's add omap4 and 5 l4_abe interconnect instance for the power
+domain.
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/ti/omap_prm.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
---- a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
-@@ -18,6 +18,7 @@ Required properties:
- 		(base address and length)
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -95,6 +95,13 @@ struct omap_reset_data {
  
- Optional properties:
-+- #power-domain-cells:	Should be 0 if the instance is a power domain provider.
- - #reset-cells:	Should be 1 if the PRM instance in question supports resets.
+ #define PRM_ST_INTRANSITION	BIT(20)
  
- Example:
-@@ -25,5 +26,6 @@ Example:
- prm_dsp2: prm@1b00 {
- 	compatible = "ti,dra7-prm-inst", "ti,omap-prm-inst";
- 	reg = <0x1b00 0x40>;
-+	#power-domain-cells = <0>;
- 	#reset-cells = <1>;
++static const struct omap_prm_domain_map omap_prm_all = {
++	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_ON_INACTIVE) |
++			BIT(OMAP_PRMD_RETENTION) | BIT(OMAP_PRMD_OFF),
++	.statechange = 1,
++	.logicretstate = 1,
++};
++
+ static const struct omap_prm_domain_map omap_prm_noinact = {
+ 	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_RETENTION) |
+ 			BIT(OMAP_PRMD_OFF),
+@@ -102,6 +109,13 @@ static const struct omap_prm_domain_map omap_prm_noinact = {
+ 	.logicretstate = 1,
  };
+ 
++static const struct omap_prm_domain_map omap_prm_nooff = {
++	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_ON_INACTIVE) |
++			BIT(OMAP_PRMD_RETENTION),
++	.statechange = 1,
++	.logicretstate = 1,
++};
++
+ static const struct omap_prm_domain_map omap_prm_onoff_noauto = {
+ 	.usable_modes = BIT(OMAP_PRMD_ON_ACTIVE) | BIT(OMAP_PRMD_OFF),
+ 	.statechange = 1,
+@@ -127,6 +141,10 @@ static const struct omap_rst_map rst_map_012[] = {
+ 
+ static const struct omap_prm_data omap4_prm_data[] = {
+ 	{ .name = "tesla", .base = 0x4a306400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
++	{
++		.name = "abe", .base = 0x4a306500,
++		.pwrstctrl = 0, .pwrstst = 0x4, .dmap = &omap_prm_all,
++	},
+ 	{ .name = "core", .base = 0x4a306700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ducati", .rstmap = rst_map_012 },
+ 	{ .name = "ivahd", .base = 0x4a306f00, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
+ 	{ .name = "device", .base = 0x4a307b00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
+@@ -135,6 +153,10 @@ static const struct omap_prm_data omap4_prm_data[] = {
+ 
+ static const struct omap_prm_data omap5_prm_data[] = {
+ 	{ .name = "dsp", .base = 0x4ae06400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
++	{
++		.name = "abe", .base = 0x4ae06500,
++		.pwrstctrl = 0, .pwrstst = 0x4, .dmap = &omap_prm_nooff,
++	},
+ 	{ .name = "core", .base = 0x4ae06700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ipu", .rstmap = rst_map_012 },
+ 	{ .name = "iva", .base = 0x4ae07200, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
+ 	{ .name = "device", .base = 0x4ae07c00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
 -- 
 2.27.0
