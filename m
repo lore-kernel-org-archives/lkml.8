@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2147C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF82C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 770172145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65F7214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653037;
-	bh=DMIw2NQxQj0v1MMUPu9aLiSDpGBMnBr7a2uEcG43WkA=;
+	s=default; t=1593653044;
+	bh=d57Z06bRJknnqjS3Wp/YqNK1f++WDqjwuAwuq9k2yN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3x8WTs9yseLRBz7C4qqtoNVXSpg2gxB74WFaG2BNnYQG3wOaCF2mLEM5YFOXPTof
-	 OH2y3iW200m+UM1hG8knmObE0mddac4R/Cos6J39GMi4JbEJaDbaYoIRRZItPNjwc3
-	 R49UaXr+bfBM8Xdwu5tUkU4HJJCTsmt1CSgFBvfg=
+	b=tPSe7d0+EDhYtfCl6xlYqd+Ld03aHHou7ktfuCTNQlK6WKTLa7T90vMzYupaL+elO
+	 WtB4wGwWisf8u6HbB2/gCuH9tcupeNBQMb5xxUzjgINcWGpt5GiqKPAedjOkchyc1g
+	 RRK1kHSTUr7WnDXTvZJsBO8VuEMWhyyiJGDFF1R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgGBBX4 (ORCPT
+        id S1728576AbgGBBYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgGBBXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:45 -0400
+        id S1728491AbgGBBXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173F820A8B;
-        Thu,  2 Jul 2020 01:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5AD20BED;
+        Thu,  2 Jul 2020 01:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653024;
-        bh=DMIw2NQxQj0v1MMUPu9aLiSDpGBMnBr7a2uEcG43WkA=;
+        s=default; t=1593653029;
+        bh=d57Z06bRJknnqjS3Wp/YqNK1f++WDqjwuAwuq9k2yN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hksPhBe6gUXbM32jmBzzNg+tNBg5HJpv1LtpOrDeGFXeB1tThX84iJhJaofIASkPA
-         ge/XQw5tbVhmUKVw48Zdx6TUtXpJsbXEkhKeR+yN121SEqy3cT50/aDN7XPaz1GrR7
-         V5FhFcStGeiAvweJiCRwxluU9L69XwGEDANbDShM=
+        b=r5ivT7ON/iZkr9xvFuYlTcZ/11sxWKjVprJ69vtXcrdRXcXPpdCXl4sw/gzdFvxr0
+         6xhiIQaK/CnC3LO2A3YA8vCoZxB7rZcDzUV3yCpxDBodefv18m2K4z3lnDkTHqLLAt
+         8Q5XIob2FYl19W6T1YAAbttFgeSZtdUnRqgVqQn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 5.7 40/53] cifs: update ctime and mtime during truncate
-Date:   Wed,  1 Jul 2020 21:21:49 -0400
-Message-Id: <20200702012202.2700645-40-sashal@kernel.org>
+Cc:     Tomas Henzl <thenzl@redhat.com>,
+        Stanislav Saner <ssaner@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 43/53] scsi: mptscsih: Fix read sense data size
+Date:   Wed,  1 Jul 2020 21:21:52 -0400
+Message-Id: <20200702012202.2700645-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -61,47 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Tomas Henzl <thenzl@redhat.com>
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
+[ Upstream commit afe89f115e84edbc76d316759e206580a06c6973 ]
 
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
+The sense data buffer in sense_buf_pool is allocated with size of
+MPT_SENSE_BUFFER_ALLOC(64) (multiplied by req_depth) while SNS_LEN(sc)(96)
+is used when reading the data.  That may lead to a read from unallocated
+area, sometimes from another (unallocated) page.  To fix this, limit the
+read size to MPT_SENSE_BUFFER_ALLOC.
 
-It lead the xfstests generic/313 failed.
-
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Link: https://lore.kernel.org/r/20200616150446.4840-1-thenzl@redhat.com
+Co-developed-by: Stanislav Saner <ssaner@redhat.com>
+Signed-off-by: Stanislav Saner <ssaner@redhat.com>
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/message/fusion/mptscsih.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 5d2965a237305..15f2cdc71ac98 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2344,6 +2344,15 @@ cifs_set_file_size(struct inode *inode, struct iattr *attrs,
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
- 	}
+diff --git a/drivers/message/fusion/mptscsih.c b/drivers/message/fusion/mptscsih.c
+index f0737c57ed5fc..1491561d2e5c9 100644
+--- a/drivers/message/fusion/mptscsih.c
++++ b/drivers/message/fusion/mptscsih.c
+@@ -118,8 +118,6 @@ int 		mptscsih_suspend(struct pci_dev *pdev, pm_message_t state);
+ int 		mptscsih_resume(struct pci_dev *pdev);
+ #endif
  
+-#define SNS_LEN(scp)	SCSI_SENSE_BUFFERSIZE
+-
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+ /*
+@@ -2422,7 +2420,7 @@ mptscsih_copy_sense_data(struct scsi_cmnd *sc, MPT_SCSI_HOST *hd, MPT_FRAME_HDR
+ 		/* Copy the sense received into the scsi command block. */
+ 		req_index = le16_to_cpu(mf->u.frame.hwhdr.msgctxu.fld.req_idx);
+ 		sense_data = ((u8 *)ioc->sense_buf_pool + (req_index * MPT_SENSE_BUFFER_ALLOC));
+-		memcpy(sc->sense_buffer, sense_data, SNS_LEN(sc));
++		memcpy(sc->sense_buffer, sense_data, MPT_SENSE_BUFFER_ALLOC);
+ 
+ 		/* Log SMART data (asc = 0x5D, non-IM case only) if required.
+ 		 */
 -- 
 2.25.1
 
