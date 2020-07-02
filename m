@@ -2,170 +2,109 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F835C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FA920936
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBAB20936
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CY6ZNsp2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DEGRN5ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgGBVBS (ORCPT
+        id S1726311AbgGBVBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:01:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42059 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725954AbgGBVBP (ORCPT
+        Thu, 2 Jul 2020 17:01:32 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42923 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbgGBVBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:01:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593723673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qmj46YtkbL+I9zTq7ntIIfxROQfpX1hCxEUSvoiv0+I=;
-        b=CY6ZNsp2fqeFzt6+2MPlc3aNQZbQVC5cvUnHoOkZo3w3QVk34TOZalPFnA+r6oIXwjVHeF
-        5oPFyM4t2Eqa1TE/aKKTmnR4bqXpj20+beqj4vsXAcoAmPVzNl2wPvdAHPHiDh/FASCsav
-        EGtwiyDbPvdo0iDIbtcU6MjAKftOrdI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-mkvppFasMUC-xIraJrAEgA-1; Thu, 02 Jul 2020 17:01:09 -0400
-X-MC-Unique: mkvppFasMUC-xIraJrAEgA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 2 Jul 2020 17:01:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593723690; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=MrJDxWrf2N4TbGJfco8+HjKPzeQQULCNLSgOC4TTleI=; b=DEGRN5ijpm4O8TXrT5slKoP7ITFvxB6dhzuwB6nUMo4XPAEXAcT85NGg+kTX5dbFwxUM/86G
+ F11LxYsi9w5SBB1WcI3aNG8LgO9MxAo6KGlERAYZGdCf6ZUE+eqUIZZGBI3MV/5Tpko0PvwF
+ 9Bf4DFG2ImnMhCdqHlSTpu5mxZs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5efe4b13bfb34e631cf7c2de (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 21:01:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 54286C433C6; Thu,  2 Jul 2020 21:01:06 +0000 (UTC)
+Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17FAA107ACF7;
-        Thu,  2 Jul 2020 21:01:08 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-66.rdu2.redhat.com [10.10.118.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C9FBE77899;
-        Thu,  2 Jul 2020 21:01:06 +0000 (UTC)
-Subject: Re: [PATCH 6/8] powerpc/pseries: implement paravirt qspinlocks for
- SPLPAR
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20200702074839.1057733-1-npiggin@gmail.com>
- <20200702074839.1057733-7-npiggin@gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <6b8ccb02-53ca-35d2-0dc6-2fc8e5523a97@redhat.com>
-Date:   Thu, 2 Jul 2020 17:01:06 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C29E8C433C8;
+        Thu,  2 Jul 2020 21:01:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C29E8C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+Subject: Re: [PATCH 1/4] interconnect: qcom: Support bcm-voter-specific TCS
+ wait behavior
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200623040814.23791-1-mdtipton@codeaurora.org>
+ <20200623040814.23791-2-mdtipton@codeaurora.org>
+ <fee03dda-4c17-701b-bb1a-bf9482cc476d@linaro.org>
+From:   Mike Tipton <mdtipton@codeaurora.org>
+Message-ID: <9833fdac-2790-d488-e998-93fd077dfb03@codeaurora.org>
+Date:   Thu, 2 Jul 2020 14:01:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200702074839.1057733-7-npiggin@gmail.com>
+In-Reply-To: <fee03dda-4c17-701b-bb1a-bf9482cc476d@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 3:48 AM, Nicholas Piggin wrote:
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->   arch/powerpc/include/asm/paravirt.h           | 23 ++++++++
->   arch/powerpc/include/asm/qspinlock.h          | 55 +++++++++++++++++++
->   arch/powerpc/include/asm/qspinlock_paravirt.h |  5 ++
->   arch/powerpc/platforms/pseries/Kconfig        |  5 ++
->   arch/powerpc/platforms/pseries/setup.c        |  6 +-
->   include/asm-generic/qspinlock.h               |  2 +
->   6 files changed, 95 insertions(+), 1 deletion(-)
->   create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
->
-> diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
-> index 7a8546660a63..5fae9dfa6fe9 100644
-> --- a/arch/powerpc/include/asm/paravirt.h
-> +++ b/arch/powerpc/include/asm/paravirt.h
-> @@ -29,6 +29,16 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
->   {
->   	plpar_hcall_norets(H_CONFER, get_hard_smp_processor_id(cpu), yield_count);
->   }
-> +
-> +static inline void prod_cpu(int cpu)
-> +{
-> +	plpar_hcall_norets(H_PROD, get_hard_smp_processor_id(cpu));
-> +}
-> +
-> +static inline void yield_to_any(void)
-> +{
-> +	plpar_hcall_norets(H_CONFER, -1, 0);
-> +}
->   #else
->   static inline bool is_shared_processor(void)
->   {
-> @@ -45,6 +55,19 @@ static inline void yield_to_preempted(int cpu, u32 yield_count)
->   {
->   	___bad_yield_to_preempted(); /* This would be a bug */
->   }
-> +
-> +extern void ___bad_yield_to_any(void);
-> +static inline void yield_to_any(void)
-> +{
-> +	___bad_yield_to_any(); /* This would be a bug */
-> +}
-> +
-> +extern void ___bad_prod_cpu(void);
-> +static inline void prod_cpu(int cpu)
-> +{
-> +	___bad_prod_cpu(); /* This would be a bug */
-> +}
-> +
->   #endif
->   
->   #define vcpu_is_preempted vcpu_is_preempted
-> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
-> index f84da77b6bb7..997a9a32df77 100644
-> --- a/arch/powerpc/include/asm/qspinlock.h
-> +++ b/arch/powerpc/include/asm/qspinlock.h
-> @@ -3,9 +3,36 @@
->   #define _ASM_POWERPC_QSPINLOCK_H
->   
->   #include <asm-generic/qspinlock_types.h>
-> +#include <asm/paravirt.h>
->   
->   #define _Q_PENDING_LOOPS	(1 << 9) /* not tuned */
->   
-> +#ifdef CONFIG_PARAVIRT_SPINLOCKS
-> +extern void native_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
-> +extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
-> +
-> +static __always_inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
-> +{
-> +	if (!is_shared_processor())
-> +		native_queued_spin_lock_slowpath(lock, val);
-> +	else
-> +		__pv_queued_spin_lock_slowpath(lock, val);
-> +}
+On 7/2/2020 2:02 AM, Georgi Djakov wrote:
+> Hi Mike,
+> 
+> On 6/23/20 07:08, Mike Tipton wrote:
+>> Currently, all bcm-voters set tcs_cmd::wait=true for the last VCD
+>> command in each TCS (AMC, WAKE, and SLEEP). However, some bcm-voters
+>> don't need the completion and instead need to optimize for latency. For
+>> instance, disabling wait-for-completion in the WAKE set can decrease
+>> resume latency and allow for certain operations to occur in parallel
+>> with the WAKE TCS triggering. This is only safe in very specific
+>> situations. Keep the default behavior of always waiting, but allow it to
+>> be overridden in devicetree.
+>>
+>> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+>> ---
+>>   drivers/interconnect/qcom/bcm-voter.c | 32 ++++++++++++++++++---------
+>>   1 file changed, 21 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+> [..]
+>> @@ -336,7 +342,11 @@ static int qcom_icc_bcm_voter_probe(struct platform_device *pdev)
+>>   		return -ENOMEM;
+>>   
+>>   	voter->dev = &pdev->dev;
+>> -	voter->np = pdev->dev.of_node;
+>> +	voter->np = np;
+>> +
+>> +	if (of_property_read_u32(np, "qcom,tcs-wait", &voter->tcs_wait))
+> 
+> This DT property needs to be documented.
+Whoops, will do.
 
-You may need to match the use of __pv_queued_spin_lock_slowpath() with 
-the corresponding __pv_queued_spin_unlock(), e.g.
-
-#define queued_spin_unlock queued_spin_unlock
-static inline queued_spin_unlock(struct qspinlock *lock)
-{
-         if (!is_shared_processor())
-                 smp_store_release(&lock->locked, 0);
-         else
-                 __pv_queued_spin_unlock(lock);
-}
-
-Otherwise, pv_kick() will never be called.
-
-Cheers,
-Longman
-
+> 
+> Thanks,
+> Georgi
+> 
