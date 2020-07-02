@@ -2,117 +2,101 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1EB207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="dqkOLlTB"
+	by mail.kernel.org (Postfix) with ESMTP id 489BB20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgGBNIV (ORCPT
+        id S1729035AbgGBNLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:08:21 -0400
-Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:45318
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726289AbgGBNIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:08:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZHJTSQySR02rpWIihnucPPdcy60NabUypK2T33YqKolGojQhlDGDMgydD2puH0LYXX9AyPelbMMJWqR8ir+e7unG79A6bJHZti5laQaH3rgWhyfVYO41SlfJRNaIB/YBGWs+0DOF/OCBLHKeUqPTQnXMzLa4m83Anivb4/p7GalF6Bh+8cfNJHvLXnq4+fzmlr+iGprua1JSrOH1XloW5IBjZlTBAULP/8rdf6ye/YvsDJ5WkDheqSSW9jxwHXmwWCvitxSCT42wdE3vyQMknwx9a+cxL/64KXP0vC+VltA0dS4mAmGyQ3wKeiFcA0qX6kUyLL9NHBndd1NBdHivRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nMInviAA8cs4uNL2+Oy/Dp9w9d3NwX0J1zGCYu8nKoU=;
- b=AuM27LcMgcTU6fZ7QBJGQnQGuyB1kMnbWVW1a/HUNm9u9oMwZOHW7Jdp6n77d7kuAvxxVwP2Cvsgh6+sZFEbH8T5U+8nElWLo405/URZysPZtIum+4kHzxddSdpIc0DO4k//yYIBAzap08u0kM/zja+ybCpjwyGHVnKVWGiZ8OYe/ejTXi8Lta0zcZsEVDFdLXuyl9MRX9NPIHNbE/6NO0MV0FEiknhtiH1fHY+Di3YaUZOsVcMcXfRiOmUHH3LvhVZO1usvzJvjLhSVMYD1XJWwIAbfRm8ruKUnV3VCgYW2PIym7PMmYtFhjOZDDWsnvdBsxC5Mp2pPwe/0dPx7Wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nMInviAA8cs4uNL2+Oy/Dp9w9d3NwX0J1zGCYu8nKoU=;
- b=dqkOLlTBye7GpJQXrfMNaInk7CIbrdwdpwJfJxT3BUGFu+KoiyMwvyjeR6crGmJXHY+QlPAOf6htSdNNINjpiqhne3WVdg3T37JwgyYoW3b/XZZmQQQylgVyZYaxUH6jpYqedOz5x8s11I1+2zcJvOqFsEpaKBRB9UWWnlHwAQQ=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR0501MB2334.eurprd05.prod.outlook.com (2603:10a6:800:24::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Thu, 2 Jul
- 2020 13:08:16 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3153.027; Thu, 2 Jul 2020
- 13:08:16 +0000
-Date:   Thu, 2 Jul 2020 10:08:09 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: [PATCH rdma-next 0/6] Cleanup mlx5_ib main file
-Message-ID: <20200702130809.GU23821@mellanox.com>
-References: <20200702081809.423482-1-leon@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702081809.423482-1-leon@kernel.org>
-X-ClientProxiedBy: BL0PR02CA0064.namprd02.prod.outlook.com
- (2603:10b6:207:3d::41) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 2 Jul 2020 09:11:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23198 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbgGBNLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:11:09 -0400
+IronPort-SDR: sDg8L576F7YQEVZNm0Vm8xjBduSmo/sjXxJj+u0ytwBtVN3Tgf45LB1RKCENxZ44Bf9XNoqPAz
+ ZgqZ/6H8Qqsg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="148436179"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="148436179"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 06:11:08 -0700
+IronPort-SDR: IHfdyl2pAFxYqwhYkcXtsE801l3ob4ycN1yS8WjoGAhCVCPycGrsV4bi17aMtCSLemNwsBXKvZ
+ SxVGNs7IsFnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="425945302"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jul 2020 06:11:08 -0700
+Received: from [10.254.75.126] (kliang2-mobl.ccr.corp.intel.com [10.254.75.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 6E1B258041D;
+        Thu,  2 Jul 2020 06:11:07 -0700 (PDT)
+Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+ <20200702074059.GX4781@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
+Date:   Thu, 2 Jul 2020 09:11:06 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (193.47.165.251) by BL0PR02CA0064.namprd02.prod.outlook.com (2603:10b6:207:3d::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23 via Frontend Transport; Thu, 2 Jul 2020 13:08:16 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jqywj-002rl8-4p; Thu, 02 Jul 2020 10:08:09 -0300
-X-Originating-IP: [193.47.165.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4da8e0e0-972f-4253-5a9d-08d81e88fbb5
-X-MS-TrafficTypeDiagnostic: VI1PR0501MB2334:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0501MB2334089CDD6981B1813D4E63CF6D0@VI1PR0501MB2334.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Iq/IvOwWOU8zVSjr2r7dWBDOJPUk94RPyVpddFIhIHQDmFe0LeZFs2oT2rfb/AJYljmKfQ95CULOD2ZSqyBgkT7MomMPh2GhF5dAl3iiqiqyzXjekzl4PzPnVZwOMBe8hV+R66JmFm6EJdCJk8RAla6s5FT+ZRAf90FEGchhWBabUY7e2zxQMMQXOyUl+fTFDCsz0SurdV7ltEQUT14E9Hhub7ax7EibP/H6GaP1QCn1o1h+kn0WzPKn7/CnxRp719tWxfgulcVbuS2cn11RQmFwzLaNBcyo44+p9WUGYVgSazJViMZAuBMS2A9J7BYosQBoej6pUs42iR9QlN4Lpq6DumoINJSdU3VBb/2+qGA1Rq2/s4KZ26eWNcWNNGztEVL335Yt8rkApxFB9r9/vQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(6916009)(107886003)(8676002)(4326008)(426003)(2616005)(33656002)(54906003)(966005)(9746002)(9786002)(36756003)(8936002)(186003)(478600001)(26005)(66476007)(66556008)(5660300002)(316002)(4744005)(1076003)(2906002)(66946007)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: W99Li2/HiKNDJRMe1yiIb27puQKxSfdzG3kIwOExR0gG+ccJ7GJ1lxp11PWxGoDkIj1htuwzE6RvIwVx0v2otHN/gjz450PrRJuiuvufOU93LY//qghx0lJbeVgKtase4q1lkHc5NU9YFk/2qASg55yEgUSA8vWflFZWcAWoJnWMk+6VIu7+D25176Zb7gcJoExWiHIRYziWqZp4Zu5a/jQso4o6oEZA8HUnJZf846rcFABpPBV9LxIR1AE4FqwFKN1mSltfXpYzGshiDTGw6fLWGxYr2bbnax3V/jcwi6GB8fTLXyquBNhpLyEE9WaR9OXwTWykjKtIMkEUra1PvxuDTZiR3zl63zmBm/1ILKbdxeupe/ODUpqskbUJ+IJFNsTxdN9TIIYeGbN5KL4rUxsZ8D/fSKquKYe2DJVspAEjqdcg5/GhFrH5feRI+uHMa/mQxo5VYCcddJvqtM7In4MEal21wJv5QagpBI7Af/FtT8tLnrzrbyhjAuLmRFvo
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4da8e0e0-972f-4253-5a9d-08d81e88fbb5
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 13:08:16.2146
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7wA6zmfBaLbCc8vso6oPJ6ex6mjfwsG0eZnnM2GGcD4PXmzR6rAlc+AO0qQqA6eEeMAOiEyou4wmSqrs3d6kDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2334
+In-Reply-To: <20200702074059.GX4781@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:18:03AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Over the years, the main.c file grew above all imagination and was >8K
-> LOC of the code. This caused to a huge burden while I started to work on
-> ib_flow allocation patches.
-> 
-> This series implements long standing "internal" wish to move flow logic
-> from the main to separate file.
-> 
-> Based on
-> https://lore.kernel.org/linux-rdma/20200630101855.368895-4-leon@kernel.org
 
-Isn't this the series you said to drop? Can this be applied
-independently?
 
-Jason
+On 7/2/2020 3:40 AM, Peter Zijlstra wrote:
+> On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
+>> Like Xu (10):
+>>    perf/x86/core: Refactor hw->idx checks and cleanup
+>>    perf/x86/lbr: Add interface to get LBR information
+>>    perf/x86: Add constraint to create guest LBR event without hw counter
+>>    perf/x86: Keep LBR records unchanged in host context for guest usage
+> 
+>> Wei Wang (1):
+>>    perf/x86: Fix variable types for LBR registers
+> 
+>>   arch/x86/events/core.c            |  26 +--
+>>   arch/x86/events/intel/core.c      | 109 ++++++++-----
+>>   arch/x86/events/intel/lbr.c       |  51 +++++-
+>>   arch/x86/events/perf_event.h      |   8 +-
+>>   arch/x86/include/asm/perf_event.h |  34 +++-
+> 
+> These look good to me; but at the same time Kan is sending me
+> Architectural LBR patches.
+> 
+> Kan, if I take these perf patches and stick them in a tip/perf/vlbr
+> topic branch, can you rebase the arch lbr stuff on top, or is there
+> anything in the arch-lbr series that badly conflicts with this work?
+> 
+
+Yes, I can rebase the arch lbr patches on top of them.
+Please push the tip/perf/vlbr branch, so I can pull and rebase my patches.
+
+Thanks,
+Kan
