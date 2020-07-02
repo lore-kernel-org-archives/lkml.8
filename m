@@ -2,101 +2,105 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB322088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0zx/cMcC"
+	by mail.kernel.org (Postfix) with ESMTP id 292CE20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgGBIlh (ORCPT
+        id S1726834AbgGBIq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgGBIlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:41:36 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361EAC08C5C1;
-        Thu,  2 Jul 2020 01:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=akm8ROnV0pI+WVyllLrWm9BCF6GQuQwWAzJsuTZEqBU=; b=0zx/cMcCfOco0iKkTq60YJz+o
-        G/MgOn+ARLws1t03J2A49+OM4y/5vi78CcaY1Z99BMnsGrpUumWooQaZVd7lGAOjGvrKF9grzP0ir
-        UdWapHI6xfNQbzUqMU7dFHw5SPr9bsdZf1kR2npG1O1L4qJNgXOIqqfuBV3SCYKqUnqgoGiVHckeK
-        nGFUq0CNcoTJWJqSMTbAQe3QiiiLl+jCquA9FNE6wn+V47pz+Sgfy34GMxsdL1Jxl4BOMZUI35CiG
-        QLbqAATEHO6e08xqoOkpWDC0sVz6oDoQ7ejvljZ3YfTjCAmOvMyLCo5mx1S66R7V6zaj5hvH3/fK4
-        Ev8hyvhxA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34316)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jqumh-0002cA-NB; Thu, 02 Jul 2020 09:41:31 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jqume-0001eF-Qf; Thu, 02 Jul 2020 09:41:28 +0100
-Date:   Thu, 2 Jul 2020 09:41:28 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Subject: Re: [PATCH RESEND net-next v3 0/3] net: enetc: remove bootloader
- dependency
-Message-ID: <20200702084128.GM1551@shell.armlinux.org.uk>
-References: <20200701213433.9217-1-michael@walle.cc>
- <20200701215310.GL1551@shell.armlinux.org.uk>
- <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com>
+        Thu, 2 Jul 2020 04:46:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46981 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgGBIq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:46:57 -0400
+IronPort-SDR: SMm7EsYoyGOCw1VH5AY5MYxjoaW32H29P1oECYocvko45IY5F5b95UUmHgEiCVDdbXD7I/6b+L
+ oqc/XQVNs4sQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="211871600"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="211871600"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 01:46:57 -0700
+IronPort-SDR: 8v773znlm029UZL/qcOa676PS5qX3eVR1JOuEsIfC/o5+P9qUYXJro3MDuwBkXM9lWFBy+Zfy4
+ emMN3tj3kZLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="455443914"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 01:46:53 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jqurt-00HAon-VD; Thu, 02 Jul 2020 11:46:53 +0300
+Date:   Thu, 2 Jul 2020 11:46:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Daniel Winkler <danielwinkler@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        stable@vger.kernel.org, abhishekpandit@chromium.org,
+        Aaron Sierra <asierra@xes-inc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] Revert "serial: 8250: Fix max baud limit in
+ generic 8250 port"
+Message-ID: <20200702084653.GG3703480@smile.fi.intel.com>
+References: <20200701211337.3027448-1-danielwinkler@google.com>
+ <20200701223713.gavale4aramu3xnb@mobilestation>
+ <20200702041152.e5csvbodojzwnagx@wunner.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200702041152.e5csvbodojzwnagx@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 01:04:02AM +0300, Vladimir Oltean wrote:
-> On Thu, 2 Jul 2020 at 00:53, Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > fixing up almost every driver the best I can with the exception of two -
-> > felix DSA and Mediatek.
-> >
-> > I'm not going to wait for Felix or Mediatek.  As I say, I've given
-> > plenty of warning, and it's only a _suspicion_ of breakage on my
-> > side.
-> >
+On Thu, Jul 02, 2020 at 06:11:52AM +0200, Lukas Wunner wrote:
+> On Thu, Jul 02, 2020 at 01:37:13AM +0300, Serge Semin wrote:
+> > 1) Add a new capability like UART_CAP_NO16DIV and take it into account
+> >    in the serial8250_get_baud_rate() method.
+> >  
+> > I don't have a documentation for the Mediatek UART port, but it seems to me
+> > that that controller calculates the baud rate differently from the standard
+> > 8250 port. A standard 8250 port does that by the next formulae:
+> >   baud = uartclk / (16 * divisor).
+> > While it seems to me that the Mediatek port uses the formulae like:
+> >   baud = uartclk / divisor. (Please, correct me if I'm wrong)
 > 
-> What do you mean "I'm not going to wait for Felix"?
-> https://patchwork.ozlabs.org/project/netdev/patch/20200625152331.3784018-5-olteanv@gmail.com/
-> We left it at:
+> 8250_bcm2835aux.c seems to suffer from a similar issue and
+> solves it like this in the ->probe hook:
 > 
-> > I'm not going to review patch 7
-> > tonight because of this fiasco.  To pissed off to do a decent job, so
-> > you're just going to have to wait.
-> 
-> So, I was actively waiting for you to review it ever since, just like
-> you said, so I could send a v2. Were you waiting for anything?
+> 	/* the HW-clock divider for bcm2835aux is 8,
+> 	 * but 8250 expects a divider of 16,
+> 	 * so we have to multiply the actual clock by 2
+> 	 * to get identical baudrates.
+> 	 */
+> 	up.port.uartclk = clk_get_rate(data->clk) * 2;
 
-I stopped being interested in your series with the patch 5 commit
-description issue; what happened there is really demotivating.
+8250_mid for example lies about UART clock due to this. It has a comment in the
+code in its ->set_termios().
+
+Yes, we have a lot of possibilities here to fix, I guess. We have custom
+termios callback, also get and set divisor and so on.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+With Best Regards,
+Andy Shevchenko
+
+
