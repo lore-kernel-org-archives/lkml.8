@@ -2,116 +2,97 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9369EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9982065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700D320899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593700754;
+	bh=qh+QrqZ1UHNEbqazeXUIg0KX2EhsudHzr0KVBgTRLgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I+1Pd5xDVbbSHXDBpOABzH34XAZOQXAveh1Nizx6RojLmOXV8MPr/OvoK0gN8xBcR
+	 AAK1Ew9+72mvObOsHiMMWdVBLxvHXk1lbjycQARYK+oimZoB8E4iu9nRTDqDHPMQhO
+	 sERoSWwlulvemHD0BvPTDRTg9AKxzqBL1U7gNhd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgGBOih (ORCPT
+        id S1729866AbgGBOjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:38:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:58548 "EHLO foss.arm.com"
+        Thu, 2 Jul 2020 10:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728179AbgGBOig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:38:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E15A531B;
-        Thu,  2 Jul 2020 07:38:35 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66DA13F68F;
-        Thu,  2 Jul 2020 07:38:33 -0700 (PDT)
-Subject: Re: [PATCH] usb: host: ohci-platform: Disable ohci for rk3288
-To:     Jagan Teki <jagan@amarulasolutions.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        mylene.josserand@collabora.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-References: <20200702090504.36670-1-jagan@amarulasolutions.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f0ae5915-9cb8-9550-f05c-6cebad191a14@arm.com>
-Date:   Thu, 2 Jul 2020 15:38:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728179AbgGBOjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:39:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925D92065F;
+        Thu,  2 Jul 2020 14:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593700752;
+        bh=qh+QrqZ1UHNEbqazeXUIg0KX2EhsudHzr0KVBgTRLgo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fiOI/5Dq62/t9KUduPh4pr90Red/TPP5UuvgNx5PBbB+g6KkgPO0vxLPKsY0ANkPG
+         oAHXqxz5mBCSNYASAC30/UAUAjBTJuvh48x9tC3vBpXk8fXOxsIERDRpKE7UeUENky
+         9Oar+nlPmNTI3zrVjIrYgvBYvWykTwGGl23Nho5Y=
+Date:   Thu, 2 Jul 2020 15:39:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     nicolas.ferre@microchip.com
+Cc:     linux-arm-kernel@lists.infradead.org, sre@kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH] MAINTAINERS: Change Maintainer for some at91 drivers
+Message-ID: <20200702143909.GH4483@sirena.org.uk>
+References: <20200702134224.3750-1-nicolas.ferre@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702090504.36670-1-jagan@amarulasolutions.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BXr400anF0jyguTS"
+Content-Disposition: inline
+In-Reply-To: <20200702134224.3750-1-nicolas.ferre@microchip.com>
+X-Cookie: I'm rated PG-34!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02 10:05, Jagan Teki wrote:
-> rk3288 has usb host0 ohci controller but doesn't actually work
-> on real hardware but it works with new revision chip rk3288w.
-> 
-> So, disable ohci for rk3288.
-> 
-> For rk3288w chips the compatible update code is handled by bootloader.
-> 
-> Cc: William Wu <william.wu@rock-chips.com>
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Note:
-> - U-Boot patch for compatible update
-> https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
-> 
->   drivers/usb/host/ohci-platform.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> index 7addfc2cbadc..24655ed6a7e0 100644
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -96,7 +96,7 @@ static int ohci_platform_probe(struct platform_device *dev)
->   	struct ohci_hcd *ohci;
->   	int err, irq, clk = 0;
->   
-> -	if (usb_disabled())
-> +	if (usb_disabled() || of_machine_is_compatible("rockchip,rk3288"))
 
-This seems unnecessary to me - if we've even started probing a driver 
-for a broken piece of hardware to the point that we need magic checks to 
-bail out again, then something is already fundamentally wrong.
+--BXr400anF0jyguTS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Old boards only sold with the original SoC variant have no reason to 
-enable the OHCI (since it never worked originally), thus will never 
-execute this check.
+On Thu, Jul 02, 2020 at 03:42:24PM +0200, nicolas.ferre@microchip.com wrote:
 
-New boards designed around the W variant to make use of the OHCI can 
-freely enable it either way.
+> I kept these entries together as it may generate conflicts if handled
+> separately. I suggest that Mark take the chunk as maintainer of SPI and
+> Audio sub-systems.
+> Anyway, don't hesitate to tell me if I should handle this change
+> differently or at another time during the development cycle.
 
-The only relative-edge-case where it might matter is older board designs 
-still in production which have shipped with both SoC variants. Enabling 
-OHCI can't be *necessary* given that it's still broken on a lot of 
-deployed boards, so at best it must be an opportunistic nice-to-have. 
-Since we're already having to rely on the bootloader to patch up the 
-devicetree for other low-level differences in this case, it should be 
-part of that responsibility for it to only enable the OHCI on the 
-appropriate SoC variant too. Statically enabling it in the DTS for a 
-board where it may well not work is just bad.
+That works for me (though I'd be a bit surprised if it generated
+conflicts), Sebastian?
 
-As soon as a DTB with a broken piece of hardware enabled gets passed to 
-an OS, then the damage is already done. A driver patch in a future 
-version of Linux that magically knows better and ignores it isn't going 
-to help a user booting an older kernel image, or some other OS entirely.
+--BXr400anF0jyguTS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Robin.
+-----BEGIN PGP SIGNATURE-----
 
->   		return -ENODEV;
->   
->   	/*
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl798Y0ACgkQJNaLcl1U
+h9DNkgf8CXzfu1HBWQjLABvOUjJTv8R3dJZAz4XSEss7PxmXnFF0VwTpt7Xh3gLS
+sp4hUskO70QgqH+f7CtFOPQ2i12u55qu6hHVyB6bEyYrl8xXRgg+oxt9iIrGmf3Q
+gC9OJmWEJy4+ZaRL8x/QnDbQTbAv7B/yexPqll4qG5/RlbHj7nqrL4z8NSuuMmm/
+atsaFx3fmY5kEfyjEBECMQ6fYXEbf+T0ySVWT4Y3eMEdMpAGOM3c7KvGNQpi07gw
+lkRVCa9lO0PkmC94nzW60H2ocdgZdn+pXt4fYcPFl9ijCFJjXG1ijg7mE1YasQ0F
+cRTKaVC87piSsTwYo/L2C6O1MlkKxw==
+=7g5B
+-----END PGP SIGNATURE-----
+
+--BXr400anF0jyguTS--
