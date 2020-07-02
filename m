@@ -2,160 +2,97 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5522C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A95320675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E4320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgGBL2q (ORCPT
+        id S1728691AbgGBL27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:28:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42058 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgGBL2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:28:46 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7AFE2180E2AE9E80C0B8;
-        Thu,  2 Jul 2020 19:28:44 +0800 (CST)
-Received: from [10.174.187.22] (10.174.187.22) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 19:28:34 +0800
-Subject: Re: [PATCH 03/12] KVM: arm64: Report hardware dirty status of stage2
- PTE if coverred
-To:     Steven Price <steven.price@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
-References: <20200616093553.27512-1-zhukeqian1@huawei.com>
- <20200616093553.27512-4-zhukeqian1@huawei.com>
- <a73952ac-5e81-6c05-9b21-734e25250845@arm.com>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        <liangpeng10@huawei.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <d994811b-ca95-236e-b2b0-461ab4f1f065@huawei.com>
-Date:   Thu, 2 Jul 2020 19:28:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 2 Jul 2020 07:28:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17851 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728661AbgGBL26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:28:58 -0400
+IronPort-SDR: mdM+rUncm4MLNnTzFQCIVuYzAHoDKJiutv3b/M3N2CZ1w/Iqy0KtG7Gsel8ghmzBOngyoDRYPY
+ jqFK9ZGDGvQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126948031"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="126948031"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 04:28:58 -0700
+IronPort-SDR: 9pspgZgUgzf7zRU62SMBhQfnaU/uODCsqnCGJmwULdBs3t7b8znyp7HUUCefXA4c2HsAAYqLai
+ Io5U+R/YQi8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="481972084"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 04:28:55 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <ben.widawsky@intel.com>, <alex.shi@linux.alibaba.com>,
+        <dwagner@suse.de>, <tobin@kernel.org>, <cl@linux.com>,
+        <akpm@linux-foundation.org>, <dan.j.williams@intel.com>,
+        <cai@lca.pw>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/3] mm/vmscan: restore zone_reclaim_mode ABI
+References: <20200701152621.D520E62B@viggo.jf.intel.com>
+        <20200701152623.384AF0A7@viggo.jf.intel.com>
+Date:   Thu, 02 Jul 2020 19:28:55 +0800
+In-Reply-To: <20200701152623.384AF0A7@viggo.jf.intel.com> (Dave Hansen's
+        message of "Wed, 1 Jul 2020 08:26:23 -0700")
+Message-ID: <87d05ejgug.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <a73952ac-5e81-6c05-9b21-734e25250845@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.187.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+Dave Hansen <dave.hansen@linux.intel.com> writes:
 
-On 2020/7/1 19:28, Steven Price wrote:
-> Hi,
-> 
-> On 16/06/2020 10:35, Keqian Zhu wrote:
->> kvm_set_pte is called to replace a target PTE with a desired one.
->> We always do this without changing the desired one, but if dirty
->> status set by hardware is coverred, let caller know it.
->>
->> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
->> ---
->>   arch/arm64/kvm/mmu.c | 36 +++++++++++++++++++++++++++++++++++-
->>   1 file changed, 35 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
->> index 5ad87bce23c0..27407153121b 100644
->> --- a/arch/arm64/kvm/mmu.c
->> +++ b/arch/arm64/kvm/mmu.c
->> @@ -194,11 +194,45 @@ static void clear_stage2_pmd_entry(struct kvm *kvm, pmd_t *pmd, phys_addr_t addr
->>       put_page(virt_to_page(pmd));
->>   }
->>   -static inline void kvm_set_pte(pte_t *ptep, pte_t new_pte)
->> +#ifdef CONFIG_ARM64_HW_AFDBM
->> +/**
->> + * @ret: true if dirty status set by hardware is coverred.
-> 
-> NIT: s/coverred/covered/, this is in several places.
-> 
-OK.
->> + */
->> +static bool kvm_set_pte(pte_t *ptep, pte_t new_pte)
->> +{
->> +    pteval_t old_pteval, new_pteval, pteval;
->> +    bool old_logging, new_no_write;
->> +
->> +    old_logging = kvm_hw_dbm_enabled() && !pte_none(*ptep) &&
->> +              kvm_s2pte_dbm(ptep);
->> +    new_no_write = pte_none(new_pte) || kvm_s2pte_readonly(&new_pte);
->> +
->> +    if (!old_logging || !new_no_write) {
->> +        WRITE_ONCE(*ptep, new_pte);
->> +        dsb(ishst);
->> +        return false;
->> +    }
->> +
->> +    new_pteval = pte_val(new_pte);
->> +    pteval = READ_ONCE(pte_val(*ptep));
-> 
-> This usage of *ptep looks wrong - it's read twice using READ_ONCE (once in kvm_s2pte_dbm()) and once without any decoration (in the pte_none() call). Which looks a bit dodgy and at the very least needs some justification. AFAICT you would be better taking a local copy and using that rather than reading from memory repeatedly.
-> 
-oh yes. Here we can use a local copy to get higher performance.
+> From: Dave Hansen <dave.hansen@linux.intel.com>
+>
+> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
+> sysctl.  Like a good kernel developer, I also went to go update the
+> documentation.  I noticed that the bits in the documentation didn't
+> match the bits in the #defines.
+>
+> The VM never explicitly checks the RECLAIM_ZONE bit.  The bit is,
+> however implicitly checked when checking 'node_reclaim_mode==0'.
+> The RECLAIM_ZONE #define was removed in a cleanup.  That, by itself
+> is fine.
+>
+> But, when the bit was removed (bit 0) the _other_ bit locations also
+> got changed.  That's not OK because the bit values are documented to
+> mean one specific thing and users surely rely on them meaning that one
+> thing and not changing from kernel to kernel.  The end result is that
+> if someone had a script that did:
+>
+> 	sysctl vm.zone_reclaim_mode=1
+>
+> That script went from doing nothing
 
-I am not sure here has problem about correctness. I *think* we should always acquire corresponding lock before manipulate PTs,
-so there is no other agent will update PTs during our several PTs access (except MMU, but it just modifies AF and [S2]AP) .
-But do I miss something?
+Per my understanding, this script would have enabled node reclaim for
+clean unmapped pages before commit 648b5cf368e0 ("mm/vmscan: remove
+unused RECLAIM_OFF/RECLAIM_ZONE").  So we should revise the description
+here?
 
->> +    do {
->> +        old_pteval = pteval;
->> +        pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, new_pteval);
->> +    } while (pteval != old_pteval);
-> This look appears to be reinventing xchg_relaxed(). Any reason we can't just use xchg_relaxed()? Also we had a dsb() after the WRITE_ONCE but you are using the _relaxed variant here. What is the justification for not having a barrier?
-> 
-Aha, I have changed the code for several times and it is equal to xchg_relaxed now, thanks.
+> to writing out pages during
+> node reclaim after the commit in question.  That's not great.
+>
+> Put the bits back the way they were and add a comment so something
+> like this is a bit harder to do again.  Update the documentation to
+> make it clear that the first bit is ignored.
+>
 
-I use _relaxd here because I am not clear about the reason that we use _relaxed in kvm_set_s2XXX_XXX and use dsb() in kvm_set_pte.
-But I will correct this in patch v2.
->> +
->> +    return !kvm_s2pte_readonly(&__pte(pteval));
->> +}
->> +#else
->> +/**
->> + * @ret: true if dirty status set by hardware is coverred.
->> + */
->> +static inline bool kvm_set_pte(pte_t *ptep, pte_t new_pte)
->>   {
->>       WRITE_ONCE(*ptep, new_pte);
->>       dsb(ishst);
->> +    return false;
->>   }
->> +#endif /* CONFIG_ARM64_HW_AFDBM */
-> 
-> You might be able to avoid this #ifdef by redefining old_logging as:
-> 
->   old_logging = IS_ENABLED(CONFIG_ARM64_HW_AFDBM) && ...
-> 
-> I *think* the compiler should be able to kill the dead code and leave you with just the above when the config symbol is off.
-> 
-After my test, you are right ;-) .
-
-
-Thanks,
-Keqian
-> Steve
-> 
->>     static inline void kvm_set_pmd(pmd_t *pmdp, pmd_t new_pmd)
->>   {
->>
-> 
-> .
-> 
+Best Regards,
+Huang, Ying
