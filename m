@@ -2,124 +2,142 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0192C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B5F20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF7C20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UlPPQ4kN"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YL+eeP32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgGBGyh (ORCPT
+        id S1726748AbgGBG4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:54:37 -0400
-Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:12347
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727860AbgGBGy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:54:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UZhf5iVOhsOEbDZUzZc6+6T7DqcleXc1wwhHKXBrmRj5mYV0pwURtbDlHKQ3BmECoU6mADo+IixXFrFBnsUdfrW4YVKMjckToHLYSroFN109HN3sq+Myqp9GxasUMRko2V6aN36O0YOiYkNJytWZKhr7OQb7Z1O8Iq5EIZ5YJJ0P2EjZ0QzvihqHhf73HiisBxgiHAvVo6IUrozFywaSSsemTLVb5vEA+tm27AErBUd3QphjJ4jf2fbRWi3bgjsDE2IkM0zLVSNjfS9SRmU8BwcaokeJ+0FIAn5ErDfWzrFBjv4CTRvBCCbejj6ozYcmgXr8WA1Ior88PSNDquXy3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A2NdxpnZ7ORXZIN0STWcEdx/uXHR9LGHSHi6z30B7x0=;
- b=T7aEvnweowQFqwHU5iHsBjrMVsnBdIz9EKzQYKDoXjmWrPbJeS0kBZmlovmMnMwoYx5DQZZXzy6oINiDGZjyUECTG9tazN8Gv5Z5xf8Xk+3iDKOoMw18t+7q2zXkujWutBHRPFNhRJiC41xzFcpuEq6FvPFuxJvSpXt3YNcPOYMKXRboGHkx2grEQY4JOdbiowtBddRisl4QShh9I6U4+RBCcpNp1Kd9ZjQTfN1V5ZIrmOzft9ct6PmCEsNzyj8og7q3Yix+yWJWAKesvCGYxqZhW7Rom/rknn/DlvxTD8W2eYexshDietybcsZJyxV/KhO12FKmzjc/A9D71pTdCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A2NdxpnZ7ORXZIN0STWcEdx/uXHR9LGHSHi6z30B7x0=;
- b=UlPPQ4kNWquRaX55jWmgKMW3WGh7x897fsPFs2kJyjOx4sc0dr7yCk5/j5EPzj+rNCSuzetHpR6GuLgXXp1rTIeZP9TWA57sXwICox1hgKkfuuFhXkZ0CRKtktQ2zQWefBu1MHjWR584nAnDRkf6q+gcm6Vz6b0uURqk9e517ss=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR04MB6943.eurprd04.prod.outlook.com (2603:10a6:803:13a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Thu, 2 Jul
- 2020 06:54:21 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3153.024; Thu, 2 Jul 2020
- 06:54:21 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, dan.j.williams@intel.com,
-        angelo@sysam.it
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v1 9/9] arm64: configs: defconfig: add CONFIG_FSL_EDMA3
-Date:   Thu,  2 Jul 2020 23:08:09 +0800
-Message-Id: <1593702489-21648-10-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
-References: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0172.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::28) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Thu, 2 Jul 2020 02:56:50 -0400
+Received: from mout.web.de ([212.227.15.14]:34369 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgGBG4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1593672987;
+        bh=wp+PJBfgkRhB2JTIRaWDN1CBab8hu15mzsFK977Zf0k=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=YL+eeP32eGnMvkQ1ob4993ZDbYXnDBJVXEDNlfcV/yywQcfpX9jUCGpg2617fdDWP
+         1Z9YmRCj3PdtUpKwdMSkvrUedRcCuHuiOtL/0EyK0FdHCnqG9inu9iHKAWC9uKUadd
+         lyaecvqjNHZFrb683sz0eIgZQZwCQ1vE9QeEwfL0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.138.52]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLyCC-1jjD6N1gpY-007j8X; Thu, 02
+ Jul 2020 08:56:27 +0200
+Subject: Re: [PATCH v3] Documentation: Coccinelle: fix various typos etc.
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+References: <def28907-18b9-5b7a-e743-79b0418c946c@infradead.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <63450b02-93f1-1ea0-9e39-c5bb14086ce2@web.de>
+Date:   Thu, 2 Jul 2020 08:56:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0172.apcprd01.prod.exchangelabs.com (2603:1096:4:28::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3153.24 via Frontend Transport; Thu, 2 Jul 2020 06:54:16 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 10863af6-0982-45af-b54e-08d81e54bf20
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6943:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB694356E963068EAC5E4ED81E896D0@VI1PR04MB6943.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:843;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jGFG4eB+Bu/LQgwWFM0sXqnoknm2ibsM7R8CMSWh5An1fTN+g2T+SvWzs0W1We9j4HECer0d10TmDysRaBgflD/2yKk9X49BGhtkcv6Qaq4gH1hylp3O5D3WoLFhwzyYW2cVmtpN+t9yFQSTEorTLNICBh823cvcuj7JTLRHKNyqZegzqwD4kAqB3Adp4r0+g9LY0ogzbdLSBMuqwvMVxNYnjyqrne8gX/bePyvhMoILjdFDliQB2XIRLqggZrAq7HFWhhIMIXp81MvuzHJRLOo0f9k7v4YiPX8EvRPDrxfPBdCTjQMuexSqximMyBEFbGzAoMU/iMAhEEfbcnocmw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(66476007)(6666004)(66946007)(66556008)(52116002)(36756003)(8936002)(2616005)(6486002)(956004)(6512007)(186003)(7416002)(4326008)(26005)(2906002)(8676002)(86362001)(16526019)(4744005)(478600001)(6506007)(5660300002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: T128/5vYyRZ6l25+y79xZWixw+CxxkwFUiVoiHB5/rXyAiOEPWIDNxQ2WQbH8P5AjvB53YxbDCq6PKLIL5gz5x9lEO4RNHvfcgrH0epn3fj6mUbgiuS75ka/OROVQSohcACSOO3AKFjwD/xaZ3f+kAA1GMRbHVRjVBVuKLbmbQnEHWrpmVhJcX0nbllQSM/eUsJ+2Oj0gRJfq5+cblv6+Q3vRQL2/sd1pQG0p9/A7NUd1Age1GrlymMULkVBi7PcX41aFdGfcIBh48rB2DVEOtYE1sh7VrW/Bg1W/tERx011+KSqgbzSR0q7ylC3415TNy2qt08IShlRw+fCHlsnoNDdVChYq+Lqe/7gFra2GTmTCpv40DB71GuVuifcoeujHpFDxksumK4/rQeFwmiHEo4BY7OUKCi1F8dAz5waGHUj7RQPBda5D+WExmeXnvZpru/tCUxVJ5ItqZmNlZfi4Jjl1nhNCh0dKjzPjjsDRzI=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10863af6-0982-45af-b54e-08d81e54bf20
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 06:54:20.8981
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9r0myXAh4MsxYhv3yceY8e7MyiEjOLQXdZpTUCX0KVedkNLnbWvzBeH7zs78dDZkSCve1kGeQH1iHCa4NcX4BA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6943
+In-Reply-To: <def28907-18b9-5b7a-e743-79b0418c946c@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0HvnEXe+l0OBvUyXfyxLXzJZPhe9tFXOgjrAAApriXLQv4g/d3s
+ AV9iMaLhXEhhuDTH5tqiOfEMeWqN9Mtm7BsuPkyXRajQkQvUHsUjOb5iLrldA7ktCESQAoK
+ 3VJOFc6+MNxK47VTI3ovtFMBZzh4R8SfIlYwqeQIhlwJlULg4bksK4HELcXQrrgAAj3xylt
+ ChQObkNkLt3MrMEPBRTiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F1efwYzKYGg=:G12g1cu9a81Ot7AKe480Fj
+ KoWkSk2b/dSSZCVGNdgtq0r+eiWvCsqu1abvpQNzEl07hw3vgu5cMKNCqrAjOApjCq8a/kVou
+ UELvL/UV0JS7qFeuTmOhT/SG3xVA8TQRZ04Pi5GUGM/yuKNy9LNLIX8b/6be0ye/5td3/1oAU
+ FzrZ3gxQm4HAEjdxDImsIrBG6le9nB7t1mSCBoSy0yoPnOcKwH51BSNs4E5BtQWKD8pRuCcZI
+ +6qh40s4ZbK81FvalfwH0hrxgcq5iXWPs8vFCrYMMDsnY82w7qQUvqChSkoUM+XK9VPKKWt4w
+ 4I2l2MjZ64UpeKFXQ5oXwEGO215OxP4r8XGjHBqRtR1Msnks02qOGqzZIrtAWv1TDoA25iWSQ
+ rakHlQkCPX6hf32LlYfiABAazr0m5nOXsQNtebRd3djy8+Qf5Tm1YT8FTTZgo0Oe2ZZLCv/cS
+ gf5TSD8Dx2WqRy5hK7rk4emurVEzmz3H8agFn3kieEMzbgZL/GUtulSO94YF64R8j9pBXnbM+
+ nF7lfyjAC14rNKk78QZDAvFqOi8xM/nwvgG/jsoERQo9maI/1pE77ddB/TQwPT2mVsmK2tuEL
+ lu4be2Bo5MRC5HZxLaKYpuo2JhVvUxT7gO7EMtJ/jCtPKQBtvxYPJDjzHFju6EAQGUAyAI/42
+ 7sC4t3MYOzoIfbmvYL2/WckDT1dJM1g1Oj9kLA8Qt1Ef0QQjMoMH9UB2c8mGJxPwg3cmwa9i4
+ GVLNEbOj447k6H4n6bmPxl6hSdOmOqdxsvDJoWjrdU8O56vHI5sxR57yTTC8/zDnt2Sdy8d2B
+ nkqgsbIRLD6GQWOAPzOWf9WdSUmPGvq1LbnbkXEBVg2g3XHDc3CT2hE8iIUv+Jv0ufFjXXz4K
+ 49Xv6lWzB8Bcfq5CZA5yUUl7AgESpulRd9K/IOEpuTxRs+H3qhVJfJvKlq5bRzTz8AGEPFkvq
+ RDFAZKnGriJRP9IciaCZ14L9K62yblBiJ9WCFC0tNjYM9EimNBlsxjcWQLJ4WspRwcE2Fs8RJ
+ Sy0ulelL/fsizjQG8VnijMNjROnw4cP9AQ6W3f7gNlJnEB3h6wiS7O2CaeREvRqBKoyRay7ha
+ BSfEeeJNG9ixMh0G+rDHhhpd99T8sKgZtkBV+iFPby3j+srUL7rq6Vd11Dn/dALyJh3bkhDLA
+ zSfbC25zy5ghf7JSNr3zsOEQZecu5FrsaGEDyPxLWgwYlDhkIKIPltCoKgtuOpc3W2D6ltfcj
+ oK2inGRPaOV3Cim9K
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_FSL_EDMA3 for i.mx8qxp/i.mx8qm.
+=E2=80=A6
+> +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
+=E2=80=A6
+> @@ -260,13 +260,13 @@ If not using the kernel's coccicheck tar
+=E2=80=A6
+> -We help Coccinelle when used against Linux with a set of sensible defau=
+lts
+> +We help Coccinelle when used against Linux with a set of sensible defau=
+lt
+>  options for Linux with our own Linux .cocciconfig. This hints to coccin=
+elle
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Another small wording adjustment:
+  =E2=80=A6 These hints =E2=80=A6
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index ae76fae..d786bd9 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -770,6 +770,7 @@ CONFIG_DMADEVICES=y
- CONFIG_DMA_BCM2835=y
- CONFIG_DMA_SUN6I=m
- CONFIG_FSL_EDMA=y
-+CONFIG_FSL_EDMA3=y
- CONFIG_IMX_SDMA=y
- CONFIG_K3_DMA=y
- CONFIG_MV_XOR=y
--- 
-2.7.4
-
+Regards,
+Markus
