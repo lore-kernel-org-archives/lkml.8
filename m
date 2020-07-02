@@ -2,154 +2,102 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7820C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327302067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sj1ZI8qv"
+	by mail.kernel.org (Postfix) with ESMTP id AA43B214DB
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgGBIFS (ORCPT
+        id S1727968AbgGBIFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgGBIFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:05:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A527FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1Shbc8XBEGOupz0+BIqRfrqP5vs699lFBc+50af7Ag8=; b=sj1ZI8qvkQGYW1AfsMtwcP8rPq
-        HcmQ5l7jhJEw/pMnBEqVmf8VrcNH7YVmQywmr19wk9gXy5ONFRkGfOsHIsBBpI+fddXVcJBraSJhv
-        q/sVFchhHcgHNdTmuZSbGTbAhhokf888HFa0zxiAQHdLg0W3MXPC6L9tHYXeLsyFWuL7zkSwTctla
-        ItiG6iNtAcnVjMl1WTWzw5GjMYswjw+AtDWVr8qrTI/EmX39L0QIZelk7P0ZWhBqoNXZzhlwHP39i
-        sgksfeOHfsWAuKEldkps95B7Y1ON0ewYxaTUfjPHuWe9aWTT0KY8hARZ3zNFKoWLUQ1ApVZPF2+1a
-        Si7OiR8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jquDZ-0007Od-34; Thu, 02 Jul 2020 08:05:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0164330015A;
-        Thu,  2 Jul 2020 10:05:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E6679264F8CB1; Thu,  2 Jul 2020 10:05:10 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 10:05:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: objtool clac/stac handling change..
-Message-ID: <20200702080510.GY4781@hirez.programming.kicks-ass.net>
-References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
- <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
- <20200701205108.wtgfnijav7lgfiqe@treble>
- <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
- <20200702000041.movaiqpyzdmhlu67@treble>
+        Thu, 2 Jul 2020 04:05:52 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:60102 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbgGBIFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:05:51 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn99Tlf1eOmFOAA--.2652S3;
+        Thu, 02 Jul 2020 16:05:40 +0800 (CST)
+Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
+ leaks
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        linux-csky@vger.kernel.org
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
+ <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
+ <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
+ <971c649e-fe07-3771-6fea-f5aaeaf090ad@web.de>
+ <c7cc848a-1ce0-e877-aa44-ebafe4b5985c@loongson.cn>
+ <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
+Date:   Thu, 2 Jul 2020 16:05:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702000041.movaiqpyzdmhlu67@treble>
+In-Reply-To: <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxn99Tlf1eOmFOAA--.2652S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7JF48ur1fZr4DXFWDZFW8WFg_yoW8Jr1UpF
+        WUur15ZFs3Jw18ur1q93yku345Zryjgr4qvws7Jrn2vr48Xrn5Wr40v3Z8uF4DCrnrXa1F
+        van3A34ru3WUJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
+        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjxUx6wCDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 07:00:41PM -0500, Josh Poimboeuf wrote:
-> On Wed, Jul 01, 2020 at 02:02:42PM -0700, Linus Torvalds wrote:
-> > So the objtool rule might be:
-> > 
-> >  - in a STAC region, no exception handlers at all except for that
-> > ex_handler_uaccess case
-> > 
-> >  - and that case will clear AC if it triggers.
-> > 
-> > and maybe such an objtool check would show some case where I'm wrong,
-> > and we do some MSR read other other fault thing within a STAC region.
-> > That _sounds_ wrong to me, but maybe we have reason to do so that I
-> > just can't think or right now?
-> 
-> Here's an attempt at implementing this, in case anybody wants to play
-> with it.  Usual disclaimers apply...
+On 07/02/2020 03:19 PM, Markus Elfring wrote:
+>>>> +++ b/drivers/irqchip/irq-csky-apb-intc.c
+> …
+>>> I suggest to recheck the parameter alignment for such a function call.
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n93
+>> OK, thank you, like this:
+>>
+>> -       ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
+>> -                       "csky_intc", handle_level_irq,
+>> -                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
+>> -       if (ret) {
+>> +       if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
+>> +                                          "csky_intc", handle_level_irq,
+>> +                                          IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
+>>                  pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+> …
+>
+> Would you like to use also horizontal tab characters for the corresponding indentation?
 
-Looks about right, two niggles below.
+Sorry, I do not quite understanding what you mean, maybe like this?
 
-> @@ -2335,6 +2340,35 @@ static void fill_alternative_cfi(struct objtool_file *file, struct instruction *
->  	}
->  }
->  
-> +static int handle_stac(struct symbol *func, struct instruction *insn,
-> +		       struct insn_state *state)
-> +{
-> +	if (state->uaccess) {
-> +		WARN_FUNC("recursive UACCESS enable", insn->sec, insn->offset);
-> +		return -1;
-> +	}
-> +
-> +	state->uaccess = true;
-> +	return 0;
-> +}
-> +
-> +static int handle_clac(struct symbol *func, struct instruction *insn,
-> +		       struct insn_state *state)
-> +{
-> +	if (!state->uaccess && func) {
-> +		WARN_FUNC("redundant UACCESS disable", insn->sec, insn->offset);
-> +		return -1;
-> +	}
-> +
-> +	if (func_uaccess_safe(func) && !state->uaccess_stack) {
-> +		WARN_FUNC("UACCESS-safe disables UACCESS", insn->sec, insn->offset);
-> +		return -1;
-> +	}
-> +
-> +	state->uaccess = false;
-> +	return 0;
-> +}
+         if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
+                 "csky_intc", handle_level_irq,
+                 IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
+                 pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+                 goto err_domain_remove;
+         }
 
-For both these we return -1 on error and then all callers convert it to
-1. So why not have this return 1 and pass any !0 value through?
+>
+> Regards,
+> Markus
 
->  /*
->   * Follow the branch starting at the given instruction, and recursively follow
->   * any other branches (jumps).  Meanwhile, track the frame pointer state at
-> @@ -2393,6 +2427,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->  				if (alt->skip_orig)
->  					skip_orig = true;
->  
-> +				if (alt->exception) {
-> +					if (!alt->uaccess && state.uaccess) {
-> +						WARN_FUNC("non-user-access exception with uaccess enabled",
-> +							  sec, insn->offset);
-> +						return 1;
-> +					}
-
-This is Linus' new rule that AC code should not get any exceptions
-except ex_handler_uaccess.
-
-> +
-> +					if (alt->uaccess && handle_clac(func, insn, &state))
-> +						return 1;
-
-And this is ex_handler_uaccess() mucking with regs->flags, right? Might
-want a comment.
-
-> +				}
-> +
->  				ret = validate_branch(file, func, alt->insn, state);
->  				if (ret) {
->  					if (backtrace)
