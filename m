@@ -2,85 +2,95 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA74C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD3920760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A44206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="dNCDR6kg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E06uoqPv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l7b80WgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGBX1V (ORCPT
+        id S1726513AbgGBX12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:27:21 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50395 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726568AbgGBX1U (ORCPT
+        Thu, 2 Jul 2020 19:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbgGBX0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:27:20 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7BB1A58038B;
-        Thu,  2 Jul 2020 19:27:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 02 Jul 2020 19:27:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=e7+7Th1m9BXZP
-        GB/OmZlUELLweXezZABXtnEK2WW7Ys=; b=dNCDR6kgzoEDQdtwBKLbkJCwCan4I
-        RI46j74E4g4TGyr6dID+KO3w0enVII8cvN9YWe9X/ZfO37ifrSPmk2LqhhcH93nA
-        v1bZYC7XhyOFDIpWEB4bXQOaZMnktvb6knu/2w5sMGaXNRYhDtPM7oyb2dArGVum
-        iZt0diytvXFsraC90ApYj1QAjBVkXCliwVHNfPP99NFgkX9T8JovBNneJtbbbYTL
-        DwX7NsUXUauIa93viG4K39FN3QXgDbyyxUEZGlf21L9vSJfM05gospeI5rTd4v8K
-        cHfpiI0XpmFdSuChFgy6SgjqP04gOSiZ+DqqYzs+PGnwx8sss3DGkmKJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=e7+7Th1m9BXZPGB/OmZlUELLweXezZABXtnEK2WW7Ys=; b=E06uoqPv
-        cqVkHstrueopNY7IfV99ERqSVZV6o5cvihIcRb2Nmn6IF2yJNSvZFZpMBA2ZdnwH
-        PP97straB9PExMebjC9d/fiPiFvP6e+Jnv3bp7CTJeuQl6ZhIAmtOhRGq1LP8MTm
-        +wYU/GMDIPvRYI/wKIT3HiLzpnN81nKaXyRgHHkvwP46EZo27hgle0sRgzzdhLy1
-        bvbDyOZini8rEvHvN3UgR2Zm16XiZBkJjGcIQrD5QybW4orUnw0V7JRbkT0G6Abp
-        0Nwz4lJ1ij/+l7/iaw0J1RkHVTEwvCA29C+xg09Xzzh0ICpCmMpa0jJX6w9jwbUb
-        fI/WkIlm+Yv/3Q==
-X-ME-Sender: <xms:VW3-XhUwNoCh7-UgD6Sbje0eplrd3gRO5mvHxJ0BcsK88MFvDbNigQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgddvtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicu
-    nfhinhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpe
-    ffvdfgjeekleetleekkeegvdetvdejgfelkeevtdffffefhfefvddvtdffieegjeenucff
-    ohhmrghinhepghhithhhuhgsrdgtohhmpdhlphgsgidruggrthgrnecukfhppeejfedrvd
-    dvhedrgedrudefkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpegurghnnhihsehkughrrghgtdhnrdguvghv
-X-ME-Proxy: <xmx:VW3-XhlzlxfgqeJyrBhe6M6wqjtR5wx-lNWT11WYYN6Q8ijDmJfDGA>
-    <xmx:VW3-XtbPUN3EUr0Dti1m_2HetNM1yPb_QZ387ZbbavZmLQdic-aBkA>
-    <xmx:VW3-XkUuTkjbzViTrlUmmDJll3fs_-n8b5qqpaaa8cKPwGz7wSHIpA>
-    <xmx:Vm3-XpX1F6a7TEQqKJXIjRcoscaln2Epa91xc0AsE1qf3YbiOvRMmA>
-Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 87861306006C;
-        Thu,  2 Jul 2020 19:27:16 -0400 (EDT)
-From:   Danny Lin <danny@kdrag0n.dev>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Danny Lin <danny@kdrag0n.dev>, stable@vger.kernel.org
-Subject: [PATCH v2] vmlinux.lds.h: Coalesce transient LLVM dead code elimination sections
-Date:   Thu,  2 Jul 2020 16:27:13 -0700
-Message-Id: <20200702232713.123893-1-danny@kdrag0n.dev>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <7304fdf3-23d7-442b-b870-e88ae6f37004@localhost>
-References: <7304fdf3-23d7-442b-b870-e88ae6f37004@localhost>
+        Thu, 2 Jul 2020 19:26:43 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45606C08C5E2
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:26:43 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cv18so6702188pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dT6/5SMac3wtXA/ljYFQAKilCRwIlUvqkRFcx76hVLY=;
+        b=l7b80WgP/9KVetj24VmgUT9DOBWaOm2zCIwYx6IuwWZ6c2fVCdsyBRS5aYxy0GewrX
+         tKhLt5bxkJVIBNNyRvbc77SE7w3PAbsT5iDtCHwscAY1foF9ukY/uLANrAV4m+twMA+p
+         Dyf5+m5g0uBTdpM8+M7uS1MDAovBBbCn8FkUs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dT6/5SMac3wtXA/ljYFQAKilCRwIlUvqkRFcx76hVLY=;
+        b=g4aGAyocmxjudiYQrDLKyAcHv0glR3W4WnYL1kg9Iw6CfHZEAnhGx+Vnv3NmcP9ZWv
+         2hUysOv5iaClRsaybu6x2HIdAFofcI5MXpjFHEsKTLGyiMNz8HyqAG/e27ymSTgMK5U2
+         48YEifsL9BT+DKwIG0HXGxki1r4pLpxQ0tOfp7gcBepJRkfzJVVn8p0wGcSDxL+czBfh
+         Hsj8FwT5iJHYFKBvHe3uo/VhDXAwKq1mOpR/mtTjvj0O/dbfDpfJXK2PsFLP8OqfKmyh
+         Y6frEfBgyXKuRkbNIk52N7eUZwxtWHo87CZC0XMQPys/oQmG89IvvoD/l76BtcJ7r+D4
+         I0Vw==
+X-Gm-Message-State: AOAM531ZvRXXzcOiSA6Spad5tLVCCPiGrHxC1wubK2LnvvDj+wOUq3b5
+        JKbunmFvFoFq9PdIgPQ9iHGgGQ==
+X-Google-Smtp-Source: ABdhPJw33nr5S79BxxRlF82vDbMAVkEgPdFtkwFxNrR2snkoy7WQHNOxVKjahspezQFiRSUaOG4PGw==
+X-Received: by 2002:a17:90b:488:: with SMTP id bh8mr33638518pjb.49.1593732402767;
+        Thu, 02 Jul 2020 16:26:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g4sm9418640pfi.68.2020.07.02.16.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 16:26:41 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Dominik Czarnota <dominik.czarnota@trailofbits.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Refactor kallsyms_show_value() users for correct cred
+Date:   Thu,  2 Jul 2020 16:26:33 -0700
+Message-Id: <20200702232638.2946421-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,79 +98,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
-temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
+Hi,
 
-  [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
-       000000000000cea0  0000000000000000  WA       0     0     32
-  [31] .rela.data..compo RELA             0000000000000000  40965440
-       0000000000001d88  0000000000000018   I      2238    30     8
-  [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
-       00000000000033c0  0000000000000000  WA       0     0     32
-  [33] .rela.data..compo RELA             0000000000000000  409671c8
-       0000000000000948  0000000000000018   I      2238    32     8
-  [...]
-  [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
-       00000000000000a0  0000000000000000  WA       0     0     32
-  [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
-       0000000000000040  0000000000000000  WA       0     0     32
-  [...]
+I'm not sure who should carry this tree (me? Greg? akpm? Linus?), but
+it fixes a kernel address exposure bug reported by Dominik Czarnota,
+where /sys/modules/*/sections/* contents were visible to uid-0 without
+CAP_SYSLOG (e.g. in containers):
 
-.{data,bss}..L<symbol name> sections are also created in some cases.
-While there aren't any in this example, they should also be coalesced to
-be safe in case some config or future LLVM change makes it start
-creating more of those sections in the future. For example, enabling
-global merging causes ..L_MergedGlobals sections to be created, but it's
-likely that other changes will result in such sections as well.
+This is correct, with CAP_SYSLOG:
+ # cat /sys/module/*/sections/.*text
+ 0xffffffffc0458000
+ ...
 
-While these extra sections don't typically cause any breakage, they do
-inflate the vmlinux size due to the overhead of storing metadata for
-thousands of extra sections.
+This is broken:
+ # capsh --drop=CAP_SYSLOG -- -c "cat /sys/module/*/sections/.*text"
+ 0xffffffffc0458000
+ ...
 
-It's also worth noting that for some reason, some downstream Android
-kernels can't boot at all if these sections aren't coalesced.
+Fixing this required refactoring of several internals, and in the process
+uncovered other users of kallsyms_show_value() that were doing checks
+during "read" context instead of "open" context. This fixes all of these
+cases by plumbing the file->f_cred through to their ultimate checks via
+kallsyms_show_value()'s new cred argument.
 
-This issue isn't limited to any specific architecture; it affects arm64
-and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
+Testing, reviews, and acks appreciated. :)
 
-Example on x86 allyesconfig:
-    Before: 2241 sections, 1171169 KiB
-    After:    56 sections, 1170972 KiB
+Thanks!
 
-[1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
+-Kees
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/958
-Cc: stable@vger.kernel.org # v4.4+
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Danny Lin <danny@kdrag0n.dev>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
----
-v2:
-  - Fixed swapped example sizes
-  - Added .{data,bss}..L* sections, since it looks like they're emitted
-    in some cases even when LTO is disabled
 
- include/asm-generic/vmlinux.lds.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Kees Cook (5):
+  kallsyms: Refactor kallsyms_show_value() to take cred
+  module: Refactor section attr into bin attribute
+  module: Do not expose section addresses to non-CAP_SYSLOG
+  kprobes: Do not expose probe addresses to non-CAP_SYSLOG
+  bpf: Check correct cred for CAP_SYSLOG in bpf_dump_raw_ok()
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..737ecf782229 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -94,10 +94,11 @@
-  */
- #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
- #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
--#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
-+#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* \
-+		  .data..compoundliteral* .data..L*
- #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
- #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
--#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
-+#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral* .bss..L*
- #define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
- #else
- #define TEXT_MAIN .text
+ include/linux/filter.h     |  4 +--
+ include/linux/kallsyms.h   |  5 ++--
+ kernel/bpf/syscall.c       | 37 +++++++++++++++------------
+ kernel/kallsyms.c          | 17 ++++++++-----
+ kernel/kprobes.c           |  4 +--
+ kernel/module.c            | 51 ++++++++++++++++++++------------------
+ net/core/sysctl_net_core.c |  2 +-
+ 7 files changed, 67 insertions(+), 53 deletions(-)
+
 -- 
-2.27.0
+2.25.1
 
