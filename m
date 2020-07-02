@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A706FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A87562088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 832602088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksBpfHsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUfgFFw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgGBXMD (ORCPT
+        id S1726924AbgGBXMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43416 "EHLO
+        Thu, 2 Jul 2020 19:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgGBXLN (ORCPT
+        with ESMTP id S1726460AbgGBXLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:11:13 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFB2C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:12 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id dm19so19499381edb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:12 -0700 (PDT)
+        Thu, 2 Jul 2020 19:11:12 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C695EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:11 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id e22so25745381edq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vhOexs42tN8O73J1HULhVDqy4cxDIEcuMkt/q9iXBcE=;
-        b=ksBpfHsUCGAkAzG8mIlf5e+na6UtfScPDcMjkqjZ/E6rb3sRN5JOADZI69IwAUfqPp
-         MDN67RcGt39iQysfHNVsEEPiaX016Y17dlqV/zdLCNO5t8I8TvtMooT+m1VrJ5bXgZ0f
-         0MAItLbXfqriWQv4rS2gN33AusX/vrER/pu11t9AZC0yx3O3+lJoSSEBL/7TuRajseay
-         lCVz3pkfHdJY5vt1Zw+q0lvR+6goit01hUTyqiDTzOUNshBjALh03WiEg1QsT1t/wHeP
-         oP11vtfO4GhO4FhoilpmUjM1YYUNTx4QMdW6tKHMiBSpovdlkCNXa3MMesSBjeOKq2Nw
-         aaXw==
+        bh=26ZiewEHNxWX5EAuv9sa51RYGJG4O6qcJfTfVaArce0=;
+        b=iUfgFFw3mmZu0Oh9wOKE8Hvo/QYkt1zOcd7Z+9mAmho/NNHjUPdbQAtE117AwFaL99
+         dqHa7RJvu3L2gUOX6avLBtAgXAXbLZpZh+tqkOZQ66wcvmB2aS3mfPenwTy/rUQRA8rc
+         pxFhO/B9xoU5VCfz2EvqoHFwYOG+uiNfy4al+ZynLzzkiycMKaPgEpxyTJmL5hZg1SFH
+         gUEj7oUgrEOY63xTRKiTL+KchQ05EtHqVPyJ2bf6kgmJ/H+o5aHCz4yoAiBJO+qvxptp
+         XY8AoSrcij4P9miFS6CLPaSUCdU2Xv6nqQAy8d3ZoMQCB3bnj80VadAxFpim17wE8q2s
+         f4jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vhOexs42tN8O73J1HULhVDqy4cxDIEcuMkt/q9iXBcE=;
-        b=MP6uk45t7xRlwG/o+XMMveZSbusDr+L9EIMcnFTDTqqpmzI5wO7olF523T2EXz92vc
-         nqs88Wp62qhkfdfLUKSVEbw5b2KFcRXrE3+iieWS9RihGmEwHgDcihyXEPLzBBpnZ23l
-         2HG+sYJd6/4/We05zfWCjI4F3TLtA5zwu2Zun7guPp/iJpoYKeSkAB/AXZ23oDoRXFPw
-         +Zlkaoh342WCL9jablSwJKC8EjNCJ4OkUhZO+bp8QIzl70KGqWXydCtJq6WigdLfhGa/
-         /Ku0EVttPGJ7uRMFbhN3smYKjHagHV6Yh0NmZE150c5hxC3CnuHCZKjbHlYzT/qdmbB1
-         xFvw==
-X-Gm-Message-State: AOAM531TO/Je5K5XI5dlauCf7ErRVY4g06sg9EfzFIvHD1YLdTd1iJCg
-        IGO2T+qeDaT4YkIeab2kSrVU8XQv
-X-Google-Smtp-Source: ABdhPJzf53uiAz24zfbMjRTm5Avq+yRlSpDi7p8xu2OFYbeRDFOO2FPizxUOQ5VxKJ7F6J4DPWdHfQ==
-X-Received: by 2002:a50:f702:: with SMTP id g2mr37791761edn.348.1593731471238;
-        Thu, 02 Jul 2020 16:11:11 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:bd38:c82d:5283:9f1])
-        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=26ZiewEHNxWX5EAuv9sa51RYGJG4O6qcJfTfVaArce0=;
+        b=chyybyh0ZODYolZbeHGA5u3BH9dps8UGGoPBSLgbQN1Qb345GnyYRbXEem4LC4VZ4+
+         axyPnBzEugBNS5jIWKmCWTsAHddlZoDZ9JnP1wYN4euPrE7D0mEa2SqkuH9Gvkzns0u0
+         765em2NvyzIwacB5jisWh6kNH/zaiXepRylQ/q6G/91R+3s1XQTPJwLy+mQQubxy2gcB
+         P1nxM/D6pbnp1oQOtpIvggwtvuL2JvPc7rnX48DFwNWAP0GiqJ8mYm8AKSG52LsJwlKh
+         mG5e1L9NuTNmLK5pHn96TvGcw3anMO8mU7NVOk2qXoa2xD/WO9qTYFT7sw8m3M+xaRbj
+         yk8g==
+X-Gm-Message-State: AOAM533BkTRWN/9KBxvaMWnGluJvp1Sx7sB0vATMEReVR25jw0JHAVMQ
+        QWOWb6xmypUEpCyKKPeKdxGRjRCs
+X-Google-Smtp-Source: ABdhPJzzDlf1sbMBRdlpW+FTsKwCqeGLxqT2y5BGSJ+uwFUETVi2riOspmcrQJaezxvioX7sUiteRA==
+X-Received: by 2002:a05:6402:228d:: with SMTP id cw13mr37891086edb.343.1593731470281;
         Thu, 02 Jul 2020 16:11:10 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:bd38:c82d:5283:9f1])
+        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 16:11:09 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 06/15] options: move helpers up
-Date:   Fri,  3 Jul 2020 01:10:30 +0200
-Message-Id: <20200702231039.55015-7-luc.vanoostenryck@gmail.com>
+Subject: [PATCH 05/15] options: handle_onoff_switch() can handle any flags, not only warnings
+Date:   Fri,  3 Jul 2020 01:10:29 +0200
+Message-Id: <20200702231039.55015-6-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
 References: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
@@ -76,143 +76,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helpers for parsing the options are often situated just above the
-first function using them. As result, these helpers can be found a bit
-everywhere in the code, it's messy and doesn't help to reuse these helpers.
-
-So, move all these helpers to the top.
+So, use 'flag' instead of 'warning' for variable and function names.
 
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- lib.c | 87 ++++++++++++++++++++++++++++++-----------------------------
- 1 file changed, 44 insertions(+), 43 deletions(-)
+ lib.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/lib.c b/lib.c
-index c27773097127..4868154fa3de 100644
+index 9acdc60fc416..c27773097127 100644
 --- a/lib.c
 +++ b/lib.c
-@@ -364,6 +364,15 @@ void add_pre_buffer(const char *fmt, ...)
- ////////////////////////////////////////////////////////////////////////////////
- // Helpers for option parsing
+@@ -250,10 +250,10 @@ void die(const char *fmt, ...)
+ static struct token *pre_buffer_begin = NULL;
+ static struct token *pre_buffer_end = NULL;
  
-+static const char *match_option(const char *arg, const char *prefix)
-+{
-+	unsigned int n = strlen(prefix);
-+	if (strncmp(arg, prefix, n) == 0)
-+		return arg + n;
-+	return NULL;
-+}
-+
-+
- struct val_map {
- 	const char *name;
- 	int val;
-@@ -438,14 +447,6 @@ end:
- }
+-enum warning_type {
+-	WARNING_OFF,
+-	WARNING_ON,
+-	WARNING_FORCE_OFF
++enum flag_type {
++	FLAG_OFF,
++	FLAG_ON,
++	FLAG_FORCE_OFF
+ };
  
- 
--static const char *match_option(const char *arg, const char *prefix)
--{
--	unsigned int n = strlen(prefix);
--	if (strncmp(arg, prefix, n) == 0)
--		return arg + n;
--	return NULL;
--}
--
- #define OPT_INVERSE	1
- #define OPT_VAL		2
- struct flag {
-@@ -497,6 +498,41 @@ static int handle_switches(const char *ori, const char *opt, const struct flag *
- 	return 0;
- }
- 
-+static char **handle_onoff_switch(char *arg, char **next, const struct flag flags[])
-+{
-+	int flag = FLAG_ON;
-+	char *p = arg + 1;
-+	unsigned i;
-+
-+	// Prefixes "no" and "no-" mean to turn warning off.
-+	if (p[0] == 'n' && p[1] == 'o') {
-+		p += 2;
-+		if (p[0] == '-')
-+			p++;
-+		flag = FLAG_FORCE_OFF;
-+	}
-+
-+	for (i = 0; flags[i].name; i++) {
-+		if (!strcmp(p,flags[i].name)) {
-+			*flags[i].flag = flag;
-+			return next;
-+		}
-+	}
-+
-+	// Unknown.
-+	return NULL;
-+}
-+
-+static void handle_onoff_switch_finalize(const struct flag flags[])
-+{
-+	unsigned i;
-+
-+	for (i = 0; flags[i].name; i++) {
-+		if (*flags[i].flag == FLAG_FORCE_OFF)
-+			*flags[i].flag = FLAG_OFF;
-+	}
-+}
-+
- static int handle_switch_setval(const char *arg, const char *opt, const struct flag *flag, int options)
- {
- 	*(flag->flag) = flag->mask;
-@@ -529,31 +565,6 @@ static int opt_##NAME(const char *arg, const char *opt, TYPE *ptr, int flag)	\
+ int Waddress = 0;
+@@ -295,7 +295,7 @@ int Wshadow = 0;
+ int Wshift_count_negative = 1;
+ int Wshift_count_overflow = 1;
+ int Wsizeof_bool = 0;
+-int Wsparse_error = WARNING_FORCE_OFF;
++int Wsparse_error = FLAG_FORCE_OFF;
+ int Wstrict_prototypes = 1;
+ int Wtautological_compare = 0;
+ int Wtransparent_union = 0;
+@@ -529,9 +529,9 @@ static int opt_##NAME(const char *arg, const char *opt, TYPE *ptr, int flag)	\
  OPT_NUMERIC(ullong, unsigned long long, strtoull)
  OPT_NUMERIC(uint, unsigned int, strtoul)
  
--static char **handle_onoff_switch(char *arg, char **next, const struct flag flags[])
--{
--	int flag = FLAG_ON;
--	char *p = arg + 1;
--	unsigned i;
--
--	// Prefixes "no" and "no-" mean to turn warning off.
--	if (p[0] == 'n' && p[1] == 'o') {
--		p += 2;
--		if (p[0] == '-')
--			p++;
--		flag = FLAG_FORCE_OFF;
--	}
--
--	for (i = 0; flags[i].name; i++) {
--		if (!strcmp(p,flags[i].name)) {
--			*flags[i].flag = flag;
--			return next;
--		}
--	}
--
--	// Unknown.
--	return NULL;
--}
--
- ////////////////////////////////////////////////////////////////////////////////
- // Option parsing
+-static char **handle_onoff_switch(char *arg, char **next, const struct flag warnings[])
++static char **handle_onoff_switch(char *arg, char **next, const struct flag flags[])
+ {
+-	int flag = WARNING_ON;
++	int flag = FLAG_ON;
+ 	char *p = arg + 1;
+ 	unsigned i;
  
-@@ -858,16 +869,6 @@ static char **handle_switch_d(char *arg, char **next)
+@@ -540,12 +540,12 @@ static char **handle_onoff_switch(char *arg, char **next, const struct flag warn
+ 		p += 2;
+ 		if (p[0] == '-')
+ 			p++;
+-		flag = WARNING_FORCE_OFF;
++		flag = FLAG_FORCE_OFF;
+ 	}
+ 
+-	for (i = 0; warnings[i].name; i++) {
+-		if (!strcmp(p,warnings[i].name)) {
+-			*warnings[i].flag = flag;
++	for (i = 0; flags[i].name; i++) {
++		if (!strcmp(p,flags[i].name)) {
++			*flags[i].flag = flag;
+ 			return next;
+ 		}
+ 	}
+@@ -722,7 +722,7 @@ static char **handle_switch_o(char *arg, char **next)
+ }
+ 
+ static const struct flag pflags[] = {
+-	{ "pedantic", &Wpedantic, NULL, OPT_VAL, WARNING_ON },
++	{ "pedantic", &Wpedantic, NULL, OPT_VAL, FLAG_ON },
+ 	{ }
+ };
+ 
+@@ -793,8 +793,8 @@ static char **handle_switch_W(char *arg, char **next)
+ 	if (!strcmp(arg, "Wsparse-all")) {
+ 		int i;
+ 		for (i = 0; warnings[i].name; i++) {
+-			if (*warnings[i].flag != WARNING_FORCE_OFF)
+-				*warnings[i].flag = WARNING_ON;
++			if (*warnings[i].flag != FLAG_FORCE_OFF)
++				*warnings[i].flag = FLAG_ON;
+ 		}
+ 	}
+ 
+@@ -858,13 +858,13 @@ static char **handle_switch_d(char *arg, char **next)
  }
  
  
--static void handle_onoff_switch_finalize(const struct flag flags[])
--{
--	unsigned i;
--
--	for (i = 0; flags[i].name; i++) {
--		if (*flags[i].flag == FLAG_FORCE_OFF)
--			*flags[i].flag = FLAG_OFF;
--	}
--}
--
- static void handle_switch_W_finalize(void)
+-static void handle_onoff_switch_finalize(const struct flag warnings[])
++static void handle_onoff_switch_finalize(const struct flag flags[])
  {
- 	handle_onoff_switch_finalize(warnings);
+ 	unsigned i;
+ 
+-	for (i = 0; warnings[i].name; i++) {
+-		if (*warnings[i].flag == WARNING_FORCE_OFF)
+-			*warnings[i].flag = WARNING_OFF;
++	for (i = 0; flags[i].name; i++) {
++		if (*flags[i].flag == FLAG_FORCE_OFF)
++			*flags[i].flag = FLAG_OFF;
+ 	}
+ }
+ 
 -- 
 2.27.0
 
