@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E29EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C05C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6AE206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6489120884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653310;
-	bh=s8s69X5ToTezidDLsSd20nuocrEgaag3s6dd4Dr//SM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0sVOaQY7EjJf2Xtv9scUiN7MGJHYvNGGThVyyHKhuFQDYQpO/UC3mob7ZiTjV2Gpc
-	 lAaKi/n8ZFyfFisEqZHGr6FVfIib5zNB8UHWRHo0F2sC5sZyVQqRXirppjagMfOhWR
-	 U1Q9eEqxd3jRGwIa085PhAJOi7NGdPr0iaru499s=
+	s=default; t=1593653314;
+	bh=5Jqa8Rm0KG4BHotO3qQqwn+APEvLoSbIZoKJA2xGqj0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=muOa2HuUeGWk+Lw7q/mLGGM4FPYX4b/kvHJT1A6x4zaP69g55uHYYlW/cqPn+04yL
+	 BSTS1n67/T6aGmX5bzxSaRohJDorRrdyJK+nGQ0k/+XirbDLaLGqOn34pqI1KIp78P
+	 VX2IxgcxYyauzti5rNYk8Mog94g2YH/3/3lRuAmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgGBB1v (ORCPT
+        id S1729557AbgGBB1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729402AbgGBB1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:14 -0400
+        id S1729328AbgGBB06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CBF2083E;
-        Thu,  2 Jul 2020 01:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BBB20C56;
+        Thu,  2 Jul 2020 01:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653234;
-        bh=s8s69X5ToTezidDLsSd20nuocrEgaag3s6dd4Dr//SM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fyAZWfBr4VxMi9OCFwzFNhCrqwt6hyp53PIOCd+4EY5vkB6nsEpN0aBpmqajlufkv
-         BwSsCaBH72TLQG9T3lxOhpF7WPnK/reIF/k87d44Dz9ONTQuqLhfcACW6G1lRTTtbt
-         GYZpPrCV8boH36h7UkFINTJZWYCRfbik0XlGmhTY=
+        s=default; t=1593653217;
+        bh=5Jqa8Rm0KG4BHotO3qQqwn+APEvLoSbIZoKJA2xGqj0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y+0RwhiT1NkmJta3/qTxAr4jxmkx8Ah8Wfo+jOqBmNJUbo11au5RLVIicpux28L9Q
+         drjQJzNWu6Gedcse5NAORSTpHM/DCOtRChS93/ZdhYwdF1kr9ziRKLujixbPghaOWi
+         DdB9bgSVHEnCZrHMlLDfTrk8xMaZVJQ5/UgJWiXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/13] gpu: host1x: Detach driver on unregister
-Date:   Wed,  1 Jul 2020 21:27:00 -0400
-Message-Id: <20200702012712.2701986-1-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/17] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Wed,  1 Jul 2020 21:26:38 -0400
+Message-Id: <20200702012649.2701799-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
+References: <20200702012649.2701799-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,53 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit d9a0a05bf8c76e6dc79230669a8b5d685b168c30 ]
+[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
 
-Currently when a host1x device driver is unregistered, it is not
-detached from the host1x controller, which means that the device
-will stay around and when the driver is registered again, it may
-bind to the old, stale device rather than the new one that was
-created from scratch upon driver registration. This in turn can
-cause various weird crashes within the driver core because it is
-confronted with a device that was already deleted.
+If an spi device is unbounded from the driver before the release
+process, there will be an NULL pointer reference when it's
+referenced in spi_slave_abort().
 
-Fix this by detaching the driver from the host1x controller when
-it is unregistered. This ensures that the deleted device also is
-no longer present in the device list that drivers will bind to.
+Fix it by checking it's already freed before reference.
 
-Reported-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/bus.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/spi/spidev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-index c27858ae05529..6ef89e8a515a9 100644
---- a/drivers/gpu/host1x/bus.c
-+++ b/drivers/gpu/host1x/bus.c
-@@ -542,8 +542,17 @@ EXPORT_SYMBOL(host1x_driver_register_full);
- 
- void host1x_driver_unregister(struct host1x_driver *driver)
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 5edf4029a3486..167047760d79a 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -607,15 +607,20 @@ static int spidev_open(struct inode *inode, struct file *filp)
+ static int spidev_release(struct inode *inode, struct file *filp)
  {
-+	struct host1x *host1x;
-+
- 	driver_unregister(&driver->driver);
+ 	struct spidev_data	*spidev;
++	int			dofree;
  
-+	mutex_lock(&devices_lock);
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
+ 
++	spin_lock_irq(&spidev->spi_lock);
++	/* ... after we unbound from the underlying device? */
++	dofree = (spidev->spi == NULL);
++	spin_unlock_irq(&spidev->spi_lock);
 +
-+	list_for_each_entry(host1x, &devices, list)
-+		host1x_detach_driver(host1x, driver);
-+
-+	mutex_unlock(&devices_lock);
-+
- 	mutex_lock(&drivers_lock);
- 	list_del_init(&driver->list);
- 	mutex_unlock(&drivers_lock);
+ 	/* last close? */
+ 	spidev->users--;
+ 	if (!spidev->users) {
+-		int		dofree;
+ 
+ 		kfree(spidev->tx_buffer);
+ 		spidev->tx_buffer = NULL;
+@@ -623,19 +628,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		kfree(spidev->rx_buffer);
+ 		spidev->rx_buffer = NULL;
+ 
+-		spin_lock_irq(&spidev->spi_lock);
+-		if (spidev->spi)
+-			spidev->speed_hz = spidev->spi->max_speed_hz;
+-
+-		/* ... after we unbound from the underlying device? */
+-		dofree = (spidev->spi == NULL);
+-		spin_unlock_irq(&spidev->spi_lock);
+-
+ 		if (dofree)
+ 			kfree(spidev);
++		else
++			spidev->speed_hz = spidev->spi->max_speed_hz;
+ 	}
+ #ifdef CONFIG_SPI_SLAVE
+-	spi_slave_abort(spidev->spi);
++	if (!dofree)
++		spi_slave_abort(spidev->spi);
+ #endif
+ 	mutex_unlock(&device_list_lock);
+ 
 -- 
 2.25.1
 
