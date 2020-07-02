@@ -2,119 +2,78 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5AC9206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593718978;
-	bh=WOOij7zcrQ3F25W0H/8a620crI0Y+voXzhPPqY+Ohcg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RF57aF7vZWf+URCK/eee15rTx7ycxFE43ooOMSaG9909Ob784wBEYYG2/Jmjc4ikP
-	 UexQA+tb+hB5jPrvTzQ2j20rhbIPLoWHGUrrwfqbRqYO5YRLZpTiyj16ce+XtNXbb/
-	 RMgX4D8JPpJ0XwBhyTCWyD6jEB8lOe3wvepIww9E=
+	by mail.kernel.org (Postfix) with ESMTP id A591F206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbgGBTm5 (ORCPT
+        id S1726102AbgGBTox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGBTm4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:42:56 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85351C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 12:42:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b25so30159929ljp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 12:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+r53KkXjZK6X/YP4U/7mih9+WzJuu5mUo2Ez1QHbKCs=;
-        b=Rk4RBvhHIxqE+t63y4J9FplOopkeMM9EQgH5Tl4KhBHYcjFS04RVuL2G5TQb/4RcSC
-         pArZxZMY9ot6xIrTJ7GaFWc9cau+XbYwcrHqWkjH6F+3gdtCFeoaEYVm/IEa0Z6UBBr+
-         gxHLZuf9CuL986liZSn1ZkGZW8MaT8TOadzfc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+r53KkXjZK6X/YP4U/7mih9+WzJuu5mUo2Ez1QHbKCs=;
-        b=qn5zgEw2vdQlHaRJfVSn6sXSAFVj+z05cYyvOaNzp1eMrNEwC0dgzZAzAANG19pMiI
-         0hHn+WqIfwtRe/rm+FctSVm9SnNI4HOMFOjh1cGjLzJcbeRKkJSpFEL3ecHHNFB+lexF
-         +WYoTZ9p/luAuumuBsY9SmMxEkHnGTCMm/ea/1q0VP02kQhuj918ZJlcxyCHhA3JFPOT
-         XYwezVnkRlnYHNzTop4DPlZQSwWnV6B30ABVUslliDzT/W5fpN9HOsTCNyfGQAeusdEs
-         FlP7CM+M+Isoily66IlGUpTRx5S1Vxm3HP+wBpqfUFMr8yJ+EU+OE1L12iQg76kKxueq
-         3CxA==
-X-Gm-Message-State: AOAM533EcFvr/koWGm/GMS9HAOFs7gCaRwr1gsvm2KV3qn2rMfeiZdw9
-        qdmKGNQzNQj2FRf0ACH3CxAeLJMIdN4=
-X-Google-Smtp-Source: ABdhPJxkgTM+P/MAc6KCIelZErLLrBl3peEZVRq5W2gRN6wzsdXhDYbwq/FcSnx93KARj7UazOXMtg==
-X-Received: by 2002:a2e:5d8:: with SMTP id 207mr16413483ljf.257.1593718974681;
-        Thu, 02 Jul 2020 12:42:54 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id a16sm3364907ljj.108.2020.07.02.12.42.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 12:42:53 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id z24so8846105ljn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 12:42:53 -0700 (PDT)
-X-Received: by 2002:a2e:86c4:: with SMTP id n4mr2490210ljj.312.1593718973053;
- Thu, 02 Jul 2020 12:42:53 -0700 (PDT)
+        Thu, 2 Jul 2020 15:44:53 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5385 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGBTox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:44:53 -0400
+IronPort-SDR: 1t0tLXLFVra7Tc12dqK9rZ3OAKEKe2oE/MA6/JsncQJROVljLKxlXd56GM8N2is1HXjz09kZZz
+ 0LFGbbbWQUBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134474655"
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="134474655"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:44:52 -0700
+IronPort-SDR: Zywr3ldWei8/LIeUJeTPM6lvkCxsULkQd9GBaC0hsSX9Jgx0hUtKk1vrwZa3EodiWQXny9irbt
+ ClkuoJnM9zbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="387429233"
+Received: from frichard-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.59])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2020 12:44:49 -0700
+Date:   Thu, 2 Jul 2020 22:44:48 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Pengfei Xu <pengfei.xu@intel.com>, Shuah Khan <shuah@kernel.org>
+Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Heng Su <heng.su@intel.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [PATCH v4] selftests: tpm: upgrade TPM2 tests from Python 2 to
+ Python 3
+Message-ID: <20200702194435.GA28988@linux.intel.com>
+References: <20200626034052.25263-1-pengfei.xu@intel.com>
 MIME-Version: 1.0
-References: <20200702140102.26129-1-pmenzel@molgen.mpg.de> <7c31d918-c967-5ebb-970e-7f6e913237e8@amd.com>
-In-Reply-To: <7c31d918-c967-5ebb-970e-7f6e913237e8@amd.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Jul 2020 12:42:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wimBucBdC+tzFEuFJU5X1UFTVWo+AHMvQTSkCcVnTT-ww@mail.gmail.com>
-Message-ID: <CAHk-=wimBucBdC+tzFEuFJU5X1UFTVWo+AHMvQTSkCcVnTT-ww@mail.gmail.com>
-Subject: Re: [PATCH 1/2] moduleparams: Add hex type parameter
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626034052.25263-1-pengfei.xu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 7:42 AM Christian K=C3=B6nig <christian.koenig@amd.c=
-om> wrote:
->
-> I'm just not sure how well this is received upstream because it only
-> covers u32
->
-> On the other hand that is probably also the most used.
+On Fri, Jun 26, 2020 at 11:40:52AM +0800, Pengfei Xu wrote:
+> Python 2 is no longer supported by the Python upstream project, so
+> upgrade TPM2 tests to Python 3.
+> 
+> Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
 
-Not necessarily true. I'd argue that "unsigned long"  is equally
-possible for some bit mask (or other hex-likely) type.
+I think that it's perfect now. Thank you.
 
-So don't call it just "hex". Call it "hexint" (the hex does imply
-"unsigned", I feel - showing hex numbers with a sign sounds insane).
+Also
 
-That way, if somebody ends up wanting it for unsigned long values,
-we're not stuck.
+1. I checked that scripts/checkpatch.pl did not report any errors.
+2. sudo python3 -m unittest -v tpm2_tests.SmokeTest
+3. sudo python3 -m unittest -v tpm2_tests.SpaceTest
 
-Another option is to just say that hex values always have bit _sizes_.
-So "hex32" and "hex64" would also make sense as names to me.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-While at it, should the hex numbers always be padded out to the size?
-The example Paul used doesn't have that issue (high bit being set).
+Shuah, I could pick this up after your PR (with my earlier fixes) lands
+to mainline, and sort out possible merge conflicts if they uprise. Is
+this fine by you?
 
-Bbut often it may make sense to show a 32-bit hex number as "%#08x"
-because it really makes things clearer when you're looking at high
-bits, say.
-
-It's really hard to tell the difference between "just bit 27 set" and
-"just bit 31" set otherwise, and that's not all that uncommon when the
-bitmasks are sparse.
-
-             Linus
+/Jarkko
