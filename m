@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92359C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D93C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636B32085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF3620874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593652998;
-	bh=YLtzimeikThgMm92AmIeJHSv55DRFKGTackCYTrPO+U=;
+	s=default; t=1593653005;
+	bh=RE38XazNYCwzs9eu9smfOGnUknFmGMxPfCedVsBQs2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJEOvF2IcaYmF4otAFHbMH2tvNj/eqWW/IAvAOT/jQFlEn+pqBHFUoKwGZXT/fNdr
-	 VGeiUVpRjMI0eZnSyg44Rw5bn724WutqIsfLcWqcmDod2C5a/raQSo9X1uL6HB/MB0
-	 brGF00UzVsN34+1Mo1pIeh1gBov3hUwiNBY6VEUY=
+	b=2pdC/XF2QuTz1pCzP30n43H8ZIIlZfAdmv7c4sXcX6ewxuIWpn39DHvxyEUsKATdQ
+	 3cYjKHyTJUCt5AFExKzWpNdAufZNrDxXEONwzVED+1aHUWRaYNQGv+EqiAbCrPr5+A
+	 tt+R+RGFJFRTwoD40e0Fky0dHFybaoYsJwV/71Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgGBBXR (ORCPT
+        id S1728314AbgGBBXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53412 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbgGBBXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:06 -0400
+        id S1728226AbgGBBXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FC6D2083E;
-        Thu,  2 Jul 2020 01:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24F272085B;
+        Thu,  2 Jul 2020 01:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652986;
-        bh=YLtzimeikThgMm92AmIeJHSv55DRFKGTackCYTrPO+U=;
+        s=default; t=1593652990;
+        bh=RE38XazNYCwzs9eu9smfOGnUknFmGMxPfCedVsBQs2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7tQ8NdqTd8Hq5EEl+kGz2KsDUOQLB54eszVF8izUP2ZbWeW6wC2p9ezrnOm/fa71
-         c08T1s+3bPnMB8kx89K9GRfqpeyUYtEszYA0L0Z9YCeBnJoSMQ+9ig8SeKSND7prnG
-         JRBAuuhqtZMgU/Ktgf9MrGl00Q7Hi82hHnNlGmBI=
+        b=sOyXRqU6oVghyN/Yq3Pef1bJsItqTZRNe79SJ6M+SUs9pILRnyn9KTwYXaEAEr+5p
+         H54yetBa/gOwzSJcFUY8n8Jvtb0EQ9eHNHsDuESu3boZOrrXmw2o32sJVlsc0AVE85
+         aKPwhikx28eVPysWNY2XZ7lIcxqhkXcAhVWlKYDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 09/53] drm/tegra: hub: Do not enable orphaned window group
-Date:   Wed,  1 Jul 2020 21:21:18 -0400
-Message-Id: <20200702012202.2700645-9-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 13/53] drm: mcde: Fix display initialization problem
+Date:   Wed,  1 Jul 2020 21:21:22 -0400
+Message-Id: <20200702012202.2700645-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -60,50 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit ef4e417eb3ec7fe657928f10ac1d2154d8a5fb38 ]
+[ Upstream commit b984b6d8b52372b98cce0a6ff6c2787f50665b87 ]
 
-Though the unconditional enable/disable code is not a final solution,
-we don't want to run into a NULL pointer situation when window group
-doesn't link to its DC parent if the DC is disabled in Device Tree.
+The following bug appeared in the MCDE driver/display
+initialization during the recent merge window.
 
-So this patch simply adds a check to make sure that window group has
-a valid parent before running into tegra_windowgroup_enable/disable.
+First the place we call drm_fbdev_generic_setup() in the
+wrong place: this needs to be called AFTER calling
+drm_dev_register() else we get this splat:
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+ ------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at ../drivers/gpu/drm/drm_fb_helper.c:2198 drm_fbdev_generic_setup+0x164/0x1a8
+mcde a0350000.mcde: Device has not been registered.
+Modules linked in:
+Hardware name: ST-Ericsson Ux5x0 platform (Device Tree Support)
+[<c010e704>] (unwind_backtrace) from [<c010a86c>] (show_stack+0x10/0x14)
+[<c010a86c>] (show_stack) from [<c0414f38>] (dump_stack+0x9c/0xb0)
+[<c0414f38>] (dump_stack) from [<c0121c8c>] (__warn+0xb8/0xd0)
+[<c0121c8c>] (__warn) from [<c0121d18>] (warn_slowpath_fmt+0x74/0xb8)
+[<c0121d18>] (warn_slowpath_fmt) from [<c04b154c>] (drm_fbdev_generic_setup+0x164/0x1a8)
+[<c04b154c>] (drm_fbdev_generic_setup) from [<c04ed278>] (mcde_drm_bind+0xc4/0x160)
+[<c04ed278>] (mcde_drm_bind) from [<c04f06b8>] (try_to_bring_up_master+0x15c/0x1a4)
+(...)
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200613223027.4189309-1-linus.walleij@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tegra/hub.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mcde/mcde_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-index 8183e617bf6b8..a2ef8f218d4ec 100644
---- a/drivers/gpu/drm/tegra/hub.c
-+++ b/drivers/gpu/drm/tegra/hub.c
-@@ -149,7 +149,9 @@ int tegra_display_hub_prepare(struct tegra_display_hub *hub)
- 	for (i = 0; i < hub->soc->num_wgrps; i++) {
- 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
+diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
+index f28cb7a576ba4..1e7c5aa4d5e62 100644
+--- a/drivers/gpu/drm/mcde/mcde_drv.c
++++ b/drivers/gpu/drm/mcde/mcde_drv.c
+@@ -208,7 +208,6 @@ static int mcde_modeset_init(struct drm_device *drm)
  
--		tegra_windowgroup_enable(wgrp);
-+		/* Skip orphaned window group whose parent DC is disabled */
-+		if (wgrp->parent)
-+			tegra_windowgroup_enable(wgrp);
- 	}
+ 	drm_mode_config_reset(drm);
+ 	drm_kms_helper_poll_init(drm);
+-	drm_fbdev_generic_setup(drm, 32);
  
  	return 0;
-@@ -166,7 +168,9 @@ void tegra_display_hub_cleanup(struct tegra_display_hub *hub)
- 	for (i = 0; i < hub->soc->num_wgrps; i++) {
- 		struct tegra_windowgroup *wgrp = &hub->wgrps[i];
  
--		tegra_windowgroup_disable(wgrp);
-+		/* Skip orphaned window group whose parent DC is disabled */
-+		if (wgrp->parent)
-+			tegra_windowgroup_disable(wgrp);
- 	}
- }
+@@ -275,6 +274,8 @@ static int mcde_drm_bind(struct device *dev)
+ 	if (ret < 0)
+ 		goto unbind;
  
++	drm_fbdev_generic_setup(drm, 32);
++
+ 	return 0;
+ 
+ unbind:
 -- 
 2.25.1
 
