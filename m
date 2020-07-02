@@ -2,199 +2,136 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7666C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B62C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB4A20781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fvYkB0Gr"
+	by mail.kernel.org (Postfix) with ESMTP id 0B0B820836
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593731069;
+	bh=kbiQ3OWz9EhhS/Tlb7ohnigA/7ugcibWgJNgPfbWUpA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wrzl6eAs/Td77umSjTBMmKX1VW1cEdlWSdXOsSb8F2ZXX5i7njhXBTdTW9gpJJXlM
+	 EGPFF4CY9LpkGrG38gbYIDH3MdmMwJrF4GGWO67vwraLTYF5uht3nJnucojy/dCxSM
+	 UNDn1RhXhsrxRmGD1wlFDMNIrPUc1/1CxREsP638=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgGBXD0 (ORCPT
+        id S1726631AbgGBXE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgGBXD0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:03:26 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DF3C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:03:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x11so11875356plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:03:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C/wKxCmAp8P5+IuEDReF1PhHjU6934D3J4Spbsakypw=;
-        b=fvYkB0GrlRYeSsqKY8DfBsHb5+EpJsR1WxZhgotr27Mz85gEm8Z5BsTJde29nk/h1E
-         BHK7QPSGOx7VZRR+JfzAmGcukkWdp28+cMSOWMccRubKzRkU0/N7mewl+2fR/9jC7LO3
-         dyXtLDDoH+t6Wj0OwsEMiRc3V5sg8zZaOc0TiIrFy59Q9BrPS5FnSNawmGBLpvH2Gxsj
-         xxh4j5Ftf5qhMv07igHdA+38g5zACOzhHOynpFMZaDfu55MVUZ6mtDkLIl3P03ukK+Ga
-         vM6LSUFknrixnYs9VBRakxbwjk24jelKI4MuTaKLnUOoZzufz0x+7S1Dr+wwgGY5EpHH
-         slAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C/wKxCmAp8P5+IuEDReF1PhHjU6934D3J4Spbsakypw=;
-        b=Tfw7vrraHSbIpTrj4rqRfn2+fshOdUaYidPsLM/7LVucivvzzHBFhbAFXb7SrFFEKs
-         Wn/3ycolp82jx7S71pmQljQAHYe4L8N+ICwJ92MOpsxuUrTv1Gb71ojZznq2EkglaIgh
-         l6ZWmLb/i2oX3ZuQOiKs9RbRdYeG6d/vu6pTa/T7Y9Wp5HlELx+QcFyvQ/fitQSMa4+5
-         dRAlNE1YbeLpqs61vhLEsbS4MmRziJlI6BP2jteA6uc3thozIgwRkKwp7zMkxD3Svgae
-         p+N1c6eWZD29FTIO8jFe33nl5/rNSfOkdJFDcWXZ4Siy8i2KacHE260sfZQK0USFHABF
-         9CWw==
-X-Gm-Message-State: AOAM532WOZ7OuxoaTRw0lWFxlg354L4w0F7eC6F2V9rmBm2667EoZrMl
-        McK7wzdoWaPQfK4QQApBl8GYdg==
-X-Google-Smtp-Source: ABdhPJyF1ykGkpqefsktD2Yx+ekgyRNvo0wT3Zm5a/e/Nie0V2q0Tu814ppuAKsBilsKAUqwbstdQA==
-X-Received: by 2002:a17:90b:19d4:: with SMTP id nm20mr12314798pjb.206.1593731005454;
-        Thu, 02 Jul 2020 16:03:25 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 198sm10316727pfb.27.2020.07.02.16.03.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 16:03:24 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 17:03:22 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, leo.yan@linaro.org
-Subject: Re: [PATCH 2/2] perf tools: Fix record failure when mixed with ARM
- SPE event
-Message-ID: <20200702230322.GB471976@xps15>
-References: <20200623123141.27747-1-liwei391@huawei.com>
- <20200623123141.27747-3-liwei391@huawei.com>
+        Thu, 2 Jul 2020 19:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgGBXE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 19:04:26 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106712088E;
+        Thu,  2 Jul 2020 23:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593731066;
+        bh=kbiQ3OWz9EhhS/Tlb7ohnigA/7ugcibWgJNgPfbWUpA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=S1KCNpG9Pv4STc7dA1EIUYmAJMxBx5FwUZImnnnqH2/lfWVOZF+CqdOBuTtfkBHuq
+         Y79CA8eKcotSs/YlBBV0FUEOAuDC5VJa9eJgO2+8gpTiyvAHCcXZW86dLe9UkMudqY
+         KJZeeIVM2C71UrOUS4zwAPgGcwv5l109snz7DFaU=
+Received: by mail-ot1-f48.google.com with SMTP id 95so14744181otw.10;
+        Thu, 02 Jul 2020 16:04:26 -0700 (PDT)
+X-Gm-Message-State: AOAM531+iuuZXAvN2qbO+tV+NO1x3xH1Xyg6tRPPMhxpa/+Egn19L/M1
+        NMunFLWiSIMckB5iSvx0GU1rtH9irlYCxt1HSw0=
+X-Google-Smtp-Source: ABdhPJxz9/D9QobsXbtfi8ziJpmocwg7uy05KVbIQy4z+mCS1flap37AIc4xZoibn5TtrTKeVtMwq2b2dTsAvOaFY3g=
+X-Received: by 2002:a9d:5a12:: with SMTP id v18mr27802873oth.90.1593731065360;
+ Thu, 02 Jul 2020 16:04:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623123141.27747-3-liwei391@huawei.com>
+References: <20200702101947.682-1-ardb@kernel.org> <20200702101947.682-5-ardb@kernel.org>
+ <20200702175022.GA2753@sol.localdomain> <CAMj1kXFen1nickdZab0s8iY7SgauoH56VginEoPdxaAAL2qENw@mail.gmail.com>
+In-Reply-To: <CAMj1kXFen1nickdZab0s8iY7SgauoH56VginEoPdxaAAL2qENw@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 3 Jul 2020 01:04:14 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG7i1isB9cV57ccaOZhrG3s7x+nKGozzTewuE9uWvX_wg@mail.gmail.com>
+Message-ID: <CAMj1kXG7i1isB9cV57ccaOZhrG3s7x+nKGozzTewuE9uWvX_wg@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/7] crypto: remove ARC4 support from the skcipher API
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-wireless@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Denis Kenzior <denkenz@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Li,
+On Thu, 2 Jul 2020 at 20:21, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 2 Jul 2020 at 19:50, Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > [+linux-wireless, Marcel Holtmann, and Denis Kenzior]
+> >
+> > On Thu, Jul 02, 2020 at 12:19:44PM +0200, Ard Biesheuvel wrote:
+> > > Remove the generic ecb(arc4) skcipher, which is slightly cumbersome from
+> > > a maintenance perspective, since it does not quite behave like other
+> > > skciphers do in terms of key vs IV lifetime. Since we are leaving the
+> > > library interface in place, which is used by the various WEP and TKIP
+> > > implementations we have in the tree, we can safely drop this code now
+> > > it no longer has any users.
+> > >
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Last year there was a discussion where it was mentioned that iwd uses
+> > "ecb(arc4)" via AF_ALG.  So can we really remove it yet?
+> > See https://lkml.kernel.org/r/97BB95F6-4A4C-4984-9EAB-6069E19B4A4F@holtmann.org
+> > Note that the code isn't in "iwd" itself but rather in "libell" which iwd
+> > depends on: https://git.kernel.org/pub/scm/libs/ell/ell.git/
+> >
+> > Apparently it also uses md4 and ecb(des) too.
+> >
+>
+> Ah yes, I remember now :-(
+>
+> > Marcel and Denis, what's your deprecation plan for these obsolete and insecure
+> > algorithms?
+> >
+>
+> Given Denis's statement:
+>
+>   It sounds to me like it was broken and should be fixed.  So our vote /
+>   preference is to have ARC4 fixed to follow the proper semantics.  We
+>   can deal with the kernel behavioral change on our end easily enough;
+>   the required workarounds are the worse evil.
+>
+> I would think that an ABI break is not the end of the world for them,
+> and given how trivial it is to implement RC4 in C, the workaround
+> should be to simply implement RC4 in user space, and not even bother
+> trying to use AF_ALG to get at ecb(arc4)
+>
+> (same applies to md4 and ecb(des) btw)
+>
+> There will always be a long tail of use cases, and at some point, we
+> just have to draw the line and remove obsolete and insecure cruft,
+> especially when it impedes progress on other fronts.
+>
 
-On Tue, Jun 23, 2020 at 08:31:41PM +0800, Wei Li wrote:
-> When recording with cache-misses and arm_spe_x event, i found that
-> it will just fail without showing any error info if i put cache-misses
-> after arm_spe_x event.
-> 
-> [root@localhost 0620]# perf record -e cache-misses -e \
-> arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,\
-> jitter=1,store_filter=1,min_latency=0/ sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.067 MB perf.data ]
-> [root@localhost 0620]# perf record -e \
-> arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,\
-> store_filter=1,min_latency=0/ -e cache-misses sleep 1
-> [root@localhost 0620]#
-> 
-> Finally, i found the reason is that the parameter 'arm_spe_pmu' passed to
-> arm_spe_recording_init() in auxtrace_record__init() is wrong. When the
-> arm_spe_x event is not the last event, 'arm_spe_pmus[i]' will be out of
-> bounds.
+I have ported iwd to Nettle's LGPL 2.1 implementation of ARC4, and the
+diffstat is
 
-Yes, this indeed broken.  
+ src/crypto.c      | 80 ++++++++++++--------
+ src/main.c        |  8 --
+ unit/test-eapol.c |  3 +-
+ 3 files changed, 51 insertions(+), 40 deletions(-)
 
-The current code can only work if the only event to be
-traced is an arm_spe_X, or if it is the last event to be specified.
-Otherwise the last event type will be checked against all the
-arm_spe_pmus[i]->types, none will match and an out of bound i index will be
-used in arm_spc_recording_init().
-
-Since this problem is not easy to figure out please include the above
-explanation in the changelog.
-
-> 
-> It seems that the code can't support concurrent multiple different
-> arm_spe_x events currently. So add the code to check and record the
-> found 'arm_spe_pmu' to fix this issue.
-> 
-> In fact, we don't support concurrent multiple same arm_spe_x events either,
-> that is checked in arm_spe_recording_options(), and it will show the
-> relevant info.
-> 
-> Fixes: ffd3d18c20b8d ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
->  tools/perf/arch/arm/util/auxtrace.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> index 62b7b03d691a..7bb6f29e766c 100644
-> --- a/tools/perf/arch/arm/util/auxtrace.c
-> +++ b/tools/perf/arch/arm/util/auxtrace.c
-> @@ -58,6 +58,7 @@ struct auxtrace_record
->  	bool found_etm = false;
->  	bool found_spe = false;
->  	static struct perf_pmu **arm_spe_pmus;
-> +	static struct perf_pmu *arm_spe_pmu;
-
-As far as I can tell the "static" doesn't do anything.
-
->  	static int nr_spes = 0;
->  	int i = 0;
->  
-> @@ -77,6 +78,13 @@ struct auxtrace_record
->  
->  		for (i = 0; i < nr_spes; i++) {
->  			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
-> +				if (found_spe && (arm_spe_pmu != arm_spe_pmus[i])) {
-> +					pr_err("Concurrent multiple SPE operation not currently supported\n");
-> +					*err = -EOPNOTSUPP;
-> +					return NULL;
-> +				}
-
-Instead of the above, which as you rightly pointed out, is also done in
-arm_spe_recording_options() it might be best to just fix the "if (!nr_spes)"
-condition:
-                if (!nr_spes || arm_spe_pmu)
-                        continue
-
-Furthermore, instead of having a new arm_spe_pmu variable you could simply make
-found_spe a struct perf_pmu.  That would be one less variable to take care of.
-
-> +
-> +				arm_spe_pmu = arm_spe_pmus[i];
->  				found_spe = true;
-
-Last but not least do you know where the memory allocated for array arm_spe_pmus
-is released?  If you can't find it either then we have a memory leak and it
-would be nice to have that fixed.
-
-Regards
-Mathieu
-
-PS: Leo Yan has spent a fair amount of time in the SPE code - please CC him on
-your next revision.
-
-
->  				break;
->  			}
-> @@ -94,7 +102,7 @@ struct auxtrace_record
->  
->  #if defined(__aarch64__)
->  	if (found_spe)
-> -		return arm_spe_recording_init(err, arm_spe_pmus[i]);
-> +		return arm_spe_recording_init(err, arm_spe_pmu);
->  #endif
->  
->  	/*
-> -- 
-> 2.17.1
-> 
+https://git.kernel.org/pub/scm/linux/kernel/git/ardb/iwd.git/log/?h=arc4-cleanup
