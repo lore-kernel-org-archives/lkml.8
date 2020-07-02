@@ -5,69 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF86C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97F7208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A85820899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4y+Myvz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoVlnDUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgGBOq5 (ORCPT
+        id S1730247AbgGBOsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50226 "EHLO
+        Thu, 2 Jul 2020 10:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730005AbgGBOqv (ORCPT
+        with ESMTP id S1730039AbgGBOq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEBCC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 22so27109469wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:50 -0700 (PDT)
+        Thu, 2 Jul 2020 10:46:58 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56EDC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:57 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so28287735wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kl7sz8QA1tp3BsjE/r0OSQuznzm9IU6toz3QDXE6srY=;
-        b=C4y+MyvzGjWT5mo+mg50PzeIgmLfB6enO3CDM4ud6BHtsMBDG6WYTz5E/zlNT5bdVN
-         uqOGQzeXk+cQ9C88ep5Os/SO4JLiJpIMBtkWnibMng/BdShwRCdWzGivNel5W0u3loQo
-         kA9lKtjOxrgy/hdPR3YBZZdVmRYNRZQY5zkRqOB5KvC2jAoY0BasgzIweMUopiIXCw6h
-         nSFj2pB8cwQoI/PgQzlyWAUKi0Zhb7CX58t3cqgORy4DcYy93PevYKZRsF7oDt5MeJUA
-         mwb9uf/Cl44mu/3TC9lpgE4PNlm+bJknnnITiHC5ced76dYl7/QC6pirP7P+PJ8GC3NT
-         LfIA==
+        bh=28X3U4dJc3uramg6kDHLLVs+7HIKsy1aJX4qqakHpps=;
+        b=DoVlnDUG55Z4Fzv9+d1V8Ieq224Bfdh8KlYCNDYO1eP2cAbL9Nih/BvbtIkArPTCgY
+         9VJgpbG9xQ71lm4ghblIel7Ajs+qU1OqUnTyaCshoagZiUE2MzvozTLZotuvn5FmGeP+
+         YOdVX4MTT9x5O+qveBt4kpo/oJKwWt+EU5xKr0VvewkyHWF9badOtmf1EYeDEQ4jvDpf
+         nXl4J32zR7BlkJVzhTaX8z1hR7v+7RgJuKlrcj9CO/hdrTRAw0GKFQCyJ0gIVKfjAL0A
+         RI8wMjBewSNCZsWaWT3urJ4JA12qcvR3+GSQ+TyQyAid8K8Az19vtresRc7nwlXYT8ZC
+         1QKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kl7sz8QA1tp3BsjE/r0OSQuznzm9IU6toz3QDXE6srY=;
-        b=K1aVqqDvxs1JlrSEVjOvItylYgGlun6HT/RqwKcrxc2I8MGzOXCbsxL2/ke/PKQl9k
-         qnwxveDntHLUwTNupEwarWdN/dLoWTRfUFmRMMleMYC1prWPeOoivgFS576epfR3UEtr
-         55mAeyriBFRBa2ZQmjD6udYO2DsrlnX6X1Gek6ZL/Y+PPAricndBNxbwdbKrJfTcQxrK
-         qy5M/xIIafx9bPFT/tVxib1Cc+z2MLphdFJ8gy1NDOZzMOP3d+83Abi42RvSI6RSSXLx
-         UY9OsR5ZS1crhk73uliOr6gocIUr6q4rJIkX+35LTaG7RpDk4OeG8e3aAzv8zQ5SSGu1
-         s7JA==
-X-Gm-Message-State: AOAM533Dn/QgYOsCLwKXpD21KGw7yv0bG+fPVRtO6J4gQfjJQdBMlWEb
-        8ZPuKWqKZ86h04mgd55jiC3hMg==
-X-Google-Smtp-Source: ABdhPJx7VJnF3IZsz1knssd5zApJ5vUeYhNVJHgmwD44/LNnJPIxKZZCahG6RssJD9o76EkSSK6XMA==
-X-Received: by 2002:a1c:e914:: with SMTP id q20mr30734859wmc.145.1593701209352;
-        Thu, 02 Jul 2020 07:46:49 -0700 (PDT)
+        bh=28X3U4dJc3uramg6kDHLLVs+7HIKsy1aJX4qqakHpps=;
+        b=hQ7bwJIj4IcctgEOzQj8UFQnI9vh+QaW7pRGiUBknC9ig9mNu2Layvok6wx/Ycq2gy
+         vOmTmnnJ+Htsmk0JsSC5RMUxUeMqpIsvX3R2perxpGYDf2lvctDAf/Wg4j08FvCAaUcm
+         u4w4OoAlnayM/D4GeYdbee8GuFrTmjau6GzmEoaHvfQ6lCo5PRnWGN/WusVLPdEDYzSh
+         GyzE+s3V3t0uTc7PU2lGBCp9qwmV9MyOhdByuVPHqSeMi4htIHHcjAA42AjYCZotiewG
+         2SRhrmUlX/1Ewji0+5CUJP7ttgiRUhOP2kXAMoysUsj2iUlp6k2GMFQVTzBOIx6Y0/PE
+         ozbw==
+X-Gm-Message-State: AOAM533aIByP/C8CZYyKtyIGV0Xz99cRt/6vCi3zcMygLukODxgcw7so
+        FnoR1YCzZZMz8JMoFgSbW5dGpA==
+X-Google-Smtp-Source: ABdhPJyhJBjWN4in2TNPlqyGbZpG7D4RdUGXcarVJruUemj20CkpM1cwqnzu9QOonoxh49cCQh2bmA==
+X-Received: by 2002:a7b:c3d0:: with SMTP id t16mr34760561wmj.117.1593701216646;
+        Thu, 02 Jul 2020 07:46:56 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.48
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:48 -0700 (PDT)
+        Thu, 02 Jul 2020 07:46:56 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Pawel Jez <pjez@cadence.com>, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 14/30] usb: cdns3: ep0: Fix a bunch of kerneldoc issues
-Date:   Thu,  2 Jul 2020 15:46:09 +0100
-Message-Id: <20200702144625.2533530-15-lee.jones@linaro.org>
+        Alan Stern <stern@rowland.harvard.edu>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Thibaut VARENE <varenet@parisc-linux.org>
+Subject: [PATCH 20/30] usb: host: ohci-at91: Demote kerneldoc headers down to basic comment blocks
+Date:   Thu,  2 Jul 2020 15:46:15 +0100
+Message-Id: <20200702144625.2533530-21-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
@@ -78,89 +81,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add some missing function argument descriptions for 'ep', 'desc'
-and 'zlp', and correct spelling/bitrot issues surrounding the
-correct spelling of present args.
+Neither usb_hcd_at91_probe() nor usb_hcd_at91_remove()'s function
+headers reach the standards required of a kerneldoc entry.  Only
+one attempt at describing an argument was made, as it is not
+correct (we're removing that too to save confusion).
 
-Fixes the following W=1 warnings:
+Fixes the following kernel build warning(s):
 
- drivers/usb/cdns3/ep0.c:36: warning: Function parameter or member 'zlp' not described in 'cdns3_ep0_run_transfer'
- drivers/usb/cdns3/ep0.c:236: warning: Function parameter or member 'ctrl' not described in 'cdns3_req_ep0_get_status'
- drivers/usb/cdns3/ep0.c:236: warning: Excess function parameter 'ctrl_req' description in 'cdns3_req_ep0_get_status'
- drivers/usb/cdns3/ep0.c:411: warning: Function parameter or member 'ctrl' not described in 'cdns3_req_ep0_handle_feature'
- drivers/usb/cdns3/ep0.c:411: warning: Excess function parameter 'ctrl_req' description in 'cdns3_req_ep0_handle_feature'
- drivers/usb/cdns3/ep0.c:661: warning: Function parameter or member 'ep' not described in 'cdns3_gadget_ep0_enable'
- drivers/usb/cdns3/ep0.c:661: warning: Function parameter or member 'desc' not described in 'cdns3_gadget_ep0_enable'
- drivers/usb/cdns3/ep0.c:671: warning: Function parameter or member 'ep' not described in 'cdns3_gadget_ep0_disable'
- drivers/usb/cdns3/ep0.c:867: warning: Function parameter or member 'priv_ep' not described in 'cdns3_init_ep0'
- drivers/usb/cdns3/ep0.c:867: warning: Excess function parameter 'ep_priv' description in 'cdns3_init_ep0'
+ drivers/usb/host/ohci-at91.c:166: warning: Function parameter or member 'driver' not described in 'usb_hcd_at91_probe'
+ drivers/usb/host/ohci-at91.c:166: warning: Function parameter or member 'pdev' not described in 'usb_hcd_at91_probe'
+ drivers/usb/host/ohci-at91.c:259: warning: Function parameter or member 'hcd' not described in 'usb_hcd_at91_remove'
+ drivers/usb/host/ohci-at91.c:259: warning: Function parameter or member 'pdev' not described in 'usb_hcd_at91_remove'
+ drivers/usb/host/ohci-at91.c:259: warning: Excess function parameter 'dev' description in 'usb_hcd_at91_remove'
 
-Cc: Pawel Laszczak <pawell@cadence.com>
-Cc: Pawel Jez <pjez@cadence.com>
-Cc: Peter Chen <peter.chen@nxp.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Thibaut VARENE <varenet@parisc-linux.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/cdns3/ep0.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/usb/host/ohci-at91.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index 82645a2a0f529..5b3f682338e50 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -227,7 +227,7 @@ static int cdns3_req_ep0_set_address(struct cdns3_device *priv_dev,
- /**
-  * cdns3_req_ep0_get_status - Handling of GET_STATUS standard USB request
-  * @priv_dev: extended gadget object
-- * @ctrl_req: pointer to received setup packet
-+ * @ctrl: pointer to received setup packet
-  *
-  * Returns 0 if success, error code on error
-  */
-@@ -400,7 +400,7 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
-  * Handling of GET/SET_FEATURE standard USB request
-  *
-  * @priv_dev: extended gadget object
-- * @ctrl_req: pointer to received setup packet
-+ * @ctrl: pointer to received setup packet
-  * @set: must be set to 1 for SET_FEATURE request
-  *
-  * Returns 0 if success, error code on error
-@@ -653,6 +653,9 @@ void cdns3_check_ep0_interrupt_proceed(struct cdns3_device *priv_dev, int dir)
+diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
+index b635c6a1b1a91..0487a4b0501ec 100644
+--- a/drivers/usb/host/ohci-at91.c
++++ b/drivers/usb/host/ohci-at91.c
+@@ -153,7 +153,7 @@ static struct regmap *at91_dt_syscon_sfr(void)
+ /* always called with process context; sleeping is OK */
  
- /**
-  * cdns3_gadget_ep0_enable
-+ * @ep: pointer to endpoint zero object
-+ * @desc: pointer to usb endpoint descriptor
-+ *
-  * Function shouldn't be called by gadget driver,
-  * endpoint 0 is allways active
-  */
-@@ -664,6 +667,8 @@ static int cdns3_gadget_ep0_enable(struct usb_ep *ep,
  
- /**
-  * cdns3_gadget_ep0_disable
-+ * @ep: pointer to endpoint zero object
-+ *
-  * Function shouldn't be called by gadget driver,
-  * endpoint 0 is allways active
-  */
-@@ -690,6 +695,7 @@ static int cdns3_gadget_ep0_set_halt(struct usb_ep *ep, int value)
-  * @ep: pointer to endpoint zero object
-  * @request: pointer to request object
-  * @gfp_flags: gfp flags
-+ * @zlp: add zero length packet
+-/**
++/*
+  * usb_hcd_at91_probe - initialize AT91-based HCDs
+  * Context: !in_interrupt()
   *
-  * Returns 0 on success, error code elsewhere
-  */
-@@ -858,7 +864,7 @@ void cdns3_ep0_config(struct cdns3_device *priv_dev)
- /**
-  * cdns3_init_ep0 Initializes software endpoint 0 of gadget
-  * @priv_dev: extended gadget object
-- * @ep_priv: extended endpoint object
-+ * @priv_ep: extended endpoint object
+@@ -244,9 +244,8 @@ static int usb_hcd_at91_probe(const struct hc_driver *driver,
+ 
+ /* may be called with controller, bus, and devices active */
+ 
+-/**
++/*
+  * usb_hcd_at91_remove - shutdown processing for AT91-based HCDs
+- * @dev: USB Host Controller being removed
+  * Context: !in_interrupt()
   *
-  * Returns 0 on success else error code.
-  */
+  * Reverses the effect of usb_hcd_at91_probe(), first invoking
 -- 
 2.25.1
 
