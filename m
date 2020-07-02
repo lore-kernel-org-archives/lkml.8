@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4945AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8001C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2760C20899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F63B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcDxMf0I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuFKcEEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgGBXLY (ORCPT
+        id S1726831AbgGBXLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:11:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
+        Thu, 2 Jul 2020 19:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGBXLQ (ORCPT
+        with ESMTP id S1726770AbgGBXLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:11:16 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFDAC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:15 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id n2so16733119edr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:15 -0700 (PDT)
+        Thu, 2 Jul 2020 19:11:21 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BAE1C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:11:21 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id by13so15890474edb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3eElLZDK+73Sru8uMZkWstDbXOPX/1Q4jpihY7SIwDg=;
-        b=lcDxMf0IacgbtirBv3TneTRSLmivWFZ8G0sKQ+zHbklLEfk9Tj5gzWoZUd00sezx5G
-         7YDpuVsmpp5Hi292141ilwszaWWjST4UGX/xLHZybvkYVzqEjV0Je6inT+QQGxIGIIVk
-         HcGTo8r3zubNe+E1PgIBsZydUpPjLKWlJE3JVoZhMv1pYfwNm+SekT67BtHpYZ4NEtLj
-         7o5grDJv3YNmGXM8zMbrymN6OWvfrGOiFZX9X71nOqX1h/Z33a6+1BGp3h7EGno7qTMp
-         up2hbfK6vvoXPXQ5zitOVrhJh8kkHoGpZS2c1ITR2lDHF7iYcdGUI2RivbxHsHOpzonL
-         3ZNg==
+        bh=dgtvhZLfdp9O3gftKqMBNkndvT7e8+IujNOk46Vo20Q=;
+        b=EuFKcEEIAwfc+2XGtQbcgo9h2Y0W+5HOUpZ2phmxvet9ddeCeDx+HNYvTJEYJoXSe9
+         v+VBEWsuhH94XMwurpQpXtrqH2fIToDxj6w18Yp/rQyqsR9Y1C2sFMetG2U3zfJepHVv
+         MHYjf4wwnyVONwLWkUFGIXb/Dyj9O8p6LYM/Thimgf+Dm4d3w1x9W7dsNLCbCs/Zwx8a
+         dko46RJ36/qeDkq12VRR6FHOIHVV8H1LEWpnL3nCYqtozacr8XJvK6lS9OypwE9ouyLe
+         RHF7vhmvBz7fC9VY6lAmjtBCrIR1Px1qatmuyTF94nIkfksnB1NEi9kFkKXZsRzzCRK2
+         RtFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3eElLZDK+73Sru8uMZkWstDbXOPX/1Q4jpihY7SIwDg=;
-        b=A94cYQeiUFPALex4kKwPvvr8+CWkslS7GkYCCP5Ij+WWHf43crk+s/Bc5r9CDAc10N
-         zDNgTz2UVIyXy0uMynWNPv1Fbw/pA5V6IaQmb3aLBJynrwpQwtzweO1e4o6hQZVsqsRE
-         fqTgCLht+VJWhroWUbcj/mCaiprbj/cHqswf7FolWetNVlZT37Wgu3g3MPsyc+yfuGVs
-         A/m2+VusKZ9UA8MCN1JLwT7f04VpaFcLJBbo1OWql0i5i4e8GliNzAnBbfJ5ALjkpBkn
-         0dxLYcc4Jil4K0BTZtQhxdVPTgHTJJ54aePicME+Qer1DN67cbKJwb30udmynmVZfTit
-         P0Jg==
-X-Gm-Message-State: AOAM533wjAWPUB6ldsdxi+q3b+DAXn7Cty9ah7cAcqNmkjDirT6gEfZa
-        7XoLCXkIOr3gES2VIAqgC0+EnA8R
-X-Google-Smtp-Source: ABdhPJz0agijvMKGzjnaeuIpe9wfK5n7UmFKFUMiW/9qR4SwUY8Yij4M99rIGesoyoDuXJyNY8uDaw==
-X-Received: by 2002:a05:6402:318d:: with SMTP id di13mr26663466edb.172.1593731474444;
-        Thu, 02 Jul 2020 16:11:14 -0700 (PDT)
+        bh=dgtvhZLfdp9O3gftKqMBNkndvT7e8+IujNOk46Vo20Q=;
+        b=mBEw8bjSEXQTK8nvImh3lDBYNqeDCbDI+wWQzanvWncVmlXDK+wEoulMDnsUg3rLAb
+         /DJs+lLpUJ7IwH3OT4hjKKlgBU9nuPzoQya5WAv4edkuSTA6AwKPBkZzBW7PJ/3oBfce
+         iwLxBFcc7p5gL+Gc2Z/m+GZP8BZiHBnbmUP8JLG2Li28Sg2gnzW6PgnuJeKk9rHjGDrF
+         HrWqZBqkX9cnuHNxQT2XMnbg3cMDaqRj/R4vhDIMZTVWsnk4hdJp+dh4yPrnDTKdt9nq
+         SF8ZIMPtyqQqqTIlkV/is3Q4YHLSFX5T7wE1YZPOHa83YTh3AKL7Q6PtM1kFHiUXiIcW
+         aiFg==
+X-Gm-Message-State: AOAM532Qz2JJNYWbcmwkGJHj4ibCOZyGHVS2AHAybgT26ByoMJTgAiYG
+        W/B3DqHFxE7HmWZlhvDtqEASic/8
+X-Google-Smtp-Source: ABdhPJzC3j8T6SI1HIOwjx4ZdlMkG6TwTrsQgIkxp4vEA485iAUEdt6NmjbzkdSlKWL3fleS9EDU1Q==
+X-Received: by 2002:a05:6402:13d0:: with SMTP id a16mr37351450edx.269.1593731479679;
+        Thu, 02 Jul 2020 16:11:19 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:bd38:c82d:5283:9f1])
-        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.13
+        by smtp.gmail.com with ESMTPSA id x9sm8214031ejw.28.2020.07.02.16.11.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 16:11:13 -0700 (PDT)
+        Thu, 02 Jul 2020 16:11:19 -0700 (PDT)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 10/15] options: add a small helper: handle_switch_finalize()
-Date:   Fri,  3 Jul 2020 01:10:34 +0200
-Message-Id: <20200702231039.55015-11-luc.vanoostenryck@gmail.com>
+Subject: [PATCH 15/15] cleanup: move hexval() to utils.c
+Date:   Fri,  3 Jul 2020 01:10:39 +0200
+Message-Id: <20200702231039.55015-16-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
 References: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
@@ -76,42 +76,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is just to isolate the details about which switch need an
-extra 'finalization' in a separate function in preparation
-to moving all the parsing code in a separate file.
+Now lib.c contains almost nothing else than library entrypoints.
+
+Move a small utility, hexval(), to utils.c to complete this cleanup.
 
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- lib.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ lib.c   | 17 -----------------
+ lib.h   |  2 --
+ utils.c | 17 +++++++++++++++++
+ utils.h |  4 ++++
+ 4 files changed, 21 insertions(+), 19 deletions(-)
 
 diff --git a/lib.c b/lib.c
-index b3bacb180cac..a56efcaa64fd 100644
+index f512be2e1a43..57c89a16448e 100644
 --- a/lib.c
 +++ b/lib.c
-@@ -1220,6 +1220,12 @@ static char **handle_switch(char *arg, char **next)
- 	return next;
- }
+@@ -50,23 +50,6 @@
+ #include "bits.h"
  
-+static void handle_switch_finalize(void)
+ 
+-unsigned int hexval(unsigned int c)
+-{
+-	int retval = 256;
+-	switch (c) {
+-	case '0'...'9':
+-		retval = c - '0';
+-		break;
+-	case 'a'...'f':
+-		retval = c - 'a' + 10;
+-		break;
+-	case 'A'...'F':
+-		retval = c - 'A' + 10;
+-		break;
+-	}
+-	return retval;
+-}
+-
+ static void do_warn(const char *type, struct position pos, const char * fmt, va_list args)
+ {
+ 	static char buffer[512];
+diff --git a/lib.h b/lib.h
+index 81253a3e7ee5..46483f2bed5c 100644
+--- a/lib.h
++++ b/lib.h
+@@ -45,8 +45,6 @@
+ #endif
+ 
+ 
+-extern unsigned int hexval(unsigned int c);
+-
+ struct position {
+ 	unsigned int type:6,
+ 		     stream:14,
+diff --git a/utils.c b/utils.c
+index 094df3f9bf1c..72fff00ff91b 100644
+--- a/utils.c
++++ b/utils.c
+@@ -8,6 +8,23 @@
+ #include <stdio.h>
+ 
+ 
++unsigned int hexval(unsigned int c)
 +{
-+	handle_switch_v_finalize();
-+	handle_switch_W_finalize();
++	int retval = 256;
++	switch (c) {
++	case '0'...'9':
++		retval = c - '0';
++		break;
++	case 'a'...'f':
++		retval = c - 'a' + 10;
++		break;
++	case 'A'...'F':
++		retval = c - 'A' + 10;
++		break;
++	}
++	return retval;
 +}
 +
- ////////////////////////////////////////////////////////////////////////////////
- // Predefines
+ void *xmemdup(const void *src, size_t len)
+ {
+ 	return memcpy(__alloc_bytes(len), src, len);
+diff --git a/utils.h b/utils.h
+index 7bd14f467799..079fb02a3e94 100644
+--- a/utils.h
++++ b/utils.h
+@@ -8,6 +8,10 @@
+ #include <stddef.h>
+ #include <stdarg.h>
  
-@@ -1576,8 +1582,7 @@ struct symbol_list *sparse_initialize(int argc, char **argv, struct string_list
- 		}
- 		add_ptr_list(filelist, arg);
- 	}
--	handle_switch_W_finalize();
--	handle_switch_v_finalize();
-+	handle_switch_finalize();
- 
- 	// Redirect stdout if needed
- 	if (dump_macro_defs || preprocess_only)
++///
++// return the value coresponding to an hexadecimal digit
++unsigned int hexval(unsigned int c);
++
+ ///
+ // duplicate a memory buffer in a newly allocated buffer.
+ // @src: a pointer to the memory buffer to be duplicated
 -- 
 2.27.0
 
