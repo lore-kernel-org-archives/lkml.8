@@ -2,79 +2,92 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C03C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41FCD20702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496AD20760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593712226;
+	bh=gONodLYvSEBI/VzAFQ+qoexk3Hoaqs926kGYVFbfaAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w7U77c2vdLukiZh4oU5DER8H1a+3ZhxTrj15jdtSwug8fpQLSuFE/mkEQkCZ29m4Y
+	 NWpVJTM0ngdsRTTktKJpTmpTEC0EMzF1rUhu+eDgEio+2cehNfDaupkEoxdUQmXOAy
+	 mGkCauS5Zc/8k0cEoN/0Xjbxo4u50zDzrdPEUnas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgGBRtg (ORCPT
+        id S1728003AbgGBRuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:49:36 -0400
-Received: from muru.com ([72.249.23.125]:60468 "EHLO muru.com"
+        Thu, 2 Jul 2020 13:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgGBRtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:49:33 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id E431F80B0;
-        Thu,  2 Jul 2020 17:50:25 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
+        id S1726120AbgGBRuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:50:24 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BD020737;
+        Thu,  2 Jul 2020 17:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593712224;
+        bh=gONodLYvSEBI/VzAFQ+qoexk3Hoaqs926kGYVFbfaAs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VRg2kfoDvSMpz8T8I1Y4Kz/0JTymw6S1ArHLqCNfOB+D8jka05iOV6NSdXFQmRgeD
+         6Pn4a5wS13qlHgdpyoeS1QMCFlIP1blXzcTlWQpSEyI+hfee+SUdCvDsX40qmTVIEq
+         d9ltZHdjUiRYKjCQmiKUdhbvtC9GHJcqvQZtsUk4=
+Date:   Thu, 2 Jul 2020 10:50:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>, linux-wireless@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Denis Kenzior <denkenz@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] bus: ti-sysc: Fix sleeping function called from invalid context for RTC quirk
-Date:   Thu,  2 Jul 2020 10:49:29 -0700
-Message-Id: <20200702174929.26506-2-tony@atomide.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702174929.26506-1-tony@atomide.com>
-References: <20200702174929.26506-1-tony@atomide.com>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org
+Subject: Re: [RFC PATCH 4/7] crypto: remove ARC4 support from the skcipher API
+Message-ID: <20200702175022.GA2753@sol.localdomain>
+References: <20200702101947.682-1-ardb@kernel.org>
+ <20200702101947.682-5-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702101947.682-5-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_DEBUG_ATOMIC_SLEEP enabled we can see the following with RTC probe:
+[+linux-wireless, Marcel Holtmann, and Denis Kenzior]
 
-BUG: sleeping function called from invalid context at drivers/bus/ti-sysc.c:1736
-...
-(sysc_quirk_rtc) from [<c060d01c>] (sysc_write_sysconfig+0x1c/0x60)
-(sysc_write_sysconfig) from [<c060d9f4>] (sysc_enable_module+0x11c/0x274)
-(sysc_enable_module) from [<c060f37c>] (sysc_probe+0xe9c/0x1380)
-(sysc_probe) from [<c06e9384>] (platform_drv_probe+0x48/0x98)
+On Thu, Jul 02, 2020 at 12:19:44PM +0200, Ard Biesheuvel wrote:
+> Remove the generic ecb(arc4) skcipher, which is slightly cumbersome from
+> a maintenance perspective, since it does not quite behave like other
+> skciphers do in terms of key vs IV lifetime. Since we are leaving the
+> library interface in place, which is used by the various WEP and TKIP
+> implementations we have in the tree, we can safely drop this code now
+> it no longer has any users.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Fixes: e8639e1c986a ("bus: ti-sysc: Handle module unlock quirk needed for some RTC")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Last year there was a discussion where it was mentioned that iwd uses
+"ecb(arc4)" via AF_ALG.  So can we really remove it yet?
+See https://lkml.kernel.org/r/97BB95F6-4A4C-4984-9EAB-6069E19B4A4F@holtmann.org
+Note that the code isn't in "iwd" itself but rather in "libell" which iwd
+depends on: https://git.kernel.org/pub/scm/libs/ell/ell.git/
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1727,8 +1727,8 @@ static void sysc_quirk_rtc(struct sysc *ddata, bool lock)
- 
- 	local_irq_save(flags);
- 	/* RTC_STATUS BUSY bit may stay active for 1/32768 seconds (~30 usec) */
--	error = readl_poll_timeout(ddata->module_va + 0x44, val,
--				   !(val & BIT(0)), 100, 50);
-+	error = readl_poll_timeout_atomic(ddata->module_va + 0x44, val,
-+					  !(val & BIT(0)), 100, 50);
- 	if (error)
- 		dev_warn(ddata->dev, "rtc busy timeout\n");
- 	/* Now we have ~15 microseconds to read/write various registers */
--- 
-2.27.0
+Apparently it also uses md4 and ecb(des) too.
+
+Marcel and Denis, what's your deprecation plan for these obsolete and insecure
+algorithms?
+
+- Eric
