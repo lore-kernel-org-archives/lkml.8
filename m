@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D93C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79812C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF3620874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5165520884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653005;
-	bh=RE38XazNYCwzs9eu9smfOGnUknFmGMxPfCedVsBQs2U=;
+	s=default; t=1593653010;
+	bh=27HmbMVf7TIt+n99FWWFvZ4hX+iwRh6GrUkWrpJrksw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2pdC/XF2QuTz1pCzP30n43H8ZIIlZfAdmv7c4sXcX6ewxuIWpn39DHvxyEUsKATdQ
-	 3cYjKHyTJUCt5AFExKzWpNdAufZNrDxXEONwzVED+1aHUWRaYNQGv+EqiAbCrPr5+A
-	 tt+R+RGFJFRTwoD40e0Fky0dHFybaoYsJwV/71Cg=
+	b=1yjfQWuPzIgKjdcGKco57yyLcfGylxpPm7zrbQja77V/sSMsI/LGu3Q2fwZKXWKNm
+	 IJ+xqDy1xRRwb8J4z1pgXMxsAjwU2s/pnbt57/7kOiB4ffUgjoBX0uuQP/nL/lqbuo
+	 /ZatLz0pQ6cLclax+kxR8KZK7G2OsrRgkZODx0m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgGBBXX (ORCPT
+        id S1728349AbgGBBX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbgGBBXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:11 -0400
+        id S1728256AbgGBBXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F272085B;
-        Thu,  2 Jul 2020 01:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C73F20748;
+        Thu,  2 Jul 2020 01:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652990;
-        bh=RE38XazNYCwzs9eu9smfOGnUknFmGMxPfCedVsBQs2U=;
+        s=default; t=1593652996;
+        bh=27HmbMVf7TIt+n99FWWFvZ4hX+iwRh6GrUkWrpJrksw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOyXRqU6oVghyN/Yq3Pef1bJsItqTZRNe79SJ6M+SUs9pILRnyn9KTwYXaEAEr+5p
-         H54yetBa/gOwzSJcFUY8n8Jvtb0EQ9eHNHsDuESu3boZOrrXmw2o32sJVlsc0AVE85
-         aKPwhikx28eVPysWNY2XZ7lIcxqhkXcAhVWlKYDY=
+        b=kqC8H64at90Y63t1HhXNqXBMb9XaloiEpwDvQvHowrrQppy3g8GvmrGPnx8eE+oXN
+         I6HGaOGGI1A8rZ0DwfTUHncK9SC64HaVqlsZBaeyQ/vkS2v2GS+U2pB/wRtvG4aqDC
+         CgB1TdFpVzVPPm1rmpOD/5jp9HMFkRi71tZUpapU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 13/53] drm: mcde: Fix display initialization problem
-Date:   Wed,  1 Jul 2020 21:21:22 -0400
-Message-Id: <20200702012202.2700645-13-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 17/53] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Wed,  1 Jul 2020 21:21:26 -0400
+Message-Id: <20200702012202.2700645-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -60,60 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit b984b6d8b52372b98cce0a6ff6c2787f50665b87 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-The following bug appeared in the MCDE driver/display
-initialization during the recent merge window.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-First the place we call drm_fbdev_generic_setup() in the
-wrong place: this needs to be called AFTER calling
-drm_dev_register() else we get this splat:
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
 
- ------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at ../drivers/gpu/drm/drm_fb_helper.c:2198 drm_fbdev_generic_setup+0x164/0x1a8
-mcde a0350000.mcde: Device has not been registered.
-Modules linked in:
-Hardware name: ST-Ericsson Ux5x0 platform (Device Tree Support)
-[<c010e704>] (unwind_backtrace) from [<c010a86c>] (show_stack+0x10/0x14)
-[<c010a86c>] (show_stack) from [<c0414f38>] (dump_stack+0x9c/0xb0)
-[<c0414f38>] (dump_stack) from [<c0121c8c>] (__warn+0xb8/0xd0)
-[<c0121c8c>] (__warn) from [<c0121d18>] (warn_slowpath_fmt+0x74/0xb8)
-[<c0121d18>] (warn_slowpath_fmt) from [<c04b154c>] (drm_fbdev_generic_setup+0x164/0x1a8)
-[<c04b154c>] (drm_fbdev_generic_setup) from [<c04ed278>] (mcde_drm_bind+0xc4/0x160)
-[<c04ed278>] (mcde_drm_bind) from [<c04f06b8>] (try_to_bring_up_master+0x15c/0x1a4)
-(...)
+Those last two bytes - 96 1f - aren't part of the original packet.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200613223027.4189309-1-linus.walleij@linaro.org
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mcde/mcde_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
-index f28cb7a576ba4..1e7c5aa4d5e62 100644
---- a/drivers/gpu/drm/mcde/mcde_drv.c
-+++ b/drivers/gpu/drm/mcde/mcde_drv.c
-@@ -208,7 +208,6 @@ static int mcde_modeset_init(struct drm_device *drm)
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 93044cf1417a5..1fe4cc28d154d 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1414,10 +1414,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
  
- 	drm_mode_config_reset(drm);
- 	drm_kms_helper_poll_init(drm);
--	drm_fbdev_generic_setup(drm, 32);
- 
- 	return 0;
- 
-@@ -275,6 +274,8 @@ static int mcde_drm_bind(struct device *dev)
- 	if (ret < 0)
- 		goto unbind;
- 
-+	drm_fbdev_generic_setup(drm, 32);
-+
- 	return 0;
- 
- unbind:
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1426,8 +1426,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
