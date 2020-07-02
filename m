@@ -2,93 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25701C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B317C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CCD20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d0d8UCbI"
+	by mail.kernel.org (Postfix) with ESMTP id 488EF20874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593652926;
+	bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=za8jz7BGwtrMVwhdAf07iXZY0wBG0k1UewsCiy4JB9ZJKMAJhSNego5PIBXYMJRsL
+	 HVKo0slRQswduEGSsE2QZFOKAIjCyE6CC2YRs3lzPF9RU63nBSrHJPfkhSVolFTmFX
+	 A/iWfBlkVWf4TGKv1UXtfb3boX52LDA9kmyyQCWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgGBBVS (ORCPT
+        id S1728104AbgGBBWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:21:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:49953 "EHLO ozlabs.org"
+        Wed, 1 Jul 2020 21:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgGBBVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:21:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726028AbgGBBWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:22:04 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49y0fg5NgRz9sRN;
-        Thu,  2 Jul 2020 11:21:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593652875;
-        bh=SNDM3Ebesqm1/WP0xmTozgFdT1xUcQvv4Uv50jRwNK0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d0d8UCbIDdHJNx3His5M9ih2D03iEW/iwIHK/FtTqNNyJ003Vm3ArnVbeviAOVEeh
-         ZUhCQga4t6I+55iWWiE7H/Tf8yCGqgyoc5CcYSZbhSmKu8O9SD7cTdvpNlDJh9rUPE
-         +I3Srhe73I2eOzcErU+8Jd4H0bzEuxwKZOpVr0v5hP7lvSURtyEQMaTCK6y9u4rZfs
-         9zdcXioMNDUb4u+ljd4cEMlM5gNEMkHBa1PhOYePeBSbRLZzAlJIYI6pdrVHST7a0n
-         u2K599FDa0SSr1jdgpxH5GRxkEpK+CEipO/yfCO4Hpnh9VUycxu2ATSRSE7LwvorNN
-         469P6VMukVANw==
-Date:   Thu, 2 Jul 2020 11:21:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20200702112112.04d3f992@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FA2820748;
+        Thu,  2 Jul 2020 01:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593652924;
+        bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qAd8IP2f4neblwS824klCsrbfs/Dt0tGiYA40MPNSzrrD1YEtog/X9DE/fAYCJqWi
+         P7A5ZI19v82gLz512OkZlOaODixU1crtq1E07KF2fS3rEBbMvwCe/ac0+g1bJcYwG2
+         AXhmk0U7jDAVjyCS3eEhsVcDUS9ZKnCjFyjIr1xQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 01/53] soc: ti: omap-prm: use atomic iopoll instead of sleeping one
+Date:   Wed,  1 Jul 2020 21:21:10 -0400
+Message-Id: <20200702012202.2700645-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/m7.HGDHfzDuDAf_vqraKDJP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/m7.HGDHfzDuDAf_vqraKDJP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Tero Kristo <t-kristo@ti.com>
 
-Hi all,
+[ Upstream commit 98ece19f247159a51003796ede7112fef2df5d7f ]
 
-After merging the block tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+The reset handling APIs for omap-prm can be invoked PM runtime which
+runs in atomic context. For this to work properly, switch to atomic
+iopoll version instead of the current which can sleep. Otherwise,
+this throws a "BUG: scheduling while atomic" warning. Issue is seen
+rather easily when CONFIG_PREEMPT is enabled.
 
-drivers/md/dm.c: In function '__map_bio':
-drivers/md/dm.c:1296:24: warning: unused variable 'md' [-Wunused-variable]
- 1296 |  struct mapped_device *md =3D io->md;
-      |                        ^~
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/soc/ti/omap_prm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Introduced by commit
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+index 96c6f777519c0..c9b3f9ebf0bbf 100644
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -256,10 +256,10 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
+ 		goto exit;
+ 
+ 	/* wait for the status to be set */
+-	ret = readl_relaxed_poll_timeout(reset->prm->base +
+-					 reset->prm->data->rstst,
+-					 v, v & BIT(st_bit), 1,
+-					 OMAP_RESET_MAX_WAIT);
++	ret = readl_relaxed_poll_timeout_atomic(reset->prm->base +
++						 reset->prm->data->rstst,
++						 v, v & BIT(st_bit), 1,
++						 OMAP_RESET_MAX_WAIT);
+ 	if (ret)
+ 		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
+ 		       reset->prm->data->name, id);
+-- 
+2.25.1
 
-  5a6c35f9af41 ("block: remove direct_make_request")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/m7.HGDHfzDuDAf_vqraKDJP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl79NogACgkQAVBC80lX
-0Gws4wgAoSLcCudGe+r3OTLt9GR83BQ8imeImAWsb2xj1gav/efyaRNEiYj6F80V
-n/6KbJmzpkXg4p6u6bQsY1yRsR8w+iGy5YTFJ6lPlO+qXNkxfvAZndfw0XDCB6S8
-mSElNYSbmkD5g11s85dZtz+NdSq4yzSQHwpYruIYzNlNjxM9FOOBepGVzv7dKcsc
-sTwNzvMH/mPz+udQEsvyx4wmV96uvfGrDKMfRt1B0klgdEq8oXiDqkBqtd5TnvV1
-HHDcor2UgGtwwGMqgMfYQQd158/Xh3Dtl9Z7mox8gaXAmKlGv5cltOk5ogQ+bd/E
-RgiEiGlaSoGhu64C9In3X10+HOkvVQ==
-=yZnc
------END PGP SIGNATURE-----
-
---Sig_/m7.HGDHfzDuDAf_vqraKDJP--
