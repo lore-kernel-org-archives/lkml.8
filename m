@@ -2,80 +2,139 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D22C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8A82070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:52:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S5GUDaE5"
+	by mail.kernel.org (Postfix) with ESMTP id D92EE208D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgGBLwz (ORCPT
+        id S1728856AbgGBLx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbgGBLwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:52:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF564C08C5C1;
-        Thu,  2 Jul 2020 04:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=2LYlRU7JyrrAAhL6kWTw5as9ctpjIL2vXkhqlV5CM/E=; b=S5GUDaE5JvUqQIPOl1eeQuBCS8
-        umysz5K1Nthmw6mgoG+czq0B+QKng0w6vkTjXPQI56Ntfmp+/5ljciG1tOY4U7g75CKuMZOXLnpMK
-        q36t49YZaXD0gpkuFWEk9seK1ASXD4xuJ558ONNZ6sDJwz0k4pKunw943/I9mslrPck9JOJFvNOKe
-        ew5wYag8RUgQrZWAvHjJmqd47WkcaRseCmpETgzq9pLS4b8IQbMp+btEbBCPqknZh7J2SRnjasP8b
-        IoU0NYLrF3R0FR1awyfcBvVNfnFAvhBGbGqPNcalm/vkDyyAYOy7Mea7QyE7ui0/DPGq18p3fIlCJ
-        6gScIk2g==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqxlq-0002WG-FE; Thu, 02 Jul 2020 11:52:50 +0000
-Date:   Thu, 2 Jul 2020 12:52:50 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v3] Documentation: Coccinelle: fix various typos etc.
-Message-ID: <20200702115250.GX25523@casper.infradead.org>
-References: <def28907-18b9-5b7a-e743-79b0418c946c@infradead.org>
- <63450b02-93f1-1ea0-9e39-c5bb14086ce2@web.de>
+        Thu, 2 Jul 2020 07:53:59 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36324 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726475AbgGBLx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:53:58 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX97Lyv1ecIBOAA--.143S3;
+        Thu, 02 Jul 2020 19:53:48 +0800 (CST)
+Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
+ leaks
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        linux-csky@vger.kernel.org
+References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
+ <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
+ <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
+ <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
+ <971c649e-fe07-3771-6fea-f5aaeaf090ad@web.de>
+ <c7cc848a-1ce0-e877-aa44-ebafe4b5985c@loongson.cn>
+ <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
+ <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c0093731-fa42-9d43-ebfc-208ba51a96c5@loongson.cn>
+Date:   Thu, 2 Jul 2020 19:53:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <63450b02-93f1-1ea0-9e39-c5bb14086ce2@web.de>
+X-CM-TRANSID: AQAAf9DxX97Lyv1ecIBOAA--.143S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFy8XryfWFW3tF18XrW8WFg_yoW8ZF47pF
+        Wj9F45Aan5Xry8uFy29w4kXa4Yv3y0grWqv3Z7KrykZrWDWrn5Cr4Dt3WY9F1kCrnrCa1F
+        qa1fZ3yrZ3W5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWxJVW8Jr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
+        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjxU7YiiUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:56:24AM +0200, Markus Elfring wrote:
-> …
-> > +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
-> …
-> > @@ -260,13 +260,13 @@ If not using the kernel's coccicheck tar
-> …
-> > -We help Coccinelle when used against Linux with a set of sensible defaults
-> > +We help Coccinelle when used against Linux with a set of sensible default
-> >  options for Linux with our own Linux .cocciconfig. This hints to coccinelle
-> 
-> Another small wording adjustment:
->   … These hints …
+On 07/02/2020 04:05 PM, Tiezhu Yang wrote:
+> On 07/02/2020 03:19 PM, Markus Elfring wrote:
+>>>>> +++ b/drivers/irqchip/irq-csky-apb-intc.c
+>> …
+>>>> I suggest to recheck the parameter alignment for such a function call.
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n93 
+>>>>
+>>> OK, thank you, like this:
+>>>
+>>> -       ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
+>>> -                       "csky_intc", handle_level_irq,
+>>> -                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 
+>>> 0, 0);
+>>> -       if (ret) {
+>>> +       if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
+>>> +                                          "csky_intc", 
+>>> handle_level_irq,
+>>> +                                          IRQ_NOREQUEST | 
+>>> IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
+>>>                  pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+>> …
+>>
+>> Would you like to use also horizontal tab characters for the 
+>> corresponding indentation?
+>
+> Sorry, I do not quite understanding what you mean, maybe like this?
+>
+>         if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
+>                 "csky_intc", handle_level_irq,
+>                 IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
+>                 pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+>                 goto err_domain_remove;
+>         }
+>
 
-That would be an incorrect adjustment.  Unfortunately, you snipped the
-rest of the sentence that puts those two words in context.  Basically it's
-shorter for "By doing this, we hint to coccinelle" rather than "These
-things are hints to coccinelle"
+Hi Markus,
+
+Thank you very much for your review and suggestion.
+
+Maybe still use "ret" variable is better, the following is another comment
+which is only sent to me:
+
+[I think that if one of the return values comes from a function call, then
+you should use the value from the function call even if it is currently
+always -ENOMEM.  The return value of the function call could perhaps
+change in the future.
+
+In any case, ret = foo(); if (ret) is very common in kernel code, and
+there is no reason not to do it, especially when the function call takes
+up a lot of space.]
+
+Let us keep it as it is to make the code clear and to avoid the 
+alignment issue:
+
+ret = foo();
+if (ret) {
+         ret = -ENOMEM;
+         goto ...
+}
+
+Thanks,
+Tiezhu
+
+>>
+>> Regards,
+>> Markus
+>
+
