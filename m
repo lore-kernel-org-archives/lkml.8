@@ -2,266 +2,171 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3356C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB43C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFE32084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Brd3k4s2"
+	by mail.kernel.org (Postfix) with ESMTP id 9FA2D2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgGBJvl (ORCPT
+        id S1728294AbgGBJwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:51:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43405 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726475AbgGBJvk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:51:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593683497;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bHogEYB9LdYLmlRRtpVvkwg/X8GA9U3ZCoLaT+Iq1ZM=;
-        b=Brd3k4s26XCG5Z1SChWUiNiH/gIB9sOTKWJhJz50EjwLHqHvgGM5vz95NpKw1rnOovXI76
-        uiPTFTIOOOCIpGcI5tXdpUnEIhbs+pubCo6iMmGgMDAQ5ZenUSa51IEvrU3bsdNdnRHy5d
-        yarrzkjKQAQv854+UFLO1pSFaJ4sofg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-500-NQ2ioGplMc-tzV9vD344vQ-1; Thu, 02 Jul 2020 05:51:36 -0400
-X-MC-Unique: NQ2ioGplMc-tzV9vD344vQ-1
-Received: by mail-wr1-f71.google.com with SMTP id y13so24599588wrp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 02:51:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bHogEYB9LdYLmlRRtpVvkwg/X8GA9U3ZCoLaT+Iq1ZM=;
-        b=HSuSsGQYsa/tDSUOhL21RrHmZKCbVPOojZB+McLc5QrXaY9hvbFTHsZKvkxGdHqD6Q
-         sABiKo2zc+N/2ALfuE33wktteCUZhkNsdnjoWQyb0IoZcRZdbXYLO85x9Zm0sC0XRKuo
-         xia2Gm2OKh7GEP0O22qsZGVFPldzMzhS6FGzvQS8vRC+I6btsl8Y4TBSWnGzcOeAAXgx
-         LaCLuIldQDEbTP33V9u4G408mLPRwlRgbLkJGXPFzCdmh3KJvNmy1NMgh7GeDLo7rCZx
-         z1z5PeRJzqZnseVMApvvF4B6136QaOK8fk7L/TLQrK3dVoP9W7thmsSgZ7AiTInyhXwz
-         YhRw==
-X-Gm-Message-State: AOAM532YWoEtkK6nYKuAZimlNyQB/N+3alaO8QNWtsCywyiCDY5fUysF
-        M3swWlu2m5c+r0dBd93oYPSqmvJNpcLleMRGt/Ptd4gpLGgSHkwRxYO9NEY+65vp0RilA9Aoiq0
-        iLQPHKOQkG88T7HmTrx9Vmh2b
-X-Received: by 2002:a5d:6a01:: with SMTP id m1mr32647446wru.115.1593683494974;
-        Thu, 02 Jul 2020 02:51:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyXVWeInx8Is6mzpEdmO8KzqqisDChfcd/0ZxL7aKAX8BZJxTsoFC5nkJpDq8uHhK7haSamAg==
-X-Received: by 2002:a5d:6a01:: with SMTP id m1mr32647426wru.115.1593683494694;
-        Thu, 02 Jul 2020 02:51:34 -0700 (PDT)
-Received: from redhat.com ([93.157.82.4])
-        by smtp.gmail.com with ESMTPSA id 138sm4695866wmb.1.2020.07.02.02.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 02:51:33 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 05:51:29 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-Message-ID: <20200702055026-mutt-send-email-mst@kernel.org>
-References: <20200702082143.25259-1-kishon@ti.com>
+        Thu, 2 Jul 2020 05:52:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34110 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728257AbgGBJwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:52:00 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxL+g5rv1eD3FOAA--.7310S3;
+        Thu, 02 Jul 2020 17:51:54 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v2] gpu/drm: Remove debug info about CPU address
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        alexander.deucher@amd.com
+References: <1593656863-1894-1-git-send-email-yangtiezhu@loongson.cn>
+ <85c81fa9-2994-d861-0690-a79600ed84b3@amd.com>
+ <af4f9870-3161-87f7-ff4f-1c0ad7869717@loongson.cn>
+ <7aa4d0c5-14ba-594d-e3fb-9acba82cf45d@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-ID: <897b806e-dba8-710f-6b62-2493e3033417@loongson.cn>
+Date:   Thu, 2 Jul 2020 17:51:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
+In-Reply-To: <7aa4d0c5-14ba-594d-e3fb-9acba82cf45d@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9AxL+g5rv1eD3FOAA--.7310S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4xJrWUZFyrKrW8tFWDArb_yoWrGw1xpa
+        yrGa4YkrykZw1jv342vryUXFyFyw47XFW8WryDC34a9wn0vFnFyF1xAw4UuFW8Wrs7KF4I
+        vr18u3yfWF1jyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
+        02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAF
+        wI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7IUYU5r3UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
-> This series enhances Linux Vhost support to enable SoC-to-SoC
-> communication over MMIO. This series enables rpmsg communication between
-> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
-> 
-> 1) Modify vhost to use standard Linux driver model
-> 2) Add support in vring to access virtqueue over MMIO
-> 3) Add vhost client driver for rpmsg
-> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
->    rpmsg communication between two SoCs connected to each other
-> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
->    between two SoCs connected via NTB
-> 6) Add configfs to configure the components
-> 
-> UseCase1 :
-> 
->  VHOST RPMSG                     VIRTIO RPMSG
->       +                               +
->       |                               |
->       |                               |
->       |                               |
->       |                               |
-> +-----v------+                 +------v-------+
-> |   Linux    |                 |     Linux    |
-> |  Endpoint  |                 | Root Complex |
-> |            <----------------->              |
-> |            |                 |              |
-> |    SOC1    |                 |     SOC2     |
-> +------------+                 +--------------+
-> 
-> UseCase 2:
-> 
->      VHOST RPMSG                                      VIRTIO RPMSG
->           +                                                 +
->           |                                                 |
->           |                                                 |
->           |                                                 |
->           |                                                 |
->    +------v------+                                   +------v------+
->    |             |                                   |             |
->    |    HOST1    |                                   |    HOST2    |
->    |             |                                   |             |
->    +------^------+                                   +------^------+
->           |                                                 |
->           |                                                 |
-> +---------------------------------------------------------------------+
-> |  +------v------+                                   +------v------+  |
-> |  |             |                                   |             |  |
-> |  |     EP      |                                   |     EP      |  |
-> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
-> |  |             <----------------------------------->             |  |
-> |  |             |                                   |             |  |
-> |  |             |                                   |             |  |
-> |  |             |  SoC With Multiple EP Instances   |             |  |
-> |  |             |  (Configured using NTB Function)  |             |  |
-> |  +-------------+                                   +-------------+  |
-> +---------------------------------------------------------------------+
-> 
-> Software Layering:
-> 
-> The high-level SW layering should look something like below. This series
-> adds support only for RPMSG VHOST, however something similar should be
-> done for net and scsi. With that any vhost device (PCI, NTB, Platform
-> device, user) can use any of the vhost client driver.
-> 
-> 
->     +----------------+  +-----------+  +------------+  +----------+
->     |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
->     +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
->             |                 |              |              |
->             |                 |              |              |
->             |                 |              |              |
-> +-----------v-----------------v--------------v--------------v----------+
-> |                            VHOST CORE                                |
-> +--------^---------------^--------------------^------------------^-----+
->          |               |                    |                  |
->          |               |                    |                  |
->          |               |                    |                  |
-> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
-> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
-> +----------------+  +-----------+  +---------------------+  +----------+
-> 
-> This was initially proposed here [1]
-> 
-> [1] -> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
+On 07/02/2020 04:39 PM, Christian König wrote:
+> Am 02.07.20 um 10:35 schrieb Tiezhu Yang:
+>> On 07/02/2020 04:27 PM, Christian König wrote:
+>>> Am 02.07.20 um 04:27 schrieb Tiezhu Yang:
+>>>> When I update the latest kernel, I see the following 
+>>>> "____ptrval____" boot
+>>>> messages.
+>>>>
+>>>> [    1.872600] radeon 0000:01:05.0: fence driver on ring 0 use gpu 
+>>>> addr 0x0000000048000c00 and cpu addr 0x(____ptrval____)
+>>>> [    1.879095] radeon 0000:01:05.0: fence driver on ring 5 use gpu 
+>>>> addr 0x0000000040056038 and cpu addr 0x(____ptrval____)
+>>>>
+>>>> Both radeon_fence_driver_start_ring() and 
+>>>> amdgpu_fence_driver_start_ring()
+>>>> have the similar issue, there exists the following two methods to 
+>>>> solve it:
+>>>> (1) Use "%pK" instead of "%p" so that the CPU address can be 
+>>>> printed when
+>>>> the kptr_restrict sysctl is set to 1.
+>>>> (2) Just completely drop the CPU address suggested by Christian, 
+>>>> because
+>>>> the CPU address was useful in the past, but isn't any more. We now 
+>>>> have a
+>>>> debugfs file to read the current fence values.
+>>>>
+>>>> Since the CPU address is not much useful, just remove the debug 
+>>>> info about
+>>>> CPU address.
+>>>>
+>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>
+>>> Splitting it into one patch for radeon and one for amdgpu might be 
+>>> nice to have.
+>>
+>> Should I split this patch into two patches and then send v3?
+>> If yes, I will do it soon.
+>
+> For me it's ok to merge it like it is now.
+>
+> Only Alex could insists to split the patches, but then he will 
+> probably do it himself.
 
+OK, then I will not send v3.
 
-I find this very interesting. A huge patchset so will take a bit
-to review, but I certainly plan to do that. Thanks!
-
-> 
-> Kishon Vijay Abraham I (22):
->   vhost: Make _feature_ bits a property of vhost device
->   vhost: Introduce standard Linux driver model in VHOST
->   vhost: Add ops for the VHOST driver to configure VHOST device
->   vringh: Add helpers to access vring in MMIO
->   vhost: Add MMIO helpers for operations on vhost virtqueue
->   vhost: Introduce configfs entry for configuring VHOST
->   virtio_pci: Use request_threaded_irq() instead of request_irq()
->   rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
->     reading messages
->   rpmsg: Introduce configfs entry for configuring rpmsg
->   rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
->   rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
->     rpmsg_internal.h
->   virtio: Add ops to allocate and free buffer
->   rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
->     virtio_free_buffer()
->   rpmsg: Add VHOST based remote processor messaging bus
->   samples/rpmsg: Setup delayed work to send message
->   samples/rpmsg: Wait for address to be bound to rpdev for sending
->     message
->   rpmsg.txt: Add Documentation to configure rpmsg using configfs
->   virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
->     device
->   PCI: endpoint: Add EP function driver to provide VHOST interface
->   NTB: Add a new NTB client driver to implement VIRTIO functionality
->   NTB: Add a new NTB client driver to implement VHOST functionality
->   NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
-> 
->  Documentation/driver-api/ntb.rst              |   11 +
->  Documentation/rpmsg.txt                       |   56 +
->  drivers/ntb/Kconfig                           |   18 +
->  drivers/ntb/Makefile                          |    2 +
->  drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
->  drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
->  drivers/ntb/ntb_virtio.h                      |   56 +
->  drivers/pci/endpoint/functions/Kconfig        |   11 +
->  drivers/pci/endpoint/functions/Makefile       |    1 +
->  .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
->  drivers/rpmsg/Kconfig                         |   10 +
->  drivers/rpmsg/Makefile                        |    3 +-
->  drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
->  drivers/rpmsg/rpmsg_core.c                    |    7 +
->  drivers/rpmsg/rpmsg_internal.h                |  136 ++
->  drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
->  drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
->  drivers/vhost/Kconfig                         |    1 +
->  drivers/vhost/Makefile                        |    2 +-
->  drivers/vhost/net.c                           |   10 +-
->  drivers/vhost/scsi.c                          |   24 +-
->  drivers/vhost/test.c                          |   17 +-
->  drivers/vhost/vdpa.c                          |    2 +-
->  drivers/vhost/vhost.c                         |  730 ++++++++++-
->  drivers/vhost/vhost_cfs.c                     |  341 +++++
->  drivers/vhost/vringh.c                        |  332 +++++
->  drivers/vhost/vsock.c                         |   20 +-
->  drivers/virtio/Kconfig                        |    9 +
->  drivers/virtio/Makefile                       |    1 +
->  drivers/virtio/virtio_pci_common.c            |   25 +-
->  drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
->  include/linux/mod_devicetable.h               |    6 +
->  include/linux/rpmsg.h                         |    6 +
->  {drivers/vhost => include/linux}/vhost.h      |  132 +-
->  include/linux/virtio.h                        |    3 +
->  include/linux/virtio_config.h                 |   42 +
->  include/linux/vringh.h                        |   46 +
->  samples/rpmsg/rpmsg_client_sample.c           |   32 +-
->  tools/virtio/virtio_test.c                    |    2 +-
->  39 files changed, 7083 insertions(+), 183 deletions(-)
->  create mode 100644 drivers/ntb/ntb_vhost.c
->  create mode 100644 drivers/ntb/ntb_virtio.c
->  create mode 100644 drivers/ntb/ntb_virtio.h
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
->  create mode 100644 drivers/rpmsg/rpmsg_cfs.c
->  create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
->  create mode 100644 drivers/vhost/vhost_cfs.c
->  create mode 100644 drivers/virtio/virtio_pci_epf.c
->  rename {drivers/vhost => include/linux}/vhost.h (66%)
-> 
-> -- 
-> 2.17.1
-> 
+>
+> Thanks for the help,
+> Christian.
+>
+>>
+>>>
+>>> But either way Reviewed-by: Christian König 
+>>> <christian.koenig@amd.com> for the patch.
+>>>
+>>> Thanks,
+>>> Christian.
+>>>
+>>>> ---
+>>>>
+>>>> v2:
+>>>>    - Just remove the debug info about CPU address suggested by 
+>>>> Christian
+>>>>    - Modify the patch subject and update the commit message
+>>>>
+>>>>   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 5 ++---
+>>>>   drivers/gpu/drm/radeon/radeon_fence.c     | 4 ++--
+>>>>   2 files changed, 4 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c 
+>>>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+>>>> index d878fe7..a29f2f9 100644
+>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+>>>> @@ -422,9 +422,8 @@ int amdgpu_fence_driver_start_ring(struct 
+>>>> amdgpu_ring *ring,
+>>>>       ring->fence_drv.irq_type = irq_type;
+>>>>       ring->fence_drv.initialized = true;
+>>>>   -    DRM_DEV_DEBUG(adev->dev, "fence driver on ring %s use gpu 
+>>>> addr "
+>>>> -              "0x%016llx, cpu addr 0x%p\n", ring->name,
+>>>> -              ring->fence_drv.gpu_addr, ring->fence_drv.cpu_addr);
+>>>> +    DRM_DEV_DEBUG(adev->dev, "fence driver on ring %s use gpu addr 
+>>>> 0x%016llx\n",
+>>>> +              ring->name, ring->fence_drv.gpu_addr);
+>>>>       return 0;
+>>>>   }
+>>>>   diff --git a/drivers/gpu/drm/radeon/radeon_fence.c 
+>>>> b/drivers/gpu/drm/radeon/radeon_fence.c
+>>>> index 43f2f93..8735bf2 100644
+>>>> --- a/drivers/gpu/drm/radeon/radeon_fence.c
+>>>> +++ b/drivers/gpu/drm/radeon/radeon_fence.c
+>>>> @@ -865,8 +865,8 @@ int radeon_fence_driver_start_ring(struct 
+>>>> radeon_device *rdev, int ring)
+>>>>       }
+>>>>       radeon_fence_write(rdev, 
+>>>> atomic64_read(&rdev->fence_drv[ring].last_seq), ring);
+>>>>       rdev->fence_drv[ring].initialized = true;
+>>>> -    dev_info(rdev->dev, "fence driver on ring %d use gpu addr 
+>>>> 0x%016llx and cpu addr 0x%p\n",
+>>>> -         ring, rdev->fence_drv[ring].gpu_addr, 
+>>>> rdev->fence_drv[ring].cpu_addr);
+>>>> +    dev_info(rdev->dev, "fence driver on ring %d use gpu addr 
+>>>> 0x%016llx\n",
+>>>> +         ring, rdev->fence_drv[ring].gpu_addr);
+>>>>       return 0;
+>>>>   }
+>>
 
