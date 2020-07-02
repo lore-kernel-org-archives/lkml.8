@@ -2,107 +2,153 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72570C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55502206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0031206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PFMZdTTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgGBWPw (ORCPT
+        id S1726363AbgGBWRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:15:52 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45562 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgGBWPv (ORCPT
+        Thu, 2 Jul 2020 18:17:00 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33104 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgGBWQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:15:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l63so14102225pge.12;
-        Thu, 02 Jul 2020 15:15:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cIIMlqNaO5Unw1RzIf81LBsODZ5TPRnfcppyapVK2+8=;
-        b=baCryEPMc2o9h6sPJV2L9WDBPDa7Ab4XG012UyS2Ylkds3kNFpcFhuKQvLxGjFVv70
-         3S6PE4plnY6LouzFa5698EgS07womE1Sza+C1/vJCQvZ7nfb0V3TUPFd3pc7aRjmKgER
-         C7YUWZDbyAMOPdGPcYA2ZDgLvaeBSyTVZjApltkHiwhQf3LgyrK6Cs+y0yFRuW4kp+hy
-         fQ0LddFdaDDr2wJjxrlsJ3/1t/yRt25teh8DdZTW7FmYNXfWBQBVygaJnaLPcZHjVAS6
-         8UrQO2ayKIOjPsOCZUpsWBNup8e4Umn7r+2lbsBv0fLpNs0FUTBwuZnvJCB58ZoNNN49
-         pDQg==
-X-Gm-Message-State: AOAM532W9TwTcqT/IpoUHkMwg2ocaL3JCTYOrosHMf4kDrYS18B1KdH8
-        II+J3ukg5v9hLuA8YC/IuYgi07YE
-X-Google-Smtp-Source: ABdhPJx0l7QL1nHWSKOp/IBbD2Z+tjawC6rDDB+Qqd61qUaYwon66FNhvOJsrOo9YHIfr5rKiD4lfA==
-X-Received: by 2002:a63:d848:: with SMTP id k8mr12692149pgj.119.1593728151066;
-        Thu, 02 Jul 2020 15:15:51 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:18f8:9053:b0e3:60d4? ([2601:647:4802:9070:18f8:9053:b0e3:60d4])
-        by smtp.gmail.com with ESMTPSA id j17sm9157032pgn.87.2020.07.02.15.15.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 15:15:50 -0700 (PDT)
-Subject: Re: [PATCH 4.19 082/131] nvme: fix possible deadlock when I/O is
- blocked
-To:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200629153502.2494656-1-sashal@kernel.org>
- <20200629153502.2494656-83-sashal@kernel.org> <20200702211743.GE5787@amd>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <e05ddf9e-1804-d297-47f4-c422d4f98cfb@grimberg.me>
-Date:   Thu, 2 Jul 2020 15:15:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 18:16:59 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3454E20B717A;
+        Thu,  2 Jul 2020 15:16:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3454E20B717A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593728218;
+        bh=oF/uy0h2kLORBOaWz4SneoVrme6PATdmsVREbyRum0g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PFMZdTTFgv5iNVM4ImGmNBoS/pvR9L0heXpZKAZMOxhPhktoVwM67LJRd8IGKuMp+
+         hsVbe/ezG63jAQaTHYIibsgW44l4YWhhShkGXgLfJnP5lJ695+dZFexJkvSWwrLoXu
+         EKLjodVxz2+a49rtE8yf+rCbSjRVinzD7f3Lub6c=
+Date:   Thu, 2 Jul 2020 17:16:56 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
+ conditional into ima_validate_rule()
+Message-ID: <20200702221656.GH4694@sequoia>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+ <1593558449.5057.12.camel@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702211743.GE5787@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593558449.5057.12.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Hi!
+On 2020-06-30 19:07:29, Mimi Zohar wrote:
+> On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
+> > Use ima_validate_rule() to ensure that the combination of a hook
+> > function and the keyrings conditional is valid and that the keyrings
+> > conditional is not specified without an explicit KEY_CHECK func
+> > conditional. This is a code cleanup and has no user-facing change.
+> > 
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> > 
+> > * v2
+> >   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
+> >     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
+> >     present in the rule entry flags for non-buffer hook functions.
+> > 
+> >  security/integrity/ima/ima_policy.c | 13 +++++++++++--
+> >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > index 8cdca2399d59..43d49ad958fb 100644
+> > --- a/security/integrity/ima/ima_policy.c
+> > +++ b/security/integrity/ima/ima_policy.c
+> > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> >  		case KEXEC_KERNEL_CHECK:
+> >  		case KEXEC_INITRAMFS_CHECK:
+> >  		case POLICY_CHECK:
+> > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
+> > +					     IMA_PERMIT_DIRECTIO |
+> > +					     IMA_MODSIG_ALLOWED |
+> > +					     IMA_CHECK_BLACKLIST))
 > 
->> From: Sagi Grimberg <sagi@grimberg.me>
->>
->> [ Upstream commit 3b4b19721ec652ad2c4fe51dfbe5124212b5f581 ]
->>
->> Revert fab7772bfbcf ("nvme-multipath: revalidate nvme_ns_head gendisk
->> in nvme_validate_ns")
->>
->> When adding a new namespace to the head disk (via nvme_mpath_set_live)
->> we will see partition scan which triggers I/O on the mpath device node.
->> This process will usually be triggered from the scan_work which holds
->> the scan_lock. If I/O blocks (if we got ana change currently have only
->> available paths but none are accessible) this can deadlock on the head
->> disk bd_mutex as both partition scan I/O takes it, and head disk revalidation
->> takes it to check for resize (also triggered from scan_work on a different
->> path). See trace [1].
->>
->> The mpath disk revalidation was originally added to detect online disk
->> size change, but this is no longer needed since commit cb224c3af4df
->> ("nvme: Convert to use set_capacity_revalidate_and_notify") which already
->> updates resize info without unnecessarily revalidating the disk (the
+> Other than KEYRINGS, this patch should continue to behave the same.
+>  However, this list gives the impressions that all of these flags are
+> permitted on all of the above flags, which isn't true.
 > 
-> Unfortunately, v4.19-stable does not contain cb224c3af4df. According
-> to changelog, it seems it should be cherry-picked?
+> For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
+> to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
 
-You are absolutely right,
+Just to clarify, are both IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST
+limited to KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK, and MODULE_CHECK?
+That's what ima_hook_supports_modsig() suggests.
 
-The reference commit is a part of the series:
-78317c5d58e6 ("scsi: Convert to use set_capacity_revalidate_and_notify")
-cb224c3af4df ("nvme: Convert to use set_capacity_revalidate_and_notify")
-3cbc28bb902b ("xen-blkfront.c: Convert to use 
-set_capacity_revalidate_and_notify")
-662155e2898d ("virtio_blk.c: Convert to use 
-set_capacity_revalidate_and_notify")
-e598a72faeb5 ("block/genhd: Notify udev about capacity change")
+>  Both should only be allowed on APPRAISE action rules.
 
-It would be cool if they are cherry picked, although they don't qualify
-as stable patches per se...
+For completeness, it looks like DONT_APPRAISE should not be allowed.
+
+> IMA_PCR should be limited to MEASURE action rules.
+
+It looks like DONT_MEASURE should not be allowed.
+
+> IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
+
+It looks like DONT_APPRAISE should not be allowed.
+
+> 
+> > +				return false;
+> > +
+> >  			break;
+> >  		case KEXEC_CMDLINE:
+> >  			if (entry->action & ~(MEASURE | DONT_MEASURE))
+> > @@ -1027,7 +1036,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> >  		default:
+> >  			return false;
+> >  		}
+> > -	}
+> > +	} else if (entry->flags & IMA_KEYRINGS)
+> > +		return false;
+> 
+> IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST need to be added here as
+> well.
+
+That makes sense.
+
+Tyler
+
+> 
+> Mimi
+> 
+> >  
+> >  	return true;
+> >  }
+> > @@ -1209,7 +1219,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+> >  			keyrings_len = strlen(args[0].from) + 1;
+> >  
+> >  			if ((entry->keyrings) ||
+> > -			    (entry->func != KEY_CHECK) ||
+> >  			    (keyrings_len < 2)) {
+> >  				result = -EINVAL;
+> >  				break;
