@@ -2,140 +2,207 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28927C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072D320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCDC2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593669610;
-	bh=pa1KsL0wFxiWclLRmFHMJNlSNaoiIY/uIWQHhzSE9PA=;
+	s=default; t=1593669632;
+	bh=sZD/Sgng7t7Ta+o/FVbjB7xz2NntagZdy2lTpgW53/U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1jrX3Q1lUh5QKlAc+OLgIY4scysFUb/iOgemz6LdPg2+tOQfZ/qHFSbPLf/qBf7bl
-	 6kKjT8iq8WJgt7BP/oM2A3D0pSl0C+W27/rsSgCa+yPG0sS8Ikviu6gn2z30cH/YKp
-	 QsONIU2OUL4RnU9/7hXTpVRktGGaVDEugIIdtmmQ=
+	b=qDZOPlgDlj6CsEK979c4hFAw5EtbJAb0yhnYBDNQvjbsaLQbe+ii4APozx6z3t5s2
+	 MLWZVKSpx6ZSV395bhO58kdzxSAJSbzFjXMQ5BbyvKG5TczO3iXtU578Jd1Vr6EFEN
+	 iS2EBqp3XQiZvDuh1LN9QwUDncuaaJwP2wj1lS1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgGBGAI (ORCPT
+        id S1726352AbgGBGAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:00:08 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:34524 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGBGAH (ORCPT
+        Thu, 2 Jul 2020 02:00:30 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37898 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGBGAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:00:07 -0400
-Received: by mail-ej1-f67.google.com with SMTP id y10so27771404eje.1;
-        Wed, 01 Jul 2020 23:00:06 -0700 (PDT)
+        Thu, 2 Jul 2020 02:00:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id n2so13298432edr.5;
+        Wed, 01 Jul 2020 23:00:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k+0TJgtyGdUFAif3iB9nD6dvgm5MlSiy6/23tSnNTIE=;
-        b=Szt6ZAUsoH7wTylBmI4oLzLcqpYwmPiyPx17U3uC5RD97hpLmvIIOgSacZOnaJmGVj
-         ENXsM32uf0pCnh+dWved370AShpXNwCn1XNdvwkYU7CeFzpG9yEWLH+tYVShNp3Yl1Aj
-         OpsdSRl57F3jPiuZInPTAXeja98mSsAHTSI+oGvzkxKyT6noPoNiXCfOnl/09ObIMh5t
-         wqyocZKuPJ+aTNo7z7tzl4bOD0TDX//AGzPf8xdWt2hekBR9kx4k3JSwLBfdPipuIGnO
-         v3A7Mv1LKtl9TDJ+dLAc4khaITIybhITdpte08qG2LWsPvwwhQHXb/0Lwp7+ZG+jwYp/
-         0OAg==
-X-Gm-Message-State: AOAM531aMuwXT2rxao0sxRGZC+6CrnoR/bcx9GVfF5SBOplMfWpaVVe3
-        cwQV11oi8YbBdModKnWbh/Z6vyV1
-X-Google-Smtp-Source: ABdhPJx+92owXVBEj1k0uFeSCkezcOnNF9loDGUYXY+ITfPZQt/zwwOX52FKrdde00pwe9p9ip6TWQ==
-X-Received: by 2002:a17:906:a1c7:: with SMTP id bx7mr20452601ejb.388.1593669605407;
-        Wed, 01 Jul 2020 23:00:05 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id a37sm8647592edf.86.2020.07.01.23.00.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Jul 2020 23:00:04 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:00:02 +0200
-From:   'Krzysztof Kozlowski' <krzk@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     'Rob Herring' <robh+dt@kernel.org>,
-        'Kukjin Kim' <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Marek Szyprowski' <m.szyprowski@samsung.com>,
-        'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>,
-        'Sylwester Nawrocki' <snawrocki@kernel.org>,
-        'Chanwoo Choi' <cw00.choi@samsung.com>,
-        'Pankaj Dubey' <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
-Message-ID: <20200702060002.GA4175@kozik-lap>
-References: <CGME20200629205534epcas5p33eb7cbdff4aee986d2e509e0c79cf952@epcas5p3.samsung.com>
- <20200629204442.17336-1-krzk@kernel.org>
- <001101d64ef2$8f824620$ae86d260$@samsung.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=VD/gVc+HcHe6Q7arl/FRj+PTG4DxUMmDhPympKTISEw=;
+        b=b9HjHhZAPAbDFbAfwyStB+BS9PeRmoDYGq7zLoKiXhV1jd+/s9Lpiepku8A48j1JGQ
+         +wMp0Nq7oR8OQUs3psUSwWM+o8aTeuRgyByy9AytvXMdVqF1jnPU9RFXca7G9uqaWRMt
+         +E5I6VuQq3ZkB2YTxjffapMArCDiyIzP8DTK9spTkcGsohy/Xy5lU+4M2nCGHvQ09SBW
+         P5MMWqQlJnpa//BooAKDhMzpEdBg8+Lrm5DBVTImuj3XP1YYRUyBVppMylod7C7c9q/5
+         t0JANBOAogc/KZDD/4rIRr5+V6aO9jdiTXYzvuhaXyIe79JTT8yAnK+HAzod91jLe5/7
+         iprA==
+X-Gm-Message-State: AOAM531r2BtrNjGlByRNenfgFyhnkkqQUdXfuANDYtP4qs3VBunVJC5k
+        geNWfKFX327MJXz+CDWiDY6yKS8K
+X-Google-Smtp-Source: ABdhPJx5+YkMNLxIRjRr3EAyKBhNAZ8xbXatCv8pRGW9xTlbp+iXDQnIK9JdstwNvwtDNIQiRuqi1w==
+X-Received: by 2002:a50:ee8a:: with SMTP id f10mr13220502edr.383.1593669627142;
+        Wed, 01 Jul 2020 23:00:27 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id n9sm6099876ejk.21.2020.07.01.23.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 23:00:26 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:00:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH 1/2] mm/memcontrol: Fix OOPS inside
+ mem_cgroup_get_nr_swap_pages()
+Message-ID: <20200702060024.GA18446@dhcp22.suse.cz>
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <001101d64ef2$8f824620$ae86d260$@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:54:28PM +0530, Alim Akhtar wrote:
-> Hi Krzysztof,
+On Thu 02-07-20 03:44:19, Bhupesh Sharma wrote:
+> Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
+> function in a corner case seen on some arm64 boards when kdump kernel
+> runs with "cgroup_disable=memory" passed to the kdump kernel via
+> bootargs.
 > 
-> > -----Original Message-----
-> > From: Krzysztof Kozlowski <krzk@kernel.org>
-> > Sent: 30 June 2020 02:15
-> > To: Rob Herring <robh+dt@kernel.org>; Kukjin Kim <kgene@kernel.org>;
-> > Krzysztof Kozlowski <krzk@kernel.org>; devicetree@vger.kernel.org;
-> linux-arm-
-> > kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>; Bartlomiej Zolnierkiewicz
-> > <b.zolnierkie@samsung.com>; Sylwester Nawrocki <snawrocki@kernel.org>;
-> > Alim Akhtar <alim.akhtar@samsung.com>; Chanwoo Choi
-> > <cw00.choi@samsung.com>; Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Subject: [PATCH 1/4] arm64: dts: exynos: Add PWM interrupts on Exynos7
-> > 
-> > Add required interrupts to PWM node on Exynos7.  This fixes DT schema
-> > warning:
-> > 
-> >     pwm@136c0000: 'interrupts' is a required property
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Not tested
-> > ---
-> >  arch/arm64/boot/dts/exynos/exynos7.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> > b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> > index f590891efe25..523547b3d539 100644
-> > --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> > +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> > @@ -581,6 +581,11 @@
-> >  		pwm: pwm@136c0000 {
-> >  			compatible = "samsung,exynos4210-pwm";
-> >  			reg = <0x136c0000 0x100>;
-> > +			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>;
-> PWM IRQs are from 449 ~ 453 for PWM[0] ~ PWM[4] on this SoC.
-> 444 ~ 447 are for HSI2C and 448 is for ADC.
+> The root-cause behind the same is that currently mem_cgroup_swap_init()
+> function is implemented as a subsys_initcall() call instead of a
+> core_initcall(), this means 'cgroup_memory_noswap' still
+> remains set to the default value (false) even when memcg is disabled via
+> "cgroup_disable=memory" boot parameter.
+> 
+> This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
+> function in corner cases:
+> 
+>   [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
+>   [    0.274495] Mem abort info:
+>   [    0.277311]   ESR = 0x96000006
+>   [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
+>   [    0.285751]   SET = 0, FnV = 0
+>   [    0.288830]   EA = 0, S1PTW = 0
+>   [    0.291995] Data abort info:
+>   [    0.294897]   ISV = 0, ISS = 0x00000006
+>   [    0.298765]   CM = 0, WnR = 0
+>   [    0.301757] [0000000000000188] user address but active_mm is swapper
+>   [    0.308174] Internal error: Oops: 96000006 [#1] SMP
+>   [    0.313097] Modules linked in:
+>   <..snip..>
+>   [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
+>   [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+>   [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
+>   [    0.347564] sp : fffffe0012b6f800
+>   [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
+>   [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
+>   [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
+>   [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
+>   [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
+>   [    0.377720] x19: 0000000000000000 x18: 0000000000000010
+>   [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
+>   [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
+>   [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
+>   [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
+>   [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
+>   [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
+>   [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
+>   [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
+>   [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
+>   [    0.431346] Call trace:
+>   [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+>   [    0.438735]  shrink_lruvec+0x404/0x4f8
+>   [    0.442516]  shrink_node+0x1a8/0x688
+>   [    0.446121]  do_try_to_free_pages+0xe8/0x448
+>   [    0.450429]  try_to_free_pages+0x110/0x230
+>   [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
+>   [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
+>   [    0.464938]  alloc_page_interleave+0x20/0x90
+>   [    0.469246]  alloc_pages_current+0xdc/0xf8
+>   [    0.473379]  atomic_pool_expand+0x60/0x210
+>   [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
+>   [    0.481910]  dma_atomic_pool_init+0xac/0x158
+>   [    0.486220]  do_one_initcall+0x50/0x218
+>   [    0.490091]  kernel_init_freeable+0x22c/0x2d0
+>   [    0.494489]  kernel_init+0x18/0x110
+>   [    0.498007]  ret_from_fork+0x10/0x18
+>   [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
+>   [    0.507770] ---[ end trace 9795948475817de4 ]---
+>   [    0.512429] Kernel panic - not syncing: Fatal exception
+>   [    0.517705] Rebooting in 10 seconds..
+> 
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kexec@lists.infradead.org
 
-Ah, indeed.
+Fixes: eccb52e78809 ("mm: memcontrol: prepare swap controller setup for integration")
 
-> Please see the exynos7.dtsi
-> Also drivers/pwm/pwm-samsung.c does not uses interrupt at all, still we need
-> interrupts property to be added here?
+> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 
-That's a good point. For S3C SoCs the PWM timer was used also as a
-clocksource so it required interrupts. But since Exynos this is not
-used.  I don't know why the bindings introduced required interrupts...
-It seems it would be better just to remove them from bindings and DTS.
+This is subtle as hell, I have to say. I find the ordering in the init
+calls very unintuitive and extremely hard to follow. The above commit
+has introduced the problem but the code previously has worked mostly by
+a luck because our default was flipped.
 
-Best regards,
-Krzysztof
+Acked-by: Michal Hocko <mhocko@suse.com>
 
+> ---
+>  mm/memcontrol.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 19622328e4b5..8323e4b7b390 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
+>  	{ },	/* terminate */
+>  };
+>  
+> +/*
+> + * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
+> + * instead of a core_initcall(), this could mean cgroup_memory_noswap still
+> + * remains set to false even when memcg is disabled via "cgroup_disable=memory"
+> + * boot parameter. This may result in premature OOPS inside 
+> + * mem_cgroup_get_nr_swap_pages() function in corner cases.
+> + */
+>  static int __init mem_cgroup_swap_init(void)
+>  {
+>  	/* No memory control -> no swap control */
+> @@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
+>  
+>  	return 0;
+>  }
+> -subsys_initcall(mem_cgroup_swap_init);
+> +core_initcall(mem_cgroup_swap_init);
+>  
+>  #endif /* CONFIG_MEMCG_SWAP */
+> -- 
+> 2.7.4
+
+-- 
+Michal Hocko
+SUSE Labs
