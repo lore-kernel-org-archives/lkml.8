@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08595C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D098820772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0AC208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="TrtfxrUS"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="neOCc8Na"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgGBVKh (ORCPT
+        id S1726203AbgGBVKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
+        Thu, 2 Jul 2020 17:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgGBVKg (ORCPT
+        with ESMTP id S1725954AbgGBVKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:10:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A2FC08C5C1;
-        Thu,  2 Jul 2020 14:10:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w16so31440894ejj.5;
-        Thu, 02 Jul 2020 14:10:36 -0700 (PDT)
+        Thu, 2 Jul 2020 17:10:41 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4CEC08C5C1;
+        Thu,  2 Jul 2020 14:10:40 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id dp18so31434889ejc.8;
+        Thu, 02 Jul 2020 14:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QZrHUY7ozd8AhEFH7QjZnJUtfZn+AQDxMHm0Bm3sT1Y=;
-        b=TrtfxrUSdBoXfxtQfwxazKUYKhrYZqyN44eERma3qqRKl8J7pK6/K8OjjeLUwlh9wv
-         64TlMBxUtX18t2grTx5EQMDIXZce7fX/2wb8c6BgyS6Q42W20HDhLXRSGbV/F7WDg02f
-         m/A4T93arjTATZFZDke0tH3q2w2wsTnfBDPs6Is+i0QTPPUESwBmcr078uVVJga5TBdt
-         mL/BXEYQVUdiKeaNB86XbEwNQIAOP3Ea7/1i5xp6senuQd+N0jTNAq7+FXb7nOywLBID
-         xtzvvdqdZeJ/k2xDIcZSUFWmbvtFPLxn+dCv8AVE+eHszWVwHvvfE5+vzsM2S9NQqSym
-         nP/w==
+        bh=1BedfZLLtUv8+jct9K4ydZAXp2NUQdx/2FyFkLNGA7s=;
+        b=neOCc8Na9y+e/dxihMt1n/W5sPpq0Xa2v/yiLGXRoJpsLIgmilxcjiubzVjRhDZ2i2
+         WJMolOqMMfnKwg+XXde8AV/uE5qIjeXvL/tTeRkB053knUpEVbBSJu2bb9mbFLkCVX+z
+         Kf0OjPMel/Xmx54HLfdkaPb10ajbyZSz8H/J5l9Wdwxoj9Iix3OZl5Onye/utImcbrOx
+         lU42IY+A6/UnUf0WrXbGGZpI61RUDFaFAc9QWDhrC6+kEkLGBVOMeNYeCzKQSX1FifAy
+         xw20JrfCt39DvQ1o1GZG8vLy7BjeP3fxld8YO5uEKjuDeDJsdw1fcW49WOlaE+qvNNeE
+         fFaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QZrHUY7ozd8AhEFH7QjZnJUtfZn+AQDxMHm0Bm3sT1Y=;
-        b=SVYLM/XrMc5jGMTT4ElKsx+6NFz50nfOvLlEfJhgJeZp8fuWHXO2IBB0YBVRwcc2G3
-         4zHjoFbirO9uiY8xxnMKpmIdpoNvFIAztItSoO1RgsfF2/ua1iBkcYcfp619J9MZlo5G
-         huJS6WYTvpb/ZHG73vXE9M+529eg1ErHzAcj3bdogqdBdaVc/Lu3YzZ9SsW76o33xmJj
-         G188KkQnUbLcMZQaV7el+NCQW0xTCWfs+jwAG5jmSIC/aCuaaW4+1I+O9Ys2srFt24o+
-         huBp62u4tc6nRmM+zn+WRnkfp8XII0PswJEY1KQvKlomOTNfRjNSyr+AlC4v22jklP+Z
-         gO5Q==
-X-Gm-Message-State: AOAM530U8WmLnZ+TR6zXLOqXLEDXKPmUdO5178D99KcKx8OnK/xvjLLl
-        dMnwW8vVtrTc/uKf0jpFLp8=
-X-Google-Smtp-Source: ABdhPJx0anBBD40pcZRKIb7loxdRBN41jmtnKcD8xxpvYmnlJ0q5Oes6PkpHo+HIgsRroTsM/ZwqwA==
-X-Received: by 2002:a17:906:5fc4:: with SMTP id k4mr29049646ejv.94.1593724234788;
-        Thu, 02 Jul 2020 14:10:34 -0700 (PDT)
+        bh=1BedfZLLtUv8+jct9K4ydZAXp2NUQdx/2FyFkLNGA7s=;
+        b=MT2yM3MMOHvPmZ347SRd4eOAOd2AF73mifQxyXGK5I4Benjonvf+8sVFq02DLLZskK
+         bJytsC3pmZnBH3VRwlusb7gKS8ahGepE9GchDzp496j8DLSNr7ETXYipJVsEy3PSLl57
+         G+iCxS4iTxigjG/3OJg8U/UbGaQBKOsYCerzGqb1xxpAyXUw0E/Fl8EM5/ym2jZA+JCr
+         fpX28AdZcGc2YoCCoXvJF0y8UIWUAeJybLvOTnEM3u9BZXfFnFJopJiCnN7c9H/2vqSa
+         cxuEhUjalHn8SKPv2JY6HpFx8z7GnydUFZZNRlzhXIoQlHsyr9vX2QG5Pw4IDlqDikYG
+         XY0A==
+X-Gm-Message-State: AOAM532oEMWln4uidN3jOgmYxxA0hfyIzYSj+j7bpBFNe9raMMC3c59/
+        9gj/w7pz8A3Dyy6bxVkiiVE=
+X-Google-Smtp-Source: ABdhPJzcFVv+ZyTEeMYFa3T6ppFANThAYYmYUoxagvBjbEslqdeHSaQvfCWeL72bMnXGsLrbsKFC7g==
+X-Received: by 2002:a17:906:aac1:: with SMTP id kt1mr30856158ejb.408.1593724239598;
+        Thu, 02 Jul 2020 14:10:39 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8070:bb9:bc00::fc])
-        by smtp.googlemail.com with ESMTPSA id x19sm10176353eds.43.2020.07.02.14.10.34
+        by smtp.googlemail.com with ESMTPSA id x19sm10176353eds.43.2020.07.02.14.10.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 14:10:34 -0700 (PDT)
+        Thu, 02 Jul 2020 14:10:39 -0700 (PDT)
 From:   Christoph Fritz <chf.fritz@googlemail.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 1/2] regulator: fan53880: Add initial support
-Date:   Thu,  2 Jul 2020 23:08:45 +0200
-Message-Id: <20200702210846.31659-2-chf.fritz@googlemail.com>
+Subject: [PATCH v2 2/2] dt-bindings: regulator: Document bindings for fan53880
+Date:   Thu,  2 Jul 2020 23:08:46 +0200
+Message-Id: <20200702210846.31659-3-chf.fritz@googlemail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200702210846.31659-1-chf.fritz@googlemail.com>
 References: <20200702210846.31659-1-chf.fritz@googlemail.com>
@@ -78,239 +78,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for ON Semiconductor FAN53880 regulator.
-
-The FAN53880 is an I2C porgrammable power management IC (PMIC)
-that contains a BUCK (step-down converter), four LDOs (low dropouts)
-and one BOOST (step-up converter).  It is designed for mobile power
-applications.
+Add device tree binding information for fan53880 regulator driver.
 
 Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
 ---
- drivers/regulator/Kconfig    |  10 ++
- drivers/regulator/Makefile   |   1 +
- drivers/regulator/fan53880.c | 179 +++++++++++++++++++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 drivers/regulator/fan53880.c
+ .../bindings/regulator/onnn,fan53880.yaml     | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index f60eeaae7afd..421ca13e1541 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -336,6 +336,16 @@ config REGULATOR_FAN53555
- 	  input voltage supply of 2.5V to 5.5V. The output voltage is
- 	  programmed through an I2C interface.
- 
-+config REGULATOR_FAN53880
-+	tristate "Fairchild FAN53880 Regulator"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  This driver supports Fairchild (ON Semiconductor) FAN53880
-+	  regulator. The regulator is a programmable power management IC
-+	  (PMIC), it is controlled by I2C and provides one BUCK, one BOOST
-+	  and four LDO outputs.
-+
- config REGULATOR_GPIO
- 	tristate "GPIO regulator support"
- 	depends on GPIOLIB || COMPILE_TEST
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 5ce7350398f8..9c2782ce44a2 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_REGULATOR_DA9211) += da9211-regulator.o
- obj-$(CONFIG_REGULATOR_DBX500_PRCMU) += dbx500-prcmu.o
- obj-$(CONFIG_REGULATOR_DB8500_PRCMU) += db8500-prcmu.o
- obj-$(CONFIG_REGULATOR_FAN53555) += fan53555.o
-+obj-$(CONFIG_REGULATOR_FAN53880) += fan53880.o
- obj-$(CONFIG_REGULATOR_GPIO) += gpio-regulator.o
- obj-$(CONFIG_REGULATOR_HI6421) += hi6421-regulator.o
- obj-$(CONFIG_REGULATOR_HI6421V530) += hi6421v530-regulator.o
-diff --git a/drivers/regulator/fan53880.c b/drivers/regulator/fan53880.c
+diff --git a/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml b/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
 new file mode 100644
-index 000000000000..285acc705a55
+index 000000000000..eb61e04ef852
 --- /dev/null
-+++ b/drivers/regulator/fan53880.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
++++ b/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/onnn,fan53880.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+enum fan53880_regulator_ids {
-+	FAN53880_LDO1,
-+	FAN53880_LDO2,
-+	FAN53880_LDO3,
-+	FAN53880_LDO4,
-+	FAN53880_BUCK,
-+	FAN53880_BOOST,
-+};
++title: Onsemi FAN53880 PMIC
 +
-+enum fan53880_registers {
-+	FAN53880_PRODUCT_ID = 0x00,
-+	FAN53880_SILICON_REV,
-+	FAN53880_BUCKVOUT,
-+	FAN53880_BOOSTVOUT,
-+	FAN53880_LDO1VOUT,
-+	FAN53880_LDO2VOUT,
-+	FAN53880_LDO3VOUT,
-+	FAN53880_LDO4VOUT,
-+	FAN53880_IOUT,
-+	FAN53880_ENABLE,
-+	FAN53880_ENABLE_BOOST,
-+};
++maintainers:
++  - Christoph Fritz <chf.fritz@googlemail.com>
 +
-+#define FAN53880_ID	0x01
++description: |
++  The FAN53880 is an I2C porgrammable power management IC (PMIC)
++  that contains a BUCK (step-down converter), four low dropouts (LDO)
++  and one BOOST (step-up converter) output. It is designed for mobile
++  power applications.
 +
-+static const struct regulator_ops fan53880_ops = {
-+	.list_voltage = regulator_list_voltage_linear_range,
-+	.map_voltage = regulator_map_voltage_linear_range,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+};
++properties:
++  $nodename:
++    pattern: "pmic@[0-9a-f]{1,2}"
++  compatible:
++    enum:
++      - onnn,fan53880
 +
-+#define FAN53880_LDO(_num, _supply, _default)				\
-+	[FAN53880_LDO ## _num] = {					\
-+		.name =		   "LDO"#_num,				\
-+		.of_match =	   of_match_ptr("LDO"#_num),		\
-+		.regulators_node = of_match_ptr("regulators"),		\
-+		.type =		   REGULATOR_VOLTAGE,			\
-+		.linear_ranges =   (struct linear_range[]) {		\
-+		      REGULATOR_LINEAR_RANGE(_default, 0x0, 0x0, 0),	\
-+		      REGULATOR_LINEAR_RANGE(800000, 0xf, 0x73, 25000),	\
-+		},							\
-+		.n_linear_ranges = 2,					\
-+		.vsel_reg =	   FAN53880_LDO ## _num ## VOUT,	\
-+		.vsel_mask =	   0x7f,				\
-+		.enable_reg =	   FAN53880_ENABLE,			\
-+		.enable_mask =	   BIT(_num - 1),			\
-+		.enable_time =	   150,					\
-+		.supply_name =	   _supply,				\
-+		.ops =		   &fan53880_ops,			\
-+	}
++  reg:
++    maxItems: 1
 +
-+static const struct regulator_desc fan53880_regulators[] = {
-+	FAN53880_LDO(1, "VIN12", 2800000),
-+	FAN53880_LDO(2, "VIN12", 2800000),
-+	FAN53880_LDO(3, "VIN3", 1800000),
-+	FAN53880_LDO(4, "VIN4", 1800000),
-+	[FAN53880_BUCK] = {
-+		.name =		   "BUCK",
-+		.of_match =	   of_match_ptr("BUCK"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.type =		   REGULATOR_VOLTAGE,
-+		.linear_ranges =   (struct linear_range[]) {
-+		      REGULATOR_LINEAR_RANGE(1100000, 0x0, 0x0, 0),
-+		      REGULATOR_LINEAR_RANGE(600000, 0x1f, 0xf7, 12500),
-+		},
-+		.n_linear_ranges = 2,
-+		.vsel_reg =	   FAN53880_BUCKVOUT,
-+		.vsel_mask =	   0x7f,
-+		.enable_reg =	   FAN53880_ENABLE,
-+		.enable_mask =	   0x10,
-+		.enable_time =	   480,
-+		.supply_name =	   "PVIN",
-+		.ops =		   &fan53880_ops,
-+	},
-+	[FAN53880_BOOST] = {
-+		.name =		   "BOOST",
-+		.of_match =	   of_match_ptr("BOOST"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.type =		   REGULATOR_VOLTAGE,
-+		.linear_ranges =   (struct linear_range[]) {
-+		      REGULATOR_LINEAR_RANGE(5000000, 0x0, 0x0, 0),
-+		      REGULATOR_LINEAR_RANGE(3000000, 0x4, 0x70, 25000),
-+		},
-+		.n_linear_ranges = 2,
-+		.vsel_reg =	   FAN53880_BOOSTVOUT,
-+		.vsel_mask =	   0x7f,
-+		.enable_reg =	   FAN53880_ENABLE_BOOST,
-+		.enable_mask =	   0xff,
-+		.enable_time =	   580,
-+		.supply_name =	   "PVIN",
-+		.ops =		   &fan53880_ops,
-+	},
-+};
++  VIN12-supply:
++    description: Input supply phandle(s) for LDO1 and LDO2
 +
-+static const struct regmap_config fan53880_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = FAN53880_ENABLE_BOOST,
-+};
++  VIN3-supply:
++    description: Input supply phandle(s) for LDO3
 +
-+static int fan53880_i2c_probe(struct i2c_client *i2c,
-+			     const struct i2c_device_id *id)
-+{
-+	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
-+	struct regmap *regmap;
-+	int i, ret;
-+	unsigned int data;
++  VIN4-supply:
++    description: Input supply phandle(s) for LDO4
 +
-+	regmap = devm_regmap_init_i2c(i2c, &fan53880_regmap);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(&i2c->dev, "Failed to create regmap: %d\n", ret);
-+		return ret;
-+	}
++  PVIN-supply:
++    description: Input supply phandle(s) for BUCK and BOOST
 +
-+	ret = regmap_read(regmap, FAN53880_PRODUCT_ID, &data);
-+	if (ret < 0) {
-+		dev_err(&i2c->dev, "Failed to read PRODUCT_ID: %d\n", ret);
-+		return ret;
-+	}
-+	if (data != FAN53880_ID) {
-+		dev_err(&i2c->dev, "Unsupported device id: 0x%x.\n", data);
-+		return -ENODEV;
-+	}
++  regulators:
++    type: object
++    $ref: regulator.yaml#
++    description: |
++      list of regulators provided by this controller, must be named
++      after their hardware counterparts LDO[1-4], BUCK and BOOST
 +
-+	config.dev = &i2c->dev;
-+	config.init_data = NULL;
++    patternProperties:
++      "^LDO[1-4]$":
++        type: object
++        $ref: regulator.yaml#
 +
-+	for (i = 0; i < ARRAY_SIZE(fan53880_regulators); i++) {
-+		rdev = devm_regulator_register(&i2c->dev,
-+					       &fan53880_regulators[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret = PTR_ERR(rdev);
-+			dev_err(&i2c->dev, "Failed to register %s: %d\n",
-+				fan53880_regulators[i].name, ret);
-+			return ret;
-+		}
-+	}
++      "^BUCK|BOOST$":
++        type: object
++        $ref: regulator.yaml#
 +
-+	return 0;
-+}
++    additionalProperties: false
 +
-+static const struct of_device_id fan53880_dt_ids[] = {
-+	{ .compatible = "onnn,fan53880", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fan53880_dt_ids);
++required:
++  - compatible
++  - reg
++  - regulators
 +
-+static const struct i2c_device_id fan53880_i2c_id[] = {
-+	{ "fan53880", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, fan53880_i2c_id);
++additionalProperties: false
 +
-+static struct i2c_driver fan53880_regulator_driver = {
-+	.driver = {
-+		.name = "fan53880",
-+		.of_match_table	= of_match_ptr(fan53880_dt_ids),
-+	},
-+	.probe = fan53880_i2c_probe,
-+	.id_table = fan53880_i2c_id,
-+};
-+module_i2c_driver(fan53880_regulator_driver);
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
-+MODULE_DESCRIPTION("FAN53880 PMIC voltage regulator driver");
-+MODULE_AUTHOR("Christoph Fritz <chf.fritz@googlemail.com>");
-+MODULE_LICENSE("GPL");
++        pmic@35 {
++            compatible = "onnn,fan53880";
++            reg = <0x35>;
++
++            PVIN-supply = <&fixreg_example_vcc>;
++
++            regulators {
++                BUCK {
++                    regulator-min-microvolt = <1200000>;
++                    regulator-max-microvolt = <1200000>;
++                };
++            };
++       };
++     };
++...
 -- 
 2.20.1
 
