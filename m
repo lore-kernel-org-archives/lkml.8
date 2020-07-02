@@ -2,102 +2,347 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7820C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA43B214DB
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECD92067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vnWKlCcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgGBIFw (ORCPT
+        id S1726106AbgGBIIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:05:52 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60102 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726042AbgGBIFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:05:51 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn99Tlf1eOmFOAA--.2652S3;
-        Thu, 02 Jul 2020 16:05:40 +0800 (CST)
-Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
- leaks
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
- <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
- <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
- <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
- <971c649e-fe07-3771-6fea-f5aaeaf090ad@web.de>
- <c7cc848a-1ce0-e877-aa44-ebafe4b5985c@loongson.cn>
- <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
-Date:   Thu, 2 Jul 2020 16:05:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 2 Jul 2020 04:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgGBIIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:08:24 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A598C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:08:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so25688672wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 01:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OnB2PeH80Z2yTNUSHboJU/armphySHhXMqSE2LUNLHA=;
+        b=vnWKlCcL1j/OYMqmERoRdKYikWnXg0lnbhjUam52wCuHnryjiNUbfNLtt10RYWCmbw
+         1fus56nmE1E4s5A/7sHU/Yy0uDgcQiY/SIhVXp15pna0arv/25hGYasIk1W5sDhz8p0Z
+         g51/ATVLhGwY8BWFSczLmCLxsG9LgVjlyBboKYN3ph3i5V9pGUGMlBVdXCXCR9uCe8fg
+         Qh92gvuHueQ/z7fEWvce1Ob4T4gkC3GAZXvL4mE8vS91zcTPXv1ybZbe88awEy1Q8LQG
+         1on8eyYCwzBQ5pFKVeNRyCo+IxPJn+OebSCklL6Mof0XYtE02e77z23f36LzJnLTLmBF
+         zQIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OnB2PeH80Z2yTNUSHboJU/armphySHhXMqSE2LUNLHA=;
+        b=DrWDrqKTt310f9uUXGae43MqzsjY+jigibds1NtqYySVgyUuIER7nATQsyd9Y5oloW
+         ksutbfaQrgGoS2TD35wqnJJ20u4CYzXtiu3v7byhCfgEZOsu5q8wYvCxfRCRMFnFL0xp
+         gfayoALRNem9QbZbu2uzsMUp+U0dkg55tKeORtf7OgU2OekyaQlm0/2+XOSmR1sSvOuD
+         YTUoV9vBKp96/WhegpAB7zfnTSk7wbcULDhrbJDFm+iwVkGCiLI9m65KEddP5N+n2ih+
+         DcqikiUypnKIyaePdkXQHjS4I/6D7rdjeQLwBOYa32JY1kmBQd/fjswWTbHh+g0R4Jgk
+         m5Kg==
+X-Gm-Message-State: AOAM5311f6yaqkAGGtk26DpljXUoIOTRG4mJtXS69W9VN6iPFynSX5JT
+        kTKSxArhIKMPE3hZih0LASHbgQ==
+X-Google-Smtp-Source: ABdhPJwuzmUrgiIjv9uMlmPmZ4Rp94Nn/qUKBzKzeyRkmYIV+7VmAe2yV9dkOXRGmsk4DrKxybhU7Q==
+X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr30201567wmg.74.1593677302615;
+        Thu, 02 Jul 2020 01:08:22 -0700 (PDT)
+Received: from apalos.home (athedsl-4423884.home.otenet.gr. [79.130.240.188])
+        by smtp.gmail.com with ESMTPSA id 59sm10445190wrj.37.2020.07.02.01.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 01:08:21 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 11:08:19 +0300
+From:   ilias.apalodimas@linaro.org
+To:     Matteo Croce <mcroce@linux.microsoft.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH net-next 3/4] mvpp2: add basic XDP support
+Message-ID: <20200702080819.GA499364@apalos.home>
+References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+ <20200630180930.87506-4-mcroce@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxn99Tlf1eOmFOAA--.2652S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7JF48ur1fZr4DXFWDZFW8WFg_yoW8Jr1UpF
-        WUur15ZFs3Jw18ur1q93yku345Zryjgr4qvws7Jrn2vr48Xrn5Wr40v3Z8uF4DCrnrXa1F
-        van3A34ru3WUJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        c2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjxUx6wCDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630180930.87506-4-mcroce@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/2020 03:19 PM, Markus Elfring wrote:
->>>> +++ b/drivers/irqchip/irq-csky-apb-intc.c
-> …
->>> I suggest to recheck the parameter alignment for such a function call.
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n93
->> OK, thank you, like this:
->>
->> -       ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
->> -                       "csky_intc", handle_level_irq,
->> -                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
->> -       if (ret) {
->> +       if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
->> +                                          "csky_intc", handle_level_irq,
->> +                                          IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
->>                  pr_err("C-SKY Intc irq_alloc_gc failed.\n");
-> …
->
-> Would you like to use also horizontal tab characters for the corresponding indentation?
+On Tue, Jun 30, 2020 at 08:09:29PM +0200, Matteo Croce wrote:
+> From: Matteo Croce <mcroce@microsoft.com>
+> 
+> Add XDP native support.
+> By now only XDP_DROP, XDP_PASS and XDP_REDIRECT
+> verdicts are supported.
+> 
+> Co-developed-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> ---
 
-Sorry, I do not quite understanding what you mean, maybe like this?
+[...]
 
-         if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
-                 "csky_intc", handle_level_irq,
-                 IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
-                 pr_err("C-SKY Intc irq_alloc_gc failed.\n");
-                 goto err_domain_remove;
-         }
+>  }
+>  
+> +static int
+> +mvpp2_run_xdp(struct mvpp2_port *port, struct mvpp2_rx_queue *rxq,
+> +	      struct bpf_prog *prog, struct xdp_buff *xdp,
+> +	      struct page_pool *pp)
+> +{
+> +	unsigned int len, sync, err;
+> +	struct page *page;
+> +	u32 ret, act;
+> +
+> +	len = xdp->data_end - xdp->data_hard_start - MVPP2_SKB_HEADROOM;
+> +	act = bpf_prog_run_xdp(prog, xdp);
+> +
+> +	/* Due xdp_adjust_tail: DMA sync for_device cover max len CPU touch */
+> +	sync = xdp->data_end - xdp->data_hard_start - MVPP2_SKB_HEADROOM;
+> +	sync = max(sync, len);
+> +
+> +	switch (act) {
+> +	case XDP_PASS:
+> +		ret = MVPP2_XDP_PASS;
+> +		break;
+> +	case XDP_REDIRECT:
+> +		err = xdp_do_redirect(port->dev, xdp, prog);
+> +		if (unlikely(err)) {
+> +			ret = MVPP2_XDP_DROPPED;
+> +			page = virt_to_head_page(xdp->data);
+> +			page_pool_put_page(pp, page, sync, true);
+> +		} else {
+> +			ret = MVPP2_XDP_REDIR;
+> +		}
+> +		break;
+> +	default:
+> +		bpf_warn_invalid_xdp_action(act);
+> +		fallthrough;
+> +	case XDP_ABORTED:
+> +		trace_xdp_exception(port->dev, prog, act);
+> +		fallthrough;
+> +	case XDP_DROP:
+> +		page = virt_to_head_page(xdp->data);
+> +		page_pool_put_page(pp, page, sync, true);
+> +		ret = MVPP2_XDP_DROPPED;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  /* Main rx processing */
+>  static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  		    int rx_todo, struct mvpp2_rx_queue *rxq)
+>  {
+>  	struct net_device *dev = port->dev;
+> +	struct bpf_prog *xdp_prog;
+> +	struct xdp_buff xdp;
+>  	int rx_received;
+>  	int rx_done = 0;
+> +	u32 xdp_ret = 0;
+>  	u32 rcvd_pkts = 0;
+>  	u32 rcvd_bytes = 0;
+>  
+> +	rcu_read_lock();
+> +
+> +	xdp_prog = READ_ONCE(port->xdp_prog);
+> +
+>  	/* Get number of received packets and clamp the to-do */
+>  	rx_received = mvpp2_rxq_received(port, rxq->id);
+>  	if (rx_todo > rx_received)
+> @@ -3060,7 +3115,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  		dma_addr_t dma_addr;
+>  		phys_addr_t phys_addr;
+>  		u32 rx_status;
+> -		int pool, rx_bytes, err;
+> +		int pool, rx_bytes, err, ret;
+>  		void *data;
+>  
+>  		rx_done++;
+> @@ -3096,6 +3151,33 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  		else
+>  			frag_size = bm_pool->frag_size;
+>  
+> +		if (xdp_prog) {
+> +			xdp.data_hard_start = data;
+> +			xdp.data = data + MVPP2_MH_SIZE + MVPP2_SKB_HEADROOM;
+> +			xdp.data_end = xdp.data + rx_bytes;
+> +			xdp.frame_sz = PAGE_SIZE;
+> +
+> +			if (bm_pool->pkt_size == MVPP2_BM_SHORT_PKT_SIZE)
+> +				xdp.rxq = &rxq->xdp_rxq_short;
+> +			else
+> +				xdp.rxq = &rxq->xdp_rxq_long;
+> +
+> +			xdp_set_data_meta_invalid(&xdp);
+> +
+> +			ret = mvpp2_run_xdp(port, rxq, xdp_prog, &xdp, pp);
+> +
+> +			if (ret) {
+> +				xdp_ret |= ret;
+> +				err = mvpp2_rx_refill(port, bm_pool, pp, pool);
+> +				if (err) {
+> +					netdev_err(port->dev, "failed to refill BM pools\n");
+> +					goto err_drop_frame;
+> +				}
+> +
+> +				continue;
+> +			}
+> +		}
+> +
+>  		skb = build_skb(data, frag_size);
+>  		if (!skb) {
+>  			netdev_warn(port->dev, "skb build failed\n");
+> @@ -3118,7 +3200,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  		rcvd_pkts++;
+>  		rcvd_bytes += rx_bytes;
+>  
+> -		skb_reserve(skb, MVPP2_MH_SIZE + NET_SKB_PAD);
+> +		skb_reserve(skb, MVPP2_MH_SIZE + MVPP2_SKB_HEADROOM);
+>  		skb_put(skb, rx_bytes);
+>  		skb->protocol = eth_type_trans(skb, dev);
+>  		mvpp2_rx_csum(port, rx_status, skb);
+> @@ -3133,6 +3215,8 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  		mvpp2_bm_pool_put(port, pool, dma_addr, phys_addr);
+>  	}
+>  
+> +	rcu_read_unlock();
+> +
+>  	if (rcvd_pkts) {
+>  		struct mvpp2_pcpu_stats *stats = this_cpu_ptr(port->stats);
+>  
+> @@ -3608,6 +3692,8 @@ static void mvpp2_start_dev(struct mvpp2_port *port)
+>  	}
+>  
+>  	netif_tx_start_all_queues(port->dev);
+> +
+> +	clear_bit(0, &port->state);
+>  }
+>  
+>  /* Set hw internals when stopping port */
+> @@ -3615,6 +3701,8 @@ static void mvpp2_stop_dev(struct mvpp2_port *port)
+>  {
+>  	int i;
+>  
+> +	set_bit(0, &port->state);
+> +
+>  	/* Disable interrupts on all threads */
+>  	mvpp2_interrupts_disable(port);
+>  
+> @@ -4021,6 +4109,10 @@ static int mvpp2_change_mtu(struct net_device *dev, int mtu)
+>  	}
+>  
+>  	if (MVPP2_RX_PKT_SIZE(mtu) > MVPP2_BM_LONG_PKT_SIZE) {
+> +		if (port->xdp_prog) {
+> +			netdev_err(dev, "Jumbo frames are not supported with XDP\n");
 
->
-> Regards,
-> Markus
+Does it make sense to switch to NL_SET_ERR_MSG_MOD() here, so the user can get
+an immediate feedback?
 
+> +			return -EINVAL;
+> +		}
+>  		if (priv->percpu_pools) {
+>  			netdev_warn(dev, "mtu %d too high, switching to shared buffers", mtu);
+>  			mvpp2_bm_switch_buffers(priv, false);
+> @@ -4159,6 +4251,73 @@ static int mvpp2_set_features(struct net_device *dev,
+>  	return 0;
+>  }
+>  
+> +static int mvpp2_xdp_setup(struct mvpp2_port *port, struct netdev_bpf *bpf)
+> +{
+> +	struct bpf_prog *prog = bpf->prog, *old_prog;
+> +	bool running = netif_running(port->dev);
+> +	bool reset = !prog != !port->xdp_prog;
+> +
+> +	if (port->dev->mtu > ETH_DATA_LEN) {
+> +		netdev_err(port->dev, "Jumbo frames are not supported by XDP, current MTU %d.\n",
+> +			   port->dev->mtu);
+
+ditto
+
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (!port->priv->percpu_pools) {
+> +		netdev_err(port->dev, "Per CPU Pools required for XDP");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	/* device is up and bpf is added/removed, must setup the RX queues */
+> +	if (running && reset) {
+> +		mvpp2_stop_dev(port);
+> +		mvpp2_cleanup_rxqs(port);
+> +		mvpp2_cleanup_txqs(port);
+> +	}
+> +
+> +	old_prog = xchg(&port->xdp_prog, prog);
+> +	if (old_prog)
+> +		bpf_prog_put(old_prog);
+> +
+> +	/* bpf is just replaced, RXQ and MTU are already setup */
+> +	if (!reset)
+> +		return 0;
+> +
+> +	/* device was up, restore the link */
+> +	if (running) {
+> +		int ret = mvpp2_setup_rxqs(port);
+> +
+> +		if (ret) {
+> +			netdev_err(port->dev, "mvpp2_setup_rxqs failed\n");
+> +			return ret;
+> +		}
+> +		ret = mvpp2_setup_txqs(port);
+> +		if (ret) {
+> +			netdev_err(port->dev, "mvpp2_setup_txqs failed\n");
+> +			return ret;
+> +		}
+> +
+> +		mvpp2_start_dev(port);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mvpp2_xdp(struct net_device *dev, struct netdev_bpf *xdp)
+> +{
+> +	struct mvpp2_port *port = netdev_priv(dev);
+> +
+> +	switch (xdp->command) {
+> +	case XDP_SETUP_PROG:
+> +		return mvpp2_xdp_setup(port, xdp);
+> +	case XDP_QUERY_PROG:
+> +		xdp->prog_id = port->xdp_prog ? port->xdp_prog->aux->id : 0;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  /* Ethtool methods */
+>  
+>  static int mvpp2_ethtool_nway_reset(struct net_device *dev)
+> @@ -4509,6 +4668,7 @@ static const struct net_device_ops mvpp2_netdev_ops = {
+>  	.ndo_vlan_rx_add_vid	= mvpp2_vlan_rx_add_vid,
+>  	.ndo_vlan_rx_kill_vid	= mvpp2_vlan_rx_kill_vid,
+>  	.ndo_set_features	= mvpp2_set_features,
+> +	.ndo_bpf		= mvpp2_xdp,
+>  };
+>  
+>  static const struct ethtool_ops mvpp2_eth_tool_ops = {
+> -- 
+> 2.26.2
+> 
