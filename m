@@ -2,204 +2,85 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F707C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0222C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1E721534
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ujmTdace"
+	by mail.kernel.org (Postfix) with ESMTP id 8F66421582
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgGBRN0 (ORCPT
+        id S1727870AbgGBROI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:13:26 -0400
-Received: from mail-co1nam11on2051.outbound.protection.outlook.com ([40.107.220.51]:6033
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726865AbgGBRNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:13:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AWyt31VFsJfq3zc5l+DWfPZlmUJ3Pmlb2jVydo8l94jWu8tezp35TUWVq0p4HPkAdu0PjqJpSnuhjbArMJE9+6jKNzdAcQ3RcE6/cUUy1M/7MXOSlY8Q1/teG6XBkluDwRR7UQ0Y6XJSnJrJksiIIEoVZwDRNosldyJNlXXrIZ1vM379nm2i9sIV1P5GduKOmQnPyyF0oUsrRrQUnbSBn3ehcqDFEyPzlhH8TLUyfGaZ5Q6dFwhe/vF/h5qSLGbHh52qZUASwtz9D6ORCleWkutQAbmcOP7epy3tojK+tWicBtgPQl9TIgNkaJY79/rE6IPf35bdIdZCe2xQLtFhcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KA3tlyiIJAjO1PnWEeoltXP+m0H4Wcn22hmM1Y9arpk=;
- b=TAvSnGRaIUz90eD925v1Y/w/9WINzgJtkh+pGUIHVkpxPm7Py2YeybFPwwjweSZV6TIC02OAqVFZ30op+eFQjPeP7P/FgK6W9XKPV9Z++e7meCOzk0VNSik7C1PfG+sChu/MRIi9O39MbuRCEgVcT0qgIKKiwovvizwt0e5kkirwqr/Z0zu6qkfdvna9vO8MtG6I3AYhAjQIYPHq44WiDiYHmOtpQBP+qfFCLgDJ8FCBnCn6V1kKtIylGjbCpKHQqqpRj+XJYkGZTFcCPGE7lkNAB7W7N1z2fytEnHz8MNYkuzg+Gaq8Z6Ffe7xsqg4GAXGWne9PLw9MtL/rvYmMNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alsa-project.org smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KA3tlyiIJAjO1PnWEeoltXP+m0H4Wcn22hmM1Y9arpk=;
- b=ujmTdaceZts98nyoxJlVsIXGh+15XNmT8KHcNPAzrpmiFyTforQFQ8pI/cfY35BNrm7BMY5PlgooibXOrPj2rSq3HRAD9ju1lJFvR7I0paDfdiOZUwoIyK5D3O5nRZ+cwqZrlX+nuDL/AwnRUyCLXhT+J2Bs+41EJ5WOpUU63uI=
-Received: from MWHPR15CA0056.namprd15.prod.outlook.com (2603:10b6:301:4c::18)
- by MWHPR12MB1261.namprd12.prod.outlook.com (2603:10b6:300:10::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Thu, 2 Jul
- 2020 17:13:20 +0000
-Received: from CO1NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:301:4c:cafe::d2) by MWHPR15CA0056.outlook.office365.com
- (2603:10b6:301:4c::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24 via Frontend
- Transport; Thu, 2 Jul 2020 17:13:20 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; alsa-project.org; dkim=none (message not signed)
- header.d=none;alsa-project.org; dmarc=permerror action=none
- header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- CO1NAM11FT050.mail.protection.outlook.com (10.13.174.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3153.24 via Frontend Transport; Thu, 2 Jul 2020 17:13:19 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Jul 2020
- 12:13:18 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Jul 2020
- 12:13:18 -0500
-Received: from LinuxHost.amd.com (10.180.168.240) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 2 Jul 2020 12:13:15 -0500
-From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To:     <alsa-devel@alsa-project.org>
-CC:     <perex@perex.cz>, <hui.wang@canonical.com>,
-        <Alexander.Deucher@amd.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [RESEND PATCH V3] ASoC: amd: add logic to check dmic hardware runtime
-Date:   Thu, 2 Jul 2020 22:56:52 +0530
-Message-ID: <1593710826-1106-1-git-send-email-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Jul 2020 13:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbgGBROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:14:08 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC32F21534;
+        Thu,  2 Jul 2020 17:14:03 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, Boris Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>,
+        Dave Anderson <anderson@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        bhupesh.linux@gmail.com, Ingo Molnar <mingo@kernel.org>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        scott.branden@broadcom.com, Mark Rutland <mark.rutland@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        John Donnelly <john.p.donnelly@oracle.com>,
+        kexec@lists.infradead.org
+Subject: Re: [PATCH v6 0/2] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for arm64 and MAX_PHYSMEM_BITS for all archs)
+Date:   Thu,  2 Jul 2020 18:14:02 +0100
+Message-Id: <159370984726.27923.4874334372278158979.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(46966005)(81166007)(2906002)(82310400002)(86362001)(5660300002)(83380400001)(6916009)(8936002)(8676002)(70586007)(70206006)(36756003)(356005)(186003)(26005)(426003)(336012)(4326008)(2616005)(316002)(54906003)(478600001)(7696005)(6666004)(47076004)(82740400003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 90459b76-77c6-4d12-f26e-08d81eab37ce
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1261:
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1261897D08948FA0E0666407976D0@MWHPR12MB1261.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /N3Kadan+NMAA3GjvKk7nLN7J/Cq2xICrtFn8PH137f3Cn+tDUl3feB0YD2qNvjE5E/ZJK8B+Zsn47QGEN0+4SEh3u8se5mb50raFCGPJ+REwlmHwZQAWpzzwBg6SxtFi26CXrl0nOy8XILJeU+YydgodbpX7/lpOZ44CVBVrbdymxCsYZ6mF+hmV3WefXBNFOClc5sKA/XvHWPbG99HEMsYg16QHS6e898MJZacWVdTT/fuXirRT3L4UiIdN8zp7rcdJ/0o6XYyG+FSJ+iQ6PfluVgELke1Q+43jiIl4x332WZP+7cgurt8xSSXuKU1NhbEUjabqLENl5S2SICp8O08ucqgk473LSYpN/zmnt24irzcIcnFfsisiDnuDFdXQXZZFus5ZoTfqz6/85imHg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 17:13:19.5766
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90459b76-77c6-4d12-f26e-08d81eab37ce
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT050.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1261
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add logic to check DMIC hardware exists or not on
-the platform at runtime.
+On Thu, 14 May 2020 00:22:35 +0530, Bhupesh Sharma wrote:
+> Apologies for the delayed update. Its been quite some time since I
+> posted the last version (v5), but I have been really caught up in some
+> other critical issues.
+> 
+> Changes since v5:
+> ----------------
+> - v5 can be viewed here:
+>   http://lists.infradead.org/pipermail/kexec/2019-November/024055.html
+> - Addressed review comments from James Morse and Boris.
+> - Added Tested-by received from John on v5 patchset.
+> - Rebased against arm64 (for-next/ptr-auth) branch which has Amit's
+>   patchset for ARMv8.3-A Pointer Authentication feature vmcoreinfo
+>   applied.
+> 
+> [...]
 
-Add module param for overriding DMIC hardware check
-at runtime.
+Applied to arm64 (for-next/vmcoreinfo), thanks!
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
-v3: changed  dmic_acpi_check module param as bint
-v2: changed module param usage -1 as default, 0 - skip, 1 - force
- sound/soc/amd/renoir/rn-pci-acp3x.c | 29 +++++++++++++++++++++++++++++
- sound/soc/amd/renoir/rn_acp3x.h     |  2 ++
- 2 files changed, 31 insertions(+)
+[1/2] crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+      https://git.kernel.org/arm64/c/1d50e5d0c505
+[2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+      https://git.kernel.org/arm64/c/bbdbc11804ff
 
-diff --git a/sound/soc/amd/renoir/rn-pci-acp3x.c b/sound/soc/amd/renoir/rn-pci-acp3x.c
-index 859ed67..d1faea5 100644
---- a/sound/soc/amd/renoir/rn-pci-acp3x.c
-+++ b/sound/soc/amd/renoir/rn-pci-acp3x.c
-@@ -5,6 +5,7 @@
- //Copyright 2020 Advanced Micro Devices, Inc.
- 
- #include <linux/pci.h>
-+#include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/delay.h>
-@@ -18,6 +19,16 @@ static int acp_power_gating;
- module_param(acp_power_gating, int, 0644);
- MODULE_PARM_DESC(acp_power_gating, "Enable acp power gating");
- 
-+/**
-+ * dmic_acpi_check = -1 - Checks ACPI method to know DMIC hardware status runtime
-+ *                 = 0 - Skips the DMIC device creation and returns probe failure
-+ *                 = 1 - Assumes that platform has DMIC support and skips ACPI
-+ *                       method check
-+ */
-+static int dmic_acpi_check = ACP_DMIC_AUTO;
-+module_param(dmic_acpi_check, bint, 0644);
-+MODULE_PARM_DESC(dmic_acpi_check, "checks Dmic hardware runtime");
-+
- struct acp_dev_data {
- 	void __iomem *acp_base;
- 	struct resource *res;
-@@ -157,6 +168,8 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
- {
- 	struct acp_dev_data *adata;
- 	struct platform_device_info pdevinfo[ACP_DEVS];
-+	acpi_handle handle;
-+	acpi_integer dmic_status;
- 	unsigned int irqflags;
- 	int ret, index;
- 	u32 addr;
-@@ -201,6 +214,22 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
- 	if (ret)
- 		goto disable_msi;
- 
-+	if (!dmic_acpi_check) {
-+		ret = -ENODEV;
-+		goto de_init;
-+	} else if (dmic_acpi_check == ACP_DMIC_AUTO) {
-+		handle = ACPI_HANDLE(&pci->dev);
-+		ret = acpi_evaluate_integer(handle, "_WOV", NULL, &dmic_status);
-+		if (ACPI_FAILURE(ret)) {
-+			ret = -EINVAL;
-+			goto de_init;
-+		}
-+		if (!dmic_status) {
-+			ret = -ENODEV;
-+			goto de_init;
-+		}
-+	}
-+
- 	adata->res = devm_kzalloc(&pci->dev,
- 				  sizeof(struct resource) * 2,
- 				  GFP_KERNEL);
-diff --git a/sound/soc/amd/renoir/rn_acp3x.h b/sound/soc/amd/renoir/rn_acp3x.h
-index 75228e3..1462039 100644
---- a/sound/soc/amd/renoir/rn_acp3x.h
-+++ b/sound/soc/amd/renoir/rn_acp3x.h
-@@ -55,6 +55,8 @@
- 
- #define MAX_BUFFER (CAPTURE_MAX_PERIOD_SIZE * CAPTURE_MAX_NUM_PERIODS)
- #define MIN_BUFFER MAX_BUFFER
-+#define	ACP_DMIC_AUTO   -1
-+
- struct pdm_dev_data {
- 	u32 pdm_irq;
- 	void __iomem *acp_base;
 -- 
-2.7.4
+Catalin
 
