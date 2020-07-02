@@ -2,416 +2,247 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A155C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450212077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE6B20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="D+ZU8wve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGBALh (ORCPT
+        id S1727999AbgGBAS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:11:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60622 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727811AbgGBALe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:11:34 -0400
-IronPort-SDR: 07UqMuJqX/DOjhl9axr1tjq1a6HaS5tlUiaLhhHOp9+KburGPKG6GZ4qI0YzYx8BxuPvQtPV4t
- NO8H4rXdDCLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="146734373"
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="146734373"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:11:32 -0700
-IronPort-SDR: Mncba7ksVP/Ab9VlH86zTt8uFbw0OeEbMTO2rq6jN8RWuKKWXU5fxfw3gi6GSBa8ZneLuwWcpt
- tnF05i4nD3bg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="313944385"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 17:11:30 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, sureshkumar.mp@intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: [PATCH v6 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Thu,  2 Jul 2020 08:09:34 +0800
-Message-Id: <20200702000934.3258-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Wed, 1 Jul 2020 20:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgGBAS2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:18:28 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504A5C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:18:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j19so5683818pgm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HyC3wfaKDwIkN5ljsKiAJ13Ve0kbqXFjUZFkbdF61hU=;
+        b=D+ZU8wve3t26pQj++RBu2jqqCMQu2CFBw08iCHE/N0Bj42QHNWL/NzXWEWfpXMs49N
+         PMGw7qBaHbbmSmEOHm2sYZBcJ04n5go2gBPbCa9qSJ1V8O7/jwQ1DhLPGwi6fvRAvPQ5
+         xhm3RT9R54FMg0ru8jsDNfDcsnCRW+dTZEfW5zzpt6bmeio+ep9WxB0rUwA05LAKRxV+
+         vYvpbq/E9MmNhn50cL8u5Y01P8zf4JRLKamVBVzZz0UAf+8zF3c5syFLXaxTPavtpUlg
+         gjAXtJQgNiFHEgkVXnZkGTPXEJ9AZOzU/wcYbLy8TwlXBCqDgA17v4IGcLBsph57qyiz
+         L/Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HyC3wfaKDwIkN5ljsKiAJ13Ve0kbqXFjUZFkbdF61hU=;
+        b=K6FKH3voVRtGZ7WPDyGd3TTt6IeOyvMhNwLCUPl+ykDtwtFYX0qi+VTcvOQ8IETLL2
+         Tc6Gnqv2JP0421eMmUeL6SNvlJuDR+LXv9/Jzub0KDCqApGRuNU4BRp1aY64DSmLc4KY
+         l8L3IffVyizZz91j2sVayS76Sae/PsxJ9dTbXvIf9POcLmQAVDeIgCg2QMgEybZUPnEW
+         cRCznfNzzplG9ABlRWfuT6jzhH+hV23h27mwBUduzIAL6iYjWRNUBkU16nH7HN6ViH+d
+         +vP2EVUjrkmH1JrWLwiueiBTyjX7osq33QyZ7tI7zGmvqglZZ4BGduPxJHgQp8o8FAuK
+         DWmA==
+X-Gm-Message-State: AOAM532CCjMEO4uM7gU9wJZC7GJ3bYJRzmiylyRcHlxeMuUBQ8DoCWH6
+        SoKCg1YZG0ZEyuUSVA4CY2MoTXkvdbqFCA==
+X-Google-Smtp-Source: ABdhPJyV4RxWnDRhvJ713rA+505bvT+0d1DT8bNYCHh0r1gIardublOisgQ4tHuoyQ5kalh6UbXpaw==
+X-Received: by 2002:aa7:859a:: with SMTP id w26mr24805308pfn.10.1593649107283;
+        Wed, 01 Jul 2020 17:18:27 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id e3sm3414393pjv.47.2020.07.01.17.18.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 17:18:26 -0700 (PDT)
+Subject: Re: [PATCH v2 2/6] powerpc/pseries/iommu: Update call to
+ ibm,query-pe-dma-windows
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200624062411.367796-1-leobras.c@gmail.com>
+ <20200624062411.367796-3-leobras.c@gmail.com>
+ <5411e8a1-02a3-1287-40bf-ccc9db7a4f88@ozlabs.ru>
+ <fbcbc7eb298930195b7146221dc1eded6bf556e4.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <47ad4907-5f63-56e1-2985-a7a7f4d0ba35@ozlabs.ru>
+Date:   Thu, 2 Jul 2020 10:18:21 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <fbcbc7eb298930195b7146221dc1eded6bf556e4.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for eMMC PHY on Intel Keem Bay SoC.
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
----
- drivers/phy/intel/Kconfig            |  12 +
- drivers/phy/intel/Makefile           |   1 +
- drivers/phy/intel/phy-keembay-emmc.c | 314 +++++++++++++++++++++++++++
- 3 files changed, 327 insertions(+)
- create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 7b47682a4e0e..8ddda4fb95d2 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -22,3 +22,15 @@ config PHY_INTEL_EMMC
- 	select GENERIC_PHY
- 	help
- 	  Enable this to support the Intel EMMC PHY
-+
-+config PHY_KEEMBAY_EMMC
-+	tristate "Intel Keem Bay EMMC PHY driver"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select REGMAP_MMIO
-+	help
-+	  Choose this option if you have an Intel Keem Bay SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called phy-keembay-emmc.
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 233d530dadde..6566334e7b77 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-+obj-$(CONFIG_PHY_KEEMBAY_EMMC)		+= phy-keembay-emmc.o
-diff --git a/drivers/phy/intel/phy-keembay-emmc.c b/drivers/phy/intel/phy-keembay-emmc.c
-new file mode 100644
-index 000000000000..66b5931a749a
---- /dev/null
-+++ b/drivers/phy/intel/phy-keembay-emmc.c
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Keem Bay eMMC PHY driver
-+ * Copyright (C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC/SD/SDIO core/phy configuration registers */
-+#define PHY_CFG_0		0x24
-+#define  SEL_DLY_TXCLK_MASK	BIT(29)
-+#define  SEL_DLY_TXCLK(x)	(((x) << 29) & SEL_DLY_TXCLK_MASK)
-+#define  OTAP_DLY_ENA_MASK	BIT(27)
-+#define  OTAP_DLY_ENA(x)	(((x) << 27) & OTAP_DLY_ENA_MASK)
-+#define  OTAP_DLY_SEL_MASK	GENMASK(26, 23)
-+#define  OTAP_DLY_SEL(x)	(((x) << 23) & OTAP_DLY_SEL_MASK)
-+#define  DLL_EN_MASK		BIT(10)
-+#define  DLL_EN(x)		(((x) << 10) & DLL_EN_MASK)
-+#define  PWR_DOWN_MASK		BIT(0)
-+#define  PWR_DOWN(x)		(((x) << 0) & PWR_DOWN_MASK)
-+
-+#define PHY_CFG_2		0x2c
-+#define  SEL_FREQ_MASK		GENMASK(12, 10)
-+#define  SEL_FREQ(x)		(((x) << 10) & SEL_FREQ_MASK)
-+
-+#define PHY_STAT		0x40
-+#define  CAL_DONE_MASK		BIT(6)
-+#define  IS_CALDONE(x)		((x) & CAL_DONE_MASK)
-+#define  DLL_RDY_MASK		BIT(5)
-+#define  IS_DLLRDY(x)		((x) & DLL_RDY_MASK)
-+
-+/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
-+#define FREQSEL_200M_170M	0x0
-+#define FREQSEL_170M_140M	0x1
-+#define FREQSEL_140M_110M	0x2
-+#define FREQSEL_110M_80M	0x3
-+#define FREQSEL_80M_50M		0x4
-+
-+struct keembay_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static const struct regmap_config keembay_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int keembay_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned int mhz;
-+	int ret;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn off the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power off above */
-+	if (!on_off)
-+		return 0;
-+
-+	mhz = DIV_ROUND_CLOSEST(clk_get_rate(priv->emmcclk), 1000000);
-+	if (mhz <= 200 && mhz >= 170)
-+		freqsel = FREQSEL_200M_170M;
-+	else if (mhz <= 170 && mhz >= 140)
-+		freqsel = FREQSEL_170M_140M;
-+	else if (mhz <= 140 && mhz >= 110)
-+		freqsel = FREQSEL_140M_110M;
-+	else if (mhz <= 110 && mhz >= 80)
-+		freqsel = FREQSEL_110M_80M;
-+	else if (mhz <= 80 && mhz >= 50)
-+		freqsel = FREQSEL_80M_50M;
-+	else
-+		freqsel = 0x0;
-+
-+	if (mhz < 50 || mhz > 200)
-+		dev_warn(&phy->dev, "Unsupported rate: %d MHz\n", mhz);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A. process, voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_2, SEL_FREQ_MASK,
-+				 SEL_FREQ(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * We turned on the DLL even though the rate was 0 because we the
-+	 * clock might be turned on later.  ...but we can't wait for the DLL
-+	 * to lock when the rate is 0 because it will never lock with no
-+	 * input clock.
-+	 *
-+	 * Technically we should be checking the lock later when the clock
-+	 * is turned on, but for now we won't.
-+	 */
-+	if (mhz == 0)
-+		return 0;
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed. If we are powering on the PHY and the card clock
-+	 * is super slow (like 100kHz) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood. In some
-+	 * extreme cases we've seen it take up to over 10ms (!). We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret)
-+		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int keembay_emmc_phy_init(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+
-+	return PTR_ERR_OR_ZERO(priv->emmcclk);
-+}
-+
-+static int keembay_emmc_phy_exit(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+};
-+
-+static int keembay_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Delay chain based txclk: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, SEL_DLY_TXCLK_MASK,
-+				 SEL_DLY_TXCLK(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: delay chain txclk set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_ENA_MASK,
-+				 OTAP_DLY_ENA(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_SEL_MASK,
-+				 OTAP_DLY_SEL(2));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, true);
-+}
-+
-+static int keembay_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= keembay_emmc_phy_init,
-+	.exit		= keembay_emmc_phy_exit,
-+	.power_on	= keembay_emmc_phy_power_on,
-+	.power_off	= keembay_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int keembay_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct keembay_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	void __iomem *base;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->syscfg = devm_regmap_init_mmio(dev, base, &keembay_regmap_config);
-+	if (IS_ERR(priv->syscfg))
-+		return PTR_ERR(priv->syscfg);
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id keembay_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,keembay-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, keembay_emmc_phy_dt_ids);
-+
-+static struct platform_driver keembay_emmc_phy_driver = {
-+	.probe		= keembay_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "keembay-emmc-phy",
-+		.of_match_table = keembay_emmc_phy_dt_ids,
-+	},
-+};
-+module_platform_driver(keembay_emmc_phy_driver);
-+
-+MODULE_AUTHOR("Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>");
-+MODULE_DESCRIPTION("Intel Keem Bay eMMC PHY driver");
-+MODULE_LICENSE("GPL v2");
+On 02/07/2020 00:04, Leonardo Bras wrote:
+> On Wed, 2020-07-01 at 18:17 +1000, Alexey Kardashevskiy wrote:
+>>
+>>> +#define DDW_EXT_SIZE		0
+>>> +#define DDW_EXT_RESET_DMA_WIN	1
+>>> +#define DDW_EXT_QUERY_OUT_SIZE	2
+>>
+>> #define DDW_EXT_LAST (DDW_EXT_QUERY_OUT_SIZE + 1)
+>> ...
+>>
+>>
+>>> +
+>>>  static struct iommu_table_group *iommu_pseries_alloc_group(int node)
+>>>  {
+>>>  	struct iommu_table_group *table_group;
+>>> @@ -339,7 +343,7 @@ struct direct_window {
+>>>  /* Dynamic DMA Window support */
+>>>  struct ddw_query_response {
+>>>  	u32 windows_available;
+>>> -	u32 largest_available_block;
+>>> +	u64 largest_available_block;
+>>>  	u32 page_size;
+>>>  	u32 migration_capable;
+>>>  };
+>>> @@ -875,13 +879,29 @@ static int find_existing_ddw_windows(void)
+>>>  machine_arch_initcall(pseries, find_existing_ddw_windows);
+>>>  
+>>>  static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+>>> -			struct ddw_query_response *query)
+>>> +		     struct ddw_query_response *query,
+>>> +		     struct device_node *parent)
+>>>  {
+>>>  	struct device_node *dn;
+>>>  	struct pci_dn *pdn;
+>>> -	u32 cfg_addr;
+>>> +	u32 cfg_addr, query_out[5], ddw_ext[DDW_EXT_QUERY_OUT_SIZE + 1];
+>>
+>> ... and use DDW_EXT_LAST here.
+> 
+> Because of the growing nature of ddw-extensions, I intentionally let
+> this be (DDW_EXT_QUERY_OUT_SIZE + 1). If we create a DDW_EXT_LAST, it
+> will be incremented in the future if more extensions come to exist.
+> 
+> I mean, I previously saw no reason for allocating space for extensions
+> after the desired one, as they won't be used here.
+
+Ah, my bad, you're right.
+
+
+> 
+>>
+>>
+>>>  	u64 buid;
+>>> -	int ret;
+>>> +	int ret, out_sz;
+>>> +
+>>> +	/*
+>>> +	 * From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can rule how many
+>>> +	 * output parameters ibm,query-pe-dma-windows will have, ranging from
+>>> +	 * 5 to 6.
+>>> +	 */
+>>> +
+>>> +	ret = of_property_read_u32_array(parent, "ibm,ddw-extensions",
+>>> +					 &ddw_ext[0],
+>>> +					 DDW_EXT_QUERY_OUT_SIZE + 1);
+> 
+> In this case, I made sure not to cross (DDW_EXT_QUERY_OUT_SIZE + 1)
+> while reading the extensions from the property.
+> 
+> What do you think about it? 
+
+I think you want something like:
+
+static inline int ddw_read_ext(const struct device_node *np, int extnum,
+u32 *ret)
+{
+retun of_property_read_u32_index(np, "ibm,ddw-extensions", extnum + 1, ret);
+}
+
+These "+1"'s all over the place are confusing.
+
+
 -- 
-2.17.1
-
+Alexey
