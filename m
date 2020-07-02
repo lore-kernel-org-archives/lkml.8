@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C05C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6489120884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A36A206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653314;
-	bh=5Jqa8Rm0KG4BHotO3qQqwn+APEvLoSbIZoKJA2xGqj0=;
+	s=default; t=1593653324;
+	bh=0vnJHi7I4mSS3PdnRFOQhlL/sfCDWyOgU9S8BIfpm3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=muOa2HuUeGWk+Lw7q/mLGGM4FPYX4b/kvHJT1A6x4zaP69g55uHYYlW/cqPn+04yL
-	 BSTS1n67/T6aGmX5bzxSaRohJDorRrdyJK+nGQ0k/+XirbDLaLGqOn34pqI1KIp78P
-	 VX2IxgcxYyauzti5rNYk8Mog94g2YH/3/3lRuAmA=
+	b=ylivsKaz9KAnknqxKjJQzSrMAARnRhMCR7K3DHD9mHH9CEw0Kwrev7sWohpGD+y7o
+	 xjPDacQosch1MBZixwaK8xyG7sbwWdQyfs4b5hDWij9JidegaIRa5y6OvOqRjB2zKW
+	 2gOt+eQN902VlKhrP7GAa+Z2CfAe8svKu8YyJmwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgGBB1k (ORCPT
+        id S1728471AbgGBB2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58684 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:28:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbgGBB06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:58 -0400
+        id S1729523AbgGBB1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01BBB20C56;
-        Thu,  2 Jul 2020 01:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48770214DB;
+        Thu,  2 Jul 2020 01:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653217;
-        bh=5Jqa8Rm0KG4BHotO3qQqwn+APEvLoSbIZoKJA2xGqj0=;
+        s=default; t=1593653255;
+        bh=0vnJHi7I4mSS3PdnRFOQhlL/sfCDWyOgU9S8BIfpm3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+0RwhiT1NkmJta3/qTxAr4jxmkx8Ah8Wfo+jOqBmNJUbo11au5RLVIicpux28L9Q
-         drjQJzNWu6Gedcse5NAORSTpHM/DCOtRChS93/ZdhYwdF1kr9ziRKLujixbPghaOWi
-         DdB9bgSVHEnCZrHMlLDfTrk8xMaZVJQ5/UgJWiXM=
+        b=0bpHakVkPAYYzuwmVCbuy/zC1QP9OfITutAIPSfhA9rQT+qVboTJ0694KrV0QAjBe
+         QC5U0WirgKPzLX9HeEP0+eJbC3ymfYBUMONe/b4jcKxr/SuH4aKaSDnZsUp5tI8ciR
+         tjFNbhv68v4hT0cX42dh2jxiTuB+O9lriENhdoyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/17] spi: spidev: fix a potential use-after-free in spidev_release()
-Date:   Wed,  1 Jul 2020 21:26:38 -0400
-Message-Id: <20200702012649.2701799-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 4/7] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Wed,  1 Jul 2020 21:27:26 -0400
+Message-Id: <20200702012729.2702141-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
-References: <20200702012649.2701799-1-sashal@kernel.org>
+In-Reply-To: <20200702012729.2702141-1-sashal@kernel.org>
+References: <20200702012729.2702141-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -78,10 +78,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 5edf4029a3486..167047760d79a 100644
+index 80beb8406f200..7969f5484aee8 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -607,15 +607,20 @@ static int spidev_open(struct inode *inode, struct file *filp)
+@@ -635,15 +635,20 @@ static int spidev_open(struct inode *inode, struct file *filp)
  static int spidev_release(struct inode *inode, struct file *filp)
  {
  	struct spidev_data	*spidev;
@@ -103,7 +103,7 @@ index 5edf4029a3486..167047760d79a 100644
  
  		kfree(spidev->tx_buffer);
  		spidev->tx_buffer = NULL;
-@@ -623,19 +628,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+@@ -651,19 +656,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
  		kfree(spidev->rx_buffer);
  		spidev->rx_buffer = NULL;
  
