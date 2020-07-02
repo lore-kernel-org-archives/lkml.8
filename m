@@ -2,139 +2,178 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB21C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28BA208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB71D207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="jAQg9GQO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQyntSia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgGBQEK (ORCPT
+        id S1726444AbgGBQEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:04:10 -0400
-Received: from mail-eopbgr50107.outbound.protection.outlook.com ([40.107.5.107]:3332
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbgGBQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:04:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S/GG+y56YnlTh9zvZDbT1CKaJUhSmbshWkgzqnOe5aibjTQC97tB63VtQmgEts7gGEzrDseIinLH6mrrBF5JrdXX5rXLIl4PqJz2WZ6Tt45i1G7b8cXkAwB7LBXmnfOlJjEt8wCasVTbVFhlr+VKkkEej/gNy1hLqUe2TiBEHqmbhwk/1kTNfxXKVLe0V+p7UqjqTCut4BWeCKLARUi6CrOBhgjMASQdGAjf0fty70prVqnhffSgboh5uSRWoQRqbkfjJFhPOPiB6OTH6s4ywNJ6/5fDVJyRCWFyiA6L7O+Ni6JOkMxoG9q984XpoSsSh5LJaEjlGT2znX8tPjfAWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SSde0tYRDQoxkqvgC1/C1yJuS0yknB/Sw44Vrk9+QEQ=;
- b=AsFHvMW3iDxjWqwrrf6hJp//bj5NGgFzfX29Mqu75OcqkIiTYxWiCrJlUD2xMPh8sjo+9dKAaXL9WzxTajYDQtZl+DCodgF8uoFsM07jjgDqxR7hyx2EWKqv9hprR0zG6rNISOCAxsbNK+ye9TE5wZinX9dE80QhVRw6oGOYTYleBMcCGUFoJERipfRA0yyjLzVPE0sZXRc0xkcrXDKO3y9pqwKgrqhNCbbfIfQPGT3GX9amU4sf3T3PCwz9P8hy06Reg+y2UGWBwSI4ZMpQglE6thtNKoWadZxX4jwqBJmaXzUkVbbRviVMJ3mFis4fFbic6ZehxIXSf43m/i05IA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SSde0tYRDQoxkqvgC1/C1yJuS0yknB/Sw44Vrk9+QEQ=;
- b=jAQg9GQO7ho3WWjNKTlaxTlPbrYDCLDJs5oh6wyTQcMfbaTulMMZYOZk65wABkVR65YqXH1rB853yff+y19gJOBDWHzgmWxJPLq7yavHKwKt/irC0jYxI/bTkzyu4lVNKAOOTnnkRgbeUHodS+iqWtiWLAm55XuQ3wMcPCnhtiw=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=kontron.de;
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
- by DB8PR10MB3657.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:13c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Thu, 2 Jul
- 2020 16:04:06 +0000
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3131.036; Thu, 2 Jul 2020
- 16:04:06 +0000
-Subject: Re: [PATCH] spi: spidev: Add compatible for external SPI ports on
- Kontron boards
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-References: <20200702141846.7752-1-frieder.schrempf@kontron.de>
- <20200702142511.GF4483@sirena.org.uk>
- <24ec4eed-de01-28df-ee1f-f7bcfc80051a@kontron.de>
- <CAMuHMdUkHxOqqX95R5BEET-aSF5SYw2zufnxWuqmKnSY0NENcQ@mail.gmail.com>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <992ccb30-3f82-4649-acc4-442cb2568eea@kontron.de>
-Date:   Thu, 2 Jul 2020 18:04:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <CAMuHMdUkHxOqqX95R5BEET-aSF5SYw2zufnxWuqmKnSY0NENcQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM3PR05CA0143.eurprd05.prod.outlook.com
- (2603:10a6:207:3::21) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:50::12)
+        Thu, 2 Jul 2020 12:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGBQEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:04:23 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7060BC08C5C1;
+        Thu,  2 Jul 2020 09:04:23 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t6so13695919pgq.1;
+        Thu, 02 Jul 2020 09:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tB1I6hCmjUM6u8j9mi/+rkvT9TH6Tm0pVRYPr44Mqew=;
+        b=vQyntSiaHHgWainLXItD2mKTmRXRY82MXoTz2fHFKNuxhTVPXAAhi1DRVu4KOw0W+z
+         hNQJuy3fbjYNPM3wKw/E2aP9NyXhBBMAUvRst09hRQlef/EcoZRpY5obD1j0ZGr2iS4n
+         wLPlrDjSlplM6uBCmriOa+DRt10aJRlLN0weqMtxo124T8gaqX8x7p2/uUSi9pqD+7I4
+         zU6L8NWSMWwcUrlwFliwM5LHvCAsAWvSWC9PkCQcryLNIGdmEn+DT+6QFkmdUfYdbqIr
+         ZUl2N4EQXn26Kd5x2F4C+gJVkSQRDt64pSoT3w7y6TFRZjbwE6+pYMBxyEaauwznaQ8F
+         uMKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tB1I6hCmjUM6u8j9mi/+rkvT9TH6Tm0pVRYPr44Mqew=;
+        b=LHpsFJ4vBuIODMt80SpmntBae0IOEJeuq3LbXsX66n1UMLD4bS26Ip+DS/YN6MNFOY
+         /aCVxACef1FSfa9731T6Jz1m52zkoQYO34mM5tEUONAqGs/9X2DVJAB4/E8MlW2SLZVr
+         MP2sL+66qt3ekpiYh+wq+29bNhg7APFCmVg+rEYBaZ19tEbWey6YsnnHhCo9FwsIz/U7
+         fwCM/5A4pMrM0r3F8SBa5/jGaHj66tZeIf4oCdjRvUOIGjOet8ePwYExVBC+kKuJeHmw
+         8CxoFSJZ7LP/E3FtaSs/tDUorijHASgw/ycnDuFPMRoyFHuCW4qhBl/+58vp85BEBi17
+         Apvw==
+X-Gm-Message-State: AOAM531FCCZZ1ZIIGItdCf7g3OFl5IQwj3H3/de/4XRThy5kaNrXPbul
+        F3kLEZ1HO1gHJ1SCrcAfqCE=
+X-Google-Smtp-Source: ABdhPJwxjdORMaGl+GNi41w9cvk8sl/0aeXV+pCgi/zmB3n6CCmy6FzpSK8UqQRyRcDckD+xy3WA/g==
+X-Received: by 2002:a05:6a00:2294:: with SMTP id f20mr29643338pfe.126.1593705862827;
+        Thu, 02 Jul 2020 09:04:22 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
+        by smtp.gmail.com with ESMTPSA id j16sm9183608pgb.33.2020.07.02.09.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 09:04:22 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 09:04:20 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Danny Lin <danny@kdrag0n.dev>, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] vmlinux.lds.h: Coalesce transient LLVM dead code
+ elimination sections
+Message-ID: <20200702160420.GA3512364@ubuntu-s3-xlarge-x86>
+References: <20200702085400.2643527-1-danny@kdrag0n.dev>
+ <202007020853.5F15B5DDD@keescook>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.10.17] (46.142.79.231) by AM3PR05CA0143.eurprd05.prod.outlook.com (2603:10a6:207:3::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Thu, 2 Jul 2020 16:04:06 +0000
-X-Originating-IP: [46.142.79.231]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 90448902-d011-4fdb-e897-08d81ea18c3f
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3657:
-X-Microsoft-Antispam-PRVS: <DB8PR10MB3657A7777451AFE8C6CB4257E96D0@DB8PR10MB3657.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: A1wWlO7Vsqr/ZrG3KkGFZr48CA8TGZ1Y2w5joTV6mW0Cs+iNvjBcZ/waFhvzyUw6658190xihFulMTXpNJWBJ5ZATy4KN+xQ8nkyaMGlQM85GHw4Ri/j32HWklBMoeurxGmXgZT7FudZ9aFIm4yFpWLiRorIShQXHpA+PrOZ2CWxg3l06LpEW7VZTctDze46WE99xhlVUyvswNI1pPbfSjpckUW/jNivYc0+mgbxAkt4DGDrLEBam2r3QZYgM2JWSzVJUHtvdjOZWuRfPqwZRFsF7beYIvpL9+zdagCNELePcX68RIPNGkpWwZcMwquVvF/bKjswDcabdjBiYabVAZNWOW/a/43e8pSZRxh4AGuM1xc3UeH9DIEefqRqWZkifflzK/PUjP2PbMci9JALRBPinqcEDcJfyeMjp/fWj6UHriRZfWOzZVwhP/ycU6gNmj5R4N7L3gVpNp2NC0c1Bg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(366004)(346002)(396003)(136003)(376002)(4326008)(6916009)(8676002)(31686004)(2616005)(956004)(966005)(54906003)(44832011)(52116002)(16526019)(45080400002)(36756003)(8936002)(16576012)(6486002)(186003)(31696002)(26005)(478600001)(66556008)(5660300002)(53546011)(2906002)(316002)(66476007)(66946007)(86362001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: XDWLW1zMHbHWjWqYQ0Vc25ZRrt1Ezm898GrfwuYs3a8kv3z9q/ZilKKjWkNVVJnt2PP40iPmYFZJLu/SPSFR/yDUQUjt/X9jc0UPJsXq/q3IG1dwsL+U+bV7eFe19OqKmE2BPzIuVSBnQx2osW22ImTqpCICp7/LMvoBLW/6x0yCPMbrW1l1lrG0Ov1TmUNgI67GWLl4+pVLItKz1mxTgK7PiOgxSkdErrnYGuuiybGUF83hJlFBmxJKi37wrGxrakRY4XlEhtPhZiD1wetUlXU1yyTObqStOhVGX5OVMFgGcFGSrQB8PDEF2ql16ZSWax042vVSW9mOfN1heYX3HFmy/8GKm6sh+e5ia98pdDMLpNVbjhzI8KkXOaX7e+i/v85lHJImVqeYTxAbCvImjg1nzH4HjO1UrF9A+5sgdUpdZBQDazuLkjrD+sT45FwKhlPqQ9FcBEttdFemTNIVn9kGnp0et4EoTDLZSmRafEI=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90448902-d011-4fdb-e897-08d81ea18c3f
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 16:04:06.5910
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vU0gY/STWY8hq583xD5yO5xGj/nRIWqH9GEcpoWuLoaYVyjsy5b2pmIT7iNmYHo28HCd2QHJR5MXcdbGEbxETcvGkDgPcx3OArp+6WLtyU4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3657
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007020853.5F15B5DDD@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Thu, Jul 02, 2020 at 08:54:53AM -0700, Kees Cook wrote:
+> On Thu, Jul 02, 2020 at 01:54:00AM -0700, Danny Lin wrote:
+> > A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
+> > temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
+> > 
+> >   [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
+> >        000000000000cea0  0000000000000000  WA       0     0     32
+> >   [31] .rela.data..compo RELA             0000000000000000  40965440
+> >        0000000000001d88  0000000000000018   I      2238    30     8
+> >   [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
+> >        00000000000033c0  0000000000000000  WA       0     0     32
+> >   [33] .rela.data..compo RELA             0000000000000000  409671c8
+> >        0000000000000948  0000000000000018   I      2238    32     8
+> >   [...]
+> >   [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
+> >        00000000000000a0  0000000000000000  WA       0     0     32
+> >   [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
+> >        0000000000000040  0000000000000000  WA       0     0     32
+> >   [...]
+> > 
+> > While these extra sections don't typically cause any breakage, they do
+> > inflate the vmlinux size due to the overhead of storing metadata for
+> > thousands of extra sections.
+> > 
+> > It's also worth noting that for some reason, some downstream Android
+> > kernels can't boot at all if these sections aren't coalesced.
+> > 
+> > This issue isn't limited to any specific architecture; it affects arm64
+> > and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
 
-On 02.07.20 16:57, Geert Uytterhoeven wrote:
-> Hi Frieder,
+It might be worth noting that this happens explicitly because of
+-fdata-sections, which is currently only used with
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION but there are other features such
+as LTO that will enable this and make this relevant in the future.
+
+https://android-review.googlesource.com/c/kernel/common/+/1329278/6#message-81b191e92ef4e98e017fa9ded5ef63ef6e60db3a
+
+It is also worth noting that those commits add .bss..L* and .data..L*
+and rodata variants. Do you know if those are relevant here?
+
+> > Example on x86 allyesconfig:
+> >     Before: 2241 sections, 1170972 KiB
+> >     After:    56 sections, 1171169 KiB
+
+Am I reading this right that coalescing those sections increases the
+image size? Kind of interesting.
+
+> > [1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
+> > 
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/958
+> > Cc: stable@vger.kernel.org # v4.4+
+> > Suggested-by: Fangrui Song <maskray@google.com>
+> > Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> > ---
+> >  include/asm-generic/vmlinux.lds.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > index db600ef218d7..18968cba87c7 100644
+> > --- a/include/asm-generic/vmlinux.lds.h
+> > +++ b/include/asm-generic/vmlinux.lds.h
+> > @@ -94,10 +94,10 @@
+> >   */
+> >  #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+> >  #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+> > -#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
+> > +#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* .data..compoundliteral*
+
+I am fairly certain this will fix a PowerPC warning that we had
+recently so good!
+
+https://lore.kernel.org/lkml/202006180904.TVUXCf6H%25lkp@intel.com/
+
+Unfortunately, I forgot to reply to that thread...
+
+> >  #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
+> >  #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
+> > -#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
+> > +#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral*
 > 
-> On Thu, Jul 2, 2020 at 4:46 PM Frieder Schrempf
-> <frieder.schrempf@kontron.de> wrote:
->> On 02.07.20 16:25, Mark Brown wrote:
->>> On Thu, Jul 02, 2020 at 04:18:46PM +0200, Schrempf Frieder wrote:
->>>> From: Frieder Schrempf <frieder.schrempf@kontron.de>
->>>>
->>>> Allow external SPI ports on Kontron boards to use the spidev driver.
->>>
->>> I'd have expected this to require loading a DT overlay for whatever's
->>> attached?
->>
->> My intention is to use the spidev driver in the default board DT for an
->> interface that is routed to an extension connector and has no dedicated
->> slave device attached onboard. So users can attach sensors, etc. with
->> userspace drivers without touching the kernel or DT.
->>
->> See https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatchwork.kernel.org%2Fpatch%2F11639075%2F&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7C5ca9f0ba0ccb4ab0329f08d81e983d4e%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637292987071583819&amp;sdata=M8y9HYICQLocSgRmak6uYsx9Y%2FoukaqgmK2D0F%2FTV98%3D&amp;reserved=0 for the boards DT.
-> 
-> You can bind "kontron,user-spi" devices to spidev from userspace:
-> [PATCH v2 0/3] device tree spidev solution - driver_override for SPI
-> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fspinics.net%2Flists%2Flinux-spi%2Fmsg13951.html&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7C5ca9f0ba0ccb4ab0329f08d81e983d4e%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637292987071583819&amp;sdata=D9pum1oTXWSt%2BY8Egb1J4DOgSa5KH3RwxsSmUl7LgUk%3D&amp;reserved=0
+> Are there .data.. and .bss.. sections we do NOT want to collect? i.e.
+> why not include .data..* and .bss..* ?
 
-Thanks for pointing that out. I didn't know that this is possible.
-I just tried like below it and it works like a charm:
+At one point Android was doing that for modules but stopped:
 
- > echo "spidev" > 
-/sys/devices/platform/soc@0/30800000.bus/30840000.spi/spi_master/spi2/spi2.0/driver_override
- > echo "spi2.0" > /sys/bus/spi/drivers/spidev/bind
+https://android-review.googlesource.com/c/kernel/common/+/1266787
 
-Thanks,
-Frieder
+I wonder if that is a problem for the main kernel image.
+
+Cheers,
+Nathan
