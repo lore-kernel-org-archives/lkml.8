@@ -4,125 +4,241 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF522C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC309C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A748E2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874A82067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRCLlu77"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PyAxwWGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbgGBOru (ORCPT
+        id S1730209AbgGBOrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730063AbgGBOrB (ORCPT
+        Thu, 2 Jul 2020 10:47:55 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55958 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730192AbgGBOrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:47:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53795C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:47:01 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o2so28288049wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pP5tNguPzonDyxhQNucE0D3MbWP90cYYUbxgRDFDsUc=;
-        b=MRCLlu77vm2lwEuKfpgTjOHIiNbOSRTeYtgs5c+tcVQF2EOP3Y+PnwvY8yMjo/cJJ9
-         TpF2T6O2DEjSh+q/g7J04eisB3ct2rVdiBCpsqSLJeVCjttHOc7mvJkWgxLpgTX1G7ih
-         9zoqFAsZWRUg+4yjqPZtnjfXqRtNRxiUz9bgYGRiZMsU3zRp/oW2DAsNBN8kUjudGQt9
-         2V6vEeJAtKSdSkRaouvKT1GaOXxATqsbk9o2Agt560AZqfMKPCHBpvFsq9QjR3OwQ2b/
-         2wOOxYVGGAVrNGw3vGhZgQmcSwGG/WaDTMsIgDN0ckGLgqnUhN6oSdWcJu49hXBTt01a
-         6Kqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pP5tNguPzonDyxhQNucE0D3MbWP90cYYUbxgRDFDsUc=;
-        b=DTV+e65p6UPdZmsPxsaky3XN96oPQnCuxx98lfZFgyoUoyInynJEKiR65vhwRXi+ze
-         vt1AArRX7qn7qJBoYUQdycHwt3mzXEoliXluMuRRaMYcc0GnxWCt821DvGI2xyhPrbWE
-         dCMaiQxa61DbsjJ33dW0lNIcrGwfVQa25Dyq7fHnPlSNof4gIhHhVoAEJKfZauM7sKRv
-         14vZIGk1zs4ekjfrcCv9WyRodK7fe39Plotn8sOFSTmyaZI4mPYJUIsU8Lp8nijNENRA
-         YHz17Y2iOFdwdKU+ashlBxM/yK+WB/QO0/7LEzw7YbEEbfd6drOvSQXAFyonjNsmiRhK
-         Fnlw==
-X-Gm-Message-State: AOAM531caD9C0hu8sRGHbn+KsOTubdOP4/AinQ3PcCxDeImtP0EShFM+
-        dEnExT6y69U+02drGzdv1VTREg==
-X-Google-Smtp-Source: ABdhPJyyBq6LXHLryVvWu+HFwT4JhZivbWn1QGWohZ3dXSZK0sYsC9OCCnVcIDtulXLnqPhVrsy2hQ==
-X-Received: by 2002:a1c:49d7:: with SMTP id w206mr30883650wma.181.1593701220039;
-        Thu, 02 Jul 2020 07:47:00 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:59 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rodolfo Giometti <giometti@linux.it>,
-        "Eurotech S.p.A" <info@eurtech.it>
-Subject: [PATCH 23/30] usb: host: oxu210hp-hcd: Move declaration of 'qtd' into 'ifdef OXU_URB_TRACE'
-Date:   Thu,  2 Jul 2020 15:46:18 +0100
-Message-Id: <20200702144625.2533530-24-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
+        Thu, 2 Jul 2020 10:47:52 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062Egvh8002250;
+        Thu, 2 Jul 2020 16:47:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=sdGDZx7HwIY5Qrej54520s0q/5R8RjFaFwqtoS3ixiU=;
+ b=PyAxwWGDdwbjWJbVGxtlU18U5iW/GIKUQmY66DK4RnQ4hR3LoAlzjOWUsPRBUV37t0+W
+ j+khTA2l86EMf4f4mpgO0pWt2ozWhX0Fjoc6lj6/OtCmZL4QOkSkmvx6CS3hzpDyZzsg
+ t/ZMTrqeX/MrYNfK1bCr/1Xli7s65JyAr8O6dV6HuXH3PIq2LwsrqxfPDoDtYmUKnm9K
+ onXruIgGJMyuyXLAft7bBF/A2cQAGUU6XyRbW2RjivI57YR0Wm3gXCSVHl/Hwe8F7e4Z
+ Wz7Ml8QmGJbuj6wsaeJ3tMowlGwD93BXeCsSIe5XKXKLrFzMqTa/VoNRFgtunYCzS1tb hA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31ww0ggu8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 16:47:40 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A5A52100034;
+        Thu,  2 Jul 2020 16:47:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 947AA2BC7BF;
+        Thu,  2 Jul 2020 16:47:39 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jul 2020 16:47:39
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
+CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 1/2] i2c: smbus: add core function handling SMBus host-notify
+Date:   Thu, 2 Jul 2020 16:47:04 +0200
+Message-ID: <1593701225-13451-2-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593701225-13451-1-git-send-email-alain.volmat@st.com>
+References: <1593701225-13451-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we assign 'epnum' during the declaration we can also avoid "ISO
-C90 forbids mixed declarations" issues.  So it does looks like we
-can have our cake and eat it in this scenario.
+SMBus Host-Notify protocol, from the adapter point of view
+consist of receiving a message from a client, including the
+client address and some other data.
 
-Fixes the following W=1 kernel build warning(s):
+It can be simply handled by creating a new slave device
+and registering a callback performing the parsing of the
+message received from the client.
 
- drivers/usb/host/oxu210hp-hcd.c: In function ‘submit_async’:
- drivers/usb/host/oxu210hp-hcd.c:2040:19: warning: variable ‘qtd’ set but not used [-Wunused-but-set-variable]
- 2040 | struct ehci_qtd *qtd;
- | ^~~
+This commit introduces two new core functions
+  * i2c_new_slave_host_notify_device
+  * i2c_free_slave_host_notify_device
+that take care of registration of the new slave device and
+callback and will call i2c_handle_smbus_host_notify once a
+Host-Notify event is received.
 
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rodolfo Giometti <giometti@linux.it>
-Cc: "Eurotech S.p.A" <info@eurtech.it>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- drivers/usb/host/oxu210hp-hcd.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core-smbus.c | 114 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/i2c-smbus.h    |  12 +++++
+ 2 files changed, 126 insertions(+)
 
-diff --git a/drivers/usb/host/oxu210hp-hcd.c b/drivers/usb/host/oxu210hp-hcd.c
-index 120666a0d5901..b00673295c9fe 100644
---- a/drivers/usb/host/oxu210hp-hcd.c
-+++ b/drivers/usb/host/oxu210hp-hcd.c
-@@ -2037,16 +2037,15 @@ static struct ehci_qh *qh_append_tds(struct oxu_hcd *oxu,
- static int submit_async(struct oxu_hcd	*oxu, struct urb *urb,
- 			struct list_head *qtd_list, gfp_t mem_flags)
- {
--	struct ehci_qtd	*qtd;
--	int epnum;
-+	int epnum = urb->ep->desc.bEndpointAddress;
- 	unsigned long flags;
- 	struct ehci_qh *qh = NULL;
- 	int rc = 0;
-+#ifdef OXU_URB_TRACE
-+	struct ehci_qtd	*qtd;
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index f5c9787992e9..23ab9dc5ac85 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -715,3 +715,117 @@ int of_i2c_setup_smbus_alert(struct i2c_adapter *adapter)
+ }
+ EXPORT_SYMBOL_GPL(of_i2c_setup_smbus_alert);
+ #endif
++
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++#define SMBUS_HOST_NOTIFY_LEN	3
++struct i2c_slave_host_notify_status {
++	u8 index;
++	u8 addr;
++};
++
++static int i2c_slave_host_notify_cb(struct i2c_client *client,
++				    enum i2c_slave_event event, u8 *val)
++{
++	struct i2c_slave_host_notify_status *status = client->dev.platform_data;
++	int ret;
++
++	switch (event) {
++	case I2C_SLAVE_WRITE_REQUESTED:
++		status->index = 0;
++		break;
++	case I2C_SLAVE_WRITE_RECEIVED:
++		/* We only retrieve the first byte received (addr)
++		 * since there is currently no support to retrieve the data
++		 * parameter from the client.
++		 */
++		if (status->index == 0)
++			status->addr = *val;
++		if (status->index < U8_MAX)
++			status->index++;
++		break;
++	case I2C_SLAVE_STOP:
++		/* Handle host-notify if whole message received only */
++		if (status->index != SMBUS_HOST_NOTIFY_LEN) {
++			status->index = U8_MAX;
++			break;
++		}
++
++		ret = i2c_handle_smbus_host_notify(client->adapter,
++						   status->addr);
++		if (ret < 0)
++			return ret;
++		status->index = U8_MAX;
++		break;
++	case I2C_SLAVE_READ_REQUESTED:
++	case I2C_SLAVE_READ_PROCESSED:
++		*val = 0xff;
++		break;
++	}
++
++	return 0;
++}
++
++/**
++ * i2c_new_slave_host_notify_device - get a client for SMBus host-notify support
++ * @adapter: the target adapter
++ * Context: can sleep
++ *
++ * Setup handling of the SMBus host-notify protocol on a given I2C bus segment.
++ *
++ * Handling is done by creating a device and its callback and handling data
++ * received via the SMBus host-notify address (0x8)
++ *
++ * This returns the client, which should be ultimately freed using
++ * i2c_free_slave_host_notify_device(); or an ERRPTR to indicate an error.
++ */
++struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
++{
++	struct i2c_board_info host_notify_board_info = {
++		I2C_BOARD_INFO("smbus_host_notify", 0x08),
++		.flags  = I2C_CLIENT_SLAVE,
++	};
++	struct i2c_slave_host_notify_status *status;
++	struct i2c_client *client;
++	int ret;
++
++	status = kzalloc(sizeof(struct i2c_slave_host_notify_status),
++			 GFP_KERNEL);
++	if (!status)
++		return ERR_PTR(-ENOMEM);
++	status->index = U8_MAX;
++
++	host_notify_board_info.platform_data = status;
++
++	client = i2c_new_client_device(adapter, &host_notify_board_info);
++	if (IS_ERR(client)) {
++		kfree(status);
++		return client;
++	}
++
++	ret = i2c_slave_register(client, i2c_slave_host_notify_cb);
++	if (ret) {
++		i2c_unregister_device(client);
++		kfree(status);
++		return ERR_PTR(ret);
++	}
++
++	return client;
++}
++EXPORT_SYMBOL_GPL(i2c_new_slave_host_notify_device);
++
++/**
++ * i2c_free_slave_host_notify_device - free the client for SMBus host-notify
++ * support
++ * @client: the client to free
++ * Context: can sleep
++ *
++ * Free the i2c_client allocated via i2c_new_slave_host_notify_device
++ */
++void i2c_free_slave_host_notify_device(struct i2c_client *client)
++{
++	i2c_slave_unregister(client);
++	kfree(client->dev.platform_data);
++	i2c_unregister_device(client);
++}
++EXPORT_SYMBOL_GPL(i2c_free_slave_host_notify_device);
++#endif
+diff --git a/include/linux/i2c-smbus.h b/include/linux/i2c-smbus.h
+index 1e4e0de4ef8b..52e62f398f1c 100644
+--- a/include/linux/i2c-smbus.h
++++ b/include/linux/i2c-smbus.h
+@@ -38,6 +38,18 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
+ 	return 0;
+ }
+ #endif
++#if IS_ENABLED(CONFIG_I2C_SLAVE)
++struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter);
++void i2c_free_slave_host_notify_device(struct i2c_client *client);
++#else
++static inline struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
++{
++	return NULL;
++}
++static inline void i2c_free_slave_host_notify_device(struct i2c_client *client)
++{
++}
++#endif
  
- 	qtd = list_entry(qtd_list->next, struct ehci_qtd, qtd_list);
--	epnum = urb->ep->desc.bEndpointAddress;
- 
--#ifdef OXU_URB_TRACE
- 	oxu_dbg(oxu, "%s %s urb %p ep%d%s len %d, qtd %p [qh %p]\n",
- 		__func__, urb->dev->devpath, urb,
- 		epnum & 0x0f, (epnum & USB_DIR_IN) ? "in" : "out",
+ #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
+ void i2c_register_spd(struct i2c_adapter *adap);
 -- 
-2.25.1
+2.7.4
 
