@@ -2,238 +2,215 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B969CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3DF208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CRrt4iP7"
+	by mail.kernel.org (Postfix) with ESMTP id B3FA62084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593714077;
+	bh=od8CmWPiX+a0VrEI4SwvSaUzn0AzEAmUSBqAuGCGkB0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FFS2AF/teIutwlrEj1imHCJuJdxifll9bWLg20A7uX+u3dL6/bRy9PVJh+lHD1VQB
+	 9UekcZAPJUxpLIqW96tUoCqIo3T97vW2I3XT2g9Osso1xX7bZWz9RpCoqHkCtj791J
+	 m0LoTDlK1r2j61ibyWxndaSXC01I1qK0QQu5Ksr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgGBST7 (ORCPT
+        id S1728059AbgGBSVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:19:59 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:23401 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgGBST4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593713995; x=1625249995;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SvFE2bHAH+Kw0YnhTxvsAs2nLmEUXkT7BrexgMWERgE=;
-  b=CRrt4iP7PFQKq2MHMEtdtDwyJMEa+ZIgYA1lPc7ut6qRNJ06g2VaLaZA
-   +9DaKJ8mHWdn+M34+BaJSR4i9Is0SoquWdD8sX3vunoFqhaO3/JNksEjW
-   sOLnr5dxqkyjFUhltLqOxGlJUZidX+jp1lcZpuEEVGVuPxzcOnTT8MzNh
-   bXFtiPBcReoAcTxKIZ0s3Fv4GAl2i0Xjzqj2r4ZV8PvPwqINh7ae81/Qu
-   EVYAHLRLxu2+tNvL5VdajRcL1Nx1BOt8G2VKYKwcSYTGFbDzRK8pha5LQ
-   GRTfVT+k/YbcIPQbeaqRiim/q4++85D5d3fzZWm7FsNMFKMJH9lw7uNWQ
-   g==;
-IronPort-SDR: 2XL8HaX927aEzPdFmOG0QESWluSHbteWaTepXpqpAV/Iat0rmFnWnIki07MF8Vt+C0lqdwKzia
- hIE2V8heOOwIZomGTVKKKdgYv2L38rd9xYOEdM2UC2SVeaGKs5++yQYqaDAgoU/TLCKeUTcldH
- Cl9Cg0MBq47Gn+9emLkPpWauNvSGaF2Xyk4BJjqr6Fq+AFgs6pKC5Qpr1hHMRIoDppwoWvmmj5
- zvMRgtE9bjm5uR0xaHEpSVPfrm+p70Cy9vtkadlFC2Dy0MCs9sCcPWXgBdrmKz1z81CD5pm6a+
- kKo=
-X-IronPort-AV: E=Sophos;i="5.75,305,1589212800"; 
-   d="scan'208";a="142854305"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2020 02:19:55 +0800
-IronPort-SDR: TZxXH3crJnRQAH12CVfreL83ZdaeCPEtwER+lWEI7ete32Ry3FLwU9taT11RUX6uQ02BXw1eTk
- ZIyI+KX41dfGwIlAFkJW3N3idug5YgjFw=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:08:42 -0700
-IronPort-SDR: iMgIrhVY0SYcbcVyY68/fxETSNvtlgDTu93PuZc2r/rkeZjUYdDmLFySjuqltul+JHvqy5aOzO
- zE6Y7YJUP1Vw==
-WDCIronportException: Internal
-Received: from caiyi-lt.ad.shared (HELO localhost.hgst.com) ([10.86.58.119])
-  by uls-op-cesaip01.wdc.com with ESMTP; 02 Jul 2020 11:19:51 -0700
-From:   Niklas Cassel <niklas.cassel@wdc.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v2 2/2] block: add max_active_zones to blk-sysfs
-Date:   Thu,  2 Jul 2020 20:19:22 +0200
-Message-Id: <20200702181922.24190-3-niklas.cassel@wdc.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200702181922.24190-1-niklas.cassel@wdc.com>
-References: <20200702181922.24190-1-niklas.cassel@wdc.com>
+        Thu, 2 Jul 2020 14:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727882AbgGBSVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:21:15 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D58208D5
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 18:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593714074;
+        bh=od8CmWPiX+a0VrEI4SwvSaUzn0AzEAmUSBqAuGCGkB0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K7q/s1pkoeNSbBojHMLagRhr4Dj/a2u38lhFSiU8fOOTJmFUme+3YyDC3GgeJJB7t
+         zn+hUkS5pGr5NxpjBxBcf4KLVx23LDAl/xl7PWCiSKNA213QOkGHW2Hb5m6fVKbAvE
+         HDeaH/bUqRfK6bX4FDMZs7OjFyj3yB8krr08Wiuk=
+Received: by mail-wr1-f49.google.com with SMTP id o11so29636165wrv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:21:14 -0700 (PDT)
+X-Gm-Message-State: AOAM530u6H+JwhI1lmMQzgt/pww2r0P2ZBGsVgBhP8uocUD9dvOPiPrU
+        ACLilij8D8jVhQRW8F10A3PEjyfcJlpVLj1imp9RsA==
+X-Google-Smtp-Source: ABdhPJzEhBH1ffttnZPRpbcHbobLvjR1vE71YHh7AFe4Fuvdna7p8xEMjd79Y8fq57+aIH8V/IqAOaDp0gNfBNk5zQU=
+X-Received: by 2002:adf:a111:: with SMTP id o17mr32330321wro.257.1593714072771;
+ Thu, 02 Jul 2020 11:21:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <87imfwd5f6.fsf@nanos.tec.linutronix.de> <8DD3180E-0E69-4FD6-92C3-311AAB3F688F@amacapital.net>
+ <87d064d13p.fsf@nanos.tec.linutronix.de> <CA+G9fYvVEMVaF=qzhCpJ8NMb1-VN4cEh6sw8P_eNFCLQYOjCzA@mail.gmail.com>
+ <20200702150250.GS4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200702150250.GS4800@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 2 Jul 2020 11:21:01 -0700
+X-Gmail-Original-Message-ID: <CALCETrVM8YNdssYF38hB=Sg3BgwiFaaBYfz3AeBqVYP3biucLg@mail.gmail.com>
+Message-ID: <CALCETrVM8YNdssYF38hB=Sg3BgwiFaaBYfz3AeBqVYP3biucLg@mail.gmail.com>
+Subject: Re: Perf: WARNING: arch/x86/entry/common.c:624 idtentry_exit_cond_rcu+0x92/0xc0
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, cj.chengjian@huawei.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michel Lespinasse <walken@google.com>,
+        lkft-triage@lists.linaro.org,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new max_active zones definition in the sysfs documentation.
-This definition will be common for all devices utilizing the zoned block
-device support in the kernel.
+On Thu, Jul 2, 2020 at 8:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Jul 02, 2020 at 07:57:54PM +0530, Naresh Kamboju wrote:
+> > I have reported this warning on linux-next and now it is happening on
+> > linux mainline tree.
+> > May I know , are we missing a fix patch on linus 's tree ?
+> >
+> > - Naresh
+> > ---
+> > While running selftest x86 single_step_syscall_32 on
+> > i386 kernel linux 5.8.0-rc3 kernel warning noticed.
+> >
+> > steps to reproduce:
+> > --------------------------
+> > perf test
+> > and
+> > cd /opt/kselftests/default-in-kernel/x86
+> > ./single_step_syscall_32
+> >
+> > crash dump,
+> > [ 1324.774385] kselftest: Running tests in x86
+> > [ 1324.830187] ------------[ cut here ]------------
+> > [ 1324.834820] IRQs not disabled as expected
+> > [ 1324.838838] WARNING: CPU: 2 PID: 5365 at
+> > /usr/src/kernel/arch/x86/entry/common.c:645
+> > idtentry_exit_cond_rcu+0x92/0xc0
+>
+> How's this?
+>
+> DEFINE_IDTENTRY_DEBUG() is DEFINE_IDTENTRY_RAW on x86_64
+>                            DEFINE_IDTENTRY on i386
+>
+> calling exc_debug_*() from DEFINE_IDTENTRY() does a double layer of
+> idtentry_{enter,exit}*() functions.
+>
+> Also, handle_debug() is still a trainwreck, we should never get to
+> cond_local_irq_enable() when !user.
+>
+> Completely untested...
+>
+> ---
+>  arch/x86/kernel/traps.c | 49 +++++++++++++++++++++++--------------------------
+>  1 file changed, 23 insertions(+), 26 deletions(-)
+>
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index b0195771c932..47d6b46e1564 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -806,8 +806,17 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
+>          * If DR6 is zero, no point in trying to handle it. The kernel is
+>          * not using INT1.
+>          */
+> -       if (!user && !dr6)
+> -               return;
+> +       if (!user) {
+> +               /*
+> +                * Catch SYSENTER with TF set and clear DR_STEP. If this hit a
+> +                * watchpoint at the same time then that will still be handled.
+> +                */
+> +               if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
+> +                       dr6 &= ~DR_STEP;
+> +
+> +               if (!dr6)
+> +                       return;
+> +       }
+>
+>         /*
+>          * If dr6 has no reason to give us about the origin of this trap,
+> @@ -859,25 +868,29 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
+>         cond_local_irq_disable(regs);
+>  }
+>
+> +#ifdef CONFIG_X86_64
+>  static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+>                                              unsigned long dr6)
+>  {
+>         bool irq_state = idtentry_enter_nmi(regs);
+>         instrumentation_begin();
+>
+> -       /*
+> -        * Catch SYSENTER with TF set and clear DR_STEP. If this hit a
+> -        * watchpoint at the same time then that will still be handled.
+> -        */
+> -       if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
+> -               dr6 &= ~DR_STEP;
+> -
+>         handle_debug(regs, dr6, false);
+>
+>         instrumentation_end();
+>         idtentry_exit_nmi(regs, irq_state);
+>  }
+>
+> +/* IST stack entry */
+> +DEFINE_IDTENTRY_DEBUG(exc_debug)
+> +{
+> +       unsigned long dr6, dr7;
+> +
+> +       debug_enter(&dr6, &dr7);
+> +       exc_debug_kernel(regs, dr6);
+> +       debug_exit(dr7);
+> +}
+> +
+>  static __always_inline void exc_debug_user(struct pt_regs *regs,
+>                                            unsigned long dr6)
+>  {
+> @@ -890,17 +903,6 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
+>         idtentry_exit_user(regs);
+>  }
+>
+> -#ifdef CONFIG_X86_64
+> -/* IST stack entry */
+> -DEFINE_IDTENTRY_DEBUG(exc_debug)
+> -{
+> -       unsigned long dr6, dr7;
+> -
+> -       debug_enter(&dr6, &dr7);
+> -       exc_debug_kernel(regs, dr6);
+> -       debug_exit(dr7);
+> -}
+> -
+>  /* User entry, runs on regular task stack */
+>  DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
+>  {
+> @@ -917,12 +919,7 @@ DEFINE_IDTENTRY_DEBUG(exc_debug)
+>         unsigned long dr6, dr7;
+>
+>         debug_enter(&dr6, &dr7);
+> -
+> -       if (user_mode(regs))
+> -               exc_debug_user(regs, dr6);
+> -       else
+> -               exc_debug_kernel(regs, dr6);
+> -
+> +       handle_debug(regs, dr6, user_mode(regs));
+>         debug_exit(dr7);
+>  }
+>  #endif
 
-Export max_active_zones according to this new definition for NVMe Zoned
-Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
-the kernel), and ZBC SCSI devices.
-
-Add the new max_active_zones member to struct request_queue, rather
-than as a queue limit, since this property cannot be split across stacking
-drivers.
-
-For SCSI devices, even though max active zones is not part of the ZBC/ZAC
-spec, export max_active_zones as 0, signifying "no limit".
-
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-Reviewed-by: Javier González <javier@javigon.com>
----
- Documentation/block/queue-sysfs.rst |  7 +++++++
- block/blk-sysfs.c                   | 14 +++++++++++++-
- drivers/nvme/host/zns.c             |  1 +
- drivers/scsi/sd_zbc.c               |  1 +
- include/linux/blkdev.h              | 16 ++++++++++++++++
- 5 files changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
-index f01cf8530ae4..f261a5c84170 100644
---- a/Documentation/block/queue-sysfs.rst
-+++ b/Documentation/block/queue-sysfs.rst
-@@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
- data that will be submitted by the block layer core to the associated
- block driver.
- 
-+max_active_zones (RO)
-+---------------------
-+For zoned block devices (zoned attribute indicating "host-managed" or
-+"host-aware"), the sum of zones belonging to any of the zone states:
-+EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.
-+If this value is 0, there is no limit.
-+
- max_open_zones (RO)
- -------------------
- For zoned block devices (zoned attribute indicating "host-managed" or
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index fa42961e9678..624bb4d85fc7 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -310,6 +310,11 @@ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
- 	return queue_var_show(queue_max_open_zones(q), page);
- }
- 
-+static ssize_t queue_max_active_zones_show(struct request_queue *q, char *page)
-+{
-+	return queue_var_show(queue_max_active_zones(q), page);
-+}
-+
- static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
- {
- 	return queue_var_show((blk_queue_nomerges(q) << 1) |
-@@ -677,6 +682,11 @@ static struct queue_sysfs_entry queue_max_open_zones_entry = {
- 	.show = queue_max_open_zones_show,
- };
- 
-+static struct queue_sysfs_entry queue_max_active_zones_entry = {
-+	.attr = {.name = "max_active_zones", .mode = 0444 },
-+	.show = queue_max_active_zones_show,
-+};
-+
- static struct queue_sysfs_entry queue_nomerges_entry = {
- 	.attr = {.name = "nomerges", .mode = 0644 },
- 	.show = queue_nomerges_show,
-@@ -776,6 +786,7 @@ static struct attribute *queue_attrs[] = {
- 	&queue_zoned_entry.attr,
- 	&queue_nr_zones_entry.attr,
- 	&queue_max_open_zones_entry.attr,
-+	&queue_max_active_zones_entry.attr,
- 	&queue_nomerges_entry.attr,
- 	&queue_rq_affinity_entry.attr,
- 	&queue_iostats_entry.attr,
-@@ -803,7 +814,8 @@ static umode_t queue_attr_visible(struct kobject *kobj, struct attribute *attr,
- 		(!q->mq_ops || !q->mq_ops->timeout))
- 			return 0;
- 
--	if (attr == &queue_max_open_zones_entry.attr &&
-+	if ((attr == &queue_max_open_zones_entry.attr ||
-+	     attr == &queue_max_active_zones_entry.attr) &&
- 	    !blk_queue_is_zoned(q))
- 		return 0;
- 
-diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c
-index 3d80b9cf6bfc..57cfd78731fb 100644
---- a/drivers/nvme/host/zns.c
-+++ b/drivers/nvme/host/zns.c
-@@ -97,6 +97,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct nvme_ns *ns,
- 	q->limits.zoned = BLK_ZONED_HM;
- 	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);
- 	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);
-+	blk_queue_max_active_zones(q, le32_to_cpu(id->mar) + 1);
- free_data:
- 	kfree(id);
- 	return status;
-diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
-index aa3564139b40..d8b2c49d645b 100644
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -721,6 +721,7 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsigned char *buf)
- 		blk_queue_max_open_zones(q, 0);
- 	else
- 		blk_queue_max_open_zones(q, sdkp->zones_max_open);
-+	blk_queue_max_active_zones(q, 0);
- 	nr_zones = round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_blocks);
- 
- 	/* READ16/WRITE16 is mandatory for ZBC disks */
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index fe168abcfdda..bb9e6eb6a7e6 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -521,6 +521,7 @@ struct request_queue {
- 	unsigned long		*conv_zones_bitmap;
- 	unsigned long		*seq_zones_wlock;
- 	unsigned int		max_open_zones;
-+	unsigned int		max_active_zones;
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
- 	/*
-@@ -741,6 +742,17 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
- {
- 	return q->max_open_zones;
- }
-+
-+static inline void blk_queue_max_active_zones(struct request_queue *q,
-+		unsigned int max_active_zones)
-+{
-+	q->max_active_zones = max_active_zones;
-+}
-+
-+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
-+{
-+	return q->max_active_zones;
-+}
- #else /* CONFIG_BLK_DEV_ZONED */
- static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
- {
-@@ -760,6 +772,10 @@ static inline unsigned int queue_max_open_zones(const struct request_queue *q)
- {
- 	return 0;
- }
-+static inline unsigned int queue_max_active_zones(const struct request_queue *q)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
- static inline bool rq_is_sync(struct request *rq)
--- 
-2.26.2
-
+I'll fold something like this into my pile of pending fixes.
