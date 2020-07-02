@@ -2,74 +2,95 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEB52073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516F82073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:30:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="0Ydm4tR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgGBK32 (ORCPT
+        id S1728210AbgGBKaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:29:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36974 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728332AbgGBK31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:29:27 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3E1E4EFFA93159E03A4A;
-        Thu,  2 Jul 2020 18:29:26 +0800 (CST)
-Received: from kernelci-master.huawei.com (10.175.101.6) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 18:29:15 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hulk Robot <hulkci@huawei.com>, Alasdair Kergon <agk@redhat.com>,
-        "Mike Snitzer" <snitzer@redhat.com>, Christoph Hellwig <hch@lst.de>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <dm-devel@redhat.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] dm: remove unused variable 'md'
-Date:   Thu, 2 Jul 2020 18:39:28 +0800
-Message-ID: <20200702103928.67693-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 Jul 2020 06:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgGBKaK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:30:10 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B0A0C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 03:30:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so27314029wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rGcFFw5Nzu6VhZiGQetAIFUMxgGvSVZizNqBhV84xWg=;
+        b=0Ydm4tR4j2q0OjR55gGolBuZ26NjGFaA/Zr+e35oxw2/eIWErBddN4dRlLVATg7zLt
+         onwvPRrG0Nv9JQFUaSvA5BMYNMeTs28ceuyDAcnfp/Wfs1A24cz5WwJRq6Fh8Nb1KnXU
+         jihJI2brvS1X7f6H3uNArluDzQ/4j0Qfogp8jHe8siMGwYsSYAhp35iH3N5/LbwJSO1d
+         pwLqKGQuNYD3rr7iOp3nE7ynrrUQZUTwKxfdNhlIhDvmepvJjeehdNxz7gNi6VGYe6OG
+         tQmvh3/FwyFX+2x17bM3zIT4u4rI3qYmNgNg1QREC6ljBEGzf+GMEs6YsMZhzysGoAa2
+         BdyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rGcFFw5Nzu6VhZiGQetAIFUMxgGvSVZizNqBhV84xWg=;
+        b=PtzO9drH+NfIw8jyzjEKMzUNS7mlCesisD27Si9654ftmt2Dm0XuFvmjlgbDZtWMng
+         ehpnggqCqLMwZkjiYkRjWkFFzwQsRNjGQHW2F3lSeozGY82s7Xy2UhLvjVI+bB92Bisp
+         pR9jzbACMN6963TFb0SEk6fXKc0yUtKzggNE/IeWxR951oWRAuCmgacBI79p2u5QAI7r
+         Z82gwN6nChZ9IB3Zcxh1UbouL+cUiOTy2UjsjGUHvYlI9gTqDc1b0TVNhJR+5KgG0Sdy
+         D+Zv826SRr8luO1AjSPzJc76Zyfwbwv5OuE80FqRDxWmYKKL2SAQqcIvy3XgOGeqJVBq
+         Ww4Q==
+X-Gm-Message-State: AOAM533At2ZZcxMnk4zcphJa2knLLMiQdJIAUiO9AYwM78gRMLQx8i6X
+        BULR0M6JgfAMo4SPxPomNl5Mww==
+X-Google-Smtp-Source: ABdhPJwJNE/SVDANdbxD71ir1Np5JakGw8nIvAnHDnXJBL7Jt2Lw0x7bxBRiYZl34MN3Gf22EcIujA==
+X-Received: by 2002:a1c:c902:: with SMTP id f2mr30428182wmb.53.1593685809206;
+        Thu, 02 Jul 2020 03:30:09 -0700 (PDT)
+Received: from localhost.localdomain (dh207-99-59.xnet.hr. [88.207.99.59])
+        by smtp.googlemail.com with ESMTPSA id 68sm10406912wmz.40.2020.07.02.03.30.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:30:08 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>
+Subject: [net-next,PATCH 0/4] net: mdio-ipq4019: add Clause 45 and clock support
+Date:   Thu,  2 Jul 2020 12:29:57 +0200
+Message-Id: <20200702103001.233961-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 5a6c35f9af41 ("block: remove direct_make_request"),
-'md' is never used and gcc report build warning:
+This patch series adds support for Clause 45 and clock handling support to
+the driver.
 
-drivers/md/dm.c:1296:24: warning: unused variable 'md' [-Wunused-variable]
- 1296 |  struct mapped_device *md = io->md;
-      |                        ^~
+While at it also change some defines to upper case to match rest of the driver.
 
-Removing it to avoid build warning.
+Robert Marko (4):
+  net: mdio-ipq4019: change defines to upper case
+  net: mdio-ipq4019: add clock support
+  net: mdio-ipq4019: add Clause 45 support
+  dt-bindings: mdio-ipq4019: add clock support
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/md/dm.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../bindings/net/qcom,ipq4019-mdio.yaml       |  11 ++
+ drivers/net/phy/mdio-ipq4019.c                | 141 +++++++++++++++---
+ 2 files changed, 132 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index a8d83d76fa9f..a02842afe358 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1293,7 +1293,6 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 	sector_t sector;
- 	struct bio *clone = &tio->clone;
- 	struct dm_io *io = tio->io;
--	struct mapped_device *md = io->md;
- 	struct dm_target *ti = tio->ti;
- 	blk_qc_t ret = BLK_QC_T_NONE;
- 
+-- 
+2.26.2
 
