@@ -2,135 +2,264 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BD120737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4D020737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYB6Nf4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgGBFU2 convert rfc822-to-8bit (ORCPT
+        id S1726147AbgGBFXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:20:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60341 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgGBFU1 (ORCPT
+        Thu, 2 Jul 2020 01:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgGBFXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:20:27 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jqre5-0003np-7p
-        for linux-kernel@vger.kernel.org; Thu, 02 Jul 2020 05:20:25 +0000
-Received: by mail-pg1-f199.google.com with SMTP id n32so19661786pgb.22
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 22:20:25 -0700 (PDT)
+        Thu, 2 Jul 2020 01:23:35 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B97CC08C5C1;
+        Wed,  1 Jul 2020 22:23:35 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id q3so12414406ilt.8;
+        Wed, 01 Jul 2020 22:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MrIiq6DPHqBGLcGy4awQj5Lf7ocfuRcVU3QA0UqcMzc=;
+        b=qYB6Nf4TEwfw/GwxgXjBmvXkwehh+YVaetDdp7hkclhIPnapQdTMsKhe2ZwJ2ruUF8
+         e1lgYhAEKSLmH2ZKQDZEg3h2CgunA+w/9jPoC4+QR0+zUfDov7bkT49g9mb0S2WJrMgH
+         6hXpgV27P+AfqHwMVph6aZfvyHyfx4x6COiw+youi4BeqYymDTT4oIZbd0TcNwFUvnZ0
+         pqG3gqbAk2iDlnAHAAr4ekxxGTSdKrUPqkRDjwvfqzIYOkI6MNYL8DYniIUcqQsn/OvC
+         ScSKZ6NYQ9APjTDmidzRCEM0JeEE81VozY/ncio88zD4UlheNeC8yUVwjG/OEqNsoWpP
+         C+ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6e32vjSNKDV1WWSzS/D6MXycMTkb/C1potgYwNx0dnw=;
-        b=VsIN8eWgux75leB8e2hJtN9HircbziJDSOECE4oBl3+bMirT+Fk1mxbPBkVGmrGafr
-         GP88Il6k9PHe0nYRcATO/2hmmhIDYCWYqAgCqvmutKK9259Q4FKMOsJvloqCUdEmN+ox
-         gdM3gP/fvO6vmwQ/GB7Wbzw9m2MQuxYyXxM+TLcijDnBUtkT/lEiZntaj6O4ophkpWgC
-         a8zdCx5zKet5wWTSWOBqKLTdZCWF+fU5pa8dNR1QZq0encVt0iqn/PwoKzAQ5zVh6gsF
-         ePe5itQr3EbIZ7dWUIPU/8hpl0HvYI6VF4RSKhvjUZKsupqxcAkp5+NAltBQLG2//loq
-         dV9g==
-X-Gm-Message-State: AOAM5330C7l1R2lGiyac8/A1otV5siY4hQazD9fOmA9fsdACiDRL4W0/
-        Eh26BSykukS07f43fHJa8jYP/LWPW26t2QkttVHek75o8e73YSJjIQDfGWUhGNr9SQDgKfbBSwm
-        8vJL9vHPSZsa9T8bUU02PrhC0K3u9UYVBmb1XWT9R0A==
-X-Received: by 2002:a17:902:8204:: with SMTP id x4mr19055748pln.16.1593667223899;
-        Wed, 01 Jul 2020 22:20:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxE1DSUfFIceznr3PtH7TjS1qSOYNMqQsM3HOgI6x3SHa8gkiMPjMvGWgqs93wUsfWDu9bs7g==
-X-Received: by 2002:a17:902:8204:: with SMTP id x4mr19055738pln.16.1593667223604;
-        Wed, 01 Jul 2020 22:20:23 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id q7sm7378860pfn.23.2020.07.01.22.20.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jul 2020 22:20:23 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] leds: core: Use blocking op for system suspend
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <38622f5a-4518-cdb4-d1ca-581f470ce797@gmail.com>
-Date:   Thu, 2 Jul 2020 13:20:21 +0800
-Cc:     pavel@ucw.cz, anthony.wong@canonical.com,
-        Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <75B39716-5795-4F19-BC74-A4C21F99B85E@canonical.com>
-References: <20200701093541.14191-1-kai.heng.feng@canonical.com>
- <38622f5a-4518-cdb4-d1ca-581f470ce797@gmail.com>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MrIiq6DPHqBGLcGy4awQj5Lf7ocfuRcVU3QA0UqcMzc=;
+        b=VuX1fDlyti3oUT67ae2d1Hi3Eski6mgecd7QTl6Ih2oM9q4qjs1xAULNToUwlD3YST
+         G/ve1cLycbKHnVSf5kgF9Xw55wtUskSuuUZLvLC1Tl487Edmap2n2zmvoJU11tLkqB47
+         ufnZxs4fs/pcnIsLVDwg0cNadeHxYSwf81dKcPxOA+/3tdEM1FH91Lix5oaqqD7q2r9S
+         7MvYNowg0Heyn2M6S88trtq4UwuVdMcLlr+W/KPw4MKi1QIGPM4ZHtC0w41zMWUfkfu9
+         BDsml+X7qLzsKiQilOgtFfUg2rgtZ07dhsbO8KNYgYwAMBGlJCabgkORcZQttKx4IMSZ
+         Lb+A==
+X-Gm-Message-State: AOAM530ZYLSj+DwKwzr+YsnmMmkfDVD4VcS/V0uv8bCUl1zHEchCtair
+        ue+zcpGTzfjOf/3GUIaOUcLpoAc+LAHNokBnOi0=
+X-Google-Smtp-Source: ABdhPJw1rNERV+43T1aSgz1QcWNkBext9nRtzr4Mfiuwrwrl5VMOvx7jOqK/T1tAqNHO9QFkol8bTJx2cfW5MW0tzEM=
+X-Received: by 2002:a92:9a97:: with SMTP id c23mr9634019ill.258.1593667414618;
+ Wed, 01 Jul 2020 22:23:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
+ <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+ <20200630153816.GD1785141@kroah.com> <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+ <20200630170012.GB1894898@kroah.com> <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
+In-Reply-To: <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Thu, 2 Jul 2020 15:23:23 +1000
+Message-ID: <CAOSf1CEZ82iXhYnig0UScS+oRRaxHzSCge9LbA1hW3NaQAiSxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 2, 2020 at 4:07 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> *snip*
+>
+> > > I guess it would make sense to have an attribute for user space to
+> > > write to in order to make the kernel reject device plug-in events
+> > > coming from a given port or connector, but the kernel has no reliable
+> > > means to determine *which* ports or connectors are "safe", and even if
+> > > there was a way for it to do that, it still may not agree with user
+> > > space on which ports or connectors should be regarded as "safe".
+> >
+> > Again, we have been doing this for USB devices for a very long time, PCI
+> > shouldn't be any different.  Why people keep ignoring working solutions
+> > is beyond me, there's nothing "special" about PCI devices here for this
+> > type of "worry" or reasoning to try to create new solutions.
+> >
+> > So, again, I ask, go do what USB does, and to do that, take the logic
+> > out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
+> > code. Why the original submitter keeps ignoring my request to do this
+> > is beyond me, I guess they like making patches that will get rejected :(
+>
+> IMHO I'm actually trying to precisely do what I think was the
+> conclusion of our discussion, and then some changes because of the
+> further feedback I received on those patches. Let's take a step back
+> and please allow me to explain how I got here (my apologies but this
+> spans a couple of threads, and I"m trying to tie them all together
+> here):
 
+The previous thread had some suggestions, but no real conclusions.
+That's probably why we're still arguing about it...
 
-> On Jul 2, 2020, at 05:28, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
-> 
-> Hi Kai-Heng,
-> 
-> Thank you for the patch.
-> 
-> On 7/1/20 11:35 AM, Kai-Heng Feng wrote:
->> Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
->> system suspend.
-> 
-> Just out of curiosity - are you experiencing that on some hardware?
+> GOAL: To allow user space to control what (PCI) drivers he wants to
+> allow on external (thunderbolt) ports. There was a lot of debate about
+> the need for such a policy at
+> https://lore.kernel.org/linux-pci/CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com/
+> with the final conclusion that it should be OK to implement such a
+> policy in userspace, as long as the policy is not implemented in the
+> kernel. The kernel only needs to expose bits & info that is needed by
+> the userspace to implement such a policy, and it can be used in
+> conjunction with "drivers_autoprobe" to implement this policy:
+> --------------------------------------------------------------------
+> ....
+> That's an odd thing, but sure, if you want to write up such a policy for
+> your systems, great.  But that policy does not belong in the kernel, it
+> belongs in userspace.
+> ....
+> --------------------------------------------------------------------
+> 1) The post https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
+> lists out the approach that was agreed on. Replicating it here:
+> -----------------------------------------------------------------------
+>   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
+>     today, but doing so would be trivial.  I think I would prefer a
+>     sysfs name like "external" so it's more descriptive and less of a
+>     judgment.
+>
+>     This comes from either the DT "external-facing" property or the
+>     ACPI "ExternalFacingPort" property.
+>
+>   - All devices present at boot are enumerated.  Any statically built
+>     drivers will bind to them before any userspace code runs.
+>
+>     If you want to keep statically built drivers from binding, you'd
+>     need to invent some mechanism so pci_driver_init() could clear
+>     drivers_autoprobe after registering pci_bus_type.
+>
+>   - Early userspace code prevents modular drivers from automatically
+>     binding to PCI devices:
+>
+>       echo 0 > /sys/bus/pci/drivers_autoprobe
+>
+>     This prevents modular drivers from binding to all devices, whether
+>     present at boot or hot-added.
+>
+>   - Userspace code uses the sysfs "bind" file to control which drivers
+>     are loaded and can bind to each device, e.g.,
+>
+>       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
 
-Yes, mute and micmute LED on laptops sometimes are still on during suspend-to-idle.
+I think this is a reasonable suggestion. However, as Greg pointed out
+it's gratuitously different to what USB does for no real reason.
 
-> 
->> led_set_brightness_nopm() uses schedule_work() to set LED brightness.
->> However, there's no guarantee that the scheduled work gets executed
->> because no one calls flush_scheduled_work().
->> As flush_scheduled_work() may affect other drivers' suspend routines,
->> take a more contained approach which uses blocking op to make sure the
->> LED gets turned off.
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->>  drivers/leds/led-core.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->> index f1f718dbe0f8..9a5bfcd7a704 100644
->> --- a/drivers/leds/led-core.c
->> +++ b/drivers/leds/led-core.c
->> @@ -269,6 +269,11 @@ EXPORT_SYMBOL_GPL(led_set_brightness);
->>  void led_set_brightness_nopm(struct led_classdev *led_cdev,
->>  			      enum led_brightness value)
->>  {
->> +
->> +	if (led_cdev->flags & LED_SUSPENDED &&
->> +	    !__led_set_brightness_blocking(led_cdev, value))
->> +		return;
->> +
-> 
-> This function is "nopm" for a reason - we do not make here any
-> pm management related operations.
-> 
-> Instead of that, please just add
-> 
-> flush_work(&led_cdev->set_brightness_work);
-> 
-> at the end of led_classdev_suspend()
-> 
-> in drivers/leds/led-class.c.
+> -----------------------------------------------------------------------
+> 2) As part of implementing the above agreed approach, when I exposed
+> PCI "untrusted" attribute to userspace, it ran into discussion that
+> concluded that instead of this, the device core should be enhanced
+> with a location attribute.
+> https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
+> -----------------------------------------------------------------------
+> ...
+> The attribute should be called something like "location" or something
+> like that (naming is hard), as you don't always know if something is
+> external or not (it could be internal, it could be unknown, it could be
+> internal to an external device that you trust (think PCI drawers for
+> "super" computers that are hot pluggable but yet really part of the
+> internal bus).
+> ....
+> "trust" has no direct relation to the location, except in a policy of
+> what you wish to do with that device, so as long as you keep them
+> separate that way, I am fine with it.
+> ...
+> -----------------------------------------------------------------------
+>
+> And hence this patch. I don't see an attribute in USB comparable to
+> this new attribute, except for the boolean "removable" may be. Are you
+> suggesting to pull that into the device core instead of adding this
+> "physical_location" attribute?
 
-Right, will send v2.
+He's suggesting you pull the "authorized" attribute into the driver
+core. That's the mechanism USB uses to block drivers binding unless
+userspace authorizes them. I don't see any reason why we can't re-use
+that sysfs interface for PCI devices since the problem being solved is
+fundamentally the same. The main question is what we should do as a
+default policy in the kernel. For USB the default comes from the
+"authorized_default" module param of usbcore:
 
-Kai-Heng
+> /* authorized_default behaviour:
+>  * -1 is authorized for all devices except wireless (old behaviour)
+>  * 0 is unauthorized for all devices
+>  * 1 is authorized for all devices
+>  * 2 is authorized for internal devices
+>  */
+> #define USB_AUTHORIZE_WIRED   -1
+> #define USB_AUTHORIZE_NONE    0
+> #define USB_AUTHORIZE_ALL     1
+> #define USB_AUTHORIZE_INTERNAL        2
+>
+> static int authorized_default = USB_AUTHORIZE_WIRED;
+> module_param(authorized_default, int, S_IRUGO|S_IWUSR);
 
-> 
-> -- 
-> Best regards,
-> Jacek Anaszewski
+So the default policy for USB is to authorize any wired USB device and
+we can optionally restrict that to just integrated devices. Sounding
+familiar?
 
+The internal / external status is still useful to know so we might
+want to make a sysfs attribute for that too. However, I'd like to
+point out that internal / external isn't the whole story. As I
+mentioned in the last thread if I have a BMC device I *really* don't
+want it to be authorized by default even though it's an internal
+device. Similarly, if I know all my internal cards support PCIe
+Component Authentication then I might choose not to trust any PCI
+devices unless they authenticate successfully.
+
+> 3) The one deviation from the agreed approach in (1) is
+> https://patchwork.kernel.org/patch/11633095/ . The reason is I
+> realized that contrary to what I earlier believed, we might not be
+> able to disable the PCI link to all external PCI devices at boot. So
+> external PCI devices may actually bind to drivers before userspace
+> comes up and does "echo 0 > /sys/bus/pci/drivers_autoprobe").
+
+Yep, that's a problem. If we want to provide a useful mechanism to
+userspace then the default behaviour of the kernel can't undermine
+that mechanism. If that means we need another kernel command line
+parameter then I guess we just have to live with it.
+
+Oliver
