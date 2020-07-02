@@ -2,209 +2,130 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C52FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C154C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530FE207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1rsZUO2"
+	by mail.kernel.org (Postfix) with ESMTP id 45B83207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgGBDbK (ORCPT
+        id S1726374AbgGBDdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 23:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgGBDbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 23:31:08 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44171C08C5C1;
-        Wed,  1 Jul 2020 20:31:08 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id by13so12183261edb.11;
-        Wed, 01 Jul 2020 20:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V57SYphvjcaqogbiN7WQNBWs0aKifVDv1zSPRDEdp78=;
-        b=i1rsZUO2yVRtwHgsfjIVPsSDF6GXGDsiXYZDg+2MxgOurUsnQXYslBdzjsaG5Bgt2J
-         GpsEL8KceBFefh6NTMVG8YzuAeK1t2c3L33h+DHROZjuy3o758pj67qf8EYrXHSbpjDI
-         3WhNHCXg90PxLKGy7YccwFkT/Rnf9UD+QcnT0CI0jboZWt+vlz3HKM9lsocD038wFjDx
-         ySWwXpQr+7TeSfJWKLivvggYsCAeTlI7z7n3vz1ZSh09vGH+Cx5ZQGOLRvrWXfg5Lt9t
-         jbzwxp0xm4+MT1DMXoXpHK08tgn/JR2FnGyFKZtUiIxIU5RnM14MLeygLKl8s9avZZtz
-         vE2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V57SYphvjcaqogbiN7WQNBWs0aKifVDv1zSPRDEdp78=;
-        b=XiJPdYFhUbjBA+yhDRGO88Hq+iC9M6RZjd7ceZqIPOERqJbBZRC7O3t4HWUV0hus1G
-         qY8M30A9or6LnK9ASv4R9XbmawnjaOVeQSxOj2oPGZPlsejy1ofOmuS7SWTsTeNxyKaO
-         Elebxq1qajY1QuE/wQHtJxYcDgMTEyh5uWtrjNlomM3krK6GPueo0rWPsyVnrxzUw5X3
-         Jt2Wch95SlWYLaR4UUQZGQsGtXoq+7JplG2YnjiaU0GuMfC4PGAQ/nBzLlGK/1bu+MyR
-         cLNhaaPa/BnvfQMR4tQaOGPN3Y0nW17QVfRCmOxTEgxLiTLoPYWgP0pDT03LoVoxZWc6
-         3xmQ==
-X-Gm-Message-State: AOAM533fz5I4Wk4+EQpAc/GVPQHgduH/a9aLqKTmD0yaB6q8aVWO6/2o
-        HsnPWd/anoR7jchOgGLqMexgHCJ/2RjWSlgKzQxMFlLN1jdEdQ==
-X-Google-Smtp-Source: ABdhPJzmtrfwWSsDIziJ0KhOscb2mK4ZnRBGcKiB4mMue9BYpAbI+uDCpssdbPPR9sFQeuxDUnF4ZyXQzrIkux+BCwc=
-X-Received: by 2002:a50:9b0b:: with SMTP id o11mr33819450edi.22.1593660666999;
- Wed, 01 Jul 2020 20:31:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593656074-10092-1-git-send-email-Anson.Huang@nxp.com> <1593656074-10092-6-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593656074-10092-6-git-send-email-Anson.Huang@nxp.com>
-From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Thu, 2 Jul 2020 11:17:05 +0800
-Message-ID: <CAA+hA=T1+F-oTfWdV22ztUT3Ru-dFPDzhC7aJsdj0R3yP4wzbA@mail.gmail.com>
-Subject: Re: [PATCH V4 5/5] clk: imx8qxp: Support building i.MX8QXP clock
- driver as module
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        Wed, 1 Jul 2020 23:33:39 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37150 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgGBDdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 23:33:38 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jqpxV-0008AS-FA; Thu, 02 Jul 2020 13:32:22 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 02 Jul 2020 13:32:21 +1000
+Date:   Thu, 2 Jul 2020 13:32:21 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        LTP List <ltp@lists.linux.it>,
         open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        lkft-triage@lists.linaro.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux- stable <stable@vger.kernel.org>
+Subject: [v2 PATCH] crypto: af_alg - Fix regression on empty requests
+Message-ID: <20200702033221.GA19367@gondor.apana.org.au>
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com>
+ <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+ <20200623064056.GA8121@gondor.apana.org.au>
+ <20200623170217.GB150582@gmail.com>
+ <20200626062948.GA25285@gondor.apana.org.au>
+ <CA+G9fYutuU55iL_6Qrk3oG3iq-37PaxvtA4KnEQHuLH9YpH-QA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYutuU55iL_6Qrk3oG3iq-37PaxvtA4KnEQHuLH9YpH-QA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 10:20 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Change configuration to "tristate", use device_initcall() instead
-> of builtin_platform_driver(), add module author, description and
-> license to support building i.MX8QXP clock drivers as module.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V3:
->         - use device_initcall() instead of builtin_platform_driver();
->         - add module author/description;
->         - link common scu/lpcg clock driver to i.MX8QXP clock driver, then
->           no need to have exports.
-> ---
->  drivers/clk/imx/Kconfig            |  6 +++---
->  drivers/clk/imx/Makefile           |  9 ++++-----
->  drivers/clk/imx/clk-imx8qxp-lpcg.c | 10 +++++++++-
->  drivers/clk/imx/clk-imx8qxp.c      | 11 ++++++++++-
->  4 files changed, 26 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-> index 1867111..8340dfe 100644
-> --- a/drivers/clk/imx/Kconfig
-> +++ b/drivers/clk/imx/Kconfig
-> @@ -5,8 +5,8 @@ config MXC_CLK
->         depends on ARCH_MXC
->
->  config MXC_CLK_SCU
-> -       bool
-> -       depends on IMX_SCU
-> +       tristate "IMX SCU clock"
-> +       depends on ARCH_MXC && IMX_SCU
->
->  config CLK_IMX1
->           bool "IMX1 CCM Clock Driver"
-> @@ -127,7 +127,7 @@ config CLK_IMX8MQ
->             Build the driver for i.MX8MQ CCM Clock Driver
->
->  config CLK_IMX8QXP
-> -       bool "IMX8QXP SCU Clock"
-> +       tristate "IMX8QXP SCU Clock"
->         depends on ARCH_MXC && IMX_SCU && ARM64
->         select MXC_CLK_SCU
->         help
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 17f5d12..79e53f2 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -21,15 +21,14 @@ mxc-clk-objs += clk-pll14xx.o
->  mxc-clk-objs += clk-sscg-pll.o
->  obj-$(CONFIG_MXC_CLK) += mxc-clk.o
->
-> -obj-$(CONFIG_MXC_CLK_SCU) += \
-> -       clk-scu.o \
-> -       clk-lpcg-scu.o
-> -
->  obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
->  obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
->  obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
->  obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
-> -obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
-> +
-> +obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
-> +clk-imx-scu-$(CONFIG_CLK_IMX8QXP) += clk-scu.o clk-imx8qxp.o
-> +clk-imx-lpcg-scu-$(CONFIG_CLK_IMX8QXP) += clk-lpcg-scu.o clk-imx8qxp-lpcg.o
->
->  obj-$(CONFIG_CLK_IMX1)   += clk-imx1.o
->  obj-$(CONFIG_CLK_IMX21)  += clk-imx21.o
-> diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> index 04c8ee3..5b6648e 100644
-> --- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> +++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
-> @@ -231,4 +231,12 @@ static struct platform_driver imx8qxp_lpcg_clk_driver = {
->         .probe = imx8qxp_lpcg_clk_probe,
->  };
->
-> -builtin_platform_driver(imx8qxp_lpcg_clk_driver);
-> +static int __init imx8qxp_lpcg_clk_init(void)
+On Tue, Jun 30, 2020 at 02:18:11PM +0530, Naresh Kamboju wrote:
+> 
+> Since we are on this subject,
+> LTP af_alg02  test case fails on stable 4.9 and stable 4.4
+> This is not a regression because the test case has been failing from
+> the beginning.
+> 
+> Is this test case expected to fail on stable 4.9 and 4.4 ?
+> or any chance to fix this on these older branches ?
+> 
+> Test output:
+> af_alg02.c:52: BROK: Timed out while reading from request socket.
+> 
+> ref:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884917/suite/ltp-crypto-tests/test/af_alg02/history/
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884606/suite/ltp-crypto-tests/test/af_alg02/log
 
-Does __init work for module?
+Actually this test really is broken.  Even though empty requests
+are legal, they should never be done with no write(2) at all.
+Because this fundamentally breaks the use of a blocking read(2)
+to wait for more data.
 
-> +{
-> +       return platform_driver_register(&imx8qxp_lpcg_clk_driver);
-> +}
-> +device_initcall(imx8qxp_lpcg_clk_init);
+Granted this has been broken since 2017 but I'm not going to
+reintroduce this just because of a broken test case.
 
-Any reason to change to device_initcall which looks a bit strange?
-Is it because the following line?
-+obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
-But it looks to me they're still two modules. Aren't they?
+So please either remove af_alg02 or fix it by adding a control
+message through sendmsg(2).
 
-Regards
-Aisheng
+Thanks,
 
-> +
-> +MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
-> +MODULE_DESCRIPTION("NXP i.MX8QXP LPCG clock driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
-> index 5e2903e..9bcf0d1 100644
-> --- a/drivers/clk/imx/clk-imx8qxp.c
-> +++ b/drivers/clk/imx/clk-imx8qxp.c
-> @@ -151,4 +151,13 @@ static struct platform_driver imx8qxp_clk_driver = {
->         },
->         .probe = imx8qxp_clk_probe,
->  };
-> -builtin_platform_driver(imx8qxp_clk_driver);
-> +
-> +static int __init imx8qxp_clk_init(void)
-> +{
-> +       return platform_driver_register(&imx8qxp_clk_driver);
-> +}
-> +device_initcall(imx8qxp_clk_init);
-> +
-> +MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
-> +MODULE_DESCRIPTION("NXP i.MX8QXP clock driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.7.4
->
+---8<---
+Some user-space programs rely on crypto requests that have no
+control metadata.  This broke when a check was added to require
+the presence of control metadata with the ctx->init flag.
+
+This patch fixes the regression by setting ctx->init as long as
+one sendmsg(2) has been made, with or without a control message.
+
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 9fcb91ea10c41..5882ed46f1adb 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -851,6 +851,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 		err = -EINVAL;
+ 		goto unlock;
+ 	}
++	ctx->init = true;
+ 
+ 	if (init) {
+ 		ctx->enc = enc;
+@@ -858,7 +859,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 			memcpy(ctx->iv, con.iv->iv, ivsize);
+ 
+ 		ctx->aead_assoclen = con.aead_assoclen;
+-		ctx->init = true;
+ 	}
+ 
+ 	while (size) {
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
