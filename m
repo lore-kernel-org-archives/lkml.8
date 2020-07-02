@@ -2,119 +2,121 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E487FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C66207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83C120781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aLSG1kWm"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="cP7JTsXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgGBCxZ (ORCPT
+        id S1726813AbgGBCyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 22:53:25 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:40039 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726146AbgGBCxZ (ORCPT
+        Wed, 1 Jul 2020 22:54:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgGBCyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 22:53:25 -0400
-X-UUID: dee14df25634404982d404beca267926-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=afpaC7qRGVZ6JRFynQgro+7OJFSDdHfSPLeLJ/lq7kQ=;
-        b=aLSG1kWmHRehrrGQ3rqzjfigMarWaiFUhQ7v78o07HneYshjxm0TtsjxlfDJ93oVg48TrHNcYz/mTSwKXH2FX3xrwX0W8pO9A89pAl6spVO2XB7nXm8UocNMJ6AfRRU1t1SHBFdrmGxJHPd54OoLXPkaB+PsXp4NdKb2UAlrIFQ=;
-X-UUID: dee14df25634404982d404beca267926-20200702
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 290555990; Thu, 02 Jul 2020 10:53:16 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Jul
- 2020 10:53:14 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 10:53:09 +0800
-Message-ID: <1593658371.23885.16.camel@mhfsdcap03>
-Subject: Re: [V2 PATCH] usb: mtu3: fix NULL pointer dereference
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 2 Jul 2020 10:52:51 +0800
-In-Reply-To: <20200701115821.GA2184169@kroah.com>
-References: <1593502942-24455-1-git-send-email-chunfeng.yun@mediatek.com>
-         <20200701115821.GA2184169@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 1 Jul 2020 22:54:38 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF464C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 19:54:37 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f16so1478123pjt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hmqaZJTWyrZ0FbjDXm8RaPiEdszyKtA9q/J035BPFVA=;
+        b=cP7JTsXrRAwaUk/s3r6046kZthbuvo+pnMiLbeJ92TN5Df4IlY5imhcjw6DhnGkCbp
+         kvsnwkrOkzH3a3JGOqOwZGog/7b3prPfeaBhvzie1IFd3qYoC3heY995lUjewiSw6d1H
+         4AB3xQJu+LyZ+/b9OESxctzddqplBAiW2jQkc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hmqaZJTWyrZ0FbjDXm8RaPiEdszyKtA9q/J035BPFVA=;
+        b=jxCxur4OWi//jHSphw/LoMjnye6N26+PYZ6rCZsVDcobru9Nj9b9VEFrBBuoogL7M6
+         W1AjqYDl1PzwKaKkMuraW9mUMAPNMHGCKp2klH0Ve8peNzHvlrFvy1d0gVEKBT3iGxAN
+         Ts4HlbE01WiZiO2vIAylDA/tlt2jjlm9pEYK3zVLGatQM0IxELCP3it5mQmWd9nypdZH
+         d806pLPxvqzQ6FMbA4W5FvqB2SlAONcGVmPnPNEqyojtSh4/p9lBlVctORAqcxdLh/Bn
+         hW7gsnlQ68Buuo/mZAQnHkebpamDfmOwamnuN7n8sfeAjV7StKpS4U+TwIEuXaUeJnlf
+         X1bw==
+X-Gm-Message-State: AOAM530grfNit0kfPukVfl2W56BaxnRh/OxQ+zwy/WQ6eQtF6zOag7yv
+        Ghz9UPFMnN9JeMqPparltINJhgTGVBI=
+X-Google-Smtp-Source: ABdhPJyo4y4l83li9ExCVZOeOn/mYCprRDsvcN4pWndY1hK1p+y5El3vuSv4CxjdcbgqE8OWQCYmKA==
+X-Received: by 2002:a17:902:6bc1:: with SMTP id m1mr25456864plt.158.1593658477129;
+        Wed, 01 Jul 2020 19:54:37 -0700 (PDT)
+Received: from localhost (2001-44b8-1113-6700-3c80-6152-10ca-83bc.static.ipv6.internode.on.net. [2001:44b8:1113:6700:3c80:6152:10ca:83bc])
+        by smtp.gmail.com with ESMTPSA id u26sm7243117pgo.71.2020.07.01.19.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 19:54:36 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
+        bsingharora@gmail.com
+Cc:     Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v8 0/4] KASAN for powerpc64 radix
+Date:   Thu,  2 Jul 2020 12:54:28 +1000
+Message-Id: <20200702025432.16912-1-dja@axtens.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 9F8CFEA6CEBAFB7D9D5D9DF806B368CC530AA52FD6E6FE9C3269E92BF6BF031F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTAxIGF0IDEzOjU4ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
-dGU6DQo+IE9uIFR1ZSwgSnVuIDMwLCAyMDIwIGF0IDAzOjQyOjIyUE0gKzA4MDAsIENodW5mZW5n
-IFl1biB3cm90ZToNCj4gPiBTb21lIHBvaW50ZXJzIGFyZSBkZXJlZmVyZW5jZWQgYmVmb3JlIHN1
-Y2Nlc3NmdWwgY2hlY2tzLg0KPiA+IA0KPiA+IFJlcG9ydGVkLWJ5OiBNYXJrdXMgRWxmcmluZyA8
-TWFya3VzLkVsZnJpbmdAd2ViLmRlPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1biA8
-Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiB2Mjogbm90aGluZyBjaGFu
-Z2VkLCBidXQgYWJhbmRvbiBhbm90aGVyIHBhdGNoDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvdXNi
-L210dTMvbXR1M19nYWRnZXQuYyB8IDI1ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gDQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL210dTMvbXR1M19nYWRnZXQuYyBiL2RyaXZlcnMv
-dXNiL210dTMvbXR1M19nYWRnZXQuYw0KPiA+IGluZGV4IGY5MzczMmUuLjE2ODljYTggMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy91c2IvbXR1My9tdHUzX2dhZGdldC5jDQo+ID4gKysrIGIvZHJp
-dmVycy91c2IvbXR1My9tdHUzX2dhZGdldC5jDQo+ID4gQEAgLTMzMiwxNCArMzMyLDIxIEBAIHN0
-YXRpYyBpbnQgbXR1M19nYWRnZXRfcXVldWUoc3RydWN0IHVzYl9lcCAqZXAsDQo+ID4gIA0KPiA+
-ICBzdGF0aWMgaW50IG10dTNfZ2FkZ2V0X2RlcXVldWUoc3RydWN0IHVzYl9lcCAqZXAsIHN0cnVj
-dCB1c2JfcmVxdWVzdCAqcmVxKQ0KPiA+ICB7DQo+ID4gLQlzdHJ1Y3QgbXR1M19lcCAqbWVwID0g
-dG9fbXR1M19lcChlcCk7DQo+ID4gLQlzdHJ1Y3QgbXR1M19yZXF1ZXN0ICptcmVxID0gdG9fbXR1
-M19yZXF1ZXN0KHJlcSk7DQo+ID4gKwlzdHJ1Y3QgbXR1M19lcCAqbWVwOw0KPiA+ICsJc3RydWN0
-IG10dTNfcmVxdWVzdCAqbXJlcTsNCj4gPiAgCXN0cnVjdCBtdHUzX3JlcXVlc3QgKnI7DQo+ID4g
-KwlzdHJ1Y3QgbXR1MyAqbXR1Ow0KPiA+ICAJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiAgCWlu
-dCByZXQgPSAwOw0KPiA+IC0Jc3RydWN0IG10dTMgKm10dSA9IG1lcC0+bXR1Ow0KPiA+ICANCj4g
-PiAtCWlmICghZXAgfHwgIXJlcSB8fCBtcmVxLT5tZXAgIT0gbWVwKQ0KPiA+ICsJaWYgKCFlcCB8
-fCAhcmVxKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiANCj4gSG93IHdpbGwgZWl0aGVyIG9m
-IHRob3NlIGV2ZXIgYmUgTlVMTD8gIFRoZSBrZXJuZWwgd2lsbCBub3QgY2FsbCB0aGlzDQo+IGZ1
-bmN0aW9uIHdpdGggZWl0aGVyIG9mIHRoZW0gYmVpbmcgTlVMTCwgcmlnaHQ/DQpZZXMsIEkgZmlu
-ZCBhbGwgY2xhc3MgZHJpdmVycyBhbHJlYWR5IGVuc3VyZSB0aGV5IGFyZSBub3QgTlVMTC4NCg0K
-PiANCj4gPiArDQo+ID4gKwltZXAgPSB0b19tdHUzX2VwKGVwKTsNCj4gPiArCW10dSA9IG1lcC0+
-bXR1Ow0KPiA+ICsNCj4gPiArCW1yZXEgPSB0b19tdHUzX3JlcXVlc3QocmVxKTsNCj4gPiArCWlm
-IChtcmVxLT5tZXAgIT0gbWVwKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICANCj4gPiAg
-CWRldl9kYmcobXR1LT5kZXYsICIlcyA6IHJlcT0lcFxuIiwgX19mdW5jX18sIHJlcSk7DQo+ID4g
-QEAgLTM3Myw4ICszODAsOCBAQCBzdGF0aWMgaW50IG10dTNfZ2FkZ2V0X2RlcXVldWUoc3RydWN0
-IHVzYl9lcCAqZXAsIHN0cnVjdCB1c2JfcmVxdWVzdCAqcmVxKQ0KPiA+ICAgKi8NCj4gPiAgc3Rh
-dGljIGludCBtdHUzX2dhZGdldF9lcF9zZXRfaGFsdChzdHJ1Y3QgdXNiX2VwICplcCwgaW50IHZh
-bHVlKQ0KPiA+ICB7DQo+ID4gLQlzdHJ1Y3QgbXR1M19lcCAqbWVwID0gdG9fbXR1M19lcChlcCk7
-DQo+ID4gLQlzdHJ1Y3QgbXR1MyAqbXR1ID0gbWVwLT5tdHU7DQo+ID4gKwlzdHJ1Y3QgbXR1M19l
-cCAqbWVwOw0KPiA+ICsJc3RydWN0IG10dTMgKm10dTsNCj4gPiAgCXN0cnVjdCBtdHUzX3JlcXVl
-c3QgKm1yZXE7DQo+ID4gIAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+ICAJaW50IHJldCA9IDA7
-DQo+ID4gQEAgLTM4Miw2ICszODksOSBAQCBzdGF0aWMgaW50IG10dTNfZ2FkZ2V0X2VwX3NldF9o
-YWx0KHN0cnVjdCB1c2JfZXAgKmVwLCBpbnQgdmFsdWUpDQo+ID4gIAlpZiAoIWVwKQ0KPiA+ICAJ
-CXJldHVybiAtRUlOVkFMOw0KPiANCj4gU2FtZSBoZXJlLCBob3cgY2FuIHRoYXQgZXZlciBoYXBw
-ZW4/DQpNYXliZSB3aGVuIHRoZSBjbGFzcyBkcml2ZXIgaGFzIHNvbWV0aGluZyB3cm9uZzopDQoN
-CllvdSBtZWFuIGl0J3MgYmV0dGVyIHRvIHJlbW92ZSB0aGVzZSB1bm5lY2Vzc2FyeSBjaGVja3M/
-DQoNClRoYW5rcw0KDQo+IA0KPiA+ICANCj4gPiArCW1lcCA9IHRvX210dTNfZXAoZXApOw0KPiA+
-ICsJbXR1ID0gbWVwLT5tdHU7DQo+ID4gKw0KPiA+ICAJZGV2X2RiZyhtdHUtPmRldiwgIiVzIDog
-JXMuLi4iLCBfX2Z1bmNfXywgZXAtPm5hbWUpOw0KPiA+ICANCj4gPiAgCXNwaW5fbG9ja19pcnFz
-YXZlKCZtdHUtPmxvY2ssIGZsYWdzKTsNCj4gPiBAQCAtNDIyLDExICs0MzIsMTIgQEAgc3RhdGlj
-IGludCBtdHUzX2dhZGdldF9lcF9zZXRfaGFsdChzdHJ1Y3QgdXNiX2VwICplcCwgaW50IHZhbHVl
-KQ0KPiA+ICAvKiBTZXRzIHRoZSBoYWx0IGZlYXR1cmUgd2l0aCB0aGUgY2xlYXIgcmVxdWVzdHMg
-aWdub3JlZCAqLw0KPiA+ICBzdGF0aWMgaW50IG10dTNfZ2FkZ2V0X2VwX3NldF93ZWRnZShzdHJ1
-Y3QgdXNiX2VwICplcCkNCj4gPiAgew0KPiA+IC0Jc3RydWN0IG10dTNfZXAgKm1lcCA9IHRvX210
-dTNfZXAoZXApOw0KPiA+ICsJc3RydWN0IG10dTNfZXAgKm1lcDsNCj4gPiAgDQo+ID4gIAlpZiAo
-IWVwKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiANCj4gQWdhaW4sIHNhbWUgaGVyZS4NCj4g
-DQo+IHRoYW5rcywNCj4gDQo+IGdyZWcgay1oDQoNCg==
+Building on the work of Christophe, Aneesh and Balbir, I've ported
+KASAN to 64-bit Book3S kernels running on the Radix MMU.
+
+This provides full inline instrumentation on radix, but does require
+that you be able to specify the amount of physically contiguous memory
+on the system at compile time. More details in patch 4.
+
+v8 is just a rebase of v7 on a more recent powerpc/merge and a fixup
+of a whitespace error.
+
+Module globals still don't work, but that's due to some 'clever'
+renaming of a section that the powerpc module loading code does to
+avoid more complicated relocations/tramplines rather than anything to
+do with KASAN.
+
+Daniel Axtens (4):
+  kasan: define and use MAX_PTRS_PER_* for early shadow tables
+  kasan: Document support on 32-bit powerpc
+  powerpc/mm/kasan: rename kasan_init_32.c to init_32.c
+  powerpc: Book3S 64-bit "heavyweight" KASAN support
+
+ Documentation/dev-tools/kasan.rst             |   8 +-
+ Documentation/powerpc/kasan.txt               | 122 ++++++++++++++++++
+ arch/powerpc/Kconfig                          |   3 +-
+ arch/powerpc/Kconfig.debug                    |  23 +++-
+ arch/powerpc/Makefile                         |  11 ++
+ arch/powerpc/include/asm/book3s/64/hash.h     |   4 +
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |   7 +
+ arch/powerpc/include/asm/book3s/64/radix.h    |   5 +
+ arch/powerpc/include/asm/kasan.h              |  11 +-
+ arch/powerpc/kernel/Makefile                  |   2 +
+ arch/powerpc/kernel/process.c                 |  16 ++-
+ arch/powerpc/kernel/prom.c                    |  76 ++++++++++-
+ arch/powerpc/mm/kasan/Makefile                |   3 +-
+ .../mm/kasan/{kasan_init_32.c => init_32.c}   |   0
+ arch/powerpc/mm/kasan/init_book3s_64.c        |  73 +++++++++++
+ arch/powerpc/mm/ptdump/ptdump.c               |  10 +-
+ arch/powerpc/platforms/Kconfig.cputype        |   1 +
+ include/linux/kasan.h                         |  18 ++-
+ mm/kasan/init.c                               |   6 +-
+ 19 files changed, 377 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/powerpc/kasan.txt
+ rename arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} (100%)
+ create mode 100644 arch/powerpc/mm/kasan/init_book3s_64.c
+
+-- 
+2.25.1
 
