@@ -2,209 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E19C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3E3207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2648D207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jwLT0yOQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LU0sYnZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgGBP5i (ORCPT
+        id S1726345AbgGBP5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgGBP5h (ORCPT
+        Thu, 2 Jul 2020 11:57:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55422 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725379AbgGBP5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:57:37 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC55AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:57:37 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k5so3138098pjg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YgPSxrVcL5/+2trP8Y9tIB9bY9o4biAaserhf1XxerA=;
-        b=jwLT0yOQjefPIZKemT4Q0cOJnhCjiUutFEeWs95700So98cfaPXpUxHm5TElQ8vHOG
-         /zINNII93zXuYoMVbpavK0k++wloLCRYyGkhPw6KK96Wq5F5orsUyCmwVPvsTyV+AEWt
-         JDDNEq+AdCjIHkN6niTjXvjyepdtZbk/3bhac=
+        Thu, 2 Jul 2020 11:57:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593705466;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7RoOoUA+53noAjeT5ayY4WzjGBDITrX8MYmPSLFhr0w=;
+        b=LU0sYnZJFzoMFEVy3QF0xpnMkhAIqWw9CKpXZ51eDkkPL0pzj4hBCIehml3sI1HroYsSRR
+        xzUqDpd47gmrd2/1udS1Hzk5gEMrxYOj2kfx/ZA8n6Z2rC7tuxrpzhDOtL1rf8uEejU9AA
+        NUr6SbT7TGqKw87jdD0ymyQHcJyfQac=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-105-bzrv5tg6MtmDsl6nWfQSOQ-1; Thu, 02 Jul 2020 11:57:44 -0400
+X-MC-Unique: bzrv5tg6MtmDsl6nWfQSOQ-1
+Received: by mail-wr1-f72.google.com with SMTP id a18so26662912wrm.14
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:57:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YgPSxrVcL5/+2trP8Y9tIB9bY9o4biAaserhf1XxerA=;
-        b=F7yhPW1cFY3hKjUfOp5XgmHSs2YmBQqyKyGM6RiNjD8ANg4KSm5+321RZaIbQT8olD
-         3p1Fu+Hq/At4ewRYXmPjB/z3pYo7FowmGFUSgXbRc4YGu5GtiKK/IIIvn6gIul4itJlX
-         33NM5GdyhFBnThzVq03UQdMV2hNvjBQhSZO8uwthEuMeLIQaOdBzIyrks5zx1lagDv3a
-         BCQdR9AheO2u9pYd22KVifuo4/J4CWptxsC2Egb18OGWnQ7vl8KvlqeJRj3soD5/PUVR
-         3S4ag0nndu0shNar2H07WSdYS2C4acTbbCOynd4pfULYd3l5TbR91YhMbyI1BFQoCMFJ
-         JrHQ==
-X-Gm-Message-State: AOAM531tZfUzj3XbaliW8NcExUm/bxw4p+dJWv+QaITASzImKcxKdB/4
-        0nsalVIv0Q4lRIHucS3L6bKdTA==
-X-Google-Smtp-Source: ABdhPJxInVGBJIUxROAK9085rrHggVy8LJffKTA+HKKkF+e8eGq3dMOWeKJxsX7poAadOvz7DKID1Q==
-X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr27320510plt.3.1593705457169;
-        Thu, 02 Jul 2020 08:57:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k100sm8517452pjb.57.2020.07.02.08.57.36
+         :mime-version:content-disposition:in-reply-to;
+        bh=7RoOoUA+53noAjeT5ayY4WzjGBDITrX8MYmPSLFhr0w=;
+        b=Jwrq9UhQLm1M1FTfFjC0f5r4rQ/hrFw89UAOrG19ARXv4PMqY3bN4y97xkJRAI8H4h
+         Ub1bSiU7dkWc40h0Vf93OmCDP3AoUWtZrhIeKzFBXfE5MZfnjd6faFAX2W1RJe8F5LLH
+         CYooo10QmNBxOIkkt/j5KxrbJ23/BDvufpzZO9gs3IpOD4y5JJrnUGUsc6th+ZPmAlsn
+         Bvw8XZyo876J6a1Sd6LJW85nyLOUp6RnsXZGyz8qdewdzTV6FxP8YjCJ6uIDy0HaO8kL
+         KbqRAvRVtbjbVLxGMoXcIqRBbT15X0Q2JwUKRNC1pCRMh/X458tPUTqB00XRjSmsqWuf
+         uZ1A==
+X-Gm-Message-State: AOAM533RfAb/NBQDD5fDPZfvgY7ULcILc8VjwaczQW4OQRrS8VSDAj3/
+        9IruDhFHEDsuJocW6zPGeVTjN4vgnGkaO/Y33JuGCZRWh1LIlgLo3wtT8+577RHleq4yVGki7Wr
+        DMUEk7LyA9b/XG1vXxT0659LB
+X-Received: by 2002:adf:e3c9:: with SMTP id k9mr30971117wrm.379.1593705463189;
+        Thu, 02 Jul 2020 08:57:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJymuXk4zbb+5PvJapCFNs7YDJH7liNU74wmElJrm3xRjCtTggVxpPiqmsNDsbHPEb803dg+HQ==
+X-Received: by 2002:adf:e3c9:: with SMTP id k9mr30971081wrm.379.1593705462930;
+        Thu, 02 Jul 2020 08:57:42 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.8.241])
+        by smtp.gmail.com with ESMTPSA id 104sm11745747wrl.25.2020.07.02.08.57.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 08:57:36 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:57:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Thu, 02 Jul 2020 08:57:42 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 17:57:40 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
-Message-ID: <202007020856.78DDE23F4A@keescook>
-References: <20200622231536.7jcshis5mdn3vr54@google.com>
- <20200625184752.73095-1-ndesaulniers@google.com>
- <CAKwvOd=cum+BNHOk2djXx5JtAcCBwq2Bxy=j5ucRd2RcLWwDZQ@mail.gmail.com>
- <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com>
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 01/10] timer: Prevent base->clk from moving backward
+Message-ID: <20200702155740.GJ9670@localhost.localdomain>
+References: <20200701011030.14324-1-frederic@kernel.org>
+ <20200701011030.14324-2-frederic@kernel.org>
+ <20200701163504.GD9670@localhost.localdomain>
+ <20200701232045.GA17670@lenoir>
+ <20200702095959.GG9670@localhost.localdomain>
+ <20200702143206.GC27417@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com>
+In-Reply-To: <20200702143206.GC27417@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:19:40AM +0200, Arnd Bergmann wrote:
-> On Wed, Jul 1, 2020 at 11:54 PM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > Hi Arnd,
-> > I usually wait longer to bump threads for review, but we have a
-> > holiday in the US so we're off tomorrow and Friday.
-> > scripts/get_maintainer.pl recommend you for this patch.  Would you
-> > take a look at it for us, please?
+On 02/07/20 16:32, Frederic Weisbecker wrote:
+> On Thu, Jul 02, 2020 at 11:59:59AM +0200, Juri Lelli wrote:
+> > On 02/07/20 01:20, Frederic Weisbecker wrote:
+> > > On Wed, Jul 01, 2020 at 06:35:04PM +0200, Juri Lelli wrote:
+> > > > Guess you might be faster to understand what I'm missing. :-)
+> > > 
+> > > So, did you port only this patch or the whole set in order to
+> > > trigger this?
+> > > 
+> > > If it was the whole set, can you try this patch alone?
+> > 
+> > Whole set. And I can't reproduce if I try with this patch alone.
+> > 
 > 
-> Hi Nick
+> Missing initialization. This should go better after this:
 > 
-> While I'm listed as the maintainer for include/asm-generic, linker scripts
-> are really not my expertise and I have no way of knowing whether the
-> change is good or not.
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 25a55c043297..f36b53219768 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -1969,6 +1969,7 @@ static void __init init_timer_cpu(int cpu)
+>  		base->cpu = cpu;
+>  		raw_spin_lock_init(&base->lock);
+>  		base->clk = jiffies;
+> +		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
+>  		timer_base_init_expiry_lock(base);
+>  	}
+>  }
 > 
-> Your description looks very reasonable of course and I have no problem
-> with having someone else pick it up. You mentioned that Kees is already
-> looking at some related work and he's already done more changes to
-> this file than anyone else. If he can provide an Ack for this patch,
-> you can add mine as well to send it to akpm, or I can pick it up in the
-> asm-generic tree.
 
-This looks good to me. Do you want me to carry it as part of the orphan
-series? (It doesn't look like it'll collide, so that's not needed, but I
-can if that makes things easier.)
+Yep. Looks like warning is gone.
 
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> 
->        Arnd
-> 
-> > On Thu, Jun 25, 2020 at 11:48 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > Basically, consider .text.{hot|unlikely|unknown}.* part of .text, too.
-> > >
-> > > When compiling with profiling information (collected via PGO
-> > > instrumentations or AutoFDO sampling), Clang will separate code into
-> > > .text.hot, .text.unlikely, or .text.unknown sections based on profiling
-> > > information. After D79600 (clang-11), these sections will have a
-> > > trailing `.` suffix, ie.  .text.hot., .text.unlikely., .text.unknown..
-> > >
-> > > When using -ffunction-sections together with profiling infomation,
-> > > either explicitly (FGKASLR) or implicitly (LTO), code may be placed in
-> > > sections following the convention:
-> > > .text.hot.<foo>, .text.unlikely.<bar>, .text.unknown.<baz>
-> > > where <foo>, <bar>, and <baz> are functions.  (This produces one section
-> > > per function; we generally try to merge these all back via linker script
-> > > so that we don't have 50k sections).
-> > >
-> > > For the above cases, we need to teach our linker scripts that such
-> > > sections might exist and that we'd explicitly like them grouped
-> > > together, otherwise we can wind up with code outside of the
-> > > _stext/_etext boundaries that might not be mapped properly for some
-> > > architectures, resulting in boot failures.
-> > >
-> > > If the linker script is not told about possible input sections, then
-> > > where the section is placed as output is a heuristic-laiden mess that's
-> > > non-portable between linkers (ie. BFD and LLD), and has resulted in many
-> > > hard to debug bugs.  Kees Cook is working on cleaning this up by adding
-> > > --orphan-handling=warn linker flag used in ARCH=powerpc to additional
-> > > architectures. In the case of linker scripts, borrowing from the Zen of
-> > > Python: explicit is better than implicit.
-> > >
-> > > Also, ld.bfd's internal linker script considers .text.hot AND
-> > > .text.hot.* to be part of .text, as well as .text.unlikely and
-> > > .text.unlikely.*. I didn't see support for .text.unknown.*, and didn't
-> > > see Clang producing such code in our kernel builds, but I see code in
-> > > LLVM that can produce such section names if profiling information is
-> > > missing. That may point to a larger issue with generating or collecting
-> > > profiles, but I would much rather be safe and explicit than have to
-> > > debug yet another issue related to orphan section placement.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=add44f8d5c5c05e08b11e033127a744d61c26aee
-> > > Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=1de778ed23ce7492c523d5850c6c6dbb34152655
-> > > Link: https://reviews.llvm.org/D79600
-> > > Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1084760
-> > > Reported-by: Jian Cai <jiancai@google.com>
-> > > Debugged-by: Luis Lozano <llozano@google.com>
-> > > Suggested-by: Fāng-ruì Sòng <maskray@google.com>
-> > > Tested-by: Luis Lozano <llozano@google.com>
-> > > Tested-by: Manoj Gupta <manojgupta@google.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> > > Changes V1 -> V2:
-> > > * Add .text.unknown.*.  It's not strictly necessary for us yet, but I
-> > >   really worry that it could become a problem for us. Either way, I'm
-> > >   happy to drop for a V3, but I'm suggesting we not.
-> > > * Beef up commit message.
-> > > * Drop references to LLD; the LLVM change had nothing to do with LLD.
-> > >   I've realized I have a Pavlovian-response to changes from Fāng-ruì
-> > >   that I associate with LLD.  I'm seeking professional help for my
-> > >   ailment. Forgive me.
-> > > * Add link to now public CrOS bug.
-> > >
-> > >  include/asm-generic/vmlinux.lds.h | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > > index d7c7c7f36c4a..245c1af4c057 100644
-> > > --- a/include/asm-generic/vmlinux.lds.h
-> > > +++ b/include/asm-generic/vmlinux.lds.h
-> > > @@ -560,7 +560,10 @@
-> > >   */
-> > >  #define TEXT_TEXT                                                      \
-> > >                 ALIGN_FUNCTION();                                       \
-> > > -               *(.text.hot TEXT_MAIN .text.fixup .text.unlikely)       \
-> > > +               *(.text.hot .text.hot.*)                                \
-> > > +               *(TEXT_MAIN .text.fixup)                                \
-> > > +               *(.text.unlikely .text.unlikely.*)                      \
-> > > +               *(.text.unknown .text.unknown.*)                        \
-> > >                 NOINSTR_TEXT                                            \
-> > >                 *(.text..refcount)                                      \
-> > >                 *(.ref.text)                                            \
-> > > --
-> > > 2.27.0.111.gc72c7da667-goog
-> > >
-
--- 
-Kees Cook
