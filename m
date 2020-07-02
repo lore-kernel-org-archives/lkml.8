@@ -2,184 +2,124 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB65C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D266220899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5BB20720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgGBIUA convert rfc822-to-8bit (ORCPT
+        id S1727940AbgGBIUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:20:00 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:50133 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgGBIT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:19:59 -0400
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MLA6m-1jZvpM05sQ-00IFiW; Thu, 02 Jul 2020 10:19:58 +0200
-Received: by mail-qv1-f54.google.com with SMTP id e3so5943369qvo.10;
-        Thu, 02 Jul 2020 01:19:57 -0700 (PDT)
-X-Gm-Message-State: AOAM533p7QTPnJYn4t7OCex0thOmv7ugblaJR4wiHpk+hxHiOFKsNTyw
-        mdEPyz61jpywlFwm6MJcqEC/xrcaHaf8LXVqdZw=
-X-Google-Smtp-Source: ABdhPJzBmcbjjltKXh8eeEUBTbHDuG5qaiHKfVVSfapQjS2eqLtXVHvKc2vXYX6ouDvcbZyLDvsziTRLaU8W45hE524=
-X-Received: by 2002:a0c:a992:: with SMTP id a18mr19332311qvb.211.1593677996743;
- Thu, 02 Jul 2020 01:19:56 -0700 (PDT)
+        Thu, 2 Jul 2020 04:20:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15731 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbgGBIUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:20:12 -0400
+IronPort-SDR: hv3mNLHAGHEb/4CzPa84XlGrEy1DLbxlTGnN/43uqUXcMZR8CR5yrQToAoHuBj4pQHXXwuB2Qi
+ qDlgzVtNQKxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="144983374"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="144983374"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 01:20:11 -0700
+IronPort-SDR: XwXnoTDj8T9XWW5RTVju94T4eRwNlJtCABeYOFuF9P1hRscb3Vwx8U8FZlhUoS1s/7oygMS2P2
+ PZdcM1MsNVQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="481919787"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 01:20:08 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jquS0-00HAaT-W2; Thu, 02 Jul 2020 11:20:08 +0300
+Date:   Thu, 2 Jul 2020 11:20:08 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Petr Mladek <pmladek@suse.com>,
+        Raul Rangel <rrangel@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: UART/TTY console deadlock
+Message-ID: <20200702082008.GE3703480@smile.fi.intel.com>
+References: <CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com>
+ <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
+ <20200630035816.GA21591@jagdpanzerIV.localdomain>
+ <20200630102141.GA11587@alley>
+ <20200630105512.GA530@jagdpanzerIV.localdomain>
+ <20200630122239.GD6173@alley>
+ <20200630130534.GB145027@jagdpanzerIV.localdomain>
+ <20200630180255.GD37466@atomide.com>
+ <20200702051213.GB3450@jagdpanzerIV.localdomain>
+ <20200702054033.GC3450@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-References: <20200622231536.7jcshis5mdn3vr54@google.com> <20200625184752.73095-1-ndesaulniers@google.com>
- <CAKwvOd=cum+BNHOk2djXx5JtAcCBwq2Bxy=j5ucRd2RcLWwDZQ@mail.gmail.com>
-In-Reply-To: <CAKwvOd=cum+BNHOk2djXx5JtAcCBwq2Bxy=j5ucRd2RcLWwDZQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jul 2020 10:19:40 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com>
-Message-ID: <CAK8P3a1mBCC=hBMzxZVukHhrWhv=LiPOfV6Mgnw1QpNg=MpONg@mail.gmail.com>
-Subject: Re: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:ni37+2efrpQ8v2QCFmNqmEikva550Z7Mr8RW3iRuHk/255ViWJL
- H0rBK++vcno6Se7E7kwrGvU6zeqr8ucJwwr8XSPrro6+rAs7GuEPhO502YKdm+ok419QZsH
- sQigMFqExCTU0qcG+eKtDIObg8tzJm2lHF3JS0l/1lfkSe6bdyxixFUnrECuOn7HT3goCDw
- Z2dhGVz9kO98cwNzwVhsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VfkFeVn3rnM=:Unb41P2LuVKlgmBiaPCPJ2
- 2Kh7CMreV1eMPiuuD7OSjeHDlnFe97D1puq6c0hEA0Fk+y4kbuYN5D/pAxS8LjP6JBnT3zCiI
- 9jCm34a5zBAIL+23surTruK6gFfSC5engMupWi1KVEgYxmJG+hG0mwXfH58NiznPgCrczVBd/
- jtwpBilyJvBc1bBcK+o0zB69cggUS5/AKFSMTVogiMI5X0miTZKFO8f1eIsMEERWz2QH1Gv7M
- hSy9yzgXfIBEcj42KowV+wUH6wV0v/ly2N3KLOWQZHDdwjZZLQVWB+ASC1WsYZqdQPoQF76hA
- 3pM0IvMjYR/q+ar/ttoftfGoRCr1/yFV+iLt1Ama6xmTdluFmddDBGMIWhCtVNOkdsUsje+Y0
- pdGnLZJhEP978EOMKIdqMCVE9B7Hf5ieWCjXE5xFV+/L6Ms79DQYm3bYXW59AoFUygE+WLlY8
- ML+Bfae+Y1i0XQD+qIdNrXk0QEU3s6P7AySCygHUFrWDBVuhtVHkKxWnFdGBCt0VuI72SeJmo
- 50C3mTYTcNo8aOlzYac+3gX3yGrF514jB668y0/Bdez4xW92Z7lJN8S4IGpqneORLaXjvLOkL
- /PvzaoQbxwQvn8fIxywW5zmC1nRUkWeTwtzi3BndSpuVZYz1JxNq7Xk6iEbzYvVXNw6o4/x8S
- tI8ohBNFfiVDR5o2ZQp4EeUCo1E8ghZlirlcMBq7qpPjha7SwhpDgU1IKXhwLdMlH3uaDZH0l
- UoyogNfaFh/WFoIThMcyjbEkWD2t1QdNBkQIqE/KREo8UmPjO0oRq/x+WrLEmOWtQAxjGviRr
- aVba2W0Pv91F8c5jxj7qHLH6YoSB4sO++TvMs73qz4J1m1CNMg=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702054033.GC3450@jagdpanzerIV.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 11:54 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> Hi Arnd,
-> I usually wait longer to bump threads for review, but we have a
-> holiday in the US so we're off tomorrow and Friday.
-> scripts/get_maintainer.pl recommend you for this patch.  Would you
-> take a look at it for us, please?
+On Thu, Jul 02, 2020 at 02:40:33PM +0900, Sergey Senozhatsky wrote:
+> On (20/07/02 14:12), Sergey Senozhatsky wrote:
+> > From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > On (20/06/30 11:02), Tony Lindgren wrote:
 
-Hi Nick
+...
 
-While I'm listed as the maintainer for include/asm-generic, linker scripts
-are really not my expertise and I have no way of knowing whether the
-change is good or not.
+> > I think we can do it. serial8250_do_startup() and irq handler take
+> > port->lock, so they should be synchronized.
+> 
+> Hmm, hold on. Why does it disable IRQ in the first place? IRQ handlers
+> should grab the port->lock. So if there is already running IRQ, then
+> serial8250_do_startup() will wait until IRQ handler unlocks the port->lock.
+> If serial8250_do_startup() grabs the port->lock first, then IRQ will wait
+> for serial8250_do_startup() to unlock it. serial8250_do_startup() does
+> not release the port->unlock until its done:
+> 
+> 		spin_lock_irqsave(&port->lock, flags);
+> 
+> 		wait_for_xmitr(up, UART_LSR_THRE);
+> 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> 		udelay(1); /* allow THRE to set */
+> 		iir1 = serial_port_in(port, UART_IIR);
+> 		serial_port_out(port, UART_IER, 0);
+> 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> 		udelay(1); /* allow a working UART time to re-assert THRE */
+> 		iir = serial_port_in(port, UART_IIR);
+> 		serial_port_out(port, UART_IER, 0);
+> 
+> 		spin_unlock_irqrestore(&port->lock, flags);
+> 
+> so IRQ will not see the inconsistent device state.
+> 
+> What exactly is the purpose of disable_irq_nosync()? Can we just remove
+> disable_irq_nosync()/enable_irq() instead? Are there any IRQ handlers
+> that don't acquire the port->lock?
 
-Your description looks very reasonable of course and I have no problem
-with having someone else pick it up. You mentioned that Kees is already
-looking at some related work and he's already done more changes to
-this file than anyone else. If he can provide an Ack for this patch,
-you can add mine as well to send it to akpm, or I can pick it up in the
-asm-generic tree.
+I didn't look into this deeply, but my understanding that this is something for
+special case when you have several UART ports sharing the IRQ (multi-port card)
+and IRQ even maybe undesirable b/c it will confuse real IRQ handler. I don't
+remember details, but AFAIR IRQ handler does a busyloop to service as much as
+possible and in between it may release the lock (again, multi-port UART cards),
+that's why we better avoid IRQ event in the first place.
+But it's my pure speculation.
 
-       Arnd
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> On Thu, Jun 25, 2020 at 11:48 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > Basically, consider .text.{hot|unlikely|unknown}.* part of .text, too.
-> >
-> > When compiling with profiling information (collected via PGO
-> > instrumentations or AutoFDO sampling), Clang will separate code into
-> > .text.hot, .text.unlikely, or .text.unknown sections based on profiling
-> > information. After D79600 (clang-11), these sections will have a
-> > trailing `.` suffix, ie.  .text.hot., .text.unlikely., .text.unknown..
-> >
-> > When using -ffunction-sections together with profiling infomation,
-> > either explicitly (FGKASLR) or implicitly (LTO), code may be placed in
-> > sections following the convention:
-> > .text.hot.<foo>, .text.unlikely.<bar>, .text.unknown.<baz>
-> > where <foo>, <bar>, and <baz> are functions.  (This produces one section
-> > per function; we generally try to merge these all back via linker script
-> > so that we don't have 50k sections).
-> >
-> > For the above cases, we need to teach our linker scripts that such
-> > sections might exist and that we'd explicitly like them grouped
-> > together, otherwise we can wind up with code outside of the
-> > _stext/_etext boundaries that might not be mapped properly for some
-> > architectures, resulting in boot failures.
-> >
-> > If the linker script is not told about possible input sections, then
-> > where the section is placed as output is a heuristic-laiden mess that's
-> > non-portable between linkers (ie. BFD and LLD), and has resulted in many
-> > hard to debug bugs.  Kees Cook is working on cleaning this up by adding
-> > --orphan-handling=warn linker flag used in ARCH=powerpc to additional
-> > architectures. In the case of linker scripts, borrowing from the Zen of
-> > Python: explicit is better than implicit.
-> >
-> > Also, ld.bfd's internal linker script considers .text.hot AND
-> > .text.hot.* to be part of .text, as well as .text.unlikely and
-> > .text.unlikely.*. I didn't see support for .text.unknown.*, and didn't
-> > see Clang producing such code in our kernel builds, but I see code in
-> > LLVM that can produce such section names if profiling information is
-> > missing. That may point to a larger issue with generating or collecting
-> > profiles, but I would much rather be safe and explicit than have to
-> > debug yet another issue related to orphan section placement.
-> >
-> > Cc: stable@vger.kernel.org
-> > Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=add44f8d5c5c05e08b11e033127a744d61c26aee
-> > Link: https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=1de778ed23ce7492c523d5850c6c6dbb34152655
-> > Link: https://reviews.llvm.org/D79600
-> > Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1084760
-> > Reported-by: Jian Cai <jiancai@google.com>
-> > Debugged-by: Luis Lozano <llozano@google.com>
-> > Suggested-by: Fāng-ruì Sòng <maskray@google.com>
-> > Tested-by: Luis Lozano <llozano@google.com>
-> > Tested-by: Manoj Gupta <manojgupta@google.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> > Changes V1 -> V2:
-> > * Add .text.unknown.*.  It's not strictly necessary for us yet, but I
-> >   really worry that it could become a problem for us. Either way, I'm
-> >   happy to drop for a V3, but I'm suggesting we not.
-> > * Beef up commit message.
-> > * Drop references to LLD; the LLVM change had nothing to do with LLD.
-> >   I've realized I have a Pavlovian-response to changes from Fāng-ruì
-> >   that I associate with LLD.  I'm seeking professional help for my
-> >   ailment. Forgive me.
-> > * Add link to now public CrOS bug.
-> >
-> >  include/asm-generic/vmlinux.lds.h | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index d7c7c7f36c4a..245c1af4c057 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -560,7 +560,10 @@
-> >   */
-> >  #define TEXT_TEXT                                                      \
-> >                 ALIGN_FUNCTION();                                       \
-> > -               *(.text.hot TEXT_MAIN .text.fixup .text.unlikely)       \
-> > +               *(.text.hot .text.hot.*)                                \
-> > +               *(TEXT_MAIN .text.fixup)                                \
-> > +               *(.text.unlikely .text.unlikely.*)                      \
-> > +               *(.text.unknown .text.unknown.*)                        \
-> >                 NOINSTR_TEXT                                            \
-> >                 *(.text..refcount)                                      \
-> >                 *(.ref.text)                                            \
-> > --
-> > 2.27.0.111.gc72c7da667-goog
-> >
+
