@@ -2,275 +2,98 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE777C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8ED207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Bn04Gr3B"
+	by mail.kernel.org (Postfix) with ESMTP id 53AC921531
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGBS0B (ORCPT
+        id S1728061AbgGBS1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:26:01 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:17004 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgGBS0A (ORCPT
+        Thu, 2 Jul 2020 14:27:54 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44751 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgGBS1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:26:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593714360; x=1625250360;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=jLJQ9NuVygNNRcAPap0ICuY1A6zLkRPc2aHxxOZMLNc=;
-  b=Bn04Gr3BvCal+J+zvGCbb48FgninblZOYSr/Qt1aYgQ5Nx5T/oQTfegb
-   bK8rj3X+OpNHAPDrR1p7VC0yAegLkvWTtoEO5LIoWb+SMrs0Mxfw0oB5n
-   tC5WGmyGyWE/Xk8fQhhzMauX7TQaiTlzzB8NRtUk/HPDwbOxjovpOsZQ4
-   w=;
-IronPort-SDR: 9K0UaovTj6pXWTvQUqHP8tf1CyImeNnAp5dgeU8Ek2iag7xWzdGj816eXt/y4qO4q0g3EatLKK
- YauVToN5kJOg==
-X-IronPort-AV: E=Sophos;i="5.75,305,1589241600"; 
-   d="scan'208";a="55693820"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Jul 2020 18:25:57 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 2B3EAA1FEE;
-        Thu,  2 Jul 2020 18:25:49 +0000 (UTC)
-Received: from EX13D08UEB002.ant.amazon.com (10.43.60.107) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 18:25:30 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D08UEB002.ant.amazon.com (10.43.60.107) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 18:25:30 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 2 Jul 2020 18:25:29 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id E9DAC40844; Thu,  2 Jul 2020 18:25:29 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 18:25:29 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>
-Subject: [PATCH v2 02/11] xenbus: add freeze/thaw/restore callbacks support
-Message-ID: <20200702182529.GA3908@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1593665947.git.anchalag@amazon.com>
+        Thu, 2 Jul 2020 14:27:53 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 48019C0003;
+        Thu,  2 Jul 2020 18:27:48 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 20:27:47 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        "moderated list:ARM/Microchip (AT91) SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/8] ASoC: atmel: fix kernel-doc
+Message-ID: <20200702182747.GB6538@piout.net>
+References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
+ <20200702165901.164100-2-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1593665947.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200702165901.164100-2-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Munehisa Kamata <kamatam@amazon.com>
+On 02/07/2020 11:58:54-0500, Pierre-Louis Bossart wrote:
+> Fix W=1 warning
+> 
+> Kernel-doc is not used in one file and missing argument in the second.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Since commit b3e96c0c7562 ("xen: use freeze/restore/thaw PM events for
-suspend/resume/chkpt"), xenbus uses PMSG_FREEZE, PMSG_THAW and
-PMSG_RESTORE events for Xen suspend. However, they're actually assigned
-to xenbus_dev_suspend(), xenbus_dev_cancel() and xenbus_dev_resume()
-respectively, and only suspend and resume callbacks are supported at
-driver level. To support PM suspend and PM hibernation, modify the bus
-level PM callbacks to invoke not only device driver's suspend/resume but
-also freeze/thaw/restore.
+> ---
+>  sound/soc/atmel/atmel-pcm-dma.c | 2 +-
+>  sound/soc/atmel/atmel_ssc_dai.c | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/atmel/atmel-pcm-dma.c b/sound/soc/atmel/atmel-pcm-dma.c
+> index cb03c4f7324c..0a2e956232af 100644
+> --- a/sound/soc/atmel/atmel-pcm-dma.c
+> +++ b/sound/soc/atmel/atmel-pcm-dma.c
+> @@ -44,7 +44,7 @@ static const struct snd_pcm_hardware atmel_pcm_dma_hardware = {
+>  	.buffer_bytes_max	= 512 * 1024,
+>  };
+>  
+> -/**
+> +/*
+>   * atmel_pcm_dma_irq: SSC interrupt handler for DMAENGINE enabled SSC
+>   *
+>   * We use DMAENGINE to send/receive data to/from SSC so this ISR is only to
+> diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
+> index 0f18dfb85bfe..6a63e8797a0b 100644
+> --- a/sound/soc/atmel/atmel_ssc_dai.c
+> +++ b/sound/soc/atmel/atmel_ssc_dai.c
+> @@ -887,6 +887,7 @@ static int asoc_ssc_init(struct device *dev)
+>  
+>  /**
+>   * atmel_ssc_set_audio - Allocate the specified SSC for audio use.
+> + * @ssc_id: SSD ID in [0, NUM_SSC_DEVICES[
+>   */
+>  int atmel_ssc_set_audio(int ssc_id)
+>  {
+> -- 
+> 2.25.1
+> 
 
-Note that we'll use freeze/restore callbacks even for PM suspend whereas
-suspend/resume callbacks are normally used in the case, becausae the
-existing xenbus device drivers already have suspend/resume callbacks
-specifically designed for Xen suspend. So we can allow the device
-drivers to keep the existing callbacks wihtout modification.
-
-[Anchal Agarwal: Changelog]:
-RFC v1->v2: Refactored the callbacks code
-    v1->v2: Use dev_warn instead of pr_warn, naming/initialization
-            conventions
-Signed-off-by: Agarwal Anchal <anchalag@amazon.com>
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
----
- drivers/xen/xenbus/xenbus_probe.c | 96 ++++++++++++++++++++++++++-----
- include/xen/xenbus.h              |  3 +
- 2 files changed, 84 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 38725d97d909..715919aacd28 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -50,6 +50,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/suspend.h>
- 
- #include <asm/page.h>
- #include <asm/xen/hypervisor.h>
-@@ -599,16 +600,33 @@ int xenbus_dev_suspend(struct device *dev)
- 	struct xenbus_driver *drv;
- 	struct xenbus_device *xdev
- 		= container_of(dev, struct xenbus_device, dev);
-+	bool xen_suspend = xen_is_xen_suspend();
- 
- 	DPRINTK("%s", xdev->nodename);
- 
- 	if (dev->driver == NULL)
- 		return 0;
- 	drv = to_xenbus_driver(dev->driver);
--	if (drv->suspend)
--		err = drv->suspend(xdev);
--	if (err)
--		dev_warn(dev, "suspend failed: %i\n", err);
-+	if (xen_suspend) {
-+		if (drv->suspend)
-+			err = drv->suspend(xdev);
-+	} else {
-+		if (drv->freeze) {
-+			err = drv->freeze(xdev);
-+			if (!err) {
-+				free_otherend_watch(xdev);
-+				free_otherend_details(xdev);
-+				return 0;
-+			}
-+		}
-+	}
-+
-+	if (err) {
-+		dev_warn(&xdev->dev, "%s %s failed: %d\n", xen_suspend ?
-+				"suspend" : "freeze", xdev->nodename, err);
-+		return err;
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(xenbus_dev_suspend);
-@@ -619,6 +637,7 @@ int xenbus_dev_resume(struct device *dev)
- 	struct xenbus_driver *drv;
- 	struct xenbus_device *xdev
- 		= container_of(dev, struct xenbus_device, dev);
-+	bool xen_suspend = xen_is_xen_suspend();
- 
- 	DPRINTK("%s", xdev->nodename);
- 
-@@ -627,23 +646,34 @@ int xenbus_dev_resume(struct device *dev)
- 	drv = to_xenbus_driver(dev->driver);
- 	err = talk_to_otherend(xdev);
- 	if (err) {
--		dev_warn(dev, "resume (talk_to_otherend) failed: %i\n", err);
-+		dev_warn(&xdev->dev, "%s (talk_to_otherend) %s failed: %d\n",
-+				xen_suspend ? "resume" : "restore",
-+				xdev->nodename, err);
- 		return err;
- 	}
- 
--	xdev->state = XenbusStateInitialising;
-+	if (xen_suspend) {
-+		xdev->state = XenbusStateInitialising;
-+		if (drv->resume)
-+			err = drv->resume(xdev);
-+	} else {
-+		if (drv->restore)
-+			err = drv->restore(xdev);
-+	}
- 
--	if (drv->resume) {
--		err = drv->resume(xdev);
--		if (err) {
--			dev_warn(dev, "resume failed: %i\n", err);
--			return err;
--		}
-+	if (err) {
-+		dev_warn(&xdev->dev, "%s %s failed: %d\n",
-+				xen_suspend ? "resume" : "restore",
-+				xdev->nodename, err);
-+		return err;
- 	}
- 
- 	err = watch_otherend(xdev);
- 	if (err) {
--		dev_warn(dev, "resume (watch_otherend) failed: %d\n", err);
-+		dev_warn(&xdev->dev, "%s (watch_otherend) %s failed: %d.\n",
-+				xen_suspend ? "resume" : "restore",
-+				xdev->nodename, err);
-+
- 		return err;
- 	}
- 
-@@ -653,8 +683,44 @@ EXPORT_SYMBOL_GPL(xenbus_dev_resume);
- 
- int xenbus_dev_cancel(struct device *dev)
- {
--	/* Do nothing */
--	DPRINTK("cancel");
-+	int err;
-+	struct xenbus_driver *drv;
-+	struct xenbus_device *xendev = to_xenbus_device(dev);
-+	bool xen_suspend = xen_is_xen_suspend();
-+
-+	if (xen_suspend) {
-+		/* Do nothing */
-+		DPRINTK("cancel");
-+		return 0;
-+	}
-+
-+	DPRINTK("%s", xendev->nodename);
-+
-+	if (dev->driver == NULL)
-+		return 0;
-+	drv = to_xenbus_driver(dev->driver);
-+	err = talk_to_otherend(xendev);
-+	if (err) {
-+		dev_warn(&xendev->dev, "thaw (talk_to_otherend) %s failed: %d.\n",
-+			xendev->nodename, err);
-+		return err;
-+	}
-+
-+	if (drv->thaw) {
-+		err = drv->thaw(xendev);
-+		if (err) {
-+			dev_warn(&xendev->dev, "thaw %s failed: %d\n", xendev->nodename, err);
-+			return err;
-+		}
-+	}
-+
-+	err = watch_otherend(xendev);
-+	if (err) {
-+		dev_warn(&xendev->dev, "thaw (watch_otherend) %s failed: %d.\n",
-+			xendev->nodename, err);
-+		return err;
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(xenbus_dev_cancel);
-diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-index 5a8315e6d8a6..8da964763255 100644
---- a/include/xen/xenbus.h
-+++ b/include/xen/xenbus.h
-@@ -104,6 +104,9 @@ struct xenbus_driver {
- 	int (*remove)(struct xenbus_device *dev);
- 	int (*suspend)(struct xenbus_device *dev);
- 	int (*resume)(struct xenbus_device *dev);
-+	int (*freeze)(struct xenbus_device *dev);
-+	int (*thaw)(struct xenbus_device *dev);
-+	int (*restore)(struct xenbus_device *dev);
- 	int (*uevent)(struct xenbus_device *, struct kobj_uevent_env *);
- 	struct device_driver driver;
- 	int (*read_otherend_details)(struct xenbus_device *dev);
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
