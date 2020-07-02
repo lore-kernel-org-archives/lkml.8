@@ -2,139 +2,178 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D22C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92EE208D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A46520737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYIi0Nhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgGBLx7 (ORCPT
+        id S1728788AbgGBLzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:53:59 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:36324 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726475AbgGBLx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:53:58 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX97Lyv1ecIBOAA--.143S3;
-        Thu, 02 Jul 2020 19:53:48 +0800 (CST)
-Subject: Re: [PATCH v4 02/14] irqchip/csky-apb-intc: Fix potential resource
- leaks
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        linux-csky@vger.kernel.org
-References: <1593569786-11500-1-git-send-email-yangtiezhu@loongson.cn>
- <1593569786-11500-3-git-send-email-yangtiezhu@loongson.cn>
- <564ffff9-6043-7191-2458-f425dd8d0c11@web.de>
- <1a0e007a-db94-501b-4ab9-0bb479ec093b@loongson.cn>
- <971c649e-fe07-3771-6fea-f5aaeaf090ad@web.de>
- <c7cc848a-1ce0-e877-aa44-ebafe4b5985c@loongson.cn>
- <41b48aa5-e5b2-0257-8b3d-07e1b86634b4@web.de>
- <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <c0093731-fa42-9d43-ebfc-208ba51a96c5@loongson.cn>
-Date:   Thu, 2 Jul 2020 19:53:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 2 Jul 2020 07:55:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54870 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726475AbgGBLzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:55:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593690917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8JPhHiGcfmRUjF2RngOoA4i4u5ZYB74t5T3BzZF3YsY=;
+        b=RYIi0NhcbN4LVHJ9wBLsv3qmaPyUomD5Yd5VdJUtX+ZBI1dYUV8kGYltV2otNxu1l3SUf+
+        Ib8B/ihI4elXUCn4J1cMQhRt9e3KkM/njB1bIXXTAH/r1OVB64Hx5zCoVK+c0zQVHgDT+g
+        lKWW4j+TeqdMpJM8ZQpWPlYI+Z2OsUE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-BA7ob32uNSm1XA_QXqBcFg-1; Thu, 02 Jul 2020 07:55:12 -0400
+X-MC-Unique: BA7ob32uNSm1XA_QXqBcFg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02CC719200CF;
+        Thu,  2 Jul 2020 11:55:03 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-96.pek2.redhat.com [10.72.13.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E08F10027B5;
+        Thu,  2 Jul 2020 11:54:57 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 19:54:54 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+Message-ID: <20200702115454.GB21026@dhcp-128-65.nay.redhat.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+ <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
+ <6e96ae5a-91fd-726e-1eda-314f2317d8b4@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <0726ddc2-6b01-2ac8-d5bf-74c3df36b6ef@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxX97Lyv1ecIBOAA--.143S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFy8XryfWFW3tF18XrW8WFg_yoW8ZF47pF
-        Wj9F45Aan5Xry8uFy29w4kXa4Yv3y0grWqv3Z7KrykZrWDWrn5Cr4Dt3WY9F1kCrnrCa1F
-        qa1fZ3yrZ3W5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWxJVW8Jr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        c2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
-        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjxU7YiiUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e96ae5a-91fd-726e-1eda-314f2317d8b4@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/2020 04:05 PM, Tiezhu Yang wrote:
-> On 07/02/2020 03:19 PM, Markus Elfring wrote:
->>>>> +++ b/drivers/irqchip/irq-csky-apb-intc.c
->> …
->>>> I suggest to recheck the parameter alignment for such a function call.
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n93 
->>>>
->>> OK, thank you, like this:
->>>
->>> -       ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
->>> -                       "csky_intc", handle_level_irq,
->>> -                       IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 
->>> 0, 0);
->>> -       if (ret) {
->>> +       if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
->>> +                                          "csky_intc", 
->>> handle_level_irq,
->>> +                                          IRQ_NOREQUEST | 
->>> IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
->>>                  pr_err("C-SKY Intc irq_alloc_gc failed.\n");
->> …
->>
->> Would you like to use also horizontal tab characters for the 
->> corresponding indentation?
->
-> Sorry, I do not quite understanding what you mean, maybe like this?
->
->         if (irq_alloc_domain_generic_chips(root_domain, 32, 1,
->                 "csky_intc", handle_level_irq,
->                 IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0)) {
->                 pr_err("C-SKY Intc irq_alloc_gc failed.\n");
->                 goto err_domain_remove;
->         }
->
+On 07/01/20 at 11:48pm, Hari Bathini wrote:
+> 
+> 
+> On 01/07/20 1:10 pm, Dave Young wrote:
+> > Hi Hari,
+> > On 06/27/20 at 12:35am, Hari Bathini wrote:
+> >> crashkernel region could have an overlap with special memory regions
+> >> like  opal, rtas, tce-table & such. These regions are referred to as
+> >> exclude memory ranges. Setup this ranges during image probe in order
+> >> to avoid them while finding the buffer for different kdump segments.
+> >> Implement kexec_locate_mem_hole_ppc64() that locates a memory hole
+> >> accounting for these ranges. Also, override arch_kexec_add_buffer()
+> >> to locate a memory hole & later call __kexec_add_buffer() function
+> >> with kbuf->mem set to skip the generic locate memory hole lookup.
+> >>
+> >> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> >> ---
+> >>  arch/powerpc/include/asm/crashdump-ppc64.h |   10 +
+> >>  arch/powerpc/include/asm/kexec.h           |    7 -
+> >>  arch/powerpc/kexec/elf_64.c                |    7 +
+> >>  arch/powerpc/kexec/file_load_64.c          |  292 ++++++++++++++++++++++++++++
+> >>  4 files changed, 312 insertions(+), 4 deletions(-)
+> >>  create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+> >>
+> > [snip]
+> >>  /**
+> >> + * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
+> >> + *                             regions like opal/rtas, tce-table, initrd,
+> >> + *                             kernel, htab which should be avoided while
+> >> + *                             setting up kexec load segments.
+> >> + * @mem_ranges:                Range list to add the memory ranges to.
+> >> + *
+> >> + * Returns 0 on success, negative errno on error.
+> >> + */
+> >> +static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	ret = add_tce_mem_ranges(mem_ranges);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_initrd_mem_range(mem_ranges);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_htab_mem_range(mem_ranges);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_kernel_mem_range(mem_ranges);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_rtas_mem_range(mem_ranges, false);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_opal_mem_range(mem_ranges, false);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	ret = add_reserved_ranges(mem_ranges);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	/* exclude memory ranges should be sorted for easy lookup */
+> >> +	sort_memory_ranges(*mem_ranges);
+> >> +out:
+> >> +	if (ret)
+> >> +		pr_err("Failed to setup exclude memory ranges\n");
+> >> +	return ret;
+> >> +}
+> > 
+> > I'm confused about the "overlap with crashkernel memory", does that mean
+> > those normal kernel used memory could be put in crashkernel reserved
+> 
+> There are regions that could overlap with crashkernel region but they are
+> not normal kernel used memory though. These are regions that kernel and/or
+> f/w chose to place at a particular address for real mode accessibility
+> and/or memory layout between kernel & f/w kind of thing.
+> 
+> > memory range?  If so why can't just skip those areas while crashkernel
+> > doing the reservation?
+> 
+> crashkernel region has a dependency to be in the first memory block for it
+> to be accessible in real mode. Accommodating this requirement while addressing
+> other requirements would mean something like what we have now. A list of
+> possible special memory regions in crashkernel region to take care of.
+> 
+> I have plans to split crashkernel region into low & high to have exclusive
+> regions for crashkernel, even if that means to have two of them. But that
+> is for another day with its own set of complexities to deal with...
 
-Hi Markus,
+Ok, I was not aware the powerpc crashkernel reservation is not
+dynamically reserved.  But seems powerpc need those tricks at least for
+the time being like you said.
 
-Thank you very much for your review and suggestion.
-
-Maybe still use "ret" variable is better, the following is another comment
-which is only sent to me:
-
-[I think that if one of the return values comes from a function call, then
-you should use the value from the function call even if it is currently
-always -ENOMEM.  The return value of the function call could perhaps
-change in the future.
-
-In any case, ret = foo(); if (ret) is very common in kernel code, and
-there is no reason not to do it, especially when the function call takes
-up a lot of space.]
-
-Let us keep it as it is to make the code clear and to avoid the 
-alignment issue:
-
-ret = foo();
-if (ret) {
-         ret = -ENOMEM;
-         goto ...
-}
-
-Thanks,
-Tiezhu
-
->>
->> Regards,
->> Markus
->
+Thanks
+Dave
 
