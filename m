@@ -2,180 +2,140 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7360C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A1720720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593707223;
-	bh=cMB53Un0eBCoEbk2RUO3vIOEZ4ehPI9IjX58+d2GPkI=;
-	h=To:From:Subject:Cc:Date:List-ID:From;
-	b=tjpV2b+3bppFMx4ifDhOkrDWiV19oNXRJQtSyY6aKgWi1uvnEKaRmyJACrV82Nv35
-	 BcEfYOqMVqFg0MH4nPFpUYzjUZ3T98FrW04ZDKGsn/kA7KAu+brLBGmxdGTP6NZfYF
-	 zjNsl4RfVKo5RPwewZ/NwJL8gDh+JSudr+BRSRHw=
+	by mail.kernel.org (Postfix) with ESMTP id A466320720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:27:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dc5QYiRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgGBQ1B (ORCPT
+        id S1726772AbgGBQ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37604 "EHLO
+        Thu, 2 Jul 2020 12:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgGBQ1B (ORCPT
+        with ESMTP id S1726199AbgGBQ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:27:01 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799B7C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 09:27:01 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id s190so2132492ooa.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 09:27:01 -0700 (PDT)
+        Thu, 2 Jul 2020 12:27:56 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09274C08C5C1;
+        Thu,  2 Jul 2020 09:27:56 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dr13so30495589ejc.3;
+        Thu, 02 Jul 2020 09:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:from:subject:cc:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=+HQPPeKFIejGiV86yMGdqBrbHg3TiXW0sg4eTbb57QY=;
-        b=ZnRwDcNdKT12L60bjWxeAZ/j55/odGKh7b6lNVs8Y7PiBzOaUuAqRuvhDb1+GMNHW7
-         gyAOD8ca/GJ7gFj5h11+m8V431lTUfqotMZ3yAbwbEA051halP0Bm5ljqLggDR178fn0
-         DQ1SYuzFImuQbXIALp8X1bX4SLlQBsQsM/xxA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=729wRp2/PBhbh0Gnc86Vq7P7Z2CAjYw3uUDYdxrU638=;
+        b=dc5QYiRbUgMXusOZ+GdrLCj6a0s03jHIZwIzI35u/J16JDM/e/zV5h1eOuO7qzz29w
+         LhFwjNVSsoswvAdbmPIUFa433B533j57PZzNcHehyEatS+5NDPNMmKzkJL0kRWGOzbPU
+         kJtApVxyPQLHfNZiQqKY1Erb3NlGv02bNk5/TeyrHsXdopFFh1U0WkE+vfcmbBrr2nz0
+         v3KW2jCRheh2S9c3IPLD8hrachGyQIG5rOnA1JFWcI3PDVnQB0NHvHP9klaSN1MTalMJ
+         oIVrNo+c9ofQw0i8P3LC5cKLBrTYeqz8Q6VNm3zbQ6Zan5u6CsNtiSMQRFRQxES7/KVR
+         cf6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=+HQPPeKFIejGiV86yMGdqBrbHg3TiXW0sg4eTbb57QY=;
-        b=Z265wr6IKsY/r2MpNwjCnuJ2WqJl4FgZsD3t4xCkHr8lSXarpuG8yArGzPuiRfIPjb
-         TWhz5t4ggb1Qsl5AjB+nTpxGLh+zUXeRbNwrKcPQG17ESy9CWfSuMnQ49Ht6MEdXXFYK
-         KhFpTmR8J93QKl1OzmogtLJ0Sx0yp8+QepaIpSTHmsxbeMT3nzTCPOoc2Pxe81n7V6m0
-         5kO5nACIlJS7Ev+VVa4iEF96xlvy3aj2h9U29s8sUThtRT/C67Ae94Vvtp+wkw/Ypft2
-         XYQycwSXm/xY6UesQnxHXiU3p/IgATiwyqBzOJnlanvrZmlbD5ZochVJou8VZI+FszmT
-         liWg==
-X-Gm-Message-State: AOAM5331ukM/yJPDsae4ffu4QhzpaQK4I2VF8cpf3IX4zaENYOLfRSLj
-        8a4ko7WmjvShQwRjqKfEYD8x/WsMhz4=
-X-Google-Smtp-Source: ABdhPJxqqV5v5JxyQMfvIA/8/KzIDufypGIk+mmqtOiMddVrepIJcizENTmMohNnN2mwxalpz+tcWA==
-X-Received: by 2002:a4a:b109:: with SMTP id a9mr19183218ooo.83.1593707220433;
-        Thu, 02 Jul 2020 09:27:00 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 72sm2699953oii.43.2020.07.02.09.26.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 09:26:59 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest fixes update for Linux 5.8-rc4
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        skhan@linuxfoundation.org, linux-kselftest@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <c97a669c-02d8-24c6-3bbf-295124d8261a@linuxfoundation.org>
-Date:   Thu, 2 Jul 2020 10:26:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=729wRp2/PBhbh0Gnc86Vq7P7Z2CAjYw3uUDYdxrU638=;
+        b=S+go2/+gIr6rElc32iLpNQqP2HwIMVjQ9FjCd1G6QDMXMuKuUTxOsPga1rThCNhIgl
+         45FeVzYCQT8Mr1yXgGQ0/R4SRmOU2U+ZvFkgL4Cb4h9CYO9Qjt45aJJgG6GnYdBqecX0
+         0jNX+gjHTOT4rZI78aLdk21UZXpiZU+6dubED10rovilpsxcWg0RpPQWfDvgxMgOExNH
+         7j3SMOKwsRDMdixyYD/vqbQLHCenIy/mdrkige89gVkfa81Kiikr82xOSmEVvz9bpytU
+         Lxrye1q2bM/UX/8Y4CBAekvZK96E3vwQyOoULquQTJcDF3WLX7lP3CYwrlwweKaQue5k
+         USNQ==
+X-Gm-Message-State: AOAM531cgltdNLRSji3oJqs7DQvp+7RCq74/CKGFwcXZJ7QgsENTYJpq
+        7WbzBLAIvODHaPUTpZK2kS8=
+X-Google-Smtp-Source: ABdhPJwaRSO710RvlavWWFdG8fe+JqiPzdhjZB/MKqEoqZiwGCKOn46Ki62yvGDk5nDITpwH5sW9uw==
+X-Received: by 2002:a17:906:fac1:: with SMTP id lu1mr23313087ejb.427.1593707274720;
+        Thu, 02 Jul 2020 09:27:54 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:4932:71ef:3c73:a14f])
+        by smtp.gmail.com with ESMTPSA id gu15sm7375188ejb.111.2020.07.02.09.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 09:27:54 -0700 (PDT)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: [PATCH v2 0/3] pci: enforce usage of 'pci_channel_state_t'
+Date:   Thu,  2 Jul 2020 18:26:48 +0200
+Message-Id: <20200702162651.49526-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------723C156AC411040FCB61D4F9"
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------723C156AC411040FCB61D4F9
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+The definition of pci_channel_io_normal and friends is relatively
+complicated and ugly:
+	typedef unsigned int __bitwise pci_channel_state_t;
+	enum pci_channel_state {
+		pci_channel_io_normal = (__force pci_channel_state_t) 1,
+		...
+	};
 
-Hi Linus,
+This is clearly motivated by a desire to have some strong typing
+for this constants but:
+* in C enums are weakly typed (they're essentially the same as 'int')
+* sparse only allow to define bitwise ints, not bitwise enums.
 
-Please pull the following Kselftest fixes update for Linux 5.8-rc4.
+This series is a preparation step to introduce bitwise enums.
+This would allow to define these constant without having to use
+the force cast:
+	enum __bitwise pci_channel_state {
+		pci_channel_io_normal = 1,
+		...
+	};
+or, equivalently:
+	typedef enum __bitwise {
+		pci_channel_io_normal = 1,
+		...
+	} pci_channel_state_t;
 
-This kselftest fixes update for Linux 5.8-rc4 consists of tpm test
-fixes from Jarkko Sakkinen.
 
-diff is attached.
+Note: the first patch is, I think, uncontroversial, the other ones
+      less so but can be safely dropped.
 
-thanks,
--- Shuah
 
-----------------------------------------------------------------
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+Changes since v1:
+* add missing conversion
+* try to avoid using 'enum pci_channel_state' in include/linux/pci.h
+* try to avoid using 'enum pci_channel_state' in the documentation
 
-   Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-are available in the Git repository at:
+Luc Van Oostenryck (3):
+  pci: use 'pci_channel_state_t' instead of 'enum pci_channel_state'
+  pci: use anonymous 'enum' instead of 'enum pci_channel_state'
+  pci: update to doc to use 'pci_channel_state_t'
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-fixes-5.8-rc4
+ Documentation/PCI/pci-error-recovery.rst    | 8 ++++----
+ arch/powerpc/kernel/eeh_driver.c            | 2 +-
+ drivers/block/rsxx/core.c                   | 2 +-
+ drivers/dma/ioat/init.c                     | 2 +-
+ drivers/media/pci/ngene/ngene-cards.c       | 2 +-
+ drivers/misc/genwqe/card_base.c             | 2 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
+ drivers/net/ethernet/intel/ice/ice_main.c   | 2 +-
+ drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
+ drivers/net/ethernet/sfc/efx.c              | 2 +-
+ drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
+ drivers/pci/pci.h                           | 2 +-
+ drivers/pci/pcie/err.c                      | 4 ++--
+ drivers/pci/pcie/portdrv_pci.c              | 2 +-
+ drivers/scsi/aacraid/linit.c                | 2 +-
+ drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
+ drivers/staging/qlge/qlge_main.c            | 2 +-
+ include/linux/pci.h                         | 4 ++--
+ 18 files changed, 24 insertions(+), 24 deletions(-)
 
-for you to fetch changes up to 377ff83083c953dd58c5a030b3c9b5b85d8cc727:
+-- 
+2.27.0
 
-   selftests: tpm: Use /bin/sh instead of /bin/bash (2020-06-29 14:19:38 
--0600)
-
-----------------------------------------------------------------
-linux-kselftest-fixes-5.8-rc4
-
-This kselftest fixes update for Linux 5.8-rc4 consists of tpm test
-fixes from Jarkko Sakkinen.
-
-----------------------------------------------------------------
-Jarkko Sakkinen (3):
-       Revert "tpm: selftest: cleanup after unseal with wrong 
-auth/policy test"
-       selftests: tpm: Use 'test -e' instead of 'test -f'
-       selftests: tpm: Use /bin/sh instead of /bin/bash
-
-  tools/testing/selftests/tpm2/test_smoke.sh | 9 ++-------
-  tools/testing/selftests/tpm2/test_space.sh | 4 ++--
-  2 files changed, 4 insertions(+), 9 deletions(-)
-
-----------------------------------------------------------------
-
---------------723C156AC411040FCB61D4F9
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-fixes-5.8-rc4.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-fixes-5.8-rc4.diff"
-
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 663062701d5a..1334e301d2a0 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,15 +1,10 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
- 
--[ -f /dev/tpm0 ] || exit $ksft_skip
-+[ -e /dev/tpm0 ] || exit $ksft_skip
- 
- python -m unittest -v tpm2_tests.SmokeTest
- python -m unittest -v tpm2_tests.AsyncTest
--
--CLEAR_CMD=$(which tpm2_clear)
--if [ -n $CLEAR_CMD ]; then
--	tpm2_clear -T device
--fi
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index 36c9d030a1c6..00259cb746cf 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,9 +1,9 @@
--#!/bin/bash
-+#!/bin/sh
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
- 
--[ -f /dev/tpmrm0 ] || exit $ksft_skip
-+[ -e /dev/tpmrm0 ] || exit $ksft_skip
- 
- python -m unittest -v tpm2_tests.SpaceTest
-
---------------723C156AC411040FCB61D4F9--
