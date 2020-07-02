@@ -2,181 +2,189 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0858DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0AC208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAE7208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="neOCc8Na"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I2TRX/Yh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgGBVKm (ORCPT
+        id S1726039AbgGBVN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgGBVKl (ORCPT
+        Thu, 2 Jul 2020 17:13:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18918 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGBVN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:10:41 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4CEC08C5C1;
-        Thu,  2 Jul 2020 14:10:40 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id dp18so31434889ejc.8;
-        Thu, 02 Jul 2020 14:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1BedfZLLtUv8+jct9K4ydZAXp2NUQdx/2FyFkLNGA7s=;
-        b=neOCc8Na9y+e/dxihMt1n/W5sPpq0Xa2v/yiLGXRoJpsLIgmilxcjiubzVjRhDZ2i2
-         WJMolOqMMfnKwg+XXde8AV/uE5qIjeXvL/tTeRkB053knUpEVbBSJu2bb9mbFLkCVX+z
-         Kf0OjPMel/Xmx54HLfdkaPb10ajbyZSz8H/J5l9Wdwxoj9Iix3OZl5Onye/utImcbrOx
-         lU42IY+A6/UnUf0WrXbGGZpI61RUDFaFAc9QWDhrC6+kEkLGBVOMeNYeCzKQSX1FifAy
-         xw20JrfCt39DvQ1o1GZG8vLy7BjeP3fxld8YO5uEKjuDeDJsdw1fcW49WOlaE+qvNNeE
-         fFaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1BedfZLLtUv8+jct9K4ydZAXp2NUQdx/2FyFkLNGA7s=;
-        b=MT2yM3MMOHvPmZ347SRd4eOAOd2AF73mifQxyXGK5I4Benjonvf+8sVFq02DLLZskK
-         bJytsC3pmZnBH3VRwlusb7gKS8ahGepE9GchDzp496j8DLSNr7ETXYipJVsEy3PSLl57
-         G+iCxS4iTxigjG/3OJg8U/UbGaQBKOsYCerzGqb1xxpAyXUw0E/Fl8EM5/ym2jZA+JCr
-         fpX28AdZcGc2YoCCoXvJF0y8UIWUAeJybLvOTnEM3u9BZXfFnFJopJiCnN7c9H/2vqSa
-         cxuEhUjalHn8SKPv2JY6HpFx8z7GnydUFZZNRlzhXIoQlHsyr9vX2QG5Pw4IDlqDikYG
-         XY0A==
-X-Gm-Message-State: AOAM532oEMWln4uidN3jOgmYxxA0hfyIzYSj+j7bpBFNe9raMMC3c59/
-        9gj/w7pz8A3Dyy6bxVkiiVE=
-X-Google-Smtp-Source: ABdhPJzcFVv+ZyTEeMYFa3T6ppFANThAYYmYUoxagvBjbEslqdeHSaQvfCWeL72bMnXGsLrbsKFC7g==
-X-Received: by 2002:a17:906:aac1:: with SMTP id kt1mr30856158ejb.408.1593724239598;
-        Thu, 02 Jul 2020 14:10:39 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8070:bb9:bc00::fc])
-        by smtp.googlemail.com with ESMTPSA id x19sm10176353eds.43.2020.07.02.14.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 14:10:39 -0700 (PDT)
-From:   Christoph Fritz <chf.fritz@googlemail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: regulator: Document bindings for fan53880
-Date:   Thu,  2 Jul 2020 23:08:46 +0200
-Message-Id: <20200702210846.31659-3-chf.fritz@googlemail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200702210846.31659-1-chf.fritz@googlemail.com>
-References: <20200702210846.31659-1-chf.fritz@googlemail.com>
+        Thu, 2 Jul 2020 17:13:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efe4e090000>; Thu, 02 Jul 2020 14:13:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Jul 2020 14:13:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Jul 2020 14:13:57 -0700
+Received: from [172.20.40.54] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jul
+ 2020 21:13:57 +0000
+Subject: Re: [git pull] drm for 5.8-rc1
+To:     Daniel Stone <daniel@fooishbar.org>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200630230808.wj2xlt44vrszqfzx@box>
+ <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
+ <20200701075719.p7h5zypdtlhqxtgv@box> <20200701075902.hhmaskxtjsm4bcx7@box>
+ <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
+ <CAPj87rOrUHBZZR3cw+iqUMtZL1ZQyjd=RoM2yHt5oUeRO5uDTA@mail.gmail.com>
+From:   James Jones <jajones@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <5ffa32db-4383-80f6-c0cf-a9bb12e729aa@nvidia.com>
+Date:   Thu, 2 Jul 2020 14:14:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPj87rOrUHBZZR3cw+iqUMtZL1ZQyjd=RoM2yHt5oUeRO5uDTA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593724425; bh=zRMa3tFNrvFTLZm34tiIHjXWilkhurLRyVAaSrk7gpA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=I2TRX/YhTsv5dRWqwj55ta7jfuKrhC1JoW5WY9R1KTJwKq/Z7wvNDiwSSdxmCW/6I
+         5LB9AYm0riLqoyvcjb9lyuzYVFWeB3TxVLYIXgJVuVgQPlcm/YwnBVAiP1I5cfTVpj
+         SX8p0hRHKK+W25AcxLKruGCZme1pgqOoiwZokoaYtf0bD/H+iqgXrMVLmPxgRtFqKQ
+         FheB1hMO/Z3tykZcV2X2AxnxMJIv8bAowB0BaL3/L7ATH8VjNsWAn6V8OJSsBbk73a
+         SN1eOsGGPOZZ0U39bdFcp3fsXtvow3dSzeDgbtJ+lvc3G9AAsafW8pUDqRgTWuO9v1
+         f8Jhj0cECSkIw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding information for fan53880 regulator driver.
+On 7/2/20 1:22 AM, Daniel Stone wrote:
+> Hi,
+> 
+> On Wed, 1 Jul 2020 at 20:45, James Jones <jajones@nvidia.com> wrote:
+>> OK, I think I see what's going on.  In the Xorg modesetting driver, the
+>> logic is basically:
+>>
+>> if (gbm_has_modifiers && DRM_CAP_ADDFB2_MODIFIERS != 0) {
+>>     drmModeAddFB2WithModifiers(..., gbm_bo_get_modifier(bo->gbm));
+>> } else {
+>>     drmModeAddFB(...);
+>> }
+> 
+> I read this thread expecting to explain the correct behaviour we
+> implement in Weston and how modesetting needs to be fixed, but ...
+> that seems OK to me? As long as `gbm_has_modifiers` is a proxy for 'we
+> used gbm_(bo|surface)_create_with_modifiers to allocate the buffer'.
 
-Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
----
- .../bindings/regulator/onnn,fan53880.yaml     | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
+Yes, the hazards of reporting findings before verifying.  I now see 
+modesetting does query the DRM-KMS modifiers and attempt to allocate 
+with them if it found any.  However, I still see a lot of ways things 
+can go wrong, but I'm not going to share my speculation again until I've 
+actually verified it, which is taking a frustratingly long time.  The 
+modesetting driver is not my friend right now.
 
-diff --git a/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml b/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
-new file mode 100644
-index 000000000000..eb61e04ef852
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/onnn,fan53880.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Onsemi FAN53880 PMIC
-+
-+maintainers:
-+  - Christoph Fritz <chf.fritz@googlemail.com>
-+
-+description: |
-+  The FAN53880 is an I2C porgrammable power management IC (PMIC)
-+  that contains a BUCK (step-down converter), four low dropouts (LDO)
-+  and one BOOST (step-up converter) output. It is designed for mobile
-+  power applications.
-+
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]{1,2}"
-+  compatible:
-+    enum:
-+      - onnn,fan53880
-+
-+  reg:
-+    maxItems: 1
-+
-+  VIN12-supply:
-+    description: Input supply phandle(s) for LDO1 and LDO2
-+
-+  VIN3-supply:
-+    description: Input supply phandle(s) for LDO3
-+
-+  VIN4-supply:
-+    description: Input supply phandle(s) for LDO4
-+
-+  PVIN-supply:
-+    description: Input supply phandle(s) for BUCK and BOOST
-+
-+  regulators:
-+    type: object
-+    $ref: regulator.yaml#
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts LDO[1-4], BUCK and BOOST
-+
-+    patternProperties:
-+      "^LDO[1-4]$":
-+        type: object
-+        $ref: regulator.yaml#
-+
-+      "^BUCK|BOOST$":
-+        type: object
-+        $ref: regulator.yaml#
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@35 {
-+            compatible = "onnn,fan53880";
-+            reg = <0x35>;
-+
-+            PVIN-supply = <&fixreg_example_vcc>;
-+
-+            regulators {
-+                BUCK {
-+                    regulator-min-microvolt = <1200000>;
-+                    regulator-max-microvolt = <1200000>;
-+                };
-+            };
-+       };
-+     };
-+...
--- 
-2.20.1
+>> There's no attempt to verify the DRM-KMS device supports the modifier,
+>> but then, why would there be?  GBM presumably chose a supported modifier
+>> at buffer creation time, and we don't know which plane the FB is going
+>> to be used with yet.  GBM doesn't actually ask the kernel which
+>> modifiers it supports here either though.
+> 
+> Right, it doesn't ask, because userspace tells it which modifiers to
+> use. The correct behaviour is to take the list from the KMS
+> `IN_FORMATS` property and then pass that to
+> `gbm_(bo|surface)_create_with_modifiers`; GBM must then select from
+> that list and only that list. If that call does not succeed and Xorg
+> falls back to `gbm_surface_create`, then it must not call
+> `gbm_bo_get_modifier` - so that would be a modesetting bug. If that
+> call does succeed and `gbm_bo_get_modifier` subsequently reports a
+> modifier which was not in the list, that's a Mesa driver bug.
+> 
+>> It just goes into Mesa via
+>> DRI and reports the modifier (unpatched) Mesa chose on its own.  Mesa
+>> just hard-codes the modifiers in its driver backends since its thinking
+>> in terms of a device's 3D engine, not display.  In theory, Mesa's DRI
+>> drivers could query KMS for supported modifiers if allocating from GBM
+>> using the non-modifiers path and the SCANOUT flag is set (perhaps some
+>> drivers do this or its equivalent?  Haven't checked.), but that seems
+>> pretty gnarly and doesn't fix the modifier-based GBM allocation path
+>> AFAIK.  Bit of a mess.
+> 
+> Two options for GBM users:
+> * call gbm_*_create_with_modifiers, it succeeds, call
+> gbm_bo_get_modifier, pass modifier into AddFB
+> * call gbm_*_create (without modifiers), it succeeds, do not call
+> gbm_bo_get_modifier, do not pass a modifier into AddFB
+> 
+> Anything else is a bug in the user. Note that falling back from 1 to 2
+> is fine: if `gbm_*_create_with_modifiers()` fails, you can fall back
+> to the non-modifier path, provided you don't later try to get a
+> modifier back out.
+>
+>> For a quick userspace fix that could probably be pushed out everywhere
+>> (Only affects Xorg server 1.20+ AFAIK), just retrying
+>> drmModeAddFB2WithModifiers() without the DRM_MODE_FB_MODIFIERS flag on
+>> failure should be sufficient.
+> 
+> This would break other drivers.
 
+I think this could be done in a way that wouldn't, though it wouldn't be 
+quite as simple.  Let's see what the true root cause is first though.
+
+>> Still need to verify as I'm having
+>> trouble wrangling my Xorg build at the moment and I'm pressed for time.
+>> A more complete fix would be quite involved, as modesetting isn't really
+>> properly plumbed to validate GBM's modifiers against KMS planes, and it
+>> doesn't seem like GBM/Mesa/DRI should be responsible for this as noted
+>> above given the general modifier workflow/design.
+>>
+>> Most importantly, options I've considered for fixing from the kernel side:
+>>
+>> -Accept "legacy" modifiers in nouveau in addition to the new modifiers,
+>> though avoid reporting them to userspace as supported to avoid further
+>> proliferation.  This is pretty straightforward.  I'll need to modify
+>> both the AddFB2 handler (nouveau_validate_decode_mod) and the mode set
+>> plane validation logic (nv50_plane_format_mod_supported), but it should
+>> end up just being a few lines of code.
+> 
+> I do think that they should also be reported to userspace if they are
+> accepted. Other users can and do look at the modifier list to see if
+> the buffer is acceptable for a given plane, so the consistency is good
+> here. Of course, in Mesa you would want to prioritise the new
+> modifiers over the legacy ones, and not allocate or return the legacy
+> ones unless that was all you were asked for. This would involve
+> tracking the used modifier explicitly through Mesa, rather than
+> throwing it away at alloc time and then later divining it from the
+> tiling mode.
+
+Reporting them as supported is equivalent to reporting support for a 
+memory layout the chips don't actually support (It corresponds to a 
+valid layout on Tegra chips, but not on discrete NV chips).  This is 
+what the new modifiers are trying to avoid in the first place: Implying 
+buffers can be shared between these Tegra chips and discrete NV GPUs.
+
+Thanks,
+-James
+
+> Cheers,
+> Daniel
+> 
