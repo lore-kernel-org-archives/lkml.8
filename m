@@ -2,93 +2,88 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D03FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8C220672
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DDF2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgGBNaA (ORCPT
+        id S1729257AbgGBNbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:30:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43650 "EHLO vps0.lunn.ch"
+        Thu, 2 Jul 2020 09:31:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36804 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgGBNaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:30:00 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jqzHo-003KKR-Fg; Thu, 02 Jul 2020 15:29:56 +0200
-Date:   Thu, 2 Jul 2020 15:29:56 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Subject: Re: [net-next,PATCH 2/4] net: mdio-ipq4019: add clock support
-Message-ID: <20200702132956.GI730739@lunn.ch>
-References: <20200702103001.233961-1-robert.marko@sartura.hr>
- <20200702103001.233961-3-robert.marko@sartura.hr>
+        id S1729047AbgGBNbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:31:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6A47FBC6A;
+        Thu,  2 Jul 2020 13:31:50 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 15:27:58 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+Message-ID: <20200702132758.GD14288@alley>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625082838.GF6156@alley>
+ <87sgeh3m5j.fsf@jogness.linutronix.de>
+ <20200629140445.GK6156@alley>
+ <87ftad8rh4.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702103001.233961-3-robert.marko@sartura.hr>
+In-Reply-To: <87ftad8rh4.fsf@jogness.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:29:59PM +0200, Robert Marko wrote:
-> Some newer SoC-s have a separate MDIO clock that needs to be enabled.
-> So lets add support for handling the clocks to the driver.
+On Mon 2020-06-29 23:57:59, John Ogness wrote:
+> On 2020-06-29, Petr Mladek <pmladek@suse.com> wrote:
+> >> @@ @@ void __init setup_log_buf(int early)
+> >> +	prb_init(&printk_rb_dynamic,
+> >> +		 new_log_buf, order_base_2(new_log_buf_len),
+> >> +		 new_dict_buf, order_base_2(new_log_buf_len),
+> >> +		 new_descs, order_base_2(new_descs_count));
+> >
+> > order_base_2() is safe. But the result might be tat some allocated
+> > space is not used.
+> >
+> > I would prefer to make sure that new_log_buf_len is rounded, e.g.
+> > by roundup_pow_of_two(), at the beginning of the function. Then we
+> > could use ilog2() here.
 > 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> ---
->  drivers/net/phy/mdio-ipq4019.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
+> new_log_buf_len can only be set within log_buf_len_update(), and it
+> is already doing exactly what you want:
 > 
-> diff --git a/drivers/net/phy/mdio-ipq4019.c b/drivers/net/phy/mdio-ipq4019.c
-> index 0e78830c070b..7660bf006da0 100644
-> --- a/drivers/net/phy/mdio-ipq4019.c
-> +++ b/drivers/net/phy/mdio-ipq4019.c
-> @@ -9,6 +9,7 @@
->  #include <linux/iopoll.h>
->  #include <linux/of_address.h>
->  #include <linux/of_mdio.h>
-> +#include <linux/clk.h>
->  #include <linux/phy.h>
->  #include <linux/platform_device.h>
->  
-> @@ -24,8 +25,12 @@
->  #define IPQ4019_MDIO_TIMEOUT	10000
->  #define IPQ4019_MDIO_SLEEP		10
->  
-> +#define QCA_MDIO_CLK_DEFAULT_RATE	100000000
-> +
->  struct ipq4019_mdio_data {
-> -	void __iomem	*membase;
-> +	void __iomem		*membase;
-> +	struct clk			*mdio_clk;
-> +	u32					clk_freq;
+>         if (size)
+>                 size = roundup_pow_of_two(size);
+>         if (size > log_buf_len)
+>                 new_log_buf_len = (unsigned long)size;
 
-Hi Robert
+I know. I though about repeating this in setup_log_bug() to make it
+error proof. But it is not really needed. I do not resist on it.
 
-Some sort of tab/space issue here.
+> I can switch to ilog2() instead of the more conservative order_base_2().
 
->  };
->  
->  static int ipq4019_mdio_wait_busy(struct mii_bus *bus)
-> @@ -100,6 +105,7 @@ static int ipq4019_mdio_probe(struct platform_device *pdev)
->  {
->  	struct ipq4019_mdio_data *priv;
->  	struct mii_bus *bus;
-> +	struct device_node *np = pdev->dev.of_node;
->  	int ret;
+Yes, please change it to ilog2().
 
-Reverse Christmas tree.
-
-	Andrew
+Best Regards,
+Petr
