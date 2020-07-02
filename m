@@ -2,100 +2,123 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA486C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15B420656
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA1A207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgGBQFT (ORCPT
+        id S1726546AbgGBQFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:05:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:38940 "EHLO foss.arm.com"
+        Thu, 2 Jul 2020 12:05:23 -0400
+Received: from muru.com ([72.249.23.125]:60366 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGBQFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:05:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD53C1FB;
-        Thu,  2 Jul 2020 09:05:17 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D70973F71E;
-        Thu,  2 Jul 2020 09:05:14 -0700 (PDT)
-Subject: Re: [PATCH v8 2/3] dt-bindings: arm-smmu: Add binding for Tegra194
- SMMU
-To:     Krishna Reddy <vdumpa@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Yu-Huan Hsu <YHsu@nvidia.com>,
-        Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-3-vdumpa@nvidia.com>
- <3e655881-bac4-f083-44ed-cfa0a61298d0@arm.com>
- <BYAPR12MB28222D6ADEBA966AA27FA9ECB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
- <0d4f46d6-6a4e-bca0-bcf3-0e22a950e57b@nvidia.com>
- <BYAPR12MB282245DD6BB50ECA700AC69EB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
- <b10673f6-2a01-b9e5-0948-9684ffbe1813@nvidia.com>
- <BYAPR12MB2822EE99210BFA984ECB954AB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <04e35d51-5e65-047d-90ef-a2de901eb15d@arm.com>
-Date:   Thu, 2 Jul 2020 17:05:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726084AbgGBQFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:05:19 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6FA5B8062;
+        Thu,  2 Jul 2020 16:06:10 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 09:05:14 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Raul Rangel <rrangel@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: UART/TTY console deadlock
+Message-ID: <20200702160514.GK37466@atomide.com>
+References: <CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com>
+ <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
+ <20200630035816.GA21591@jagdpanzerIV.localdomain>
+ <20200630102141.GA11587@alley>
+ <20200630105512.GA530@jagdpanzerIV.localdomain>
+ <20200630122239.GD6173@alley>
+ <20200630130534.GB145027@jagdpanzerIV.localdomain>
+ <20200630180255.GD37466@atomide.com>
+ <20200702051213.GB3450@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB2822EE99210BFA984ECB954AB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702051213.GB3450@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-01 20:39, Krishna Reddy wrote:
-> On 01/07/2020 20:00, Krishna Reddy wrote:
->>>>>>> +        items:
->>>>>>> +          - enum:
->>>>>>> +              - nvdia,tegra194-smmu
->>>>>>> +          - const: arm,mmu-500
->>>>>
->>>>>> Is the fallback compatible appropriate here? If software treats this as a standard MMU-500 it will only program the first instance (because the second isn't presented as a separate MMU-500) - is there any way that isn't going to blow up?
->>>>>
->>>>> When compatible is set to both nvidia,tegra194-smmu and arm,mmu-500, implementation override ensure that both instances are programmed. Isn't it? I am not sure I follow your comment fully.
->>>
->>>> The problem is, if for some reason someone had a Tegra194, but only set the compatible string to 'arm,mmu-500' it would assume that it was a normal arm,mmu-500 and only one instance would be programmed. We always want at least 2 of the 3 instances >>programmed and so we should only match 'nvidia,tegra194-smmu'. In fact, I think that we also need to update the arm_smmu_of_match table to add 'nvidia,tegra194-smmu' with the data set to &arm_mmu500.
->>>
->>> In that case, new binding "nvidia,smmu-v2" can be added with data set to &arm_mmu500 and enumeration would have nvidia,tegra194-smmu and another variant for next generation SoC in future.
+* Sergey Senozhatsky <sergey.senozhatsky@gmail.com> [200702 05:13]:
+> On (20/06/30 11:02), Tony Lindgren wrote:
+> > This conditional disable for irq_shared does not look nice to me
+> > from the other device point of view :)
+> > 
+> > Would it be possible to just set up te dummy interrupt handler
+> > for the startup, then change it back afterwards? See for example
+> > omap8250_no_handle_irq().
 > 
->> I think you would be better off with nvidia,smmu-500 as smmu-v2 appears to be something different. I see others have a smmu-v2 but I am not sure if that is legacy. We have an smmu-500 and so that would seem more appropriate.
+> I think we can do it. serial8250_do_startup() and irq handler take
+> port->lock, so they should be synchronized.
 > 
-> I tried to use the binding synonymous to other vendors.
-> V2 is the architecture version.  MMU-500 is the actual implementation from ARM based on V2 arch.  As we just use the MMU-500 IP as it is, It can be named as nvidia,smmu-500 or similar as well.
+> Something like this then?
 
-Yup, that sounds OK to me if you want a broader compatible to 
-potentially match other future SoCs as well.
+Yeah thanks this should work better for shared irq.
 
-> Others probably having their own implementation based on V2 arch.
+Regards,
 
-Exactly - "cavium,smmu-v2" and "qcom,smmu-v2" are their own in-house 
-microarchitectures, not one of Arm's designs, so they don't really have 
-a suitable 'product name' we could have used for the bindings.
+Tony
 
-Robin.
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index f77bf820b7a3..61ad6f5f0f88 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2140,6 +2140,11 @@ static void serial8250_put_poll_char(struct uart_port *port,
+>  
+>  #endif /* CONFIG_CONSOLE_POLL */
+>  
+> +static int serial8250_dummy_handle_irq(struct uart_port *port)
+> +{
+> +	return 0;
+> +}
+> +
+>  int serial8250_do_startup(struct uart_port *port)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+> @@ -2271,6 +2276,9 @@ int serial8250_do_startup(struct uart_port *port)
+>  
+>  	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+>  		unsigned char iir1;
+> +		int (*handler)(struct uart_port *);
+> +
+> +		handler = port->handle_irq;
+>  		/*
+>  		 * Test for UARTs that do not reassert THRE when the
+>  		 * transmitter is idle and the interrupt has already
+> @@ -2280,8 +2288,7 @@ int serial8250_do_startup(struct uart_port *port)
+>  		 * allow register changes to become visible.
+>  		 */
+>  		spin_lock_irqsave(&port->lock, flags);
+> -		if (up->port.irqflags & IRQF_SHARED)
+> -			disable_irq_nosync(port->irq);
+> +		port->handle_irq = serial8250_dummy_handle_irq;
+>  
+>  		wait_for_xmitr(up, UART_LSR_THRE);
+>  		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> @@ -2293,8 +2300,7 @@ int serial8250_do_startup(struct uart_port *port)
+>  		iir = serial_port_in(port, UART_IIR);
+>  		serial_port_out(port, UART_IER, 0);
+>  
+> -		if (port->irqflags & IRQF_SHARED)
+> -			enable_irq(port->irq);
+> +		port->handle_irq = handler;
+>  		spin_unlock_irqrestore(&port->lock, flags);
+>  
+>  		/*
