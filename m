@@ -2,182 +2,180 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEF2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B55C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E865520885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E33C20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZx9UUs/"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SDEAl+v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgGBSCA (ORCPT
+        id S1727988AbgGBSDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
+        Thu, 2 Jul 2020 14:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbgGBSB7 (ORCPT
+        with ESMTP id S1726349AbgGBSDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:01:59 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF21C08C5C1;
-        Thu,  2 Jul 2020 11:01:58 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h23so22015340qtr.0;
-        Thu, 02 Jul 2020 11:01:58 -0700 (PDT)
+        Thu, 2 Jul 2020 14:03:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D86C2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 11:03:40 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so26557151wrw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C0N6ebTMTdJ8oNLRoYmc25ksVK6daob4tarO6KDoNoM=;
-        b=pZx9UUs/2utdw+dFgEsECyNd+QMs4v4zfhQ4s37feSgKuHvsxSSfFoE1tVQz9h16A6
-         UlGSvKN4XxGvaIdzvXRbZe4aUpCghTw2k7mmo5xUPHbJhFfazyhl/AU3LALIqCZxanyT
-         lFGP1STuAWF3Yp5NMdu+lzzx5RF+Z7m3hmmk8doAOtTEKTkhQ4kaVF3jcrl4mX2CRAQ7
-         4eMhuN0/amQVrVZz9VzknE/+LeVa8TItTtTn4+Zp9GLpd9Locu49GFtmofd0IWfq9+eN
-         NoNQ0GVnYyQ/Q/CdOt2cDzXHEY2IThZYfJFHw7HaYhy9XSmT+/tMA1PeiNiCqoZsNXbx
-         gXng==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UpAJNr8vpfTKtPQlj/e/glrJ9ulcMqPbKalh3VG00pM=;
+        b=SDEAl+v4mwYH2FWXjETOOYOvRfmikj7NShBSNRHJW2UZNJ4YUd+TJJryD9LzQ9QhpA
+         eN1lwTgoQwINeLc3RXJ4cU+Y5hdSlkBU1BmgJDNVMOiGHcpYH6pcgDLK52aLrzVZmv6r
+         PFnkOFxN+vObKR9N+rJ+7S6/i/cxfEcUkp7XI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C0N6ebTMTdJ8oNLRoYmc25ksVK6daob4tarO6KDoNoM=;
-        b=J+GRtza+lpSbkTpxieNmiJUuDETEgDZgMCpqJMc5MW8iJE4ohfKRbewap3b8CBHhjR
-         xXshezurbyu7Y13EgSBUvoLC1I1IsRKtxSItJ2yOkgkTuYoY5UcZ8kndoMgLoKmQWkZw
-         ZAXkh7Aq+am5RLlvOOD3ShIDWfPt0hz1NmTsazmt2fl+oB//hiN4WSOOcKFP0SyR+/F/
-         mrUX8qvUpkiPVu27yZqjny6L9fDpXYFWKgo9GnmUKTZoZqcTIFrzmAJI2Rzc+M49UZz9
-         /+4mELPcBn92rvWhrhPhN6xJXqLIMfbaJVmwGgguRpa7YlVhEZ4OGrHc9cjCfjXf6XfL
-         hYiA==
-X-Gm-Message-State: AOAM533zaiX8+PJ5noeNVQpcvvmVtTKuhoMEk5Al+3QZNNaqy9GI8N4p
-        KaqP0FjR9bUv39WBxrO0H5EsRvex0jU=
-X-Google-Smtp-Source: ABdhPJz/ekMX8q4eOLJuDaTVvmxmrF/8nMPr96S4Z+gyQ8eRjnmAQPDHgXqLXM9JMhNmifTrB/J3OQ==
-X-Received: by 2002:ac8:409d:: with SMTP id p29mr32646851qtl.369.1593712917358;
-        Thu, 02 Jul 2020 11:01:57 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d1::10e2? ([2620:10d:c091:480::1:e927])
-        by smtp.gmail.com with ESMTPSA id o10sm8992256qtq.71.2020.07.02.11.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 11:01:56 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH v15 3/3] Input: new da7280 haptic driver
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <cover.1593435662.git.Roy.Im@diasemi.com>
- <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-Message-ID: <31377d96-3e6d-e7b6-30de-0c7e9e6f9364@gmail.com>
-Date:   Thu, 2 Jul 2020 14:01:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=UpAJNr8vpfTKtPQlj/e/glrJ9ulcMqPbKalh3VG00pM=;
+        b=gtpx6ujZN34640/APzfJvr/4mj4kLml1U7rSmDJdF64iSMAbfB7k9JjH/GFs3YDtjP
+         ciqUOwtD/e4VzG/bn6lGnhsaZpJJsFw5aF0abirkBe278JkjDVK8T3DyeZZWu+gB8Mrx
+         gi7ypBbcSaOtZc5M40ph5X9Jz4BPN6UpQGFt9v7pJ1sh/uhpxgBTeYPfPpSEyQ1huEiN
+         Wc4tiW0tOgNjLPeQMwx/beO3DsNh4ScuHvwqw9i+MlK+5bsHq83K5TKq2ZhN873hXQPW
+         j9+/hgXh7XrpDYEHoN4dIWYH284rR3CJ5Ujrs6Ipjr9Pv8wORevEX8vlO10y/r4357Em
+         NlFQ==
+X-Gm-Message-State: AOAM53257Cp8wRtdw02226+Xgq6T2Ovg6kpao951wqeYtgjbhU9U8lUp
+        S4ByRiamlmN8blHmy4BKnLdwIQ==
+X-Google-Smtp-Source: ABdhPJwUPiRqviJX4p/wQ4ZlfWVQDt88ex2g1XXDueh/V48dmaVm3xrRzZwLDYoIIaTkFo3VMCW82w==
+X-Received: by 2002:adf:f104:: with SMTP id r4mr34105603wro.90.1593713019519;
+        Thu, 02 Jul 2020 11:03:39 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id n16sm11595673wra.19.2020.07.02.11.03.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 11:03:38 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 20:03:36 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Simon Ser <contact@emersion.fr>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "jianxin.pan@amlogic.com" <jianxin.pan@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 1/6] drm/fourcc: Add modifier definitions for
+ describing Amlogic Video Framebuffer Compression
+Message-ID: <20200702180336.GB3278063@phenom.ffwll.local>
+Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
+        Simon Ser <contact@emersion.fr>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "jianxin.pan@amlogic.com" <jianxin.pan@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20200702074759.32356-1-narmstrong@baylibre.com>
+ <20200702074759.32356-2-narmstrong@baylibre.com>
+ <8cBfZpkc4pHBLhihlvJMD_Hq1DEsNRcSY4Y8JaGwklMWcxiYzUMVEx7wH9f_DuCBMVUhXvOR0PcHVslILtKI2wdw79Nfih0N3VnrxfMQd08=@emersion.fr>
+ <20200702131834.GZ3278063@phenom.ffwll.local>
+ <044964ad-b927-57d7-9361-beda5c8d99a8@baylibre.com>
+ <CAKMK7uHa4ajC5_SA_fFUhB-Amxcbt7T9UZ+pvRhqDeUeX9Ez6A@mail.gmail.com>
+ <190ac909-c78b-81e0-35a1-353cd24e9f44@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <190ac909-c78b-81e0-35a1-353cd24e9f44@baylibre.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/29/20 9:01 AM, Roy Im wrote:
-> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
-> multiple mode and integrated waveform memory and wideband support.
-> It communicates via an I2C bus to the device.
+On Thu, Jul 02, 2020 at 05:11:25PM +0200, Neil Armstrong wrote:
+> Hi,
 > 
-> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-> ---
-> v15:
-> 	- Removed some defines and updated some comments.
-> v14:
-> 	- Updated pwm related code, alignments and comments.
-> v13:
-> 	- Updated some conditions in pwm function and alignments.
-> v12: No changes.
-> v11: 
-> 	- Updated the pwm related code, comments and typo.
-> v10: 
-> 	- Updated the pwm related function and added some comments.
-> v9: 
-> 	- Removed the header file and put the definitions into the c file.
-> 	- Updated the pwm code and error logs with %pE
-> v8: 
-> 	- Added changes to support FF_PERIODIC/FF_CUSTOM and FF_CONSTANT.
-> 	- Updated the dt-related code.
-> 	- Removed memless related functions.
-> v7: 
-> 	- Added more attributes to handle one value per file.
-> 	- Replaced and updated the dt-related code and functions called.
-> 	- Fixed error/functions.
-> v6: No changes.
-> v5: Fixed errors in Kconfig file.
-> v4: Updated code as dt-bindings are changed.
-> v3: No changes.
-> v2: Fixed kbuild error/warning
+> On 02/07/2020 16:15, Daniel Vetter wrote:
+> > On Thu, Jul 2, 2020 at 3:34 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> On 02/07/2020 15:18, Daniel Vetter wrote:
+> >>> On Thu, Jul 02, 2020 at 09:23:11AM +0000, Simon Ser wrote:
+> >>>> On Thursday, July 2, 2020 9:47 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>>
+> >>>>> Finally is also adds the Scatter Memory layout, meaning the header contains IOMMU
+> >>>>> references to the compressed frames content to optimize memory access
+> >>>>> and layout.
+> >>>>>
+> >>>>> In this mode, only the header memory address is needed, thus the content
+> >>>>> memory organization is tied to the current producer execution and cannot
+> >>>>> be saved/dumped neither transferrable between Amlogic SoCs supporting this
+> >>>>> modifier.
+> >>>>
+> >>>> Still not sure how to handle this one, since this breaks fundamental
+> >>>> assumptions about modifiers.
+> >>>
+> >>> I wonder whether we should require special allocations for these, and then
+> >>> just outright reject mmap on these buffers. mmap on dma-buf isn't a
+> >>> required feature.
+> >>
+> >> Yes, it's the plan to reject mmap on these buffers, but it can't be explained
+> >> in the modifiers description and it's a requirement of the producer, not the
+> >> consumer.
+> > 
+> > Hm I think worth to add that as a note to the modifier. Just to make
+> > sure. And avoids questions like the one from Simon.
 > 
+> Something like:
 > 
->  drivers/input/misc/Kconfig  |   13 +
->  drivers/input/misc/Makefile |    1 +
->  drivers/input/misc/da7280.c | 1838 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1852 insertions(+)
->  create mode 100644 drivers/input/misc/da7280.c
+>  /*
+>   * Amlogic FBC Scatter Memory layout
+>   *
+>   * Indicates the header contains IOMMU references to the compressed
+>   * frames content to optimize memory access and layout.
+>   *
+>   * In this mode, only the header memory address is needed, thus the
+>   * content memory organization is tied to the current producer
+>   * execution and cannot be saved/dumped neither transferrable between
+>   * Amlogic SoCs supporting this modifier.
+> + *
+> + * Due to the nature of the layout, these buffers are not expected to
+> + * be accessible by the user-space clients but only accessible by the
+> + * hardware producers and consumers.
+> + *
+> + * The user-space clients should expect a failure while trying to mmap
+> + * the DMA-BUF handle returned by the producer.
+>   */
 
-[snip]
+lgtm, Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 
+> Thanks,
+> Neil
+> 
+> > -Daniel
+> > 
+> >>
+> >>>
+> >>> That would make sure that userspace cannot look at them.
+> >>>
+> >>> Also I'm kinda suspecting that there's not unlimited amounts of this magic
+> >>> invisible storage available anyway.
+> >>> -Daniel
+> >>>
+> >>
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > 
+> > 
+> 
 
-> +static ssize_t
-> +patterns_store(struct device *dev,
-> +	       struct device_attribute *attr,
-> +	       const char *buf,
-> +	       size_t count)
-> +{
-> +	struct da7280_haptic *haptics = dev_get_drvdata(dev);
-> +	char cmd[MAX_USER_INPUT_LEN];
-> +	struct parse_data_t mem;
-> +	unsigned int val;
-> +	int error;
-> +
-> +	error = regmap_read(haptics->regmap, DA7280_MEM_CTL1, &val);
-> +	if (error)
-> +		return error;
-> +
-> +	if (count > MAX_USER_INPUT_LEN)
-> +		memcpy(cmd, buf, MAX_USER_INPUT_LEN);
-> +	else
-> +		memcpy(cmd, buf, count);
-> +
-> +	/* chop of '\n' introduced by echo at the end of the input */
-> +	if (cmd[count - 1] == '\n')
-> +		cmd[count - 1] = '\0';
-
-You have a potential memory corruption bug here for the case where
- count > MAX_USER_INPUT_LEN. The code correctly clamps the memcpy()
-length, but it still is at risk of writing beyond the end of the cmd
-buffer when doing the \0 termination.
-
-If you change the code above to say
-
-	if (count > MAX_USER_INPUT_LEN)
-		count = MAX_USER_INPUT_LEN
-	memcpy(cmd, buf, count);
-
-it should take care of it, and it will also return the actual count
-written to the caller.
-
-Cheers,
-Jes
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
