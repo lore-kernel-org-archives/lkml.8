@@ -2,149 +2,93 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A404C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25701C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 094B820748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CCD20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9j4CswU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d0d8UCbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGBBVA (ORCPT
+        id S1728075AbgGBBVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgGBBU7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:20:59 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB03C08C5C1;
-        Wed,  1 Jul 2020 18:20:58 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t25so24927495lji.12;
-        Wed, 01 Jul 2020 18:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dYCeMOPmLDd6YkOtzFpnQl9uCIfo9ocTM9gPN7zgGLs=;
-        b=d9j4CswU2NFZCBq45rswJjWthlpogrZnyxU2Y3/qFx3SzQ/Yg010yg+KHPckVLMK7E
-         sPM8Vl3sG/AcQaGYeiyAu0/y2NWDRFpN1cCGWZfSvqzvHm5OiyAxAO1Dt97pMU2E0dmk
-         iS7KuYi16IoF64egljBq4I2PpWLZDdd95183IIuQ7d7bgik4N+IndnkWEQhQKukAgMZA
-         s+JpJag5nHTBtAfKONT0BOIODyFke/y2jPMJiBL+CegXb4WhTK5iNesdPuPjBHoOitij
-         010J4brz2P8aTqBd6+yMM3QatHxh0kZo1oOmAU8jRZ0M8hgVNeF73mXnCW8JE/+4P82m
-         R9qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dYCeMOPmLDd6YkOtzFpnQl9uCIfo9ocTM9gPN7zgGLs=;
-        b=YC6fEuv8hQgsxL5mbKztMb2innT7OnhnNF4HqcD5xTW+u9yly7Cmlf+uSa3mzyybgK
-         m8pu3VQn1Cxdl/Q5mbR97v226SLQHsfYT8KXDQGnj0HjrJ1wfj44AonMdt3eIxxckHJq
-         C68JCzlAgSeflTxVijmfeH3+/tbiw8Lm3LFXmaD1a6XLeI4jalGzCwh9/KPErjwyFHJT
-         LJCv2769IMQJ3FAKzte2VyXp9eJn6EqjzYB77EamhkNrgSmbssBHY9nvWWC2dr+mqScF
-         szRdu1EqSen8Qo3oNxqlvCl+2TDu/dt04QICs04jCVWKrb/8Q6N8EZ2VtRHJncVTLtaq
-         FJLQ==
-X-Gm-Message-State: AOAM532Kzwo/s220/HRqHhhwt1ddR/YYfgy02sHtWfRqJJxT2CCaE3eK
-        BQAoVn7QRYCFqgVxJDpj+5ZRtJomzjw=
-X-Google-Smtp-Source: ABdhPJxfVjfn28q5t97TdXNmIK+RNFjKEXIoVX+Bw+Pu1pBF7C+yZ6DON9DioM1xmYHgdH2FopVzAw==
-X-Received: by 2002:a2e:9818:: with SMTP id a24mr13554159ljj.280.1593652857102;
-        Wed, 01 Jul 2020 18:20:57 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id d18sm2380862lja.116.2020.07.01.18.20.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 18:20:56 -0700 (PDT)
-Subject: Re: [PATCH v4 11/37] PM / devfreq: tegra30: Silence deferred probe
- error
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200609131404.17523-1-digetx@gmail.com>
- <CGME20200609131843epcas1p3a5b06308559ff03ef1b27521f412b656@epcas1p3.samsung.com>
- <20200609131404.17523-12-digetx@gmail.com>
- <136b430d-2097-7b2b-d7dd-b438deee8f5d@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fda8aa80-04f1-af00-7a0d-f9b589cdb37e@gmail.com>
-Date:   Thu, 2 Jul 2020 04:20:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 1 Jul 2020 21:21:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:49953 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgGBBVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:21:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49y0fg5NgRz9sRN;
+        Thu,  2 Jul 2020 11:21:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593652875;
+        bh=SNDM3Ebesqm1/WP0xmTozgFdT1xUcQvv4Uv50jRwNK0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=d0d8UCbIDdHJNx3His5M9ih2D03iEW/iwIHK/FtTqNNyJ003Vm3ArnVbeviAOVEeh
+         ZUhCQga4t6I+55iWWiE7H/Tf8yCGqgyoc5CcYSZbhSmKu8O9SD7cTdvpNlDJh9rUPE
+         +I3Srhe73I2eOzcErU+8Jd4H0bzEuxwKZOpVr0v5hP7lvSURtyEQMaTCK6y9u4rZfs
+         9zdcXioMNDUb4u+ljd4cEMlM5gNEMkHBa1PhOYePeBSbRLZzAlJIYI6pdrVHST7a0n
+         u2K599FDa0SSr1jdgpxH5GRxkEpK+CEipO/yfCO4Hpnh9VUycxu2ATSRSE7LwvorNN
+         469P6VMukVANw==
+Date:   Thu, 2 Jul 2020 11:21:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build warning after merge of the block tree
+Message-ID: <20200702112112.04d3f992@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <136b430d-2097-7b2b-d7dd-b438deee8f5d@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/m7.HGDHfzDuDAf_vqraKDJP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.07.2020 03:59, Chanwoo Choi пишет:
-> Hi,
-> 
-> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
->> Tegra EMC driver was turned into a regular kernel driver, it also could
->> be compiled as a loadable kernel module now. Hence EMC clock isn't
->> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
->> there is no good reason to spam KMSG with a error about missing EMC clock
->> in this case, so let's silence the deferred probe error.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index e94a27804c20..423dd35c95b3 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -801,9 +801,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
->> -	if (IS_ERR(tegra->emc_clock)) {
->> -		dev_err(&pdev->dev, "Failed to get emc clock\n");
->> -		return PTR_ERR(tegra->emc_clock);
->> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
->> +	if (err) {
->> +		if (err != -EPROBE_DEFER)
->> +			dev_err(&pdev->dev, "Failed to get emc clock: %d\n",
->> +				err);
->> +		return err;
->>  	}
->>  
->>  	err = platform_get_irq(pdev, 0);
->>
-> 
-> As I commented on patch10, I recommend that you add the Tegra EMC driver
-> commit information into patch description and Looks good to me.
-> 
+--Sig_/m7.HGDHfzDuDAf_vqraKDJP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hello, Chanwoo!
+Hi all,
 
-This patch11 and patch10 are depending on the patches 4/5 (the Tegra EMC
-driver patches) of *this* series, hence there is no commit information.
-I'm expecting that this whole series will go via tegra tree once all the
-patches will be reviewed and collect all the necessary acks from you,
-ICC and CLK subsystem maintainers.
+After merging the block tree, today's linux-next build (powerpc
+ppc64_defconfig) produced this warning:
 
-Please feel free to give yours ack to the patches 10/11 if they are good
-to you :)
+drivers/md/dm.c: In function '__map_bio':
+drivers/md/dm.c:1296:24: warning: unused variable 'md' [-Wunused-variable]
+ 1296 |  struct mapped_device *md =3D io->md;
+      |                        ^~
+
+Introduced by commit
+
+  5a6c35f9af41 ("block: remove direct_make_request")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/m7.HGDHfzDuDAf_vqraKDJP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl79NogACgkQAVBC80lX
+0Gws4wgAoSLcCudGe+r3OTLt9GR83BQ8imeImAWsb2xj1gav/efyaRNEiYj6F80V
+n/6KbJmzpkXg4p6u6bQsY1yRsR8w+iGy5YTFJ6lPlO+qXNkxfvAZndfw0XDCB6S8
+mSElNYSbmkD5g11s85dZtz+NdSq4yzSQHwpYruIYzNlNjxM9FOOBepGVzv7dKcsc
+sTwNzvMH/mPz+udQEsvyx4wmV96uvfGrDKMfRt1B0klgdEq8oXiDqkBqtd5TnvV1
+HHDcor2UgGtwwGMqgMfYQQd158/Xh3Dtl9Z7mox8gaXAmKlGv5cltOk5ogQ+bd/E
+RgiEiGlaSoGhu64C9In3X10+HOkvVQ==
+=yZnc
+-----END PGP SIGNATURE-----
+
+--Sig_/m7.HGDHfzDuDAf_vqraKDJP--
