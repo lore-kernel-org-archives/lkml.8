@@ -2,93 +2,71 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8F1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29293C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC13A20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1ACF20874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WQ74p2S6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgGBHFW (ORCPT
+        id S1726987AbgGBHGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:05:22 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:48396 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgGBHFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:05:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id A4EB4FB03;
-        Thu,  2 Jul 2020 09:05:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XkiwlLoqLj9N; Thu,  2 Jul 2020 09:05:14 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id C52E144F51; Thu,  2 Jul 2020 09:05:10 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 09:05:10 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] MAINTAINERS: Update entry for st7703 driver after the
- rename
-Message-ID: <20200702070510.GA3275@bogon.m.sigxcpu.org>
-References: <20200701184640.1674969-1-megous@megous.com>
+        Thu, 2 Jul 2020 03:06:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56498 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726733AbgGBHGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:06:17 -0400
+X-UUID: 8e5f5d2f0e8945e2a7224e2164eb2a93-20200702
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=GxrmFz7Pchk0LDKgF6ZwoVEc2QOYVFPDOOWLPzi5ts0=;
+        b=WQ74p2S6bsQEc0ZqyOknh0W/UT58QGuJ1Vflfnnx8nmrqy3Mv8IWG9+QW6S19RxbqrbBw7AgztXIPlj/oH8Yd5C+7ahk5XVXF7DQb/Q9tRf0DMockMsljZBDcJW6xCGuVe+1gTUn0JTOSqhy4BdrKQnskl8zNc/FtptPoEDWscI=;
+X-UUID: 8e5f5d2f0e8945e2a7224e2164eb2a93-20200702
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 579252762; Thu, 02 Jul 2020 15:06:10 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 2 Jul 2020 15:06:05 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 2 Jul 2020 15:06:07 +0800
+From:   EastL Lee <EastL.Lee@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
+CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
+Subject: [PATCH v6] dmaengine: mediatek-cqdma: add dt-bindings and remove redundant queue
+Date:   Thu, 2 Jul 2020 15:06:00 +0800
+Message-ID: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701184640.1674969-1-megous@megous.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
-On Wed, Jul 01, 2020 at 08:46:40PM +0200, Ondrej Jirman wrote:
-> The driver was renamed, change the path in the MAINTAINERS file.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  MAINTAINERS | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5f186a661a9b..f5183eae08df 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5487,12 +5487,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
->  F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
->  
-> -DRM DRIVER FOR ROCKTECH JH057N00900 PANELS
-> +DRM DRIVER FOR SITRONIX ST7703 PANELS
->  M:	Guido Günther <agx@sigxcpu.org>
->  R:	Purism Kernel Team <kernel@puri.sm>
-> +R:	Ondrej Jirman <megous@megous.com>
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
-> -F:	drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> +F:	Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
-> +F:	drivers/gpu/drm/panel/panel-sitronix-st7703.c
+VGhpcyBwYXRjaCBzZXQgYWRkcyBkb2N1bWVudCB0aGUgZGV2aWNldHJlZSBiaW5kaW5ncyBmb3Ig
+TWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciwNCmFuZCByZW1vdmUgcmVkdW5k
+YW50IHF1ZXVlIHN0cnVjdHVyZS4NCg0KaGFuZ2VzIHNpbmNlIHY1Og0KLSBmaXggZnVsbCBuYW1l
+DQoNCmhhbmdlcyBzaW5jZSB2NDoNCi0gZml4IHlhbWwgJiBkbWEtbWFzayBjb2RlIGZsb3cNCg0K
+aGFuZ2VzIHNpbmNlIHYzOg0KLSBmaXggZHRfYmluZGluZ19jaGVjayBlcnJvcnMNCg0KQ2hhbmdl
+cyBzaW5jZSB2MjoNCi0gYWRkIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1h
+bmQtUXVldWUgRE1BIGNvbnRyb2xsZXINCg0KQ2hhbmdlcyBzaW5jZSB2MToNCi0gcmVtb3ZlIHJl
+ZHVuZGFudCBxdWV1ZSBzdHJ1Y3R1cmUNCi0gZml4IHdyb25nIGRlc2NyaXB0aW9uIGFuZCB0YWdz
+IGluIHRoZSBlYXJsaWVyIHBhdGNoDQotIGFkZCBkbWEtY2hhbm5lbC1tYXNrIGZvciBETUEgY2Fw
+YWJpbGl0eQ0KLSBmaXggY29tcGF0aWJsZSBmb3IgY29tbW9uDQo=
 
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-
-Thanks,
- -- Guido
-
->  
->  DRM DRIVER FOR SAVAGE VIDEO CARDS
->  S:	Orphan / Obsolete
-> -- 
-> 2.27.0
-> 
