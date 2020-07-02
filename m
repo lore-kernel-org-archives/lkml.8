@@ -2,124 +2,95 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1375C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968B3207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC8720780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgGBLja (ORCPT
+        id S1728716AbgGBLlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:39:30 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:34081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgGBLj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:39:29 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MyJx6-1isHMh3GRg-00ykb7; Thu, 02 Jul 2020 13:39:27 +0200
-Received: by mail-qk1-f176.google.com with SMTP id e13so25256271qkg.5;
-        Thu, 02 Jul 2020 04:39:27 -0700 (PDT)
-X-Gm-Message-State: AOAM532z0IHA9N1mAsG65XlCWqo+0pwbShicaHgYkplIDL+zOJ4B9Fdd
-        Gx0V0WAJRgyl1kE6Xf/FAxj82S5DvTjR08HdYBs=
-X-Google-Smtp-Source: ABdhPJxZnj5versBmr7lWdCxrevvSnrtGz16SQp4OMCvU87jKF+QYKva7czF6a7gzq//AqJiVHDYLYMn/4Cgp3bsm/o=
-X-Received: by 2002:a37:9dd6:: with SMTP id g205mr30820571qke.352.1593689966522;
- Thu, 02 Jul 2020 04:39:26 -0700 (PDT)
+        Thu, 2 Jul 2020 07:41:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:42548 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgGBLlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:41:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 829D41FB;
+        Thu,  2 Jul 2020 04:41:54 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 239563F71E;
+        Thu,  2 Jul 2020 04:41:54 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 12:41:52 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
+        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
+        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH 4/8] cpufreq,vexpress-spc: fix Frequency Invariance (FI)
+ for bL switching
+Message-ID: <20200702114123.GA28120@arm.com>
+References: <20200701090751.7543-1-ionela.voinescu@arm.com>
+ <20200701090751.7543-5-ionela.voinescu@arm.com>
+ <20200701095414.2wjcnyhndgcedk2q@vireshk-i7>
+ <20200701140735.GB32736@arm.com>
+ <20200702030551.p4cevaahgfvpum4o@vireshk-i7>
 MIME-Version: 1.0
-References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-5-will@kernel.org>
- <20200702093239.GA15391@C02TD0UTHF1T.local> <20200702094833.GA16248@willie-the-truck>
- <CAK8P3a07G1dLC+RUBDkzDbCRCP_gwZAaVK+k1UxvXT+7Kj=o+g@mail.gmail.com> <20200702111832.GC16418@willie-the-truck>
-In-Reply-To: <20200702111832.GC16418@willie-the-truck>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jul 2020 13:39:10 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3VrEkDf8t1CCsY+g7rtXkqBsiPOr97b1yRbz8NpjdfFA@mail.gmail.com>
-Message-ID: <CAK8P3a3VrEkDf8t1CCsY+g7rtXkqBsiPOr97b1yRbz8NpjdfFA@mail.gmail.com>
-Subject: Re: [PATCH 04/18] alpha: Override READ_ONCE() with barriered implementation
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z8zyvq6vDbeYzAhJCb6eVc2WB9OLAma8FkNnVfzP5LIPHoG/zM3
- H+stHIIcLhAOQVdPGVb+yvmXZS6bZvAlPlPGAb7K3XN/Yf/9tiD+LfyrHyrF2jie4hgS9KZ
- irhd23yNkSatHVfb8y2fRt4J+qOAfrpIFB+YlKB8CPwZ0m5soww1dXiL+e4/fBrJvO0u51V
- FIQm29ysC2PM1GqgInKpw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MVQPFMqFHCg=:Mc/Fzv3M0wGaJGNRmiZWUe
- KhM7kbvbSIBkOSpRLKpn2mQuHZQiboCZGmj68hm2SMimxXdnYI3wYcK7GopZhk+JR3aBa1wbc
- b1yaKMwUqylhcFZNngxpMvDzlTF1PvFIjy1TTaAhiTRUB9+xeBPFgbS05UWQRwSmi2JAp+DOb
- w9PpjmmcLdJhOqQzTTiFB20BJKu26jnzomBTvGHtCKhc9ykIackRn29iZzaFfpnZvSRmnkvtQ
- nRB1TJtCrCSzEq2cuZ3HgSGJM0VJ7lBsDmQcm5XEh8rI8t/0TOOtezYCP2qeHZMi2E7wldego
- 58hv1Ra6Ath2DLPfjcT9qJbkmo/521T0VPquIdh/1enx7hnlCBxsv8gxG2QnI8BYnZ3fTUTbQ
- qR3eaMFvTbbNBLDZTj2gNWGUbSrcyEqWPBu76Rmq+UU/d+W1zne8vnaUNyNjsJuIZAAqqnG2b
- UU8wfrD4HFvkfBctfr/Fi7vwMMXIF3BMSoOp78QP8Qj4tJwVoeCI1Sd1EBvtrBR2wQPmOrS68
- eREemZPiU1odDD2L1M3yLfpnjayDnchDXD/nZlp6QVeA6t0OqPfXZm0BQaUv98iolzQP8HxjA
- 9XW1RGsmMsY/mMjUh2fyz5dymegWy+bpNe76EEzhw7+laAeDZEGO3I15Mx6eE0MRiuUjwffdQ
- 5It73uUIRMFuiNK89mNjqT2VH+pSxQ4tl28Zqogpjw/CBt72jxVvhtO+89/7RLoZEz1l6X7Gy
- hdJ0rZ5ohsb3nY2vodf3TGVAKZyMGgO9S+QpihT/Ypet1XCDCqkCdn6XMwIkInXyR4v4dvNJm
- Y3SqJsvXjFHzffKoa+nDO8VFyuSx0FcmDugZDFctFRy2lf2Cw4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702030551.p4cevaahgfvpum4o@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 1:18 PM Will Deacon <will@kernel.org> wrote:
-> On Thu, Jul 02, 2020 at 12:08:41PM +0200, Arnd Bergmann wrote:
-> > On Thu, Jul 2, 2020 at 11:48 AM Will Deacon <will@kernel.org> wrote:
-> > > On Thu, Jul 02, 2020 at 10:32:39AM +0100, Mark Rutland wrote:
+Hi,
 
-> Not sure I follow you here, but I can confirm that what you're worried
-> about doesn't happen for the usual case of a pointer-to-volatile scalar.
+On Thursday 02 Jul 2020 at 08:35:51 (+0530), Viresh Kumar wrote:
+> On 01-07-20, 15:07, Ionela Voinescu wrote:
+> > On Wednesday 01 Jul 2020 at 16:16:19 (+0530), Viresh Kumar wrote:
+> > > Is there anyone who cares for this driver and EAS ? I will just skip doing the
+> > > FIE thing here and mark it skipped.
+> > 
+> > That is a good question. The vexpress driver is still used for TC2, but
+> > I don't know of any users of this bL switcher functionality that's part
+> > of the driver. I think there were a few people wondering recently if
+> > it's still used [1].
+> 
+> Even if it is used by some, there is no need, I believe, to enable
+> freq-invariance for it, which wasn't enabled until now.
 >
-> For example, ignoring dependency ordering:
->
-> unsigned long foo(volatile unsigned long *p)
-> {
->         return smp_load_acquire(p) + 1;
-> }
->
-> Ends up looking like:
->
->         unsigned long ___p1 = *(const volatile unsigned long *)p;
->         smp_mb();
->         (volatile unsigned long)___p1;
->
-> My understanding is that casting a non-pointer type to volatile doesn't
-> do anything, so we're good.
 
-Right, I mixed up the correct
+It was enabled until now, but it was partially broken. If you look over
+the driver you'll see arch_set_freq_scale() being called for both
+is_bL_switching_enabled() and for when it's not [1].
 
-        (typeof(*p))___p;
+For !is_bL_switching_enabled() this is fine. But for
+is_bL_switching_enabled(), it is broken as described in 4/8.
 
-with the incorrect
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpufreq/vexpress-spc-cpufreq.c?h=v5.8-rc3#n203
 
-       *typeof(p)&___p;
+> And considering that we are going to enable the flag only for the
+> interested parties now, as from the discussion on 1/8, this shouldn't
+> be required.
+> 
 
-which would dereference a volatile pointer and cause the
-problem.
+If we just don't want frequency invariance for
+is_bL_switching_enabled(), I can just guard the setting of the flag
+suggested by Rafael at 1/8 by !CONFIG_BL_SWITCHER.
 
-The code is all fine then.
+I'll proceed to do that and remove the fix at 4/8.
 
-    Arnd
+Many thanks!
+Ionela.
+
+> -- 
+> viresh
