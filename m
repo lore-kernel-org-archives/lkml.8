@@ -2,254 +2,127 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F44C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1758520760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252F520760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:42:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iVEP/cK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGBJl5 (ORCPT
+        id S1728309AbgGBJmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:41:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7347 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725287AbgGBJly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:41:54 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2E54ED967EB76536ABC1;
-        Thu,  2 Jul 2020 17:41:51 +0800 (CST)
-Received: from [127.0.0.1] (10.174.187.83) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Jul 2020
- 17:41:42 +0800
-Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
- of data
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <willy@infradead.org>,
-        <wangxiongfeng2@huawei.com>, <wanghaibin.wang@huawei.com>,
-        <guoheyi@huawei.com>, <yebiaoxiang@huawei.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>,
-        James Puthukattukaran <james.puthukattukaran@oracle.com>
-References: <20200628161449.GA3122309@bjorn-Precision-5520>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <39bab369-79aa-24b2-720b-4dba752b99f9@huawei.com>
-Date:   Thu, 2 Jul 2020 17:41:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 2 Jul 2020 05:42:40 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44466 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgGBJmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:42:39 -0400
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4892B20B4908;
+        Thu,  2 Jul 2020 02:42:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4892B20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593682958;
+        bh=yeT/YZEI04dXnABBuQyfYr8dFBGFkuBpRxXtbalM76w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iVEP/cK8yHqJpsyxDMO8ZfwOPci1aNNYB2lNs9aXM0g7tBc/CzUiFarfASqlIE090
+         PkUMLNcGk2mtccCo8JMlYKzzxO1O4t4A+yGeYP8TA1WGZYr1sjWf4v3UCABSDo3wzo
+         LFG2zjSzDbgQxIK6NCjiRbAmalBYEFWbM6CziNfo=
+Received: by mail-qv1-f41.google.com with SMTP id dm12so12334814qvb.9;
+        Thu, 02 Jul 2020 02:42:37 -0700 (PDT)
+X-Gm-Message-State: AOAM530jsiKX0HB6+pM5RljyWu/oqgBjefxSeUnVjP3ZamkzbhUB3yye
+        PGZt9BFZzZk9pYH8uX2Sr2vG5uSw8RmXRTQlDXg=
+X-Google-Smtp-Source: ABdhPJzleLEvjXKmUACvkuYWy6CKyhad1vLj/r7ezZendZV2h4CwO3Ilr5pEHllRzgRwvP1cfZmYJ5QD88guKY/H3pA=
+X-Received: by 2002:ad4:4672:: with SMTP id z18mr29940458qvv.104.1593682956992;
+ Thu, 02 Jul 2020 02:42:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200628161449.GA3122309@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.187.83]
-X-CFilter-Loop: Reflected
+References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+ <20200630180930.87506-3-mcroce@linux.microsoft.com> <20200702073104.GA496703@apalos.home>
+In-Reply-To: <20200702073104.GA496703@apalos.home>
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+Date:   Thu, 2 Jul 2020 11:42:01 +0200
+X-Gmail-Original-Message-ID: <CAFnufp09fvsyDxqJB0Hx0ag35h-XHrQt4=022cnBnRH_6iVD5g@mail.gmail.com>
+Message-ID: <CAFnufp09fvsyDxqJB0Hx0ag35h-XHrQt4=022cnBnRH_6iVD5g@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/4] mvpp2: use page_pool allocator
+To:     ilias.apalodimas@linaro.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 2, 2020 at 9:31 AM <ilias.apalodimas@linaro.org> wrote:
+>
+> Hi Matteo,
+>
+> Thanks for working on this!
+>
 
+:)
 
-On 2020/6/29 0:14, Bjorn Helgaas wrote:
-> On Sun, Jun 28, 2020 at 12:18:10PM +0800, Xiang Zheng wrote:
->> On 2020/6/26 7:24, Bjorn Helgaas wrote:
->>> On Wed, Jun 24, 2020 at 06:23:09PM -0500, Bjorn Helgaas wrote:
->>>> On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
->>>>> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
->>>>> device") suggests that the "pci_lock" is sufficient, and all the
->>>>> callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>>>>
->>>>> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
->>>>> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
->>>>> are not safe anymore. This would cause kernel panic in a very low chance
->>>>> (See more detailed information from the below link). A "pci_lock" is
->>>>> insufficient and we need to hold an additional queue lock while read/write
->>>>> the wait queue.
->>>>>
->>>>> So let's use the add_wait_queue()/remove_wait_queue() instead of
->>>>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
->>>>> functionality around the "schedule()" function to avoid reintroducing
->>>>> the deadlock addressed by "cdcb33f98244".
->>>>
->>>> I see that add_wait_queue() acquires the wq_head->lock, while
->>>> __add_wait_queue() does not.
->>>>
->>>> But I don't understand why the existing pci_lock is insufficient.  
->>>> pci_cfg_wait is only used in pci_wait_cfg() and
->>>> pci_cfg_access_unlock().
->>>>
->>>> In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
->>>> are called while holding pci_lock, so that doesn't seem like the
->>>> problem.
->>>>
->>>> In pci_cfg_access_unlock(), we have:
->>>>
->>>>   pci_cfg_access_unlock
->>>>     wake_up_all(&pci_cfg_wait)
->>>>       __wake_up(&pci_cfg_wait, ...)
->>>>         __wake_up_common_lock(&pci_cfg_wait, ...)
->>>> 	  spin_lock(&pci_cfg_wait->lock)
->>>> 	  __wake_up_common(&pci_cfg_wait, ...)
->>>> 	    list_for_each_entry_safe_from(...)
->>>> 	      list_add_tail(...)                <-- problem?
->>>> 	  spin_unlock(&pci_cfg_wait->lock)
->>>>
->>>> Is the problem that the wake_up_all() modifies the pci_cfg_wait list
->>>> without holding pci_lock?
->>>>
->>>> If so, I don't quite see how the patch below fixes it.  Oh, wait,
->>>> maybe I do ... by using add_wait_queue(), we protect the list using
->>>> the *same* lock used by __wake_up_common_lock.  Is that it?
->>>
->>> Any reaction to the following?  Certainly not as optimized, but also a
->>> little less magic and more in the mainstream of wait_event/wake_up
->>> usage.
->>>
->>> I don't claim any real wait queue knowledge and haven't tested it.
->>> There are only a handful of __add_wait_queue() users compared with
->>> over 1600 users of wait_event() and variants, and I don't like being
->>> such a special case.
->>
->> I think the following patch is OK, even though I prefer mine. :)
-> 
-> Possibility A:
-> 
->         do {
->                 set_current_state(TASK_UNINTERRUPTIBLE);
->                 raw_spin_unlock_irq(&pci_lock);
->                 add_wait_queue(&pci_cfg_wait, &wait);
->                 schedule();
->                 remove_wait_queue(&pci_cfg_wait, &wait);
->                 raw_spin_lock_irq(&pci_lock);
->         } while (dev->block_cfg_access);
-> 
-> Possibility B:
-> 
->         do {
->                 raw_spin_unlock_irq(&pci_lock);
->                 wait_event(pci_cfg_wait, !dev->block_cfg_access);
->                 raw_spin_lock_irq(&pci_lock);
->         } while (dev->block_cfg_access);
-> 
-> I think both ways probably work.  
-> 
-> I prefer B because there's less chance for error -- it requires less
-> knowledge of the internals of wait/wake_up and we don't have to worry
-> about the ordering of set_current_state(), raw_spin_unlock_irq(),
-> add_wait_queue(), schedule(), and remove_wait_queue().
-> 
-> I really don't know much about wait queues, so I'm interested in why
-> you prefer A.
-> 
+> On Tue, Jun 30, 2020 at 08:09:28PM +0200, Matteo Croce wrote:
+> > From: Matteo Croce <mcroce@microsoft.com>
+> > -static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool)
+> > +/* Returns a struct page if page_pool is set, otherwise a buffer */
+> > +static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool,
+> > +                           struct page_pool *page_pool)
+> >  {
+> > +     if (page_pool)
+> > +             return page_pool_alloc_pages(page_pool,
+> > +                                          GFP_ATOMIC | __GFP_NOWARN);
+>
+> page_pool_dev_alloc_pages() can set these flags for you, instead of explicitly
+> calling them
+>
 
-Hmm...I also think B is much better than A as you describe above.
-I'am not sure that whether "dev->block_cfg_access" is safe, at least
-the "do{...}while" cannot be removed.
+Ok
 
->> I can test your patch on my testcase(with hacked 300ms delay before
->> "curr->func" in __wake_up_common()). And if James has more efficient
->> testcase or measure for this problem, then go with James.
-> 
-> That would be great, thank you!  Let me know how it goes.
+> >
+> > +     if (priv->percpu_pools) {
+> > +             err = xdp_rxq_info_reg(&rxq->xdp_rxq_short, port->dev, rxq->id);
+> > +             if (err < 0)
+> > +                     goto err_free_dma;
+> > +
+> > +             err = xdp_rxq_info_reg(&rxq->xdp_rxq_long, port->dev, rxq->id);
+> > +             if (err < 0)
+> > +                     goto err_unregister_rxq_short;
+> > +
+> > +             /* Every RXQ has a pool for short and another for long packets */
+> > +             err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_short,
+> > +                                              MEM_TYPE_PAGE_POOL,
+> > +                                              priv->page_pool[rxq->logic_rxq]);
+> > +             if (err < 0)
+> > +                     goto err_unregister_rxq_short;
+> > +
+> > +             err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_long,
+> > +                                              MEM_TYPE_PAGE_POOL,
+> > +                                              priv->page_pool[rxq->logic_rxq +
+> > +                                                              port->nrxqs]);
+> > +             if (err < 0)
+> > +                     goto err_unregister_rxq_long;
+>
+> Since mvpp2_rxq_init() will return an error shouldn't we unregister the short
+> memory pool as well?
+>
 
-I need to make some hacking codes to test your patch, some like:
+Ok, I'll add another label like:
 
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -206,19 +206,12 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
-
- static noinline void pci_wait_cfg(struct pci_dev *dev)
- {
--       DECLARE_WAITQUEUE(wait, current);
--       wait.flags = WQ_FLAG_PCI;
--
--       __add_wait_queue(&pci_cfg_wait, &wait);
-        do {
-                set_current_state(TASK_UNINTERRUPTIBLE);
-                raw_spin_unlock_irq(&pci_lock);
--               schedule();
-+               wait_event_flags(pci_cfg_wait, !dev->block_cfg_access, WQ_FLAG_PCI);
-                raw_spin_lock_irq(&pci_lock);
-        } while (dev->block_cfg_access);
--       __remove_wait_queue(&pci_cfg_wait, &wait);
- }
---- a/kernel/sched/wait.c
-+++ b/kernel/sched/wait.c
-@@ -4,8 +4,12 @@
-  *
-  * (C) 2004 Nadia Yvette Chambers, Oracle
-  */
-+#include <linux/delay.h>
-+
- #include "sched.h"
-
-+unsigned long wake_up_delay_ms;
-+
- void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *name, struct lock_class_key *k
-ey)
- {
-        spin_lock_init(&wq_head->lock);
-@@ -90,6 +94,10 @@ static int __wake_up_common(struct wait_queue_head *wq_head, unsigned int mode,
-                if (flags & WQ_FLAG_BOOKMARK)
-                        continue;
-
-+               if (flags & WQ_FLAG_PCI && wake_up_delay_ms) {
-+                       mdelay(wake_up_delay_ms);
-+               }
-+
-                ret = curr->func(curr, mode, wake_flags, key);
-                if (ret < 0)
-                        break;
-
-
-I tested it both on 4.19+ and mainline(5.8.0-rc3+). It's much difficult
-to reproduce the kernel panic on mainline(I don't know why).
-
-Anyway, all is well with your patch.
-
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
-
-> 
->>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->>> index 79c4a2ef269a..7c2222bddbff 100644
->>> --- a/drivers/pci/access.c
->>> +++ b/drivers/pci/access.c
->>> @@ -205,16 +205,11 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
->>>  
->>>  static noinline void pci_wait_cfg(struct pci_dev *dev)
->>>  {
->>> -	DECLARE_WAITQUEUE(wait, current);
->>> -
->>> -	__add_wait_queue(&pci_cfg_wait, &wait);
->>>  	do {
->>> -		set_current_state(TASK_UNINTERRUPTIBLE);
->>>  		raw_spin_unlock_irq(&pci_lock);
->>> -		schedule();
->>> +		wait_event(pci_cfg_wait, !dev->block_cfg_access);
->>>  		raw_spin_lock_irq(&pci_lock);
->>>  	} while (dev->block_cfg_access);
->>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
->>>  }
->>>  
->>>  /* Returns 0 on success, negative values indicate error. */
->>>
->>> .
->>>
->>
->> -- 
->> Thanks,
->> Xiang
->>
-> 
-> .
-> 
+err_unregister_mem_rxq_short:
+        xdp_rxq_info_unreg_mem_model(&rxq->xdp_rxq_short);
 
 -- 
-Thanks,
-Xiang
-
+per aspera ad upstream
