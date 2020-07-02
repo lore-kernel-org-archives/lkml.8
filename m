@@ -2,79 +2,92 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30593C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AE32088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024FD2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:02:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dm6t6Oj3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jzif+nd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgGBI65 (ORCPT
+        id S1726819AbgGBJCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:58:57 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45104 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbgGBI64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:58:56 -0400
-Received: from ticat.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb97Mof1ehGhOAA--.19S2;
-        Thu, 02 Jul 2020 16:58:52 +0800 (CST)
-From:   Peng Fan <fanpeng@loongson.cn>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] power: supply: rt5033_battery: Fix error code in rt5033_battery_probe()
-Date:   Thu,  2 Jul 2020 16:58:52 +0800
-Message-Id: <1593680332-31884-1-git-send-email-fanpeng@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxb97Mof1ehGhOAA--.19S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr1xZFyfZry5JrW7AF45Awb_yoW3trg_u3
-        y7Wr97Ar1UuF15Kr1DC34xZFy09ryDXF4fX3WYqrnIva15WwsrArZ7Zwn8u3ZrXrW7Crs8
-        CFZFqrn8AFyxtjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFyl
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUbKZGDUUUU
-X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
+        Thu, 2 Jul 2020 05:02:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47408 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGBJCF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:02:05 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593680523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iSHp+qL8jlCnfx+lpGtQHzsTwnPkgJZ+hzplODbpLis=;
+        b=Dm6t6Oj3BbIVrKAKyTPjW9LF/T6t9Bdmutb1cDd//FSn6oQed1lqlut+QZ/bL6vcaNKAmJ
+        z0JGzBsNfDxwFugQRGwERqzKuxAK3zrNqmSLEQ2pdwKWeClLJCsnQZKmxgOiIdd1ftbaQW
+        WlKM7WI3QfY26qqotnC2lsXHy7rhQRghAbA+3li6yeObek2Ek+dXKjK4UXsZAfoOhfnKVK
+        1r8SBDbFHUYJBrENZduuXCsHqzEGTfM+oDtvoSQ3nqff6jUoPfhcM++KrFwNh8q7bMYXfq
+        /4I3bzmlge/U+LaUPvcl+ROpiqtDlKixRwaTPUM4finRSAVGrP6/1W4U8DfulQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593680523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iSHp+qL8jlCnfx+lpGtQHzsTwnPkgJZ+hzplODbpLis=;
+        b=Jzif+nd6FqtafDb6f+2yMZZidwaOxAfVki88jUDsJxCrf3uwlXuFSQCViQifPGUGQtg947
+        TVMYm9euQgiGUHCA==
+To:     lijiang <lijiang@redhat.com>, Petr Mladek <pmladek@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] printk: use the lockless ringbuffer
+In-Reply-To: <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com>
+References: <20200618144919.9806-1-john.ogness@linutronix.de> <20200618144919.9806-4-john.ogness@linutronix.de> <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com>
+Date:   Thu, 02 Jul 2020 11:08:02 +0206
+Message-ID: <87zh8imgs5.fsf@jogness.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function rt5033_battery_probe(), it should return -ENOMEM
-instead of -EINVAL when call function devm_kzalloc() failed.
+On 2020-07-02, lijiang <lijiang@redhat.com> wrote:
+> About the VMCOREINFO part, I made some tests based on the kernel patch
+> v3, the makedumpfile and crash-utility can work as expected with your
+> patch(userspace patch), but, unfortunately, the vmcore-dmesg(kexec-tools)
+> can't correctly read the printk ring buffer information, and get the
+> following error:
+>
+> "Missing the log_buf symbol"
+>
+> The kexec-tools(vmcore-dmesg) should also have a similar patch, just like
+> in the makedumpfile and crash-utility.
 
-Signed-off-by: Peng Fan <fanpeng@loongson.cn>
----
- drivers/power/supply/rt5033_battery.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, a patch for this is needed (as well as for any other related
+software floating around the internet).
 
-diff --git a/drivers/power/supply/rt5033_battery.c b/drivers/power/supply/rt5033_battery.c
-index d8667a9..f330452 100644
---- a/drivers/power/supply/rt5033_battery.c
-+++ b/drivers/power/supply/rt5033_battery.c
-@@ -125,7 +125,7 @@ static int rt5033_battery_probe(struct i2c_client *client,
- 
- 	battery = devm_kzalloc(&client->dev, sizeof(*battery), GFP_KERNEL);
- 	if (!battery)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	battery->client = client;
- 	battery->regmap = devm_regmap_init_i2c(client,
--- 
-2.1.0
+I have no RFC patches for vmcore-dmesg. Looking at the code, I think it
+would be quite straight forward to port the makedumpfile patch. I will
+try to make some time for this.
 
+I do not want to patch any other software for this. I think with 3
+examples (crash, makedumpfile, vmcore-dmesg), others should be able to
+implement the changes to their software without needing my help.
+
+John Ogness
