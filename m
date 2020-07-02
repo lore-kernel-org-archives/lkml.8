@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94203C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B46920780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7712520780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGBV6f (ORCPT
+        id S1726715AbgGBV7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:58:35 -0400
+        Thu, 2 Jul 2020 17:59:17 -0400
 Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgGBV6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:58:33 -0400
+        id S1726196AbgGBV6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 17:58:34 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2161521883;
+        by mail.kernel.org (Postfix) with ESMTPSA id D243521973;
         Thu,  2 Jul 2020 21:58:33 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jr7E0-004Bev-5l; Thu, 02 Jul 2020 17:58:32 -0400
-Message-ID: <20200702215832.049969400@goodmis.org>
+        id 1jr7E0-004BhV-TS; Thu, 02 Jul 2020 17:58:32 -0400
+Message-ID: <20200702215832.784471709@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 02 Jul 2020 17:58:16 -0400
+Date:   Thu, 02 Jul 2020 17:58:21 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [for-next][PATCH 04/18] x86/ftrace: Do not jump to direct code in created trampolines
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 09/18] tracing: Move pipe reference to trace array instead of current_tracer
 References: <20200702215812.428188663@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -46,83 +45,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-When creating a trampoline based on the ftrace_regs_caller code, nop out the
-jnz test that would jmup to the code that would return to a direct caller
-(stored in the ORIG_RAX field) and not back to the function that called it.
+If a process has the trace_pipe open on a trace_array, the current tracer
+for that trace array should not be changed. This was original enforced by a
+global lock, but when instances were introduced, it was moved to the
+current_trace. But this structure is shared by all instances, and a
+trace_pipe is for a single instance. There's no reason that a process that
+has trace_pipe open on one instance should prevent another instance from
+changing its current tracer. Move the reference counter to the trace_array
+instead.
 
-Link: http://lkml.kernel.org/r/20200422162750.638839749@goodmis.org
+This is marked as "Fixes" but is more of a clean up than a true fix.
+Backport if you want, but its not critical.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: cf6ab6d9143b1 ("tracing: Add ref count to tracer for when they are being read by pipe")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- arch/x86/kernel/ftrace.c    | 15 +++++++++++++++
- arch/x86/kernel/ftrace_64.S |  1 +
- 2 files changed, 16 insertions(+)
+ kernel/trace/trace.c | 12 ++++++------
+ kernel/trace/trace.h |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index d1a0190fef5b..7edbd5ee5ed4 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -286,6 +286,7 @@ extern void ftrace_regs_caller_ret(void);
- extern void ftrace_caller_end(void);
- extern void ftrace_caller_op_ptr(void);
- extern void ftrace_regs_caller_op_ptr(void);
-+extern void ftrace_regs_caller_jmp(void);
- 
- /* movq function_trace_op(%rip), %rdx */
- /* 0x48 0x8b 0x15 <offset-to-ftrace_trace_op (4 bytes)> */
-@@ -316,6 +317,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long end_offset;
- 	unsigned long op_offset;
- 	unsigned long call_offset;
-+	unsigned long jmp_offset;
- 	unsigned long offset;
- 	unsigned long npages;
- 	unsigned long size;
-@@ -333,11 +335,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		end_offset = (unsigned long)ftrace_regs_caller_end;
- 		op_offset = (unsigned long)ftrace_regs_caller_op_ptr;
- 		call_offset = (unsigned long)ftrace_regs_call;
-+		jmp_offset = (unsigned long)ftrace_regs_caller_jmp;
- 	} else {
- 		start_offset = (unsigned long)ftrace_caller;
- 		end_offset = (unsigned long)ftrace_caller_end;
- 		op_offset = (unsigned long)ftrace_caller_op_ptr;
- 		call_offset = (unsigned long)ftrace_call;
-+		jmp_offset = 0;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8241d1448d70..64c5b8146cca 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5891,7 +5891,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
  	}
  
- 	size = end_offset - start_offset;
-@@ -367,6 +371,17 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	if (WARN_ON(ret < 0))
- 		goto fail;
+ 	/* If trace pipe files are being read, we can't change the tracer */
+-	if (tr->current_trace->ref) {
++	if (tr->trace_ref) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+@@ -6107,7 +6107,7 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
  
-+	/* No need to test direct calls on created trampolines */
-+	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-+		/* NOP the jnz 1f; but make sure it's a 2 byte jnz */
-+		ip = trampoline + (jmp_offset - start_offset);
-+		if (WARN_ON(*(char *)ip != 0x75))
-+			goto fail;
-+		ret = copy_from_kernel_nofault(ip, ideal_nops[2], 2);
-+		if (ret < 0)
-+			goto fail;
-+	}
-+
- 	/*
- 	 * The address of the ftrace_ops that is used for this trampoline
- 	 * is stored at the end of the trampoline. This will be used to
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 43cf9a2b52c7..ac3d5f22fe64 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -241,6 +241,7 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	 */
- 	movq ORIG_RAX(%rsp), %rax
- 	testq	%rax, %rax
-+SYM_INNER_LABEL(ftrace_regs_caller_jmp, SYM_L_GLOBAL)
- 	jnz	1f
+ 	nonseekable_open(inode, filp);
  
- 	restore_mcount_regs
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ out:
+ 	mutex_unlock(&trace_types_lock);
+ 	return ret;
+@@ -6126,7 +6126,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	tr->current_trace->ref--;
++	tr->trace_ref--;
+ 
+ 	if (iter->trace->pipe_close)
+ 		iter->trace->pipe_close(iter);
+@@ -7428,7 +7428,7 @@ static int tracing_buffers_open(struct inode *inode, struct file *filp)
+ 
+ 	filp->private_data = info;
+ 
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ 
+ 	mutex_unlock(&trace_types_lock);
+ 
+@@ -7529,7 +7529,7 @@ static int tracing_buffers_release(struct inode *inode, struct file *file)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	iter->tr->current_trace->ref--;
++	iter->tr->trace_ref--;
+ 
+ 	__trace_array_put(iter->tr);
+ 
+@@ -8737,7 +8737,7 @@ static int __remove_instance(struct trace_array *tr)
+ 	int i;
+ 
+ 	/* Reference counter for a newly created trace array = 1. */
+-	if (tr->ref > 1 || (tr->current_trace && tr->current_trace->ref))
++	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
+ 		return -EBUSY;
+ 
+ 	list_del(&tr->list);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 13db4000af3f..f21607f87189 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -356,6 +356,7 @@ struct trace_array {
+ 	struct trace_event_file *trace_marker_file;
+ 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
+ 	int			ref;
++	int			trace_ref;
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	struct ftrace_ops	*ops;
+ 	struct trace_pid_list	__rcu *function_pids;
+@@ -547,7 +548,6 @@ struct tracer {
+ 	struct tracer		*next;
+ 	struct tracer_flags	*flags;
+ 	int			enabled;
+-	int			ref;
+ 	bool			print_max;
+ 	bool			allow_instances;
+ #ifdef CONFIG_TRACER_MAX_TRACE
 -- 
 2.26.2
 
