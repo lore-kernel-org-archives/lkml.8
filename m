@@ -2,136 +2,173 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99030C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888DA20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763D320780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="fPOtA6Tb"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tK4jwZSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgGBLWU (ORCPT
+        id S1728673AbgGBLX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgGBLWT (ORCPT
+        Thu, 2 Jul 2020 07:23:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30974 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728009AbgGBLX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:22:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3050BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:22:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so13334873pgc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=nt96k6iAKxqAFLPuGZvFYf33kEJ+/jRhegvfMeKc9Xs=;
-        b=fPOtA6Tb7M5g4NKvW+QtMg8fBqYNtKBM0zq7JWAD5tEQeaj7a4EM4Uwc8uLzIuzjWI
-         lbG7Pi2tuDApXckkKxuI9NGIwojlLArPSNCQkO2WZT6Go6TGqWFNIF8agRJawsmk2BUF
-         fxDy/cKeelxjZ/sjBTk2pGEsZs+VLxn4V0OtgejWlUeQ5R63qL9ZVtiaHWobJp516QXY
-         OSoIZN2tdyuLKfX62JLAE9riYDmbWzIrcecj61ogKcf1FvfEJTpzBB/cvYAVRzRsa9TA
-         pLaN7Qpa3lDyBw1JNQrfaojZ1EPM8m5MhRRpFtm7yPOO/g+PnRZYHdz9SImPFIJNEZwr
-         WAmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=nt96k6iAKxqAFLPuGZvFYf33kEJ+/jRhegvfMeKc9Xs=;
-        b=BYH3oc9VNxwIje7xPIXzBIbPnMeWYi3wFj56C5ntODj/Nads19GtIoGXsdXu8YxMvP
-         UO6lEYR6J1/yBS/eETjUT7DojqOvtgRVyJI3gKhoMcG0V6vAC73ki5CwdSLv5HJc3MMW
-         IVv5IO5ev9xIUSKInZm8ATwHiBRQaLFtUJIMshz9W8SLRL0WHnC/mwFb6yTHxaCiFf6S
-         Tgh9KCOvYNV16mp/Jf2bXR+rflbv21yfrvdFYvY3rD+EINiW4nwjMDClkKPGsI+lt7xI
-         EatpFjak52xa5ey7RYM6K4eE86obP2t1fIoW1wdZeoO8ZfrBOFYyoPpibqDCELI0dlo3
-         kNww==
-X-Gm-Message-State: AOAM533Xla6LhHKIQy3lC0RZZ7hlzX3l35oFPLL0cccEptr7d/Qq2KDb
-        gAkv8+FuESRPXeHMkEJjY2sZPg==
-X-Google-Smtp-Source: ABdhPJydMbhu4w4dIm3e/HYEXc5ZMYlZN68Nglf/tCAmFxbrbQ+hA0WwrlNL0s0aS9y6fW5p5PNPhA==
-X-Received: by 2002:a63:f814:: with SMTP id n20mr23250319pgh.92.1593688938793;
-        Thu, 02 Jul 2020 04:22:18 -0700 (PDT)
-Received: from localhost ([2406:7400:73:3271:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id 7sm8674767pgw.85.2020.07.02.04.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 04:22:17 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 2 Jul 2020 07:22:10 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] staging: rtl8188eu: include: rtw_pwrctrl.h: fixed
- multiple parentheses coding style issues.
-Message-ID: <20200702112210.th4aiiszhdtufbpe@pesu-pes-edu>
+        Thu, 2 Jul 2020 07:23:26 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062BG4IJ003106;
+        Thu, 2 Jul 2020 13:23:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=5WRolsP7RiTQVKYQWxXnd4r13bZrvjWmpEgS8eL44Vo=;
+ b=tK4jwZSoCzqQvFoTTJc/3BLffPTvaB6X2vqCxqU71etrfo3J3A2ZSnsgdX+Fi8F15yzP
+ 7x8RQDer+5OQrNS30yHcOjEEuqExVvYsoDcdYjuk0iS4gFDomdakmL/bT8eokV95ze2f
+ NW8tMbSonOUUqCG6ybcXoRCgaJO1NdtcUhjY+2WrHG1l0mrhqRf8onRqTLzXNo+8ICwJ
+ THtV4lEfmN0Tujg28nNYIkoJgS9FfBcZqYP0BVQMjM0epfycULeqRIAGiAsq4YgUY/Ti
+ srMoj3Bn92Wt04cY1yBX2370pLrB8GxsjGjJOrhxNj6wVl14hF5pA5Bl9VCYrVeDmrQg dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31wuk1qqj0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 13:23:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D295C10002A;
+        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B88812AFEEF;
+        Thu,  2 Jul 2020 13:23:14 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jul
+ 2020 13:23:13 +0200
+Date:   Thu, 2 Jul 2020 13:23:13 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <pierre-yves.mordret@st.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 1/4] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200702112313.GE6855@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, robh+dt@kernel.org,
+        mark.rutland@arm.com, pierre-yves.mordret@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-2-git-send-email-alain.volmat@st.com>
+ <20200701104946.GH2261@ninjato>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ekcxpik5lw6jcut3"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200701104946.GH2261@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_05:2020-07-02,2020-07-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Wolfram,
 
---ekcxpik5lw6jcut3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Okay, now I got it to work, I also noted a few more issues.
+> 
+> First, I'd suggest s/i2c_smbus_host_notify/i2c_slave_host_notify/g for
+> all occurences in this patch. This makes a stronger distinction between
+> the generic HostNotify support and the slave specific one.
 
-add parentheses since complex valued macros must be enclosed within parentheses.
+Ok with that.
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/rtl8188eu/include/rtw_pwrctrl.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Also, I wonder if this shouldn't go to i2c-smbus.c instead but I haven't
+> checked if we end up in dependency hell then. Second best thought: at
+> least move to i2c-core-slave.c, then we could save the #ifdeffery in the
+> c-file?
 
-diff --git a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-index 404634999e35..c89328142731 100644
---- a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-@@ -84,7 +84,7 @@ struct reportpwrstate_parm {
- 	unsigned short rsvd;
- };
+I have actually difficulties to understand clearly what should go within
+i2c-smbus.c vs i2c-core-smbus or i2c-core-slave. My feeling is that
+i2c-core-slave is more about the registering of a slave rather than one usage
+of the slave mechanism. Hence I am not sure those functions/cb belong there.
+But at the same time, I don't know about i2c-smbus vs i2c-core-smbus. I putted
+it within i2c-core-smbus considering that the creation of the alert device
+is also done there.
 
--#define LPS_DELAY_TIME	1*HZ /*  1 sec */
-+#define LPS_DELAY_TIME	(1*HZ) /*  1 sec */
+....
 
- #define EXE_PWR_NONE	0x01
- #define EXE_PWR_IPS		0x02
-@@ -201,7 +201,7 @@ struct pwrctrl_priv {
- };
+> > +{
+> > +	struct i2c_smbus_host_notify_status *status = client->dev.platform_data;
+> > +	int ret;
+> > +
+> > +	switch (event) {
+> > +	case I2C_SLAVE_WRITE_REQUESTED:
+> > +		status->notify_start = true;
+> > +		break;
+> > +	case I2C_SLAVE_WRITE_RECEIVED:
+> > +		/* We only retrieve the first byte received (addr)
+> > +		 * since there is currently no support to retrieve the data
+> > +		 * parameter from the client.
+> > +		 */
+> > +		if (!status->notify_start)
+> > +			break;
+> > +		status->addr = *val;
+> > +		status->notify_start = false;
+> 
+> So, we are safe if the message is too short. Otherwise, we capture the
+> first byte (== address) only, right. Further bytes until STOP are
+> discarded. So, we don't check if the message is too long and contains
+> more than the status word. Maybe we should add that?
 
- #define rtw_get_ips_mode_req(pwrctrlpriv) \
--	(pwrctrlpriv)->ips_mode_req
-+	((pwrctrlpriv)->ips_mode_req)
+Yes I modified that.
 
- #define rtw_ips_mode_req(pwrctrlpriv, ips_mode) \
- 	((pwrctrlpriv)->ips_mode_req = (ips_mode))
---
-2.20.1
+> > +		break;
+> > +	case I2C_SLAVE_STOP:
+> > +		/* In case of incomplete write, don't handle host-notify */
+> > +		if (status->notify_start) {
+> > +			status->notify_start = false;
+> > +			break;
+> > +		}
+> > +
+> > +		ret = i2c_handle_smbus_host_notify(client->adapter,
+> > +						   status->addr);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +		break;
+> > +	default:
+> 
+> The missing cases are mandatory. From my testunit driver:
+> 
+>         case I2C_SLAVE_READ_REQUESTED:
+>         case I2C_SLAVE_READ_PROCESSED:
+>                 *val = 0xff;
+>                 break;
 
+Ok, done as well.
 
---ekcxpik5lw6jcut3
-Content-Type: application/pgp-signature; name="signature.asc"
+> > --- a/include/linux/i2c-smbus.h
+> > +++ b/include/linux/i2c-smbus.h
+> > @@ -38,6 +38,8 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
+> >  	return 0;
+> >  }
+> >  #endif
+> > +struct i2c_client *i2c_new_smbus_host_notify_device(struct i2c_adapter *adapter);
+> > +void i2c_free_smbus_host_notify_device(struct i2c_client *client);
+> 
+> Those need to be guarded with I2C_SLAVE as well. And an #else branch
+> with empty/successful placeholders.
 
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79w2IACgkQ471Q5AHe
-Z2rdZgv+PEEd2Ajt0okuG+6fIqzpISYZ/28PJjGjrCVHhXZtavp3LSNrCKIdMCW6
-ib6K4zOhMrHNgOd97ktSdq/uRaP2dN0cpXOhzbo1zzHcR27F6t4j7wAMnyHwA3o+
-OOK/sPiUkhibXeggNQPqVSVXASBIowpHk4EbJ3QVwSYjhFYGQDz02Jn1qovs1F63
-VSBuRBS0iQ9EDoENbWgnLxdirSL+aeXHEWTc4ZhM44bq2NCcmXdLcoBMdGIc5TUZ
-dliMSNXrehaFZ8yEiT8NAVNzc29MtS2s8Cki9RMEvTH2kxFHTYM3mYacWv9JlJ2u
-BBGB5h61u/TmGuzqcYwcdu1xfAj1FBCFdsMHPD/SKsYjrKD/v/CgiixKuSWc0Kla
-VjKwXYqIXPugV0rH6HZMyBxTezhhKblr0dXectcGErf+6s5RqkBtW2ZcKtOIaaYE
-gbcjSHHgSDhHMZUed9UsfvTzqJn18rJF6K7KVEIbAf2ia5LJLmJ0PWuiBE99Qair
-A8zGIgg/
-=hbqL
------END PGP SIGNATURE-----
-
---ekcxpik5lw6jcut3--
+Ok understood.
