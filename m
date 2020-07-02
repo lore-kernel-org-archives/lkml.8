@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5518BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9E820C56
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2AA20899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wxi9l2wp"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LNV/MQa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgGBHsP (ORCPT
+        id S1728186AbgGBHsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41564 "EHLO
+        Thu, 2 Jul 2020 03:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgGBHsM (ORCPT
+        with ESMTP id S1728159AbgGBHsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:48:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3167DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:48:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so26889761wrj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:48:12 -0700 (PDT)
+        Thu, 2 Jul 2020 03:48:14 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5369C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:48:13 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so26913385wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VYba028CJZ9T7XD/ZTFsh/GrF/6SxW5rmDPslFkKJEg=;
-        b=wxi9l2wpvFUBcyiwxwxdzQ0LtAL+CsSh4uPFgKKVj+xONa6JpwGzWXsBL7JS6bgR7f
-         RBWALDIWTv2wL07yclrrGux8AyWrdNjLW1+E+Dut4UhcJLVKAwHMXGjxYqypakfPOk9X
-         p387wtrvM4enhUh+fLjS/qoMjqMgv/ANkvNJtmWI740Va+AXO0NXp1dg8Qu4QAFpjuxm
-         xZy1/vTSQz12flZVHtrHC7WFgGNDPsEcKJlSvKYwW8AH+Ch/TrsL96ba7ISIgNEc3Zqo
-         U5D1l9txrCZMMmbhxY/Td22vcGxZ72ay64ztCfClEQCx4mMp2DRZUbX+nsVezLKZuQtw
-         cuwg==
+        bh=ci6ooCorfZ5Pyg0EKRJeiIb8tL4fvaY6SA1psV8+SCw=;
+        b=LNV/MQa46fdkURV0u2B9ejwweqqRpDIKhbBKeEfqQcMmNjWyXRBajz9QDNiMKyTvHH
+         6gCtxD86tRUjjW+s8TPUXvkvbr+OS3YJmDP/gHeMhNhQUmSotRgCSjKufKXvQIm+mMGf
+         45WlajdJ8HA6WbJTPr2ybTp+4kuKLodRk1M/Ar2ySwtoMijjG6DrZpV971+ZQCP9GqK6
+         M0q1v08l3I0mYN0A8eztbGf+XZMi5Sa2tEkkVPvse1xndXRvpU6iaFzInjnZzLffMk11
+         uEjN4Oak4gG/6Zqt1H3TdkYAy8G5ytuYlu5nFtvT3XxVgT04P+bg9smB4+ak9LRY40GG
+         IkHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VYba028CJZ9T7XD/ZTFsh/GrF/6SxW5rmDPslFkKJEg=;
-        b=qEZwZ+H67zEOYJqcIPI0ACb7aIMKrfVdzTAKvDAqQhYWc3sqDwraCiKxwJnDZfh2Bq
-         c9yLhbYbramzbSG91HIFGG3XTILtvmCNVTmcTsvrHy2Vnp/eaohSYwbLVS9c1guw4XOl
-         qyk3PhT4YAh4G8TgY85PAslylNzwMaDylAfZitBZyHoXI361k0xpn7YupaRso/B5Oepu
-         iFeGsPtZKrr0FIidT8ycFokLLi8+uz+EFzYQZBNqw+3q3TfeI6jEg7yNAvSCyyVmNaC6
-         T9WyIyzjzJGhGptcCf8LoHB7PBW7VSCaiRkn61HS/4xvl08o0BEm2DiqB6RavjybUu6K
-         B7Hw==
-X-Gm-Message-State: AOAM531aa/x9m/DWSkIgBcgqeAtZlSu84K8ds+BEJBhNA4y/PTNacrC9
-        uT0e3QOiCnoUmVVox5RFEeG7prptuFk0dw==
-X-Google-Smtp-Source: ABdhPJykcmbrJhzMMw+Lgp0fx/cyMjCMpMIHsUhsBEZjIdT5ACEAnqyDrjRgRJrlkhlYikdoMd0n7Q==
-X-Received: by 2002:adf:ecc8:: with SMTP id s8mr30718668wro.317.1593676090734;
-        Thu, 02 Jul 2020 00:48:10 -0700 (PDT)
+        bh=ci6ooCorfZ5Pyg0EKRJeiIb8tL4fvaY6SA1psV8+SCw=;
+        b=oVBytN/U2t6V79GcuZKkpkYAuTKIvmMWVgCnr9NNuxrPDk4B7MksGAW7Ch8DZEp0Rh
+         QJjvbJIHzJkUbluuCdWXbdQ5DRs3mq0I6RhFtfiA8Juql3b8grlfN4O8wzLAYlB4oR0T
+         PyK35ZqzIX3uP8CPABgQyukH88yqm4VRjqmrVLXS01GPB24zhDKIaBjyCvzYrJjj1iyY
+         fupUw3Rq7dPbsg5TDBMQHAcKkMpM8oqi1PYQ8KETKzIL3BIcbIEqM3FuwO/RixiDx1nE
+         DPjMWqYTGBmEKb5sl/bpe7Bku04YMJwjk0bY9vkl932rxeO7xymuS8zEgUr3xJb4/94c
+         8nqA==
+X-Gm-Message-State: AOAM533Ze42UCFd79FQ5Dp2fBqhYILe4l1VSt/9yhSHCe5spby36rlYX
+        KJqRYub++NHvERUbchWAHb5I7g==
+X-Google-Smtp-Source: ABdhPJzRyKGfdgm9MhttaHg18K3kT7W+KjIdtWl18Cnj7zu3qrmOSvKfv2O+bPsm4/+MxHKkrvWfIA==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr31938378wrq.357.1593676092277;
+        Thu, 02 Jul 2020 00:48:12 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:7023:727a:c688:cf9b])
-        by smtp.gmail.com with ESMTPSA id z1sm10001882wru.30.2020.07.02.00.48.09
+        by smtp.gmail.com with ESMTPSA id z1sm10001882wru.30.2020.07.02.00.48.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 00:48:10 -0700 (PDT)
+        Thu, 02 Jul 2020 00:48:11 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
 Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v8 5/6] drm/meson: overlay: setup overlay for Amlogic FBC Scatter Memory layout
-Date:   Thu,  2 Jul 2020 09:47:58 +0200
-Message-Id: <20200702074759.32356-6-narmstrong@baylibre.com>
+Subject: [PATCH v8 6/6] drm/meson: crtc: handle commit of Amlogic FBC frames
+Date:   Thu,  2 Jul 2020 09:47:59 +0200
+Message-Id: <20200702074759.32356-7-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200702074759.32356-1-narmstrong@baylibre.com>
 References: <20200702074759.32356-1-narmstrong@baylibre.com>
@@ -78,102 +78,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup the Amlogic FBC decoder for the VD1 video overlay plane to use
-read the FBC header as Scatter Memory layout reference.
+Since the VD1 Amlogic FBC decoder is now configured by the overlay driver,
+commit the right registers to decode the Amlogic FBC frame.
 
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/meson/meson_overlay.c | 53 ++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/meson/meson_crtc.c | 118 +++++++++++++++++++++--------
+ 1 file changed, 88 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index 1566a887d482..1f7b2055e012 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -490,6 +490,10 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 						AMLOGIC_FBC_OPTION_MEM_SAVING))
- 			priv->viu.vd1_afbc_mode |= AFBC_BLK_MEM_MODE;
- 
-+		if ((fb->modifier & __fourcc_mod_amlogic_layout_mask) ==
-+				AMLOGIC_FBC_LAYOUT_SCATTER)
-+			priv->viu.vd1_afbc_mode |= AFBC_SCATTER_MODE;
+diff --git a/drivers/gpu/drm/meson/meson_crtc.c b/drivers/gpu/drm/meson/meson_crtc.c
+index e66b6271ff58..2854272dc2d9 100644
+--- a/drivers/gpu/drm/meson/meson_crtc.c
++++ b/drivers/gpu/drm/meson/meson_crtc.c
+@@ -291,6 +291,10 @@ static void meson_crtc_enable_vd1(struct meson_drm *priv)
+ 			    VPP_VD1_PREBLEND | VPP_VD1_POSTBLEND |
+ 			    VPP_COLOR_MNG_ENABLE,
+ 			    priv->io_base + _REG(VPP_MISC));
 +
- 		priv->viu.vd1_afbc_en = 0x1600 | AFBC_DEC_ENABLE;
++	writel_bits_relaxed(VIU_CTRL0_AFBC_TO_VD1,
++			    priv->viu.vd1_afbc ? VIU_CTRL0_AFBC_TO_VD1 : 0,
++			    priv->io_base + _REG(VIU_MISC_CTRL0));
+ }
  
- 		priv->viu.vd1_afbc_conv_ctrl = AFBC_CONV_LBUF_LEN(256);
-@@ -675,23 +679,32 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 	}
+ static void meson_g12a_crtc_enable_vd1(struct meson_drm *priv)
+@@ -300,6 +304,10 @@ static void meson_g12a_crtc_enable_vd1(struct meson_drm *priv)
+ 		       VD_BLEND_POSTBLD_SRC_VD1 |
+ 		       VD_BLEND_POSTBLD_PREMULT_EN,
+ 		       priv->io_base + _REG(VD1_BLEND_SRC_CTRL));
++
++	writel_relaxed(priv->viu.vd1_afbc ?
++		       (VD1_AXI_SEL_AFBC | AFBC_VD1_SEL) : 0,
++		       priv->io_base + _REG(VD1_AFBCD0_MISC_CTRL));
+ }
  
- 	if (priv->viu.vd1_afbc) {
--		/* Default mode is 4k per superblock */
--		unsigned long block_size = 4096;
--		unsigned long body_size;
--
--		/* 8bit mem saving mode is 3072bytes per superblock */
--		if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
--			block_size = 3072;
--
--		body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
--			    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
--			    block_size;
--
--		priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
--
--		/* Header is after body content */
--		priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
--						body_size) >> 4;
-+		if (priv->viu.vd1_afbc_mode & AFBC_SCATTER_MODE) {
-+			/*
-+			 * In Scatter mode, the header contains the physical
-+			 * body content layout, thus the body content
-+			 * size isn't needed.
-+			 */
-+			priv->viu.vd1_afbc_head_addr = priv->viu.vd1_addr0 >> 4;
-+			priv->viu.vd1_afbc_body_addr = 0;
+ void meson_crtc_irq(struct meson_drm *priv)
+@@ -383,36 +391,86 @@ void meson_crtc_irq(struct meson_drm *priv)
+ 	/* Update the VD1 registers */
+ 	if (priv->viu.vd1_enabled && priv->viu.vd1_commit) {
+ 
+-		switch (priv->viu.vd1_planes) {
+-		case 3:
+-			meson_canvas_config(priv->canvas,
+-					    priv->canvas_id_vd1_2,
+-					    priv->viu.vd1_addr2,
+-					    priv->viu.vd1_stride2,
+-					    priv->viu.vd1_height2,
+-					    MESON_CANVAS_WRAP_NONE,
+-					    MESON_CANVAS_BLKMODE_LINEAR,
+-					    MESON_CANVAS_ENDIAN_SWAP64);
+-		/* fallthrough */
+-		case 2:
+-			meson_canvas_config(priv->canvas,
+-					    priv->canvas_id_vd1_1,
+-					    priv->viu.vd1_addr1,
+-					    priv->viu.vd1_stride1,
+-					    priv->viu.vd1_height1,
+-					    MESON_CANVAS_WRAP_NONE,
+-					    MESON_CANVAS_BLKMODE_LINEAR,
+-					    MESON_CANVAS_ENDIAN_SWAP64);
+-		/* fallthrough */
+-		case 1:
+-			meson_canvas_config(priv->canvas,
+-					    priv->canvas_id_vd1_0,
+-					    priv->viu.vd1_addr0,
+-					    priv->viu.vd1_stride0,
+-					    priv->viu.vd1_height0,
+-					    MESON_CANVAS_WRAP_NONE,
+-					    MESON_CANVAS_BLKMODE_LINEAR,
+-					    MESON_CANVAS_ENDIAN_SWAP64);
++		if (priv->viu.vd1_afbc) {
++			writel_relaxed(priv->viu.vd1_afbc_head_addr,
++				       priv->io_base +
++				       _REG(AFBC_HEAD_BADDR));
++			writel_relaxed(priv->viu.vd1_afbc_body_addr,
++				       priv->io_base +
++				       _REG(AFBC_BODY_BADDR));
++			writel_relaxed(priv->viu.vd1_afbc_en,
++				       priv->io_base +
++				       _REG(AFBC_ENABLE));
++			writel_relaxed(priv->viu.vd1_afbc_mode,
++				       priv->io_base +
++				       _REG(AFBC_MODE));
++			writel_relaxed(priv->viu.vd1_afbc_size_in,
++				       priv->io_base +
++				       _REG(AFBC_SIZE_IN));
++			writel_relaxed(priv->viu.vd1_afbc_dec_def_color,
++				       priv->io_base +
++				       _REG(AFBC_DEC_DEF_COLOR));
++			writel_relaxed(priv->viu.vd1_afbc_conv_ctrl,
++				       priv->io_base +
++				       _REG(AFBC_CONV_CTRL));
++			writel_relaxed(priv->viu.vd1_afbc_size_out,
++				       priv->io_base +
++				       _REG(AFBC_SIZE_OUT));
++			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_ctrl,
++				       priv->io_base +
++				       _REG(AFBC_VD_CFMT_CTRL));
++			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_w,
++				       priv->io_base +
++				       _REG(AFBC_VD_CFMT_W));
++			writel_relaxed(priv->viu.vd1_afbc_mif_hor_scope,
++				       priv->io_base +
++				       _REG(AFBC_MIF_HOR_SCOPE));
++			writel_relaxed(priv->viu.vd1_afbc_mif_ver_scope,
++				       priv->io_base +
++				       _REG(AFBC_MIF_VER_SCOPE));
++			writel_relaxed(priv->viu.vd1_afbc_pixel_hor_scope,
++				       priv->io_base+
++				       _REG(AFBC_PIXEL_HOR_SCOPE));
++			writel_relaxed(priv->viu.vd1_afbc_pixel_ver_scope,
++				       priv->io_base +
++				       _REG(AFBC_PIXEL_VER_SCOPE));
++			writel_relaxed(priv->viu.vd1_afbc_vd_cfmt_h,
++				       priv->io_base +
++				       _REG(AFBC_VD_CFMT_H));
 +		} else {
-+			/* Default mode is 4k per superblock */
-+			unsigned long block_size = 4096;
-+			unsigned long body_size;
++			switch (priv->viu.vd1_planes) {
++			case 3:
++				meson_canvas_config(priv->canvas,
++						    priv->canvas_id_vd1_2,
++						    priv->viu.vd1_addr2,
++						    priv->viu.vd1_stride2,
++						    priv->viu.vd1_height2,
++						    MESON_CANVAS_WRAP_NONE,
++						    MESON_CANVAS_BLKMODE_LINEAR,
++						    MESON_CANVAS_ENDIAN_SWAP64);
++				fallthrough;
++			case 2:
++				meson_canvas_config(priv->canvas,
++						    priv->canvas_id_vd1_1,
++						    priv->viu.vd1_addr1,
++						    priv->viu.vd1_stride1,
++						    priv->viu.vd1_height1,
++						    MESON_CANVAS_WRAP_NONE,
++						    MESON_CANVAS_BLKMODE_LINEAR,
++						    MESON_CANVAS_ENDIAN_SWAP64);
++				fallthrough;
++			case 1:
++				meson_canvas_config(priv->canvas,
++						    priv->canvas_id_vd1_0,
++						    priv->viu.vd1_addr0,
++						    priv->viu.vd1_stride0,
++						    priv->viu.vd1_height0,
++						    MESON_CANVAS_WRAP_NONE,
++						    MESON_CANVAS_BLKMODE_LINEAR,
++						    MESON_CANVAS_ENDIAN_SWAP64);
++			}
 +
-+			/* 8bit mem saving mode is 3072bytes per superblock */
-+			if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
-+				block_size = 3072;
-+
-+			body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
-+				    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
-+				    block_size;
-+
-+			priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
-+			/* Header is after body content */
-+			priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
-+							body_size) >> 4;
-+		}
- 	}
- 
- 	priv->viu.vd1_enabled = true;
-@@ -754,7 +767,8 @@ static bool meson_overlay_format_mod_supported(struct drm_plane *plane,
- 			return false;
++			writel_relaxed(0, priv->io_base + _REG(AFBC_ENABLE));
  		}
  
--		if (layout != AMLOGIC_FBC_LAYOUT_BASIC) {
-+		if (layout != AMLOGIC_FBC_LAYOUT_BASIC &&
-+		    layout != AMLOGIC_FBC_LAYOUT_SCATTER) {
- 			DRM_DEBUG_KMS("%llx invalid layout %x\n",
- 				      modifier, layout);
- 			return false;
-@@ -800,8 +814,11 @@ static const uint32_t supported_drm_formats[] = {
- };
- 
- static const uint64_t format_modifiers[] = {
-+	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_SCATTER,
-+				   AMLOGIC_FBC_OPTION_MEM_SAVING),
- 	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_BASIC,
- 				   AMLOGIC_FBC_OPTION_MEM_SAVING),
-+	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_SCATTER, 0),
- 	DRM_FORMAT_MOD_AMLOGIC_FBC(AMLOGIC_FBC_LAYOUT_BASIC, 0),
- 	DRM_FORMAT_MOD_LINEAR,
- 	DRM_FORMAT_MOD_INVALID,
+ 		writel_relaxed(priv->viu.vd1_if0_gen_reg,
 -- 
 2.22.0
 
