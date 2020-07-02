@@ -2,173 +2,238 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3599DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A3D20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RDkdQXx4"
+	by mail.kernel.org (Postfix) with ESMTP id D6A792088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgGBNeo (ORCPT
+        id S1729358AbgGBNfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:34:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729115AbgGBNeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:34:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39B6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 06:34:43 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k6so28431869wrn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 06:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QtUSfQwMQwE8C4rYKs7db9IZkQbmcpLVtNvyBZDb6eU=;
-        b=RDkdQXx4oF+yh9YK3sRMwAcyaTsdq8rJbD7nDeqymvDHlao2P/wnBDdWgOOobLBSQm
-         FPwurO6UeGiGfIWhi5nvTOEcGC6fbgTjdZvoZu5kFbg1eae12t142DeAS9lSfjkCZBvj
-         uuRU6/oo00Lnalgx9a4jgXEc0pXujhybHdpHTfa8ONAIqPARWkbZPTn26koP06OGnDpB
-         LNe0tXe5mYK7hahi9lYKqUSqmaGkM4aBp3AnXSFts+e0RXjbUtSaWhUfseSwQB0CTc4P
-         c2R8P1qsSuL60DD3wgs+Z9dW/r9Jlo4XodKkLwhfHeDQmO9xLxrnBkVbKs6QWPHr2iVY
-         qdyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QtUSfQwMQwE8C4rYKs7db9IZkQbmcpLVtNvyBZDb6eU=;
-        b=JursMTLx/3AQF9xjupjs36raHagAACQAU20oYtvhbLsQg9yPOw2GZ0wD5idxogA1cR
-         5Ew1Y17MAG02HcV78VPWR+f+bwSJK9oQDH9Ll7SP0C8d+DI1FEmdbqy/qaUzsU5M4ttF
-         F/dRPB+rbrFJSGKDAth+vvOzQhDiReS0qz204UWOOJYgAWJ/KDptw3Ghk42GwXQRkjnl
-         UQsqk3xl5eoS5wsozCEGYJtRSfi5LP0LDxMeFfHs75s9YsOkUagFIn0En43kMwPEt7rX
-         b4wlJrBpDcBf9Enzqtbq2+j0oyBGGRMW4lnuigkGex6cgZnNU/d1z5HQbgJ0gT6XnEER
-         ogLQ==
-X-Gm-Message-State: AOAM532/fi+1pJsyem4Y4n5AL1keuMRgYFvFVJ0WkE+sD9ZKRlXb0spg
-        pgGXuUIbpo6vrN4tDQovM5r+6Q==
-X-Google-Smtp-Source: ABdhPJy6WbFia0yn9UID8Gm2tkkyz9fh0xvXlY5IEXYfhSB2AcUfT/i8yr5YgPrdynqAArrEq5xU+w==
-X-Received: by 2002:a5d:69cf:: with SMTP id s15mr20388776wrw.10.1593696882242;
-        Thu, 02 Jul 2020 06:34:42 -0700 (PDT)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o29sm11738592wra.5.2020.07.02.06.34.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 06:34:41 -0700 (PDT)
-Subject: Re: [PATCH v8 1/6] drm/fourcc: Add modifier definitions for
- describing Amlogic Video Framebuffer Compression
-To:     Simon Ser <contact@emersion.fr>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "jianxin.pan@amlogic.com" <jianxin.pan@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200702074759.32356-1-narmstrong@baylibre.com>
- <20200702074759.32356-2-narmstrong@baylibre.com>
- <8cBfZpkc4pHBLhihlvJMD_Hq1DEsNRcSY4Y8JaGwklMWcxiYzUMVEx7wH9f_DuCBMVUhXvOR0PcHVslILtKI2wdw79Nfih0N3VnrxfMQd08=@emersion.fr>
- <20200702131834.GZ3278063@phenom.ffwll.local>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <044964ad-b927-57d7-9361-beda5c8d99a8@baylibre.com>
-Date:   Thu, 2 Jul 2020 15:34:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 09:35:50 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43668 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729115AbgGBNft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:35:49 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jqzNR-003KMu-4A; Thu, 02 Jul 2020 15:35:45 +0200
+Date:   Thu, 2 Jul 2020 15:35:45 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Subject: Re: [net-next,PATCH 3/4] net: mdio-ipq4019: add Clause 45 support
+Message-ID: <20200702133545.GJ730739@lunn.ch>
+References: <20200702103001.233961-1-robert.marko@sartura.hr>
+ <20200702103001.233961-4-robert.marko@sartura.hr>
 MIME-Version: 1.0
-In-Reply-To: <20200702131834.GZ3278063@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702103001.233961-4-robert.marko@sartura.hr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2020 15:18, Daniel Vetter wrote:
-> On Thu, Jul 02, 2020 at 09:23:11AM +0000, Simon Ser wrote:
->> On Thursday, July 2, 2020 9:47 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->>> Finally is also adds the Scatter Memory layout, meaning the header contains IOMMU
->>> references to the compressed frames content to optimize memory access
->>> and layout.
->>>
->>> In this mode, only the header memory address is needed, thus the content
->>> memory organization is tied to the current producer execution and cannot
->>> be saved/dumped neither transferrable between Amlogic SoCs supporting this
->>> modifier.
->>
->> Still not sure how to handle this one, since this breaks fundamental
->> assumptions about modifiers.
+On Thu, Jul 02, 2020 at 12:30:00PM +0200, Robert Marko wrote:
+> While up-streaming the IPQ4019 driver it was thought that the controller had no Clause 45 support,
+> but it actually does and its activated by writing a bit to the mode register.
 > 
-> I wonder whether we should require special allocations for these, and then
-> just outright reject mmap on these buffers. mmap on dma-buf isn't a
-> required feature.
+> So lets add it as newer SoC-s use the same controller and Clause 45 compliant PHY-s.
+> 
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  drivers/net/phy/mdio-ipq4019.c | 109 ++++++++++++++++++++++++++++-----
+>  1 file changed, 92 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/net/phy/mdio-ipq4019.c b/drivers/net/phy/mdio-ipq4019.c
+> index 7660bf006da0..9143113d5a6b 100644
+> --- a/drivers/net/phy/mdio-ipq4019.c
+> +++ b/drivers/net/phy/mdio-ipq4019.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/phy.h>
+>  #include <linux/platform_device.h>
+>  
+> +#define MDIO_MODE_REG				0x40
+>  #define MDIO_ADDR_REG				0x44
+>  #define MDIO_DATA_WRITE_REG			0x48
+>  #define MDIO_DATA_READ_REG			0x4c
+> @@ -21,6 +22,12 @@
+>  #define MDIO_CMD_ACCESS_START		BIT(8)
+>  #define MDIO_CMD_ACCESS_CODE_READ	0
+>  #define MDIO_CMD_ACCESS_CODE_WRITE	1
+> +#define MDIO_CMD_ACCESS_CODE_C45_ADDR	0
+> +#define MDIO_CMD_ACCESS_CODE_C45_WRITE	1
+> +#define MDIO_CMD_ACCESS_CODE_C45_READ	2
+> +
+> +/* 0 = Clause 22, 1 = Clause 45 */
+> +#define MDIO_MODE_BIT				BIT(8)
+>  
+>  #define IPQ4019_MDIO_TIMEOUT	10000
+>  #define IPQ4019_MDIO_SLEEP		10
+> @@ -39,7 +46,7 @@ static int ipq4019_mdio_wait_busy(struct mii_bus *bus)
+>  	unsigned int busy;
+>  
+>  	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
+> -				  (busy & MDIO_CMD_ACCESS_BUSY) == 0, 
+> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0,
+>  				  IPQ4019_MDIO_SLEEP, IPQ4019_MDIO_TIMEOUT);
+>  }
 
-Yes, it's the plan to reject mmap on these buffers, but it can't be explained
-in the modifiers description and it's a requirement of the producer, not the
-consumer.
+Please put white space changes into a separate patch.
 
-> 
-> That would make sure that userspace cannot look at them.
-> 
-> Also I'm kinda suspecting that there's not unlimited amounts of this magic
-> invisible storage available anyway.
-> -Daniel
-> 
 
+>  
+> @@ -47,18 +54,43 @@ static int ipq4019_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+>  {
+>  	struct ipq4019_mdio_data *priv = bus->priv;
+>  	unsigned int cmd;
+> -
+> -	/* Reject clause 45 */
+> -	if (regnum & MII_ADDR_C45)
+> -		return -EOPNOTSUPP;
+> +	unsigned int data;
+
+Reverse Christmas tree please.
+
+>  
+>  	if (ipq4019_mdio_wait_busy(bus))
+>  		return -ETIMEDOUT;
+>  
+> -	/* issue the phy address and reg */
+> -	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +	/* Clause 45 support */
+> +	if (regnum & MII_ADDR_C45) {
+> +		unsigned int mmd = (regnum >> 16) & 0x1F;
+> +		unsigned int reg = regnum & 0xFFFF;
+> +
+> +		/* Enter Clause 45 mode */
+> +		data = readl(priv->membase + MDIO_MODE_REG);
+> +
+> +		data |= MDIO_MODE_BIT;
+> +
+> +		writel(data, priv->membase + MDIO_MODE_REG);
+> +
+> +		/* issue the phy address and mmd */
+> +		writel((mii_id << 8) | mmd, priv->membase + MDIO_ADDR_REG);
+> +
+> +		/* issue reg */
+> +		writel(reg, priv->membase + MDIO_DATA_WRITE_REG);
+> +
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_C45_ADDR;
+> +	} else {
+> +		/* Enter Clause 22 mode */
+> +		data = readl(priv->membase + MDIO_MODE_REG);
+>  
+> -	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_READ;
+> +		data &= ~MDIO_MODE_BIT;
+> +
+> +		writel(data, priv->membase + MDIO_MODE_REG);
+> +
+> +		/* issue the phy address and reg */
+> +		writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_READ;
+> +	}
+>  
+>  	/* issue read command */
+>  	writel(cmd, priv->membase + MDIO_CMD_REG);
+> @@ -67,6 +99,15 @@ static int ipq4019_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+>  	if (ipq4019_mdio_wait_busy(bus))
+>  		return -ETIMEDOUT;
+>  
+> +	if (regnum & MII_ADDR_C45) {
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_C45_READ;
+> +
+> +		writel(cmd, priv->membase + MDIO_CMD_REG);
+> +
+> +		if (ipq4019_mdio_wait_busy(bus))
+> +			return -ETIMEDOUT;
+> +	}
+> +
+>  	/* Read and return data */
+>  	return readl(priv->membase + MDIO_DATA_READ_REG);
+>  }
+> @@ -76,22 +117,56 @@ static int ipq4019_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+>  {
+>  	struct ipq4019_mdio_data *priv = bus->priv;
+>  	unsigned int cmd;
+> -
+> -	/* Reject clause 45 */
+> -	if (regnum & MII_ADDR_C45)
+> -		return -EOPNOTSUPP;
+> +	unsigned int data;
+>  
+>  	if (ipq4019_mdio_wait_busy(bus))
+>  		return -ETIMEDOUT;
+>  
+> -	/* issue the phy address and reg */
+> -	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +	/* Clause 45 support */
+> +	if (regnum & MII_ADDR_C45) {
+> +		unsigned int mmd = (regnum >> 16) & 0x1F;
+> +		unsigned int reg = regnum & 0xFFFF;
+> +
+> +		/* Enter Clause 45 mode */
+> +		data = readl(priv->membase + MDIO_MODE_REG);
+> +
+> +		data |= MDIO_MODE_BIT;
+> +
+> +		writel(data, priv->membase + MDIO_MODE_REG);
+> +
+> +		/* issue the phy address and mmd */
+> +		writel((mii_id << 8) | mmd, priv->membase + MDIO_ADDR_REG);
+> +
+> +		/* issue reg */
+> +		writel(reg, priv->membase + MDIO_DATA_WRITE_REG);
+> +
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_C45_ADDR;
+> +
+> +		writel(cmd, priv->membase + MDIO_CMD_REG);
+> +
+> +		if (ipq4019_mdio_wait_busy(bus))
+> +			return -ETIMEDOUT;
+> +	} else {
+> +		/* Enter Clause 22 mode */
+> +		data = readl(priv->membase + MDIO_MODE_REG);
+> +
+> +		data &= ~MDIO_MODE_BIT;
+> +
+> +		writel(data, priv->membase + MDIO_MODE_REG);
+> +
+> +		/* issue the phy address and reg */
+> +		writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
+> +	}
+>  
+>  	/* issue write data */
+>  	writel(value, priv->membase + MDIO_DATA_WRITE_REG);
+> -
+> -	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_WRITE;
+> +
+>  	/* issue write command */
+> +	if (regnum & MII_ADDR_C45)
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_C45_WRITE;
+> +	else
+> +		cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_WRITE;
+> +
+>  	writel(cmd, priv->membase + MDIO_CMD_REG);
+>  
+>  	/* Wait write complete */
+> @@ -105,7 +180,7 @@ static int ipq4019_mdio_probe(struct platform_device *pdev)
+>  {
+>  	struct ipq4019_mdio_data *priv;
+>  	struct mii_bus *bus;
+> -	struct device_node *np = pdev->dev.of_node; 
+> +	struct device_node *np = pdev->dev.of_node;
+>  	int ret;
+
+Another white space change.
+
+	Andrew
