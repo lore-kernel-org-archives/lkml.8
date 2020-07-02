@@ -2,152 +2,113 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC179C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDA920884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAAC20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593722940;
+	bh=e4ciOu9oUHI5yL+c1sto9jKwVb5p1bjw6Wl6l3yhd/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VT2+jYW+Pws/59r7wXICMoXlhMqSaqU051A1BvJo4j+7YRBnl9BD/USMR6MAcmvun
+	 p2PssxESyNjeAm6MdbzfyZ5G0FyT+neYppBmq4hNpi8JNn4aDpJvSqczSoiGe+H7FJ
+	 TjoGhG00sgswzFrqUDScw2PNTKHJsbsqfm8cwAAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgGBUsI (ORCPT
+        id S1726305AbgGBUs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:48:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38767 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgGBUsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:48:08 -0400
-IronPort-SDR: O0K8KrBmcXy/x1qYfOANVIUlLVuvrTFza5iKpPsuFKmNy36C8TPNaEbbIwAcQAWvlhHlaiLcrM
- d5KR5XDehUBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="147036098"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="147036098"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 13:48:06 -0700
-IronPort-SDR: jLI2ussQiJcwVAQDoqzZVUjyRMEtKTn40kOahLEmA6pJw0olSDFbMrl6BwY1keBaWQt2cyBacV
- bHKvJ4fkLLyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="282073619"
-Received: from frichard-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.59])
-  by orsmga006.jf.intel.com with ESMTP; 02 Jul 2020 13:48:01 -0700
-Date:   Thu, 2 Jul 2020 23:48:00 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Define TPM2_SPACE_BUFFER_SIZE to replace the use of
- PAGE_SIZE
-Message-ID: <20200702204800.GC31291@linux.intel.com>
-References: <20200626143436.396889-1-jarkko.sakkinen@linux.intel.com>
- <35184081-6f01-e13c-1b87-7c7d83d075c0@linux.ibm.com>
+        Thu, 2 Jul 2020 16:48:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36133 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgGBUs6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 16:48:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id y2so30366492ioy.3;
+        Thu, 02 Jul 2020 13:48:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HmX76XVNFdnKdNstB4FEQ2AG2VQGUy0YrDhBLWg+PgM=;
+        b=dgxQ/cpqkJW6RTq2C3anEP0SFffv4kNfh0VBcKSVm+6AtBy8AiwkCnrVlRlNGrp7UE
+         XoackCD2FZFhzQI28tmc8vKvMGXbNLn+B5SdOIAS+cA3RqxgFp2YcI6+1dPjaVSOm3QG
+         8PHvvGaKob69LzlfxYRvtsADVOLBGwlVdc95KGIvPH0p1KygncOUE2ATJdfPSJrr6Oo1
+         ov57nCyc4yAAHQprqvE7pJ1ddhbHC9i2tgpmnxN/tkgKXoAf19qMqjaF+Z7tWl7O1qR3
+         EIkn8rdz1B60Bvtl27JbQDPX4MmsGnd+z+hIFkUw0whXjgt0iygDqzSzkuSi5sbYJxep
+         tIPA==
+X-Gm-Message-State: AOAM530Q6YHmTkqZ6G098222Eu/XKS5Fu8Q75P1F3TjwZnfeREYx9sTU
+        LGrCtITKj94kRmuhB7hmpD910fXjbg==
+X-Google-Smtp-Source: ABdhPJyWpYN6OwRJqIZaEkMX30sxRTZIy/tJA5Eq8b9+H5/O56nWoEuFhugPb7AijBkTbRKP8mhhdg==
+X-Received: by 2002:a6b:ba06:: with SMTP id k6mr9404438iof.101.1593722937715;
+        Thu, 02 Jul 2020 13:48:57 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id u3sm4912873iol.41.2020.07.02.13.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 13:48:57 -0700 (PDT)
+Received: (nullmailer pid 1667287 invoked by uid 1000);
+        Thu, 02 Jul 2020 20:48:55 -0000
+Date:   Thu, 2 Jul 2020 14:48:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: interconnect: Add Qualcomm SM8150 DT
+ bindings
+Message-ID: <20200702204855.GA1667062@bogus>
+References: <20200701134259.8055-1-jonathan@marek.ca>
+ <20200701134259.8055-2-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35184081-6f01-e13c-1b87-7c7d83d075c0@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200701134259.8055-2-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:47:02PM -0400, Stefan Berger wrote:
-> On 6/26/20 10:34 AM, Jarkko Sakkinen wrote:
-> > The size of the buffers for storing context's and sessions can vary from
-> > arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-> > maximum for PPC64). Define a fixed buffer size set to 16 kB. This should
-> > be enough for most use with three handles (that is how many we allow at
-> > the moment).
-> > 
-> > Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-> > Cc: stable@vger.kernel.org
-> > Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >   drivers/char/tpm/tpm2-space.c | 27 ++++++++++++++++-----------
-> >   1 file changed, 16 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-> > index 982d341d8837..9bef646093d1 100644
-> > --- a/drivers/char/tpm/tpm2-space.c
-> > +++ b/drivers/char/tpm/tpm2-space.c
-> > @@ -15,6 +15,8 @@
-> >   #include <asm/unaligned.h>
-> >   #include "tpm.h"
-> > +#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-> > +
-> >   enum tpm2_handle_types {
-> >   	TPM2_HT_HMAC_SESSION	= 0x02000000,
-> >   	TPM2_HT_POLICY_SESSION	= 0x03000000,
-> > @@ -40,11 +42,11 @@ static void tpm2_flush_sessions(struct tpm_chip *chip, struct tpm_space *space)
-> >   int tpm2_init_space(struct tpm_space *space)
-> >   {
-> > -	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-> > +	space->context_buf = kzalloc(TPM2_SPACE_BUFFER_SIZE, GFP_KERNEL);
-> >   	if (!space->context_buf)
-> >   		return -ENOMEM;
-> > -	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-> > +	space->session_buf = kzalloc(TPM2_SPACE_BUFFER_SIZE, GFP_KERNEL);
-> >   	if (space->session_buf == NULL) {
-> >   		kfree(space->context_buf);
-> >   		return -ENOMEM;
-> > @@ -311,8 +313,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
-> >   	       sizeof(space->context_tbl));
-> >   	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
-> >   	       sizeof(space->session_tbl));
-> > -	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
-> > -	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-> > +	memcpy(chip->work_space.context_buf, space->context_buf,
-> > +	       TPM2_SPACE_BUFFER_SIZE);
-> > +	memcpy(chip->work_space.session_buf, space->session_buf,
-> > +	       TPM2_SPACE_BUFFER_SIZE);
-> >   	rc = tpm2_load_space(chip);
-> >   	if (rc) {
-> > @@ -492,8 +496,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
-> >   			continue;
-> >   		rc = tpm2_save_context(chip, space->context_tbl[i],
-> > -				       space->context_buf, PAGE_SIZE,
-> > -				       &offset);
-> > +				       space->context_buf,
-> > +				       TPM2_SPACE_BUFFER_SIZE, &offset);
-> >   		if (rc == -ENOENT) {
-> >   			space->context_tbl[i] = 0;
-> >   			continue;
-> > @@ -509,9 +513,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
-> >   			continue;
-> >   		rc = tpm2_save_context(chip, space->session_tbl[i],
-> > -				       space->session_buf, PAGE_SIZE,
-> > -				       &offset);
-> > -
-> > +				       space->session_buf,
-> > +				       TPM2_SPACE_BUFFER_SIZE, &offset);
-> >   		if (rc == -ENOENT) {
-> >   			/* handle error saving session, just forget it */
-> >   			space->session_tbl[i] = 0;
-> > @@ -557,8 +560,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
-> >   	       sizeof(space->context_tbl));
-> >   	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
-> >   	       sizeof(space->session_tbl));
-> > -	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
-> > -	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-> > +	memcpy(space->context_buf, chip->work_space.context_buf,
-> > +	       TPM2_SPACE_BUFFER_SIZE);
-> > +	memcpy(space->session_buf, chip->work_space.session_buf,
-> > +	       TPM2_SPACE_BUFFER_SIZE);
+On Wed, 01 Jul 2020 09:42:50 -0400, Jonathan Marek wrote:
+> The Qualcomm SM8150 platform has several bus fabrics that could be
+> controlled and tuned dynamically according to the bandwidth demand.
 > 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  .../bindings/interconnect/qcom,sm8150.yaml    |  86 +++++++++
+>  .../dt-bindings/interconnect/qcom,sm8150.h    | 176 ++++++++++++++++++
+>  2 files changed, 262 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
 > 
-> work_space.session_buf and context_buf also need allocation changes,
-> otherwise we read from a smaller buffer here. See comment to other patch
-> about tpm-chip.c .
 
-Thank you, a good catch. I'll send an update.
 
-/Jarkko
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: maintainers:0: None is not of type 'string'
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/interconnect/qcom,sm8150.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/interconnect/qcom,sm8150.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/interconnect/qcom,sm8150.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+
+See https://patchwork.ozlabs.org/patch/1320475
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
