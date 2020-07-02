@@ -2,43 +2,52 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2553BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB2352067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TuDIr0w+"
+	by mail.kernel.org (Postfix) with ESMTP id 9E0BF20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593677896;
+	bh=2dOO5kQOu2YXuUzo51sbC8QuexLQG37+CB+Iz14e9SA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NQNAF6r+JeP+sxpCB0c1/slOmRwfHTvvs1LSKtutjfLLzQg+xewx+vQXyPcs01Nb4
+	 ToAVhVWEg9ZjrepHnEMt8E3LFOyzPDGrK1a2Z9MmOn2a89k1guqyTr2gxuz1mEQYtw
+	 JTshnhaJDDpdsdGlBhJVhCZmMmaOk0oPDu8yvgN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgGBIO4 (ORCPT
+        id S1726777AbgGBISP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:14:56 -0400
-Received: from vps.xff.cz ([195.181.215.36]:39322 "EHLO vps.xff.cz"
+        Thu, 2 Jul 2020 04:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgGBIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593677688; bh=a2NHJHG5QFB78AfgGChp//7c+qQXotdIBgRIWgVfJDE=;
+        id S1726042AbgGBISO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:18:14 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE6D20720;
+        Thu,  2 Jul 2020 08:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593677894;
+        bh=2dOO5kQOu2YXuUzo51sbC8QuexLQG37+CB+Iz14e9SA=;
         h=From:To:Cc:Subject:Date:From;
-        b=TuDIr0w+fvaEOEp60tG2KqaKHJVb92lJc4yrQ0nKOjryG4ilZm9tHPPVcTCAzrkin
-         bpjLMe/r/Q0o8YvLMcIUnIgHLLLp98RTlQzymcEaHoX3N9OUW5servjpbjFikeAIQv
-         3beDDnDl50a/QmKRZ3/YbMhgduvkQVEyF8LHALLc=
-From:   Ondrej Jirman <megous@megous.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v8 0/2] Add support for PinePhone LCD panel
-Date:   Thu,  2 Jul 2020 10:14:30 +0200
-Message-Id: <20200702081432.1727696-1-megous@megous.com>
+        b=Ey1aQpYxoNOTb3Yq3n1wkmMCa+xlzZrdYnYZkI7mWQ8Qd+B8Uls0BoczPWIfBCDyJ
+         1xKdnetMiJ+Hx+ao8P2el6LpNOQ09t7ntAkHe0CWxDFvb/cTwqhA0OY/MQmSWZcP2a
+         CltTgvV/S9FS4E0k+vnHLyJhkJ970JhO7kueyF3c=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: [PATCH rdma-next 0/6] Cleanup mlx5_ib main file
+Date:   Thu,  2 Jul 2020 11:18:03 +0300
+Message-Id: <20200702081809.423482-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,109 +55,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for the LCD panel of PinePhone.
+From: Leon Romanovsky <leonro@mellanox.com>
 
-I've tested this on PinePhone 1.0 and 1.2.
+Over the years, the main.c file grew above all imagination and was >8K
+LOC of the code. This caused to a huge burden while I started to work on
+ib_flow allocation patches.
 
-Please take a look.
+This series implements long standing "internal" wish to move flow logic
+from the main to separate file.
 
-thank you and regards,
-  Ondrej Jirman
+Based on
+https://lore.kernel.org/linux-rdma/20200630101855.368895-4-leon@kernel.org
 
-Changes in v8:
-- Drop goodix,gt911 fallback compatible (Icenowy)
-- Drop address/size-cells from &dsi node (Maxime)
-- Drop already applied patches
-- v7->v8 diff: https://megous.com/dl/tmp/v7-v8.patch
+Thanks
 
-Changes in v7:
-- Removed mode.vrefresh, rebased onto next-20200701
-- v6->v7 diff: https://megous.com/dl/tmp/v6-v7.patch
+Leon Romanovsky (6):
+  RDMA/mlx5: Limit the scope of mlx5_ib_enable_driver function
+  RDMA/mlx5: Separate restrack callbacks initialization from main.c
+  RDMA/mlx5: Separate counters from main.c
+  RDMA/mlx5: Separate flow steering logic from main.c
+  RDMA/mlx5: Cleanup DEVX initialization flow
+  RDMA/mlx5: Delete one-time used functions
 
-Changes in v6:
-- Fixed spacing in yaml
-- Fixed wrong vccio->iovcc supply name in the bindings doc
-- I noticed that the original driver uses a delay of 20ms in the init
-  function to achieve a combined total of 120ms required from post-reset
-  to display_on. I've added a similar delay to xbd599_init, so that
-  xbd599 panel also has the right timing. (patch 9)
-- v5->v6 diff: https://megous.com/dl/tmp/v5-v6.patch
-- Added review/ack tags
-- Learned to run dt_binding_check by myself ;)
+ drivers/infiniband/hw/mlx5/Makefile   |    3 +-
+ drivers/infiniband/hw/mlx5/cmd.c      |   12 -
+ drivers/infiniband/hw/mlx5/cmd.h      |    1 -
+ drivers/infiniband/hw/mlx5/counters.c |  709 +++++
+ drivers/infiniband/hw/mlx5/counters.h |   17 +
+ drivers/infiniband/hw/mlx5/devx.c     |  102 +-
+ drivers/infiniband/hw/mlx5/devx.h     |   45 +
+ drivers/infiniband/hw/mlx5/flow.c     |  765 -----
+ drivers/infiniband/hw/mlx5/fs.c       | 2514 +++++++++++++++
+ drivers/infiniband/hw/mlx5/fs.h       |   29 +
+ drivers/infiniband/hw/mlx5/main.c     | 4112 +++++--------------------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h  |   76 +-
+ drivers/infiniband/hw/mlx5/qp.c       |    1 +
+ drivers/infiniband/hw/mlx5/qp.h       |    1 +
+ drivers/infiniband/hw/mlx5/restrack.c |   29 +-
+ drivers/infiniband/hw/mlx5/restrack.h |   13 +
+ 16 files changed, 4184 insertions(+), 4245 deletions(-)
+ create mode 100644 drivers/infiniband/hw/mlx5/counters.c
+ create mode 100644 drivers/infiniband/hw/mlx5/counters.h
+ create mode 100644 drivers/infiniband/hw/mlx5/devx.h
+ delete mode 100644 drivers/infiniband/hw/mlx5/flow.c
+ create mode 100644 drivers/infiniband/hw/mlx5/fs.c
+ create mode 100644 drivers/infiniband/hw/mlx5/fs.h
+ create mode 100644 drivers/infiniband/hw/mlx5/restrack.h
 
-Changes in v5:
-- rewritten on top of rocktech-jh057n00900 driver
-- rocktech-jh057n00900 renamed to st7703 (controller name)
-- converted rocktech-jh057n00900 bindings to yaml and extended for xbd599
-
-Changes in v4:
-- use ->type from the mode instead of hardcoding (Samuel)
-- move init_sequence to ->prepare (Samuel)
-- move anti-flicker delay to ->enable, explain it (Samuel)
-- add enter_sleep after display_off (Samuel)
-- drop ->disable (move code to ->unprepare)
-- add ID bytes dumping (Linus)
-  (I can't test it since allwinner DSI driver has a broken
-   dcs_read function, and I didn't manage to fix it.)
-- document magic bytes (Linus)
-- assert reset during powerup
-- cleanup powerup timings according to the datasheet
-
-Changes in v3:
-- Panel driver renamed to the name of the LCD controller
-- Re-organize the driver slightly to more easily support more panels
-  based on the same controller.
-- Add patch to enable the touchscreen to complete the LCD support
-  on PinePhone.
-- Dropped the "DSI fix" patch (the driver seems to work for me without it)
-- Improved brightness levels handling:
-  - PinePhone 1.0 uses default levels generated by the driver
-  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-    default levels can't be used. Martijn Braam came up with a
-    list of duty cycle values that lead to perception of linear
-    brigtness level <-> light intensity on PinePhone 1.1
-- There was some feedback on v2 about this being similar to st7701.
-  It's only similar in name. Most of the "user commands" are different,
-  so I opted to keep this in a new driver instead of creating st770x.
-  
-  Anyone who likes to check the differences, here are datasheets:
-
-  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-  - https://megous.com/dl/tmp/ST7701.pdf
-
-Changes in v2:
-- DT Example fix.
-- DT Format fix.
-- Raised copyright info to 2020.
-- Sort panel operation functions.
-- Sort inclusion.
-
-
--- For phone owners: --
-
-There's an open question on how to set the backlight brightness values
-on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-to backlight being black. It would be nice if more people can test
-the various backlight levels on 1.1 and 1.2 revision with this change
-in dts:
-
-       brightness-levels = <0 1000>;
-       num-interpolated-steps = <1000>;
-
-and report at what brightness level the backlight turns on. So far it
-seems this has a wide range. Lowest useable duty cycle for me is ~7%
-on 1.2 and for Martijn ~20% on 1.1.
-
-Icenowy Zheng (1):
-  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-
-Ondrej Jirman (1):
-  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-
- .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 +++++++
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 52 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
-
--- 
-2.27.0
+--
+2.26.2
 
