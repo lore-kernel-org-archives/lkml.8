@@ -2,137 +2,102 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ED5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B159FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C1F2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4DE2084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgGBKDk (ORCPT
+        id S1728253AbgGBKEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:03:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2423 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727819AbgGBKDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:03:39 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2BA29EFAB6232256022B;
-        Thu,  2 Jul 2020 11:03:38 +0100 (IST)
-Received: from localhost (10.52.121.38) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Thu, 2 Jul 2020
- 11:03:37 +0100
-Date:   Thu, 2 Jul 2020 11:02:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     David Rientjes <rientjes@google.com>
-CC:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kbusch@kernel.org>, <ying.huang@intel.com>,
-        <dan.j.williams@intel.com>
-Subject: Re: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of
- discard
-Message-ID: <20200702110235.00005f2f@Huawei.com>
-In-Reply-To: <alpine.DEB.2.23.453.2007011226240.1908531@chino.kir.corp.google.com>
-References: <20200629234503.749E5340@viggo.jf.intel.com>
-        <20200629234509.8F89C4EF@viggo.jf.intel.com>
-        <alpine.DEB.2.22.394.2006301732010.1644114@chino.kir.corp.google.com>
-        <039a5704-4468-f662-d660-668071842ca3@linux.alibaba.com>
-        <alpine.DEB.2.22.394.2006302208460.1685201@chino.kir.corp.google.com>
-        <33028a57-24fd-e618-7d89-5f35a35a6314@linux.alibaba.com>
-        <alpine.DEB.2.23.453.2007011226240.1908531@chino.kir.corp.google.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 2 Jul 2020 06:04:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60799 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725287AbgGBKEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:04:31 -0400
+IronPort-SDR: ThQrZNedRbhh8idl3yAPD77IRoo5tlh++WHks08hpZDQ3M4PylDYTwrQDxAWLTmx/S//Is2d7g
+ aH/3+hLz2KYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="144369343"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="144369343"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 03:04:30 -0700
+IronPort-SDR: eV5vhCrF/V/avimrcklFEMXLzkWgEjeF2mAInxhkm4eizzd8n0KALSBTv4pAUztNCCrUhlAs/8
+ aVjNORiPEevQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="322050416"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 02 Jul 2020 03:04:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jqw50-00HBPd-1y; Thu, 02 Jul 2020 13:04:30 +0300
+Date:   Thu, 2 Jul 2020 13:04:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     wsa@kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: algo-pca: Add 0x78 as SCL stuck low status
+Message-ID: <20200702100430.GR3703480@smile.fi.intel.com>
+References: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.38]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Jul 2020 12:45:17 -0700
-David Rientjes <rientjes@google.com> wrote:
+On Thu, Jul 02, 2020 at 10:39:11AM +1200, Chris Packham wrote:
+> The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
+> low, this differs to the PCA9564 which uses 90h for this indication.
+> Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
+> 
+> Based on looking through the PCA9564 and PCA9665 datasheets this should
+> be safe for both chips. The PCA9564 should not return 0x78 for any valid
+> state and the PCA9665 should not return 0x90.
 
-> On Wed, 1 Jul 2020, Yang Shi wrote:
-> 
-> > > We can do this if we consider pmem not to be a separate memory tier from
-> > > the system perspective, however, but rather the socket perspective.  In
-> > > other words, a node can only demote to a series of exclusive pmem ranges
-> > > and promote to the same series of ranges in reverse order.  So DRAM node 0
-> > > can only demote to PMEM node 2 while DRAM node 1 can only demote to PMEM
-> > > node 3 -- a pmem range cannot be demoted to, or promoted from, more than
-> > > one DRAM node.
-> > > 
-> > > This naturally takes care of mbind() and cpuset.mems if we consider pmem
-> > > just to be slower volatile memory and we don't need to deal with the
-> > > latency concerns of cross socket migration.  A user page will never be
-> > > demoted to a pmem range across the socket and will never be promoted to a
-> > > different DRAM node that it doesn't have access to.  
-> > 
-> > But I don't see too much benefit to limit the migration target to the
-> > so-called *paired* pmem node. IMHO it is fine to migrate to a remote (on a
-> > different socket) pmem node since even the cross socket access should be much
-> > faster then refault or swap from disk.
-> >   
-> 
-> Hi Yang,
-> 
-> Right, but any eventual promotion path would allow this to subvert the 
-> user mempolicy or cpuset.mems if the demoted memory is eventually promoted 
-> to a DRAM node on its socket.  We've discussed not having the ability to 
-> map from the demoted page to either of these contexts and it becomes more 
-> difficult for shared memory.  We have page_to_nid() and page_zone() so we 
-> can always find the appropriate demotion or promotion node for a given 
-> page if there is a 1:1 relationship.
-> 
-> Do we lose anything with the strict 1:1 relationship between DRAM and PMEM 
-> nodes?  It seems much simpler in terms of implementation and is more 
-> intuitive.
-Hi David, Yang,
+For me as well looks better this way.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The 1:1 mapping implies a particular system topology.  In the medium
-term we are likely to see systems with a central pool of persistent memory
-with equal access characteristics from multiple CPU containing nodes, each
-with local DRAM. 
-
-Clearly we could fake a split of such a pmem pool to keep the 1:1 mapping
-but it's certainly not elegant and may be very wasteful for resources.
-
-Can a zone based approach work well without such a hard wall?
-
-Jonathan
-
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> Changes in v2:
+> - Note which status corresponds to which chip
+> - Move patch commentary to commit message
 > 
-> > I think using pmem as a node is more natural than zone and less intrusive
-> > since we can just reuse all the numa APIs. If we treat pmem as a new zone I
-> > think the implementation may be more intrusive and complicated (i.e. need a
-> > new gfp flag) and user can't control the memory placement.
-> >   
+>  drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> This is an important decision to make, I'm not sure that we actually 
-> *want* all of these NUMA APIs :)  If my memory is demoted, I can simply do 
-> migrate_pages() back to DRAM and cause other memory to be demoted in its 
-> place.  Things like MPOL_INTERLEAVE over nodes {0,1,2} don't make sense.  
-> Kswapd for a DRAM node putting pressure on a PMEM node for demotion that 
-> then puts the kswapd for the PMEM node under pressure to reclaim it serves 
-> *only* to spend unnecessary cpu cycles.
+> diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
+> index 7f10312d1b88..388978775be0 100644
+> --- a/drivers/i2c/algos/i2c-algo-pca.c
+> +++ b/drivers/i2c/algos/i2c-algo-pca.c
+> @@ -314,7 +314,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
+>  			DEB2("BUS ERROR - SDA Stuck low\n");
+>  			pca_reset(adap);
+>  			goto out;
+> -		case 0x90: /* Bus error - SCL stuck low */
+> +		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
+> +		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
+>  			DEB2("BUS ERROR - SCL Stuck low\n");
+>  			pca_reset(adap);
+>  			goto out;
+> -- 
+> 2.27.0
 > 
-> Users could control the memory placement through a new mempolicy flag, 
-> which I think are needed anyway for explicit allocation policies for PMEM 
-> nodes.  Consider if PMEM is a zone so that it has the natural 1:1 
-> relationship with DRAM, now your system only has nodes {0,1} as today, no 
-> new NUMA topology to consider, and a mempolicy flag MPOL_F_TOPTIER that 
-> specifies memory must be allocated from ZONE_MOVABLE or ZONE_NORMAL (and I 
-> can then mlock() if I want to disable demotion on memory pressure).
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
