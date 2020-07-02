@@ -2,102 +2,98 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7780C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC07C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD752071A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vBIn6A3a"
+	by mail.kernel.org (Postfix) with ESMTP id C38512071A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgGBEHn (ORCPT
+        id S1726371AbgGBEL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 00:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgGBEHn (ORCPT
+        Thu, 2 Jul 2020 00:11:56 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:45731 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGBEL4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 00:07:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1836FC08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 21:07:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f2so10757972plr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 21:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GAH6ryWr1XYB1ggxji+dhT1fSzyaM2fT6l3rS9nVfOY=;
-        b=vBIn6A3a9VGvi55v0oucV9eBYHiFBsqeb3Faw6QREovl8TYoCO4p7A1Ggr/lHFb+k2
-         hTzCEN9Df/pM0NHW5t40UHVsOUsXdbrv+G23qOWugZqZgpQmIZN/mmL1pguPoxjzIG0N
-         H8h2dUYUxv+01VsiSNNQB3WVzGI7piLrj/EMJB9dq0q59bkmDIcYPgy2IlHqo61Kcpce
-         JZmVrGkZlHwTUNPpgOo6Dn29MGkzRurSMp1yzHLHEDOqV1ktwIMcNPxI5oD5EsFTk9gr
-         +/EQPubzBjQ0VMO4O22g17fHI2gtqkLv18NE9frOFoAw1hj4uK+11PQ4YTgOTtHaAJA0
-         UY6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GAH6ryWr1XYB1ggxji+dhT1fSzyaM2fT6l3rS9nVfOY=;
-        b=P4Xos1W2VTy2KbO3eTfZvMyGfyZyFAXr1Pnwq7/YuSC3YmbpAeY0x7sFNnQgoEecGg
-         tPg77lLqqg0pOssD2J4HifKNbGO/61mLqY5VKWef8FDo4wUTjGFt5O09IpQNMq3K2QdT
-         YiWpYcEkxGv51PgDzgahbzVm6roIUz9MOo2ZU6gCtJvog3E568Z4vuE5mTAbpYJpNFcY
-         SS7XlVC7FmmLH08RqC9FV/SKwRg1y/7PhW9ee/NkJ8Xr88SZeM0G1UpQQUEcd9l06Ykx
-         zJDApSApx67vUWMW1vGBGF3QKkXavO2cmIxMTYgAyHTU5HlTq+22uubCRwOgpzpbF6lh
-         0yMg==
-X-Gm-Message-State: AOAM530ckADq5XssknPmJ7b6AVhjSLy2m3r2MCqpkL+2aygme3fAjgaD
-        lZ5qvN+9H5MbKlZ71bPXv1as3464hPd2Ug==
-X-Google-Smtp-Source: ABdhPJwJTXbS28eFnzRkeoeKnTOqsgZ9d9rqynQb+L2B85/DtTwJZBxinj5ZDG6SLIPXUQaYDnn5JA==
-X-Received: by 2002:a17:90a:b25:: with SMTP id 34mr29072875pjq.220.1593662862472;
-        Wed, 01 Jul 2020 21:07:42 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:b0a2:2229:1cbe:53d2? ([2605:e000:100e:8c61:b0a2:2229:1cbe:53d2])
-        by smtp.gmail.com with ESMTPSA id d18sm6448347pjz.11.2020.07.01.21.07.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 21:07:41 -0700 (PDT)
-Subject: Re: linux-next: build warning after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200702112112.04d3f992@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5f9ae650-9e3c-e9c2-3bc5-d7afbdee778d@kernel.dk>
-Date:   Wed, 1 Jul 2020 22:07:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 00:11:56 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 07030300011B9;
+        Thu,  2 Jul 2020 06:11:53 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BC3492ED3E2; Thu,  2 Jul 2020 06:11:52 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 06:11:52 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Daniel Winkler <danielwinkler@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        stable@vger.kernel.org, abhishekpandit@chromium.org,
+        Aaron Sierra <asierra@xes-inc.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/1] Revert "serial: 8250: Fix max baud limit in
+ generic 8250 port"
+Message-ID: <20200702041152.e5csvbodojzwnagx@wunner.de>
+References: <20200701211337.3027448-1-danielwinkler@google.com>
+ <20200701223713.gavale4aramu3xnb@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200702112112.04d3f992@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701223713.gavale4aramu3xnb@mobilestation>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 7:21 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the block tree, today's linux-next build (powerpc
-> ppc64_defconfig) produced this warning:
-> 
-> drivers/md/dm.c: In function '__map_bio':
-> drivers/md/dm.c:1296:24: warning: unused variable 'md' [-Wunused-variable]
->  1296 |  struct mapped_device *md = io->md;
->       |                        ^~
-> 
-> Introduced by commit
-> 
->   5a6c35f9af41 ("block: remove direct_make_request")
+On Thu, Jul 02, 2020 at 01:37:13AM +0300, Serge Semin wrote:
+> 1) Add a new capability like UART_CAP_NO16DIV and take it into account
+>    in the serial8250_get_baud_rate() method.
+>  
+> I don't have a documentation for the Mediatek UART port, but it seems to me
+> that that controller calculates the baud rate differently from the standard
+> 8250 port. A standard 8250 port does that by the next formulae:
+>   baud = uartclk / (16 * divisor).
+> While it seems to me that the Mediatek port uses the formulae like:
+>   baud = uartclk / divisor. (Please, correct me if I'm wrong)
 
-Thanks, I did fix this one up, just haven't pushed out the updated tree
-yet.
+8250_bcm2835aux.c seems to suffer from a similar issue and
+solves it like this in the ->probe hook:
 
--- 
-Jens Axboe
+	/* the HW-clock divider for bcm2835aux is 8,
+	 * but 8250 expects a divider of 16,
+	 * so we have to multiply the actual clock by 2
+	 * to get identical baudrates.
+	 */
+	up.port.uartclk = clk_get_rate(data->clk) * 2;
 
+
+> 2) Manually call serial8250_do_set_divisor() in the custom set_termios()
+>    callback.
+> 
+> Just add the uart_update_timeout() and serial8250_do_set_divisor() methods
+> invocation into the mtk8250_set_termios() function, which the original commit
+> 81bb549fdf14 ("serial: 8250_mtk: support big baud rate") author should have
+> done in the first place.
+
+That sound preferable as adding new quirks into core code feels
+like a case of midlayer fallacy:
+
+https://blog.ffwll.ch/2016/12/midlayers-once-more-with-feeling.html
+
+Thanks,
+
+Lukas
