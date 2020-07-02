@@ -2,75 +2,111 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F94AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A49C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 606B720899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593675661;
-	bh=fu9AbKs4fpI0bDe695/+sT0YsRDwFK4WhDeSDfHQTyk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NnCK7+Q/+p882Z/KiaYG939ISPVlniqHWH8w4FcvImo2uWChDjr/MjNeTFvLSQ6gk
-	 gupYfNijIWEWmPJicdYiI0pSW0XSRTFgbqzK1ZomN6UCJiybdnA+G5FODAkNzfccoM
-	 sDAgFyDh6ELIcXAIH0rPrns33SHTsxzYYurwWmFU=
+	by mail.kernel.org (Postfix) with ESMTP id CF64920899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sFgSl9Gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgGBHlA (ORCPT
+        id S1727961AbgGBHld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgGBHk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:40:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 2 Jul 2020 03:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgGBHlc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:41:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F09C08C5C1;
+        Thu,  2 Jul 2020 00:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XTabvSLO7S5tELpoXrJiNFuMzsHwzZp5WpQClf4PKdk=; b=sFgSl9Gcs3uRIVF548A0umcLQi
+        AYzzAb0cgK1h5LwXjvrGL5QlYbYgclSEKGtQ5tkEMf9oqwvekDTGpGihN6spqQLWxbkv/xGizG/Y9
+        WWbPTB0Iq57rX8tmEYegHLfU11KypvtrGRBwXATY74N33TY8slcS0ZuB3KmZzMu4Ec9XG7HKckpdu
+        rOFuSDmVjg5Xrt7ubIC7FrM3G/SvlhhnOCBwz/THMKv05SdGA07BTmTeMHazs9aLXXO6tNurvl+DJ
+        GRdsJmn5y8ZcZwdJsvQNTXJH4R1hW+S8N/7bfXH860MbylzsTrc9vCqhkRsCYb+e5JvsiNKhHQ/jH
+        Z+kv+yYA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqtq9-0006AV-NN; Thu, 02 Jul 2020 07:41:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2A282089D;
-        Thu,  2 Jul 2020 07:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593675659;
-        bh=fu9AbKs4fpI0bDe695/+sT0YsRDwFK4WhDeSDfHQTyk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M2vd0Ujg7wjIiNrvcXPJx5TKUUjNOAFqW3VdWYhIzyoe2WMRtRdseemJy/P3lJQ5N
-         8r8foAXsfcf7++J+w0oH+QgtVUvAqvTZkJegzji6imm8fxSwJ1oyLRvV45adulcbuO
-         zdC6OyftGbLbsNyNfI8JX0z1I4GHJsOJ2Ar2TbVg=
-Date:   Thu, 2 Jul 2020 09:41:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        John Warthog9 Hawley <warthog9@kernel.org>
-Subject: Re: [for-next][PATCH 8/8] ktest.pl: Add MAIL_MAX_SIZE to limit the
- amount of log emailed
-Message-ID: <20200702074103.GA1076415@kroah.com>
-References: <20200701231717.757834010@goodmis.org>
- <20200701231756.790637968@goodmis.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7240E3003D8;
+        Thu,  2 Jul 2020 09:40:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 366CA23D44E56; Thu,  2 Jul 2020 09:40:59 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 09:40:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
+Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
+Message-ID: <20200702074059.GX4781@hirez.programming.kicks-ass.net>
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701231756.790637968@goodmis.org>
+In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 07:17:25PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> Add the ktest config option MAIL_MAX_SIZE that will limit the size of the
-> log file that is placed into the email on failure.
-> 
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  tools/testing/ktest/ktest.pl    | 12 +++++++++++-
->  tools/testing/ktest/sample.conf | 13 +++++++++++++
->  2 files changed, 24 insertions(+), 1 deletion(-)
+On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
+> Like Xu (10):
+>   perf/x86/core: Refactor hw->idx checks and cleanup
+>   perf/x86/lbr: Add interface to get LBR information
+>   perf/x86: Add constraint to create guest LBR event without hw counter
+>   perf/x86: Keep LBR records unchanged in host context for guest usage
 
-Interesting, but I like full log files for my reports :)
+> Wei Wang (1):
+>   perf/x86: Fix variable types for LBR registers
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>  arch/x86/events/core.c            |  26 +--
+>  arch/x86/events/intel/core.c      | 109 ++++++++-----
+>  arch/x86/events/intel/lbr.c       |  51 +++++-
+>  arch/x86/events/perf_event.h      |   8 +-
+>  arch/x86/include/asm/perf_event.h |  34 +++-
+
+These look good to me; but at the same time Kan is sending me
+Architectural LBR patches.
+
+Kan, if I take these perf patches and stick them in a tip/perf/vlbr
+topic branch, can you rebase the arch lbr stuff on top, or is there
+anything in the arch-lbr series that badly conflicts with this work?
+
+Paolo, would that topic branch work for you too, to then stick these
+patches in top?
+
+>   KVM: vmx/pmu: Expose LBR to guest via MSR_IA32_PERF_CAPABILITIES
+>   KVM: vmx/pmu: Unmask LBR fields in the MSR_IA32_DEBUGCTLMSR emualtion
+>   KVM: vmx/pmu: Pass-through LBR msrs when guest LBR event is scheduled
+>   KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
+>   KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
+>   KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
+
+>  arch/x86/kvm/pmu.c                |  12 +-
+>  arch/x86/kvm/pmu.h                |   5 +
+>  arch/x86/kvm/vmx/capabilities.h   |  23 ++-
+>  arch/x86/kvm/vmx/pmu_intel.c      | 253 +++++++++++++++++++++++++++++-
+>  arch/x86/kvm/vmx/vmx.c            |  86 +++++++++-
+>  arch/x86/kvm/vmx/vmx.h            |  17 ++
+>  arch/x86/kvm/x86.c                |  13 --
+
+>  12 files changed, 559 insertions(+), 78 deletions(-)
