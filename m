@@ -2,108 +2,124 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3113CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC19C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D42720780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB60D20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eJ7T25fE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNaUC1qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgGBLqU (ORCPT
+        id S1728768AbgGBLsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgGBLqU (ORCPT
+        Thu, 2 Jul 2020 07:48:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38714 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726443AbgGBLsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:46:20 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396AFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:46:20 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k5so2856921pjg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y66BdGLXe7ElT19YUw05TZ+XtmB7S3su8JlgwqLpqn4=;
-        b=eJ7T25fEPgZk9QNXnChTO+a5BkV6i/A6p7o+VidSoCqAklisjQtAD4HFTkojx2NsHs
-         zH/yhGxuzpbyJGcybXmCB6c07VoM05DdC9mHPSGi4pNm9vl0ncRktw3uRz9TxcToUtsJ
-         rleBxoLp40KRUt0qmAT6+uKVkjX2V5cJx4Maxle/92nZhajSJaBWaFgjw0qnjFd1f1tY
-         QC0uTfknbnIcruC6M1Z+GSVa7fYFkl7y+sbBC6KGIbDCQASt8yE93zURNFOmo6xgzqK+
-         loRrMu95ccMw4zU3CYgsrVXy01UIiOrOkr+xt1ObNcvg7kJL2/vaNAoiuap5VOUPb2dA
-         n8dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y66BdGLXe7ElT19YUw05TZ+XtmB7S3su8JlgwqLpqn4=;
-        b=TMahpXsm/tfWRZRkq16p0RxoRE6Z+l8o/LJDZPm3RopZRQq08IRrBkzGsbvfnmKNL+
-         j/TpZxSmbDe20OZRkq7bMVr8hfso4YrX+IwWu3aDf5Ynt/N051kWcRPI4AS0G8KP0U/D
-         18nx8qN7Qw0xfDASIPAZ7r6cCGRKfIRJlPeETNNdO/CXFQRuvOyyyWTAOYRTc0w1L+wR
-         YLpeBY0rrr6gRVQdqFoRzvs/EPKW5kKAJSe1rnu3sST8Thf6e3Vhdl4poX7BCr+diWOA
-         6oypyO9rNtxFIIoGfxHJN8zBBRNqYKCDPho9CeIjLFyFfIdHVwV+ZFrigZPXBO5I9Jss
-         9aww==
-X-Gm-Message-State: AOAM532jbsRCXJ6PLm75t6LXywfmTHg+SEz7D60vSGl2gFHuBofthhoA
-        sduKqhHOeTgqexP+It4FGG67Rw==
-X-Google-Smtp-Source: ABdhPJxGOFQpu5yGoJXE8yveWRzYwJ4ls6rFlsnyYT4JuklF+wC0ozy8mFOMNpmJav9d5Mbmcq/Hlg==
-X-Received: by 2002:a17:90a:8c01:: with SMTP id a1mr4912838pjo.97.1593690378893;
-        Thu, 02 Jul 2020 04:46:18 -0700 (PDT)
-Received: from localhost ([122.172.40.201])
-        by smtp.gmail.com with ESMTPSA id c207sm8856436pfb.159.2020.07.02.04.46.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 04:46:18 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 17:16:16 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, sudeep.holla@arm.com,
-        will@kernel.org, linux@armlinux.org.uk, valentin.schneider@arm.com,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 4/8] cpufreq,vexpress-spc: fix Frequency Invariance (FI)
- for bL switching
-Message-ID: <20200702114616.kgzxj4ffzgdn2g24@vireshk-i7>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-5-ionela.voinescu@arm.com>
- <20200701095414.2wjcnyhndgcedk2q@vireshk-i7>
- <20200701140735.GB32736@arm.com>
- <20200702030551.p4cevaahgfvpum4o@vireshk-i7>
- <20200702114123.GA28120@arm.com>
+        Thu, 2 Jul 2020 07:48:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593690492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XjmPmaD/IooVKYdxRZ/9YWrdivHE5lwEHMPYLDdNJ+Y=;
+        b=NNaUC1qymoNtsNN2JBZ2AzDpn5UK84iQrJQMUKOGt2GBdQO4KWroO6RjTAvstSMrgwo3hp
+        gmbt1flSDitDWPq/1ee/v6ts4DZFSfGdHIl4LwQJr9MSsVA46vX0es7WtHQwT85JN7Mfsw
+        CpYCY3AHz0UqbSY9DVAzwq02AMpziI0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-H_w9jTJWOV6KaVp1n8h7fg-1; Thu, 02 Jul 2020 07:48:08 -0400
+X-MC-Unique: H_w9jTJWOV6KaVp1n8h7fg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC89E107ACF2;
+        Thu,  2 Jul 2020 11:48:06 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-96.pek2.redhat.com [10.72.13.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E5D0419D7F;
+        Thu,  2 Jul 2020 11:48:01 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 19:47:58 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Pingfan Liu <piliu@redhat.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
+Message-ID: <20200702114758.GA21026@dhcp-128-65.nay.redhat.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+ <20200629133933.0787f562@ezekiel.suse.cz>
+ <7981ae61-26c6-000c-9ee4-382dab3eecab@linux.ibm.com>
+ <20200701074659.GA3878@dhcp-128-65.nay.redhat.com>
+ <0e145e84-a6cf-4da3-1a1a-331a7e1ac1fa@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702114123.GA28120@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <0e145e84-a6cf-4da3-1a1a-331a7e1ac1fa@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-07-20, 12:41, Ionela Voinescu wrote:
-> It was enabled until now, but it was partially broken. If you look over
-> the driver you'll see arch_set_freq_scale() being called for both
-> is_bL_switching_enabled() and for when it's not [1].
-
-I missed that completely, it was indeed added here:
-
-commit 518accf20629 ("cpufreq: arm_big_little: invoke frequency-invariance setter function")
-
-and so this patch or a version of it is required here.
-
-> If we just don't want frequency invariance for
-> is_bL_switching_enabled(), I can just guard the setting of the flag
-> suggested by Rafael at 1/8 by !CONFIG_BL_SWITCHER.
+On 07/02/20 at 12:01am, Hari Bathini wrote:
 > 
-> I'll proceed to do that and remove the fix at 4/8.
+> 
+> On 01/07/20 1:16 pm, Dave Young wrote:
+> > On 06/29/20 at 05:26pm, Hari Bathini wrote:
+> >> Hi Petr,
+> >>
+> >> On 29/06/20 5:09 pm, Petr Tesarik wrote:
+> >>> Hi Hari,
+> >>>
+> >>> is there any good reason to add two more functions with a very similar
+> >>> name to an existing function? AFAICS all you need is a way to call a
+> >>> PPC64-specific function from within kexec_add_buffer (PATCH 4/11), so
+> >>> you could add something like this:
+> >>>
+> >>> int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> >>> {
+> >>> 	return 0;
+> >>> }
+> >>>
+> >>> Call this function from kexec_add_buffer where appropriate and then
+> >>> override it for PPC64 (it roughly corresponds to your
+> >>> kexec_locate_mem_hole_ppc64() from PATCH 4/11).
+> >>>
+> >>> FWIW it would make it easier for me to follow the resulting code.
+> >>
+> >> Right, Petr.
+> >>
+> >> I was trying out a few things before I ended up with what I sent here.
+> >> Bu yeah.. I did realize arch_kexec_locate_mem_hole() would have been better
+> >> after sending out v1. Will take care of that in v2.
+> > 
+> > Another way is use arch private function to locate mem hole, then set
+> > kbuf->mem, and then call kexec_add_buf, it will skip the common locate
+> > hole function.
+> 
+> Dave, I did think about it. But there are a couple of places this can get
+> tricky. One is ima_add_kexec_buffer() and the other is kexec_elf_load().
+> These call sites could be updated to set kbuf->mem before kexec_add_buffer().
+> But the current approach seemed like the better option for it creates a
+> single point of control in setting up segment buffers and also, makes adding
+> any new segments simpler, arch-specific segments or otherwise.
+> 
 
-I think it would be better to do that and avoid any complicate code
-unnecessarily here.
+Ok, thanks for the explanation.
 
--- 
-viresh
