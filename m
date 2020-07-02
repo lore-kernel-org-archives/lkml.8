@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F352C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7FB1206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1B206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653567;
-	bh=XShLMHFLIslsFzvvnDfxIF44y2nXE8NLb7s1NS6Wa0E=;
+	s=default; t=1593653575;
+	bh=S5y3AhmUCAUNnZse2ae1T3/X32UKywxLi6gBfv4BVxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBphVCau3WsWfE7Yj7LVxXry3Jq1tFA2FM7Q9RL5s5MMZep4kNCjJW8OkIbfUd6k7
-	 ROV0lQ+5JHREE3i91mUN0kb6YwdFrnvjKZmR8K3IrryUp0doRpluTonksRWpi+4LB9
-	 dkZ0iUFG/Xqja3Sa6Us1tSPV86P9pz7hjyik1a2M=
+	b=JgpE+VIg+WpY2wncrxhImMM7Pzo5SRcRXYo9HNhstfmKqx0ytRBDpZqvvLaozxfqr
+	 7NvBYnRypSjCCtvw4DE3vbPp9suvo7f0U65/+NizzYs6N5NuH6ezIhWH94QiMqF4JQ
+	 uZOlEfWUWHUhylNwRrScrzUpSLaBaCaqE8F+FeM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgGBBcq (ORCPT
+        id S1728364AbgGBB0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgGBB0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:08 -0400
+        id S1728976AbgGBBZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 890D520899;
-        Thu,  2 Jul 2020 01:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E2120748;
+        Thu,  2 Jul 2020 01:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653168;
-        bh=XShLMHFLIslsFzvvnDfxIF44y2nXE8NLb7s1NS6Wa0E=;
+        s=default; t=1593653152;
+        bh=S5y3AhmUCAUNnZse2ae1T3/X32UKywxLi6gBfv4BVxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mkQQPXLPCAcDcejUQUR/7tcY5hGbB0vgrKVFY0O1kJayBy8UFSlr7emKq9cWXX+lt
-         v/cCDd1gUrHz0nxTuLwXxVjmTGGn9FsdBcKd5J7AGxlHKHFaT/crf8ExQlgKRz0J/O
-         DwZq6D8yOpxjAmQH9iecpuKpCHntRB9cRxaXWx68=
+        b=ZXa/msgMZniBmlnQfIou1LW+cJYzLUc2Vsbl1Zp+5BWQlPm7DMi8IFR1wjrXbYpSd
+         G9QI68IjSFPbwIgPXfEQ989O5psfOoGjSNjGjUak/rFIJ8qtGypBfaa+RTJTTg/hkV
+         xbc+pznrSJl10qWdiIWeLOp1QJThIsUhxvWXV3bA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/40] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
-Date:   Wed,  1 Jul 2020 21:23:56 -0400
-Message-Id: <20200702012402.2701121-35-sashal@kernel.org>
+Cc:     Dany Madden <drt@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/40] ibmvnic: continue to init in CRQ reset returns H_CLOSED
+Date:   Wed,  1 Jul 2020 21:23:43 -0400
+Message-Id: <20200702012402.2701121-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -58,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Dany Madden <drt@linux.ibm.com>
 
-[ Upstream commit 2655971ad4b34e97dd921df16bb0b08db9449df7 ]
+[ Upstream commit 8b40eb73509f5704a0e8cd25de0163876299f1a7 ]
 
-dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
-the reference counter. In case of failure, decrement the reference
-before returning.
+Continue the reset path when partner adapter is not ready or H_CLOSED is
+returned from reset crq. This patch allows the CRQ init to proceed to
+establish a valid CRQ for traffic to flow after reset.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Dany Madden <drt@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index b67372737dc9b..96c05b121fac8 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -206,8 +206,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
- 	int ret;
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 5a42ddeecfe50..143a9722ad11a 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1865,13 +1865,18 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 			release_sub_crqs(adapter, 1);
+ 		} else {
+ 			rc = ibmvnic_reset_crq(adapter);
+-			if (!rc)
++			if (rc == H_CLOSED || rc == H_SUCCESS) {
+ 				rc = vio_enable_interrupts(adapter->vdev);
++				if (rc)
++					netdev_err(adapter->netdev,
++						   "Reset failed to enable interrupts. rc=%d\n",
++						   rc);
++			}
+ 		}
  
- 	ret = pm_runtime_get_sync(&dwc3->dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put_sync_autosuspend(&dwc3->dev);
- 		return;
-+	}
+ 		if (rc) {
+ 			netdev_err(adapter->netdev,
+-				   "Couldn't initialize crq. rc=%d\n", rc);
++				   "Reset couldn't initialize crq. rc=%d\n", rc);
+ 			goto out;
+ 		}
  
- 	pm_runtime_mark_last_busy(&dwc3->dev);
- 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
 -- 
 2.25.1
 
