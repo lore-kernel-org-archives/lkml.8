@@ -2,112 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DEFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8925C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCEE2088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593721094;
-	bh=eeqv045ZtIkQLwK7q/4wDgmJSPUN7vvhvVLfre4BYHM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Af5jec/2hMBUmV7Jg6mQk7YuELTeWnJ9pAki6xwC/fYNsfUrrGGLha8/SPKqxSCZx
-	 YQ02XlXeplulZgFb4kXsLwLdwr2JZ2waSX30d1G4GGGo5prYz0KhAtRJ++MfW3bcKf
-	 wHfI1g9n6IwR8hLJ6U437op/wxwvguNP2L1iub8Y=
+	by mail.kernel.org (Postfix) with ESMTP id C686520890
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgGBUSM (ORCPT
+        id S1726305AbgGBUSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
+        Thu, 2 Jul 2020 16:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgGBUSL (ORCPT
+        with ESMTP id S1726032AbgGBUSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:18:11 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6281C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:18:10 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f8so21599253ljc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NKAvQ3x/jWOWfzX8imS+F5oUhVjtLTNjNSuHV7D48w8=;
-        b=DbkIc3d98XP5MNyq8UNDBoqdCdN6zpg0tDrAIVNEKlHBrkulQdNCWA1kMFQ1JWAhdY
-         D9gz+IcXmp0gFrT7uBcGwZNLc4wUtGiSlpOL0zA548LxhAFt3suKnCpuLomExQY2ykrW
-         cglfpMCov0y4JxtIPrn8/cPBQMpAcOqVZ5MUE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NKAvQ3x/jWOWfzX8imS+F5oUhVjtLTNjNSuHV7D48w8=;
-        b=VGcSZ2i8zHUerd/Ss3Hg6Cnik8MYg05axZjTpkpSIuDqvEmyssn1Z8RBYbNlSmFbxj
-         KCYxChtUBM3clcam67OK/aLpHSbK/iH7q5PQPgdLoh+Oi0IMDYC9zVJQ7Ca6NWfHvrKh
-         YL8qw9WBnsESsLs8sgIsK9FpEAI/aoRIXVogwGfDc+WEywUV4gwwgqFmYIJkrr7nTP3A
-         WtL+B5734Wox8u4q73Eu36RWOcoeKnnDx0g7VTjH8RFppKGuSa3N7rdEA7qk+3Tl1iYo
-         8dxnmLBzYN/DZp4vBnix8jllP7ddWlW9Mx3FxxQWCdMOoMM4K3oiQKdjfU38CI3B+AMJ
-         2JzA==
-X-Gm-Message-State: AOAM530fzmjzOKCJvadtZ2lUKft2zxu4J+IM3Vh1v78CTkLK0UfmHsGK
-        1ST7czVOoXtM0gT1qN6tybG7qE0C3jE=
-X-Google-Smtp-Source: ABdhPJxdubANq/ZNLN8JOT4AWBsoENK9NUt6TeUhJYzfAQhfMGfUq6OaV2LSm/LENxo/qg6r6WqSPw==
-X-Received: by 2002:a2e:b541:: with SMTP id a1mr16052197ljn.4.1593721089049;
-        Thu, 02 Jul 2020 13:18:09 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id m6sm3295122ljc.134.2020.07.02.13.18.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 13:18:08 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id u25so17008451lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:18:08 -0700 (PDT)
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr19422159lfd.31.1593721087764;
- Thu, 02 Jul 2020 13:18:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200702165120.1469875-1-agruenba@redhat.com> <20200702165120.1469875-3-agruenba@redhat.com>
- <CAHk-=wgpsuC6ejzr3pn5ej5Yn5z4xthNUUOvmA7KXHHGynL15Q@mail.gmail.com> <CAHc6FU5_JnK=LHtLL9or6E2+XMwNgmftdM_V71hDqk8apawC4A@mail.gmail.com>
-In-Reply-To: <CAHc6FU5_JnK=LHtLL9or6E2+XMwNgmftdM_V71hDqk8apawC4A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Jul 2020 13:17:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiDA9wm09e1aOSwqq9=e5iTEP5ncheux=C=p62h7dWvbA@mail.gmail.com>
-Message-ID: <CAHk-=wiDA9wm09e1aOSwqq9=e5iTEP5ncheux=C=p62h7dWvbA@mail.gmail.com>
-Subject: Re: [RFC 2/4] fs: Add IOCB_NOIO flag for generic_file_read_iter
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
+        Thu, 2 Jul 2020 16:18:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936B5C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:18:24 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jr5ed-0049VK-MY; Thu, 02 Jul 2020 20:17:55 +0000
+Date:   Thu, 2 Jul 2020 21:17:55 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: objtool clac/stac handling change..
+Message-ID: <20200702201755.GO2786714@ZenIV.linux.org.uk>
+References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
+ <20200701184131.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wj_2v9m+yZioE4vOLGW1mc9SBa5+++LdeJ86aEeB5OXcw@mail.gmail.com>
+ <20200701195914.GK2786714@ZenIV.linux.org.uk>
+ <CAHk-=wj-CYhKZR8ZKQgi=VTx=o7n6dtwPXikvgkJ3SdiqRPd8A@mail.gmail.com>
+ <87lfk26nx4.fsf@mpe.ellerman.id.au>
+ <CAHk-=wicOPQwuDUzFyDTBgr4UvQJHPdCX7_6BLaK6cve6CqBSg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wicOPQwuDUzFyDTBgr4UvQJHPdCX7_6BLaK6cve6CqBSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 12:58 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
->
-> > Of course, if you want to avoid both new reads to be submitted _and_
-> > avoid waiting for existing pending reads, you should just set both
-> > flags, and you get the semantics you want. So for your case, this may
-> > not make any difference.
->
-> Indeed, in the gfs2 case, waiting for existing pending reads should be
-> fine. I'll send an update after some testing.
+On Thu, Jul 02, 2020 at 12:52:27PM -0700, Linus Torvalds wrote:
+> On Thu, Jul 2, 2020 at 6:32 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+> >
+> > Probably the simplest option for us is to just handle it in our
+> > unsafe_op_wrap(). I'll try and come up with something tomorrow.
+> 
+> IMy suggestion was to basically just always handle it in all exception cases.
+> 
+> And note that IU don't mean the fault handler: obviously page faults
+> (or unaligned faults or whatever) can happen while in a user access
+> region.
+> 
+> But I mean any time fixup_exception() triggers.
+> 
+> For x86, this is in fact particularly natural: it involves just always
+> clearing the AC bit in the "struct pt_regs" that fixup_exception()
+> gets anyway. We can do it without even bothering with checking for
+> CLAC/STAC support, since without it, AC is meaningless in kernel mode
+> anyway, but also because doing "user_access_end()" in the exception
+> would be pointless: AC is restored by the exception routine, so on x86
+> you *have* to do it by just modifying the return state.
 
-Do note that "wait for pending reads" very much does imply "wait for
-those reads to _complete_".
+What about
 
-And maybe the IO completion handler itself ends up having to finalize
-something and take the lock to do that?
+static inline int copy_xregs_to_user(struct xregs_state __user *buf)
+{
+[...]
+        stac();
+        XSTATE_OP(XSAVE, buf, -1, -1, err);
+        clac();
+where XSTATE_OP() is
+#define XSTATE_OP(op, st, lmask, hmask, err)                            \
+        asm volatile("1:" op "\n\t"                                     \
+                     "xor %[err], %[err]\n"                             \
+                     "2:\n\t"                                           \
+                     ".pushsection .fixup,\"ax\"\n\t"                   \
+                     "3: movl $-2,%[err]\n\t"                           \
+                     "jmp 2b\n\t"                                       \
+                     ".popsection\n\t"                                  \
+                     _ASM_EXTABLE(1b, 3b)                               \
+                     : [err] "=r" (err)                                 \
+                     : "D" (st), "m" (*st), "a" (lmask), "d" (hmask)    \
+                     : "memory")
 
-So in that case, even just "waiting" will cause a deadlock. Not
-because the waiter itself needs the lock, but because the thing it
-waits for might possibly need it.
-
-But in many simple cases, IO completion shouldn't need any filesystem
-locks. I just don't know the gfs2 code at all, so I'm not even going
-to guess. I just wanted to mention it.
-
-               Linus
+Rely upon objtool not noticing that we have, in effect, clac() in a state
+where AC is already cleared?  We could massage that thing to take a label,
+but it wouldn't be pretty...
