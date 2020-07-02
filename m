@@ -2,173 +2,181 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D3EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E41E207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2CC2082F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRhMEajk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sPZuY5Gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGBA7l (ORCPT
+        id S1728082AbgGBBB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:59:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30861 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726814AbgGBA7j (ORCPT
+        Wed, 1 Jul 2020 21:01:27 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:30235 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgGBBBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:59:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593651578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=Sh4KPebLPMiQTSq94J+ueizqXBs0f85eCZhJCTEhzNY=;
-        b=IRhMEajkdDGIXMrKMMAmIchS1uCPQ7B5cjPeK6QVnECxG6ZvaG9zxKCrqJk4+eh9CMhh9X
-        n8w/ryyndBPg7UeDV6CAaU4HSGsh0sm8AqH+/qrDkKtZJNiulwhfQPBG/ggaMVB9HsfewH
-        dTh4ORQdzuKpe7MMPuA7lRRgCKxOs/I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-sz62XHqhMWyXVzIL3G8wBQ-1; Wed, 01 Jul 2020 20:59:37 -0400
-X-MC-Unique: sz62XHqhMWyXVzIL3G8wBQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1FF6185B39B;
-        Thu,  2 Jul 2020 00:59:35 +0000 (UTC)
-Received: from llong.com (ovpn-118-140.rdu2.redhat.com [10.10.118.140])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CCEA73FD2;
-        Thu,  2 Jul 2020 00:59:28 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v5] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
-Date:   Wed,  1 Jul 2020 20:59:23 -0400
-Message-Id: <20200702005923.10064-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Wed, 1 Jul 2020 21:01:22 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200702010120epoutp017be7b30f57f7116f23543e842a5ae45c~dycJxAcnK0044600446epoutp01F
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:01:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200702010120epoutp017be7b30f57f7116f23543e842a5ae45c~dycJxAcnK0044600446epoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593651680;
+        bh=RsDj3CoPR1c7on0/7kkXlT3fnQEAu+pB1kuzaD759NE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sPZuY5Gr2LXvyOGauwcUcac938YcV204WwXoVlVKbdP+2Cjc9dapQoPaY9lhpa4vM
+         qODIMLAB1uJePTlfKieSXnlYnbYeLs4ES6PckLquMgucZCecx8Fy386keiicWYtyu5
+         WxdSeqFvhPZUzYCUycQ5vyT1eBIEqUSti2zEMTD8=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200702010119epcas1p4473b8c2187f17e0a003511635d125d6a~dycJCKZMZ2585225852epcas1p4_;
+        Thu,  2 Jul 2020 01:01:19 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49y0Cc3WppzMqYkZ; Thu,  2 Jul
+        2020 01:01:16 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4B.BF.18978.CD13DFE5; Thu,  2 Jul 2020 10:01:16 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200702010116epcas1p1e610a393c91c8ceff1bb7ed3c0ce0a42~dycGBJOBJ3155831558epcas1p17;
+        Thu,  2 Jul 2020 01:01:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200702010116epsmtrp1944739d7de34b50d28a2b175ea2d2f01~dycGAMQT40320003200epsmtrp1O;
+        Thu,  2 Jul 2020 01:01:16 +0000 (GMT)
+X-AuditID: b6c32a35-603ff70000004a22-33-5efd31dc51a9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6E.F3.08382.BD13DFE5; Thu,  2 Jul 2020 10:01:15 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702010115epsmtip21e1e4d6e06ba114440f6dab9770a9626~dycFrcvq-0995009950epsmtip2j;
+        Thu,  2 Jul 2020 01:01:15 +0000 (GMT)
+Subject: Re: [PATCH v4 15/37] PM / devfreq: tegra30: Add error messages to
+ tegra_devfreq_target()
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <1d11b08f-eed5-ece1-462d-b18151e65777@samsung.com>
+Date:   Thu, 2 Jul 2020 10:12:31 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200609131404.17523-16-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmru4dw79xBl2bpCzuz2tltHj36Smr
+        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
+        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
+        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+        5koKeYm5qbZKLj4Bum6ZOUC/KCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0
+        ihNzi0vz0vWS83OtDA0MjEyBChOyM9Y8+MVecJiz4tH102wNjJfYuxg5OSQETCR6dkxi62Lk
+        4hAS2MEo8W/yTFYI5xOjxKlZD5kgnG+MEjN3f2SBadk0/TkjRGIvo0Tb651QLe8ZJZa9+MYI
+        UiUskCzx5NgbsHYRgSPMEqs7j4O1MAtcZpQ42/aFDaSKTUBLYv+LG2A2v4CixNUfj8G6eQXs
+        JCZ9fQV2IouAikTXxeVMILaoQJjEyW0tUDWCEidnPgG7iVPAXOLo9T6wemYBcYlbT+YzQdjy
+        EtvfzmEGWSwh0M4pcXDJJ2aIJ1wkpp2/CA0DYYlXx7dA2VISL/vboOxqiZUnj7BBNHcwSmzZ
+        f4EVImEssX/pZKANHEAbNCXW79KHCCtK7Pw9lxFiMZ/Eu689rCAlEgK8Eh1tQhAlyhKXH9xl
+        grAlJRa3d7JNYFSaheSdWUhemIXkhVkIyxYwsqxiFEstKM5NTy02LDBEjvBNjOCkrmW6g3Hi
+        2w96hxiZOBgPMUpwMCuJ8J42+BUnxJuSWFmVWpQfX1Sak1p8iNEUGMATmaVEk/OBeSWvJN7Q
+        1MjY2NjCxNDM1NBQSZxXXOZCnJBAemJJanZqakFqEUwfEwenVAOTT9sJtSOy7u1nDhS0JEqc
+        KLmut+HYzU/l8pGiZo//TnZ4JXv/fmvMsz+JSyr/CNxakd+5Yp9Gao5jYZDvPPMS0VnxFVG9
+        sTzXTt5amW7WWMabNeP+UfU98f/ThBynblQIskrIWHr1aPaK7b+vST58ctzYnmVpVVeEQ/D9
+        S3oS7ikq9d9VP7oH/P6wo8tIkfn/7ibVv5KPGk8euMUkxpL2suPBVznDXYuiH8/3O2Q0U0ok
+        gK/d10POwdTF8DZTodHDw5bWCwPPStvICYs0u0b0LYw9qcETNFti2S4dX75JDz4r9XYbcgse
+        qDE1nKy7NFO4Jlmk5F+dtNIWO7YlZrv82X+fUZ+SX+4gVrPjhhJLcUaioRZzUXEiAIxS6HNz
+        BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsWy7bCSvO5tw79xBnPabSzuz2tltHj36Smr
+        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
+        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
+        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZax78Yi84zFnx6PpptgbGS+xd
+        jJwcEgImEpumP2fsYuTiEBLYzSjx8VwjC0RCUmLaxaPMXYwcQLawxOHDxRA1bxkl5h/ayQpS
+        IyyQLPHk2BsmkISIwDFmiU2nT4M5zAKXGSV2dH5lg2jZxihxZ/c1NpAWNgEtif0vboDZ/AKK
+        Eld/PGYEsXkF7CQmfX0FdhOLgIpE18XlTCC2qECYxM4lj5kgagQlTs58AnYep4C5xNHrfWD1
+        zALqEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj8Cwk7bOQtMxC0jILScsCRpZVjJKpBcW56bnF
+        hgWGeanlesWJucWleel6yfm5mxjB0a2luYNx+6oPeocYmTgYDzFKcDArifCeNvgVJ8SbklhZ
+        lVqUH19UmpNafIhRmoNFSZz3RuHCOCGB9MSS1OzU1ILUIpgsEwenVAOT/HPnzltqCx4ElKSX
+        PWKf/5ifye+k8MX+Uw+sZbfFWUlJqv8RvHL9sXZXt4ZBgML9Z3a/ix5F384ts320NEMk+Kr6
+        5Lt7Pp7vVp97XTtxbbPmNxXj1Ts/81x0S/CfoDn9QNtu56Z/V68cnpu5c6qY7vvNPzN+eE/Y
+        1D+lWpMjJ+ZC1EOz1vd/Zy2IPdhvs0t44myJlUnsHXXHTUtvdc+ZccrFynWW7HP3hj35iybJ
+        ci67JaP6+kf3t+aV0RY/tRxdeavuptS/bZ1iwNr+bJPZJCWFJPfuX5kTrK1W60z1Tb1dz7ml
+        7F9VOtfH4slTX2hkxDk0F+QoLznk0RrLavl2hbgwp/vahLp5sh/75p1TYinOSDTUYi4qTgQA
+        9enaEV0DAAA=
+X-CMS-MailID: 20200702010116epcas1p1e610a393c91c8ceff1bb7ed3c0ce0a42
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200609131710epcas1p218e720c23ae62ecf4a6f6727854d93f0
+References: <20200609131404.17523-1-digetx@gmail.com>
+        <CGME20200609131710epcas1p218e720c23ae62ecf4a6f6727854d93f0@epcas1p2.samsung.com>
+        <20200609131404.17523-16-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on the workloads, the following circular locking dependency
-warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
-lock) may show up:
+On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+> It's useful to now when something goes wrong instead of failing silently,
+> so let's add error messages to tegra_devfreq_target() to prevent situation
+> where it fails silently.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 13f93c6038ab..a03fb16c5c4c 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -641,12 +641,16 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>  	dev_pm_opp_put(opp);
+>  
+>  	err = clk_set_min_rate(tegra->emc_clock, rate * KHZ);
+> -	if (err)
+> +	if (err) {
+> +		dev_err(dev, "Failed to set min rate: %d\n", err);
+>  		return err;
+> +	}
+>  
+>  	err = clk_set_rate(tegra->emc_clock, 0);
+> -	if (err)
+> +	if (err) {
+> +		dev_err(dev, "Failed to set rate: %d\n", err);
+>  		goto restore_min_rate;
+> +	}
+>  
+>  	return 0;
+>  
+> 
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.0.0-rc1+ #60 Tainted: G        W
-------------------------------------------------------
-fsfreeze/4346 is trying to acquire lock:
-0000000026f1d784 (fs_reclaim){+.+.}, at:
-fs_reclaim_acquire.part.19+0x5/0x30
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-but task is already holding lock:
-0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
-
-which lock already depends on the new lock.
-  :
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(sb_internal);
-                               lock(fs_reclaim);
-                               lock(sb_internal);
-  lock(fs_reclaim);
-
- *** DEADLOCK ***
-
-4 locks held by fsfreeze/4346:
- #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
- #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
- #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
- #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
-
-stack backtrace:
-Call Trace:
- dump_stack+0xe0/0x19a
- print_circular_bug.isra.10.cold.34+0x2f4/0x435
- check_prev_add.constprop.19+0xca1/0x15f0
- validate_chain.isra.14+0x11af/0x3b50
- __lock_acquire+0x728/0x1200
- lock_acquire+0x269/0x5a0
- fs_reclaim_acquire.part.19+0x29/0x30
- fs_reclaim_acquire+0x19/0x20
- kmem_cache_alloc+0x3e/0x3f0
- kmem_zone_alloc+0x79/0x150
- xfs_trans_alloc+0xfa/0x9d0
- xfs_sync_sb+0x86/0x170
- xfs_log_sbcount+0x10f/0x140
- xfs_quiesce_attr+0x134/0x270
- xfs_fs_freeze+0x4a/0x70
- freeze_super+0x1af/0x290
- do_vfs_ioctl+0xedc/0x16c0
- ksys_ioctl+0x41/0x80
- __x64_sys_ioctl+0x73/0xa9
- do_syscall_64+0x18f/0xd23
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This is a false positive as all the dirty pages are flushed out before
-the filesystem can be frozen.
-
-One way to avoid this splat is to add GFP_NOFS to the affected allocation
-calls. This is what PF_MEMALLOC_NOFS per-process flag is for. This does
-reduce the potential source of memory where reclaim can be done. This
-shouldn't matter unless the system is really running out of memory.
-In that particular case, the filesystem freeze operation may fail while
-it was succeeding previously.
-
-Without this patch, the command sequence below will show that the lock
-dependency chain sb_internal -> fs_reclaim exists.
-
- # fsfreeze -f /home
- # fsfreeze --unfreeze /home
- # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
-
-After applying the patch, such sb_internal -> fs_reclaim lock dependency
-chain can no longer be found. Because of that, the locking dependency
-warning will not be shown.
-
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- fs/xfs/xfs_super.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 379cbff438bc..dcc97bad950a 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -913,11 +913,21 @@ xfs_fs_freeze(
- 	struct super_block	*sb)
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
-+	unsigned long		pflags;
-+	int			ret;
- 
-+	/*
-+	 * Disable fs reclaim in memory allocation for fs freeze to avoid
-+	 * causing a possible circular locking dependency lockdep splat
-+	 * relating to fs reclaim.
-+	 */
-+	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
- 	xfs_stop_block_reaping(mp);
- 	xfs_save_resvblks(mp);
- 	xfs_quiesce_attr(mp);
--	return xfs_sync_sb(mp, true);
-+	ret = xfs_sync_sb(mp, true);
-+	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-+	return ret;
- }
- 
- STATIC int
 -- 
-2.18.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
