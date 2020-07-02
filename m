@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B838BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4C142085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A217206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653468;
-	bh=SY38ldM89iKKMo7OdUVyuJSiLrQblXLpZRagEc9anDg=;
+	s=default; t=1593653474;
+	bh=u9eUkU7WO6oTjpY8bF0J93M9skjuzcFyYCYAHnayeQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tg7xZP20ZHJz7XQvaLwxL3I/B+i3eDC4y/GYG6eMtIqSi8ZEyfX20gG6l1iYWMdcK
-	 OxgqMBpDBeqrplb2hBH9k6pcbdm8NxmKA1v8hCLV/sTQ/3NAPqQiZTIvSKUKraknK3
-	 G/brtfpqwZd8q5rb63WKhAG/5gBkI2substg0W4g=
+	b=TPqlE4nwU/2RW925YGOgptV1Pp6kQDbNT9g0uJHaVIHDYqBOe/5gz0fmN8VXapO3c
+	 zrTrz/aEfGIibyUEY9lz6RZDsaMfSJHEXSQlpYZag4W4aGaTjATmGdrD4soAWeyEFu
+	 /Z0qB95qLuJ+dNcKEZcStQE+ArxQHzPHCWYj94t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgGBB0m (ORCPT
+        id S1729247AbgGBBbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgGBB0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:13 -0400
+        id S1729238AbgGBB0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E55206BE;
-        Thu,  2 Jul 2020 01:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0451E20899;
+        Thu,  2 Jul 2020 01:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653173;
-        bh=SY38ldM89iKKMo7OdUVyuJSiLrQblXLpZRagEc9anDg=;
+        s=default; t=1593653201;
+        bh=u9eUkU7WO6oTjpY8bF0J93M9skjuzcFyYCYAHnayeQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhRCIKST3sgnICFUnjvYhSW1HiVZpBCX+qVsBhS0fOlNfIsbacBtFXr3QoL/W6b0E
-         20PI8MzN7XcHQc9qSHJrfKRcWvGmCMlZ0qeAV/aD7dQhuE/5a1LeOfM/PR8bI8SegK
-         2Cz7dZWV+HFZIwBu1gmOoN/EmwGpwCh3VPhtSr0w=
+        b=qrrdakC3vrmHz1IwShh/tRL+tUZVVmU+LQEY9wYkSSMX6pXt5e1X1MGL9j/Oo82kX
+         q4sb0X9dIb+YGypUCHFhvMeuCRiGKuR2hJSzjLbetHnwkLYtE6QHbXiyoHZZcgh0+w
+         Ut+Fgx4ugpiihAPZ986tg4BKvvy0MklWzGJGkVo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 39/40] kgdb: Avoid suspicious RCU usage warning
-Date:   Wed,  1 Jul 2020 21:24:00 -0400
-Message-Id: <20200702012402.2701121-39-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 21/27] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
+Date:   Wed,  1 Jul 2020 21:26:09 -0400
+Message-Id: <20200702012615.2701532-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
-References: <20200702012402.2701121-1-sashal@kernel.org>
+In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
+References: <20200702012615.2701532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,107 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 440ab9e10e2e6e5fd677473ee6f9e3af0f6904d6 ]
+[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
 
-At times when I'm using kgdb I see a splat on my console about
-suspicious RCU usage.  I managed to come up with a case that could
-reproduce this that looked like this:
+if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
+corresponding put_device(). Thus add a jump target to fix the exception
+handling for this function implementation.
 
-  WARNING: suspicious RCU usage
-  5.7.0-rc4+ #609 Not tainted
-  -----------------------------
-  kernel/pid.c:395 find_task_by_pid_ns() needs rcu_read_lock() protection!
-
-  other info that might help us debug this:
-
-    rcu_scheduler_active = 2, debug_locks = 1
-  3 locks held by swapper/0/1:
-   #0: ffffff81b6b8e988 (&dev->mutex){....}-{3:3}, at: __device_attach+0x40/0x13c
-   #1: ffffffd01109e9e8 (dbg_master_lock){....}-{2:2}, at: kgdb_cpu_enter+0x20c/0x7ac
-   #2: ffffffd01109ea90 (dbg_slave_lock){....}-{2:2}, at: kgdb_cpu_enter+0x3ec/0x7ac
-
-  stack backtrace:
-  CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4+ #609
-  Hardware name: Google Cheza (rev3+) (DT)
-  Call trace:
-   dump_backtrace+0x0/0x1b8
-   show_stack+0x1c/0x24
-   dump_stack+0xd4/0x134
-   lockdep_rcu_suspicious+0xf0/0x100
-   find_task_by_pid_ns+0x5c/0x80
-   getthread+0x8c/0xb0
-   gdb_serial_stub+0x9d4/0xd04
-   kgdb_cpu_enter+0x284/0x7ac
-   kgdb_handle_exception+0x174/0x20c
-   kgdb_brk_fn+0x24/0x30
-   call_break_hook+0x6c/0x7c
-   brk_handler+0x20/0x5c
-   do_debug_exception+0x1c8/0x22c
-   el1_sync_handler+0x3c/0xe4
-   el1_sync+0x7c/0x100
-   rpmh_rsc_probe+0x38/0x420
-   platform_drv_probe+0x94/0xb4
-   really_probe+0x134/0x300
-   driver_probe_device+0x68/0x100
-   __device_attach_driver+0x90/0xa8
-   bus_for_each_drv+0x84/0xcc
-   __device_attach+0xb4/0x13c
-   device_initial_probe+0x18/0x20
-   bus_probe_device+0x38/0x98
-   device_add+0x38c/0x420
-
-If I understand properly we should just be able to blanket kgdb under
-one big RCU read lock and the problem should go away.  We'll add it to
-the beast-of-a-function known as kgdb_cpu_enter().
-
-With this I no longer get any splats and things seem to work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200602154729.v2.1.I70e0d4fd46d5ed2aaf0c98a355e8e1b7a5bb7e4e@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 7d54c7c280544..2222f3225e53d 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -546,6 +546,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		arch_kgdb_ops.disable_hw_break(regs);
- 
- acquirelock:
-+	rcu_read_lock();
- 	/*
- 	 * Interrupts will be restored by the 'trap return' code, except when
- 	 * single stepping.
-@@ -602,6 +603,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -620,6 +622,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 		raw_spin_unlock(&dbg_master_lock);
- 		dbg_touch_watchdogs();
- 		local_irq_restore(flags);
-+		rcu_read_unlock();
- 
- 		goto acquirelock;
+diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+index 529f4b5bbd3a7..4bfefbec971a6 100644
+--- a/arch/arm/mach-imx/pm-imx6.c
++++ b/arch/arm/mach-imx/pm-imx6.c
+@@ -497,14 +497,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
  	}
-@@ -743,6 +746,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	raw_spin_unlock(&dbg_master_lock);
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
-+	rcu_read_unlock();
  
- 	return kgdb_info[cpu].ret_state;
- }
+ 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -527,7 +527,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
+ 	if (ret) {
+ 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
+@@ -574,7 +574,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 		&imx6_suspend,
+ 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
+ 
+-	goto put_node;
++	goto put_device;
+ 
+ pl310_cache_map_failed:
+ 	iounmap(pm_info->gpc_base.vbase);
+@@ -584,6 +584,8 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
+ 	iounmap(pm_info->src_base.vbase);
+ src_map_failed:
+ 	iounmap(pm_info->mmdc_base.vbase);
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
+ 
 -- 
 2.25.1
 
