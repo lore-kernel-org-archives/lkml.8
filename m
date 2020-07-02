@@ -2,120 +2,105 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BC6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91BFC208B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="P5Fo+ozD"
+	by mail.kernel.org (Postfix) with ESMTP id E1CD4208B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbgGBPYr (ORCPT
+        id S1730014AbgGBP1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:24:47 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:15197 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbgGBPYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:24:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1593703486; x=1625239486;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=nkmDXtaePXWcmJSfN1BNlH1GK4LqQIDWcLPiBV5PH2s=;
-  b=P5Fo+ozDrtIcA+LN1oaPberN/9P2DEMnMYI9NX3U6cXbaOvwShyZc635
-   xi2hndz6zs86EpPSUXFRY7STZFjCmHqKTibL5feInPPtnPFmL6ZwGl41h
-   LAfAtmPvwOdSqUu8g9v48MFO6EwW/58LV7tUPk/c/e7oiRo/TSIbGhNXB
-   k=;
-IronPort-SDR: 7OfPpNa0i//+CwtAHQ5YfMb5h/bANcQOcdVPx0MyXiJDDqxyK4u4tF7aixXGOvJ9IHM11RMSsu
- atVPHNMy+t8g==
-X-IronPort-AV: E=Sophos;i="5.75,304,1589241600"; 
-   d="scan'208";a="56915989"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 02 Jul 2020 15:24:40 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 1639EA1F30;
-        Thu,  2 Jul 2020 15:24:40 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 15:24:39 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.65) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Jul 2020 15:24:32 +0000
-Subject: Re: [PATCH v4 03/18] nitro_enclaves: Define enclave info for internal
- bookkeeping
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        "Stefano Garzarella" <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-4-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <cc84e2ee-1a85-c92e-9d29-2f4a33148a61@amazon.de>
-Date:   Thu, 2 Jul 2020 17:24:30 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200622200329.52996-4-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D21UWA001.ant.amazon.com (10.43.160.154) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Jul 2020 11:27:25 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55200 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgGBP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:27:24 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A90D61A0C17;
+        Thu,  2 Jul 2020 17:27:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 20A8B1A0AE6;
+        Thu,  2 Jul 2020 17:27:12 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3563F402B1;
+        Thu,  2 Jul 2020 23:27:00 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, arnd@arndb.de, peng.fan@nxp.com,
+        abel.vesa@nxp.com, j.remmet@phytec.de, sfr@canb.auug.org.au,
+        georg.waibel@wiedemann-group.de, Georg.Waibel@wiedemann-group.com,
+        laurent.pinchart@ideasonboard.com, chen.fang@nxp.com,
+        fugang.duan@nxp.com, daniel.baluta@nxp.com, yuehaibing@huawei.com,
+        horia.geanta@nxp.com, andrew.smirnov@gmail.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V5 0/6] Support building i.MX ARMv7/ARMv8 platforms clock driver as module
+Date:   Thu,  2 Jul 2020 23:23:55 +0800
+Message-Id: <1593703441-16944-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Nowdays, there are more and more requirements of building SoC specific
+drivers as modules, such as Android GKI (generic kernel image), this
+patch set supports building i.MX ARMv6/ARMv7 SoCs clock drivers as modules,
 
+The CLK_IMXxxx is introduced for i.MX ARMv7 platforms in order to support
+various build options, and i.MX1/2/3 platforms now still ONLY support built-in
+as they are rarely used now.
 
-On 22.06.20 22:03, Andra Paraschiv wrote:
-> The Nitro Enclaves driver keeps an internal info per each enclave.
-> =
+Changes since V4:
+	- add empty function of imx_register_uart_clocks() for MODULE build, then
+	  all earlycon related clock handler can be built-out for MODULE;
+	- add module build support for ARMv7 platforms, also add COMPILE_TEST for them;
+	- add COMPILE_TEST for ARMv8 platforms;
+	- keep using builtin_platform_driver() for i.MX8QXP clock driver.
 
-> This is needed to be able to manage enclave resources state, enclave
-> notifications and have a reference of the PCI device that handles
-> command requests for enclave lifetime management.
-> =
+Anson Huang (6):
+  clk: composite: Export clk_hw_register_composite()
+  clk: imx: Support module build for i.MX5/6/7 and vf610
+  clk: imx: Support building i.MX common clock driver as module
+  clk: imx: Add clock configuration for ARMv7 platforms
+  clk: imx8m: Support module build
+  clk: imx8qxp: Support building i.MX8QXP clock driver as module
 
-> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+ drivers/clk/clk-composite.c        |   1 +
+ drivers/clk/imx/Kconfig            | 101 ++++++++++++++++++++++++++++++++-----
+ drivers/clk/imx/Makefile           |  79 ++++++++++++++---------------
+ drivers/clk/imx/clk-composite-8m.c |   2 +
+ drivers/clk/imx/clk-cpu.c          |   2 +
+ drivers/clk/imx/clk-frac-pll.c     |   2 +
+ drivers/clk/imx/clk-gate2.c        |   2 +
+ drivers/clk/imx/clk-imx5.c         |   5 ++
+ drivers/clk/imx/clk-imx6q.c        |   5 ++
+ drivers/clk/imx/clk-imx6sl.c       |   5 ++
+ drivers/clk/imx/clk-imx6sll.c      |   5 ++
+ drivers/clk/imx/clk-imx6sx.c       |   5 ++
+ drivers/clk/imx/clk-imx6ul.c       |   5 ++
+ drivers/clk/imx/clk-imx7d.c        |   5 ++
+ drivers/clk/imx/clk-imx7ulp.c      |   5 ++
+ drivers/clk/imx/clk-imx8mm.c       |   4 ++
+ drivers/clk/imx/clk-imx8mn.c       |   4 ++
+ drivers/clk/imx/clk-imx8mp.c       |   4 ++
+ drivers/clk/imx/clk-imx8mq.c       |   4 ++
+ drivers/clk/imx/clk-imx8qxp-lpcg.c |   4 ++
+ drivers/clk/imx/clk-imx8qxp.c      |   4 ++
+ drivers/clk/imx/clk-pll14xx.c      |   5 ++
+ drivers/clk/imx/clk-sscg-pll.c     |   2 +
+ drivers/clk/imx/clk-vf610.c        |   5 ++
+ drivers/clk/imx/clk.c              |  17 +++++--
+ drivers/clk/imx/clk.h              |   6 +++
+ 26 files changed, 231 insertions(+), 57 deletions(-)
 
-Reviewed-by: Alexander Graf <graf@amazon.com>
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+-- 
+2.7.4
 
