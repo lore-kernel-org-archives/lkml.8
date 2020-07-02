@@ -2,97 +2,70 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28383C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB522084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A05420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgGBQeX (ORCPT
+        id S1726813AbgGBQed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:34:23 -0400
-Received: from muru.com ([72.249.23.125]:60416 "EHLO muru.com"
+        Thu, 2 Jul 2020 12:34:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44222 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgGBQeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:34:22 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E2B738062;
-        Thu,  2 Jul 2020 16:35:14 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 09:34:19 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 1/1] arch: arm: mach-omap2: mmc: Move
- omap_mmc_notify_cover_event() prototype
-Message-ID: <20200702163419.GL37466@atomide.com>
-References: <20200701102317.235032-1-lee.jones@linaro.org>
+        id S1726715AbgGBQec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:34:32 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jr2AK-003Le7-P9; Thu, 02 Jul 2020 18:34:24 +0200
+Date:   Thu, 2 Jul 2020 18:34:24 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 0/4] net: ethtool: Untangle PHYLIB dependency
+Message-ID: <20200702163424.GG752507@lunn.ch>
+References: <20200702042942.76674-1-f.fainelli@gmail.com>
+ <20200702155652.ivokudjptoect6ch@lion.mk-sys.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200701102317.235032-1-lee.jones@linaro.org>
+In-Reply-To: <20200702155652.ivokudjptoect6ch@lion.mk-sys.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [200701 03:24]:
-> When building the kernel with W=1 the build system complains of:
+On Thu, Jul 02, 2020 at 05:56:52PM +0200, Michal Kubecek wrote:
+> On Wed, Jul 01, 2020 at 09:29:38PM -0700, Florian Fainelli wrote:
+> > Hi all,
+> > 
+> > This patch series untangles the ethtool netlink dependency with PHYLIB
+> > which exists because the cable test feature calls directly into PHY
+> > library functions. The approach taken here is to utilize a new set of
+> > net_device_ops function pointers which are automatically set to the PHY
+> > library variants when a network device driver attaches to a PHY device.
 > 
->  drivers/mmc/host/omap.c:854:6: warning: no previous prototype for ‘omap_mmc_notify_cover_event’ [-Wmissing-prototypes]
->  854 | void omap_mmc_notify_cover_event(struct device *dev, int num, int is_closed)
->  | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> If we move the prototype into a shared headerfile the build system
-> will be satisfied.  Rather than create a whole new headerfile just
-> for this purpose, it makes sense to use the already existing
-> mmc-omap.h.
+> I'm not sure about the idea of creating a copy of netdev_ops for each
+> device using phylib. First, there would be some overhead (just checked
+> my 5.8-rc3 kernel, struct netdev_ops is 632 bytes). Second, there is
+> quite frequent pattern of comparing dev->netdev_ops against known
+> constants to check if a network device is of certain type; I can't say
+> for sure if it is also used with devices using phylib in existing code
+> but it feels risky.
 
-Looks good to me and should not conflict with anything so feel
-free to queue along with your other patches:
+I agree with Michal here. I don't like this.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+I think we need phylib to register a set of ops with ethtool when it
+loads. It would also allow us to clean up phy_ethtool_get_strings(),
+phy_ethtool_get_sset_count(), phy_ethtool_get_stats().
 
-
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: linux-omap@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  arch/arm/mach-omap2/mmc.h              | 4 ----
->  include/linux/platform_data/mmc-omap.h | 3 +++
->  2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/mmc.h b/arch/arm/mach-omap2/mmc.h
-> index 7f4e053c34344..b5533e93cb632 100644
-> --- a/arch/arm/mach-omap2/mmc.h
-> +++ b/arch/arm/mach-omap2/mmc.h
-> @@ -16,7 +16,3 @@ static inline int omap_msdi_reset(struct omap_hwmod *oh)
->  	return 0;
->  }
->  #endif
-> -
-> -/* called from board-specific card detection service routine */
-> -extern void omap_mmc_notify_cover_event(struct device *dev, int slot,
-> -					int is_closed);
-> diff --git a/include/linux/platform_data/mmc-omap.h b/include/linux/platform_data/mmc-omap.h
-> index 9acf0e87aa9be..f0b8947e6b07d 100644
-> --- a/include/linux/platform_data/mmc-omap.h
-> +++ b/include/linux/platform_data/mmc-omap.h
-> @@ -116,3 +116,6 @@ struct omap_mmc_platform_data {
->  
->  	} slots[OMAP_MMC_MAX_SLOTS];
->  };
-> +
-> +extern void omap_mmc_notify_cover_event(struct device *dev, int slot,
-> +					int is_closed);
-> -- 
-> 2.25.1
-> 
+      Andrew
