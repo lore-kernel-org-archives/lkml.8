@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7872FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1814FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5900620720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C5420720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgGBRJR (ORCPT
+        id S1727789AbgGBRJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:09:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38719 "EHLO mga12.intel.com"
+        Thu, 2 Jul 2020 13:09:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:38697 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbgGBRJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:09:05 -0400
-IronPort-SDR: YwNlft0A/TDhjL/pk4GSQy8l6+Xq+t1fET97h/j4xJdgZtGrKqTKAwfzOt2Af04mVKatJJZy7V
- at4TA9D2nQkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126587522"
+        id S1726793AbgGBRJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:09:02 -0400
+IronPort-SDR: rNF027PcJegIDRqHLM/0u9TQMXsJVkS3BbPnUKn3J7A4/iusvXvO34CoMSlqLV2HOYPkREPwAJ
+ hNGnw/3iOUAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126587467"
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="126587522"
+   d="scan'208";a="126587467"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 10:09:03 -0700
-IronPort-SDR: GrStkSZ/4wIrIdpVmNQwLLaBKrjlb5VqvtSzabLi4WEovblSOMJW6n0qGhs3Sza2rfGC0KmGpE
- eiwAqZOLZJcw==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 10:08:56 -0700
+IronPort-SDR: WO/SfI6y4eoNHoJ3zr6p+2KfsgDPnGNF4sd0Z/fnGgjsebPNDaGHpBlrvOYBPWOjNMWFBfS4b5
+ MRfBHCs9Bhtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="481763241"
+   d="scan'208";a="481763184"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 10:09:03 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 10:08:56 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     jeffrey.t.kirsher@intel.com, olof@lixom.net,
         dan.j.williams@intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 6/7] perf/x86/intel/uncore: Generic support for the platform device
-Date:   Thu,  2 Jul 2020 10:05:16 -0700
-Message-Id: <1593709517-108857-7-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 1/7] PCI/portdrv: Create a platform device for the perf uncore driver
+Date:   Thu,  2 Jul 2020 10:05:11 -0700
+Message-Id: <1593709517-108857-2-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593709517-108857-1-git-send-email-kan.liang@linux.intel.com>
 References: <1593709517-108857-1-git-send-email-kan.liang@linux.intel.com>
@@ -55,159 +55,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Some uncore counters may be located in the configuration space of a PCI
-device, which already has a bonded driver. Currently, the uncore driver
-cannot register a PCI uncore PMU for these counters. Because, to
-register a PCI uncore PMU, the uncore driver must be bond to the device.
-However, one device can only have one bonded driver.
+On Snow Ridge server, several performance monitoring counters are added
+in the Root Port Configuration Space of CPU Complex PCIe Root Ports A,
+which can be used to collect the performance data between the PCIe
+devices and the components (in M2IOSF) which are responsible for
+translating and managing the requests to/from the device. The
+performance data is very useful for analyzing the performance of the
+PCIe devices.
 
-The PCI device can create a platform device as its child device. The
-uncore driver can bind to the platform device instead.
+However, the perf uncore driver cannot be loaded to register a
+performance monitoring unit (PMU) for the counters, because the PCIe
+Root Ports device already has a bonded driver portdrv_pci.
 
-The probe() and remove() methods are implemented to support the platform
-device. When probing a platform device, its parent PCI device is
-searched in an id table. If a matched device is found, a PMU for the
-platform device will be registered, which will be used to monitor its
-parents' PCI device. When the parent device is removed, the remove()
-method will be triggered, which unregister the PMU.
+To enable the uncore PMU support for these counters on the uncore
+driver, a new solution should be introduced, which has to meet the
+requirements as below:
+- must have a reliable way to find the PCIe Root Port device from the
+  uncore driver;
+- must be able to access the uncore counters of the PCIe Root Port
+  device from the uncore driver;
+- must support hotplug. When the PCIe Root Port device is removed, the
+  uncore driver has to be notified and unregisters the uncore PMU.
 
-Other modules' loading/unloading will trigger the loading/unloading of
-the platform device, and impact the uncore driver. The potential race
-condition can be prevented by the device_lock() of the platform device,
-which guarantees the probe(), and remove() are sequential.
-
-The id table varies on different platforms, which will be implemented in
-the following platform-specific patch.
+A new platform device 'perf_uncore_pcieport' is introduced as part of
+the new solution, which can facilitate the enabling of the uncore PMU in
+the uncore driver. The new platform device
+- is a child device of the PCIe Root Port device. It's allocated when
+  the PCIe Root Ports A device is probed. (For SNR, the PMU counters are
+  only located in the configuration space of the PCIe Root Ports A.)
+- stores its pdev as the private driver data pointer of the PCIe Root
+  Ports A. The pdev can be easily retrieved to check the existence of
+  the platform device when removing the PCIe Root Ports A.
+- is unregistered when the PCIe Root Port A is removed. The remove()
+  method which is provided in the uncore driver will be invoked. The
+  uncore PMU will be unregistered as well.
+- doesn't share any memory and IRQ resources. The uncore driver will
+  only touch the PMU counters in the configuration space of the PCIe
+  Root Port A.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c | 54 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/events/intel/uncore.h | 19 +++++++++++++++
- 2 files changed, 73 insertions(+)
+ drivers/pci/pcie/portdrv_pci.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index b702dc3..30fe187 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -12,6 +12,8 @@ struct intel_uncore_type **uncore_mmio_uncores = empty_uncore;
- 
- static bool pcidrv_registered;
- struct pci_driver *uncore_pci_driver;
-+struct uncore_platform_driver *uncore_platform_driver;
-+
- /* pci bus to socket mapping */
- DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
- struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
-@@ -1159,6 +1161,42 @@ static void uncore_pci_remove(struct pci_dev *pdev)
- 	uncore_pci_pmu_unregister(pmu, box);
- }
- 
-+static int uncore_platform_probe(struct platform_device *pdev)
-+{
-+	struct pci_dev *pci_dev = to_pci_dev(pdev->dev.parent);
-+	struct intel_uncore_pmu *pmu;
-+	int phys_id, die, ret;
-+
-+	pmu = uncore_find_pmu_by_pci_dev(pci_dev, uncore_platform_driver->pci_ids);
-+	if (!pmu)
-+		return -ENODEV;
-+
-+	ret = uncore_pci_get_die_info(pci_dev, &phys_id, &die);
-+	if (ret)
-+		return ret;
-+
-+	ret = uncore_pci_pmu_register(pci_dev, pmu->type, pmu, phys_id, die);
-+
-+	platform_set_drvdata(pdev, pmu->boxes[die]);
-+
-+	return ret;
-+}
-+
-+static int uncore_platform_remove(struct platform_device *pdev)
-+{
-+	struct intel_uncore_box *box;
-+
-+	box = platform_get_drvdata(pdev);
-+	if (!box)
-+		return 0;
-+
-+	uncore_pci_pmu_unregister(box->pmu, box);
-+
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
- static int __init uncore_pci_init(void)
- {
- 	size_t size;
-@@ -1183,6 +1221,19 @@ static int __init uncore_pci_init(void)
- 		goto errtype;
- 
- 	pcidrv_registered = true;
-+
-+	if (uncore_platform_driver) {
-+		uncore_platform_driver->driver->probe = uncore_platform_probe;
-+		uncore_platform_driver->driver->remove = uncore_platform_remove;
-+
-+		ret = platform_driver_register(uncore_platform_driver->driver);
-+		if (ret) {
-+			pr_warn("Failed to register platform driver. "
-+				"Disable %s uncore unit.\n",
-+				uncore_platform_driver->driver->driver.name);
-+			uncore_platform_driver = NULL;
-+		}
-+	}
- 	return 0;
- 
- errtype:
-@@ -1197,6 +1248,9 @@ static int __init uncore_pci_init(void)
- 
- static void uncore_pci_exit(void)
- {
-+	if (uncore_platform_driver)
-+		platform_driver_unregister(uncore_platform_driver->driver);
-+
- 	if (pcidrv_registered) {
- 		pcidrv_registered = false;
- 		pci_unregister_driver(uncore_pci_driver);
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 105fdc6..da4cb36 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -3,6 +3,7 @@
- #include <linux/pci.h>
- #include <asm/apicdef.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 3acf151..47e33b2 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -15,6 +15,7 @@
+ #include <linux/init.h>
+ #include <linux/aer.h>
+ #include <linux/dmi.h>
 +#include <linux/platform_device.h>
  
- #include <linux/perf_event.h>
- #include "../perf_event.h"
-@@ -161,6 +162,24 @@ struct uncore_event_desc {
- 	const char *config;
- };
+ #include "../pci.h"
+ #include "portdrv.h"
+@@ -90,6 +91,40 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+ #define PCIE_PORTDRV_PM_OPS	NULL
+ #endif /* !PM */
  
-+/*
-+ * A platform device created by other drivers for uncore monitoring
-+ * @driver: platform_driver for the platform device
-+ * @pci_ids: id_table for supported PCI devices
-+ *           Used to compare with the platform device's parent PCI device
-+ *
-+ * Other drivers may create a platform device for uncore monitoring,
-+ * e.g. pcieport driver on SNR. To match the platform device, the probe
-+ * function has to compare the platform device's parent PCI device with
-+ * pci_ids.
-+ */
-+struct uncore_platform_driver {
-+	struct platform_driver		*driver;
-+	const struct pci_device_id	*pci_ids;
++static const struct pci_device_id perf_uncore_pcieport_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a) },
++	{ },
 +};
 +
-+extern struct uncore_platform_driver *uncore_platform_driver;
++static void perf_platform_device_register(struct pci_dev *dev)
++{
++	struct platform_device *pdev;
 +
- struct freerunning_counters {
- 	unsigned int counter_base;
- 	unsigned int counter_offset;
++	if (!pci_match_id(perf_uncore_pcieport_ids, dev))
++		return;
++
++	pdev = platform_device_alloc("perf_uncore_pcieport", PLATFORM_DEVID_AUTO);
++	if (!pdev)
++		return;
++
++	pdev->dev.parent = &dev->dev;
++
++	if (platform_device_add(pdev)) {
++		platform_device_put(pdev);
++		return;
++	}
++
++	pci_set_drvdata(dev, pdev);
++}
++
++static void perf_platform_device_unregister(struct pci_dev *dev)
++{
++	struct platform_device *pdev = pci_get_drvdata(dev);
++
++	if (pdev)
++		platform_device_unregister(pdev);
++}
++
+ /*
+  * pcie_portdrv_probe - Probe PCI-Express port devices
+  * @dev: PCI-Express port device being probed
+@@ -113,6 +148,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+ 	if (status)
+ 		return status;
+ 
++	perf_platform_device_register(dev);
++
+ 	pci_save_state(dev);
+ 
+ 	dev_pm_set_driver_flags(&dev->dev, DPM_FLAG_NO_DIRECT_COMPLETE |
+@@ -142,6 +179,7 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+ 		pm_runtime_dont_use_autosuspend(&dev->dev);
+ 	}
+ 
++	perf_platform_device_unregister(dev);
+ 	pcie_port_device_remove(dev);
+ }
+ 
 -- 
 2.7.4
 
