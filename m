@@ -2,122 +2,198 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE84C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10602C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995A32073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3F6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHVI+Z2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgGBP2J (ORCPT
+        id S1730347AbgGBP2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:28:09 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60060 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgGBP2I (ORCPT
+        Thu, 2 Jul 2020 11:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgGBP2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:28:08 -0400
-Received: from [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed] (unknown [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DF3732A5F5D;
-        Thu,  2 Jul 2020 16:28:05 +0100 (BST)
-Subject: Re: [PATCH 1/2] dt-bindings: sound: fsl-asoc-card: add new compatible
- for I2S slave
-To:     Mark Brown <broonie@kernel.org>
-Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
- <20200702141114.232688-2-arnaud.ferraris@collabora.com>
- <20200702143145.GG4483@sirena.org.uk>
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
- 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
- xZQG6fKWuIur3RI=
-Message-ID: <5de5ea5b-0716-8ed1-28b0-9ad3da7a2d47@collabora.com>
-Date:   Thu, 2 Jul 2020 17:28:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 11:28:14 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21780C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:28:14 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u9so7834164pls.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=f6NHiKBOJxQx2yu25TfleraIEvN0rvdlanwLkWkQo5A=;
+        b=sHVI+Z2+QnOPqFlk3cV7wUqBpsuT8U4d+eJmFckHcxG7gqqQkN+g7rfCTrAWhH7zNE
+         NvrXfIlEHszrhIITJ9+pPVwQqvE2YB8HeAb5tFoHjVkEMaqRYA20kfE7+gyS6W5lzmuc
+         YsuZ2NpjIhjzaXTIf+J4IR/TKAhwbKdV0R7WNx2zWAnIH+S7TuyUbnR6pQHYuT+T5G2T
+         gWpdWk20+PiJFXXgXFqQn1nXjVzBONJN00cdX30q+cO0KiRnf72jqzZx45Ic6JBfS2wf
+         Evu8EseZLptk03ZJbPI2HN8JhJgxb44mkjn+oZ5x2rf+DCWhEPdsk69097DF0w3fQ0Q7
+         hkdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=f6NHiKBOJxQx2yu25TfleraIEvN0rvdlanwLkWkQo5A=;
+        b=JkxUHzGTP92EOyzn+SNQIDc7LLPH+Y0EGnHxWVSmEJ+Nj+7p9X2FmV5quqE150dxng
+         UFXyagOkTO++J7Tfy7XRF+Vhu0ke40OthAFkg5ySfmQPvlODxEXTSg+QIU1cs1mnL58/
+         5Aft2AjnYC9DhepCylqUZVwaufBLh24TU4KUEalXCv5AZm+3Slqbiy0dfKJI8eoaHYCa
+         4NWBJLcf1fA0azz1zQXBXRyaGSiAw3LfU9KaiM1O8Z9ZyzTv/z71hMRc+ZWpsHWHR1qw
+         WvP31ulrj/oFm8kugR3T1vzXA8g7HUW7bOUp7bJyMSJNbc3PgLHs7NKiPFKT0raJl3+b
+         U2Vg==
+X-Gm-Message-State: AOAM532WXQ3ZokEK8qjGROTYWNyE0d3zua/DX2HwlT1NTSdHAfd8pAqH
+        CZ1+MEPbBiV+x8sPvTiH0rE=
+X-Google-Smtp-Source: ABdhPJxfhDWpMb0DIFZ7cnoKC1zFDSgfvqqwtdrZliYAbrZoOBhClp2cLdpKYFc9Nnhr40pnaonwCw==
+X-Received: by 2002:a17:902:8bc7:: with SMTP id r7mr27861805plo.57.1593703693653;
+        Thu, 02 Jul 2020 08:28:13 -0700 (PDT)
+Received: from localhost ([144.34.187.180])
+        by smtp.gmail.com with ESMTPSA id s194sm9248546pgs.24.2020.07.02.08.28.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jul 2020 08:28:13 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 15:27:59 +0000
+From:   Long Li <lonuxli.64@gmail.com>
+To:     willy@infradead.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] mm, slab: Check GFP_SLAB_BUG_MASK before alloc_pages in
+ kmalloc_order
+Message-ID: <20200702152759.GA32931@lilong>
 MIME-Version: 1.0
-In-Reply-To: <20200702143145.GG4483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+kmalloc cannot allocate memory from HIGHMEM.  Allocating large amounts
+of memory currently bypasses the check and will simply leak the memory
+when page_address() returns NULL.  To fix this, factor the
+GFP_SLAB_BUG_MASK check out of slab & slub, and call it from
+kmalloc_order() as well. In order to make the code clear, the warning
+message is put in one place.
 
-Le 02/07/2020 à 16:31, Mark Brown a écrit :
-> On Thu, Jul 02, 2020 at 04:11:14PM +0200, Arnaud Ferraris wrote:
->> fsl-asoc-card currently doesn't support generic codecs with the SoC
->> acting as I2S slave.
->>
->> This commit adds a new `fsl,imx-audio-i2s-slave` for this use-case, as
->> well as the following mandatory properties:
-> 
-> Why require that the CODEC be clock master here - why not make this
-> configurable, reusing the properties from the generic and audio graph
-> cards?
+Signed-off-by: Long Li <lonuxli.64@gmail.com>
+---
+changes in V4:
+-Change the check function name to kmalloc_check_flags()
+-Put the flags check into the kmalloc_check_flags() 
 
-This is partly because I'm not sure how to do it (yet), but mostly
-because I don't have the hardware to test this (the 2 CODECs present on
-my only i.MX6 board are both clock master)
+changes in V3:
+-Put the warning message in one place
+-updage the change log to be clear
 
-Regards,
-Arnaud
+ mm/slab.c        |  8 +-------
+ mm/slab.h        |  1 +
+ mm/slab_common.c | 18 +++++++++++++++++-
+ mm/slub.c        |  8 +-------
+ 4 files changed, 20 insertions(+), 15 deletions(-)
+
+diff --git a/mm/slab.c b/mm/slab.c
+index ac7a223d9ac3..755f33f96f04 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -2573,13 +2573,7 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
+ 	 * Be lazy and only check for valid flags here,  keeping it out of the
+ 	 * critical path in kmem_cache_alloc().
+ 	 */
+-	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+-		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+-		flags &= ~GFP_SLAB_BUG_MASK;
+-		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+-				invalid_mask, &invalid_mask, flags, &flags);
+-		dump_stack();
+-	}
++	flags = kmalloc_check_flags(flags);
+ 	WARN_ON_ONCE(cachep->ctor && (flags & __GFP_ZERO));
+ 	local_flags = flags & (GFP_CONSTRAINT_MASK|GFP_RECLAIM_MASK);
+ 
+diff --git a/mm/slab.h b/mm/slab.h
+index a06f3313e4a0..48df5660764c 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -90,6 +90,7 @@ void create_kmalloc_caches(slab_flags_t);
+ struct kmem_cache *kmalloc_slab(size_t, gfp_t);
+ #endif
+ 
++gfp_t kmalloc_check_flags(gfp_t flags);
+ 
+ /* Functions provided by the slab allocators */
+ int __kmem_cache_create(struct kmem_cache *, slab_flags_t flags);
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index a143a8c8f874..9184e4575d6d 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -26,6 +26,8 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/kmem.h>
+ 
++#include "internal.h"
++
+ #include "slab.h"
+ 
+ enum slab_state slab_state;
+@@ -805,6 +807,20 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ }
+ #endif /* !CONFIG_SLOB */
+ 
++gfp_t kmalloc_check_flags(gfp_t flags)
++{
++	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
++		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
++
++		flags &= ~GFP_SLAB_BUG_MASK;
++		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
++				invalid_mask, &invalid_mask, flags, &flags);
++		dump_stack();
++	}
++
++	return flags;
++}
++
+ /*
+  * To avoid unnecessary overhead, we pass through large allocation requests
+  * directly to the page allocator. We use __GFP_COMP, because we will need to
+@@ -815,7 +831,7 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
+ 	void *ret = NULL;
+ 	struct page *page;
+ 
+-	flags |= __GFP_COMP;
++	flags = kmalloc_check_flags(flags) | __GFP_COMP;
+ 	page = alloc_pages(flags, order);
+ 	if (likely(page)) {
+ 		ret = page_address(page);
+diff --git a/mm/slub.c b/mm/slub.c
+index 62d2de56549e..8e787767850f 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1817,13 +1817,7 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 
+ static struct page *new_slab(struct kmem_cache *s, gfp_t flags, int node)
+ {
+-	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+-		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+-		flags &= ~GFP_SLAB_BUG_MASK;
+-		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+-				invalid_mask, &invalid_mask, flags, &flags);
+-		dump_stack();
+-	}
++	flags = kmalloc_check_flags(flags);
+ 
+ 	return allocate_slab(s,
+ 		flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK), node);
+-- 
+2.17.1
+
