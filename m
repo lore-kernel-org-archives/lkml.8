@@ -2,101 +2,183 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4268C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D650C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E66C2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6932070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgGBVQ6 (ORCPT
+        id S1726236AbgGBVRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:16:58 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41860 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgGBVQ5 (ORCPT
+        Thu, 2 Jul 2020 17:17:03 -0400
+Received: from mail.windriver.com ([147.11.1.11]:51903 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGBVRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:16:57 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 356E01C0BD2; Thu,  2 Jul 2020 23:16:55 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 23:16:54 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Simon Arlott <simon@octiron.net>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
-Message-ID: <20200702211653.GB5787@amd>
-References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200623204234.GA16156@khazad-dum.debian.net>
- <CACVXFVNdC1U-gXdMr-B6i0WJdiYF+JvBcF3MkhFApEw_ZPx7pA@mail.gmail.com>
+        Thu, 2 Jul 2020 17:17:01 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 062LGABj018020
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Thu, 2 Jul 2020 14:16:10 -0700 (PDT)
+Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 2 Jul 2020 14:15:57 -0700
+Received: by yow-pgortmak-d1.corp.ad.wrs.com (Postfix, from userid 1000)        id
+ 589E22E0BF2; Thu,  2 Jul 2020 17:15:57 -0400 (EDT)
+Date:   Thu, 2 Jul 2020 17:15:57 -0400
+From:   Paul Gortmaker <paul.gortmaker@windriver.com>
+To:     Dave Jones <davej@codemonkey.org.uk>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        <peterz@infradead.org>, <mgorman@techsingularity.net>,
+        <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Michal Kubecek <mkubecek@suse.cz>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: weird loadavg on idle machine post 5.7
+Message-ID: <20200702211555.GA27819@windriver.com>
+References: <20200702171548.GA11813@codemonkey.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CACVXFVNdC1U-gXdMr-B6i0WJdiYF+JvBcF3MkhFApEw_ZPx7pA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200702171548.GA11813@codemonkey.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[weird loadavg on idle machine post 5.7] On 02/07/2020 (Thu 13:15) Dave Jones wrote:
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> When I upgraded my firewall to 5.7-rc2 I noticed that on a mostly
+> idle machine (that usually sees loadavg hover in the 0.xx range)
+> that it was consistently above 1.00 even when there was nothing running.
+> All that perf showed was the kernel was spending time in the idle loop
+> (and running perf).
+> 
+> For the first hour or so after boot, everything seems fine, but over
+> time loadavg creeps up, and once it's established a new baseline, it
+> never seems to ever drop below that again.
+> 
+> One morning I woke up to find loadavg at '7.xx', after almost as many
+> hours of uptime, which makes me wonder if perhaps this is triggered
+> by something in cron.  I have a bunch of scripts that fire off
+> every hour that involve thousands of shortlived runs of iptables/ipset,
+> but running them manually didn't seem to automatically trigger the bug.
+> 
+> Given it took a few hours of runtime to confirm good/bad, bisecting this
+> took the last two weeks. I did it four different times, the first
 
-Hi!
+I've seen pretty much the same thing - I was helping paulmck test
+rcu-dev for something hopefully unrelated, when I 1st saw it, and
+assumed it came in with the sched-core merge and was using one under
+that as "good" to attempt bisect.
 
-> > during a FLASH write or erase can cause from weakened cells, to much
-> > larger damage.  It is possible to harden the chip or the design against
-> > this, but it is *expensive*.  And even if warded off by hardening and no
-> > FLASH damage happens, an erase/program cycle must be done on the whole
-> > erase block to clean up the incomplete program cycle.
->=20
-> It should have been SSD's(including FW) responsibility to avoid data loss=
- when
-> the SSD is doing its own BG writing, because power cut can happen any time
-> from SSD's viewpoint.
+> producing bogus results from over-eager 'good', but the last two runs
 
-It should be their responsibility. But we know how well that works
-(not well), so we try hard (and should try hard) to power SSDs down
-cleanly.
+Yeah - it sucks.  I was using Paul's TREE03 rcu-torture for loading and
+even after a two hour test I'd still get "false good" results.  Only
+after 7h was I quite confident that good was really good.
 
-In a similar way, it is ext4's responsibility not to corrupt itself,
-and we still prefer clean shutdowns.
+> both implicated this commit:
+> 
+> commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
+> Author: Peter Zijlstra <peterz@infradead.org>
+> Date:   Sun May 24 21:29:55 2020 +0100
+> 
+>     sched/core: Optimize ttwu() spinning on p->on_cpu
 
-Plus, HDDs normally do handle unexpected power offs well, but it puts
-extra stress on their hardware, so we should avoid that...
+I was down to 10 commits roughly above and below this guy before hearing
+you were working the same problem.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+I just got this guy to reveal a false load after a 2h test as well.
+I want to let the one underneath soak overnight just to also confirm it
+is "good" - so that is pending.
 
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+What I can add, is that it is like we are "leaking" an instance into
+calc_load_tasks -- which isn't anything new -- see when tglx fixed it
+before in d60585c5766.  Unfortunate we don't have some low overhead leak
+checks on that... ?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Anyway, if I "fix" the leak, then everything seems back to normal:
 
-iEYEARECAAYFAl7+TsUACgkQMOfwapXb+vKGzACgk0GX74ERX5Pl/uVrV+tG1mWX
-ZGYAniwvujTlx/B3a4xN4uas0M1MVcwW
-=dm1G
------END PGP SIGNATURE-----
+   (gdb) p calc_load_tasks
+   $2 = {counter = 1}
+   (gdb) set variable calc_load_tasks = { 0 }
+   (gdb) p calc_load_tasks
+   $4 = {counter = 0}
+   (gdb) continue
+   Continuing.
+   
+   [ ... watching decay on resumed target ....]
+   
+    10:13:14 up  9:54,  4 users,  load average: 0.92, 0.98, 1.15
+    10:13:54 up  9:55,  4 users,  load average: 0.47, 0.86, 1.10
+    10:15:17 up  9:56,  4 users,  load average: 0.12, 0.65, 1.00
+    10:19:20 up 10:00,  4 users,  load average: 0.00, 0.28, 0.76
+    10:26:07 up 10:07,  4 users,  load average: 0.00, 0.06, 0.48
+    10:32:48 up 10:14,  4 users,  load average: 0.00, 0.00, 0.29
 
---MW5yreqqjyrRcusr--
+Obviously that isn't a fix, but it shows it is an accounting thing.
+I've also used gdb to snoop all the cfs->avg fields and they look as
+expected for a completely idle machine.  Nothing hiding in avg_rt or
+avg_dl either.
+
+>     
+>     Both Rik and Mel reported seeing ttwu() spend significant time on:
+>     
+>       smp_cond_load_acquire(&p->on_cpu, !VAL);
+>     
+>     Attempt to avoid this by queueing the wakeup on the CPU that owns the
+>     p->on_cpu value. This will then allow the ttwu() to complete without
+>     further waiting.
+>     
+>     Since we run schedule() with interrupts disabled, the IPI is
+>     guaranteed to happen after p->on_cpu is cleared, this is what makes it
+>     safe to queue early.
+>     
+>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>     Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+>     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>     Cc: Jirka Hladky <jhladky@redhat.com>
+>     Cc: Vincent Guittot <vincent.guittot@linaro.org>
+>     Cc: valentin.schneider@arm.com
+>     Cc: Hillf Danton <hdanton@sina.com>
+>     Cc: Rik van Riel <riel@surriel.com>
+>     Link: https://lore.kernel.org/r/20200524202956.27665-2-mgorman@techsingularity.net
+> 
+> Unfortunatly it doesn't revert cleanly on top of rc3 so I haven't
+> confirmed 100% that it's the cause yet, but the two separate bisects
+> seem promising.
+
+I've not tried the revert (yet) - but Kyle saw me boring people on
+#kernel with the details of bisecting this and gave me the heads-up you
+were looking at it too (thanks Kyle!).   So I figured I'd better add
+what I'd seen so far.
+
+I'm testing with what is largely a defconfig, plus KVM_INTEL (needed for
+paulmck TREE03 rcu-torture), plus I enabled KGDB and DEBUG_INFO after a
+while so I could poke and prod - but was reproducing it before that.
+
+For completeness, the test was:
+
+  tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 24 --duration 120 \
+	--configs TREE03 --trust-make
+
+...on a 24 core 2013 vintage xeon-v2 COTS box.   As above, the 120m
+seemed to give between 60-75% confidence on not getting a false good.
+
+Anyway - so that is all I know so far...
+
+Paul.
+--
+
+> 
+> I don't see any obvious correlation between what's changing there and
+> the symtoms (other than "scheduler magic") but maybe those closer to
+> this have ideas what could be going awry ?
+> 
+> 	Dave
