@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8761C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8681820936
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A522082F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593652987;
-	bh=heI/zeiybxQ+XENOmCPW/BYUbzGnLzbbihRM/RDA930=;
+	s=default; t=1593652990;
+	bh=H6E1ErTHKdU8VDL/lt494z9m+g1stL2ziOwVXwpMVPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMeoH68udSAMLTMS7yF85O/TATmSvoYAHgag3hO8ZsSeiiEYReCtjiWE2SneuPTRb
-	 h8vZoSMtwEQgbB4At7Jw0KUtfAtrv5CFZYv27XzR/E2U+KdJRKwJxeySP3jvNxwWqP
-	 LdonB0zeUky4226IXKcqwEHhywrf4h9TYFufPzno=
+	b=bOJ4fld14RBMSMCVVQgYmRJxX6XQ5yNAfS477uHoGAWRH/wHT+ns6qQjGIs8ya/Xk
+	 iQgIpTkG0uoePb2WKCm3kocjfWCko5F/rFGYxI7OIn7HRgIjZq+AnlE4wbA8I7sTTB
+	 UvxKmVkwMNRU6d4Coe3qqJxc/JLplcmq9UJeScR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgGBBXG (ORCPT
+        id S1728218AbgGBBXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgGBBXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:01 -0400
+        id S1728174AbgGBBXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E34F2082F;
-        Thu,  2 Jul 2020 01:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AAAA20874;
+        Thu,  2 Jul 2020 01:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652981;
-        bh=heI/zeiybxQ+XENOmCPW/BYUbzGnLzbbihRM/RDA930=;
+        s=default; t=1593652982;
+        bh=H6E1ErTHKdU8VDL/lt494z9m+g1stL2ziOwVXwpMVPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPsF0tgWtzDXiAawBeHTa91mhDgp8Gw/FxF3gSBkxA0q5dgR07mBxACM65IBRQA03
-         fbnGHYKlkPERiwYN1OabEtrkfAfqTa3QFqzw63cHn0WwsEQygMtF+aBgHfRxSKl+0R
-         qGSCLVZwg9zzA/58B41dA09MRxVYzWXRIWwoCibA=
+        b=RsBmcNxWvcFx8Qd0eTxU8HcHpfbmrYWP3whfaXxMqJJgJ/fIVfN4kC5Vr8OjHGNI7
+         8v5eCp5xz1u9XkDTBf34C1IvnEhRySFyBksWYTJf9cLV1A6IK+qGgDjNdKARoB0bnx
+         C6g3FlX7XZ9dxdLqx5fQ05/xOz5esjdVUEQCnXh8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 05/53] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
-Date:   Wed,  1 Jul 2020 21:21:14 -0400
-Message-Id: <20200702012202.2700645-5-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 5.7 06/53] drm/ttm: Fix dma_fence refcnt leak in ttm_bo_vm_fault_reserved
+Date:   Wed,  1 Jul 2020 21:21:15 -0400
+Message-Id: <20200702012202.2700645-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,50 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
+[ Upstream commit 37cc4b95d13f311c04aa8e9daacca3905ad45ca7 ]
 
-We can currently sometimes get "RXS timed out" errors and "EOT timed out"
-errors with spi transfers.
+ttm_bo_vm_fault_reserved() invokes dma_fence_get(), which returns a
+reference of the specified dma_fence object to "moving" with increased
+refcnt.
 
-These errors can be made easy to reproduce by reading the cpcap iio
-values in a loop while keeping the CPUs busy by also reading /dev/urandom.
+When ttm_bo_vm_fault_reserved() returns, local variable "moving" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
-in addition to the spi-cs-high property we already have.
+The reference counting issue happens in several exception handling paths
+of ttm_bo_vm_fault_reserved(). When those error scenarios occur such as
+"err" equals to -EBUSY, the function forgets to decrease the refcnt
+increased by dma_fence_get(), causing a refcnt leak.
 
-The "EOT timed out" errors we can fix by increasing the spi clock rate
-to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
-up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
-for cpcap.
+Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
+equals to true.
 
-Cc: maemo-leste@lists.dyne.org
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/370219/
+Signed-off-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ttm/ttm_bo_vm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index e39eee628afd6..08a7d3ce383f2 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -13,8 +13,10 @@ cpcap: pmic@0 {
- 		#interrupt-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		spi-max-frequency = <3000000>;
-+		spi-max-frequency = <9600000>;
- 		spi-cs-high;
-+		spi-cpol;
-+		spi-cpha;
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index 0ad30b1129821..72100b84c7a90 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -300,8 +300,10 @@ vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
+ 			break;
+ 		case -EBUSY:
+ 		case -ERESTARTSYS:
++			dma_fence_put(moving);
+ 			return VM_FAULT_NOPAGE;
+ 		default:
++			dma_fence_put(moving);
+ 			return VM_FAULT_SIGBUS;
+ 		}
  
- 		cpcap_adc: adc {
- 			compatible = "motorola,mapphone-cpcap-adc";
 -- 
 2.25.1
 
