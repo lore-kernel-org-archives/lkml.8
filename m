@@ -2,67 +2,89 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA425C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A532C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E0220702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3DF207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgGBTCx (ORCPT
+        id S1726147AbgGBTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:02:53 -0400
-Received: from muru.com ([72.249.23.125]:60480 "EHLO muru.com"
+        Thu, 2 Jul 2020 15:03:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13302 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbgGBTCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:02:53 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id F04448062;
-        Thu,  2 Jul 2020 19:03:44 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 12:02:49 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] bus: ti-sysc: Fix wakeirq sleeping function called
- from invalid context
-Message-ID: <20200702190249.GO37466@atomide.com>
-References: <20200702174929.26506-1-tony@atomide.com>
- <434eff2e-bc7f-84ee-0980-769915cefffb@ti.com>
+        id S1725878AbgGBTDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:03:24 -0400
+IronPort-SDR: AW6Bes3x7083rEVeAZVyLpYb6XnQnVhP9paxJMAm1htH+7s7neeUWVO73+agqPwa4iUAaRJp6J
+ hlqupXwpelaA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165054792"
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="165054792"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:03:23 -0700
+IronPort-SDR: ITwhDjjC2EW5TkDGnDY5YhDJPnao/dKwEHsS0zhlA07dwxJxe7RUuCj3idyidbNsnHlTLiFRvr
+ Qic3MYf842Mg==
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="295989015"
+Received: from dhprice-mobl1.amr.corp.intel.com (HELO [10.254.75.219]) ([10.254.75.219])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:03:22 -0700
+Subject: Re: [PATCH 3/6] ASoC: fsl: fsl-asoc-card: fix kernel-doc
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "open list:FREESCALE SOC SOUND DRIVERS" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200702172227.164474-1-pierre-louis.bossart@linux.intel.com>
+ <20200702172227.164474-4-pierre-louis.bossart@linux.intel.com>
+ <20200702184727.GD23935@Asurada-Nvidia>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7c6fac59-562c-d3b5-8eea-3e0f450cee6b@linux.intel.com>
+Date:   Thu, 2 Jul 2020 14:03:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <434eff2e-bc7f-84ee-0980-769915cefffb@ti.com>
+In-Reply-To: <20200702184727.GD23935@Asurada-Nvidia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [200702 18:01]:
-> Hi Tony,
+
+
+On 7/2/20 1:47 PM, Nicolin Chen wrote:
+> On Thu, Jul 02, 2020 at 12:22:24PM -0500, Pierre-Louis Bossart wrote:
+>> Fix W=1 warnings. Kernel-doc syntax was not properly used.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   sound/soc/fsl/fsl-asoc-card.c | 21 +++++++++------------
+>>   1 file changed, 9 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
 > 
-> On 7/2/20 12:49 PM, Tony Lindgren wrote:
-> > With CONFIG_DEBUG_ATOMIC_SLEEP enabled we can see the following with
-> > wakeirqs and serial console idled:
+>>   /**
+>> - * Freescale Generic ASOC card private data
+>> + * struct fsl_asoc_card_priv - struct Freescale Generic ASOC card private data
 > 
-> Which devices are these? I have one patch from Tero fixing similar errors in
-> OMAP IOMMU driver. Will post that either today or tomorrow.
+> Just a nit, can you drop the "struct" before "Freescale"?
+> Other parts of your changes don't really add this word.
 
-I noticed this testing Andy Schevchenko's pending generic serial PM
-patches. It happens on any omap variant with kernel serial console
-detached and uart idled. Then just wait for the autosuspend timeout
-to expire and type a character on the serial console :)
+will do, thanks for spotting this.
 
-Regards,
-
-Tony
+> Otherwise,
+> Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> 
