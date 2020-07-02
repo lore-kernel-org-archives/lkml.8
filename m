@@ -2,116 +2,108 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB897C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E027F207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:54:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiO7osuZ"
+	by mail.kernel.org (Postfix) with ESMTP id D263A20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgGBAyt (ORCPT
+        id S1728021AbgGBAzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgGBAys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:54:48 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11F7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:54:48 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l6so24138270qkc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=hO91gN0h/Yr5xSJfWsTPMl5yb7ckd6xh7ekWQ6cvBIA=;
-        b=QiO7osuZ0V9urEG1lVlw4WEcRNR0F3Sdnl9NjD89hK4dpbaR8xm137hAqFW/blgQNX
-         pLY7xwYaz3WeauXhs62baAWCiVeILKiIwi6q1dLxDWtzYvEhCj3oezBGt1Pr9ETLdfUY
-         QPTkp0SjYMIoCkgmc0bL2hy+MfPtlas1Ar/F5fSJaRkzeOIcVqWGQrqiuMFZAE7+E4SR
-         IB8tO6wfQH+eotybHY5E/+Wm/Euywh5ZpIxyf9lOg4z72fP+DyWgqcbST2E9PRDS7fV7
-         KMuVqDMQnTgY2pVF4+UPq6XxpL0yXn4kTThRYpLN/ntDmT+kIIyKtezb+zXlfb3Yz7QV
-         9prw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=hO91gN0h/Yr5xSJfWsTPMl5yb7ckd6xh7ekWQ6cvBIA=;
-        b=Vfm5OgLPuoYm+MyqYZKrh70VcUcOE2fMXLqEv88DOwyx4oxBtwWW5Fb6//H+o58Ds9
-         zK6R4oUTLcuzVvEqmhqPAy9dgt8rbcomcaSwUejAyz+JzuuT+jPP8Wza6zO1NnsAv1Hq
-         1VDLfa60rwD3b4QvSxGRQOYHrw7ckG1Noqx8trBghOpFwEjM76zrJibGDztPX1Om6SfE
-         4B1ePUeX3NGmP+TPRJYZ0qLyaS/sDtEesbmTUzQZOX7olclHr2aWQrP0U2m/lO2dICWQ
-         j0WqWV/KQz/y2V/paY//+GUezt2eTUIGwhljDfv7mk+yRicdmrhm5eaPRG+GJS7ewpYv
-         5wcA==
-X-Gm-Message-State: AOAM531WmaTb7IjtX+Ht227dOKi8ZA+BRvU7Joij1e8WDHAYZ2MguN0l
-        H5P5WRSLqY6SFD91m/SM/Lw=
-X-Google-Smtp-Source: ABdhPJyXc53Sx1YOZSJEC1jfR/nuKaGgvtLyvG53K2V1rEfpc4caHt1WAHF+YCSvxu+w8B1RG0Gssg==
-X-Received: by 2002:a37:9b01:: with SMTP id d1mr29385611qke.65.1593651288027;
-        Wed, 01 Jul 2020 17:54:48 -0700 (PDT)
-Received: from LeoBras (200-236-245-17.dynamic.desktop.com.br. [200.236.245.17])
-        by smtp.gmail.com with ESMTPSA id q189sm7224509qkd.57.2020.07.01.17.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 17:54:47 -0700 (PDT)
-Message-ID: <3049147914a4a04a095a3f3bd74a7c7ad4d961ad.camel@gmail.com>
-Subject: Re: [PATCH v2 5/6] powerpc/pseries/iommu: Make use of DDW even if
- it does not map the partition
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 01 Jul 2020 21:54:41 -0300
-In-Reply-To: <2c5dc8d2-f379-5a5f-844a-f4eea233f265@ozlabs.ru>
-References: <20200624062411.367796-1-leobras.c@gmail.com>
-         <20200624062411.367796-6-leobras.c@gmail.com>
-         <18df09c0-ef83-a0d8-1143-1cb4d50bf6b7@ozlabs.ru>
-         <0e8bcc38614ec80c7816c07dd4dc70854c2b901d.camel@gmail.com>
-         <0c3de45dfb612745aa2ee4126b3935303d8e8704.camel@gmail.com>
-         <2c5dc8d2-f379-5a5f-844a-f4eea233f265@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 1 Jul 2020 20:55:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58937 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726637AbgGBAzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:55:11 -0400
+IronPort-SDR: AEYgCOtF50C3U2IY9n7Cd2L/R371i6KpjB4jcWuzvUcME5AoqL+vWEYVw0P8De96NhaD0Upvjz
+ xUw9ohxTCPIA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="231629096"
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="231629096"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:55:11 -0700
+IronPort-SDR: Nlp5wjbaER4uLKVVDUyDVEAuE+Ool+CICepdKX168U6kedkNiRZlbfTRlUPrdNA5jY3D3aLKTf
+ N9cHtVHKR11g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="304060663"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 17:55:09 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v3 3/7] iommu/vt-d: Fix PASID devTLB invalidation
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1593617636-79385-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e6eb217f-3a05-9bb1-267b-8046c6e3121b@linux.intel.com>
+Date:   Thu, 2 Jul 2020 08:50:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <1593617636-79385-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-02 at 10:31 +1000, Alexey Kardashevskiy wrote:
-> > In fact, there is a lot of places in this file where it's called direct
-> > window. Should I replace everything?
-> > Should it be in a separated patch?
+On 7/1/20 11:33 PM, Jacob Pan wrote:
+> DevTLB flush can be used for both DMA request with and without PASIDs.
+> The former uses PASID#0 (RID2PASID), latter uses non-zero PASID for SVA
+> usage.
 > 
-> If it looks simple and you write a nice commit log explaining all that
-> and why you are not reusing the existing ibm,dma-window property 
-> for that - sure, do it :)
+> This patch adds a check for PASID value such that devTLB flush with
+> PASID is used for SVA case. This is more efficient in that multiple
+> PASIDs can be used by a single device, when tearing down a PASID entry
+> we shall flush only the devTLB specific to a PASID.
+> 
+> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table")
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-Nice, I will do that :)
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-> (to provide a clue what "reset" will reset to? is there any other
-> reason?)
+Best regards,
+baolu
 
-That's the main reason here. 
-
-The way I perceive this, ibm,dma-window should only point to the
-default DMA window, which is guaranteed to always be the same, even if
-it's destroyed and re-created. So there I see no point destroying /
-overwriting it.
-
-On the other hand, I also thought about using a new node name for this
-window, but it would be very troublesome and I could see no real gain.
-
-Thanks !
-
+> ---
+>   drivers/iommu/intel/pasid.c | 11 ++++++++++-
+>   1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+> index c81f0f17c6ba..fa0154cce537 100644
+> --- a/drivers/iommu/intel/pasid.c
+> +++ b/drivers/iommu/intel/pasid.c
+> @@ -486,7 +486,16 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+>   	qdep = info->ats_qdep;
+>   	pfsid = info->pfsid;
+>   
+> -	qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
+> +	/*
+> +	 * When PASID 0 is used, it indicates RID2PASID(DMA request w/o PASID),
+> +	 * devTLB flush w/o PASID should be used. For non-zero PASID under
+> +	 * SVA usage, device could do DMA with multiple PASIDs. It is more
+> +	 * efficient to flush devTLB specific to the PASID.
+> +	 */
+> +	if (pasid == PASID_RID2PASID)
+> +		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
+> +	else
+> +		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0, 64 - VTD_PAGE_SHIFT);
+>   }
+>   
+>   void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
+> 
