@@ -2,229 +2,76 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF18AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB0020772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vIIhhKww"
+	by mail.kernel.org (Postfix) with ESMTP id CAB0E2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgGBIzh (ORCPT
+        id S1727820AbgGBIzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:55:37 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:34011 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgGBIzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:55:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593680134; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=6R0fs0rnnmdawC5ltF/lObSxGBvdioNRI/wjeKU4Swg=; b=vIIhhKww4ncDzQmEeYfFks0lmnpaV+sSskiXRZnx7MSJvSqAuVYLcHyf37XMpUg6IJqHGw3J
- ZR8AZHbn8OZeR3ASl2FDkwmCxZ3hCDAnxkfPyIv5MeDpCDpNdjx+zEKO8HkZOgAgkqxhWsBc
- l1vGc3OGos6U6O6WDzX8+eS/i5M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
- 5efda106f3deea03f3b02598 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 08:55:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2278BC433CA; Thu,  2 Jul 2020 08:55:34 +0000 (UTC)
-Received: from [192.168.1.11] (unknown [117.247.20.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B818C433C6;
-        Thu,  2 Jul 2020 08:55:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B818C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593518176-24450-1-git-send-email-rnayak@codeaurora.org>
- <1593518176-24450-3-git-send-email-rnayak@codeaurora.org>
- <20200701162726.GO39073@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <b67844d5-13d7-02c9-bed7-92be829677ed@codeaurora.org>
-Date:   Thu, 2 Jul 2020 14:25:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 2 Jul 2020 04:55:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36564 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGBIzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:55:43 -0400
+Received: from [222.129.43.254] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1jqv0H-0000UW-GJ; Thu, 02 Jul 2020 08:55:34 +0000
+From:   Aaron Ma <aaron.ma@canonical.com>
+To:     aaron.ma@canonical.com, mapengyu@gmail.com, ibm-acpi@hmh.eng.br,
+        dvhart@infradead.org, andy@infradead.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: not loading brightness_init when _BCL invalid
+Date:   Thu,  2 Jul 2020 16:55:20 +0800
+Message-Id: <20200702085520.16901-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200701162726.GO39073@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When _BCL invalid, disable thinkpad_acpi backlight brightness control.
 
-On 7/1/2020 9:57 PM, Matthias Kaehlcke wrote:
-> On Tue, Jun 30, 2020 at 05:26:14PM +0530, Rajendra Nayak wrote:
->> On SDM845 DSI needs to express a perforamnce state
-> 
-> nit: performance
-> 
->> requirement on a power domain depending on the clock rates.
->> Use OPP table from DT to register with OPP framework and use
->> dev_pm_opp_set_rate() to set the clk/perf state.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/dsi/dsi.h      |  2 ++
->>   drivers/gpu/drm/msm/dsi/dsi_cfg.c  |  4 +--
->>   drivers/gpu/drm/msm/dsi/dsi_host.c | 58 ++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 62 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
->> index 4de771d..ba7583c 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi.h
->> +++ b/drivers/gpu/drm/msm/dsi/dsi.h
->> @@ -180,10 +180,12 @@ int msm_dsi_runtime_suspend(struct device *dev);
->>   int msm_dsi_runtime_resume(struct device *dev);
->>   int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host);
->>   int dsi_link_clk_set_rate_v2(struct msm_dsi_host *msm_host);
->> +int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host);
->>   int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host);
->>   int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host);
->>   void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host);
->>   void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host);
->> +void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host);
->>   int dsi_tx_buf_alloc_6g(struct msm_dsi_host *msm_host, int size);
->>   int dsi_tx_buf_alloc_v2(struct msm_dsi_host *msm_host, int size);
->>   void *dsi_tx_buf_get_6g(struct msm_dsi_host *msm_host);
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
->> index 813d69d..773c4fe 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
->> +++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
->> @@ -210,9 +210,9 @@ static const struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
->>   };
->>   
->>   static const struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
->> -	.link_clk_set_rate = dsi_link_clk_set_rate_6g,
->> +	.link_clk_set_rate = dsi_link_clk_set_rate_6g_v2,
->>   	.link_clk_enable = dsi_link_clk_enable_6g,
->> -	.link_clk_disable = dsi_link_clk_disable_6g,
->> +	.link_clk_disable = dsi_link_clk_disable_6g_v2,
->>   	.clk_init_ver = dsi_clk_init_6g_v2,
->>   	.tx_buf_alloc = dsi_tx_buf_alloc_6g,
->>   	.tx_buf_get = dsi_tx_buf_get_6g,
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
->> index 11ae5b8..890531c 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
->> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/of_graph.h>
->>   #include <linux/of_irq.h>
->>   #include <linux/pinctrl/consumer.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/regmap.h>
->>   #include <linux/regulator/consumer.h>
->>   #include <linux/spinlock.h>
->> @@ -111,6 +112,9 @@ struct msm_dsi_host {
->>   	struct clk *pixel_clk_src;
->>   	struct clk *byte_intf_clk;
->>   
->> +	struct opp_table *opp_table;
->> +	bool has_opp_table;
->> +
->>   	u32 byte_clk_rate;
->>   	u32 pixel_clk_rate;
->>   	u32 esc_clk_rate;
->> @@ -537,6 +541,38 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
->>   	return 0;
->>   }
->>   
->> +int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host)
->> +{
->> +	int ret;
->> +	struct device *dev = &msm_host->pdev->dev;
->> +
->> +	DBG("Set clk rates: pclk=%d, byteclk=%d",
->> +		msm_host->mode->clock, msm_host->byte_clk_rate);
->> +
->> +	ret = dev_pm_opp_set_rate(dev, msm_host->byte_clk_rate);
->> +	if (ret) {
->> +		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_set_rate(msm_host->pixel_clk, msm_host->pixel_clk_rate);
->> +	if (ret) {
->> +		pr_err("%s: Failed to set rate pixel clk, %d\n", __func__, ret);
->> +		return ret;
->> +	}
->> +
->> +	if (msm_host->byte_intf_clk) {
->> +		ret = clk_set_rate(msm_host->byte_intf_clk,
->> +				   msm_host->byte_clk_rate / 2);
->> +		if (ret) {
->> +			pr_err("%s: Failed to set rate byte intf clk, %d\n",
->> +			       __func__, ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
-> 
-> xThis function is essentially the same as dsi_link_clk_set_rate_6g(),
-> except for the use of dev_pm_opp_set_rate() instead of clk_set_rate().
-> 
-> IIUC dev_pm_opp_set_rate() just calls clk_set_rate() if the device has
-> no OPP table. If that's correct you could just call dev_pm_opp_set_rate()
-> in dsi_link_clk_set_rate_6g().
-> 
-> 	/*
->      	* For IO devices which require an OPP on some platforms/SoCs
->      	* while just needing to scale the clock on some others
->      	* we look for empty OPP tables with just a clock handle and
->      	* scale only the clk. This makes dev_pm_opp_set_rate()
-> 	* equivalent to a clk_set_rate()
-> 	*/
-> 	if (!_get_opp_count(opp_table)) {
-> 		ret = _generic_set_opp_clk_only(dev, clk, freq);
-> 		goto put_opp_table;
-> 	}
+brightness_enable is already checked at the beginning,
+Always print notice when enabled brightness control.
 
-ah, thats right, I think I had this code from before that support got
-added to dev_pm_opp_set_rate() and I just did not update this driver to
-make use of it. Thanks for catching it, I will fix it up and repost soon.
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> 
-> https://elixir.bootlin.com/linux/v5.7.6/source/drivers/opp/core.c#L855
-> 
->>   int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host)
->>   {
->> @@ -665,6 +701,13 @@ void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
->>   	clk_disable_unprepare(msm_host->byte_clk);
->>   }
->>   
->> +void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host)
->> +{
->> +	/* Drop the performance state vote */
->> +	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
-> 
-> Couldn't you just do this in dsi_link_clk_disable_6g() ?
-
-yes, looks like I can, I'll get rid of both of these additional functions.
-
-thanks,
-Rajendra
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index ff7f0a4f2475..a52d6d457d6c 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6955,10 +6955,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+ 			pr_warn("Cannot enable backlight brightness support, ACPI is already handling it.  Refer to the acpi_backlight kernel parameter.\n");
+ 			return 1;
+ 		}
+-	} else if (tp_features.bright_acpimode && brightness_enable > 1) {
+-		pr_notice("Standard ACPI backlight interface not available, thinkpad_acpi native brightness control enabled\n");
++	} else if (!tp_features.bright_acpimode) {
++		pr_notice("thinkpad_acpi backlight interface not available\n");
++		return 1;
+ 	}
+ 
++	pr_notice("thinkpad_acpi native brightness control enabled\n");
++
+ 	/*
+ 	 * Check for module parameter bogosity, note that we
+ 	 * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
+
