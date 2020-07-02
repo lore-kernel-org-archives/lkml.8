@@ -2,187 +2,209 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37302C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB8E420772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C97720772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kjd7ViS0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5jizEqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgGBKz1 (ORCPT
+        id S1728435AbgGBK6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        Thu, 2 Jul 2020 06:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgGBKzX (ORCPT
+        with ESMTP id S1728007AbgGBK6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:55:23 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEFBC08C5C1;
-        Thu,  2 Jul 2020 03:55:23 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id s14so11169004plq.6;
-        Thu, 02 Jul 2020 03:55:23 -0700 (PDT)
+        Thu, 2 Jul 2020 06:58:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEABC08C5C1;
+        Thu,  2 Jul 2020 03:58:09 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t25so26743333lji.12;
+        Thu, 02 Jul 2020 03:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mG3Gr9JnbGvredrz4X7c4VX5RS6QFdJXmMVG61A0nk4=;
-        b=Kjd7ViS0eLyzMOE0iq6o8MHYcgUsIh2OfMZ+Iq9vu7Hr06kAaHWDMR+R2ch+kg2Ec2
-         yWUuKDiJr2IagoMcMG7UpU/uANUf54hW9+B32kXPWPeaOVPM5x8SDvkxHXQRpfy3zG3I
-         UpzTpIZ25phMceJ+PiNR6u64bX8agFO+Ezypi9riGxz5XQXlG39HWMCLSVtbIpBMMhbs
-         EcT1MRdO90Ye8KrceWqE/Gn90Tf+wVtoRihRKyzBJ2Bo6TsD0WEmVmfq053SKf2ajsJ1
-         j+NCMdpmqoPYyq7uBTbnggpZ2gso71kS3i5ZBuisd553mOPbHWs2c/iK12O7kZ3t1721
-         c44A==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=kKRrfxb90VfzoXGfhNPYe5HmgW3st+L4rXe9X50lhVE=;
+        b=M5jizEqu0whp1mWCOc7mCG0MqJ+3nBdSSCWbYjY5AtvlruQJOFWkk/uOcem20L271/
+         3OrK02PrH2xU5ivMXit67+Qt6HiQr9toxA4KYEvrjJEh5ndlN2/dnAZdTRvjRojL2qu6
+         44qMR8N0qhwZkfTGIHltX+EPl9uvHZrOv48XPh2/7DaguUTkKZRbrORVc0bT9QxutjHY
+         57hyQyF5gkCrbLfeH2gvcoaa5sIgdwyjrxFCqY5CXCDkv5G1Wmv6jHkD+OiQcHdePK+3
+         mkdJLRyQAA1hlQH/954UswcQtHMtevAWNWOBQLfrDiI7q3siT8jqJIWYPIYQK5eRGkhf
+         ULZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mG3Gr9JnbGvredrz4X7c4VX5RS6QFdJXmMVG61A0nk4=;
-        b=fiGC+ZQ3arVpwQRNbH76GqWTCZ7Hzl8vefaJN+FvP7xiZtVNEdhW8OqSq+x3M/GLgD
-         UG2+uOQeMH6yNEuQ8dQcNOr4svkTkyuM2gvo/tPt+PoSMZtCWR9u54zKpRyuHBlRLUop
-         m//IIWH5a5EDSai4D6nCJLg2rBOAw7WlLOtrYvuA9ffMe3TX50355Wo0/3gq4VNpuz16
-         +uv2w6OrjrkhHkwiP7yTApQVxYMRKeA8QtuIvPG6H0T76jkkJ8Ym03tuUtUfZfzWxpha
-         SjkaTytg9lzq5F+rG2CgSNNYTUmZnZc34fJ0H6PcFKlYzFsLeSWbAErHfztH9ZzcvN6o
-         Uj3Q==
-X-Gm-Message-State: AOAM532Pnm/BfjXbeAjdfwqVzPyuvx9VYehuJzeIzd5oClRFYX7hFqp6
-        pD9UiSkbrJJyWfwaWrWCn1w=
-X-Google-Smtp-Source: ABdhPJxAdKbk2Slr8krJZngWpET39lkBpC7eTCVqsa4rAT0jliM7i1u6rLkgRScRRu34oAa/h7lSFw==
-X-Received: by 2002:a17:902:c40c:: with SMTP id k12mr26647870plk.105.1593687322799;
-        Thu, 02 Jul 2020 03:55:22 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id z13sm8702393pfq.220.2020.07.02.03.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 03:55:22 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steve Glendinning <steve.glendinning@shawell.net>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 2/2] smsc9420: use generic power management
-Date:   Thu,  2 Jul 2020 16:23:51 +0530
-Message-Id: <20200702105351.363880-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702105351.363880-1-vaibhavgupta40@gmail.com>
-References: <20200702105351.363880-1-vaibhavgupta40@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=kKRrfxb90VfzoXGfhNPYe5HmgW3st+L4rXe9X50lhVE=;
+        b=gIQbyjBtIPnypwG8dcf0Wkh6ITFjTTWzZQQg6XeG0UH/XWoPqOFoWFv2E5Sn65yM7p
+         i+ONTg0gAwimrkcsmd8qr17hNtO8YcAM275Zi1Kw9YGea7tJg+XDHGAzUACRQy+UKhS/
+         GOohKyVt67H4CQo43ZIeTBFIweo4mswZ3YWim1M6O/mhjXDE8hvj9VWgFjBz5VhAyKTr
+         hY0TQt91u0pJx30MwFiEnGtpqULWf9eE3fffgqnpGmuY/yrrFqBHjaS9KExS4/fPyRwW
+         mEJcV/dZ5o3FzDiXAnhU8mMz4ZyI2EKyGnk5CJmuv6Yg0xtWCQsK5P6OTqSULc+6KAzU
+         sDJw==
+X-Gm-Message-State: AOAM533jZBCpbkjwBT1Gug1TgqsXEwHulSg6iBz0N3vc9yj8daX4Xkk/
+        buvp35ImAo77tlgJxl5J1dZppYi8
+X-Google-Smtp-Source: ABdhPJzdo/qQ2Z3Hfy5L+tGUBzoUfTRwMbyWzP0wyBFXT+6IRzG/dBG/3PUJwrvwJ689yjDxsm9qFQ==
+X-Received: by 2002:a05:651c:222:: with SMTP id z2mr614115ljn.395.1593687487828;
+        Thu, 02 Jul 2020 03:58:07 -0700 (PDT)
+Received: from smtp.gmail.com (95.108.174.193-red.dhcp.yndx.net. [95.108.174.193])
+        by smtp.gmail.com with ESMTPSA id n9sm3219097lfd.60.2020.07.02.03.58.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jul 2020 03:58:07 -0700 (PDT)
+From:   Dmitry Monakhov <dmonakhov@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        paolo.valente@linaro.org, Dmitry Monakhov <dmonakhov@gmail.com>
+Subject: [PATCH] bfq: fix blkio cgroup leakage
+Date:   Thu,  2 Jul 2020 10:57:51 +0000
+Message-Id: <20200702105751.20482-1-dmonakhov@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions.
+commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
+introduce leak forbfq_group and blkcg_gq objects because of get/put
+imbalance. See trace balow:
+-> blkg_alloc
+   -> bfq_pq_alloc
+     -> bfqg_get (+1)
+->bfq_activate_bfqq
+  ->bfq_activate_requeue_entity
+    -> __bfq_activate_entity
+       ->bfq_get_entity
+         ->bfqg_and_blkg_get (+1)  <==== : Note1
+->bfq_del_bfqq_busy
+  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
+    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
+      -> bfq_forget_entity(is_in_service = true)
+	 entity->on_st_or_in_serv = false   <=== :Note2
+	 if (is_in_service)
+	     return;  ==> do not touch reference
+-> blkcg_css_offline
+ -> blkcg_destroy_blkgs
+  -> blkg_destroy
+   -> bfq_pd_offline
+    -> __bfq_deactivate_entity
+         if (!entity->on_st_or_in_serv) /* true, because (Note2)
+		return false;
+ -> bfq_pd_free
+    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
+So bfq_group and blkcg_gq  will leak forever, see test-case below.
+If fact bfq_group objects reference counting are quite different
+from bfq_queue. bfq_groups object are referenced by blkcg_gq via
+blkg_policy_data pointer, so  neither nor blkg_get() neither bfqg_get
+required here.
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
 
-Compile-tested only.
+This patch drop commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
+and add corresponding comment.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+##TESTCASE_BEGIN:
+#!/bin/bash
+
+max_iters=${1:-100}
+#prep cgroup mounts
+mount -t tmpfs cgroup_root /sys/fs/cgroup
+mkdir /sys/fs/cgroup/blkio
+mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+
+# Prepare blkdev
+grep blkio /proc/cgroups
+truncate -s 1M img
+losetup /dev/loop0 img
+echo bfq > /sys/block/loop0/queue/scheduler
+
+grep blkio /proc/cgroups
+for ((i=0;i<max_iters;i++))
+do
+    mkdir -p /sys/fs/cgroup/blkio/a
+    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
+    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
+    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
+    rmdir /sys/fs/cgroup/blkio/a
+    grep blkio /proc/cgroups
+done
+##TESTCASE_END:
+
+Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
 ---
- drivers/net/ethernet/smsc/smsc9420.c | 39 +++++++---------------------
- 1 file changed, 10 insertions(+), 29 deletions(-)
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.h |  1 -
+ block/bfq-wf2q.c    | 15 +++++----------
+ 3 files changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/smsc/smsc9420.c b/drivers/net/ethernet/smsc/smsc9420.c
-index 7312e522c022..d07f509cb4c7 100644
---- a/drivers/net/ethernet/smsc/smsc9420.c
-+++ b/drivers/net/ethernet/smsc/smsc9420.c
-@@ -1422,11 +1422,9 @@ static int smsc9420_open(struct net_device *dev)
- 	return result;
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 68882b9..b791e20 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+ 		kfree(bfqg);
  }
  
--#ifdef CONFIG_PM
--
--static int smsc9420_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused smsc9420_suspend(struct device *dev_d)
+-void bfqg_and_blkg_get(struct bfq_group *bfqg)
++static void bfqg_and_blkg_get(struct bfq_group *bfqg)
  {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct smsc9420_pdata *pd = netdev_priv(dev);
- 	u32 int_cfg;
- 	ulong flags;
-@@ -1451,33 +1449,19 @@ static int smsc9420_suspend(struct pci_dev *pdev, pm_message_t state)
- 		netif_device_detach(dev);
- 	}
+ 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+ 	bfqg_get(bfqg);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index cd224aa..7038952 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -986,7 +986,6 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
+-void bfqg_and_blkg_get(struct bfq_group *bfqg);
+ void bfqg_and_blkg_put(struct bfq_group *bfqg);
  
--	pci_save_state(pdev);
--	pci_enable_wake(pdev, pci_choose_state(pdev, state), 0);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-+	device_wakeup_disable(dev_d);
- 
- 	return 0;
- }
- 
--static int smsc9420_resume(struct pci_dev *pdev)
-+static int __maybe_unused smsc9420_resume(struct device *dev_d)
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 34ad095..6a363bb 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -529,13 +529,14 @@ static void bfq_get_entity(struct bfq_entity *entity)
  {
--	struct net_device *dev = pci_get_drvdata(pdev);
--	struct smsc9420_pdata *pd = netdev_priv(dev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	int err;
+ 	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
  
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
--	err = pci_enable_device(pdev);
--	if (err)
--		return err;
-+	pci_set_master(to_pci_dev(dev_d));
- 
--	pci_set_master(pdev);
--
--	err = pci_enable_wake(pdev, PCI_D0, 0);
--	if (err)
--		netif_warn(pd, ifup, pd->dev, "pci_enable_wake failed: %d\n",
--			   err);
-+	device_wakeup_disable(dev_d);
- 
- 	if (netif_running(dev)) {
- 		/* FIXME: gross. It looks like ancient PM relic.*/
-@@ -1487,8 +1471,6 @@ static int smsc9420_resume(struct pci_dev *pdev)
- 	return err;
++	/* Grab reference only for bfq_queue's objects, bfq_group ones
++	 * are owned by blkcg_gq
++	 */
+ 	if (bfqq) {
+ 		bfqq->ref++;
+ 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+ 			     bfqq, bfqq->ref);
+-	} else
+-		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
+-					       entity));
++	}
  }
  
--#endif /* CONFIG_PM */
+ /**
+@@ -649,14 +650,8 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 
+ 	entity->on_st_or_in_serv = false;
+ 	st->wsum -= entity->weight;
+-	if (is_in_service)
+-		return;
 -
- static const struct net_device_ops smsc9420_netdev_ops = {
- 	.ndo_open		= smsc9420_open,
- 	.ndo_stop		= smsc9420_stop,
-@@ -1658,15 +1640,14 @@ static void smsc9420_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
+-	if (bfqq)
++	if (bfqq && !is_in_service)
+ 		bfq_put_queue(bfqq);
+-	else
+-		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
+-					       entity));
  }
  
-+static SIMPLE_DEV_PM_OPS(smsc9420_pm_ops, smsc9420_suspend, smsc9420_resume);
-+
- static struct pci_driver smsc9420_driver = {
- 	.name = DRV_NAME,
- 	.id_table = smsc9420_id_table,
- 	.probe = smsc9420_probe,
- 	.remove = smsc9420_remove,
--#ifdef CONFIG_PM
--	.suspend = smsc9420_suspend,
--	.resume = smsc9420_resume,
--#endif /* CONFIG_PM */
-+	.driver.pm = &smsc9420_pm_ops,
- };
- 
- static int __init smsc9420_init_module(void)
+ /**
 -- 
-2.27.0
+2.7.4
 
