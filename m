@@ -2,49 +2,52 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BBCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E695BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C9E20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BE120720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgGBRJC (ORCPT
+        id S1727823AbgGBRJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:09:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38697 "EHLO mga12.intel.com"
+        Thu, 2 Jul 2020 13:09:05 -0400
+Received: from mga12.intel.com ([192.55.52.136]:38710 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgGBRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:09:01 -0400
-IronPort-SDR: JiIodZ9+PZ7x9p+3DprbN3m4cIH9NA+xr3mh0BWP0vSg7LcNAvGkVUfoxEM7QPAFmSnxOLi2zq
- sUudJJ4aN9+g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126587451"
+        id S1726297AbgGBRJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:09:02 -0400
+IronPort-SDR: +KK7p1tkNxgpf5luRU2WQWXz6WFTk/Q9kk/kySoWImA2qqumGxniry9YNDpdo6F3QgM5HlhByL
+ PSHYnHliF2Kw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126587471"
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="126587451"
+   d="scan'208";a="126587471"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 10:08:55 -0700
-IronPort-SDR: CzVd/meu4IuQuwDBFokF2ceUZ0Ui0Yp+W2oDGmlqxIr7ZYbWJNuUZOaXEbz0kmIV9LGqyZ1Kbn
- 1zgv8RWANSoA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 10:08:58 -0700
+IronPort-SDR: p8FzhZu5/WmN7nevKDHLA8328vkrXsitogdQX6dhYQ0KsuInUWUe6zpg18lJVHQaVRInRU+kbo
+ dH0slAwiBvqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="481763168"
+   d="scan'208";a="481763195"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 10:08:54 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 10:08:57 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, bhelgaas@google.com, mingo@redhat.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     jeffrey.t.kirsher@intel.com, olof@lixom.net,
         dan.j.williams@intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 0/7] Support PCIe3 uncore PMU on Snow Ridge
-Date:   Thu,  2 Jul 2020 10:05:10 -0700
-Message-Id: <1593709517-108857-1-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 2/7] perf/x86/intel/uncore: Factor out uncore_pci_get_die_info()
+Date:   Thu,  2 Jul 2020 10:05:12 -0700
+Message-Id: <1593709517-108857-3-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593709517-108857-1-git-send-email-kan.liang@linux.intel.com>
+References: <1593709517-108857-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,58 +55,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The Snow Ridge integrated PCIe3 uncore performance monitoring unit (PMU)
-can be used to collect the performance data, e.g., the utilization
-between the PCIe devices and the components (in M2IOSF) which are
-responsible for translating and managing the requests to/from the
-device. The performance data is very useful for analyzing the
-performance of the PCIe devices.
+The socket and die information is required when probing the platform
+device.
 
-The PCIe3 uncore PMU was once supported in the Linux kernel, but it was
-removed by the commit id 2167f1625c2f ("perf/x86/intel/uncore: Remove
-PCIe3 unit for SNR") due to the conflict between the PCIe Root Port
-driver and the perf uncore driver. The counters of the PCIe3 uncore PMU
-are located in the configuration space of the PCIe Root Port device,
-which already has a bonded driver portdrv_pci. One device can only have
-one bonded driver. The uncore driver is always failed to be loaded.
+Factor out the codes to get the socket and die information from a BUS
+number into a separate function. The function will be used later.
 
-To re-enable the PCIe3 uncore PMU support in the uncore driver, a new
-solution should be introduced, which has to meet the requirements as
-below:
-- must have a reliable way to find the PCIe Root Port device from the
-  uncore driver;
-- must be able to access the uncore counters of the PCIe Root Port
-  device from the uncore driver;
-- must support hotplug. When the PCIe Root Port device is removed, the
-  uncore driver has to be notified and unregisters the PCIe3 uncore
-  PMU.
+There is no functional change.
 
-A new platform device 'perf_uncore_pcieport' as a child device of the
-PCIe Root Port device is introduced to address the issue, which:
-- can be probed by a unique name, 'perf_uncore_pcieport'. The uncore
-  driver is the only driver for the new platform device.
-- can provide the struct pci_dev of its parent, aka the PCIe Root Port
-  device. The struct pci_dev can be used by the uncore driver to
-  register a PMU for accessing the counters in the PCIe Root Port
-  device.
-- can be notified if its parent PCIe Root Port device is removed.
-  The uncore driver can unregister the PMU accordingly.
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/intel/uncore.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-Kan Liang (7):
-  PCI/portdrv: Create a platform device for the perf uncore driver
-  perf/x86/intel/uncore: Factor out uncore_pci_get_die_info()
-  perf/x86/intel/uncore: Factor out uncore_find_pmu_by_pci_dev()
-  perf/x86/intel/uncore: Factor out uncore_pci_pmu_register()
-  perf/x86/intel/uncore: Factor out uncore_pci_pmu_unregister()
-  perf/x86/intel/uncore: Generic support for the platform device
-  perf/x86/intel/uncore: Support PCIe3 unit on Snow Ridge
-
- arch/x86/events/intel/uncore.c       | 213 +++++++++++++++++++++++++----------
- arch/x86/events/intel/uncore.h       |  19 ++++
- arch/x86/events/intel/uncore_snbep.c |  60 ++++++++++
- drivers/pci/pcie/portdrv_pci.c       |  38 +++++++
- 4 files changed, 271 insertions(+), 59 deletions(-)
-
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index d5c6d3b..0651ab7 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -988,6 +988,20 @@ uncore_types_init(struct intel_uncore_type **types, bool setid)
+ 	return 0;
+ }
+ 
++static int uncore_pci_get_die_info(struct pci_dev *pdev,
++				   int *phys_id, int *die)
++{
++	*phys_id = uncore_pcibus_to_physid(pdev->bus);
++	if (*phys_id < 0)
++		return -ENODEV;
++
++	*die = (topology_max_die_per_package() > 1) ? *phys_id :
++				topology_phys_to_logical_pkg(*phys_id);
++	if (*die < 0)
++		return -EINVAL;
++
++	return 0;
++}
+ /*
+  * add a pci uncore device
+  */
+@@ -998,14 +1012,9 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	struct intel_uncore_box *box;
+ 	int phys_id, die, ret;
+ 
+-	phys_id = uncore_pcibus_to_physid(pdev->bus);
+-	if (phys_id < 0)
+-		return -ENODEV;
+-
+-	die = (topology_max_die_per_package() > 1) ? phys_id :
+-					topology_phys_to_logical_pkg(phys_id);
+-	if (die < 0)
+-		return -EINVAL;
++	ret = uncore_pci_get_die_info(pdev, &phys_id, &die);
++	if (ret)
++		return ret;
+ 
+ 	if (UNCORE_PCI_DEV_TYPE(id->driver_data) == UNCORE_EXTRA_PCI_DEV) {
+ 		int idx = UNCORE_PCI_DEV_IDX(id->driver_data);
 -- 
 2.7.4
 
