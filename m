@@ -2,118 +2,117 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4040C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB03C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B912083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593657774;
-	bh=DhUcWSC96FEQw4xwxDy4zXC0QqBUfHK/Nz9yf9s1acc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1lqGYUxSbDXA6N8tu97P2AMgDZlM7lSVD/fFRvk4pCFcix+C4NSax/7xiwEEfZAed
-	 DB2RxIvYc/zOQOR8tjawhCZs7+nrgQqboTXbdFsuFp579vVSOM5Jr+t+/fH7rs7z6d
-	 zBMBEFu97vI0UPDef70z8g8X0+FKdcxpmQVZe4NA=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9092083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+p15q+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGBCmx (ORCPT
+        id S1726800AbgGBCoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 22:42:53 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:35206 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgGBCmw (ORCPT
+        Wed, 1 Jul 2020 22:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgGBCoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 22:42:52 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0622gTPN016475;
-        Thu, 2 Jul 2020 11:42:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0622gTPN016475
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593657750;
-        bh=mDVif8MiOGCjLLlZ8k21oCwqqxD9Plyy3x2UlM47NDM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mPwKLGhQ2fosA/zx9ft3qDN9ZYBXwYdIhqOK74QH+1I4Aqo5ioqzgVxKApQ5CQIv4
-         sUyyPu4qK0o7EywlHvEkcPYoLawgLgoO6WE6Q9s72mYXSNH3USJULCWuyF/guZi7P2
-         AgezzD9N3jkpeNo8c2upA0py5HI29+OFFPI7qplbuWHrbNzloUNRx+dEWcFpma+gOh
-         +da6p4qnN04oyJqusFpJHWHam5gGadlsp2OtRmWAcmpy7DClvENC/8Hzoou5YswA8Z
-         twLps9kM2P6CZYyg5bC1b9v05X0hdj6pXtz7CV6tZK6VbClTfGtMn/hBrBWS3iXg31
-         011qrQ9SHW8qg==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id 64so8194802vsl.3;
-        Wed, 01 Jul 2020 19:42:30 -0700 (PDT)
-X-Gm-Message-State: AOAM532JhHXD5yuSAAM7Pq99bgb0SGiJYTYvtzG2hoFDUxr8OvGBS6WO
-        twgztORL24rIusJhUafPSV1VknHxQ2jFsvGmrh4=
-X-Google-Smtp-Source: ABdhPJwgdLfTp8ApgAzTWHhd+PoMDRZpPwRvMlt9tqC0CraL525IFfWskW5GLpHlUALcpvZ1CCpFRjSMX+TG2K5nJIM=
-X-Received: by 2002:a67:694d:: with SMTP id e74mr22283923vsc.155.1593657749034;
- Wed, 01 Jul 2020 19:42:29 -0700 (PDT)
+        Wed, 1 Jul 2020 22:44:22 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5626C08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 19:44:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id p1so1419351pls.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=isbOQd2LXqwGe2XN0v2Rojr+1zs/7ikiY6hJeRf2GTI=;
+        b=G+p15q+UuPQNWHWqucs1rYYMutVsji8peFDbApoyy1FGnP1H6aEfT1xCUCwIQpco32
+         3oSrVqU5wQZIYJ0dhrXAbV3UB+jigBuUhKq1r986X+Ca2h0TtTGowGkCp2qBty7AzL2s
+         SyP7d4DdbDJzxPmeVnXWNOZVrU8dphNb3KjC9pQDTsey7ANzmV9rQZ+zpBARkA/iGrfE
+         Xr1KoWZr8+YZ0d9KHTYglvu7UV8y6xP5gDpmS+FTiIq5LiEZLH3E9rH9Pi6r+QjyOqB+
+         tgYg3Caxwujlck4Zhvh0GpyErSicwsTELHrH4uyYLkyQMiK0ks+hUph51yX1m9In05eK
+         kW8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=isbOQd2LXqwGe2XN0v2Rojr+1zs/7ikiY6hJeRf2GTI=;
+        b=Sv/TuQ/ZwACmfhuN52rEkL8tS7HgIun5VBtiZgPZs50TJCf+MaK7PK5eo/SBknLLZ1
+         /eYexbgmsL2I2/faFjEyesj8XSUeiyKLQWZOHiVBkVjEn1Cz95gynQ7RQow34Y9pREz0
+         QGpdfNOIsgSpSRyXXemn+e5GpfaAn7UWvKb43hNbOksGTWAzUU7vfE5xvUXae9JEOGyE
+         /ChQHKTWEclr5fMulGkOl6o9FeScE+DaH9xzx1EjxO1wOTppM8/4TE41O6HSrSv3nasA
+         Pe2xidhjDZZSe/Vl6ud6oD9IKjzZvzN6hHc4kZlUmuFm0TyY1Zyb4WvqlyI4qqzLjNpD
+         u0kg==
+X-Gm-Message-State: AOAM532nUjLMlliVKt7NKREJ5GXaUqSBMXOoVJtzikuG6rjje9cNPEqf
+        f94vv86/qeSwRYDGIQTm4ir73hlvbes=
+X-Google-Smtp-Source: ABdhPJyJU07M66YziF91QRH1/LMXAx/FTAxftvnXR+Z1169X1189zk4H4aPpwxzhbmmIqGfdCr4cxQ==
+X-Received: by 2002:a17:90a:2048:: with SMTP id n66mr8924797pjc.71.1593657860287;
+        Wed, 01 Jul 2020 19:44:20 -0700 (PDT)
+Received: from localhost ([223.235.247.110])
+        by smtp.gmail.com with ESMTPSA id 2sm7199723pfa.110.2020.07.01.19.44.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jul 2020 19:44:19 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:14:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: ARMADA_AP_CPU_CLK needs to select
+ ARMADA_AP_CP_HELPER
+Message-ID: <20200702024417.ot2llwnwkfjohjcs@vireshk-i7>
+References: <20200701201128.2448427-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <20200701192936.1397152-1-masahiroy@kernel.org> <CAMo8Bf+w2ikVxEJecE_DpAbBQFNhY=K1jWpg9y4uDw9jEb5=MQ@mail.gmail.com>
-In-Reply-To: <CAMo8Bf+w2ikVxEJecE_DpAbBQFNhY=K1jWpg9y4uDw9jEb5=MQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 2 Jul 2020 11:41:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ6SdeWvXj7nNtzMBN2E-s4PmGg6gj7OZHug2_TBKTg1w@mail.gmail.com>
-Message-ID: <CAK7LNAQ6SdeWvXj7nNtzMBN2E-s4PmGg6gj7OZHug2_TBKTg1w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: do not export LDFLAGS_vmlinux
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Guan Xuetao <gxt@pku.edu.cn>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701201128.2448427-1-natechancellor@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 5:14 AM Max Filippov <jcmvbkbc@gmail.com> wrote:
->
-> On Wed, Jul 1, 2020 at 12:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> [...]
->
-> > diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-> > index 12ae1e91cb75..c6538d3321b9 100644
-> > --- a/arch/xtensa/boot/boot-elf/Makefile
-> > +++ b/arch/xtensa/boot/boot-elf/Makefile
-> > @@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
-> >                 $(OBJS) $@
-> >
-> >  $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
-> > -       $(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
-> > +       $(LD) $(KBUILD_LDFLAGS) \
->
-> Can that $(Q) be retained, please?
-> The rest LGTM.
+On 01-07-20, 13:11, Nathan Chancellor wrote:
+> When building arm32 allmodconfig:
+> 
+> ld.lld: error: undefined symbol: ap_cp_unique_name
+> >>> referenced by ap-cpu-clk.c
+> >>>               clk/mvebu/ap-cpu-clk.o:(ap_cpu_clock_probe) in archive drivers/built-in.a
+> 
+> ap_cp_unique_name is only compiled into the kernel image when
+> CONFIG_ARMADA_AP_CP_HELPER is selected (as it is not user selectable).
+> However, CONFIG_ARMADA_AP_CPU_CLK does not select it.
+> 
+> This has been a problem since the driver was added to the kernel but it
+> was not built before commit c318ea261749 ("cpufreq: ap806: fix cpufreq
+> driver needs ap cpu clk") so it was never noticed.
+> 
+> Fixes: f756e362d938 ("clk: mvebu: add CPU clock driver for Armada 7K/8K")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+> I do not know who should actually take this patch since the problematic
+> patch is on Viresh's cpufreq/arm/linux-next
 
+That patch just enabled the config option and I have picked it up for
+5.9.
 
-Oops, I temporarily deleted $(Q) for debugging,
-then accidentally committed it.
+> but the problem originated
+> from a patch in the clk tree in 5.4. I assume all that would be needed
+> is a clk maintainer's ack? Please let me know if I did something wrong.
 
-I will restore $(Q) when this patch is applied.
-
-Thanks.
-
-
-
-
-
-> >                 -T $(obj)/boot.lds \
-> >                 --build-id=none \
-> >                 -o $@ $(obj)/Image.o
->
-> --
-> Thanks.
-> -- Max
-
-
+This patch should go through clk tree and get pushed for 5.8 if
+possible (which makes sense as well).
 
 -- 
-Best Regards
-Masahiro Yamada
+viresh
