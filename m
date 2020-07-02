@@ -2,136 +2,196 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE98C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1964C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86EC20781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEC5206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtIkoZAR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVKTZdZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgGBC6W (ORCPT
+        id S1726759AbgGBC7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 22:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGBC6V (ORCPT
+        Wed, 1 Jul 2020 22:59:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41218 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726187AbgGBC7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 22:58:21 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82628C08C5DB
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 19:58:21 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so12752631pgq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:58:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T8E2WLP76UAor8xyXwaGyeONvKVqPzozF3LQH+sB25g=;
-        b=XtIkoZARBOOxbFgd0psranRYed5UO5Ohw7Nqe6Bo4BHy8xLmycgS8rT3VKuJglyBl1
-         OqfUjPceX+p4nMczyVNpTmtES0rWxBM2kOhz8k2BEKSy4Y2yslLmtx2rQwTmgvc8iCBz
-         jVaadwMvRIbdAkCwvC2tU7XFvNT9I6B3Pts4Kdaw2HFcxFk66kcrTqLLbi/ez4Fte+Ud
-         XJ82xmXu/Xu5yZlintdAeQv81OekuVCa4IiJ8npmgDiMF7RJgyPpEk/ICclIlgx3O3ZS
-         UvKbIhfVjR5GFdW5TEEJoY7xqSVHqcuHa3nBiM/xX4ih5+Obfvz7hA1sLaQaKbIEUKOj
-         LGCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T8E2WLP76UAor8xyXwaGyeONvKVqPzozF3LQH+sB25g=;
-        b=JG9Q3C/nDX3GC0NWhfPamoDV/lWyDbf+kxcpyZq11qyv9c5zfEVaRzVBGXfHXPH2qK
-         DkBFfqBWFf+mwaOyCU7b9rgzK8PBpKzwyfdtlp1j4EIFEHLcQUaouq1CSJZJbdpEBW/F
-         cdt8PzaRdg9CiIj7xanWyR/Zep+B1fn1C3gS7wnAStc//4us3sVeL24lWr8fAy8eNfrm
-         qlKetGlQo40r2OQ2lCRmfH/pZ8H3zijr+c2bGv+9rRmDpyR/oOPuxOrVx1zZPhUZ8q8U
-         h8vQKSC/QF86TBNIS3xsVDcUcjviOFdTAiXaODjlAt3kiuSAE/NtITpaNkf1kOHYXelj
-         r7wQ==
-X-Gm-Message-State: AOAM5311nvmRgJqHxvqqEGNDTq4HyEEYpCAr1SZRkwXsERKwmFWUJy1k
-        6BRsFsYbp4gYpuevCrHbtP3y9A==
-X-Google-Smtp-Source: ABdhPJyKZTp5tmDq4Zq7ijoSaWuh2H5kvp93fGeQNGNbfqzUu+TQxqaDaNYLDI0kO4mP4uhmzIQvlQ==
-X-Received: by 2002:a63:79c2:: with SMTP id u185mr21742987pgc.84.1593658700948;
-        Wed, 01 Jul 2020 19:58:20 -0700 (PDT)
-Received: from localhost ([223.235.247.110])
-        by smtp.gmail.com with ESMTPSA id f131sm7271323pgc.14.2020.07.01.19.58.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jul 2020 19:58:20 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:28:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
- freq invariance
-Message-ID: <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-2-ionela.voinescu@arm.com>
- <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
- <20200701133330.GA32736@arm.com>
- <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
+        Wed, 1 Jul 2020 22:59:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593658784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEK6R9G90/zOz77+9pwzvG2TS0PXah5aDKU36HLvoW0=;
+        b=GVKTZdZH8QWBzhPMA8WzqWQ88jZnkPum+9QaZy/DmroXnaWIpLU/QnxPAF5SdxkSELk4n7
+        OvJmdcKQx+87uJZ/q/HUWL3tIHKIVWEnNx/LZMHLZfVh9jCnq3IK6CjcV0WF/tN9ADe5Z8
+        ZI3GIG84tS1y4NP9tVRxSD9i57iVYw8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460-6iw7E02ENVGj0BTBZ93pYQ-1; Wed, 01 Jul 2020 22:59:41 -0400
+X-MC-Unique: 6iw7E02ENVGj0BTBZ93pYQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75871107ACCD;
+        Thu,  2 Jul 2020 02:59:38 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-96.pek2.redhat.com [10.72.13.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E86260BE1;
+        Thu,  2 Jul 2020 02:59:29 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 10:59:26 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bhe@redhat.com,
+        catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com,
+        robh+dt@kernel.org, arnd@arndb.de, John.P.donnelly@oracle.com,
+        prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de, corbet@lwn.net,
+        bhsharma@redhat.com, horms@verge.net.au, xiexiuqi@huawei.com,
+        linux-doc@vger.kernel.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, huawei.libin@huawei.com,
+        guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v9 5/5] kdump: update Documentation about crashkernel on
+ arm64
+Message-ID: <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
+References: <20200628083458.40066-1-chenzhou10@huawei.com>
+ <20200628083458.40066-6-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200628083458.40066-6-chenzhou10@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-07-20, 18:05, Rafael J. Wysocki wrote:
-> On Wed, Jul 1, 2020 at 3:33 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
-> > On Wednesday 01 Jul 2020 at 16:16:17 (+0530), Viresh Kumar wrote:
-> > > I will rather suggest CPUFREQ_SKIP_SET_FREQ_SCALE as the name and
-> > > functionality. We need to give drivers a choice if they do not want
-> > > the core to do it on their behalf, because they are doing it on their
-> > > own or they don't want to do it.
+Hi Chen,
+On 06/28/20 at 04:34pm, Chen Zhou wrote:
+> Now we support crashkernel=X,[low] on arm64, update the Documentation.
+> We could use parameters "crashkernel=X crashkernel=Y,low" to reserve
+> memory above 4G.
 > 
-> Well, this would go backwards to me, as we seem to be designing an
-> opt-out flag for something that's not even implemented already.
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
+>  Documentation/admin-guide/kernel-parameters.txt | 17 +++++++++++++++--
+>  2 files changed, 26 insertions(+), 4 deletions(-)
 > 
-> I would go for an opt-in instead.  That would be much cleaner and less
-> prone to regressions IMO.
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 2da65fef2a1c..6ba294d425c9 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -299,7 +299,13 @@ Boot into System Kernel
+>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+>  
+> -   On x86 and x86_64, use "crashkernel=64M@16M".
+> +   On x86 use "crashkernel=64M@16M".
+> +
+> +   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
+> +   fall back to reserve region above 4G when '@offset' hasn't been specified.
 
-That's fine, I just wanted an option for drivers to opt-out of this
-thing. I felt okay with the opt-out flag as this should be enabled for
-most of the drivers and so enabling by default looked okay as well.
+Actually crashkernel=Y without the offset works well, I do not see why
+we need the offset, it should be some legacy thing.  So it should be
+better just use the Y without offset here, and just leave a note
+somewhere people can use [@X] offset when they really have to.
 
-> > In this case we would not be able to tell if cpufreq (driver or core)
-> > can provide the frequency scale factor, so we would not be able to tell
-> > if the system is really frequency invariant; CPUFREQ_SKIP_SET_FREQ_SCALE
+> +   We can also use "crashkernel=X,high" to select a region above 4G, which
+> +   also tries to allocate at least 256M below 4G automatically and
+> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+>  
+>     On ppc64, use "crashkernel=128M@32M".
+>  
+> @@ -316,8 +322,11 @@ Boot into System Kernel
+>     kernel will automatically locate the crash kernel image within the
+>     first 512MB of RAM if X is not given.
+>  
+> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+> +   On arm64, use "crashkernel=Y[@X]". Note that the start address of
+>     the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+> +   If crashkernel=Z,low is specified simultaneously, reserve spcified size
+> +   low memory for crash kdump kernel devices firstly and then reserve memory
 
-That is easy to fix. Let the drivers call
-enable_cpufreq_freq_invariance() and set the flag.
+"devices" seems not very accurate, maybe just drop the "for crash kdump
+kernel devices" since it is clear based on the context.
 
-> > would be set if either:
-> >  - the driver calls arch_set_freq_scale() on its own
-> >  - the driver does not want arch_set_freq_scale() to be called.
-> >
-> > So at the core level we would not be able to distinguish between the
-> > two, and return whether cpufreq-based invariance is supported.
-> >
-> > I don't really see a reason why a driver would not want to set the
-> > frequency scale factor
+> +   above 4G.
+>  
+>  Load the Dump-capture Kernel
+>  ============================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index fb95fad81c79..335431a351c0 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -722,6 +722,9 @@
+>  			[KNL, x86_64] select a region under 4G first, and
+>  			fall back to reserve region above 4G when '@offset'
+>  			hasn't been specified.
+> +			[KNL, arm64] If crashkernel=X,low is specified, reserve
+> +			spcified size low memory for crash kdump kernel devices
 
-A simple case where the driver doesn't have any idea what the real
-freq of the CPU is and it doesn't have counters to guess it as well.
+Ditto.
 
-There can be other reasons which we aren't able to imagine at this
-point of time.
+> +			firstly, and then reserve memory above 4G.
+>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+>  
+>  	crashkernel=range1:size1[,range2:size2,...][@offset]
+> @@ -746,13 +749,23 @@
+>  			requires at least 64M+32K low memory, also enough extra
+>  			low memory is needed to make sure DMA buffers for 32-bit
+>  			devices won't run out. Kernel would try to allocate at
+> -			at least 256M below 4G automatically.
+> +			least 256M below 4G automatically.
+>  			This one let user to specify own low range under 4G
+>  			for second kernel instead.
+>  			0: to disable low allocation.
+>  			It will be ignored when crashkernel=X,high is not used
+>  			or memory reserved is below 4G.
+> -
+> +			[KNL, arm64] range under 4G.
+> +			This one let user to specify own low range under 4G
+> +			for crash dump kernel instead.
+> +			Different with x86_64, kernel allocates specified size
 
--- 
-viresh
+sounds better:
+s/Different with/Be different from
+
+s/allocates/reserves
+
+> +			physical memory region only when this parameter is specified
+> +			instead of trying to allocate at least 256M below 4G
+
+s/allocate/reserve
+
+> +			automatically.
+> +			This parameter is used along with crashkernel=X when we
+
+Could change the passive sentence to below:
+"Use this parameter along with"
+
+> +			want to reserve crashkernel above 4G. If there are devices
+> +			need to use ZONE_DMA in crash dump kernel, it is also
+> +			a good choice.
+>  	cryptomgr.notests
+>  			[KNL] Disable crypto self-tests
+>  
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+Thanks
+Dave
+
