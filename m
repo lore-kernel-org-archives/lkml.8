@@ -2,236 +2,193 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71700C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD11C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5479122200
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B19221E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CFHRBkvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgGBTWN (ORCPT
+        id S1726251AbgGBTW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:22:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9166 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgGBTWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:22:05 -0400
-IronPort-SDR: FZ5j6TC5pU5KazRgR/h/MBDARpKGcDm2acG6sk+yLvLxjL97epnDArDafgluNT3qUeRMLrJMGx
- rM3LLgagfUXA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="146092713"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="146092713"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:22:02 -0700
-IronPort-SDR: VC72ixVpyhh/fzeRMmVEKwl5TjkPN9T8Gz6Ihijn5Ym4BmvGMVKt/JyIvDAMZIjI26KDBZluLx
- TXWvphkw/aQQ==
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="304345329"
-Received: from dhprice-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.75.219])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:22:01 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linuxppc-dev@lists.ozlabs.org (open list:FREESCALE SOC SOUND DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 5/6] ASoC: fsl: fsl_asrc: fix kernel-doc
-Date:   Thu,  2 Jul 2020 14:21:40 -0500
-Message-Id: <20200702192141.168018-6-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702192141.168018-1-pierre-louis.bossart@linux.intel.com>
-References: <20200702192141.168018-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 2 Jul 2020 15:22:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31818 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726072AbgGBTW3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:22:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593717747;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wow0Ygu65peLja/h/OTF4fc7jwjBqgs+uK8UVoodCFw=;
+        b=CFHRBkvVWPm4Z15JWbOvOmsFErwENDVi5yzNrQbhqpIK97fttnbgd6x56ATtmMkDAq+qQZ
+        oDtBy1vxwviQtJiYV1iBElajW8qRApZUuVtc9zVkrkNpxcNZ3NN51d8V/OFDwW24Ko8N8j
+        uFtoV1pWJQm4s44kIDQf8jDbeW1NB/0=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-8wiLaduXNKCNbuMemedVyw-1; Thu, 02 Jul 2020 15:22:21 -0400
+X-MC-Unique: 8wiLaduXNKCNbuMemedVyw-1
+Received: by mail-qt1-f198.google.com with SMTP id z26so1585613qto.15
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 12:22:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wow0Ygu65peLja/h/OTF4fc7jwjBqgs+uK8UVoodCFw=;
+        b=fc4wLKnqqwvQV46qytyoulm7yZcStep+PrCDUi3tIEIMsWBN0wSlcc2UXC0SBe8BgU
+         XfGLkMpN2aNU6o1XQlaqXezXrn5taCdWn8Z0CbJkCOwZbPbUNflBJzf0HmRae9olZ+dq
+         5uGPY5vSmKFH/1hBGfCbTWbDwXdpO0d1pCGUXwyXEzAJgi688oSRF7lx2rXFwYnWkQyu
+         j0fqKs0MBMHM/PcKvbP4p4R2PFHfxtASsAniiy60XtdJbsGhP9eYIaOsVpi2q6VQEt/B
+         ixMSCUwfC7PsPGutPKUxg3HsyRymvYdcl/VL249HKiNK6OqobzJ4f3gSsIIxX3fym7gw
+         fUSw==
+X-Gm-Message-State: AOAM5330ZSboWPhjTAx4E6UnnYK+lzvGrhaxJloe+IQXxI+NcUpDMW7Q
+        XOEl35M3mJovcJjSvFDjXVntcVlSkfKRwnSKlbIDj4kic7Up7N8xjMezGNITbW7iMWhhucYydeb
+        iYLLyoEsXNRID1ZuYsll7g9RxLW2zKqFpv/J+S5RO
+X-Received: by 2002:ac8:429b:: with SMTP id o27mr21653197qtl.124.1593717740702;
+        Thu, 02 Jul 2020 12:22:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxT/Yz66Mm2DZnNpTLY1kn5bds91N12gXuAl8xcrffYobR0MkCqmKoDHO8iv5NQ7rsNdb5NF+5YXp8MRlwfnAI=
+X-Received: by 2002:ac8:429b:: with SMTP id o27mr21653164qtl.124.1593717740325;
+ Thu, 02 Jul 2020 12:22:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ <1593641660-13254-3-git-send-email-bhsharma@redhat.com> <20200702075001.GA16113@willie-the-truck>
+In-Reply-To: <20200702075001.GA16113@willie-the-truck>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Fri, 3 Jul 2020 00:52:08 +0530
+Message-ID: <CACi5LpPn4QUjC692G=5UxLchpi+ZL+xFCcxqLbFvgvvcso28ww@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: Allocate crashkernel always in ZONE_DMA
+To:     Will Deacon <will@kernel.org>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix W=1 warnings. fix kernel doc and describe arguments.
+Hi Will,
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- sound/soc/fsl/fsl_asrc.c | 57 +++++++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+On Thu, Jul 2, 2020 at 1:20 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Thu, Jul 02, 2020 at 03:44:20AM +0530, Bhupesh Sharma wrote:
+> > commit bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in
+> > ZONE_DMA32") allocates crashkernel for arm64 in the ZONE_DMA32.
+> >
+> > However as reported by Prabhakar, this breaks kdump kernel booting in
+> > ThunderX2 like arm64 systems. I have noticed this on another ampere
+> > arm64 machine. The OOM log in the kdump kernel looks like this:
+> >
+> >   [    0.240552] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+> >   [    0.247713] swapper/0: page allocation failure: order:1, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+> >   <..snip..>
+> >   [    0.274706] Call trace:
+> >   [    0.277170]  dump_backtrace+0x0/0x208
+> >   [    0.280863]  show_stack+0x1c/0x28
+> >   [    0.284207]  dump_stack+0xc4/0x10c
+> >   [    0.287638]  warn_alloc+0x104/0x170
+> >   [    0.291156]  __alloc_pages_slowpath.constprop.106+0xb08/0xb48
+> >   [    0.296958]  __alloc_pages_nodemask+0x2ac/0x2f8
+> >   [    0.301530]  alloc_page_interleave+0x20/0x90
+> >   [    0.305839]  alloc_pages_current+0xdc/0xf8
+> >   [    0.309972]  atomic_pool_expand+0x60/0x210
+> >   [    0.314108]  __dma_atomic_pool_init+0x50/0xa4
+> >   [    0.318504]  dma_atomic_pool_init+0xac/0x158
+> >   [    0.322813]  do_one_initcall+0x50/0x218
+> >   [    0.326684]  kernel_init_freeable+0x22c/0x2d0
+> >   [    0.331083]  kernel_init+0x18/0x110
+> >   [    0.334600]  ret_from_fork+0x10/0x18
+> >
+> > This patch limits the crashkernel allocation to the first 1GB of
+> > the RAM accessible (ZONE_DMA), as otherwise we might run into OOM
+> > issues when crashkernel is executed, as it might have been originally
+> > allocated from either a ZONE_DMA32 memory or mixture of memory chunks
+> > belonging to both ZONE_DMA and ZONE_DMA32.
+>
+> How does this interact with this ongoing series:
+>
+> https://lore.kernel.org/r/20200628083458.40066-1-chenzhou10@huawei.com
+>
+> (patch 4, in particular)
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 462ce9f9ab48..02c81d2e34ad 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -37,7 +37,7 @@ static struct snd_pcm_hw_constraint_list fsl_asrc_rate_constraints = {
- 	.list = supported_asrc_rate,
- };
- 
--/**
-+/*
-  * The following tables map the relationship between asrc_inclk/asrc_outclk in
-  * fsl_asrc.h and the registers of ASRCSR
-  */
-@@ -68,7 +68,7 @@ static unsigned char output_clk_map_imx53[ASRC_CLK_MAP_LEN] = {
- 	0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7, 0x7,
- };
- 
--/**
-+/*
-  * i.MX8QM/i.MX8QXP uses the same map for input and output.
-  * clk_map_imx8qm[0] is for i.MX8QM asrc0
-  * clk_map_imx8qm[1] is for i.MX8QM asrc1
-@@ -102,16 +102,17 @@ static unsigned char clk_map_imx8qxp[2][ASRC_CLK_MAP_LEN] = {
- };
- 
- /**
-- * Select the pre-processing and post-processing options
-+ * fsl_asrc_sel_proc - Select the pre-processing and post-processing options
-+ * @inrate: input sample rate
-+ * @outrate: output sample rate
-+ * @pre_proc: return value for pre-processing option
-+ * @post_proc: return value for post-processing option
-+ *
-  * Make sure to exclude following unsupported cases before
-  * calling this function:
-  * 1) inrate > 8.125 * outrate
-  * 2) inrate > 16.125 * outrate
-  *
-- * inrate: input sample rate
-- * outrate: output sample rate
-- * pre_proc: return value for pre-processing option
-- * post_proc: return value for post-processing option
-  */
- static void fsl_asrc_sel_proc(int inrate, int outrate,
- 			     int *pre_proc, int *post_proc)
-@@ -148,7 +149,9 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
- }
- 
- /**
-- * Request ASRC pair
-+ * fsl_asrc_request_pair - Request ASRC pair
-+ * @channels: number of channels
-+ * @pair: pointer to pair
-  *
-  * It assigns pair by the order of A->C->B because allocation of pair B,
-  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
-@@ -193,7 +196,8 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
- }
- 
- /**
-- * Release ASRC pair
-+ * fsl_asrc_release_pair - Release ASRC pair
-+ * @pair: pair to release
-  *
-  * It clears the resource from asrc and releases the occupied channels.
-  */
-@@ -217,7 +221,10 @@ static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
- }
- 
- /**
-- * Configure input and output thresholds
-+ * fsl_asrc_set_watermarks- configure input and output thresholds
-+ * @pair: pointer to pair
-+ * @in: input threshold
-+ * @out: output threshold
-  */
- static void fsl_asrc_set_watermarks(struct fsl_asrc_pair *pair, u32 in, u32 out)
- {
-@@ -234,7 +241,9 @@ static void fsl_asrc_set_watermarks(struct fsl_asrc_pair *pair, u32 in, u32 out)
- }
- 
- /**
-- * Calculate the total divisor between asrck clock rate and sample rate
-+ * fsl_asrc_cal_asrck_divisor - Calculate the total divisor between asrck clock rate and sample rate
-+ * @pair: pointer to pair
-+ * @div: divider
-  *
-  * It follows the formula clk_rate = samplerate * (2 ^ prescaler) * divider
-  */
-@@ -250,7 +259,10 @@ static u32 fsl_asrc_cal_asrck_divisor(struct fsl_asrc_pair *pair, u32 div)
- }
- 
- /**
-- * Calculate and set the ratio for Ideal Ratio mode only
-+ * fsl_asrc_set_ideal_ratio - Calculate and set the ratio for Ideal Ratio mode only
-+ * @pair: pointer to pair
-+ * @inrate: input rate
-+ * @outrate: output rate
-  *
-  * The ratio is a 32-bit fixed point value with 26 fractional bits.
-  */
-@@ -293,7 +305,9 @@ static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
- }
- 
- /**
-- * Configure the assigned ASRC pair
-+ * fsl_asrc_config_pair - Configure the assigned ASRC pair
-+ * @pair: pointer to pair
-+ * @use_ideal_rate: boolean configuration
-  *
-  * It configures those ASRC registers according to a configuration instance
-  * of struct asrc_config which includes in/output sample rate, width, channel
-@@ -508,7 +522,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- }
- 
- /**
-- * Start the assigned ASRC pair
-+ * fsl_asrc_start_pair - Start the assigned ASRC pair
-+ * @pair: pointer to pair
-  *
-  * It enables the assigned pair and makes it stopped at the stall level.
-  */
-@@ -539,7 +554,8 @@ static void fsl_asrc_start_pair(struct fsl_asrc_pair *pair)
- }
- 
- /**
-- * Stop the assigned ASRC pair
-+ * fsl_asrc_stop_pair - Stop the assigned ASRC pair
-+ * @pair: pointer to pair
-  */
- static void fsl_asrc_stop_pair(struct fsl_asrc_pair *pair)
- {
-@@ -552,7 +568,9 @@ static void fsl_asrc_stop_pair(struct fsl_asrc_pair *pair)
- }
- 
- /**
-- * Get DMA channel according to the pair and direction.
-+ * fsl_asrc_get_dma_channel- Get DMA channel according to the pair and direction.
-+ * @pair: pointer to pair
-+ * @dir: DMA direction
-  */
- static struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair,
- 						 bool dir)
-@@ -896,7 +914,8 @@ static const struct regmap_config fsl_asrc_regmap_config = {
- };
- 
- /**
-- * Initialize ASRC registers with a default configurations
-+ * fsl_asrc_init - Initialize ASRC registers with a default configuration
-+ * @asrc: ASRC context
-  */
- static int fsl_asrc_init(struct fsl_asrc *asrc)
- {
-@@ -930,7 +949,9 @@ static int fsl_asrc_init(struct fsl_asrc *asrc)
- }
- 
- /**
-- * Interrupt handler for ASRC
-+ * fsl_asrc_isr- Interrupt handler for ASRC
-+ * @irq: irq number
-+ * @dev_id: ASRC context
-  */
- static irqreturn_t fsl_asrc_isr(int irq, void *dev_id)
- {
--- 
-2.25.1
+Many thanks for having a look at this patchset. I was not aware that
+Chen had sent out a new version.
+I had noted in the v9 review of the high/low range allocation
+<https://lists.gt.net/linux/kernel/3726052#3726052> that I was working
+on a generic solution (irrespective of the crashkernel, low and high
+range allocation) which resulted in this patchset.
+
+The issue is two-fold: OOPs in memcfg layer (PATCH 1/2, which has been
+Acked-by memcfg maintainer) and OOM in the kdump kernel due to
+crashkernel allocation in ZONE_DMA32 regions(s) which is addressed by
+this PATCH.
+
+I will have a closer look at the v10 patchset Chen shared, but seems
+it needs some rework as per Dave's review comments which he shared
+today.
+IMO, in the meanwhile this patchset  can be used to fix the existing
+kdump issue with upstream kernel.
+
+> > Fixes: bff3b04460a8 ("arm64: mm: reserve CMA and crashkernel in ZONE_DMA32")
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: cgroups@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: kexec@lists.infradead.org
+> > Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  arch/arm64/mm/init.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index 1e93cfc7c47a..02ae4d623802 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -91,8 +91,15 @@ static void __init reserve_crashkernel(void)
+> >       crash_size = PAGE_ALIGN(crash_size);
+> >
+> >       if (crash_base == 0) {
+> > -             /* Current arm64 boot protocol requires 2MB alignment */
+> > -             crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+> > +             /* Current arm64 boot protocol requires 2MB alignment.
+> > +              * Also limit the crashkernel allocation to the first
+> > +              * 1GB of the RAM accessible (ZONE_DMA), as otherwise we
+> > +              * might run into OOM issues when crashkernel is executed,
+> > +              * as it might have been originally allocated from
+> > +              * either a ZONE_DMA32 memory or mixture of memory
+> > +              * chunks belonging to both ZONE_DMA and ZONE_DMA32.
+> > +              */
+>
+> This comment needs help. Why does putting the crashkernel in ZONE_DMA
+> prevent "OOM issues"?
+
+Sure, I can work on adding more details in the comment so that it
+explains the potential OOM issue(s) better.
+
+Thanks,
+Bhupesh
 
