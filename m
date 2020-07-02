@@ -2,160 +2,203 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A15AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35ED208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44E12088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDpOVh4x"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="Pg4yk0YI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PhkQcYY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgGBWBc (ORCPT
+        id S1726379AbgGBWBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgGBWBb (ORCPT
+        Thu, 2 Jul 2020 18:01:49 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:44131 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726347AbgGBWBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:01:31 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9596DC08C5C1;
-        Thu,  2 Jul 2020 15:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=M9o/yoakftKlRxGmFhWGkioeRiqSbXBUgs5p6s59O+0=; b=aDpOVh4x4GOtkt487bsCMFmLSw
-        BslNH2ww+Y8SlYgWBognViQiZOYQ6VTKshjcPKegMCvXiA3j0oYopZF6UvSS8zaZM5hDObhUAzQVG
-        LqPztF+/XEFRB85h2czRWj+OsWShXyoZ8ImCpfANrh/FLOJVgTiYyDWemFFKK/61XGNIjAioTzbCE
-        VIcKncMxdL4casr61+Vnh251PCDTUvOJq2ulf8nVAEJeGhdgk9KbPNoXixYAxB0Zz568ML0mGHRla
-        7ggYV3A1rYw2PSvtNxz6BBXgo3AIBAI7U48I6go6z2zO8zrJufEL+Cs7ENsxyLGOpEynIAAsM53Sm
-        hP64XkLA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jr7Gd-0008S8-LM; Thu, 02 Jul 2020 22:01:15 +0000
-Subject: Re: [PATCH v2] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Abhishek Bhardwaj <abhishekbh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Anthony Steinhauser <asteinhauser@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-References: <20200702213807.2511503-1-abhishekbh@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
-Date:   Thu, 2 Jul 2020 15:01:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200702213807.2511503-1-abhishekbh@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jul 2020 18:01:48 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id E57215C0184;
+        Thu,  2 Jul 2020 18:01:46 -0400 (EDT)
+Received: from imap6 ([10.202.2.56])
+  by compute1.internal (MEProxy); Thu, 02 Jul 2020 18:01:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=++Nf+jzmk32Uv4KzN6LP0cOsHrUI9Ej
+        gYva0jX6LIrU=; b=Pg4yk0YIJrwWMjzDqS+aUUqvdlNb82l4y6EkYHpGnzP70f7
+        B1YY40jKsE2vbdvE0u+udHjX9YrAvotz+e5OdBfaJsnBOtxSz4u06wG++5PLV+Vk
+        1HmRpvbrHXzaAKDsPStHWr42Y+8wrseqKfCCHrhLiae2YLg9K3dZcZBXeWkJ5Bk6
+        mHrFGZhVgmu55nr8o1J5Isiw/wPi6NUodV2SJNJjWHIlPBy9UXmWDJDw/tXZ5ecG
+        Xf5Cp1WCkhqZ97Hv6PdOli47zBcoBWFcxy0s5L0YAUXDvLZYNfnNAL2PvzIGNTkw
+        3Yn+QjwqghBEkeIb4SVTqaI4fv7diXTn4LauhMw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=++Nf+j
+        zmk32Uv4KzN6LP0cOsHrUI9EjgYva0jX6LIrU=; b=PhkQcYY6l8VzCLSHHcxsfJ
+        FswLbAHWfg7HrJmtCqZlsos0DeSMz6ig3H8wT2YEGMmzuFKYnHf41PJVYGpmEflZ
+        SDjp7Hjh6ZW+eW7VLeOB13VO8pkMtqmDVTRHtThjuA9U+KULZJzRUpWa7bmVZoWz
+        brdzPcM9y7j7nBWW/JdP6i200Ffowb8ZfRznAL7xCSIdxPCAlSYcmvI8iYhk5sMe
+        82Sca2cF1KLVll9kwTGZJfEBhvA/q2XrCYcSLZwimGE+VScCLNDRb4oEQQm3RqOx
+        Wckjaj+83NTBUUrHXvE1oCevJM83DZAobdwVvucj0FZf/1JwH2Z/cGN6Ub67k1ig
+        ==
+X-ME-Sender: <xms:Sln-Xjboo9M_5vghecSHvELG_X8Ep6NsZzlQqXichH2uu-epJdiGNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgddtfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedfffgrnhhn
+    hicunfhinhdfuceouggrnhhnhieskhgurhgrghdtnhdruggvvheqnecuggftrfgrthhtvg
+    hrnhepvedvkeefhfejtdfgleegudeujeeuueehtddvudffkeegjeejfeffvdeuteektdeg
+    necuffhomhgrihhnpehgohhoghhlvghsohhurhgtvgdrtghomhdpghhithhhuhgsrdgtoh
+    hmpdhlphgsgidruggrthgrpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegurghnnhihsehkughrrghgtdhnrdguvg
+    hv
+X-ME-Proxy: <xmx:Sln-XiZ_KI0R7tLQBB603k6POGD4AnwbVGYLqTD9JeGfhWctw0SGfg>
+    <xmx:Sln-Xl-f4p6_IADPDXa0-gVkWCwumJOJOq59_ZE0qAP4St7f4qZQOQ>
+    <xmx:Sln-XpqhJNQceDvleWresQwqvXSTx4g9OypfHQ-16YAfN43WuXW0LQ>
+    <xmx:Sln-XvfGUyibpnCLUa2lxupWF6rFTNlGU2pLzTOUwk6EnTI8kmqm0Q>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 1791B1400A1; Thu,  2 Jul 2020 18:01:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-dev0-576-gfe2cd66-fm-20200629.001-gfe2cd668
+Mime-Version: 1.0
+Message-Id: <7304fdf3-23d7-442b-b870-e88ae6f37004@localhost>
+In-Reply-To: <20200702160420.GA3512364@ubuntu-s3-xlarge-x86>
+References: <20200702085400.2643527-1-danny@kdrag0n.dev>
+ <202007020853.5F15B5DDD@keescook>
+ <20200702160420.GA3512364@ubuntu-s3-xlarge-x86>
+Date:   Thu, 02 Jul 2020 15:01:25 -0700
+From:   "Danny Lin" <danny@kdrag0n.dev>
+To:     "Nathan Chancellor" <natechancellor@gmail.com>
+Cc:     "Kees Cook" <keescook@chromium.org>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        "Fangrui Song" <maskray@google.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org
+Subject: =?UTF-8?Q?Re:_[PATCH]_vmlinux.lds.h:_Coalesce_transient_LLVM_dead_code_e?=
+ =?UTF-8?Q?limination_sections?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
+Jul 2, 2020 9:04:25 AM Nathan Chancellor <natechancellor@gmail.com>:
 
-On 7/2/20 2:38 PM, Abhishek Bhardwaj wrote:
-> This change adds a new kernel configuration that sets the l1d cache
-> flush setting at compile time rather than at run time.
-> 
-> Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - Fix typo in the help of the new KConfig.
-> 
->  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
->  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 0b71970d2d3d2..1dcc875cf5547 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
->  #if IS_ENABLED(CONFIG_KVM_INTEL)
->  EXPORT_SYMBOL_GPL(l1tf_mitigation);
->  #endif
-> +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
-> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
-> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
-> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
-> +#else
->  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
-> +#endif
->  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
->  
->  /*
-> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> index b277a2db62676..d375dcedd447d 100644
-> --- a/arch/x86/kvm/Kconfig
-> +++ b/arch/x86/kvm/Kconfig
-> @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
->  	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
->  	 auditing of KVM MMU events at runtime.
->  
-> +config KVM_VMENTRY_L1D_FLUSH
-> +	int "L1D cache flush settings (1-3)"
-> +	range 1 3
-> +	default "2"
-> +	depends on KVM && X86 && X86_64
+> On Thu, Jul 02, 2020 at 08:54:53AM -0700, Kees Cook wrote:
+>> On Thu, Jul 02, 2020 at 01:54:00AM -0700, Danny Lin wrote:
+>>> A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
+>>> temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
+>>>
+>>> [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
+>>> 000000000000cea0  0000000000000000  WA       0     0     32
+>>> [31] .rela.data..compo RELA             0000000000000000  40965440
+>>> 0000000000001d88  0000000000000018   I      2238    30     8
+>>> [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
+>>> 00000000000033c0  0000000000000000  WA       0     0     32
+>>> [33] .rela.data..compo RELA             0000000000000000  409671c8
+>>> 0000000000000948  0000000000000018   I      2238    32     8
+>>> [...]
+>>> [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
+>>> 00000000000000a0  0000000000000000  WA       0     0     32
+>>> [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
+>>> 0000000000000040  0000000000000000  WA       0     0     32
+>>> [...]
+>>>
+>>> While these extra sections don't typically cause any breakage, they do
+>>> inflate the vmlinux size due to the overhead of storing metadata for
+>>> thousands of extra sections.
+>>>
+>>> It's also worth noting that for some reason, some downstream Android
+>>> kernels can't boot at all if these sections aren't coalesced.
+>>>
+>>> This issue isn't limited to any specific architecture; it affects arm64
+>>> and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
+>
+> It might be worth noting that this happens explicitly because of
+> -fdata-sections, which is currently only used with
+> CONFIG_LD_DEAD_CODE_DATA_ELIMINATION but there are other features such
+> as LTO that will enable this and make this relevant in the future.
+>
+> https://android-review.googlesource.com/c/kernel/common/+/1329278/6#message-81b191e92ef4e98e017fa9ded5ef63ef6e60db3a
+>
+> It is also worth noting that those commits add .bss..L* and .data..L*
+> and rodata variants. Do you know if those are relevant here?
 
-Why does this apply only to KVM?
+As far as I can tell, those sections are exclusive to LTO which isn't in
+mainline yet. I don't see any sections like that in my DCE-only vmlinux.
 
-and the "X86 && X86_64" is more than is needed. Just "X86_64" alone
-should be enough.
+>
+>>> Example on x86 allyesconfig:
+>>> Before: 2241 sections, 1170972 KiB
+>>> After:    56 sections, 1171169 KiB
+>
+> Am I reading this right that coalescing those sections increases the
+> image size? Kind of interesting.
 
+Oops, I accidentally swapped the numbers in the commit message.
+Coalescing the sections makes the image smaller as expected.
 
-> +	help
-> +	 This setting determines the L1D cache flush behavior before a VMENTER.
-> +	 This is similar to setting the option / parameter to
-> +	 kvm-intel.vmentry_l1d_flush.
-> +	 1 - Never flush.
-> +	 2 - Conditionally flush.
-> +	 3 - Always flush.
-> +
-> +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-> +# the virtualization menu.
-> +source "drivers/vhost/Kconfig"
+>
+>>> [1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
+>>>
+>>> Link: https://github.com/ClangBuiltLinux/linux/issues/958
+>>> Cc: stable@vger.kernel.org # v4.4+
+>>> Suggested-by: Fangrui Song <maskray@google.com>
+>>> Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+>>> ---
+>>> include/asm-generic/vmlinux.lds.h | 4 ++--
+>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+>>> index db600ef218d7..18968cba87c7 100644
+>>> --- a/include/asm-generic/vmlinux.lds.h
+>>> +++ b/include/asm-generic/vmlinux.lds.h
+>>> @@ -94,10 +94,10 @@
+>>> */
+>>> #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+>>> #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+>>> -#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
+>>> +#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* .data..compoundliteral*
+>
+> I am fairly certain this will fix a PowerPC warning that we had
+> recently so good!
+>
+> https://lore.kernel.org/lkml/202006180904.TVUXCf6H%25lkp@intel.com/
+>
+> Unfortunately, I forgot to reply to that thread...
+>
+>>> #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
+>>> #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
+>>> -#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
+>>> +#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral*
+>>
+>> Are there .data.. and .bss.. sections we do NOT want to collect? i.e.
+>> why not include .data..* and .bss..* ?
+>
+> At one point Android was doing that for modules but stopped:
+>
+> https://android-review.googlesource.com/c/kernel/common/+/1266787
+>
+> I wonder if that is a problem for the main kernel image.
 
+A comment above the code in question explicitly states that not all
+.data..* sections should be coalesced. There's a .data..percpu section
+in my x86 vmlinux which should probably remain separate.
 
-I don't quite understand why this 'source' line is here.
-Can you explain more about that, please?
-
-It puts "VHOST drivers" in the menu 2 times, in 2 totally unrelated
-places.  Seems like it could be confusing.
-
-> +
->  endif # VIRTUALIZATION
-
-
--- 
-~Randy
-
+>
+> Cheers,
+> Nathan
+>
