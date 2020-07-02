@@ -2,178 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB21C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB71D207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:04:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQyntSia"
+	by mail.kernel.org (Postfix) with ESMTP id F15B420656
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgGBQEZ (ORCPT
+        id S1726365AbgGBQFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgGBQEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:04:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7060BC08C5C1;
-        Thu,  2 Jul 2020 09:04:23 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so13695919pgq.1;
-        Thu, 02 Jul 2020 09:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tB1I6hCmjUM6u8j9mi/+rkvT9TH6Tm0pVRYPr44Mqew=;
-        b=vQyntSiaHHgWainLXItD2mKTmRXRY82MXoTz2fHFKNuxhTVPXAAhi1DRVu4KOw0W+z
-         hNQJuy3fbjYNPM3wKw/E2aP9NyXhBBMAUvRst09hRQlef/EcoZRpY5obD1j0ZGr2iS4n
-         wLPlrDjSlplM6uBCmriOa+DRt10aJRlLN0weqMtxo124T8gaqX8x7p2/uUSi9pqD+7I4
-         zU6L8NWSMWwcUrlwFliwM5LHvCAsAWvSWC9PkCQcryLNIGdmEn+DT+6QFkmdUfYdbqIr
-         ZUl2N4EQXn26Kd5x2F4C+gJVkSQRDt64pSoT3w7y6TFRZjbwE6+pYMBxyEaauwznaQ8F
-         uMKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tB1I6hCmjUM6u8j9mi/+rkvT9TH6Tm0pVRYPr44Mqew=;
-        b=LHpsFJ4vBuIODMt80SpmntBae0IOEJeuq3LbXsX66n1UMLD4bS26Ip+DS/YN6MNFOY
-         /aCVxACef1FSfa9731T6Jz1m52zkoQYO34mM5tEUONAqGs/9X2DVJAB4/E8MlW2SLZVr
-         MP2sL+66qt3ekpiYh+wq+29bNhg7APFCmVg+rEYBaZ19tEbWey6YsnnHhCo9FwsIz/U7
-         fwCM/5A4pMrM0r3F8SBa5/jGaHj66tZeIf4oCdjRvUOIGjOet8ePwYExVBC+kKuJeHmw
-         8CxoFSJZ7LP/E3FtaSs/tDUorijHASgw/ycnDuFPMRoyFHuCW4qhBl/+58vp85BEBi17
-         Apvw==
-X-Gm-Message-State: AOAM531FCCZZ1ZIIGItdCf7g3OFl5IQwj3H3/de/4XRThy5kaNrXPbul
-        F3kLEZ1HO1gHJ1SCrcAfqCE=
-X-Google-Smtp-Source: ABdhPJwxjdORMaGl+GNi41w9cvk8sl/0aeXV+pCgi/zmB3n6CCmy6FzpSK8UqQRyRcDckD+xy3WA/g==
-X-Received: by 2002:a05:6a00:2294:: with SMTP id f20mr29643338pfe.126.1593705862827;
-        Thu, 02 Jul 2020 09:04:22 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
-        by smtp.gmail.com with ESMTPSA id j16sm9183608pgb.33.2020.07.02.09.04.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 09:04:22 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 09:04:20 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Danny Lin <danny@kdrag0n.dev>, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] vmlinux.lds.h: Coalesce transient LLVM dead code
- elimination sections
-Message-ID: <20200702160420.GA3512364@ubuntu-s3-xlarge-x86>
-References: <20200702085400.2643527-1-danny@kdrag0n.dev>
- <202007020853.5F15B5DDD@keescook>
+        Thu, 2 Jul 2020 12:05:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:38940 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgGBQFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:05:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD53C1FB;
+        Thu,  2 Jul 2020 09:05:17 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D70973F71E;
+        Thu,  2 Jul 2020 09:05:14 -0700 (PDT)
+Subject: Re: [PATCH v8 2/3] dt-bindings: arm-smmu: Add binding for Tegra194
+ SMMU
+To:     Krishna Reddy <vdumpa@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Yu-Huan Hsu <YHsu@nvidia.com>,
+        Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-3-vdumpa@nvidia.com>
+ <3e655881-bac4-f083-44ed-cfa0a61298d0@arm.com>
+ <BYAPR12MB28222D6ADEBA966AA27FA9ECB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+ <0d4f46d6-6a4e-bca0-bcf3-0e22a950e57b@nvidia.com>
+ <BYAPR12MB282245DD6BB50ECA700AC69EB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+ <b10673f6-2a01-b9e5-0948-9684ffbe1813@nvidia.com>
+ <BYAPR12MB2822EE99210BFA984ECB954AB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <04e35d51-5e65-047d-90ef-a2de901eb15d@arm.com>
+Date:   Thu, 2 Jul 2020 17:05:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007020853.5F15B5DDD@keescook>
+In-Reply-To: <BYAPR12MB2822EE99210BFA984ECB954AB36C0@BYAPR12MB2822.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:54:53AM -0700, Kees Cook wrote:
-> On Thu, Jul 02, 2020 at 01:54:00AM -0700, Danny Lin wrote:
-> > A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
-> > temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
-> > 
-> >   [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
-> >        000000000000cea0  0000000000000000  WA       0     0     32
-> >   [31] .rela.data..compo RELA             0000000000000000  40965440
-> >        0000000000001d88  0000000000000018   I      2238    30     8
-> >   [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
-> >        00000000000033c0  0000000000000000  WA       0     0     32
-> >   [33] .rela.data..compo RELA             0000000000000000  409671c8
-> >        0000000000000948  0000000000000018   I      2238    32     8
-> >   [...]
-> >   [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
-> >        00000000000000a0  0000000000000000  WA       0     0     32
-> >   [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
-> >        0000000000000040  0000000000000000  WA       0     0     32
-> >   [...]
-> > 
-> > While these extra sections don't typically cause any breakage, they do
-> > inflate the vmlinux size due to the overhead of storing metadata for
-> > thousands of extra sections.
-> > 
-> > It's also worth noting that for some reason, some downstream Android
-> > kernels can't boot at all if these sections aren't coalesced.
-> > 
-> > This issue isn't limited to any specific architecture; it affects arm64
-> > and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
-
-It might be worth noting that this happens explicitly because of
--fdata-sections, which is currently only used with
-CONFIG_LD_DEAD_CODE_DATA_ELIMINATION but there are other features such
-as LTO that will enable this and make this relevant in the future.
-
-https://android-review.googlesource.com/c/kernel/common/+/1329278/6#message-81b191e92ef4e98e017fa9ded5ef63ef6e60db3a
-
-It is also worth noting that those commits add .bss..L* and .data..L*
-and rodata variants. Do you know if those are relevant here?
-
-> > Example on x86 allyesconfig:
-> >     Before: 2241 sections, 1170972 KiB
-> >     After:    56 sections, 1171169 KiB
-
-Am I reading this right that coalescing those sections increases the
-image size? Kind of interesting.
-
-> > [1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
-> > 
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/958
-> > Cc: stable@vger.kernel.org # v4.4+
-> > Suggested-by: Fangrui Song <maskray@google.com>
-> > Signed-off-by: Danny Lin <danny@kdrag0n.dev>
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-
-> > ---
-> >  include/asm-generic/vmlinux.lds.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index db600ef218d7..18968cba87c7 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -94,10 +94,10 @@
-> >   */
-> >  #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-> >  #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
-> > -#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
-> > +#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* .data..compoundliteral*
-
-I am fairly certain this will fix a PowerPC warning that we had
-recently so good!
-
-https://lore.kernel.org/lkml/202006180904.TVUXCf6H%25lkp@intel.com/
-
-Unfortunately, I forgot to reply to that thread...
-
-> >  #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
-> >  #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
-> > -#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
-> > +#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral*
+On 2020-07-01 20:39, Krishna Reddy wrote:
+> On 01/07/2020 20:00, Krishna Reddy wrote:
+>>>>>>> +        items:
+>>>>>>> +          - enum:
+>>>>>>> +              - nvdia,tegra194-smmu
+>>>>>>> +          - const: arm,mmu-500
+>>>>>
+>>>>>> Is the fallback compatible appropriate here? If software treats this as a standard MMU-500 it will only program the first instance (because the second isn't presented as a separate MMU-500) - is there any way that isn't going to blow up?
+>>>>>
+>>>>> When compatible is set to both nvidia,tegra194-smmu and arm,mmu-500, implementation override ensure that both instances are programmed. Isn't it? I am not sure I follow your comment fully.
+>>>
+>>>> The problem is, if for some reason someone had a Tegra194, but only set the compatible string to 'arm,mmu-500' it would assume that it was a normal arm,mmu-500 and only one instance would be programmed. We always want at least 2 of the 3 instances >>programmed and so we should only match 'nvidia,tegra194-smmu'. In fact, I think that we also need to update the arm_smmu_of_match table to add 'nvidia,tegra194-smmu' with the data set to &arm_mmu500.
+>>>
+>>> In that case, new binding "nvidia,smmu-v2" can be added with data set to &arm_mmu500 and enumeration would have nvidia,tegra194-smmu and another variant for next generation SoC in future.
 > 
-> Are there .data.. and .bss.. sections we do NOT want to collect? i.e.
-> why not include .data..* and .bss..* ?
+>> I think you would be better off with nvidia,smmu-500 as smmu-v2 appears to be something different. I see others have a smmu-v2 but I am not sure if that is legacy. We have an smmu-500 and so that would seem more appropriate.
+> 
+> I tried to use the binding synonymous to other vendors.
+> V2 is the architecture version.  MMU-500 is the actual implementation from ARM based on V2 arch.  As we just use the MMU-500 IP as it is, It can be named as nvidia,smmu-500 or similar as well.
 
-At one point Android was doing that for modules but stopped:
+Yup, that sounds OK to me if you want a broader compatible to 
+potentially match other future SoCs as well.
 
-https://android-review.googlesource.com/c/kernel/common/+/1266787
+> Others probably having their own implementation based on V2 arch.
 
-I wonder if that is a problem for the main kernel image.
+Exactly - "cavium,smmu-v2" and "qcom,smmu-v2" are their own in-house 
+microarchitectures, not one of Arm's designs, so they don't really have 
+a suitable 'product name' we could have used for the bindings.
 
-Cheers,
-Nathan
+Robin.
