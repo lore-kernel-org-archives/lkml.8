@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92626C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B32CA208B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0382073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgGBP1h (ORCPT
+        id S1729934AbgGBP1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:27:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55374 "EHLO inva020.nxp.com"
+        Thu, 2 Jul 2020 11:27:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55440 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbgGBP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:27:33 -0400
+        id S1730251AbgGBP1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 11:27:37 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 794EE1A0AE6;
-        Thu,  2 Jul 2020 17:27:30 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CE0B01A0BEE;
+        Thu,  2 Jul 2020 17:27:34 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AC4DC1A0C15;
-        Thu,  2 Jul 2020 17:27:20 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CD1A91A0C3C;
+        Thu,  2 Jul 2020 17:27:24 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AAB3C402F7;
-        Thu,  2 Jul 2020 23:27:08 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCEE840314;
+        Thu,  2 Jul 2020 23:27:12 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -41,9 +41,9 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V5 4/6] clk: imx: Add clock configuration for ARMv7 platforms
-Date:   Thu,  2 Jul 2020 23:23:59 +0800
-Message-Id: <1593703441-16944-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V5 6/6] clk: imx8qxp: Support building i.MX8QXP clock driver as module
+Date:   Thu,  2 Jul 2020 23:24:01 +0800
+Message-Id: <1593703441-16944-7-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593703441-16944-1-git-send-email-Anson.Huang@nxp.com>
 References: <1593703441-16944-1-git-send-email-Anson.Huang@nxp.com>
@@ -53,147 +53,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_CLK_xxx for i.MX ARMv7 platforms, and use it as build option
-instead of CONFIG_SOC_xxx, the CONFIG_CLK_xxx will be selected by default
-according to CONFIG_SOC_xxx, COMPILE_TEST will be also supported.
+Change configuration to "tristate", add module author, description and
+license to support building i.MX8QXP clock drivers as module.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 Changes since V4:
-	- remove COMPILE_TEST support for i.MX1/2/3;
-	- add COMPILE_TEST support for i.MX ARMv7 platform ONLY when the corresponding SOC
-	  config is NOT set.
+	- keep using builtin_platform_driver();
+	- add COMPILE_TEST support.
 ---
- drivers/clk/imx/Kconfig  | 71 +++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/clk/imx/Makefile | 30 ++++++++++----------
- 2 files changed, 85 insertions(+), 16 deletions(-)
+ drivers/clk/imx/Kconfig            | 8 +++++---
+ drivers/clk/imx/Makefile           | 9 ++++-----
+ drivers/clk/imx/clk-imx8qxp-lpcg.c | 4 ++++
+ drivers/clk/imx/clk-imx8qxp.c      | 4 ++++
+ 4 files changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-index ee854ac..595c435 100644
+index 4f4f86e..51be5e8 100644
 --- a/drivers/clk/imx/Kconfig
 +++ b/drivers/clk/imx/Kconfig
-@@ -2,12 +2,81 @@
- # common clock support for NXP i.MX SoC family.
- config MXC_CLK
- 	tristate "IMX clock"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
+@@ -5,7 +5,8 @@ config MXC_CLK
+ 	depends on ARCH_MXC || COMPILE_TEST
  
  config MXC_CLK_SCU
- 	bool
+-	bool
++	tristate "IMX SCU clock"
++	depends on ARCH_MXC || COMPILE_TEST
  	depends on IMX_SCU
  
-+config CLK_IMX1
-+	def_bool SOC_IMX1
-+	select CLK_MXC
-+
-+config CLK_IMX21
-+	def_bool SOC_IMX21
-+	select CLK_MXC
-+
-+config CLK_IMX25
-+	def_bool SOC_IMX25
-+	select CLK_MXC
-+
-+config CLK_IMX27
-+	def_bool SOC_IMX27
-+	select CLK_MXC
-+
-+config CLK_IMX31
-+	def_bool SOC_IMX31
-+	select CLK_MXC
-+
-+config CLK_IMX35
-+	def_bool SOC_IMX35
-+	select CLK_MXC
-+
-+config CLK_IMX5
-+	tristate "IMX5 CCM Clock Driver" if COMPILE_TEST && !SOC_IMX5
-+	default SOC_IMX5
-+	select MXC_CLK
-+
-+config CLK_IMX6Q
-+	tristate "IMX6Q CCM Clock Driver" if COMPILE_TEST && !SOC_IMX6Q
-+	default SOC_IMX6Q
-+	select MXC_CLK
-+
-+config CLK_IMX6SL
-+	tristate "IMX6SL CCM Clock Driver" if COMPILE_TEST && !SOC_IMX6SL
-+	default SOC_IMX6SL
-+	select MXC_CLK
-+
-+config CLK_IMX6SLL
-+	tristate "IMX6SLL CCM Clock Driver" if COMPILE_TEST && !SOC_IMX6SLL
-+	default SOC_IMX6SLL
-+	select MXC_CLK
-+
-+config CLK_IMX6SX
-+	tristate "IMX6SX CCM Clock Driver" if COMPILE_TEST && !SOC_IMX6SX
-+	default SOC_IMX6SX
-+	select MXC_CLK
-+
-+config CLK_IMX6UL
-+	tristate "IMX6UL CCM Clock Driver" if COMPILE_TEST && !SOC_IMX6UL
-+	default SOC_IMX6UL
-+	select MXC_CLK
-+
-+config CLK_IMX7D
-+	tristate "IMX7D CCM Clock Driver" if COMPILE_TEST && !SOC_IMX7D
-+	default SOC_IMX7D
-+	select MXC_CLK
-+
-+config CLK_IMX7ULP
-+	tristate "IMX7ULP Clock Driver" if COMPILE_TEST && !SOC_IMX7ULP
-+	default SOC_IMX7ULP
-+	select MXC_CLK
-+
-+config CLK_VF610
-+	tristate "VF610 Clock Driver" if COMPILE_TEST && !SOC_VF610
-+	default SOC_VF610
-+	select MXC_CLK
-+
- config CLK_IMX8MM
- 	bool "IMX8MM CCM Clock Driver"
- 	depends on ARCH_MXC
+ config CLK_IMX1
+@@ -106,8 +107,9 @@ config CLK_IMX8MQ
+ 	    Build the driver for i.MX8MQ CCM Clock Driver
+ 
+ config CLK_IMX8QXP
+-	bool "IMX8QXP SCU Clock"
+-	depends on ARCH_MXC && IMX_SCU && ARM64
++	tristate "IMX8QXP SCU Clock"
++	depends on (ARCH_MXC && ARM64) || COMPILE_TEST
++	depends on IMX_SCU
+ 	select MXC_CLK_SCU
+ 	help
+ 	  Build the driver for IMX8QXP SCU based clocks.
 diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 687207d..17f5d12 100644
+index 17f5d12..79e53f2 100644
 --- a/drivers/clk/imx/Makefile
 +++ b/drivers/clk/imx/Makefile
-@@ -31,18 +31,18 @@ obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
- obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
- obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
+@@ -21,15 +21,14 @@ mxc-clk-objs += clk-pll14xx.o
+ mxc-clk-objs += clk-sscg-pll.o
+ obj-$(CONFIG_MXC_CLK) += mxc-clk.o
  
--obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
--obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
--obj-$(CONFIG_SOC_IMX25)  += clk-imx25.o
--obj-$(CONFIG_SOC_IMX27)  += clk-imx27.o
--obj-$(CONFIG_SOC_IMX31)  += clk-imx31.o
--obj-$(CONFIG_SOC_IMX35)  += clk-imx35.o
--obj-$(CONFIG_SOC_IMX5)   += clk-imx5.o
--obj-$(CONFIG_SOC_IMX6Q)  += clk-imx6q.o
--obj-$(CONFIG_SOC_IMX6SL) += clk-imx6sl.o
--obj-$(CONFIG_SOC_IMX6SLL) += clk-imx6sll.o
--obj-$(CONFIG_SOC_IMX6SX) += clk-imx6sx.o
--obj-$(CONFIG_SOC_IMX6UL) += clk-imx6ul.o
--obj-$(CONFIG_SOC_IMX7D)  += clk-imx7d.o
--obj-$(CONFIG_SOC_IMX7ULP) += clk-imx7ulp.o
--obj-$(CONFIG_SOC_VF610)  += clk-vf610.o
-+obj-$(CONFIG_CLK_IMX1)   += clk-imx1.o
-+obj-$(CONFIG_CLK_IMX21)  += clk-imx21.o
-+obj-$(CONFIG_CLK_IMX25)  += clk-imx25.o
-+obj-$(CONFIG_CLK_IMX27)  += clk-imx27.o
-+obj-$(CONFIG_CLK_IMX31)  += clk-imx31.o
-+obj-$(CONFIG_CLK_IMX35)  += clk-imx35.o
-+obj-$(CONFIG_CLK_IMX5)   += clk-imx5.o
-+obj-$(CONFIG_CLK_IMX6Q)  += clk-imx6q.o
-+obj-$(CONFIG_CLK_IMX6SL) += clk-imx6sl.o
-+obj-$(CONFIG_CLK_IMX6SLL) += clk-imx6sll.o
-+obj-$(CONFIG_CLK_IMX6SX) += clk-imx6sx.o
-+obj-$(CONFIG_CLK_IMX6UL) += clk-imx6ul.o
-+obj-$(CONFIG_CLK_IMX7D)  += clk-imx7d.o
-+obj-$(CONFIG_CLK_IMX7ULP) += clk-imx7ulp.o
-+obj-$(CONFIG_CLK_VF610)  += clk-vf610.o
+-obj-$(CONFIG_MXC_CLK_SCU) += \
+-	clk-scu.o \
+-	clk-lpcg-scu.o
+-
+ obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
+ obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
+ obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
+ obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
+-obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
++
++obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
++clk-imx-scu-$(CONFIG_CLK_IMX8QXP) += clk-scu.o clk-imx8qxp.o
++clk-imx-lpcg-scu-$(CONFIG_CLK_IMX8QXP) += clk-lpcg-scu.o clk-imx8qxp-lpcg.o
+ 
+ obj-$(CONFIG_CLK_IMX1)   += clk-imx1.o
+ obj-$(CONFIG_CLK_IMX21)  += clk-imx21.o
+diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+index 04c8ee3..e947a70 100644
+--- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
++++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+@@ -232,3 +232,7 @@ static struct platform_driver imx8qxp_lpcg_clk_driver = {
+ };
+ 
+ builtin_platform_driver(imx8qxp_lpcg_clk_driver);
++
++MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX8QXP LPCG clock driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
+index 5e2903e..d650ca3 100644
+--- a/drivers/clk/imx/clk-imx8qxp.c
++++ b/drivers/clk/imx/clk-imx8qxp.c
+@@ -152,3 +152,7 @@ static struct platform_driver imx8qxp_clk_driver = {
+ 	.probe = imx8qxp_clk_probe,
+ };
+ builtin_platform_driver(imx8qxp_clk_driver);
++
++MODULE_AUTHOR("Aisheng Dong <aisheng.dong@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX8QXP clock driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
