@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00B1220748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CBB206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653524;
-	bh=2iQA6mqimRsMV25dNMf7E6m/TlOIfN2OM6I+gFbKVQM=;
+	s=default; t=1593653529;
+	bh=MqbJuaMdE5G91py8qFrKcQTEIsoxFQOPbiruB5rMRaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UH14rib/KpR5oACtt+rsjyTq0xPslqoy1dXbNteGv1z/3+IH/ljVEZIYUspGt8x9y
-	 AZ5IzA7SPQARka1oU8GolUFJkKYfC+C2EkdlmgYVZ4rPx5Lv7AniJrGvJVT/O6+ZWz
-	 iXgpY2CQAvgtd4+B4WssFCHmKo5jY1FqNgnuZe38=
+	b=Xah2ccuViLLYdTbv7yOSSloN0ubCIFez3102Lf5js8IoGQ9/BWE/D/T5ZoC4rjaWx
+	 9mMOp+DsWSiao49fjv/N8bTfB63KHHSbUUAWzzcFtN1EEX+eH/LGp+SXrEUbreNc65
+	 0fJXBwTpnJma+FxlXitppSDr0BN3ExfnaQ5jUZqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgGBBcC (ORCPT
+        id S1729165AbgGBB0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgGBB02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:28 -0400
+        id S1729056AbgGBB0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C24E20884;
-        Thu,  2 Jul 2020 01:26:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF027206BE;
+        Thu,  2 Jul 2020 01:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653187;
-        bh=2iQA6mqimRsMV25dNMf7E6m/TlOIfN2OM6I+gFbKVQM=;
+        s=default; t=1593653164;
+        bh=MqbJuaMdE5G91py8qFrKcQTEIsoxFQOPbiruB5rMRaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+e98XblPKHqeURh7SVlaSxlCftCc5H++2RYnT9oe5QpPU0fn1jlhSaepsLZUZvRn
-         ffgtm3CNSxZgwp59kP6WJrtesvjWeN7IDFwA5VRvAeGsbv3XJPAwS5TkmCTQHeP+Sd
-         ANEeHxDjLfQVcStUFuDhaxyjlN7GxIfXm8tm6bKA=
+        b=vAi/t1QkE9d3kFtbNHqALnSYQDpSbZEmKqRTD3WEBPjPd6Tt3USr3FjgpyUHF1XIp
+         tGeTjPXmCXgQZiaJKkDkr3o125s69LkHUpyk4cD3S+n/iuvS97mK9yyt3U3OF+m6qq
+         hmw2HLNtT3qFYXeC+pUNRP95WY+GEc9tFa3AQY40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Christensen <drc@linux.vnet.ibm.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/27] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Wed,  1 Jul 2020 21:25:58 -0400
-Message-Id: <20200702012615.2701532-10-sashal@kernel.org>
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.4 32/40] cifs: update ctime and mtime during truncate
+Date:   Wed,  1 Jul 2020 21:23:53 -0400
+Message-Id: <20200702012402.2701121-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
-References: <20200702012615.2701532-1-sashal@kernel.org>
+In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
+References: <20200702012402.2701121-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Christensen <drc@linux.vnet.ibm.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
+[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+As the man description of the truncate, if the size changed,
+then the st_ctime and st_mtime fields should be updated. But
+in cifs, we doesn't do it.
 
-Add check for pcierr_recovery which skips code already executed for the
-"Frozen" state.
+It lead the xfstests generic/313 failed.
 
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
+the file size
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/inode.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index a12962702611f..be845df050399 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18229,8 +18229,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 5e6bc8fa4e461..eb2e3db3916f0 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -2264,6 +2264,15 @@ cifs_set_file_size(struct inode *inode, struct iattr *attrs,
+ 	if (rc == 0) {
+ 		cifsInode->server_eof = attrs->ia_size;
+ 		cifs_setsize(inode, attrs->ia_size);
++
++		/*
++		 * The man page of truncate says if the size changed,
++		 * then the st_ctime and st_mtime fields for the file
++		 * are updated.
++		 */
++		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
++		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
++
+ 		cifs_truncate_page(inode->i_mapping, inode->i_size);
+ 	}
  
- 	rtnl_lock();
- 
--	/* We probably don't have netdev yet */
--	if (!netdev || !netif_running(netdev))
-+	/* Could be second call or maybe we don't have netdev yet */
-+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
- 		goto done;
- 
- 	/* We needn't recover from permanent error */
 -- 
 2.25.1
 
