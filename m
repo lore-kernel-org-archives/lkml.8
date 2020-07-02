@@ -2,137 +2,95 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F622C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEE5206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E3220781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgGBPJN (ORCPT
+        id S1729819AbgGBPJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:09:13 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:39725 "EHLO
+        Thu, 2 Jul 2020 11:09:16 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:39723 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729360AbgGBPJL (ORCPT
+        with ESMTP id S1729232AbgGBPJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 11:09:11 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
         with SMTP; 2 Jul 2020 18:09:08 +0300
 Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 062F98hm020260;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 062F98Tx020252;
         Thu, 2 Jul 2020 18:09:08 +0300
 Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 062F98xb015407;
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 062F98NR015403;
         Thu, 2 Jul 2020 18:09:08 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 062F98rp015406;
-        Thu, 2 Jul 2020 18:09:08 +0300
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 062F97af015402;
+        Thu, 2 Jul 2020 18:09:07 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-Subject: [PATCH net-next 2/7] devlink: Rework devlink health reporter destructor
-Date:   Thu,  2 Jul 2020 18:08:08 +0300
-Message-Id: <1593702493-15323-3-git-send-email-moshe@mellanox.com>
+        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
+Subject: [PATCH net-next 0/7] Add devlink-health support for devlink ports
+Date:   Thu,  2 Jul 2020 18:08:06 +0300
+Message-Id: <1593702493-15323-1-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1593702493-15323-1-git-send-email-moshe@mellanox.com>
-References: <1593702493-15323-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+Implement support for devlink health reporters on per-port basis. First
+part in the series prepares common functions parts for health reporter
+implementation. Second introduces required API to devlink-health and
+mlx5e ones demonstrate its usage and effectively implement the feature
+for mlx5 driver.
+The per-port reporter functionality is achieved by adding a list of
+devlink_health_reporters to devlink_port struct in a manner similar to
+existing device infrastructure. This is the only major difference and
+it makes possible to fully reuse device reporters operations.
+The effect will be seen in conjunction with iproute2 additions and
+will affect all devlink health commands. User can distinguish between
+device and port reporters by looking at a devlink handle. Port reporters
+have a port index at the end of the address and such addresses can be
+provided as a parameter in every place where devlink-health accepted it.
+These can be obtained from devlink port show command.
+For example:
+$ devlink health show
+pci/0000:00:0a.0:
+  reporter fw
+    state healthy error 0 recover 0 auto_dump true
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 500 auto_recover true auto_dump true
+$ devlink health set pci/0000:00:0a.0/1 reporter tx grace_period 1000 \
+auto_recover false auto_dump false
+$ devlink health show pci/0000:00:0a.0/1 reporter tx
+pci/0000:00:0a.0/1:
+  reporter tx
+    state healthy error 0 recover 0 grace_period 1000 auto_recover flase auto_dump false
 
-Devlink keeps its own reference to every reporter in a list and inits
-refcount to 1 upon reporter's creation. Existing destructor waits to
-free the memory indefinitely using msleep() until all references except
-devlink's own are put.
 
-Rework this mechanism by moving memory free routine to a separate
-function, which is called when the last reporter reference is put.
+Vladyslav Tarasiuk (7):
+  devlink: Refactor devlink health reporter constructor
+  devlink: Rework devlink health reporter destructor
+  devlink: Create generic devlink health reporter search function
+  devlink: Implement devlink health reporters on per-port basis
+  devlink: Add devlink health port reporters API
+  net/mlx5e: Move devlink port register and unregister calls
+  net/mlx5e: Move devlink-health rx and tx reporters to devlink port
 
-Besides, it allows to call __devlink_health_reporter_destroy() while
-locked on a reporters list mutex in symmetry to
-__devlink_health_reporter_create(), which is required in follow-up
-patch.
+ .../ethernet/mellanox/mlx5/core/en/reporter_rx.c   |   9 +-
+ .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |  13 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  15 +-
+ include/net/devlink.h                              |  11 +
+ net/core/devlink.c                                 | 245 ++++++++++++++++-----
+ 5 files changed, 217 insertions(+), 76 deletions(-)
 
-Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
----
- net/core/devlink.c | 37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
-
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index dfd7fe2..dcf8006 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -5353,6 +5353,29 @@ struct devlink_health_reporter *
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_create);
- 
-+static void
-+devlink_health_reporter_free(struct devlink_health_reporter *reporter)
-+{
-+	mutex_destroy(&reporter->dump_lock);
-+	if (reporter->dump_fmsg)
-+		devlink_fmsg_free(reporter->dump_fmsg);
-+	kfree(reporter);
-+}
-+
-+static void
-+devlink_health_reporter_put(struct devlink_health_reporter *reporter)
-+{
-+	if (refcount_dec_and_test(&reporter->refcount))
-+		devlink_health_reporter_free(reporter);
-+}
-+
-+static void
-+__devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
-+{
-+	list_del(&reporter->list);
-+	devlink_health_reporter_put(reporter);
-+}
-+
- /**
-  *	devlink_health_reporter_destroy - destroy devlink health reporter
-  *
-@@ -5362,14 +5385,8 @@ struct devlink_health_reporter *
- devlink_health_reporter_destroy(struct devlink_health_reporter *reporter)
- {
- 	mutex_lock(&reporter->devlink->reporters_lock);
--	list_del(&reporter->list);
-+	__devlink_health_reporter_destroy(reporter);
- 	mutex_unlock(&reporter->devlink->reporters_lock);
--	while (refcount_read(&reporter->refcount) > 1)
--		msleep(100);
--	mutex_destroy(&reporter->dump_lock);
--	if (reporter->dump_fmsg)
--		devlink_fmsg_free(reporter->dump_fmsg);
--	kfree(reporter);
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_destroy);
- 
-@@ -5639,12 +5656,6 @@ int devlink_health_report(struct devlink_health_reporter *reporter,
- 	return NULL;
- }
- 
--static void
--devlink_health_reporter_put(struct devlink_health_reporter *reporter)
--{
--	refcount_dec(&reporter->refcount);
--}
--
- void
- devlink_health_reporter_state_update(struct devlink_health_reporter *reporter,
- 				     enum devlink_health_reporter_state state)
 -- 
 1.8.3.1
 
