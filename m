@@ -2,102 +2,113 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B03AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC58C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 094B920885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FD220885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="dpYuNn8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgGBNWR (ORCPT
+        id S1729244AbgGBNXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:22:17 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:35486 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgGBNWQ (ORCPT
+        Thu, 2 Jul 2020 09:23:00 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:30674 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729067AbgGBNW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:22:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jqzAL-0004mh-WB; Thu, 02 Jul 2020 07:22:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jqzAK-0002tm-HL; Thu, 02 Jul 2020 07:22:13 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Matt Bennett <matt.bennett@alliedtelesis.co.nz>
-Cc:     netdev@vger.kernel.org, zbr@ioremap.net,
-        linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>
-References: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz>
-Date:   Thu, 02 Jul 2020 08:17:38 -0500
-In-Reply-To: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz> (Matt
-        Bennett's message of "Thu, 2 Jul 2020 12:26:30 +1200")
-Message-ID: <87h7uqukct.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Jul 2020 09:22:59 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062DLZtt019972;
+        Thu, 2 Jul 2020 06:22:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=6Kwa79/B4oYeiDXtVKCW5HHWsBXKxKO2pXdcKdrUd7I=;
+ b=dpYuNn8qAZc1T3BMBlze1uXhh2kD+WhaN5vrHR+4qNAQTWWcT+q1HrIPd3RKSzKwj7GW
+ eEhPlZjAMx3aeXX8x2Y4fDQpcBO+w1S7jDv/u9p6JE9gCRfWpoXhEqNIIZUT3u8hu+4S
+ /kzFnHqSX9tK6QDzAwKsH65bmEZeWiNmGFdcN3SG4IePOG9aAwETzolR6dCBDobrZWR4
+ xs1aRYNPso2Qyyi33Gu09Hziwuwm6LcwWOyEGK8fDdPACDEQ4mA8kHcKNzpiOcaq83aj
+ sUY14Wp0jGAkp9DgQmUjJUHgU4AtRF7sX3yDT4j5yFBnT0ENa/f0zJvQEtoYkWcwJxKy fQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31x5mnwd53-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 06:22:51 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Jul
+ 2020 06:22:49 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Jul
+ 2020 06:22:49 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 2 Jul 2020 06:22:49 -0700
+Received: from [10.193.54.28] (unknown [10.193.54.28])
+        by maili.marvell.com (Postfix) with ESMTP id B6B243F703F;
+        Thu,  2 Jul 2020 06:22:45 -0700 (PDT)
+Subject: Re: [EXT] [PATCH v1 2/2] qlcninc: use generic power management
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Manish Chopra" <manishc@marvell.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        <skhan@linuxfoundation.org>
+References: <20200702063632.289959-1-vaibhavgupta40@gmail.com>
+ <20200702063632.289959-3-vaibhavgupta40@gmail.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <3aa3a243-6e9a-c80d-95d1-9c6a143e7eb4@marvell.com>
+Date:   Thu, 2 Jul 2020 16:22:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jqzAK-0002tm-HL;;;mid=<87h7uqukct.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19v+BspXknwer4bSqp3IVqIJsTE2IxbID4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 0/5] RFC: connector: Add network namespace awareness
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200702063632.289959-3-vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_08:2020-07-02,2020-07-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matt Bennett <matt.bennett@alliedtelesis.co.nz> writes:
-
-> Previously the connector functionality could only be used by processes running in the
-> default network namespace. This meant that any process that uses the connector functionality
-> could not operate correctly when run inside a container. This is a draft patch series that
-> attempts to now allow this functionality outside of the default network namespace.
->
-> I see this has been discussed previously [1], but am not sure how my changes relate to all
-> of the topics discussed there and/or if there are any unintended side effects from my draft
-> changes.
-
-Is there a piece of software that uses connector that you want to get
-working in containers?
-
-I am curious what the motivation is because up until now there has been
-nothing very interesting using this functionality.  So it hasn't been
-worth anyone's time to make the necessary changes to the code.
-
-Eric
 
 
-> Thanks.
->
-> [1] https://marc.info/?l=linux-kernel&m=150806196728365&w=2
->
-> Matt Bennett (5):
->   connector: Use task pid helpers
->   connector: Use 'current_user_ns' function
->   connector: Ensure callback entry is released
->   connector: Prepare for supporting multiple namespaces
->   connector: Create connector per namespace
->
->  Documentation/driver-api/connector.rst |   6 +-
->  drivers/connector/cn_proc.c            | 110 +++++++-------
->  drivers/connector/cn_queue.c           |   9 +-
->  drivers/connector/connector.c          | 192 ++++++++++++++++++++-----
->  drivers/hv/hv_fcopy.c                  |   1 +
->  drivers/hv/hv_utils_transport.c        |   6 +-
->  drivers/md/dm-log-userspace-transfer.c |   6 +-
->  drivers/video/fbdev/uvesafb.c          |   8 +-
->  drivers/w1/w1_netlink.c                |  19 +--
->  include/linux/connector.h              |  38 +++--
->  include/net/net_namespace.h            |   4 +
->  kernel/exit.c                          |   2 +-
->  samples/connector/cn_test.c            |   6 +-
->  13 files changed, 286 insertions(+), 121 deletions(-)
+On 02/07/2020 9:36 am, Vaibhav Gupta wrote:
+> External Email
+> 
+> ----------------------------------------------------------------------
+> With legacy PM, drivers themselves were responsible for managing the
+> device's power states and takes care of register states. And they use PCI
+> helper functions to do it.
+> 
+> After upgrading to the generic structure, PCI core will take care of
+> required tasks and drivers should do only device-specific operations.
+> 
+> .suspend() calls __qlcnic_shutdown, which then calls qlcnic_82xx_shutdown;
+> .resume()  calls __qlcnic_resume,   which then calls qlcnic_82xx_resume;
+> 
+> Both ...82xx..() are define in
+> drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c and are used only in
+> drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c.
+> 
+> Hence upgrade them and remove PCI function calls, like pci_save_state()
+> and
+> pci_enable_wake(), inside them
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+
+Thanks!
