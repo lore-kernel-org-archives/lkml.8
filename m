@@ -2,188 +2,304 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC73C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F059C20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593679716;
-	bh=n0/ETBMZtZXEXcMd3jAalXfRHi+uZlBk4qzRq7lhjDI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=j0GmmIlnNk3KZAgWNju2Q5JFHctT65Pbxw5WuTZrYStj9dhor9DHwmL7QRHCJapd4
-	 PnXKHvNozthA0lqqXbfWninr0KQKaFS4ooTznq6TaqDstuxhwmPteRuGgjHvXqTAQ4
-	 QvDm2SUriHmQx84a4H2kW0IfR0noTL+NAcWX7Y70=
+	by mail.kernel.org (Postfix) with ESMTP id 706652145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qeGL73yY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgGBIse (ORCPT
+        id S1727834AbgGBIsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:48:34 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:37423 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725287AbgGBIsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:48:33 -0400
-Received: by mail-ej1-f68.google.com with SMTP id lx13so9675020ejb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 01:48:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VV1IWx8EqKynJvKotPIzTeJfmbIIq4AFHL6hpTY0F+8=;
-        b=qMpLBFfe8oPGuCGzSnxLONcwKlzJwTxG2RkFC7qEVrwpwO4s4pK1SDzFPyyIeig+Fj
-         wiEVC+tkrQJnKQCRfPLxDVKfEX35APsiovt0hHjrCTvo1Ed0HgA9LbcbRxc1NOzh7wZb
-         qXE6pofBYB9521ndyg7m25XSSTuNmYVrUXaQMk5dk85+unymYQImq8jD1bqVKMMP+fqW
-         7PyWpzddhrDLKYzRUTdtZP/jcmP6TzfHBvop4JcVpadyOKAk6Xuu9uxgrnISTsYai7WT
-         QIqH7swtFYxgQMmLoM9yXqk1ibddRNRoVXGJvlbs/56TiO/wiNE4JrPN4pUoRaRGttfz
-         sjfg==
-X-Gm-Message-State: AOAM5323uGRZuWrLFsjh4hz503t8E2iu6QhoBUkDMvmABw5W8kg+lpcY
-        Id/uUlK+A/0sfczRXMpPGXo=
-X-Google-Smtp-Source: ABdhPJyifjHc0ekAqGbB27X8AE7wiggeyVGFKiu3r40T6bWl+ZPtFnKUGCg4GtOMwanmlddrur4rEg==
-X-Received: by 2002:a17:906:57da:: with SMTP id u26mr27426643ejr.157.1593679711112;
-        Thu, 02 Jul 2020 01:48:31 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id q24sm9465979edg.51.2020.07.02.01.48.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 01:48:30 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] vt/vt: Add SRG mouse reporting protocol
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1593615440.git.tammo.block@gmail.com>
- <167e1d106125e5401fd907d6febdec4273cfdd3e.1593615440.git.tammo.block@gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <db653724-2706-b2c1-8889-ebb60af80ab1@kernel.org>
-Date:   Thu, 2 Jul 2020 10:48:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <167e1d106125e5401fd907d6febdec4273cfdd3e.1593615440.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
+        Thu, 2 Jul 2020 04:48:45 -0400
+Received: from mail-am6eur05on2047.outbound.protection.outlook.com ([40.107.22.47]:44507
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725287AbgGBIso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:48:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U6+f1v6H+C2aqKxLtJJ9v17T4tiHouseyBVMsqG9xLBcx3g7nkfkjBwhRQwlpe405tJttpgV8m0LkxZv9qrpAndWeYyuzJ8M/tgdvQ8TSAHYJCUbUsqea7dlT+xgPpj8DxOeXp0iMHwp8JUeLeexsMrfeIqUcgzBYI4fvlXQBbDwoTQklECtu7zxFvNwInQc/CX859DUql4Jwd7ujTUSNOHwfLez+3ji80iWtfWXhkrJg+s07l55fSNABOWNqoXKWNli2U4J54EOL84W9xk402YQ/hR+6wQ1L46I4o4TPO3Qpjn0+UEvhstVeOUDko7WP+UuWj/HeIih/lIU9gndVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eSn+x+tNsMo3RN0SMd8/M0ssOALuXztYBBPau/ldBIM=;
+ b=F3jmj1Wc61TKYY8FCRBVjdCv0rYQ9kqvES+lhmg16F2c/aL4avBodO0OKgGgYftJbUk7o9I7L9f2J/6Jsi+wwqQ4JsvWbHrs6T8swRS4YqITAX779Bv44YTtg/lpfrVQ9tqKAfQB9DZXFOx/DD9BbrU2DKVSuQeutpxB8e/h+4m+D5U9vEZ8sGJ8xzrMMCEmBsXayjnirQn9Xc9uuV4QPNqBiBjco+ZmwurAdcTLBNTblze/6qhKrFkeVUXXAeE+xcz21bi5+S4r133huwwnvP6TKgZmJ2ktCbGzeuNvV6WLwX0IQX4bJ0aGoWw5t+wlH09nea2cTsFuebV+LSFJ0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eSn+x+tNsMo3RN0SMd8/M0ssOALuXztYBBPau/ldBIM=;
+ b=qeGL73yYFql/GthRGphr+aLYbh6RCWVUMO0QGwigPSPw8Iz4P0q6nc5WUOGKZe+AJxNEycWUgr7eQvlu+7/wevMx6FFZ8V3YCAgDoCnYCvGesrvCc1Qsd6Lipkk6a8OVb1bSe4avudEnnQfF58pbN70p5ciZGuoRPSoucy4wScI=
+Received: from VI1PR0402MB3871.eurprd04.prod.outlook.com
+ (2603:10a6:803:16::14) by VI1PR0402MB3469.eurprd04.prod.outlook.com
+ (2603:10a6:803:d::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Thu, 2 Jul
+ 2020 08:48:39 +0000
+Received: from VI1PR0402MB3871.eurprd04.prod.outlook.com
+ ([fe80::e5d7:ec32:1cfe:71f0]) by VI1PR0402MB3871.eurprd04.prod.outlook.com
+ ([fe80::e5d7:ec32:1cfe:71f0%7]) with mapi id 15.20.3131.028; Thu, 2 Jul 2020
+ 08:48:39 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     "Calvin Johnson (OSS)" <calvin.johnson@oss.nxp.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon <jon@solid-run.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux.cj@gmail.com" <linux.cj@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [net-next PATCH v2 3/3] net: dpaa2-mac: Add ACPI support for
+ DPAA2 MAC driver
+Thread-Topic: [net-next PATCH v2 3/3] net: dpaa2-mac: Add ACPI support for
+ DPAA2 MAC driver
+Thread-Index: AQHWT269YgAmGtRtDUaoEYVt8gTAOajz955A
+Date:   Thu, 2 Jul 2020 08:48:38 +0000
+Message-ID: <VI1PR0402MB387145B3181911668E024264E06D0@VI1PR0402MB3871.eurprd04.prod.outlook.com>
+References: <20200701061233.31120-1-calvin.johnson@oss.nxp.com>
+ <20200701061233.31120-4-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200701061233.31120-4-calvin.johnson@oss.nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: oss.nxp.com; dkim=none (message not signed)
+ header.d=none;oss.nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [188.25.219.134]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5f247fae-9cc2-4490-edc7-08d81e64b731
+x-ms-traffictypediagnostic: VI1PR0402MB3469:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB34695C95855A3E71BA47AE26E06D0@VI1PR0402MB3469.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:813;
+x-forefront-prvs: 0452022BE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XUIFvCVmpxvkmA+eSpEs2eLZO/8c1KPtf2S2H5GHjLJUaZXoJT63qI9gQKFbIR2JhONuAVssdA4YhOLtth/zT8kNn+r0s1G0qQjoFlMlOAO6Y2YLnqk98rUlWIIgv3TK6OOnszRPnP1KzExI5dSMtPuIe+RCVWSEg0OI7T8o5NIoeBCt4riHJb95MsOrbjmHdKjs7Ne4r5mIUc5cN5d3iy0MO4JCKM2vhcCPld41ZMlct7opnuYT/+qMMs4E3DIxiKUoeBQn/noVjGsL99Nh/QFmy0iL58MxdePO7hgYUOlPRahX2wrOUQg897SvxMzYZhmOwrhjAfeOQWlUMMDTKA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3871.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(136003)(396003)(366004)(86362001)(8676002)(6506007)(8936002)(478600001)(33656002)(66446008)(64756008)(66946007)(2906002)(71200400001)(83380400001)(76116006)(66556008)(66476007)(316002)(9686003)(52536014)(7416002)(26005)(4326008)(54906003)(7696005)(5660300002)(44832011)(55016002)(110136005)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NuWqM3jiU9FfCTeevxavzNJPM3pXlNVdaihPKCxsb8xyh81iZPIz27So9O6vywpJIn+6EAfsMn5aK6IWSFuaGSyGLLmSW2gvKlSbXFxsavgYx9rgOWCqJl7xp9xkLO+eexeQ6DJ+LNAM3XtoBEUwV3hmCQ/JrCZJK/7P2uAzJUwKkYZxfNzcO9S3u+4l1wc1FPivz4QsW473hoPW8K//Qak4lcgwQw4jKNPER+fGfEQIzOKpLF2RD91g3J7az5/jydCVi9q34fwpUpuudBsQi6C+rDVJiBkuA5OGPX0Kh1IydwikCO09niW7tjtGHErpjhPLf9hd7awM+yMwjfNhxXt+Uj10Bm/bzsApAR/+Oax9S3gBX1WZTj5An+SIiw3XrmubFuZMlLyDkPGoqupi5c1blC9hhe2KLbjUCbTHtKR7+UBfdeER3YYhuovS5QucAvEAFV32EYCZuHKG7oOAwN08egJnzqyvlfg9pZMg/TBqiLqb9K0GhzjmBxcHCH7X
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3871.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f247fae-9cc2-4490-edc7-08d81e64b731
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2020 08:48:38.9921
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YhOFTcd7mfZgogkTUmKWazXkO02IY6BepthyhwPvrtSiTZy1dYsUKoyl5MjJt0r0Buw1khlHzhPmDH/iXwBuzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01. 07. 20, 17:13, Tammo Block wrote:
-> The SRG protocol indicates a button release by appending a "m" to the
-> report. In this case the button number is not 3 (RELEASEEVENT) but
-> the number of the button that was released. As release event are only
-> reported for the first three buttons (LOWBUTTONMASK), we need to store
-> the number on click events because it is not sent to us from userspace.
-> 
-> We also need to check for the case where no button state change occurred
-> at all (bit 6 set), in this case a value of 3 is OK even in SRG.
-> 
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
+> Subject: [net-next PATCH v2 3/3] net: dpaa2-mac: Add ACPI support for DPA=
+A2
+> MAC driver
+>=20
+> Modify dpaa2_mac_connect() to support ACPI along with DT.
+> Modify dpaa2_mac_get_node() to get the dpmac fwnode from either DT or
+> ACPI.
+> Replace of_get_phy_mode with fwnode_get_phy_mode to get phy-mode for a
+> dpmac_node.
+> Define and use helper function find_phy_device() to find phy_dev that is =
+later
+> connected to mac->phylink.
+>=20
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+>=20
 > ---
->  drivers/tty/vt/vt.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 9abf2829b1d3..9aae3eac7989 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -1838,15 +1838,34 @@ static inline void respond_ID(struct tty_struct *tty)
->  	respond_string(vt102_id, strlen(vt102_id), tty->port);
->  }
->  
-> +#define ANYBUTTONMASK	0xc3
-> +#define LOWBUTTONMASK	0x03
-
-Insert _ before MASK.
-
-> +#define RELEASEEVENT	0x03
-> +
->  enum { Mouse_X10 = 0, Mouse_SRG, Mouse_URXVT};
-
-= 0 in unnecessary. And put one per line. And all capitals as
-CodingStyle says.
-
-You should name the enum somehow and use it as a type for
-vc_protocol_mouse (you'd need a forward declaration of the enum in the
-header).
-
->  void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
+>=20
+> Changes in v2:
+>     - clean up dpaa2_mac_get_node()
+>     - introduce find_phy_device()
+>     - use acpi_find_child_device()
+>=20
+>  .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  | 79 ++++++++++++-------
+>  1 file changed, 50 insertions(+), 29 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+> b/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+> index 3ee236c5fc37..78e8160c9b52 100644
+> --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+> +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c
+> @@ -3,6 +3,8 @@
+>=20
+>  #include "dpaa2-eth.h"
+>  #include "dpaa2-mac.h"
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+>=20
+>  #define phylink_to_dpaa2_mac(config) \
+>  	container_of((config), struct dpaa2_mac, phylink_config) @@ -23,38
+> +25,46 @@ static int phy_mode(enum dpmac_eth_if eth_if, phy_interface_t
+> *if_mode)  }
+>=20
+>  /* Caller must call of_node_put on the returned value */ -static struct
+> device_node *dpaa2_mac_get_node(u16 dpmac_id)
+> +static struct fwnode_handle *dpaa2_mac_get_node(struct device *dev,
+> +						u16 dpmac_id)
 >  {
-> -	char buf[8];
-> +	static char last_btn = RELEASEEVENT;
-> +	char buf[20];
-> +	bool rel;
->  	int len;
->  
-> -	len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
-> -			(char)('!' + mrx), (char)('!' + mry));
-> +	switch (vc_cons[fg_console].d->vc_protocol_mouse) {
-> +		case Mouse_SRG:
+> -	struct device_node *dpmacs, *dpmac =3D NULL;
+> -	u32 id;
+> +	struct fwnode_handle *fsl_mc_fwnode =3D dev->parent->parent-
+> >fwnode;
+> +	struct fwnode_handle *dpmacs, *dpmac =3D NULL;
+> +	struct device *fsl_mc =3D dev->parent->parent;
+> +	struct acpi_device *adev;
+>  	int err;
+> +	u32 id;
+>=20
+> -	dpmacs =3D of_find_node_by_name(NULL, "dpmacs");
+> -	if (!dpmacs)
+> -		return NULL;
+> -
+> -	while ((dpmac =3D of_get_next_child(dpmacs, dpmac)) !=3D NULL) {
+> -		err =3D of_property_read_u32(dpmac, "reg", &id);
+> -		if (err)
+> -			continue;
+> -		if (id =3D=3D dpmac_id)
+> -			break;
+> +	if (is_of_node(fsl_mc_fwnode)) {
+> +		dpmacs =3D device_get_named_child_node(fsl_mc, "dpmacs");
+> +		if (!dpmacs)
+> +			return NULL;
+> +
+> +		while ((dpmac =3D fwnode_get_next_child_node(dpmacs,
+> dpmac))) {
+> +			err =3D fwnode_property_read_u32(dpmac, "reg", &id);
+> +			if (err)
+> +				continue;
+> +			if (id =3D=3D dpmac_id)
+> +				return dpmac;
+> +		}
+> +	} else if (is_acpi_node(fsl_mc_fwnode)) {
+> +		adev =3D acpi_find_child_device(ACPI_COMPANION(dev->parent),
+> +					      dpmac_id, false);
+> +		if (adev)
+> +			return (&adev->fwnode);
+>  	}
+> -
+> -	of_node_put(dpmacs);
+> -
 
-This is not how we indent switch-case.
+This of_node_put() on the 'dpmacs'  node still needs to happen for the OF c=
+ase.
 
-> +			rel = (butt & ANYBUTTONMASK) == RELEASEEVENT;
-> +			if ((butt & ANYBUTTONMASK) < RELEASEEVENT)
-> +				last_btn = butt & LOWBUTTONMASK;
-> +			if ((butt & TIOCL_SELBUTTONMASK) == RELEASEEVENT)
-> +				butt = (butt & ~LOWBUTTONMASK) | last_btn;
-> +			len = sprintf(buf, "\033[<%d;%d;%d%c", butt,
-> +					mrx + 1, mry + 1, rel ? 'm' : 'M');
-> +			break;
-> +		default:
-> +			len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
-> +					(char)('!' + mrx), (char)('!' + mry));
-> +			break;
-> +	}
->  	respond_string(buf, len, tty->port);
+Ioana
+
+> -	return dpmac;
+> +	return NULL;
 >  }
+>=20
+> -static int dpaa2_mac_get_if_mode(struct device_node *node,
+> +static int dpaa2_mac_get_if_mode(struct fwnode_handle *dpmac_node,
+>  				 struct dpmac_attr attr)
+>  {
+>  	phy_interface_t if_mode;
+>  	int err;
+>=20
+> -	err =3D of_get_phy_mode(node, &if_mode);
+> -	if (!err)
+> -		return if_mode;
+> +	err =3D fwnode_get_phy_mode(dpmac_node);
+> +	if (err > 0)
+> +		return err;
+>=20
+>  	err =3D phy_mode(attr.eth_if, &if_mode);
+>  	if (!err)
+> @@ -231,7 +241,8 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)  {
+>  	struct fsl_mc_device *dpmac_dev =3D mac->mc_dev;
+>  	struct net_device *net_dev =3D mac->net_dev;
+> -	struct device_node *dpmac_node;
+> +	struct fwnode_handle *dpmac_node =3D NULL;
+> +	struct phy_device *phy_dev;
+>  	struct phylink *phylink;
+>  	struct dpmac_attr attr;
+>  	int err;
+> @@ -251,7 +262,7 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)
+>=20
+>  	mac->if_link_type =3D attr.link_type;
+>=20
+> -	dpmac_node =3D dpaa2_mac_get_node(attr.id);
+> +	dpmac_node =3D dpaa2_mac_get_node(&dpmac_dev->dev, attr.id);
+>  	if (!dpmac_node) {
+>  		netdev_err(net_dev, "No dpmac@%d node found.\n", attr.id);
+>  		err =3D -ENODEV;
+> @@ -269,7 +280,7 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)
+>  	 * error out if the interface mode requests them and there is no PHY
+>  	 * to act upon them
+>  	 */
+> -	if (of_phy_is_fixed_link(dpmac_node) &&
+> +	if (of_phy_is_fixed_link(to_of_node(dpmac_node)) &&
+>  	    (mac->if_mode =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+>  	     mac->if_mode =3D=3D PHY_INTERFACE_MODE_RGMII_RXID ||
+>  	     mac->if_mode =3D=3D PHY_INTERFACE_MODE_RGMII_TXID)) { @@ -
+> 282,7 +293,7 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)
+>  	mac->phylink_config.type =3D PHYLINK_NETDEV;
+>=20
+>  	phylink =3D phylink_create(&mac->phylink_config,
+> -				 of_fwnode_handle(dpmac_node), mac-
+> >if_mode,
+> +				 dpmac_node, mac->if_mode,
+>  				 &dpaa2_mac_phylink_ops);
+>  	if (IS_ERR(phylink)) {
+>  		err =3D PTR_ERR(phylink);
+> @@ -290,20 +301,30 @@ int dpaa2_mac_connect(struct dpaa2_mac *mac)
+>  	}
+>  	mac->phylink =3D phylink;
+>=20
+> -	err =3D phylink_of_phy_connect(mac->phylink, dpmac_node, 0);
+> +	if (is_of_node(dpmac_node))
+> +		err =3D phylink_of_phy_connect(mac->phylink,
+> +					     to_of_node(dpmac_node), 0);
+> +	else if (is_acpi_node(dpmac_node)) {
+> +		phy_dev =3D find_phy_device(dpmac_node);
+> +		if (IS_ERR(phy_dev))
+> +			goto err_phylink_destroy;
+> +		err =3D phylink_connect_phy(mac->phylink, phy_dev);
+> +	}
+>  	if (err) {
+> -		netdev_err(net_dev, "phylink_of_phy_connect() =3D %d\n", err);
+> +		netdev_err(net_dev, "phylink_fwnode_phy_connect() =3D %d\n",
+> err);
+>  		goto err_phylink_destroy;
+>  	}
+>=20
+> -	of_node_put(dpmac_node);
+> +	if (is_of_node(dpmac_node))
+> +		of_node_put(to_of_node(dpmac_node));
+>=20
+>  	return 0;
+>=20
+>  err_phylink_destroy:
+>  	phylink_destroy(mac->phylink);
+>  err_put_node:
+> -	of_node_put(dpmac_node);
+> +	if (is_of_node(dpmac_node))
+> +		of_node_put(to_of_node(dpmac_node));
+>  err_close_dpmac:
+>  	dpmac_close(mac->mc_io, 0, dpmac_dev->mc_handle);
+>  	return err;
+> --
+> 2.17.1
 
-thanks,
--- 
-js
-suse labs
