@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A20206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381B72085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653460;
-	bh=2Z8yd9Hrf9PnWZtHopSUaQ1KmI9By6p9fMY4XUXGzNk=;
+	s=default; t=1593653467;
+	bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQAFLxSqns/s6fUa/tc4mWRtymN0PXdgnVjhSh0ngP71Xxnsa4UB1KIz9e1zY74Tb
-	 HU8dZlux34D7n05jDsOEP2CRU4I1oQBK6BnKkp77x7pFe2Qx38gBh5cEyMTcBg0TM4
-	 dJ3czRRl4tK9J1qVo8Frbf5zvlALDaP3kyNCEXiw=
+	b=dEe2vm6GImYqxOdEFgyYv94GzyTIt7ncgiOqBRtXYcVev3gqn8dsmfxhLB6g+c0Yp
+	 IHGfYEeOkwBbxIDlzP7W2cqkd1vvXJr3hBQYXMt1MSoAB/gIe3TXRLhpdrwgseYIxs
+	 L9/mq0O15s32jMWqcLQjZPTCkjvE59nKjyNV9Z2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgGBBa7 (ORCPT
+        id S1729221AbgGBBbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbgGBB0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:45 -0400
+        id S1729261AbgGBB0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6F120874;
-        Thu,  2 Jul 2020 01:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D19820748;
+        Thu,  2 Jul 2020 01:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653205;
-        bh=2Z8yd9Hrf9PnWZtHopSUaQ1KmI9By6p9fMY4XUXGzNk=;
+        s=default; t=1593653204;
+        bh=MSXNpAEhno4g986D8o9A5a+ESTpY1tYD20T+D+8C4+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dI8bSm3C9zA9D07zmFeK6FMaQes5B+KmjPMDQEyKUH5YDcJTBTiHltyS+lpXGElas
-         gLPhUvwQzcD4z/do4uopefzZf6BnmPygNfWp0i1rZVvLo2CqBEP1c/8K1IEmZwz4my
-         MaOqv+Cxzkt/hX8rOJ26+SpOnqnEPvjoIdFNA2+A=
+        b=qV+PrXrRji4Rblx7Oiyf8szpi2GWir0LjCpjzVI9Z88lQGZLjORkxcr/sL/pco1iE
+         wt02atfxZpTUzAkP/yTretEyajAOZxTF3ySSaqyfTwdYCpxUrRiiypJXZtV6j07ixr
+         iXmxNYl1V2qccm720UUoUjqen1hELQYHhEzUrPQM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@mykernel.net>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/27] block: release bip in a right way in error path
-Date:   Wed,  1 Jul 2020 21:26:12 -0400
-Message-Id: <20200702012615.2701532-24-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/27] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
+Date:   Wed,  1 Jul 2020 21:26:11 -0400
+Message-Id: <20200702012615.2701532-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
 References: <20200702012615.2701532-1-sashal@kernel.org>
@@ -61,70 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 0b8eb629a700c0ef15a437758db8255f8444e76c ]
+[ Upstream commit 2655971ad4b34e97dd921df16bb0b08db9449df7 ]
 
-Release bip using kfree() in error path when that was allocated
-by kmalloc().
+dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
+the reference counter. In case of failure, decrement the reference
+before returning.
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 5bd90cd4b51e3..d3ef211d006ef 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -38,6 +38,18 @@ void blk_flush_integrity(void)
- 	flush_workqueue(kintegrityd_wq);
- }
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index b2fd505938a0c..389ec4c689c44 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -204,8 +204,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
+ 	int ret;
  
-+void __bio_integrity_free(struct bio_set *bs, struct bio_integrity_payload *bip)
-+{
-+	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
-+		if (bip->bip_vec)
-+			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
-+				  bip->bip_slab);
-+		mempool_free(bip, &bs->bio_integrity_pool);
-+	} else {
-+		kfree(bip);
+ 	ret = pm_runtime_get_sync(&dwc3->dev);
+-	if (ret)
++	if (ret) {
++		pm_runtime_put_sync_autosuspend(&dwc3->dev);
+ 		return;
 +	}
-+}
-+
- /**
-  * bio_integrity_alloc - Allocate integrity payload and attach it to bio
-  * @bio:	bio to attach integrity metadata to
-@@ -90,7 +102,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
  
- 	return bip;
- err:
--	mempool_free(bip, &bs->bio_integrity_pool);
-+	__bio_integrity_free(bs, bip);
- 	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL(bio_integrity_alloc);
-@@ -111,14 +123,7 @@ static void bio_integrity_free(struct bio *bio)
- 		kfree(page_address(bip->bip_vec->bv_page) +
- 		      bip->bip_vec->bv_offset);
- 
--	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
--		bvec_free(&bs->bvec_integrity_pool, bip->bip_vec, bip->bip_slab);
--
--		mempool_free(bip, &bs->bio_integrity_pool);
--	} else {
--		kfree(bip);
--	}
--
-+	__bio_integrity_free(bs, bip);
- 	bio->bi_integrity = NULL;
- 	bio->bi_opf &= ~REQ_INTEGRITY;
- }
+ 	pm_runtime_mark_last_busy(&dwc3->dev);
+ 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
 -- 
 2.25.1
 
