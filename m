@@ -2,78 +2,73 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5390BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032B62088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226AC20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593694632;
+	bh=6HAK3qHSIcna6sA8s3JCC4sdkipPIpcQVvedZolZ6N0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0mbIOyazRHBiZ2l2YAwQBPw1RpKB27JC3PmLlu7le9Q/kp6fkJUCj5wsS9FJ8YGk6
+	 EDhtFgscmZVDx4zQAO2M5IcpbzPaxNcZNUNDOtB4jYe09gvz5Rx9uxCc6M69JprJGm
+	 kOLxiv+iSo5Wthv1LGkGA4JJRQMPw4bfMeQUf9l0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgGBM4B (ORCPT
+        id S1729121AbgGBM5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 08:56:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43564 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728661AbgGBM4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 08:56:01 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B27037EA7A15A2B43017;
-        Thu,  2 Jul 2020 20:55:59 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 20:55:50 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Fixed the warning: Assignment of 0/1 to bool variable
-Date:   Thu, 2 Jul 2020 20:54:15 +0800
-Message-ID: <1593694455-31268-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Jul 2020 08:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728808AbgGBM5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 08:57:09 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8994E20772;
+        Thu,  2 Jul 2020 12:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593694629;
+        bh=6HAK3qHSIcna6sA8s3JCC4sdkipPIpcQVvedZolZ6N0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SS6m+TFQ+N0ptvONAjRaIIHM1ONObKIwCYCWRGIVJyIr+Wqa0NmW4co2Sd5fsxyJj
+         YL+r14zbOFWhVyPSl6zJM2FuOIsJJtM0EShKHn9nKVVLsThqQoq7xEP/YCDm4x42pN
+         LddZfrGkRb5dx3hyZV6p2H1RH+nLnHsFEDsrwJqY=
+Date:   Thu, 2 Jul 2020 18:27:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH next 6/6] dmaengine: ti: k3-udma: Switch to
+ k3_ringacc_request_rings_pair
+Message-ID: <20200702125705.GB273932@vkoul-mobl>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+ <20200701103030.29684-7-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701103030.29684-7-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fixed the following warning:
-hibmc_drm_drv.c:296:1-18:WARNING: Assignment of 0/1 to bool variable.
-hibmc_drm_drv.c:301:2-19: WARNING: Assignment of 0/1 to bool variable.
+On 01-07-20, 13:30, Grygorii Strashko wrote:
+> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> We only request ring pairs via K3 DMA driver, switch to use the new
+> k3_ringacc_request_rings_pair() to simplify the code.
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 249c298..2fc0c97 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -294,12 +294,12 @@ static int hibmc_load(struct drm_device *dev)
- 		goto err;
- 	}
- 
--	priv->msi_enabled = 0;
-+	priv->msi_enabled = false;
- 	ret = pci_enable_msi(dev->pdev);
- 	if (ret) {
- 		DRM_WARN("enabling MSI failed: %d\n", ret);
- 	} else {
--		priv->msi_enabled = 1;
-+		priv->msi_enabled = true;
- 		ret = drm_irq_install(dev, dev->pdev->irq);
- 		if (ret)
- 			DRM_WARN("install irq failed: %d\n", ret);
 -- 
-2.7.4
-
+~Vinod
