@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539B02083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0959020C56
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653169;
-	bh=mVT1nm+k/l19rJIVXm8NMTgjChCxlRFDhy6XAsQx29g=;
+	s=default; t=1593653171;
+	bh=b44jm7P6vI+Zkeiv9QWrWNQ5os3dfh9gfK08ciXU9CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiXTeKv8URiwMZhRjo7G3dWZcizlQqROG1r2inZcHlM2Y74Hh5g6/E7cmMo3hwSVT
-	 7DDUrL77FPvJo1/go4qAGbuXHGDOHabU7nf0GKUspd2K6aWxfJ7pX+6afnDJol/Oxk
-	 QAJye0RoYfH5SvwIwmoJWY66zVRE0zYg4Ktw9UZs=
+	b=IBk4Hn7RpqF2WKahRlTAcIV5chXfafnopzd2shoC8KlTUlrOBWgenZ145q2eB/nNt
+	 2+9JEsXRlIvs6hiuEJiOAkFRKu5Zaw6rARx00GBWReu8G2nDtPFYdvFsrc9A3rLiNu
+	 05gzzpSRSD/6Cw3cf0uD8mPf0+ITqdayOpCS648Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgGBB0H (ORCPT
+        id S1729093AbgGBB0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56936 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgGBBZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:54 -0400
+        id S1729013AbgGBBZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6268206BE;
-        Thu,  2 Jul 2020 01:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48CF820748;
+        Thu,  2 Jul 2020 01:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653153;
-        bh=mVT1nm+k/l19rJIVXm8NMTgjChCxlRFDhy6XAsQx29g=;
+        s=default; t=1593653156;
+        bh=b44jm7P6vI+Zkeiv9QWrWNQ5os3dfh9gfK08ciXU9CA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZjSj7zFAtjSXzS/bofwywL9xBccP+LztiaSsA4AOx5Fm3UPnwZP9Dw7tj0RCN/A6J
-         wacgJutl8FQPe152KAVpgBHyNj8Lw28b67PIUEqk4qDrlrO/7YiLhrv1WiJ2gpkZAQ
-         +h1vkrem64cMImiPOfJ48VyFinPxKqWYq6tg6NWI=
+        b=0KBGq8gq4fvW3te89WnQ0EaVBENOu6njvSWT8isUV85MuQQd+tnsM8aQM7KdrrE/+
+         TFMONJjxDCZZMNdqP0kaChJytxeDgKIa8LGKc9OVlmAZKAau+FbSKmiry/TX0y9V7Q
+         j0greQhXU5nNe5wJnr37k5GxGUfJI5kwzm4YT1aU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 23/40] powerpc/kvm/book3s64: Fix kernel crash with nested kvm & DEBUG_VIRTUAL
-Date:   Wed,  1 Jul 2020 21:23:44 -0400
-Message-Id: <20200702012402.2701121-23-sashal@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>, Ashok Raj <ashok.raj@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 25/40] iommu/vt-d: Don't apply gfx quirks to untrusted devices
+Date:   Wed,  1 Jul 2020 21:23:46 -0400
+Message-Id: <20200702012402.2701121-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -60,68 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Rajat Jain <rajatja@google.com>
 
-[ Upstream commit c1ed1754f271f6b7acb1bfdc8cfb62220fbed423 ]
+[ Upstream commit 67e8a5b18d41af9298db5c17193f671f235cce01 ]
 
-With CONFIG_DEBUG_VIRTUAL=y, __pa() checks for addr value and if it's
-less than PAGE_OFFSET it leads to a BUG().
+Currently, an external malicious PCI device can masquerade the VID:PID
+of faulty gfx devices, and thus apply iommu quirks to effectively
+disable the IOMMU restrictions for itself.
 
-  #define __pa(x)
-  ({
-  	VIRTUAL_BUG_ON((unsigned long)(x) < PAGE_OFFSET);
-  	(unsigned long)(x) & 0x0fffffffffffffffUL;
-  })
+Thus we need to ensure that the device we are applying quirks to, is
+indeed an internal trusted device.
 
-  kernel BUG at arch/powerpc/kvm/book3s_64_mmu_radix.c:43!
-  cpu 0x70: Vector: 700 (Program Check) at [c0000018a2187360]
-      pc: c000000000161b30: __kvmhv_copy_tofrom_guest_radix+0x130/0x1f0
-      lr: c000000000161d5c: kvmhv_copy_from_guest_radix+0x3c/0x80
-  ...
-  kvmhv_copy_from_guest_radix+0x3c/0x80
-  kvmhv_load_from_eaddr+0x48/0xc0
-  kvmppc_ld+0x98/0x1e0
-  kvmppc_load_last_inst+0x50/0x90
-  kvmppc_hv_emulate_mmio+0x288/0x2b0
-  kvmppc_book3s_radix_page_fault+0xd8/0x2b0
-  kvmppc_book3s_hv_page_fault+0x37c/0x1050
-  kvmppc_vcpu_run_hv+0xbb8/0x1080
-  kvmppc_vcpu_run+0x34/0x50
-  kvm_arch_vcpu_ioctl_run+0x2fc/0x410
-  kvm_vcpu_ioctl+0x2b4/0x8f0
-  ksys_ioctl+0xf4/0x150
-  sys_ioctl+0x28/0x80
-  system_call_exception+0x104/0x1d0
-  system_call_common+0xe8/0x214
-
-kvmhv_copy_tofrom_guest_radix() uses a NULL value for to/from to
-indicate direction of copy.
-
-Avoid calling __pa() if the value is NULL to avoid the BUG().
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-[mpe: Massage change log a bit to mention CONFIG_DEBUG_VIRTUAL]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200611120159.680284-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-4-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 43b56f8f6bebd..da8375437d161 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -38,7 +38,8 @@ unsigned long __kvmhv_copy_tofrom_guest_radix(int lpid, int pid,
- 	/* Can't access quadrants 1 or 2 in non-HV mode, call the HV to do it */
- 	if (kvmhv_on_pseries())
- 		return plpar_hcall_norets(H_COPY_TOFROM_GUEST, lpid, pid, eaddr,
--					  __pa(to), __pa(from), n);
-+					  (to != NULL) ? __pa(to): 0,
-+					  (from != NULL) ? __pa(from): 0, n);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 773ac2b0d6068..4e91036cf5636 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5955,6 +5955,23 @@ static bool intel_iommu_is_attach_deferred(struct iommu_domain *domain,
+ 	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
+ }
  
- 	quadrant = 1;
- 	if (!pid)
++/*
++ * Check that the device does not live on an external facing PCI port that is
++ * marked as untrusted. Such devices should not be able to apply quirks and
++ * thus not be able to bypass the IOMMU restrictions.
++ */
++static bool risky_device(struct pci_dev *pdev)
++{
++	if (pdev->untrusted) {
++		pci_info(pdev,
++			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
++			 pdev->vendor, pdev->device);
++		pci_info(pdev, "Please check with your BIOS/Platform vendor about this\n");
++		return true;
++	}
++	return false;
++}
++
+ const struct iommu_ops intel_iommu_ops = {
+ 	.capable		= intel_iommu_capable,
+ 	.domain_alloc		= intel_iommu_domain_alloc,
+@@ -5983,6 +6000,9 @@ const struct iommu_ops intel_iommu_ops = {
+ 
+ static void quirk_iommu_igfx(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	pci_info(dev, "Disabling IOMMU for graphics on this chipset\n");
+ 	dmar_map_gfx = 0;
+ }
+@@ -6024,6 +6044,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x163D, quirk_iommu_igfx);
+ 
+ static void quirk_iommu_rwbf(struct pci_dev *dev)
+ {
++	if (risky_device(dev))
++		return;
++
+ 	/*
+ 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
+ 	 * but needs it. Same seems to hold for the desktop versions.
+@@ -6054,6 +6077,9 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
+ {
+ 	unsigned short ggc;
+ 
++	if (risky_device(dev))
++		return;
++
+ 	if (pci_read_config_word(dev, GGC, &ggc))
+ 		return;
+ 
+@@ -6087,6 +6113,12 @@ static void __init check_tylersburg_isoch(void)
+ 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3a3e, NULL);
+ 	if (!pdev)
+ 		return;
++
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	pci_dev_put(pdev);
+ 
+ 	/* System Management Registers. Might be hidden, in which case
+@@ -6096,6 +6128,11 @@ static void __init check_tylersburg_isoch(void)
+ 	if (!pdev)
+ 		return;
+ 
++	if (risky_device(pdev)) {
++		pci_dev_put(pdev);
++		return;
++	}
++
+ 	if (pci_read_config_dword(pdev, 0x188, &vtisochctrl)) {
+ 		pci_dev_put(pdev);
+ 		return;
 -- 
 2.25.1
 
