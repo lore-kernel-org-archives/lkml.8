@@ -2,187 +2,184 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF95208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD89208B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKYPBWm7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X/370d7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgGBPp5 (ORCPT
+        id S1726342AbgGBPpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:45:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
+        Thu, 2 Jul 2020 11:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgGBPpU (ORCPT
+        with ESMTP id S1726065AbgGBPpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 11:45:20 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26381C08C5C1
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E85C08C5DD
         for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:45:20 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e8so13663764pgc.5
+Received: by mail-wm1-x341.google.com with SMTP id o8so27438690wmh.4
         for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=M5epT+ZnUgKP+WCCXExIrVbl9Uf15MOmZ2N+7978elE=;
-        b=DKYPBWm73CUJPwZ5vWCd5nexOuLCVv9xz7Z+H6m7w+/pjgI/1+jIO+Mm6dTdAeDkox
-         rmSVdm1HuYFB3c1wisNEbkB+WQdaFb4Gm7uvcYeKasyZbx+YS1nhN4jrwT21rPLMCnwb
-         pua0fKKHoJOBlwzOouwBIWN3f+lprwa0uZfi3FMoT15r+kYqn5ydb3gDQ4G0XNA/SWYf
-         C3OM4i7DAZZcy5nEKryodmsrI+TtUDxMdYHO40TfKd0UnynRoA9g8IeIW8Tw0sDODAvy
-         cZGHH3n8PW4EdGNYhR7Q11Z0BF0TqGN/p9QC/qWgZaqX1eeNWDMmdALVOLGfBMkK4GpO
-         ZFxw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5NpA1aHPtrtTbDRv3BwJsLYLsdIe49m/oDHB3TNgzSg=;
+        b=X/370d7bfe2wKHRZ5XVFz0qdHal5xmGwf85Zc6IDUVi0M5m7ynIAqEOe5ciIVpJVCc
+         3QETHIWwNB410S3dKj6anHO02VXlRe+YE2AarzVqruSBap/fwL46PewA1Hmb35m3CN5U
+         FCdxSM00IrvR2nkppuhhXlJvmX8Z8kNte5fi6y99bYoOoM8X28fiDIj4vQJQDmgIttuS
+         K9ZtI8fQUY+KwDkM9ZWhYF+RlKEtKWaTapv0dlYN2vHNitUWkcXZot0Xnq7eyyZQht3K
+         E5Qr2el/qylFUhUFhCbTCBWfTcli7vFi4RBprnREXx2rMFiR6ySlD341+1CJ9GPOCgT4
+         aXFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=M5epT+ZnUgKP+WCCXExIrVbl9Uf15MOmZ2N+7978elE=;
-        b=Mw5zXnX1mpU0YC7kZthSl5IkBd5c6CSeAtUoqpLvQ4D0AFFgCuzz2crf6ZsBgJdY1M
-         j0ug9xQpXFhuOrOPSRSlclQDgKj7SNDAAom3hmD/t7IhbJlsGUlQl7/5s1HQKJt2nwN6
-         hS4yX/j8Bso4Iv//xhsHrfgODOmAjEeqhG+FNqJGAVxX7LYi+1BfKJRmVwDyMvguyBFI
-         YNcbR5zB6rfZkmGYrB2CaTP6HhiOGp3KQZvRhyxnUE1DVgHnlY8mciarcydMNeh6Iz/6
-         /OGi3A0q8omBkborg0UUWErwXJv54pFU33aTMP+zVmMo6KpvVZTk41XjXESfAnaip5qH
-         N8kw==
-X-Gm-Message-State: AOAM532ruLsNHQQzsELfpo+HjgO61I5hV7S+yWWOFyVquDMBZ88hWzev
-        dKg5t1tdV/0R7Tuh0ilS1aA=
-X-Google-Smtp-Source: ABdhPJykLlKwL2WPoDRiAMRqYEo7wDo2RE5ICzKdbcSkxAQcLiK6SiEHTdjf/LEr4/ls1rQTcN3S6w==
-X-Received: by 2002:a63:8b4c:: with SMTP id j73mr24643165pge.209.1593704719681;
-        Thu, 02 Jul 2020 08:45:19 -0700 (PDT)
-Received: from localhost.localdomain (n11923716050.netvigator.com. [119.237.16.50])
-        by smtp.gmail.com with ESMTPSA id f15sm7166804pgr.36.2020.07.02.08.45.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5NpA1aHPtrtTbDRv3BwJsLYLsdIe49m/oDHB3TNgzSg=;
+        b=t7rXF81LvIXdce9aQElw6F5EYPzn5avRBrZCyMabYSoq+PY7i7jWZNW80wQ8lx+FtB
+         eHo/Vz3rjKwzfJOt6DfCepPj3C7S1ZH/CzLMmaHPpBsmwRE4Y9w7JXeFwSI0JE52xL3x
+         XnWiIPELIZ19ZYACt6eApppoQ59HtAuPap0obi/v3wdafK9jAAcO4EJqrRiGL1dVuO8L
+         GuqyDwsl000uq0gdQ/7x+AcOYZKH8jyznsWKK/pR9aWv0r03zdW6QFtu3drrgQ1EzWle
+         8tvSHwlmtIPmRGK2McFQ3ZJuDUoSzv4/TA9jr/2eP0Xq1MICn0BRiDk80N/mUTBJ6zxZ
+         EzmQ==
+X-Gm-Message-State: AOAM5310s+h77BEq/io1BtEZFl313Z7KjQMGEMUXdYlZMv9zopg+cQmM
+        ChrG1c0prcyf+TgNwvKhLrZJaKheICVrhw==
+X-Google-Smtp-Source: ABdhPJwlMcPNCVDq3OS2q1fYfyx8/F/uGQ83V0/XC1CVgOs9Hb9YYVEhsDV45jr6bLkOuNHiB6Etww==
+X-Received: by 2002:a7b:c84d:: with SMTP id c13mr32186872wml.170.1593704718790;
+        Thu, 02 Jul 2020 08:45:18 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:f693:9fff:fef4:a7ef])
+        by smtp.gmail.com with ESMTPSA id u84sm10580204wmg.7.2020.07.02.08.45.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 08:45:19 -0700 (PDT)
-From:   Simon Fong <simon.fodin@gmail.com>
-To:     Larry.Finger@lwfinger.net
-Cc:     Simon Fong <simon.fodin@gmail.com>, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: rtl8188eu: Fix WARNINGs of Block comments
-Date:   Thu,  2 Jul 2020 23:44:20 +0800
-Message-Id: <239f5c7f4761dd2ef0df8ee6966fca8ed2a13a9c.1593703689.git.simon.fodin@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1593703689.git.simon.fodin@gmail.com>
-References: <cover.1593703689.git.simon.fodin@gmail.com>
-In-Reply-To: <cover.1593703689.git.simon.fodin@gmail.com>
-References: <cover.1593703689.git.simon.fodin@gmail.com>
+        Thu, 02 Jul 2020 08:45:18 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 16:45:14 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH v3 2/7] sched/topology: Define and assign sched_domain
+ flag metadata
+Message-ID: <20200702154514.GA1072702@google.com>
+References: <20200701190656.10126-1-valentin.schneider@arm.com>
+ <20200701190656.10126-3-valentin.schneider@arm.com>
+ <20200702121536.GA765585@google.com>
+ <jhjk0zm7zv8.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhjk0zm7zv8.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed 5 WARNINGs of Block comments use * on subsequent lines.
+On Thursday 02 Jul 2020 at 15:31:07 (+0100), Valentin Schneider wrote:
+> There an "interesting" quirk of asym_cpu_capacity_level() in that it does
+> something slightly different than what it says on the tin: it detects
+> the lowest topology level where *the biggest* CPU capacity is visible by
+> all CPUs. That works just fine on big.LITTLE, but there are questionable
+> DynamIQ topologies that could hit some issues.
+> 
+> Consider:
+> 
+> DIE [                   ]
+> MC  [             ][    ] <- sd_asym_cpucapacity
+>      0   1   2   3  4  5
+>      L   L   B   B  B  B
+> 
+> asym_cpu_capacity_level() would pick MC as the asymmetric topology level,
+> and you can argue either way: it should be DIE, because that's where CPUs 4
+> and 5 can see a LITTLE, or it should be MC, at least for CPUs 0-3 because
+> there they see all CPU capacities.
 
-Signed-off-by: Simon Fong <simon.fodin@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_xmit.c | 62 +++++++++++------------
- 1 file changed, 31 insertions(+), 31 deletions(-)
+Right, I am not looking forward to these topologies...
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-index 258531bc1408..9a3e5d5bade9 100644
---- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-@@ -49,8 +49,8 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
- 	spin_lock_init(&pxmitpriv->lock);
- 
- 	/*
--	Please insert all the queue initializaiton using _rtw_init_queue below
--	*/
-+	 * Please insert all the queue initializaiton using _rtw_init_queue below
-+	 */
- 
- 	pxmitpriv->adapter = padapter;
- 
-@@ -63,10 +63,10 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
- 	_rtw_init_queue(&pxmitpriv->free_xmit_queue);
- 
- 	/*
--	Please allocate memory with the sz = (struct xmit_frame) * NR_XMITFRAME,
--	and initialize free_xmit_frame below.
--	Please also apply  free_txobj to link_up all the xmit_frames...
--	*/
-+	 * Please allocate memory with the sz = (struct xmit_frame) * NR_XMITFRAME,
-+	 * and initialize free_xmit_frame below.
-+	 * Please also apply  free_txobj to link_up all the xmit_frames...
-+	 */
- 
- 	pxmitpriv->pallocated_frame_buf = vzalloc(NR_XMITFRAME * sizeof(struct xmit_frame) + 4);
- 
-@@ -893,17 +893,17 @@ s32 rtw_txframes_sta_ac_pending(struct adapter *padapter, struct pkt_attrib *pat
- }
- 
- /*
--
--This sub-routine will perform all the following:
--
--1. remove 802.3 header.
--2. create wlan_header, based on the info in pxmitframe
--3. append sta's iv/ext-iv
--4. append LLC
--5. move frag chunk from pframe to pxmitframe->mem
--6. apply sw-encrypt, if necessary.
--
--*/
-+ *
-+ * This sub-routine will perform all the following:
-+ *
-+ * 1. remove 802.3 header.
-+ * 2. create wlan_header, based on the info in pxmitframe
-+ * 3. append sta's iv/ext-iv
-+ * 4. append LLC
-+ * 5. move frag chunk from pframe to pxmitframe->mem
-+ * 6. apply sw-encrypt, if necessary.
-+ *
-+ */
- s32 rtw_xmitframe_coalesce(struct adapter *padapter, struct sk_buff *pkt, struct xmit_frame *pxmitframe)
- {
- 	s32 frg_inx, frg_len, mpdu_len, llc_sz, mem_sz;
-@@ -1233,25 +1233,25 @@ s32 rtw_free_xmitbuf(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf)
- }
- 
- /*
--Calling context:
--1. OS_TXENTRY
--2. RXENTRY (rx_thread or RX_ISR/RX_CallBack)
--
--If we turn on USE_RXTHREAD, then, no need for critical section.
--Otherwise, we must use _enter/_exit critical to protect free_xmit_queue...
--
--Must be very very cautious...
--
--*/
-+ * Calling context:
-+ * 1. OS_TXENTRY
-+ * 2. RXENTRY (rx_thread or RX_ISR/RX_CallBack)
-+ *
-+ * If we turn on USE_RXTHREAD, then, no need for critical section.
-+ * Otherwise, we must use _enter/_exit critical to protect free_xmit_queue...
-+ *
-+ * Must be very very cautious...
-+ *
-+ */
- 
- struct xmit_frame *rtw_alloc_xmitframe(struct xmit_priv *pxmitpriv)
- 				/* _queue *pfree_xmit_queue) */
- {
- 	/*
--		Please remember to use all the osdep_service api,
--		and lock/unlock or _enter/_exit critical to protect
--		pfree_xmit_queue
--	*/
-+	 *	Please remember to use all the osdep_service api,
-+	 *	and lock/unlock or _enter/_exit critical to protect
-+	 *	pfree_xmit_queue
-+	 */
- 	struct xmit_frame *pxframe;
- 	struct __queue *pfree_xmit_queue = &pxmitpriv->free_xmit_queue;
- 
--- 
-2.17.1
+> I have a plan on how to fix that, but I haven't been made aware of any
+> "real" topology that would seriously break there. The moment one does, this
+> will surface up to the top of my todo-list.
+> 
+> In the meantime, we can make it match the SDF_SHARED_PARENT semantics, and
+> this actually fixes an issue with solo big CPU clusters (which I
+> anecdotally found out while first writing this series, and forgot to
+> include):
+> 
+> --->8
+> From: Valentin Schneider <valentin.schneider@arm.com>
+> Date: Wed, 16 Oct 2019 18:12:12 +0100
+> Subject: [PATCH 1/1] sched/topology: Propagate SD_ASYM_CPUCAPACITY upwards
+> 
+> We currently set this flag *only* on domains whose topology level exactly
+> match the level where we detect asymmetry (as returned by
+> asym_cpu_capacity_level()). This is rather problematic.
+> 
+> Say there are two clusters in the system, one with a lone big CPU and the
+> other with a mix of big and LITTLE CPUs:
+> 
+> DIE [                ]
+> MC  [             ][ ]
+>      0   1   2   3  4
+>      L   L   B   B  B
+> 
+> asym_cpu_capacity_level() will figure out that the MC level is the one
+> where all CPUs can see a CPU of max capacity, and we will thus set
+> SD_ASYM_CPUCAPACITY at MC level for all CPUs.
+> 
+> That lone big CPU will degenerate its MC domain, since it would be alone in
+> there, and will end up with just a DIE domain. Since the flag was only set
+> at MC, this CPU ends up not seeing any SD with the flag set, which is
+> broken.
 
++1
+
+> Rather than clearing dflags at every topology level, clear it before
+> entering the topology level loop. This will properly propagate upwards
+> flags that are set starting from a certain level.
+
+I'm feeling a bit nervous about that asymmetry -- in your example
+select_idle_capacity() on, say, CPU3 will see less CPUs than on CPU4.
+So, you might get fun side-effects where all task migrated to CPUs 0-3
+will be 'stuck' there while CPU 4 stays mostly idle.
+
+I have a few ideas to avoid that (e.g. looking at the rd span in
+select_idle_capacity() instead of sd_asym_cpucapacity) but all this is
+theoretical, so I'm happy to wait for a real platform to be released
+before we worry too much about it.
+
+In the meantime:
+
+Reviewed-by: Quentin Perret <qperret@google.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  kernel/sched/topology.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index b5667a273bf6..549268249645 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1965,11 +1965,10 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>         /* Set up domains for CPUs specified by the cpu_map: */
+>         for_each_cpu(i, cpu_map) {
+>                 struct sched_domain_topology_level *tl;
+> +		int dflags = 0;
+> 
+>                 sd = NULL;
+>                 for_each_sd_topology(tl) {
+> -			int dflags = 0;
+> -
+>                         if (tl == tl_asym) {
+>                                 dflags |= SD_ASYM_CPUCAPACITY;
+>                                 has_asym = true;
+> --
+> 2.27.0
+
+Thanks,
+Quentin
