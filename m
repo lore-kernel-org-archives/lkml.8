@@ -2,108 +2,90 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C15FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D877BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DAA20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB3720874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b194pnNo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nOAaJfzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGBJsJ (ORCPT
+        id S1728184AbgGBJs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:48:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25208 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgGBJsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:48:09 -0400
-IronPort-SDR: NGBI4Fq2mlW8pYu/gBtQwUHP34eXyVplRtl5HUJtxCpGCXLnJ/MuBbRiIRmzdpMA4p/9/RNQ+g
- /sbkW+43EJiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126935773"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="126935773"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 02:48:08 -0700
-IronPort-SDR: MfId8Xsu+pXlIBLT1E+9fv/iiNoFYtd++gWymsw2yHsvG9sWxYALZwFkKAD2yM4c+SnyCT72lE
- YVtF4tDtg/8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="265657264"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2020 02:48:07 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jqvpA-00HBHk-Oy; Thu, 02 Jul 2020 12:48:08 +0300
-Date:   Thu, 2 Jul 2020 12:48:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ricardo Ribalda <ribalda@kernel.org>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH v3] i2c: designware: platdrv: Set class based on dmi
-Message-ID: <20200702094808.GP3703480@smile.fi.intel.com>
-References: <20200702093832.2077252-1-ribalda@kernel.org>
+        Thu, 2 Jul 2020 05:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgGBJs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:48:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6039FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 02:48:26 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593683304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n7KSu5ePUYPphRAI7CrnncN0j8iV5PRQYus725BOSco=;
+        b=b194pnNo1apqKXU+4NuTWop6ZQHVnbRuVqKDFhpeGiDSoN+NQMtWjIjmISQWEPxgynBc2q
+        OusK/TwI76vdv5o2nNkxFrWFWO3FvafdFcsgT+K0+eZhA6OV+CyZBjjRoS4XvnVi9oVBi4
+        j2fFsgDlUpFTGV4y1wkBSueKk8yqD1tY2iyARCCyjXMUPKOGsVThdXyvTKNIfanR6Nrt5Q
+        yYYPZbLYN0crtAF0drCd0tBU4WVPAOjcJDHfcE+5Wf0zTopp9gqbkB/Pd58CbsEHkEUGwT
+        S30sWTX2C+0fD6qBInLwCLOQzndQ2t1Oq0UIcedjhD37MbbzAknFP8ltxklbyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593683304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n7KSu5ePUYPphRAI7CrnncN0j8iV5PRQYus725BOSco=;
+        b=nOAaJfzPAWxVHMyUanA1ZLP605ez5M0ySgJLrnD1usftFoTh/KuJzn2ET6lHATao8o7yuk
+        wFakN5Ho2qUURAAg==
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [RFC PATCH 01/10] timer: Prevent base->clk from moving backward
+In-Reply-To: <20200701011030.14324-2-frederic@kernel.org>
+References: <20200701011030.14324-1-frederic@kernel.org> <20200701011030.14324-2-frederic@kernel.org>
+Date:   Thu, 02 Jul 2020 11:48:23 +0200
+Message-ID: <87sgea9riw.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702093832.2077252-1-ribalda@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:38:32AM +0200, Ricardo Ribalda wrote:
-> Current AMD's zen-based APUs use this core for some of its i2c-buses.
-> 
-> With this patch we re-enable autodetection of hwmon-alike devices, so
-> lm-sensors will be able to work automatically.
-> 
-> It does not affect the boot-time of embedded devices, as the class is
-> set based on the dmi information.
+Frederic Weisbecker <frederic@kernel.org> writes:
+> When a timer is enqueued with a negative delta (ie: expiry is below
+> base->clk), it gets added to the wheel as expiring now (base->clk).
+>
+> Yet the value that gets stored in base->next_expiry, while calling
+> trigger_dyntick_cpu(), is the initial timer->expires value. The
+> resulting state becomes:
+>
+> 	base->next_expiry < base->clk
+>
+> On the next timer enqueue, forward_timer_base() may accidentally
+> rewind base->clk. As a possible outcome, timers may expire way too
+> early, the worst case being that the highest wheel levels get spuriously
+> processed again.
 
-dmi -> DMI
+Bah. Nice catch.
 
-> Dmi is probed only on Qtechnology QT5222 Industrial Camera Platform
+> To prevent from that, make sure that base->next_expiry doesn't get below
+> base->clk.
 
-Dmi -> DMI
+That wants a Fixes: tag and a CC stable.
 
-> https://qtec.com/camera-technology-camera-platforms/
+Thanks,
 
-Use DocLink: tag.
-
-...
-
-> +static const struct dmi_system_id allow_probe[] = {
-
-allow_probe -> dw_i2c_hwmon_class_dmi
-
-> +	{
-> +		.ident = "Qtechnology QT5222",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
-
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222")
-
-Comma is missed.
-
-> +		}
-> +	},
-
-> +
-
-Redundant.
-
-> +	{ }
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+        tglx
