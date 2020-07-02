@@ -2,174 +2,163 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F57C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3743EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5054D2073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FD72073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kbhzaqGe";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="diDXwlZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgGBSQJ (ORCPT
+        id S1727995AbgGBSSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:16:09 -0400
-Received: from mga06.intel.com ([134.134.136.31]:24084 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgGBSQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:16:09 -0400
-IronPort-SDR: uibqNT2r1goJGuROwetVvMgX4nUIj2g3kxGFV9vTVYEGNFY/rmuc1XZeJ7bqldmrrQafwQdvqM
- AtFYwn5FkdZA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="208511650"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="208511650"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:16:07 -0700
-IronPort-SDR: FZCac+/n1T105djQwmNPNfSwk8S0quKaIoqXlTlhP7d4BBLOqggajyznlb2XQcUeKNXgunBET+
- qLuPMah//6Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="321593912"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Jul 2020 11:16:06 -0700
-Date:   Thu, 2 Jul 2020 11:16:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH] kvm: x86: rewrite kvm_spec_ctrl_valid_bits
-Message-ID: <20200702181606.GF3575@linux.intel.com>
-References: <20200702174455.282252-1-mlevitsk@redhat.com>
-MIME-Version: 1.0
+        Thu, 2 Jul 2020 14:18:12 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:13796 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726980AbgGBSSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:18:11 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062IAjpM002068;
+        Thu, 2 Jul 2020 11:17:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=SeRwImw+QWuCtlznLLAfvpLB9u70Fr5FNgOO4t6uRBk=;
+ b=kbhzaqGeAwYe9FNQ7oSzHwbr0+UR/2UW6WH+7JIKP+Wi5VKBHNcveECDYN+fgsrFRttC
+ kryNHCzunUEHRVVDNcNZq2CKnaSKA+Hi11REOpeoLz0kHBFg0fU9Kt9F5WPEweTisgVX
+ Tu1tDYrJhjEqe+eF3EiO0dEDiNGvL6Vy0ao= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 3216k83rqt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 02 Jul 2020 11:17:33 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 11:17:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bPYB3aKXP26s1p/vPjxm4678M+KYYOqwW4mL9zpHYO/WewSG96PZ80g9CEZG2AVfUXC9qnIwiJu1e5N1bONpe5HihtVmPnpSQV4j7nd6gpsoNGHEc2R43v9q+jmqhnS1eyCHYhdZMnBOj2O3qHQfGYBe7TRVJwBKscxXcO6TpoF/dO98aUFz87+PnAkZyAWIeXP8AevuZHCdzbLcDxMZZWrgAjkQ9nCe4BoX21Of4MwPIK/Ou1NbQ0Iky6CDJoU8+GITy1A6J51JkB36webNtrgSDvBey0WWJRd+croA+W7DNyWm/frycd/KkrBvtuWtv08gM4ig0+GFqXbFQOzfzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SeRwImw+QWuCtlznLLAfvpLB9u70Fr5FNgOO4t6uRBk=;
+ b=goOsSRcHEbBOfM+4WMhEbKb4Hg4QNuWYg/3uoDS4+U5KfWBy+FB29CHSk3aedTZ0w+pNiLa0HXwrh6x8yvp8eqVROWLVy72ES0/VoAETFI20Cp9dk7DH5QjvCoOz2ANmO02aAonwS4BgOtevFZ1Uvc+FBWxyHq07YpfFNfZcP2Hty2PBzk4XaPbmZoHYKietXRDyxEv+v6XyR/BCqNwiBLMK5ffmlUHZCsj6PSArF3mHjwcNiJR3NOkpupaIp8jWmKaSRy0xKPxHRROlxOFAZk5Ai99aohJQIPuTZPkB94nRnoG29LXRxznTRF7XDC63p5LI/xtBd9dXZjQJgZiwLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SeRwImw+QWuCtlznLLAfvpLB9u70Fr5FNgOO4t6uRBk=;
+ b=diDXwlZ57+iWm2BIu3gWfayEsi6l0sdX63gseKV8P54WZLnAWSptfqO8buGxh91GhPTp3ROEO1s4AkqoPfBsyLArd3sApxCPNJMAdBhyIi/Comzw7TM/W2HhbRQ63B2N5mJwOcLJY51ZGZmrn2TRu4HY2CZ7ZInjAbRYKXUIY3k=
+Authentication-Results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2757.namprd15.prod.outlook.com (2603:10b6:a03:156::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Thu, 2 Jul
+ 2020 18:17:29 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3131.034; Thu, 2 Jul 2020
+ 18:17:29 +0000
+Date:   Thu, 2 Jul 2020 11:17:26 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2] mm: kmem: make memcg_kmem_enabled() irreversible
+Message-ID: <20200702181726.GA114903@carbon.dhcp.thefacebook.com>
+References: <20200702180926.1330769-1-guro@fb.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702174455.282252-1-mlevitsk@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200702180926.1330769-1-guro@fb.com>
+X-ClientProxiedBy: BY5PR16CA0010.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::23) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:58c6) by BY5PR16CA0010.namprd16.prod.outlook.com (2603:10b6:a03:1a0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Thu, 2 Jul 2020 18:17:29 +0000
+X-Originating-IP: [2620:10d:c090:400::5:58c6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d1a8e6ca-cf95-4ab5-3c05-08d81eb42e6e
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2757:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2757FC0968BD65F8A55E4B29BE6D0@BYAPR15MB2757.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: F+te24rMl7P24lYMkm3FZLnvqcnNaMKDWSrjrevWi4r6yM1Ilc1YeGj9cBsWUtH8+IxUCeuoKcltFj8b3pRqs0WY00mh9BTq+eaOwY/Kw4ZxRoAGvKCxXSdK/r07dzKVRStHx56mIB6UWFrj6nt1zUtrrigYKfalb/pFKLVCeo8sDDBsQbjYzP2CJmuZVdCylmU5DhHDiCscXYPeY/ex/5mUdKsomdHrsvey0rcLhMD8HaaZ78zcOyMP9uocjKGEUS2hsWaH2eFe5IkX5uHVEq3seg1GkOXKczIDtZCyp/RyCTHCTyagLzKTaCI00fL+KsY+bdOF0qM037wpDG6FHQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(7696005)(52116002)(86362001)(6916009)(186003)(5660300002)(16526019)(8676002)(33656002)(83380400001)(8936002)(55016002)(66946007)(4326008)(54906003)(1076003)(66556008)(66476007)(9686003)(2906002)(6666004)(6506007)(498600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 4d/TQ5pK3DRNJmu9aCR4ygUYO+PfcBDXdLSt5aS1uS/B4kIrzS3k9Crquo8hW7xtOngDYV/f2e9aQlcR1FXOrtcIW1VsFk6ua0rth+XE0YQ+aMzRRocrvLxLtcp5RGWnP6ig0S6M68Yanzih571lHMtewI3WYPLqLV51XyQy5TAPiZc/M4BIh2F9FotdLu9pOsMSmEYO0xYyReZlXrJN4RULp1WVaZyMo6eP9WcOZkSQBha4epUxOboOvc/WRqwS/wZklSjc/0uXN/3M1onWcKAMf7r206v+1aGAqVgRzeS4dCvIZacUvRhPYOwQKUIy3+SuAFnDNW4ecmPJp5WvPDi2Zhjx3mnFFIsPPGkiuf4Z/J6WRf/h2Y44hr0tButufu3TRR0vTbtGZP/Zy3/3+q6fVUpVplb3aj7wAzwlysjYj/pwFhhHuulbayeGsmQmbwbUjfWa/dnMYx3jb9CCogYflsZ3ZD12vYk8fgi3utE4hQk97PbG+pi8GwKBwOm+m7oGKYQCjM8YenojfDl7EQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1a8e6ca-cf95-4ab5-3c05-08d81eb42e6e
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 18:17:29.7086
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s5xfuiemC+hEdIXjnFE5yCKbbDaCWDBcx2QQRlqHF/c3m3lMNaRKsGKh0ymNCgYY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2757
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 priorityscore=1501
+ suspectscore=1 spamscore=0 mlxlogscore=662 cotscore=-2147483648
+ adultscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020124
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:44:55PM +0300, Maxim Levitsky wrote:
-> There are few cases when this function was creating a bogus #GP condition,
-> for example case when and AMD host supports STIBP but doesn't support SSBD.
+On Thu, Jul 02, 2020 at 11:09:26AM -0700, Roman Gushchin wrote:
+> Historically the kernel memory accounting was an opt-in feature, which
+> could be enabled for individual cgroups. But now it's not true, and
+> it's on by default both on cgroup v1 and cgroup v2.  And as long as a
+> user has at least one non-root memory cgroup, the kernel memory
+> accounting is on. So in most setups it's either always on (if memory
+> cgroups are in use and kmem accounting is not disabled), either always
+> off (otherwise).
 > 
-> Follow the rules for AMD and Intel strictly instead.
-
-Can you elaborate on the conditions that are problematic, e.g. what does
-the guest expect to exist that KVM isn't providing?
-
-> AMD #GP rules for IA32_SPEC_CTRL can be found here:
-> https://bugzilla.kernel.org/show_bug.cgi?id=199889
+> memcg_kmem_enabled() is used in many places to guard the kernel memory
+> accounting code. If memcg_kmem_enabled() can reverse from returning
+> true to returning false (as now), we can't rely on it on release paths
+> and have to check if it was on before.
 > 
-> Fixes: 6441fa6178f5 ("KVM: x86: avoid incorrect writes to host MSR_IA32_SPEC_CTRL")
+> If we'll make memcg_kmem_enabled() irreversible (always returning true
+> after returning it for the first time), it'll make the general logic
+> more simple and robust. It also will allow to guard some checks which
+> otherwise would stay unguarded.
 > 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 57 ++++++++++++++++++++++++++++++++++------------
->  1 file changed, 42 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 00c88c2f34e4..a6bed4670b7f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10670,27 +10670,54 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
->  }
->  EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
->  
-> -u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> +
-> +static u64 kvm_spec_ctrl_valid_bits_host(void)
-> +{
-> +	uint64_t bits = 0;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL))
-> +		bits |= SPEC_CTRL_IBRS;
-> +	if (boot_cpu_has(X86_FEATURE_INTEL_STIBP))
-> +		bits |= SPEC_CTRL_STIBP;
-> +	if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-> +		bits |= SPEC_CTRL_SSBD;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_AMD_IBRS) || boot_cpu_has(X86_FEATURE_AMD_STIBP))
-> +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS | SPEC_CTRL_SSBD;
-> +
-> +	return bits;
-> +}
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Rather than compute the mask every time, it can be computed once on module
-load and stashed in a global.  Note, there's a RFC series[*] to support
-reprobing bugs at runtime, but that has bigger issues with existing KVM
-functionality to be addressed, i.e. it's not our problem, yet :-).
+Andrew,
 
-[*] https://lkml.kernel.org/r/1593703107-8852-1-git-send-email-mihai.carabas@oracle.com
+can you, please, put this patch before my slab series?
 
-> +
-> +static u64 kvm_spec_ctrl_valid_bits_guest(struct kvm_vcpu *vcpu)
->  {
-> -	uint64_t bits = SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD;
-> +	uint64_t bits = 0;
->  
-> -	/* The STIBP bit doesn't fault even if it's not advertised */
-> -	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL) &&
-> -	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS))
-> -		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> -	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL) &&
-> -	    !boot_cpu_has(X86_FEATURE_AMD_IBRS))
-> -		bits &= ~(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP);
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> +		bits |= SPEC_CTRL_IBRS;
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_INTEL_STIBP))
-> +		bits |= SPEC_CTRL_STIBP;
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD))
-> +		bits |= SPEC_CTRL_SSBD;
->  
-> -	if (!guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL_SSBD) &&
-> -	    !guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-> -		bits &= ~SPEC_CTRL_SSBD;
-> -	if (!boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) &&
-> -	    !boot_cpu_has(X86_FEATURE_AMD_SSBD))
-> -		bits &= ~SPEC_CTRL_SSBD;
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_AMD_IBRS) ||
-> +			guest_cpuid_has(vcpu, X86_FEATURE_AMD_STIBP))
+Thank you!
 
-Bad indentation.
-
-> +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS;
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_AMD_SSBD))
-> +		bits |= SPEC_CTRL_STIBP | SPEC_CTRL_IBRS | SPEC_CTRL_SSBD;
-
-Would it be feasible to split into two patches?  The first (tagged Fixes:)
-to make the functional changes without inverting the logic or splitting, and
-then do the cleanup?  It's really hard to review this patch because I can't
-easily tease out what's different in terms of functionality.
-
->  	return bits;
->  }
-> +
-> +u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> +{
-> +	return kvm_spec_ctrl_valid_bits_host() &
-> +	       kvm_spec_ctrl_valid_bits_guest(vcpu);
-> +}
-> +
-> +
->  EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
->  
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
-> -- 
-> 2.25.4
-> 
+Roman
