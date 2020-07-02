@@ -2,121 +2,205 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5244C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE867207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3CA2071A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:07:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AnwkEP3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgGBD7D (ORCPT
+        id S1726262AbgGBEHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 23:59:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26776 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgGBD7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 23:59:02 -0400
-IronPort-SDR: UeVKnAbzP9rV1gTs3a2u29CPmtIRCgtjMO1UdQtvlnfFX2evOWMfjqInDK8XFLHNaxyulKhd2e
- h0JTHWwqe8TQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126403730"
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="126403730"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 20:59:02 -0700
-IronPort-SDR: BVhIUUZ1L/xEqOBO26oXtglVzitgz3GWW+7g3i67tenBlNkARotauZWDCTJyDmhbtBaIFmo1cO
- c9Cf4XlxNByQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="281818263"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 01 Jul 2020 20:59:02 -0700
-Date:   Wed, 1 Jul 2020 20:59:02 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200702035902.GC1819@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+        Thu, 2 Jul 2020 00:07:12 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:19043 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGBEHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 00:07:11 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200702040706epoutp04c3ada092ca7bc3d8a6918de7878c24b5~d0_W1R5pV2029820298epoutp043
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:07:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200702040706epoutp04c3ada092ca7bc3d8a6918de7878c24b5~d0_W1R5pV2029820298epoutp043
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593662826;
+        bh=nSBloLjBMkhEq6dBnL0Yut7t5IwUXxI09+5uuRC+GYI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AnwkEP3HZjzGy38t1rKrQ5Sq4bEi/VXmO+tZcn0w5+L4qn2Y3qoONPfDE5gM5Z1iS
+         6chLBFWVaLxAX0X6AJcz7dZ6+Yp1MKNpUGkRKriyyhG5pebPa4sBBiLn9KGRg42JVw
+         7FtrZtEJ9PV5nFBOAe/DQHd/Y2aBJxQ2fQy3+vRk=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200702040706epcas1p4ded8bc0a4377b2e65a53400e4c98d717~d0_WUindx2564425644epcas1p4A;
+        Thu,  2 Jul 2020 04:07:06 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49y4Kz693gzMqYm7; Thu,  2 Jul
+        2020 04:07:03 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        59.D0.29173.76D5DFE5; Thu,  2 Jul 2020 13:07:03 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200702040703epcas1p3f8b2c6f5a3a9c49ce121659d0de215bd~d0_TY4jwO2343023430epcas1p3c;
+        Thu,  2 Jul 2020 04:07:03 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200702040702epsmtrp1b8419846011fd7e80cd260570f732743~d0_TX5xR50526105261epsmtrp1-;
+        Thu,  2 Jul 2020 04:07:02 +0000 (GMT)
+X-AuditID: b6c32a37-9b7ff700000071f5-9a-5efd5d6783da
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        68.C8.08303.66D5DFE5; Thu,  2 Jul 2020 13:07:02 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702040702epsmtip24222edcb032c7d2c57cc9c880c4e3847~d0_TGzNf71793117931epsmtip2x;
+        Thu,  2 Jul 2020 04:07:02 +0000 (GMT)
+Subject: Re: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for
+ building OPP table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
+Date:   Thu, 2 Jul 2020 13:18:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200609131404.17523-13-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPJsWRmVeSWpSXmKPExsWy7bCmrm567N84g0X/DSzuz2tltHj36Smr
+        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
+        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
+        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+        5koKeYm5qbZKLj4Bum6ZOUC/KCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0
+        ihNzi0vz0vWS83OtDA0MjEyBChOyM2Y072EqeCBYMXf2OqYGxql8XYycHBICJhJHzjxi6mLk
+        4hAS2MEo0by/lRHC+cQo0b7vEZTzmVFi9totjDAtly+8YIZI7GKUmPZuCjtIQkjgPaPEh/MF
+        ILawQIzEpO4ZLCBFIgJHmCVWdx4HG8UscJlR4mzbFzaQKjYBLYn9L26A2fwCihJXfzwGW8Er
+        YCexunULK4jNIqAi0fD8EtgGUYEwiZPbWqBqBCVOznzCAmJzCphLrN+yGMxmFhCXuPVkPhOE
+        LS+x/e0csFMlBNo5JU6vP8MK8YOLxNxpV5khbGGJV8e3sEPYUhIv+9ug7GqJlSePsEE0dzBK
+        bNl/AarZWGL/0slAGziANmhKrN+lDxFWlNj5ey4jxGI+iXdfe1hBSiQEeCU62oQgSpQlLj+4
+        ywRhS0osbu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhgjBzfmxjBKV3LfAfj
+        tLcf9A4xMnEwHmKU4GBWEuE9bfArTog3JbGyKrUoP76oNCe1+BCjKTCAJzJLiSbnA7NKXkm8
+        oamRsbGxhYmhmamhoZI4r6/VhTghgfTEktTs1NSC1CKYPiYOTqkGJk8T1qV9QYZ+fMpX4lPz
+        1kTXzjSbs+bv3ynn87l5N/Qu1jVUv2TXO/N3wMR9W1wKXcw/ejw+0Hw+uvulrc2/tAoR57zN
+        7z+FV7xVNQ/wV6qK/CLlL+zXq279ZoJ5q5Th1VMFLPse1fw6s8aL/Wx9ZuK5A6unPt3ZzP6x
+        dNexH4znpSNEl/ic/sG96qn9gvwNj/l+P+9wyhZZZ+x8JYCL8Tjb9oONbWcvxOrHOW2fHeY4
+        IXTHVO4/O7ibSqfrPltZ5/iS/+uaBOaTzWo+Hw693jJt9zaTzZu/uUQZMy85v7f24Gqn55/+
+        uFcaXZz2ZN3Tc5+Z8+8F8/1JTdo0f4/hwbsFnUnO67w59t1Z7LXhKp8SS3FGoqEWc1FxIgBk
+        GHfccgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsWy7bCSvG5a7N84gyMzzS3uz2tltHj36Smr
+        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
+        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
+        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZM5r3MBU8EKyYO3sdUwPjVL4u
+        Rk4OCQETicsXXjB3MXJxCAnsYJS4MbeZDSIhKTHt4lGgBAeQLSxx+HAxSFhI4C2jxI7DoiC2
+        sECMxKTuGSwgvSICx5glNp0+zQTiMAtcBirq/MoGMXUbo8S1X29ZQVrYBLQk9r+4AbaBX0BR
+        4uqPx4wgNq+AncTq1i1gNSwCKhINzy+xg9iiAmESO5c8ZoKoEZQ4OfMJC4jNKWAusX7LYjCb
+        WUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfY
+        sMAoL7Vcrzgxt7g0L10vOT93EyM4trW0djDuWfVB7xAjEwfjIUYJDmYlEd7TBr/ihHhTEiur
+        Uovy44tKc1KLDzFKc7AoifN+nbUwTkggPbEkNTs1tSC1CCbLxMEp1cCkxNAkkT6zc9XpY5I3
+        LAU0WFhFnlvEVesIsn76c3xj5VqVKZu2FUxy+LHOLTeOL0ZOI+3C1kTxinKX3p0/ZmUsCzjK
+        E73/xe6dV6N7XjE9yez9u+N7n+zf1pXrpZufbOoQO7bVTmW9oddH3TWpjSnPl0XZFhZvnhK2
+        /fvUKcHH2+a/aiuQfORX7VhXevj58psla/Vq2J9ckJKbF1ewep3qAt9DMgstOOdJMDK7ng9f
+        25gZZ+lQo8jYNdXOaePFQm4PhZ4dTWl7zzCl5xRs6E76sTg1cXbMhj6Dg1GxG1sP7rUojJX2
+        +60aopcaeP/o1KdGXx/mzw+eH3Iz8rXU0Rd56n7LosR07za8jeYpZVBiKc5INNRiLipOBACK
+        Lp0uXAMAAA==
+X-CMS-MailID: 20200702040703epcas1p3f8b2c6f5a3a9c49ce121659d0de215bd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0
+References: <20200609131404.17523-1-digetx@gmail.com>
+        <CGME20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0@epcas1p2.samsung.com>
+        <20200609131404.17523-13-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> +static int sgx_validate_secs(const struct sgx_secs *secs,
-> +			     unsigned long ssaframesize)
-> +{
-> +	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
-> +		return -EINVAL;
-> +
-> +	if (secs->base & (secs->size - 1))
-> +		return -EINVAL;
-> +
-> +	if (secs->miscselect & sgx_misc_reserved_mask ||
-> +	    secs->attributes & sgx_attributes_reserved_mask ||
-> +	    secs->xfrm & sgx_xfrm_reserved_mask)
-> +		return -EINVAL;
-> +
-> +	if (secs->attributes & SGX_ATTR_MODE64BIT) {
-> +		if (secs->size > sgx_encl_size_max_64)
-> +			return -EINVAL;
-> +	} else if (secs->size > sgx_encl_size_max_32)
-> +		return -EINVAL;
+Hi Dmitry,
 
-These should be >=, not >, the SDM uses one of those fancy ≥ ligatures.
+On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+> The clk_round_rate() won't be usable for building OPP table once
+> interconnect support will be added to the EMC driver because that CLK API
+> function limits the rounded rate based on the clk rate that is imposed by
+> active clk-users, and thus, the rounding won't work as expected if
+> interconnect will set the minimum EMC clock rate before devfreq driver is
+> loaded. The struct tegra_mc contains memory timings which could be used by
+> the devfreq driver for building up OPP table instead of rounding clock
+> rate, this patch implements this idea.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+> index 6469dc69c5e0..bf504ca4dea2 100644
+> --- a/drivers/devfreq/tegra20-devfreq.c
+> +++ b/drivers/devfreq/tegra20-devfreq.c
+> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  {
+>  	struct tegra_devfreq *tegra;
+>  	struct tegra_mc *mc;
+> -	unsigned long max_rate;
+> -	unsigned long rate;
+> +	unsigned int i;
+>  	int err;
+>  
+>  	mc = tegra_get_memory_controller();
+> @@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	tegra->regs = mc->regs;
+>  
+> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> -
+> -	for (rate = 0; rate <= max_rate; rate++) {
+> -		rate = clk_round_rate(tegra->emc_clock, rate);
+> +	if (!mc->num_timings) {
 
-Internal versions use more obvious pseudocode, e.g.:
+Could you explain what is meaning of 'num_timing?
+Also, why add the opp entry in case of mc->num_timings is zero?
 
-    if ((DS:TMP_SECS.ATTRIBUTES.MODE64BIT = 1) AND
-        (DS:TMP_SECS.SIZE AND (~((1 << CPUID.18.0:EDX[15:8]) – 1)))
-    {
-        #GP(0);
-    }
+> +		err = dev_pm_opp_add(&pdev->dev,
+> +				     clk_get_rate(tegra->emc_clock), 0);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "failed to add OPP: %d\n", err);
+> +			return err;
+> +		}
+> +	}
+>  
+> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+> +	for (i = 0; i < mc->num_timings; i++) {
+> +		err = dev_pm_opp_add(&pdev->dev, mc->timings[i].rate, 0);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
+>  			goto remove_opps;
+> 
 
-> +
-> +	if (!(secs->xfrm & XFEATURE_MASK_FP) ||
-> +	    !(secs->xfrm & XFEATURE_MASK_SSE) ||
-> +	    (((secs->xfrm >> XFEATURE_BNDREGS) & 1) !=
-> +	     ((secs->xfrm >> XFEATURE_BNDCSR) & 1)))
-> +		return -EINVAL;
-> +
-> +	if (!secs->ssa_frame_size || ssaframesize > secs->ssa_frame_size)
-> +		return -EINVAL;
-> +
-> +	if (memchr_inv(secs->reserved1, 0, sizeof(secs->reserved1)) ||
-> +	    memchr_inv(secs->reserved2, 0, sizeof(secs->reserved2)) ||
-> +	    memchr_inv(secs->reserved3, 0, sizeof(secs->reserved3)) ||
-> +	    memchr_inv(secs->reserved4, 0, sizeof(secs->reserved4)))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
