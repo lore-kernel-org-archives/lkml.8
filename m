@@ -2,199 +2,149 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E10C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3FC20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE842070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvrU6D3y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ef+WvaDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgGBGiZ (ORCPT
+        id S1726578AbgGBGkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
+        Thu, 2 Jul 2020 02:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGBGiX (ORCPT
+        with ESMTP id S1726068AbgGBGkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:38:23 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E818C08C5C1;
-        Wed,  1 Jul 2020 23:38:23 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id j1so12100147pfe.4;
-        Wed, 01 Jul 2020 23:38:23 -0700 (PDT)
+        Thu, 2 Jul 2020 02:40:02 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AA4C08C5C1;
+        Wed,  1 Jul 2020 23:40:01 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o18so23460704eje.7;
+        Wed, 01 Jul 2020 23:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Euh2eLNQ1JYbPjXtvEgr09p8aHrcoiM2/6V1LZ25Y9U=;
-        b=QvrU6D3yaNQ69T5OV/rJWrxvqHQGICFKqDEGRg0eAme3wF7jmuE/0hctd5keCBfc4i
-         65mfER4yfSqflDs3plmuDTJaB27N3qu+wSLF1Ex/HeP3uKcSFRZZKQsYtrsH+4GMQZnu
-         40e6wKllRvFB7mWz8JZhd1oqvggXrNh9XwwFQx32hD0AGOpGlQ/n42VX++wq9L34QVS+
-         BaDcW1Fww+zXhbSh2WrdLghdoUK7S0VZRPgEFXYHjj8SNfCfcm/vx5ViKiQKXgDCKtzd
-         IZOA8/9wk+Gg3kkUUvVCO4dfomqQgoRBKFnJgoepe8ZwpA21zFvnWeWtIBm+n/gENjPr
-         zwmw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uZyzkTpWxxyp2jCpCr/H7AQhJTt+1oFIYiYjR40e5k8=;
+        b=ef+WvaDI5Nclj/K3DxyTqSSIiMNT70CBd5IP2Oh8mSLH15FENPmZiNclUE54Cef5Y1
+         6RdTuKtBentGIP3A2y8+jhPffGc8jn/LJ9ZRvpS5+cdnzDueqkGsNMqAdcQ2qDgBL5Wo
+         TR4r7Hj7hcW9Fa31FslEK/MC3djVQaGhgL5PXCN9hyKpqXfd/D5LUR9QMeFLkJwfYtGr
+         c1VXFt8rx4+GEz8F2KbqvYBf/wvZh0x/lbvGYN/D1ov/QRi+rZmxUa3/YX4Lp7CDGsUp
+         Sn3a39dv13S3DaJ9HcJYmVLqtzeQxsXEN+7YZhkVNi19zDnEO52Wpn6Vu3zpvqI6+MYJ
+         bJGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Euh2eLNQ1JYbPjXtvEgr09p8aHrcoiM2/6V1LZ25Y9U=;
-        b=XUw0MzRK13DKTsfQW7tZkSU3QHMOtMG7MZAHOprzK2Ar+7z97AszNP5rVvutozYxOq
-         hGL9vcfk5KsrVUKaFqEqNy6r26eWIZBz95mRsEZAiNbeS9kb5B8FwqbclPcz2WCxkBf1
-         4A1+lD+gn/2YbYAZrDHKdwg5SxmocCPbYKceJWPvP8Hv3WL4jk79Pme9bInpQV3hiqUk
-         FoL/fZQbIUcdrZ+DD2sKQWzd7X0FlIqTM3OIwec1ll1CbYR0j3G09j9wJGyDGsWboDY+
-         MGvt2Ox51F8OBsiqJnm4Sycnpf/+sojQJndAIFZRhP8aCxM4WVGLJ/MnQWBHE04NF6dK
-         NZrg==
-X-Gm-Message-State: AOAM531cSN3Jmf+6w+yPSyWEgcb2MtnaX4dAe/V+HZMlGlUzMOQwxW7S
-        Qz/Rk1rO0KxpW/HMUsRPUgw=
-X-Google-Smtp-Source: ABdhPJyI9cxlW7p5YoWL1fbaaFFYzVle3KD72jGxUkm1KtT/IcQdOc0AEJyAjH1rfFYBIhWRDvpP1Q==
-X-Received: by 2002:a62:64ce:: with SMTP id y197mr4642085pfb.19.1593671902756;
-        Wed, 01 Jul 2020 23:38:22 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id l12sm7523549pff.212.2020.07.01.23.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 23:38:22 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Manish Chopra <manishc@marvell.com>,
-        Rahul Verma <rahulv@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Shahed Shaikh <shshaikh@marvell.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 2/2] qlcninc: use generic power management
-Date:   Thu,  2 Jul 2020 12:06:32 +0530
-Message-Id: <20200702063632.289959-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702063632.289959-1-vaibhavgupta40@gmail.com>
-References: <20200702063632.289959-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uZyzkTpWxxyp2jCpCr/H7AQhJTt+1oFIYiYjR40e5k8=;
+        b=uKWo4w+TlCG5dFN3sc9xxZU++xqI6+87TKZoy3rDiDlXPvkug6vh4idyUrWH8KSa9x
+         TeR7GOmt4ejRkYoNT95R6LxhmbbVeUZgVaT4Es2QC0iWThGoBeiJNj9dlcfREKglpfTy
+         O1inPAXrMt4NA4ywBkmkkDLlTXMFztqcRozHMWVDyGWHGlGtyLAnvTlA56LyCPJ7zfIz
+         CinBHN62PKgJkZtUxID+8O1q67T+UxS9fDsx0BsJTzRKdYrwuSBVsJNYkuYkryU5SO1t
+         AbgEmxMM5RiZ+BO60ja2c3L0rmn6YHrdLJxaZaQpMj9TMYXlEwufv+4L1/dHfmcxdQTe
+         yFzA==
+X-Gm-Message-State: AOAM533y0TlOKBeIZiVmxpV7mqE/3UtZedfMj77/rn+zOSZrXfdkwtuA
+        rui9s2GNWSZ/5Enj/1aDc10aKgWx4nCLoPoJJBs=
+X-Google-Smtp-Source: ABdhPJwcdJc+U6kh8u/dlaQKuEdG1Rr872beSa67XPYZJ6AgnTMmZLhLlp9wvGZneXlCk1gmpjEyS7JQdHyVAthcVa8=
+X-Received: by 2002:a17:907:7245:: with SMTP id ds5mr27575294ejc.67.1593672000556;
+ Wed, 01 Jul 2020 23:40:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1593656074-10092-1-git-send-email-Anson.Huang@nxp.com>
+ <1593656074-10092-4-git-send-email-Anson.Huang@nxp.com> <CAA+hA=S0G7Na0ieEpPq3aN6GN1BEHtYp9vbF9x2tjmknDSVjZw@mail.gmail.com>
+ <DB3PR0402MB391610595D40C11CF26CD990F56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAA+hA=Rtkm_FpkoBvHNnB0TSeTrqXaRVwOzkywsL7QO6ec_K7Q@mail.gmail.com> <AM6PR0402MB3911049CC1B136327345F11CF56D0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB3911049CC1B136327345F11CF56D0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Thu, 2 Jul 2020 14:25:58 +0800
+Message-ID: <CAA+hA=S9ENXtD7q362=y84qKAtR090pZOd6MF6uN8W223UK-+Q@mail.gmail.com>
+Subject: Re: [PATCH V4 3/5] clk: imx: Support building i.MX common clock
+ driver as module
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states. And they use PCI
-helper functions to do it.
+On Thu, Jul 2, 2020 at 2:11 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> > Subject: Re: [PATCH V4 3/5] clk: imx: Support building i.MX common clock
+> > driver as module
+> >
+> > On Thu, Jul 2, 2020 at 11:26 AM Anson Huang <anson.huang@nxp.com>
+> > wrote:
+> > [...]
+> > > > > @@ -143,16 +148,18 @@ void imx_cscmr1_fixup(u32 *val)  static int
+> > > > > imx_keep_uart_clocks;  static struct clk ** const
+> > > > > *imx_uart_clocks;
+> > > > >
+> > > > > -static int __init imx_keep_uart_clocks_param(char *str)
+> > > > > +static int __maybe_unused imx_keep_uart_clocks_param(char *str)
+> > > > >  {
+> > > > >         imx_keep_uart_clocks = 1;
+> > > > >
+> > > > >         return 0;
+> > > > >  }
+> > > > > +#ifndef MODULE
+> > > > >  __setup_param("earlycon", imx_keep_uart_earlycon,
+> > > > >               imx_keep_uart_clocks_param, 0);
+> > > > > __setup_param("earlyprintk", imx_keep_uart_earlyprintk,
+> > > > >               imx_keep_uart_clocks_param, 0);
+> > > >
+> > > > I feel not only the __setup_param, the whole logic of
+> > > > keep_uart_clocks are not needed for Module case. Is it true?
+> > >
+> > > Yes, but the 'keep_uart_clocks' is false by default and the function
+> > > imx_keep_uart_clocks_param() already has '__maybe_unused', it does NOT
+> > > impact anything if it is for module build, so I did NOT add the #ifndef check
+> > for them, just to keep code easy and clean.
+> > >
+> >
+> > IMHO do not compile them is a more easy and clean way. Then users don't
+> > have to look into the code logic which is meaingless for Module case.
+> >
+> > BTW, it really does not make any sense to only condionally compile
+> > __setup_parm() but left
+> > the param functions definition to be handled by __maybe_unnused.
+> > They're together part of code, aren't they?
+>
+> I am fine of adding the '#ifndef MODULE' to imx_clk_disable_uart() and imx_keep_uart_clocks_param()
+> as well in next patch series. Others like ' imx_keep_uart_clocks ' and imx_register_uart_clocks() need to
+> be kept always built, since they are used by each clock driver no matter built-in or module build.
+>
+> So that means I have to add another 'ifndef MODULE' or I need to adjust some code sequence to make
+> those code can be built-out in same block and just use single 'ifndef MODULE', I think adjust the code
+> sequence should be better, will go with this way.
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+What if we  condionally compile it in clk.h? Will that be easiser?
 
-.suspend() calls __qlcnic_shutdown, which then calls qlcnic_82xx_shutdown;
-.resume()  calls __qlcnic_resume,   which then calls qlcnic_82xx_resume;
+Regards
+Aisheng
 
-Both ...82xx..() are define in
-drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c and are used only in
-drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c.
-
-Hence upgrade them and remove PCI function calls, like pci_save_state() and
-pci_enable_wake(), inside them
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../net/ethernet/qlogic/qlcnic/qlcnic_hw.c    | 10 ++----
- .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  | 33 ++++---------------
- 2 files changed, 9 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c
-index 822aa393c370..780bba9f2e92 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c
-@@ -1662,14 +1662,8 @@ int qlcnic_82xx_shutdown(struct pci_dev *pdev)
- 
- 	clear_bit(__QLCNIC_RESETTING, &adapter->state);
- 
--	retval = pci_save_state(pdev);
--	if (retval)
--		return retval;
--
--	if (qlcnic_wol_supported(adapter)) {
--		pci_enable_wake(pdev, PCI_D3cold, 1);
--		pci_enable_wake(pdev, PCI_D3hot, 1);
--	}
-+	if (qlcnic_wol_supported(adapter))
-+		device_wakeup_enable(&pdev->dev);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-index 9dd6cb36f366..e52af092a793 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-@@ -2811,35 +2811,17 @@ static void qlcnic_shutdown(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
--#ifdef CONFIG_PM
--static int qlcnic_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused qlcnic_suspend(struct device *dev_d)
- {
--	int retval;
--
--	retval = __qlcnic_shutdown(pdev);
--	if (retval)
--		return retval;
--
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
--	return 0;
-+	return __qlcnic_shutdown(to_pci_dev(dev_d));
- }
- 
--static int qlcnic_resume(struct pci_dev *pdev)
-+static int __maybe_unused qlcnic_resume(struct device *dev_d)
- {
--	struct qlcnic_adapter *adapter = pci_get_drvdata(pdev);
--	int err;
--
--	err = pci_enable_device(pdev);
--	if (err)
--		return err;
--
--	pci_set_power_state(pdev, PCI_D0);
--	pci_set_master(pdev);
--	pci_restore_state(pdev);
-+	struct qlcnic_adapter *adapter = dev_get_drvdata(dev_d);
- 
- 	return  __qlcnic_resume(adapter);
- }
--#endif
- 
- static int qlcnic_open(struct net_device *netdev)
- {
-@@ -4258,15 +4240,14 @@ static const struct pci_error_handlers qlcnic_err_handler = {
- 	.resume = qlcnic_io_resume,
- };
- 
-+static SIMPLE_DEV_PM_OPS(qlcnic_pm_ops, qlcnic_suspend, qlcnic_resume);
-+
- static struct pci_driver qlcnic_driver = {
- 	.name = qlcnic_driver_name,
- 	.id_table = qlcnic_pci_tbl,
- 	.probe = qlcnic_probe,
- 	.remove = qlcnic_remove,
--#ifdef CONFIG_PM
--	.suspend = qlcnic_suspend,
--	.resume = qlcnic_resume,
--#endif
-+	.driver.pm = &qlcnic_pm_ops,
- 	.shutdown = qlcnic_shutdown,
- 	.err_handler = &qlcnic_err_handler,
- #ifdef CONFIG_QLCNIC_SRIOV
--- 
-2.27.0
-
+>
+> Anson
