@@ -2,107 +2,152 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B40AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217BC2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593713464;
-	bh=jAXk80oDq4+9Y/UPmiO21NEVFMikxzhxCGTvZJxc1sc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jn46ygWLDJf34AZQOtxcZplGoopOryQrf9teSWvf125gqqA24w+SjcQwgzb/HyXTR
-	 yl07lWMeAAFuaz1cddIoBOn2I7Qeq+EjoRR7P6ZT9ac5zd2BKqZZqWG2aGhUN1eNUk
-	 OpT6Q0kxEQD7OU2tNtU4HUxssCYyOVBRJzrWkLFY=
+	by mail.kernel.org (Postfix) with ESMTP id 41BDF2073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="g383Rgq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgGBSLC (ORCPT
+        id S1728021AbgGBSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgGBSLB (ORCPT
+        Thu, 2 Jul 2020 14:12:52 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:55856 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726349AbgGBSMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:11:01 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8825EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 11:11:01 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so16795632lfb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ZF2RO7D0EVWwMJZ+4s9BUuPvy5hetDDT+LtkKbx5jA=;
-        b=aBC7CVuq4bDi327CCmAk00uAKzXwDXFwka2t1budpO1vnfIVa2mhtpM0hyc23Ybcsc
-         4Q9QSrTL8XeuvC6s7HWsM8siP9hY3nACHvOUGoA9Ud6+Hmi67VrIhRHxBHHtC9gyA+ed
-         oAFRom3cS+moVq1MRyTJGXkqatICUT293Pa3E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ZF2RO7D0EVWwMJZ+4s9BUuPvy5hetDDT+LtkKbx5jA=;
-        b=Fk3QA5gX7AzTwGQU72yMzTzdIULT4XzuRaZ0j0boPw2r6sKXDRrM0DX8K8q+ACfHeu
-         p9jByWMkJkGBCIvp3dlhA9hJi2jG0693AQpKzRoq+N3pkPBYbVFgv6E27crD2LBlmjzA
-         VJ47anWfkne9rpettYyD+pnXr8svNBQXV/LeNFtOLvoBubVr2HJ4BmcEaNFQxtnxu5q8
-         QQKxh3Z+OXXIFrD/qjsSahr5Wbt7tZfrFnRvXNFmCXfA4ALLskCrMeaKnCMEYqLrApwl
-         jvRWSOvqFiytLqJTVDL7SYnB8Di9AhAECAT18SnYduIgPyTuJRjotSdeJ9m1UUgp59Wu
-         Y84w==
-X-Gm-Message-State: AOAM530AM0NZGSWdAjlPQdp0cVxzuT7IwkdYv7UCWuAQazBdI1pIAC3u
-        vRVvgntW9fJn0JcCHuaKC/FcpM/9LEA=
-X-Google-Smtp-Source: ABdhPJwLDwdscgjLNoZf58ETKWzDuTIHL5W5gT8jkBEkxJ06DNxX0fFTR1ZFVczCgsmLtlbKpZjmMQ==
-X-Received: by 2002:ac2:5548:: with SMTP id l8mr18881642lfk.188.1593713459766;
-        Thu, 02 Jul 2020 11:10:59 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id p14sm3649924lfh.32.2020.07.02.11.10.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 11:10:59 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id f5so17524256ljj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:10:58 -0700 (PDT)
-X-Received: by 2002:a2e:760b:: with SMTP id r11mr2189529ljc.285.1593713458587;
- Thu, 02 Jul 2020 11:10:58 -0700 (PDT)
+        Thu, 2 Jul 2020 14:12:51 -0400
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062I6xWf021265;
+        Thu, 2 Jul 2020 19:08:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=dHBJESfsfuoreJg+hXrfxFFWunh4+79b75TiWxqM97A=;
+ b=g383Rgq9sti6Bn+cu+UTO/3GFFBS8CFYQnf7IglyV8CnzwDzucMDpgzOWgQa9bZz7p6W
+ W9gqs9cX+NufeX/UECsCx0pdFW7NMGfqCRzE5a5zQ+pQTclvgGgPOxKYoA/7h+vNU9FL
+ owC9M0AjwCaQua1A63VIxxLHxQaFTRg8j3mA0D6N9y9u6l5h3Zrx6xlB2bLDCz35H4mR
+ 775TeCH9PfRc81WY8k7cEg8ot4zybMhYHtqjpJxIpAgSnOHlEXzbGZPxuHk4Q2KVP9ye
+ r8vZsJFX8v5fivTU8goxhBSUcrleOBnpZFwdAeww0N5OVD7iBvfEQSs+bMRE2kT90gk1 QA== 
+Received: from prod-mail-ppoint6 (prod-mail-ppoint6.akamai.com [184.51.33.61] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 31xkj2nbpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 19:08:46 +0100
+Received: from pps.filterd (prod-mail-ppoint6.akamai.com [127.0.0.1])
+        by prod-mail-ppoint6.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 062I69SV014747;
+        Thu, 2 Jul 2020 14:08:45 -0400
+Received: from prod-mail-relay19.dfw02.corp.akamai.com ([172.27.165.173])
+        by prod-mail-ppoint6.akamai.com with ESMTP id 31x1ey2v9p-1;
+        Thu, 02 Jul 2020 14:08:45 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay19.dfw02.corp.akamai.com (Postfix) with ESMTP id 268F26036B;
+        Thu,  2 Jul 2020 18:08:44 +0000 (GMT)
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+To:     Paolo Abeni <pabeni@redhat.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com>
+ <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
+ <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+From:   Josh Hunt <johunt@akamai.com>
+Message-ID: <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+Date:   Thu, 2 Jul 2020 11:08:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200702165120.1469875-1-agruenba@redhat.com>
-In-Reply-To: <20200702165120.1469875-1-agruenba@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Jul 2020 11:10:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whb4H3ywKcwGxgjFSTEap_WuFj5SW7CYw0J2j=WGUs4nQ@mail.gmail.com>
-Message-ID: <CAHk-=whb4H3ywKcwGxgjFSTEap_WuFj5SW7CYw0J2j=WGUs4nQ@mail.gmail.com>
-Subject: Re: [RFC 0/4] Fix gfs2 readahead deadlocks
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=2 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020123
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 cotscore=-2147483648 mlxlogscore=999 phishscore=0
+ bulkscore=0 suspectscore=2 impostorscore=0 adultscore=0 mlxscore=0
+ clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007020123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 9:51 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
->
-> Of this patch queue, either only the first patch or all four patches can
-> be applied to fix gfs2's current issues in 5.8.  Please let me know what
-> you think.
+On 7/2/20 2:45 AM, Paolo Abeni wrote:
+> Hi all,
+> 
+> On Thu, 2020-07-02 at 08:14 +0200, Jonas Bonn wrote:
+>> Hi Cong,
+>>
+>> On 01/07/2020 21:58, Cong Wang wrote:
+>>> On Wed, Jul 1, 2020 at 9:05 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>>>> On Tue, Jun 30, 2020 at 2:08 PM Josh Hunt <johunt@akamai.com> wrote:
+>>>>> Do either of you know if there's been any development on a fix for this
+>>>>> issue? If not we can propose something.
+>>>>
+>>>> If you have a reproducer, I can look into this.
+>>>
+>>> Does the attached patch fix this bug completely?
+>>
+>> It's easier to comment if you inline the patch, but after taking a quick
+>> look it seems too simplistic.
+>>
+>> i)  Are you sure you haven't got the return values on qdisc_run reversed?
+> 
+> qdisc_run() returns true if it was able to acquire the seq lock. We
+> need to take special action in the opposite case, so Cong's patch LGTM
+> from a functional PoV.
+> 
+>> ii) There's a "bypass" path that skips the enqueue/dequeue operation if
+>> the queue is empty; that needs a similar treatment:  after releasing
+>> seqlock it needs to ensure that another packet hasn't been enqueued
+>> since it last checked.
+> 
+> That has been reverted with
+> commit 379349e9bc3b42b8b2f8f7a03f64a97623fff323
+> 
+> ---
+>> diff --git a/net/core/dev.c b/net/core/dev.c
+>> index 90b59fc50dc9..c7e48356132a 100644
+>> --- a/net/core/dev.c
+>> +++ b/net/core/dev.c
+>> @@ -3744,7 +3744,8 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+>>
+>>   	if (q->flags & TCQ_F_NOLOCK) {
+>>   		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+>> -		qdisc_run(q);
+>> +		if (!qdisc_run(q) && rc == NET_XMIT_SUCCESS)
+>> +			__netif_schedule(q);
+> 
+> I fear the __netif_schedule() call may cause performance regression to
+> the point of making a revert of TCQ_F_NOLOCK preferable. I'll try to
+> collect some data.
 
-I think the IOCB_NOIO flag looks fine (apart from the nit I pointed
-out), abnd we could do that.
+Initial results with Cong's patch look promising, so far no stalls. We 
+will let it run over the long weekend and report back on Tuesday.
 
-However, is the "revert and reinstate" looks odd. Is the reinstate so
-different front he original that it makes sense to do that way?
+Paolo - I have concerns about possible performance regression with the 
+change as well. If you can gather some data that would be great. If 
+things look good with our low throughput test over the weekend we can 
+also try assessing performance next week.
 
-Or was it done that way only to give the choice of just doing the revert?
-
-Because if so, I think I'd rather just see a "fix" rather than
-"revert+reinstate".
-
-But I didn't look that closely at the gfs2 code itself, maybe there's
-some reason you did it that way.
-
-              Linus
+Josh
