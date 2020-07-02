@@ -2,194 +2,199 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D31C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7666C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1750E20781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB4A20781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kndgUCLi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fvYkB0Gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgGBW7y (ORCPT
+        id S1726482AbgGBXD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:59:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47458 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBW7x (ORCPT
+        Thu, 2 Jul 2020 19:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgGBXD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:59:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062MvTp8075029;
-        Thu, 2 Jul 2020 22:59:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=rja40bkZ+uABEn1zz77pxq4CDtieylOgbo/CCZbZS0U=;
- b=kndgUCLi8TtT2/WeHmyYfw9qwBaJMg3c18lZZKETy+NXS0p5fTh/sbkr+4z902nhZl+0
- K0m+qJFpAVL6igeiwoMBiAIGH2++AXdcKbUnPxpTzZGmZA9fedbrIOs9TqUOzTcR6aI8
- zxnWs4wcImV7hB90a0i2eAm3aZnF+7El9T02kBCK5IgQNWVs7vMIPG57NyaIhLQ0fuEl
- 4zaEnZDOEqtZiSon3n1ddFj5toNYmkczbPVlXqnT+6ue47O3sCWk3GFMBHGYEf5vhIQu
- aozrGcaGV4J0oX1KvW5y71AvRNfLX1JVYjQYn47BTWBHqJ9P+V5Utnu+y+mFKjn2djMo Iw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31ywrc17n7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 02 Jul 2020 22:59:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062Mwgxi160912;
-        Thu, 2 Jul 2020 22:59:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31xfvwbfh9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jul 2020 22:59:30 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 062MxRse016460;
-        Thu, 2 Jul 2020 22:59:27 GMT
-Received: from [10.39.209.60] (/10.39.209.60)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Jul 2020 22:59:27 +0000
-Subject: Re: [PATCH v2 1/4] x86/xen: remove 32-bit Xen PV guest support
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20200701110650.16172-1-jgross@suse.com>
- <20200701110650.16172-2-jgross@suse.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <6d0b517a-6c53-61d3-117b-40e33e013037@oracle.com>
-Date:   Thu, 2 Jul 2020 18:59:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 19:03:26 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DF3C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:03:26 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so11875356plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C/wKxCmAp8P5+IuEDReF1PhHjU6934D3J4Spbsakypw=;
+        b=fvYkB0GrlRYeSsqKY8DfBsHb5+EpJsR1WxZhgotr27Mz85gEm8Z5BsTJde29nk/h1E
+         BHK7QPSGOx7VZRR+JfzAmGcukkWdp28+cMSOWMccRubKzRkU0/N7mewl+2fR/9jC7LO3
+         dyXtLDDoH+t6Wj0OwsEMiRc3V5sg8zZaOc0TiIrFy59Q9BrPS5FnSNawmGBLpvH2Gxsj
+         xxh4j5Ftf5qhMv07igHdA+38g5zACOzhHOynpFMZaDfu55MVUZ6mtDkLIl3P03ukK+Ga
+         vM6LSUFknrixnYs9VBRakxbwjk24jelKI4MuTaKLnUOoZzufz0x+7S1Dr+wwgGY5EpHH
+         slAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C/wKxCmAp8P5+IuEDReF1PhHjU6934D3J4Spbsakypw=;
+        b=Tfw7vrraHSbIpTrj4rqRfn2+fshOdUaYidPsLM/7LVucivvzzHBFhbAFXb7SrFFEKs
+         Wn/3ycolp82jx7S71pmQljQAHYe4L8N+ICwJ92MOpsxuUrTv1Gb71ojZznq2EkglaIgh
+         l6ZWmLb/i2oX3ZuQOiKs9RbRdYeG6d/vu6pTa/T7Y9Wp5HlELx+QcFyvQ/fitQSMa4+5
+         dRAlNE1YbeLpqs61vhLEsbS4MmRziJlI6BP2jteA6uc3thozIgwRkKwp7zMkxD3Svgae
+         p+N1c6eWZD29FTIO8jFe33nl5/rNSfOkdJFDcWXZ4Siy8i2KacHE260sfZQK0USFHABF
+         9CWw==
+X-Gm-Message-State: AOAM532WOZ7OuxoaTRw0lWFxlg354L4w0F7eC6F2V9rmBm2667EoZrMl
+        McK7wzdoWaPQfK4QQApBl8GYdg==
+X-Google-Smtp-Source: ABdhPJyF1ykGkpqefsktD2Yx+ekgyRNvo0wT3Zm5a/e/Nie0V2q0Tu814ppuAKsBilsKAUqwbstdQA==
+X-Received: by 2002:a17:90b:19d4:: with SMTP id nm20mr12314798pjb.206.1593731005454;
+        Thu, 02 Jul 2020 16:03:25 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 198sm10316727pfb.27.2020.07.02.16.03.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 16:03:24 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 17:03:22 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, leo.yan@linaro.org
+Subject: Re: [PATCH 2/2] perf tools: Fix record failure when mixed with ARM
+ SPE event
+Message-ID: <20200702230322.GB471976@xps15>
+References: <20200623123141.27747-1-liwei391@huawei.com>
+ <20200623123141.27747-3-liwei391@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701110650.16172-2-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007020153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- clxscore=1011 cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007020153
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623123141.27747-3-liwei391@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 7:06 AM, Juergen Gross wrote:
-> Xen is requiring 64-bit machines today and since Xen 4.14 it can be
-> built without 32-bit PV guest support. There is no need to carry the
-> burden of 32-bit PV guest support in the kernel any longer, as new
-> guests can be either HVM or PVH, or they can use a 64 bit kernel.
->
-> Remove the 32-bit Xen PV support from the kernel.
->
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+Hi Li,
+
+On Tue, Jun 23, 2020 at 08:31:41PM +0800, Wei Li wrote:
+> When recording with cache-misses and arm_spe_x event, i found that
+> it will just fail without showing any error info if i put cache-misses
+> after arm_spe_x event.
+> 
+> [root@localhost 0620]# perf record -e cache-misses -e \
+> arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,\
+> jitter=1,store_filter=1,min_latency=0/ sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.067 MB perf.data ]
+> [root@localhost 0620]# perf record -e \
+> arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,\
+> store_filter=1,min_latency=0/ -e cache-misses sleep 1
+> [root@localhost 0620]#
+> 
+> Finally, i found the reason is that the parameter 'arm_spe_pmu' passed to
+> arm_spe_recording_init() in auxtrace_record__init() is wrong. When the
+> arm_spe_x event is not the last event, 'arm_spe_pmus[i]' will be out of
+> bounds.
+
+Yes, this indeed broken.  
+
+The current code can only work if the only event to be
+traced is an arm_spe_X, or if it is the last event to be specified.
+Otherwise the last event type will be checked against all the
+arm_spe_pmus[i]->types, none will match and an out of bound i index will be
+used in arm_spc_recording_init().
+
+Since this problem is not easy to figure out please include the above
+explanation in the changelog.
+
+> 
+> It seems that the code can't support concurrent multiple different
+> arm_spe_x events currently. So add the code to check and record the
+> found 'arm_spe_pmu' to fix this issue.
+> 
+> In fact, we don't support concurrent multiple same arm_spe_x events either,
+> that is checked in arm_spe_recording_options(), and it will show the
+> relevant info.
+> 
+> Fixes: ffd3d18c20b8d ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
+> Signed-off-by: Wei Li <liwei391@huawei.com>
 > ---
->  arch/x86/entry/entry_32.S      | 109 +----------
->  arch/x86/include/asm/proto.h   |   2 +-
->  arch/x86/include/asm/segment.h |   2 +-
->  arch/x86/kernel/head_32.S      |  31 ---
->  arch/x86/xen/Kconfig           |   3 +-
->  arch/x86/xen/Makefile          |   3 +-
->  arch/x86/xen/apic.c            |  17 --
->  arch/x86/xen/enlighten_pv.c    |  48 +----
+>  tools/perf/arch/arm/util/auxtrace.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 62b7b03d691a..7bb6f29e766c 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -58,6 +58,7 @@ struct auxtrace_record
+>  	bool found_etm = false;
+>  	bool found_spe = false;
+>  	static struct perf_pmu **arm_spe_pmus;
+> +	static struct perf_pmu *arm_spe_pmu;
+
+As far as I can tell the "static" doesn't do anything.
+
+>  	static int nr_spes = 0;
+>  	int i = 0;
+>  
+> @@ -77,6 +78,13 @@ struct auxtrace_record
+>  
+>  		for (i = 0; i < nr_spes; i++) {
+>  			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+> +				if (found_spe && (arm_spe_pmu != arm_spe_pmus[i])) {
+> +					pr_err("Concurrent multiple SPE operation not currently supported\n");
+> +					*err = -EOPNOTSUPP;
+> +					return NULL;
+> +				}
+
+Instead of the above, which as you rightly pointed out, is also done in
+arm_spe_recording_options() it might be best to just fix the "if (!nr_spes)"
+condition:
+                if (!nr_spes || arm_spe_pmu)
+                        continue
+
+Furthermore, instead of having a new arm_spe_pmu variable you could simply make
+found_spe a struct perf_pmu.  That would be one less variable to take care of.
+
+> +
+> +				arm_spe_pmu = arm_spe_pmus[i];
+>  				found_spe = true;
+
+Last but not least do you know where the memory allocated for array arm_spe_pmus
+is released?  If you can't find it either then we have a memory leak and it
+would be nice to have that fixed.
+
+Regards
+Mathieu
+
+PS: Leo Yan has spent a fair amount of time in the SPE code - please CC him on
+your next revision.
 
 
-Should we drop PageHighMem() test in set_aliased_prot()?
-
-
-(And there are few other places where is is used, in mmu_pv.c)
-
-
-
-> @@ -555,13 +547,8 @@ static void xen_load_tls(struct thread_struct *t, =
-unsigned int cpu)
->  	 * exception between the new %fs descriptor being loaded and
->  	 * %fs being effectively cleared at __switch_to().
->  	 */
-> -	if (paravirt_get_lazy_mode() =3D=3D PARAVIRT_LAZY_CPU) {
-> -#ifdef CONFIG_X86_32
-> -		lazy_load_gs(0);
-> -#else
-
-
-I think this also needs an adjustment to the preceding comment.
-
-
-> =20
-> -#ifdef CONFIG_X86_PAE
-> -static void xen_set_pte_atomic(pte_t *ptep, pte_t pte)
-> -{
-> -	trace_xen_mmu_set_pte_atomic(ptep, pte);
-> -	__xen_set_pte(ptep, pte);
-
-
-Probably not for this series but I wonder whether __xen_set_pte() should
-continue to use hypercall now that we are 64-bit only.
-
-
-> @@ -654,14 +621,12 @@ static int __xen_pgd_walk(struct mm_struct *mm, p=
-gd_t *pgd,
-
-
-Comment above should be updated.
-
-
--boris
-
+>  				break;
+>  			}
+> @@ -94,7 +102,7 @@ struct auxtrace_record
+>  
+>  #if defined(__aarch64__)
+>  	if (found_spe)
+> -		return arm_spe_recording_init(err, arm_spe_pmus[i]);
+> +		return arm_spe_recording_init(err, arm_spe_pmu);
+>  #endif
+>  
+>  	/*
+> -- 
+> 2.17.1
+> 
