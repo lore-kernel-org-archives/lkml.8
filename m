@@ -2,264 +2,239 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA72C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB107C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5EE820748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35C12077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSrJfnam"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEnbYfoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgGBAAx (ORCPT
+        id S1727889AbgGBAIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:00:53 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55170 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726764AbgGBAAx (ORCPT
+        Wed, 1 Jul 2020 20:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbgGBAIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:00:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593648050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BWlg4nprW+lT5HSpnWRIE5bylNtxirhxTV64sLs4Vrs=;
-        b=aSrJfnam/ApHu3jv0xp0BiUCq3fJIdDTfI5iWKrMHGY56bHIAR02WXTeqzlqC1OB5Ze3zv
-        2FK9uOI9xkqVDzm0GWbkxZQgCIoUqZYcNr5bYjurgFGvmgGw3YLvDPD9t8B1kOKCZkLmvF
-        Da+OJB+u81ibAkeQ2GETGs+pIeG8gCo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-sB73hjoBNmCbM2OEsCtKUA-1; Wed, 01 Jul 2020 20:00:46 -0400
-X-MC-Unique: sB73hjoBNmCbM2OEsCtKUA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 708708014D7;
-        Thu,  2 Jul 2020 00:00:45 +0000 (UTC)
-Received: from treble (ovpn-117-134.rdu2.redhat.com [10.10.117.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A628460CD1;
-        Thu,  2 Jul 2020 00:00:44 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 19:00:41 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: objtool clac/stac handling change..
-Message-ID: <20200702000041.movaiqpyzdmhlu67@treble>
-References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
- <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
- <20200701205108.wtgfnijav7lgfiqe@treble>
- <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
+        Wed, 1 Jul 2020 20:08:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E7FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:08:21 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id t11so6843237pfq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T7hL8oTAJrT5pDPCgIg1OSRZK1ha79xq6AjDa0eoWzM=;
+        b=LEnbYfoJKkXege/aZzvcuMIoxLycA71bdbZUWiA0LKPJBzkLr1NjDtTji/yDoZuqmG
+         SgutKsd0nQlY6f/Oma3BlcuhwG05exEmsXqQ9208gaTQunAfOLKywX4jv0Fxzew26g2a
+         wZCM0ff+knpkbcgFiJb+L/92Q0VSD2dUJMOhWCnX7NILxMlN5brpRMEGbfeKN7eN+ZAY
+         mMcn0I7Ug79H/4rZYHVtjSvBxZTLkvVDDOWGIFcSsdjeibceFDUt13Yt14N0UjY3jNM6
+         sU0WepShcec2/AjUp2bPrUQpBQumxh6+j8IXJ8nJl4Qt+2UK3tXlGWn/E2V7J/4V6BhJ
+         Lz1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T7hL8oTAJrT5pDPCgIg1OSRZK1ha79xq6AjDa0eoWzM=;
+        b=io1VpWy9JrI5dyX2nL+WSIagHmn5MWF0VUnfNtyb7iaWVlEJrg7grM+I3cESRxmy8l
+         tq2jDzNaNK1Ojt+cdKTy0sQqZGZvOAzZ2jZOdI5iNb+89BIMTJck/E5Zt1566vmPgadD
+         tTuiga3snEowZ1tINcarQD8KetZ8MwFSwiHXaKaghqQbLipfIjmYvC7kcMXtnWau9FUN
+         wr2+YSn9t31sHd+GMPzrwWv5cPB8EzNmpvFvvFHOQjD7SSxr0BhcMozBLPOGa9VrEMAq
+         cx84zBIpb1KQOtXeluIIZlKPpSicqvGNKpXM7Co53tWei12Nhp3qyzwMvxfmqAgaW47l
+         gZbA==
+X-Gm-Message-State: AOAM532RiA4hNAYI5vqnhF9qV+2q8xT3C65HJjCKPsFEAL7V7dtpeEKx
+        euTW45ZpdeUwfL7Y0gcMhMhbqRTMh0cjXOh/ZExdnw==
+X-Google-Smtp-Source: ABdhPJxay3+NVL7g1bJnT+SW3CTXpy+QaVtu3iAFRk0eR/kGTftYv4RPNc3Q2z6F1HP2TV7SPwIqDxHbgd2M97d9yeA=
+X-Received: by 2002:aa7:9303:: with SMTP id 3mr17081569pfj.108.1593648500571;
+ Wed, 01 Jul 2020 17:08:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200701192936.1397152-1-masahiroy@kernel.org>
+In-Reply-To: <20200701192936.1397152-1-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 1 Jul 2020 17:08:07 -0700
+Message-ID: <CAKwvOdkwgTxHWAD1L63vOn4TGVjr0EOKTUnZ1KsW=mh1wxNTGQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: do not export LDFLAGS_vmlinux
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org, Guan Xuetao <gxt@pku.edu.cn>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 02:02:42PM -0700, Linus Torvalds wrote:
-> So the objtool rule might be:
-> 
->  - in a STAC region, no exception handlers at all except for that
-> ex_handler_uaccess case
-> 
->  - and that case will clear AC if it triggers.
-> 
-> and maybe such an objtool check would show some case where I'm wrong,
-> and we do some MSR read other other fault thing within a STAC region.
-> That _sounds_ wrong to me, but maybe we have reason to do so that I
-> just can't think or right now?
+On Wed, Jul 1, 2020 at 12:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> When you clean the build tree for ARCH=arm, you may see the following
+> error message:
+>
+> $ make -j24 ARCH=arm clean
+>   CLEAN   arch/arm/crypto
+>   CLEAN   arch/arm/kernel
+>   CLEAN   arch/arm/mach-at91
+>   CLEAN   arch/arm/mach-omap2
+>   CLEAN   arch/arm/vdso
+>   CLEAN   certs
+>   CLEAN   lib
+>   CLEAN   usr
+>   CLEAN   net/wireless
+>   CLEAN   drivers/firmware/efi/libstub
+> nm: 'arch/arm/boot/compressed/../../../../vmlinux': No such file
+> /bin/sh: 1: arithmetic expression: expecting primary: " "
+>   CLEAN   arch/arm/boot/compressed
+>   CLEAN   drivers/scsi
+>   CLEAN   drivers/tty/vt
+>   CLEAN   arch/arm/boot
+>   CLEAN   vmlinux.symvers modules.builtin modules.builtin.modinfo
 
-Here's an attempt at implementing this, in case anybody wants to play
-with it.  Usual disclaimers apply...
+Thanks for the patch, Masahiro. This fixes the issue I was also
+observing.  Curious case of shadowing env vars.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5e0d70a89fb8..470447225314 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -24,7 +24,7 @@
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
--	bool skip_orig;
-+	bool skip_orig, exception, uaccess;
- };
- 
- const char *objname;
-@@ -1023,8 +1023,13 @@ static int add_special_section_alts(struct objtool_file *file)
- 		}
- 
- 		alt->insn = new_insn;
-+
- 		alt->skip_orig = special_alt->skip_orig;
-+		alt->exception = special_alt->exception;
-+		alt->uaccess   = special_alt->uaccess;
-+
- 		orig_insn->ignore_alts |= special_alt->skip_alt;
-+
- 		list_add_tail(&alt->list, &orig_insn->alts);
- 
- 		list_del(&special_alt->list);
-@@ -2335,6 +2340,35 @@ static void fill_alternative_cfi(struct objtool_file *file, struct instruction *
- 	}
- }
- 
-+static int handle_stac(struct symbol *func, struct instruction *insn,
-+		       struct insn_state *state)
-+{
-+	if (state->uaccess) {
-+		WARN_FUNC("recursive UACCESS enable", insn->sec, insn->offset);
-+		return -1;
-+	}
-+
-+	state->uaccess = true;
-+	return 0;
-+}
-+
-+static int handle_clac(struct symbol *func, struct instruction *insn,
-+		       struct insn_state *state)
-+{
-+	if (!state->uaccess && func) {
-+		WARN_FUNC("redundant UACCESS disable", insn->sec, insn->offset);
-+		return -1;
-+	}
-+
-+	if (func_uaccess_safe(func) && !state->uaccess_stack) {
-+		WARN_FUNC("UACCESS-safe disables UACCESS", insn->sec, insn->offset);
-+		return -1;
-+	}
-+
-+	state->uaccess = false;
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2393,6 +2427,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				if (alt->skip_orig)
- 					skip_orig = true;
- 
-+				if (alt->exception) {
-+					if (!alt->uaccess && state.uaccess) {
-+						WARN_FUNC("non-user-access exception with uaccess enabled",
-+							  sec, insn->offset);
-+						return 1;
-+					}
-+
-+					if (alt->uaccess && handle_clac(func, insn, &state))
-+						return 1;
-+				}
-+
- 				ret = validate_branch(file, func, alt->insn, state);
- 				if (ret) {
- 					if (backtrace)
-@@ -2478,26 +2523,13 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			return 0;
- 
- 		case INSN_STAC:
--			if (state.uaccess) {
--				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
-+			if (handle_stac(func, insn, &state))
- 				return 1;
--			}
--
--			state.uaccess = true;
- 			break;
- 
- 		case INSN_CLAC:
--			if (!state.uaccess && func) {
--				WARN_FUNC("redundant UACCESS disable", sec, insn->offset);
-+			if (handle_clac(func, insn, &state))
- 				return 1;
--			}
--
--			if (func_uaccess_safe(func) && !state.uaccess_stack) {
--				WARN_FUNC("UACCESS-safe disables UACCESS", sec, insn->offset);
--				return 1;
--			}
--
--			state.uaccess = false;
- 			break;
- 
- 		case INSN_STD:
-diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index e74e0189de22..41f27199cae6 100644
---- a/tools/objtool/special.c
-+++ b/tools/objtool/special.c
-@@ -18,6 +18,7 @@
- #define EX_ENTRY_SIZE		12
- #define EX_ORIG_OFFSET		0
- #define EX_NEW_OFFSET		4
-+#define EX_HANDLER_OFFSET	8
- 
- #define JUMP_ENTRY_SIZE		16
- #define JUMP_ORIG_OFFSET	0
-@@ -35,8 +36,9 @@
- 
- struct special_entry {
- 	const char *sec;
--	bool group, jump_or_nop;
-+	bool group, jump_or_nop, exception;
- 	unsigned char size, orig, new;
-+	unsigned char handler; /* __ex_table only */
- 	unsigned char orig_len, new_len; /* group only */
- 	unsigned char feature; /* ALTERNATIVE macro CPU feature */
- };
-@@ -61,9 +63,11 @@ struct special_entry entries[] = {
- 	},
- 	{
- 		.sec = "__ex_table",
-+		.exception = true,
- 		.size = EX_ENTRY_SIZE,
- 		.orig = EX_ORIG_OFFSET,
- 		.new = EX_NEW_OFFSET,
-+		.handler = EX_HANDLER_OFFSET,
- 	},
- 	{},
- };
-@@ -118,6 +122,20 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
- 		}
- 	}
- 
-+	if (entry->exception) {
-+		struct rela *handler_rela;
-+
-+		alt->exception = true;
-+
-+		handler_rela = find_rela_by_dest(elf, sec, offset + entry->handler);
-+		if (!handler_rela) {
-+			WARN_FUNC("can't find handler rela", sec, offset + entry->handler);
-+			return -1;
-+		}
-+		if (!strcmp(handler_rela->sym->name, "ex_handler_uaccess"))
-+			alt->uaccess = true;
-+	}
-+
- 	orig_rela = find_rela_by_dest(elf, sec, offset + entry->orig);
- 	if (!orig_rela) {
- 		WARN_FUNC("can't find orig rela", sec, offset + entry->orig);
-diff --git a/tools/objtool/special.h b/tools/objtool/special.h
-index 35061530e46e..3a62daef14b3 100644
---- a/tools/objtool/special.h
-+++ b/tools/objtool/special.h
-@@ -16,6 +16,7 @@ struct special_alt {
- 	bool skip_orig;
- 	bool skip_alt;
- 	bool jump_or_nop;
-+	bool exception, uaccess;
- 
- 	struct section *orig_sec;
- 	unsigned long orig_off;
+>
+> Even if you run the same command again, the error message is not shown
+> despite vmlinux is already gone.
+>
+> To reproduce it, the parallel option -j is needed. Single thread
+> cleaning always executes 'archclean', 'vmlinuxclean' in this order,
+> so vmlinux still exists when arch/arm/boot/compressed/ is cleaned.
+>
+> Looking at arch/arm/boot/compressed/Makefile does not help understand
+> the reason of the error message. Both KBSS_SZ and LDFLAGS_vmlinux are
+> assigned with '=' operator, hence, they are not expanded until they are
+> used. Obviously, 'make clean' does not use them.
+>
+> In fact, the root cause exists in the top Makefile:
+>
+>   export LDFLAGS_vmlinux
+>
+> Since LDFLAGS_vmlinux is an exported variable, LDFLAGS_vmlinux in
+> arch/arm/boot/compressed/Makefile is expanded when scripts/Makefile.clean
+> has a command to execute. This is why the error message shows up only
+> when there exist build artifacts in arch/arm/boot/compressed/.
+>
+> Adding 'unexport LDFLAGS_vmlinux' to arch/arm/boot/compressed/Makefile
+> will fix it as far as ARCH=arm is concerned, but I believe the proper
+> fix is to get rid of 'export LDFLAGS_vmlinux' from the top Makefile.
+>
+> LDFLAGS_vmlinux in the top Makefile contains linker flags for the top
+> vmlinux. LDFLAGS_vmlinux in arch/arm/boot/compressed/Makefile is for
+> arch/arm/boot/compressed/vmlinux. They just happen to have the same
+> variable name, but are used for different purposes. Exporting the former
+> bothers the decompressor Makefiles.
+>
+> This commit passes LDFLAGS_vmlinux to scripts/link-vmlinux.sh via a
+> command line parameter instead of via an environment variable. LD and
+> KBUILD_LDFLAGS are exported, but I did the same for consistency. Anyway,
+> they must be included in cmd_link-vmlinux to allow if_changed to detect
+> the changes in LD or KBUILD_LDFLAGS.
+>
+> The following Makefiles are not affected:
+>
+>   arch/arm/boot/compressed/Makefile
+>   arch/h8300/boot/compressed/Makefile
+>   arch/nios2/boot/compressed/Makefile
+>   arch/parisc/boot/compressed/Makefile
+>   arch/s390/boot/compressed/Makefile
+>   arch/sh/boot/compressed/Makefile
+>   arch/sh/boot/romimage/Makefile
+>   arch/x86/boot/compressed/Makefile
+>
+> They use ':=' or '=' to clear the LDFLAGS_vmlinux inherited from the
+> top Makefile.
+>
+> We need to take a closer look at the impact to unicore32 and xtensa.
+>
+> arch/unicore32/boot/compressed/Makefile only uses '+=' operator for
+> LDFLAGS_vmlinux. So, the decompressor previously inherited the linker
+> flags from the top Makefile.
+>
+> However, commit 70fac51feaf2 ("unicore32 additional architecture files:
+> boot process") was merged before commit 1f2bfbd00e46 ("kbuild: link of
+> vmlinux moved to a script"). So, I believe this is rather a bug fix of
+> 1f2bfbd00e46.
+>
+> arch/xtensa/boot/boot-elf/Makefile is also affected, but this is a fix
+> for the same reason. It did not inherit LDFLAGS_vmlinux when commit
+> 4bedea945451 ("[PATCH] xtensa: Architecture support for Tensilica Xtensa
+> Part 2") was merged. I deleted $(LDFLAGS_vmlinux), which is now empty.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  Makefile                           | 3 +--
+>  arch/xtensa/boot/boot-elf/Makefile | 2 +-
+>  scripts/link-vmlinux.sh            | 4 ++++
+>  3 files changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 5496a32dffa6..075f2f943180 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1100,7 +1100,6 @@ KBUILD_VMLINUX_OBJS += $(patsubst %/,%/built-in.a, $(drivers-y))
+>
+>  export KBUILD_VMLINUX_OBJS KBUILD_VMLINUX_LIBS
+>  export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
+> -export LDFLAGS_vmlinux
+>  # used by scripts/Makefile.package
+>  export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) LICENSES arch include scripts tools)
+>
+> @@ -1132,7 +1131,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+>
+>  # Final link of vmlinux with optional arch pass after final link
+>  cmd_link-vmlinux =                                                 \
+> -       $(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
+> +       $(CONFIG_SHELL) $< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)";    \
+>         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+>
+>  vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+> diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
+> index 12ae1e91cb75..c6538d3321b9 100644
+> --- a/arch/xtensa/boot/boot-elf/Makefile
+> +++ b/arch/xtensa/boot/boot-elf/Makefile
+> @@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
+>                 $(OBJS) $@
+>
+>  $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
+> -       $(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
+> +       $(LD) $(KBUILD_LDFLAGS) \
+>                 -T $(obj)/boot.lds \
+>                 --build-id=none \
+>                 -o $@ $(obj)/Image.o
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 7eaf70d58488..16c7818b3e19 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -30,6 +30,10 @@
+>  # Error out on error
+>  set -e
+>
+> +LD="$1"
+> +KBUILD_LDFLAGS="$2"
+> +LDFLAGS_vmlinux="$3"
+> +
+>  # Nice output in kbuild format
+>  # Will be supressed by "make -s"
+>  info()
+> --
+> 2.25.1
+>
 
+
+-- 
+Thanks,
+~Nick Desaulniers
