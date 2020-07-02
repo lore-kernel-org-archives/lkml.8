@@ -2,123 +2,102 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A944CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6938BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F822073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC7320780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F1rkM9cP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKLSXxs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgGBKg0 (ORCPT
+        id S1728504AbgGBKgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:36:26 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8627 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbgGBKg0 (ORCPT
+        Thu, 2 Jul 2020 06:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgGBKge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:36:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efdb8450000>; Thu, 02 Jul 2020 03:34:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 Jul 2020 03:36:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 Jul 2020 03:36:26 -0700
-Received: from [10.25.97.252] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jul
- 2020 10:36:18 +0000
-CC:     <spujar@nvidia.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
-        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
-Subject: Re: Re: Re: [PATCH v4 12/23] ASoC: simple-card: Support DPCM DAI link
- with multiple Codecs
-To:     Mark Brown <broonie@kernel.org>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-13-git-send-email-spujar@nvidia.com>
- <874kqu1x70.wl-kuninori.morimoto.gx@renesas.com>
- <1e0cf6d1-bf4e-8808-5390-c8a3b7c7fe7e@nvidia.com>
- <87mu4lz6pt.wl-kuninori.morimoto.gx@renesas.com>
- <1d7888c7-a8cc-e891-01aa-016e31cc9113@nvidia.com>
- <87ftadyrec.wl-kuninori.morimoto.gx@renesas.com>
- <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
- <20200630110100.GH5272@sirena.org.uk>
- <81d106c0-e1c8-a79a-8caf-1f3be0d61f0c@nvidia.com>
- <20200630153220.GL5272@sirena.org.uk>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <fb286ab7-21f2-43ad-2751-c76b7b6e4cf2@nvidia.com>
-Date:   Thu, 2 Jul 2020 16:06:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 06:36:34 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418A8C08C5C1;
+        Thu,  2 Jul 2020 03:36:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so12378672pgc.8;
+        Thu, 02 Jul 2020 03:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=zjqH5OyJ0uNgtW+k6QC+tgZu9cOQCPtDoHSfO1sMDg4=;
+        b=gKLSXxs5Xi0ffOI4xaSGtq2l4qx855x5dafTHDq9WcXO7TQYplArFpssod2qR5iroc
+         Z//J/E+Jxf2dWCBbYKBHXFVD+w+CXtshhKTHJdbD/O3iC89Fj08aafiZCVEJF2cOTrNE
+         4O5RqYQhri/vkSqkCRh9y8WiBO96ojL+4z4rqkLZXntWV5WAPiQZgcI1l0fnRFTFW50B
+         rnTXdlfNOfTTwQ8ZKKGlQmHh4n8MfQVtn/MOtzbdTacVyDrkzZeO+Bdvyer8wuGkuL/S
+         WC2gdd9tZnGshLR1E2a6JkZgt2oEw8jXurog9U4CI9OV0MLCeiLynDz8keltOuHYW5qY
+         QHew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=zjqH5OyJ0uNgtW+k6QC+tgZu9cOQCPtDoHSfO1sMDg4=;
+        b=OMKzmtoor52GMkXfpxH9CF6tApxEDhYSi3Lq4nGbj3OD5DNd/KhstIQIKlsPP8COvh
+         c2o3MhShBrPM00kzjI/rvOgHw5J4D0gacHHFX/SBs6hSniHTdijrzGmAVL0jEqGzxTUe
+         Yq8FrBlJvKdj3nT+6OlC2ZHY8IDyQfKEfXiR/0tiGb4n0CBUfWBaNJK+FAA6VUkuWoAc
+         esEXUpqB+9FIxlbNaBCuApUtY1sO/Um/Wq9xCzQy3XJMPDfIczXs0oUNnR9FWagssWxU
+         2xXT/LMtQ817HFnjlJ58S3hGYdF0C8jRne8SCGc6uHSC2f0yjiKNjABamXeKok7uTsJN
+         5M0A==
+X-Gm-Message-State: AOAM533P3TI7eSgmJMzTUrcjgZNwgVz8SqCHYZiStpGRauvZ3kkKQewn
+        PNVnjDd5u1ISX8zpagp5owo=
+X-Google-Smtp-Source: ABdhPJzDNFrzM9gHS1aXVkfvYMpILRrQRmwBPh5wcimghMwI/lqsx8PhEr//gfgskebXTyEDOTJ33g==
+X-Received: by 2002:a63:8f18:: with SMTP id n24mr23072639pgd.432.1593686193761;
+        Thu, 02 Jul 2020 03:36:33 -0700 (PDT)
+Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
+        by smtp.gmail.com with ESMTPSA id i128sm8838706pfe.74.2020.07.02.03.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:36:33 -0700 (PDT)
+Date:   Thu, 02 Jul 2020 20:36:27 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 2/8] powerpc/pseries: use smp_rmb() in H_CONFER spin yield
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200702074839.1057733-1-npiggin@gmail.com>
+        <20200702074839.1057733-3-npiggin@gmail.com>
+        <20200702082840.GC4781@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200702082840.GC4781@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200630153220.GL5272@sirena.org.uk>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593686085; bh=UhnflAwDmheF6iWSFj2l1i5hhV4k8BcKcVrUdRQwc8s=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=F1rkM9cPVeb7rPxjtk0sAt/FK+bVJMWr4+G+nzSwwSzPOhJZy4bNSnY9lsDXLZB6s
-         E13ynpqjMwugH2lHSR7csU9Aif915rGDThTt0pM8Gwxbbi/sAbLsGaUkZDclgplWlh
-         nhmByXvOq0Cj+gF0gd8bgi0guTosvpDKEcTIPOqEGuCDfPnk7aC31at8iCwh8iCvcc
-         /gtuk6RBsvmyrLeFDE1+WbHmlJRDPo7qiJKrNyf/Vn4O1TfB2Cfzgl9j6nA1dahXgx
-         gVBPxZ/da40o08tRHb+QRfUinkRHmxO7E1Ay1cciUBoxC6xtCi75FifrgXKZLb0gBS
-         CnX7QtdScbmNA==
+Message-Id: <1593685552.uh4kepm08t.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Excerpts from Peter Zijlstra's message of July 2, 2020 6:28 pm:
+> On Thu, Jul 02, 2020 at 05:48:33PM +1000, Nicholas Piggin wrote:
+>> There is no need for rmb(), this allows faster lwsync here.
+>=20
+> Since you determined this; I'm thinking you actually understand the
+> ordering here. How about recording this understanding in a comment?
+>=20
+> Also, should the lock->slock load not use READ_ONCE() ?
 
+Yeah, good point. Maybe I'll drop it from this series, doesn't really=20
+belong I just saw the cleanup and didn't want to forget it.
 
-On 6/30/2020 9:02 PM, Mark Brown wrote:
-> On Tue, Jun 30, 2020 at 06:23:49PM +0530, Sameer Pujar wrote:
->> On 6/30/2020 4:31 PM, Mark Brown wrote:
->>> Why simple-card and not audio-graph-card?
->> Frankly speaking I have not used audio-graph-card before. I had a brief look
->> at the related binding. It seems it can use similar DT properties that
->> simple-card uses, although the binding style appears to be different.
->> However I am not sure if it offers better solutions to the problems I am
->> facing. For example, the ability to connect or form a chain of components to
->> realize more complicated use cases with DPCM, some of which were discussed
->> in [0]. Can you please help me understand why it could be preferred?
->> [0] https://lkml.org/lkml/2020/4/30/519
-> It's the more modern thing which covers everything simple-card does and
-> more, I'd expect new development to go into that rather than
-> simple-card.
+We we just ordering the two loads in this function, and !SMP isn't a=20
+concern (i.e., no issues of !SMP guest on SMP HV), but yeah fixing
+the lack of comment is warranted, thanks.
 
-Hi Mark & Kuninori,
-
-For the HW I am using, there are no fixed endpoints and I am not sure if 
-it is allowed to have empty endpoints in audio-graph-card. 
-Crossbar/router provides the flexibility to connect the components in 
-any required order. Patch [05/23] exposes required graph and MUX 
-controls for the flexible configurations. Mostly, in DT, I am trying to 
-model the component itself and finally router can help me specify the 
-audio path to interconnect various components. Hence I was trying to 
-understand if it is really necessary to represent the links using 
-audio-graph-card. Kindly help me understand what more it offers. If 
-simple-card works fine, are we allowed to use it?
-
-Thank you,
-Sameer.
-
+Thanks,
+Nick
