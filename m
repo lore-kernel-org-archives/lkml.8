@@ -2,81 +2,104 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF879C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37CD2088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F182520899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgGBXHb (ORCPT
+        id S1726617AbgGBXIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:07:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20851 "EHLO mga17.intel.com"
+        Thu, 2 Jul 2020 19:08:50 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22836 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgGBXHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:07:31 -0400
-IronPort-SDR: Gu07ljBZaJEbP0mwlWnUkMoSoveg7W295mmLBMCiR60CF2ndM2gRgSmHCKjhJMhc0KZ0LaN5sB
- sYHfFeEDPbPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="127141143"
+        id S1726017AbgGBXIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 19:08:50 -0400
+IronPort-SDR: 9KBl74tTI4gZx3K3SxW4LaN6VqZR7pSM6DfSMZbOvIaJLnlJ18KCRF0eevrxDUd7F95O/d65yj
+ o6W2S1r+G5ig==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134507530"
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="127141143"
+   d="scan'208";a="134507530"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 16:07:30 -0700
-IronPort-SDR: jyoGQnLdUGnbzRxKrSkGDQTprX0E9mCw3Cfu1de6iVaqeJmbUqcHGhKt2skihcUjCzqjFwRimm
- xafxwlFv0Bjw==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 16:08:49 -0700
+IronPort-SDR: nqD/LQS7GowioAIHzBOTKSewaXL6TK4pMcJMspEozGQdTCShYXn9rHORtrFZdeBlGoiS4JPhs0
+ XF8wTVircYCw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="304393758"
-Received: from chadjitt-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.41.125])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Jul 2020 16:07:26 -0700
-Date:   Fri, 3 Jul 2020 02:07:25 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Shuah Khan <shuah@kernel.org>, pengfei.xu@intel.com,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        Tadeusz Struk <tadeusz.struk@intel.com>
-Subject: Re: [PATCH 0/3] selftests: tpm: fixes
-Message-ID: <20200702230725.GD31291@linux.intel.com>
-References: <20200622212034.20624-1-jarkko.sakkinen@linux.intel.com>
- <ddf50129-5fe0-ab84-1bae-90a06ba017a3@linuxfoundation.org>
+   d="scan'208";a="267199222"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Jul 2020 16:08:49 -0700
+Date:   Thu, 2 Jul 2020 16:08:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>
+Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
+Message-ID: <20200702230849.GL3575@linux.intel.com>
+References: <20200601115957.1581250-1-peterx@redhat.com>
+ <20200601115957.1581250-3-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ddf50129-5fe0-ab84-1bae-90a06ba017a3@linuxfoundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200601115957.1581250-3-peterx@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:21:47PM -0600, Shuah Khan wrote:
-> On 6/22/20 3:20 PM, Jarkko Sakkinen wrote:
-> > A few fixes for tools/testing/selftests/tpm.
-> > 
-> > Jarkko Sakkinen (3):
-> >    Revert "tpm: selftest: cleanup after unseal with wrong auth/policy
-> >      test"
-> >    selftests: tpm: Use 'test -e' instead of 'test -f'
-> >    selftests: tpm: Use /bin/sh instead of /bin/bash
-> > 
-> >   tools/testing/selftests/tpm2/test_smoke.sh | 9 ++-------
-> >   tools/testing/selftests/tpm2/test_space.sh | 4 ++--
-> >   2 files changed, 4 insertions(+), 9 deletions(-)
-> > 
+On Mon, Jun 01, 2020 at 07:59:45AM -0400, Peter Xu wrote:
+> Cache the address space ID just like the slot ID.  It will be used in
+> order to fill in the dirty ring entries.
 > 
-> Applied to linux-kselftest fixes for Linux 5.8-rc4
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  include/linux/kvm_host.h | 1 +
+>  virt/kvm/kvm_main.c      | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 01276e3d01b9..5e7bbaf7a36b 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -346,6 +346,7 @@ struct kvm_memory_slot {
+>  	unsigned long userspace_addr;
+>  	u32 flags;
+>  	short id;
+> +	u16 as_id;
+>  };
+>  
+>  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 74bdb7bf3295..ebdd98a30e82 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1243,6 +1243,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+>  	if (!mem->memory_size)
+>  		return kvm_delete_memslot(kvm, mem, &old, as_id);
 
-Thank you.
+This technically needs to set as_id in the deleted memslot.  I highly doubt
+it will ever matter from a functionality perspective, but it'd be confusing
+to encounter a memslot whose as_id did not match that of its owner.
 
-/Jarkko
+> +	new.as_id = as_id;
+>  	new.id = id;
+>  	new.base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
+>  	new.npages = mem->memory_size >> PAGE_SHIFT;
+> -- 
+> 2.26.2
+> 
