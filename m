@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F27C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B99DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83BAF20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AFA20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653253;
-	bh=qch7SL1lWg43fDm7d4BAHHM43nWCwSszkGJaO6D0oiM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iOvENV6mKAbW/tHtJISB8wBAQIMWt2G1zfq0+R1ROS9kWGAb8/2oIq3i9cOAIYOsZ
-	 pEKQL9BC+RrC1OHmFyuQRLtk1oLQqn0uLFfGUlmfyU+kXRMhq2uNm2q3BR7q+yeEIX
-	 scZVZRG3B1b4vCT3+jxZ67yQg6cxmQh8uYeDG5ik=
+	s=default; t=1593653259;
+	bh=5eXMQNhbrRFdB6JrQi+rLl3n4tIXKH8775zN6Y2Z2N8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xD4wj/Dq2oQ/TZpXGBxlXEcYGGjfrmISboYSYKiKX6S/K+vxDP5f+5Lvp2kKGW5GU
+	 HYWFgXA64KJT4GLhSB5+dEz7yHwQZJmBqRVMI7r/x+1J8az9bB9vI5SCBFP+T619yA
+	 bZihNrSChvHDPFhyVszP9vvFXJjBfCXZvjrBgEHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgGBB1c (ORCPT
+        id S1728566AbgGBB1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58572 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgGBB0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:55 -0400
+        id S1729292AbgGBB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69386212CC;
-        Thu,  2 Jul 2020 01:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C627420748;
+        Thu,  2 Jul 2020 01:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653214;
-        bh=qch7SL1lWg43fDm7d4BAHHM43nWCwSszkGJaO6D0oiM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOchoi8uk+D+GMu5ajLhjloE/aW1nk85hIDSva1t1hNft1evssOYpWxPN+ZYf56VV
-         f5vn/irsEuWQyxU9OE0FT4nhn0KgkAQI0iC6uQ0dYWAsJ5FKli6RTwQLRwO9GQtCmr
-         amEvS9qF//OoS4Gt1kljdEtrGaVZURDdcJ6PkC8g=
+        s=default; t=1593653211;
+        bh=5eXMQNhbrRFdB6JrQi+rLl3n4tIXKH8775zN6Y2Z2N8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CsgLhQdiK55/hHXuyyIVhTwdzk6LL/F002ACwnEYZmodDW8/yu/5dKmEec70cn62r
+         RRD/JZyF5K6GcrFKiuT99F3IhBX3CDSmQKlW04MUWlaPzN6VnAvZCpza9MD7Xvpww0
+         lQQXX7NZPP6UA9C3rAApq/5+cmRCrgCktA2Kjidg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/17] net: usb: ax88179_178a: fix packet alignment padding
-Date:   Wed,  1 Jul 2020 21:26:35 -0400
-Message-Id: <20200702012649.2701799-3-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/17] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
+Date:   Wed,  1 Jul 2020 21:26:33 -0400
+Message-Id: <20200702012649.2701799-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
-References: <20200702012649.2701799-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,72 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
+[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
 
-Using a AX88179 device (0b95:1790), I see two bytes of appended data on
-every RX packet. For example, this 48-byte ping, using 0xff as a
-payload byte:
+We can currently sometimes get "RXS timed out" errors and "EOT timed out"
+errors with spi transfers.
 
-  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
-	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
-	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
-	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
-	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
-	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0060:  ffff 961f
+These errors can be made easy to reproduce by reading the cpcap iio
+values in a loop while keeping the CPUs busy by also reading /dev/urandom.
 
-Those last two bytes - 96 1f - aren't part of the original packet.
+The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
+in addition to the spi-cs-high property we already have.
 
-In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
-'alignment pseudo header' from the start of the packet, and sets the
-length from a per-packet field populated by hardware. It looks like that
-length field *includes* the 2-byte header; the current driver assumes
-that it's excluded.
+The "EOT timed out" errors we can fix by increasing the spi clock rate
+to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
+up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
+for cpcap.
 
-This change trims the 2-byte alignment header after we've set the packet
-length, so the resulting packet length is correct. While we're moving
-the comment around, this also fixes the spelling of 'pseudo'.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: maemo-leste@lists.dyne.org
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/ax88179_178a.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 0f69b77e8502b..875639b0e9d56 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1400,10 +1400,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		}
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index bcced922b2807..b4779b0ece96d 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -16,8 +16,10 @@ cpcap: pmic@0 {
+ 		#interrupt-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		spi-max-frequency = <3000000>;
++		spi-max-frequency = <9600000>;
+ 		spi-cs-high;
++		spi-cpol;
++		spi-cpha;
  
- 		if (pkt_cnt == 0) {
--			/* Skip IP alignment psudo header */
--			skb_pull(skb, 2);
- 			skb->len = pkt_len;
--			skb_set_tail_pointer(skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(skb, 2);
-+			skb_set_tail_pointer(skb, skb->len);
- 			skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(skb, pkt_hdr);
- 			return 1;
-@@ -1412,8 +1412,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		ax_skb = skb_clone(skb, GFP_ATOMIC);
- 		if (ax_skb) {
- 			ax_skb->len = pkt_len;
--			ax_skb->data = skb->data + 2;
--			skb_set_tail_pointer(ax_skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(ax_skb, 2);
-+			skb_set_tail_pointer(ax_skb, ax_skb->len);
- 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(ax_skb, pkt_hdr);
- 			usbnet_skb_return(dev, ax_skb);
+ 		cpcap_adc: adc {
+ 			compatible = "motorola,mapphone-cpcap-adc";
 -- 
 2.25.1
 
