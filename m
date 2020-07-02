@@ -2,160 +2,1295 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D771E2089D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6E320720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Hhjnybzj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GVzlvQgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgGBIXZ (ORCPT
+        id S1728672AbgGBIXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:23:25 -0400
-Received: from mout.web.de ([212.227.15.4]:46825 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbgGBIXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:23:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593678148;
-        bh=r50khE4f8sNvlXWIvRv2gpF4lDQ2DJgm5qYt9RNo5BA=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
-        b=HhjnybzjP2ZwI6CK8BVSRo8XS/Zrz5h9d8dgROS1MZP9mUkCuhM4JroZpQz28b/6w
-         PY9IdEnm3Efz0zJvcR0ciHWXvR310+cz0KqJSDJ8TrKxL9be3rsrkObAZ8ZrOxAw2V
-         nSY1Txa6xrd5jyQslm1u/AOJQjrmg7BakL6Ut+iI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.138.52]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M24vT-1iy72t2hD9-00u21X; Thu, 02
- Jul 2020 10:22:28 +0200
-Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Coccinelle <cocci@systeme.lip6.fr>, linux-doc@vger.kernel.org
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
- <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
- <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
- <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
- <648d287e-3636-1858-1439-103d317f8571@web.de>
- <34065299-03cf-5b62-db37-0acc9830be72@infradead.org>
- <65db3f88-1ac8-374d-e3fe-2ea0970ffd67@web.de>
- <30b722ca-1bd8-2b96-ca41-1e9bc7212b66@infradead.org>
- <bd4033cd-f564-0414-4dbf-4ff58f841648@web.de>
- <05f8cb2b-c76e-e2ba-24a8-5676c1792255@infradead.org>
- <5e83b473-8764-fbfc-394c-1acffa74943c@web.de>
- <alpine.DEB.2.22.394.2007012232510.2540@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>
-Message-ID: <0b4bdb33-2b67-bc08-cfc1-0cd82c8551d0@web.de>
-Date:   Thu, 2 Jul 2020 10:22:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 04:23:36 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34638 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgGBIX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:23:28 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628NGj5017460;
+        Thu, 2 Jul 2020 03:23:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593678196;
+        bh=4weDqdhxb2wj5llXwjbhfQ/l+OmVwyAeC8Zu2T5KfnE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=GVzlvQglsI77iLhf5oBePjCkWknZGyANGm6NnxaPX7M6mGM9SKZsQXsL+LHSbqY2i
+         ybY4EqwDRW1NPqYV88Q/TQMS0DH3evtUbLKmF7JsbHqwNqiILhnrwFXV/NR2QhHm/f
+         hDSFHzqBZIIaDZOg7+33GN2z1Sg0N2ROCJ2GO1CU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628NAlH066403
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Jul 2020 03:23:10 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
+ 2020 03:23:09 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 2 Jul 2020 03:23:09 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYQ006145;
+        Thu, 2 Jul 2020 03:23:04 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>
+Subject: [RFC PATCH 14/22] rpmsg: Add VHOST based remote processor messaging bus
+Date:   Thu, 2 Jul 2020 13:51:35 +0530
+Message-ID: <20200702082143.25259-15-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
+References: <20200702082143.25259-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2007012232510.2540@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9yvsi1GEbaoTzPF2KcVG7QWBwCdu+yQyAfxOuTUMqMROIVS7DPl
- oSXq6Waw8yw8sbwdbv3ohNMCh3W+nv7qhvHo2ug4C/lmem4HZT1/Vf27MxOPKykTMBiprUl
- Z1XFhFEEsKWg+T4XH2Z/rjzJc3od+TeVYiXMLXCu8L08kZBR4vitM+NbYdpMhIhs2yCKgZL
- WOgiQNUtUswZ+83/msunQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VBNkLLNT1Fw=:i/f1Oa5UZovOwvZ/B0crOg
- zSvTxVOn1XQUqWSaLBcthT7JUyrAqldZ9TU/ruO7srPBrhogN+9rbHNolfZOxOq5oZu57CIwU
- JPFFSO/6HSQKqsjq3Vb+KbTLr9cTqjm1+hCvINH4dx8GaGjYNE9vVODhqS9bYSV4tJYdEWEbL
- XW2FUaFS54lFzSjI02nnUnQHPHsAvVLNDKlPa6lNY37C/TO2hxZZ2jwW+FvZS/i95HxmZ7bWJ
- waNLNkvx2Ke4Rx/RTrAs4ipO+x2uVyACeziRMfr2sSH8tLPvAzWq0AGZwQY4F3xuEh/k21O1C
- fes/URR2HBLzC1ynaCYDqVvaxUXcS2Obsms6+hubaGERCuaIKtz7iDINDQ+EuoepbuFaw/9zn
- 3d4ltOnFa+YcohK+vuhTfvkxkR3WHawo5KocDcr6KSBXs59UdKqsMiG7fSFpQQ7EY3Is8GRCc
- BDKEgR2g9OfxmVcfmBeKtQlD3D6edleSlhUxXjYgoVnrvuY6dsreLMPlOnDI2DPYVOu0tD2xT
- wk4uzeKLfiCk8sOoPdOth7EiprHZnuVJyHfRzWOQCVy2Ys9BFj9tU8NucBYbjwrh/c+fZVJA4
- lMf8tVpcB54ywZJUejKZr+XHbLg1lf5j8oFhxMzWB3QPdmdb37uQzfn6SB55ep1uWvMbRTcUh
- eY1Bvs4nl64SrY3zXYLq9bQ3z+t6RulwK6Mafn4Liglx5lzPXoBAeZdv2czZEMUSmSRJdiHk+
- 4siYmdM5pAJjChU5s2FYwjNQmJoErEejicrrejPtAxa7r6JrYj1W35A7vteddTaRHzq5l+KL8
- R6HIaOwhwAl6+XIvod+LRv5Yik7FbKCFcSaVWbuELcWFYO7XTQfRxF5d1Pxgrw8n9k6WkBiDv
- paCyETvl6P2T+4DHdifxwBw8XD9TeYY+yZoov5upfBR2fWIFJuyvztRI9K/pnQJ2QjitQQasl
- /B3FK+EtYv+Pvpb8VGUA6D+w6aYb2K+JdJ+QJk889SUSbyn2JwhpEEI1D/WX81Byapd6MEG+X
- Z/GGWYDppyBuH0nCEKkYpxV90OioYbxtx6U9P6bYHg1d76F6d3amU2V8o/qQcRT/pLiMUh93H
- ps/oi2GGyO4mSaB9c6X4c8EDbYD2EiHORO0TAHjf3aHZOMoMdLaa+s5i0mYhjtwUqKyTbESNy
- Xz2wqxbO99sa3Foz4n5Lm2ELn5+xvYWad51oFnj/5fVZHlTTaOCAgRzqSTPjjNyQ3+OEFUcuq
- DtpTKpncQlZYJyImPWik80tTUQCu3xR4tjZxD3w==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>   elfring@Sonne:~/Projekte/Linux/next-patched> make J=3D1 C=3D1 CHECK=
-=3D'scripts/coccicheck' MODE=3Dcontext COCCI=3D~/Projekte/Linux/next-patch=
-ed/scripts/coccinelle/null/show_pointer_usage_before_null_check-20200701.c=
-occi drivers/usb/mtu3/mtu3_gadget.o
->
-> This is not what is intended.  What is intended has never worked.  The
-> coccicheck script expects that the file name is received on its command
-> line, and that is not the case.
+Add a VHOST-based inter-processor communication bus, which enables
+kernel drivers to communicate with VIRTIO-based messaging bus,
+running on remote processors, over shared memory using a simple
+messaging protocol.
 
-I suggest to take another look at information from the verbose execution v=
-ariant
-for such a command example.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/rpmsg/Kconfig           |   10 +
+ drivers/rpmsg/Makefile          |    1 +
+ drivers/rpmsg/vhost_rpmsg_bus.c | 1151 +++++++++++++++++++++++++++++++
+ include/linux/rpmsg.h           |    1 +
+ 4 files changed, 1163 insertions(+)
+ create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
 
-* Do the generated program calls look more appropriate then?
+diff --git a/drivers/rpmsg/Kconfig b/drivers/rpmsg/Kconfig
+index a9108ff563dc..881712f424d3 100644
+--- a/drivers/rpmsg/Kconfig
++++ b/drivers/rpmsg/Kconfig
+@@ -64,4 +64,14 @@ config RPMSG_VIRTIO
+ 	select RPMSG
+ 	select VIRTIO
+ 
++config RPMSG_VHOST
++	tristate "Vhost RPMSG bus driver"
++	depends on HAS_DMA
++	select RPMSG
++	select VHOST
++	help
++	  Say y here to enable support for the RPMSG VHOST driver
++	  providing communication channels to remote processors running
++	  RPMSG VIRTIO driver.
++
+ endmenu
+diff --git a/drivers/rpmsg/Makefile b/drivers/rpmsg/Makefile
+index 047acfda518a..44023b0abe9e 100644
+--- a/drivers/rpmsg/Makefile
++++ b/drivers/rpmsg/Makefile
+@@ -7,3 +7,4 @@ obj-$(CONFIG_RPMSG_QCOM_GLINK_NATIVE) += qcom_glink_native.o
+ obj-$(CONFIG_RPMSG_QCOM_GLINK_SMEM) += qcom_glink_smem.o
+ obj-$(CONFIG_RPMSG_QCOM_SMD)	+= qcom_smd.o
+ obj-$(CONFIG_RPMSG_VIRTIO)	+= virtio_rpmsg_bus.o
++obj-$(CONFIG_RPMSG_VHOST)	+= vhost_rpmsg_bus.o
+diff --git a/drivers/rpmsg/vhost_rpmsg_bus.c b/drivers/rpmsg/vhost_rpmsg_bus.c
+new file mode 100644
+index 000000000000..6bfb5c64c95a
+--- /dev/null
++++ b/drivers/rpmsg/vhost_rpmsg_bus.c
+@@ -0,0 +1,1151 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Vhost-based remote processor messaging bus
++ *
++ * Based on virtio_rpmsg_bus.c
++ *
++ * Copyright (C) 2020 Texas Instruments
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ *
++ */
++
++#define pr_fmt(fmt) "%s: " fmt, __func__
++
++#include <linux/configfs.h>
++#include <linux/idr.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/rpmsg.h>
++#include <linux/vhost.h>
++#include <linux/virtio_ids.h>
++
++#include "rpmsg_internal.h"
++
++/**
++ * struct virtproc_info - virtual remote processor state
++ * @vdev:	the virtio device
++ * @rvq:	rx vhost_virtqueue
++ * @svq:	tx vhost_virtqueue
++ * @buf_size:   size of one rx or tx buffer
++ * @tx_lock:	protects svq, sbufs and sleepers, to allow concurrent senders.
++ *		sending a message might require waking up a dozing remote
++ *		processor, which involves sleeping, hence the mutex.
++ * @endpoints:	idr of local endpoints, allows fast retrieval
++ * @endpoints_lock: lock of the endpoints set
++ * @sendq:	wait queue of sending contexts waiting for a tx buffers
++ * @sleepers:	number of senders that are waiting for a tx buffer
++ * @as_ept:	the bus's address service endpoint
++ * @nb:		notifier block for receiving notifications from vhost device
++ *              driver
++ * @list:	maintain list of client drivers bound to rpmsg vhost device
++ * @list_lock:  mutex to protect updating the list
++ *
++ * This structure stores the rpmsg state of a given vhost remote processor
++ * device (there might be several virtio proc devices for each physical
++ * remote processor).
++ */
++struct virtproc_info {
++	struct vhost_dev *vdev;
++	struct vhost_virtqueue *rvq, *svq;
++	unsigned int buf_size;
++	/* mutex to protect sending messages */
++	struct mutex tx_lock;
++	/* mutex to protect receiving messages */
++	struct mutex rx_lock;
++	struct idr endpoints;
++	/* mutex to protect receiving accessing idr */
++	struct mutex endpoints_lock;
++	wait_queue_head_t sendq;
++	atomic_t sleepers;
++	struct rpmsg_endpoint *as_ept;
++	struct notifier_block nb;
++	struct list_head list;
++	/* mutex to protect updating pending rpdev in vrp */
++	struct mutex list_lock;
++};
++
++/**
++ * @vrp: the remote processor this channel belongs to
++ */
++struct vhost_rpmsg_channel {
++	struct rpmsg_device rpdev;
++
++	struct virtproc_info *vrp;
++};
++
++#define to_vhost_rpmsg_channel(_rpdev) \
++	container_of(_rpdev, struct vhost_rpmsg_channel, rpdev)
++
++static void vhost_rpmsg_destroy_ept(struct rpmsg_endpoint *ept);
++static int vhost_rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len);
++static int vhost_rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
++			      u32 dst);
++static int vhost_rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src,
++				       u32 dst, void *data, int len);
++static int vhost_rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len);
++static int vhost_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
++				 int len, u32 dst);
++static int vhost_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
++					  u32 dst, void *data, int len);
++
++static const struct rpmsg_endpoint_ops vhost_endpoint_ops = {
++	.destroy_ept = vhost_rpmsg_destroy_ept,
++	.send = vhost_rpmsg_send,
++	.sendto = vhost_rpmsg_sendto,
++	.send_offchannel = vhost_rpmsg_send_offchannel,
++	.trysend = vhost_rpmsg_trysend,
++	.trysendto = vhost_rpmsg_trysendto,
++	.trysend_offchannel = vhost_rpmsg_trysend_offchannel,
++};
++
++/**
++ * __ept_release() - deallocate an rpmsg endpoint
++ * @kref: the ept's reference count
++ *
++ * This function deallocates an ept, and is invoked when its @kref refcount
++ * drops to zero.
++ *
++ * Never invoke this function directly!
++ */
++static void __ept_release(struct kref *kref)
++{
++	struct rpmsg_endpoint *ept = container_of(kref, struct rpmsg_endpoint,
++						  refcount);
++	/*
++	 * At this point no one holds a reference to ept anymore,
++	 * so we can directly free it
++	 */
++	kfree(ept);
++}
++
++/**
++ * __rpmsg_create_ept() - Create rpmsg endpoint
++ * @vrp: virtual remote processor of the vhost device where endpoint has to be
++ *       created
++ * @rpdev: rpmsg device on which endpoint has to be created
++ * @cb: callback associated with the endpoint
++ * @priv: private data for the driver's use
++ * @addr: channel_info with the local rpmsg address to bind with @cb
++ *
++ * Allows drivers to create an endpoint, and bind a callback with some
++ * private data, to an rpmsg address.
++ */
++static struct rpmsg_endpoint *__rpmsg_create_ept(struct virtproc_info *vrp,
++						 struct rpmsg_device *rpdev,
++						 rpmsg_rx_cb_t cb,
++						 void *priv, u32 addr)
++{
++	int id_min, id_max, id;
++	struct rpmsg_endpoint *ept;
++	struct device *dev = rpdev ? &rpdev->dev : &vrp->vdev->dev;
++
++	ept = kzalloc(sizeof(*ept), GFP_KERNEL);
++	if (!ept)
++		return NULL;
++
++	kref_init(&ept->refcount);
++	mutex_init(&ept->cb_lock);
++
++	ept->rpdev = rpdev;
++	ept->cb = cb;
++	ept->priv = priv;
++	ept->ops = &vhost_endpoint_ops;
++
++	/* do we need to allocate a local address ? */
++	if (addr == RPMSG_ADDR_ANY) {
++		id_min = RPMSG_RESERVED_ADDRESSES;
++		id_max = 0;
++	} else {
++		id_min = addr;
++		id_max = addr + 1;
++	}
++
++	mutex_lock(&vrp->endpoints_lock);
++
++	/* bind the endpoint to an rpmsg address (and allocate one if needed) */
++	id = idr_alloc(&vrp->endpoints, ept, id_min, id_max, GFP_KERNEL);
++	if (id < 0) {
++		dev_err(dev, "idr_alloc failed: %d\n", id);
++		goto free_ept;
++	}
++	ept->addr = id;
++
++	mutex_unlock(&vrp->endpoints_lock);
++
++	return ept;
++
++free_ept:
++	mutex_unlock(&vrp->endpoints_lock);
++	kref_put(&ept->refcount, __ept_release);
++	return NULL;
++}
++
++/**
++ * vhost_rpmsg_create_ept() - Create rpmsg endpoint
++ * @rpdev: rpmsg device on which endpoint has to be created
++ * @cb: callback associated with the endpoint
++ * @priv: private data for the driver's use
++ * @chinfo: channel_info with the local rpmsg address to bind with @cb
++ *
++ * Wrapper to __rpmsg_create_ept() to create rpmsg endpoint
++ */
++static struct rpmsg_endpoint
++*vhost_rpmsg_create_ept(struct rpmsg_device *rpdev, rpmsg_rx_cb_t cb, void *priv,
++			struct rpmsg_channel_info chinfo)
++{
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(rpdev);
++
++	return __rpmsg_create_ept(vch->vrp, rpdev, cb, priv, chinfo.src);
++}
++
++/**
++ * __rpmsg_destroy_ept() - destroy an existing rpmsg endpoint
++ * @vrp: virtproc which owns this ept
++ * @ept: endpoing to destroy
++ *
++ * An internal function which destroy an ept without assuming it is
++ * bound to an rpmsg channel. This is needed for handling the internal
++ * name service endpoint, which isn't bound to an rpmsg channel.
++ * See also __rpmsg_create_ept().
++ */
++static void
++__rpmsg_destroy_ept(struct virtproc_info *vrp, struct rpmsg_endpoint *ept)
++{
++	/* make sure new inbound messages can't find this ept anymore */
++	mutex_lock(&vrp->endpoints_lock);
++	idr_remove(&vrp->endpoints, ept->addr);
++	mutex_unlock(&vrp->endpoints_lock);
++
++	/* make sure in-flight inbound messages won't invoke cb anymore */
++	mutex_lock(&ept->cb_lock);
++	ept->cb = NULL;
++	mutex_unlock(&ept->cb_lock);
++
++	kref_put(&ept->refcount, __ept_release);
++}
++
++/**
++ * vhost_rpmsg_destroy_ept() - destroy an existing rpmsg endpoint
++ * @ept: endpoing to destroy
++ *
++ * Wrapper to __rpmsg_destroy_ept() to destroy rpmsg endpoint
++ */
++static void vhost_rpmsg_destroy_ept(struct rpmsg_endpoint *ept)
++{
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(ept->rpdev);
++
++	__rpmsg_destroy_ept(vch->vrp, ept);
++}
++
++/**
++ * vhost_rpmsg_announce_create() - Announce creation of new channel
++ * @rpdev: rpmsg device on which new endpoint channel is created
++ *
++ * Send a message to the remote processor's name service about the
++ * creation of this channel.
++ */
++static int vhost_rpmsg_announce_create(struct rpmsg_device *rpdev)
++{
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(rpdev);
++	struct virtproc_info *vrp = vch->vrp;
++	struct device *dev = &rpdev->dev;
++	int err = 0;
++
++	/* need to tell remote processor's name service about this channel ? */
++	if (rpdev->ept && vhost_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
++		struct rpmsg_ns_msg nsm;
++
++		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
++		nsm.addr = rpdev->ept->addr;
++		nsm.flags = RPMSG_NS_CREATE | RPMSG_AS_ANNOUNCE;
++
++		err = rpmsg_sendto(rpdev->ept, &nsm, sizeof(nsm), RPMSG_NS_ADDR);
++		if (err)
++			dev_err(dev, "failed to announce service %d\n", err);
++	}
++
++	return err;
++}
++
++/**
++ * vhost_rpmsg_announce_destroy() - Announce deletion of channel
++ * @rpdev: rpmsg device on which this endpoint channel is created
++ *
++ * Send a message to the remote processor's name service about the
++ * deletion of this channel.
++ */
++static int vhost_rpmsg_announce_destroy(struct rpmsg_device *rpdev)
++{
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(rpdev);
++	struct virtproc_info *vrp = vch->vrp;
++	struct device *dev = &rpdev->dev;
++	int err = 0;
++
++	/* tell remote processor's name service we're removing this channel */
++	if (rpdev->announce && rpdev->ept &&
++	    vhost_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
++		struct rpmsg_ns_msg nsm;
++
++		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
++		nsm.addr = rpdev->ept->addr;
++		nsm.flags = RPMSG_NS_DESTROY;
++
++		err = rpmsg_sendto(rpdev->ept, &nsm, sizeof(nsm), RPMSG_NS_ADDR);
++		if (err)
++			dev_err(dev, "failed to announce service %d\n", err);
++	}
++
++	return err;
++}
++
++static const struct rpmsg_device_ops vhost_rpmsg_ops = {
++	.create_ept = vhost_rpmsg_create_ept,
++	.announce_create = vhost_rpmsg_announce_create,
++	.announce_destroy = vhost_rpmsg_announce_destroy,
++};
++
++/**
++ * vhost_rpmsg_release_device() - Callback to free vhost_rpmsg_channel
++ * @dev: struct device of rpmsg_device
++ *
++ * Invoked from device core after all references to "dev" is removed
++ * to free the wrapper vhost_rpmsg_channel.
++ */
++static void vhost_rpmsg_release_device(struct device *dev)
++{
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(rpdev);
++
++	kfree(vch);
++}
++
++/**
++ * vhost_rpmsg_create_channel - Create an rpmsg channel
++ * @dev: struct device of vhost_dev
++ * @name: name of the rpmsg channel to be created
++ *
++ * Create an rpmsg channel using its name. Invokes rpmsg_register_device()
++ * only if status is VIRTIO_CONFIG_S_DRIVER_OK or else just adds it to
++ * list of pending rpmsg devices. This is because if the rpmsg client
++ * driver is already loaded when rpmsg is being registered, it'll try
++ * to start accessing virtqueue which will be ready only after VIRTIO
++ * sets status as VIRTIO_CONFIG_S_DRIVER_OK.
++ */
++struct device *vhost_rpmsg_create_channel(struct device *dev, const char *name)
++{
++	struct vhost_rpmsg_channel *vch;
++	struct rpmsg_device *rpdev;
++	struct virtproc_info *vrp;
++	struct vhost_dev *vdev;
++	u8 status;
++	int ret;
++
++	vdev = to_vhost_dev(dev);
++	status = vhost_get_status(vdev);
++	vrp = vhost_get_drvdata(vdev);
++
++	vch = kzalloc(sizeof(*vch), GFP_KERNEL);
++	if (!vch)
++		return ERR_PTR(-ENOMEM);
++
++	/* Link the channel to our vrp */
++	vch->vrp = vrp;
++
++	/* Assign public information to the rpmsg_device */
++	rpdev = &vch->rpdev;
++	rpdev->src = RPMSG_ADDR_ANY;
++	rpdev->dst = RPMSG_ADDR_ANY;
++	rpdev->ops = &vhost_rpmsg_ops;
++
++	rpdev->announce = true;
++
++	strncpy(rpdev->id.name, name, RPMSG_NAME_SIZE);
++
++	rpdev->dev.parent = &vrp->vdev->dev;
++	rpdev->dev.release = vhost_rpmsg_release_device;
++	if (!(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
++		mutex_lock(&vrp->list_lock);
++		list_add_tail(&rpdev->list, &vrp->list);
++		mutex_unlock(&vrp->list_lock);
++	} else {
++		ret = rpmsg_register_device(rpdev);
++		if (ret)
++			return ERR_PTR(-EINVAL);
++	}
++
++	return &rpdev->dev;
++}
++EXPORT_SYMBOL_GPL(vhost_rpmsg_create_channel);
++
++/**
++ * vhost_rpmsg_delete_channel - Delete an rpmsg channel
++ * @dev: struct device of rpmsg_device
++ *
++ * Delete channel created using vhost_rpmsg_create_channel()
++ */
++void vhost_rpmsg_delete_channel(struct device *dev)
++{
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct vhost_rpmsg_channel *vch;
++	struct virtproc_info *vrp;
++	struct vhost_dev *vdev;
++	u8 status;
++
++	vch = to_vhost_rpmsg_channel(rpdev);
++	vrp = vch->vrp;
++	vdev = vrp->vdev;
++	status = vhost_get_status(vdev);
++
++	if (!(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
++		mutex_lock(&vrp->list_lock);
++		list_del(&rpdev->list);
++		mutex_unlock(&vrp->list_lock);
++		kfree(vch);
++	} else {
++		device_unregister(dev);
++	}
++}
++EXPORT_SYMBOL_GPL(vhost_rpmsg_delete_channel);
++
++static const struct rpmsg_virtproc_ops vhost_rpmsg_virtproc_ops = {
++	.create_channel = vhost_rpmsg_create_channel,
++	.delete_channel = vhost_rpmsg_delete_channel,
++};
++
++/**
++ * rpmsg_upref_sleepers() - enable "tx-complete" interrupts, if needed
++ * @vrp: virtual remote processor state
++ *
++ * This function is called before a sender is blocked, waiting for
++ * a tx buffer to become available.
++ *
++ * If we already have blocking senders, this function merely increases
++ * the "sleepers" reference count, and exits.
++ *
++ * Otherwise, if this is the first sender to block, we also enable
++ * virtio's tx callbacks, so we'd be immediately notified when a tx
++ * buffer is consumed (we rely on virtio's tx callback in order
++ * to wake up sleeping senders as soon as a tx buffer is used by the
++ * remote processor).
++ */
++static void rpmsg_upref_sleepers(struct virtproc_info *vrp)
++{
++	/* support multiple concurrent senders */
++	mutex_lock(&vrp->tx_lock);
++
++	/* are we the first sleeping context waiting for tx buffers ? */
++	if (atomic_inc_return(&vrp->sleepers) == 1)
++		/* enable "tx-complete" interrupts before dozing off */
++		vhost_virtqueue_enable_cb(vrp->svq);
++
++	mutex_unlock(&vrp->tx_lock);
++}
++
++/**
++ * rpmsg_downref_sleepers() - disable "tx-complete" interrupts, if needed
++ * @vrp: virtual remote processor state
++ *
++ * This function is called after a sender, that waited for a tx buffer
++ * to become available, is unblocked.
++ *
++ * If we still have blocking senders, this function merely decreases
++ * the "sleepers" reference count, and exits.
++ *
++ * Otherwise, if there are no more blocking senders, we also disable
++ * virtio's tx callbacks, to avoid the overhead incurred with handling
++ * those (now redundant) interrupts.
++ */
++static void rpmsg_downref_sleepers(struct virtproc_info *vrp)
++{
++	/* support multiple concurrent senders */
++	mutex_lock(&vrp->tx_lock);
++
++	/* are we the last sleeping context waiting for tx buffers ? */
++	if (atomic_dec_and_test(&vrp->sleepers))
++		/* disable "tx-complete" interrupts */
++		vhost_virtqueue_disable_cb(vrp->svq);
++
++	mutex_unlock(&vrp->tx_lock);
++}
++
++/**
++ * rpmsg_send_offchannel_raw() - send a message across to the remote processor
++ * @rpdev: the rpmsg channel
++ * @src: source address
++ * @dst: destination address
++ * @data: payload of message
++ * @len: length of payload
++ * @wait: indicates whether caller should block in case no TX buffers available
++ *
++ * This function is the base implementation for all of the rpmsg sending API.
++ *
++ * It will send @data of length @len to @dst, and say it's from @src. The
++ * message will be sent to the remote processor which the @rpdev channel
++ * belongs to.
++ *
++ * The message is sent using one of the TX buffers that are available for
++ * communication with this remote processor.
++ *
++ * If @wait is true, the caller will be blocked until either a TX buffer is
++ * available, or 15 seconds elapses (we don't want callers to
++ * sleep indefinitely due to misbehaving remote processors), and in that
++ * case -ERESTARTSYS is returned. The number '15' itself was picked
++ * arbitrarily; there's little point in asking drivers to provide a timeout
++ * value themselves.
++ *
++ * Otherwise, if @wait is false, and there are no TX buffers available,
++ * the function will immediately fail, and -ENOMEM will be returned.
++ *
++ * Normally drivers shouldn't use this function directly; instead, drivers
++ * should use the appropriate rpmsg_{try}send{to, _offchannel} API
++ * (see include/linux/rpmsg.h).
++ *
++ * Returns 0 on success and an appropriate error value on failure.
++ */
++static int rpmsg_send_offchannel_raw(struct rpmsg_device *rpdev,
++				     u32 src, u32 dst,
++				     void *data, int len, bool wait)
++{
++	struct vhost_rpmsg_channel *vch = to_vhost_rpmsg_channel(rpdev);
++	struct virtproc_info *vrp = vch->vrp;
++	struct vhost_virtqueue *svq = vrp->svq;
++	struct vhost_dev *vdev = svq->dev;
++	struct device *dev = &rpdev->dev;
++	struct rpmsg_hdr msg;
++	int length;
++	u16 head;
++	u64 base;
++	int err;
++
++	/*
++	 * We currently use fixed-sized buffers, and therefore the payload
++	 * length is limited.
++	 *
++	 * One of the possible improvements here is either to support
++	 * user-provided buffers (and then we can also support zero-copy
++	 * messaging), or to improve the buffer allocator, to support
++	 * variable-length buffer sizes.
++	 */
++	if (len > vrp->buf_size - sizeof(struct rpmsg_hdr)) {
++		dev_err(dev, "message is too big (%d)\n", len);
++		return -EMSGSIZE;
++	}
++
++	mutex_lock(&vrp->tx_lock);
++	/* grab a buffer */
++	base = vhost_virtqueue_get_outbuf(svq, &head, &length);
++	if (!base && !wait) {
++		dev_err(dev, "Failed to get buffer for OUT transfers\n");
++		err = -ENOMEM;
++		goto out;
++	}
++
++	/* no free buffer ? wait for one (but bail after 15 seconds) */
++	while (!base) {
++		/* enable "tx-complete" interrupts, if not already enabled */
++		rpmsg_upref_sleepers(vrp);
++
++		/*
++		 * sleep until a free buffer is available or 15 secs elapse.
++		 * the timeout period is not configurable because there's
++		 * little point in asking drivers to specify that.
++		 * if later this happens to be required, it'd be easy to add.
++		 */
++		err = wait_event_interruptible_timeout
++			(vrp->sendq, (base =
++				      vhost_virtqueue_get_outbuf(svq, &head,
++								 &length)),
++			 msecs_to_jiffies(15000));
++
++		/* disable "tx-complete" interrupts if we're the last sleeper */
++		rpmsg_downref_sleepers(vrp);
++
++		/* timeout ? */
++		if (!err) {
++			dev_err(dev, "timeout waiting for a tx buffer\n");
++			err = -ERESTARTSYS;
++			goto out;
++		}
++	}
++
++	msg.len = len;
++	msg.flags = 0;
++	msg.src = src;
++	msg.dst = dst;
++	msg.reserved = 0;
++	/*
++	 * Perform two writes, one for rpmsg header and other for actual buffer
++	 * data, instead of squashing the data into one buffer and then send
++	 * them to the vhost layer.
++	 */
++	err = vhost_write(vdev, base, &msg, sizeof(struct rpmsg_hdr));
++	if (err) {
++		dev_err(dev, "Failed to write rpmsg header to remote buffer\n");
++		goto out;
++	}
++
++	err = vhost_write(vdev, base + sizeof(struct rpmsg_hdr), data, len);
++	if (err) {
++		dev_err(dev, "Failed to write buffer data to remote buffer\n");
++		goto out;
++	}
++
++	dev_dbg(dev, "TX From 0x%x, To 0x%x, Len %d, Flags %d, Reserved %d\n",
++		msg.src, msg.dst, msg.len, msg.flags, msg.reserved);
++#if defined(CONFIG_DYNAMIC_DEBUG)
++	dynamic_hex_dump("rpmsg_virtio TX: ", DUMP_PREFIX_NONE, 16, 1,
++			 &msg, sizeof(msg) + msg.len, true);
++#endif
++
++	vhost_virtqueue_put_buf(svq, head, len + sizeof(struct rpmsg_hdr));
++
++	/* tell the remote processor it has a pending message to read */
++	vhost_virtqueue_kick(vrp->svq);
++
++out:
++	mutex_unlock(&vrp->tx_lock);
++
++	return err;
++}
++
++static int vhost_rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	u32 src = ept->addr, dst = rpdev->dst;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, true);
++}
++
++static int vhost_rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
++			      u32 dst)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	u32 src = ept->addr;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, true);
++}
++
++static int vhost_rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src,
++				       u32 dst, void *data, int len)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, true);
++}
++
++static int vhost_rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	u32 src = ept->addr, dst = rpdev->dst;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
++}
++
++static int vhost_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
++				 int len, u32 dst)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	u32 src = ept->addr;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
++}
++
++static int vhost_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
++					  u32 dst, void *data, int len)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++
++	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
++}
++
++/**
++ * rpmsg_recv_single - Invoked when a buffer is received from remote VIRTIO dev
++ * @vrp: virtual remote processor of the vhost device which has received a msg
++ * @dev: struct device of vhost_dev
++ * @msg: pointer to the rpmsg_hdr
++ * @len: length of the received buffer
++ *
++ * Invoked when a buffer is received from remote VIRTIO device. It gets the
++ * destination address from rpmsg_hdr and invokes the callback of the endpoint
++ * corresponding to the address
++ */
++static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
++			     struct rpmsg_hdr *msg, unsigned int len)
++{
++	struct rpmsg_endpoint *ept;
++
++	dev_dbg(dev, "From: 0x%x, To: 0x%x, Len: %d, Flags: %d, Reserved: %d\n",
++		msg->src, msg->dst, msg->len, msg->flags, msg->reserved);
++#if defined(CONFIG_DYNAMIC_DEBUG)
++	dynamic_hex_dump("rpmsg_virtio RX: ", DUMP_PREFIX_NONE, 16, 1,
++			 msg, sizeof(*msg) + msg->len, true);
++#endif
++
++	/*
++	 * We currently use fixed-sized buffers, so trivially sanitize
++	 * the reported payload length.
++	 */
++	if (len > vrp->buf_size ||
++	    msg->len > (len - sizeof(struct rpmsg_hdr))) {
++		dev_warn(dev, "inbound msg too big: (%d, %d)\n", len, msg->len);
++		return -EINVAL;
++	}
++
++	/* use the dst addr to fetch the callback of the appropriate user */
++	mutex_lock(&vrp->endpoints_lock);
++
++	ept = idr_find(&vrp->endpoints, msg->dst);
++
++	/* let's make sure no one deallocates ept while we use it */
++	if (ept)
++		kref_get(&ept->refcount);
++
++	mutex_unlock(&vrp->endpoints_lock);
++
++	if (ept) {
++		/* make sure ept->cb doesn't go away while we use it */
++		mutex_lock(&ept->cb_lock);
++
++		if (ept->cb)
++			ept->cb(ept->rpdev, msg->data, msg->len, ept->priv,
++				msg->src);
++
++		mutex_unlock(&ept->cb_lock);
++
++		/* farewell, ept, we don't need you anymore */
++		kref_put(&ept->refcount, __ept_release);
++	} else {
++		dev_warn(dev, "msg received with no recipient\n");
++	}
++
++	return 0;
++}
++
++/**
++ * vhost_rpmsg_recv_done - Callback of the receive virtqueue
++ * @rvq: Receive virtqueue
++ *
++ * Invoked when the remote VIRTIO device sends a notification on the receive
++ * virtqueue. It gets base address of the input buffer and repeatedly calls
++ * rpmsg_recv_single() until no more buffers are left to be read.
++ */
++static void vhost_rpmsg_recv_done(struct vhost_virtqueue *rvq)
++{
++	struct vhost_dev *vdev = rvq->dev;
++	struct virtproc_info *vrp = vhost_get_drvdata(vdev);
++	unsigned int len, msgs_received = 0;
++	struct device *dev = &vdev->dev;
++	struct rpmsg_hdr *msg;
++	u64 base;
++	u16 head;
++	int err;
++
++	base = vhost_virtqueue_get_inbuf(rvq, &head, &len);
++	if (!base) {
++		dev_err(dev, "uhm, incoming signal, but no used buffer ?\n");
++		return;
++	}
++
++	vhost_virtqueue_disable_cb(rvq);
++	while (base) {
++		msg =  kzalloc(len, GFP_KERNEL);
++		if (!msg)
++			return;
++
++		vhost_read(rvq->dev, msg, base, len);
++
++		err = rpmsg_recv_single(vrp, dev, msg, len);
++		if (err)
++			break;
++
++		kfree(msg);
++		vhost_virtqueue_put_buf(rvq, head, len);
++		msgs_received++;
++
++		base = vhost_virtqueue_get_inbuf(rvq, &head, &len);
++	}
++	vhost_virtqueue_enable_cb(rvq);
++
++	dev_dbg(dev, "Received %u messages\n", msgs_received);
++
++	/* tell the remote processor we added another available rx buffer */
++	if (msgs_received)
++		vhost_virtqueue_kick(vrp->rvq);
++}
++
++/**
++ * vhost_rpmsg_xmit_done - Callback of the receive virtqueue
++ * @svq: Send virtqueue
++ *
++ * This is invoked whenever the remote processor completed processing
++ * a TX msg we just sent it, and the buffer is put back to the used ring.
++ *
++ * Normally, though, we suppress this "tx complete" interrupt in order to
++ * avoid the incurred overhead.
++ */
++static void vhost_rpmsg_xmit_done(struct vhost_virtqueue *svq)
++{
++	struct vhost_dev *vdev = svq->dev;
++	struct virtproc_info *vrp = vhost_get_drvdata(vdev);
++	struct device *dev = &vdev->dev;
++
++	dev_dbg(dev, "%s\n", __func__);
++
++	/* wake up potential senders that are waiting for a tx buffer */
++	wake_up_interruptible(&vrp->sendq);
++}
++
++/**
++ * vhost_rpmsg_as_cb - Callback of address service announcement
++ * @data: rpmsg_as_msg sent by remote VIRTIO device
++ * @len: length of the received message
++ * @priv: private data for the driver's use
++ * @src: source address of the remote VIRTIO device that sent the AS
++ *       announcement
++ *
++ * Invoked when a address service announcement arrives to assign the
++ * destination address of the rpmsg device.
++ */
++static int vhost_rpmsg_as_cb(struct rpmsg_device *rpdev, void *data, int len,
++			     void *priv, u32 hdr_src)
++{
++	struct virtproc_info *vrp = priv;
++	struct device *dev = &vrp->vdev->dev;
++	struct rpmsg_channel_info chinfo;
++	struct rpmsg_as_msg *msg = data;
++	struct rpmsg_device *rpmsg_dev;
++	struct device *rdev;
++	int ret = 0;
++	u32 flags;
++	u32 src;
++	u32 dst;
++
++#if defined(CONFIG_DYNAMIC_DEBUG)
++	dynamic_hex_dump("AS announcement: ", DUMP_PREFIX_NONE, 16, 1,
++			 data, len, true);
++#endif
++
++	if (len == sizeof(*msg)) {
++		src = msg->src;
++		dst = msg->dst;
++		flags = msg->flags;
++	} else {
++		dev_err(dev, "malformed AS msg (%d)\n", len);
++		return -EINVAL;
++	}
++
++	/*
++	 * the name service ept does _not_ belong to a real rpmsg channel,
++	 * and is handled by the rpmsg bus itself.
++	 * for sanity reasons, make sure a valid rpdev has _not_ sneaked
++	 * in somehow.
++	 */
++	if (rpdev) {
++		dev_err(dev, "anomaly: ns ept has an rpdev handle\n");
++		return -EINVAL;
++	}
++
++	/* don't trust the remote processor for null terminating the name */
++	msg->name[RPMSG_NAME_SIZE - 1] = '\0';
++
++	dev_info(dev, "%sing dst addr 0x%x to channel %s src 0x%x\n",
++		 flags & RPMSG_AS_ASSIGN ? "Assign" : "Free",
++		 dst, msg->name, src);
++
++	strncpy(chinfo.name, msg->name, sizeof(chinfo.name));
++	chinfo.src = src;
++	chinfo.dst = RPMSG_ADDR_ANY;
++
++	/* Find a similar channel */
++	rdev = rpmsg_find_device(dev, &chinfo);
++	if (!rdev) {
++		ret = -ENODEV;
++		goto err_find_device;
++	}
++
++	rpmsg_dev = to_rpmsg_device(rdev);
++	if (flags & RPMSG_AS_ASSIGN) {
++		if (rpmsg_dev->dst != RPMSG_ADDR_ANY) {
++			dev_err(dev, "Address bound to channel %s src 0x%x\n",
++				msg->name, src);
++			ret = -EBUSY;
++			goto err_find_device;
++		}
++		rpmsg_dev->dst = dst;
++	} else {
++		rpmsg_dev->dst = RPMSG_ADDR_ANY;
++	}
++
++err_find_device:
++	put_device(rdev);
++
++	return ret;
++}
++
++/**
++ * vhost_rpmsg_finalize_feature - Perform initializations for negotiated
++ *   features
++ * @vrp: virtual remote processor of the vhost device where the feature has been
++ *       negotiated
++ *
++ * Invoked when features negotiation between VHOST and VIRTIO device is
++ * completed.
++ */
++static int vhost_rpmsg_finalize_feature(struct virtproc_info *vrp)
++{
++	struct vhost_dev *vdev = vrp->vdev;
++
++	/* if supported by the remote processor, enable the address service */
++	if (vhost_has_feature(vdev, VIRTIO_RPMSG_F_AS)) {
++		/* a dedicated endpoint handles the name service msgs */
++		vrp->as_ept = __rpmsg_create_ept(vrp, NULL, vhost_rpmsg_as_cb,
++						 vrp, RPMSG_AS_ADDR);
++		if (!vrp->as_ept) {
++			dev_err(&vdev->dev, "failed to create the as ept\n");
++			return -ENOMEM;
++		}
++	} else {
++		dev_err(&vdev->dev, "Address Service not supported\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++/**
++ * vhost_rpmsg_set_status - Perform initialization when remote VIRTIO device
++ *   updates status
++ * @vrp: virtual remote processor of the vhost device whose status has been
++ *       updated
++ *
++ * Invoked when the remote VIRTIO device updates status. If status is set
++ * as VIRTIO_CONFIG_S_DRIVER_OK, invoke rpmsg_register_device() for every
++ * un-registered rpmsg device.
++ */
++static int vhost_rpmsg_set_status(struct virtproc_info *vrp)
++{
++	struct vhost_dev *vdev = vrp->vdev;
++	struct rpmsg_device *rpdev;
++	u8 status;
++	int ret;
++
++	status = vhost_get_status(vdev);
++
++	if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
++		mutex_lock(&vrp->list_lock);
++		list_for_each_entry(rpdev, &vrp->list, list) {
++			ret = rpmsg_register_device(rpdev);
++			if (ret) {
++				mutex_unlock(&vrp->list_lock);
++				return -EINVAL;
++			}
++		}
++		list_del(&vrp->list);
++		mutex_unlock(&vrp->list_lock);
++	}
++
++	return 0;
++}
++
++/**
++ * vhost_rpmsg_notifier - Notifier to notify updates from remote VIRTIO device
++ * @nb: notifier block associated with this virtual remote processor
++ * @notify_reason: Indicate the updates (finalize feature or set status) by
++ *                 remote host
++ * @data: un-used here
++ *
++ * Invoked when the remote VIRTIO device updates status or finalize features.
++ */
++static int vhost_rpmsg_notifier(struct notifier_block *nb, unsigned long notify_reason,
++				void *data)
++{
++	struct virtproc_info *vrp = container_of(nb, struct virtproc_info, nb);
++	struct vhost_dev *vdev = vrp->vdev;
++	int ret;
++
++	switch (notify_reason) {
++	case NOTIFY_FINALIZE_FEATURES:
++		ret = vhost_rpmsg_finalize_feature(vrp);
++		if (ret)
++			dev_err(&vdev->dev, "failed to finalize features\n");
++		break;
++	case NOTIFY_SET_STATUS:
++		ret = vhost_rpmsg_set_status(vrp);
++		if (ret)
++			dev_err(&vdev->dev, "failed to set status\n");
++		break;
++	default:
++		dev_err(&vdev->dev, "Unsupported notification\n");
++		break;
++	}
++
++	return NOTIFY_OK;
++}
++
++static unsigned int vhost_rpmsg_features[] = {
++	VIRTIO_RPMSG_F_AS,
++	VIRTIO_RPMSG_F_NS,
++};
++
++/**
++ * vhost_rpmsg_set_features - Sets supported features on the VHOST device
++ *
++ * Build supported features from the feature table and invoke
++ * vhost_set_features() to set the supported features on the VHOST device
++ */
++static int vhost_rpmsg_set_features(struct vhost_dev *vdev)
++{
++	unsigned int feature_table_size;
++	unsigned int feature;
++	u64 device_features;
++	int ret, i;
++
++	feature_table_size =  ARRAY_SIZE(vhost_rpmsg_features);
++	for (i = 0; i < feature_table_size; i++) {
++		feature = vhost_rpmsg_features[i];
++		WARN_ON(feature >= 64);
++		device_features |= (1ULL << feature);
++	}
++
++	ret = vhost_set_features(vdev, device_features);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++/**
++ * vhost_rpmsg_probe - Create virtual remote processor for the VHOST device
++ * @vdev - VHOST device with vendor ID and device ID supported by this driver
++ *
++ * Invoked when VHOST device is registered with vendor ID and device ID
++ * supported by this driver. Creates and initializes the virtual remote
++ * processor for the VHOST device
++ */
++static int vhost_rpmsg_probe(struct vhost_dev *vdev)
++{
++	vhost_vq_callback_t *vq_cbs[] = { vhost_rpmsg_xmit_done, vhost_rpmsg_recv_done };
++	static const char * const names[] = { "output", "input" };
++	struct device *dev = &vdev->dev;
++	struct vhost_virtqueue *vqs[2];
++	struct config_group *group;
++	struct virtproc_info *vrp;
++	int err;
++
++	vrp = devm_kzalloc(dev, sizeof(*vrp), GFP_KERNEL);
++	if (!vrp)
++		return -ENOMEM;
++
++	vrp->vdev = vdev;
++
++	idr_init(&vrp->endpoints);
++	mutex_init(&vrp->endpoints_lock);
++	mutex_init(&vrp->tx_lock);
++	mutex_init(&vrp->rx_lock);
++	mutex_init(&vrp->list_lock);
++	init_waitqueue_head(&vrp->sendq);
++
++	err = vhost_rpmsg_set_features(vdev);
++	if (err) {
++		dev_err(dev, "Failed to set features\n");
++		return err;
++	}
++
++	/* We expect two vhost_virtqueues, tx and rx (and in this order) */
++	err = vhost_create_vqs(vdev, 2, MAX_RPMSG_NUM_BUFS / 2, vqs, vq_cbs,
++			       names);
++	if (err) {
++		dev_err(dev, "Failed to create virtqueues\n");
++		return err;
++	}
++
++	vrp->svq = vqs[0];
++	vrp->rvq = vqs[1];
++
++	vrp->buf_size = MAX_RPMSG_BUF_SIZE;
++
++	vhost_set_drvdata(vdev, vrp);
++
++	vrp->nb.notifier_call = vhost_rpmsg_notifier;
++	vhost_register_notifier(vdev, &vrp->nb);
++	INIT_LIST_HEAD(&vrp->list);
++
++	group = rpmsg_cfs_add_virtproc_group(dev,
++					     &vhost_rpmsg_virtproc_ops);
++	if (IS_ERR(group)) {
++		err = PTR_ERR(group);
++		goto err;
++	}
++
++	dev_info(&vdev->dev, "vhost rpmsg host is online\n");
++
++	return 0;
++
++err:
++	vhost_del_vqs(vdev);
++
++	return err;
++}
++
++static int vhost_rpmsg_remove_device(struct device *dev, void *data)
++{
++	device_unregister(dev);
++
++	return 0;
++}
++
++static int vhost_rpmsg_remove(struct vhost_dev *vdev)
++{
++	struct virtproc_info *vrp = vhost_get_drvdata(vdev);
++	int ret;
++
++	ret = device_for_each_child(&vdev->dev, NULL, vhost_rpmsg_remove_device);
++	if (ret)
++		dev_warn(&vdev->dev, "can't remove rpmsg device: %d\n", ret);
++
++	if (vrp->as_ept)
++		__rpmsg_destroy_ept(vrp, vrp->as_ept);
++
++	idr_destroy(&vrp->endpoints);
++
++	vhost_del_vqs(vdev);
++
++	kfree(vrp);
++	return 0;
++}
++
++static struct vhost_device_id vhost_rpmsg_id_table[] = {
++	{ VIRTIO_ID_RPMSG, VIRTIO_DEV_ANY_ID },
++	{ 0 },
++};
++
++static struct vhost_driver vhost_rpmsg_driver = {
++	.driver.name	= KBUILD_MODNAME,
++	.driver.owner	= THIS_MODULE,
++	.id_table	= vhost_rpmsg_id_table,
++	.probe		= vhost_rpmsg_probe,
++	.remove		= vhost_rpmsg_remove,
++};
++
++static int __init vhost_rpmsg_init(void)
++{
++	int ret;
++
++	ret = vhost_register_driver(&vhost_rpmsg_driver);
++	if (ret)
++		pr_err("Failed to register vhost rpmsg driver: %d\n", ret);
++
++	return ret;
++}
++module_init(vhost_rpmsg_init);
++
++static void __exit vhost_rpmsg_exit(void)
++{
++	vhost_unregister_driver(&vhost_rpmsg_driver);
++}
++module_exit(vhost_rpmsg_exit);
++
++MODULE_DEVICE_TABLE(vhost, vhost_rpmsg_id_table);
++MODULE_DESCRIPTION("Vhost-based remote processor messaging bus");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index b9d9283b46ac..5d60d13efaf4 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -55,6 +55,7 @@ struct rpmsg_device {
+ 	u32 dst;
+ 	struct rpmsg_endpoint *ept;
+ 	bool announce;
++	struct list_head list;
+ 
+ 	const struct rpmsg_device_ops *ops;
+ };
+-- 
+2.17.1
 
-* Are you still missing any relevant data (or corresponding descriptions)?
-
-Regards,
-Markus
