@@ -2,115 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4102067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447AC20899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxMpXkgM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoyObNL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbgGBOtC (ORCPT
+        id S1730313AbgGBOtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:49:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
+        Thu, 2 Jul 2020 10:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729985AbgGBOqs (ORCPT
+        with ESMTP id S1730294AbgGBOtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:48 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF2BC08C5E1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so28794003wrw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:44 -0700 (PDT)
+        Thu, 2 Jul 2020 10:49:00 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A9B9C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:49:00 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q74so5582026iod.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K724gNBq1+8gJuUosuyXSMvH+REcJBS2sGMOEUVIfWc=;
-        b=bxMpXkgMVaIQhUosfclwMUUcexKCyxfNvmHDbmWxGE6fnfTamN5u0EjbZj6xscXTJO
-         KIqwSDdDoUdpSQjaH5gfR2j3bPAjelzx07KQNxL5h1MuR11ckg4jcR5+LCNbnF7m0LyX
-         uc+hTJBCiFR8J/aHBmIrhWw+iCM8BO8LXIO9UZm+GQk+ettGaEC+svC5PHWO9knyxcxq
-         Eyx45/1OtfW7w8v3xhWVQYzHpRGQvw0Iu6TXfXbdmUcCnnO7yuLErpt3TcRveMRqx4t5
-         9j6tlz681kwT2hbuts1GpJis58KKUpqBVck9dSa7i7jQ4OzcB3v+7hlHUu2FUQP7ik3B
-         tWIg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v4VXI9uP014tYHa4Tj77JYdAu3duCFmr1FkN+vT8NsI=;
+        b=FoyObNL92iyVLE061Hvbm+xq+zoeDIpNkTcIUjGaXkrsBOkS1ywIpFNY/kdIw7OPms
+         EWzPxJOpa7MJzcQI1tMfv/vtfU3yNUt4ZETFGw4iwn/fsT9oFyCTnaKIEPlG/LQW7v/F
+         cuJdCxfF3FjsQCpeWWNc/QExbhhNa5rnBjX3vciDAAGLevquONjrb00s+NcBsQlgv81f
+         e2GGhZ5MMK992CtMz1m3IsNTvXT5qf752JhUqT9DMnFntgzsoYNJScekoqqQ9tlo3OqY
+         saoknjuOJ2JQx0GcMqJd6BehD+PelFtZ31gCN2UQkckHDMAyNoGZFxYKfdmuvXR7NZJY
+         oPAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K724gNBq1+8gJuUosuyXSMvH+REcJBS2sGMOEUVIfWc=;
-        b=soda8/k2KA6USTPNuHxBiOpu9i6AmYYt9dRrE3wT38gMNiFrpqj9Mu0xKtTVaQd8V/
-         1+TLkD3dLYgzFrcCdFtyDVYWxMF30MCElnUX5+CscczXh2dAhRx7WshyXWvbwEM3ZGky
-         aOdkRhAL3SSKndTwfmF/veJtlHyn3sE1NEgpn5jB2BM8jp15oaOTJiqBGJ1qsvS2z58p
-         kwys5/z6KyQWjpIlV/4wX0z90ztDmWFykEnqRVpJyG9w1TG0azoDHAGYbczCwliNf6Sb
-         Cm8s1mz+Xs7VMX1Ef6f+vtGkq8j6Lo6bxIbmqNC3lFnfTQ2yRCgcTcVE9uiVEtZ484HR
-         ridg==
-X-Gm-Message-State: AOAM53033bw9khkS5UquKVNERjD3KlApSwBzuOHSAT69MmVtP4VICzKb
-        lRvx4aO3vCVFq5vh9gpXudNU8w==
-X-Google-Smtp-Source: ABdhPJy4S926IqfqG9+GjXBGJlktkqEcFIY2+P6+GBBzSak8NQL0ghDJYlnEAQjhrd4dBc3MisUR1Q==
-X-Received: by 2002:a5d:4051:: with SMTP id w17mr30549831wrp.183.1593701203410;
-        Thu, 02 Jul 2020 07:46:43 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:42 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Ben Dooks <ben@simtec.co.uk>
-Subject: [PATCH 09/30] usb: dwc2: gadget: Do not read GINTMSK2
-Date:   Thu,  2 Jul 2020 15:46:04 +0100
-Message-Id: <20200702144625.2533530-10-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v4VXI9uP014tYHa4Tj77JYdAu3duCFmr1FkN+vT8NsI=;
+        b=bpSeTLdPmAPPK/tHAXlGEsMXt+CbQNjTz4+A/Nz19lJTGGDfBbq5S4tQ+8toeEjUKU
+         GP6qJ74AVxrqf0YocJxC/jVi601ifjmMbl/v0C9L/5E9zuXvwq/2lcMR/kqpKaMXMWYo
+         JkDhFxBpHW99dwPEleN9jg95+AQ+JSL5t49Jo8hPn0ciUI4P384VeM//j1Di3fyYMe/p
+         TPnQ6XBeovAovfDuSx9loY/PSkaEBiBVGF62xSBpSlQpLlFecABHsJfTWJCCOEF90BaK
+         s2+z1a1YUriLGZb30e/ihHQ0gO6VReGMOjrZMgcLPZykDevEUiC0bIp5iiABWnE6ZPZ/
+         QE8A==
+X-Gm-Message-State: AOAM532oRulckcF5xTGcYO1aZuyYB16+IQA1bongHIj2TFwbqxLhSKcc
+        epmA+etF8GWMP+aKoj3/0XfF/KQKUByhznHBcA==
+X-Google-Smtp-Source: ABdhPJyVQXzx0lAtmUN3BtC8Tkcr13el8baae8+TSIqX/1DCH6FcNUO6wM89BF5N7w1XA1rAyO0/vpSkh2gr5Elwbuo=
+X-Received: by 2002:a5d:849a:: with SMTP id t26mr7826768iom.22.1593701339267;
+ Thu, 02 Jul 2020 07:48:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200701110650.16172-1-jgross@suse.com>
+In-Reply-To: <20200701110650.16172-1-jgross@suse.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 2 Jul 2020 10:48:48 -0400
+Message-ID: <CAMzpN2hvK2T7Qje51MPjMyTggxT7_=EFnt7gAmJEa1Zq+t3LtA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Remove 32-bit Xen PV guest support
+To:     Juergen Gross <jgross@suse.com>
+Cc:     xen-devel <xen-devel@lists.xenproject.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Deep Shah <sdeep@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value of GINTMSK2 hasn't been checked since the inception of
-dwc2_gadget_wkup_alert_handler() in 2018.
+On Wed, Jul 1, 2020 at 7:07 AM Juergen Gross <jgross@suse.com> wrote:
+>
+> The long term plan has been to replace Xen PV guests by PVH. The first
+> victim of that plan are now 32-bit PV guests, as those are used only
+> rather seldom these days. Xen on x86 requires 64-bit support and with
+> Grub2 now supporting PVH officially since version 2.04 there is no
+> need to keep 32-bit PV guest support alive in the Linux kernel.
+> Additionally Meltdown mitigation is not available in the kernel running
+> as 32-bit PV guest, so dropping this mode makes sense from security
+> point of view, too.
 
-Fixes the following W=1 warning:
+One thing that you missed is removing VDSO_NOTE_NONEGSEG_BIT from
+vdso32/note.S.  With that removed there is no difference from the
+64-bit version.
 
- drivers/usb/dwc2/gadget.c: In function ‘dwc2_gadget_wkup_alert_handler’:
- drivers/usb/dwc2/gadget.c:259:6: warning: variable ‘gintmsk2’ set but not used [-Wunused-but-set-variable]
- 259 | u32 gintmsk2;
- | ^~~~~~~~
-
-Cc: Minas Harutyunyan <hminas@synopsys.com>
-Cc: Ben Dooks <ben@simtec.co.uk>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/usb/dwc2/gadget.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 12b98b4662872..14c422ee6a069 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -256,10 +256,8 @@ int dwc2_hsotg_tx_fifo_total_depth(struct dwc2_hsotg *hsotg)
- static void dwc2_gadget_wkup_alert_handler(struct dwc2_hsotg *hsotg)
- {
- 	u32 gintsts2;
--	u32 gintmsk2;
- 
- 	gintsts2 = dwc2_readl(hsotg, GINTSTS2);
--	gintmsk2 = dwc2_readl(hsotg, GINTMSK2);
- 
- 	if (gintsts2 & GINTSTS2_WKUP_ALERT_INT) {
- 		dev_dbg(hsotg->dev, "%s: Wkup_Alert_Int\n", __func__);
--- 
-2.25.1
-
+Otherwise this series looks good to me.
+--
+Brian Gerst
