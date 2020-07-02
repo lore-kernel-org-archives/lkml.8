@@ -2,112 +2,128 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55556C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F167C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC5E20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:29:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5Eg11Z9"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2EE20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgGBW3m (ORCPT
+        id S1726446AbgGBWaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgGBW3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:29:42 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1CFC08C5C1;
-        Thu,  2 Jul 2020 15:29:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h22so27101620lji.9;
-        Thu, 02 Jul 2020 15:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
-        b=H5Eg11Z9hn0nAlgWO7xYNhfv0JqaLDjFb6T3TNFC4HAhEYM+NAykFGb40mVhLCEyP8
-         89J6eu0fEwy/nisaUDezq6zLhobof7rGWCcDy5p0cCVTOXcIu91LT30adquKyk1RDcpo
-         R5Za4WEURUdOtucQnivvJbaFYfMj1p1AiBdGYkZobOlKsMz4CJb9Ka5vqgX3hio6nEU4
-         LApjtLJ4mIuzgwD1Y67rCWqyTi0T9ViqnT9MwX/X1hWv+OdjGDDvjuKJNvyfqdALZyHz
-         0mSG7VtcmsjqA6JIA87D7xXr4IJ1fsqhQNS3ljpAHMYqKSLCfPIHnHNt2Yc6kXHAekRe
-         UYig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xxQFr1BqDEffTMIbjj2nr78urbKnKQfjZ+rNpfgSt08=;
-        b=CSibwBh/B0WsD7+B82rXM6+1vIXOLEhiI2gh5BrIOX1NRaPN87smcsBiA7oaIaK5KV
-         XeaUkL8flzwozIPN0oyDlz7q79aCFiGEwX8hjqoReYJ4BZEey5mHI7PvTuomkoay5Ahq
-         l6anU8UtU9LWyob9V00++5CfXGDqfX9+Ib/k2ZWFMmBe/AQbQccFuBbCQ1Qtrn9fFqDx
-         cWifNg/TzxJo4ly4oFISCoX5YwhZ48tYvMnEYN8C+gIpTO30YBvxXxyX6BKbH2ZkmAdO
-         LgL01WHbtkfAwH0qiacnm2NHXCE3R+VAMkDw+CsoC6rfsPKmKUN6s8M6Fa06McyKqCHO
-         82lg==
-X-Gm-Message-State: AOAM530smaHNs+5c0HEGujinBLUCOsoMgvL1xaihhLU/Q5gBtXJpbC7w
-        +VtW/QG37zujmIwL5LzEIYFatjCO4eA2nKCQtLU=
-X-Google-Smtp-Source: ABdhPJw63DHFOW+2oJ387eLmT45jEZ5gsdDYBXDveJ+O6iDUw8rDJqoTS4F60kuHr07mYRB3M3UDRSi7vwC3QvZSNpQ=
-X-Received: by 2002:a2e:9e87:: with SMTP id f7mr18422139ljk.44.1593728980418;
- Thu, 02 Jul 2020 15:29:40 -0700 (PDT)
+        Thu, 2 Jul 2020 18:30:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:3107 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgGBWaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:30:02 -0400
+IronPort-SDR: OWRxiqE6aln2IKOszBWXEldzFrHvgzzmn7SPEo60vB4ckI2LiW5T7GYw9yv+4ImtbLwJjgGnrr
+ WjUtZFfK3vlQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="126653147"
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="126653147"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:30:02 -0700
+IronPort-SDR: tbamLTMO62RorKJ/EX8T00IEQHunr51703Fh4c0rADVC1XeYG+dOuDJSxSinfY3/S3dQFBrO6B
+ gSfMr5EO8T3Q==
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="426100405"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.34]) ([10.255.31.34])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 15:30:00 -0700
+Subject: Re: [PATCH v2 6/7] KVM: X86: Move kvm_x86_ops.update_vcpu_model()
+ into kvm_update_vcpu_model()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200623115816.24132-1-xiaoyao.li@intel.com>
+ <20200623115816.24132-7-xiaoyao.li@intel.com>
+ <20200702185913.GI3575@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <e1a4eb94-f14b-c96b-5d82-c76ddafebd8a@intel.com>
+Date:   Fri, 3 Jul 2020 06:29:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
-In-Reply-To: <20200702175352.19223-3-TheSven73@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 2 Jul 2020 19:29:29 -0300
-Message-ID: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
- of clk_enet_ref
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702185913.GI3575@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sven,
+On 7/3/2020 2:59 AM, Sean Christopherson wrote:
+> On Tue, Jun 23, 2020 at 07:58:15PM +0800, Xiaoyao Li wrote:
+>> kvm_x86_ops.update_vcpu_model() is used to update vmx/svm vcpu settings
+>> based on updated CPUID settings. So it's supposed to be called after
+>> CPUIDs are fully updated, i.e., kvm_update_cpuid().
+>>
+>> Move it in kvm_update_vcpu_model().
+> 
+> The changelog needs to provide an in-depth analysis of VMX and SVM to prove
+> that there are no existing dependencies in the ordering.  I've done the
+> analysis a few times over the past few years for a similar chage I carried
+> in my SGX code, but dropped that code a while back and haven't done the
+> analysis since.  Anyways, it should be documented.
 
-On Thu, Jul 2, 2020 at 2:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+No problem. Will add the analysis in next version.
 
-> +       /*
-> +        * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
-> +        * be the PTP clock source, instead of having to be routed through
-> +        * pads.
-> +        */
-> +       if (of_machine_is_compatible("fsl,imx6qp")) {
-> +               clksel = of_property_read_bool(np, "fsl,ptpclk-bypass-pad") ?
-> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PLL :
-> +                               IMX6Q_GPR5_ENET_TXCLK_SEL_PAD;
-> +               regmap_update_bits(gpr, IOMUXC_GPR5,
-> +                                  IMX6Q_GPR5_ENET_TXCLK_SEL_MASK, clksel);
-> +       }
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>> ---
+>>   arch/x86/kvm/cpuid.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index d2f93823f9fd..5decc2dd5448 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -121,6 +121,8 @@ void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+>>   	struct kvm_lapic *apic = vcpu->arch.apic;
+>>   	struct kvm_cpuid_entry2 *best;
+>>   
+>> +	kvm_x86_ops.update_vcpu_model(vcpu);
+>> +
+>>   	best = kvm_find_cpuid_entry(vcpu, 1, 0);
+>>   	if (best && apic) {
+>>   		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+>> @@ -136,6 +138,7 @@ void kvm_update_vcpu_model(struct kvm_vcpu *vcpu)
+>>   		vcpu->arch.guest_supported_xcr0 =
+>>   			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+>>   
+>> +
+> 
+> Spurious whitespace.
+> 
+>>   	/* Note, maxphyaddr must be updated before tdp_level. */
+>>   	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+>>   	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+>> @@ -224,7 +227,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>>   
+>>   	cpuid_fix_nx_cap(vcpu);
+>>   	kvm_apic_set_version(vcpu);
+>> -	kvm_x86_ops.update_vcpu_model(vcpu);
+>>   	kvm_update_cpuid(vcpu);
+>>   	kvm_update_vcpu_model(vcpu);
+>>   
+>> @@ -254,7 +256,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>>   	}
+>>   
+>>   	kvm_apic_set_version(vcpu);
+>> -	kvm_x86_ops.update_vcpu_model(vcpu);
+>>   	kvm_update_cpuid(vcpu);
+>>   	kvm_update_vcpu_model(vcpu);
+>>   out:
+>> -- 
+>> 2.18.2
+>>
 
-With the device tree approach, I think that a better place to touch
-GPR5 would be inside the fec driver.
-
-You can refer to drivers/pci/controller/dwc/pci-imx6.c and follow the
-same approach for accessing the GPR register:
-...
-/* Grab GPR config register range */
-imx6_pcie->iomuxc_gpr =
-syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr")
-
-For the property name, what about fsl,txclk-from-pll?
