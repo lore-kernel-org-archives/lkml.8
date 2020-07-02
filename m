@@ -2,161 +2,201 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F64BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4975C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25630206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="URGnyEZH"
+	by mail.kernel.org (Postfix) with ESMTP id 834A220702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgGBJPj (ORCPT
+        id S1727910AbgGBJRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:15:39 -0400
-Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:14619
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbgGBJPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:15:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NAFJMdCFCXnnWY9YtPX04tiq0hfJxQ2wtrnez935U5OOyXof/6FrjvcdwDkk7s3K2CrLzvDKQtjcEtLs7XR7NUnEZ/U3zdcK9AxnRY33OFQKJkFPiKuUOXjC4wEoPWxh3VFMVj1BShnzlIXOS3+xd3YwGuldQmRvcoIJ4SfvGHDviK1D3XPVE2oCSQ2aL4hpTLQJ0sX9DpazHpsoWi3SClg6YsbNND5+oC0DO9lvLOep+RwgLH/9tIlo884Dtdk94Qf3h9w9omrmKx08cX0cYRWb4rQ8E3sULf2Jk09rmnsq1f6GiGeDdAGT1bT9z08SVeTo2wgvUvTsm3g/LkRaFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wV89JFu9rUPiJGobhvq4B5ArQDzjFsQmakH2OqRbPxA=;
- b=hhR/kDV7Q3tkHXnxngwF9B+DyWNEp9rg+saT7mk5PJERFyWm+KNnZgSLWsE3MVHAt0BQliQeH967QCqkumgVOo5X+tFXB8vAwFckeKIHmEjCh9owQInqN8dd7VfVTnG2Koo/eX9vJfeP3FW8Yc7u+V8pi1Fnf4nGusFacNLNsc7L5qsCwuwoU2N+c876uKgvENkhYj7gVKuZa5DuZcr49C4PWBUy+oymWVcAwHVYPp0wX+u6RlojT2nagbaKM4gNMrrY4+2StOLmDsBV7gQff8HXkThg6N+5rgCkO1qUcEJUr1i2Pb7txfw6qW/voLR64D3VC3sI7dlmezS5Cuq9/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wV89JFu9rUPiJGobhvq4B5ArQDzjFsQmakH2OqRbPxA=;
- b=URGnyEZHFHdPfIkgr7k3Pl2uYsU2mHixDnXB9cw66AEZFZmTSHpEFQdANCuWaL4yMgxOxNgDyk0IpwHRsSTg2lMSbCOxcH1v9FA77qZseRas2Nxtz1vFkesbPWWgznbyuallcw0+utEvGlzaOgn6OVO542d2MW6T6VLlfQi7g50=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB3574.namprd03.prod.outlook.com (2603:10b6:a02:aa::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21; Thu, 2 Jul
- 2020 09:15:34 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3153.022; Thu, 2 Jul 2020
- 09:15:34 +0000
-Date:   Thu, 2 Jul 2020 17:13:35 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: regulator: add document bindings for
- sy8827n
-Message-ID: <20200702171335.59f5e79b@xhacker.debian>
-In-Reply-To: <20200702171304.68928e88@xhacker.debian>
-References: <20200702171304.68928e88@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HK2PR02CA0144.apcprd02.prod.outlook.com
- (2603:1096:202:16::28) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by HK2PR02CA0144.apcprd02.prod.outlook.com (2603:1096:202:16::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23 via Frontend Transport; Thu, 2 Jul 2020 09:15:32 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 352ae42d-c7e5-4066-2cf6-08d81e6879d9
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3574:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB3574B1164B0641852C7CF987ED6D0@BYAPR03MB3574.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yFyvO+n7p3innBrHw1KfXNR++ytTtp/IzNBuxlcTqir+rUu0fgamblZWatmZZQ5pRlv3lpjmKpN4UVuWteu2xfPZFzLHKpCMLa/x2bBm2DKv19PYxG9H/ji8grzk6i7W+49GxvRs3/mWTaQ8J/66alwhLme3Ji6odhmMtxo3NKtJoi/V1BXlNi6JzCjA8U5k8asqBqUOVKHmkfQi+t3BVUSYYZuv5jTMhIsXZUalOe1b2RqdV5Tp8KzYqAJgR2t6Pp7zWQTcmxfq6NkCu52+DPchZIKHRMDBeD5Q7a4M3wkhjr5dcezYllPayYKzi3Ifr3AsjaX/JnmHiXNIXwsgXMibucwNRu8pg8SUGV3465xw13sXLMBI4xDgkuweWjPJzfUoR7G/HKmr6NB0bEMWwg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(396003)(39850400004)(346002)(136003)(956004)(478600001)(2906002)(66476007)(66556008)(66946007)(8676002)(8936002)(9686003)(4326008)(55016002)(16526019)(26005)(966005)(186003)(316002)(110136005)(86362001)(7696005)(1076003)(52116002)(6506007)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4QoJM+xHtgkRpW/n8wfBARu+owos3C8IkMStJkRiBFOAN7yuUreGChTbGdbbqr9idz7v1iWzZdg8psJw0z3sCJ/LSBWsYwmQbPOaJLjJADX4M/yhpkRzD64Kva9nM8ofHZozGiwRP5bMmFhk61kt/mXDe283cZ3P6/l96SC1sdxMAP2OwDdchk7aooFv+9AlfEZorvrD8mlazFs5CehntjYDe2aYnprZK3UrtCnHX8KDfEuNiw1S6hg1vEpzg99t1PfID/kox3qtZ6EcSlDx8Bq0BtssVgcM0lIkhwYZnvOoU4R9MoXN+U/WRSOOM5qYRO8IbQzAuBFlOngk5UHtfUC+s05jdvof9gmmmjmtJTtp31h1jzkZ/6xDp1p9lVmHlIGYbaK8Ftewib/86tQj+aO+2yTTLMOiedx5xNnDxUwdbjG/vPjgDM8LISMXTDQZOw26NqCHVJnuMaTRKsmQgpjlKoJoDzmJ48h1+C2Y1EYYq+cs2rFn5W2djb1xJxAD
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 352ae42d-c7e5-4066-2cf6-08d81e6879d9
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 09:15:34.5261
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z3ox3VFBkTz1mTC1LYK5z5vzAYlqPlt/wG21GSzJ6yG0wJRf74cxxYVeeDbRJ4+hy4f60mY+pQwMhSoxMdFBbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3574
+        Thu, 2 Jul 2020 05:17:15 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:55136 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGBJRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:17:15 -0400
+X-Greylist: delayed 635 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Jul 2020 05:17:14 EDT
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36257858"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 02 Jul 2020 17:06:31 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(43927:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Thu, 02 Jul 2020 17:06:29 +0800 (CST)
+Received: from 101.12.40.229
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2483:0:AUTH_LOGIN)
+        (envelope-from <jingle.wu@emc.com.tw>); Thu, 02 Jul 2020 17:06:28 +0800 (CST)
+From:   Jingle Wu <jingle.wu@emc.com.tw>
+To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw, dave.wang@emc.com.tw, josh.chen@emc.com.tw,
+        Jingle Wu <jingle.wu@emc.com.tw>
+Subject: [PATCH] Input: elan_i2c - Add ic type 0x14, modify the iap method for all IC.
+Date:   Thu,  2 Jul 2020 05:06:23 -0400
+Message-Id: <20200702090623.4130-1-jingle.wu@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding information for sy8827n regulator driver.
+The 0x14 is 512 page size.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Jingle Wu <jingle.wu@emc.com.tw>
 ---
- .../bindings/regulator/silergy,sy8827n.yaml   | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8827n.yaml
+ drivers/input/mouse/elan_i2c.h       |  3 ++-
+ drivers/input/mouse/elan_i2c_core.c  | 16 ++++++++++++----
+ drivers/input/mouse/elan_i2c_i2c.c   | 24 ++++++++++++------------
+ drivers/input/mouse/elan_i2c_smbus.c |  2 +-
+ 4 files changed, 27 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/silergy,sy8827n.yaml b/Documentation/devicetree/bindings/regulator/silergy,sy8827n.yaml
-new file mode 100644
-index 000000000000..15983cdc7c28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/silergy,sy8827n.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/silergy,sy8827n.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/input/mouse/elan_i2c.h b/drivers/input/mouse/elan_i2c.h
+index af1a8ee8f38a..71fff2cef8b5 100644
+--- a/drivers/input/mouse/elan_i2c.h
++++ b/drivers/input/mouse/elan_i2c.h
+@@ -34,6 +34,7 @@
+ #define ETP_FW_IAP_INTF_ERR	(1 << 4)
+ #define ETP_FW_PAGE_SIZE	64
+ #define ETP_FW_PAGE_SIZE_128	128
++#define ETP_FW_PAGE_SIZE_512	512
+ #define ETP_FW_SIGNATURE_SIZE	6
+ 
+ struct i2c_client;
+@@ -73,7 +74,7 @@ struct elan_transport_ops {
+ 	int (*iap_get_mode)(struct i2c_client *client, enum tp_mode *mode);
+ 	int (*iap_reset)(struct i2c_client *client);
+ 
+-	int (*prepare_fw_update)(struct i2c_client *client);
++	int (*prepare_fw_update)(struct i2c_client *client, u16 ic_type);
+ 	int (*write_fw_block)(struct i2c_client *client, u16 fw_page_size,
+ 			      const u8 *page, u16 checksum, int idx);
+ 	int (*finish_fw_update)(struct i2c_client *client,
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 5f584bcf306e..d64d3016ab7b 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -133,6 +133,7 @@ static int elan_get_fwinfo(struct elan_tp_data *data,
+ 		*validpage_count = 640;
+ 		break;
+ 	case 0x10:
++	case 0x14:
+ 		*validpage_count = 1024;
+ 		break;
+ 	case 0x11:
+@@ -152,12 +153,19 @@ static int elan_get_fwinfo(struct elan_tp_data *data,
+ 	*signature_address =
+ 		(*validpage_count * ETP_FW_PAGE_SIZE) - ETP_FW_SIGNATURE_SIZE;
+ 
+-	if ((data->pattern >= 0x01) && (data->iap_version == 1)) {
++	if ((data->ic_type == 0x14) && (data->iap_version >= 2))
++	{
++		*validpage_count /= 8;
++		*page_size = ETP_FW_PAGE_SIZE_512;
++	}
++	else if ((data->ic_type >= 0x0D) && (data->iap_version >= 1)) {
+ 		*validpage_count /= 2;
+ 		*page_size = ETP_FW_PAGE_SIZE_128;
+-	} else
++	}
++	else
++	{
+ 		*page_size = ETP_FW_PAGE_SIZE;
+-
++	}
+ 	return 0;
+ }
+ 
+@@ -486,7 +494,7 @@ static int __elan_update_firmware(struct elan_tp_data *data,
+ 	u16 boot_page_count;
+ 	u16 sw_checksum = 0, fw_checksum = 0;
+ 
+-	error = data->ops->prepare_fw_update(client);
++	error = data->ops->prepare_fw_update(client, data->ic_type);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/drivers/input/mouse/elan_i2c_i2c.c b/drivers/input/mouse/elan_i2c_i2c.c
+index 6d0ee741308a..ef19fd5dacf6 100644
+--- a/drivers/input/mouse/elan_i2c_i2c.c
++++ b/drivers/input/mouse/elan_i2c_i2c.c
+@@ -254,7 +254,11 @@ static int elan_i2c_get_pattern(struct i2c_client *client, u8 *pattern)
+ 		dev_err(&client->dev, "failed to get pattern: %d\n", error);
+ 		return error;
+ 	}
+-	*pattern = val[1];
 +
-+title: silergy sy8827n PMIC
-+
-+maintainers:
-+  - Jisheng Zhang <jszhang@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - silergy,sy8827n
-+
-+  reg:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: GPIO to enable/disable the regulator.
-+    maxItems: 1
-+
-+  silergy,vsel-state-high:
-+    type: boolean
-+    description:
-+      Indicates if the VSEL pin is set to high.
-+      If this property is missing, assume the VSEL pin is set to low.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        regulator@60 {
-+          compatible = "silergy,sy8827n";
-+          reg = <0x60>;
-+        };
-+    };
-+
-+...
++	if((val[0]==0xFF)&&(val[1]==0xFF))
++		*pattern = 0;
++	else
++		*pattern = val[1];
+ 
+ 	return 0;
+ }
+@@ -560,7 +564,7 @@ static int elan_read_write_iap_type(struct i2c_client *client)
+ 	return -EIO;
+ }
+ 
+-static int elan_i2c_prepare_fw_update(struct i2c_client *client)
++static int elan_i2c_prepare_fw_update(struct i2c_client *client, u16 ic_type)
+ {
+ 	struct device *dev = &client->dev;
+ 	int error;
+@@ -568,13 +572,6 @@ static int elan_i2c_prepare_fw_update(struct i2c_client *client)
+ 	u8 val[3];
+ 	u16 password;
+ 	u8 iap_version;
+-	u8 pattern_ver;
+-
+-	error = elan_i2c_get_pattern(client, &pattern_ver);
+-	if (error) {
+-		dev_err(&client->dev, "failed to get pattern version\n");
+-		return error;
+-	}
+ 
+ 	error = elan_i2c_get_version(client, true, &iap_version);
+ 	if (error)
+@@ -611,8 +608,8 @@ static int elan_i2c_prepare_fw_update(struct i2c_client *client)
+ 		dev_err(dev, "wrong mode: %d\n", mode);
+ 		return -EIO;
+ 	}
+-
+-	if ((pattern_ver >= 0x1) && (iap_version == 1)) {
++	
++	if ((ic_type >= 0x0D) && (iap_version >= 1)) {
+ 		error = elan_read_write_iap_type(client);
+ 		if (error)
+ 			return error;
+@@ -666,7 +663,10 @@ static int elan_i2c_write_fw_block(struct i2c_client *client, u16 fw_page_size,
+ 	}
+ 
+ 	/* Wait for F/W to update one page ROM data. */
+-	msleep(35);
++	if(fw_page_size==ETP_FW_PAGE_SIZE_512)
++		msleep(50);
++	else
++		msleep(35);
+ 
+ 	error = elan_i2c_read_cmd(client, ETP_I2C_IAP_CTRL_CMD, val);
+ 	if (error) {
+diff --git a/drivers/input/mouse/elan_i2c_smbus.c b/drivers/input/mouse/elan_i2c_smbus.c
+index 0f441deef3cf..6d6090e7cb38 100644
+--- a/drivers/input/mouse/elan_i2c_smbus.c
++++ b/drivers/input/mouse/elan_i2c_smbus.c
+@@ -340,7 +340,7 @@ static int elan_smbus_set_flash_key(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int elan_smbus_prepare_fw_update(struct i2c_client *client)
++static int elan_smbus_prepare_fw_update(struct i2c_client *client, u16 ic_type)
+ {
+ 	struct device *dev = &client->dev;
+ 	int len;
 -- 
-2.27.0
+2.17.1
 
