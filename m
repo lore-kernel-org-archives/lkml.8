@@ -2,139 +2,93 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF482C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C7620672
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDBC2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rP62sV3X"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ebeCUJBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgGBN0C (ORCPT
+        id S1729362AbgGBN0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:26:02 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38011 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgGBN0B (ORCPT
+        Thu, 2 Jul 2020 09:26:05 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6530 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729257AbgGBN0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:26:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593696360; x=1625232360;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PQJD5iuJXUSsGZM7I9TKdT2Kv84crJHcRFOPfrfc7cM=;
-  b=rP62sV3XpTUyFDIJmmQoW93niD/GpCzkRxIl6kpxdXp2ynARRWGdUoWB
-   BmtMj3+ZG1MfVAHZzlK7cZAP5UZe7UmfYDw40yYk8DhLAAACnNDsMshmB
-   jwzStCzU4un9u2OM0du1anG0207Xg79lwtH8v7TDYbDD1GhNmdM85tFXv
-   3mQR0Qnpm9siQLdh4O/htZLvJsEd6ng4JSWL7aX6uX63kGRo6KG3wsifc
-   F43JKqTvuDItzKMiAFBjbcDfya6otg3V2Z6hyNywdDLNN/MDDq6h/qQss
-   SpLTu52LqQGqQgv9AubGW/QYqqhbrub2rypVPcU8I2iAPmLDHYs/uACJw
-   Q==;
-IronPort-SDR: zMeqEU3emBzSIPEngKxWnta1KI3jvb9IRztbGFZrHZNxFwInFnrD/G3GltcxoTNyeTEk17KZ5H
- xT+EsnIPvxgEVpC3+jgR+qpM3K/ECn3lRP0WVi6M+cfXC79tD2OJzhAdvo+1a2BjuBTeWrOjDb
- DmgOUidoIsWpK9vDC60DVRnu05aCVKy/q1HgG/JMw6/JqEziEH6vAHZ4tuToC01ZTcpvlIiFd4
- r9pq7PJwKGmUh3LnnpJmbfBorbLVVbd8Qv3KSNAbIXSp+9esH6ev+wSZMxhApqHLu5+bLjBgsU
- tes=
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82395064"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:26:00 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 06:26:00 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 06:25:50 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <mchehab@kernel.org>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH 2/4] media: misc: introduce miscellaneous menu for helper chips
-Date:   Thu, 2 Jul 2020 16:23:57 +0300
-Message-ID: <20200702132359.122844-3-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702132359.122844-1-eugen.hristev@microchip.com>
-References: <20200702132359.122844-1-eugen.hristev@microchip.com>
+        Thu, 2 Jul 2020 09:26:02 -0400
+X-UUID: 16f36d4dca634598a9d7327811550bca-20200702
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=eBTJcCYdyu4P7SpqfiES4jVryEeGPF+hpxQ4vbDiblk=;
+        b=ebeCUJByPXUHpVEyQYy6YNtLe5UC86pOz6pMNkJq/j4XRrnf9M0iWf7R6abpywx5l7zn8/f2UwviCTicfXSRGVFDSqzcA+Ig2cXKpDw5R+igxEI+aQxuNQPhwePPcE0yRKuh9bYVYUXXoCEhGQGA04arEngxbkTf2O2CaBgi8Qs=;
+X-UUID: 16f36d4dca634598a9d7327811550bca-20200702
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1849546426; Thu, 02 Jul 2020 21:25:59 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 2 Jul 2020 21:25:54 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 2 Jul 2020 21:25:56 +0800
+Message-ID: <1593696357.5899.3.camel@mtkswgap22>
+Subject: Re: [PATCH v5] binder: transaction latency tracking for user build
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Date:   Thu, 2 Jul 2020 21:25:57 +0800
+In-Reply-To: <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
+References: <20200507085544.GB1097552@kroah.com>
+         <1591791827-23871-1-git-send-email-Frankie.Chang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-TM-SNTS-SMTP: 3BBB8660D72F636611F30F1FF60E1224D241F7EABAAF37F1121E045B93560BF32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce misc directory for misc driver: various helper chips
-on different platforms.
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- drivers/media/Kconfig       |  1 +
- drivers/media/Makefile      |  2 +-
- drivers/media/misc/Kconfig  | 13 +++++++++++++
- drivers/media/misc/Makefile |  1 +
- 4 files changed, 16 insertions(+), 1 deletion(-)
- create mode 100644 drivers/media/misc/Kconfig
- create mode 100644 drivers/media/misc/Makefile
-
-diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-index a6d073f2e036..99d842fc63ce 100644
---- a/drivers/media/Kconfig
-+++ b/drivers/media/Kconfig
-@@ -258,6 +258,7 @@ source "drivers/media/i2c/Kconfig"
- source "drivers/media/spi/Kconfig"
- source "drivers/media/tuners/Kconfig"
- source "drivers/media/dvb-frontends/Kconfig"
-+source "drivers/media/misc/Kconfig"
- 
- endmenu
- 
-diff --git a/drivers/media/Makefile b/drivers/media/Makefile
-index d18357bf1346..d7545d090f5b 100644
---- a/drivers/media/Makefile
-+++ b/drivers/media/Makefile
-@@ -29,6 +29,6 @@ obj-$(CONFIG_CEC_CORE) += cec/
- # Finally, merge the drivers that require the core
- #
- 
--obj-y += common/ platform/ pci/ usb/ mmc/ firewire/ spi/ test-drivers/
-+obj-y += common/ platform/ pci/ usb/ mmc/ firewire/ spi/ test-drivers/ misc/
- obj-$(CONFIG_VIDEO_DEV) += radio/
- 
-diff --git a/drivers/media/misc/Kconfig b/drivers/media/misc/Kconfig
-new file mode 100644
-index 000000000000..206f39f86f46
---- /dev/null
-+++ b/drivers/media/misc/Kconfig
-@@ -0,0 +1,13 @@
-+#
-+# Multimedia Video Miscellaneous device configuration
-+#
-+
-+if VIDEO_V4L2
-+
-+menu "Miscellaneous helper chips"
-+
-+comment "Various helper chips"
-+
-+endmenu
-+
-+endif
-diff --git a/drivers/media/misc/Makefile b/drivers/media/misc/Makefile
-new file mode 100644
-index 000000000000..f66554cd5c45
---- /dev/null
-+++ b/drivers/media/misc/Makefile
-@@ -0,0 +1 @@
-+# SPDX-License-Identifier: GPL-2.0
--- 
-2.25.1
+SGkgR3JlZywgVG9kZCBhbmQgYWxsDQoNCkdlbnRsZSByZW1pbmQgb2YgdGhpcyBwYXRjaCBzZXQN
+Cg0KVGhhbmtzLg0KRnJhbmtpZQ0KDQpPbiBXZWQsIDIwMjAtMDYtMTAgYXQgMjA6MjMgKzA4MDAs
+IEZyYW5raWUgQ2hhbmcgd3JvdGU6DQo+IEZyYW5raWUuQ2hhbmcgKDMpOg0KPiAgIGJpbmRlcjog
+bW92ZSBzdHJ1Y3RzIGZyb20gY29yZSBmaWxlIHRvIGhlYWRlciBmaWxlDQo+ICAgYmluZGVyOiBh
+ZGQgdHJhY2UgYXQgZnJlZSB0cmFuc2FjdGlvbi4NCj4gICBiaW5kZXI6IGFkZCB0cmFuc2FjdGlv
+biBsYXRlbmN5IHRyYWNlcg0KPiANCj4gIGRyaXZlcnMvYW5kcm9pZC9LY29uZmlnICAgICAgICAg
+ICAgICAgICB8ICAgOCArDQo+ICBkcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgfCAgIDEgKw0KPiAgZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jICAgICAgICAgICAgICAgIHwg
+NDA4ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVyX2lu
+dGVybmFsLmggICAgICAgfCA0MTYgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJz
+L2FuZHJvaWQvYmluZGVyX2xhdGVuY3lfdHJhY2VyLmMgfCAxMDggKysrKysrDQo+ICBkcml2ZXJz
+L2FuZHJvaWQvYmluZGVyX3RyYWNlLmggICAgICAgICAgfCAgNDkgKysrDQo+ICA2IGZpbGVzIGNo
+YW5nZWQsIDU4NiBpbnNlcnRpb25zKCspLCA0MDQgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5jDQo+IA0KPiBDaGFu
+Z2UgZnJvbSB2NToNCj4gICAtIGNoYW5nZSBjb25maWcgbmFtZSB0byB0aGUgcHJvcGVyIG9uZSwg
+Q09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HLg0KPiAgIC0gY2hhbmdl
+IHRyYWNlcG9pbnQgbmFtZSB0byBtb3JlIGRlc2NyaXB0aXZlIG9uZSwgdHJhY2VfYmluZGVyX3R4
+bl9sYXRlbmN5XyhhbGxvY3xpbmZvfGZyZWUpDQo+ICAgLSBlbmhhbmNlIHNvbWUgbG9jayBwcm90
+ZWN0aW9uLg0KPiANCj4gQ2hhbmdlIGZyb20gdjQ6DQo+ICAgLSBzcGxpdCB1cCBpbnRvIHBhdGNo
+IHNlcmllcy4NCj4gDQo+IENoYW5nZSBmcm9tIHYzOg0KPiAgIC0gdXNlIHRyYWNlcG9pbnRzIGZv
+ciBiaW5kZXJfdXBkYXRlX2luZm8gYW5kIHByaW50X2JpbmRlcl90cmFuc2FjdGlvbl9leHQsDQo+
+ICAgICBpbnN0ZWFkIG9mIGN1c3RvbSByZWdpc3RyYXRpb24gZnVuY3Rpb25zLg0KPiANCj4gQ2hh
+bmdlIGZyb20gdjI6DQo+ICAgLSBjcmVhdGUgdHJhbnNhY3Rpb24gbGF0ZW5jeSBtb2R1bGUgdG8g
+bW9uaXRvciBzbG93IHRyYW5zYWN0aW9uLg0KPiANCj4gQ2hhbmdlIGZyb20gdjE6DQo+ICAgLSBm
+aXJzdCBwYXRjaHNldC4NCg0K
 
