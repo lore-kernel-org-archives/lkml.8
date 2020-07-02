@@ -2,72 +2,91 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB314C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2B4E2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C85F2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgGBLML (ORCPT
+        id S1728499AbgGBLPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:12:11 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:39231 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727900AbgGBLML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:12:11 -0400
-Received: from localhost.localdomain (ip5f5bf058.dynamic.kabel-deutschland.de [95.91.240.88])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id B2858206462AB;
-        Thu,  2 Jul 2020 13:12:08 +0200 (CEST)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] .gitignore: Do not track `defconfig` from `make savedefconfig`
-Date:   Thu,  2 Jul 2020 13:12:00 +0200
-Message-Id: <20200702111200.39997-1-pmenzel@molgen.mpg.de>
-X-Mailer: git-send-email 2.27.0
+        Thu, 2 Jul 2020 07:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgGBLPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:15:20 -0400
+X-Greylist: delayed 695 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Jul 2020 04:15:19 PDT
+Received: from forward500j.mail.yandex.net (forward500j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DC2C08C5C1;
+        Thu,  2 Jul 2020 04:15:19 -0700 (PDT)
+Received: from mxback8j.mail.yandex.net (mxback8j.mail.yandex.net [IPv6:2a02:6b8:0:1619::111])
+        by forward500j.mail.yandex.net (Yandex) with ESMTP id 177EE11C1A12;
+        Thu,  2 Jul 2020 14:15:17 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback8j.mail.yandex.net (mxback/Yandex) with ESMTP id zy2fKpYmZG-FFjm119q;
+        Thu, 02 Jul 2020 14:15:16 +0300
+Received: by iva2-13089525268d.qloud-c.yandex.net with HTTP;
+        Thu, 02 Jul 2020 14:15:15 +0300
+From:   Angelo Dureghello <angelo@sysam.it>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+References: <1593449998-32091-1-git-send-email-yibin.gong@nxp.com>
+Subject: Re: [PATCH v1] dmaengine: fsl-edma-common: correct DSIZE_32BYTE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Thu, 02 Jul 2020 13:15:15 +0200
+Message-Id: <979851593688387@mail.yandex.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running `make savedefconfig` creates by default `defconfig`, which is,
-currently, on git’s radar, for example, `git status` lists this file as
-untracked.
+Hi Robin,
 
-So, add the file to `.gitignore`, so it’s ignored by git.
+29.06.2020, 10:53, "Robin Gong" <yibin.gong@nxp.com>:
+> Correct EDMA_TCD_ATTR_DSIZE_32BYTE define since it's broken by the below:
+> '0x0005 --> BIT(3) | BIT(0))'
+>
+> Fixes: 4d6d3a90e4ac ("dmaengine: fsl-edma: fix macros")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/fsl-edma-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+> index 67e4225..ec11697 100644
+> --- a/drivers/dma/fsl-edma-common.h
+> +++ b/drivers/dma/fsl-edma-common.h
+> @@ -33,7 +33,7 @@
+>  #define EDMA_TCD_ATTR_DSIZE_16BIT BIT(0)
+>  #define EDMA_TCD_ATTR_DSIZE_32BIT BIT(1)
+>  #define EDMA_TCD_ATTR_DSIZE_64BIT (BIT(0) | BIT(1))
+> -#define EDMA_TCD_ATTR_DSIZE_32BYTE (BIT(3) | BIT(0))
+> +#define EDMA_TCD_ATTR_DSIZE_32BYTE (BIT(2) | BIT(0))
 
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
----
- .gitignore | 3 +++
- 1 file changed, 3 insertions(+)
+looks like i need some glasses. Thanks a lot for the fix.
+I probably missed it since not using 16bytes transfers.
 
-diff --git a/.gitignore b/.gitignore
-index 87b9dd8a163b..f07500889fba 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -143,6 +143,9 @@ x509.genkey
- /allrandom.config
- /allyes.config
- 
-+# Kconfig presets, default savedefconfg output
-+/defconfig
-+
- # Kdevelop4
- *.kdev4
- 
--- 
-2.27.0
+Tested-by: Angelo Dureghello <angelo@sysam.it>
 
+
+Regards,
+angelo
+
+>  #define EDMA_TCD_ATTR_SSIZE_8BIT 0
+>  #define EDMA_TCD_ATTR_SSIZE_16BIT (EDMA_TCD_ATTR_DSIZE_16BIT << 8)
+>  #define EDMA_TCD_ATTR_SSIZE_32BIT (EDMA_TCD_ATTR_DSIZE_32BIT << 8)
+> --
+> 2.7.4
