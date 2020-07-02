@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36642C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799E82083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0291D2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653230;
-	bh=CEY62XlbzwgiW5Lf2uBoRurdb/wAA8yCa81CH4PGnhI=;
+	s=default; t=1593653243;
+	bh=b9mQDorhFC7sS98onQzu+8sJwNkkUMXw0ygqhBTzCHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ENGKSzlE65EdsefHaII8pDsROMvGw6EfeOCqaNgYapG+aCdiwAqzMUG1EQnUla7qN
-	 KdhSEjk1ESFyNf5UuNU5xn7Z/CKjFWGaGcmT+ThBA49jCeQZliSg3YHXGcyogJyiUp
-	 HYiFLpdXUUgkyE73rPUgv1MLpzlVSCj45XjMXysM=
+	b=EkjICGrV4bXtJK+514x9xxETmMpPxKGXhwq6Z2qP+YMZlCzuPKfzqpGf5HbhcHCE1
+	 jM6N8xCfwT1aLvtjuSFKgBYQ+9aBUx0ZuGz0BdAc37FWrJgBjRxI7IMgkV8NLGMrgc
+	 OfKp6E8clWhrOdB+DcnQTdcLXuRNaN40rkHECBuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgGBB1H (ORCPT
+        id S1729458AbgGBB1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgGBB0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:34 -0400
+        id S1729111AbgGBB0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD6F206BE;
-        Thu,  2 Jul 2020 01:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2396C206BE;
+        Thu,  2 Jul 2020 01:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653194;
-        bh=CEY62XlbzwgiW5Lf2uBoRurdb/wAA8yCa81CH4PGnhI=;
+        s=default; t=1593653203;
+        bh=b9mQDorhFC7sS98onQzu+8sJwNkkUMXw0ygqhBTzCHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGPzYe6y6k0HJM+IWAHS3hYKvJv7YWwlfZqBr1wOWsKv4BRggik/MfUho0g8c60sB
-         BvuUV1hVYbjBYjDopvMKCS97X4Fb6hdX5bneNLY1B/xwgGQUsEDVseJsF5Vc46Oz7r
-         5ub1vxi/osDw5dvSoWw5H5T+4e1rbS3/VW0BlK00=
+        b=rrURyBMO++IxzB0S/AlbVqZ+56LmSP+c2Qgs/abjq8pVJXGgXf5vd/WR8fV9m/C9s
+         jKPeDG4wPu+ZSiJN9DlNtG27nbfkf4xxEOZ3FZvxodQY+1C+m6ZogOt7lxS1kw8ssf
+         Q2UayqYNUl7ekFqN6JjYkryxUnIi8215RyjXv3KI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
+Cc:     Tomas Henzl <thenzl@redhat.com>,
+        Stanislav Saner <ssaner@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 15/27] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
-Date:   Wed,  1 Jul 2020 21:26:03 -0400
-Message-Id: <20200702012615.2701532-15-sashal@kernel.org>
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/27] scsi: mptscsih: Fix read sense data size
+Date:   Wed,  1 Jul 2020 21:26:10 -0400
+Message-Id: <20200702012615.2701532-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
 References: <20200702012615.2701532-1-sashal@kernel.org>
@@ -60,50 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tomas Henzl <thenzl@redhat.com>
 
-[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
+[ Upstream commit afe89f115e84edbc76d316759e206580a06c6973 ]
 
-The Acer S1003 has proper DMI strings for sys-vendor and product-name,
-so we do not need to match by BIOS-date.
+The sense data buffer in sense_buf_pool is allocated with size of
+MPT_SENSE_BUFFER_ALLOC(64) (multiplied by req_depth) while SNS_LEN(sc)(96)
+is used when reading the data.  That may lead to a read from unallocated
+area, sometimes from another (unallocated) page.  To fix this, limit the
+read size to MPT_SENSE_BUFFER_ALLOC.
 
-This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
-drm_dmi_panel_orientation_data struct which is also used by other quirks.
-
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20200616150446.4840-1-thenzl@redhat.com
+Co-developed-by: Stanislav Saner <ssaner@redhat.com>
+Signed-off-by: Stanislav Saner <ssaner@redhat.com>
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/message/fusion/mptscsih.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index de7837efbbfce..fa5c25d36d3dc 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
- 	int orientation;
- };
+diff --git a/drivers/message/fusion/mptscsih.c b/drivers/message/fusion/mptscsih.c
+index 6ba07c7feb92b..2af7ae13449d3 100644
+--- a/drivers/message/fusion/mptscsih.c
++++ b/drivers/message/fusion/mptscsih.c
+@@ -118,8 +118,6 @@ int 		mptscsih_suspend(struct pci_dev *pdev, pm_message_t state);
+ int 		mptscsih_resume(struct pci_dev *pdev);
+ #endif
  
--static const struct drm_dmi_panel_orientation_data acer_s1003 = {
--	.width = 800,
--	.height = 1280,
--	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
--};
+-#define SNS_LEN(scp)	SCSI_SENSE_BUFFERSIZE
 -
- static const struct drm_dmi_panel_orientation_data asus_t100ha = {
- 	.width = 800,
- 	.height = 1280,
-@@ -100,7 +94,7 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
- 		},
--		.driver_data = (void *)&acer_s1003,
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* Asus T100HA */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+ /*
+@@ -2420,7 +2418,7 @@ mptscsih_copy_sense_data(struct scsi_cmnd *sc, MPT_SCSI_HOST *hd, MPT_FRAME_HDR
+ 		/* Copy the sense received into the scsi command block. */
+ 		req_index = le16_to_cpu(mf->u.frame.hwhdr.msgctxu.fld.req_idx);
+ 		sense_data = ((u8 *)ioc->sense_buf_pool + (req_index * MPT_SENSE_BUFFER_ALLOC));
+-		memcpy(sc->sense_buffer, sense_data, SNS_LEN(sc));
++		memcpy(sc->sense_buffer, sense_data, MPT_SENSE_BUFFER_ALLOC);
+ 
+ 		/* Log SMART data (asc = 0x5D, non-IM case only) if required.
+ 		 */
 -- 
 2.25.1
 
