@@ -2,93 +2,161 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB68C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84C920748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653112;
-	bh=XShLMHFLIslsFzvvnDfxIF44y2nXE8NLb7s1NS6Wa0E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4MzUHvNt/tdMgJ7zQS2R2Kr9NZzk+u5Euq7REE1HmtvUTybtJDSgJpB4kGyMq2R9
-	 r11J2pdUUHfAHp850wZ4lWPX1nbDGCgoeiaH/pfG8MhPdZ+IGGLKqWOVje9STj1Q7j
-	 y8ttUxLyqYSalp35Pv5bS4Jfv5F2lsXHcmxmQCr0=
+	by mail.kernel.org (Postfix) with ESMTP id A5996206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk2P/S1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgGBBZK (ORCPT
+        id S1728766AbgGBBZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgGBBXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:50 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D8C2145D;
-        Thu,  2 Jul 2020 01:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653030;
-        bh=XShLMHFLIslsFzvvnDfxIF44y2nXE8NLb7s1NS6Wa0E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6H49pPYM2bRb3F2x0OvH64m9Yksals2JLqrwueVggA3ug3oma9zyM2sLMmB4QF4U
-         JscLPHKDQYx4NB5/wPjPBjE6MjcSipR3uJjLhO5yHA6Uld1/ofKFR/fQxoYNMSJumw
-         NztWJIPuzMyu5DXsGJPe0J3hPvCFXwz4WRmoG5jI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 44/53] usb: dwc3: pci: Fix reference count leak in dwc3_pci_resume_work
-Date:   Wed,  1 Jul 2020 21:21:53 -0400
-Message-Id: <20200702012202.2700645-44-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
-References: <20200702012202.2700645-1-sashal@kernel.org>
+        Wed, 1 Jul 2020 21:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbgGBBZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011BBC08C5C1;
+        Wed,  1 Jul 2020 18:25:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q7so16284109ljm.1;
+        Wed, 01 Jul 2020 18:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OA49WuL0sThpD2AYuMtpdZGroGjS32Zzwhjd8yiNNuE=;
+        b=Mk2P/S1R51LjiHT7a52NIA3xKyA8UaSrakv3wRtyWYPe6BL3niPa/Dc/e4xhwoI/7y
+         qJCb9fIvWwDH+rLQCzB7ZXYtVgYJ17S079OzNbyqQDLIp0iyIOZCd2f/fXeMuCcMZLJt
+         /nXGZj42VSvsYShz0ll30Lyi6zGzcBWLqTeKBVrFClp61LhaHRGRo7AY9m0Pyg+rKlJg
+         leQR6wWLC+Ta3BChiNfVKYMnm6Cnijo3iVy35FtBvlPGz1TinVSDi5OeLq4ExN/pNSKk
+         HVnbRxh9g2dXkTgaTw8nTyxZK7+4+/oV5s4HURZiYG3wpDpJvgjBmRy+AXNHPlFQSHMp
+         sU+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OA49WuL0sThpD2AYuMtpdZGroGjS32Zzwhjd8yiNNuE=;
+        b=slZMJu6lAawQN/iCGs4dlR9wMT9bChNtotd7jbt18qWWpQgBtEpozvPhrYb6v98KTQ
+         p+sGjMzHCybZuAv5p7opDBBhO8eUVfIPNvhvwFLtgW7Ix3FwNx6eC2Co+cH6emM2lgG7
+         Aq4wvhdtZxuiU5jDBDGsdd7NQGHrOyZOhmTxXZvuuGbbfKSaJN6B+7nNVOpgrUji7FC8
+         bBBTtWKL4BFsPvMJG6IcVSKhwa/Djra3lfDWXTP0zQmOJNS7Pi11rbsodUsyYcBuIoYm
+         dlxGFzkkjbIUlvXyV2B6rIhfGzLDALvnexi6bzqSLLXq/UKI4nDOAph5QpAA1J2ECQM1
+         xImg==
+X-Gm-Message-State: AOAM532p/VGDQQmPt/R2Fs9r3rOXPcWcZ2mYCxqEBDAUihn6OOq/Tv0k
+        JL8Z7UshUhQb6DHBZaPflXkvvWXZcQM=
+X-Google-Smtp-Source: ABdhPJxhRnB8zlB9MEI6/ePrP8TdwiCvmtrvwqZ45jg4cOgOfkQ8DUYoWvB37U4c3CnwDzsMcLaC0A==
+X-Received: by 2002:a2e:9017:: with SMTP id h23mr10807112ljg.61.1593653104194;
+        Wed, 01 Jul 2020 18:25:04 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id t4sm2704596lfp.21.2020.07.01.18.25.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 18:25:03 -0700 (PDT)
+Subject: Re: [PATCH v4 11/37] PM / devfreq: tegra30: Silence deferred probe
+ error
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <CGME20200609131843epcas1p3a5b06308559ff03ef1b27521f412b656@epcas1p3.samsung.com>
+ <20200609131404.17523-12-digetx@gmail.com>
+ <136b430d-2097-7b2b-d7dd-b438deee8f5d@samsung.com>
+ <fda8aa80-04f1-af00-7a0d-f9b589cdb37e@gmail.com>
+ <8e941321-5da6-e9e7-6a4e-8c0477911ebd@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3e30279c-0964-4dd8-e7ac-2066c8ccc902@gmail.com>
+Date:   Thu, 2 Jul 2020 04:25:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <8e941321-5da6-e9e7-6a4e-8c0477911ebd@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+02.07.2020 04:34, Chanwoo Choi пишет:
+> On 7/2/20 10:20 AM, Dmitry Osipenko wrote:
+>> 02.07.2020 03:59, Chanwoo Choi пишет:
+>>> Hi,
+>>>
+>>> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+>>>> Tegra EMC driver was turned into a regular kernel driver, it also could
+>>>> be compiled as a loadable kernel module now. Hence EMC clock isn't
+>>>> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
+>>>> there is no good reason to spam KMSG with a error about missing EMC clock
+>>>> in this case, so let's silence the deferred probe error.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/devfreq/tegra30-devfreq.c | 9 ++++++---
+>>>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>>>> index e94a27804c20..423dd35c95b3 100644
+>>>> --- a/drivers/devfreq/tegra30-devfreq.c
+>>>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>>>> @@ -801,9 +801,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>>  	}
+>>>>  
+>>>>  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
+>>>> -	if (IS_ERR(tegra->emc_clock)) {
+>>>> -		dev_err(&pdev->dev, "Failed to get emc clock\n");
+>>>> -		return PTR_ERR(tegra->emc_clock);
+>>>> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
+>>>> +	if (err) {
+>>>> +		if (err != -EPROBE_DEFER)
+>>>> +			dev_err(&pdev->dev, "Failed to get emc clock: %d\n",
+>>>> +				err);
+>>>> +		return err;
+>>>>  	}
+>>>>  
+>>>>  	err = platform_get_irq(pdev, 0);
+>>>>
+>>>
+>>> As I commented on patch10, I recommend that you add the Tegra EMC driver
+>>> commit information into patch description and Looks good to me.
+>>>
+>>
+>> Hello, Chanwoo!
+>>
+>> This patch11 and patch10 are depending on the patches 4/5 (the Tegra EMC
+>> driver patches) of *this* series, hence there is no commit information.
+>> I'm expecting that this whole series will go via tegra tree once all the
+>> patches will be reviewed and collect all the necessary acks from you,
+>> ICC and CLK subsystem maintainers.
+>>
+>> Please feel free to give yours ack to the patches 10/11 if they are good
+>> to you :)
+>>
+>>
+> 
+> OK. Looks good to me
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> 
 
-[ Upstream commit 2655971ad4b34e97dd921df16bb0b08db9449df7 ]
-
-dwc3_pci_resume_work() calls pm_runtime_get_sync() that increments
-the reference counter. In case of failure, decrement the reference
-before returning.
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/dwc3/dwc3-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index b67372737dc9b..96c05b121fac8 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -206,8 +206,10 @@ static void dwc3_pci_resume_work(struct work_struct *work)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(&dwc3->dev);
--	if (ret)
-+	if (ret) {
-+		pm_runtime_put_sync_autosuspend(&dwc3->dev);
- 		return;
-+	}
- 
- 	pm_runtime_mark_last_busy(&dwc3->dev);
- 	pm_runtime_put_sync_autosuspend(&dwc3->dev);
--- 
-2.25.1
-
+Thank you! :)
