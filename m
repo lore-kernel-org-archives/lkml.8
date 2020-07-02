@@ -2,50 +2,48 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD945C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16350C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A211B2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45BC20747
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AHcAmehG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XfChI975"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgGBLKE (ORCPT
+        id S1728618AbgGBLKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:10:04 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20080 "EHLO
+        Thu, 2 Jul 2020 07:10:10 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32038 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728584AbgGBLKD (ORCPT
+        by vger.kernel.org with ESMTP id S1728574AbgGBLKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:10:03 -0400
+        Thu, 2 Jul 2020 07:10:06 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593688203; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=OKu1EM6eiLid9WUfX5EOnISzTQlacwjoK78xIqopTHw=; b=AHcAmehG/okVv481BRB85b244Qr2ZKzlA4BMjsPp8k2kWyRXvhgTs4EAorcut0xV55LktcNU
- e8EQIkQMErFzD5o2C7yovxxDdZLQUOtp4OjhHBVwQSFopfx/iTvqC9ZFOYVGMzKDdM41HGBd
- pemj6LNq7ZPdXq4IS6fMInorTxU=
+ s=smtp; t=1593688205; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=bTuN57vJilTOX0pADiPZZNPd5sonb/cXm6sf/c1qdWo=; b=XfChI975rKc8obDOrdkGdrQxvGfHHg97y6Jo9ruoYE2UT9KJhGHmdBbpXYZKmU+OhgiDBs8r
+ 523CkG3RG+FDPY7YRKVCbJGSzNbLAGeMJI9l1so5PirvyDgf9dwU7BhqdhLzlxc+hnDJycI5
+ UHQ+7k3qvPYOCsqWZD8GUkjcAZU=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5efdc08a3a8a8b20b8812c4c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:10:02
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5efdc07ca6e154319f817b62 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:09:48
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C58F9C433B2; Thu,  2 Jul 2020 11:10:01 +0000 (UTC)
+        id 7EC51C433C6; Thu,  2 Jul 2020 11:09:47 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AC49C433CA;
-        Thu,  2 Jul 2020 11:09:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AC49C433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5892BC433C8;
+        Thu,  2 Jul 2020 11:09:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5892BC433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -54,108 +52,39 @@ To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
 Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 4/4] arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
-Date:   Thu,  2 Jul 2020 16:39:11 +0530
-Message-Id: <1593688151-22616-5-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v2 0/4] DVFS support for dpu and dsi
+Date:   Thu,  2 Jul 2020 16:39:07 +0530
+Message-Id: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
-References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables for DSI and MDP based on the perf state/clk
-requirements, and add the power-domains property to specify the
-scalable power domain.
+Changes in v2
+- Patch 2: Dropped dsi_link_clk_set_rate_6g_v2 and dsi_link_clk_disable_6g_v2 as suggested by Matthias
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+These patches add DVFS support for DPU and DSI.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index ad57df2..3430c33f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2482,6 +2482,8 @@
- 						       <19200000>,
- 						       <19200000>,
- 						       <19200000>;
-+				operating-points-v2 = <&mdp_opp_table>;
-+				power-domains = <&rpmhpd SC7180_CX>;
- 
- 				interrupt-parent = <&mdss>;
- 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2499,6 +2501,31 @@
- 						};
- 					};
- 				};
-+
-+				mdp_opp_table: mdp-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-200000000 {
-+						opp-hz = /bits/ 64 <200000000>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-300000000 {
-+						opp-hz = /bits/ 64 <300000000>;
-+						required-opps = <&rpmhpd_opp_svs>;
-+					};
-+
-+					opp-345000000 {
-+						opp-hz = /bits/ 64 <345000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+
-+					opp-460000000 {
-+						opp-hz = /bits/ 64 <460000000>;
-+						required-opps = <&rpmhpd_opp_nom>;
-+					};
-+				};
-+
- 			};
- 
- 			dsi0: dsi@ae94000 {
-@@ -2522,6 +2549,9 @@
- 					      "iface",
- 					      "bus";
- 
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SC7180_CX>;
-+
- 				phys = <&dsi_phy>;
- 				phy-names = "dsi";
- 
-@@ -2547,6 +2577,25 @@
- 						};
- 					};
- 				};
-+
-+				dsi_opp_table: dsi-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-187500000 {
-+						opp-hz = /bits/ 64 <187500000>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-300000000 {
-+						opp-hz = /bits/ 64 <300000000>;
-+						required-opps = <&rpmhpd_opp_svs>;
-+					};
-+
-+					opp-358000000 {
-+						opp-hz = /bits/ 64 <358000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+				};
- 			};
- 
- 			dsi_phy: dsi-phy@ae94400 {
+These patches have no other dependency. Patch 1 and 2 will need to be merged in
+via the MSM DRM tree.
+
+DT patches will need to land via the msm tree.
+
+Rajendra Nayak (4):
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 49 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 59 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 26 +++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++
+ drivers/gpu/drm/msm/dsi/dsi_host.c            | 26 +++++++++++-
+ 6 files changed, 163 insertions(+), 4 deletions(-)
+
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
