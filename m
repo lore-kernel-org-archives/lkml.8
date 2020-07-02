@@ -2,185 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C22AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE04CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E25207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D44A2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BW5hWve/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRRN360y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgGBApH (ORCPT
+        id S1728042AbgGBApe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:45:07 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:21114 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgGBApH (ORCPT
+        Wed, 1 Jul 2020 20:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgGBApd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:45:07 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200702004504epoutp030d7893fa46d93ef358a00c7dd3e54f74~dyN9EJOV21762217622epoutp03U
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:45:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200702004504epoutp030d7893fa46d93ef358a00c7dd3e54f74~dyN9EJOV21762217622epoutp03U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593650704;
-        bh=cr1O3j0g2Qo31hxYu1nd+OKIhFic8UjzEN5/LrLf1Rg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BW5hWve/DGwbURL4rnA3BbmktMggL9hcf6OpJpX0ekc/FH42UcvsO4zWSdDpowEp9
-         hi6X75NDnOoq2AXT8B9NJWlhTkURU7yhEXB6l+HX9cN5eFRtBz20T5bsnke1XtWCHd
-         YxgtPJQEZesAoDw/gvQt+QuHXcmstGpwkBEeyttE=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200702004503epcas1p487e96ff72e39c320da2c74cd5f44c81e~dyN8e4WAR1635916359epcas1p4L;
-        Thu,  2 Jul 2020 00:45:03 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49xzrp6tKbzMqYkh; Thu,  2 Jul
-        2020 00:44:58 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EB.C8.19033.A0E2DFE5; Thu,  2 Jul 2020 09:44:58 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200702004458epcas1p4fdfcf011b6e880ad886ad5022a51c6b5~dyN3RyhPq1281412814epcas1p46;
-        Thu,  2 Jul 2020 00:44:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200702004458epsmtrp244a74758c68d61794b2991b37abc29b9~dyN3Q1iT62661626616epsmtrp2k;
-        Thu,  2 Jul 2020 00:44:58 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-06-5efd2e0adc0c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2E.62.08382.A0E2DFE5; Thu,  2 Jul 2020 09:44:58 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200702004457epsmtip27c5c6690082e9279945405425055c242~dyN27uuPo0248402484epsmtip2Q;
-        Thu,  2 Jul 2020 00:44:57 +0000 (GMT)
-Subject: Re: [PATCH v4 10/37] PM / devfreq: tegra20: Silence deferred probe
- error
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <14271aed-5fb6-14e1-3fe9-ef8d0c5013c4@samsung.com>
-Date:   Thu, 2 Jul 2020 09:56:13 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Wed, 1 Jul 2020 20:45:33 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC0AC08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:45:33 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so8163932pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PF6PVg6Qk3aczs+/e1HWRyzHNDndSGQClfFztHhcrJA=;
+        b=IRRN360yDKEMQxG9gT3EO16qJfg/TcpVShQcjRB9jTaTvchyHFTq4oTBH0DuMRu0L/
+         DxZN8IBFt5WiQaBOohCA3SM0pCeDKhTQvwGElidlfN1JBrTftIKRZ2qvUbF7dSX31Ovl
+         unSwAWVPVUgZe91Kk8wFDpHNz8uN3oouD+ZyU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PF6PVg6Qk3aczs+/e1HWRyzHNDndSGQClfFztHhcrJA=;
+        b=jF+hwoPqSUS2o5Cp4KmCBTn++uXXyMhJEwq9dmAmviY/fKnK/umGOVgQOajfcpRltE
+         KLGGupbe8RCdvjyihvzy5UvluDMn3YvVwCDo22nV2kaFIVdt4lgdMg+ZIR3TxpQszB60
+         xpSn07teZYUcLMP0B5vTFRV0GBrBasmdl9pnssOVzpL8CD4l5MhIlQAMRtKWWcVBS1pB
+         EQrtHt0rJKvFRulspUhMkxjhBnO52/D6W/awt7lr0HXiubtJDBD9uuT0Inzwv9TBa92V
+         oSVdBh93PA55hJ5TkI0wbT/yl6U65grpohD5Ob4ljUoGEilc37Yclic3qZjZyZqYlE8u
+         e5Pg==
+X-Gm-Message-State: AOAM532ewOYBIIGVY/MI0W3knSF1okGgEqQNd9uMHNcHEHOLi3Tor92T
+        6Q6PXfYcsmzbXsXrw0TuZi4Tag==
+X-Google-Smtp-Source: ABdhPJzPPKTtbw7LrsBUf0ic/Ijm1Yz9qx+hzC3WuV8qdS19siqcooPzbKzryXVcyy89dAYTRcTVbg==
+X-Received: by 2002:a17:902:7896:: with SMTP id q22mr25007062pll.237.1593650732668;
+        Wed, 01 Jul 2020 17:45:32 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id w4sm6966212pfd.39.2020.07.01.17.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 17:45:32 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     akashast@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        mkshah@codeaurora.org, swboyd@chromium.org,
+        georgi.djakov@linaro.org, ctheegal@codeaurora.org,
+        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH 0/3] spi: spi-geni-qcom: Avoid a bunch of per-transfer overhead
+Date:   Wed,  1 Jul 2020 17:45:06 -0700
+Message-Id: <20200702004509.2333554-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
 MIME-Version: 1.0
-In-Reply-To: <20200609131404.17523-11-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxbZRTH9/S2ty2xeCkwHnDOcl3MwFFaoOxiAGWWpRM/oE00EKVc6V1L
-        KG1ti3HDOOaAAXMbYAax4UVGpttFFBDYAEkVOhE7cIhuOEeQbEsWBmVQIEh5sZfrIt9+55z/
-        ec7zf14EiPguGibINdooi5E04Kgft3swQhblJ93Ikn21EE9MNZQAwr34gEc0Okd5RMvCPUD8
-        vjyPErX9HShRbL/IJUY+meUT4711KOE56wRE+ZIdJcZ+SSX+OnkZJapbLwCipN/JJzZvtXOJ
-        f3obuK8EqOYnSviqHvskX/Xb6Dqi6qDLUdXdW9+jqqkzQxzV2VNuVHWukwYqT8fedGFmXqKe
-        IrWURUIZc0zaXKMuCU9Ta17VKOJl8ih5AnEQlxjJfCoJV76eHnU41+Dzgks+IA0FvlQ6abXi
-        0cmJFlOBjZLoTVZbEk6ZtQZzgllqJfOtBUadNMeU/5JcJotR+ITZefqapla++cunPuw4uQ6K
-        wKqwAggFEIuDffQWtwL4CcTYNQCdS8UoGywCOOf91VcR+IIVAMvUTxoqr6zyWE2/T1Pv5rPB
-        PIDfVQ8CRhWIqWHVSBGHKQRhTgS2lA8BJkCwcQBHSpdQRoVikdDxcGKbn8bC4R+r9wAzToQl
-        w4keKYNcbB+kG3WMIhh7Cw53F2+vL8IC4PDn97kMC7GD8Mz1qm1GsBB4534jh+Xn4NW5OoQZ
-        C7HTQvhwbYbHWlDC881uhOVAODPUyWc5DHrc/SjLhfDKsBNlm8sA7HTc/K85FjoufcZhNodg
-        EfDb3mg2HQ57vPWAHewP3cuf8hgJxESwrFTMSp6H439PclgOhc2ny9FKgNt32LHvsGDfYcH+
-        /7AvAJcGuymzNV9HWeXmmJ2X3QG2n3lk/DVQPfdYOgA4AjAAoADBg0Qu2VqWWKQljx2nLCaN
-        pcBAWQeAwne+VUhYcI7J90+MNo1cERMbG0vEyeMVcjkeInphz80sMaYjbVQeRZkpy5M+jkAY
-        VsRRa7C2RbV4zLSnatKh/TlVeWgz5TD6zZvn0LU3dqXVuVxdqWl9ouQMerHtz0T/Gcsjmk//
-        uEA79tbMqh0es3+hVOPav//r68H2hEy361hpSfTK7refIT9W/FAW8K6iqcKgHFghpyOOntg4
-        HvJic1xzXebRef+Qxx6n9/bw7YQJfXpx60dHTsWk0jemKqcz0KbR0PRlUb9/xXsP4qPf2djQ
-        SW5o/Vyh2RcXa81Bms1pXeedjJSJ2Z9Wp5Nrsr319L7C9iOlDYFL3M2xwdcu99Ve0K8HeVu2
-        HmWEv9wGU94353SfuBqKHUAOrbRXI7s4q13K4vADEaEziZeehetb3ugunGvVk/JIxGIl/wX8
-        QUYkbwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsWy7bCSvC6X3t84gxOfmC3uz2tltHj36Smr
-        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
-        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
-        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZ0xauZS9YxlOxqfEPYwPjD84u
-        Rk4OCQETiQkrf7B2MXJxCAnsZpR4eukuI0RCUmLaxaPMXYwcQLawxOHDxRA1bxkl7uzfDVYj
-        LBAsMfFsAxNIQkTgGLPEptOnwRxmgcuMEjs6v7JBtGxjlJh+ahkbSAubgJbE/hc3wGx+AUWJ
-        qz8eM4Ks4BWwk7ixUw/EZBFQkVg1Px2kQlQgTGLnksdMIDavgKDEyZlPWEBsTgFzie6jE8Fs
-        ZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnUguLc9Nxi
-        wwLDvNRyveLE3OLSvHS95PzcTYzgyNbS3MG4fdUHvUOMTByMhxglOJiVRHhPG/yKE+JNSays
-        Si3Kjy8qzUktPsQozcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoFp+cSdUo++b9nbpR7J
-        8GTClhVp4jMu2T2dbmb32S2v+3+k9LHPzt6lLMVFPq/qPDyPvP4UPVNCZcVNeUm9Z/JH15fO
-        MsnJ0n78qfpisHD7zn0Xrgitdp5Q/f27d/wi81huBddtrBGJC2K0epkO5DZP81LIO8qs8Gum
-        M1NDySNe90iul6yXTnybu4LnbNKjydv109xCaxdc756SGzxPTPDJh6iT2/O4TudlZO6OutCd
-        xn/R6uzEI2E3JaU2FL32ifkdv1DuQNhNT80tM+Rac9mlYiRXXta4IFPxZ2n0kxUdjOlyM2dW
-        Xeq/rJA9Y76yz/e536XZX2jNUufS31pR++D8GaO485qXjv1JnsMokf5HiaU4I9FQi7moOBEA
-        1HYv0lsDAAA=
-X-CMS-MailID: 20200702004458epcas1p4fdfcf011b6e880ad886ad5022a51c6b5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200609131843epcas1p352d1dfcbca81988d3363036d762dd47f
-References: <20200609131404.17523-1-digetx@gmail.com>
-        <CGME20200609131843epcas1p352d1dfcbca81988d3363036d762dd47f@epcas1p3.samsung.com>
-        <20200609131404.17523-11-digetx@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+This series tries to reduce a whole bunch of overhead in each SPI
+transfer.  Much of this overhead is new with the recent interconnect
+changes, but even without those changes we still had some overhead
+that we could avoid.  Let's avoid all of it.
 
-On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
-> Tegra EMC driver was turned into a regular kernel driver, it also could
-> be compiled as a loadable kernel module now. Hence EMC clock isn't
+These changes are atop the Qualcomm tree to avoid merge conflicts.  If
+they look good, the most expedient way to land them is probably to get
+Ack's from Mark and land then via the Qualcomm tree.
 
-Looks good to me. But, you better to add the commit information
-about Tegra EMC driver with commit-id ("patch title") format
-into patch descritpion.
+Most testing was done on the Chrome OS 5.4 tree, but sanity check was
+done on mainline.
 
-> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
-> there is no good reason to spam KMSG with a error about missing EMC clock
-> in this case, so let's silence the deferred probe error.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra20-devfreq.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-> index ff82bac9ee4e..6469dc69c5e0 100644
-> --- a/drivers/devfreq/tegra20-devfreq.c
-> +++ b/drivers/devfreq/tegra20-devfreq.c
-> @@ -141,9 +141,11 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  
->  	/* EMC is a system-critical clock that is always enabled */
->  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
-> -	if (IS_ERR(tegra->emc_clock)) {
-> -		err = PTR_ERR(tegra->emc_clock);
-> -		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
-> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to get emc clock: %d\n",
-> +				err);
->  		return err;
->  	}
->  
-> 
 
+Douglas Anderson (3):
+  spi: spi-geni-qcom: Avoid clock setting if not needed
+  spi: spi-geni-qcom: Set an autosuspend delay of 250 ms
+  spi: spi-geni-qcom: Get rid of most overhead in prepare_message()
+
+ drivers/spi/spi-geni-qcom.c | 67 ++++++++++++++++++-------------------
+ 1 file changed, 32 insertions(+), 35 deletions(-)
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.27.0.383.g050319c2ae-goog
+
