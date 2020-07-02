@@ -2,109 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA494C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3CE42145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:59:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8T/FHGX"
+	by mail.kernel.org (Postfix) with ESMTP id BDF7920772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgGBN7K (ORCPT
+        id S1729407AbgGBOBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgGBN7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:59:09 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BADC08C5C1;
-        Thu,  2 Jul 2020 06:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gl1jKq2wcYbRMLXz2bIDCOo5JcG5MyTdy5yY3rjDs6A=; b=m8T/FHGXVQuNDN0fShATSEBI4v
-        gdrv0UOm+Qc/TVk/hko/YWkvsicyavkQ7T9kgB1cXA3f7SjZGveySW1lNZ9pj7AAP82GfbQIZyFHG
-        zIE/4hT4rRZHeOu0DKsXG9q2FaZhCLNucDE/UC0Nd/S35IgBPjOvQksaJDcpvMVzz1T3OuEJBqp/Y
-        65ZZ5ev6vizlBoY4BgFQw8w3IoiMECG3nxictrZc5jD3AMR8gm9YDJ4ph+8dg4ZqKeiWnkvUBInFh
-        hRtFgvtrFhaZLOIBTYl8vUlDtHnDdTrCDeaVSN3VUb9IY4fvK5ibZneIRU4p0OvqMhjBx74ZuS5SV
-        PXmXmfMw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqzjh-0003A1-DO; Thu, 02 Jul 2020 13:58:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4321730015A;
-        Thu,  2 Jul 2020 15:58:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3057B203DA8CF; Thu,  2 Jul 2020 15:58:42 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 15:58:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
-Message-ID: <20200702135842.GR4800@hirez.programming.kicks-ass.net>
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
- <20200702074059.GX4781@hirez.programming.kicks-ass.net>
- <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
+        Thu, 2 Jul 2020 10:01:14 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:42883 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726343AbgGBOBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:01:13 -0400
+Received: from hopp.molgen.mpg.de (hopp.molgen.mpg.de [141.14.25.186])
+        by mx.molgen.mpg.de (Postfix) with ESMTP id A3423206442DE;
+        Thu,  2 Jul 2020 16:01:11 +0200 (CEST)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org
+Subject: [PATCH 1/2] moduleparams: Add hex type parameter
+Date:   Thu,  2 Jul 2020 16:01:01 +0200
+Message-Id: <20200702140102.26129-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 09:11:06AM -0400, Liang, Kan wrote:
-> On 7/2/2020 3:40 AM, Peter Zijlstra wrote:
-> > On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
-> > > Like Xu (10):
-> > >    perf/x86/core: Refactor hw->idx checks and cleanup
-> > >    perf/x86/lbr: Add interface to get LBR information
-> > >    perf/x86: Add constraint to create guest LBR event without hw counter
-> > >    perf/x86: Keep LBR records unchanged in host context for guest usage
-> > 
-> > > Wei Wang (1):
-> > >    perf/x86: Fix variable types for LBR registers
-> > 
-> > >   arch/x86/events/core.c            |  26 +--
-> > >   arch/x86/events/intel/core.c      | 109 ++++++++-----
-> > >   arch/x86/events/intel/lbr.c       |  51 +++++-
-> > >   arch/x86/events/perf_event.h      |   8 +-
-> > >   arch/x86/include/asm/perf_event.h |  34 +++-
-> > 
-> > These look good to me; but at the same time Kan is sending me
-> > Architectural LBR patches.
-> > 
-> > Kan, if I take these perf patches and stick them in a tip/perf/vlbr
-> > topic branch, can you rebase the arch lbr stuff on top, or is there
-> > anything in the arch-lbr series that badly conflicts with this work?
-> > 
-> 
-> Yes, I can rebase the arch lbr patches on top of them.
-> Please push the tip/perf/vlbr branch, so I can pull and rebase my patches.
+For bitmasks printing values in hex is more convenient.
 
-For now I have:
+Prefix with 0x (#) to make it clear, that it’s a hex value.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/vlbr
+Using the helper for `amdgpu.ppfeaturemask`, it will look like below.
 
-Once the 0day robot comes back all-green, I'll push it out to
-tip/perf/vlbr and merge it into tip/perf/core.
+Before:
 
-Thanks!
+    $ more /sys/module/amdgpu/parameters/ppfeaturemask
+    4294950911
+
+After:
+
+    $ more /sys/module/amdgpu/parameters/ppfeaturemask
+    0xffffbfff
+
+Cc: linux-kernel@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+---
+ include/linux/moduleparam.h | 7 ++++++-
+ kernel/params.c             | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index 3ef917ff0964..408978fcfe27 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -118,7 +118,7 @@ struct kparam_array
+  * you can create your own by defining those variables.
+  *
+  * Standard types are:
+- *	byte, short, ushort, int, uint, long, ulong
++ *	byte, hex, short, ushort, int, uint, long, ulong
+  *	charp: a character pointer
+  *	bool: a bool, values 0/1, y/n, Y/N.
+  *	invbool: the above, only sense-reversed (N = true).
+@@ -448,6 +448,11 @@ extern int param_set_ullong(const char *val, const struct kernel_param *kp);
+ extern int param_get_ullong(char *buffer, const struct kernel_param *kp);
+ #define param_check_ullong(name, p) __param_check(name, p, unsigned long long)
+ 
++extern const struct kernel_param_ops param_ops_hex;
++extern int param_set_hex(const char *val, const struct kernel_param *kp);
++extern int param_get_hex(char *buffer, const struct kernel_param *kp);
++#define param_check_hex(name, p) param_check_uint(name, p)
++
+ extern const struct kernel_param_ops param_ops_charp;
+ extern int param_set_charp(const char *val, const struct kernel_param *kp);
+ extern int param_get_charp(char *buffer, const struct kernel_param *kp);
+diff --git a/kernel/params.c b/kernel/params.c
+index 8e56f8b12d8f..ceca8394dac5 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -241,6 +241,7 @@ STANDARD_PARAM_DEF(uint,	unsigned int,		"%u",   kstrtouint);
+ STANDARD_PARAM_DEF(long,	long,			"%li",  kstrtol);
+ STANDARD_PARAM_DEF(ulong,	unsigned long,		"%lu",  kstrtoul);
+ STANDARD_PARAM_DEF(ullong,	unsigned long long,	"%llu", kstrtoull);
++STANDARD_PARAM_DEF(hex,		unsigned int,		"%#x",  kstrtouint);
+ 
+ int param_set_charp(const char *val, const struct kernel_param *kp)
+ {
+-- 
+2.26.2
+
