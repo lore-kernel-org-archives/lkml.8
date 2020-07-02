@@ -2,60 +2,60 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE04CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B69C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D44A2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC8320748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRRN360y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OgTYIQGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGBApe (ORCPT
+        id S1728078AbgGBApj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
+        Wed, 1 Jul 2020 20:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgGBApd (ORCPT
+        with ESMTP id S1726877AbgGBApf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:45:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC0AC08C5DC
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:45:33 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so8163932pje.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:45:33 -0700 (PDT)
+        Wed, 1 Jul 2020 20:45:35 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E86C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:45:35 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id j4so10582387plk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PF6PVg6Qk3aczs+/e1HWRyzHNDndSGQClfFztHhcrJA=;
-        b=IRRN360yDKEMQxG9gT3EO16qJfg/TcpVShQcjRB9jTaTvchyHFTq4oTBH0DuMRu0L/
-         DxZN8IBFt5WiQaBOohCA3SM0pCeDKhTQvwGElidlfN1JBrTftIKRZ2qvUbF7dSX31Ovl
-         unSwAWVPVUgZe91Kk8wFDpHNz8uN3oouD+ZyU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qKjLnIEQ5s8BQOFR0Dm9JoOFH5y6dFVrqIR/bR40PHg=;
+        b=OgTYIQGoqbGGi3TqnnISr32Pc9Qf/cJx2SkEpLvV3ryeXnjuKg5CKulguIVQYnpVM8
+         97+zU4abqfcA3ysytFl0KTHUVA4yjlxTnti3dbuIa8oxpVK/ci36uTT5yxsxbcINAhtx
+         ucYdEsaWG/rhk5E1IbgAIk51mo9Mc7+IBPJLM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PF6PVg6Qk3aczs+/e1HWRyzHNDndSGQClfFztHhcrJA=;
-        b=jF+hwoPqSUS2o5Cp4KmCBTn++uXXyMhJEwq9dmAmviY/fKnK/umGOVgQOajfcpRltE
-         KLGGupbe8RCdvjyihvzy5UvluDMn3YvVwCDo22nV2kaFIVdt4lgdMg+ZIR3TxpQszB60
-         xpSn07teZYUcLMP0B5vTFRV0GBrBasmdl9pnssOVzpL8CD4l5MhIlQAMRtKWWcVBS1pB
-         EQrtHt0rJKvFRulspUhMkxjhBnO52/D6W/awt7lr0HXiubtJDBD9uuT0Inzwv9TBa92V
-         oSVdBh93PA55hJ5TkI0wbT/yl6U65grpohD5Ob4ljUoGEilc37Yclic3qZjZyZqYlE8u
-         e5Pg==
-X-Gm-Message-State: AOAM532ewOYBIIGVY/MI0W3knSF1okGgEqQNd9uMHNcHEHOLi3Tor92T
-        6Q6PXfYcsmzbXsXrw0TuZi4Tag==
-X-Google-Smtp-Source: ABdhPJzPPKTtbw7LrsBUf0ic/Ijm1Yz9qx+hzC3WuV8qdS19siqcooPzbKzryXVcyy89dAYTRcTVbg==
-X-Received: by 2002:a17:902:7896:: with SMTP id q22mr25007062pll.237.1593650732668;
-        Wed, 01 Jul 2020 17:45:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qKjLnIEQ5s8BQOFR0Dm9JoOFH5y6dFVrqIR/bR40PHg=;
+        b=BS+hnU8FgXoMSR364tzuNTMVzHG+DRKcTY66A0v+HX+k6yTgCBbAhaDZ9CJMrQK83p
+         yKX1zTiErLPvR+dPiZXv6sfrQfkvQVv51MvizEM4x1Iva0QhnrEvBDCt/GDeChmfLsmI
+         mlXuNqiK3z1/A4NSiYr3DXBwGWRA2OaVpUHjW5hP0sUh3c9UDiOHQjB83zoa0sC0w6EU
+         1BDA3LpuMtcMUhmbfhOIxob4pDUH5KJbE1tEvU5V0X5vJJTpgF4c+SNt6HtLy3HOnhgZ
+         h+XBOF8CnDcF7BfcI0X+jzSFAr3XGYl6pN3MZ2/Dekxm+MKP6nPMQQnKEKUtkm2iAzO4
+         BWGA==
+X-Gm-Message-State: AOAM530TPM/nagPRjg0EOcGEQ9sN1+nUG4HKQyCcrqz48GWny0H3Pw5U
+        kupEuxPSbJ8QgWMwJMOkuFOjjQ==
+X-Google-Smtp-Source: ABdhPJwpOlo75/PNS/C5MOdlszShYU92XZBrkp+HcSUZD+vA7JbAvH5XAw3YsxEce5XF/aiIC7cU7Q==
+X-Received: by 2002:a17:902:ff10:: with SMTP id f16mr24605718plj.277.1593650734789;
+        Wed, 01 Jul 2020 17:45:34 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id w4sm6966212pfd.39.2020.07.01.17.45.31
+        by smtp.gmail.com with ESMTPSA id w4sm6966212pfd.39.2020.07.01.17.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 17:45:32 -0700 (PDT)
+        Wed, 01 Jul 2020 17:45:34 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Mark Brown <broonie@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -64,10 +64,12 @@ Cc:     akashast@codeaurora.org, linux-arm-msm@vger.kernel.org,
         georgi.djakov@linaro.org, ctheegal@codeaurora.org,
         mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 0/3] spi: spi-geni-qcom: Avoid a bunch of per-transfer overhead
-Date:   Wed,  1 Jul 2020 17:45:06 -0700
-Message-Id: <20200702004509.2333554-1-dianders@chromium.org>
+Subject: [PATCH 2/3] spi: spi-geni-qcom: Set an autosuspend delay of 250 ms
+Date:   Wed,  1 Jul 2020 17:45:08 -0700
+Message-Id: <20200701174506.2.I9b8f6bb1e7e6d8847e2ed2cf854ec55678db427f@changeid>
 X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+In-Reply-To: <20200702004509.2333554-1-dianders@chromium.org>
+References: <20200702004509.2333554-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,27 +77,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series tries to reduce a whole bunch of overhead in each SPI
-transfer.  Much of this overhead is new with the recent interconnect
-changes, but even without those changes we still had some overhead
-that we could avoid.  Let's avoid all of it.
+In commit 0e3b8a81f5df ("spi: spi-geni-qcom: Add interconnect
+support") the spi_geni_runtime_suspend() and spi_geni_runtime_resume()
+became a bit slower.  Measuring on my hardware I see numbers in the
+hundreds of microseconds now.
 
-These changes are atop the Qualcomm tree to avoid merge conflicts.  If
-they look good, the most expedient way to land them is probably to get
-Ack's from Mark and land then via the Qualcomm tree.
+Let's use autosuspend to help avoid some of the overhead.  Now if
+we're doing a bunch of transfers we won't need to be constantly
+chruning.
 
-Most testing was done on the Chrome OS 5.4 tree, but sanity check was
-done on mainline.
+The number 250 ms for the autosuspend delay was picked a bit
+arbitrarily, so if someone has measurements showing a better value we
+could easily change this.
 
+Fixes: 0e3b8a81f5df ("spi: spi-geni-qcom: Add interconnect support")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Douglas Anderson (3):
-  spi: spi-geni-qcom: Avoid clock setting if not needed
-  spi: spi-geni-qcom: Set an autosuspend delay of 250 ms
-  spi: spi-geni-qcom: Get rid of most overhead in prepare_message()
+ drivers/spi/spi-geni-qcom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/spi/spi-geni-qcom.c | 67 ++++++++++++++++++-------------------
- 1 file changed, 32 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index bb4cdda2dec8..f51279608fc7 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -595,6 +595,8 @@ static int spi_geni_probe(struct platform_device *pdev)
+ 
+ 	init_completion(&mas->xfer_done);
+ 	spin_lock_init(&mas->lock);
++	pm_runtime_use_autosuspend(&pdev->dev);
++	pm_runtime_set_autosuspend_delay(&pdev->dev, 250);
+ 	pm_runtime_enable(dev);
+ 
+ 	ret = geni_icc_get(&mas->se, NULL);
 -- 
 2.27.0.383.g050319c2ae-goog
 
