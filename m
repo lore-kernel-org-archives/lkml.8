@@ -2,84 +2,150 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F58C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3427720760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F041220874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KuLrQtIC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnMaYX4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgGBJjj (ORCPT
+        id S1728187AbgGBJlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:39:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23946 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726475AbgGBJji (ORCPT
+        Thu, 2 Jul 2020 05:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgGBJlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:39:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593682777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OU1abHmcvqlPXE7j6qY5NTPbjnWuDoW6srqdHAGVMo0=;
-        b=KuLrQtICw7WxwjLWuFc0r8nMZRtg6o+v9u4dGs6PUqVBECKXj+LNpErY6apyBQPJqNQWmj
-        vTALcbE2O/7GFe8vRHaRQ68b0vXS4OZRm/Z1kME44NjuHFGpDdqkx8uNixoMecGEricWy4
-        zCqNf2jzGM8Fho4ziAhGnvSrGiLmoqc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-JnfcbkGbNaqoEPaIYrmDpA-1; Thu, 02 Jul 2020 05:39:36 -0400
-X-MC-Unique: JnfcbkGbNaqoEPaIYrmDpA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2DA8BFC3;
-        Thu,  2 Jul 2020 09:39:34 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6344F5C541;
-        Thu,  2 Jul 2020 09:39:34 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] kvm: use more precise cast and do not drop __user
-Date:   Thu,  2 Jul 2020 05:39:33 -0400
-Message-Id: <20200702093933.20845-1-pbonzini@redhat.com>
+        Thu, 2 Jul 2020 05:41:52 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51662C08C5C1;
+        Thu,  2 Jul 2020 02:41:52 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y10so28513599eje.1;
+        Thu, 02 Jul 2020 02:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t5uetk4l/MbHsFV0PVEK494J/oOl1v9zGOC4JF1Xwlo=;
+        b=CnMaYX4ESBZzNTTNlk+O3QnFP8gEjYdxZ2X5fErELFo4pa2B67V71n1GjJpC6BNanv
+         lkAf3b4Ugwf20ItQkL3IMb7dWbva/Rj2ItFncu7m6k0CfoRm31NydDLqKlbz9bkfoyCJ
+         nSr4q+Kq0k7VmhBDF1yihUHUVudDN/W2d8qk7iclqDgW0UP8UXkdNTANfFVpME+6Rd+4
+         9Q9JwlsvvHyIVyZJnIFrhbfGAn0NqgNlqAreYrxSDxPd7EiqFK6iDy/aUwSVCVYFtQxf
+         xb8g83T05VlyOtYrloMwL3OM9bbKFZxtev/h93mAKxbn+KBYZxs5VfIpLqRKrAECGJDt
+         C2Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t5uetk4l/MbHsFV0PVEK494J/oOl1v9zGOC4JF1Xwlo=;
+        b=tvrAh5zkBpWnWfRnARyAfUqxIiR2I0DXTg65B7+8uA2H4AIZXnY6noL++t1ivcAVWH
+         YsvQW9i8mU26YewUc7gWSa7H0UIwzkushhYgPt/knygq9EawfJdoumMuB8+BUf6hwgF4
+         vOIGmyVIb2okNFQ7EpiOLrizXNqMQR7GIyjtHpvS11j9NeipfHEl7eZXpvf+/kr0S4+j
+         RRUpfLqZ7Co+hf3S8Eekfjlp3ci+jGNYwR1Ex7xaLZzNzqg+OyNiLVX5lRhMhxNIi8H8
+         0U/SWy9PMFnHygjHVIo0YuRCByoAeEtTa838jyN1YudZgCEGdmgUfJutb4acuxu2fSnt
+         EQCA==
+X-Gm-Message-State: AOAM530znVC8vObo1Ka8MafBPDOHTfWJnbM5xi0GcATNjFQAB4ul0u14
+        2HeWlRY0cC+N8lWf4Ik8LOgEnCG35u9fCgh4nMph48Mb
+X-Google-Smtp-Source: ABdhPJxSq5fW8ouB0Ff5UzExabRnPT2gN9SXVfYg5UOQJRwAFxm06wANAMGgWAVHgRsBNLT95oUmkfrNTL2XMdcoSK0=
+X-Received: by 2002:a17:906:1117:: with SMTP id h23mr24492014eja.396.1593682910997;
+ Thu, 02 Jul 2020 02:41:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200701213433.9217-1-michael@walle.cc> <20200701215310.GL1551@shell.armlinux.org.uk>
+ <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com> <20200702084128.GM1551@shell.armlinux.org.uk>
+In-Reply-To: <20200702084128.GM1551@shell.armlinux.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 2 Jul 2020 12:41:39 +0300
+Message-ID: <CA+h21hoD0HTtpeGtEFyALg-5b7Gs0qJycukgzhQOGy+xHra23A@mail.gmail.com>
+Subject: Re: [PATCH RESEND net-next v3 0/3] net: enetc: remove bootloader dependency
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Michael Walle <michael@walle.cc>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Heiko Thiery <heiko.thiery@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse complains on a call to get_compat_sigset, fix it.  The "if"
-right above explains that sigmask_arg->sigset is basically a
-compat_sigset_t.
+On Thu, 2 Jul 2020 at 11:41, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Jul 02, 2020 at 01:04:02AM +0300, Vladimir Oltean wrote:
+> > On Thu, 2 Jul 2020 at 00:53, Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > fixing up almost every driver the best I can with the exception of two -
+> > > felix DSA and Mediatek.
+> > >
+> > > I'm not going to wait for Felix or Mediatek.  As I say, I've given
+> > > plenty of warning, and it's only a _suspicion_ of breakage on my
+> > > side.
+> > >
+> >
+> > What do you mean "I'm not going to wait for Felix"?
+> > https://patchwork.ozlabs.org/project/netdev/patch/20200625152331.3784018-5-olteanv@gmail.com/
+> > We left it at:
+> >
+> > > I'm not going to review patch 7
+> > > tonight because of this fiasco.  To pissed off to do a decent job, so
+> > > you're just going to have to wait.
+> >
+> > So, I was actively waiting for you to review it ever since, just like
+> > you said, so I could send a v2. Were you waiting for anything?
+>
+> I stopped being interested in your series with the patch 5 commit
+> description issue; what happened there is really demotivating.
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yes, but I mean, the fact that reviewing felix is "demotivating" can
+only have 2 courses of action as far as I can see:
+- I do resubmit the series with feedback that you've given so far, but
+it's likely going to take a few more iterations because you haven't
+reviewed the current series in its entirety, and you haven't in fact
+reviewed the part which you consider as a dependency for your work yet
+(the mac_link_up conversion). But this goes against your argument that
+the lynx pcs will land quickly, so Michael should just wait a little
+bit more.
+- As per your "I'm not going to wait for Felix or Mediatek" phrase,
+you might decide you just don't deal with DSA any longer, and you
+proceed with the PCS patches by essentially breaking the dependency.
+In this case, I'm not sure why Michael would need to wait either,
+since _you_ are deciding to not wait for DSA, neither is he.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index a852af5c3214..0a68c9d3d3ab 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3350,7 +3350,8 @@ static long kvm_vcpu_compat_ioctl(struct file *filp,
- 			if (kvm_sigmask.len != sizeof(compat_sigset_t))
- 				goto out;
- 			r = -EFAULT;
--			if (get_compat_sigset(&sigset, (void *)sigmask_arg->sigset))
-+			if (get_compat_sigset(&sigset,
-+					      (compat_sigset_t __user *)sigmask_arg->sigset))
- 				goto out;
- 			r = kvm_vcpu_ioctl_set_sigmask(vcpu, &sigset);
- 		} else
--- 
-2.26.2
+I'm fine either way, but one thing is not going to change, and that's
+the ordering of my patches in the "PHYLINK integration improvements
+for Felix DSA driver" series. As you know, most NXP users are not
+using David's net-next directly (and that is at their! request), but a
+"vendor" kernel which we try to keep as close to David's tree as
+humanly possible, and which goes through a lot of testing. But if
+there are going to be treewide changes in the phylink API (and there
+_are_ already, that mac_link_up thing, which we haven't backported),
+then there needs to be a strict ordering relationship between the
+cleanup commits, which we can cherry-pick, and the adaptation to an
+API which we haven't (nor we intend to) backport to 5.4, because it's
+too much for little practical benefit. You seem to be hung up on that,
+and we won't be making much progress if that continues, I'm afraid.
 
+There are a lot of things to be done that depend on the lynx-pcs
+thing, and there are multiple groups of people who are all waiting.
+The new seville DSA driver, which _almost_ got into the previous
+release cycle but missed the train due to a dependency with Mark
+Brown's tree, also has a Lynx PCS integrated in it. I would like to
+reuse the lynx-pcs module, but from what I can see, the bottleneck for
+everybody seems to be reviewing the mac_link_up conversion of felix.
+
+Thank you,
+-Vladimir
