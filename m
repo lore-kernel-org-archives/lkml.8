@@ -2,136 +2,198 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF32C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B72B2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0362084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FquHVBuq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaeLrB1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgGBFwO (ORCPT
+        id S1726269AbgGBFxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
+        Thu, 2 Jul 2020 01:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGBFwN (ORCPT
+        with ESMTP id S1725774AbgGBFxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:52:13 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B0B2C08C5C1;
-        Wed,  1 Jul 2020 22:52:13 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so27705728ejd.13;
-        Wed, 01 Jul 2020 22:52:13 -0700 (PDT)
+        Thu, 2 Jul 2020 01:53:12 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC53FC08C5C1;
+        Wed,  1 Jul 2020 22:53:11 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so15207393lfe.9;
+        Wed, 01 Jul 2020 22:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PTX8G0FukGDGojl6rKgvGA2fV/um1+DnSL6BGGF5rTk=;
-        b=FquHVBuq7KCtLoqPVvMm9HrqdlxcjXKcG1/+uFCoy9V2e1Xg3bw0d7tBmfSyFAGcha
-         IgZIgf0l9wD2Joq5cTRKEesJYG7anNVjvVKeExREY9By5CJp7ImSJPFfaXLFBp2QG7kr
-         GfcmsNQbJeTmwzK7RPOonHY0aEpzJ3oy+6PpCWlQR9tOE0gkA4aLefcJWAmtGN0DZ/p9
-         0iG9N+XmuuBpFtbWok3DgwEfuMNhasYWjk+6ke3z1OwZh2CFg14Uh0A50qN5upQsO04R
-         JP6Kg95vi7KGsDdV02vBFfzdaqeQWMTYOb2EDR4Wx8hjOIP4w+GxVz5NKeacl1FmgeNQ
-         x0Ow==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cwHCT7cT5X5SdEciMo4uCbOZCo5n65PfdpAKlH+e0hw=;
+        b=FaeLrB1PxfX9Rsw/lPFjelWqksRrbsEITJFJeCizLaLwdP9ptRy3tMKhctrK9R6CYb
+         A8nh51VNmcK5plrXDtyDG9ONNrRVmwEZg4d5jOjyn1M7Zv4yuzv20vCqUTpCv/UN9reM
+         0J/Aazqbh2YVku/j72RTB/OKgDHo7woJWRAIO6VM/4mO7P4+I1UarkTpQJAEdcdm8IMv
+         PM2DtVEx29/IgoQkPD/+MH1lNZuzUFdPpgXpks+P8GcvoLFDytKBUI6boI6c9HtXeE9F
+         An8Rj/UTes1byT+HZCjUEHlF/XLw+3G/BRf8oiXykibH0xR8E5u9VsawaRpJJYhAdc4Z
+         X2wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PTX8G0FukGDGojl6rKgvGA2fV/um1+DnSL6BGGF5rTk=;
-        b=sz3AADI5Fmk3DzlphFAqu6pgihT2DygZFOX/gIjpKlLVJ+WiNaWBJ0fg97XY2ZJT3w
-         iBnMZolPnvXYFtCiIEzpd850a6KnnnpO5DeeqF+dP2pniOA6OxZK1tijWzrWKghYj612
-         DSLeHzOUveutbtVnxASlmTvfmFs5jmQjfLn+k6imlFnMnpr6fL7T2JDLH7IbI951QryI
-         hxLZBMnT9GOU6xVcUmytgH14T+74ptZpWOYRmbWv5LuYbAYWMiurNqLAIG9RwAmROnGV
-         hWI6cB2GyztX94Y3LuIkN7BsaOdYSNOt7wZdRxXAe6nU62BJU50ZIaezHgML13ar2t+X
-         iokw==
-X-Gm-Message-State: AOAM530imByHfxBfe440ANoVuius4lZoEHebstJ3OGmBwGCxXYu3RsJT
-        ovBI1VsZwIFRIojQTaZLM0Fi2ZB19hgK8p2WZZA=
-X-Google-Smtp-Source: ABdhPJwMXcuDstpkLDAVFtfvS+c1kcgVHNxhmQy/o9PberFQHvXcCp+0m6rAm/8+6AsWMhEswSifBPT5RBcN2f7BYoU=
-X-Received: by 2002:a17:906:e215:: with SMTP id gf21mr20475157ejb.310.1593669132029;
- Wed, 01 Jul 2020 22:52:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593656074-10092-1-git-send-email-Anson.Huang@nxp.com>
- <1593656074-10092-4-git-send-email-Anson.Huang@nxp.com> <CAA+hA=S0G7Na0ieEpPq3aN6GN1BEHtYp9vbF9x2tjmknDSVjZw@mail.gmail.com>
- <DB3PR0402MB391610595D40C11CF26CD990F56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB391610595D40C11CF26CD990F56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Thu, 2 Jul 2020 13:38:10 +0800
-Message-ID: <CAA+hA=Rtkm_FpkoBvHNnB0TSeTrqXaRVwOzkywsL7QO6ec_K7Q@mail.gmail.com>
-Subject: Re: [PATCH V4 3/5] clk: imx: Support building i.MX common clock
- driver as module
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cwHCT7cT5X5SdEciMo4uCbOZCo5n65PfdpAKlH+e0hw=;
+        b=mDaSqwAt24kCEz1jxF2hpJCHZ+JunXKZbYkrttQvr12AcRcsBOafi9zNd28g2WKLCX
+         Z6rIqu8po591s+NG2fpHsCPDDg7DI/UMPaaCvxBSLC5EiJBw7GzXq5CPtxNgxiPsi0LY
+         dFyM7nOCLReE84wUeAAsF+DRFV+1nfddML38TsE5LLo2rz/1jT6Pc0O7c4gbvXXuM0Eg
+         dU99yMWbMlJJezml0ElUDWPl/tnpUyAqP+6DyzRtV0i9A+V0a2ZqxnqkSI/Yk93+WPAl
+         BHSJ6JU816w7s9XtqO5qcOsNXqDc34J6dPUpM7e1QVooCBdk/VRu6ajX8vzz2oRbI8u6
+         YMOQ==
+X-Gm-Message-State: AOAM532l+ZPBpk59ca0MWe+Xp5antRuR0WzGr0vE0CBphElXCg7GEbYU
+        a84Eubl+9e8ZNa0ni8wPxvOBCp0LN6E=
+X-Google-Smtp-Source: ABdhPJwavK+SIIiWOV66MVXkfysc7JQV+BS31nbzvmYL6xd58vIGpeeocZo16IZXV41yYLdjSkOmXw==
+X-Received: by 2002:a19:691c:: with SMTP id e28mr17498281lfc.131.1593669189870;
+        Wed, 01 Jul 2020 22:53:09 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id c27sm2939944lfm.56.2020.07.01.22.53.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 22:53:09 -0700 (PDT)
+Subject: Re: [PATCH v4 12/37] PM / devfreq: tegra20: Use MC timings for
+ building OPP table
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <CGME20200609131458epcas1p2c774a0302bcef2c02790c2cb8cad57a0@epcas1p2.samsung.com>
+ <20200609131404.17523-13-digetx@gmail.com>
+ <4ea7fe00-7676-3186-8222-6e0d0eb8ed1f@samsung.com>
+ <4b22d3ee-f303-d81d-e261-187d4a46e749@gmail.com>
+ <2069fb51-f043-795d-7768-0024fc9a9f4e@samsung.com>
+ <7988b6cf-e60c-7e5c-ffc3-8075c20af3d3@gmail.com>
+Message-ID: <388eef55-3452-064b-8560-e9d65b908525@gmail.com>
+Date:   Thu, 2 Jul 2020 08:53:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <7988b6cf-e60c-7e5c-ffc3-8075c20af3d3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 11:26 AM Anson Huang <anson.huang@nxp.com> wrote:
-[...]
-> > > @@ -143,16 +148,18 @@ void imx_cscmr1_fixup(u32 *val)
-> > >  static int imx_keep_uart_clocks;
-> > >  static struct clk ** const *imx_uart_clocks;
-> > >
-> > > -static int __init imx_keep_uart_clocks_param(char *str)
-> > > +static int __maybe_unused imx_keep_uart_clocks_param(char *str)
-> > >  {
-> > >         imx_keep_uart_clocks = 1;
-> > >
-> > >         return 0;
-> > >  }
-> > > +#ifndef MODULE
-> > >  __setup_param("earlycon", imx_keep_uart_earlycon,
-> > >               imx_keep_uart_clocks_param, 0);
-> > >  __setup_param("earlyprintk", imx_keep_uart_earlyprintk,
-> > >               imx_keep_uart_clocks_param, 0);
-> >
-> > I feel not only the __setup_param, the whole logic of keep_uart_clocks
-> > are not needed for Module case. Is it true?
->
-> Yes, but the 'keep_uart_clocks' is false by default and the function imx_keep_uart_clocks_param()
-> already has '__maybe_unused', it does NOT impact anything if it is for module build, so I did NOT
-> add the #ifndef check for them, just to keep code easy and clean.
->
+02.07.2020 08:43, Dmitry Osipenko пишет:
+> 02.07.2020 08:30, Chanwoo Choi пишет:
+>> On 7/2/20 2:07 PM, Dmitry Osipenko wrote:
+>>> 02.07.2020 07:18, Chanwoo Choi пишет:
+>>>> Hi Dmitry,
+>>>>
+>>>> On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
+>>>>> The clk_round_rate() won't be usable for building OPP table once
+>>>>> interconnect support will be added to the EMC driver because that CLK API
+>>>>> function limits the rounded rate based on the clk rate that is imposed by
+>>>>> active clk-users, and thus, the rounding won't work as expected if
+>>>>> interconnect will set the minimum EMC clock rate before devfreq driver is
+>>>>> loaded. The struct tegra_mc contains memory timings which could be used by
+>>>>> the devfreq driver for building up OPP table instead of rounding clock
+>>>>> rate, this patch implements this idea.
+>>>>>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>>>>  drivers/devfreq/tegra20-devfreq.c | 18 +++++++++++-------
+>>>>>  1 file changed, 11 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+>>>>> index 6469dc69c5e0..bf504ca4dea2 100644
+>>>>> --- a/drivers/devfreq/tegra20-devfreq.c
+>>>>> +++ b/drivers/devfreq/tegra20-devfreq.c
+>>>>> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>>>  {
+>>>>>  	struct tegra_devfreq *tegra;
+>>>>>  	struct tegra_mc *mc;
+>>>>> -	unsigned long max_rate;
+>>>>> -	unsigned long rate;
+>>>>> +	unsigned int i;
+>>>>>  	int err;
+>>>>>  
+>>>>>  	mc = tegra_get_memory_controller();
+>>>>> @@ -151,12 +150,17 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>>>  
+>>>>>  	tegra->regs = mc->regs;
+>>>>>  
+>>>>> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+>>>>> -
+>>>>> -	for (rate = 0; rate <= max_rate; rate++) {
+>>>>> -		rate = clk_round_rate(tegra->emc_clock, rate);
+>>>>> +	if (!mc->num_timings) {
+>>>>
+>>>> Could you explain what is meaning of 'num_timing?
+>>>
+>>> The num_timings is the number of memory timings defined in a
+>>> device-tree. One timing configuration per memory clock rate.
+>>
+>> OK. I understand.
+>>
+>>>
+>>>> Also, why add the opp entry in case of mc->num_timings is zero?
+>>>
+>>> Timings may be not defined in some device-trees at all and in this case
+>>> memory always running on a fixed clock rate.
+>>
+>> You mean that 'timings' information is optional?
+> 
+> Yes
+> 
+> Actually, looks like I missed to properly test this case where timings
+> are missing in DT and it shouldn't work with the current code. I'll fix
+> it in the next version.
+> 
+>>>
+>>> The devfreq driver won't be practically useful if mc->num_timings is
+>>> zero since memory frequency can't be changed, but anyways we'd want to
+>>> load the devfreq driver in order to prevent confusion about why it's not
+>>> loaded.
+>>>
+>>> For example, you may ask somebody to show contents of
+>>> /sys/class/devfreq/tegra20-devfreq/trans_stat and the person says to you
+>>> that this file doesn't exist, now you'll have to figure out what
+>>> happened to the devfreq driver.
+>>
+>> I understand why add OPP entry point when timing is not defined on DT.
+>> But, actually, I think that you better to change 'timings' info is mandatory
+>> instead of optional. Because the devfreq driver is for DVFS
+>> and the driver supporting DVFS have to have the frequency information
+>> like OPP.
 
-IMHO do not compile them is a more easy and clean way. Then users
-don't have to look into the code logic
-which is meaingless for Module case.
+That's what I initially did by bailing out from driver's probe if
+timings info is missing, until ran into a situation described above :)
 
-BTW, it really does not make any sense to only condionally compile
-__setup_parm() but left
-the param functions definition to be handled by __maybe_unnused.
-They're together part of code, aren't they?
+>> Or, 
+>> If you want to keep 'timing' is optional on DT,
+>> I recommend that you add one timing data to tegra mc driver
+>> when DT doesn't include the any timing information
+>> I think that is it more clear.
+> 
+> Okay, I'll move it into the MC driver in the next version.
+> 
+> Thank you for the review!
+> 
 
-Regards
-Aisheng
-
-Regards
-Aisheng
-
-> Thanks,
-> Anson
->
