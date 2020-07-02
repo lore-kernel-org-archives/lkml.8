@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96939C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCF920748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C8620748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653376;
-	bh=Qxq0x4f/Ohc7tuomfAoYtbvko6bmA3BVpIifCaAKF70=;
+	s=default; t=1593653382;
+	bh=pieAcDd6bFTdpg6107qY4pEzKvJ8WHGm9bg/hlipDIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BPlWVmVoG6Mc+YKNoRhqyRvdqXpKcQQj0Mt1sRxuL4/16VslPiiF+Qp1aZ3FWXAI/
-	 CUXpBcQEQJFwqX3YS3PQscD3C/YNVB9jtLj+Fkjkvy84g/xwYCrzcOU4xjLXlbIYQJ
-	 1Pmvqvkinvyd5GmISh4sK0B7nB3lrvdv6QXnmYLI=
+	b=xELhKZHXB/zWJi/g2DTZCtKIw925x6R/uqI/RqC1j4YAlPSJDJqKUAYt4by9PNl/F
+	 KeRUcETBVHhL0XE5CQTw3fcMeKi+xIU713wWmfZPdpQCb8kwbDpqRby4T8zmGp3/q4
+	 91S0r/ahlXGGDaGECWkywLGZ5Lka2QfX0g1+ze3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgGBB3f (ORCPT
+        id S1728158AbgGBB1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59106 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbgGBB1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:17 -0400
+        id S1729224AbgGBB0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC3C2083E;
-        Thu,  2 Jul 2020 01:27:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 749A6206BE;
+        Thu,  2 Jul 2020 01:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653236;
-        bh=Qxq0x4f/Ohc7tuomfAoYtbvko6bmA3BVpIifCaAKF70=;
+        s=default; t=1593653199;
+        bh=pieAcDd6bFTdpg6107qY4pEzKvJ8WHGm9bg/hlipDIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eq0qYRVsefEAezDn6tlB5spTaEsNGGdV6RDgrEEULDepjwIOJ+z3vFmaum/xbbMwY
-         4uze/S+Twvlqpabst7eWXMtYvJlDLq3yuduqgVERqbgqbhkQ1uGfTs2OvWnbVO2VA1
-         92m5c/kbliBSG4sieA0VBf9lAcGrPWsUhTW3bZGk=
+        b=vb0rvzjkqHReTRN1tzUb9l0nfN27TtW9SdWVMNpmukqApFkH8x9rh73hHcVVa99Np
+         a/VfaeIlT4AjMv2sN7zctxNuHFjQPGPe5kP0q8eWP3CiAt7kkks/XR9xQ9VSqEINZl
+         t+ja/N9gNn4lSMKBVZn/entD8SVrWwJx0eU+Up6s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zqiang <qiang.zhang@windriver.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/13] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
-Date:   Wed,  1 Jul 2020 21:27:02 -0400
-Message-Id: <20200702012712.2701986-3-sashal@kernel.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 19/27] drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
+Date:   Wed,  1 Jul 2020 21:26:07 -0400
+Message-Id: <20200702012615.2701532-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
-References: <20200702012712.2701986-1-sashal@kernel.org>
+In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
+References: <20200702012615.2701532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,67 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+From: Maxime Ripard <maxime@cerno.tech>
 
-[ Upstream commit 28ebeb8db77035e058a510ce9bd17c2b9a009dba ]
+[ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
 
-BUG: memory leak
-unreferenced object 0xffff888055046e00 (size 256):
-  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
-  hex dump (first 32 bytes):
-    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
-    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
-  backtrace:
-    [<00000000d121dccf>] kmemleak_alloc_recursive
-include/linux/kmemleak.h:43 [inline]
-    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
-    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
-    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
-    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
-drivers/usb/misc/usbtest.c:2790
-    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
-drivers/usb/core/driver.c:361
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
-    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
-drivers/base/dd.c:831
-    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
-    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
-    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
-    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
-    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
-    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
-drivers/usb/core/message.c:2030
-    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
-    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
-drivers/usb/core/driver.c:266
-    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
-    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+The main DRM device is actually a virtual device so it doesn't have the
+iommus property, which is instead on the DMA masters, in this case the
+mixers.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-Link: https://lore.kernel.org/r/20200612035210.20494-1-qiang.zhang@windriver.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add a call to of_dma_configure with the mixers DT node but on the DRM
+virtual device to configure it in the same way than the mixers.
+
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech
+(cherry picked from commit b718102dbdfd0285ad559687a30e27cc9124e592)
+[Maxime: Applied to -fixes since it missed the merge window and display is
+         broken without it]
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/usbtest.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
-index e31f72b3a22c5..54b8e8645e0bb 100644
---- a/drivers/usb/misc/usbtest.c
-+++ b/drivers/usb/misc/usbtest.c
-@@ -2771,6 +2771,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 71a798e5d5591..ddab3fab36a1a 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -435,6 +435,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+ 	mixer->engine.ops = &sun8i_engine_ops;
+ 	mixer->engine.node = dev->of_node;
  
- 	usb_set_intfdata(intf, NULL);
- 	dev_dbg(&intf->dev, "disconnect\n");
-+	kfree(dev->buf);
- 	kfree(dev);
- }
- 
++	if (of_find_property(dev->of_node, "iommus", NULL)) {
++		/*
++		 * This assume we have the same DMA constraints for
++		 * all our the mixers in our pipeline. This sounds
++		 * bad, but it has always been the case for us, and
++		 * DRM doesn't do per-device allocation either, so we
++		 * would need to fix DRM first...
++		 */
++		ret = of_dma_configure(drm->dev, dev->of_node, true);
++		if (ret)
++			return ret;
++	}
++
+ 	/*
+ 	 * While this function can fail, we shouldn't do anything
+ 	 * if this happens. Some early DE2 DT entries don't provide
 -- 
 2.25.1
 
