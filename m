@@ -2,99 +2,112 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C99C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974A820772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C289207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsFN61eC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgGBSmS (ORCPT
+        id S1726169AbgGBSmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:42:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30064 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgGBSmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:42:17 -0400
-IronPort-SDR: 3/o4F/Twn5gAV0kPeMC2uhMVi6Ni2WUWpPiOB8plk/FV1osQBd/24JMtkJhqxkm5KRjhM0SxaS
- Z39UBQp6kegA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="231854511"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="231854511"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:42:17 -0700
-IronPort-SDR: kSdY8JjTauDyWVvUTV3AZpIJ5/e70QfsIjhUj4vpiG0SOD7OQE+ZhH/i2YOo5icWRknB0LAXny
- yq8dhSDF7PaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="295983459"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jul 2020 11:42:16 -0700
-Date:   Thu, 2 Jul 2020 11:42:16 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Mihai Carabas <mihai.carabas@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-Subject: Re: [PATCH RFC 0/7] CPU feature evaluation after microcode late
- loading
-Message-ID: <20200702184216.GG3575@linux.intel.com>
-References: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com>
+        Thu, 2 Jul 2020 14:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgGBSme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:42:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDEDC08C5C1;
+        Thu,  2 Jul 2020 11:42:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g17so11638652plq.12;
+        Thu, 02 Jul 2020 11:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tbX9gnwNkjOzk/98d8BFqWlU3Yk39GHs2cPsD7jbrXM=;
+        b=JsFN61eCI+fVmsDGKjx3xNcUB9PTWSDRaIF3nEA7cb13QIkZmIqYDssIQvKF2ony9w
+         Bc/I8YIpo/DNOqg01APimdwuBKsysstKm3eNWmiCC3L/WkvKtEItiHdW/NHiV9JLIy2p
+         HHTSap5HMi/MV+wih89HXnkggCyyyijeIt1gDdczQXVBEUvk5m8LIl6T18qw1O504bYW
+         FNnUrxwdVjGvbXXZTLejVs98ZvwYFj8GJ/b87XNnMV+MkQ6DuZtq5a6uUyTj4NWjs7G1
+         JUrHAvMaz6Hoel+1vWArGEnqsSgZTzcuLoyH6nNKRM2GUj/N382/u5XK3EnAfr8XtJJE
+         FMlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tbX9gnwNkjOzk/98d8BFqWlU3Yk39GHs2cPsD7jbrXM=;
+        b=eWVyLVa9d5da4bvd0ygclpMrKmOFLQFCj1IjJMFsJrGVF9CpfIGUn3RTpxnv0AKoNN
+         zS4dRjm7akm9Jzu3AsmqBWorI2RA00LUIaErDAmkrpGel88Q1dIjzv+BdXC4GcZHL9o6
+         mJpO3QwYhFP7sZRliBiJLl26fLELDQLKXHQu5yMAaTYC25FgyI/lVWVA2L5icU/hJEkn
+         WdpCK/V9fYRGrlqgtfn/PVqz9yf9TMhPsabZ8I2yNLB0RmYbc4PnlkucHkhuaiZzuU4N
+         1pX6CY7DvZh1aPl7Ni8ZuvEvsqpJ8pN5niFB6i2nM4plZuU0odcY+/hr6SsF2RWJ5ToP
+         WJBg==
+X-Gm-Message-State: AOAM531hnmqVf+CvrGXOwnkcC8eC5uGScO68jv5dnqBUI1j1VDHXMQyu
+        yWJIClWUrTlDw4USXrs6m9A=
+X-Google-Smtp-Source: ABdhPJzmKId/+K9zaOkh/BstpizWZM6xvVYuyR3syVZrxtWMXg/kTWp1q3xysYJLElQ8cgvSAK8/BA==
+X-Received: by 2002:a17:90a:290e:: with SMTP id g14mr30210537pjd.85.1593715354041;
+        Thu, 02 Jul 2020 11:42:34 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id y7sm8819228pjy.21.2020.07.02.11.42.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jul 2020 11:42:33 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 11:42:26 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+Message-ID: <20200702184226.GA23935@Asurada-Nvidia>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:18:20PM +0300, Mihai Carabas wrote:
-> This RFC patch set aims to provide the ability to re-evaluate all CPU
-> features and take proper bug mitigation in place after a microcode
-> late loading.
-> 
-> This was debated last year and this patch set implements a subset of
-> point #2 from Thomas Gleixner's idea:
-> https://lore.kernel.org/lkml/alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de/
-> 
-> Point #1 was sent as an RFC some time ago
-> (https://lkml.org/lkml/2020/4/27/214), but after a discussion with CPU
-> vendors (Intel), the metadata file is not easily buildable at this
-> moment so we could not advance with it more. Without #1, I know it is
-> unlikely to embrace the feature re-evaluation.
-> 
-> Patches from 1 to 4 bring in changes for functions/variables in order to be
-> able to use them at runtime.
-> 
-> Patch 5 re-evaluates CPU features, patch 6 is re-probing bugs and patch 7
-> deals with speculation blacklist CPUs/microcode versions.
+Hi Arnaud,
 
-This misses critical functionality in KVM.  KVM snapshots boot_cpu_data at
-module load time (and does further modifications) for ongoing reuse in
-filtering what features are advertised to the userspace VMM.  See
-kvm_set_cpu_caps() for details.
+On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+> The current ASRC driver hardcodes the input and output clocks used for
+> sample rate conversions. In order to allow greater flexibility and to
+> cover more use cases, it would be preferable to select the clocks using
+> device-tree properties.
 
-Even if you found a way to reference kvm_cpu_caps, that still leaves the
-problem of existing guests having been created with stale data.  Oh, and
-KVM also needs to properly handle MSR_IA32_TSX_CTRL.
+We recent just merged a new change that auto-selecting internal
+clocks based on sample rates as the first option -- ideal ratio
+mode is the fallback mode now. Please refer to:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
 
-Rather than forcefully tearing down guests, what about adding a way to block
-updates, e.g. KVM would block updates on module load and unblock on module
-exit. That puts the onus of coordinating updates on the orchestration layer
-where it belongs.
+Having a quick review at your changes, I think the DT part may
+not be necessary as it's more likely a software configuration.
+I personally like the new auto-selecting solution more.
 
-KVM aside, it wouldn't surprise in the least if there is other code in the
-kernel that captures bug state locally.  This series feels like it needs a
-fair bit of infrastructure to either detect conflicting usage at build time
-or actively prevent consuming stale state at runtime.
+> This series also fix register configuration and clock assignment so
+> conversion can be conducted effectively in both directions with a good
+> quality.
 
-There's also the problem of the flags being exposed to userspace via
-/proc/cpuinfo, though I suppose that's userspace's problem to not shoot
-itself in the foot.
+If there's any further change that you feel you can improve on
+the top of mentioned change after rebasing, I'd like to review.
+
+Thanks
+Nic
