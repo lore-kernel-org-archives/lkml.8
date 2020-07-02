@@ -2,96 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3707DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02638C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152E620771
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE44820771
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AunhPqqA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Af0DT3tX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgGBPuZ (ORCPT
+        id S1726237AbgGBPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgGBPuZ (ORCPT
+        Thu, 2 Jul 2020 11:51:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28353 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726187AbgGBPvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:50:25 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC760C08C5C1;
-        Thu,  2 Jul 2020 08:50:24 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id h28so24506873edz.0;
-        Thu, 02 Jul 2020 08:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v3ZShXNghZu0mZy1xQ0pTk73q/Fxh7v+qQmyVwRa1do=;
-        b=AunhPqqAXtWnBrOyRqiFufpbMgxXr9qPqoqCMUbxmDa4VI2+/cqFaWPuz1Y99enMWj
-         YlxG+elVpU1x5fKV9AZCWiO49LwPO3wOUDDwA9gq6kGJoEGjel1kCzmW+k3nyC84Z4d+
-         8sy7T2MS2BD0reyk1H8FEjXFj4JJ1Hgquf6CszlyZxZrCg2tB/t5uYt7zWbewyfoD29S
-         0WkDzIbeAhDl7vI+TXVJuw/l2wxRXEd3j9rNplasBpMu2QuOffN6jbMVpq/5vBGAw4sM
-         Rl02kl5AKVxk0YOS6FAcN39mnWusT0EjsiECZLfK296QDq3Kyil6Hj4Fc+F9Q32P1tqg
-         HA7Q==
+        Thu, 2 Jul 2020 11:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593705103;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3VZY2zDbwBbzLtxgPU26SXjP7JkefPkdEkB2jqODvmQ=;
+        b=Af0DT3tXG3+oqpR3j1ZsBx/Rtcv/mzOG5z7bJQQAew+6sMt7IqblPlKmiZmFDEqBzYgUMu
+        N8R174HmmM3Lslmtgv4nX0fwv1T5SeTADarmWOLuHEgWjhiFpVql4I2GkZzYbqCiS0a6kS
+        dWCdw75wP+/+6B5lt7t/iZI31tfcgTs=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-P9_Ur8O7MH2efJ2D0UyRcw-1; Thu, 02 Jul 2020 11:51:37 -0400
+X-MC-Unique: P9_Ur8O7MH2efJ2D0UyRcw-1
+Received: by mail-qt1-f198.google.com with SMTP id d45so11770490qte.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:51:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=v3ZShXNghZu0mZy1xQ0pTk73q/Fxh7v+qQmyVwRa1do=;
-        b=qDXUZD3Ey4P/6mAIzN5BqzM4LlQPLrdzeaQ9Xc60WxDeMXKl2ikClQ84HZKi9rp9Ep
-         6H3NbN6U89N5GCheV/VEBCmouqGq5e6bVmbn+5ul51jBW/vf2brrCPwBTFrKXoBOAdEY
-         o4JYLtlhVkIAZiYNuDmTxy9U2+enfZAjMWZ/vl+P/l4hQd1gYtLkWpzuxNfkxOiQ4wif
-         oic6UF6iB0mvtCwS1dUWijXJ2/hxvkfwF4qQM+Y3152OUm1yAPqUOyPvbeY4uPylYH+0
-         vkRG7gZuZSezKHy6/DNeAYQApg6OT8C+sPp/Oux682HIS/s2qjIkDyE2ZtVB1KnbjILA
-         dSKA==
-X-Gm-Message-State: AOAM530BHbA+Xnhf9dgkLWfz9VKg9eU3PbOa7INY2Xvf5cTQPBK+YWAq
-        lQ+2DXtcPwZB3STmNwQUYEo=
-X-Google-Smtp-Source: ABdhPJwLo7zHrDUlriu5e2nB5mzEcjUuumr1wXReHao4hZcTbjaRaMne63Z0tvVKW8A56uDED3pX1A==
-X-Received: by 2002:aa7:c98d:: with SMTP id c13mr26944146edt.188.1593705023418;
-        Thu, 02 Jul 2020 08:50:23 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id s14sm9749761edq.36.2020.07.02.08.50.22
+        bh=3VZY2zDbwBbzLtxgPU26SXjP7JkefPkdEkB2jqODvmQ=;
+        b=VruEBGA9FTGJSaX7BHXBgskmcFE50D13iYp2DHNBgWyZA5OAFvqShyJljbkGO2roUi
+         NjWaiuYyDYiTaoOOFLFtgNFXP8XFFymj5Fs06xm4WyBe3i+ynjWvqHjTYhU4L3+148KV
+         vlOqf392rRfA7ETqOECSBD5Q5BOc/fT+n1qyveLfhXBwI1zo/8xFHoJPFWTn7us6wYKx
+         eyzf62hXkyRuFKvhcwznr7+eGfCJwnvnpoNs/+n8daxhNodKUs36CKPolk075+0KTXw8
+         AV9SlrQnrZEZSv5fOTbLOu6fvidoN2e4ijiz9Z5W9ToYT3Br4MgBacvIMEJU13Rc3t/p
+         adkQ==
+X-Gm-Message-State: AOAM53211SdqQyNtVC29NE16AMh7AKqzpZJLLEvHuvf6ZBVlWFR1vJEe
+        D3JRYst4YCmlsZ92iAb8U+hkyYZwLI8mc8G6UKAmlrrwl9ZbAfS1vUZR8MkkpE/jeHuFJKzJoLM
+        4mv41dElaE0Mtuia1PTRzoXYC
+X-Received: by 2002:a37:5bc4:: with SMTP id p187mr31620570qkb.166.1593705095717;
+        Thu, 02 Jul 2020 08:51:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxKAr0yUH8hYYhDsr4DruYkVLRU9FgSh469c3MauYeix84ykqUuFOOZU7bgix90YvCz9q//0g==
+X-Received: by 2002:a37:5bc4:: with SMTP id p187mr31620555qkb.166.1593705095513;
+        Thu, 02 Jul 2020 08:51:35 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id x13sm8044078qts.57.2020.07.02.08.51.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 08:50:22 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 17:50:16 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     t-mabelt@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/3] Drivers: hv: vmbus: vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200702155016.GA12759@andrea>
-References: <20200701001221.2540-1-lkmlabelt@gmail.com>
+        Thu, 02 Jul 2020 08:51:33 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 11:51:32 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Pekka Enberg <penberg@gmail.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 17/26] mm/riscv: Use general page fault accounting
+Message-ID: <20200702155132.GJ40675@xz-x1>
+References: <20200626223130.199227-1-peterx@redhat.com>
+ <20200626223625.199813-1-peterx@redhat.com>
+ <CAOJsxLEYHzjgMtXgbkoWYvU+Lf_08GPkMAFqibnEwARNzxJZxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200701001221.2540-1-lkmlabelt@gmail.com>
+In-Reply-To: <CAOJsxLEYHzjgMtXgbkoWYvU+Lf_08GPkMAFqibnEwARNzxJZxQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Andres Beltran (3):
->   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
->     hardening
->   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
->     VMBus hardening
->   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
->     hardening
+On Wed, Jul 01, 2020 at 02:46:24PM +0300, Pekka Enberg wrote:
+> Hi Peter,
 
-Confirming previous results,
+Hi, Pekka,
 
-Tested-by: Andrea Parri <parri.andrea@gmail.com>
+> 
+> On Sat, Jun 27, 2020 at 1:36 AM Peter Xu <peterx@redhat.com> wrote:
+> > Use the general page fault accounting by passing regs into handle_mm_fault().
+> > It naturally solve the issue of multiple page fault accounting when page fault
+> > retry happened.
+> 
+> I sent a patch to fix up riscv page fault accounting some days ago:
+> 
+> http://lists.infradead.org/pipermail/linux-riscv/2020-June/000775.html
 
-  Andrea
+Yes, this is a valid fix too.
+
+> 
+> However, your fix is obviously even better. For the generic and riscv parts:
+> 
+> Reviewed-by: Pekka Enberg <penberg@kernel.org>
+
+Thanks!
+
+-- 
+Peter Xu
+
