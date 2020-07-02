@@ -2,129 +2,98 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26782C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7297BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F9A20672
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGfKjGqO"
+	by mail.kernel.org (Postfix) with ESMTP id 5448920672
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGBUvF (ORCPT
+        id S1726364AbgGBUvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGBUvB (ORCPT
+        Thu, 2 Jul 2020 16:51:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58061 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgGBUvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:51:01 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4A9C08C5C1;
-        Thu,  2 Jul 2020 13:51:01 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a8so24188338edy.1;
-        Thu, 02 Jul 2020 13:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ufie2CDrhQ/r4KkbF9WWsSi4czhI/yseQTh/49H/EYA=;
-        b=dGfKjGqOosSamvdrgWcRCV0ymB4gV9kROaMvgyKQsEZVq2gwsQeWvHGIfTyUSjhzQw
-         P+gEUd3QePrewPSAwY7CQjZ3yfh0hrB03KxI4xvnnspX8T/4dgV6qxLE6G4Zlqc+bf0J
-         uDIoTxVtqi9Jaf24z4Hlw+o/KIgSyIRTuESdGYsM/V+SgptlFPDJ27YhaPerjHw4r0cr
-         XMxLdmS+4qu+foLql6mUAlb8qJmebfvdFJohbaiVbrkHnWjMvQrD3dZ1iSe6vviu7T0D
-         z5EA+YAe53qh3orxBuZaMk8gKk+BdmzBCxGtBoRVMu3KHkjr38KpOFJbpvS/pJvq5YeZ
-         vcbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ufie2CDrhQ/r4KkbF9WWsSi4czhI/yseQTh/49H/EYA=;
-        b=CzZeMnzm35aCDQkfY13NLSgbIa8uFPGKjMk6d9DvVPcp+0a9jw2skGqe58QJC+fOVw
-         HemH+VYf1Zj++h+CmFAU5bc/zskfGaDAwtpWO9rtTFA2wkFyLzyMWf/S3WIAcOjX/eqF
-         Ju9ODQdqFU3yakNtNzXJi0U86hTcmFjHwx60UtPCH4QUVgXBM9rI/1W4hsk8JU/8w+yZ
-         TlZBLUCcahYmm8hbcizfr1LZHxSgJmKu1sUIDwDJEcEBF2XfJSQZmLssfh5X+yv/NpxM
-         fdSeDGNC1+HrwVab5vbS7JvHBGm3yhVOdFKWBf0QPmcO+6sdZUucdDmwsPlF5TdVk0Dj
-         yKGg==
-X-Gm-Message-State: AOAM533d66BY6zcON/kpEOGDW1F1HE4iO/JpynD3XNJjoDg+0n0LCtwU
-        AtO6OwOh67RpJLDTmLzkLOSGblIv
-X-Google-Smtp-Source: ABdhPJycjQwX4+oNVImACY03PvV89lnvZCJAQc0HM4ZfEg1DbOqvUmAaCyQb4XoSPsVXewoYViDVAQ==
-X-Received: by 2002:aa7:c2cf:: with SMTP id m15mr12345977edp.27.1593723060101;
-        Thu, 02 Jul 2020 13:51:00 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:55bc:8b0a:d3af:949c? ([2a01:110f:b59:fd00:55bc:8b0a:d3af:949c])
-        by smtp.gmail.com with ESMTPSA id da20sm10014362edb.27.2020.07.02.13.50.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 13:50:59 -0700 (PDT)
-Subject: Re: [PATCH v2] leds: core: Flush scheduled work for system suspend
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, pavel@ucw.cz
-Cc:     anthony.wong@canonical.com, Dan Murphy <dmurphy@ti.com>,
-        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200702054500.11251-1-kai.heng.feng@canonical.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a5a931e5-771d-3356-89c2-b0e49f74161c@gmail.com>
-Date:   Thu, 2 Jul 2020 22:50:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 16:51:08 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jr6Ak-0005ov-C1; Thu, 02 Jul 2020 20:51:06 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] fixes for v5.8-rc4
+Date:   Thu,  2 Jul 2020 22:47:33 +0200
+Message-Id: <20200702204732.1114343-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200702054500.11251-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai-Heng,
+Hey Linus,
 
-Thank you for the update.
+/* Summary */
+This contains an annotation patch for a data race in copy_process() reported by
+KCSAN when reading and writing nr_threads. The data race is intentional and
+benign. This is obvious from the comment above the relevant code and based on
+general consensus when discussing this issue. So simply using data_race() to
+annotate this as an intentional race seems the best option.
 
-On 7/2/20 7:45 AM, Kai-Heng Feng wrote:
-> Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
-> system suspend.
-> 
-> led_set_brightness_nopm() uses schedule_work() to set LED brightness.
-> However, there's no guarantee that the scheduled work gets executed
-> because no one flushes the work.
-> 
-> So flush the scheduled work to make sure LED gets turned off.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
->   - Use flush_work() instead.
-> 
->   drivers/leds/led-class.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 3363a6551a70..cc3929f858b6 100644
-> --- a/drivers/leds/led-class.c
-> +++ b/drivers/leds/led-class.c
-> @@ -173,6 +173,7 @@ void led_classdev_suspend(struct led_classdev *led_cdev)
->   {
->   	led_cdev->flags |= LED_SUSPENDED;
->   	led_set_brightness_nopm(led_cdev, 0);
-> +	flush_work(&led_cdev->set_brightness_work);
->   }
->   EXPORT_SYMBOL_GPL(led_classdev_suspend);
->   
-> 
+A few comments on this since doing a grep data_race() reveals that currently
+only kernel/rcu/* is making use of this new annotation and this seems to be the
+first annotation in core kernel: when this was first sent to me I was obviously
+aware of the existence of KCSAN but not whether we had established a consenus
+around annotating places in the (core) kernel where we currently have benign
+data races that KCSAN complains about. I don't know whether we have reached a
+consensus in general yet or we're just doing this subsystem specific. We had a
+bit of a back and forth on this topic related to this patch here. Most people
+argued that because this is an intentional and benign data race that we should
+simply annotate it. Now, we're obviously doing this for the sake of KCSAN and
+given that KCSAN is now upstream and starting to report data races I guess
+doing this is sensible. The linux-next tree contains various mm/* patches that
+push in the same direction of annotating benign data races. So it seems going
+forward we'll just funnel such patches upstream where they make sense.
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+/* Testing */
+All patches have seen exposure in linux-next and are based on v5.8-rc1.
 
-Pavel, this needs to go to stable as well, so let's add the tag:
+/* Conflicts */
+At the time of creating this pr no merge conflicts were reported.
+Fyi, I applied this patch right on top of the previous fixes before -rc2 was
+out and hence didn't rebase my fixes tree on top of -rc3 because of that.
 
-Fixes: 81fe8e5b73e3 ("leds: core: Add led_set_brightness_nosleep{nopm} 
-functions")
+The following changes since commit 86f56395feb2b106b125c47e72192e37da5dd088:
 
--- 
-Best regards,
-Jacek Anaszewski
+  tests: test for setns() EINVAL regression (2020-06-17 00:48:54 +0200)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-2020-07-02
+
+for you to fetch changes up to c17d1a3a8ee4dac7539d5c976b45d9300f6f10bc:
+
+  fork: annotate data race in copy_process() (2020-06-26 01:05:29 +0200)
+
+Please consider pulling these changes from the signed for-linus-2020-07-02 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-2020-07-02
+
+----------------------------------------------------------------
+Weilong Chen (1):
+      fork: annotate data race in copy_process()
+
+ kernel/fork.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
