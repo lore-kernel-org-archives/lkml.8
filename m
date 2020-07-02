@@ -2,85 +2,69 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0222C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3567C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F66421582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDFE21655
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRTnLo/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgGBROI (ORCPT
+        id S1727827AbgGBRPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbgGBROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:14:08 -0400
-Received: from localhost.localdomain (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC32F21534;
-        Thu,  2 Jul 2020 17:14:03 +0000 (UTC)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     Will Deacon <will@kernel.org>, Boris Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        Dave Anderson <anderson@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        bhupesh.linux@gmail.com, Ingo Molnar <mingo@kernel.org>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        scott.branden@broadcom.com, Mark Rutland <mark.rutland@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        John Donnelly <john.p.donnelly@oracle.com>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH v6 0/2] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for arm64 and MAX_PHYSMEM_BITS for all archs)
-Date:   Thu,  2 Jul 2020 18:14:02 +0100
-Message-Id: <159370984726.27923.4874334372278158979.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
-References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+        Thu, 2 Jul 2020 13:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgGBRPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:15:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97597C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 10:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AkKtnmHmvL46FS6TSZsGc+QvVSp7DuMXzazIW+80hK0=; b=jRTnLo/s8fZyHcTuIdV5XmRbtl
+        TYp8I7siWaanCxhbwrfxQQxjcvi6X+rMQ5zcOm9unFn+6gvGrKysJVMMsyLN6O/gvLY9CElt64Tot
+        avdiY9Wsj898soNOG7Em/UmdjAwgik0oDQuaJyRBXzecN+SmtZjhMjL2MdoZMjsHIGGeixnHwTUAF
+        YcN1+AJdCsiC+agBv/xd9YC1XjBBYeVzlQxG3P3iWeh3jLH0+oR2TbH5fDdhOAhW12Sn9eNVb1oP0
+        Vl+v4gHed2WvoAHhbAhS798yrZmH804iJLmZVfdgbFCr9xwdcD26Y/ikl1UeZ3aXMXVgU9jSjDVXX
+        ExHeqA2w==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jr2nU-0003Ji-5U; Thu, 02 Jul 2020 17:14:52 +0000
+Date:   Thu, 2 Jul 2020 18:14:52 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Long Li <lonuxli.64@gmail.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] mm, slab: Check GFP_SLAB_BUG_MASK before alloc_pages
+ in kmalloc_order
+Message-ID: <20200702171452.GZ25523@casper.infradead.org>
+References: <20200702152759.GA32931@lilong>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702152759.GA32931@lilong>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 00:22:35 +0530, Bhupesh Sharma wrote:
-> Apologies for the delayed update. Its been quite some time since I
-> posted the last version (v5), but I have been really caught up in some
-> other critical issues.
-> 
-> Changes since v5:
-> ----------------
-> - v5 can be viewed here:
->   http://lists.infradead.org/pipermail/kexec/2019-November/024055.html
-> - Addressed review comments from James Morse and Boris.
-> - Added Tested-by received from John on v5 patchset.
-> - Rebased against arm64 (for-next/ptr-auth) branch which has Amit's
->   patchset for ARMv8.3-A Pointer Authentication feature vmcoreinfo
->   applied.
-> 
-> [...]
+On Thu, Jul 02, 2020 at 03:27:59PM +0000, Long Li wrote:
+> ---
+> changes in V4:
+> -Change the check function name to kmalloc_check_flags()
+> -Put the flags check into the kmalloc_check_flags() 
 
-Applied to arm64 (for-next/vmcoreinfo), thanks!
+The point of not doing that was that this is unlikely().  With your
+change there is now a function call to check something that's (extremely)
+unlikely().
 
-[1/2] crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-      https://git.kernel.org/arm64/c/1d50e5d0c505
-[2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
-      https://git.kernel.org/arm64/c/bbdbc11804ff
-
--- 
-Catalin
+I take David's point that I misnamed the function.  maybe kmalloc_fix_flags()?
 
