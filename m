@@ -2,299 +2,335 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B58C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409FD20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sr7FQmAn"
+	by mail.kernel.org (Postfix) with ESMTP id 2831620772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgGBSjH (ORCPT
+        id S1726203AbgGBSjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:39:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44281 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgGBSjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:39:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593715144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QinCx818pF5X1BdSH0zzsKcBs7VYqRNInJzgnq1e7DU=;
-        b=Sr7FQmAnY4kgOranzBLE5H3dWxu5PlkzYR3RUFcq6w9jBrJeME2erOlyGCDy8ED9u+Rncs
-        3QFHcgALkA6NQjdlwD930qmr23VeNL32Lx3UmdyQvXwLJwIoze5GL7P4UKhmyiSuLNfahY
-        j4/VCzH/djDqHlQ5fhpaW2rrRfKdhSg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-HeEylAtSP3qHqeCAcVzSjA-1; Thu, 02 Jul 2020 14:38:58 -0400
-X-MC-Unique: HeEylAtSP3qHqeCAcVzSjA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE3F92E93;
-        Thu,  2 Jul 2020 18:38:56 +0000 (UTC)
-Received: from x1.home (ovpn-112-156.phx2.redhat.com [10.3.112.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BDD379254;
-        Thu,  2 Jul 2020 18:38:48 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 12:38:47 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     eric.auger@redhat.com, baolu.lu@linux.intel.com, joro@8bytes.org,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] vfio/type1: Report iommu nesting info to
- userspace
-Message-ID: <20200702123847.384e7460@x1.home>
-In-Reply-To: <1592988927-48009-4-git-send-email-yi.l.liu@intel.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-4-git-send-email-yi.l.liu@intel.com>
-Organization: Red Hat
+        Thu, 2 Jul 2020 14:39:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:52470 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgGBSjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:39:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4CBE1FB;
+        Thu,  2 Jul 2020 11:39:22 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3E5D3F71E;
+        Thu,  2 Jul 2020 11:39:21 -0700 (PDT)
+References: <20200702125211.GQ4800@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, mgorman@suse.de,
+        Oleg Nesterov <oleg@redhat.com>, david@fromorbit.com
+Subject: Re: [RFC][PATCH] sched: Better document ttwu()
+In-reply-to: <20200702125211.GQ4800@hirez.programming.kicks-ass.net>
+Date:   Thu, 02 Jul 2020 19:39:16 +0100
+Message-ID: <jhjd05d92y3.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 01:55:16 -0700
-Liu Yi L <yi.l.liu@intel.com> wrote:
 
-> This patch exports iommu nesting capability info to user space through
-> VFIO. User space is expected to check this info for supported uAPIs (e.g.
-> PASID alloc/free, bind page table, and cache invalidation) and the vendor
-> specific format information for first level/stage page table that will be
-> bound to.
-> 
-> The nesting info is available only after the nesting iommu type is set
-> for a container. Current implementation imposes one limitation - one
-> nesting container should include at most one group. The philosophy of
-> vfio container is having all groups/devices within the container share
-> the same IOMMU context. When vSVA is enabled, one IOMMU context could
-> include one 2nd-level address space and multiple 1st-level address spaces.
-> While the 2nd-leve address space is reasonably sharable by multiple groups
-> , blindly sharing 1st-level address spaces across all groups within the
-> container might instead break the guest expectation. In the future sub/
-> super container concept might be introduced to allow partial address space
-> sharing within an IOMMU context. But for now let's go with this restriction
-> by requiring singleton container for using nesting iommu features. Below
-> link has the related discussion about this decision.
-> 
-> https://lkml.org/lkml/2020/5/15/1028
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Hi,
+
+On 02/07/20 13:52, Peter Zijlstra wrote:
+> Dave hit the problem fixed by commit:
+>
+>   b6e13e85829f ("sched/core: Fix ttwu() race")
+>
+> and failed to understand much of the code involved. Per his request a
+> few comments to (hopefully) clarify things.
+>
+
+All of the below is already tremendously helpful! I remember it took me
+quite some time to figure out e.g. how we could observe p->on_cpu &&
+!p->on_rq and why we cared about it in ttwu(). On the bright side, I'm
+happy that my notes aren't completely off - there may be hope for me yet.
+
+Have some small comments below.
+
+> Requested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  drivers/vfio/vfio_iommu_type1.c | 73 +++++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       |  9 +++++
->  2 files changed, 82 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 7accb59..8c143d5 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -72,6 +72,7 @@ struct vfio_iommu {
->  	uint64_t		pgsize_bitmap;
->  	bool			v2;
->  	bool			nesting;
-> +	struct iommu_nesting_info *nesting_info;
->  	bool			dirty_page_tracking;
->  	bool			pinned_page_dirty_scope;
->  };
+>  include/linux/sched.h |  12 ++--
+>  kernel/sched/core.c   | 195 +++++++++++++++++++++++++++++++++++++++++++-------
+>  kernel/sched/sched.h  |  11 +++
+>  3 files changed, 187 insertions(+), 31 deletions(-)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 9bd073a10224..ad36f70bef24 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+[...]
+> + * Special state:
+> + *
+> + * System-calls and anything external will use task_rq_lock() which acquires
+> + * both p->lock and rq->lock. As a consequence the state they change is stable
+> + * while holding either lock:
+> + *
+> + *  - sched_setaffinity():	p->cpus_ptr
+> + *  - set_user_nice():		p->se.load, p->static_prio
+> + *  - __sched_setscheduler():	p->sched_class, p->policy, p->*prio, p->se.load,
+> + *				p->dl.dl_{runtime, deadline, period, flags, bw, density}
 
-Mind the structure packing and alignment, placing a pointer in the
-middle of a section of bools is going to create wasteful holes in the
-data structure.
+Only extra thing that comes to mind is p->uclamp*; dunno how exhaustive you
+want this list to be.
 
-> @@ -130,6 +131,9 @@ struct vfio_regions {
->  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->  					(!list_empty(&iommu->domain_list))
->  
-> +#define IS_DOMAIN_IN_CONTAINER(iommu)	((iommu->external_domain) || \
-> +					 (!list_empty(&iommu->domain_list)))
+> + *  - sched_setnuma():		p->numa_preferred_nid
+> + *  - sched_move_task()/
+> + *    cpu_cgroup_fork():	p->sched_task_group
+> + *
+> + * p->state <- TASK_*:
+> + *
+> + *   is changed locklessly using set_current_state(), __set_current_state() or
+> + *   set_special_state(), see their respective comments, or by
+> + *   try_to_wake_up(). This latter uses p->pi_lock to serialize against
+> + *   concurrent self.
+> + *
+> + * p->on_rq <- { 0, 1 = TASK_ON_RQ_QUEUED, 2 = TASK_ON_RQ_MIGRATING }:
+> + *
+> + *   is set by activate_task() and cleared by deactivate_task(), under
+> + *   rq->lock. Non-zero indicates the task is runnable, the special
+> + *   ON_RQ_MIGRATING state is used for migration without holding both
+> + *   rq->locks. It indicates task_cpu() is not stable, see task_rq_lock().
+> + *
+> + * p->on_cpu <- { 0, 1 }:
+> + *
+> + *   is set by prepare_task() and cleared by finish_task() such that it will be
+> + *   set before p is scheduled-in and cleared after p is scheduled-out, both
+> + *   under rq->lock. Non-zero indicates the task is running on it's CPU.
+> + *
+> + *   [ The astute reader will observe that it is possible for two tasks on one
+> + *     CPU to have ->on_cpu = 1 at the same time. ]
+> + *
+> + * task_cpu(p): is changed by set_task_cpu(), the rules are:
+> + *
+> + *  - Don't call set_task_cpu() on a blocked task:
+> + *
+> + *    We don't care what CPU we're not running on, this simplifies hotplug,
+> + *    the CPU assignment of blocked tasks isn't required to be valid.
+> + *
+
+That's more of a good practice rather than a hard rule, right? We do that
+with proxy execution (the whole migrate to owner's rq thing), at least in
+its current shape.
+
+> + *  - for try_to_wake_up(), called under p->pi_lock:
+> + *
+> + *    This allows try_to_wake_up() to only take one rq->lock, see its comment.
+> + *
+> + *  - for migration called under rq->lock:
+> + *    [ see task_on_rq_migrating() in task_rq_lock() ]
+> + *
+> + *    o move_queued_task()
+> + *    o __migrate_swap_task()
+
+Isn't that one under double_rq_lock()?
+
+> + *    o detach_task()
+> + *
+> + *  - for migration called under double_rq_lock():
+> + *
+> + *    o push_rt_task() / pull_rt_task()
+> + *    o push_dl_task() / pull_dl_task()
+> + *    o dl_task_offline_migration()
+> + *
+> + */
 > +
->  #define DIRTY_BITMAP_BYTES(n)	(ALIGN(n, BITS_PER_TYPE(u64)) / BITS_PER_BYTE)
->  
 >  /*
-> @@ -1959,6 +1963,12 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  		}
->  	}
->  
-> +	/* Nesting type container can include only one group */
-> +	if (iommu->nesting && IS_DOMAIN_IN_CONTAINER(iommu)) {
-> +		mutex_unlock(&iommu->lock);
-> +		return -EINVAL;
-> +	}
-> +
->  	group = kzalloc(sizeof(*group), GFP_KERNEL);
->  	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
->  	if (!group || !domain) {
-> @@ -2029,6 +2039,36 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_domain;
->  
-> +	/* Nesting cap info is available only after attaching */
-> +	if (iommu->nesting) {
-> +		struct iommu_nesting_info tmp;
-> +		struct iommu_nesting_info *info;
-> +
-> +		/* First get the size of vendor specific nesting info */
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    &tmp);
-> +		if (ret)
-> +			goto out_detach;
-> +
-> +		info = kzalloc(tmp.size, GFP_KERNEL);
-> +		if (!info) {
-> +			ret = -ENOMEM;
-> +			goto out_detach;
-> +		}
-> +
-> +		/* Now get the nesting info */
-> +		info->size = tmp.size;
-> +		ret = iommu_domain_get_attr(domain->domain,
-> +					    DOMAIN_ATTR_NESTING,
-> +					    info);
-> +		if (ret) {
-> +			kfree(info);
-> +			goto out_detach;
-> +		}
-> +		iommu->nesting_info = info;
-> +	}
-> +
->  	/* Get aperture info */
->  	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
->  
-> @@ -2138,6 +2178,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	return 0;
->  
->  out_detach:
-> +	kfree(iommu->nesting_info);
-
-This looks prone to a use-after-free.
-
->  	vfio_iommu_detach_group(domain, group);
->  out_domain:
->  	iommu_domain_free(domain->domain);
-> @@ -2338,6 +2379,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					vfio_iommu_unmap_unpin_all(iommu);
->  				else
->  					vfio_iommu_unmap_unpin_reaccount(iommu);
-> +
-> +				kfree(iommu->nesting_info);
-
-As does this.  Set to NULL since get_info tests the pointer before
-trying to use it.
-
->  			}
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
-> @@ -2546,6 +2589,30 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
->  	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
+>   * __task_rq_lock - lock the rq @p resides on.
+>   */
+[...]
 >  }
->  
-> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> +					   struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_info_cap_header *header;
-> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> +	size_t size;
-> +
-> +	size = sizeof(*nesting_cap) + iommu->nesting_info->size;
-> +
-> +	header = vfio_info_cap_add(caps, size,
-> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> +	if (IS_ERR(header))
-> +		return PTR_ERR(header);
-> +
-> +	nesting_cap = container_of(header,
-> +				   struct vfio_iommu_type1_info_cap_nesting,
-> +				   header);
-> +
-> +	memcpy(&nesting_cap->info, iommu->nesting_info,
-> +	       iommu->nesting_info->size);
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  				     unsigned long arg)
+>
+>  /*
+> - * Called in case the task @p isn't fully descheduled from its runqueue,
+> - * in this case we must do a remote wakeup. Its a 'light' wakeup though,
+> - * since all we need to do is flip p->state to TASK_RUNNING, since
+> - * the task is still ->on_rq.
+> + * Consider @p being inside a wait loop:
+> + *
+> + *   for (;;) {
+> + *           set_current_state(TASK_UNINTERRUPTIBLE);
+> + *
+> + *           if (CONDITION)
+> + *         break;
+
+For some reason the alignment is off in my mail view, but looks okay once
+applied.
+
+> + *
+> + *           schedule();
+> + *   }
+> + *   __set_current_state(TASK_RUNNING);
+> + *
+> + * between set_current_state() and schedule(). In this case @p is still
+> + * runnable, so all that needs doing is change p->state back to TASK_RUNNING in
+> + * an atomic manner.
+> + *
+
+Sorry if I'm being dense; don't you mean "running" here? If it stops being
+current inbetween set_current_state() and schedule(), __schedule() will
+deactivate() it, so AFAICT it can only be either running or deactivated.
+
+> + * By taking task_rq(p)->lock we serialize against schedule(), if @p->on_rq
+> + * then schedule() must still happen and p->state can be changed to
+> + * TASK_RUNNING. Otherwise we lost the race, schedule() has happened, and we
+> + * need to do a full wakeup with enqueue.
+> + *
+> + * Returns: %true when the wakeup is done,
+> + *          %false otherwise.
+>   */
+> -static int ttwu_remote(struct task_struct *p, int wake_flags)
+> +static int ttwu_runnable(struct task_struct *p, int wake_flags)
 >  {
-> @@ -2586,6 +2653,12 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
->  	if (ret)
->  		return ret;
->  
-> +	if (iommu->nesting_info) {
-> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	if (caps.size) {
->  		info.flags |= VFIO_IOMMU_INFO_CAPS;
->  
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index eca66926..f1f39e1 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/ioctl.h>
-> +#include <linux/iommu.h>
+>       struct rq_flags rf;
+>       struct rq *rq;
+[...]
+> @@ -2494,15 +2608,41 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+>   * @state: the mask of task states that can be woken
+>   * @wake_flags: wake modifier flags (WF_*)
+>   *
+> - * If (@state & @p->state) @p->state = TASK_RUNNING.
+> + * Conceptually does:
+> + *
+> + *   If (@state & @p->state) @p->state = TASK_RUNNING.
+>   *
+>   * If the task was not queued/runnable, also place it back on a runqueue.
+>   *
+> - * Atomic against schedule() which would dequeue a task, also see
+> - * set_current_state().
+> + * This function:
+> + *  - is atomic against schedule() which would dequeue the task;
+> + *  - issues a full memory barrier before accessing @p->state.
+> + * See the comment with set_current_state().
+> + *
+> + * Uses p->pi_lock to serialize against concurrent wake-ups.
+> + *
+> + * Relies on p->pi_lock stabilizing:
+> + *  - p->sched_class
+> + *  - p->cpus_ptr
+> + *  - p->sched_task_group
+> + * in order to do migration, see its use of select_task_rq()/set_task_cpu().
+>   *
+> - * This function executes a full memory barrier before accessing the task
+> - * state; see set_current_state().
+> + * Tries really hard to only take one task_rq(p)->lock for performance.
+> + * Takes rq->lock in:
+> + *  - ttwu_runnable()    -- old rq, unavoidable, see comment there;
+> + *  - ttwu_queue()       -- new rq, for enqueue of the task;
+> + *  - psi_ttwu_dequeue() -- much sadness :-( accounting will kill us.
+> + *
+> + * As a concequence we race really badly with just about everything. See the
 
-Why?  We're not directly referencing any IOMMU UAPI structures here.
+s/concequence/consequence/
 
->  
->  #define VFIO_API_VERSION	0
->  
-> @@ -1039,6 +1040,14 @@ struct vfio_iommu_type1_info_cap_migration {
->  	__u64	max_dirty_bitmap_size;		/* in bytes */
+> + * many memory barriers and their comments for details. The basic order of
+> + * reading things is:
+> + *
+> + *   LOAD p->state
+> + *   RMB
+> + *   LOAD p->on_rq
+> + *   RMB
+> + *   LOAD-ACQUIRE p->on_cpu
+> + *   LOAD task_cpu()
+>   *
+>   * Return: %true if @p->state changes (an actual wakeup was done),
+>   *	   %false otherwise.
+> @@ -2518,7 +2658,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>               /*
+>                * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+>                * == smp_processor_id()'. Together this means we can special
+> -		 * case the whole 'p->on_rq && ttwu_remote()' case below
+> +		 * case the whole 'p->on_rq && ttwu_runnable()' case below
+>                * without taking any locks.
+>                *
+>                * In particular:
+> @@ -2539,8 +2679,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>       /*
+>        * If we are going to wake up a thread waiting for CONDITION we
+>        * need to ensure that CONDITION=1 done by the caller can not be
+> -	 * reordered with p->state check below. This pairs with mb() in
+> -	 * set_current_state() the waiting thread does.
+> +	 * reordered with p->state check below. This pairs with smp_store_mb()
+> +	 * in set_current_state() that the waiting thread does.
+>        */
+>       raw_spin_lock_irqsave(&p->pi_lock, flags);
+>       smp_mb__after_spinlock();
+> @@ -2575,7 +2715,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>        * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
+>        */
+>       smp_rmb();
+> -	if (p->on_rq && ttwu_remote(p, wake_flags))
+> +	if (p->on_rq && ttwu_runnable(p, wake_flags))
+>               goto unlock;
+>
+>       if (p->in_iowait) {
+> @@ -3134,8 +3274,12 @@ static inline void prepare_task(struct task_struct *next)
+>       /*
+>        * Claim the task as running, we do this before switching to it
+>        * such that any running task will have this set.
+> +	 *
+> +	 * __schedule()'s rq->lock and smp_mb__after_spin_lock() orders this
+> +	 * store against prior state change of @next, also see
+> +	 * try_to_wake_up(), specifically smp_load_acquire(&p->on_cpu).
+
+smp_*cond*_load_acquire(&p->on_cpu, <blah>)
+
+>        */
+> -	next->on_cpu = 1;
+> +	WRITE_ONCE(next->on_cpu, 1);
+>  #endif
+>  }
+>
+> @@ -3143,8 +3287,9 @@ static inline void finish_task(struct task_struct *prev)
+>  {
+>  #ifdef CONFIG_SMP
+>       /*
+> -	 * After ->on_cpu is cleared, the task can be moved to a different CPU.
+> -	 * We must ensure this doesn't happen until the switch is completely
+> +	 * This must be the very last reference to @prev from this CPU. After
+> +	 * p->on_cpu is cleared, the task can be moved to a different CPU. We
+> +	 * must ensure this doesn't happen until the switch is completely
+>        * finished.
+>        *
+>        * In particular, the load of prev->state in finish_task_switch() must
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 5aa6661ecaf1..73c0c5d0034b 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1197,6 +1197,17 @@ struct rq_flags {
+>  #endif
 >  };
->  
-> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
-> +
-> +struct vfio_iommu_type1_info_cap_nesting {
-> +	struct	vfio_info_cap_header header;
-> +	__u32	flags;
+>
+> +/*
+> + * Lockdep annotation that avoid accidental unlock; any
+> + * raw_spin_unlock(&rq->lock) without preceding rq_unpin_lock() with the
+> + * correct cookie will result in a WARN.
+> + *
 
-I think there's an alignment issue here for a uapi.  The header field is
-8-bytes total and info[] should start at an 8-byte alignment to allow
-data[] within info to have 8-byte alignment.  This could lead to the
-structure having a compiler dependent size and offsets.  We should add
-a 4-byte reserved field here to resolve.
+ISTR that being described (by yourself?) as a "sticky/continuous
+lockdep_assert_held()", which I think gets the point across.
 
-> +	__u8	info[];
-> +};
-
-This should have a lot more description around it, a user could not
-infer that info[] is including a struct iommu_nesting_info from the
-information provided here.  Thanks,
-
-Alex
-
-> +
->  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
->  
->  /**
-
+> + * This avoids code that has access to 'struct rq *rq' (basically everything in
+> + * the scheduler) from accidentally unlocking the rq if they do not also have a
+> + * copy of the (on-stack) 'struct rq_flags rf'.
+> + *
+> + * Also see Documentation/locking/lockdep-design.rst.
+> + */
+>  static inline void rq_pin_lock(struct rq *rq, struct rq_flags *rf)
+>  {
+>       rf->cookie = lockdep_pin_lock(&rq->lock);
