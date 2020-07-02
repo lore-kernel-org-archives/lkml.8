@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3804420748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C9520748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653624;
-	bh=ZaXnKVv036WIEZxAKuXBF80BGpN2iXc9gZtAy+/Mtrc=;
+	s=default; t=1593653629;
+	bh=72+uB+LKQB1wmd6QaomoiOLsV95GspFvxEglGh3T3AQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHefS4amDR4uyqVl+NbEYnAPtYJBPiJ5YULakNxGDliFDI8FNwefOyZVYWbDboHFa
-	 L9YtBa3YmSWcMQ6bgTB/6aBe01pyPa2TCSlsqIg/uAvRQovYg02y4aSoGYZGoAPFze
-	 rmbtyWB2EVaG2jLqKaBiHJDWA1KF9JJa9h53zTIY=
+	b=1uSHZPo902Lv8xRQBlNxbIqQ64ZCn+fxmTTlpg0pkJHIKGKDGICsrgutznz/Vj25W
+	 1NflwvVZsPqg7Z/3GJ110yQE1qu/7og8/PvMSWP6kLdxrFo6G8w0sEL/W8Zv2cXpwI
+	 /Ig8JJdOiqnUCL1o/oA6HbDG77eb/amlR+wBGRS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgGBBZt (ORCPT
+        id S1728902AbgGBBZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56758 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgGBBZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:44 -0400
+        id S1728853AbgGBBZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4D5020B1F;
-        Thu,  2 Jul 2020 01:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F00620B1F;
+        Thu,  2 Jul 2020 01:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653143;
-        bh=ZaXnKVv036WIEZxAKuXBF80BGpN2iXc9gZtAy+/Mtrc=;
+        s=default; t=1593653139;
+        bh=72+uB+LKQB1wmd6QaomoiOLsV95GspFvxEglGh3T3AQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ly66Cl8c/NSoqvSmgJdAgnZPyZsmJ09a483yJvFui76vu4RLW/C4vdrNk8WN8yWqH
-         JYgHPmpns4Uywv9XztZIjSI0O6nxdzbkcnnTY5C7F+DeIHd/gySRS+ZajIEEh4J3ZP
-         /1nfdDAOC6xhsY4EZVme6deP8m++GvsC7fo5nbt8=
+        b=khpkV+ab3+zoEIH3OkFoDuVZv82D6Q7BhfxG7Tpdb5FUUafE1q9vTjTQjz6fXcWOe
+         B9QonVtdlGLDVNJ3WA16sFnJRo6qZNTfAKeuJDhi2hbBqx6zdbY+YmMxph9gYGs+7f
+         Qfq/lHHiVlI3KYbusOwUJIB8NArk1JqEr5jsJglI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/40] spi: spidev: fix a race between spidev_release and spidev_remove
-Date:   Wed,  1 Jul 2020 21:23:36 -0400
-Message-Id: <20200702012402.2701121-15-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/40] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Wed,  1 Jul 2020 21:23:33 -0400
+Message-Id: <20200702012402.2701121-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -59,60 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-Imagine below scene, spidev is referenced after it's freed.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-spidev_release()                spidev_remove()
-...
-                                spin_lock_irq(&spidev->spi_lock);
-                                    spidev->spi = NULL;
-                                spin_unlock_irq(&spidev->spi_lock);
-mutex_lock(&device_list_lock);
-dofree = (spidev->spi == NULL);
-if (dofree)
-    kfree(spidev);
-mutex_unlock(&device_list_lock);
-                                mutex_lock(&device_list_lock);
-                                list_del(&spidev->device_entry);
-                                device_destroy(spidev_class, spidev->devt);
-                                clear_bit(MINOR(spidev->devt), minors);
-                                if (spidev->users == 0)
-                                    kfree(spidev);
-                                mutex_unlock(&device_list_lock);
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
 
-Fix it by resetting spidev->spi in device_list_lock's protection.
+Those last two bytes - 96 1f - aren't part of the original packet.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index ab2c3848f5bf8..88d0976215fac 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -783,13 +783,13 @@ static int spidev_remove(struct spi_device *spi)
- {
- 	struct spidev_data	*spidev = spi_get_drvdata(spi);
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index daa54486ab094..df2f7cc6dc03a 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1387,10 +1387,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
  
-+	/* prevent new opens */
-+	mutex_lock(&device_list_lock);
- 	/* make sure ops on existing fds can abort cleanly */
- 	spin_lock_irq(&spidev->spi_lock);
- 	spidev->spi = NULL;
- 	spin_unlock_irq(&spidev->spi_lock);
- 
--	/* prevent new opens */
--	mutex_lock(&device_list_lock);
- 	list_del(&spidev->device_entry);
- 	device_destroy(spidev_class, spidev->devt);
- 	clear_bit(MINOR(spidev->devt), minors);
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1399,8 +1399,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
