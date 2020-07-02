@@ -2,147 +2,139 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF42AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6770BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F3520720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suMZCdb6"
+	by mail.kernel.org (Postfix) with ESMTP id 4870120720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593706929;
+	bh=W4UDlZ49OH/LiR6KPai/u3hFCRS917Sr4olT+AYboSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QbDoA6y8TXahqiBlmaCLLyPxk1qRpP+n2eeBN9gKGnaIp1+nUSAUoeLXWaPXqyoUP
+	 Ehizh+CZPR1G/13mWty44PtygeuWBFZHA+t0Ri0HkclMvXPjljo+/WdY+ZnZz6DxaC
+	 Id2/xDp1iTK9cK6O2a0uaCjkKFSxa3cm2U04VAsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgGBQTX (ORCPT
+        id S1726586AbgGBQWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgGBQTW (ORCPT
+        Thu, 2 Jul 2020 12:22:07 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:45716 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgGBQWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:19:22 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2191BC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 09:19:22 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id m25so15108590qtk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 09:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=CXTe1dgoIkziCoFVfYKeWk3MqTpTpSjmG77p0bE6NoA=;
-        b=suMZCdb64YsbSOryl020BrcFDQ3UYPbRVImF5H5v6pc9aBeBZtiSXm2zZ/33mPrnrb
-         WxErBfDhtBLdxno5VWInb25pAdsvuAPINvWptBxml477CQfyEGDM3UfI6YJU3GkUxAce
-         dD2tKHU0hLlD3swE/sXOkvX4FezCBbL2CLT77TSj6dWGSLou78WiYYmFPRjE0KnZZCS9
-         m8R9XTNuKGncmUoCWNwAEnGp/RmNxWEICtYd5aEeoZB+zc0m1WR4/9SF/rdlNDw43VeA
-         eJvJ4i9pIQ/aVIbIIRz0oZ+uoGCA/KjIwzJPxFewdN5NdyBvSRAONvVOOUamk+z9Sm6d
-         cC7Q==
+        Thu, 2 Jul 2020 12:22:07 -0400
+Received: by mail-ej1-f68.google.com with SMTP id a1so30443425ejg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 09:22:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=CXTe1dgoIkziCoFVfYKeWk3MqTpTpSjmG77p0bE6NoA=;
-        b=d6FYA1Z5QjkOZznSSHDDcMefktwP9BPl2tC3AXy0Chje31fmfC1uXJGx8rm7lUFBMi
-         VwRI3K+iDq1UUN0D9DIK09zEExBe1CTEiGgThn+KGON4iA/J2VJP1MyAuy1so+GztJHm
-         sQvGU1ypiWsulPiJ/CqHMGDj4p78UN1BuhQ21iPKFdG9ZEZF55JGfv17gbRQ4ksrRjgw
-         X7gODPd9yU3KVRu6UQLf1R4icSIFZjk3CcWHbCqczLFtbtA1RYU27w8wtSAvWp8QHvLX
-         A2yT96Lz1Y6Dq98VPIxJz+Pb54mpBFw/rH7236UMPbNIakKxd54R8zvldXiwckI2SorW
-         QYeg==
-X-Gm-Message-State: AOAM5305D67RomloGL6q+EOC9i/At2ppZNTcGvW7c6IpY7FAHZP2k/l+
-        r7lD3b4FtIKVsFxrOKZ5gQLfAvZdm4/I+U7w88ObBZShoGMuA4hriC5FPOzU23m7hv7lbBZ1wZH
-        FWZfaOdggzracUBY7x5PisR+Fkh85S4kA03KNladQN6F7hlkxLoEtxGdXjYHtpGwrNBv9mMuCDT
-        0D311p
-X-Google-Smtp-Source: ABdhPJyMIMas8tgBt7VQOheH8xigvokD2vo4KZ/A/aw4GacYLB8/fzAlrqaYDQevZIT7u27IzMfwRvfLL/vjfnRF
-X-Received: by 2002:ad4:4d83:: with SMTP id cv3mr31515092qvb.236.1593706761146;
- Thu, 02 Jul 2020 09:19:21 -0700 (PDT)
-Date:   Thu,  2 Jul 2020 09:19:16 -0700
-Message-Id: <20200702161916.2456342-1-abhishekbh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] x86/speculation/l1tf: Add KConfig for setting the L1D cache
- flush mode
-From:   Abhishek Bhardwaj <abhishekbh@google.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DbONkljCM39wKkgdtWGmPLeGjsUj+0c2PNnDTJ43lyE=;
+        b=dXWgSWCGeaj8Uyc3ccn94fJw5oC64tl73Y2gQ56e6RVxqEecezu/49glx5H233wDyC
+         zWXJxpICrj5kmNEEKWoCXoAMhYqiJH+n106iF7Bd+HArBc7ZNIquVSQ9RUloXeKi/YYq
+         +Vzw7BfdFKYK9wFL6d6ZTbkXGai2wBlBRiGBI4BW1jfnuGVwbO2AOVME0DtKW4/ZTBh2
+         41lSefZKu8ps2MASjnhAoq+eHZV7xVg3PfkbrLFRupw7KTkogj5fJltMGBwJiRyzLOEd
+         c1PEvHICGLSGNblrsGsNBmIX5QAMdZw0as005oYwfGuJ3PNKotxhjqiiXaqr2ZwxxlIM
+         vpzQ==
+X-Gm-Message-State: AOAM532mz0MxFuYp/bZOwFLIXcZkvW69ne7t5f3kwoM618RD0aJoomcK
+        JFo9Il66nnueCmST9Hctszk=
+X-Google-Smtp-Source: ABdhPJze2ZMZ0MDoXSjpdzX64hRtOQvPYmu7AUSBq83pqDgkSzXYEiHjyrtKf4ubrt1bltK8bZQagg==
+X-Received: by 2002:a17:906:7686:: with SMTP id o6mr29370028ejm.326.1593706925426;
+        Thu, 02 Jul 2020 09:22:05 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id q7sm7261247eja.69.2020.07.02.09.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 09:22:04 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 18:22:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>
+Subject: Re: BUG: Bad page state in process - page dumped because: page still
+ charged to cgroup
+Message-ID: <20200702162202.GI18446@dhcp22.suse.cz>
+References: <CA+G9fYs=3UG3k-2trqQuB-gJh9D1YygkNQ4qWiHtcaRMSWTmrQ@mail.gmail.com>
+ <20200701082904.GM2369@dhcp22.suse.cz>
+ <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds a new kernel configuration that sets the l1d cache
-flush setting at compile time rather than at run time.
+On Wed 01-07-20 11:45:52, Roman Gushchin wrote:
+[...]
+> >From c97afecd32c0db5e024be9ba72f43d22974f5bcd Mon Sep 17 00:00:00 2001
+> From: Roman Gushchin <guro@fb.com>
+> Date: Wed, 1 Jul 2020 11:05:32 -0700
+> Subject: [PATCH] mm: kmem: make memcg_kmem_enabled() irreversible
+> 
+> Historically the kernel memory accounting was an opt-in feature, which
+> could be enabled for individual cgroups. But now it's not true, and
+> it's on by default both on cgroup v1 and cgroup v2.  And as long as a
+> user has at least one non-root memory cgroup, the kernel memory
+> accounting is on. So in most setups it's either always on (if memory
+> cgroups are in use and kmem accounting is not disabled), either always
+> off (otherwise).
+> 
+> memcg_kmem_enabled() is used in many places to guard the kernel memory
+> accounting code. If memcg_kmem_enabled() can reverse from returning
+> true to returning false (as now), we can't rely on it on release paths
+> and have to check if it was on before.
+> 
+> If we'll make memcg_kmem_enabled() irreversible (always returning true
+> after returning it for the first time), it'll make the general logic
+> more simple and robust. It also will allow to guard some checks which
+> otherwise would stay unguarded.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  mm/memcontrol.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 50ae77f3985e..2d018a51c941 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -3582,7 +3582,8 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
+>  	objcg->memcg = memcg;
+>  	rcu_assign_pointer(memcg->objcg, objcg);
+>  
+> -	static_branch_inc(&memcg_kmem_enabled_key);
+> +	if (!memcg_kmem_enabled())
+> +		static_branch_inc(&memcg_kmem_enabled_key);
 
-Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
----
+Wouldn't be static_branch_enable() more readable?
 
- arch/x86/kernel/cpu/bugs.c |  8 ++++++++
- arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
- 2 files changed, 25 insertions(+)
+>  	/*
+>  	 * A memory cgroup is considered kmem-online as soon as it gets
+>  	 * kmemcg_id. Setting the id after enabling static branching will
+> @@ -3643,9 +3644,6 @@ static void memcg_free_kmem(struct mem_cgroup *memcg)
+>  	/* css_alloc() failed, offlining didn't happen */
+>  	if (unlikely(memcg->kmem_state == KMEM_ONLINE))
+>  		memcg_offline_kmem(memcg);
+> -
+> -	if (memcg->kmem_state == KMEM_ALLOCATED)
+> -		static_branch_dec(&memcg_kmem_enabled_key);
+>  }
+>  #else
+>  static int memcg_online_kmem(struct mem_cgroup *memcg)
+> -- 
+> 2.26.2
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d2..1dcc875cf5547 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
- #if IS_ENABLED(CONFIG_KVM_INTEL)
- EXPORT_SYMBOL_GPL(l1tf_mitigation);
- #endif
-+#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
-+enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
-+#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
-+enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
-+#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
-+enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
-+#else
- enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
-+#endif
- EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
- 
- /*
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index b277a2db62676..f82a0c564e931 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
- 	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
- 	 auditing of KVM MMU events at runtime.
- 
-+config KVM_VMENTRY_L1D_FLUSH
-+	int "L1D cache flush settings (1-3)"
-+	range 1 3
-+	default "2"
-+	depends on KVM && X86 && X86_64
-+	help
-+	 This setting determines the L1D cache flush behavior before a VMENTER.
-+	 This is similar to setting the option / parameter to
-+	 kvm-intel.vmentry_l1d_flush.
-+	 1 - Never flush.
-+	 2 - Conditinally flush.
-+	 3 - Always flush.
-+
-+# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-+# the virtualization menu.
-+source "drivers/vhost/Kconfig"
-+
- endif # VIRTUALIZATION
 -- 
-2.27.0.212.ge8ba1cc988-goog
-
+Michal Hocko
+SUSE Labs
