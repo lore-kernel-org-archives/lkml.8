@@ -2,614 +2,113 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E841C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE430C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E46D207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WvKJLSgD"
+	by mail.kernel.org (Postfix) with ESMTP id 954D120780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593722622;
+	bh=1SdCwzeq3XtwyPwd30PcHrpNCfW3uFnspdI1ik0B2bk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EVuK4yjdjPBiOeHCIWWKPrS7KN9n4PJxEwRKSW6q/mJLmvTxrA8oGVfUmT2j4iyo0
+	 cjBI7mxYYDv2buDMcLd+ypXMMlb+10kKLNxbOZ6wF9+ZdhYT8MYf5pM9CkKe7Xeg6w
+	 0Bp3yuy81lwPSXTRc1LfTNWnHefGiroAGtksYmL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgGBUeV (ORCPT
+        id S1726117AbgGBUnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:34:21 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35761 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgGBUeU (ORCPT
+        Thu, 2 Jul 2020 16:43:39 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34711 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGBUni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:34:20 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200702203417euoutp02d0db7463bee9444e49686d5c4c93f9e6~eCcR71LGY2931029310euoutp020
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 20:34:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200702203417euoutp02d0db7463bee9444e49686d5c4c93f9e6~eCcR71LGY2931029310euoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593722057;
-        bh=F4Q9XhygBokPI3cCCxSxLMLJKoc/u8WErcqeoikqdC4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=WvKJLSgD+f4uctkXhWJkGgYJvzU1UZfs/YwsD32tzkFJggS1OOfjlJuPizNhbz90s
-         gD6Fv+/vv0XOjEsaMC5ziEZaj/PKOpPDlHX4dMTKIaeQbK1OeMGJKA4J39MCdZRWtK
-         6WJyvp69QpjtwjKcb9JEGE6TQbO3VReKjbiasHpQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200702203416eucas1p2c6940acf003a255f05b579227c2ac1f6~eCcQ-qCUy0283902839eucas1p2Y;
-        Thu,  2 Jul 2020 20:34:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E8.C0.05997.8C44EFE5; Thu,  2
-        Jul 2020 21:34:16 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200702203415eucas1p1ebec4f5e3559a41ff6791b327c68aea9~eCcP3nXgI0693206932eucas1p1b;
-        Thu,  2 Jul 2020 20:34:15 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200702203415eusmtrp2164b2cd894c3cf53a586980192cc5954~eCcP24ra23270132701eusmtrp2U;
-        Thu,  2 Jul 2020 20:34:15 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-a1-5efe44c8db6f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 82.02.06314.7C44EFE5; Thu,  2
-        Jul 2020 21:34:15 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200702203414eusmtip253239c5cf77a3938c92b56b0b12261e8~eCcO-qCES1934119341eusmtip2G;
-        Thu,  2 Jul 2020 20:34:14 +0000 (GMT)
-Subject: Re: [PATCH v2 5/8] ARM: dts: exynos: Remove DMA controller bus node
- name to fix dtschema warnings
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <11b9adcf-251f-81ad-2559-9d96c0a3ad78@samsung.com>
-Date:   Thu, 2 Jul 2020 22:34:14 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Thu, 2 Jul 2020 16:43:38 -0400
+Received: by mail-io1-f65.google.com with SMTP id q74so6762638iod.1;
+        Thu, 02 Jul 2020 13:43:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9CKNLJgI2E2dmsPxA89wHeetvVZ0mTwZVWuoJtaPM1Q=;
+        b=JF3CozeEEKEU5ux7KtdB82EsDIcBTR7hw82cNZDvKMgz2jGRgoU8gJdiuxRdPRfLzk
+         TMMg9IYXgHCxZsJwReuwSAOCqcEzOuqXZfA1OmDsboCvjjISVaaUnd11bmp05yirWHub
+         atzIdyJIRMO9J47fIuJXRmJF1ylmaggCerbisYh4ag3L9HaWgABC5Xo/J7ldXRv38Agb
+         roQkMiy2VpRkOGPWlt4TGJi32NyLY/NbIpVAQNKYgT4M86bT1rxZNycIqU79YpwzJJBi
+         j3tSohkeyJlTTJ9BG4i9/L66scU1noTGxIhRCuHFODfz5PPV5/hYi/hrg6Jz2LEtJI2V
+         R5Kw==
+X-Gm-Message-State: AOAM532CCf+uf4K98SC7xolm3nSE5WEjcRvh8eUyF0OiCfJmo+Et3fqO
+        0Lp2YdO/CkkqvOBhkHzzWQ==
+X-Google-Smtp-Source: ABdhPJxDkpcg7Zn4SUV67PNen92IBqdZprC/69RObQpyOE8clGJd3InVDF2S7lRIlvsVgWUIdYReIQ==
+X-Received: by 2002:a02:b18b:: with SMTP id t11mr31938785jah.46.1593722616772;
+        Thu, 02 Jul 2020 13:43:36 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id w4sm4979794ioc.23.2020.07.02.13.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 13:43:36 -0700 (PDT)
+Received: (nullmailer pid 1658496 invoked by uid 1000);
+        Thu, 02 Jul 2020 20:43:35 -0000
+Date:   Thu, 2 Jul 2020 14:43:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RESEND PATCH v2 06/13] dt-bindings: clock: Introduce SM8150
+ QCOM Graphics clock bindings
+Message-ID: <20200702204335.GA1657238@bogus>
+References: <20200629211725.2592-1-jonathan@marek.ca>
+ <20200629211725.2592-7-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200702155149.12854-5-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fO2TmOZse18smiaEZR4S2NXlKkImEQRdmHRMtaeVBpztq8
-        FpSX7LIkbx+awzRWdlnpdPNSdkFNnaa51LAoV4ZGmEgXt0BLy3Wy/Pb7v//nef7PAy9DSN5T
-        Xky8KolTqxRKmVBE1rVN2Hzat09H+z/OlOHB0johrtaZKPzS8ZHCZS3dFM4bGiWwzVZF43fO
-        VoTNQ/0U7msoEWK73YiwzvZYgA21DhrnPGqh8bkPIwSeaCgl8ZuCIrSFld/X22m52XhBKB/o
-        fyiUW66fludN+csv1RiRfNy8fDcdKQqJ4ZTxKZzaL/SQKO6a1Ukfs6SmNessggz0I0KL3Bhg
-        g+DLk8+0FokYCXsLwYPcqr/CgWCwPY/ixTiCzBs3hbMtA7p6xBs3EZSXNxK8+Iygp62JcFUt
-        ZJXQYRolXYaULSfAMmGgXAbB2hHkF8a7WMgGgHZM+2esmA2Frv5K2sUkuwqelmWRLl7ERoNp
-        pF7A13hAR/Hwn3c3diNMXqwU8DNXQP1YCcGzJ7weLhO4goHNYaB89BfJ770dSqtv/+WF8Mla
-        Q/O8DH7dn23IRvC+u4LmRS6Cviwd4quCYaB7cmZVZiZiLZga/FwI7FaoLlrMozu8GvPgd3CH
-        wrrLBP8shvNnJfyM1aC3Vv5LbXreS+QjmX7OZfo51+jnXKP/H3sVkUbkySVrEmI5zQYVl+qr
-        USRoklWxvkcSE8xo5uN1Tlsd91DDz8PNiGWQbL443zoVLaEUKZr0hGYEDCGTirc964yWiGMU
-        6Sc4deJBdbKS0zSjpQwp8xQHGkYOSNhYRRJ3lOOOcepZV8C4eWWgYGfX0m9hxuzs3oJaj4cC
-        br+0KnkwzLSp6as0NDfxrdF7Mxk1UX1ypTNtwZ0rp7zUnfavMXct0oyIiuECb+WJ9cWOzlpz
-        DbXnRa1PijPEfdvO4Z7w8zlrLpQU7+qNmrf3rKooaMmZth1TjMigfRn4Pbw1V27YKdiHIxtt
-        xkNix3EZqYlTBKwj1BrFb3VrRx10AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCIsWRmVeSWpSXmKPExsVy+t/xe7rHXf7FGRx8KmTxYN42NouNM9az
-        Wlz/8pzVYv6Rc6wW/Y9fM1ucP7+B3eL+16OMFpseX2O1uLxrDpvF3burGC1mnN/HZLFo6xd2
-        i9a9R9gt2p++ZLb4uWsei8XtiZMZHQQ8ds66y+6xaVUnm8eda3vYPDYvqffo/2vg0bdlFaPH
-        501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
-        ehmLj39lL9hcXnFoxmamBsbfEV2MnBwSAiYSd2ZsZ+xi5OIQEljKKHF1/28miISMxMlpDawQ
-        trDEn2tdbCC2kMBbRok3vbUgtrBAjsTJ9a9ZQJpFBJYySzxc/5YNxGEWuM8ocb7tJzvE2M2M
-        Eh0r34ONZRMwlOh6CzGKV8BO4sy1dewgNouAisSp+U0sILaoQJzE8i3z2SFqBCVOznwCFucU
-        MJX41b0ObA6zgJnEvM0PmSFseYntb+dA2eISt57MZ5rAKDQLSfssJC2zkLTMQtKygJFlFaNI
-        amlxbnpusaFecWJucWleul5yfu4mRmCMbzv2c/MOxksbgw8xCnAwKvHwTjj+N06INbGsuDL3
-        EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTD95JfGGpobmFpaG5sbm
-        xmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYw6v0WmMn7731gi/9Tva6qorc6v5jm/2/
-        5SSa3lBLFZl36OzMa4UaWy9/vf7rzcmbQUp5FZJrY4Jz2zq3lQtwvnlm+/5zyb0tQm1GPD6W
-        XQ+mbJ185llH+72yi7827b38WK/dZdf0jrAT3XqZOu4uK91LlI/sOrEh4nTcA0cRmWNRrxa0
-        Bp1wV2Ipzkg01GIuKk4EAMeebagHAwAA
-X-CMS-MailID: 20200702203415eucas1p1ebec4f5e3559a41ff6791b327c68aea9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157
-References: <20200702155149.12854-1-krzk@kernel.org>
-        <CGME20200702155216eucas1p2424c5998e09d73e3b758e4cd8ba27157@eucas1p2.samsung.com>
-        <20200702155149.12854-5-krzk@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629211725.2592-7-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.07.2020 17:51, Krzysztof Kozlowski wrote:
-> There is no need to keep DMA controller nodes under AMBA bus node.
-> Remove the "amba" node to fix dtschema warnings like:
->
->      amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
+On Mon, 29 Jun 2020 17:17:12 -0400, Jonathan Marek wrote:
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SM8150 SoCs.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 > ---
->
-> Changes since v1:
-> 1. Remove the bus, as suggested by Marek
-> ---
->   arch/arm/boot/dts/exynos3250.dtsi             |  47 +++----
->   arch/arm/boot/dts/exynos4.dtsi                |  70 +++++-----
->   .../boot/dts/exynos4210-universal_c210.dts    |   2 +-
->   arch/arm/boot/dts/exynos5250.dtsi             |  92 ++++++-------
->   arch/arm/boot/dts/exynos5410.dtsi             |  46 +++----
->   arch/arm/boot/dts/exynos5420.dtsi             | 130 ++++++++----------
->   6 files changed, 174 insertions(+), 213 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 044e5da64a76..d3fb45a56527 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -418,33 +418,26 @@
->   			status = "disabled";
->   		};
->   
-> -		amba {
-> -			compatible = "simple-bus";
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			ranges;
-> -
-> -			pdma0: pdma@12680000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x12680000 0x1000>;
-> -				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&cmu CLK_PDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			pdma1: pdma@12690000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x12690000 0x1000>;
-> -				interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&cmu CLK_PDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> +		pdma0: pdma@12680000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x12680000 0x1000>;
-> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_PDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		pdma1: pdma@12690000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x12690000 0x1000>;
-> +			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cmu CLK_PDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
->   		};
->   
->   		adc: adc@126c0000 {
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index d2779a790ce3..a1e54449f33f 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -669,45 +669,37 @@
->   			status = "disabled";
->   		};
->   
-> -		amba: amba {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
-> -			ranges;
-> -
-> -			pdma0: pdma@12680000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x12680000 0x1000>;
-> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			pdma1: pdma@12690000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x12690000 0x1000>;
-> -				interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			mdma1: mdma@12850000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x12850000 0x1000>;
-> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_MDMA>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <1>;
-> -			};
-> +		pdma0: pdma@12680000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x12680000 0x1000>;
-> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		pdma1: pdma@12690000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x12690000 0x1000>;
-> +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		mdma1: mdma@12850000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x12850000 0x1000>;
-> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_MDMA>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
->   		};
->   
->   		fimd: fimd@11c00000 {
-> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> index 02fde1a75ebd..e07aa3aa93bd 100644
-> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> @@ -181,7 +181,7 @@
->   	};
->   };
->   
-> -&amba {
-> +&soc {
+>  .../bindings/clock/qcom,sm8150-gpucc.yaml     | 74 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gpucc-sm8150.h | 40 ++++++++++
+>  2 files changed, 114 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
+> 
 
 
-What about the alphabetical order of the labels here?
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml: maintainers:0: None is not of type 'string'
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml: ignoring, error in schema: maintainers: 0
+warning: no schema found in file: ./Documentation/devicetree/bindings/clock/qcom,sm8150-gpucc.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 
->   	mdma0: mdma@12840000 {
->   		compatible = "arm,pl330", "arm,primecell";
->   		reg = <0x12840000 0x1000>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index b6135af7ef39..e3dbe4166836 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -679,56 +679,48 @@
->   			samsung,pmureg-phandle = <&pmu_system_controller>;
->   		};
->   
-> -		amba {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
-> -			ranges;
-> -
-> -			pdma0: pdma@121a0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121A0000 0x1000>;
-> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			pdma1: pdma@121b0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121B0000 0x1000>;
-> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			mdma0: mdma@10800000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x10800000 0x1000>;
-> -				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_MDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <1>;
-> -			};
-> -
-> -			mdma1: mdma@11c10000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x11C10000 0x1000>;
-> -				interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_MDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <1>;
-> -			};
-> +		pdma0: pdma@121a0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121A0000 0x1000>;
-> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		pdma1: pdma@121b0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121B0000 0x1000>;
-> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		mdma0: mdma@10800000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x10800000 0x1000>;
-> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_MDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
-> +		};
-> +
-> +		mdma1: mdma@11c10000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x11C10000 0x1000>;
-> +			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_MDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
->   		};
->   
->   		gsc_0:  gsc@13e00000 {
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 2eab80bf5f3a..abe75b9e39f5 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -189,34 +189,26 @@
->   			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
->   		};
->   
-> -		amba {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
-> -			ranges;
-> -
-> -			pdma0: pdma@121a0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121a0000 0x1000>;
-> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> +		pdma0: pdma@121a0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121a0000 0x1000>;
-> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
->   
-> -			pdma1: pdma@121b0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121b0000 0x1000>;
-> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> +		pdma1: pdma@121b0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121b0000 0x1000>;
-> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
->   		};
->   
->   		audi2s0: i2s@3830000 {
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index b672080e7469..c76460b70532 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -433,76 +433,68 @@
->   			power-domains = <&mau_pd>;
->   		};
->   
-> -		amba {
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
-> -			ranges;
-> -
-> -			adma: adma@3880000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x03880000 0x1000>;
-> -				interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock_audss EXYNOS_ADMA>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <6>;
-> -				#dma-requests = <16>;
-> -				power-domains = <&mau_pd>;
-> -			};
-> -
-> -			pdma0: pdma@121a0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121A0000 0x1000>;
-> -				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			pdma1: pdma@121b0000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x121B0000 0x1000>;
-> -				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_PDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <32>;
-> -			};
-> -
-> -			mdma0: mdma@10800000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x10800000 0x1000>;
-> -				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_MDMA0>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <1>;
-> -			};
-> +		adma: adma@3880000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x03880000 0x1000>;
-> +			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock_audss EXYNOS_ADMA>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <6>;
-> +			#dma-requests = <16>;
-> +			power-domains = <&mau_pd>;
-> +		};
->   
-> -			mdma1: mdma@11c10000 {
-> -				compatible = "arm,pl330", "arm,primecell";
-> -				reg = <0x11C10000 0x1000>;
-> -				interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clock CLK_MDMA1>;
-> -				clock-names = "apb_pclk";
-> -				#dma-cells = <1>;
-> -				#dma-channels = <8>;
-> -				#dma-requests = <1>;
-> -				/*
-> -				 * MDMA1 can support both secure and non-secure
-> -				 * AXI transactions. When this is enabled in
-> -				 * the kernel for boards that run in secure
-> -				 * mode, we are getting imprecise external
-> -				 * aborts causing the kernel to oops.
-> -				 */
-> -				status = "disabled";
-> -			};
-> +		pdma0: pdma@121a0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121A0000 0x1000>;
-> +			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		pdma1: pdma@121b0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x121B0000 0x1000>;
-> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_PDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +		};
-> +
-> +		mdma0: mdma@10800000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x10800000 0x1000>;
-> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_MDMA0>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
-> +		};
-> +
-> +		mdma1: mdma@11c10000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x11C10000 0x1000>;
-> +			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clock CLK_MDMA1>;
-> +			clock-names = "apb_pclk";
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
-> +			/*
-> +			 * MDMA1 can support both secure and non-secure
-> +			 * AXI transactions. When this is enabled in
-> +			 * the kernel for boards that run in secure
-> +			 * mode, we are getting imprecise external
-> +			 * aborts causing the kernel to oops.
-> +			 */
-> +			status = "disabled";
->   		};
->   
->   		i2s0: i2s@3830000 {
+See https://patchwork.ozlabs.org/patch/1319320
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
