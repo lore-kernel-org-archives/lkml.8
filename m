@@ -2,104 +2,87 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E083A2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFD62075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgGBKv1 (ORCPT
+        id S1728335AbgGBKyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:51:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39782 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgGBKv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:51:26 -0400
-Received: from [222.129.43.254] (helo=[192.168.1.10])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jqwoL-00013y-I3; Thu, 02 Jul 2020 10:51:22 +0000
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: not loading brightness_init
- when _BCL invalid
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     mapengyu@gmail.com,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200702085520.16901-1-aaron.ma@canonical.com>
- <CAHp75VeCHW=GMgyHRswsTrZ7b3TEnFh15F-5fyHcUsqXzoFS_g@mail.gmail.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <2ecf4032-267c-32c8-361f-2396730aaa65@canonical.com>
-Date:   Thu, 2 Jul 2020 18:51:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 06:54:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:38268 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbgGBKyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:54:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82FB61FB;
+        Thu,  2 Jul 2020 03:54:39 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63C613F71E;
+        Thu,  2 Jul 2020 03:54:38 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 11:54:36 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH v2] Sched: Add a tracepoint to track rq->nr_running
+Message-ID: <20200702105435.na2vumpnov5w5tis@e107158-lin.cambridge.arm.com>
+References: <20200619141120.1476-1-pauld@redhat.com>
+ <20200629192303.GC120228@lorien.usersys.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VeCHW=GMgyHRswsTrZ7b3TEnFh15F-5fyHcUsqXzoFS_g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200629192303.GC120228@lorien.usersys.redhat.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 5:30 PM, Andy Shevchenko wrote:
-> On Thu, Jul 2, 2020 at 11:55 AM Aaron Ma <aaron.ma@canonical.com> wrote:
->>
->> When _BCL invalid, disable thinkpad_acpi backlight brightness control.
->>
->> brightness_enable is already checked at the beginning,
+On 06/29/20 15:23, Phil Auld wrote:
+> Add a bare tracepoint trace_sched_update_nr_running_tp which tracks
+> ->nr_running CPU's rq. This is used to accurately trace this data and
+> provide a visualization of scheduler imbalances in, for example, the
+> form of a heat map.  The tracepoint is accessed by loading an external
+> kernel module. An example module (forked from Qais' module and including
+> the pelt related tracepoints) can be found at:
 > 
->> Always print notice when enabled brightness control.
+>   https://github.com/auldp/tracepoints-helpers.git
 > 
-> Why?
+> A script to turn the trace-cmd report output into a heatmap plot can be
+> found at:
 > 
+>   https://github.com/jirvoz/plot-nr-running
+> 
+> The tracepoints are added to add_nr_running() and sub_nr_running() which
+> are in kernel/sched/sched.h. In order to avoid CREATE_TRACE_POINTS in
+> the header a wrapper call is used and the trace/events/sched.h include
+> is moved before sched.h in kernel/sched/core.
+> 
+> Signed-off-by: Phil Auld <pauld@redhat.com>
+> CC: Qais Yousef <qais.yousef@arm.com>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Vincent Guittot <vincent.guittot@linaro.org>
+> CC: Steven Rostedt <rostedt@goodmis.org>
+> CC: linux-kernel@vger.kernel.org
+> ---
 
-Default brightness_enable = 2, so this message will always be printed as before
-Actually no change here.
+LGTM.
 
-> ...
-> 
->> +       pr_notice("thinkpad_acpi native brightness control enabled\n");
-> 
-> 'notice' level is quite high, why do we spam users with this?
-> 
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 
-Like above.
+Thanks
 
-Another reason is  most thinkpads are using native gpu driver to control
-brightness, notice when thinkpad_acpi brightness is enabled.
-
-Aaron
+--
+Qais Yousef
