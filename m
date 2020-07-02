@@ -2,60 +2,62 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF44C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2144D2073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649EC2073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MaP4Rf5w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CvpAce8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgGBHXV (ORCPT
+        id S1727097AbgGBHYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:23:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27753 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728004AbgGBHXU (ORCPT
+        Thu, 2 Jul 2020 03:24:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26718 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbgGBHYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:23:20 -0400
+        Thu, 2 Jul 2020 03:24:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593674598;
+        s=mimecast20190719; t=1593674669;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=qv4yPdiNnrfn14+LfYWbU2sjcQdKPmiWOrDj+8FMzd8=;
-        b=MaP4Rf5wLrWpxtjcM03DrCpOmdNUlBAXA/R5Vs1x5RAfV8FliR2VUWwl37GZyS+VMJd93z
-        OfdNhYkhIJejxlQQwU2/nQJR1A0kjitSPccGVzQyJfqduNNKleIc6l/Q/n5COphzMjAHLO
-        T5HvihjlZ8hna4Iog+J01GOSMWFNYLw=
+        bh=WKaRIJpHocqYZUWALU1aI1C7o23A+pxvY0xHvQjdE/g=;
+        b=CvpAce8yQf4mpZf7m8o1OqFtVQXwGLrbq75EV+PTRnZje37eSsTjg2nQMDMytZhy5K+Saw
+        HQtcW7E1mjFar0+ouMxHeN0ypQsoAauQbU8YT++lY2VydHzg4cNazTZaCOFO/thpvLh7On
+        Fkn5RkyZ97rOJ+Fvugp0wtTr+W1aJhM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-497-Fk-v5tR0OW69Z_UNcC3dxw-1; Thu, 02 Jul 2020 03:23:14 -0400
-X-MC-Unique: Fk-v5tR0OW69Z_UNcC3dxw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-134-1i9hh8KgPD-4a_ez6nS-kg-1; Thu, 02 Jul 2020 03:24:25 -0400
+X-MC-Unique: 1i9hh8KgPD-4a_ez6nS-kg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A82E19057AA;
-        Thu,  2 Jul 2020 07:23:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0FC88015F3;
+        Thu,  2 Jul 2020 07:24:23 +0000 (UTC)
 Received: from [10.36.114.38] (ovpn-114-38.ams2.redhat.com [10.36.114.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3506C277A4;
-        Thu,  2 Jul 2020 07:23:11 +0000 (UTC)
-Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20200701141830.18749-1-david@redhat.com>
- <20200701141830.18749-2-david@redhat.com>
- <20200701150643.GA2999146@linux.ibm.com> <20200701153157.GC5008@osiris>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 30BDD6111F;
+        Thu,  2 Jul 2020 07:24:21 +0000 (UTC)
+Subject: Re: [PATCH v3 1/3] mm/shuffle: don't move pages between zones and
+ don't read garbage memmaps
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        stable@vger.kernel.org
+References: <20200624094741.9918-2-david@redhat.com>
+ <20200701193322.E670F20760@mail.kernel.org>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -101,72 +103,42 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <9a6728b2-05d3-0e98-dc45-a3e4821e0539@redhat.com>
-Date:   Thu, 2 Jul 2020 09:23:10 +0200
+Message-ID: <e6c3bbef-0d82-4f84-165b-cb93c5c8ed40@redhat.com>
+Date:   Thu, 2 Jul 2020 09:24:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200701153157.GC5008@osiris>
+In-Reply-To: <20200701193322.E670F20760@mail.kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.07.20 17:31, Heiko Carstens wrote:
-> On Wed, Jul 01, 2020 at 06:06:43PM +0300, Mike Rapoport wrote:
->> Hi David,
->>
->> On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
->>> "physmem" in the memblock allocator is somewhat weird: it's not actually
->>> used for allocation, it's simply information collected during boot, which
->>> describes the unmodified physical memory map at boot time, without any
->>> standby/hotplugged memory. It's only used on s390x and is currently the
->>> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
->>>
->>> Physmem isn't numa aware and current users don't specify any flags. Let's
->>> hide it from the user, exposing only for_each_physmem(), and simplify. The
->>> interface for physmem is now really minimalistic:
->>> - memblock_physmem_add() to add ranges
->>> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
->>>
->>> Don't place it into an __init section and don't discard it without
->>> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
->>> the __meminit notifier to avoid section mismatch warnings once
->>> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
->>> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
->>>
->>> While fixing up the documentation, sneak in some related cleanups. We can
->>> stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
->>
->> As you noted in the previous version it should have been
->> CONFIG_ARCH_KEEP_MEMBLOCK ;-)
->>
->>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->>> Cc: Vasily Gorbik <gor@linux.ibm.com>
->>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->>> Cc: Mike Rapoport <rppt@linux.ibm.com>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>
->> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
->>
->>> ---
->>>  arch/s390/kernel/crash_dump.c |  6 ++--
->>>  include/linux/memblock.h      | 28 ++++++++++++++---
->>>  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
->>>  3 files changed, 55 insertions(+), 36 deletions(-)
+On 01.07.20 21:33, Sasha Levin wrote:
+> Hi
 > 
-> So I guess this should go via the s390 tree, since the second patch of
-> this series can go only upstream if both this patch and a patch which
-> is currently only on our features are merged before.
+> [This is an automated email]
 > 
-> Any objections?
+> This commit has been processed because it contains a "Fixes:" tag
+> fixing commit: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization").
+> 
+> The bot has tested the following trees: v5.7.6, v5.4.49.
+> 
+> v5.7.6: Build OK!
+> v5.4.49: Failed to apply! Possible dependencies:
+>     e03d1f78341e8 ("mm/sparse: rename pfn_present() to pfn_in_present_section()")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
 
-@Andrew, fine with you if this goes via the s390 tree?
+Well, it contains "Cc: stable@vger.kernel.org # v5.2+" so yes, please queue.
 
 -- 
 Thanks,
