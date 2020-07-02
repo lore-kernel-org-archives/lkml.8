@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64471C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD52083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDE4206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653285;
+	s=default; t=1593653291;
 	bh=BKDfyG9iI5w/CsTBdkXPgua6e2lQjWnLmHqiGKG3ANg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8Zgslw+aJ6y8fnJZOCGNBoisEWbDgK0sgbun+lFcxTHuIXdR/60tXK0gQeTuz07R
-	 lRaj/JcgV62lN32LsZHZdtP542x5j8nr7KPd4oAjo6iT8muqar6uYDXNGEmYeVmioe
-	 82HVX7eU4t4h8DNJwCkvHJFC0D8faMEPk1L3z+pc=
+	b=p0+r8k4+Pg1lbG4kGllkSxVNjuGorL1lX2dFmqAatqIb2vHik6RdEkgWhKk4XFga2
+	 o5kQcFw4YoaqnPHb9MBjiuAo+LK7Te5GVbVwXijV5b3+RF7gUzGRJoxtWMzVPEP7BF
+	 8OXwMjCEdQgjpj+4vXu7VJECiiy1Q+RC9OEyf6qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgGBB2E (ORCPT
+        id S1729799AbgGBB2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59382 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729496AbgGBB13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:29 -0400
+        id S1729539AbgGBB1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB3E20899;
-        Thu,  2 Jul 2020 01:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDED92083E;
+        Thu,  2 Jul 2020 01:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653248;
+        s=default; t=1593653258;
         bh=BKDfyG9iI5w/CsTBdkXPgua6e2lQjWnLmHqiGKG3ANg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tcvWO5QiPViwFyPe6PlCWAMtRXPx9iHoWcvesb2yDHCOYmCEIgYCkdRRizQDFqfu
-         y+hQpqXFqY9a6OBQLKd3CMfFtig2Ftha5w/F/+bCdeqfcLePo1zelKIET4Tu4mPwo0
-         F6xxphaKBUgKdLLBZmF7sw3eVzbnJ2cUALKAVgro=
+        b=P2a+npteE8c247FxGSE+XnL8KehQQQGqzMfZ1m9F/9N9DiZ0cRkMEczQla2OG3vJX
+         NakD1XnekCZDlYSgCy7ZnSVd8bMEcnsqvbnoG7gIPwBjAE9t8spz1T2jqK0b6UPz3Q
+         6T+yNEHQUkj0BeDlwZY9BU+KPdvJCMNaXphu0DQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Douglas Anderson <dianders@chromium.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 13/13] kgdb: Avoid suspicious RCU usage warning
-Date:   Wed,  1 Jul 2020 21:27:12 -0400
-Message-Id: <20200702012712.2701986-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 7/7] kgdb: Avoid suspicious RCU usage warning
+Date:   Wed,  1 Jul 2020 21:27:29 -0400
+Message-Id: <20200702012729.2702141-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
-References: <20200702012712.2701986-1-sashal@kernel.org>
+In-Reply-To: <20200702012729.2702141-1-sashal@kernel.org>
+References: <20200702012729.2702141-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
