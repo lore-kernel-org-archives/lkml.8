@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39478C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF89C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16B25208B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3C420780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4wddxtd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjLnSEq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgGBOx5 (ORCPT
+        id S1730166AbgGBOyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51396 "EHLO
+        Thu, 2 Jul 2020 10:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729942AbgGBOxz (ORCPT
+        with ESMTP id S1730146AbgGBOx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:53:55 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00682C08C5C1;
-        Thu,  2 Jul 2020 07:53:54 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b16so12622024pfi.13;
-        Thu, 02 Jul 2020 07:53:54 -0700 (PDT)
+        Thu, 2 Jul 2020 10:53:59 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D527C08C5C1;
+        Thu,  2 Jul 2020 07:53:59 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id j4so11413663plk.3;
+        Thu, 02 Jul 2020 07:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KFyeQfdSfeF/OnFMNlNDOOlcmfxLaj5OwuFJXU8uYJo=;
-        b=Q4wddxtd7UZEebKb5xPxIoGXYfJOfbE6rOApsa/SLWF4V1snSiQmTb9cz0rL7yrE//
-         +2G7Yyxk6p//49Vpr2ZxQri6X9Re2GTXS4URiGhppNp4Ne2NdvMnaXwUKKJD+sIrdJn8
-         IamJWPdnjk83DXcBF4iGU/2X2GUqgYlTdGRlByqMborflkpEh+E7Zb5UUtzQ8g70tcHz
-         wsKEFL+DLO+W92gGNmI/oLEe1eyunrYm2NroQSFQ2Be70/+PB3CuVzO6zcsNBAPaR1BT
-         LNf0JY+VrUY0s/jJgpKXfNeOm6plEZCmuUAK7jNd2qxDkxnCstfadvE+Vzm8EzjIPBRH
-         JdvQ==
+        bh=xG+I+OhzhwmJtUntwedWWvLVF9hdPz7VJjHJ9UQuwVg=;
+        b=WjLnSEq5QSel1YiqPF8jirofURmebUG6KhyUBCrXkhaDNdQWrSe3wqTAklpISsEMY8
+         5b995mGnZbWC3CLjbGVd820M65pBbW1aVZCK8QuLw3138li6+JfLO1Cyxcy5ZYCoQ80I
+         NX8jIHGJP+4XYZ9wQPdYI5vCsiE+GMIVr5Y7kd5F8+wIzv2y8oS1gSu+tSTIB45EVt7w
+         qInGxlWZEq93iC5vmi3zIHy4BEnZ3TTm28YA4qEFJ+iMM//UOy0r8NOoPO2lpLNWaFnQ
+         m0CR1KJJ7ONkEjiJlpBllmGpKxCyaWIjub6fUlwOljWl3H6jCDq7NhM9e0UyhOqBMxRl
+         EjjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KFyeQfdSfeF/OnFMNlNDOOlcmfxLaj5OwuFJXU8uYJo=;
-        b=Q8euB9y0a22E2vXzYKwK2CUZUjIknlJ1fypPb+ElnoM2npG8W2cbAdZlPGbrdfdpup
-         n4NDRdcwQNUhSzqD1LlJBr/QJHmWJoWDQCbWaLkMvJxiLzLaMVzp9mRMHUddLo+4Ymde
-         TLfmCQuJ96t0YgjCnGga7J/O0xwIkS7plVymKTpmSDhV/s79oog7+cTQnuKazf6CjKGe
-         A8WzES6IPnFgsrZGV5ZYMzV6lZZM85bgSwPHUnrOP6D12dmbuw6XOnwnr4H7RRVwg/cL
-         iXUYyfAFo5G00qy1zC4MJBa8K0z5PzyPfEkqExKNMW97Z+LKMdBGSGfy0qTsgQCd8unD
-         beBQ==
-X-Gm-Message-State: AOAM532Yt0dwnJbPNraMavX4BSTFAqelaBwI6szFyWuLhrwAOKp/bFPn
-        2ng9542moqGH8fGEKh6HdOM=
-X-Google-Smtp-Source: ABdhPJwdC0Exa7dRYIZqQEXrMBCHE4dR99z+nKx4QS/phZ8VY9gtApIyOzT58Mc5ILLh+QgT4vzWBw==
-X-Received: by 2002:a63:2c96:: with SMTP id s144mr24253837pgs.359.1593701634505;
-        Thu, 02 Jul 2020 07:53:54 -0700 (PDT)
+        bh=xG+I+OhzhwmJtUntwedWWvLVF9hdPz7VJjHJ9UQuwVg=;
+        b=STdHpBs6HLEBAK8AeqIlmdCGRDHCFUdugXXXKSioDKFZiaeX6w5CVvWYrK8/zBsry5
+         +X3ZWswtomrWAB1SpISaJjXp5E1u2c8obG5WTooP7jk470kZr4HiWL1QZm9rw7JJOq7w
+         Ck7/MBq0I/dXwwyd8KlPwKJ8WGB4S/3uE8bqFNcSX1rm5ue5bqi3C84MLH6Po9LsTPzY
+         1WZiH0JjBjMEe6VB3koFsTM+jUN/MGksuYoA5NxaetxONaOWwIMf9VdjkirYquem9WqC
+         40yi14rpjxnrbumddc/YTOP6gnbQO3eEStDSmIbaZv8YPZ6e9YK5Josui/QIdlLMOnWm
+         2wTw==
+X-Gm-Message-State: AOAM531TYMajPH8ZvXiFXsGD0Gd4C4M3hB44cnEiJSLEK8t3nZtqf4Vt
+        wu2jm8thUpbdCGeAedMJrEo=
+X-Google-Smtp-Source: ABdhPJym9JYnI8irA2HRmbdSHqii3UHpsFvDSpvttgbVeTn8plv+/3TQHwr+lTaFymLK80ioDAoctg==
+X-Received: by 2002:a17:902:7204:: with SMTP id ba4mr25554410plb.250.1593701638478;
+        Thu, 02 Jul 2020 07:53:58 -0700 (PDT)
 Received: from localhost.localdomain ([223.190.0.253])
-        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.50
+        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.54
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 07:53:53 -0700 (PDT)
+        Thu, 02 Jul 2020 07:53:57 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
 To:     andre.przywara@arm.com, afaerber@suse.de,
         manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
 Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 08/10] dt-bindings: mmc: owl: add compatible string actions,s700-mmc
-Date:   Thu,  2 Jul 2020 20:22:54 +0530
-Message-Id: <1593701576-28580-9-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v5 09/10] arm64: dts: actions: Add MMC controller support for S700
+Date:   Thu,  2 Jul 2020 20:22:55 +0530
+Message-Id: <1593701576-28580-10-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
 References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
@@ -76,13 +76,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit adds a new SoC specific compatible string "actions,s700-mmc"
-in combination with more generic string "actions,owl-mmc".
+This commits adds support for MMC controllers present on Actions S700 SoC,
+there are 3 MMC controllers in this SoC which can be used for accessing
+SD/EMMC/SDIO cards.
 
-Placement order of these strings should abide by the principle of
-"from most specific to most general".
-
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
 Changes since v4:
@@ -90,28 +87,58 @@ Changes since v4:
 Changes since v3:
         * No change.
 Changes since v2:
-        * Added Rob's Reviewed-by tag
+        * No change.
+Changes since v1:
+        * Added SoC specific compatibe string.
+Changes since RFC:
+        * No change
 ---
- Documentation/devicetree/bindings/mmc/owl-mmc.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/owl-mmc.yaml b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-index 1380501fb8f0..5eab25ccf7ae 100644
---- a/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-@@ -14,7 +14,11 @@ maintainers:
- 
- properties:
-   compatible:
--    const: actions,owl-mmc
-+    oneOf:
-+      - const: actions,owl-mmc
-+      - items:
-+          - const: actions,s700-mmc
-+          - const: actions,owl-mmc
- 
-   reg:
-     maxItems: 1
+diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+index 2c78caebf515..9ed88aafc2da 100644
+--- a/arch/arm64/boot/dts/actions/s700.dtsi
++++ b/arch/arm64/boot/dts/actions/s700.dtsi
+@@ -259,5 +259,38 @@
+ 			clocks = <&cmu CLK_DMAC>;
+ 			power-domains = <&sps S700_PD_DMA>;
+ 		};
++
++		mmc0: mmc@e0210000 {
++			compatible = "actions,s700-mmc", "actions,owl-mmc";
++			reg = <0x0 0xe0210000 0x0 0x4000>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu CLK_SD0>;
++			resets = <&cmu RESET_SD0>;
++			dmas = <&dma 2>;
++			dma-names = "mmc";
++			status = "disabled";
++		};
++
++		mmc1: mmc@e0214000 {
++			compatible = "actions,s700-mmc", "actions,owl-mmc";
++			reg = <0x0 0xe0214000 0x0 0x4000>;
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu CLK_SD1>;
++			resets = <&cmu RESET_SD1>;
++			dmas = <&dma 3>;
++			dma-names = "mmc";
++			status = "disabled";
++		};
++
++		mmc2: mmc@e0218000 {
++			compatible = "actions,s700-mmc", "actions,owl-mmc";
++			reg = <0x0 0xe0218000 0x0 0x4000>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu CLK_SD2>;
++			resets = <&cmu RESET_SD2>;
++			dmas = <&dma 4>;
++			dma-names = "mmc";
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 2.7.4
 
