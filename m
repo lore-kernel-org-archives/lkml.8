@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B317C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC27C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 488EF20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BBE20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593652926;
-	bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=za8jz7BGwtrMVwhdAf07iXZY0wBG0k1UewsCiy4JB9ZJKMAJhSNego5PIBXYMJRsL
-	 HVKo0slRQswduEGSsE2QZFOKAIjCyE6CC2YRs3lzPF9RU63nBSrHJPfkhSVolFTmFX
-	 A/iWfBlkVWf4TGKv1UXtfb3boX52LDA9kmyyQCWk=
+	s=default; t=1593652931;
+	bh=Sc6/7a4ZFbtbmwQKk3K67o57mnr8p/wUtpto7eiLetM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YwB3h2ngyEumOqQpaGXyFvtdr2QkqDIEmaE50j7e7n+kRIxlG6c9FdW37zkXGrtxF
+	 931+ryh2Tf0PT1BsvxVlYongItl5FEMQehd1oYBru7auQpju2SQrI0Qfu7x5fmhvKM
+	 mqKJubYSnFzzbbIR0OZIk0rThvgkLKDriVV4QHbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgGBBWF (ORCPT
+        id S1728150AbgGBBWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52992 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgGBBWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:22:04 -0400
+        id S1728108AbgGBBWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:22:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA2820748;
-        Thu,  2 Jul 2020 01:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E822B2085B;
+        Thu,  2 Jul 2020 01:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652924;
-        bh=t48+Xhwq9/p8QGgsPqjcI4Z6WeMmsCy0ku+QepkjvXw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qAd8IP2f4neblwS824klCsrbfs/Dt0tGiYA40MPNSzrrD1YEtog/X9DE/fAYCJqWi
-         P7A5ZI19v82gLz512OkZlOaODixU1crtq1E07KF2fS3rEBbMvwCe/ac0+g1bJcYwG2
-         AXhmk0U7jDAVjyCS3eEhsVcDUS9ZKnCjFyjIr1xQ=
+        s=default; t=1593652926;
+        bh=Sc6/7a4ZFbtbmwQKk3K67o57mnr8p/wUtpto7eiLetM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QD8JIKCM/hOx3Mew1Js1i2YKrCyXNOpXYkqL/odaOJzF4a12DGhBZF2hb8Y9WTlUr
+         OiLZvZk3LE73RfrIEmExxTwmU1BOwhmxHTL6DWNmeVppmDNN8EHNswS9m6srX8iFmw
+         g71iOGQyTgAPtB7yLhlgFjd4ohRF0CMk8RuLuAJw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/53] soc: ti: omap-prm: use atomic iopoll instead of sleeping one
-Date:   Wed,  1 Jul 2020 21:21:10 -0400
-Message-Id: <20200702012202.2700645-1-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 03/53] perf/x86/rapl: Move RAPL support to common x86 code
+Date:   Wed,  1 Jul 2020 21:21:12 -0400
+Message-Id: <20200702012202.2700645-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
+References: <20200702012202.2700645-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +58,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 98ece19f247159a51003796ede7112fef2df5d7f ]
+[ Upstream commit fd3ae1e1587d64ef8cc8e361903d33625458073e ]
 
-The reset handling APIs for omap-prm can be invoked PM runtime which
-runs in atomic context. For this to work properly, switch to atomic
-iopoll version instead of the current which can sleep. Otherwise,
-this throws a "BUG: scheduling while atomic" warning. Issue is seen
-rather easily when CONFIG_PREEMPT is enabled.
+To prepare for support of both Intel and AMD RAPL.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+As per the AMD PPR, Fam17h support Package RAPL counters to monitor power usage.
+The RAPL counter operates as with Intel RAPL, and as such it is beneficial
+to share the code.
+
+No change in functionality.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200527224659.206129-2-eranian@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/omap_prm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/events/Kconfig            | 6 +++---
+ arch/x86/events/Makefile           | 1 +
+ arch/x86/events/intel/Makefile     | 2 --
+ arch/x86/events/{intel => }/rapl.c | 9 ++++++---
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+ rename arch/x86/events/{intel => }/rapl.c (98%)
 
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-index 96c6f777519c0..c9b3f9ebf0bbf 100644
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -256,10 +256,10 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
- 		goto exit;
+diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
+index 9a7a1446cb3a0..4a809c6cbd2f5 100644
+--- a/arch/x86/events/Kconfig
++++ b/arch/x86/events/Kconfig
+@@ -10,11 +10,11 @@ config PERF_EVENTS_INTEL_UNCORE
+ 	available on NehalemEX and more modern processors.
  
- 	/* wait for the status to be set */
--	ret = readl_relaxed_poll_timeout(reset->prm->base +
--					 reset->prm->data->rstst,
--					 v, v & BIT(st_bit), 1,
--					 OMAP_RESET_MAX_WAIT);
-+	ret = readl_relaxed_poll_timeout_atomic(reset->prm->base +
-+						 reset->prm->data->rstst,
-+						 v, v & BIT(st_bit), 1,
-+						 OMAP_RESET_MAX_WAIT);
- 	if (ret)
- 		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
- 		       reset->prm->data->name, id);
+ config PERF_EVENTS_INTEL_RAPL
+-	tristate "Intel rapl performance events"
+-	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
++	tristate "Intel/AMD rapl performance events"
++	depends on PERF_EVENTS && (CPU_SUP_INTEL || CPU_SUP_AMD) && PCI
+ 	default y
+ 	---help---
+-	Include support for Intel rapl performance events for power
++	Include support for Intel and AMD rapl performance events for power
+ 	monitoring on modern processors.
+ 
+ config PERF_EVENTS_INTEL_CSTATE
+diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+index 9e07f554333fb..b418ef6878796 100644
+--- a/arch/x86/events/Makefile
++++ b/arch/x86/events/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y					+= core.o probe.o
++obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
+ obj-y					+= amd/
+ obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/arch/x86/events/intel/Makefile b/arch/x86/events/intel/Makefile
+index 3468b0c1dc7c9..e67a5886336c1 100644
+--- a/arch/x86/events/intel/Makefile
++++ b/arch/x86/events/intel/Makefile
+@@ -2,8 +2,6 @@
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= core.o bts.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= ds.o knc.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= lbr.o p4.o p6.o pt.o
+-obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= intel-rapl-perf.o
+-intel-rapl-perf-objs			:= rapl.o
+ obj-$(CONFIG_PERF_EVENTS_INTEL_UNCORE)	+= intel-uncore.o
+ intel-uncore-objs			:= uncore.o uncore_nhmex.o uncore_snb.o uncore_snbep.o
+ obj-$(CONFIG_PERF_EVENTS_INTEL_CSTATE)	+= intel-cstate.o
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/rapl.c
+similarity index 98%
+rename from arch/x86/events/intel/rapl.c
+rename to arch/x86/events/rapl.c
+index a5dbd25852cb7..ece043fb7b494 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -1,11 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Support Intel RAPL energy consumption counters
++ * Support Intel/AMD RAPL energy consumption counters
+  * Copyright (C) 2013 Google, Inc., Stephane Eranian
+  *
+  * Intel RAPL interface is specified in the IA-32 Manual Vol3b
+  * section 14.7.1 (September 2013)
+  *
++ * AMD RAPL interface for Fam17h is described in the public PPR:
++ * https://bugzilla.kernel.org/show_bug.cgi?id=206537
++ *
+  * RAPL provides more controls than just reporting energy consumption
+  * however here we only expose the 3 energy consumption free running
+  * counters (pp0, pkg, dram).
+@@ -58,8 +61,8 @@
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+-#include "../perf_event.h"
+-#include "../probe.h"
++#include "perf_event.h"
++#include "probe.h"
+ 
+ MODULE_LICENSE("GPL");
+ 
 -- 
 2.25.1
 
