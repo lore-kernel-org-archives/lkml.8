@@ -2,111 +2,185 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63878C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA224C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 403B520780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF09206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kg6yLeFQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WBlUeMpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgGBWOB (ORCPT
+        id S1726319AbgGBWPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        Thu, 2 Jul 2020 18:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgGBWOA (ORCPT
+        with ESMTP id S1726032AbgGBWPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:14:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E23BC08C5C1;
-        Thu,  2 Jul 2020 15:14:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so11832374plo.7;
-        Thu, 02 Jul 2020 15:14:00 -0700 (PDT)
+        Thu, 2 Jul 2020 18:15:16 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808D6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 15:15:16 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id k6so25594263ili.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 15:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6oWu8CGvUHxicXVBr6Djg+FI6SK9f+5RLFtIeKJCKoQ=;
-        b=Kg6yLeFQkYuYlGuTGlH8RpB/8QyZN7ayi8Kmblyda3HyVQW8KZarHzTEO8j9QiIQQ2
-         Ojyw1CijRsJmicug/Cc/ouz7/zxT6z45Ls2cIyk2euuvZ04DbKj3pIIFNOby+jBti/iW
-         f94ZMLPw/RrmZbPTVpXHLles2/HvxgPRn1fUZWUWDO3nL8iiWvKZnnY2i1rYV+KXZbyl
-         U/CyLRJtpBd1uWKL4yZu3qfZpdWu0OZ/nmLCgI6OwcdluJg9LS3L7U5AcNZNcQQFrpnR
-         xQgK59XDDBAYP1AOvrXQNYbVvJuzg5NaJf1wbmeP9k4xlirDBsKue62x9TaU/Whbv6Hs
-         v81g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lcJAZjj8xewF97TwahN5y7Et+lrdL5BLJ9rAmJHlt1A=;
+        b=WBlUeMpgJQDKEDr6LjGfbHL+WCZTjSL7sdTk3Er+AOhPtLqBsqC8FMT3017u+4ojX4
+         NMLBegMXmRc6lbCAfWFJf75lGJnl9q5EP6QDTszdA9UcYkQyysEpsbtLr1iC7Xx0qsah
+         rUeoDIYTMOeWWLfa8FBqN4StcBcX89Qv6PPJsVkB8QNMlV9WmT67j3517lvJpCcntFhm
+         uBVmKsHhCyiEKXjai1Dpu9CwVlCVCAL97IiCiChQhWYRp5RR6MxKfyhMjGOZ0dWBheRJ
+         JyWtYovv+ZQAcoFrBYibIKxIt7hvLCSLv4zV4GRNLwPkJnf1lbnOvi2uwNwytCpODpCB
+         n4vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6oWu8CGvUHxicXVBr6Djg+FI6SK9f+5RLFtIeKJCKoQ=;
-        b=VVKo8hlO9PMj5HlHnnCafgYOuVyQP+lX7k13qRs9HvnhrInYKUZ9DLURtMRqXC/enB
-         0F+HWX6QvR2OhV9g1+dJmbmtX4jCj76F6nMs0iNdxTf5NulYwv9wXIovaic5OaXji9m/
-         qIoVrWcFKVlx5yUg0HlFLyY1BQK0nYNJa14dhp91neDvy+/Z1e80eyg/lOlYsDoPAkl9
-         5JYip3Jk5OClLsJlQ6xN9NI60I21mIhkBOgc42zl8gLXJ7/hXPuw/bD6peTae2PyoYq2
-         478dsfMKEqqvpXMfEIPED8HUI99AdldazaGfWfpNpA3xrRwezuMq5VMnzq03hYDklqM/
-         TUmQ==
-X-Gm-Message-State: AOAM532fKJm/Q0K3g6WDN30bUWexdGqjZClDrLemd2j8F6qXRY7eMzK0
-        81u9i8qfDiSi8cTi8s5eIIQ=
-X-Google-Smtp-Source: ABdhPJyVFpqOvhx2lOLP9HTgx4ksvqPWVFw5kfuwAYv84vVPBxgiuYi8T6w/iZ621zdxYYC2MmlsBA==
-X-Received: by 2002:a17:902:9a02:: with SMTP id v2mr28968513plp.321.1593728039427;
-        Thu, 02 Jul 2020 15:13:59 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id nl8sm8979501pjb.13.2020.07.02.15.13.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 15:13:58 -0700 (PDT)
-From:   rentao.bupt@gmail.com
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        openbmc@lists.ozlabs.org,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>, taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH] hwmon: (pmbus) fix a typo in Kconfig SENSORS_IR35221 option
-Date:   Thu,  2 Jul 2020 15:13:49 -0700
-Message-Id: <20200702221349.18139-1-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lcJAZjj8xewF97TwahN5y7Et+lrdL5BLJ9rAmJHlt1A=;
+        b=rOHXFFCAHFfcxrz9wBW8rWW3FSMfIffm2FoPgIxvroqCNyke5nS/6R9soRp/KK+EO4
+         4ZKvSXebh4Uew+lAA2kVI+YobhHWaKwFOUmPf0HfMye4Hv1e/60fZoWdpOjDiGanhKhN
+         dIj9uZLy2HpGKSi0a9dTVReMFwqkf8bjvyp6zhcqLhZNSnycJye0cXdEJf0oo3wvKGdJ
+         j7+GN0x7oeYQxbv1U4X5bEwrISrerz1AuWw66+r1ILiZr/B6skMob5hIJ+8zhpQkUqU1
+         urX0Ik/zu5FCefqW4LOX6APl5CsFdM/R8SmHUFhRA/vV6ee8sIMEpRPLniht1josFFF7
+         zTkg==
+X-Gm-Message-State: AOAM532HUUKDIjeejgUcOvnR6ECFCORSyw9C1DrolYJ6Wd00TGjO29Wz
+        an6prIpCaZev17ixF3GUO//zYe/ONzcigOGGUbnbIA==
+X-Google-Smtp-Source: ABdhPJwutdoMSAMPPZKN4tGNoXxVk81W7gmwa77ORx/9+vAJ3jHdPFToEHlBk3Jz0SPEj3C1/QpsDK9V8T2HdSvwIXM=
+X-Received: by 2002:a92:cd01:: with SMTP id z1mr14965787iln.103.1593728115606;
+ Thu, 02 Jul 2020 15:15:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702213807.2511503-1-abhishekbh@google.com> <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
+In-Reply-To: <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
+From:   Abhishek Bhardwaj <abhishekbh@google.com>
+Date:   Thu, 2 Jul 2020 15:14:38 -0700
+Message-ID: <CA+noqojQ9FmvQ3k7r1Yh5bdrtDF4+eDd-Spo4PG7fdMSVxVP1w@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On Thu, Jul 2, 2020 at 3:01 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Hi--
+>
+> On 7/2/20 2:38 PM, Abhishek Bhardwaj wrote:
+> > This change adds a new kernel configuration that sets the l1d cache
+> > flush setting at compile time rather than at run time.
+> >
+> > Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
+> >
+> > ---
+> >
+> > Changes in v2:
+> > - Fix typo in the help of the new KConfig.
+> >
+> >  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
+> >  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> > index 0b71970d2d3d2..1dcc875cf5547 100644
+> > --- a/arch/x86/kernel/cpu/bugs.c
+> > +++ b/arch/x86/kernel/cpu/bugs.c
+> > @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
+> >  #if IS_ENABLED(CONFIG_KVM_INTEL)
+> >  EXPORT_SYMBOL_GPL(l1tf_mitigation);
+> >  #endif
+> > +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
+> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
+> > +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
+> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
+> > +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
+> > +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
+> > +#else
+> >  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+> > +#endif
+> >  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
+> >
+> >  /*
+> > diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> > index b277a2db62676..d375dcedd447d 100644
+> > --- a/arch/x86/kvm/Kconfig
+> > +++ b/arch/x86/kvm/Kconfig
+> > @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
+> >        This option adds a R/W kVM module parameter 'mmu_audit', which allows
+> >        auditing of KVM MMU events at runtime.
+> >
+> > +config KVM_VMENTRY_L1D_FLUSH
+> > +     int "L1D cache flush settings (1-3)"
+> > +     range 1 3
+> > +     default "2"
+> > +     depends on KVM && X86 && X86_64
+>
+> Why does this apply only to KVM?
+Sorry, I don't know what this means. The runtime options this aims to
+emulate applied to kvm driver.
+Hence, this kernel config applies to KVM ?
 
-Fix a typo in SENSORS_IR35221 option: module name should be "ir35221"
-instead of "ir35521".
+>
+> and the "X86 && X86_64" is more than is needed. Just "X86_64" alone
+> should be enough.
+Fixed in v3.
 
-Fixes: 8991ebd9c9a6 ("hwmon: (pmbus) Add client driver for IR35221")
+>
+>
+> > +     help
+> > +      This setting determines the L1D cache flush behavior before a VMENTER.
+> > +      This is similar to setting the option / parameter to
+> > +      kvm-intel.vmentry_l1d_flush.
+> > +      1 - Never flush.
+> > +      2 - Conditionally flush.
+> > +      3 - Always flush.
+> > +
+> > +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
+> > +# the virtualization menu.
+> > +source "drivers/vhost/Kconfig"
+This was a bad copy paste. Removed in v3.
+>
+>
+> I don't quite understand why this 'source' line is here.
+> Can you explain more about that, please?
+>
+> It puts "VHOST drivers" in the menu 2 times, in 2 totally unrelated
+> places.  Seems like it could be confusing.
+>
+> > +
+> >  endif # VIRTUALIZATION
+>
+>
+> --
+> ~Randy
+>
 
-Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- drivers/hwmon/pmbus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 3ad97fd5ce03..e35db489b76f 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -71,7 +71,7 @@ config SENSORS_IR35221
- 	  Infineon IR35221 controller.
- 
- 	  This driver can also be built as a module. If so, the module will
--	  be called ir35521.
-+	  be called ir35221.
- 
- config SENSORS_IR38064
- 	tristate "Infineon IR38064"
 -- 
-2.17.1
-
+Abhishek
