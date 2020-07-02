@@ -2,129 +2,96 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52933207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A6A20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgGBLo2 (ORCPT
+        id S1728776AbgGBLo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:44:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:42806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgGBLo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:44:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B83631FB;
-        Thu,  2 Jul 2020 04:44:27 -0700 (PDT)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A3313F71E;
-        Thu,  2 Jul 2020 04:44:27 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 12:44:25 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] cpufreq: allow drivers to flag custom support for
- freq invariance
-Message-ID: <20200702114425.GB28120@arm.com>
-References: <20200701090751.7543-1-ionela.voinescu@arm.com>
- <20200701090751.7543-2-ionela.voinescu@arm.com>
- <20200701094417.ffuvduz6pqknjcks@vireshk-i7>
- <20200701133330.GA32736@arm.com>
- <CAJZ5v0gT+xWwxcx3OZjXBnDLr9i4VOt2Vp3ScWBxbu+NiopkbA@mail.gmail.com>
- <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
+        Thu, 2 Jul 2020 07:44:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727016AbgGBLo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:44:57 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2A7A9ED5C325D3C76CEC;
+        Thu,  2 Jul 2020 19:44:54 +0800 (CST)
+Received: from kernelci-master.huawei.com (10.175.101.6) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 2 Jul 2020 19:44:47 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Hulk Robot <hulkci@huawei.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Maciej Grochowski <maciej.grochowski@pm.me>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] kcov: make some symbols static
+Date:   Thu, 2 Jul 2020 19:55:01 +0800
+Message-ID: <20200702115501.73077-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702025818.s4oh7rzz3tr6zwqr@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.175.101.6]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix sparse build warnings:
 
-On Thursday 02 Jul 2020 at 08:28:18 (+0530), Viresh Kumar wrote:
-> On 01-07-20, 18:05, Rafael J. Wysocki wrote:
-> > On Wed, Jul 1, 2020 at 3:33 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
-> > > On Wednesday 01 Jul 2020 at 16:16:17 (+0530), Viresh Kumar wrote:
-> > > > I will rather suggest CPUFREQ_SKIP_SET_FREQ_SCALE as the name and
-> > > > functionality. We need to give drivers a choice if they do not want
-> > > > the core to do it on their behalf, because they are doing it on their
-> > > > own or they don't want to do it.
-> > 
-> > Well, this would go backwards to me, as we seem to be designing an
-> > opt-out flag for something that's not even implemented already.
-> > 
-> > I would go for an opt-in instead.  That would be much cleaner and less
-> > prone to regressions IMO.
-> 
-> That's fine, I just wanted an option for drivers to opt-out of this
-> thing. I felt okay with the opt-out flag as this should be enabled for
-> most of the drivers and so enabling by default looked okay as well.
-> 
-> > > In this case we would not be able to tell if cpufreq (driver or core)
-> > > can provide the frequency scale factor, so we would not be able to tell
-> > > if the system is really frequency invariant; CPUFREQ_SKIP_SET_FREQ_SCALE
-> 
-> That is easy to fix. Let the drivers call
-> enable_cpufreq_freq_invariance() and set the flag.
-> 
+kernel/kcov.c:99:1: warning:
+ symbol '__pcpu_scope_kcov_percpu_data' was not declared. Should it be static?
+kernel/kcov.c:778:6: warning:
+ symbol 'kcov_remote_softirq_start' was not declared. Should it be static?
+kernel/kcov.c:795:6: warning:
+ symbol 'kcov_remote_softirq_stop' was not declared. Should it be static?
 
-Right! I suppose part of "the dream" :) was for drivers to be ignorant of
-frequency invariance, and for the core to figure out if it has proper
-information to potentially* pass to the scheduler.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ kernel/kcov.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-*potentially = depending on the arch_set_freq_scale() definition.
+diff --git a/kernel/kcov.c b/kernel/kcov.c
+index 6afae0bcbac4..6b8368be89c8 100644
+--- a/kernel/kcov.c
++++ b/kernel/kcov.c
+@@ -96,7 +96,7 @@ struct kcov_percpu_data {
+ 	int			saved_sequence;
+ };
+ 
+-DEFINE_PER_CPU(struct kcov_percpu_data, kcov_percpu_data);
++static DEFINE_PER_CPU(struct kcov_percpu_data, kcov_percpu_data);
+ 
+ /* Must be called with kcov_remote_lock locked. */
+ static struct kcov_remote *kcov_remote_find(u64 handle)
+@@ -775,7 +775,7 @@ static inline bool kcov_mode_enabled(unsigned int mode)
+ 	return (mode & ~KCOV_IN_CTXSW) != KCOV_MODE_DISABLED;
+ }
+ 
+-void kcov_remote_softirq_start(struct task_struct *t)
++static void kcov_remote_softirq_start(struct task_struct *t)
+ {
+ 	struct kcov_percpu_data *data = this_cpu_ptr(&kcov_percpu_data);
+ 	unsigned int mode;
+@@ -792,7 +792,7 @@ void kcov_remote_softirq_start(struct task_struct *t)
+ 	}
+ }
+ 
+-void kcov_remote_softirq_stop(struct task_struct *t)
++static void kcov_remote_softirq_stop(struct task_struct *t)
+ {
+ 	struct kcov_percpu_data *data = this_cpu_ptr(&kcov_percpu_data);
+ 
 
-> > > would be set if either:
-> > >  - the driver calls arch_set_freq_scale() on its own
-> > >  - the driver does not want arch_set_freq_scale() to be called.
-> > >
-> > > So at the core level we would not be able to distinguish between the
-> > > two, and return whether cpufreq-based invariance is supported.
-> > >
-> > > I don't really see a reason why a driver would not want to set the
-> > > frequency scale factor
-> 
-> A simple case where the driver doesn't have any idea what the real
-> freq 
-
-For me, this would have been filtered by either the type of callback
-they use (target_index(), fast_switch() and even target() would offer
-some close to accurate indication of the current frequency, while
-setpolicy() it obviously targets a range of frequencies) or by the
-definition of arch_set_freq_scale().
-
-> ..of the CPU is and it doesn't have counters to guess it as well.
-> 
-> There can be other reasons which we aren't able to imagine at this
-> point of time.
-> 
-
-But I understand both the points you and Rafael raised so it's obvious
-that a 'opt in' flag would be the better option.
-
-Thank you both,
-Ionela.
-
-> -- 
-> viresh
