@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB38C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB82C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F2920781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C55420781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653794;
-	bh=Su7ILB/8TejBEFHJihSSLoVfxdzDuZnPTJVRyUPt8GI=;
+	s=default; t=1593653800;
+	bh=G+uS8SYJDr3PJrz8oRLSBFYFdFUlrst1MS89HE8KMjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERjg6wJzXUflBgROjtUC2EH2/W5XsaJiyiAZkDFurGTUiJXCogJfxhFRmH7DoXS1t
-	 Gg3aIP3WCB/0CADRpP1hnX/NRUJvwima4odDqd9zfFMG3gsoSnOCojxuNn2ir3v4hK
-	 I7207vNjwFPOlFGSI7k91HP2M/u4L65eLM7HaHZc=
+	b=ip/iuoNcLsMuWKt7CZTQnkWAZ4wW30gSkGAij1NMK6m9ZqDSdSyhSmuPj/1UcJYcN
+	 fqrhEb8oyUpcxrpselyo+xK5Uh9I0rCHuJ8cFutGJVTrQm9mvPzug4NCJ+nNN/JX1/
+	 KyWUOOZmMkPjnvCdwkFZo55p+39nEWfOYi+3uRpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgGBBgd (ORCPT
+        id S1727008AbgGBBgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:36:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728233AbgGBBXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:12 -0400
+        id S1728208AbgGBBXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ECE220884;
-        Thu,  2 Jul 2020 01:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A965C2082F;
+        Thu,  2 Jul 2020 01:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652992;
-        bh=Su7ILB/8TejBEFHJihSSLoVfxdzDuZnPTJVRyUPt8GI=;
+        s=default; t=1593652987;
+        bh=G+uS8SYJDr3PJrz8oRLSBFYFdFUlrst1MS89HE8KMjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/ImAJUlSC+d/5oBzzTiIes4i0QnICPPsl3rwiE9tOFNaXq4HQ2CWl8dXGtrJ89pq
-         ERrtwBoz/0/jPN0+UWMP7GeFLNt4t37BFDUEMvU/Y5WsDQbsIKBMFHDBqw2ty8of10
-         MkPvCFtdJTj5zBiqYQ8Tr6dS8nqGKjYHnUq/YyL4=
+        b=vJLICc+F0Q4daxgC+loBR0x4GrTUP9FLFU1q9vkjcM/tTUPd8BzHwOTzDedffTpjI
+         1hnAXvZZniPPSTjXbCuj3tPV5CPbDgf6jKkI6jWHhOJVRC0uKYCv+olCz6jfxijT3I
+         AsmJMasR74oNGgNbzLcOo4SbZJYEdMwDgyT9HBKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
         Sasha Levin <sashal@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 14/53] ASoC: SOF: Intel: add PCI ID for CometLake-S
-Date:   Wed,  1 Jul 2020 21:21:23 -0400
-Message-Id: <20200702012202.2700645-14-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 10/53] gpu: host1x: Detach driver on unregister
+Date:   Wed,  1 Jul 2020 21:21:19 -0400
+Message-Id: <20200702012202.2700645-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -62,35 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 258fb4f4c34a0db9d3834aba6784d7b322176bb9 ]
+[ Upstream commit d9a0a05bf8c76e6dc79230669a8b5d685b168c30 ]
 
-Mirror ID added for legacy HDaudio
+Currently when a host1x device driver is unregistered, it is not
+detached from the host1x controller, which means that the device
+will stay around and when the driver is registered again, it may
+bind to the old, stale device rather than the new one that was
+created from scratch upon driver registration. This in turn can
+cause various weird crashes within the driver core because it is
+confronted with a device that was already deleted.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200617164755.18104-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by detaching the driver from the host1x controller when
+it is unregistered. This ensures that the deleted device also is
+no longer present in the device list that drivers will bind to.
+
+Reported-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/sof-pci-dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/host1x/bus.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index cec631a1389b5..7b1846aeadd59 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -427,6 +427,8 @@ static const struct pci_device_id sof_pci_ids[] = {
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_H)
- 	{ PCI_DEVICE(0x8086, 0x06c8),
- 		.driver_data = (unsigned long)&cml_desc},
-+	{ PCI_DEVICE(0x8086, 0xa3f0), /* CML-S */
-+		.driver_data = (unsigned long)&cml_desc},
- #endif
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_TIGERLAKE)
- 	{ PCI_DEVICE(0x8086, 0xa0c8),
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index 6a995db51d6d8..e201f62d62c0c 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -686,8 +686,17 @@ EXPORT_SYMBOL(host1x_driver_register_full);
+  */
+ void host1x_driver_unregister(struct host1x_driver *driver)
+ {
++	struct host1x *host1x;
++
+ 	driver_unregister(&driver->driver);
+ 
++	mutex_lock(&devices_lock);
++
++	list_for_each_entry(host1x, &devices, list)
++		host1x_detach_driver(host1x, driver);
++
++	mutex_unlock(&devices_lock);
++
+ 	mutex_lock(&drivers_lock);
+ 	list_del_init(&driver->list);
+ 	mutex_unlock(&drivers_lock);
 -- 
 2.25.1
 
