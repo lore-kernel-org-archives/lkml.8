@@ -2,102 +2,155 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B159FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0481BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4DE2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB43720771
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="V6Kamdd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgGBKEc (ORCPT
+        id S1728345AbgGBKFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:04:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60799 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725287AbgGBKEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:04:31 -0400
-IronPort-SDR: ThQrZNedRbhh8idl3yAPD77IRoo5tlh++WHks08hpZDQ3M4PylDYTwrQDxAWLTmx/S//Is2d7g
- aH/3+hLz2KYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="144369343"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="144369343"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 03:04:30 -0700
-IronPort-SDR: eV5vhCrF/V/avimrcklFEMXLzkWgEjeF2mAInxhkm4eizzd8n0KALSBTv4pAUztNCCrUhlAs/8
- aVjNORiPEevQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="322050416"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 02 Jul 2020 03:04:28 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jqw50-00HBPd-1y; Thu, 02 Jul 2020 13:04:30 +0300
-Date:   Thu, 2 Jul 2020 13:04:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     wsa@kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: algo-pca: Add 0x78 as SCL stuck low status
-Message-ID: <20200702100430.GR3703480@smile.fi.intel.com>
-References: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 2 Jul 2020 06:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725287AbgGBKFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:05:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D092C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 03:05:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so26076888wmh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=z6rgXj0NTD9PDpQjHsG/IEK9XchmNS0510zhoY6+bRM=;
+        b=V6Kamdd1OVWbDdE4nkgJT9LoSC8s7cK+++UHAukTcyCFI+MUhWZ3kQMfEHurLmC3VX
+         auY7IxlsQm/sVxo6SSZTvWfeWUs4PnVhl5bVVJFk8GOKjTd8kbPCgrKY9dcrq3UHxwEN
+         QxpNaeFbsGDE8QHON37JeMiK5JmBh7K8+j3+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z6rgXj0NTD9PDpQjHsG/IEK9XchmNS0510zhoY6+bRM=;
+        b=GERIFBr7HybTia2OvUE0ruKwaIdU+zd4vE4ZcxI5x574MMCTZrGqW7f0BAXCvIcK+P
+         Jo1ywR6MNyAZW33+OZj8Pq37thrbjeFgEz/YO3KcfSTaWun75sPJZ1xNxDi38NEjYfQP
+         JtuwIZG2BN2pnBrDoKuDw0UYRuKCYsc1hkRDN1yILtJUzGaEsA+MhOTthn6mPt2LyZ6y
+         8PD0/Kghaay2nK8zUTmuVzhI+9IZzxTyQYt6+dDsLvPppDgsMckpKRAtPS7J9zoi3X5E
+         ZMcie5A+BrgP/SZd/9a7v1H/rJTPGM6qi387aiGmofZ9zzIsS69JNx0XPv2/pqRkG+Q4
+         B7Og==
+X-Gm-Message-State: AOAM530GYVNbtyM2HLj9lP7alrgAG1IelW+1YG3EA9cp2ClY7d/z412P
+        QcIMgnl+St2GZkqiCYPQUOc6iA==
+X-Google-Smtp-Source: ABdhPJwSjMqSScQHghRqZI31MUtUpODKi6xYVBUN+0ghQAtB/dtczJkORmCsn4rW41/+AX6Mj89EqA==
+X-Received: by 2002:a1c:4303:: with SMTP id q3mr32097134wma.134.1593684303419;
+        Thu, 02 Jul 2020 03:05:03 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id x185sm10508303wmg.41.2020.07.02.03.05.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 03:05:02 -0700 (PDT)
+Subject: Re: [PATCH net-next v3 3/3] bridge: Extend br_fill_ifinfo to return
+ MPR status
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        jiri@mellanox.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org,
+        UNGLinuxDriver@microchip.com
+References: <20200702081307.933471-1-horatiu.vultur@microchip.com>
+ <20200702081307.933471-4-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <5c94fb61-a85d-e28f-01b4-52e2e4e0892e@cumulusnetworks.com>
+Date:   Thu, 2 Jul 2020 13:05:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701223912.30864-1-chris.packham@alliedtelesis.co.nz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200702081307.933471-4-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:39:11AM +1200, Chris Packham wrote:
-> The PCA9665 datasheet says that I2CSTA = 78h indicates that SCL is stuck
-> low, this differs to the PCA9564 which uses 90h for this indication.
-> Treat either 0x78 or 0x90 as an indication that the SCL line is stuck.
+On 02/07/2020 11:13, Horatiu Vultur wrote:
+> This patch extends the function br_fill_ifinfo to return also the MRP
+> status for each instance on a bridge. It also adds a new filter
+> RTEXT_FILTER_MRP to return the MRP status only when this is set, not to
+> interfer with the vlans. The MRP status is return only on the bridge
+> interfaces.
 > 
-> Based on looking through the PCA9564 and PCA9665 datasheets this should
-> be safe for both chips. The PCA9564 should not return 0x78 for any valid
-> state and the PCA9665 should not return 0x90.
-
-For me as well looks better this way.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 > ---
-> Changes in v2:
-> - Note which status corresponds to which chip
-> - Move patch commentary to commit message
-> 
->  drivers/i2c/algos/i2c-algo-pca.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-algo-pca.c
-> index 7f10312d1b88..388978775be0 100644
-> --- a/drivers/i2c/algos/i2c-algo-pca.c
-> +++ b/drivers/i2c/algos/i2c-algo-pca.c
-> @@ -314,7 +314,8 @@ static int pca_xfer(struct i2c_adapter *i2c_adap,
->  			DEB2("BUS ERROR - SDA Stuck low\n");
->  			pca_reset(adap);
->  			goto out;
-> -		case 0x90: /* Bus error - SCL stuck low */
-> +		case 0x78: /* Bus error - SCL stuck low (PCA9665) */
-> +		case 0x90: /* Bus error - SCL stuck low (PCA9564) */
->  			DEB2("BUS ERROR - SCL Stuck low\n");
->  			pca_reset(adap);
->  			goto out;
-> -- 
-> 2.27.0
+>  include/uapi/linux/rtnetlink.h |  1 +
+>  net/bridge/br_netlink.c        | 25 ++++++++++++++++++++++++-
+>  2 files changed, 25 insertions(+), 1 deletion(-)
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
+> diff --git a/include/uapi/linux/rtnetlink.h b/include/uapi/linux/rtnetlink.h
+> index 879e64950a0a2..9b814c92de123 100644
+> --- a/include/uapi/linux/rtnetlink.h
+> +++ b/include/uapi/linux/rtnetlink.h
+> @@ -778,6 +778,7 @@ enum {
+>  #define RTEXT_FILTER_BRVLAN	(1 << 1)
+>  #define RTEXT_FILTER_BRVLAN_COMPRESSED	(1 << 2)
+>  #define	RTEXT_FILTER_SKIP_STATS	(1 << 3)
+> +#define RTEXT_FILTER_MRP	(1 << 4)
+>  
+>  /* End of information exported to user level */
+>  
+> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+> index 240e260e3461c..c532fa65c9834 100644
+> --- a/net/bridge/br_netlink.c
+> +++ b/net/bridge/br_netlink.c
+> @@ -453,6 +453,28 @@ static int br_fill_ifinfo(struct sk_buff *skb,
+>  		rcu_read_unlock();
+>  		if (err)
+>  			goto nla_put_failure;
+> +
+> +		nla_nest_end(skb, af);
+> +	}
+> +
+> +	if (filter_mask & RTEXT_FILTER_MRP) {
+> +		struct nlattr *af;
+> +		int err;
+> +
+> +		if (!br_mrp_enabled(br) || port)
+> +			goto done;
+> +
+> +		af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
+> +		if (!af)
+> +			goto nla_put_failure;
+> +
+> +		rcu_read_lock();
+> +		err = br_mrp_fill_info(skb, br);
+> +		rcu_read_unlock();
+> +
+> +		if (err)
+> +			goto nla_put_failure;
+> +
+>  		nla_nest_end(skb, af);
+>  	}
+>  
+> @@ -516,7 +538,8 @@ int br_getlink(struct sk_buff *skb, u32 pid, u32 seq,
+>  	struct net_bridge_port *port = br_port_get_rtnl(dev);
+>  
+>  	if (!port && !(filter_mask & RTEXT_FILTER_BRVLAN) &&
+> -	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED))
+> +	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED) &&
+> +	    !(filter_mask & RTEXT_FILTER_MRP))
+>  		return 0;
+>  
+>  	return br_fill_ifinfo(skb, port, pid, seq, RTM_NEWLINK, nlflags,
+> 
 
