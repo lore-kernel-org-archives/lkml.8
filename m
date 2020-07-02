@@ -2,98 +2,145 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30592C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AC320890
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KudU7RaN"
+	by mail.kernel.org (Postfix) with ESMTP id 2A0E12073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgGBNEa (ORCPT
+        id S1729141AbgGBNFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:04:30 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35305 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgGBNE2 (ORCPT
+        Thu, 2 Jul 2020 09:05:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726343AbgGBNFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:04:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593695068; x=1625231068;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AXbjniwuszyxWpVmXzYI6N4oJcnifghlxot0w5Is/xU=;
-  b=KudU7RaNzTJWFH/rdEyLFMRjkdmcqwDuCQd5ozDf3L6Yi+L5dk85wSZ0
-   MCN0aaduSFdz6DgcyVm5EGp/yEvAkp6uxVf1+3NWz7Um3Vr8xXOZ4Oe/6
-   v9dcZKqMjhNBW0GuO1Bk/gVojvu8huy+5lQ3533cbpnHPcuEqma2/ek8o
-   CLec38HYRc1wPEGZfSJCz9QdpljU+l3c9YJfOJhAuWrGQ4225HqbKcY2e
-   HA7YTL0XrRNLDlgrFfs5+f6uyU97TsZWGfiShpwu9OhGjI2K0Sg/U8Xwr
-   BEqprwWhW1M6n77wRw4x7msk4/JEvsl9SrJJNW77oxRfnE1lH4V0b4CA0
-   g==;
-IronPort-SDR: AFFxMP1lNuUdTuox+VSl6R5uLEwnBtFm3a94pektJdYNOMsLdOug1iHZJAVytmBN5GIItsbk7i
- LZPu8nmw8gVdu5IIZrJxyuNJoMCjAAhWFm1PqtGidvTQIb0mFmiPzCZZONTCPKUBFNzyPRwliY
- t/Ai3yWoz9jdLOBBH48txhvtk9rfX4xzrRCyYFpsQo9K4gSAjo++NrWpAXULCsiNEIyp/YjzMH
- LbLM2OfakTKsE/Y4ZweRqyX1BVj6t9C/mMb3bNfsFoP2/NgFTYKovF82eSSGKv+Qteb5VXb09g
- DPE=
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="82389501"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:04:27 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 06:04:27 -0700
-Received: from localhost.localdomain (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 06:04:05 -0700
-From:   <nicolas.ferre@microchip.com>
-To:     <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH] MAINTAINERS: net: macb: add Claudiu as co-maintainer
-Date:   Thu, 2 Jul 2020 15:00:21 +0200
-Message-ID: <20200702130021.32694-1-nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 2 Jul 2020 09:05:32 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062D51uS049499;
+        Thu, 2 Jul 2020 09:05:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3212atdq6n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 09:05:25 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062D5Orp052085;
+        Thu, 2 Jul 2020 09:05:24 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3212atdpfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 09:05:21 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062Cso7p024179;
+        Thu, 2 Jul 2020 13:03:55 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma01fra.de.ibm.com with ESMTP id 31wyyaun24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 13:03:55 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062D3q0N58196058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jul 2020 13:03:52 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C053511C052;
+        Thu,  2 Jul 2020 13:03:52 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F257411C04C;
+        Thu,  2 Jul 2020 13:03:51 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.146.43])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Jul 2020 13:03:51 +0000 (GMT)
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+ <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+ <20200629115651-mutt-send-email-mst@kernel.org>
+ <20200629180526.41d0732b.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <26ecd4c6-837b-1ce6-170b-a0155e4dd4d4@linux.ibm.com>
+Date:   Thu, 2 Jul 2020 15:03:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200629180526.41d0732b.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_08:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
+ mlxlogscore=881 suspectscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007020094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-I would like that Claudiu becomes co-maintainer of the Cadence macb
-driver. He's already participating to lots of reviews and enhancements
-to this driver and knows the different versions of this controller.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+On 2020-06-29 18:05, Cornelia Huck wrote:
+> On Mon, 29 Jun 2020 11:57:14 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> 
+>> On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
+>>> An architecture protecting the guest memory against unauthorized host
+>>> access may want to enforce VIRTIO I/O device protection through the
+>>> use of VIRTIO_F_IOMMU_PLATFORM.
+>>>
+>>> Let's give a chance to the architecture to accept or not devices
+>>> without VIRTIO_F_IOMMU_PLATFORM.
+>>>
+>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>> Acked-by: Jason Wang <jasowang@redhat.com>
+>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>>> ---
+>>>   arch/s390/mm/init.c     |  6 ++++++
+>>>   drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
+>>>   include/linux/virtio.h  |  2 ++
+>>>   3 files changed, 30 insertions(+)
+> 
+>>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
+>>>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>>>   		return 0;
+>>>   
+>>> +	if (arch_needs_virtio_iommu_platform(dev) &&
+>>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+>>> +		dev_warn(&dev->dev,
+>>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>>   	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>>>   	status = dev->config->get_status(dev);
+>>>   	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+>>
+>> Well don't you need to check it *before* VIRTIO_F_VERSION_1, not after?
+> 
+> But it's only available with VERSION_1 anyway, isn't it? So it probably
+> also needs to fail when this feature is needed if VERSION_1 has not been
+> negotiated, I think.
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 63c4cc4a04d6..5f14938a5985 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2929,6 +2929,7 @@ F:	include/uapi/linux/atm*
- 
- ATMEL MACB ETHERNET DRIVER
- M:	Nicolas Ferre <nicolas.ferre@microchip.com>
-+M:	Claudiu Beznea <claudiu.beznea@microchip.com>
- S:	Supported
- F:	drivers/net/ethernet/cadence/
- 
+Yes, clearly, I will add this.
+
+Thanks,
+Pierre
+
 -- 
-2.27.0
-
+Pierre Morel
+IBM Lab Boeblingen
