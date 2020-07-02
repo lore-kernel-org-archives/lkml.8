@@ -2,101 +2,134 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC739C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB67207E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593657339;
-	bh=8F1h3//G/kf9HnV7eaRR34OR8LtYeHBW0vpcDbroKrQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OUNhxq3Sxa0Y2psLH/Leh4LvmhTq4qmBvB8o6Hv6OeNXY5FCEbbAADMh90yiQ9GRf
-	 bZ7kk1rDqNv0626FMK3rktPvJV0EnhnBOuMyjXn6Ol8VTPo21e1C1dsKGt9Zb33maZ
-	 zplidigzbnqhpBY8xnf7mv3s8gmEWqheQt7k8oAk=
+	by mail.kernel.org (Postfix) with ESMTP id 7C9492083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 02:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rd1riGz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGBCfi (ORCPT
+        id S1728014AbgGBChv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 22:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
+        Wed, 1 Jul 2020 22:37:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgGBCfi (ORCPT
+        with ESMTP id S1726363AbgGBChu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 22:35:38 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 841E8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 19:35:37 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id k17so2181489lfg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:35:37 -0700 (PDT)
+        Wed, 1 Jul 2020 22:37:50 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8C5C08C5DB
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 19:37:50 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so10683188pls.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:37:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dO+MYSL5JIFNDDAWCgnk88YYd0Gu8lu4qudIafhsIH8=;
-        b=bTqo5ZsG+TwJIPH9BEUoRZxCg6Dlz/Z85DLm7635y496rV2cjz70C5+v96VBOLtiOl
-         Rruu4lhV2PhcHK2DpL7/sbJuOMI+t75nQ4D2yGsRZwFXv0lcTxHOzA5ylZi0GBfPRaph
-         IhzmyMeIhDyj/OUByXBJb+9nWZPrkSBnqcIKY=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E6qbMlZ2Efi0OnOWp1DIBcuwZU3AyV6M/I4efZUFWaQ=;
+        b=rd1riGz5u1jk9KczDNJXRDIkj0NTKkAhfsqIiYDHCcSsb8ey6U0F1lFO9QGss6CNbt
+         Ip86QpCH2sEZK9SlOx8nKnf+n7jnVHXxm4NDfae5aC7viKXQaHcBWLTHnT6GbUzbeB7Q
+         Mt8RBMyjd5iZNseSUs4Hz9hF/NbUBjYL8aSdfWs72ZYYvmAzNw6GXFglngdNHIGl6Jz2
+         SMxgCUVkKjoKBbxwdlXXC2OdpN0OV92nz91NjSWmYWmnCZa4dxe/J3mmJBCHoiqT3lhm
+         Pvp1PNtK7P8ThpAdcqJDe7TNdWDTx6ealZ829ZRwwmdUPNhjWCw6ivyfs/J10c3DFw7X
+         MkaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dO+MYSL5JIFNDDAWCgnk88YYd0Gu8lu4qudIafhsIH8=;
-        b=cPOCofvF02F69GO+ubZvdyDpK2LDcOTTYeRidwNv46CD38Jv3T+bWMC1xy5mxXaaia
-         BPG8r2OazNNFwxafcQHGJelDciX/cilU5ArpuCtmlmxLytTaLIhg6jRmhcoZkZcy16NQ
-         Q0B1hPgdmOfpbT6+OzjUhqfZUv12DrMK//VnVYHEix9yv4mLdei2YLtFDDXUGo6H2z79
-         yNMtLM4wjZBEDOR43pkr8ic6DGUiExbqU+kGSpcSXYkzCCdywRDe1Tvo0fJq0SQSj2z/
-         e6GPKt6RJED0iqqs/fKvuquebSo8LTB1en/iIQJa+39yyWa6aE5JcX0uSDklEEtDs3o4
-         +FKA==
-X-Gm-Message-State: AOAM530LLIBe5kVVKyJv2rc52DhNsJeb977O4QR4zvKumacTwlClg9ho
-        B9QMXMb2g218IK6BFPT1jsIZtFA37uo=
-X-Google-Smtp-Source: ABdhPJzoNm4I/Ycl2sWRcW52HJ6bCNkxT5aWv+n16a0qZ2zMTKm7LwgkxIzB8jafPGKcahzQ/xTesA==
-X-Received: by 2002:ac2:4550:: with SMTP id j16mr16955864lfm.37.1593657335729;
-        Wed, 01 Jul 2020 19:35:35 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id j26sm2761399lfm.11.2020.07.01.19.35.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2020 19:35:34 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id b25so26094385ljp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 19:35:34 -0700 (PDT)
-X-Received: by 2002:a2e:760b:: with SMTP id r11mr9680ljc.285.1593657334480;
- Wed, 01 Jul 2020 19:35:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
- <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net> <CAHk-=wh0X1YBQm8b6dqu=FpE8jgHriisXDeqJ7jai41Ob+sJDA@mail.gmail.com>
- <CALCETrXpKAR2A0+96b+RWUE0vUmoPwmp-mfF1u=g2270DNi96w@mail.gmail.com> <CAHk-=wjXftMyC93Jg8J=_HiuERsHujPOa-RbOmMLuuxVoJCrfQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wjXftMyC93Jg8J=_HiuERsHujPOa-RbOmMLuuxVoJCrfQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 Jul 2020 19:35:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whmS2E26pa=K3QOGfPqPyrJpSaosXDbnUmuBt2dHFP3jQ@mail.gmail.com>
-Message-ID: <CAHk-=whmS2E26pa=K3QOGfPqPyrJpSaosXDbnUmuBt2dHFP3jQ@mail.gmail.com>
-Subject: Re: objtool clac/stac handling change..
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E6qbMlZ2Efi0OnOWp1DIBcuwZU3AyV6M/I4efZUFWaQ=;
+        b=EIAObv5V48aqqySAXFzeXyZ8pyxWcfooUgeNBTU3P9G1lpvCOsvpOJv5EgHfiOgNsY
+         9+cyOjN9B2aALvOsMfdQYznJrH5UUdsN24cXg/2+UhLd4ERK/uE0ldeE/mw5j9ccyorn
+         l4bNT6uIn01hfNh7WP+FyAXgsIJOI5y+08965q4zEBHY3i3ele+K/OUI860g6Xh38U3L
+         ZLbL1R7v1BKc3R4fPJFEdfyzf0vmjRRGa2fyxdQO44lO5/xfJrKm0hwF3jP8dTHM5jtC
+         sMb7CkZGCtI2R8tuvKmzTW9aFctV/DIvTYOZda/X8j18TQBPNyTGTwF8k7ip3CxoL7X7
+         mZ4A==
+X-Gm-Message-State: AOAM530nsjSNebOVwlYLPP+gz5VVUCQsCJApeVknbwyc0QKmq2wnaGTC
+        3SWvChp1LJNoxFoP/U14oYR9bjiyqxw=
+X-Google-Smtp-Source: ABdhPJzWA2sCClagfIdhuHoEOvXzH6EhJArvtlPVjv9hibIidWhx1A4wpf9A1PD40eqx9Md3bEahxQ==
+X-Received: by 2002:a17:90a:6a03:: with SMTP id t3mr30648268pjj.174.1593657470066;
+        Wed, 01 Jul 2020 19:37:50 -0700 (PDT)
+Received: from localhost ([223.235.247.110])
+        by smtp.gmail.com with ESMTPSA id io3sm235298pjb.22.2020.07.01.19.37.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Jul 2020 19:37:48 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:07:47 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Xin Hao <xhao@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
+ value in cppc_perf_caps struct
+Message-ID: <20200702023746.li2uf4zl7bwzg62x@vireshk-i7>
+References: <20200701042007.13333-1-xhao@linux.alibaba.com>
+ <20200701045227.epojzjwuky5kkdzj@vireshk-i7>
+ <CAJZ5v0iRW25n9CqvJ=ODbVh2osocx+wJVz62GqaWV9m4sdL12g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iRW25n9CqvJ=ODbVh2osocx+wJVz62GqaWV9m4sdL12g@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 7:30 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I guess we could do that. Are there cases where this actually helps?
+On 01-07-20, 14:16, Rafael J. Wysocki wrote:
+> On Wed, Jul 1, 2020 at 6:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 01-07-20, 12:20, Xin Hao wrote:
+> > >  The 'caps' variable has been defined, so there is no need to get
+> > >  'highest_perf' value through 'cpu->caps.highest_perf', you can use
+> > >  'caps->highest_perf' instead.
+> > >
+> > > Signed-off-by: Xin Hao <xhao@linux.alibaba.com>
+> > > ---
+> > >  drivers/cpufreq/cppc_cpufreq.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> > > index 257d726a4456..051d0e56c67a 100644
+> > > --- a/drivers/cpufreq/cppc_cpufreq.c
+> > > +++ b/drivers/cpufreq/cppc_cpufreq.c
+> > > @@ -161,7 +161,7 @@ static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
+> > >               if (!max_khz)
+> > >                       max_khz = cppc_get_dmi_max_khz();
+> > >               mul = max_khz;
+> > > -             div = cpu->perf_caps.highest_perf;
+> > > +             div = caps->highest_perf;
+> > >       }
+> > >       return (u64)perf * mul / div;
+> > >  }
+> > > @@ -184,7 +184,7 @@ static unsigned int cppc_cpufreq_khz_to_perf(struct cppc_cpudata *cpu,
+> > >       } else {
+> > >               if (!max_khz)
+> > >                       max_khz = cppc_get_dmi_max_khz();
+> > > -             mul = cpu->perf_caps.highest_perf;
+> > > +             mul = caps->highest_perf;
+> > >               div = max_khz;
+> > >       }
+> >
+> > Applied. Thanks.
+> 
+> I applied the previous cppc_cpufreq patch, hopefully it will not clash
+> with this one.
+> 
+> Are you going to take care of this driver going forward?
 
-Hmm. Thinking about it., using that approach might make the
-"CONFIG_CC_HAS_ASM_GOTO_OUTPUT" choices simpler to handle.
+I started picking up the patches for this driver as it was mostly ARM
+stuff and FWIW, I picked the previous one as well and because it was
+sent by me, I never replied with the "Applied" message :)
 
-With ASM_GOTO_OUTPUT it generates the perfect non-jump code. And
-without it, it generates the (annoying, but inevitable) actual
-conditionals.
+Will it be possible for you to drop that one? Or should I drop that
+now ? There shouldn't be any conflicts for now though.
 
-            Linus
+-- 
+viresh
