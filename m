@@ -2,65 +2,68 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3987C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A60F420874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3BC2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Cjb/Gq85"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nsBR7n1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgGBINQ (ORCPT
+        id S1726973AbgGBINZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:13:16 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:31878 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgGBINP (ORCPT
+        Thu, 2 Jul 2020 04:13:25 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:43101 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGBINY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:13:15 -0400
+        Thu, 2 Jul 2020 04:13:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593677594; x=1625213594;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Yl2VuSGjDWMQiuL7KQmLjM60vMbdhACMmPH2M/uS8AI=;
-  b=Cjb/Gq85dtEqcYo4xHVUNCpu9HJJese/PSqoGVjXgjJIbwlCB+Lw8YFr
-   ek5ER9VqeCOpiR+6rfQrZzArr8QYhU6JdiljSzO/a2kBUItfsykAA6Bm8
-   BkQ2LhA2ccQGGOVxIpkD6QLrG1a62+IvOcDB7eZSefHbNv8nfR8ki1M+a
-   OP4ZcwlM4IfHqu0Mqh7NqG04yPAhkYpgovd1nuuxXvkgd4YNvnMMMLl3k
-   bhIhGB/+54ohRHCfc7ZQuYYOy9VJSPbGTZQRg47yG3T8Xb9tpjKmTOcZB
-   n7Ljisq8ieoiaLB2wcfcHxhPCiYEPhrFkHOq9/lXe/smP4IC3NHZ4nKg7
+  t=1593677605; x=1625213605;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PdW1XZ3MHRJsroDmSJ1DwasAvadWD6be00JFedG1d2Y=;
+  b=nsBR7n1GUBTAOxNGU+77aWuJUuHTDrXU5Q1sTl21BeeCqTmv6Pb150jE
+   BzI1BP3aDuf2gXe07QBoa86IyMijVMoVxvvX1vZP/sVev2K6SOrtseug2
+   KLBcaTVkXjCxWKXyYaANV1GTqC7bJ3rzgHmLX6JosxBTHIS+JunrTaB5h
+   G8ebdaI6Iz4Wid5422w0gD9dz3JG8Fr9hWtGDQJB/MmJ43kTO1hiryhJb
+   iEu6tpKBcXgAkT4lB7FaAeiV8ecAJPFSwj1IVaPC+/ZzYEQDY/mJf47hU
+   2DcmQkv/rPCWWK6U5hDmPUFOCiQ+RYDruKt1TBWMycHxJYhqDljddXaPH
    g==;
-IronPort-SDR: d27XaLuMzYw/vdevJ2B/WamZccilcKMA0wEBvK45ggmZFnkAqv4RoHQKQRTIdMbSs/t4O/y9uX
- wjfWpDWBJojBJkFqQrGCH/zgTrr1AhJFc4NQKU7nz6Ns1ZjkAaOjTA2/oY4baFGqfQeFuyI5ki
- R1iirTvd5/+oDPQ2fR2vOHWjirkHAvL6B8tDryTE0LqyrK7WjWtAZLd5zzmur4ieAJTog7+78j
- uHD4mNU+JYPzalIep4KwLIHp+vkb4AwDwxKs41E8ec0Q+traMWj848D6UXq0zO33ixWlqEhm7B
- itU=
+IronPort-SDR: P6KVoisUuR8tbsqlDtzu9JPJ2xJa+dGQP/OXGUdIwjGfcU2ziEsaqzD9k7UvXO+9c6W4tp9Gn7
+ 6nSezd4no5hFvoC3gjiwdvREntrn1EjRB70vHFZAA5OrhR2NRjJyhD4mllUgy5LPDwJkbsc9JX
+ WvQ1AdKNLX2jH/Y04stFyk8l9qW3KVkj52w+PHM7G8982sWyAwgj3GKK+iJgdQ22b1Qfto9LW+
+ p/1I8uZzzfEJQ8dMd3vswAO382GQUpaK78tJYnS74niAXQoyVXBBXCBX+p1oaAMtkKNMoNjMM0
+ twQ=
 X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="80467644"
+   d="scan'208";a="81635220"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 01:13:13 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 01:13:24 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 01:13:13 -0700
+ 15.1.1979.3; Thu, 2 Jul 2020 01:13:23 -0700
 Received: from soft-dev3.localdomain (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 01:12:50 -0700
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 01:13:00 -0700
 From:   Horatiu Vultur <horatiu.vultur@microchip.com>
 To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
         <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
         <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
 CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 0/3] bridge: mrp: Add support for getting the status
-Date:   Thu, 2 Jul 2020 10:13:04 +0200
-Message-ID: <20200702081307.933471-1-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v3 3/3] bridge: Extend br_fill_ifinfo to return MPR status
+Date:   Thu, 2 Jul 2020 10:13:07 +0200
+Message-ID: <20200702081307.933471-4-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200702081307.933471-1-horatiu.vultur@microchip.com>
+References: <20200702081307.933471-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -69,28 +72,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series extends the MRP netlink interface to allow the userspace
-daemon to get the status of the MRP instances in the kernel.
+This patch extends the function br_fill_ifinfo to return also the MRP
+status for each instance on a bridge. It also adds a new filter
+RTEXT_FILTER_MRP to return the MRP status only when this is set, not to
+interfer with the vlans. The MRP status is return only on the bridge
+interfaces.
 
-v3:
-  - remove misleading comment
-  - fix to use correctly the RCU
-
-v2:
-  - fix sparse warnings
-
-Horatiu Vultur (3):
-  bridge: uapi: mrp: Extend MRP attributes to get the status
-  bridge: mrp: Add br_mrp_fill_info
-  bridge: Extend br_fill_ifinfo to return MPR status
-
- include/uapi/linux/if_bridge.h | 17 +++++++++
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
  include/uapi/linux/rtnetlink.h |  1 +
- net/bridge/br_mrp_netlink.c    | 64 ++++++++++++++++++++++++++++++++++
- net/bridge/br_netlink.c        | 25 ++++++++++++-
- net/bridge/br_private.h        |  7 ++++
- 5 files changed, 113 insertions(+), 1 deletion(-)
+ net/bridge/br_netlink.c        | 25 ++++++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
+diff --git a/include/uapi/linux/rtnetlink.h b/include/uapi/linux/rtnetlink.h
+index 879e64950a0a2..9b814c92de123 100644
+--- a/include/uapi/linux/rtnetlink.h
++++ b/include/uapi/linux/rtnetlink.h
+@@ -778,6 +778,7 @@ enum {
+ #define RTEXT_FILTER_BRVLAN	(1 << 1)
+ #define RTEXT_FILTER_BRVLAN_COMPRESSED	(1 << 2)
+ #define	RTEXT_FILTER_SKIP_STATS	(1 << 3)
++#define RTEXT_FILTER_MRP	(1 << 4)
+ 
+ /* End of information exported to user level */
+ 
+diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+index 240e260e3461c..c532fa65c9834 100644
+--- a/net/bridge/br_netlink.c
++++ b/net/bridge/br_netlink.c
+@@ -453,6 +453,28 @@ static int br_fill_ifinfo(struct sk_buff *skb,
+ 		rcu_read_unlock();
+ 		if (err)
+ 			goto nla_put_failure;
++
++		nla_nest_end(skb, af);
++	}
++
++	if (filter_mask & RTEXT_FILTER_MRP) {
++		struct nlattr *af;
++		int err;
++
++		if (!br_mrp_enabled(br) || port)
++			goto done;
++
++		af = nla_nest_start_noflag(skb, IFLA_AF_SPEC);
++		if (!af)
++			goto nla_put_failure;
++
++		rcu_read_lock();
++		err = br_mrp_fill_info(skb, br);
++		rcu_read_unlock();
++
++		if (err)
++			goto nla_put_failure;
++
+ 		nla_nest_end(skb, af);
+ 	}
+ 
+@@ -516,7 +538,8 @@ int br_getlink(struct sk_buff *skb, u32 pid, u32 seq,
+ 	struct net_bridge_port *port = br_port_get_rtnl(dev);
+ 
+ 	if (!port && !(filter_mask & RTEXT_FILTER_BRVLAN) &&
+-	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED))
++	    !(filter_mask & RTEXT_FILTER_BRVLAN_COMPRESSED) &&
++	    !(filter_mask & RTEXT_FILTER_MRP))
+ 		return 0;
+ 
+ 	return br_fill_ifinfo(skb, port, pid, seq, RTM_NEWLINK, nlflags,
 -- 
 2.27.0
 
