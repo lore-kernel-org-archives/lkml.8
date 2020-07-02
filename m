@@ -2,142 +2,204 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8107AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F707C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA9E21582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593709987;
-	bh=rTb8ZTPuq3O/PqCDYSVVh++esn5oPd8Xgy6aOrLB7ug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FVzGmdjK2E45WAENckM65NgdQTfC8rXc/64yfY7sOI5E9WUpzFCQ+G3yzQOUqfx2d
-	 D6rpMkJfZ6Ntz8cx2avLO77YXkPb5pLhaKd7cvAEeBS3LZzjmB5HuqMqtBpP+231to
-	 6y+bZRX7RfPJ9V15PEADySjWcO1OdsYP+SuCIBJg=
+	by mail.kernel.org (Postfix) with ESMTP id 5A1E721534
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ujmTdace"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgGBRNG (ORCPT
+        id S1727083AbgGBRN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:13:06 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41622 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbgGBRNF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:13:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e22so24748166edq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 10:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VVnE4dgvyAySr2AFaA3khkVH7tNEvr0JK5jKeXH+JQw=;
-        b=E88RV0GJ4qfH3ZZ18t4A0aou6wY4Spn0IogKeSbet7ghWERlp3LVTR3KI66YmcbMVV
-         bBbZQ4089uwviSUww5XjCFvmRkuC+aRCvfzeiR/L84tv2hsX/bmVKEGNJDq3V6o/l+nW
-         bXMqcIIGZppAeLObyGemvQ6njzyUoeD27YTIpnViih2qMbZgtEHeF8KlbTz7SGZSnH6s
-         416pSHrwASpqBZRDy6Iq3ND7WJHAaFWeAO8FaKIwXa7/Qq8DnDdeO+X5/5dJwQgy4O7r
-         VTRe0LvQQfwe8zWmam2cHnqczl8Ky9VP2mPq8+d6W/wjoAxqEaNuijWyNi5g2Jlb2RvB
-         1yzg==
-X-Gm-Message-State: AOAM532URzdrj92TWLYVu4xwcuHBt9duhBaKTavbdwbmDT5/7hwFkf0V
-        mKA6vPLasdzwnJMYWPEHZwQ=
-X-Google-Smtp-Source: ABdhPJzsx3bO5yi0V/ckWa7Vrn10ZB0zUEKO/SIIlR9h4BC7fL/R/0EN4AXZgNcI++/I6s3g461IIw==
-X-Received: by 2002:aa7:c50e:: with SMTP id o14mr36265439edq.168.1593709983439;
-        Thu, 02 Jul 2020 10:13:03 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id x4sm7204449eju.2.2020.07.02.10.13.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 10:13:02 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 19:13:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>
-Subject: Re: BUG: Bad page state in process - page dumped because: page still
- charged to cgroup
-Message-ID: <20200702171302.GK18446@dhcp22.suse.cz>
-References: <CA+G9fYs=3UG3k-2trqQuB-gJh9D1YygkNQ4qWiHtcaRMSWTmrQ@mail.gmail.com>
- <20200701082904.GM2369@dhcp22.suse.cz>
- <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
- <20200702162202.GI18446@dhcp22.suse.cz>
- <20200702163738.GA106423@carbon.dhcp.thefacebook.com>
+        Thu, 2 Jul 2020 13:13:26 -0400
+Received: from mail-co1nam11on2051.outbound.protection.outlook.com ([40.107.220.51]:6033
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726865AbgGBRNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:13:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AWyt31VFsJfq3zc5l+DWfPZlmUJ3Pmlb2jVydo8l94jWu8tezp35TUWVq0p4HPkAdu0PjqJpSnuhjbArMJE9+6jKNzdAcQ3RcE6/cUUy1M/7MXOSlY8Q1/teG6XBkluDwRR7UQ0Y6XJSnJrJksiIIEoVZwDRNosldyJNlXXrIZ1vM379nm2i9sIV1P5GduKOmQnPyyF0oUsrRrQUnbSBn3ehcqDFEyPzlhH8TLUyfGaZ5Q6dFwhe/vF/h5qSLGbHh52qZUASwtz9D6ORCleWkutQAbmcOP7epy3tojK+tWicBtgPQl9TIgNkaJY79/rE6IPf35bdIdZCe2xQLtFhcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KA3tlyiIJAjO1PnWEeoltXP+m0H4Wcn22hmM1Y9arpk=;
+ b=TAvSnGRaIUz90eD925v1Y/w/9WINzgJtkh+pGUIHVkpxPm7Py2YeybFPwwjweSZV6TIC02OAqVFZ30op+eFQjPeP7P/FgK6W9XKPV9Z++e7meCOzk0VNSik7C1PfG+sChu/MRIi9O39MbuRCEgVcT0qgIKKiwovvizwt0e5kkirwqr/Z0zu6qkfdvna9vO8MtG6I3AYhAjQIYPHq44WiDiYHmOtpQBP+qfFCLgDJ8FCBnCn6V1kKtIylGjbCpKHQqqpRj+XJYkGZTFcCPGE7lkNAB7W7N1z2fytEnHz8MNYkuzg+Gaq8Z6Ffe7xsqg4GAXGWne9PLw9MtL/rvYmMNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alsa-project.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KA3tlyiIJAjO1PnWEeoltXP+m0H4Wcn22hmM1Y9arpk=;
+ b=ujmTdaceZts98nyoxJlVsIXGh+15XNmT8KHcNPAzrpmiFyTforQFQ8pI/cfY35BNrm7BMY5PlgooibXOrPj2rSq3HRAD9ju1lJFvR7I0paDfdiOZUwoIyK5D3O5nRZ+cwqZrlX+nuDL/AwnRUyCLXhT+J2Bs+41EJ5WOpUU63uI=
+Received: from MWHPR15CA0056.namprd15.prod.outlook.com (2603:10b6:301:4c::18)
+ by MWHPR12MB1261.namprd12.prod.outlook.com (2603:10b6:300:10::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24; Thu, 2 Jul
+ 2020 17:13:20 +0000
+Received: from CO1NAM11FT050.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:301:4c:cafe::d2) by MWHPR15CA0056.outlook.office365.com
+ (2603:10b6:301:4c::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.24 via Frontend
+ Transport; Thu, 2 Jul 2020 17:13:20 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; alsa-project.org; dkim=none (message not signed)
+ header.d=none;alsa-project.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ CO1NAM11FT050.mail.protection.outlook.com (10.13.174.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3153.24 via Frontend Transport; Thu, 2 Jul 2020 17:13:19 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Jul 2020
+ 12:13:18 -0500
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Jul 2020
+ 12:13:18 -0500
+Received: from LinuxHost.amd.com (10.180.168.240) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 2 Jul 2020 12:13:15 -0500
+From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To:     <alsa-devel@alsa-project.org>
+CC:     <perex@perex.cz>, <hui.wang@canonical.com>,
+        <Alexander.Deucher@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH V3] ASoC: amd: add logic to check dmic hardware runtime
+Date:   Thu, 2 Jul 2020 22:56:52 +0530
+Message-ID: <1593710826-1106-1-git-send-email-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702163738.GA106423@carbon.dhcp.thefacebook.com>
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(46966005)(81166007)(2906002)(82310400002)(86362001)(5660300002)(83380400001)(6916009)(8936002)(8676002)(70586007)(70206006)(36756003)(356005)(186003)(26005)(426003)(336012)(4326008)(2616005)(316002)(54906003)(478600001)(7696005)(6666004)(47076004)(82740400003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 90459b76-77c6-4d12-f26e-08d81eab37ce
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1261:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1261897D08948FA0E0666407976D0@MWHPR12MB1261.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /N3Kadan+NMAA3GjvKk7nLN7J/Cq2xICrtFn8PH137f3Cn+tDUl3feB0YD2qNvjE5E/ZJK8B+Zsn47QGEN0+4SEh3u8se5mb50raFCGPJ+REwlmHwZQAWpzzwBg6SxtFi26CXrl0nOy8XILJeU+YydgodbpX7/lpOZ44CVBVrbdymxCsYZ6mF+hmV3WefXBNFOClc5sKA/XvHWPbG99HEMsYg16QHS6e898MJZacWVdTT/fuXirRT3L4UiIdN8zp7rcdJ/0o6XYyG+FSJ+iQ6PfluVgELke1Q+43jiIl4x332WZP+7cgurt8xSSXuKU1NhbEUjabqLENl5S2SICp8O08ucqgk473LSYpN/zmnt24irzcIcnFfsisiDnuDFdXQXZZFus5ZoTfqz6/85imHg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 17:13:19.5766
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90459b76-77c6-4d12-f26e-08d81eab37ce
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT050.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-07-20 09:37:38, Roman Gushchin wrote:
-> On Thu, Jul 02, 2020 at 06:22:02PM +0200, Michal Hocko wrote:
-> > On Wed 01-07-20 11:45:52, Roman Gushchin wrote:
-> > [...]
-> > > >From c97afecd32c0db5e024be9ba72f43d22974f5bcd Mon Sep 17 00:00:00 2001
-> > > From: Roman Gushchin <guro@fb.com>
-> > > Date: Wed, 1 Jul 2020 11:05:32 -0700
-> > > Subject: [PATCH] mm: kmem: make memcg_kmem_enabled() irreversible
-> > > 
-> > > Historically the kernel memory accounting was an opt-in feature, which
-> > > could be enabled for individual cgroups. But now it's not true, and
-> > > it's on by default both on cgroup v1 and cgroup v2.  And as long as a
-> > > user has at least one non-root memory cgroup, the kernel memory
-> > > accounting is on. So in most setups it's either always on (if memory
-> > > cgroups are in use and kmem accounting is not disabled), either always
-> > > off (otherwise).
-> > > 
-> > > memcg_kmem_enabled() is used in many places to guard the kernel memory
-> > > accounting code. If memcg_kmem_enabled() can reverse from returning
-> > > true to returning false (as now), we can't rely on it on release paths
-> > > and have to check if it was on before.
-> > > 
-> > > If we'll make memcg_kmem_enabled() irreversible (always returning true
-> > > after returning it for the first time), it'll make the general logic
-> > > more simple and robust. It also will allow to guard some checks which
-> > > otherwise would stay unguarded.
-> > > 
-> > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > ---
-> > >  mm/memcontrol.c | 6 ++----
-> > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index 50ae77f3985e..2d018a51c941 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -3582,7 +3582,8 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
-> > >  	objcg->memcg = memcg;
-> > >  	rcu_assign_pointer(memcg->objcg, objcg);
-> > >  
-> > > -	static_branch_inc(&memcg_kmem_enabled_key);
-> > > +	if (!memcg_kmem_enabled())
-> > > +		static_branch_inc(&memcg_kmem_enabled_key);
-> > 
-> > Wouldn't be static_branch_enable() more readable?
-> 
-> Agree, will change, add reported-by and tested-by tags and resend.
-> Thanks!
+Add logic to check DMIC hardware exists or not on
+the platform at runtime.
 
-Feel free to add
-Acked-by: Michal Hocko <mhocko@suse.com>
+Add module param for overriding DMIC hardware check
+at runtime.
 
-> Btw, don't we wanna to change memcg_kmem_enabled() definition
-> from static_branch_unlikely() to static_branch_likely()?
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+v3: changed  dmic_acpi_check module param as bint
+v2: changed module param usage -1 as default, 0 - skip, 1 - force
+ sound/soc/amd/renoir/rn-pci-acp3x.c | 29 +++++++++++++++++++++++++++++
+ sound/soc/amd/renoir/rn_acp3x.h     |  2 ++
+ 2 files changed, 31 insertions(+)
 
-Honestly, I do not know what would be the impact but considering kmem
-is enabled unless explicitly disabled these days then likely sounds more
-logical from reading POV. I do not think that early allocations until
-the first memcg is created is the case to optimize for.
-Worth a separate patch I guess.
-
+diff --git a/sound/soc/amd/renoir/rn-pci-acp3x.c b/sound/soc/amd/renoir/rn-pci-acp3x.c
+index 859ed67..d1faea5 100644
+--- a/sound/soc/amd/renoir/rn-pci-acp3x.c
++++ b/sound/soc/amd/renoir/rn-pci-acp3x.c
+@@ -5,6 +5,7 @@
+ //Copyright 2020 Advanced Micro Devices, Inc.
+ 
+ #include <linux/pci.h>
++#include <linux/acpi.h>
+ #include <linux/module.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
+@@ -18,6 +19,16 @@ static int acp_power_gating;
+ module_param(acp_power_gating, int, 0644);
+ MODULE_PARM_DESC(acp_power_gating, "Enable acp power gating");
+ 
++/**
++ * dmic_acpi_check = -1 - Checks ACPI method to know DMIC hardware status runtime
++ *                 = 0 - Skips the DMIC device creation and returns probe failure
++ *                 = 1 - Assumes that platform has DMIC support and skips ACPI
++ *                       method check
++ */
++static int dmic_acpi_check = ACP_DMIC_AUTO;
++module_param(dmic_acpi_check, bint, 0644);
++MODULE_PARM_DESC(dmic_acpi_check, "checks Dmic hardware runtime");
++
+ struct acp_dev_data {
+ 	void __iomem *acp_base;
+ 	struct resource *res;
+@@ -157,6 +168,8 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
+ {
+ 	struct acp_dev_data *adata;
+ 	struct platform_device_info pdevinfo[ACP_DEVS];
++	acpi_handle handle;
++	acpi_integer dmic_status;
+ 	unsigned int irqflags;
+ 	int ret, index;
+ 	u32 addr;
+@@ -201,6 +214,22 @@ static int snd_rn_acp_probe(struct pci_dev *pci,
+ 	if (ret)
+ 		goto disable_msi;
+ 
++	if (!dmic_acpi_check) {
++		ret = -ENODEV;
++		goto de_init;
++	} else if (dmic_acpi_check == ACP_DMIC_AUTO) {
++		handle = ACPI_HANDLE(&pci->dev);
++		ret = acpi_evaluate_integer(handle, "_WOV", NULL, &dmic_status);
++		if (ACPI_FAILURE(ret)) {
++			ret = -EINVAL;
++			goto de_init;
++		}
++		if (!dmic_status) {
++			ret = -ENODEV;
++			goto de_init;
++		}
++	}
++
+ 	adata->res = devm_kzalloc(&pci->dev,
+ 				  sizeof(struct resource) * 2,
+ 				  GFP_KERNEL);
+diff --git a/sound/soc/amd/renoir/rn_acp3x.h b/sound/soc/amd/renoir/rn_acp3x.h
+index 75228e3..1462039 100644
+--- a/sound/soc/amd/renoir/rn_acp3x.h
++++ b/sound/soc/amd/renoir/rn_acp3x.h
+@@ -55,6 +55,8 @@
+ 
+ #define MAX_BUFFER (CAPTURE_MAX_PERIOD_SIZE * CAPTURE_MAX_NUM_PERIODS)
+ #define MIN_BUFFER MAX_BUFFER
++#define	ACP_DMIC_AUTO   -1
++
+ struct pdm_dev_data {
+ 	u32 pdm_irq;
+ 	void __iomem *acp_base;
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
