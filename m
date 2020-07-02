@@ -2,135 +2,92 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F127F2088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kwLccC1j"
+	by mail.kernel.org (Postfix) with ESMTP id 13D2320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgGBUNx (ORCPT
+        id S1726030AbgGBUQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
+        Thu, 2 Jul 2020 16:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBUNx (ORCPT
+        with ESMTP id S1725937AbgGBUQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:13:53 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDD2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:13:52 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so30016977wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=U0gw4d6sEKgljMIw/xorufjd8mwmlkHltY0nbeUDOQM=;
-        b=kwLccC1jdmZ9S/sUIxMZYAluj9tT/wXdOzG/dR+FetpUWimq2lxiiwlfHzplVLVXRi
-         mDeojQYiHjHJSxP9Hj/LYA9pKrxGWiVnsrIMuPwq4b9oZ2N1v7L2+JskNhJ9RfA0uMou
-         S9j+a80Bdri/1MJ8MybUrqsRQuChqJVpE6b75FeQUqf3ofjIuNMWp2u1rTkZcP+G2ssK
-         IGpG5EfgjFe498A8JMuQ+KZWWWPRm8ymFfC9u0MLTy81n8g2APX42whPf2sdrigH7PFJ
-         ZT5oVGApgWFiuJd6eq3mH4Tm2a/EOohFPQ8rNG+KMJr7F3Bj0x7uCKCfD7V4376q1HHM
-         nsOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=U0gw4d6sEKgljMIw/xorufjd8mwmlkHltY0nbeUDOQM=;
-        b=Npdvj8q9jBCjLIwAWF4isnQcmmXO6tMqpgSWWZg8wQ8XgEjAfxO6BZF6lkFVZx9f7T
-         341cAWvcsmjN7QS41YjE+UtaIYQdH8L+ake9z3yEXAGbKylPoMWiQPXRubxj6lA9Xp/m
-         96ZsTSocrrupvtPj0p8VLUBrMYz0kDRVeI8KHRHguvlndJ5k6V1Zskbu/8qYMnZzPh0N
-         hGoPs1Eob00Yj4I8jfA5hBhLyDU2xJTcwOJgdvpT/tA6cUE4lvEMxL+4hX/BuTzilZdL
-         hcI23qFEcoHHYlA9tI588ChtT9XN8CaevrWO2QBVHH+n/eW8CzQJANDFVinwGK82wxEQ
-         au5A==
-X-Gm-Message-State: AOAM532Hvi90zVJ1f4bdfURh/DqK1IQxg4ELWCWE49vX8Cz+ZrJTYac/
-        1MSdDNCE4vyq0fKixfRExhZJdA==
-X-Google-Smtp-Source: ABdhPJzTK2k0WyLaXLeQ6CWKeQub3nkJmFi+VIBMJau3t+pYqru1fQrmoNRj4kXNlirbg6PvravgPw==
-X-Received: by 2002:a05:600c:414f:: with SMTP id h15mr23304225wmm.82.1593720831500;
-        Thu, 02 Jul 2020 13:13:51 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id u1sm2812615wrb.78.2020.07.02.13.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 13:13:50 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 21:13:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH 15/15] mmc: host: sdhci-iproc: Tell the compiler that
- ACPI functions may not be used
-Message-ID: <20200702201348.GT1179328@dell>
-References: <20200701124702.908713-1-lee.jones@linaro.org>
- <20200701124702.908713-16-lee.jones@linaro.org>
- <3a32b98c-45c6-6f8d-0853-161f91e65b57@broadcom.com>
+        Thu, 2 Jul 2020 16:16:57 -0400
+X-Greylist: delayed 1080 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Jul 2020 13:16:56 PDT
+Received: from mail.default.ilande.uk0.bigv.io (mail.ilande.co.uk [IPv6:2001:41c9:1:41f::167])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6112C08C5C1;
+        Thu,  2 Jul 2020 13:16:56 -0700 (PDT)
+Received: from host86-182-221-233.range86-182.btcentralplus.com ([86.182.221.233] helo=[192.168.1.65])
+        by mail.default.ilande.uk0.bigv.io with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <mark.cave-ayland@ilande.co.uk>)
+        id 1jr5MA-0004jV-BV; Thu, 02 Jul 2020 20:58:55 +0100
+To:     Corentin Labbe <clabbe@baylibre.com>, davem@davemloft.net
+Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+References: <1593694973-34113-1-git-send-email-clabbe@baylibre.com>
+From:   Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Autocrypt: addr=mark.cave-ayland@ilande.co.uk; keydata=
+ mQENBFQJuzwBCADAYvxrwUh1p/PvUlNFwKosVtVHHplgWi5p29t58QlOUkceZG0DBYSNqk93
+ 3JzBTbtd4JfFcSupo6MNNOrCzdCbCjZ64ik8ycaUOSzK2tKbeQLEXzXoaDL1Y7vuVO7nL9bG
+ E5Ru3wkhCFc7SkoypIoAUqz8EtiB6T89/D9TDEyjdXUacc53R5gu8wEWiMg5MQQuGwzbQy9n
+ PFI+mXC7AaEUqBVc2lBQVpAYXkN0EyqNNT12UfDLdxaxaFpUAE2pCa2LTyo5vn5hEW+i3VdN
+ PkmjyPvL6DdY03fvC01PyY8zaw+UI94QqjlrDisHpUH40IUPpC/NB0LwzL2aQOMkzT2NABEB
+ AAG0ME1hcmsgQ2F2ZS1BeWxhbmQgPG1hcmsuY2F2ZS1heWxhbmRAaWxhbmRlLmNvLnVrPokB
+ OAQTAQIAIgUCVAm7PAIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQW8LFb64PMh9f
+ NAgAuc3ObOEY8NbZko72AGrg2tWKdybcMVITxmcor4hb9155o/OWcA4IDbeATR6cfiDL/oxU
+ mcmtXVgPqOwtW3NYAKr5g/FrZZ3uluQ2mtNYAyTFeALy8YF7N3yhs7LOcpbFP7tEbkSzoXNG
+ z8iYMiYtKwttt40WaheWuRs0ZOLbs6yoczZBDhna3Nj0LA3GpeJKlaV03O4umjKJgACP1c/q
+ T2Pkg+FCBHHFP454+waqojHp4OCBo6HyK+8I4wJRa9Z0EFqXIu8lTDYoggeX0Xd6bWeCFHK3
+ DhD0/Xi/kegSW33unsp8oVcM4kcFxTkpBgj39dB4KwAUznhTJR0zUHf63LkBDQRUCbs8AQgA
+ y7kyevA4bpetM/EjtuqQX4U05MBhEz/2SFkX6IaGtTG2NNw5wbcAfhOIuNNBYbw6ExuaJ3um
+ 2uLseHnudmvN4VSJ5Hfbd8rhqoMmmO71szgT/ZD9MEe2KHzBdmhmhxJdp+zQNivy215j6H27
+ 14mbC2dia7ktwP1rxPIX1OOfQwPuqlkmYPuVwZP19S4EYnCELOrnJ0m56tZLn5Zj+1jZX9Co
+ YbNLMa28qsktYJ4oU4jtn6V79H+/zpERZAHmH40IRXdR3hA+Ye7iC/ZpWzT2VSDlPbGY9Yja
+ Sp7w2347L5G+LLbAfaVoejHlfy/msPeehUcuKjAdBLoEhSPYzzdvEQARAQABiQEfBBgBAgAJ
+ BQJUCbs8AhsMAAoJEFvCxW+uDzIfabYIAJXmBepHJpvCPiMNEQJNJ2ZSzSjhic84LTMWMbJ+
+ opQgr5cb8SPQyyb508fc8b4uD8ejlF/cdbbBNktp3BXsHlO5BrmcABgxSP8HYYNsX0n9kERv
+ NMToU0oiBuAaX7O/0K9+BW+3+PGMwiu5ml0cwDqljxfVN0dUBZnQ8kZpLsY+WDrIHmQWjtH+
+ Ir6VauZs5Gp25XLrL6bh/SL8aK0BX6y79m5nhfKI1/6qtzHAjtMAjqy8ChPvOqVVVqmGUzFg
+ KPsrrIoklWcYHXPyMLj9afispPVR8e0tMKvxzFBWzrWX1mzljbBlnV2n8BIwVXWNbgwpHSsj
+ imgcU9TTGC5qd9g=
+Message-ID: <275363bb-2f36-f7f3-aa7e-4a2fc6901d63@ilande.co.uk>
+Date:   Thu, 2 Jul 2020 20:58:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <1593694973-34113-1-git-send-email-clabbe@baylibre.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a32b98c-45c6-6f8d-0853-161f91e65b57@broadcom.com>
+X-SA-Exim-Connect-IP: 86.182.221.233
+X-SA-Exim-Mail-From: mark.cave-ayland@ilande.co.uk
+Subject: Re: [PATCH] sparc: sparc64_defconfig: add necessary configs for qemu
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.default.ilande.uk0.bigv.io)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Jul 2020, Scott Branden wrote:
+On 02/07/2020 14:02, Corentin Labbe wrote:
 
-> Hi Lee,
-> 
-> On 2020-07-01 5:47 a.m., Lee Jones wrote:
-> > ... as is the case when !CONFIG_ACPI.
-> > 
-> > Fixes the following W=1 kernel build warning:
-> > 
-> >   mmc/host/sdhci-iproc.c:297:36: warning: ‘sdhci_iproc_acpi_ids’ defined but not used [-Wunused-const-variable=]
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ray Jui <rjui@broadcom.com>
-> > Cc: Scott Branden <sbranden@broadcom.com>
-> > Cc: bcm-kernel-feedback-list@broadcom.com
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >   drivers/mmc/host/sdhci-iproc.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
-> > index 225603148d7de..9c7d130205edd 100644
-> > --- a/drivers/mmc/host/sdhci-iproc.c
-> > +++ b/drivers/mmc/host/sdhci-iproc.c
-> > @@ -294,7 +294,7 @@ static const struct of_device_id sdhci_iproc_of_match[] = {
-> >   };
-> >   MODULE_DEVICE_TABLE(of, sdhci_iproc_of_match);
+> The sparc64 qemu machines uses pcnet32 network hardware by default, so for
+> simple boot testing using qemu, having PCNET32 is useful.
+> Same for its storage which is a PATA_CMD64.
 
-> Would it better to compile this in if CONFIG_ACPI is defined instead?
-> #if CONFIG_ACPI
+Which version of QEMU are you using? qemu-system-sparc64 switched to using a hme NIC
+by default in version 2.11 (see
+https://wiki.qemu.org/Documentation/Platforms/SPARC#Changes_to_sun4u_machine_from_2.11_onwards)
+which is well over 2 years ago...
 
-Literally can't win.
 
- https://lore.kernel.org/linux-arm-kernel/CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com/
+ATB,
 
-Damned if we do, damned if we don't. ;)
-
-> > -static const struct acpi_device_id sdhci_iproc_acpi_ids[] = {
-> > +static const struct acpi_device_id __maybe_unused sdhci_iproc_acpi_ids[] = {
-> >   	{ .id = "BRCM5871", .driver_data = (kernel_ulong_t)&iproc_cygnus_data },
-> >   	{ .id = "BRCM5872", .driver_data = (kernel_ulong_t)&iproc_data },
-> >   	{ /* sentinel */ }
-> 
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Mark.
