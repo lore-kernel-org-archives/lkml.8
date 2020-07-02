@@ -2,98 +2,85 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB618C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA74C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A597F20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD3920760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YYtApD/6"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="dNCDR6kg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E06uoqPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgGBX1Q (ORCPT
+        id S1726856AbgGBX1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgGBX0p (ORCPT
+        Thu, 2 Jul 2020 19:27:21 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50395 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbgGBX1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:26:45 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C434C08C5E0
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 16:26:45 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so13160385pjc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 16:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ln6rO86x9ZxOiyZZPuxFfPT8Nugldwg64LyJUHiqZT0=;
-        b=YYtApD/6rs1BT/ZzA44IlQCH/zgH3loPHO4nrJjyar1pcWSs1f1U/7EWSBhEGCnNpn
-         8b0/wokfQx35rbyVYIClE0w0NMPrndlLoC+wumiIdrB2Y4ekwvsxyhRYnCbn/1sCRXHP
-         Gx5nfmAXpl7AHzdKNGugYuKJOZHn9lUV3gJ1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ln6rO86x9ZxOiyZZPuxFfPT8Nugldwg64LyJUHiqZT0=;
-        b=iiB8efCb9wpHQhw5oqR9Lz2Za4bfdrXfNoMBTq0wFTio0nxLIFbbg10GuysVzzQSCC
-         SFlkU1go8aigkVeRZDi6ktwmCD49lXJSE0rfA2zKfA090ek68OS4HhV3E2O87Lyzf60n
-         9db8mqO+pn3CKPSqkVFiCskiwExHjqHD620cFo1UJTReEL9IVfRvjgbJ3OZFMgjN/XBh
-         QV484B2hvqF0jSuxFHFZ2DyETqhq8acPmnLjiqlPW/1vaxZrSLXTVnc5/F4DabgcmHU6
-         xeI6a4QbA54IRpz9UY/iDpFidF0d/CtOKuybKMLZV+N6k6YhiUzsFCzZAtcghx8WdmLz
-         Jd4g==
-X-Gm-Message-State: AOAM533PYKyQA3+Vvjoekj/UxZaOyEf9ZLwNqX8cO5q2fgRnQy4ZFP87
-        CLCx91rPHgy7ZySbMZS9xxfftg==
-X-Google-Smtp-Source: ABdhPJwfJJ4gw99qjzyTNpCmCsOoWMzyap43GRDeaqgnGHrygOWaZADTDGp6Bqu/EDIf8o0sxOAFGw==
-X-Received: by 2002:a17:902:704a:: with SMTP id h10mr27952959plt.85.1593732404766;
-        Thu, 02 Jul 2020 16:26:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m140sm9987328pfd.195.2020.07.02.16.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 16:26:41 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Dominik Czarnota <dominik.czarnota@trailofbits.com>
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] kallsyms: Refactor kallsyms_show_value() to take cred
-Date:   Thu,  2 Jul 2020 16:26:34 -0700
-Message-Id: <20200702232638.2946421-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702232638.2946421-1-keescook@chromium.org>
-References: <20200702232638.2946421-1-keescook@chromium.org>
+        Thu, 2 Jul 2020 19:27:20 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7BB1A58038B;
+        Thu,  2 Jul 2020 19:27:18 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Thu, 02 Jul 2020 19:27:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=e7+7Th1m9BXZP
+        GB/OmZlUELLweXezZABXtnEK2WW7Ys=; b=dNCDR6kgzoEDQdtwBKLbkJCwCan4I
+        RI46j74E4g4TGyr6dID+KO3w0enVII8cvN9YWe9X/ZfO37ifrSPmk2LqhhcH93nA
+        v1bZYC7XhyOFDIpWEB4bXQOaZMnktvb6knu/2w5sMGaXNRYhDtPM7oyb2dArGVum
+        iZt0diytvXFsraC90ApYj1QAjBVkXCliwVHNfPP99NFgkX9T8JovBNneJtbbbYTL
+        DwX7NsUXUauIa93viG4K39FN3QXgDbyyxUEZGlf21L9vSJfM05gospeI5rTd4v8K
+        cHfpiI0XpmFdSuChFgy6SgjqP04gOSiZ+DqqYzs+PGnwx8sss3DGkmKJg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=e7+7Th1m9BXZPGB/OmZlUELLweXezZABXtnEK2WW7Ys=; b=E06uoqPv
+        cqVkHstrueopNY7IfV99ERqSVZV6o5cvihIcRb2Nmn6IF2yJNSvZFZpMBA2ZdnwH
+        PP97straB9PExMebjC9d/fiPiFvP6e+Jnv3bp7CTJeuQl6ZhIAmtOhRGq1LP8MTm
+        +wYU/GMDIPvRYI/wKIT3HiLzpnN81nKaXyRgHHkvwP46EZo27hgle0sRgzzdhLy1
+        bvbDyOZini8rEvHvN3UgR2Zm16XiZBkJjGcIQrD5QybW4orUnw0V7JRbkT0G6Abp
+        0Nwz4lJ1ij/+l7/iaw0J1RkHVTEwvCA29C+xg09Xzzh0ICpCmMpa0jJX6w9jwbUb
+        fI/WkIlm+Yv/3Q==
+X-ME-Sender: <xms:VW3-XhUwNoCh7-UgD6Sbje0eplrd3gRO5mvHxJ0BcsK88MFvDbNigQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicu
+    nfhinhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpe
+    ffvdfgjeekleetleekkeegvdetvdejgfelkeevtdffffefhfefvddvtdffieegjeenucff
+    ohhmrghinhepghhithhhuhgsrdgtohhmpdhlphgsgidruggrthgrnecukfhppeejfedrvd
+    dvhedrgedrudefkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpegurghnnhihsehkughrrghgtdhnrdguvghv
+X-ME-Proxy: <xmx:VW3-XhlzlxfgqeJyrBhe6M6wqjtR5wx-lNWT11WYYN6Q8ijDmJfDGA>
+    <xmx:VW3-XtbPUN3EUr0Dti1m_2HetNM1yPb_QZ387ZbbavZmLQdic-aBkA>
+    <xmx:VW3-XkUuTkjbzViTrlUmmDJll3fs_-n8b5qqpaaa8cKPwGz7wSHIpA>
+    <xmx:Vm3-XpX1F6a7TEQqKJXIjRcoscaln2Epa91xc0AsE1qf3YbiOvRMmA>
+Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 87861306006C;
+        Thu,  2 Jul 2020 19:27:16 -0400 (EDT)
+From:   Danny Lin <danny@kdrag0n.dev>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Danny Lin <danny@kdrag0n.dev>, stable@vger.kernel.org
+Subject: [PATCH v2] vmlinux.lds.h: Coalesce transient LLVM dead code elimination sections
+Date:   Thu,  2 Jul 2020 16:27:13 -0700
+Message-Id: <20200702232713.123893-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <7304fdf3-23d7-442b-b870-e88ae6f37004@localhost>
+References: <7304fdf3-23d7-442b-b870-e88ae6f37004@localhost>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -101,147 +88,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to perform future tests against the cred saved during open(),
-switch kallsyms_show_value() to operate on a cred, and have all current
-callers pass current_cred(). This makes it very obvious where callers
-are checking the wrong credential in their "read" contexts. These will
-be fixed in the coming patches.
+A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
+temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
 
-Additionally switch return value to bool, since it is always used as a
-direct permission check, not a 0-on-success, negative-on-error style
-function return.
+  [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
+       000000000000cea0  0000000000000000  WA       0     0     32
+  [31] .rela.data..compo RELA             0000000000000000  40965440
+       0000000000001d88  0000000000000018   I      2238    30     8
+  [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
+       00000000000033c0  0000000000000000  WA       0     0     32
+  [33] .rela.data..compo RELA             0000000000000000  409671c8
+       0000000000000948  0000000000000018   I      2238    32     8
+  [...]
+  [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
+       00000000000000a0  0000000000000000  WA       0     0     32
+  [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
+       0000000000000040  0000000000000000  WA       0     0     32
+  [...]
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+.{data,bss}..L<symbol name> sections are also created in some cases.
+While there aren't any in this example, they should also be coalesced to
+be safe in case some config or future LLVM change makes it start
+creating more of those sections in the future. For example, enabling
+global merging causes ..L_MergedGlobals sections to be created, but it's
+likely that other changes will result in such sections as well.
+
+While these extra sections don't typically cause any breakage, they do
+inflate the vmlinux size due to the overhead of storing metadata for
+thousands of extra sections.
+
+It's also worth noting that for some reason, some downstream Android
+kernels can't boot at all if these sections aren't coalesced.
+
+This issue isn't limited to any specific architecture; it affects arm64
+and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
+
+Example on x86 allyesconfig:
+    Before: 2241 sections, 1171169 KiB
+    After:    56 sections, 1170972 KiB
+
+[1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/958
+Cc: stable@vger.kernel.org # v4.4+
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- include/linux/filter.h   |  2 +-
- include/linux/kallsyms.h |  5 +++--
- kernel/kallsyms.c        | 17 +++++++++++------
- kernel/kprobes.c         |  4 ++--
- kernel/module.c          |  2 +-
- 5 files changed, 18 insertions(+), 12 deletions(-)
+v2:
+  - Fixed swapped example sizes
+  - Added .{data,bss}..L* sections, since it looks like they're emitted
+    in some cases even when LTO is disabled
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 259377723603..55104f6c78e8 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -889,7 +889,7 @@ static inline bool bpf_dump_raw_ok(void)
- 	/* Reconstruction of call-sites is dependent on kallsyms,
- 	 * thus make dump the same restriction.
- 	 */
--	return kallsyms_show_value() == 1;
-+	return kallsyms_show_value(current_cred());
- }
- 
- struct bpf_prog *bpf_patch_insn_single(struct bpf_prog *prog, u32 off,
-diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
-index 98338dc6b5d2..481273f0c72d 100644
---- a/include/linux/kallsyms.h
-+++ b/include/linux/kallsyms.h
-@@ -18,6 +18,7 @@
- #define KSYM_SYMBOL_LEN (sizeof("%s+%#lx/%#lx [%s]") + (KSYM_NAME_LEN - 1) + \
- 			 2*(BITS_PER_LONG*3/10) + (MODULE_NAME_LEN - 1) + 1)
- 
-+struct cred;
- struct module;
- 
- static inline int is_kernel_inittext(unsigned long addr)
-@@ -98,7 +99,7 @@ int lookup_symbol_name(unsigned long addr, char *symname);
- int lookup_symbol_attrs(unsigned long addr, unsigned long *size, unsigned long *offset, char *modname, char *name);
- 
- /* How and when do we show kallsyms values? */
--extern int kallsyms_show_value(void);
-+extern bool kallsyms_show_value(const struct cred *cred);
- 
- #else /* !CONFIG_KALLSYMS */
- 
-@@ -158,7 +159,7 @@ static inline int lookup_symbol_attrs(unsigned long addr, unsigned long *size, u
- 	return -ERANGE;
- }
- 
--static inline int kallsyms_show_value(void)
-+static inline bool kallsyms_show_value(const struct cred *cred)
- {
- 	return false;
- }
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 16c8c605f4b0..bb14e64f62a4 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -644,19 +644,20 @@ static inline int kallsyms_for_perf(void)
-  * Otherwise, require CAP_SYSLOG (assuming kptr_restrict isn't set to
-  * block even that).
+ include/asm-generic/vmlinux.lds.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index db600ef218d7..737ecf782229 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -94,10 +94,11 @@
   */
--int kallsyms_show_value(void)
-+bool kallsyms_show_value(const struct cred *cred)
- {
- 	switch (kptr_restrict) {
- 	case 0:
- 		if (kallsyms_for_perf())
--			return 1;
-+			return true;
- 	/* fallthrough */
- 	case 1:
--		if (has_capability_noaudit(current, CAP_SYSLOG))
--			return 1;
-+		if (security_capable(cred, &init_user_ns, CAP_SYSLOG,
-+				     CAP_OPT_NOAUDIT) == 0)
-+			return true;
- 	/* fallthrough */
- 	default:
--		return 0;
-+		return false;
- 	}
- }
- 
-@@ -673,7 +674,11 @@ static int kallsyms_open(struct inode *inode, struct file *file)
- 		return -ENOMEM;
- 	reset_iter(iter, 0);
- 
--	iter->show_value = kallsyms_show_value();
-+	/*
-+	 * Instead of checking this on every s_show() call, cache
-+	 * the result here at open time.
-+	 */
-+	iter->show_value = kallsyms_show_value(file->f_cred);
- 	return 0;
- }
- 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 4a904cc56d68..d4de217e4a91 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2448,7 +2448,7 @@ static void report_probe(struct seq_file *pi, struct kprobe *p,
- 	else
- 		kprobe_type = "k";
- 
--	if (!kallsyms_show_value())
-+	if (!kallsyms_show_value(current_cred()))
- 		addr = NULL;
- 
- 	if (sym)
-@@ -2540,7 +2540,7 @@ static int kprobe_blacklist_seq_show(struct seq_file *m, void *v)
- 	 * If /proc/kallsyms is not showing kernel address, we won't
- 	 * show them here either.
- 	 */
--	if (!kallsyms_show_value())
-+	if (!kallsyms_show_value(current_cred()))
- 		seq_printf(m, "0x%px-0x%px\t%ps\n", NULL, NULL,
- 			   (void *)ent->start_addr);
- 	else
-diff --git a/kernel/module.c b/kernel/module.c
-index e8a198588f26..a5022ae84e50 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -4377,7 +4377,7 @@ static int modules_open(struct inode *inode, struct file *file)
- 
- 	if (!err) {
- 		struct seq_file *m = file->private_data;
--		m->private = kallsyms_show_value() ? NULL : (void *)8ul;
-+		m->private = kallsyms_show_value(current_cred()) ? NULL : (void *)8ul;
- 	}
- 
- 	return err;
+ #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+ #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+-#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
++#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* \
++		  .data..compoundliteral* .data..L*
+ #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
+ #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
+-#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
++#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral* .bss..L*
+ #define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
+ #else
+ #define TEXT_MAIN .text
 -- 
-2.25.1
+2.27.0
 
