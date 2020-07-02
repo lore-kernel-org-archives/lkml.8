@@ -2,185 +2,152 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF20C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F1720760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593719222;
-	bh=rek7PPSizCYQXurccaBZVrpqrxa71GEldavwNVdGKss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=etQRsDgCvmz5yN2ECkU5Yn9fIKCn7cMbdoqYcj0a53MCL2/cItwGuhJkU1awblMHp
-	 bQ+mjvv8xz3z4jcZRnWynf04+DlXhwmioaEDmFKxtbB65IGkSnsFKp5Xk0PukUvQ+S
-	 sDy8U4remt2+CeRdyEjnioE9RhbJsL/SObFy2idI=
+	by mail.kernel.org (Postfix) with ESMTP id E134320780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:50:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Omd66MTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgGBTrB (ORCPT
+        id S1726035AbgGBTuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:47:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40886 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBTrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:47:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x11so11697603plo.7;
-        Thu, 02 Jul 2020 12:46:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OHFXCZoREfl1GMwKik+5lcCUbnGDc+wlkQ8rGpzOHJY=;
-        b=FkPhG6A9U0NVwzmsAT98qHKnNfxcOIO4csmQAuQS+Huj3cN7OUZojfDthIOyqkg+cn
-         tQ8sBz63yiKWxLdjBGol4JEk4K0ZRkCdmiZ2MI79q7UGAb0tP2EmpFKIjA4oTmsTXw7H
-         AAsfYv8dMIkOtjkF/JwzP1d+q3YxNtULohv7BJNvIpYSVSNkNA+XR/Qew2olbDMA44kT
-         eym0Y6ysfnXPbqQO+Qel1NeD3LFrBA4WKNMzuOX+TJnDJmpZJCOkRzqGJVVbKZ9P8I8W
-         L1kl3JsKcrs6mosc7N4ImANeT+hfsloxy+o3CNFDohZIzM3rIUq+UbqReWBL0AjTuNoz
-         yBHA==
-X-Gm-Message-State: AOAM532MQcCPbJ5AwLGsnvWxX7yPB5OzlnQj9L41VQSkrKF73G5VJReq
-        xLS6tEb7x0b9kdpx3fy1F0I=
-X-Google-Smtp-Source: ABdhPJzZRZZnyTT/LL8zshMzqSe4q6iWh/bqF3eI60b4K/yHnYqIox4lLP9gZCWSkU96CYlxNiNA6Q==
-X-Received: by 2002:a17:90a:b38b:: with SMTP id e11mr15548657pjr.120.1593719219005;
-        Thu, 02 Jul 2020 12:46:59 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n18sm10014912pfd.99.2020.07.02.12.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 12:46:57 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 695BF403DC; Thu,  2 Jul 2020 19:46:56 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 19:46:56 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        David Howells <dhowells@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200702194656.GV4332@42.do-not-panic.com>
-References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
- <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
- <20200701153859.GT4332@42.do-not-panic.com>
- <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+        Thu, 2 Jul 2020 15:50:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54620 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGBTuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:50:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593719454; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=K3B8WGVy41bSlc2yD1RjVh1+IaDG7mzcNGo5djhEYWc=;
+ b=Omd66MTQb/www/vLcct4lMGT1+0RCwOqTZq/YcZ8R5ve/WHpFYouL9F+z5twGHfgEtzgNaq8
+ aihWEQY2LwklEq3vjd98u9qZiwFGqPMOwuQKslxvC0QqJtJVdBw5df/keG1jAeYo2hh6X0jk
+ Ubkjf14rvQY00e1/9tJYhMzwveI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5efe3a9cc4bb4f886d12c72f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 19:50:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5F419C433CA; Thu,  2 Jul 2020 19:50:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rananta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B94C5C433C8;
+        Thu,  2 Jul 2020 19:50:50 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 Jul 2020 12:50:50 -0700
+From:   rananta@codeaurora.org
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mingo@redhat.com, psodagud@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Tracing: rb_head_page_deactivate() caught in an infinite loop
+In-Reply-To: <20200701220316.1baf0a50@oasis.local.home>
+References: <6f84f449a6951d47e6cbab40bf898a1f@codeaurora.org>
+ <20200701220316.1baf0a50@oasis.local.home>
+Message-ID: <086e8f3e4a924849fb7f057961df29c2@codeaurora.org>
+X-Sender: rananta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 01:26:53PM +0900, Tetsuo Handa wrote:
-> On 2020/07/02 0:38, Luis Chamberlain wrote:
-> > @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
-> >  		 */
-> >  		if (KWIFEXITED(ret))
-> >  			sub_info->retval = KWEXITSTATUS(ret);
-> > +		/*
-> > +		 * Do we really want to be passing the signal, or do we pass
-> > +		 * a single error code for all cases?
-> > +		 */
-> > +		else if (KWIFSIGNALED(ret))
-> > +			sub_info->retval = KWTERMSIG(ret);
+Hi Steven,
+
+Thank you for responding.
+
+On 2020-07-01 19:03, Steven Rostedt wrote:
+> On Wed, 01 Jul 2020 10:07:06 -0700
+> rananta@codeaurora.org wrote:
 > 
-> No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
-> and e.g. SIGKILL'ed by the OOM-killer.
-
-Right, the question is: do we care?
-
-> Please pass raw exit status value.
+>> Hi Steven and Mingo,
+>> 
 > 
-> I feel that caller of usermode helper should not use exit status value.
-> For example, call_sbin_request_key() is checking
+> Hi Raghavendra,
 > 
->   test_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags) || key_validate(key) < 0
 > 
-> condition (if usermode helper was invoked) in order to "ignore any errors from
-> userspace if the key was instantiated".
-
-For those not familiar with this code path, or if you cannot decipher
-the above, the code path in question was:
-
-static int call_sbin_request_key(struct key *authkey, void *aux)                
-{
-	...
-	/* do it */                                                             
-	ret = call_usermodehelper_keys(request_key, argv, envp, keyring,        
-				       UMH_WAIT_PROC);
-	kdebug("usermode -> 0x%x", ret);
-	if (ret >= 0) {
-		/* ret is the exit/wait code */
-		if (test_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags) ||
-		    key_validate(key) < 0)
-		    ret = -ENOKEY;
-		/* ignore any errors from userspace if the key was      
-		 * instantiated */  
-		 ret = 0;
-	}
-	...
-}
-
-And the umh patch "umh: fix processed error when UMH_WAIT_PROC is used"
-changed this to:
-
--       if (ret >= 0) {
-+       if (ret != 0) {
-
-Prior to the patch negative return values from userspace were still
-being captured, and likewise signals, but the error value was not
-raw, not the actual value. After the patch, since we check for ret != 0
-we still upkeep the sanity check for any error, correct the error value,
-but as you noted signals were ignored as I made the wrong assumption
-we would ignore them. The umh sub_info->retval is set after my original
-patch only if KWIFSIGNALED(ret)), and ignored signals, and so that
-would be now capitured with the additional KWIFSIGNALED(ret)) check.
-
-The question still stands:
-
-Do we want to open code all these checks or simply wrap them up in
-the umh. If we do the later, as you note exit(9) and a SIGKILL will
-be the same to the inspector in the kernel. But do we care?
-
-Do we really want umh callers differntiatin between signals and exit values?
-
-The alternative to making a compromise is using generic wrappers for
-things which make sense and letting the callers use those.
-
-  Luis
-
-> > +		/* Same here */
-> > +		else if (KWIFSTOPPED((ret)))
-> > +			sub_info->retval = KWSTOPSIG(ret);
-> > +		/* And are we really sure we want this? */
-> > +		else if (KWIFCONTINUED((ret)))
-> > +			sub_info->retval = 0;
-> >  	}
-> >  
-> >  	/* Restore default kernel sig handler */
-> > 
+>> While trying to adjust the buffer size (echo <size> >
+>> /sys/kernel/debug/tracing/buffer_size_kb), we see that the kernel gets
+>> caught up in an infinite loop
+>> while traversing the "cpu_buffer->pages" list in
+>> rb_head_page_deactivate().
+>> 
+>> Looks like the last node of the list could be uninitialized, thus
+>> leading to infinite traversal. From the data that we captured:
+>> 000|rb_head_page_deactivate(inline)
+>>      |  cpu_buffer = 0xFFFFFF8000671600 =
+>> kernel_size_le_lo32+0xFFFFFF652F6EE600 -> (
+>> ...
+>>      |    pages = 0xFFFFFF80A909D980 =
+>> kernel_size_le_lo32+0xFFFFFF65D811A980 -> (
+>>      |      next = 0xFFFFFF80A909D200 =
+>> kernel_size_le_lo32+0xFFFFFF65D811A200 -> (
+>>      |        next = 0xFFFFFF80A909D580 =
+>> kernel_size_le_lo32+0xFFFFFF65D811A580 -> (
+>>      |          next = 0xFFFFFF8138D1CD00 =
+>> kernel_size_le_lo32+0xFFFFFF6667D99D00 -> (
+>>      |            next = 0xFFFFFF80006716F0 =
+>> kernel_size_le_lo32+0xFFFFFF652F6EE6F0 -> (
+>>      |              next = 0xFFFFFF80006716F0 =
+>> kernel_size_le_lo32+0xFFFFFF652F6EE6F0 -> (
+>>      |                next = 0xFFFFFF80006716F0 =
+>> kernel_size_le_lo32+0xFFFFFF652F6EE6F0 -> (
+>>      |                  next = 0xFFFFFF80006716F0 =
+>> kernel_size_le_lo32+0xFFFFFF652F6EE6F0,
+>> 
+>> Wanted to check with you if there's any scenario that could lead us 
+>> into
+>> this state.
+>> 
+>> Test details:
+>> -- Arch: arm64
+>> -- Kernel version 5.4.30; running on Andriod
+>> -- Test case: Running the following set of commands across reboot will
+>> lead us to the scenario
+>> 
+>>    atrace --async_start -z -c -b 120000 sched audio irq idle freq
+>>    < Run any workload here >
+>>    atrace --async_dump -z -c -b 1200000 sched audio irq idle freq >
+>> mytrace.trace
+>>    atrace --async_stop > /dev/null
+>>    echo 150000 > /sys/kernel/debug/tracing/buffer_size_kb
+>>    echo 200000 > /sys/kernel/debug/tracing/buffer_size_kb
+>>    reboot
+>> 
+>> Repeating the above lines across reboots would reproduce the issue.
+>> The "atrace" or "echo" would just get stuck while resizing the buffer
+>> size.
 > 
+> What do you mean repeat across reboots? If it doesn't happen it wont
+> ever happen, but if you reboot it may have it happen again?
+> 
+Actually, ignore the reboot part. I was able to reproduce with the 
+reboot.
+>> I'll try to reproduce the issue without atrace as well, but wondering
+>> what could be the reason for leading us to this state.
+> 
+> I haven't used arm lately, and I'm unfamiliar with atrace. So I don't
+> really know what is going on. If you can reproduce this with just a
+> shell script accessing the ftrace files, that would be much more 
+> useful.
+> 
+I tried to reproduce it without atrace, but couldn't. It's a simple 
+wrapper utility
+to collect ftraces. You can find the source here:
+https://android.googlesource.com/platform/system/extras/+/jb-mr1-dev-plus-aosp/atrace/atrace.c
+> Thanks,
+> 
+> -- Steve
