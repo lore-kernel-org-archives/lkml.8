@@ -2,150 +2,254 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B21C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F041220874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnMaYX4E"
+	by mail.kernel.org (Postfix) with ESMTP id 1758520760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgGBJlx (ORCPT
+        id S1728260AbgGBJl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgGBJlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:41:52 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51662C08C5C1;
-        Thu,  2 Jul 2020 02:41:52 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id y10so28513599eje.1;
-        Thu, 02 Jul 2020 02:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t5uetk4l/MbHsFV0PVEK494J/oOl1v9zGOC4JF1Xwlo=;
-        b=CnMaYX4ESBZzNTTNlk+O3QnFP8gEjYdxZ2X5fErELFo4pa2B67V71n1GjJpC6BNanv
-         lkAf3b4Ugwf20ItQkL3IMb7dWbva/Rj2ItFncu7m6k0CfoRm31NydDLqKlbz9bkfoyCJ
-         nSr4q+Kq0k7VmhBDF1yihUHUVudDN/W2d8qk7iclqDgW0UP8UXkdNTANfFVpME+6Rd+4
-         9Q9JwlsvvHyIVyZJnIFrhbfGAn0NqgNlqAreYrxSDxPd7EiqFK6iDy/aUwSVCVYFtQxf
-         xb8g83T05VlyOtYrloMwL3OM9bbKFZxtev/h93mAKxbn+KBYZxs5VfIpLqRKrAECGJDt
-         C2Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t5uetk4l/MbHsFV0PVEK494J/oOl1v9zGOC4JF1Xwlo=;
-        b=tvrAh5zkBpWnWfRnARyAfUqxIiR2I0DXTg65B7+8uA2H4AIZXnY6noL++t1ivcAVWH
-         YsvQW9i8mU26YewUc7gWSa7H0UIwzkushhYgPt/knygq9EawfJdoumMuB8+BUf6hwgF4
-         vOIGmyVIb2okNFQ7EpiOLrizXNqMQR7GIyjtHpvS11j9NeipfHEl7eZXpvf+/kr0S4+j
-         RRUpfLqZ7Co+hf3S8Eekfjlp3ci+jGNYwR1Ex7xaLZzNzqg+OyNiLVX5lRhMhxNIi8H8
-         0U/SWy9PMFnHygjHVIo0YuRCByoAeEtTa838jyN1YudZgCEGdmgUfJutb4acuxu2fSnt
-         EQCA==
-X-Gm-Message-State: AOAM530znVC8vObo1Ka8MafBPDOHTfWJnbM5xi0GcATNjFQAB4ul0u14
-        2HeWlRY0cC+N8lWf4Ik8LOgEnCG35u9fCgh4nMph48Mb
-X-Google-Smtp-Source: ABdhPJxSq5fW8ouB0Ff5UzExabRnPT2gN9SXVfYg5UOQJRwAFxm06wANAMGgWAVHgRsBNLT95oUmkfrNTL2XMdcoSK0=
-X-Received: by 2002:a17:906:1117:: with SMTP id h23mr24492014eja.396.1593682910997;
- Thu, 02 Jul 2020 02:41:50 -0700 (PDT)
+        Thu, 2 Jul 2020 05:41:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7347 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725287AbgGBJly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:41:54 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2E54ED967EB76536ABC1;
+        Thu,  2 Jul 2020 17:41:51 +0800 (CST)
+Received: from [127.0.0.1] (10.174.187.83) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Jul 2020
+ 17:41:42 +0800
+Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
+ of data
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <willy@infradead.org>,
+        <wangxiongfeng2@huawei.com>, <wanghaibin.wang@huawei.com>,
+        <guoheyi@huawei.com>, <yebiaoxiang@huawei.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <tglx@linutronix.de>, <guohanjun@huawei.com>,
+        <yangyingliang@huawei.com>,
+        James Puthukattukaran <james.puthukattukaran@oracle.com>
+References: <20200628161449.GA3122309@bjorn-Precision-5520>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <39bab369-79aa-24b2-720b-4dba752b99f9@huawei.com>
+Date:   Thu, 2 Jul 2020 17:41:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20200701213433.9217-1-michael@walle.cc> <20200701215310.GL1551@shell.armlinux.org.uk>
- <CA+h21hotHbN1xpZcnTMftXesgz7T6sEGCCPzFKdtG1NfMxguLg@mail.gmail.com> <20200702084128.GM1551@shell.armlinux.org.uk>
-In-Reply-To: <20200702084128.GM1551@shell.armlinux.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 2 Jul 2020 12:41:39 +0300
-Message-ID: <CA+h21hoD0HTtpeGtEFyALg-5b7Gs0qJycukgzhQOGy+xHra23A@mail.gmail.com>
-Subject: Re: [PATCH RESEND net-next v3 0/3] net: enetc: remove bootloader dependency
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Michael Walle <michael@walle.cc>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200628161449.GA3122309@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.187.83]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 11:41, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Jul 02, 2020 at 01:04:02AM +0300, Vladimir Oltean wrote:
-> > On Thu, 2 Jul 2020 at 00:53, Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > fixing up almost every driver the best I can with the exception of two -
-> > > felix DSA and Mediatek.
-> > >
-> > > I'm not going to wait for Felix or Mediatek.  As I say, I've given
-> > > plenty of warning, and it's only a _suspicion_ of breakage on my
-> > > side.
-> > >
-> >
-> > What do you mean "I'm not going to wait for Felix"?
-> > https://patchwork.ozlabs.org/project/netdev/patch/20200625152331.3784018-5-olteanv@gmail.com/
-> > We left it at:
-> >
-> > > I'm not going to review patch 7
-> > > tonight because of this fiasco.  To pissed off to do a decent job, so
-> > > you're just going to have to wait.
-> >
-> > So, I was actively waiting for you to review it ever since, just like
-> > you said, so I could send a v2. Were you waiting for anything?
->
-> I stopped being interested in your series with the patch 5 commit
-> description issue; what happened there is really demotivating.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
 
-Yes, but I mean, the fact that reviewing felix is "demotivating" can
-only have 2 courses of action as far as I can see:
-- I do resubmit the series with feedback that you've given so far, but
-it's likely going to take a few more iterations because you haven't
-reviewed the current series in its entirety, and you haven't in fact
-reviewed the part which you consider as a dependency for your work yet
-(the mac_link_up conversion). But this goes against your argument that
-the lynx pcs will land quickly, so Michael should just wait a little
-bit more.
-- As per your "I'm not going to wait for Felix or Mediatek" phrase,
-you might decide you just don't deal with DSA any longer, and you
-proceed with the PCS patches by essentially breaking the dependency.
-In this case, I'm not sure why Michael would need to wait either,
-since _you_ are deciding to not wait for DSA, neither is he.
 
-I'm fine either way, but one thing is not going to change, and that's
-the ordering of my patches in the "PHYLINK integration improvements
-for Felix DSA driver" series. As you know, most NXP users are not
-using David's net-next directly (and that is at their! request), but a
-"vendor" kernel which we try to keep as close to David's tree as
-humanly possible, and which goes through a lot of testing. But if
-there are going to be treewide changes in the phylink API (and there
-_are_ already, that mac_link_up thing, which we haven't backported),
-then there needs to be a strict ordering relationship between the
-cleanup commits, which we can cherry-pick, and the adaptation to an
-API which we haven't (nor we intend to) backport to 5.4, because it's
-too much for little practical benefit. You seem to be hung up on that,
-and we won't be making much progress if that continues, I'm afraid.
+On 2020/6/29 0:14, Bjorn Helgaas wrote:
+> On Sun, Jun 28, 2020 at 12:18:10PM +0800, Xiang Zheng wrote:
+>> On 2020/6/26 7:24, Bjorn Helgaas wrote:
+>>> On Wed, Jun 24, 2020 at 06:23:09PM -0500, Bjorn Helgaas wrote:
+>>>> On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
+>>>>> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+>>>>> device") suggests that the "pci_lock" is sufficient, and all the
+>>>>> callers of pci_wait_cfg() are wrapped with the "pci_lock".
+>>>>>
+>>>>> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
+>>>>> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
+>>>>> are not safe anymore. This would cause kernel panic in a very low chance
+>>>>> (See more detailed information from the below link). A "pci_lock" is
+>>>>> insufficient and we need to hold an additional queue lock while read/write
+>>>>> the wait queue.
+>>>>>
+>>>>> So let's use the add_wait_queue()/remove_wait_queue() instead of
+>>>>> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
+>>>>> functionality around the "schedule()" function to avoid reintroducing
+>>>>> the deadlock addressed by "cdcb33f98244".
+>>>>
+>>>> I see that add_wait_queue() acquires the wq_head->lock, while
+>>>> __add_wait_queue() does not.
+>>>>
+>>>> But I don't understand why the existing pci_lock is insufficient.  
+>>>> pci_cfg_wait is only used in pci_wait_cfg() and
+>>>> pci_cfg_access_unlock().
+>>>>
+>>>> In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
+>>>> are called while holding pci_lock, so that doesn't seem like the
+>>>> problem.
+>>>>
+>>>> In pci_cfg_access_unlock(), we have:
+>>>>
+>>>>   pci_cfg_access_unlock
+>>>>     wake_up_all(&pci_cfg_wait)
+>>>>       __wake_up(&pci_cfg_wait, ...)
+>>>>         __wake_up_common_lock(&pci_cfg_wait, ...)
+>>>> 	  spin_lock(&pci_cfg_wait->lock)
+>>>> 	  __wake_up_common(&pci_cfg_wait, ...)
+>>>> 	    list_for_each_entry_safe_from(...)
+>>>> 	      list_add_tail(...)                <-- problem?
+>>>> 	  spin_unlock(&pci_cfg_wait->lock)
+>>>>
+>>>> Is the problem that the wake_up_all() modifies the pci_cfg_wait list
+>>>> without holding pci_lock?
+>>>>
+>>>> If so, I don't quite see how the patch below fixes it.  Oh, wait,
+>>>> maybe I do ... by using add_wait_queue(), we protect the list using
+>>>> the *same* lock used by __wake_up_common_lock.  Is that it?
+>>>
+>>> Any reaction to the following?  Certainly not as optimized, but also a
+>>> little less magic and more in the mainstream of wait_event/wake_up
+>>> usage.
+>>>
+>>> I don't claim any real wait queue knowledge and haven't tested it.
+>>> There are only a handful of __add_wait_queue() users compared with
+>>> over 1600 users of wait_event() and variants, and I don't like being
+>>> such a special case.
+>>
+>> I think the following patch is OK, even though I prefer mine. :)
+> 
+> Possibility A:
+> 
+>         do {
+>                 set_current_state(TASK_UNINTERRUPTIBLE);
+>                 raw_spin_unlock_irq(&pci_lock);
+>                 add_wait_queue(&pci_cfg_wait, &wait);
+>                 schedule();
+>                 remove_wait_queue(&pci_cfg_wait, &wait);
+>                 raw_spin_lock_irq(&pci_lock);
+>         } while (dev->block_cfg_access);
+> 
+> Possibility B:
+> 
+>         do {
+>                 raw_spin_unlock_irq(&pci_lock);
+>                 wait_event(pci_cfg_wait, !dev->block_cfg_access);
+>                 raw_spin_lock_irq(&pci_lock);
+>         } while (dev->block_cfg_access);
+> 
+> I think both ways probably work.  
+> 
+> I prefer B because there's less chance for error -- it requires less
+> knowledge of the internals of wait/wake_up and we don't have to worry
+> about the ordering of set_current_state(), raw_spin_unlock_irq(),
+> add_wait_queue(), schedule(), and remove_wait_queue().
+> 
+> I really don't know much about wait queues, so I'm interested in why
+> you prefer A.
+> 
 
-There are a lot of things to be done that depend on the lynx-pcs
-thing, and there are multiple groups of people who are all waiting.
-The new seville DSA driver, which _almost_ got into the previous
-release cycle but missed the train due to a dependency with Mark
-Brown's tree, also has a Lynx PCS integrated in it. I would like to
-reuse the lynx-pcs module, but from what I can see, the bottleneck for
-everybody seems to be reviewing the mac_link_up conversion of felix.
+Hmm...I also think B is much better than A as you describe above.
+I'am not sure that whether "dev->block_cfg_access" is safe, at least
+the "do{...}while" cannot be removed.
 
-Thank you,
--Vladimir
+>> I can test your patch on my testcase(with hacked 300ms delay before
+>> "curr->func" in __wake_up_common()). And if James has more efficient
+>> testcase or measure for this problem, then go with James.
+> 
+> That would be great, thank you!  Let me know how it goes.
+
+I need to make some hacking codes to test your patch, some like:
+
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -206,19 +206,12 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
+
+ static noinline void pci_wait_cfg(struct pci_dev *dev)
+ {
+-       DECLARE_WAITQUEUE(wait, current);
+-       wait.flags = WQ_FLAG_PCI;
+-
+-       __add_wait_queue(&pci_cfg_wait, &wait);
+        do {
+                set_current_state(TASK_UNINTERRUPTIBLE);
+                raw_spin_unlock_irq(&pci_lock);
+-               schedule();
++               wait_event_flags(pci_cfg_wait, !dev->block_cfg_access, WQ_FLAG_PCI);
+                raw_spin_lock_irq(&pci_lock);
+        } while (dev->block_cfg_access);
+-       __remove_wait_queue(&pci_cfg_wait, &wait);
+ }
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -4,8 +4,12 @@
+  *
+  * (C) 2004 Nadia Yvette Chambers, Oracle
+  */
++#include <linux/delay.h>
++
+ #include "sched.h"
+
++unsigned long wake_up_delay_ms;
++
+ void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *name, struct lock_class_key *k
+ey)
+ {
+        spin_lock_init(&wq_head->lock);
+@@ -90,6 +94,10 @@ static int __wake_up_common(struct wait_queue_head *wq_head, unsigned int mode,
+                if (flags & WQ_FLAG_BOOKMARK)
+                        continue;
+
++               if (flags & WQ_FLAG_PCI && wake_up_delay_ms) {
++                       mdelay(wake_up_delay_ms);
++               }
++
+                ret = curr->func(curr, mode, wake_flags, key);
+                if (ret < 0)
+                        break;
+
+
+I tested it both on 4.19+ and mainline(5.8.0-rc3+). It's much difficult
+to reproduce the kernel panic on mainline(I don't know why).
+
+Anyway, all is well with your patch.
+
+Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
+
+> 
+>>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>>> index 79c4a2ef269a..7c2222bddbff 100644
+>>> --- a/drivers/pci/access.c
+>>> +++ b/drivers/pci/access.c
+>>> @@ -205,16 +205,11 @@ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
+>>>  
+>>>  static noinline void pci_wait_cfg(struct pci_dev *dev)
+>>>  {
+>>> -	DECLARE_WAITQUEUE(wait, current);
+>>> -
+>>> -	__add_wait_queue(&pci_cfg_wait, &wait);
+>>>  	do {
+>>> -		set_current_state(TASK_UNINTERRUPTIBLE);
+>>>  		raw_spin_unlock_irq(&pci_lock);
+>>> -		schedule();
+>>> +		wait_event(pci_cfg_wait, !dev->block_cfg_access);
+>>>  		raw_spin_lock_irq(&pci_lock);
+>>>  	} while (dev->block_cfg_access);
+>>> -	__remove_wait_queue(&pci_cfg_wait, &wait);
+>>>  }
+>>>  
+>>>  /* Returns 0 on success, negative values indicate error. */
+>>>
+>>> .
+>>>
+>>
+>> -- 
+>> Thanks,
+>> Xiang
+>>
+> 
+> .
+> 
+
+-- 
+Thanks,
+Xiang
+
