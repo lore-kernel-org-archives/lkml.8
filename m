@@ -2,74 +2,143 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C467C20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB952073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KvkswkY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgGBTLV (ORCPT
+        id S1726035AbgGBTNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:11:21 -0400
-Received: from muru.com ([72.249.23.125]:60502 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGBTLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:11:21 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7543A8062;
-        Thu,  2 Jul 2020 19:12:13 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 12:11:18 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] bus: ti-sysc: Fix wakeirq sleeping function called
- from invalid context
-Message-ID: <20200702191118.GP37466@atomide.com>
-References: <20200702174929.26506-1-tony@atomide.com>
- <434eff2e-bc7f-84ee-0980-769915cefffb@ti.com>
- <20200702190249.GO37466@atomide.com>
+        Thu, 2 Jul 2020 15:13:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48721 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725847AbgGBTNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:13:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593717190;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FzBxpCXjYpYykVqIIHvJqM6p4BizB/f7pG6TYVbhSrc=;
+        b=KvkswkY+IXgiBLS8E4T87/8vw2/nkqiUtP0SydJXr5glJWPAfxSpJ8fiImdhUsuU3Ye59T
+        KhOk484AbacwdlcMaOkHimNgDwlTw1ZHLVyZhojxOtc1rA5CUR4LXJlf2Zo810rfqG+Hjd
+        NIvTPNZw5fwfHbmhkNUDYb0vWpYKek8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-211-agXmqbaCMZaa2Q3O-dcvyA-1; Thu, 02 Jul 2020 15:12:58 -0400
+X-MC-Unique: agXmqbaCMZaa2Q3O-dcvyA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52D8980B70D;
+        Thu,  2 Jul 2020 19:12:52 +0000 (UTC)
+Received: from localhost (ovpn-116-143.gru2.redhat.com [10.97.116.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E627A79258;
+        Thu,  2 Jul 2020 19:12:51 +0000 (UTC)
+Date:   Thu, 2 Jul 2020 16:12:50 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com
+Subject: Re: [PATCH v3 2/2] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200702191250.GB3669@glitch>
+References: <20200623202640.4936-1-bmeneg@redhat.com>
+ <20200623202640.4936-3-bmeneg@redhat.com>
+ <1593204023.27152.476.camel@linux.ibm.com>
+ <20200629234744.GA2756@glitch>
+ <1593514848.5085.82.camel@linux.ibm.com>
+ <20200630170043.GE2944@glitch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200630170043.GE2944@glitch>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=bmeneg@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
 Content-Disposition: inline
-In-Reply-To: <20200702190249.GO37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200702 19:03]:
-> * Suman Anna <s-anna@ti.com> [200702 18:01]:
-> > Hi Tony,
-> > 
-> > On 7/2/20 12:49 PM, Tony Lindgren wrote:
-> > > With CONFIG_DEBUG_ATOMIC_SLEEP enabled we can see the following with
-> > > wakeirqs and serial console idled:
-> > 
-> > Which devices are these? I have one patch from Tero fixing similar errors in
-> > OMAP IOMMU driver. Will post that either today or tomorrow.
-> 
-> I noticed this testing Andy Schevchenko's pending generic serial PM
-> patches. It happens on any omap variant with kernel serial console
-> detached and uart idled. Then just wait for the autosuspend timeout
-> to expire and type a character on the serial console :)
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And BTW, Andy's series involves the removal of pm_runtime_irq_safe()
-from the serial drivers that we still have. So this won't trigger
-currently with the uart. But the issue could trigger with other
-drivers though.
+On Tue, Jun 30, 2020 at 02:00:43PM -0300, Bruno Meneguele wrote:
+> On Tue, Jun 30, 2020 at 07:00:48AM -0400, Mimi Zohar wrote:
+> > On Mon, 2020-06-29 at 20:47 -0300, Bruno Meneguele wrote:
+> >=20
+> > >=20
+> > > > I'm not if the "secure_boot" flag is available prior to calling
+> > > > default_appraise_setup(), but if it is, you could modify the test
+> > > > there to also check if the system is booted in secure boot mode (eg=
+.
+> > > > IS_ENABLED(CONFIG_IMA_APPRAISE_BOOTPARAM) &&
+> > > > !arch_ima_get_secureboot())
+> > > >=20
+> > >=20
+> > > Well pointed. I built a custom x86 kernel with some workaround to get
+> > > this flag status within default_appraise_setup() and as a result the
+> > > flag is was correctly available.=20
+> > >=20
+> > > Considering the nature of this flag (platform's firmware (in all
+> > > arches?)) can we trust that every arch supporting secure/trusted boot
+> > > will have it available in the __setup() call time?
+> >=20
+> > Calling=A0default_appraise_setup() could be deferred.
+> >=20
+>=20
+> Hmmm.. ok, I'm going to investigate it further.
+> Didn't really know that.
+>=20
 
-Regards,
+After some research on powerpc, x86 and s390 (the only users of arch
+policies) codes it's clear that, no matter what, the secure boot flag
+will be available even before the kernel cmdline is actually
+copied/saved in kernel's memory.
 
-Tony
+Both powerpc and x86 populate it through setup_arch() call in
+init/main.c:kernel_start(), where some early_params are handled, but
+nothing about normal (non-early) __setup() params. s390 is a bit deeper
+where it gets the flag, right down its boot code, even before
+start_kernel().
+
+With that said, it's safe checking it directly from
+default_appraise_setup(). I'm going to prepare a v4, test it and post it
+tomorrow.=20
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7+MbIACgkQYdRkFR+R
+okOE9wgAtlCT2xp0XdlQd9PXMOlQZrofYigVUIMXsGtC0ln+HzCr87RDqf6ZGir4
+z0TApF2+fb6SvtW654EDJiXQM8WalA++rsuXSzW47jPUuwkrvyHoaykHDKVbwm8h
+WoYoylK8wMNo/sjO6m+78O3j3qnE0vESewUimHf5PIv8ihFS2FwNY7B6oO0P2ygu
+YHpIg93bZfkSxUSWe/XA+0OvbMlsC7cS5PVEl/Cf81HR5G6knavZe9jFpGPY7rNi
+QxhJQAyDfSUmZNnIQWdWn+SBKQSxsILJ9sylvDtprR8fD13fknuERlyRHjMCg83E
+I04QUaw5LwbE9GhpXn0zSr/13JfuJg==
+=sFZi
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
+
