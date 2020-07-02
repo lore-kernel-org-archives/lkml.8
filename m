@@ -5,28 +5,25 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A341AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F33207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2A9207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgGBQzB (ORCPT
+        id S1727838AbgGBQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGBQy7 (ORCPT
+        Thu, 2 Jul 2020 12:55:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60958 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGBQzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:54:59 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA366C08C5C1;
-        Thu,  2 Jul 2020 09:54:58 -0700 (PDT)
+        Thu, 2 Jul 2020 12:55:04 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id F1AF12A603F
+        with ESMTPSA id 220CF2A6047
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -37,9 +34,9 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com,
         tfiga@chromium.org, eddie.cai.linux@gmail.com,
         zhengsq@rock-chips.com
-Subject: [PATCH v3 7/9] media: MAINTAINERS: rkisp1: add path to dt-bindings
-Date:   Thu,  2 Jul 2020 13:54:08 -0300
-Message-Id: <20200702165410.2583375-8-helen.koike@collabora.com>
+Subject: [PATCH v3 8/9] arm64: dts: rockchip: add isp0 node for rk3399
+Date:   Thu,  2 Jul 2020 13:54:09 -0300
+Message-Id: <20200702165410.2583375-9-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200702165410.2583375-1-helen.koike@collabora.com>
 References: <20200702165410.2583375-1-helen.koike@collabora.com>
@@ -50,43 +47,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Rockchip ISP bindings was moved out of staging.
-Update MAINTAINERS file with the new path.
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Fields sorted according to output of
-./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
---order
+RK3399 has two ISPs, but only isp0 was tested.
+Add isp0 node in rk3399 dtsi
 
+Verified with:
+make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 
 V3:
-- Add line:
-L:     linux-rockchip@lists.infradead.org
-- Re-order:
-F:     drivers/staging/media/rkisp1/
+- clean up clocks
 
 V2:
-- This is a new patch in the series
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+- re-order power-domains property
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 634d2c3d621aa..d7141cf17072f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14679,7 +14679,9 @@ F:	include/linux/hid-roccat*
- ROCKCHIP ISP V1 DRIVER
- M:	Helen Koike <helen.koike@collabora.com>
- L:	linux-media@vger.kernel.org
-+L:	linux-rockchip@lists.infradead.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
- F:	drivers/staging/media/rkisp1/
+V1:
+This patch was originally part of this patchset:
+
+    https://patchwork.kernel.org/patch/10267431/
+
+The only difference is:
+- add phy properties
+- add ports
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 2581e9cc7a1de..a27c3ccf4bd08 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1710,6 +1710,33 @@ vopb_mmu: iommu@ff903f00 {
+ 		status = "disabled";
+ 	};
  
- ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
++	isp0: isp0@ff910000 {
++		compatible = "rockchip,rk3399-cif-isp";
++		reg = <0x0 0xff910000 0x0 0x4000>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_ISP0>,
++			 <&cru ACLK_ISP0_WRAPPER>,
++			 <&cru HCLK_ISP0_WRAPPER>;
++		clock-names = "clk_isp",
++			      "aclk_isp_wrap",
++			      "hclk_isp_wrap";
++		iommus = <&isp0_mmu>;
++		phys = <&mipi_dphy_rx0>;
++		phy-names = "dphy";
++		power-domains = <&power RK3399_PD_ISP0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++	};
++
+ 	isp0_mmu: iommu@ff914000 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
 -- 
 2.26.0
 
