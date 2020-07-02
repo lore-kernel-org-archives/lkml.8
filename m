@@ -2,79 +2,132 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70246C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4896F20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4572070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgGBLss (ORCPT
+        id S1728764AbgGBLwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:48:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41447 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgGBLsr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:48:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jqxhj-00067a-OM; Thu, 02 Jul 2020 11:48:35 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
-        alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ASoC: Intel: bxt-da7219-max98357a: return -EINVAL on unrecognized speaker amplifier
-Date:   Thu,  2 Jul 2020 12:48:35 +0100
-Message-Id: <20200702114835.37889-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 2 Jul 2020 07:52:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2105 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728388AbgGBLwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:52:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49yGfT2v0Sz9v2nB;
+        Thu,  2 Jul 2020 13:52:01 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id xtqwurSz25b4; Thu,  2 Jul 2020 13:52:01 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49yGfT1kTxz9v2n9;
+        Thu,  2 Jul 2020 13:52:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0ECF18B99A;
+        Thu,  2 Jul 2020 13:52:03 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6epQhKbCo4iF; Thu,  2 Jul 2020 13:52:02 +0200 (CEST)
+Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [10.25.210.22])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA4138B98D;
+        Thu,  2 Jul 2020 13:52:02 +0200 (CEST)
+Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B0F7C652C1; Thu,  2 Jul 2020 11:52:02 +0000 (UTC)
+Message-Id: <3667deb0911affbf999b99f87c31c77d5e870cd2.1593690707.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH 1/2] Revert "powerpc/kasan: Fix shadow pages allocation
+ failure"
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  2 Jul 2020 11:52:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This reverts commit d2a91cef9bbdeb87b7449fdab1a6be6000930210.
 
-Currently if the ctx->spkamp is not recognized an error message is
-reported but the code continues to set up the device with uninitialized
-variables such as the number of widgets.  Fix this by returning -EINVAL
-for unrecognized speaker amplifier types.
+This commit moved too much work in kasan_init(). The allocation
+of shadow pages has to be moved for the reason explained in that
+patch, but the allocation of page tables still need to be done
+before switching to the final hash table.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: e1435a1feb18 ("ASoC: Intel: bxt-da7219-max98357a: support MAX98390 speaker amp")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+First revert the incorrect commit, following patch redoes it
+properly.
+
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208181
+Fixes: d2a91cef9bbd ("powerpc/kasan: Fix shadow pages allocation failure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- sound/soc/intel/boards/bxt_da7219_max98357a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/kasan.h      | 2 ++
+ arch/powerpc/mm/init_32.c             | 2 ++
+ arch/powerpc/mm/kasan/kasan_init_32.c | 4 +---
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bxt_da7219_max98357a.c b/sound/soc/intel/boards/bxt_da7219_max98357a.c
-index 4d39253e796b..0c0a717823c4 100644
---- a/sound/soc/intel/boards/bxt_da7219_max98357a.c
-+++ b/sound/soc/intel/boards/bxt_da7219_max98357a.c
-@@ -677,7 +677,7 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
- 		break;
- 	default:
- 		dev_err(card->dev, "Invalid speaker amplifier %d\n", ctx->spkamp);
--		break;
-+		return -EINVAL;
- 	}
+diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+index be85c7005fb1..d635b96c7ea6 100644
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -27,10 +27,12 @@
  
- 	err = snd_soc_dapm_new_controls(&card->dapm, widgets, num_widgets);
+ #ifdef CONFIG_KASAN
+ void kasan_early_init(void);
++void kasan_mmu_init(void);
+ void kasan_init(void);
+ void kasan_late_init(void);
+ #else
+ static inline void kasan_init(void) { }
++static inline void kasan_mmu_init(void) { }
+ static inline void kasan_late_init(void) { }
+ #endif
+ 
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index 5a5469eb3174..bf1717f8d5f4 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -171,6 +171,8 @@ void __init MMU_init(void)
+ 	btext_unmap();
+ #endif
+ 
++	kasan_mmu_init();
++
+ 	setup_kup();
+ 
+ 	/* Shortly after that, the entire linear mapping will be available */
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0760e1e754e4..4813c6d50889 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -117,7 +117,7 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
+ 	kasan_update_early_region(k_start, k_end, __pte(0));
+ }
+ 
+-static void __init kasan_mmu_init(void)
++void __init kasan_mmu_init(void)
+ {
+ 	int ret;
+ 	struct memblock_region *reg;
+@@ -146,8 +146,6 @@ static void __init kasan_mmu_init(void)
+ 
+ void __init kasan_init(void)
+ {
+-	kasan_mmu_init();
+-
+ 	kasan_remap_early_shadow_ro();
+ 
+ 	clear_page(kasan_early_shadow_page);
 -- 
-2.27.0
+2.25.0
 
