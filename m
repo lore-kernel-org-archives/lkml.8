@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D11C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06FA20720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECC12089D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hKh4Ycc0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tsLOiQk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgGBIZD (ORCPT
+        id S1728415AbgGBIZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:25:03 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59580 "EHLO
+        Thu, 2 Jul 2020 04:25:28 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59466 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbgGBIX1 (ORCPT
+        with ESMTP id S1728274AbgGBIWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:23:27 -0400
+        Thu, 2 Jul 2020 04:22:51 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628NGhc082008;
-        Thu, 2 Jul 2020 03:23:16 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628Mawm081816;
+        Thu, 2 Jul 2020 03:22:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593678196;
-        bh=z96ye//Mg15JHZ1ndtZxlE33lV8uirQIl1DtUAPpCNk=;
+        s=ti-com-17Q1; t=1593678156;
+        bh=xFcqYzNmQgKuE1+hIXHcn1dlvHlbBiHv2NFJRAR7N1Q=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hKh4Ycc0nsKdDPMU7zvoAF1INSmeh72IPvQS5QOFMq4Kc9z2De6UHyUGJQsMmlqry
-         DYgZNo1XEM+w2AaJimrzgI0NKEC9A5VRpDP9utmTyIV6VPFwKtQ/btpKPHG9wxz8/X
-         /BiKQoNwEaAmwJLbq3/wJAlgDVSeBWOF5IKKiAxk=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628NFj5066600
+        b=tsLOiQk2xuDiTEuvWhyS7fcI0xjQfuNmWsXd0mOnCnouBoFsnFY3s17NgErsbNi/4
+         PFs2foICGoxb8mg8C12Te8IiISySv2tLVXECFDTbp1UJaw4ofcOKOg0FX5Q7lhU4ir
+         lTvouUvV44mf/mPovGOaHW3TTMRHUq7Eli+vuyjE=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628MaYH065363
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jul 2020 03:23:15 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 2 Jul 2020 03:22:36 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
- 2020 03:23:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:22:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 2 Jul 2020 03:23:15 -0500
+ Frontend Transport; Thu, 2 Jul 2020 03:22:35 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYR006145;
-        Thu, 2 Jul 2020 03:23:10 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYK006145;
+        Thu, 2 Jul 2020 03:22:30 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -66,9 +66,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <netdev@vger.kernel.org>
-Subject: [RFC PATCH 15/22] samples/rpmsg: Setup delayed work to send message
-Date:   Thu, 2 Jul 2020 13:51:36 +0530
-Message-ID: <20200702082143.25259-16-kishon@ti.com>
+Subject: [RFC PATCH 08/22] rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when reading messages
+Date:   Thu, 2 Jul 2020 13:51:29 +0530
+Message-ID: <20200702082143.25259-9-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
 References: <20200702082143.25259-1-kishon@ti.com>
@@ -80,76 +80,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let us not send any message to the remote processor before
-announce_create() callback has been invoked. Since announce_create() is
-only invoked after ->probe() is completed, setup delayed work to start
-sending message to the remote processor.
+Since rpmsg_recv_done() reads messages in a while loop, disable
+callbacks until the while loop exits. This helps to get rid of the
+annoying "uhm, incoming signal, but no used buffer ?" message.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- samples/rpmsg/rpmsg_client_sample.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/rpmsg/virtio_rpmsg_bus.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/samples/rpmsg/rpmsg_client_sample.c b/samples/rpmsg/rpmsg_client_sample.c
-index ae5081662283..514a51945d69 100644
---- a/samples/rpmsg/rpmsg_client_sample.c
-+++ b/samples/rpmsg/rpmsg_client_sample.c
-@@ -20,6 +20,8 @@ module_param(count, int, 0644);
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 376ebbf880d6..2d0d42084ac0 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -777,6 +777,7 @@ static void rpmsg_recv_done(struct virtqueue *rvq)
+ 		return;
+ 	}
  
- struct instance_data {
- 	int rx_count;
-+	struct delayed_work send_msg_work;
-+	struct rpmsg_device *rpdev;
- };
++	virtqueue_disable_cb(rvq);
+ 	while (msg) {
+ 		err = rpmsg_recv_single(vrp, dev, msg, len);
+ 		if (err)
+@@ -786,6 +787,19 @@ static void rpmsg_recv_done(struct virtqueue *rvq)
  
- static int rpmsg_sample_cb(struct rpmsg_device *rpdev, void *data, int len,
-@@ -48,9 +50,21 @@ static int rpmsg_sample_cb(struct rpmsg_device *rpdev, void *data, int len,
- 	return 0;
- }
- 
--static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
-+static void rpmsg_sample_send_msg_work(struct work_struct *work)
- {
-+	struct instance_data *idata = container_of(work, struct instance_data,
-+						   send_msg_work.work);
-+	struct rpmsg_device *rpdev = idata->rpdev;
- 	int ret;
+ 		msg = virtqueue_get_buf(rvq, &len);
+ 	}
++	virtqueue_enable_cb(rvq);
 +
-+	/* send a message to our remote processor */
-+	ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
-+	if (ret)
-+		dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-+}
-+
-+static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
-+{
- 	struct instance_data *idata;
++	/*
++	 * Try to read message one more time in case a new message is submitted
++	 * after virtqueue_get_buf() inside the while loop but before enabling
++	 * callbacks
++	 */
++	msg = virtqueue_get_buf(rvq, &len);
++	if (msg) {
++		err = rpmsg_recv_single(vrp, dev, msg, len);
++		if (!err)
++			msgs_received++;
++	}
  
- 	dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x!\n",
-@@ -62,18 +76,18 @@ static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
- 
- 	dev_set_drvdata(&rpdev->dev, idata);
- 
--	/* send a message to our remote processor */
--	ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
--	if (ret) {
--		dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
--		return ret;
--	}
-+	idata->rpdev = rpdev;
-+	INIT_DELAYED_WORK(&idata->send_msg_work, rpmsg_sample_send_msg_work);
-+	schedule_delayed_work(&idata->send_msg_work, msecs_to_jiffies(500));
- 
- 	return 0;
- }
- 
- static void rpmsg_sample_remove(struct rpmsg_device *rpdev)
- {
-+	struct instance_data *idata = dev_get_drvdata(&rpdev->dev);
-+
-+	cancel_delayed_work_sync(&idata->send_msg_work);
- 	dev_info(&rpdev->dev, "rpmsg sample client driver is removed\n");
- }
+ 	dev_dbg(dev, "Received %u messages\n", msgs_received);
  
 -- 
 2.17.1
