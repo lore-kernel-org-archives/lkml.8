@@ -2,139 +2,174 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4C420884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593674591;
-	bh=Re61RwD/CyQqWBiQskwnaPfGr1o4kLsu1CWsfLls+hM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bC/8WfTBTYksU0+wuHpAbG+pJnEoNrqkBuHd91t8AY1HzsFQwFgva9LSoYY6YM7fT
-	 DfBjln6RSvzErRIR9az/KwyTfZnF+OKdCrDRQH25HSQG4lJfos05fbdcDjOUtW19E3
-	 FTGrpZ4btl3YDphdbEqxlrmo+FRf8gP3Ipj6ELH4=
+	by mail.kernel.org (Postfix) with ESMTP id 2144D2073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MaP4Rf5w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgGBHXJ (ORCPT
+        id S1728032AbgGBHXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgGBHXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:23:09 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 2 Jul 2020 03:23:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27753 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728004AbgGBHXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:23:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593674598;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=qv4yPdiNnrfn14+LfYWbU2sjcQdKPmiWOrDj+8FMzd8=;
+        b=MaP4Rf5wLrWpxtjcM03DrCpOmdNUlBAXA/R5Vs1x5RAfV8FliR2VUWwl37GZyS+VMJd93z
+        OfdNhYkhIJejxlQQwU2/nQJR1A0kjitSPccGVzQyJfqduNNKleIc6l/Q/n5COphzMjAHLO
+        T5HvihjlZ8hna4Iog+J01GOSMWFNYLw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-497-Fk-v5tR0OW69Z_UNcC3dxw-1; Thu, 02 Jul 2020 03:23:14 -0400
+X-MC-Unique: Fk-v5tR0OW69Z_UNcC3dxw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3D42073E;
-        Thu,  2 Jul 2020 07:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593674588;
-        bh=Re61RwD/CyQqWBiQskwnaPfGr1o4kLsu1CWsfLls+hM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kuS2Mmhm+7c/+nST2Wi4JbOT82ZSobqK5KFCdbVqQXwCGLZBy7/LpmgMb7Pq85t1G
-         a6m6BrCh5id96wu1KUG0opwCahVKpnhDfkXuSg9AMslVdZ1XMgtrIMFp1PT5EHGsL9
-         n0XlU4lEskbMa3Pt2IwRkzphNfPJu+6WmVYkG9DQ=
-Date:   Thu, 2 Jul 2020 08:23:02 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Dave P Martin <dave.martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matt Turner <mattst88@gmail.com>, kernel-team@android.com,
-        Marco Elver <elver@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-alpha@vger.kernel.org
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when
- CLANG_LTO=y
-Message-ID: <20200702072301.GA15963@willie-the-truck>
-References: <20200630173734.14057-1-will@kernel.org>
- <20200630173734.14057-19-will@kernel.org>
- <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A82E19057AA;
+        Thu,  2 Jul 2020 07:23:13 +0000 (UTC)
+Received: from [10.36.114.38] (ovpn-114-38.ams2.redhat.com [10.36.114.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3506C277A4;
+        Thu,  2 Jul 2020 07:23:11 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
+ add/walk physmem
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20200701141830.18749-1-david@redhat.com>
+ <20200701141830.18749-2-david@redhat.com>
+ <20200701150643.GA2999146@linux.ibm.com> <20200701153157.GC5008@osiris>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <9a6728b2-05d3-0e98-dc45-a3e4821e0539@redhat.com>
+Date:   Thu, 2 Jul 2020 09:23:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701170722.4rte5ssnmrn2uqzg@bakewell.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200701153157.GC5008@osiris>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 06:07:25PM +0100, Dave P Martin wrote:
-> On Tue, Jun 30, 2020 at 06:37:34PM +0100, Will Deacon wrote:
-> > When building with LTO, there is an increased risk of the compiler
-> > converting an address dependency headed by a READ_ONCE() invocation
-> > into a control dependency and consequently allowing for harmful
-> > reordering by the CPU.
-> > 
-> > Ensure that such transformations are harmless by overriding the generic
-> > READ_ONCE() definition with one that provides acquire semantics when
-> > building with LTO.
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
-> >  arch/arm64/kernel/vdso/Makefile   |  2 +-
-> >  arch/arm64/kernel/vdso32/Makefile |  2 +-
-> >  3 files changed, 65 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/arm64/include/asm/rwonce.h
-> > 
-> > diff --git a/arch/arm64/include/asm/rwonce.h b/arch/arm64/include/asm/rwonce.h
-> > new file mode 100644
-> > index 000000000000..515e360b01a1
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/rwonce.h
-> > @@ -0,0 +1,63 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2020 Google LLC.
-> > + */
-> > +#ifndef __ASM_RWONCE_H
-> > +#define __ASM_RWONCE_H
-> > +
-> > +#ifdef CONFIG_CLANG_LTO
+On 01.07.20 17:31, Heiko Carstens wrote:
+> On Wed, Jul 01, 2020 at 06:06:43PM +0300, Mike Rapoport wrote:
+>> Hi David,
+>>
+>> On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
+>>> "physmem" in the memblock allocator is somewhat weird: it's not actually
+>>> used for allocation, it's simply information collected during boot, which
+>>> describes the unmodified physical memory map at boot time, without any
+>>> standby/hotplugged memory. It's only used on s390x and is currently the
+>>> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
+>>>
+>>> Physmem isn't numa aware and current users don't specify any flags. Let's
+>>> hide it from the user, exposing only for_each_physmem(), and simplify. The
+>>> interface for physmem is now really minimalistic:
+>>> - memblock_physmem_add() to add ranges
+>>> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
+>>>
+>>> Don't place it into an __init section and don't discard it without
+>>> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
+>>> the __meminit notifier to avoid section mismatch warnings once
+>>> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
+>>> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
+>>>
+>>> While fixing up the documentation, sneak in some related cleanups. We can
+>>> stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
+>>
+>> As you noted in the previous version it should have been
+>> CONFIG_ARCH_KEEP_MEMBLOCK ;-)
+>>
+>>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>
+>> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+>>
+>>> ---
+>>>  arch/s390/kernel/crash_dump.c |  6 ++--
+>>>  include/linux/memblock.h      | 28 ++++++++++++++---
+>>>  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
+>>>  3 files changed, 55 insertions(+), 36 deletions(-)
 > 
-> Don't we have a generic option for LTO that's not specific to Clang.
+> So I guess this should go via the s390 tree, since the second patch of
+> this series can go only upstream if both this patch and a patch which
+> is currently only on our features are merged before.
+> 
+> Any objections?
 
-/me looks at the LTO series some more
+@Andrew, fine with you if this goes via the s390 tree?
 
-Oh yeah, there's CONFIG_LTO which is selected by CONFIG_LTO_CLANG, which is
-the non-typoed version of the above. I can switch this to CONFIG_LTO.
+-- 
+Thanks,
 
-> Also, can you illustrate code that can only be unsafe with Clang LTO?
+David / dhildenb
 
-I don't have a concrete example, but it's an ongoing concern over on the LTO
-thread [1], so I cooked this to show one way we could deal with it. The main
-concern is that the whole-program optimisations enabled by LTO may allow the
-compiler to enumerate possible values for a pointer at link time and replace
-an address dependency between two loads with a control dependency instead,
-defeating the dependency ordering within the CPU.
-
-We likely won't realise if/when this goes wrong, other than impossible to
-debug, subtle breakage that crops up seemingly randomly. Ideally, we'd be
-able to detect this sort of thing happening at build time, and perhaps
-even prevent it with compiler options or annotations, but none of that is
-close to being available and I'm keen to progress the LTO patches in the
-meantime because they are a requirement for CFI.
-
-Will
-
-[1] https://lore.kernel.org/r/20200624203200.78870-1-samitolvanen@google.com
