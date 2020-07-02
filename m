@@ -2,110 +2,199 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0060BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B35E208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C682E208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgGBTye (ORCPT
+        id S1726152AbgGBTyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:54:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:6136 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGBTyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:54:33 -0400
-IronPort-SDR: i0GOb7Bk8vNt0ltnzeAq8kW2igZ5pdSLzHeWVGhJ72n5xOH5rt7q/avs3/Xh1n9VPadq6wYz0n
- fF4LwP6WnYoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134476845"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="134476845"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:54:33 -0700
-IronPort-SDR: xBXPaVJZ/1VjL78CnhmPGTxk4I1uFJ9lQe+ZjEYTD1W5JKBaxO6P/o41jt7j+5z1oOICEkocd9
- cCgAtnDJJ0kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="313121847"
-Received: from frichard-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.59])
-  by orsmga008.jf.intel.com with ESMTP; 02 Jul 2020 12:54:27 -0700
-Date:   Thu, 2 Jul 2020 22:54:26 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Alexey Klimov <aklimov@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
- dynamically
-Message-ID: <20200702195426.GA31291@linux.intel.com>
-References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
- <8d19d5e2-91bc-09ad-6b94-d51a7aad6376@linux.ibm.com>
- <20200625212556.GC20341@linux.intel.com>
- <031020b9-dc0a-3c2f-32e4-4bb2db4b5a2b@linux.ibm.com>
- <20200626114815.GA5847@linux.intel.com>
- <5d786bca-6a0f-0c7f-e856-04dac2f280f6@linux.ibm.com>
+        Thu, 2 Jul 2020 15:54:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26190 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725915AbgGBTyf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:54:35 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062JVqHD164636;
+        Thu, 2 Jul 2020 15:54:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s23makb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 15:54:24 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062JWZj5170654;
+        Thu, 2 Jul 2020 15:54:23 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 320s23majt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 15:54:23 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062Jj8Tc016618;
+        Thu, 2 Jul 2020 19:54:21 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 31wyyauugj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 19:54:21 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062JsIL658064976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jul 2020 19:54:18 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C2215204F;
+        Thu,  2 Jul 2020 19:54:18 +0000 (GMT)
+Received: from hbathini.in.ibm.com (unknown [9.102.21.221])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C129952052;
+        Thu,  2 Jul 2020 19:54:14 +0000 (GMT)
+Subject: [PATCH v2 01/12] kexec_file: allow archs to handle special regions
+ while locating memory hole
+From:   Hari Bathini <hbathini@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Date:   Fri, 03 Jul 2020 01:24:13 +0530
+Message-ID: <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
+In-Reply-To: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d786bca-6a0f-0c7f-e856-04dac2f280f6@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
+ cotscore=-2147483648 spamscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007020129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 08:16:45AM -0400, Stefan Berger wrote:
-> On 6/26/20 7:48 AM, Jarkko Sakkinen wrote:
-> > On Thu, Jun 25, 2020 at 05:27:50PM -0400, Stefan Berger wrote:
-> > > On 6/25/20 5:25 PM, Jarkko Sakkinen wrote:
-> > > > On Thu, Jun 25, 2020 at 08:41:18AM -0400, Stefan Berger wrote:
-> > > > > On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
-> > > > > > Re-allocate context and session buffers when needed. Scale them in page
-> > > > > > increments so that the reallocation is only seldomly required, and thus
-> > > > > > causes minimal stress to the system. Add a static maximum limit of four
-> > > > > > pages for buffer sizes.
-> > > > > > 
-> > > > > > Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-> > > > > > Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > You don't want to try a fixes tag? None of the previous versions of this
-> > > > > code will work with newer versions of the TPM 2 then...
-> > > > It's not a regression.
-> > > Ok, so distros will have to backport it.
-> > Now that you mentioned PPC64 in some other email that would make this a
-> > regression since x86 provides less space for keys than PPC64.
-> > 
-> > I studied PPC64 a bit and it actually allows max 256 kB page size, which
-> > is too much for us, given that there is no accounting implemented for
-> > TPM spaces (so far, should be done eventually).
-> > 
-> > So to summarize: 0 the idea would decrease the limit on PPC64 and
-> > increase it on ther arch's.  `
-> > 
-> > Dynamic scaling is over to top for fixing the issue, which means that I
-> > will just define static size of 16 kB for the buffer. We can reconsider
-> > it if we hit the roof again.
-> 
-> 16kb is plenty of space for years to come. Maybe just enlarge the buffer for
-> the regression and then do dynamic allocation as the final solution for the
-> tip. I can try to test compile it on one or two long term stable kernels.
-> Hopefully it applies cleanly. Simple test just in case you had a setup with
-> a VM and libtpms master:
+Some architectures may have special memory regions, within the given
+memory range, which can't be used for the buffer in a kexec segment.
+Implement weak arch_kexec_locate_mem_hole() definition which arch code
+may override, to take care of special regions, while trying to locate
+a memory hole.
 
-3*4096 bytes is based on absolutely nothing.
+Also, add the missing declarations for arch overridable functions and
+and drop the __weak descriptors in the declarations to avoid non-weak
+definitions from becoming weak.
 
-The chosen page size is based on the PPC64 default page size.
+Reported-by: kernel test robot <lkp@intel.com>
+[lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
 
-/Jarkko
+Changes in v2:
+* Introduced arch_kexec_locate_mem_hole() for override and dropped
+  weak arch_kexec_add_buffer().
+* Dropped __weak identifier for arch overridable functions.
+* Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
+  reported by lkp. lkp report for reference:
+    - https://lore.kernel.org/patchwork/patch/1264418/
+
+
+ include/linux/kexec.h |   29 ++++++++++++++++++-----------
+ kernel/kexec_file.c   |   16 ++++++++++++++--
+ 2 files changed, 32 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ea67910..9e93bef 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -183,17 +183,24 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ 
+-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-					 unsigned long buf_len);
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+-int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+-					    Elf_Shdr *section,
+-					    const Elf_Shdr *relsec,
+-					    const Elf_Shdr *symtab);
+-int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
+-					Elf_Shdr *section,
+-					const Elf_Shdr *relsec,
+-					const Elf_Shdr *symtab);
++/* Architectures may override the below functions */
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				  unsigned long buf_len);
++void *arch_kexec_kernel_image_load(struct kimage *image);
++int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
++				     Elf_Shdr *section,
++				     const Elf_Shdr *relsec,
++				     const Elf_Shdr *symtab);
++int arch_kexec_apply_relocations(struct purgatory_info *pi,
++				 Elf_Shdr *section,
++				 const Elf_Shdr *relsec,
++				 const Elf_Shdr *symtab);
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#ifdef CONFIG_KEXEC_SIG
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
++				 unsigned long buf_len);
++#endif
++int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 09cc78d..e89912d 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -636,6 +636,19 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ }
+ 
+ /**
++ * arch_kexec_locate_mem_hole - Find free memory to place the segments.
++ * @kbuf:                       Parameters for the memory search.
++ *
++ * On success, kbuf->mem will have the start address of the memory region found.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
++{
++	return kexec_locate_mem_hole(kbuf);
++}
++
++/**
+  * kexec_add_buffer - place a buffer in a kexec segment
+  * @kbuf:	Buffer contents and memory parameters.
+  *
+@@ -647,7 +660,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+  */
+ int kexec_add_buffer(struct kexec_buf *kbuf)
+ {
+-
+ 	struct kexec_segment *ksegment;
+ 	int ret;
+ 
+@@ -675,7 +687,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	ret = kexec_locate_mem_hole(kbuf);
++	ret = arch_kexec_locate_mem_hole(kbuf);
+ 	if (ret)
+ 		return ret;
+ 
+
