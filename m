@@ -2,148 +2,143 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3FD72088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EE320771
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KwW+/U9f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E231RZrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGBPxB (ORCPT
+        id S1726194AbgGBPy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        Thu, 2 Jul 2020 11:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgGBPw7 (ORCPT
+        with ESMTP id S1725878AbgGBPy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:52:59 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCE2C08C5DE
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:52:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id d17so18151404ljl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:52:58 -0700 (PDT)
+        Thu, 2 Jul 2020 11:54:56 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48B5C08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:54:55 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so11467240plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
-        b=KwW+/U9fkM+srFlFPvkKz4V3jEnKIKH8ygaroNt4YXgCxeue/VrdTKoJwmcn9oXIVs
-         4DY0ZVk34mPlw7u4KLu6rGjhvnrQL6/lofTS76CSIpt1KUwe2M3VISdDz83TvG8iTXSI
-         W47Pw8OTk/hC0zb2MZaQ1r596h7N8T5A23JSQkaU9RWiYgGd5Xav7JwLesO4IqMIFUZL
-         2VuieIxaw/GaR9iMUF6CkG5lHBbOPJgWIfkSCxXHB48wkXOO7uuaIH8G93d6r33rKKeJ
-         p2LG1w2EFwjJvNEP/726kUUAmMNBPXMl5+BvhQTxMO/S6XCBw/1QqIdNdExANIirUL/4
-         +A/w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MeAooFE7BzOJmYHcj5OvJQ3TIg8iS0KIUniqk0qo5RE=;
+        b=E231RZrQeNOxHh/UTusOKpx/9GZyqw7QxQJkPeqUZz6CUpMxg+PQ93lPWTHg6A7njf
+         9/s9/DtLeQECLL3mPfiHy/zYgSl8SvJa1wS3GmTkJELVt6l7Yh5Xb07gOsTpgYaMInDs
+         NWAAtwUQgGR66y9UiGHjay3pOw/x2zgzhXHgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
-        b=UGvfmvrW2e08/vnrNzYWLqmr+k5CDM0JLZaExVIs0DEWqbviwn3sGluMAQ3245G75P
-         ztPJ1lONL95AW36KkClaZJXG2K8M4Yglnjf/Da0v0qth8z6O9TYzSthBxaC7s19YrveO
-         9PJLFmWkFDAi+zrYjHUv/v1SOO0TF3ESma6uwpt3uEeBY1jKDlictJ/2neCUTGm51YTV
-         FNff+XCxcUmQmCw280JuL414XvqErrTHXA4ksqVFIUeFXdUzEeLWwDM2SuEXNFAJEciC
-         FMp72S+ubMu0XDpxpfPIIgCjDX3oB/5b6d6Hryk3gWnI/CqREg3Nzj5ydNggOzt7Tleu
-         5wQg==
-X-Gm-Message-State: AOAM533HtrqaJnr3cnENTBpt8oS7+bWeiZiOO9Jaim12OJ1jzJyFdOBy
-        kSykNgqS5uKWuGgWPd+2s+xHOIjNCdhRU+moaoq4fA==
-X-Google-Smtp-Source: ABdhPJz3ABkPWjkv8L0FIiK+Kjjg6BO4eaaimJnKQo1xzAYZPxzmmzDpXVUF4bLDPypwEcFJ8kmLmaUrHoL1B8Z52PM=
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr16463205ljp.266.1593705177353;
- Thu, 02 Jul 2020 08:52:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MeAooFE7BzOJmYHcj5OvJQ3TIg8iS0KIUniqk0qo5RE=;
+        b=A1cZNiFXUVvWP8RDe8TCYaNkK+3QllHBooOx7vVQ0feiUMQ4RNfR5XNQ+NNMKZuqa8
+         3JA3p6FhP4I+YGEzND4hLeGm14WoEUhSPHzpoqT2f3Iyr4wefrLJ3PHkE8KbfGakzf4D
+         EJgCpO2FB4wus7iXYNslst1Hjfz3PM/9xcAXPjCKAHJ7BWFoaO2YNTmPCb8e/2Hdu1z4
+         Mgw3LdF1in2epcbXGhRQqQq1N19pq9MlBv0C9a/08IFfVr0g7a7Kzs3O6Wb+liZ3BSrk
+         NM+FB5vyw21hrI160FMSsEkhV6JBuczSkyRITOKCwemPFEmNMkU2QenJjWIUzxB6sXc4
+         rfdQ==
+X-Gm-Message-State: AOAM533xp8HoP7xBkWmZc1RJh9HcLuSjkLvgivhgn4vULzu1OCNlyDal
+        pG1suGkz4GVR60zGRdyw5uHhxg==
+X-Google-Smtp-Source: ABdhPJzxtf0wMlXhoQG2ZQz9ws5/QOLGYc1LqvaoXLWTDjY8edkVA5cT+vVZslEfFySrxdY9yW4VTw==
+X-Received: by 2002:a17:902:bb95:: with SMTP id m21mr26850948pls.111.1593705295142;
+        Thu, 02 Jul 2020 08:54:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n65sm9219269pfn.17.2020.07.02.08.54.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 08:54:54 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:54:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Danny Lin <danny@kdrag0n.dev>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] vmlinux.lds.h: Coalesce transient LLVM dead code
+ elimination sections
+Message-ID: <202007020853.5F15B5DDD@keescook>
+References: <20200702085400.2643527-1-danny@kdrag0n.dev>
 MIME-Version: 1.0
-References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-19-hch@lst.de>
- <20200702141001.GA3834@lca.pw> <20200702151453.GA1799@lst.de>
-In-Reply-To: <20200702151453.GA1799@lst.de>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 2 Jul 2020 21:22:46 +0530
-Message-ID: <CA+G9fYv6DfJB=DeQFVptAuaVv1Ng-BK0fRHgFZ=DNzymu8LVvw@mail.gmail.com>
-Subject: Re: [PATCH 18/20] block: refator submit_bio_noacct
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Qian Cai <cai@lca.pw>, Jens Axboe <axboe@kernel.dk>,
-        dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702085400.2643527-1-danny@kdrag0n.dev>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 20:45, Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, Jul 02, 2020 at 10:10:10AM -0400, Qian Cai wrote:
-> > On Mon, Jun 29, 2020 at 09:39:45PM +0200, Christoph Hellwig wrote:
-> > > Split out a __submit_bio_noacct helper for the actual de-recursion
-> > > algorithm, and simplify the loop by using a continue when we can't
-> > > enter the queue for a bio.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >
-> > Reverting this commit and its dependencies,
-> >
-> > 5a6c35f9af41 block: remove direct_make_request
-> > ff93ea0ce763 block: shortcut __submit_bio_noacct for blk-mq drivers
-> >
-> > fixed the stack-out-of-bounds during boot,
-> >
-> > https://lore.kernel.org/linux-block/000000000000bcdeaa05a97280e4@google.com/
->
-> Yikes.  bio_alloc_bioset pokes into bio_list[1] in a totally
-> undocumented way.  But even with that the problem should only show
-> up with "block: shortcut __submit_bio_noacct for blk-mq drivers".
->
-> Can you try this patch?
+On Thu, Jul 02, 2020 at 01:54:00AM -0700, Danny Lin wrote:
+> A recent LLVM 11 commit [1] made LLD stop implicitly coalescing some
+> temporary LLVM sections, namely .{data,bss}..compoundliteral.XXX:
+> 
+>   [30] .data..compoundli PROGBITS         ffffffff9ac9a000  19e9a000
+>        000000000000cea0  0000000000000000  WA       0     0     32
+>   [31] .rela.data..compo RELA             0000000000000000  40965440
+>        0000000000001d88  0000000000000018   I      2238    30     8
+>   [32] .data..compoundli PROGBITS         ffffffff9aca6ea0  19ea6ea0
+>        00000000000033c0  0000000000000000  WA       0     0     32
+>   [33] .rela.data..compo RELA             0000000000000000  409671c8
+>        0000000000000948  0000000000000018   I      2238    32     8
+>   [...]
+>   [2213] .bss..compoundlit NOBITS           ffffffffa3000000  1d85c000
+>        00000000000000a0  0000000000000000  WA       0     0     32
+>   [2214] .bss..compoundlit NOBITS           ffffffffa30000a0  1d85c000
+>        0000000000000040  0000000000000000  WA       0     0     32
+>   [...]
+> 
+> While these extra sections don't typically cause any breakage, they do
+> inflate the vmlinux size due to the overhead of storing metadata for
+> thousands of extra sections.
+> 
+> It's also worth noting that for some reason, some downstream Android
+> kernels can't boot at all if these sections aren't coalesced.
+> 
+> This issue isn't limited to any specific architecture; it affects arm64
+> and x86 if CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is forced on.
+> 
+> Example on x86 allyesconfig:
+>     Before: 2241 sections, 1170972 KiB
+>     After:    56 sections, 1171169 KiB
+> 
+> [1] https://github.com/llvm/llvm-project/commit/9e33c096476ab5e02ab1c8442cc3cb4e32e29f17
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/958
+> Cc: stable@vger.kernel.org # v4.4+
+> Suggested-by: Fangrui Song <maskray@google.com>
+> Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+> ---
+>  include/asm-generic/vmlinux.lds.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index db600ef218d7..18968cba87c7 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -94,10 +94,10 @@
+>   */
+>  #ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+>  #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+> -#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
+> +#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* .data..compoundliteral*
+>  #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
+>  #define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
+> -#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
+> +#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral*
 
-Applied your patch on top of linux-next 20200702 and tested on
-arm64 and x86_64 devices and the reported BUG fixed.
+Are there .data.. and .bss.. sections we do NOT want to collect? i.e.
+why not include .data..* and .bss..* ?
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
->
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index bf882b8d84450c..9f1bf8658b611a 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1155,11 +1155,10 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
->  static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
->  {
->         struct gendisk *disk = bio->bi_disk;
-> -       struct bio_list bio_list;
-> +       struct bio_list bio_list[2] = { };
->         blk_qc_t ret = BLK_QC_T_NONE;
->
-> -       bio_list_init(&bio_list);
-> -       current->bio_list = &bio_list;
-> +       current->bio_list = bio_list;
->
->         do {
->                 WARN_ON_ONCE(bio->bi_disk != disk);
-> @@ -1174,7 +1173,7 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
->                 }
->
->                 ret = blk_mq_submit_bio(bio);
-> -       } while ((bio = bio_list_pop(&bio_list)));
-> +       } while ((bio = bio_list_pop(&bio_list[0])));
->
->         current->bio_list = NULL;
->         return ret;
-
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1538359#L288
-https://lkft.validation.linaro.org/scheduler/job/1538360#L572
-
-
-- Naresh
+-- 
+Kees Cook
