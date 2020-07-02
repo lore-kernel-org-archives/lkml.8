@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46684C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE5D20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F3220748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653683;
-	bh=30HkcgXNjv8HHhen8WTqMInBwSDwJ9xryGRUgIxvElU=;
+	s=default; t=1593653686;
+	bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFsRlDv7s6wmaHzbBVzeiqyRCl0daqM2CLYCeo75r13p/xfGNxmYEK8B7BsR238b8
-	 PNbV/FZJdNChe9WjpX603k/oYDYGRA3wKzz763lQ+b4bi/8CAXAojnfywTnIR0ictO
-	 VApyUMJ5MZ4X1ft7RogEoVkJYPPTvh8t/8zMcfWo=
+	b=vm0D1KQL6pNx6FFfTV0MTWhMIbk1NOA+1qceJ4GRBuZdU+IgP0IDmh/aUYtnWK6hC
+	 ohjQbAd1T6URPkS695Z8JA96D34TzZFE6Ful1YIirgqwiuk4sdxpZlvan9a25kuP8W
+	 Jk2V+fpy4bU+BtRikqc1T8lIH/JLJzcs/DiIS3JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgGBBem (ORCPT
+        id S1729125AbgGBBeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbgGBBZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:30 -0400
+        id S1728366AbgGBBZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E184D2145D;
-        Thu,  2 Jul 2020 01:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1ECE20748;
+        Thu,  2 Jul 2020 01:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653129;
-        bh=30HkcgXNjv8HHhen8WTqMInBwSDwJ9xryGRUgIxvElU=;
+        s=default; t=1593653128;
+        bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gt2ZFrhGiR0G0khkKOEcNY6lCs7D69XLdOEK2r1XRdbhtik0gZkTuPFlA00Ib6yWo
-         Q21oCUy4iaPicit5ge0/0OEnxy73W3g7FqxFZxP/tvgmgrLy9swZ7KWZRfy/qzh3E/
-         w+gx2GmFcvOKjcmsx4mGJJLM7xdhiqp6mbsPuIwI=
+        b=rEh0HavWZPIC3UI4p6rfcFjLA3I/cx7X2AgPo2vJzpCU+W/jsCjko/3mGbB6wwA6+
+         JfbkWVn2JueOE7+vZF3xqTdja0dMFbtu3SfLafhUE6CdR+3h8sYuFZPAKsM2IyN8t3
+         6nSlL8juyyv63SGdoktMQNBWy2TJ9H6ARdB+NqFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/40] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
-Date:   Wed,  1 Jul 2020 21:23:25 -0400
-Message-Id: <20200702012402.2701121-4-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 03/40] perf/x86/rapl: Fix RAPL config variable bug
+Date:   Wed,  1 Jul 2020 21:23:24 -0400
+Message-Id: <20200702012402.2701121-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -61,50 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
+[ Upstream commit 16accae3d97f97d7f61c4ee5d0002bccdef59088 ]
 
-We can currently sometimes get "RXS timed out" errors and "EOT timed out"
-errors with spi transfers.
+This patch fixes a bug introduced by:
 
-These errors can be made easy to reproduce by reading the cpcap iio
-values in a loop while keeping the CPUs busy by also reading /dev/urandom.
+  fd3ae1e1587d6 ("perf/x86/rapl: Move RAPL support to common x86 code")
 
-The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
-in addition to the spi-cs-high property we already have.
+The Kconfig variable name was wrong. It was missing the CONFIG_ prefix.
 
-The "EOT timed out" errors we can fix by increasing the spi clock rate
-to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
-up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
-for cpcap.
-
-Cc: maemo-leste@lists.dyne.org
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephane Eranian <eraniangoogle.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Kim Phillips <kim.phillips@amd.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200528201614.250182-1-eranian@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/events/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 82f7ae030600d..ab91c4ebb1463 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -13,8 +13,10 @@ cpcap: pmic@0 {
- 		#interrupt-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		spi-max-frequency = <3000000>;
-+		spi-max-frequency = <9600000>;
- 		spi-cs-high;
-+		spi-cpol;
-+		spi-cpha;
- 
- 		cpcap_adc: adc {
- 			compatible = "motorola,mapphone-cpcap-adc";
+diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+index b418ef6878796..726e83c0a31a1 100644
+--- a/arch/x86/events/Makefile
++++ b/arch/x86/events/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-y					+= core.o probe.o
+-obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
++obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= rapl.o
+ obj-y					+= amd/
+ obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
 -- 
 2.25.1
 
