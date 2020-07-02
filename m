@@ -2,239 +2,84 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB107C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00042C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35C12077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC764207E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEnbYfoJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fp6Gy8ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgGBAIW (ORCPT
+        id S1727976AbgGBAIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
+        Wed, 1 Jul 2020 20:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgGBAIV (ORCPT
+        with ESMTP id S1727073AbgGBAIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:08:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E7FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 17:08:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t11so6843237pfq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 17:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T7hL8oTAJrT5pDPCgIg1OSRZK1ha79xq6AjDa0eoWzM=;
-        b=LEnbYfoJKkXege/aZzvcuMIoxLycA71bdbZUWiA0LKPJBzkLr1NjDtTji/yDoZuqmG
-         SgutKsd0nQlY6f/Oma3BlcuhwG05exEmsXqQ9208gaTQunAfOLKywX4jv0Fxzew26g2a
-         wZCM0ff+knpkbcgFiJb+L/92Q0VSD2dUJMOhWCnX7NILxMlN5brpRMEGbfeKN7eN+ZAY
-         mMcn0I7Ug79H/4rZYHVtjSvBxZTLkvVDDOWGIFcSsdjeibceFDUt13Yt14N0UjY3jNM6
-         sU0WepShcec2/AjUp2bPrUQpBQumxh6+j8IXJ8nJl4Qt+2UK3tXlGWn/E2V7J/4V6BhJ
-         Lz1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T7hL8oTAJrT5pDPCgIg1OSRZK1ha79xq6AjDa0eoWzM=;
-        b=io1VpWy9JrI5dyX2nL+WSIagHmn5MWF0VUnfNtyb7iaWVlEJrg7grM+I3cESRxmy8l
-         tq2jDzNaNK1Ojt+cdKTy0sQqZGZvOAzZ2jZOdI5iNb+89BIMTJck/E5Zt1566vmPgadD
-         tTuiga3snEowZ1tINcarQD8KetZ8MwFSwiHXaKaghqQbLipfIjmYvC7kcMXtnWau9FUN
-         wr2+YSn9t31sHd+GMPzrwWv5cPB8EzNmpvFvvFHOQjD7SSxr0BhcMozBLPOGa9VrEMAq
-         cx84zBIpb1KQOtXeluIIZlKPpSicqvGNKpXM7Co53tWei12Nhp3qyzwMvxfmqAgaW47l
-         gZbA==
-X-Gm-Message-State: AOAM532RiA4hNAYI5vqnhF9qV+2q8xT3C65HJjCKPsFEAL7V7dtpeEKx
-        euTW45ZpdeUwfL7Y0gcMhMhbqRTMh0cjXOh/ZExdnw==
-X-Google-Smtp-Source: ABdhPJxay3+NVL7g1bJnT+SW3CTXpy+QaVtu3iAFRk0eR/kGTftYv4RPNc3Q2z6F1HP2TV7SPwIqDxHbgd2M97d9yeA=
-X-Received: by 2002:aa7:9303:: with SMTP id 3mr17081569pfj.108.1593648500571;
- Wed, 01 Jul 2020 17:08:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200701192936.1397152-1-masahiroy@kernel.org>
-In-Reply-To: <20200701192936.1397152-1-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 1 Jul 2020 17:08:07 -0700
-Message-ID: <CAKwvOdkwgTxHWAD1L63vOn4TGVjr0EOKTUnZ1KsW=mh1wxNTGQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: do not export LDFLAGS_vmlinux
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        Wed, 1 Jul 2020 20:08:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99E3C08C5C1;
+        Wed,  1 Jul 2020 17:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=itjXWeaWl+zoa6+Nj8NLNZzan7LY+vRjjEzZZHqOrYM=; b=Fp6Gy8ho+HdQ37oJzO5GcfbzPO
+        tK7QdXC2EBz0292qLZmdskbeO1Ty2g01IgVzQaLZSMeC8zx6+wd05QSflw931WXEz+uBRdKrz35IN
+        IicFK8/euW9rhv7Ovj3mtRuWyt4BD7/IM2R3BP/T8Nz3h2zIawgGeOe4JtvUCHPzx29QaYKwaq/XX
+        8kjuMV+rOVgU0y1f61KhO+bdl6b1/4Bz4REU9kgTDSkgYJMrZC3hQka5RO3Py3fp76wMtbcVA0Rxm
+        /I1VJq+tympjYY42JqiQF8Qya5gs1ovHHHFMoCNpO6SN82JEz61cXSd5JFTthuOZ0Q1nMgcJC6ctO
+        i0HwZD/Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqmmR-0003Uc-22; Thu, 02 Jul 2020 00:08:43 +0000
+Date:   Thu, 2 Jul 2020 01:08:43 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>,
         LKML <linux-kernel@vger.kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, Guan Xuetao <gxt@pku.edu.cn>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+        kernel-janitors@vger.kernel.org,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
+Message-ID: <20200702000843.GV25523@casper.infradead.org>
+References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
+ <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
+ <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
+ <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
+ <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
+ <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
+ <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 12:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> When you clean the build tree for ARCH=arm, you may see the following
-> error message:
->
-> $ make -j24 ARCH=arm clean
->   CLEAN   arch/arm/crypto
->   CLEAN   arch/arm/kernel
->   CLEAN   arch/arm/mach-at91
->   CLEAN   arch/arm/mach-omap2
->   CLEAN   arch/arm/vdso
->   CLEAN   certs
->   CLEAN   lib
->   CLEAN   usr
->   CLEAN   net/wireless
->   CLEAN   drivers/firmware/efi/libstub
-> nm: 'arch/arm/boot/compressed/../../../../vmlinux': No such file
-> /bin/sh: 1: arithmetic expression: expecting primary: " "
->   CLEAN   arch/arm/boot/compressed
->   CLEAN   drivers/scsi
->   CLEAN   drivers/tty/vt
->   CLEAN   arch/arm/boot
->   CLEAN   vmlinux.symvers modules.builtin modules.builtin.modinfo
+On Wed, Jul 01, 2020 at 07:52:58AM -0700, Randy Dunlap wrote:
+> On 7/1/20 6:32 AM, Markus Elfring wrote:
+> >>> How do you think about to use the following command variant
+> >>> for the adjustment of the software documentation?
+> >>>
+> >>> +    make C=1 CHECK='scripts/coccicheck' 'path/to/file.o'
+> >>
+> >> I don't understand the reason for that change...
+> 
+> IOW, your "patch" needs justification and/or explanation. It was missing that info.
 
-Thanks for the patch, Masahiro. This fixes the issue I was also
-observing.  Curious case of shadowing env vars.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+What Markus is trying so completely ineptly to say is that
+  make C=1 CHECK=scripts/coccicheck path/to/file.c
+doesn't work.  You need to use the .o suffix to check the .c file.
 
->
-> Even if you run the same command again, the error message is not shown
-> despite vmlinux is already gone.
->
-> To reproduce it, the parallel option -j is needed. Single thread
-> cleaning always executes 'archclean', 'vmlinuxclean' in this order,
-> so vmlinux still exists when arch/arm/boot/compressed/ is cleaned.
->
-> Looking at arch/arm/boot/compressed/Makefile does not help understand
-> the reason of the error message. Both KBSS_SZ and LDFLAGS_vmlinux are
-> assigned with '=' operator, hence, they are not expanded until they are
-> used. Obviously, 'make clean' does not use them.
->
-> In fact, the root cause exists in the top Makefile:
->
->   export LDFLAGS_vmlinux
->
-> Since LDFLAGS_vmlinux is an exported variable, LDFLAGS_vmlinux in
-> arch/arm/boot/compressed/Makefile is expanded when scripts/Makefile.clean
-> has a command to execute. This is why the error message shows up only
-> when there exist build artifacts in arch/arm/boot/compressed/.
->
-> Adding 'unexport LDFLAGS_vmlinux' to arch/arm/boot/compressed/Makefile
-> will fix it as far as ARCH=arm is concerned, but I believe the proper
-> fix is to get rid of 'export LDFLAGS_vmlinux' from the top Makefile.
->
-> LDFLAGS_vmlinux in the top Makefile contains linker flags for the top
-> vmlinux. LDFLAGS_vmlinux in arch/arm/boot/compressed/Makefile is for
-> arch/arm/boot/compressed/vmlinux. They just happen to have the same
-> variable name, but are used for different purposes. Exporting the former
-> bothers the decompressor Makefiles.
->
-> This commit passes LDFLAGS_vmlinux to scripts/link-vmlinux.sh via a
-> command line parameter instead of via an environment variable. LD and
-> KBUILD_LDFLAGS are exported, but I did the same for consistency. Anyway,
-> they must be included in cmd_link-vmlinux to allow if_changed to detect
-> the changes in LD or KBUILD_LDFLAGS.
->
-> The following Makefiles are not affected:
->
->   arch/arm/boot/compressed/Makefile
->   arch/h8300/boot/compressed/Makefile
->   arch/nios2/boot/compressed/Makefile
->   arch/parisc/boot/compressed/Makefile
->   arch/s390/boot/compressed/Makefile
->   arch/sh/boot/compressed/Makefile
->   arch/sh/boot/romimage/Makefile
->   arch/x86/boot/compressed/Makefile
->
-> They use ':=' or '=' to clear the LDFLAGS_vmlinux inherited from the
-> top Makefile.
->
-> We need to take a closer look at the impact to unicore32 and xtensa.
->
-> arch/unicore32/boot/compressed/Makefile only uses '+=' operator for
-> LDFLAGS_vmlinux. So, the decompressor previously inherited the linker
-> flags from the top Makefile.
->
-> However, commit 70fac51feaf2 ("unicore32 additional architecture files:
-> boot process") was merged before commit 1f2bfbd00e46 ("kbuild: link of
-> vmlinux moved to a script"). So, I believe this is rather a bug fix of
-> 1f2bfbd00e46.
->
-> arch/xtensa/boot/boot-elf/Makefile is also affected, but this is a fix
-> for the same reason. It did not inherit LDFLAGS_vmlinux when commit
-> 4bedea945451 ("[PATCH] xtensa: Architecture support for Tensilica Xtensa
-> Part 2") was merged. I deleted $(LDFLAGS_vmlinux), which is now empty.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  Makefile                           | 3 +--
->  arch/xtensa/boot/boot-elf/Makefile | 2 +-
->  scripts/link-vmlinux.sh            | 4 ++++
->  3 files changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 5496a32dffa6..075f2f943180 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1100,7 +1100,6 @@ KBUILD_VMLINUX_OBJS += $(patsubst %/,%/built-in.a, $(drivers-y))
->
->  export KBUILD_VMLINUX_OBJS KBUILD_VMLINUX_LIBS
->  export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
-> -export LDFLAGS_vmlinux
->  # used by scripts/Makefile.package
->  export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) LICENSES arch include scripts tools)
->
-> @@ -1132,7 +1131,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
->
->  # Final link of vmlinux with optional arch pass after final link
->  cmd_link-vmlinux =                                                 \
-> -       $(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
-> +       $(CONFIG_SHELL) $< "$(LD)" "$(KBUILD_LDFLAGS)" "$(LDFLAGS_vmlinux)";    \
->         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
->
->  vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
-> diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-> index 12ae1e91cb75..c6538d3321b9 100644
-> --- a/arch/xtensa/boot/boot-elf/Makefile
-> +++ b/arch/xtensa/boot/boot-elf/Makefile
-> @@ -25,7 +25,7 @@ $(obj)/Image.o: vmlinux.bin $(OBJS)
->                 $(OBJS) $@
->
->  $(obj)/../Image.elf: $(obj)/Image.o $(obj)/boot.lds
-> -       $(Q)$(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) \
-> +       $(LD) $(KBUILD_LDFLAGS) \
->                 -T $(obj)/boot.lds \
->                 --build-id=none \
->                 -o $@ $(obj)/Image.o
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index 7eaf70d58488..16c7818b3e19 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -30,6 +30,10 @@
->  # Error out on error
->  set -e
->
-> +LD="$1"
-> +KBUILD_LDFLAGS="$2"
-> +LDFLAGS_vmlinux="$3"
-> +
->  # Nice output in kbuild format
->  # Will be supressed by "make -s"
->  info()
-> --
-> 2.25.1
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
