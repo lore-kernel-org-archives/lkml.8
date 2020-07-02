@@ -2,101 +2,161 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A416C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB2F20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041E4207E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgGBGoA (ORCPT
+        id S1726856AbgGBGoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:44:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2267 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgGBGoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:44:00 -0400
-IronPort-SDR: sK27BxKgkpmISPrlVOPWObmx+4PFGybaT8u+bCESPR4u7QPASZ0ZM0sKDgRRzAfl3D/nBgQOS2
- SEIkPrWRKYRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="164869501"
-X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="164869501"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 23:43:59 -0700
-IronPort-SDR: rHXL0bKhROcvkEdkF2ZKwjC3xqd7t/KLFz9uDJIbOqWn8hBk9exjsQ3r0r4ETueAaQIKkKQqz6
- 3f7CdnJwMwNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="425846485"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by orsmga004.jf.intel.com with ESMTP; 01 Jul 2020 23:43:57 -0700
-Subject: Re: [PATCH 14/15] mmc: host: cqhci: Demote faux kerneldoc header down
- to basic comment block
-To:     Lee Jones <lee.jones@linaro.org>, ulf.hansson@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>
-References: <20200701124702.908713-1-lee.jones@linaro.org>
- <20200701124702.908713-15-lee.jones@linaro.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <049e68ad-50fb-31d6-0a94-3f7c676a75e7@intel.com>
-Date:   Thu, 2 Jul 2020 09:43:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 2 Jul 2020 02:44:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36426 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726169AbgGBGo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:44:29 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0626W4fT082159;
+        Thu, 2 Jul 2020 02:44:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmp2je5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 02:44:16 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0626fftQ118902;
+        Thu, 2 Jul 2020 02:44:16 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmp2jdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 02:44:16 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0626aPZb016144;
+        Thu, 2 Jul 2020 06:44:13 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 31wwch5bu7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 06:44:13 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0626iBVI58196136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jul 2020 06:44:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 43DC45204F;
+        Thu,  2 Jul 2020 06:44:11 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id C8DD352052;
+        Thu,  2 Jul 2020 06:44:08 +0000 (GMT)
+Date:   Thu, 2 Jul 2020 12:14:08 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+Message-ID: <20200702064408.GD17918@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
+ <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
+ <20200701084200.GN2369@dhcp22.suse.cz>
+ <20200701100442.GB17918@linux.vnet.ibm.com>
+ <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
+ <20200701110145.GC17918@linux.vnet.ibm.com>
+ <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
+ <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
+ <20200701122110.GT2369@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200701124702.908713-15-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200701122110.GT2369@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_02:2020-07-01,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 adultscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/07/20 3:47 pm, Lee Jones wrote:
-> cqhci_host_alloc_tdl()'s function header is the only one in
-> kerneldoc format.  Which seems odd as it's not part of an
-> external API and isn't referenced anywhere else.  Seeing as
-> there has also been no attempt to describe the expected
-> function arguments either, we're going to assume that this is
-> not actually a bona fide kerneldoc use-case.
-> 
-> Fixes the following W=1 kernel build warning:
-> 
->  drivers/mmc/host/cqhci.c:163: warning: Function parameter or member 'cq_host' not described in 'cqhci_host_alloc_tdl'
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ritesh Harjani <riteshh@codeaurora.org>
-> Cc: Asutosh Das <asutoshd@codeaurora.org>
-> Cc: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+* Michal Hocko <mhocko@kernel.org> [2020-07-01 14:21:10]:
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/cqhci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>>>>>
+> > >>>>>> 2. Also existence of dummy node also leads to inconsistent information. The
+> > >>>>>> number of online nodes is inconsistent with the information in the
+> > >>>>>> device-tree and resource-dump
+> > >>>>>>
+> > >>>>>> 3. When the dummy node is present, single node non-Numa systems end up showing
+> > >>>>>> up as NUMA systems and numa_balancing gets enabled. This will mean we take
+> > >>>>>> the hit from the unnecessary numa hinting faults.
+> > >>>>>
+> > >>>>> I have to say that I dislike the node online/offline state and directly
+> > >>>>> exporting that to the userspace. Users should only care whether the node
+> > >>>>> has memory/cpus. Numa nodes can be online without any memory. Just
+> > >>>>> offline all the present memory blocks but do not physically hot remove
+> > >>>>> them and you are in the same situation. If users are confused by an
+> > >>>>> output of tools like numactl -H then those could be updated and hide
+> > >>>>> nodes without any memory&cpus.
+> > >>>>>
+> > >>>>> The autonuma problem sounds interesting but again this patch doesn't
+> > >>>>> really solve the underlying problem because I strongly suspect that the
+> > >>>>> problem is still there when a numa node gets all its memory offline as
+> > >>>>> mentioned above.
 > 
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index 75934f3c117eb..8cc277b4ffe9e 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -144,7 +144,7 @@ static void cqhci_dumpregs(struct cqhci_host *cq_host)
->  		CQHCI_DUMP(": ===========================================\n");
->  }
->  
-> -/**
-> +/*
->   * The allocated descriptor table for task, link & transfer descritors
->   * looks like:
->   * |----------|
-> 
+> I would really appreciate a feedback to these two as well.
 
+1. Its not just numactl that's to be fixed but all tools/utilities that
+depend on /sys/devices/system/node/online. Are we saying to not rely/believe
+in the output given by the kernel but do further verification?  
+
+Also how would the user space differentiate between the case where the
+Kernel missed marking a node as offline to the case where the memory was
+offlined on a cpuless node but node wasn't offline?.
+
+2. Regarding the autonuma, the case of offline memory is user/admin driven,
+so if there is a performance hit, its something that's driven by his
+user/admin actions. Also how often do we see users offline complete memory
+of cpuless node on a 2 node system?
+
+> 
+> > [    0.009726] SRAT: PXM 1 -> APIC 0x00 -> Node 0
+> > [    0.009727] SRAT: PXM 1 -> APIC 0x01 -> Node 0
+> > [    0.009727] SRAT: PXM 1 -> APIC 0x02 -> Node 0
+> > [    0.009728] SRAT: PXM 1 -> APIC 0x03 -> Node 0
+> > [    0.009731] ACPI: SRAT: Node 0 PXM 1 [mem 0x00000000-0x0009ffff]
+> > [    0.009732] ACPI: SRAT: Node 0 PXM 1 [mem 0x00100000-0xbfffffff]
+> > [    0.009733] ACPI: SRAT: Node 0 PXM 1 [mem 0x100000000-0x13fffffff]
+> 
+> This begs a question whether ppc can do the same thing?
+
+Certainly ppc can be made to adapt to this situation but that would be a
+workaround. Do we have a reason why we think node 0 is unique and special?
+If yes can we document it so that in future also people know why we consider
+node 0 to be special. I do understand the *fear of the unknown* but when we
+are unable to theoretically or practically come up a case, then it may
+probably be better we hit the situation to understand what that unknown is?
+
+> I would swear that we've had x86 system with node 0 but I cannot really
+> find it and it is possible that it was not x86 after all...
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
