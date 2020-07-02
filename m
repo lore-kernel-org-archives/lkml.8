@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E234520874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2AA20748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653095;
-	bh=gT5drgVkggJ7IsVykwTuD9LohfHoV0Is9KZ7YA3lFi4=;
+	s=default; t=1593653100;
+	bh=PSzzfbTuoUNF3dRKfP49WxHtPiD1fc3IO882Ix6zJLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXqlQ/KOWO19e8X09rFZGZF0LhEClsDxzVIrcF00070hPYS383wyKJ0KGySKuRPyF
-	 ckcTm05p2fylGp1pp4paQ7kBZf1WZbO5bDpPE2Dl87aLybtBE57/9YmMWhylncm8qC
-	 V6J/W677DA/8SqA2LW9qZmSdqXYnf1DkrFFgU++o=
+	b=Ns94MA5nijVAtHLd50D/t9aJz6Z78/ryIljCaCISCXrkvrAyJM+7iu3jnqe5iReFM
+	 O3rNs1zxMnM1ogISwGr1YaFxrvO7NHLz1Izo4WFH+Z8dFti2H+JR8nNf4yD62bxddJ
+	 Dnb+bLqv5NwjZ5auzf5knxtMgcapNZwkwAZ+X44g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgGBBYx (ORCPT
+        id S1728720AbgGBBY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54758 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbgGBBX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:57 -0400
+        id S1728514AbgGBBXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD082082F;
-        Thu,  2 Jul 2020 01:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C205320936;
+        Thu,  2 Jul 2020 01:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653037;
-        bh=gT5drgVkggJ7IsVykwTuD9LohfHoV0Is9KZ7YA3lFi4=;
+        s=default; t=1593653032;
+        bh=PSzzfbTuoUNF3dRKfP49WxHtPiD1fc3IO882Ix6zJLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KkSo6zlDPM1yEdJakPvcFzqWdifUqcimcCT1XjW7YN9Xf5+SH1D3gpQW1zdbtj9W
-         QYOOD7g4UWe3Y9u7qTsugjxiQ+C8PshdsZpB0nAsITU7dYq5n28aPl7ygT1hrcwIJ0
-         euxiJEphE0s3rySANGyqZggq8dgp6EB/+5AyDQjc=
+        b=wGWSw6Ogv21+EWuPjwRsjTi8HNEziUeBQLEoxZ9yYUGf4aatkk3qBXYeKljJaulmT
+         i+/a12NP6wOztiURnLR5gNWjFz6ItQuehe7UdmmvX5GuA8p5ZH/6k/QdkY/zC0xWnc
+         jCcFquRw8L2BBQb+mowJYdBDutrbcLhCXCDhbPHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 50/53] arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist
-Date:   Wed,  1 Jul 2020 21:21:59 -0400
-Message-Id: <20200702012202.2700645-50-sashal@kernel.org>
+Cc:     Chengguang Xu <cgxu519@mykernel.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 46/53] block: release bip in a right way in error path
+Date:   Wed,  1 Jul 2020 21:21:55 -0400
+Message-Id: <20200702012202.2700645-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -61,37 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-[ Upstream commit 108447fd0d1a34b0929cd26dc637c917a734ebab ]
+[ Upstream commit 0b8eb629a700c0ef15a437758db8255f8444e76c ]
 
-QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on
-Cortex-A55 and are SSB safe, hence add them to SSB
-safelist -> arm64_ssb_cpus[].
+Release bip using kfree() in error path when that was allocated
+by kmalloc().
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200625103123.7240-1-saiprakash.ranjan@codeaurora.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpu_errata.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bio-integrity.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index df56d2295d165..0f37045fafab3 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -460,6 +460,8 @@ static const struct midr_range arm64_ssb_cpus[] = {
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
- 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
-+	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
-+	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
- 	{},
- };
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index bf62c25cde8f4..1d173feb38831 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -24,6 +24,18 @@ void blk_flush_integrity(void)
+ 	flush_workqueue(kintegrityd_wq);
+ }
  
++void __bio_integrity_free(struct bio_set *bs, struct bio_integrity_payload *bip)
++{
++	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
++		if (bip->bip_vec)
++			bvec_free(&bs->bvec_integrity_pool, bip->bip_vec,
++				  bip->bip_slab);
++		mempool_free(bip, &bs->bio_integrity_pool);
++	} else {
++		kfree(bip);
++	}
++}
++
+ /**
+  * bio_integrity_alloc - Allocate integrity payload and attach it to bio
+  * @bio:	bio to attach integrity metadata to
+@@ -75,7 +87,7 @@ struct bio_integrity_payload *bio_integrity_alloc(struct bio *bio,
+ 
+ 	return bip;
+ err:
+-	mempool_free(bip, &bs->bio_integrity_pool);
++	__bio_integrity_free(bs, bip);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ EXPORT_SYMBOL(bio_integrity_alloc);
+@@ -96,14 +108,7 @@ void bio_integrity_free(struct bio *bio)
+ 		kfree(page_address(bip->bip_vec->bv_page) +
+ 		      bip->bip_vec->bv_offset);
+ 
+-	if (bs && mempool_initialized(&bs->bio_integrity_pool)) {
+-		bvec_free(&bs->bvec_integrity_pool, bip->bip_vec, bip->bip_slab);
+-
+-		mempool_free(bip, &bs->bio_integrity_pool);
+-	} else {
+-		kfree(bip);
+-	}
+-
++	__bio_integrity_free(bs, bip);
+ 	bio->bi_integrity = NULL;
+ 	bio->bi_opf &= ~REQ_INTEGRITY;
+ }
 -- 
 2.25.1
 
