@@ -2,111 +2,82 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B73FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F538C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C6520899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7589220748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgGBHwI (ORCPT
+        id S1726892AbgGBHze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:52:08 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60685 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBHwI (ORCPT
+        Thu, 2 Jul 2020 03:55:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:47423 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725287AbgGBHzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:52:08 -0400
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N2V8T-1ioGAD2WER-013wOK; Thu, 02 Jul 2020 09:52:06 +0200
-Received: by mail-qv1-f50.google.com with SMTP id el4so8149078qvb.13;
-        Thu, 02 Jul 2020 00:52:06 -0700 (PDT)
-X-Gm-Message-State: AOAM530L5cNzli5ifsPhspQq7j4kva1brURfKmbAp0QJO9J01YlCA//U
-        x3KOfjW0P1NBN2y4RprjGeGe6BGEuQDzLlrPYuM=
-X-Google-Smtp-Source: ABdhPJwiJUPMCqWnBbIV5x5xxsO/4qntI7KoZTnqIAyLRr87ITypaM11g24i6m5gKU/156opHDiB4/9MJjwq3CgPKes=
-X-Received: by 2002:a0c:ba0e:: with SMTP id w14mr28987642qvf.222.1593676325385;
- Thu, 02 Jul 2020 00:52:05 -0700 (PDT)
+        Thu, 2 Jul 2020 03:55:33 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-119-yl_OAD0oOpipGC1tkdZXrg-1; Thu, 02 Jul 2020 08:55:28 +0100
+X-MC-Unique: yl_OAD0oOpipGC1tkdZXrg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 2 Jul 2020 08:55:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 2 Jul 2020 08:55:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kars Mulder' <kerneldev@karsmulder.nl>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: RE: Writing to a const pointer: is this  supposed to happen?
+Thread-Topic: Writing to a const pointer: is this  supposed to happen?
+Thread-Index: AQHWSju/rqA8ozob6UepcWuq3RM2GKjsP5LwgAcSxwCAAKR74A==
+Date:   Thu, 2 Jul 2020 07:55:27 +0000
+Message-ID: <32182d4126fd49dabac4091b7a6c89e7@AcuMS.aculab.com>
+References: <0ceda3b41fe446e792fce5ff2634c48f@AcuMS.aculab.com>
+ <1f2d-5efd1600-b3-caae120@315006>
+In-Reply-To: <1f2d-5efd1600-b3-caae120@315006>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200701200950.30314-1-rikard.falkeborn@gmail.com> <20200701200950.30314-3-rikard.falkeborn@gmail.com>
-In-Reply-To: <20200701200950.30314-3-rikard.falkeborn@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jul 2020 09:51:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1tQn02j-MkJGhAd7udVuGcKuve0nFAhM57ifn1hTq7pA@mail.gmail.com>
-Message-ID: <CAK8P3a1tQn02j-MkJGhAd7udVuGcKuve0nFAhM57ifn1hTq7pA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] hwrng: nomadik - Constify nmk_rng_ids[]
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:d1tmNuojY+mL4cI3CvhR2qDsP/HPRJvB0uSJsNMVYwF0zKjETWR
- npcz9L3d9oRU7r1ro6NiUtsBerrsuovpzvIN15Sayu0QGY84xZerQBAphBvKZTHQO4u5o3b
- dcBPd0I4c1PesJT/ymWfV7JNtIHs4cBx/02ds5/n9qPKU1gMn4mruRtK1aQr7lV7imNZmve
- w9c05zN5jmFLHGiQAd7DQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UsM3UdRzDus=:UqrKfHMQQQywpZ+0i+IklE
- 9exShB5ll0IGYGN8kZvefEPCar6RUVOb3DvRL+wdBX+MV4/TdYCj7phri1dr8Re+7Hnt9Uy1W
- HiPEQXnQZMvJFZhLq9jsp9uU4RcV0hwxTyWg7R2o8tybl0WnolCa6DZSuy74W842Ku23CVCzP
- mPeKB7GSxYY2bKSdtlBSAABDUXCSt4Ado+MJQkxM0yxCQJMXun0j5l5AMs0xze4YrWSHvrRTR
- 832OKpmwnWhlwd/X1nRS7mT0FtEl0M3gZOZzc83awowaSFUZygyBrBzEkALlY7Ahai+3aZVKF
- Ta5Z/I8Q6UerNcLhHnsrmP2h4dtABqLZ7qkENqBK55UqnT9GXgdlTW1GRxge94rX2wiGjO1So
- iIm/XOhK26/dlRG7CVYIsyiIv+DBH97qxrr8sGdrdGcDT1aQHpVaBxUx2/ib+jlQbJ6avHdyx
- vqycD19ao8zleInIDLKsVmiZlf37xLRogwCMTrX2YIXLdL5xKvVigvEii2OBvI/hEKUoJ9wOz
- tPx9lfv0u01iagcVZZZM6HtgluBtqFh0mFzwuTPbE6K2R0VW6BS/4l8CSI2no/GYtnRzvgafS
- Qm+0ruyil6XVhYhe/oiXZCvSjMY5SqWOJpGTL+o1789MrrpNgyEu293FReAM2xZDn054VYChK
- dOgEdOOCME/9NVkI2TI+z1A/9g5sExqtOliHaaMLvfWXMBzyJr45CTL0ZGSm+c7iEgpC17Uoj
- zuVE2UKk+MDwiANed8N2bZZDN7Z0iQ7RfaXBP4OzEynCsgE9O4zsuEJ3EstLShNA0u4AKD87c
- zOblnxct6sHLGTakJ31dEh8UfcmuN8hDVclg/wXycj9A61lFik=
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 11:48 PM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
->
-> nmk_rng_ids[] is not modified and can be made const to allow the
-> compiler to put it in read-only memory.
->
-> Before:
->    text    data     bss     dec     hex filename
->     652     216       4     872     368 drivers/char/hw_random/nomadik-rng.o
->
-> After:
->    text    data     bss     dec     hex filename
->     676     192       4     872     368 drivers/char/hw_random/nomadik-rng.o
+RnJvbTogS2FycyBNdWxkZXINCj4gU2VudDogMDIgSnVseSAyMDIwIDAwOjAzDQo+IE9uIFNhdHVy
+ZGF5LCBKdW5lIDI3LCAyMDIwIDEyOjI0IENFU1QsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBU
+aGUgY29kZSBxdW90ZWQgKHVzaW5nIHN0cnNldCgpKSBpcyBhbG1vc3QgY2VydGFpbmx5IHdyb25n
+Lg0KPiA+IFRoZSBjYWxsZXIgaXMgdW5saWtlbHkgdG8gZXhwZWN0IHRoZSBpbnB1dCBiZSBtb2Rp
+ZmllZC4NCj4gPiBTaW5jZSBpdCBkb2Vzbid0IGZhdWx0IHRoZSBzdHJpbmcgbXVzdCBiZSBpbiBy
+ZWFkLXdyaXRlIG1lbW9yeS4NCj4gDQo+IEkgdHJpZWQgd3JpdGluZyBhIHBhdGNoIHRoYXQgYXZv
+aWRzIHRoZSB3cml0aW5nLXRvLWNvbnN0LXBvaW50ZXIgaXNzdWUNCj4gYnkgdXNpbmcgdGhlIGxl
+c3MgaW50cnVzaXZlIHNzY2FuZiBmdW5jdGlvbiBpbnN0ZWFkIG9mIHN0cnNlcC4gSXQgbWlnaHQN
+Cj4gYXZvaWQgYSBwb3RlbnRpYWwgYnVnIHdoZW4gc29tZWJvZHkgd3JvbmdseSBhc3N1bWVzIHRo
+YXQgYQ0KPiBrZXJuZWxfcGFyYW1fb3BzLnNldCBmdW5jdGlvbiB3aWxsIG5vdCB3cml0ZSB0byBp
+dHMgY29uc3QgY2hhciogYXJndW1lbnQuDQoNCkhtbS4uLiBzc2NhbmYoKSBpcyBhbHNvIGhvcnJp
+ZC4NClN1cnByaXNpbmdseSBkaWZmaWN1bHQgdG8gdXNlIGNvcnJlY3RseS4NCg0KSXQgaXMgdXN1
+YWxseSBiZXN0IHRvIHVzZSBzdHJjaHIoKSAoYW5kIG1heWJlIHN0cltjXXNjbigpKQ0KdG8gcGFy
+c2Ugc3RyaW5ncy4NCkZvciBudW1iZXJzIHVzZSB3aGF0ZXZlciB0aGUga2VybmVscyBjdXJyZW50
+ICdmYXZvdXJpdGUnIGltcGxlbWVudGF0aW9uDQpvZiBzdHJ0b3VsKCkgaXMgY2FsbGVkLg0KDQoJ
+RGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1v
+dW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEz
+OTczODYgKFdhbGVzKQ0K
 
-Moving 24 bytes into the .rodata section is probably not a worth
-the change, but the patch is correct and I agree this should be
-.rodata anway.
-
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-> ---
->  drivers/char/hw_random/nomadik-rng.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/hw_random/nomadik-rng.c b/drivers/char/hw_random/nomadik-rng.c
-> index 74ed29f42e4f..b0ded41eb865 100644
-> --- a/drivers/char/hw_random/nomadik-rng.c
-> +++ b/drivers/char/hw_random/nomadik-rng.c
-> @@ -76,7 +76,7 @@ static int nmk_rng_remove(struct amba_device *dev)
->         return 0;
->  }
->
-> -static struct amba_id nmk_rng_ids[] = {
-> +static const struct amba_id nmk_rng_ids[] = {
->         {
->                 .id     = 0x000805e1,
->                 .mask   = 0x000fffff, /* top bits are rev and cfg: accept all */
-> --
-> 2.27.0
->
