@@ -2,109 +2,124 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF12C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519C020702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E8820702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="cbiVtJcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgGBRsH (ORCPT
+        id S1727943AbgGBRsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Jul 2020 13:48:09 -0400
+Received: from mail-eopbgr70045.outbound.protection.outlook.com ([40.107.7.45]:19061
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726997AbgGBRsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 13:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgGBRsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:48:06 -0400
-X-Greylist: delayed 1933 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Jul 2020 10:48:06 PDT
-Received: from scorn.kernelslacker.org (scorn.kernelslacker.org [IPv6:2600:3c03:e000:2fb::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB18C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 10:48:06 -0700 (PDT)
-Received: from [2601:196:4600:6634:ae9e:17ff:feb7:72ca] (helo=wopr.kernelslacker.org)
-        by scorn.kernelslacker.org with esmtp (Exim 4.92)
-        (envelope-from <davej@codemonkey.org.uk>)
-        id 1jr2oO-0007xq-D4; Thu, 02 Jul 2020 13:15:48 -0400
-Received: by wopr.kernelslacker.org (Postfix, from userid 1026)
-        id 2CC4056011F; Thu,  2 Jul 2020 13:15:48 -0400 (EDT)
-Date:   Thu, 2 Jul 2020 13:15:48 -0400
-From:   Dave Jones <davej@codemonkey.org.uk>
-To:     Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     peterz@infradead.org, mgorman@techsingularity.net,
-        mingo@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: weird loadavg on idle machine post 5.7
-Message-ID: <20200702171548.GA11813@codemonkey.org.uk>
-Mail-Followup-To: Dave Jones <davej@codemonkey.org.uk>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, peterz@infradead.org,
-        mgorman@techsingularity.net, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gv3Mnpskq3OEt8cbWf5QpT53IGHNFcFUplX+AfD/QAi3j0/UbIJ4XIBjV0369mHAt5ie9QrH39gVz73uQvwoNfDUF2bYWyWIuS18JoUjLSouC+tLqPX/U7GBai4/vQsLnoMtdfBtsUmrf3EHiXrEGcZ8R1s4N7G8+FUvNLqltXCy4tYknGQ7qLaCbnGPTjl9vKKG4pwdwuTlQMyxDh63hPShEAa9GItpsrxHZ29S16DxEQ6yGdZRC9SeuKkbGTGjkFDFTlTCOsy61IE+fu6IN7HYwt7hg9CG/ol1Z5qeS/JxnqJH6JVhDXnvp16dgxuNEt9ArUoZ+yFiKUM5RlWCdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGdh+FcVEqE4DGhUiMS9vKl1jyo1XzQ/gb+eZVB/uEQ=;
+ b=KwtLw7wGj6//lAEIciIv5Z/kwOkGiDobzvd9wUhd++Qb+pBYN78mpf/Vc95aGw3/h4sLhiyp391EFKOv41VQaDt2BCg2NeCtuGTKmNrz8wTXa0n4t0spUmkoppY0T7WqZpVd+WU7PPFAa2j/7wRVJzUmu2B5tf3Tq22GnHhR+J928/FqSAbYUZ3xtqXqDubGYDtFPc+hq5S1XeBo35qRIDJ3bv40JmfGRKGE/LttzPoFmixBcL9zXf1uLLFIMQL9b4lTN3KBTraX4vpqk+sdwcWYy8WihvTZtdRXemYcFUlVPhHXSUKW+uAHe5ys6eIPuQwnip3USVgIg1SMCXCtKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGdh+FcVEqE4DGhUiMS9vKl1jyo1XzQ/gb+eZVB/uEQ=;
+ b=cbiVtJcHel1UlctNQuLpRF7QvhJqHS8UhNTgN5oBbuV44C3olZT2jhsiQCW2DSNDbJScMNXWjHS/Y1It4hSMLcLvxb8GtpSn06f1RTGZ8dYXIcC2Lt7GloP72v82BFtCoejIscD2yGH2NJunUsh+9Ljz8WeaxHwwwoxqaxZ/FCc=
+Authentication-Results: mellanox.com; dkim=none (message not signed)
+ header.d=none;mellanox.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com (2603:10a6:208:63::16)
+ by AM0PR0502MB4052.eurprd05.prod.outlook.com (2603:10a6:208:9::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Thu, 2 Jul
+ 2020 17:48:02 +0000
+Received: from AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f]) by AM0PR05MB4290.eurprd05.prod.outlook.com
+ ([fe80::21b3:2006:95aa:7a1f%3]) with mapi id 15.20.3153.024; Thu, 2 Jul 2020
+ 17:48:02 +0000
+Subject: Re: [PATCH net-next 5/7] devlink: Add devlink health port reporters
+ API
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+References: <1593702493-15323-1-git-send-email-moshe@mellanox.com>
+ <1593702493-15323-6-git-send-email-moshe@mellanox.com>
+ <20200702094053.50252366@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@mellanox.com>
+Message-ID: <d7b0bf0f-6e9c-6894-c6e8-dde4c5d3c4a7@mellanox.com>
+Date:   Thu, 2 Jul 2020 20:48:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <20200702094053.50252366@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM3PR07CA0089.eurprd07.prod.outlook.com
+ (2603:10a6:207:6::23) To AM0PR05MB4290.eurprd05.prod.outlook.com
+ (2603:10a6:208:63::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.223.0.91] (193.47.165.251) by AM3PR07CA0089.eurprd07.prod.outlook.com (2603:10a6:207:6::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.9 via Frontend Transport; Thu, 2 Jul 2020 17:48:01 +0000
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e50c218b-6965-4bd9-4ee3-08d81eb0112f
+X-MS-TrafficTypeDiagnostic: AM0PR0502MB4052:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR0502MB40523CFEF43F55CF840656F3D96D0@AM0PR0502MB4052.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OTMClVUfJzP4LBEFHe8mkcQ8EnbmaKqzS99XE22KFaccRO/e2SFQ/FQfFHj3rj1vDWbIGjqU9xwH+zjVSUgg/AHcqnbiYsnNh2HZznaI/Fi9TO8LCChjDW9SWEaeWU2FEHZnA1nvI0sXO1bnNBmFB0ZtdJsfEXs/naZcLeXN4rhW2+/rasNw14eBnRp47zx0oOBQ71PAOULTbM9Y7KdVcVjNc7K8+tl8tCAgTAbYFf1xW9MNaw6SyolqAUHT+bN4MH6Jgz5anqa8Mvq5V9q5IyfbCsW1G5fU7c84CbNzcq6n5ZICYML9pQGhGr68l5OPZ5A4pQ6vxLVNM9gL0zLeuEU5xQK5wfIPJ/lWTt8ZIprJeWzIAKcGzpb44gqrXmxC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4290.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(66476007)(83380400001)(31696002)(16576012)(66946007)(6916009)(52116002)(54906003)(107886003)(4744005)(86362001)(8936002)(2906002)(316002)(8676002)(31686004)(53546011)(66556008)(956004)(4326008)(478600001)(36756003)(16526019)(186003)(26005)(6486002)(2616005)(5660300002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: jHGgoN7x6717kfmd/7c8W7RfsdwyDaG9GkV/kv4tpwlGHc0OPVRVfI09Y8K4gc3nV75qxFmVpfe+G9WuX89AFipO0U8mEmPXnWWDV8DITGx1ag1y2ZdJ7cTL7gOi5L6GfwFPs7koIMVZOvKvOMmeYTiLP8yAnAbfysOTASRr4X5MRzMC2mX5CVOx1uSzaxgI+0rUz1Eb48WeChgDmeSvk3HnKyIb7YYL9WJZDdqp27/hr1QHea5AGTMsOcfHZDLlqf9H865C7PKD67o3OTsWTRY9zn5JeizrdQyb1mN87pxKuRUwpPwREUyJbjBhiujYvyhKNvoudmckHVsl0cDojpwH2yGnx4VSqwZjhidonp+uy2FLq91AgIx95Jc/67gNPlnno5qcXco1NkZtrPkT9bQCRY6IuNT2ktkDQKYH/G8wJCpJazoJgQ6TtZL3f0rpvLxgyS31e23+YX7sgrtTbwDL4ujgh61YlivwXI8Zgstnq/UV6FH4arV/YLyFa5vT
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e50c218b-6965-4bd9-4ee3-08d81eb0112f
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4290.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 17:48:02.6124
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gdpg1+Db7mSpwxQYbjkRvJPtWrwvrQxpNIVfdPbiGVQcQcZ6Q50EtTj9dQUbExqE6ubz0YfD/Grotj2zdUnwDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB4052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I upgraded my firewall to 5.7-rc2 I noticed that on a mostly
-idle machine (that usually sees loadavg hover in the 0.xx range)
-that it was consistently above 1.00 even when there was nothing running.
-All that perf showed was the kernel was spending time in the idle loop
-(and running perf).
 
-For the first hour or so after boot, everything seems fine, but over
-time loadavg creeps up, and once it's established a new baseline, it
-never seems to ever drop below that again.
+On 7/2/2020 7:40 PM, Jakub Kicinski wrote:
+> On Thu,  2 Jul 2020 18:08:11 +0300 Moshe Shemesh wrote:
+>> From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+>>
+>> In order to use new devlink port health reporters infrastructure, add
+>> corresponding constructor and destructor functions.
+>>
+>> Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+>> Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+>> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+> net/core/devlink.c:5361: warning: Function parameter or member 'port' not described in 'devlink_port_health_reporter_create'
+> net/core/devlink.c:5361: warning: Excess function parameter 'devlink_port' description in 'devlink_port_health_reporter_create'
+> net/core/devlink.c:5462: warning: Excess function parameter 'port' description in 'devlink_port_health_reporter_destroy'
 
-One morning I woke up to find loadavg at '7.xx', after almost as many
-hours of uptime, which makes me wonder if perhaps this is triggered
-by something in cron.  I have a bunch of scripts that fire off
-every hour that involve thousands of shortlived runs of iptables/ipset,
-but running them manually didn't seem to automatically trigger the bug.
 
-Given it took a few hours of runtime to confirm good/bad, bisecting this
-took the last two weeks. I did it four different times, the first
-producing bogus results from over-eager 'good', but the last two runs
-both implicated this commit:
+I will resend with a fix. Thanks.
 
-commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Sun May 24 21:29:55 2020 +0100
 
-    sched/core: Optimize ttwu() spinning on p->on_cpu
-    
-    Both Rik and Mel reported seeing ttwu() spend significant time on:
-    
-      smp_cond_load_acquire(&p->on_cpu, !VAL);
-    
-    Attempt to avoid this by queueing the wakeup on the CPU that owns the
-    p->on_cpu value. This will then allow the ttwu() to complete without
-    further waiting.
-    
-    Since we run schedule() with interrupts disabled, the IPI is
-    guaranteed to happen after p->on_cpu is cleared, this is what makes it
-    safe to queue early.
-    
-    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-    Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-    Signed-off-by: Ingo Molnar <mingo@kernel.org>
-    Cc: Jirka Hladky <jhladky@redhat.com>
-    Cc: Vincent Guittot <vincent.guittot@linaro.org>
-    Cc: valentin.schneider@arm.com
-    Cc: Hillf Danton <hdanton@sina.com>
-    Cc: Rik van Riel <riel@surriel.com>
-    Link: https://lore.kernel.org/r/20200524202956.27665-2-mgorman@techsingularity.net
-
-Unfortunatly it doesn't revert cleanly on top of rc3 so I haven't
-confirmed 100% that it's the cause yet, but the two separate bisects
-seem promising.
-
-I don't see any obvious correlation between what's changing there and
-the symtoms (other than "scheduler magic") but maybe those closer to
-this have ideas what could be going awry ?
-
-	Dave
