@@ -2,78 +2,123 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66487C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D63AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3538C20890
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED9A208D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgGBNjI (ORCPT
+        id S1729333AbgGBNl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:39:08 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:47675 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgGBNjH (ORCPT
+        Thu, 2 Jul 2020 09:41:27 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:56554 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729171AbgGBNl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:39:07 -0400
-Received: by mail-il1-f200.google.com with SMTP id o2so19503045ilg.14
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 06:39:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=WpKkuPCbjM9qHybSEs/eO4ohp9+DmrsOe+ROlXOZsfw=;
-        b=B6zlxk24AgFGsECQAPEotw4uZcmkY9zfqaKIW9T+6GBzW8OK+ulrs6S8zPzl0d6DX8
-         nNd70itgAnFNBGZB8DIpcf70LRIDhnghgLaesIuW5ylOqat2Co8MvhUJLPTqBo75q9Kt
-         Cw3YLanQbzQ5Lal3O955ajrO2cLeDvXUWfMNuMP+RXD2R7JZZ+rDfL8SQ2KwGN4jKeD7
-         vjlG6kA+MV5RjPQ9SN65CiJoCshuJlB4hv9Mpenbz1A57CKIB/vdkBtIliX7KpS+tJ+M
-         Vk5YusO2FCyQH2oAgOsPcl+8q0j4RH/ldhGu0YnTY/k5nIcHaA/KdqmYe7SBVRU2F2xV
-         mbbQ==
-X-Gm-Message-State: AOAM531Tv8EIsOYDlJc228r1Mx5rrOrJNOZuR4f7obkYdRpYN/XNIg7l
-        yjWzkDB4s9e13jlBozqkhr9kUwYmnfNPl3oX/XZp1eTkqJbb
-X-Google-Smtp-Source: ABdhPJzabNnQL2nbQZLXYYBaeQiPct0MWGQOc2ZsbarBu3vWY2R3VqBxT6Ux5jgC1ao6rItmynuh00qwZq7qfK301tZVPk00HE/2
+        Thu, 2 Jul 2020 09:41:26 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 062DeGHr064859;
+        Thu, 2 Jul 2020 22:40:16 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Thu, 02 Jul 2020 22:40:16 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 062DeAdE064698
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 2 Jul 2020 22:40:16 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+ <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+ <20200625120725.GA3493334@kroah.com>
+ <20200625.123437.2219826613137938086.davem@davemloft.net>
+ <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+ <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+ <87y2oac50p.fsf@x220.int.ebiederm.org>
+ <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+ <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
+ <87eepwzqhd.fsf@x220.int.ebiederm.org>
+ <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
+ <87pn9euks9.fsf@x220.int.ebiederm.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
+Date:   Thu, 2 Jul 2020 22:40:09 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:e93:: with SMTP id p19mr16903757jas.67.1593697147104;
- Thu, 02 Jul 2020 06:39:07 -0700 (PDT)
-Date:   Thu, 02 Jul 2020 06:39:07 -0700
-In-Reply-To: <000000000000ea237605a8e368a9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000055323705a9758823@google.com>
-Subject: Re: WARNING in idr_alloc
-From:   syzbot <syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com>
-To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87pn9euks9.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 2020/07/02 22:08, Eric W. Biederman wrote:
+> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
+> 
+>> On 2020/06/30 21:29, Eric W. Biederman wrote:
+>>> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
+>>> release_task is called so there is a race.  As it is possible to wake
+>>> up and then go back to sleep before pid_has_task becomes false.
+>>
+>> What is the reason we want to wait until pid_has_task() becomes false?
+>>
+>> - wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
+>> + while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
+> 
+> So that it is safe to call bpfilter_umh_cleanup.  The previous code
+> performed the wait by having a callback in do_exit.
 
-commit e42671084361302141a09284fde9bbc14fdd16bf
-Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date:   Thu May 7 12:53:06 2020 +0000
+But bpfilter_umh_cleanup() does only
 
-    net: qrtr: Do not depend on ARCH_QCOM
+	fput(info->pipe_to_umh);
+	fput(info->pipe_from_umh);
+	put_pid(info->tgid);
+	info->tgid = NULL;
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17325ad5100000
-start commit:   7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b25ad5100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b25ad5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
-dashboard link: https://syzkaller.appspot.com/bug?extid=f31428628ef672716ea8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15252c4b100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10159291100000
+which is (I think) already safe regardless of the usermode process because
+bpfilter_umh_cleanup() merely closes one side of two pipes used between
+two processes and forgets about the usermode process.
 
-Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
-Fixes: e42671084361 ("net: qrtr: Do not depend on ARCH_QCOM")
+> 
+> It might be possible to call bpf_umh_cleanup early but I have not done
+> that analysis.
+> 
+> To perform the test correctly what I have right now is:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Waiting for the termination of a SIGKILLed usermode process is not
+such simple. If a usermode process was killed by the OOM killer, it
+might take minutes for the killed process to reach do_exit() due to
+invisible memory allocation dependency chain. Since the OOM killer
+kicks the OOM reaper, and the OOM reaper forgets about the killed
+process after one second if mmap_sem could not be held (in order to
+avoid OOM deadlock), the OOM situation will be eventually solved; but
+there is no guarantee that the killed process can reach do_exit()
+in a short period.
+
