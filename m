@@ -2,87 +2,115 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE90DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F3220874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADE920760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZrUwUShK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgGBJoM (ORCPT
+        id S1728282AbgGBJp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:44:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58083 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgGBJoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:44:11 -0400
-IronPort-SDR: JKHDewWt9I/w7af1lOJe2hqWqHioNjYSYeN1uGyFRMxiEia6QotJ5Rla4KTO+NpZKNTif35TYQ
- sU5joYGbfg0Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126463279"
+        Thu, 2 Jul 2020 05:45:28 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:26188 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgGBJp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:45:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593683127; x=1625219127;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9tUmu3Sw3rOqTQH6B2QqulbAJeo7lfwvMHct9nObl+A=;
+  b=ZrUwUShKF3kvhkOMn57+bYUfexPYLeKchmmztmBVetXaPh9Xh2Q9iw+s
+   wlQGgRO+8nLwIqXJQ1I2b1o3CPm0zu4+z5GJ40kLpEdCu12Xo80fqRLl4
+   CSWZSQkGxxMgQWRazsjKIDxZhcBQ+Kh4vpzKBL1KeDv88Pgnn5hpwt5rb
+   mrzKvRsDWSwHVduvZSebnKwsxk/3mVlh+fiQ1uCdWCTcKklbEScgB06dt
+   ntCml3UpLAiEV/lP9GLa4e+jC99c00an/KdHM2LRmIC91hQHOkCumauCu
+   +TzrRC1ZAHRyRx2nfkat8ATNxYIafViwNPUe5aHFHvx7EZIGuTDJ4v2ui
+   g==;
+IronPort-SDR: /PaVc6AzY3x31tzJKEUag3hLapYqI781lYHFtiT4DiEEDPJqBJ5x8S1xjK5Eiy5H+wE0Q4JkBl
+ PS6JWOWStk9nem4WMX95ywThPJrl6TZHGsWnO5Mf4rQsZV1ITlXvrVk+E8211BPW+Xo8XZxq8o
+ z9mcORIL3mNzulYlhPFdVSUX9eGhdZ23BObTZbkYZC87RUgRvdGIfTe6zjFmPRi35IXTj2jPrb
+ kXhAh0hxUtkKFS26EDOq5RC3LjPgWdoTcBXWyhpZpzoYUao/gVF7Bd17kgXUYlGKeyXyWKKVNn
+ sSk=
 X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="126463279"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 02:44:11 -0700
-IronPort-SDR: 59cV44xd5Nrp05/QcqfbeZSu4KToURfaJOm3jm7A/YZhtWz9/K0ZIukK+aGuHMJr1O8pcd4ORU
- KWbsSLuWG3UA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="265656750"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2020 02:44:10 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jqvlM-00HBG5-Cf; Thu, 02 Jul 2020 12:44:12 +0300
-Date:   Thu, 2 Jul 2020 12:44:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] uuid: Remove unused uuid_le_to_bin() definition
-Message-ID: <20200702094412.GO3703480@smile.fi.intel.com>
-References: <20200622075355.55936-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="78541808"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 02:45:05 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 02:45:05 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 02:44:41 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
+        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH net] net: dsa: microchip: set the correct number of ports
+Date:   Thu, 2 Jul 2020 12:44:50 +0300
+Message-ID: <20200702094450.1353917-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622075355.55936-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:53:55AM +0300, Andy Shevchenko wrote:
-> There is no more user, so remove it.
+The number of ports is incorrectly set to the maximum available for a DSA
+switch. Even if the extra ports are not used, this causes some functions
+to be called later, like port_disable() and port_stp_state_set(). If the
+driver doesn't check the port index, it will end up modifying unknown
+registers.
 
-Can we do this?
+Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ drivers/net/dsa/microchip/ksz8795.c | 3 +++
+ drivers/net/dsa/microchip/ksz9477.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/uuid.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/uuid.h b/include/linux/uuid.h
-> index d41b0d3e9474..8cdc0d3567cd 100644
-> --- a/include/linux/uuid.h
-> +++ b/include/linux/uuid.h
-> @@ -98,8 +98,6 @@ int guid_parse(const char *uuid, guid_t *u);
->  int uuid_parse(const char *uuid, uuid_t *u);
->  
->  /* backwards compatibility, don't use in new code */
-> -#define uuid_le_to_bin(guid, u)	guid_parse(guid, u)
-> -
->  static inline int uuid_le_cmp(const guid_t u1, const guid_t u2)
->  {
->  	return memcmp(&u1, &u2, sizeof(guid_t));
-> -- 
-> 2.27.0
-> 
-
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 47d65b77caf7..7c17b0f705ec 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -1268,6 +1268,9 @@ static int ksz8795_switch_init(struct ksz_device *dev)
+ 			return -ENOMEM;
+ 	}
+ 
++	/* set the real number of ports */
++	dev->ds->num_ports = dev->port_cnt;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 9a51b8a4de5d..8d15c3016024 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1588,6 +1588,9 @@ static int ksz9477_switch_init(struct ksz_device *dev)
+ 			return -ENOMEM;
+ 	}
+ 
++	/* set the real number of ports */
++	dev->ds->num_ports = dev->port_cnt;
++
+ 	return 0;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
