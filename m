@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D36FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7764AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C6520781
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514FF20781
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653803;
-	bh=q5PPXSNYwYNETXLnW13CPZbxXCtQGH4Z5Ed2lgifHKU=;
+	s=default; t=1593653816;
+	bh=WZm9NVwm/5hzx3Z8PKdERAEM9pbyT8kA/yFB5RQ6bAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tg+/+ySlgeRWfELVtkfk7nA+eit1VDC3xSd+yJXAP17T5W2FLxQDm92KGGBt7Twop
-	 dRU2EdgMY3MdhfP3KEoI2WBAhw+qttSQRJNti96tDSeC8zdjIfITzJYBAxI2opxexW
-	 GQY6yKgwCb0GMsLr9FWNLRgdnmB5eevdXUW4eUmc=
+	b=dLGNC3vhDSSy2nuPmUM4nYk9OQK+KCo0/StMXNKu+oReH0ohOXQ56pwt1sxL6kH4/
+	 VF0xn8zd+zJ04nqxrMvR3qI2r6WNYYTkB4DQ3Jon3iMfSLo43ZFJNR+sh6Mwrd1pnB
+	 d2bxk1MLs3G13iC43zH6H8dh50gqzoITMQiw9FiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgGBBgl (ORCPT
+        id S1728630AbgGBBgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53494 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgGBBXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:08 -0400
+        id S1728051AbgGBBXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D555D2083E;
-        Thu,  2 Jul 2020 01:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D70C2085B;
+        Thu,  2 Jul 2020 01:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593652988;
-        bh=q5PPXSNYwYNETXLnW13CPZbxXCtQGH4Z5Ed2lgifHKU=;
+        s=default; t=1593652985;
+        bh=WZm9NVwm/5hzx3Z8PKdERAEM9pbyT8kA/yFB5RQ6bAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpZu+6ITCM7D6W613S3GngtsubwK2JuZojxXDueLpyIwOAJFNsfsjBPTP5Iem9PkD
-         TGRYMOU2rn6/HILD81dJlDiZJrG5ZDWuPbA+CytnBDYVuEy9qmj9LBzEi2det92pDC
-         uCDFSLJfwR6728jqDcbmMuQRu25vqmI1FcW6X00k=
+        b=x8qGi+cWwAXzgnN6FLYCB1u4BypWGDm8WUi2uwBLIp3Hp8T+V/fhHja7q6lNT/SSA
+         8qj4kSxrGkRn+hv6NAHDs/Igh8w7Z5wP5eQrHVEYj5g6uhzvDrNxo8C+ACSizRL94t
+         jEYH2+lDD3YaMXTFy4rBLd/rA/Yt9TdL691MOQOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 11/53] btrfs: use kfree() in btrfs_ioctl_get_subvol_info()
-Date:   Wed,  1 Jul 2020 21:21:20 -0400
-Message-Id: <20200702012202.2700645-11-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 08/53] gpu: host1x: Clean up debugfs in error handling path
+Date:   Wed,  1 Jul 2020 21:21:17 -0400
+Message-Id: <20200702012202.2700645-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -58,37 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit b091f7fede97cc64f7aaad3eeb37965aebee3082 ]
+[ Upstream commit 109be8b23fb2ec8e2d309325ee3b7a49eab63961 ]
 
-In btrfs_ioctl_get_subvol_info(), there is a classic case where kzalloc()
-was incorrectly paired with kzfree(). According to David Sterba, there
-isn't any sensitive information in the subvol_info that needs to be
-cleared before freeing. So kzfree() isn't really needed, use kfree()
-instead.
+host1x_debug_init() must be reverted in an error handling path.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This is already fixed in the remove function since commit 44156eee91ba
+("gpu: host1x: Clean up debugfs on removal")
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/host1x/dev.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 40b729dce91cd..5070bd2436b76 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -2691,7 +2691,7 @@ static int btrfs_ioctl_get_subvol_info(struct file *file, void __user *argp)
- 	btrfs_put_root(root);
- out_free:
- 	btrfs_free_path(path);
--	kzfree(subvol_info);
-+	kfree(subvol_info);
- 	return ret;
- }
+diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
+index d24344e919227..3c0f151847bae 100644
+--- a/drivers/gpu/host1x/dev.c
++++ b/drivers/gpu/host1x/dev.c
+@@ -468,11 +468,12 @@ static int host1x_probe(struct platform_device *pdev)
  
+ 	err = host1x_register(host);
+ 	if (err < 0)
+-		goto deinit_intr;
++		goto deinit_debugfs;
+ 
+ 	return 0;
+ 
+-deinit_intr:
++deinit_debugfs:
++	host1x_debug_deinit(host);
+ 	host1x_intr_deinit(host);
+ deinit_syncpt:
+ 	host1x_syncpt_deinit(host);
 -- 
 2.25.1
 
