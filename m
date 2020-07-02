@@ -2,107 +2,163 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F50206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1042B20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BjS0+cjb"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ZabYM9Ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgGBOte (ORCPT
+        id S1729899AbgGBOvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729944AbgGBOqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B00FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z2so6524681wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V6gF5OZoL4RS0/p0R84cBC4PkOOgqqKbUR7gNdMwCYM=;
-        b=BjS0+cjbl/ylf9WIsjuuM5KRIKa1tflpMXbUUUReB1WQml9HUW6E7bANNjfQ5fTX/A
-         ePKj5W/F4jTQ5DLni9yk4rEL0mT0PZ8dx/ky2IeK4j26F+tluYD+xaCITBCrSwhHDkG0
-         UjYtzRYY1AZ1XJ9FbJStn9EZ2dOaSQVOz0ZTjAy3qfUFL/OnG1ALFNX/lOhWfCrk0PAA
-         E9iW5PKN2w1rivJs2V0GOJnXF7m6RAcY+Rhv3sFBPzim9PY9lAbUX+LDiXQaJWjLIobh
-         7BZt8ywcNGAKtdq5SRkR8fB6Ov7RYsv3mwiu7mpnDcFkBnkV5Ha2N/0X48uQF+Svx/43
-         Gn0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V6gF5OZoL4RS0/p0R84cBC4PkOOgqqKbUR7gNdMwCYM=;
-        b=ffXL8EqNSsxHT6sYZ1ceZ92kqXM2E573Q105rm+8xDTLGkAo/nYdzjTYB9H8fQzIag
-         SUEmLCwahh/1XQ4MvYDTJlwKM5YPkfzEWu2czhWISanBkf+Cb6kQA8yUsCF2iEkBJPLK
-         hnyUCnqcp924qSnFrqf+iAa2/v+oxsZ37Oc1+jX2c13NOJBbaiCqWNAlUsWCLqFlRdRL
-         zDpnZegWG8g+0tm0dw3OUQ7wkBn8fj6oxOTfmG537EL60sLcH2Pg8gS742lqidQk0xGR
-         OIcrJuHgMs/C507P/9jJRunWkkTI74B6ciiQP05A0Ca1Iwr/gFG4udtTXaCJn7qid9dr
-         qhEw==
-X-Gm-Message-State: AOAM531y19QB1l4G4ByWBYlEjBJlnOVwcddbnMLAlrENR/halARj929+
-        E86d+xb7/0yPAPPKhvaewHJJPA==
-X-Google-Smtp-Source: ABdhPJxPgeQecG8Qw9IvYuzEGJ3H19n5YN5vEt0bIlABEWuytzwfCAbC88GDg3TzdKAG9CqcWTyTQA==
-X-Received: by 2002:a5d:4984:: with SMTP id r4mr31220077wrq.215.1593701197660;
-        Thu, 02 Jul 2020 07:46:37 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:37 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 04/30] usb: common: usb-conn-gpio: Demote comment block which is clearly not kerneldoc
-Date:   Thu,  2 Jul 2020 15:45:59 +0100
-Message-Id: <20200702144625.2533530-5-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
+        Thu, 2 Jul 2020 10:51:32 -0400
+Received: from vps.xff.cz ([195.181.215.36]:47146 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729673AbgGBOvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:51:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593701490; bh=8Lafhf52OmE2ABPw47gwSdwhTa88IzL7NH6IzBd7nlU=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=ZabYM9SsVIhnEXhg0pKjt+hSD7xJ761TZV/lRgnGh9WOfjjb7ai8ApCqyPA/l5b/Y
+         pcDE9y8mcYqMQQ9rqi6W8dF0hAInrOaZn3PgkNNq31yhNY1l3aQ8l/6G0GPQrKVp5w
+         T5uYl5fsq+51tGw4y/USoij2FMcc6mbo2WIRHQ4I=
+Date:   Thu, 2 Jul 2020 16:51:29 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200702145129.7k5sgvexmze2sktx@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+References: <20200702144712.1994685-1-megous@megous.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702144712.1994685-1-megous@megous.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This block lacks a title and argument descriptions.
+Hi,
 
-Fixes the following W=1 kernel build warning:
+On Thu, Jul 02, 2020 at 04:47:11PM +0200, megous hlavni wrote:
+> Some LED controllers may come with an internal HW triggering mechanism
+> for the LED and an ability to switch between user control of the LED,
+> or the internal control. One such example is AXP20X PMIC, that allows
+> wither for user control of the LED, or for internal control based on
+> the state of the battery charger.
+> 
+> Add support for registering per-LED device trigger.
+> 
+> Names of private triggers need to be globally unique, but may clash
+> with other private triggers. This is enforced during trigger
+> registration. Developers can register private triggers just like
+> the normal triggers, by setting private_led to a classdev
+> of the LED the trigger is associated with.
 
- drivers/usb/common/usb-conn-gpio.c:44: warning: Cannot understand  * "DEVICE" = VBUS and "HOST" = !ID, so we have:
- on line 44 - I thought it was a doc line
+I've prepared this patch based on the note here:
 
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/usb/common/usb-conn-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ https://www.kernel.org/doc/html/latest/leds/leds-class.html
 
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-index ed204cbb63ea1..b4051f042c79c 100644
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -40,7 +40,7 @@ struct usb_conn_info {
- 	int vbus_irq;
- };
- 
--/**
-+/*
-  * "DEVICE" = VBUS and "HOST" = !ID, so we have:
-  * Both "DEVICE" and "HOST" can't be set as active at the same time
-  * so if "HOST" is active (i.e. ID is 0)  we keep "DEVICE" inactive
--- 
-2.25.1
+  Future Development:
+  
+  At the moment, a trigger can’t be created specifically for a single LED. There
+  are a number of cases where a trigger might only be mappable to a particular
+  LED (ACPI?). The addition of triggers provided by the LED driver should cover
+  this option and be possible to add without breaking the current interface.
 
+Does it look good?
+
+I plan to use this interface in the axp20x driver I've sent previously,
+if this patch is acceptable.
+
+thank you and regards,
+	o.
+
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  drivers/leds/led-triggers.c | 12 +++++++++---
+>  include/linux/leds.h        |  3 +++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 79e30d2cb7a5..3011e2658404 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -50,7 +50,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  
+>  	down_read(&triggers_list_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (sysfs_streq(buf, trig->name)) {
+> +		if (sysfs_streq(buf, trig->name) &&
+> +		    (!trig->private_led || trig->private_led == led_cdev)) {
+>  			down_write(&led_cdev->trigger_lock);
+>  			led_trigger_set(led_cdev, trig);
+>  			up_write(&led_cdev->trigger_lock);
+> @@ -96,6 +97,9 @@ static int led_trigger_format(char *buf, size_t size,
+>  		bool hit = led_cdev->trigger &&
+>  			!strcmp(led_cdev->trigger->name, trig->name);
+>  
+> +		if (trig->private_led && trig->private_led != led_cdev)
+> +			continue;
+> +
+>  		len += led_trigger_snprintf(buf + len, size - len,
+>  					    " %s%s%s", hit ? "[" : "",
+>  					    trig->name, hit ? "]" : "");
+> @@ -243,7 +247,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+>  	down_read(&triggers_list_lock);
+>  	down_write(&led_cdev->trigger_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
+> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
+> +		    (!trig->private_led || trig->private_led == led_cdev)) {
+>  			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
+>  			led_trigger_set(led_cdev, trig);
+>  			break;
+> @@ -280,7 +285,8 @@ int led_trigger_register(struct led_trigger *trig)
+>  	down_write(&triggers_list_lock);
+>  	/* Make sure the trigger's name isn't already in use */
+>  	list_for_each_entry(_trig, &trigger_list, next_trig) {
+> -		if (!strcmp(_trig->name, trig->name)) {
+> +		if (!strcmp(_trig->name, trig->name) &&
+> +		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
+>  			up_write(&triggers_list_lock);
+>  			return -EEXIST;
+>  		}
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 2451962d1ec5..0d7577c752ad 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -345,6 +345,9 @@ struct led_trigger {
+>  	int		(*activate)(struct led_classdev *led_cdev);
+>  	void		(*deactivate)(struct led_classdev *led_cdev);
+>  
+> +	/* LED-private triggers have the LED device set here. */
+> +	struct led_classdev *private_led;
+
+I'm not sure what the best descriptive name is here. ^
+
+regards,
+	o.
+
+>  	/* LEDs under control by this trigger (for simple triggers) */
+>  	rwlock_t	  leddev_list_lock;
+>  	struct list_head  led_cdevs;
+> -- 
+> 2.27.0
+> 
