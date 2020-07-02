@@ -2,143 +2,135 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4292073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7038E20747
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593685910;
+	bh=F9vnAZWeYI1yUXDMzQowJVQL7nOsdUhI++UYvZLndE0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dIkv+ykEZ3df8voeRu9U2iRHjo/6mLvoaSUGuMmq4cdATR138aW+OjCBpXg1XS2Lp
+	 +jZXtSJgM94O2+URl7NiPXMugQmT1SREyWfYcdo8tDry6xdVC5PfmzrLIaM/sDUA3M
+	 94iXbtCXhtnM5BYSjPFGtD+Oqr+ZEWvrlvPEshOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgGBKaj (ORCPT
+        id S1728404AbgGBKbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:30:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728552AbgGBKae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:30:34 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F1E801CDC32E9AD15771;
-        Thu,  2 Jul 2020 18:30:31 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 18:30:23 +0800
-From:   tongtiangen <tongtiangen@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <kan.liang@linux.intel.com>, <mhiramat@kernel.org>,
-        <tongtiangen@huawei.com>, <weiyongjun1@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf header: Fix possible memory leak when using do_read_string
-Date:   Thu, 2 Jul 2020 18:35:04 +0800
-Message-ID: <20200702103504.119845-1-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 2 Jul 2020 06:31:48 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:39231 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbgGBKbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:31:48 -0400
+Received: by mail-ej1-f65.google.com with SMTP id w6so28709994ejq.6;
+        Thu, 02 Jul 2020 03:31:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ud2BD5mh1oHuMfR912NokotFsl+3DpQPjYT/i6xyLjE=;
+        b=iXcFgwYtjO0qQOFlBonS0IPkqjxSCD8ns0eJIPcQqQgEfQ+0ZcYZ6xWM/pmjU9fr50
+         /pQyjpLu26HrSElYHS2Y+hMdakhAM6RNSNf1LcjkgrpL8nvN94M2hA1rtmJn8Ou67rRr
+         2TjFuNArvYl3isfPHQ9zGbtmG+814BIXuX3Dl9jptKLWW7e1k953iz2UF7ZgzXe/N+R7
+         2/37GX8wrIwBFSmYjIwtSuWkOJePjw0TXTyi8ZFywx7eKtmtvM+LJGW0WPlYn92VhG0I
+         Yge31T+aI2zQFQbxUPYh9kjRvNeWOFQ4LTpZ/whb3DSYJwe//a1mF7oKQUzOYrXYwLtM
+         EGPw==
+X-Gm-Message-State: AOAM532bT8DxKh7X7XdGBQpZEhpC8NGNLX8ZTl2T+3jsH0VvqYhBdkRo
+        YXhbL6qKvN6XcG57MwW+PLk=
+X-Google-Smtp-Source: ABdhPJyLDMY5ZUc+B1R15VoFZTC82DmYosz5fFnuz4c8IjCCux+gvAIPwsIoaM60eCrMcCuP7BefTQ==
+X-Received: by 2002:a17:906:547:: with SMTP id k7mr26357373eja.287.1593685906142;
+        Thu, 02 Jul 2020 03:31:46 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id d20sm8623356edy.9.2020.07.02.03.31.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:31:45 -0700 (PDT)
+From:   Ricardo Ribalda <ribalda@kernel.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Ricardo Ribalda <ribalda@kernel.org>
+Subject: [PATCH v5] i2c: designware: platdrv: Set class based on DMI
+Date:   Thu,  2 Jul 2020 12:31:43 +0200
+Message-Id: <20200702103143.2091958-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the header.c file, some functions allocate memory after using
-do_read_string, but the corresponding memory is not released after
-subsequent processing errors, causing memory leaks.
+Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-Fixes: acae8b36cded ("perf header: Add die information in CPU topology")
-Fixes: c60da22aca87 ("perf header: Transform nodes string info to struct")
-Fixes: 642aadaa320b ("perf header: Make topology checkers to check return value of strbuf")
-Signed-off-by: tongtiangen <tongtiangen@huawei.com>
+With this patch we re-enable autodetection of hwmon-alike devices, so
+lm-sensors will be able to work automatically.
+
+It does not affect the boot-time of embedded devices, as the class is
+set based on the DMI information.
+
+DMI is probed only on Qtechnology QT5222 Industrial Camera Platform.
+
+DocLink: https://qtec.com/camera-technology-camera-platforms/
+Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- tools/perf/util/header.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+v5: Comments by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 7a67d017d72c..2f77391e0787 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2307,8 +2307,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 			goto error;
+ - Add missing period and removed extra line
+
+ drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index c2efaaaac252..630e28ef2412 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -12,6 +12,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+@@ -191,6 +192,18 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+ 	return ret;
+ }
  
- 		/* include a NULL character at the end */
--		if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
-+		if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
-+			free(str);
- 			goto error;
-+		}
- 		size += string_size(str);
- 		free(str);
- 	}
-@@ -2326,8 +2328,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 			goto error;
++static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
++	{
++		.ident = "Qtechnology QT5222",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
++		},
++	},
++
++	{ } /* terminate list */
++};
++
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
+ 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -267,7 +280,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
  
- 		/* include a NULL character at the end */
--		if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
-+		if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
-+			free(str);
- 			goto error;
-+		}
- 		size += string_size(str);
- 		free(str);
- 	}
-@@ -2390,8 +2394,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
- 			goto error;
- 
- 		/* include a NULL character at the end */
--		if (strbuf_add(&sb, str, strlen(str) + 1) < 0)
-+		if (strbuf_add(&sb, str, strlen(str) + 1) < 0) {
-+			free(str);
- 			goto error;
-+		}
- 		size += string_size(str);
- 		free(str);
- 	}
-@@ -2446,7 +2452,7 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
- 
- 		n->map = perf_cpu_map__new(str);
- 		if (!n->map)
--			goto error;
-+			goto free_str;
- 
- 		free(str);
- 	}
-@@ -2454,6 +2460,8 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
- 	ff->ph->env.numa_nodes = nodes;
- 	return 0;
- 
-+free_str:
-+	free(str);
- error:
- 	free(nodes);
- 	return -1;
-@@ -2487,10 +2495,10 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
- 			goto error;
- 
- 		if (strbuf_addf(&sb, "%u:%s", type, name) < 0)
--			goto error;
-+			goto free_name;
- 		/* include a NULL character at the end */
- 		if (strbuf_add(&sb, "", 1) < 0)
--			goto error;
-+			goto free_name;
- 
- 		if (!strcmp(name, "msr"))
- 			ff->ph->env.msr_pmu_type = type;
-@@ -2501,6 +2509,8 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
- 	ff->ph->env.pmu_mappings = strbuf_detach(&sb, NULL);
- 	return 0;
- 
-+free_name:
-+	free(name);
- error:
- 	strbuf_release(&sb);
- 	return -1;
+ 	adap = &dev->adapter;
+ 	adap->owner = THIS_MODULE;
+-	adap->class = I2C_CLASS_DEPRECATED;
++	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
++					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
+ 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->nr = -1;
 -- 
-2.20.1
+2.27.0
 
