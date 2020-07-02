@@ -2,136 +2,84 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F58C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 431FC20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593682720;
-	bh=hkQ8ByXrkeHMxfidSZEiW886/eOOXJ12KSIWfpuF1Sg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xcdeOAopNc2gsjTRZ7HMaNaeUtiyD8knOWJCE1hmk8fPpGGM/qNxFzjhnXev202cz
-	 BXnLOciUlLTuehF38wZ/Zal06MrzicASQFychw5fQ89AeWjkB3EWvxDXT6/TKP+Nqt
-	 EC51oPwWnNVicB2hyyIQJ1dCBNfEMdAHpR1M4uHw=
+	by mail.kernel.org (Postfix) with ESMTP id 3427720760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KuLrQtIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgGBJij (ORCPT
+        id S1728191AbgGBJjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:38:39 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:35086 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgGBJii (ORCPT
+        Thu, 2 Jul 2020 05:39:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23946 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726475AbgGBJji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:38:38 -0400
-Received: by mail-ej1-f66.google.com with SMTP id rk21so28533318ejb.2;
-        Thu, 02 Jul 2020 02:38:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PshYPWi7fvTQHrWfUZQEN624Xq+S5W73EgfXf3KFYes=;
-        b=NaQHhUrxO9pz1UVhLoP87ySykgLihsttvuiBlu+Ie0qbRPY7opFkGi9UrMVZxLUSxl
-         BLnRDu4i9P0mVIngS8gO4hNFld+Uz+GdFviz0y1ukFaNWmUgxNeBQmeUlERmq1+ndxwx
-         zVWJeOtpi6veki2mZAVf6gMAoYWeDZ45J1NGb6LFztrpmr094jgLE3kDYVunD3wlBKbr
-         p36IurybV5T0I42q6TpULk1P2i0l+lNpAhVmc8iMNeNw/D6OWRyhfz3GmFUHD/q4Z0gH
-         ad3szld7fo8dZUQV1j9CqA6uEvZ5NMNiWCLWtlcLJVn8nIIoeW/ereq4MqBOgCFsdHeq
-         NdbA==
-X-Gm-Message-State: AOAM5307PgQHsNuA8HcxN0H5IIyYtmY0Gc1+w4Bm3P5uCbPfDmnLz4+e
-        bfHqLbJ7RnjuuCqGwV/qjhsnKEDpJcE=
-X-Google-Smtp-Source: ABdhPJwmnk10YRxLgMfD/lCDgqC3eUs/X3gFQZl3/SzMyaDU07mbbNuc/es3NjRCaglqFP94/8erzQ==
-X-Received: by 2002:a17:906:9387:: with SMTP id l7mr25768386ejx.274.1593682716186;
-        Thu, 02 Jul 2020 02:38:36 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id g8sm9215406edk.13.2020.07.02.02.38.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 02:38:34 -0700 (PDT)
-From:   Ricardo Ribalda <ribalda@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     Ricardo Ribalda <ribalda@kernel.org>
-Subject: [PATCH v3] i2c: designware: platdrv: Set class based on dmi
-Date:   Thu,  2 Jul 2020 11:38:32 +0200
-Message-Id: <20200702093832.2077252-1-ribalda@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Thu, 2 Jul 2020 05:39:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593682777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OU1abHmcvqlPXE7j6qY5NTPbjnWuDoW6srqdHAGVMo0=;
+        b=KuLrQtICw7WxwjLWuFc0r8nMZRtg6o+v9u4dGs6PUqVBECKXj+LNpErY6apyBQPJqNQWmj
+        vTALcbE2O/7GFe8vRHaRQ68b0vXS4OZRm/Z1kME44NjuHFGpDdqkx8uNixoMecGEricWy4
+        zCqNf2jzGM8Fho4ziAhGnvSrGiLmoqc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-JnfcbkGbNaqoEPaIYrmDpA-1; Thu, 02 Jul 2020 05:39:36 -0400
+X-MC-Unique: JnfcbkGbNaqoEPaIYrmDpA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2DA8BFC3;
+        Thu,  2 Jul 2020 09:39:34 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6344F5C541;
+        Thu,  2 Jul 2020 09:39:34 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] kvm: use more precise cast and do not drop __user
+Date:   Thu,  2 Jul 2020 05:39:33 -0400
+Message-Id: <20200702093933.20845-1-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current AMD's zen-based APUs use this core for some of its i2c-buses.
+Sparse complains on a call to get_compat_sigset, fix it.  The "if"
+right above explains that sigmask_arg->sigset is basically a
+compat_sigset_t.
 
-With this patch we re-enable autodetection of hwmon-alike devices, so
-lm-sensors will be able to work automatically.
-
-It does not affect the boot-time of embedded devices, as the class is
-set based on the dmi information.
-
-Dmi is probed only on Qtechnology QT5222 Industrial Camera Platform
-https://qtec.com/camera-technology-camera-platforms/
-
-Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
-Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
+ virt/kvm/kvm_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v3: Comment by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-  - Add Fixes tag
-  - Do not user strstr for dmidecode
-  Comment by Jarkko Nikula <jarkko.nikula@linux.intel.com>
-  - Use dmi_check_system()
- drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index c2efaaaac252..a9f2d416b7d1 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -12,6 +12,7 @@
- #include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -191,6 +192,18 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
- 	return ret;
- }
- 
-+static const struct dmi_system_id allow_probe[] = {
-+	{
-+		.ident = "Qtechnology QT5222",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222")
-+		}
-+	},
-+
-+	{ }
-+};
-+
- static int dw_i2c_plat_probe(struct platform_device *pdev)
- {
- 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-@@ -267,7 +280,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	adap = &dev->adapter;
- 	adap->owner = THIS_MODULE;
--	adap->class = I2C_CLASS_DEPRECATED;
-+	adap->class = dmi_check_system(allow_probe) ?
-+					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
- 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->nr = -1;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index a852af5c3214..0a68c9d3d3ab 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3350,7 +3350,8 @@ static long kvm_vcpu_compat_ioctl(struct file *filp,
+ 			if (kvm_sigmask.len != sizeof(compat_sigset_t))
+ 				goto out;
+ 			r = -EFAULT;
+-			if (get_compat_sigset(&sigset, (void *)sigmask_arg->sigset))
++			if (get_compat_sigset(&sigset,
++					      (compat_sigset_t __user *)sigmask_arg->sigset))
+ 				goto out;
+ 			r = kvm_vcpu_ioctl_set_sigmask(vcpu, &sigset);
+ 		} else
 -- 
-2.27.0
+2.26.2
 
