@@ -2,134 +2,139 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4434BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD4F20702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ttsbcsBM"
+	by mail.kernel.org (Postfix) with ESMTP id E04F820702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgGBJck (ORCPT
+        id S1728204AbgGBJcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgGBJck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:32:40 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA01C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 02:32:39 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y18so15600232lfh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 02:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xJrKLxFtP5i0UcBKdy1GE3OwCPtszmxth6t90XmZnto=;
-        b=ttsbcsBM5d2wN8N8MSUThSKYEGVc38uTg8irCxPOwLP4CvC/gHlh1tG9aCaoBfbZw4
-         IOQAX05Te7L+tizZj+ie5VK7Qd2ZjTGvTjvv7dMiqV2GaBUPod/Y4tuvkc1GwxxympXT
-         lS8buFCZstgSTqLb1RMCAp7j2dBLVMrGQ77D07mL5uAAtHxQXffy/djWidzjB/sQjuHQ
-         6+tm0tSr2tz3lk3WU+8rqPPxMxLjw4FJFJ4bvbVdjahirxkBg3+5/Pl+frfX37RvHNAq
-         UAE4kX+tqvxhEBjtfeulVqlABddC61Qsrzmm9DY4f9+UH+rs6h2gw0E8xco5BNsH9Reu
-         Ad8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xJrKLxFtP5i0UcBKdy1GE3OwCPtszmxth6t90XmZnto=;
-        b=ckCRtCmY2ZlPLbzN0iV3WxzXFr2eWqqDtniZzilnlgWbKn2Z3U2In8OXzOpFu94UdS
-         oXuCKBz0ruh/3nwLGJf+Z7KiP7rLeCEvN7z9r/BGkMsHGeR2167AU2k6L8eyetYm0wQB
-         Swnsq7/WXjDovY75TwoI489Pm1t6FzS42sMpdLirpcgGQlQYmvXqWPYvS96XOVMq1zYl
-         GVJXzxaUXVWNB8Zu0PxCMirickoRr0R+np+rJFTeU41UwZIW9GM9Bqlzegs3W2TbXH1g
-         B1snQYQC/NyOQeWnUWhbPEOcRSDIFtCzep91t5JDqXzCgLOwLAgF/vE6V2+OAFPJbveH
-         0XtQ==
-X-Gm-Message-State: AOAM5335YiEdoAtaO0qHB0ua9iBX8Nm6u/VmGSm48f1yRL9zLpNvCfsh
-        RSuVpyfyg+b96ZAdKr28OvPUWXQoQOWQGw==
-X-Google-Smtp-Source: ABdhPJwIdcIQafdt42QlqVEBIRfGHC/lMgIxRDNqG0gS0fWBMzgvsIzfjrTdGE2q5x8myUi8sR6DeQ==
-X-Received: by 2002:a19:6a14:: with SMTP id u20mr16782739lfu.172.1593682357797;
-        Thu, 02 Jul 2020 02:32:37 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:461b:f1c2:55ed:4719:4c47:712d? ([2a00:1fa0:461b:f1c2:55ed:4719:4c47:712d])
-        by smtp.gmail.com with ESMTPSA id y12sm2767034ljh.79.2020.07.02.02.32.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 02:32:37 -0700 (PDT)
-Subject: Re: [PATCH v6 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200701212155.37830-1-james.quinlan@broadcom.com>
- <20200701212155.37830-3-james.quinlan@broadcom.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <968d6802-b30e-b618-1dd5-1b1a5ba6548a@cogentembedded.com>
-Date:   Thu, 2 Jul 2020 12:32:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 2 Jul 2020 05:32:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:58934 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727057AbgGBJcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:32:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D892B31B;
+        Thu,  2 Jul 2020 02:32:50 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.12.193])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7322A3F71E;
+        Thu,  2 Jul 2020 02:32:46 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 10:32:39 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kernel-team@android.com
+Subject: Re: [PATCH 04/18] alpha: Override READ_ONCE() with barriered
+ implementation
+Message-ID: <20200702093239.GA15391@C02TD0UTHF1T.local>
+References: <20200630173734.14057-1-will@kernel.org>
+ <20200630173734.14057-5-will@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200701212155.37830-3-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630173734.14057-5-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 02.07.2020 0:21, Jim Quinlan wrote:
-
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Tue, Jun 30, 2020 at 06:37:20PM +0100, Will Deacon wrote:
+> Rather then relying on the core code to use smp_read_barrier_depends()
+> as part of the READ_ONCE() definition, instead override __READ_ONCE()
+> in the Alpha code so that it is treated the same way as
+> smp_load_acquire().
 > 
-> A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> driver for the BrcmSTB 7216 chip.  Use
-> devm_reset_control_get_optional_shared control() to handle this sharing.
-
-    Not "devm_reset_control_get_optional_shared() control"?
-
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
 > ---
->   drivers/ata/ahci_brcm.c | 11 +++--------
->   1 file changed, 3 insertions(+), 8 deletions(-)
+>  arch/alpha/include/asm/barrier.h | 61 ++++----------------------------
+>  arch/alpha/include/asm/rwonce.h  | 19 ++++++++++
+>  2 files changed, 26 insertions(+), 54 deletions(-)
+>  create mode 100644 arch/alpha/include/asm/rwonce.h
 > 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 6853dbb4131d..d6115bc04b09 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-[...]
-> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->   
->   	/* Reset is optional depending on platform and named differently */
->   	if (priv->version == BRCM_SATA_BCM7216)
-> -		reset_name = "rescal";
-> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
->   	else
-> -		reset_name = "ahci";
-> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
->   
-> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
->   	if (IS_ERR(priv->rcdev))
->   		return PTR_ERR(priv->rcdev);
->   
+> diff --git a/arch/alpha/include/asm/barrier.h b/arch/alpha/include/asm/barrier.h
+> index 92ec486a4f9e..2ecd068d91d1 100644
+> --- a/arch/alpha/include/asm/barrier.h
+> +++ b/arch/alpha/include/asm/barrier.h
+> @@ -2,64 +2,17 @@
+>  #ifndef __BARRIER_H
+>  #define __BARRIER_H
+>  
+> -#include <asm/compiler.h>
+> -
+>  #define mb()	__asm__ __volatile__("mb": : :"memory")
+>  #define rmb()	__asm__ __volatile__("mb": : :"memory")
+>  #define wmb()	__asm__ __volatile__("wmb": : :"memory")
+
+> -#define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
+> +#define __smp_load_acquire(p)						\
+> +({									\
+> +	__unqual_scalar_typeof(*p) ___p1 =				\
+> +		(*(volatile typeof(___p1) *)(p));			\
+> +	compiletime_assert_atomic_type(*p);				\
+> +	___p1;								\
+> +})
+
+Sorry if I'm being thick, but doesn't this need a barrier after the
+volatile access to provide the acquire semantic?
+
+IIUC prior to this commit alpha would have used the asm-generic
+__smp_load_acquire, i.e.
+
+| #ifndef __smp_load_acquire
+| #define __smp_load_acquire(p)                                           \
+| ({                                                                      \
+|         __unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);               \
+|         compiletime_assert_atomic_type(*p);                             \
+|         __smp_mb();                                                     \
+|         (typeof(*p))___p1;                                              \
+| })
+| #endif
+
+... where the __smp_mb() would be alpha's mb() from earlier in the patch
+context, i.e.
+
+| #define mb() __asm__ __volatile__("mb": : :"memory")
+
+... so don't we need similar before returning ___p1 above in
+__smp_load_acquire() (and also matching the old read_barrier_depends())?
+
 [...]
 
-MBR, Sergei
+> +#include <asm/barrier.h>
+> +
+> +/*
+> + * Alpha is apparently daft enough to reorder address-dependent loads
+> + * on some CPU implementations. Knock some common sense into it with
+> + * a memory barrier in READ_ONCE().
+> + */
+> +#define __READ_ONCE(x)	__smp_load_acquire(&(x))
+
+As above, I don't see a memory barrier implied here, so this doesn't
+look quite right.
+
+Thanks,
+Mark.
