@@ -2,120 +2,91 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B07CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3833820720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:43:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHRlxDmy"
+	by mail.kernel.org (Postfix) with ESMTP id 17B4C20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgGBQnu (ORCPT
+        id S1726739AbgGBQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgGBQnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:43:50 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD37C08C5C1;
-        Thu,  2 Jul 2020 09:43:49 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so29286436wrs.11;
-        Thu, 02 Jul 2020 09:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mVvrzT69sPx+FSAmQUk8XmkOHty6XEaiuNJ0f0jrwM4=;
-        b=IHRlxDmyjPsclh0OA124VbwKZqP9sEDMZ6Q3DB8U9cy/6EMYt8b4yFHnCEqkXvUVNy
-         2x+kD8tlx7KrDqE8vnopsQhtLNaxmx6tU0x/4kBPO0zXkGbXK7vgLL0h+8KmbPKFPiEX
-         H8yaJZd1o2iSirX5xQ6bpve2XGQLb+E9CBLN3JUOeCIWtxQORRzK7w+wZlJnq0KyWqlP
-         dYA92Qfvxf0Z5pavWZ7SjBu36DVd/LHi5CEcuHgDCJeb3yVChG3VpwbAlDSs5JUdyix1
-         AF9ZfX4R+g6evdE8qRfa3N859EBKED/NIq1JPmn2IMbEU00DwroMgh5xvFGx6a098LNE
-         Xn+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mVvrzT69sPx+FSAmQUk8XmkOHty6XEaiuNJ0f0jrwM4=;
-        b=azishzSsFGAK4JQdAu5AEZp5P7FExjXiKWmvO1iDhOj6X9D8iFltNf5DnoOGKmH3T4
-         P/AUOW0vQnXFu0X8DKKFZ7+kxFxir1L7GOcj//zy3791BBUCAq4xsbUrnaCkoGHvQhUa
-         Wzjqk3jg4RoyEqcy6H03feGQBPCW4RSCfTcrq70FD7xiw7TiWNYW+ewjb48aQooBwI5r
-         0aVLm9Qo97eWZsSn1WGI8Rmi2yIwsmBH4AVOsaaLqrNzse9pXAoZqiyAyDGcDJQFYPWj
-         IVN/kDUam+dQTqXM4vXcmEuHxRJH/TAymx7YS1K2ELm8xh5284vGe52Z/9rZ38deJlsB
-         ezOA==
-X-Gm-Message-State: AOAM53043Ctu5hehJqxspzRzY7xJLn4xp/SIQdFbV/LuYmR8i7ARK3gT
-        XhK80SFHtRExT5FyLfiWfcyfIp/J
-X-Google-Smtp-Source: ABdhPJwmmdwPpUiA4P0T3jwUOKiUkxW9JiBulft1eV8T6xeji3M4mr6nQOOQQmBMRC8+5GzQpSKehg==
-X-Received: by 2002:adf:b312:: with SMTP id j18mr30476393wrd.195.1593708228114;
-        Thu, 02 Jul 2020 09:43:48 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d63sm11692366wmc.22.2020.07.02.09.43.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 09:43:47 -0700 (PDT)
-Subject: Re: [PATCH net-next 0/4] net: ethtool: Untangle PHYLIB dependency
-To:     Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200702042942.76674-1-f.fainelli@gmail.com>
- <20200702155652.ivokudjptoect6ch@lion.mk-sys.cz>
- <20200702163424.GG752507@lunn.ch>
- <20200702093545.5ee3371a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <47965786-9a12-6f09-cf23-1d342334fbc0@gmail.com>
-Date:   Thu, 2 Jul 2020 09:43:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Thu, 2 Jul 2020 12:44:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42960 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726374AbgGBQow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:44:52 -0400
+IronPort-SDR: t4aYe6itqftRvXSSw0JPh7+NJk45FNoNocpGL/YnYJFlaa5txsrHffgArbTbn8YgcN68TIIl3h
+ 69wnXPWYBe1w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148498382"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="148498382"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:44:51 -0700
+IronPort-SDR: i3NhLhGla1TLJtx6cdRU3Gq7NArPh6JUpM2jI3nUGE5l9kemQJdcJlo5Ac32g69IgxCRcyiq/k
+ 5moSeOZZNEqQ==
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="426011059"
+Received: from nzbastur-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.231.182])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:44:50 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 3/6] ASoC: amd: raven: acp3x-pcm-dma: fix 'set but not used' warning
+Date:   Thu,  2 Jul 2020 11:44:30 -0500
+Message-Id: <20200702164433.162815-4-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702164433.162815-1-pierre-louis.bossart@linux.intel.com>
+References: <20200702164433.162815-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702093545.5ee3371a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix W=1 warning. the card variable is useless here.
 
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-On 7/2/2020 9:35 AM, Jakub Kicinski wrote:
-> On Thu, 2 Jul 2020 18:34:24 +0200 Andrew Lunn wrote:
->> On Thu, Jul 02, 2020 at 05:56:52PM +0200, Michal Kubecek wrote:
->>> On Wed, Jul 01, 2020 at 09:29:38PM -0700, Florian Fainelli wrote:  
->>>> Hi all,
->>>>
->>>> This patch series untangles the ethtool netlink dependency with PHYLIB
->>>> which exists because the cable test feature calls directly into PHY
->>>> library functions. The approach taken here is to utilize a new set of
->>>> net_device_ops function pointers which are automatically set to the PHY
->>>> library variants when a network device driver attaches to a PHY device.  
->>>
->>> I'm not sure about the idea of creating a copy of netdev_ops for each
->>> device using phylib. First, there would be some overhead (just checked
->>> my 5.8-rc3 kernel, struct netdev_ops is 632 bytes). Second, there is
->>> quite frequent pattern of comparing dev->netdev_ops against known
->>> constants to check if a network device is of certain type; I can't say
->>> for sure if it is also used with devices using phylib in existing code
->>> but it feels risky.  
->>
->> I agree with Michal here. I don't like this.
->>
->> I think we need phylib to register a set of ops with ethtool when it
->> loads. It would also allow us to clean up phy_ethtool_get_strings(),
->> phy_ethtool_get_sset_count(), phy_ethtool_get_stats().
-> 
-> +1
-
-OK, that makes sense, I will work on that.
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 5bd458e0fe31..1f0fe5aaab1d 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -302,14 +302,12 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
+ 					   struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_pcm_runtime *prtd;
+-	struct snd_soc_card *card;
+ 	struct i2s_stream_instance *rtd;
+ 	u32 pos;
+ 	u32 buffersize;
+ 	u64 bytescount;
+ 
+ 	prtd = substream->private_data;
+-	card = prtd->card;
+ 	rtd = substream->runtime->private_data;
+ 
+ 	buffersize = frames_to_bytes(substream->runtime,
 -- 
-Florian
+2.25.1
+
