@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F202BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B166EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38012067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6772067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mq1Q5i/A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MnIF3NKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgGBOsk (ORCPT
+        id S1729922AbgGBOsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50232 "EHLO
+        Thu, 2 Jul 2020 10:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730008AbgGBOqw (ORCPT
+        with ESMTP id S1729995AbgGBOqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:52 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B291CC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so17512568wrl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:51 -0700 (PDT)
+        Thu, 2 Jul 2020 10:46:49 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81391C08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:49 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w3so15822848wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N2ZbcYjJZjZ17aCzzB/muazXcgiT4k+gU+MxkZwfWa8=;
-        b=Mq1Q5i/AEO457zmTrv+POuxnGzOAe+6/nY9A5cmZtvfowIplFqpV1Eke6o1PXZdyi6
-         VJNNLYPpwyhWZlYftQRTK49825KmLFsYZ5p8sohqPXDFA1DByoIbH7eMh2WdHrbZHk4a
-         tUrM5lieL0qZWrljuF0MFtiyYIIgD0lEYfkh90NWOfpwpubQITmjvwsPJTyovuFg6ZLi
-         geCvUfUGEhMmASDmyzzSvlUfJO//nZLj45kN6iVv6QAtcOo9cBt3Kp5viFUQj8cXEb+Z
-         mw00++JZLQ1CQr9sHz5dLhc3zIELZJdfkdmgGOGRamyf0zqOn5oU+GPnyIQfEx9uddeM
-         JIPg==
+        bh=A68m/4vXtRoEt+tCUl/deoA+S6NQ0dzD0za0e2IsKFc=;
+        b=MnIF3NKMeHllD9bTiFG/UBWre8WcWJwn5Gs+iOqWaPWWVSs3Fmue2tnex/eI8nRqPE
+         XQauSD7JfNVMRzo5iKgnr8oq0f8dcrGaXVQgT+wgmvxBBPLfRQpEcxBSpsifs7sxW9TI
+         y7LrKuy/z5fGS7KaetA8KIHoBZ1xNWSKfbioR04TI5jOLFjaaMAUV6foseYp2OYdkRM4
+         1Z0jBQW5Nt733Tztd5Mv871YZPC7G+E2gk7GlaK964bTvoaRTTMT0v5Op/LxtOUhhyPI
+         eeWnTopVRGYVBugAlMM1Yaopc5tKTEPkusEWAxPsCNUFafsAbuPDdUnPwlEpVSXqMaMZ
+         sQYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N2ZbcYjJZjZ17aCzzB/muazXcgiT4k+gU+MxkZwfWa8=;
-        b=q9DMmhJ+SkUxKwlCS7aOWDLQ/CeXT4u3m5zBv9gfC2jAgjeOCi2J3Hj09ciCX2pyII
-         80Q14rJXLa6/2iJBFEo0/OD3l01Izg/+cTsl/v5prRMIdUsWaxtntti0NSRNqcq2kfU6
-         CezfHcBTSLkpLMS8QZ3ZUjc5VtM5ZTNm8rpx4473QAkVFOTwNF0B5r1jHz2ZCcbXEKFe
-         3cD/qpyXEvva3ndTdQdEG5XuNuA/EWgl4NA7sUReQjrIj0o6t6SP0R9MXrttuRrMqY3O
-         RW2+s7XHdQ1K2MdZSugUR9uUo78NO/RjiH1bZ30gG4dF0/YXJPX0MaQzs5MBgIa6g3Ey
-         X78g==
-X-Gm-Message-State: AOAM532MC0ef0/fA8xt84GyVmZ9jEsWPgPG4VuZVwRRQrU5WTynPOmJO
-        SE6LyIon7gWdoSElS0HoKLExQA==
-X-Google-Smtp-Source: ABdhPJzL8QUTzwy3oMlhA58n2PXE6vG/UgMbPHNq/o/+zK/18O97nXXvR9OcedR0UNxfobMNkjoqDw==
-X-Received: by 2002:adf:f445:: with SMTP id f5mr32588597wrp.339.1593701210450;
-        Thu, 02 Jul 2020 07:46:50 -0700 (PDT)
+        bh=A68m/4vXtRoEt+tCUl/deoA+S6NQ0dzD0za0e2IsKFc=;
+        b=R0awdzFMzLAzhOGKhyrJj2fNX+rMb0aev+QkfxMFUOWRbEFO7dX7W5GRequuMElZk1
+         AalqVAA42fb4s36hMg0L3iZ4HxyM7hmkLZw7V1zUwX9OYf8AjD8dMgwzSnCTlnnC4pwr
+         CrsVblnt+deD7gk7nYOfN/9YKtWYmXImE4j5bPtfMAxQ3ByBerTCh2mHVbkFqFb5k6he
+         N3m2TfWi5cPYrbp4KXvqWbdk+u/BuHnWq+pFDlB0ZJXvz6AyjYQMptlJLi9oDKUNIPjT
+         iYKnmgQpFcLFMQKs92VwLEpdyz+WNtDOLPr8gxdxVmGi9FTbOnE/CcEdsGcrdliWdO12
+         TapQ==
+X-Gm-Message-State: AOAM531tPDW478XfQ7Xb86iwqh9itFChEVOc7DCO3bmuoQPKKUnRA4e2
+        mg5LreVlDqVIVWNe+lqEwn+UGZtR+e4=
+X-Google-Smtp-Source: ABdhPJw/XS4Q1S0GGevj+ph6k6w1go7mzC+xGwxs/OouigSO7U4rDiQ8fCZ+aBU/5fV4s1OKUk6Idg==
+X-Received: by 2002:a7b:c5c7:: with SMTP id n7mr32283737wmk.77.1593701208260;
+        Thu, 02 Jul 2020 07:46:48 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.49
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:49 -0700 (PDT)
+        Thu, 02 Jul 2020 07:46:47 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        John Youn <johnyoun@synopsys.com>
-Subject: [PATCH 15/30] usb: dwc3: dwc3-haps: Function headers are not suitable for kerneldoc
-Date:   Thu,  2 Jul 2020 15:46:10 +0100
-Message-Id: <20200702144625.2533530-16-lee.jones@linaro.org>
+        Pawel Laszczak <pawell@cadence.com>,
+        Peter Chen <peter.chen@nxp.com>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 13/30] usb: cdns3: core: Fix incorrect formatting and misspelled function arg docs
+Date:   Thu,  2 Jul 2020 15:46:08 +0100
+Message-Id: <20200702144625.2533530-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
@@ -79,30 +78,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warnings:
+There are 3 misspellings and 1 incorrect format used in this file's
+kerneldoc function headers.  Fixing them squashes the following W=1
+kernel build warnings:
 
- drivers/usb/dwc3/dwc3-haps.c:19: warning: Incorrect use of kernel-doc format:  * struct dwc3_haps - Driver private structure
- drivers/usb/dwc3/dwc3-haps.c:23: warning: cannot understand function prototype: 'struct dwc3_haps '
+ drivers/usb/cdns3/gadget.c:653: warning: Function parameter or member 'priv_ep' not described in 'cdns3_wa2_descmissing_packet'
+ drivers/usb/cdns3/gadget.c:653: warning: Excess function parameter 'priv_dev' description in 'cdns3_wa2_descmissing_packet'
+ drivers/usb/cdns3/gadget.c:1088: warning: Function parameter or member 'request' not described in 'cdns3_ep_run_transfer'
+ drivers/usb/cdns3/gadget.c:2574: warning: Function parameter or member 'priv_ep' not described in '__cdns3_gadget_ep_set_halt'
+ drivers/usb/cdns3/gadget.c:2574: warning: Excess function parameter 'ep' description in '__cdns3_gadget_ep_set_halt'
+ drivers/usb/cdns3/gadget.c:2595: warning: Function parameter or member 'priv_ep' not described in '__cdns3_gadget_ep_clear_halt'
+ drivers/usb/cdns3/gadget.c:2595: warning: Excess function parameter 'ep' description in '__cdns3_gadget_ep_clear_halt'
+ drivers/usb/cdns3/gadget.c:2898: warning: Function parameter or member 'priv_dev' not described in 'cdns3_init_eps'
+ drivers/usb/cdns3/gadget.c:2898: warning: Excess function parameter 'cdns3' description in 'cdns3_init_eps'
+ drivers/usb/cdns3/gadget.c:3210: warning: Function parameter or member 'cdns' not described in 'cdns3_gadget_init'
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: John Youn <johnyoun@synopsys.com>
+Cc: Pawel Laszczak <pawell@cadence.com>
+Cc: Peter Chen <peter.chen@nxp.com>
+Cc: Roger Quadros <rogerq@ti.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/dwc3/dwc3-haps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/cdns3/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-haps.c b/drivers/usb/dwc3/dwc3-haps.c
-index 3cecbf1694526..55b4a901168e8 100644
---- a/drivers/usb/dwc3/dwc3-haps.c
-+++ b/drivers/usb/dwc3/dwc3-haps.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--/**
-+/*
-  * dwc3-haps.c - Synopsys HAPS PCI Specific glue layer
+diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+index 19bbb5b7e6b6c..59e5e213a99bb 100644
+--- a/drivers/usb/cdns3/core.c
++++ b/drivers/usb/cdns3/core.c
+@@ -282,7 +282,7 @@ static int cdns3_idle_init(struct cdns3 *cdns)
+ 
+ /**
+  * cdns3_hw_role_switch - switch roles based on HW state
+- * @cdns3: controller
++ * @cdns: controller
+  */
+ int cdns3_hw_role_switch(struct cdns3 *cdns)
+ {
+@@ -320,7 +320,7 @@ int cdns3_hw_role_switch(struct cdns3 *cdns)
+ /**
+  * cdsn3_role_get - get current role of controller.
   *
-  * Copyright (C) 2018 Synopsys, Inc.
+- * @dev: Pointer to device structure
++ * @sw: pointer to USB role switch structure
+  *
+  * Returns role
+  */
+@@ -334,8 +334,8 @@ static enum usb_role cdns3_role_get(struct usb_role_switch *sw)
+ /**
+  * cdns3_role_set - set current role of controller.
+  *
+- * @dev: pointer to device object
+- * @role - the previous role
++ * @sw: pointer to USB role switch structure
++ * @role: the previous role
+  * Handles below events:
+  * - Role switch for dual-role devices
+  * - USB_ROLE_GADGET <--> USB_ROLE_NONE for peripheral-only devices
 -- 
 2.25.1
 
