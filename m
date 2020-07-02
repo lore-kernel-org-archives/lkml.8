@@ -2,364 +2,149 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99034C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666FA207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C42520672
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hzP/52G8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o3xzQqUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgGBBnd (ORCPT
+        id S1728109AbgGBBpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgGBBn3 (ORCPT
+        Wed, 1 Jul 2020 21:45:22 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:56485 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbgGBBpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:43:29 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B85D8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 18:43:29 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id a25so7658749pfl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 18:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=SCqQGailrCYA7+IFNQkGdPcyTCT2gfWNKAHkDA9B1GY=;
-        b=hzP/52G8y/U5SEdRnajEwhCVo+IzJNdL7M7B8RPX28Uyin02LnNTbtuD+Aw5XtyzWK
-         5nEIfIhJg6HNRCXZ/FADkRrgwvLGm2lOt1R3L0K9zcedZbffA2Bysl88uHclF3WX3OeG
-         4pNIg5xNSkEuX9ro8KTQxHgkqxheICXdsu32ePHrOIrg+Yfec7Phjqx+AvQBd/vng6Vf
-         JZGtPihMHYfu4tGn3wXHzCElVxB8w0lJ7R1j75uAQJ/Yp5GrYWipGVxLiixYBhxoS31O
-         nAS75psD+5EvYbsVZ8m3ewcerRGRv0dVMPe7oYalc85C85uPPJOHFsCo5/39toqXFhtX
-         d9yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=SCqQGailrCYA7+IFNQkGdPcyTCT2gfWNKAHkDA9B1GY=;
-        b=nx+XKUKBXvxIoEVJoFdTgltGko1aTAdZVIq0Qp7finPgNI4w3nyQAsuZDARS6BhKku
-         kU27uVHckZVOFx3LB+RH4vXnldXek63AtIopS8jcw2umreeRixW2Z7Z29r/4/PqV6dbk
-         IBeGMdg5mGr0Mvy10e4jrfVH3k/dZ1Bn6cL59JUxSwMsvztMmtg1Bf6KLPOZ64EiYqmq
-         tygfwN3eiUFn5XzbBAUuC7kXPBjNwTmTFyVtsdbX4efgmVUUWG7xXPSpGFUhnRvXC9mS
-         A4h1AEHWNUq9zUkyWE9MFRGYQ+Rzhdm02Xdd2VNL7mLQUlXWCnp1TC257SzhJjlYmNQg
-         LfZA==
-X-Gm-Message-State: AOAM530XiXjfdoqX+d9+74c1sFrnLXgTSY0YaV0T9j6MQYlZ0I479DCm
-        pveNMPI7kZxehXYaywbC7ZlXqyh6B32ZwYl2
-X-Google-Smtp-Source: ABdhPJzhZwG94LQ7S2+ClOsEqlp0XJknP6+1ih2Pa0MuDmV7aHu0txehv0/LSu/sHmSlQJDwz/N8dgohlStubMLF
-X-Received: by 2002:a17:902:8681:: with SMTP id g1mr24117264plo.161.1593654209035;
- Wed, 01 Jul 2020 18:43:29 -0700 (PDT)
-Date:   Thu,  2 Jul 2020 01:42:23 +0000
-In-Reply-To: <20200630174350.2842555-1-linchuyuan@google.com>
-Message-Id: <20200702014223.4096977-1-linchuyuan@google.com>
-Mime-Version: 1.0
-References: <20200630174350.2842555-1-linchuyuan@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] hwmon:max6697: Allow max6581 to create tempX_offset attributes
-From:   Chu Lin <linchuyuan@google.com>
-To:     linux@roeck-us.net, jdelvare@suse.com, linchuyuan@google.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jasonling@google.com, belgaied@google.com, zhongqil@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 1 Jul 2020 21:45:21 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200702014519epoutp033b333fd90999360aa50d2a1007032c7f~dzCjuBro00704507045epoutp03C
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:45:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200702014519epoutp033b333fd90999360aa50d2a1007032c7f~dzCjuBro00704507045epoutp03C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593654319;
+        bh=PjPafx41GNVfaeK7QN9ako8OUQWiq47e2huHdgUGBiw=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=o3xzQqUDtwfA2L4oFZJ+OihaDfi+n8hBNp32MCamlnex4GLXGmpo0pdzGx35M7OG9
+         iLRm1ITfBpjcBYam+f70DsKA6MduvwnNfUj8wsoc3YrLiNN/IYCCzDgg6cm2dl76K9
+         a46mQjfmoH8zvuU7mr1km1mp/TfsPxe9SR4yTEvs=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200702014518epcas1p3cde2daea149096fc676c219a49922dc5~dzCjUtGZ92617826178epcas1p3g;
+        Thu,  2 Jul 2020 01:45:18 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 49y1BP50ymzMqYkq; Thu,  2 Jul
+        2020 01:45:17 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1E.5E.28581.C2C3DFE5; Thu,  2 Jul 2020 10:45:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702014516epcas1p22f130072d6872cdf0607cdbb36c9201f~dzChMfIri0631606316epcas1p22;
+        Thu,  2 Jul 2020 01:45:16 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702014516epsmtrp21741270637ecd86125eb118bc1b1e942~dzChLl3Dd2872028720epsmtrp2b;
+        Thu,  2 Jul 2020 01:45:16 +0000 (GMT)
+X-AuditID: b6c32a38-2cdff70000006fa5-44-5efd3c2cfb6f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C4.5D.08303.C2C3DFE5; Thu,  2 Jul 2020 10:45:16 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200702014516epsmtip286858a9898b7bf6c80d0349c56bb6659~dzChCaWuW0339103391epsmtip2k;
+        Thu,  2 Jul 2020 01:45:16 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Sasha Levin'" <sashal@kernel.org>
+Cc:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200702013824.GH2687961@sasha-vm>
+Subject: RE: [PATCH 5.7.y 0/5] exfat stable patches for 5.7.y
+Date:   Thu, 2 Jul 2020 10:45:16 +0900
+Message-ID: <002101d65012$6f861560$4e924020$@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHpU7TLZu4sPgwmGsLVIX6Hklol4AD9uaezAhVcfvmotON5IA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsWy7bCmnq6Ozd84g+Mt1hbNi9ezWVzeNYfN
+        YtOaa2wWCzY+YnRg8di0qpPNY//cNewenzfJBTBH5dhkpCampBYppOYl56dk5qXbKnkHxzvH
+        m5oZGOoaWlqYKynkJeam2iq5+AToumXmAG1TUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gq
+        pRak5BQYGhToFSfmFpfmpesl5+daGRoYGJkCVSbkZKydcoOxYClbRd//fuYGxncsXYycHBIC
+        JhKvzz5k7WLk4hAS2MEocahxLhOE84lR4uSM5cwQzmdGiRuPr7F1MXKAtUxeFQYR38Uo8ePX
+        Gaiil4wSZxbNYQaZyyagK/Hvz342EFtEQF1i1Y01YDazQIzE5r7NYLs5BQwklu+aDmYLC9hK
+        7Fq0jRHEZhFQkXi2eQsriM0rYCnx4u5EZghbUOLkzCcsEHPkJba/hdglIaAg8fPpMlaQ40QE
+        nCR6v9RClIhIzO5sA7tNQuAju8S1UxMZIepdJF4sucUEYQtLvDq+hR3ClpL4/G4v1JPVEh/3
+        Q43vYJR48d0WwjaWuLl+A9gqZgFNifW79CHCihI7f89lhFjLJ/Huaw8rxBReiY42IYgSVYm+
+        S4ehlkpLdLV/YJ/AqDQLyV+zkPw1C8kDsxCWLWBkWcUollpQnJueWmxYYIIc1ZsYwelQy2IH
+        49y3H/QOMTJxMB5ilOBgVhLhPW3wK06INyWxsiq1KD++qDQntfgQoykwpCcyS4km5wMTcl5J
+        vKGpkbGxsYWJmbmZqbGSOO9JqwtxQgLpiSWp2ampBalFMH1MHJxSDUwzj88t3L9NXbNB2s/b
+        uVzprVaTyNaDwlGpd5dO+6Cu09Kw89Nh+5qdq9ecWfAh2677xy7FVcVsa+YvOv9NatdihfUm
+        CXZ/QsVOdhw44sQnHBjxsOj1dOe2SWrv+f/esV4cdUp/XcnNo/WCqSky6mpcAvFvPp59zub7
+        1r469J3qFo+bzvV+qXwfV0csduf78iLh+euyw/vv34k3NgiedLFyTdWd6oti3eZrDYqCfl5s
+        1dmpk3FU7eiCn+KCU35G3NnMk3tnmsS+jTuqlpdZyvyVCPj8O7eJtefE/+B/D38otx+Vzjpy
+        UMtY1aR13qumY8nlnxYvuf3h4Qb3y9evXf3Vs/pcsoLfPobydy9nFV+bosRSnJFoqMVcVJwI
+        AOX8axwQBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvK6Ozd84g/1nFSyaF69ns7i8aw6b
+        xaY119gsFmx8xOjA4rFpVSebx/65a9g9Pm+SC2CO4rJJSc3JLEst0rdL4MpYO+UGY8FStoq+
+        //3MDYzvWLoYOTgkBEwkJq8K62Lk4hAS2MEoceLAW+YuRk6guLTEsRNnmCFqhCUOHy6GqHnO
+        KDH342Q2kBo2AV2Jf3/2g9kiAuoSq26sAbOZBeIk5vw6wQTRsJFR4vLTSywgCU4BA4nlu6aD
+        2cICthK7Fm1jBLFZBFQknm3ewgpi8wpYSry4O5EZwhaUODnzCdihzAJ6Em0bGSHmy0tsfzsH
+        6k4FiZ9Pl7GClIgIOEn0fqmFKBGRmN3ZxjyBUXgWkkGzEAbNQjJoFpKOBYwsqxglUwuKc9Nz
+        iw0LjPJSy/WKE3OLS/PS9ZLzczcxgqNCS2sH455VH/QOMTJxMB5ilOBgVhLhPW3wK06INyWx
+        siq1KD++qDQntfgQozQHi5I479dZC+OEBNITS1KzU1MLUotgskwcnFINTKUX3XRlLtmtck5P
+        k7G426JT32Yqatp04HS9ZUNDde23fyIdfyw7/RKz14s5c2st73s36Z52cFFM9MT+qreXe23k
+        o3Y+LW01EzgX4pXy+f3l1w1uBWcVl3O8ka2Rmrz/kFgMl9L2nRrX/vfOPZcz01z9Q5/5XaOn
+        xT2nV3OvdPg+PVDU53Wfyasf63NC7TO+tz/8rNi578HOYPUZV6VqnG2msajo3M3/+YP1VdWF
+        d1yfd9w6Y/3H32xT7ycFftan1b93s58xlXtZW/VoYd2TTqmUozs+pM3ZcHTrOvFeyxm79m27
+        7BoVM+Uu70PDi51mj53Fnwes0Zy7RGS6zrPiIJm6pV++7jy8d6X18vXSbUosxRmJhlrMRcWJ
+        AKtyKi35AgAA
+X-CMS-MailID: 20200702014516epcas1p22f130072d6872cdf0607cdbb36c9201f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac
+References: <CGME20200701232535epcas1p3787fa9426c087372556cba2fdb7232ac@epcas1p3.samsung.com>
+        <20200701232024.2083-1-namjae.jeon@samsung.com>
+        <20200702013824.GH2687961@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per max6581, reg 4d and reg 4e is used for temperature read offset.
-This patch will let the user specify the temperature read offset for
-max6581. This patch is tested on max6581 and only applies to max6581.
-
-Testing:
-echo 16250 > temp2_offset
-cat temp2_offset
-16250
-
-echo 17500 > temp3_offset
-cat temp3_offset
-17500
-cat temp4_offset
-0
-cat temp2_offset
-17500
-
-echo 0 > temp2_offset
-cat temp2_offset
-0
-cat temp3_offset
-17500
-
-echo -0 > temp2_offset
-cat temp2_offset
-0
-
-echo -100000 > temp2_offset
--sh: echo: write error: Invalid argument
-
-cat temp2_input
-37000
-
-echo 10000 > temp2_offset
-cat temp2_input
-47125
-
-echo -2000 > temp2_offset
-cat temp2_input
-34875
-
-echo -0 > temp2_offset
-cat temp2_input
-37000
-
-Signed-off-by: Chu Lin <linchuyuan@google.com>
----
- drivers/hwmon/max6697.c | 129 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 125 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-index 743752a2467a..b11fcb594807 100644
---- a/drivers/hwmon/max6697.c
-+++ b/drivers/hwmon/max6697.c
-@@ -41,6 +41,14 @@ static const u8 MAX6697_REG_CRIT[] = {
- #define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
- 				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
- 
-+#define MAX6581_OFFSET_TO_MILLIC(reg)	(16000 * (((reg) & (1<<6)) >> 6) + \
-+					 8000 * (((reg) & (1<<5)) >> 5) + \
-+					 4000 * (((reg) & (1<<4)) >> 4) + \
-+					 2000 * (((reg) & (1<<3)) >> 3) + \
-+					 1000 * (((reg) & (1<<2)) >> 2) + \
-+					 500 * (((reg) & (1<<1)) >> 1) + \
-+					 250 * ((reg) & 1))
-+
- #define MAX6697_REG_STAT(n)		(0x44 + (n))
- 
- #define MAX6697_REG_CONFIG		0x41
-@@ -56,6 +64,9 @@ static const u8 MAX6697_REG_CRIT[] = {
- #define MAX6581_REG_IDEALITY_SELECT	0x4c
- #define MAX6581_REG_OFFSET		0x4d
- #define MAX6581_REG_OFFSET_SELECT	0x4e
-+#define MAX6581_OFFSET_MIN		-31750
-+#define MAX6581_OFFSET_MAX		-MAX6581_OFFSET_MIN
-+
- 
- #define MAX6697_CONV_TIME		156	/* ms per channel, worst case */
- 
-@@ -316,6 +327,94 @@ static ssize_t temp_store(struct device *dev,
- 	return ret < 0 ? ret : count;
- }
- 
-+static ssize_t offset_store(struct device *dev,
-+			    struct device_attribute *devattr, const char *buf,
-+			    size_t count)
-+{
-+	long temp;
-+	u8 val, select;
-+	int i, temp_frac, temp_int, ret, index;
-+	bool sign;
-+	struct max6697_data *data;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client,
-+					  MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return -ENODATA;
-+	ret = kstrtol(buf, 10, &temp);
-+	if (ret < 0)
-+		return ret;
-+	if (temp > MAX6581_OFFSET_MAX || temp < MAX6581_OFFSET_MIN)
-+		return -EINVAL;
-+
-+	/* disable the offset for channel */
-+	if (temp == 0) {
-+		ret = i2c_smbus_write_byte_data(data->client,
-+						MAX6581_REG_OFFSET_SELECT,
-+						select & ~(1<<(index-1)));
-+		return ret < 0 ? ret : count;
-+	}
-+	sign = temp < 0 ? false : true;
-+	temp = abs(temp);
-+	temp_int = temp / 1000;
-+	temp_frac = temp % 1000;
-+	for (i = 4; i >= 0 && temp_int > 0; --i) {
-+		if (temp_int >= 1<<i) {
-+			temp_int -= 1<<i;
-+			val |= 1 << (i+2);
-+		}
-+	}
-+	/* special handle the fraction */
-+	if (temp_frac % 250 != 0)
-+		return -EINVAL;
-+	if (temp_frac == 750)
-+		val |= 0x3;
-+	else if (temp_frac == 500)
-+		val |= 0x2;
-+	else if (temp_frac)
-+		val |= 0x1;
-+	ret = i2c_smbus_write_byte_data(data->client,
-+					MAX6581_REG_OFFSET_SELECT,
-+					select | 1<<(index-1));
-+	if (ret < 0)
-+		return ret;
-+	ret = i2c_smbus_write_byte_data(data->client,
-+					MAX6581_REG_OFFSET,
-+					sign?val:(~val + 1));
-+	return ret < 0 ? ret : count;
-+}
-+
-+static ssize_t offset_show(struct device *dev, struct device_attribute *devattr,
-+			   char *buf)
-+{
-+	int select, ret, index, temp;
-+	struct max6697_data *data;
-+
-+	index = to_sensor_dev_attr(devattr)->index;
-+	data = dev_get_drvdata(dev);
-+	select = i2c_smbus_read_byte_data(data->client,
-+				       MAX6581_REG_OFFSET_SELECT);
-+	if (select < 0)
-+		return -ENODATA;
-+	if (select & (1<<(index-1))) {
-+		ret = i2c_smbus_read_byte_data(data->client,
-+					       MAX6581_REG_OFFSET);
-+		if (ret < 0)
-+			return -ENODATA;
-+	} else {
-+		return sprintf(buf, "%d\n", 0);
-+	}
-+	if (1<<7 & ret) {
-+		ret = ~ret + 1;
-+		temp = -MAX6581_OFFSET_TO_MILLIC(ret);
-+	} else {
-+		temp = MAX6581_OFFSET_TO_MILLIC(ret);
-+	}
-+	return sprintf(buf, "%d\n", temp);
-+}
-+
- static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_max, temp, 0, MAX6697_TEMP_MAX);
- static SENSOR_DEVICE_ATTR_2_RW(temp1_crit, temp, 0, MAX6697_TEMP_CRIT);
-@@ -374,6 +473,16 @@ static SENSOR_DEVICE_ATTR_RO(temp6_fault, alarm, 5);
- static SENSOR_DEVICE_ATTR_RO(temp7_fault, alarm, 6);
- static SENSOR_DEVICE_ATTR_RO(temp8_fault, alarm, 7);
- 
-+/* There is no offset for local temperature so starting from temp2 */
-+static SENSOR_DEVICE_ATTR_RW(temp1_offset, offset, 0);
-+static SENSOR_DEVICE_ATTR_RW(temp2_offset, offset, 1);
-+static SENSOR_DEVICE_ATTR_RW(temp3_offset, offset, 2);
-+static SENSOR_DEVICE_ATTR_RW(temp4_offset, offset, 3);
-+static SENSOR_DEVICE_ATTR_RW(temp5_offset, offset, 4);
-+static SENSOR_DEVICE_ATTR_RW(temp6_offset, offset, 5);
-+static SENSOR_DEVICE_ATTR_RW(temp7_offset, offset, 6);
-+static SENSOR_DEVICE_ATTR_RW(temp8_offset, offset, 7);
-+
- static DEVICE_ATTR(dummy, 0, NULL, NULL);
- 
- static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
-@@ -382,8 +491,8 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct max6697_data *data = dev_get_drvdata(dev);
- 	const struct max6697_chip_data *chip = data->chip;
--	int channel = index / 6;	/* channel number */
--	int nr = index % 6;		/* attribute index within channel */
-+	int channel = index / 8;	/* channel number */
-+	int nr = index % 7;		/* attribute index within channel */
- 
- 	if (channel >= chip->channels)
- 		return 0;
-@@ -392,6 +501,10 @@ static umode_t max6697_is_visible(struct kobject *kobj, struct attribute *attr,
- 		return 0;
- 	if (nr == 5 && !(chip->have_fault & (1 << channel)))
- 		return 0;
-+	/* offset reg is only supported on max6581 remote channels */
-+	if (nr == 6)
-+		if (data->type != max6581 || channel == 0)
-+			return 0;
- 
- 	return attr->mode;
- }
-@@ -408,6 +521,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp1_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp1_crit_alarm.dev_attr.attr,
- 	&dev_attr_dummy.attr,
-+	&sensor_dev_attr_temp1_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp2_input.dev_attr.attr,
- 	&sensor_dev_attr_temp2_max.dev_attr.attr,
-@@ -415,6 +529,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp2_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp2_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp2_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp2_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp3_input.dev_attr.attr,
- 	&sensor_dev_attr_temp3_max.dev_attr.attr,
-@@ -422,6 +537,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp3_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp3_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp3_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp3_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp4_input.dev_attr.attr,
- 	&sensor_dev_attr_temp4_max.dev_attr.attr,
-@@ -429,6 +545,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp4_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp4_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp4_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp4_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp5_input.dev_attr.attr,
- 	&sensor_dev_attr_temp5_max.dev_attr.attr,
-@@ -436,6 +553,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp5_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp5_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp5_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp5_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp6_input.dev_attr.attr,
- 	&sensor_dev_attr_temp6_max.dev_attr.attr,
-@@ -443,6 +561,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp6_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp6_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp6_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp6_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp7_input.dev_attr.attr,
- 	&sensor_dev_attr_temp7_max.dev_attr.attr,
-@@ -450,6 +569,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp7_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp7_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp7_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp7_offset.dev_attr.attr,
- 
- 	&sensor_dev_attr_temp8_input.dev_attr.attr,
- 	&sensor_dev_attr_temp8_max.dev_attr.attr,
-@@ -457,6 +577,7 @@ static struct attribute *max6697_attributes[] = {
- 	&sensor_dev_attr_temp8_crit.dev_attr.attr,
- 	&sensor_dev_attr_temp8_crit_alarm.dev_attr.attr,
- 	&sensor_dev_attr_temp8_fault.dev_attr.attr,
-+	&sensor_dev_attr_temp8_offset.dev_attr.attr,
- 	NULL
- };
- 
-@@ -493,8 +614,8 @@ static void max6697_get_config_of(struct device_node *node,
- 	}
- 	prop = of_get_property(node, "transistor-ideality", &len);
- 	if (prop && len == 2 * sizeof(u32)) {
--			pdata->ideality_mask = be32_to_cpu(prop[0]);
--			pdata->ideality_value = be32_to_cpu(prop[1]);
-+		pdata->ideality_mask = be32_to_cpu(prop[0]);
-+		pdata->ideality_value = be32_to_cpu(prop[1]);
- 	}
- }
- 
--- 
-2.27.0.212.ge8ba1cc988-goog
+> Hi Namjae,
+Hi Sasha,
+> 
+> On Thu, Jul 02, 2020 at 08:20:19AM +0900, Namjae Jeon wrote:
+> >Could you please push exfat stable patches into 5.7.y kernel tree ?
+> 
+> I've queued them up, however it would be much easier if for commits that don't require any
+> modification to allow backporting you would just provide the commit ids in Linus's tree rather than
+> the patches themselves.
+> 
+> I do see that you had to modify this one:
+> 
+> >Sungjong Seo (1):
+> >  exfat: flush dirty metadata in fsync
+> 
+> In which case, a header in the commit message indicating the upstream commit id would be appriciated.
+> Something like this:
+Okay, I'll do that next time!
+Thank you!
+> 
+> [ Upstream commit 5267456e953fd8c5abd8e278b1cc6a9f9027ac0a ]
+> 
+> Thank you!
+> 
+> --
+> Thanks,
+> Sasha
 
