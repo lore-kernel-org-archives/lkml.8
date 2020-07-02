@@ -2,111 +2,186 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A49C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ADCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF64920899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:41:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sFgSl9Gc"
+	by mail.kernel.org (Postfix) with ESMTP id B61FC20A8B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593675754;
+	bh=CoV32QaALDuL3Z9VEXeQEpQ4T+p6a2AGF/RZFvRe4v4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rwxd4tlRZIl2Joz0XsxQRPR9MymRpHk0swOeQ88IA1VVqWifyQx5PK8/Un3o3OUNv
+	 X1uu5EUs7Wh9OdLlG7ng2osgxXuWKXgJ33qtmFpwcJaxEcY3j4fcp4ek9XdkHrezs8
+	 2mCGD3TqcJgOec3benM04C2lGDqt3b9xtwMKgPHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgGBHld (ORCPT
+        id S1728047AbgGBHmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgGBHlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:41:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F09C08C5C1;
-        Thu,  2 Jul 2020 00:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XTabvSLO7S5tELpoXrJiNFuMzsHwzZp5WpQClf4PKdk=; b=sFgSl9Gcs3uRIVF548A0umcLQi
-        AYzzAb0cgK1h5LwXjvrGL5QlYbYgclSEKGtQ5tkEMf9oqwvekDTGpGihN6spqQLWxbkv/xGizG/Y9
-        WWbPTB0Iq57rX8tmEYegHLfU11KypvtrGRBwXATY74N33TY8slcS0ZuB3KmZzMu4Ec9XG7HKckpdu
-        rOFuSDmVjg5Xrt7ubIC7FrM3G/SvlhhnOCBwz/THMKv05SdGA07BTmTeMHazs9aLXXO6tNurvl+DJ
-        GRdsJmn5y8ZcZwdJsvQNTXJH4R1hW+S8N/7bfXH860MbylzsTrc9vCqhkRsCYb+e5JvsiNKhHQ/jH
-        Z+kv+yYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqtq9-0006AV-NN; Thu, 02 Jul 2020 07:41:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 2 Jul 2020 03:42:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727863AbgGBHmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:42:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7240E3003D8;
-        Thu,  2 Jul 2020 09:40:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 366CA23D44E56; Thu,  2 Jul 2020 09:40:59 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 09:40:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
-Message-ID: <20200702074059.GX4781@hirez.programming.kicks-ass.net>
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D203120899;
+        Thu,  2 Jul 2020 07:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593675751;
+        bh=CoV32QaALDuL3Z9VEXeQEpQ4T+p6a2AGF/RZFvRe4v4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uCiET5Q7Iut6jzjunUHexrG6hKhXFTRFsgr4+T1BP38b8zkD8sSPUs2/q59n7oyx4
+         Qi5PRHO0DYzs7ce6Odwa9fhkoAdFXYIG36DUEWWl9JBrr4u5STywCNKqwaywpYGM0f
+         J5UnovdfXxzZL0zbSyL6ZxfmuahIf/kSL8K/p8y8=
+Date:   Thu, 2 Jul 2020 09:42:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        John Warthog9 Hawley <warthog9@kernel.org>
+Subject: Re: [for-next][PATCH 7/8] ktest.pl: Add the log of last test in
+ email on failure
+Message-ID: <20200702074235.GB1076415@kroah.com>
+References: <20200701231717.757834010@goodmis.org>
+ <20200701231756.619246244@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
+In-Reply-To: <20200701231756.619246244@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
-> Like Xu (10):
->   perf/x86/core: Refactor hw->idx checks and cleanup
->   perf/x86/lbr: Add interface to get LBR information
->   perf/x86: Add constraint to create guest LBR event without hw counter
->   perf/x86: Keep LBR records unchanged in host context for guest usage
+On Wed, Jul 01, 2020 at 07:17:24PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> If a failure happens and an email is sent, show the contents of the log of
+> the last test that failed in the email.
+> 
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/testing/ktest/ktest.pl | 44 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 40 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+> index e90e2e7cb72c..945a7d8c178c 100755
+> --- a/tools/testing/ktest/ktest.pl
+> +++ b/tools/testing/ktest/ktest.pl
+> @@ -82,6 +82,8 @@ my %default = (
+>      "IGNORE_UNUSED"		=> 0,
+>  );
+>  
+> +my $test_log_start = 0;
+> +
+>  my $ktest_config = "ktest.conf";
+>  my $version;
+>  my $have_version = 0;
+> @@ -1492,8 +1494,21 @@ sub dodie {
+>  
+>      if ($email_on_error) {
+>  	my $name = get_test_name;
+> +	my $log_file;
+> +
+> +	if (defined($opt{"LOG_FILE"})) {
+> +	    $log_file = "$tmpdir/log";
+> +	    open (L, "$opt{LOG_FILE}") or die "Can't open $opt{LOG_FILE} to read)";
+> +	    open (O, "> $tmpdir/log") or die "Can't open $tmpdir/log\n";
+> +	    seek(L, $test_log_start, 0);
+> +	    while (<L>) {
+> +		print O;
+> +	    }
+> +	    close O;
+> +	    close L;
+> +	}
+>          send_email("KTEST: critical failure for test $i [$name]",
+> -                "Your test started at $script_start_time has failed with:\n@_\n");
+> +                "Your test started at $script_start_time has failed with:\n@_\n", $log_file);
+>      }
+>  
+>      if ($monitor_cnt) {
+> @@ -4185,7 +4200,7 @@ sub find_mailer {
+>  }
+>  
+>  sub do_send_mail {
+> -    my ($subject, $message) = @_;
+> +    my ($subject, $message, $file) = @_;
+>  
+>      if (!defined($mail_path)) {
+>  	# find the mailer
+> @@ -4195,22 +4210,37 @@ sub do_send_mail {
+>  	}
+>      }
+>  
+> +    my $header_file = "$tmpdir/header";
+> +    open (HEAD, ">$header_file") or die "Can not create $header_file\n";
+> +    print HEAD "To: $mailto\n";
+> +    print HEAD "Subject: $subject\n\n";
+> +    print HEAD "$message\n";
+> +    close HEAD;
+> +
+>      if (!defined($mail_command)) {
+>  	if ($mailer eq "mail" || $mailer eq "mailx") {
+> -	    $mail_command = "\$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO <<< \'\$MESSAGE\'";
+> +	    $mail_command = "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -s \'\$SUBJECT\' \$MAILTO";
+>  	} elsif ($mailer eq "sendmail" ) {
+> -	    $mail_command =  "echo \'Subject: \$SUBJECT\n\n\$MESSAGE\' | \$MAIL_PATH/\$MAILER -t \$MAILTO";
+> +	    $mail_command =  "cat \$HEADER_FILE \$BODY_FILE | \$MAIL_PATH/\$MAILER -t \$MAILTO";
+>  	} else {
+>  	    die "\nYour mailer: $mailer is not supported.\n";
+>  	}
+>      }
+>  
+> +    if (defined($file)) {
+> +	$mail_command =~ s/\$BODY_FILE/$file/g;
+> +    } else {
+> +	$mail_command =~ s/\$BODY_FILE//g;
+> +    }
+> +
+> +    $mail_command =~ s/\$HEADER_FILE/$header_file/g;
+>      $mail_command =~ s/\$MAILER/$mailer/g;
+>      $mail_command =~ s/\$MAIL_PATH/$mail_path/g;
+>      $mail_command =~ s/\$MAILTO/$mailto/g;
+>      $mail_command =~ s/\$SUBJECT/$subject/g;
+>      $mail_command =~ s/\$MESSAGE/$message/g;
+>  
+> +	    print ">$mail_command<\n";
+>      run_command $mail_command;
+>  }
+>  
+> @@ -4352,6 +4382,11 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
+>      }
+>  
+>      doprint "\n\n";
+> +
+> +    if (defined($opt{"LOG_FILE"})) {
+> +	$test_log_start = tell(LOG);
+> +    }
 
-> Wei Wang (1):
->   perf/x86: Fix variable types for LBR registers
+Nit, the mix of spaces and tabs in this file is always annoying to me,
+but it's your code...
 
->  arch/x86/events/core.c            |  26 +--
->  arch/x86/events/intel/core.c      | 109 ++++++++-----
->  arch/x86/events/intel/lbr.c       |  51 +++++-
->  arch/x86/events/perf_event.h      |   8 +-
->  arch/x86/include/asm/perf_event.h |  34 +++-
+> +
+>      doprint "RUNNING TEST $i of $opt{NUM_TESTS}$name with option $test_type $run_type$installme\n\n";
+>  
+>      if (defined($pre_test)) {
+> @@ -4461,6 +4496,7 @@ if ($email_when_finished) {
+>  }
+>  
+>  if (defined($opt{"LOG_FILE"})) {
+> +
+>      print "\n See $opt{LOG_FILE} for the record of results.\n\n";
+>      close LOG;
+>  }
 
-These look good to me; but at the same time Kan is sending me
-Architectural LBR patches.
+Extra blank line?
 
-Kan, if I take these perf patches and stick them in a tip/perf/vlbr
-topic branch, can you rebase the arch lbr stuff on top, or is there
-anything in the arch-lbr series that badly conflicts with this work?
+Anyway, looks sane to me
 
-Paolo, would that topic branch work for you too, to then stick these
-patches in top?
-
->   KVM: vmx/pmu: Expose LBR to guest via MSR_IA32_PERF_CAPABILITIES
->   KVM: vmx/pmu: Unmask LBR fields in the MSR_IA32_DEBUGCTLMSR emualtion
->   KVM: vmx/pmu: Pass-through LBR msrs when guest LBR event is scheduled
->   KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
->   KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
->   KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
-
->  arch/x86/kvm/pmu.c                |  12 +-
->  arch/x86/kvm/pmu.h                |   5 +
->  arch/x86/kvm/vmx/capabilities.h   |  23 ++-
->  arch/x86/kvm/vmx/pmu_intel.c      | 253 +++++++++++++++++++++++++++++-
->  arch/x86/kvm/vmx/vmx.c            |  86 +++++++++-
->  arch/x86/kvm/vmx/vmx.h            |  17 ++
->  arch/x86/kvm/x86.c                |  13 --
-
->  12 files changed, 559 insertions(+), 78 deletions(-)
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
