@@ -2,207 +2,173 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD74C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9CE20899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684AD20936
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="onCcasIj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uHSAlAsA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cJyoYcdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgGBHqk (ORCPT
+        id S1727863AbgGBHsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:46:40 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:43447 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726362AbgGBHqj (ORCPT
+        Thu, 2 Jul 2020 03:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgGBHsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:46:39 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DF820A96;
-        Thu,  2 Jul 2020 03:46:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 02 Jul 2020 03:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=XD7giw22ZmO7+jioYevux6e4A4V
-        ypAB+8F9PcAxqDzg=; b=onCcasIjj6hTu3WPuf4sGp6/uBj/24rWctvNGuHHyQP
-        iGIkq5cs6KYY6exKCz3iXR5EdwP6dWkoXl6thsoClOXo4/LeYsT5RJhO0PzS61+a
-        u1stq2r53l/8rRv+uHLF+vrJ7aiDaGLerafnb4EMwxsRzKjk7ZySAs/gSDFV8K4O
-        //HqGET1kB3hDcCkI4venIwe3XjS67w8J/URT5dRoVrA1K/+OMGIilKnBn8FDEHF
-        U4BbTf9XCLWgZf+OK6czrO9sLwZSkAam2l/AG4T5KnMX8H38ooOsDZIyrcYGY+tw
-        ObRp5CD9jFWZuFrFXbv46s7zk4YBjLDS9vVcbb620iw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=XD7giw
-        22ZmO7+jioYevux6e4A4VypAB+8F9PcAxqDzg=; b=uHSAlAsAhoZYXWd6OnEizh
-        vO+Xr7Xthpivedv8K2ygyrVsmHnBr+3XxwBk2YyKwXlIe5fQ2X/1ky1a0rqHMDEH
-        QMhNhe07CpiOg9iD952KgVdmy+lfI11JNZSSWslE9MbChMlVn4tY2PgAq+N3SyiG
-        M4aL4/7pEBw1+9xEE7ycWkT9ewJCBQn/SHAS3iXbceBZjF3QTzJaM6MV2GPeba/i
-        so1fHRPqUrkggVHamPlfO5CmRKGIQCUkoe2isukDNSRMB8c8y+TuE9sRkq9GPuYD
-        vH5YfOsq4XRwnkHXSpq4pWlF7RD1LgkOBrn4+x6sVMGOEHCv7BDGfL6CmhqSnSuA
-        ==
-X-ME-Sender: <xms:2pD9Xv_8DEDgYsgU4ENG14E5yt9ldfWo_anPvVHs_qZ0yXLuPdDwOw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdefgdduvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:2pD9Xrvu3pWSffdJhtROI1t-tC_B5UhUpwTimD6nZuNiPHYJM4DRWA>
-    <xmx:2pD9XtD_K1AzkRvfClc7dYbb_S_CavhwwUKrHjcYp2Ed25bJl_kLwQ>
-    <xmx:2pD9Xrc3NCP9DxAmkwGyNXTD6neeP4XTj98rN6TMLPcBj82KhsyJAA>
-    <xmx:3JD9XpcZA-4T6qtgUGGXqPCajd1anfIY-w08mJT3mAM8ZQXBG1goCZ04Vyg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D187D3280064;
-        Thu,  2 Jul 2020 03:46:33 -0400 (EDT)
-Date:   Thu, 2 Jul 2020 09:46:31 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v7 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD
- support on PinePhone
-Message-ID: <20200702074631.oj54lreufm3fkhiu@gilmour.lan>
-References: <20200701162928.1638874-1-megous@megous.com>
- <20200701162928.1638874-13-megous@megous.com>
+        Thu, 2 Jul 2020 03:48:04 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C119AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:48:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so26958623wrv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8M+mFGruIPk3CS9J1xbXhvwkPs322aITgShX5ewQVTQ=;
+        b=cJyoYcdt4qoPTsDOKgbH8BDy1hkTA/lU8+OoimqiKhJuvup+eJ5pShA3oQLtmM790u
+         k0taMEOv17PPxFh1QUb4TjyW+sV4RFR7CWqsJ5SSxPRYUUWWm3zrKaZU1Ic5fOQKPk2T
+         9aTDQZIig2oovyHfnrrwP68+s/Qn8FkNG+anTz5kbO1hMCjgd1DACAGD+nXuyCnTjqEr
+         IERyt7j3A7oZFIuXaHb5Vj/CkYlr8HxzA3LO/T6j4PQfjHsIlX+GHjHjlbduIxiw+Xap
+         0lKy2nYdiq7knHZhIe6P9MLhGi6NeDcLfGrItHHRUv10LYyFcOcDK0MRol834AURfg15
+         DWUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8M+mFGruIPk3CS9J1xbXhvwkPs322aITgShX5ewQVTQ=;
+        b=p0cd0+NM9rBTE8nDz8X9OLhRGjn+qJJ8HXZ69MaBvNdrjNXv7PGCOF6J9dApCgtRGD
+         B6mrGDCPUQ7CfRTRmUGHziGV892N2bUDculikj74jJuG1LEMwNYHw13xjSUg8WWGtMOB
+         sDabfLkoNvm9aJ+cpMbv29XlgE/jMvLr6oM8dsGVVHM6FxUYQKHhlCk8cLTEoiENKgk5
+         QaRR6daQA9XXD/JA90s+QQE54dXfUARgxfrTOWRGvCAtJked0W47jyBfGRP77jkNET1F
+         N584PNKsbNBvJEfLEYJx957Pn6HCvHh25eJAo0BUtwYaSe6ciLesTKTKmF6byDsqEIBX
+         pvxw==
+X-Gm-Message-State: AOAM531e5qUDfFUCP+oNttJ9bWiRB+zjMnKq0w0wlc+cra9dwMyhfwsm
+        J7a6pPEaJ1AfDHLXaKCxAdC06w==
+X-Google-Smtp-Source: ABdhPJxFuxuBKpXZuocxj+mJU51KU9NfMukKtxA52BnS1Gg6Wc9/gDjoChATQ11FAkuy6Pfk5q1uCw==
+X-Received: by 2002:a5d:65cd:: with SMTP id e13mr33073968wrw.213.1593676082299;
+        Thu, 02 Jul 2020 00:48:02 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:7023:727a:c688:cf9b])
+        by smtp.gmail.com with ESMTPSA id z1sm10001882wru.30.2020.07.02.00.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 00:48:01 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/6] drm/meson: add support for Amlogic Video FBC
+Date:   Thu,  2 Jul 2020 09:47:53 +0200
+Message-Id: <20200702074759.32356-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4seei5k7uul7ogtm"
-Content-Disposition: inline
-In-Reply-To: <20200701162928.1638874-13-megous@megous.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Amlogic uses a proprietary lossless image compression protocol and format
+for their hardware video codec accelerators, either video decoders or
+video input encoders.
 
---4seei5k7uul7ogtm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It considerably reduces memory bandwidth while writing and reading
+frames in memory.
 
-On Wed, Jul 01, 2020 at 06:29:27PM +0200, Ondrej Jirman wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->=20
-> PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-> display.
->=20
-> Backlight levels curve was optimized by Martijn Braam using a
-> lux meter.
->=20
-> Add its device nodes.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Martijn Braam <martijn@brixit.nl>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
->  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
->  2 files changed, 54 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> index 06a775c41664..3e99a87e9ce5 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-> @@ -9,3 +9,22 @@ / {
->  	model =3D "Pine64 PinePhone Braveheart (1.1)";
->  	compatible =3D "pine64,pinephone-1.1", "allwinner,sun50i-a64";
->  };
-> +
-> +&backlight {
-> +	power-supply =3D <&reg_ldo_io0>;
-> +	/*
-> +	 * PWM backlight circuit on this PinePhone revision was changed since
-> +	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
-> +	 * being off is around 20%. Duty cycle for the lowest brightness level
-> +	 * also varries quite a bit between individual boards, so the lowest
-> +	 * value here was chosen as a safe default.
-> +	 */
-> +	brightness-levels =3D <
-> +		774  793  814  842
-> +		882  935  1003 1088
-> +		1192 1316 1462 1633
-> +		1830 2054 2309 2596
-> +		2916 3271 3664 4096>;
-> +	num-interpolated-steps =3D <50>;
-> +	default-brightness-level =3D <400>;
-> +};
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> index cefda145c3c9..85a7aa5efd32 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> @@ -16,6 +16,13 @@ aliases {
->  		serial0 =3D &uart0;
->  	};
-> =20
-> +	backlight: backlight {
-> +		compatible =3D "pwm-backlight";
-> +		pwms =3D <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-> +		enable-gpios =3D <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-> +		/* Backlight configuration differs per PinePhone revision. */
-> +	};
-> +
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> @@ -84,6 +91,30 @@ &dai {
->  	status =3D "okay";
->  };
-> =20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&dphy {
-> +	status =3D "okay";
-> +};
-> +
-> +&dsi {
-> +	vcc-dsi-supply =3D <&reg_dldo1>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	status =3D "okay";
+The underlying storage is considered to be 3 components, 8bit or 10-bit
+per component, YCbCr 420, single plane :
+- DRM_FORMAT_YUV420_8BIT
+- DRM_FORMAT_YUV420_10BIT
 
-If you're about to send a new version, you can remove #address-cells and
-#size-cells too, they're already set in the DTSI.
+This modifier will be notably added to DMA-BUF frames imported from the V4L2
+Amlogic VDEC decoder.
 
-Maxime
+At least two layout are supported :
+- Basic: composed of a body and a header
+- Scatter: the buffer is filled with a IOMMU scatter table referring
+  to the encoder current memory layout. This mode if more efficient in terms
+  of memory allocation but frames are not dumpable and only valid during until
+  the buffer is freed and back in control of the encoder
 
---4seei5k7uul7ogtm
-Content-Type: application/pgp-signature; name="signature.asc"
+At least two options are supported :
+- Memory saving: when the pixel bpp is 8b, the size of the superblock can
+  be reduced, thus saving memory.
 
------BEGIN PGP SIGNATURE-----
+This serie adds the missing register, updated the FBC decoder registers
+content to be committed by the crtc code.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXv2Q1wAKCRDj7w1vZxhR
-xRU3AP9/RU4o7gJkXULsYLNValRt6TkkGC1AIH6ty1GbeFVv2AD+NJYwDiC9CJxm
-iWn2yi4SWp4MZG0IKSMy8iATzq2rVgs=
-=mUin
------END PGP SIGNATURE-----
+The Amlogic FBC has been tested with compressed content from the Amlogic
+HW VP9 decoder on S905X (GXL), S905D2 (G12A) and S905X3 (SM1) in 8bit
+(Scatter+Mem Saving on G12A/SM1, Mem Saving on GXL) and 10bit
+(Scatter on G12A/SM1, default on GXL).
 
---4seei5k7uul7ogtm--
+It's expected to work as-is on GXM and G12B SoCs.
+
+Changes since v7 at [7]:
+- rebased on drm-misc-next
+- removed spurious DEBUG in drivers/gpu/drm/meson/meson_overlay.c
+
+Changes since v6 at [6]:
+- rebased on drm-misc-next (after drm-misc-next-2020-05-14)
+- updated patch 1 commit log for completion
+
+Changes since v5 at [5]:
+- merged all fourcc patches in 1
+- fixed fourcc definition to have only a single DRM_MOD_
+- fixed 2 checkpatch issues
+
+Changes since v4 at [4]:
+- added layout and options mask
+- cosmetic changes in fourcc.h
+- fixed mod check using the masks
+- fixed plane apply using the masks
+
+Changes since v3 at [3]:
+- added dropped fourcc patch for scatter
+- fixed build of last patch
+
+Changes since v2 at [2]:
+- Added "BASIC" layout and moved the SCATTER mode as layout, making
+  BASIC and SCATTER layout exclusives
+- Moved the Memory Saving at bit 8 for options fields
+- Split fourcc and overlay patch to introduce basic, mem saving and then
+  scatter in separate patches
+- Added comment about "transferability" of the buffers
+
+Changes since v1 at [1]:
+- s/VD1_AXI_SEL_AFB/VD1_AXI_SEL_AFBC/ into meson_registers.h
+
+[1] https://patchwork.freedesktop.org/series/73722/#rev1
+[2] https://patchwork.freedesktop.org/series/73722/#rev2
+[3] https://patchwork.freedesktop.org/series/73722/#rev3
+[4] https://patchwork.freedesktop.org/series/73722/#rev4
+[5] https://patchwork.freedesktop.org/series/73722/#rev5
+[6] https://patchwork.freedesktop.org/series/73722/#rev6
+[7] https://patchwork.freedesktop.org/series/73722/#rev7
+
+Neil Armstrong (6):
+  drm/fourcc: Add modifier definitions for describing Amlogic Video
+    Framebuffer Compression
+  drm/meson: add Amlogic Video FBC registers
+  drm/meson: overlay: setup overlay for Amlogic FBC
+  drm/meson: overlay: setup overlay for Amlogic FBC Memory Saving mode
+  drm/meson: overlay: setup overlay for Amlogic FBC Scatter Memory
+    layout
+  drm/meson: crtc: handle commit of Amlogic FBC frames
+
+ drivers/gpu/drm/meson/meson_crtc.c      | 118 +++++++---
+ drivers/gpu/drm/meson/meson_drv.h       |  16 ++
+ drivers/gpu/drm/meson/meson_overlay.c   | 289 +++++++++++++++++++++++-
+ drivers/gpu/drm/meson/meson_registers.h |  22 ++
+ include/uapi/drm/drm_fourcc.h           |  74 ++++++
+ 5 files changed, 481 insertions(+), 38 deletions(-)
+
+-- 
+2.22.0
+
