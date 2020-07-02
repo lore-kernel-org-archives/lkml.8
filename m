@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E32BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E3620884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A889720780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a0dq2pCY"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Nbj0ty8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgGBLVA (ORCPT
+        id S1728715AbgGBLVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 2 Jul 2020 07:21:00 -0400
-Received: from vps.xff.cz ([195.181.215.36]:43334 "EHLO vps.xff.cz"
+Received: from vps.xff.cz ([195.181.215.36]:43346 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgGBLUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728071AbgGBLUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 07:20:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593688846; bh=8MnIUEYeY05TGOIDZW8L0F8wsrPnTZc57BEKQ99wvHk=;
+        t=1593688846; bh=OH0uafqw3wiAiFdr3Xq7r48sm5oT4+qFhajRJjz8lvE=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=a0dq2pCYV3mUs3Yeu1M/OUxc8DmS96deZ/2XWJiAcHEuU97/RIsIr40o2FiRzBv/J
-         1ealPmlB2FUd/wBHbrG7mgSqM4PF3xuecbVKRSdLRigSWQd+t10c//KJzLvY/jru7N
-         oAtiR/TY8Pa0KTyZ+IeVua8oVPA30ycbOExsNYE4=
+        b=Nbj0ty8XPOyIPBt+Yk3OnUCyp8Vhl4W9EOcurV0TFZyviKtjf76Lv14HmUxOY34U4
+         iyCtX5sr8gWGwYgYpzmtjYbFuAQk0RhRsOQFTjy2xiUZswkMLaQeGA+GAdclfBN+5s
+         0tmbcBzmcczTBAMIiXert+DF/+3/JuX/+Y4KR5Lc=
 From:   Ondrej Jirman <megous@megous.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 1/4] dt-bindings: input: gpio-vibrator: Don't require enable-gpios
-Date:   Thu,  2 Jul 2020 13:20:38 +0200
-Message-Id: <20200702112041.1942707-2-megous@megous.com>
+Subject: [PATCH v3 2/4] input: gpio-vibra: Allow to use vcc-supply alone to control the vibrator
+Date:   Thu,  2 Jul 2020 13:20:39 +0200
+Message-Id: <20200702112041.1942707-3-megous@megous.com>
 In-Reply-To: <20200702112041.1942707-1-megous@megous.com>
 References: <20200702112041.1942707-1-megous@megous.com>
 MIME-Version: 1.0
@@ -50,33 +50,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to turn the motor on/off just by enabling/disabling
-the vcc-supply. Change the binding to require either enable-gpios
-or vcc-supply or both.
+Make enable-gpio optional to allow using this driver with boards that
+have vibrator connected to a power supply without intermediate gpio
+based enable circuitry.
+
+Also avoid a case where neither regulator nor enable gpio is specified,
+and bail out in probe in such a case.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-index 2384465eaa19..082ac06471db 100644
---- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-+++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-@@ -24,7 +24,12 @@ properties:
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..b3bb7e61ed1d 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+ 	struct device *pdev = vibrator->input->dev.parent;
+ 	int err;
  
- required:
-   - compatible
--  - enable-gpios
+-	if (!vibrator->vcc_on) {
++	if (vibrator->vcc && !vibrator->vcc_on) {
+ 		err = regulator_enable(vibrator->vcc);
+ 		if (err) {
+ 			dev_err(pdev, "failed to enable regulator: %d\n", err);
+@@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+ {
+ 	gpiod_set_value_cansleep(vibrator->gpio, 0);
+ 
+-	if (vibrator->vcc_on) {
++	if (vibrator->vcc && vibrator->vcc_on) {
+ 		regulator_disable(vibrator->vcc);
+ 		vibrator->vcc_on = false;
+ 	}
+@@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 	if (!vibrator->input)
+ 		return -ENOMEM;
+ 
+-	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
+ 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
+@@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
++						 GPIOD_OUT_LOW);
+ 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
+@@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	if (!vibrator->vcc && !vibrator->gpio) {
++		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
++		return -EINVAL;
++	}
 +
-+anyOf:
-+  - required:
-+    - enable-gpios
-+  - required:
-+    - vcc-supply
+ 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
  
- additionalProperties: false
- 
+ 	vibrator->input->name = "gpio-vibrator";
 -- 
 2.27.0
 
