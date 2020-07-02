@@ -2,202 +2,334 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9E92070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FAF2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFfBpLyx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yRnF/Wv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgGBLL1 (ORCPT
+        id S1728653AbgGBLLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        Thu, 2 Jul 2020 07:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgGBLL1 (ORCPT
+        with ESMTP id S1728337AbgGBLLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:11:27 -0400
+        Thu, 2 Jul 2020 07:11:30 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B579CC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:11:26 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so27631507wrj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:11:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C19C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:11:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so24682767wrw.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EP4mIxEbTa2u7jpvr40EEMAGhOAwuykUNeTsn1WTCCk=;
-        b=zFfBpLyxH6ZSt2sNv14lPq6aaA1kWUbVElWIUkMvuqR7bDo3IVlT2v2uaRUe8Gi29k
-         CZLNUJOM0aUiuEGKBTY5yRMLIuAVo6GD8ha0zs5T0MR1RPn9Y6foojTjZJ+76XMnC5DL
-         nKfx+bSQ0whmQP19yNleY9nDdJA6MC8bRwurC2uBVmirwPLtG2+4kFnD3Zt7OkpVDQap
-         rUqr1IulYqGDTcMuUQ2lCd9DHbmwwLq8y6leC/gwCktBHhyYA4/LMjRZSAxEGyNDOrxs
-         D18zfAJ5yWIlvZsRdQpv11JWQdTi9O2Q5pMooh1ZYb5VT1pB9FjbO7xCSivUpA5D6sLP
-         sBUw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nLcMYFjK2Mqk6sa9STwGNahU8gUOiBKyhyhKpNx5RCk=;
+        b=yRnF/Wv4aNROFV4Enx2JD9ld3bfFtQjXtHqsFnXnL1TXProw3IjCOTNur3E01wXR32
+         wuLE/5XkxDaiDFtpxgqd+Zw07T4sc7oUtTPAbjBH+Bq7kliSPWpiHkCL5n/U/fv4pR9P
+         YZTfla/9XR4cjmqRuVCu65aDkKo2ZyxGcgzSANurMQ5G15fcZmrGmVSkNH0aG9jpPgNy
+         M4ojVgTvmmqIoxz8slTPgPVioVncno2LKU/iF2jVAggD6F/3R2tO+UlKPFguFxOTysOC
+         4V1+4jvGa7FiWGMNXfS5rK9ymlmdTKJd+BwuJSwMet0QuyvnO2PFiVed/EaJt6l5JXFr
+         LbGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EP4mIxEbTa2u7jpvr40EEMAGhOAwuykUNeTsn1WTCCk=;
-        b=nbcAzC8+BxHq7nG2+is8s98qsPGtdQCF6AVMlu/Ldx2ohW1Dk/taNXLZqETZJf3jZN
-         4neCXyF0Ld8bDRd6sP+7wbjnfDaEEpPWTitBhVJAWybS/yZ0/QyuH4zrgSekpqhlSDmW
-         PR7mX4KLJvOIMRvIsvv7On047H+48+S3L3n+v1PKfiFqXJffmQSbzchDBqMgG0YtF1va
-         XRdkxhfGk9YzEVzgU1l1ATL4oCHuyx0MzneEodJ+45Dq5lB/vSuOb+Xe1whJ/VtNv4jH
-         BAiLXrrybZ4Jnn2WB3GQgxpTm/yH0ygv39tIFlUohFtmmf6GxK3S/5dj2aBlR+qdU41T
-         RcjA==
-X-Gm-Message-State: AOAM5333RxxkdvQf0HIOTmpzNlkihodSmr2wMDPgpB1J+S8AvXfw2mlT
-        mADzs6SZbCwYgmL4xr4Xmw4BoVlYTcg=
-X-Google-Smtp-Source: ABdhPJyS5oKx0yim8v9iWhytgy1KkzBevo2CpUyPHtLaxLxwdvgkAS70IknqROe7wlPin77if/mQHg==
-X-Received: by 2002:a5d:56c7:: with SMTP id m7mr30630239wrw.223.1593688284949;
-        Thu, 02 Jul 2020 04:11:24 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id p8sm10418763wrq.29.2020.07.02.04.11.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 04:11:24 -0700 (PDT)
-Subject: Re: [PATCH 4/4] interconnect: qcom: Fix small BW votes being
- truncated to zero
-To:     Mike Tipton <mdtipton@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200623040814.23791-1-mdtipton@codeaurora.org>
- <20200623040814.23791-5-mdtipton@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <09f21847-33bc-64fb-aeb7-df5bafa5593c@linaro.org>
-Date:   Thu, 2 Jul 2020 14:11:23 +0300
+        bh=nLcMYFjK2Mqk6sa9STwGNahU8gUOiBKyhyhKpNx5RCk=;
+        b=XJC61xFzWy5nWfLJTdJGeXIObJw38VVMrc42nw1j2s63OYu/lMLRY70QtbC1X2J57B
+         Po3Yz0mqLOOOGG7822nuTngvVPM+19ydO+7BSox6/eQyX3hth67lyAh/v1HwfRFZNNlC
+         DD5l8H7Yc4B8Q3J1s3/dqy+cevKDLNwxdNZiFyVqcp1gAiFJaqwxbdgW3eFfm9Uqu9cP
+         RoHicmwzS9FtcqWYB8VJfSEaYEK6FstHueJScxitiTxIzUaNR86Ll31gowJcd0z45nQv
+         BGoaO+PLn/N2nh0yogAHJSZ8r7R8f5ByaDsePKxtadcXp7a9mfQP616VXOMqQuJ0ry2b
+         cE8A==
+X-Gm-Message-State: AOAM533pJWRcEGRixMytUwzy8Aa8STAzWJenUD9350ou2siOXVQhKtQ/
+        7y9qshKXufcoS3Xoo1re9eCUeA==
+X-Google-Smtp-Source: ABdhPJx7r1YY7c/spG+XRYvMbNqHYb3MKBGWcT/vr7200rSOLM0hv1yy0T3E0RP7FPM4sMSKJNbAug==
+X-Received: by 2002:a5d:4e8e:: with SMTP id e14mr29504972wru.134.1593688288645;
+        Thu, 02 Jul 2020 04:11:28 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id l190sm10122008wml.12.2020.07.02.04.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 04:11:27 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        ckeepax@opensource.cirrus.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH] ALSA: compress: add support to change codec profile in gapless playback
+Date:   Thu,  2 Jul 2020 12:11:14 +0100
+Message-Id: <20200702111114.32217-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20200623040814.23791-5-mdtipton@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+For gapless playback its possible that each track can have different
+codec profile with same decoder, for example we have WMA album,
+we may have different tracks as WMA v9, WMA v10 and so on
 
-On 6/23/20 07:08, Mike Tipton wrote:
-> Small BW votes that translate to less than a single BCM unit are
-> currently truncated to zero. Ensure that non-zero BW requests always
-> result in at least a vote of 1 to BCM.
-> 
-> Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
-> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
-> ---
->  drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-> index a68c858ca6b7..9e2612fe7fad 100644
-> --- a/drivers/interconnect/qcom/bcm-voter.c
-> +++ b/drivers/interconnect/qcom/bcm-voter.c
-> @@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
->  		return 1;
->  }
->  
-> +static u64 bcm_div(u64 num, u64 base)
-> +{
-> +	/* Ensure that small votes aren't lost. */
-> +	if (num && num < base)
-> +		return 1;
-> +
-> +	do_div(num, base);
+Existing code does not allow to change this profile while doing gapless
+playback.
 
-do_div() does a 64-by-32 division, which will truncate these to 32-bit.
+This patch adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL to allow
+userspace to set this new parameters required for new codec profile.
 
-> +
-> +	return num;
-> +}
-> +
->  static void bcm_aggregate(struct qcom_icc_bcm *bcm)
->  {
-> +	struct qcom_icc_node *node;
->  	size_t i, bucket;
->  	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
->  	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
-> @@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
->  
->  	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
->  		for (i = 0; i < bcm->num_nodes; i++) {
-> -			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
-> -			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
-> +			node = bcm->nodes[i];
-> +			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
-> +				       node->buswidth * node->channels);
->  			agg_avg[bucket] = max(agg_avg[bucket], temp);
->  
-> -			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
-> -			do_div(temp, bcm->nodes[i]->buswidth);
-> +			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
-> +				       node->buswidth);
->  			agg_peak[bucket] = max(agg_peak[bucket], temp);
->  		}
->  
->  		temp = agg_avg[bucket] * bcm->vote_scale;
-> -		do_div(temp, bcm->aux_data.unit);
-> -		bcm->vote_x[bucket] = temp;
-> +		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
->  
->  		temp = agg_peak[bucket] * bcm->vote_scale;
-> -		do_div(temp, bcm->aux_data.unit);
-> -		bcm->vote_y[bucket] = temp;
-> +		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
->  	}
->  
->  	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
-> 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ include/sound/compress_driver.h       |  5 +++
+ include/sound/soc-component.h         |  3 ++
+ include/sound/soc-dai.h               |  5 +++
+ include/uapi/sound/compress_offload.h |  1 +
+ sound/core/compress_offload.c         | 54 ++++++++++++++++++++++++---
+ sound/soc/soc-compress.c              | 30 +++++++++++++++
+ sound/soc/soc-dai.c                   | 14 +++++++
+ 7 files changed, 106 insertions(+), 6 deletions(-)
 
-The rest looks good.
+diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
+index 70cbc5095e72..8d23351f7ad7 100644
+--- a/include/sound/compress_driver.h
++++ b/include/sound/compress_driver.h
+@@ -93,6 +93,9 @@ struct snd_compr_stream {
+  * @set_params: Sets the compressed stream parameters, mandatory
+  * This can be called in during stream creation only to set codec params
+  * and the stream properties
++ * @set_codec_params: Sets the compressed stream codec parameters, mandatory
++ * This can be called in during gapless next track codec change only to set
++ * codec params
+  * @get_params: retrieve the codec parameters, mandatory
+  * @set_metadata: Set the metadata values for a stream
+  * @get_metadata: retrieves the requested metadata values from stream
+@@ -112,6 +115,8 @@ struct snd_compr_ops {
+ 	int (*free)(struct snd_compr_stream *stream);
+ 	int (*set_params)(struct snd_compr_stream *stream,
+ 			struct snd_compr_params *params);
++	int (*set_codec_params)(struct snd_compr_stream *stream,
++			struct snd_codec *params);
+ 	int (*get_params)(struct snd_compr_stream *stream,
+ 			struct snd_codec *params);
+ 	int (*set_metadata)(struct snd_compr_stream *stream,
+diff --git a/include/sound/soc-component.h b/include/sound/soc-component.h
+index 5663891148e3..1e69c54ed0b9 100644
+--- a/include/sound/soc-component.h
++++ b/include/sound/soc-component.h
+@@ -36,6 +36,9 @@ struct snd_compress_ops {
+ 	int (*get_params)(struct snd_soc_component *component,
+ 			  struct snd_compr_stream *stream,
+ 			  struct snd_codec *params);
++	int (*set_codec_params)(struct snd_soc_component *component,
++			  struct snd_compr_stream *stream,
++			  struct snd_codec *params);
+ 	int (*set_metadata)(struct snd_soc_component *component,
+ 			    struct snd_compr_stream *stream,
+ 			    struct snd_compr_metadata *metadata);
+diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+index 212257e84fac..526794ee555b 100644
+--- a/include/sound/soc-dai.h
++++ b/include/sound/soc-dai.h
+@@ -192,6 +192,9 @@ int snd_soc_dai_compr_trigger(struct snd_soc_dai *dai,
+ int snd_soc_dai_compr_set_params(struct snd_soc_dai *dai,
+ 				 struct snd_compr_stream *cstream,
+ 				 struct snd_compr_params *params);
++int snd_soc_dai_compr_set_codec_params(struct snd_soc_dai *dai,
++				 struct snd_compr_stream *cstream,
++				 struct snd_codec *codec);
+ int snd_soc_dai_compr_get_params(struct snd_soc_dai *dai,
+ 				 struct snd_compr_stream *cstream,
+ 				 struct snd_codec *params);
+@@ -292,6 +295,8 @@ struct snd_soc_cdai_ops {
+ 			struct snd_soc_dai *);
+ 	int (*set_params)(struct snd_compr_stream *,
+ 			struct snd_compr_params *, struct snd_soc_dai *);
++	int (*set_codec_params)(struct snd_compr_stream *,
++			struct snd_codec *, struct snd_soc_dai *);
+ 	int (*get_params)(struct snd_compr_stream *,
+ 			struct snd_codec *, struct snd_soc_dai *);
+ 	int (*set_metadata)(struct snd_compr_stream *,
+diff --git a/include/uapi/sound/compress_offload.h b/include/uapi/sound/compress_offload.h
+index 7184265c0b0d..c46286113a4b 100644
+--- a/include/uapi/sound/compress_offload.h
++++ b/include/uapi/sound/compress_offload.h
+@@ -172,6 +172,7 @@ struct snd_compr_metadata {
+ 						 struct snd_compr_metadata)
+ #define SNDRV_COMPRESS_GET_METADATA	_IOWR('C', 0x15,\
+ 						 struct snd_compr_metadata)
++#define SNDRV_COMPRESS_SET_CODEC_PARAMS	_IOW('C', 0x16, struct snd_codec)
+ #define SNDRV_COMPRESS_TSTAMP		_IOR('C', 0x20, struct snd_compr_tstamp)
+ #define SNDRV_COMPRESS_AVAIL		_IOR('C', 0x21, struct snd_compr_avail)
+ #define SNDRV_COMPRESS_PAUSE		_IO('C', 0x30)
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 0e53f6f31916..1c4b2cf450a0 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -566,6 +566,18 @@ static int snd_compr_allocate_buffer(struct snd_compr_stream *stream,
+ 	return 0;
+ }
+ 
++static int snd_compress_check_codec_params(struct snd_codec *codec)
++{
++	/* now codec parameters */
++	if (codec->id == 0 || codec->id > SND_AUDIOCODEC_MAX)
++		return -EINVAL;
++
++	if (codec->ch_in == 0 || codec->ch_out == 0)
++		return -EINVAL;
++
++	return 0;
++}
++
+ static int snd_compress_check_input(struct snd_compr_params *params)
+ {
+ 	/* first let's check the buffer parameter's */
+@@ -574,14 +586,41 @@ static int snd_compress_check_input(struct snd_compr_params *params)
+ 	    params->buffer.fragments == 0)
+ 		return -EINVAL;
+ 
+-	/* now codec parameters */
+-	if (params->codec.id == 0 || params->codec.id > SND_AUDIOCODEC_MAX)
+-		return -EINVAL;
++	return snd_compress_check_codec_params(&params->codec);
+ 
+-	if (params->codec.ch_in == 0 || params->codec.ch_out == 0)
+-		return -EINVAL;
++}
+ 
+-	return 0;
++static int snd_compr_set_codec_params(struct snd_compr_stream *stream,
++				      unsigned long arg)
++{
++	struct snd_codec *params;
++	int retval;
++
++	if (!stream->ops->set_codec_params)
++		return -EPERM;
++
++	if (stream->runtime->state != SNDRV_PCM_STATE_RUNNING)
++		return -EPERM;
++
++	/* codec params can be only set when next track has been signalled */
++	if (stream->next_track == false)
++		return -EPERM;
++
++	params = memdup_user((void __user *)arg, sizeof(*params));
++	if (IS_ERR(params))
++		return PTR_ERR(params);
++
++	retval = snd_compress_check_codec_params(params);
++	if (retval)
++		goto out;
++
++	retval = stream->ops->set_codec_params(stream, params);
++	if (retval)
++		goto out;
++
++out:
++	kfree(params);
++	return retval;
+ }
+ 
+ static int
+@@ -964,6 +1003,9 @@ static long snd_compr_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
+ 	case _IOC_NR(SNDRV_COMPRESS_SET_PARAMS):
+ 		retval = snd_compr_set_params(stream, arg);
+ 		break;
++	case _IOC_NR(SNDRV_COMPRESS_SET_CODEC_PARAMS):
++		retval = snd_compr_set_codec_params(stream, arg);
++		break;
+ 	case _IOC_NR(SNDRV_COMPRESS_GET_PARAMS):
+ 		retval = snd_compr_get_params(stream, arg);
+ 		break;
+diff --git a/sound/soc/soc-compress.c b/sound/soc/soc-compress.c
+index 4984b6a2c370..e549e0197aca 100644
+--- a/sound/soc/soc-compress.c
++++ b/sound/soc/soc-compress.c
+@@ -518,6 +518,34 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
+ 	return ret;
+ }
+ 
++static int soc_compr_set_codec_params(struct snd_compr_stream *cstream,
++				      struct snd_codec *codec)
++{
++	struct snd_soc_pcm_runtime *rtd = cstream->private_data;
++	struct snd_soc_component *component;
++	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
++	int i, ret;
++
++	mutex_lock_nested(&rtd->card->pcm_mutex, rtd->card->pcm_subclass);
++
++	ret = snd_soc_dai_compr_set_codec_params(cpu_dai, cstream, codec);
++	if (ret < 0)
++		goto err;
++
++	for_each_rtd_components(rtd, i, component) {
++		if (!component->driver->compress_ops ||
++		    !component->driver->compress_ops->set_codec_params)
++			continue;
++
++		ret = component->driver->compress_ops->set_codec_params(component, cstream,
++								     codec);
++		break;
++	}
++err:
++	mutex_unlock(&rtd->card->pcm_mutex);
++	return ret;
++}
++
+ static int soc_compr_get_params(struct snd_compr_stream *cstream,
+ 				struct snd_codec *params)
+ {
+@@ -728,6 +756,7 @@ static struct snd_compr_ops soc_compr_ops = {
+ 	.open		= soc_compr_open,
+ 	.free		= soc_compr_free,
+ 	.set_params	= soc_compr_set_params,
++	.set_codec_params = soc_compr_set_codec_params,
+ 	.set_metadata   = soc_compr_set_metadata,
+ 	.get_metadata	= soc_compr_get_metadata,
+ 	.get_params	= soc_compr_get_params,
+@@ -744,6 +773,7 @@ static struct snd_compr_ops soc_compr_dyn_ops = {
+ 	.free		= soc_compr_free_fe,
+ 	.set_params	= soc_compr_set_params_fe,
+ 	.get_params	= soc_compr_get_params,
++	.set_codec_params = soc_compr_set_codec_params,
+ 	.set_metadata   = soc_compr_set_metadata,
+ 	.get_metadata	= soc_compr_get_metadata,
+ 	.trigger	= soc_compr_trigger_fe,
+diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
+index b05e18b63a1c..06481d0278b8 100644
+--- a/sound/soc/soc-dai.c
++++ b/sound/soc/soc-dai.c
+@@ -594,6 +594,20 @@ int snd_soc_dai_compr_get_params(struct snd_soc_dai *dai,
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_dai_compr_get_params);
+ 
++int snd_soc_dai_compr_set_codec_params(struct snd_soc_dai *dai,
++					struct snd_compr_stream *cstream,
++					struct snd_codec *codec)
++{	int ret = 0;
++
++	if (dai->driver->cops &&
++	    dai->driver->cops->set_codec_params)
++		ret = dai->driver->cops->set_codec_params(cstream, codec, dai);
++
++	return soc_dai_ret(dai, ret);
++
++}
++EXPORT_SYMBOL_GPL(snd_soc_dai_compr_set_codec_params);
++
+ int snd_soc_dai_compr_ack(struct snd_soc_dai *dai,
+ 			  struct snd_compr_stream *cstream,
+ 			  size_t bytes)
+-- 
+2.21.0
 
-Thanks,
-Georgi
