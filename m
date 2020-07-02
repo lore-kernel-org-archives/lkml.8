@@ -2,185 +2,75 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15897C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E2820720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042682067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PFt2hlK4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kjtd2wG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgGBINj (ORCPT
+        id S1728216AbgGBIOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:13:39 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:31908 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgGBINi (ORCPT
+        Thu, 2 Jul 2020 04:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGBIOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:13:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593677618; x=1625213618;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BL6dmHjTIatkptYTqN6do+i//9TqaErPS26wVkNOrWk=;
-  b=PFt2hlK40XjtXVLrV6t1XajMAAJtANFGWX8sCEaGjaBeXxj3w9Ebxdf7
-   z/zxJAxgENT/ZrB+V+O5ZXBvwW2GoZ67z75JDoLeWa++hgCv3EcnKtAa+
-   kjagdmqIVvHSntsS7mH/KtxpL/epcC492QZFbmWWgezjV4iibanVVvMaL
-   9Wk7HEDF95qbJiyS3TBCW4048htsMyENUhhDL6jVJov9PmE6ceWCqxH/L
-   w3K0RV5PuuB346jz51I9gs2/ovpqVDpfHN2UJ7s1q93hgxv3R8fzEvUIM
-   7Ef+2Ju8MHgx7kkJsR68PXGTb75KSxInrw6JF4UOBAW/MvQrsu+1qUSPG
-   Q==;
-IronPort-SDR: JIEfNMWW1xZoF3Xx4NeeaAVj+JVt1pd8o5VLqI3jBWV7pdTaknxIySAj2/tmodyOMvigG9BR+L
- HC+ZTXvaepLgV9tigK0rIGUL78Km1eOHZpE/tvhCjxX3Dih2SHjR/reZ/4AXLdZit7wZTT1M5T
- WGWPeMxHvSPdEqyOdB+lkF3I8s/NxgROQlIeHC66YERJHl6Q+AC8KF/K5kftHM576/34s3w3c2
- TvUuVmIXA+4AhT0jUt0RZCWRobDhNusLjo+HSRTW/B5McyrrEsETCJBr7lTTS5ACcv6KAl0YnS
- +dk=
-X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
-   d="scan'208";a="80467659"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 01:13:20 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 01:13:20 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 01:12:56 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <jiri@mellanox.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 2/3] bridge: mrp: Add br_mrp_fill_info
-Date:   Thu, 2 Jul 2020 10:13:06 +0200
-Message-ID: <20200702081307.933471-3-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702081307.933471-1-horatiu.vultur@microchip.com>
-References: <20200702081307.933471-1-horatiu.vultur@microchip.com>
+        Thu, 2 Jul 2020 04:14:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14361C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DCacNRD1uL4bMLWk5ZZs0zu8Jt+SbmcnTXgs/UtoZFQ=; b=Kjtd2wG6X/EuMYB7A5r5jGda3Z
+        EkTHseW8tbmoRD0/dGNCzxtcd0WS3x/rjcsjNotzrVUt79avnhL6F40MAsjDVgRRcncBlZDUT3sIu
+        3UJFco/GWvVE8DNN3zlXLxf7OG88s8HN1vZEHaVM+wOvcvnDgKTzn0PrE5Bt9wxAs4uRd8cm1LiMA
+        FxNIYZLln7PLgVpKsRo9dvLua6VD8XK6JVBpZBdXyH/zoiuAKyvOLKzR2kXrW5TS+mgqxmJMCmVei
+        UxrqpSgJxPUSZ/YiZisDfPCS8VfV+9FjaXF2MmJiAJ7ZEhoJPzxH5gMgcdStBXTyDg0aVPub65K+6
+        9FGBSmzA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jquMN-0007pF-7N; Thu, 02 Jul 2020 08:14:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5CA513011B2;
+        Thu,  2 Jul 2020 10:14:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 25BEE264F8CB1; Thu,  2 Jul 2020 10:14:18 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 10:14:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] proc: add support detach proccess's autogroup
+Message-ID: <20200702081418.GZ4781@hirez.programming.kicks-ass.net>
+References: <20200702052039.GA2824@192.168.3.9>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702052039.GA2824@192.168.3.9>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the function br_mrp_fill_info which populates the MRP attributes
-regarding the status of each MRP instance.
+On Thu, Jul 02, 2020 at 01:20:43PM +0800, Weiping Zhang wrote:
+> Since setid will create a autogroup for that process, there is no
+> way to detach a process from that autogroup, this patch add a new interface
+> to detach a process from its autogroup. You can write anything to
+> /proc/<pid>/autogroup_detach to do that.
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp_netlink.c | 64 +++++++++++++++++++++++++++++++++++++
- net/bridge/br_private.h     |  7 ++++
- 2 files changed, 71 insertions(+)
+This is indeed what the patch does; but it fails to tell me why. Why do
+we want this? Why should I care about your patch :-)
 
-diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-index 34b3a8776991f..c4f5c356811f3 100644
---- a/net/bridge/br_mrp_netlink.c
-+++ b/net/bridge/br_mrp_netlink.c
-@@ -304,6 +304,70 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 	return 0;
- }
- 
-+int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
-+{
-+	struct nlattr *tb, *mrp_tb;
-+	struct br_mrp *mrp;
-+
-+	mrp_tb = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP);
-+	if (!mrp_tb)
-+		return -EMSGSIZE;
-+
-+	list_for_each_entry_rcu(mrp, &br->mrp_list, list) {
-+		struct net_bridge_port *p;
-+
-+		tb = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP_INFO);
-+		if (!tb)
-+			goto nla_info_failure;
-+
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_ID,
-+				mrp->ring_id))
-+			goto nla_put_failure;
-+
-+		p = rcu_dereference(mrp->p_port);
-+		if (p && nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_P_IFINDEX,
-+				     p->dev->ifindex))
-+			goto nla_put_failure;
-+
-+		p = rcu_dereference(mrp->s_port);
-+		if (p && nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_S_IFINDEX,
-+				     p->dev->ifindex))
-+			goto nla_put_failure;
-+
-+		if (nla_put_u16(skb, IFLA_BRIDGE_MRP_INFO_PRIO,
-+				mrp->prio))
-+			goto nla_put_failure;
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_STATE,
-+				mrp->ring_state))
-+			goto nla_put_failure;
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_ROLE,
-+				mrp->ring_role))
-+			goto nla_put_failure;
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_INTERVAL,
-+				mrp->test_interval))
-+			goto nla_put_failure;
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_MAX_MISS,
-+				mrp->test_max_miss))
-+			goto nla_put_failure;
-+		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_MONITOR,
-+				mrp->test_monitor))
-+			goto nla_put_failure;
-+
-+		nla_nest_end(skb, tb);
-+	}
-+	nla_nest_end(skb, mrp_tb);
-+
-+	return 0;
-+
-+nla_put_failure:
-+	nla_nest_cancel(skb, tb);
-+
-+nla_info_failure:
-+	nla_nest_cancel(skb, mrp_tb);
-+
-+	return -EMSGSIZE;
-+}
-+
- int br_mrp_port_open(struct net_device *dev, u8 loc)
- {
- 	struct net_bridge_port *p;
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 6a7d8e218ae7e..65d2c163a24ab 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -1317,6 +1317,7 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
- bool br_mrp_enabled(struct net_bridge *br);
- void br_mrp_port_del(struct net_bridge *br, struct net_bridge_port *p);
-+int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br);
- #else
- static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 			       struct nlattr *attr, int cmd,
-@@ -1339,6 +1340,12 @@ static inline void br_mrp_port_del(struct net_bridge *br,
- 				   struct net_bridge_port *p)
- {
- }
-+
-+static inline int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
-+{
-+	return 0;
-+}
-+
- #endif
- 
- /* br_netlink.c */
--- 
-2.27.0
-
+Please, always explain why you want things done, that can also help us
+consider if the proposed solution is the right one.
