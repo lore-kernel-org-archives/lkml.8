@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68030C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E05C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C29F20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E1820748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653369;
-	bh=OA5u6xscy9t2k46JPnu2Yt95OyMmpfiU8Xnxkh0UXNE=;
+	s=default; t=1593653373;
+	bh=lY5i/G1xFnqXCzRAHXjROM97QoklifLMJB3E/TZuJmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwNHKs0RlfUZ0Z0FnmXOsVh50VLzWU+5e+bYDE2mRy3w9g5vbCl3trjHSkBOX5A79
-	 9IoyFOW7QZRzmlJ/VkTiiAfpyyoUUWLjWIm1bDvKmT7kjFVKUvfUOxN+M9FieW+Bzi
-	 OM8SiXTfu0b+Vdb3DnjczvqkIzqyb8Sw8q7kVBOM=
+	b=V273WYD69O70C+z+8ua8E7szGVOiNHyX285LkLOI3n3P05WMCAo3USez/YDl0X2SA
+	 LY5mRGAHtLoYjvmTdWj2NgURh4UbpbUAgxpTbiqLDPk4gWlOKG9v412aoCIRfTD+oK
+	 2x6aF9iCvSwX0SZsbp9Q77Bp4LEBcCbOCBC+Tfb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgGBB1S (ORCPT
+        id S1728521AbgGBB3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729105AbgGBB0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:40 -0400
+        id S1729428AbgGBB1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E1D20884;
-        Thu,  2 Jul 2020 01:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0255721473;
+        Thu,  2 Jul 2020 01:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653200;
-        bh=OA5u6xscy9t2k46JPnu2Yt95OyMmpfiU8Xnxkh0UXNE=;
+        s=default; t=1593653237;
+        bh=lY5i/G1xFnqXCzRAHXjROM97QoklifLMJB3E/TZuJmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUNCvvzyKj7wFlvsMs7OROdturAz5F1TzkM1todLVLxTxL2TXghjYZGsw6mw7ZSOC
-         32Iai7LFqsUGxJbBckglb8FVKyeNfjrYav0A6ioeD04YqP8uXp1xD7TmRnouv1ZhYq
-         Z90zTVOSEUUxY4W8qnk2BPEM477QtvJYp0o+0JUw=
+        b=MPeoSEqGGt232TiWTXVWssCvtllVLh2UEsAK5+XtIvnDAsTtbLtRnilZAz1TaNwyH
+         6mTsOxqCXjAaZPYHVfkkb56CZfhtAXGpbGmCZusyuAS2feuxnBfgw6lhA42fh1/oIm
+         xoFcNjr2Zkdy8fUzeJ/RBVyhnsvLLxYqsm4Gbvrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 20/27] cifs: update ctime and mtime during truncate
-Date:   Wed,  1 Jul 2020 21:26:08 -0400
-Message-Id: <20200702012615.2701532-20-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/13] spi: spidev: fix a race between spidev_release and spidev_remove
+Date:   Wed,  1 Jul 2020 21:27:03 -0400
+Message-Id: <20200702012712.2701986-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
-References: <20200702012615.2701532-1-sashal@kernel.org>
+In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
+References: <20200702012712.2701986-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,47 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 5618303d8516f8ac5ecfe53ee8e8bc9a40eaf066 ]
+[ Upstream commit abd42781c3d2155868821f1b947ae45bbc33330d ]
 
-As the man description of the truncate, if the size changed,
-then the st_ctime and st_mtime fields should be updated. But
-in cifs, we doesn't do it.
+Imagine below scene, spidev is referenced after it's freed.
 
-It lead the xfstests generic/313 failed.
+spidev_release()                spidev_remove()
+...
+                                spin_lock_irq(&spidev->spi_lock);
+                                    spidev->spi = NULL;
+                                spin_unlock_irq(&spidev->spi_lock);
+mutex_lock(&device_list_lock);
+dofree = (spidev->spi == NULL);
+if (dofree)
+    kfree(spidev);
+mutex_unlock(&device_list_lock);
+                                mutex_lock(&device_list_lock);
+                                list_del(&spidev->device_entry);
+                                device_destroy(spidev_class, spidev->devt);
+                                clear_bit(MINOR(spidev->devt), minors);
+                                if (spidev->users == 0)
+                                    kfree(spidev);
+                                mutex_unlock(&device_list_lock);
 
-So, add the ATTR_MTIME|ATTR_CTIME flags on attrs when change
-the file size
+Fix it by resetting spidev->spi in device_list_lock's protection.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-1-zhenzhong.duan@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/spi/spidev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 51d410c6f6a47..4a38f16d944db 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2219,6 +2219,15 @@ cifs_set_file_size(struct inode *inode, struct iattr *attrs,
- 	if (rc == 0) {
- 		cifsInode->server_eof = attrs->ia_size;
- 		cifs_setsize(inode, attrs->ia_size);
-+
-+		/*
-+		 * The man page of truncate says if the size changed,
-+		 * then the st_ctime and st_mtime fields for the file
-+		 * are updated.
-+		 */
-+		attrs->ia_ctime = attrs->ia_mtime = current_time(inode);
-+		attrs->ia_valid |= ATTR_CTIME | ATTR_MTIME;
-+
- 		cifs_truncate_page(inode->i_mapping, inode->i_size);
- 	}
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index a685c6114a8d5..67ad7e46da42d 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -809,13 +809,13 @@ static int spidev_remove(struct spi_device *spi)
+ {
+ 	struct spidev_data	*spidev = spi_get_drvdata(spi);
  
++	/* prevent new opens */
++	mutex_lock(&device_list_lock);
+ 	/* make sure ops on existing fds can abort cleanly */
+ 	spin_lock_irq(&spidev->spi_lock);
+ 	spidev->spi = NULL;
+ 	spin_unlock_irq(&spidev->spi_lock);
+ 
+-	/* prevent new opens */
+-	mutex_lock(&device_list_lock);
+ 	list_del(&spidev->device_entry);
+ 	device_destroy(spidev_class, spidev->devt);
+ 	clear_bit(MINOR(spidev->devt), minors);
 -- 
 2.25.1
 
