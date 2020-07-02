@@ -2,225 +2,150 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5165C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE239C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997A220747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593685352;
-	bh=Dgcjvy0hCTfHOwCVOrjRfrBiKApvt8n4dhLRuzaQnTA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jV9eTaegH+A0s97WQoys+BLG6Ux+624pa47r7impT7iWVgrhGHt5SWpRaz1hc7w7r
-	 kl/stS6frw73AdcLf4LarX/7oD7TSnzYudGMYoB2n+r25qR+3LNSrPFzOCg5BCbFcc
-	 frr2aQI4CJfs2mMhYJr3Ffv/fjg+FiWkPA3nGdkU=
+	by mail.kernel.org (Postfix) with ESMTP id B3F6C20884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="eS2AS63X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgGBKWQ (ORCPT
+        id S1728484AbgGBKWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgGBKUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728402AbgGBKUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 06:20:45 -0400
-Received: from e123331-lin.nice.arm.com (lfbn-nic-1-188-42.w2-15.abo.wanadoo.fr [2.15.37.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3092E208D5;
-        Thu,  2 Jul 2020 10:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593685244;
-        bh=Dgcjvy0hCTfHOwCVOrjRfrBiKApvt8n4dhLRuzaQnTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eih0jVBvh7Y1bN4cY1nF7fJ9CwT3o2BoGfRUZVQM+4FJmd7mGUPmo4UWNkrVfYdiB
-         QtE+5mjRUT1SuE5e5DJezfzxeQKrJTsTgcuMrq10aCUG0TYfa2oHkEK9CcqHd7Gq5J
-         oTxHKpYq7H7UmQRq7PM5eDzFiReX5/NUi4ukBBWA=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org
-Subject: [RFC PATCH 7/7] crypto: tcrypt - remove ecb(arc4) testing/benchmarking support
-Date:   Thu,  2 Jul 2020 12:19:47 +0200
-Message-Id: <20200702101947.682-8-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702101947.682-1-ardb@kernel.org>
-References: <20200702101947.682-1-ardb@kernel.org>
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7944C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 03:20:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y10so28652031eje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=y6QK1uUJZHQuZnFXHjM7RpcCfhjO+BnMr6K6R14LikI=;
+        b=eS2AS63X4xHtWcaWVJuiQnZRL3FS5hl/kitkp/qfhE2U4bn44KsMkcI5ahaIUhkpta
+         6tvJeM0eRhhkkdT/HtD13QyqAXZlJuuAf/hOLUhwUyrVhrIjZLI2hfSmgt0Q4v08rWWl
+         8hS+jEqsMJSVlJnAruXLO3In7Lsa86+0XITBf7uyOLIOrdOeks10qjwobA7CaPzU54OH
+         mdateSDMB8KYldO8l84nBECnC0GG8g0k4bICDJTD3s+k3LkuNDtPYYV+0R3HUmtsZXuS
+         e9+cfSLqkoMb/HgGnCCw/eX3Iyfs42vr/mrFfAeVgD77VV9daKXn2j6SDsAxfRoi+XfU
+         Ak+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=y6QK1uUJZHQuZnFXHjM7RpcCfhjO+BnMr6K6R14LikI=;
+        b=Y+22rZrL1J0zsDNTXEyNwzvfAUeh8jxrqYreMFg/lGVxVHvMCwEOIcPVyrMHWZPa8g
+         i1KsgmfHmPEqkmO1Nw7rfqXl7gazhtqOzT18J0vOVfmcmZI4ySeE51XGcFjMCTgtuU8R
+         x5h6/bS98c1LhSR3DA+yl797SFhMLftxrDUZceZlXI2CWpDwPN7wt9HBCXYWGBHXB32Q
+         LEzxpOvoe9Y4OqQvK8B48WbUn1opDWCy/6sgSc9spxCgjdNd5qauKDxypffGajGXsXvJ
+         ++6zSubocYdfT4p3C0xA0mQSB9gETNmZeTTIcG+jFjjaiGObOWS6YOq3pvcJCYmCyMz0
+         eEjg==
+X-Gm-Message-State: AOAM532rNc69hRGLz1jeQWdrEidPNyogXZ+/hSV1PzaR91gczzy921di
+        /PV5lwNpyY6LdmEuQ+Y7l2QNdg==
+X-Google-Smtp-Source: ABdhPJznU0cTuSpy44OchlJ/NcoicUfXVthk+RD4AWFPMdlv1FyVBTAxmHOyydYRtWmTGe2aRm0ZCQ==
+X-Received: by 2002:a17:906:c142:: with SMTP id dp2mr28125124ejc.541.1593685243381;
+        Thu, 02 Jul 2020 03:20:43 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id dh16sm9185934edb.3.2020.07.02.03.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:20:42 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 12:20:41 +0200
+From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 2/2] block: add max_active_zones to blk-sysfs
+Message-ID: <20200702102041.qlehlokxel5ed6sf@mpHalley.local>
+References: <20200616102546.491961-1-niklas.cassel@wdc.com>
+ <20200616102546.491961-3-niklas.cassel@wdc.com>
+ <20200701111330.3vpivrovh3i46maa@mpHalley.local>
+ <20200702084104.GA607715@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200702084104.GA607715@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- crypto/tcrypt.c  | 21 +------
- crypto/testmgr.c |  7 ---
- crypto/testmgr.h | 62 --------------------
- 3 files changed, 1 insertion(+), 89 deletions(-)
+On 02.07.2020 08:41, Niklas Cassel wrote:
+>On Wed, Jul 01, 2020 at 01:16:52PM +0200, Javier González wrote:
+>> On 16.06.2020 12:25, Niklas Cassel wrote:
+>> > Add a new max_active zones definition in the sysfs documentation.
+>> > This definition will be common for all devices utilizing the zoned block
+>> > device support in the kernel.
+>> >
+>> > Export max_active_zones according to this new definition for NVMe Zoned
+>> > Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
+>> > the kernel), and ZBC SCSI devices.
+>> >
+>> > Add the new max_active_zones struct member to the request_queue, rather
+>> > than as a queue limit, since this property cannot be split across stacking
+>> > drivers.
+>> >
+>> > For SCSI devices, even though max active zones is not part of the ZBC/ZAC
+>> > spec, export max_active_zones as 0, signifying "no limit".
+>> >
+>> > Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>> > ---
+>
+>(snip)
+>
+>> Looking a second time at these patches, wouldn't it make sense to move
+>> this to queue_limits?
+>
+>Hello Javier,
+>
+>The problem with having MAR/MOR as queue_limits, is that they
+>then would be split across stacking drivers/device-mapper targets.
+>However, MAR/MOR are not splittable, at least not the way the
+>block layer works today.
+>
+>If the block layer and drivers ever change so that they do
+>accounting of zone conditions, then we could divide the MAR/MOR to
+>be split over stacking drivers, but because of performance reasons,
+>this will probably never happen.
+>In the unlikely event that it did happen, we would still use the
+>same sysfs-path for these properties, the only thing that would
+>change would be that these would be moved into queue_limits.
+>
+>
+>So the way the code looks right now, these properties cannot
+>be split, therefore I chose to put them inside request_queue
+>(just like nr_zones), rather than request_queue->limits
+>(which is of type struct queue_limits).
+>
+>nr_zones is also exposed as a sysfs property, even though it
+>is part of request_queue, so I don't see why MAR/MOR can't do
+>the same. Also see Damien's replies to PATCH 1/2 of this series,
+>which reaches the same conclusion.
+>
 
-diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
-index ba0b7702f2e9..72828c4acd3a 100644
---- a/crypto/tcrypt.c
-+++ b/crypto/tcrypt.c
-@@ -68,7 +68,7 @@ static char *tvmem[TVMEMSIZE];
- static const char *check[] = {
- 	"des", "md5", "des3_ede", "rot13", "sha1", "sha224", "sha256", "sm3",
- 	"blowfish", "twofish", "serpent", "sha384", "sha512", "md4", "aes",
--	"cast6", "arc4", "michael_mic", "deflate", "crc32c", "tea", "xtea",
-+	"cast6", "michael_mic", "deflate", "crc32c", "tea", "xtea",
- 	"khazad", "wp512", "wp384", "wp256", "tnepres", "xeta",  "fcrypt",
- 	"camellia", "seed", "salsa20", "rmd128", "rmd160", "rmd256", "rmd320",
- 	"lzo", "lzo-rle", "cts", "sha3-224", "sha3-256", "sha3-384",
-@@ -1762,10 +1762,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 		ret += tcrypt_test("xts(cast6)");
- 		break;
- 
--	case 16:
--		ret += tcrypt_test("ecb(arc4)");
--		break;
--
- 	case 17:
- 		ret += tcrypt_test("michael_mic");
- 		break;
-@@ -2201,11 +2197,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				  speed_template_32_64);
- 		break;
- 
--	case 208:
--		test_cipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				  speed_template_8);
--		break;
--
- 	case 209:
- 		test_cipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				  speed_template_8_16);
-@@ -2720,11 +2711,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				   speed_template_32_48_64);
- 		break;
- 
--	case 505:
--		test_acipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				   speed_template_8);
--		break;
--
- 	case 506:
- 		test_acipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				   speed_template_8_16);
-@@ -2932,11 +2918,6 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
- 				       speed_template_32_48_64, num_mb);
- 		break;
- 
--	case 605:
--		test_mb_skcipher_speed("ecb(arc4)", ENCRYPT, sec, NULL, 0,
--				       speed_template_8, num_mb);
--		break;
--
- 	case 606:
- 		test_mb_skcipher_speed("ecb(cast5)", ENCRYPT, sec, NULL, 0,
- 				       speed_template_8_16, num_mb);
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 6863f911fcee..7c1bdc5690e2 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -4783,13 +4783,6 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.cipher = __VECS(anubis_tv_template)
- 		}
--	}, {
--		.alg = "ecb(arc4)",
--		.generic_driver = "ecb(arc4)-generic",
--		.test = alg_test_skcipher,
--		.suite = {
--			.cipher = __VECS(arc4_tv_template)
--		}
- 	}, {
- 		.alg = "ecb(blowfish)",
- 		.test = alg_test_skcipher,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index d29983908c38..48cd6330ec8d 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -22490,68 +22490,6 @@ static const struct cipher_testvec cast5_ctr_tv_template[] = {
- 	},
- };
- 
--/*
-- * ARC4 test vectors from OpenSSL
-- */
--static const struct cipher_testvec arc4_tv_template[] = {
--	{
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.ctext	= "\x75\xb7\x87\x80\x99\xe0\xc5\x96",
--		.len	= 8,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.ctext	= "\x74\x94\xc2\xe7\x10\x4b\x08\x79",
--		.len	= 8,
--	}, {
--		.key	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.klen	= 8,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00",
--		.ctext	= "\xde\x18\x89\x41\xa3\x37\x5d\x3a",
--		.len	= 8,
--	}, {
--		.key	= "\xef\x01\x23\x45",
--		.klen	= 4,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00\x00\x00",
--		.ctext	= "\xd6\xa1\x41\xa7\xec\x3c\x38\xdf"
--			  "\xbd\x61\x5a\x11\x62\xe1\xc7\xba"
--			  "\x36\xb6\x78\x58",
--		.len	= 20,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xab\xcd\xef",
--		.klen	= 8,
--		.ptext	= "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78\x9A\xBC\xDE\xF0"
--			  "\x12\x34\x56\x78",
--		.ctext	= "\x66\xa0\x94\x9f\x8a\xf7\xd6\x89"
--			  "\x1f\x7f\x83\x2b\xa8\x33\xc0\x0c"
--			  "\x89\x2e\xbe\x30\x14\x3c\xe2\x87"
--			  "\x40\x01\x1e\xcf",
--		.len	= 28,
--	}, {
--		.key	= "\xef\x01\x23\x45",
--		.klen	= 4,
--		.ptext	= "\x00\x00\x00\x00\x00\x00\x00\x00"
--			  "\x00\x00",
--		.ctext	= "\xd6\xa1\x41\xa7\xec\x3c\x38\xdf"
--			  "\xbd\x61",
--		.len	= 10,
--	}, {
--		.key	= "\x01\x23\x45\x67\x89\xAB\xCD\xEF"
--			"\x00\x00\x00\x00\x00\x00\x00\x00",
--		.klen	= 16,
--		.ptext	= "\x01\x23\x45\x67\x89\xAB\xCD\xEF",
--		.ctext	= "\x69\x72\x36\x59\x1B\x52\x42\xB1",
--		.len	= 8,
--	},
--};
--
- /*
-  * TEA test vectors
-  */
--- 
-2.17.1
+Thanks for explaining Niklas - makes sense. I just looked at your patch
+again while adding other attributes and thought it would be worth asking
+the reason behind it.
 
+You can keep the reviewed-by on the 2 patches.
+
+Javier
