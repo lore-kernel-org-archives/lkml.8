@@ -7,26 +7,29 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC06C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1156020772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F61420772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgGBOMX (ORCPT
+        id S1729762AbgGBOM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:12:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59148 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728651AbgGBOMU (ORCPT
+        Thu, 2 Jul 2020 10:12:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgGBOMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:12:20 -0400
+        Thu, 2 Jul 2020 10:12:21 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0ACC08C5C1;
+        Thu,  2 Jul 2020 07:12:21 -0700 (PDT)
 Received: from xps.home (unknown [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8C01F2A5EC3;
-        Thu,  2 Jul 2020 15:12:18 +0100 (BST)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35F8E2A5EC4;
+        Thu,  2 Jul 2020 15:12:19 +0100 (BST)
 From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
 Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -39,9 +42,9 @@ Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 1/2] dt-bindings: sound: fsl-asoc-card: add new compatible for I2S slave
-Date:   Thu,  2 Jul 2020 16:11:14 +0200
-Message-Id: <20200702141114.232688-2-arnaud.ferraris@collabora.com>
+Subject: [PATCH 2/2] ASoC: fsl-asoc-card: add support for generic I2S slave use-case
+Date:   Thu,  2 Jul 2020 16:11:15 +0200
+Message-Id: <20200702141114.232688-3-arnaud.ferraris@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
 References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
@@ -53,64 +56,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fsl-asoc-card currently doesn't support generic codecs with the SoC
-acting as I2S slave.
+This commit implements support for generic codecs with the SoC acting as
+I2S slave, by implementing the new `fsl,imx-audio-i2s-slave` compatible
+and related properties.
 
-This commit adds a new `fsl,imx-audio-i2s-slave` for this use-case, as
-well as the following mandatory properties:
-- `audio-codec-dai-name` for specifying the codec DAI to be used
-- `audio-slot-width`
+This is particularly useful when using a Bluetooth controller acting as
+I2S master, but other simple or dummy codecs might benefit from it too.
 
 Signed-off-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
 ---
- .../bindings/sound/fsl-asoc-card.txt          | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl-asoc-card.c | 46 ++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-index 133d7e14a4d0..694a138df462 100644
---- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
-@@ -22,6 +22,8 @@ Note: The card is initially designed for those sound cards who use AC'97, I2S
- The compatible list for this generic sound card currently:
-  "fsl,imx-audio-ac97"
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 57ea1b072326..6076b963c873 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -166,12 +166,15 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
+ 		return 0;
  
-+ "fsl,imx-audio-i2s-slave"
-+
-  "fsl,imx-audio-cs42888"
+ 	/* Specific configurations of DAIs starts from here */
+-	ret = snd_soc_dai_set_sysclk(asoc_rtd_to_cpu(rtd, 0), cpu_priv->sysclk_id[tx],
+-				     cpu_priv->sysclk_freq[tx],
+-				     cpu_priv->sysclk_dir[tx]);
+-	if (ret && ret != -ENOTSUPP) {
+-		dev_err(dev, "failed to set sysclk for cpu dai\n");
+-		return ret;
++	if (cpu_priv->sysclk_freq[tx] > 0) {
++		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_cpu(rtd, 0),
++					     cpu_priv->sysclk_id[tx],
++					     cpu_priv->sysclk_freq[tx],
++					     cpu_priv->sysclk_dir[tx]);
++		if (ret && ret != -ENOTSUPP) {
++			dev_err(dev, "failed to set sysclk for cpu dai\n");
++			return ret;
++		}
+ 	}
  
-  "fsl,imx-audio-cs427x"
-@@ -75,7 +77,13 @@ Optional unless SSI is selected as a CPU DAI:
+ 	if (cpu_priv->slot_width) {
+@@ -475,11 +478,14 @@ static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
+ 		return 0;
+ 	}
  
-   - mux-ext-port	: The external port of the i.MX audio muxer
+-	ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
+-				     codec_priv->mclk_freq, SND_SOC_CLOCK_IN);
+-	if (ret && ret != -ENOTSUPP) {
+-		dev_err(dev, "failed to set sysclk in %s\n", __func__);
+-		return ret;
++	if (codec_priv->mclk_freq > 0) {
++		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
++					     codec_priv->mclk_freq,
++					     SND_SOC_CLOCK_IN);
++		if (ret && ret != -ENOTSUPP) {
++			dev_err(dev, "failed to set sysclk in %s\n", __func__);
++			return ret;
++		}
+ 	}
  
--Example:
-+Optional unless compatible is "fsl,imx-audio-i2s-slave":
-+
-+  - audio-codec-dai-name: The name of the DAI provided by the codec
-+
-+  - audio-slot-width	: The audio sample format
-+
-+Examples:
- sound-cs42888 {
- 	compatible = "fsl,imx-audio-cs42888";
- 	model = "cs42888-audio";
-@@ -96,3 +104,16 @@ sound-cs42888 {
- 		"AIN2L", "Line In Jack",
- 		"AIN2R", "Line In Jack";
- };
-+
-+sound-bluetooth {
-+	compatible = "fsl,imx-audio-i2s-slave";
-+	audio-cpu = <&ssi1>;
-+	audio-codec = <&codec_bluetooth>;
-+	audio-codec-dai-name = "bt-sco-pcm-wb";
-+	audio-slot-width = <16>;
-+	audio-routing =
-+		"RX", "Mic Jack",
-+		"Headphone Jack", "TX";
-+	mux-int-port = <1>;
-+	mux-ext-port = <4>;
-+};
+ 	return 0;
+@@ -620,6 +626,23 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 		priv->cpu_priv.slot_width = 32;
+ 		priv->card.dapm_routes = audio_map_tx;
+ 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
++	} else if (of_device_is_compatible(np, "fsl,imx-audio-i2s-slave")) {
++		ret = of_property_read_string(np, "audio-codec-dai-name",
++					      &codec_dai_name);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to get codec DAI name\n");
++			ret = -EINVAL;
++			goto asrc_fail;
++		}
++		ret = of_property_read_u32(np, "audio-slot-width",
++					   &priv->cpu_priv.slot_width);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to get slot width\n");
++			ret = -EINVAL;
++			goto asrc_fail;
++		}
++		priv->card.set_bias_level = NULL;
++		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else {
+ 		dev_err(&pdev->dev, "unknown Device Tree compatible\n");
+ 		ret = -EINVAL;
+@@ -763,6 +786,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
+ 	{ .compatible = "fsl,imx-audio-ac97", },
++	{ .compatible = "fsl,imx-audio-i2s-slave", },
+ 	{ .compatible = "fsl,imx-audio-cs42888", },
+ 	{ .compatible = "fsl,imx-audio-cs427x", },
+ 	{ .compatible = "fsl,imx-audio-sgtl5000", },
 -- 
 2.27.0
 
