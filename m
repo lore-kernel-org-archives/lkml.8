@@ -2,116 +2,128 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2838D20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF6D20760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593712746;
-	bh=LiNf/oCR5xMtevLJEVXBqNNKcCAHHJBxiwRz04agoFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=twTR7fU2l4WhC7fkxgQ4aB4IcS/d6+tK5jgjEB96+ZqZ0QAhP0gfgEBFlO9sFmXK7
-	 Jeaw2rG4SqRmXUAhcCuAzo4kjRV4H+U4z+IVl6P5tNFFuvLhgNQ8BB4da3Q4BU//BD
-	 oNrU6Zq+g3vzaWpX53QRaJLGyEzaEEIgdyQbMW/0=
+	s=default; t=1593712791;
+	bh=vG1vBm6vstM6zzH+k1vdCUTH1v0SmoEIDUIITtr1D/0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=LVsk5RNc9Tf8dbTpHc2diQroS3CCXR5x4BPTEAVDbS3scg5K1xMlP6p1JH3SB0xKF
+	 smgalYmXJNSsSzOaIGf6vEwb4r1yLtUHKptMDy5z7yfR+4Ueiyzuel99ZrJaUAy3Jv
+	 joCfB5+/4fKkw97bxLe1ImOSG8rMmGbGO31UVz1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgGBR7E (ORCPT
+        id S1727978AbgGBR7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:59:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 13:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbgGBR7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:59:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726349AbgGBR7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:59:49 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A9720737;
-        Thu,  2 Jul 2020 17:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69C4F20737;
+        Thu,  2 Jul 2020 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593712743;
-        bh=LiNf/oCR5xMtevLJEVXBqNNKcCAHHJBxiwRz04agoFc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jMpwBH2mioxgNjTAwQkjJpfcUhIWXt5XWb5sP5oVkYJrQGOWeo/mDsBSAdUW8bYVt
-         SHUK1h9zjeZY8/04WvNLGrfO1ARjnvt/hkXzAZBd7rTxWVFX4sds6Va2oJRR3Qinsy
-         y1Z1l9rvas+7lJv5H4aNTynD1JdD9fMiINsNcW8Y=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jr3UD-008VH4-L0; Thu, 02 Jul 2020 18:59:01 +0100
+        s=default; t=1593712788;
+        bh=vG1vBm6vstM6zzH+k1vdCUTH1v0SmoEIDUIITtr1D/0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YSECcQsGgN0Kb258rQalKoY0GD0gMkQKjSrIAw4B93WGNrTMgWQ/6hr+oWDw+SXRG
+         xKlKIQ4BaG/mRIGsMf9Tu1kJIwAlxOy0d4WAWr1fTaubryYquozE9wywm8Z/2siJrf
+         mogkDnM5b8tk2Qmi8jhn2YzWtbDFbssSH7swTEv0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 52653352334B; Thu,  2 Jul 2020 10:59:48 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 10:59:48 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200702175948.GV9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+ <20200630191931.GA884155@elver.google.com>
+ <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+ <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 02 Jul 2020 18:59:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        david@lechnology.com, wmills@ti.com
-Subject: Re: [PATCHv3 5/6] irqchip/irq-pruss-intc: Add support for ICSSG INTC
- on K3 SoCs
-In-Reply-To: <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <d1b232c6f33a629117a2ecbd440622d0@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
 > 
-> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS 
-> IP,
-> commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
-> more System Events (160 vs 64), more Interrupt Channels and Host 
-> Interrupts
-> (20 vs 10) compared to the previous generation PRUSS INTC instances. 
-> The
-> first 2 and the last 10 of these host interrupt lines are used by the
-> PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
-> host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
-> connected to the other ICSSG instances within the SoC and can be
-> partitioned as per system integration through the board dts files.
+> > But it looks like we are going to have to tell the compiler.
 > 
-> Enhance the PRUSS INTC driver to add support for this ICSSG INTC
-> instance. This support is added using specific compatible and match
-> data and updating the code to use this data instead of the current
-> hard-coded macros. The INTC config structure is updated to use the
-> higher events and channels on all SoCs, while limiting the actual
-> processing to only the relevant number of events/channels/interrupts.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
-> v2->v3:
-> - Change patch order: use it directly after "irqchip/irq-pruss-intc:
->   Implement irq_{get,set}_irqchip_state ops" and before new
->   "irqchip/irq-pruss-intc: Add event mapping support" in order to 
-> reduce
->   diff.
+> What does the current proposal look like? I can certainly annotate the
+> seqcount latch users, but who knows what other code is out there....
 
-The diff would be even smaller if you introduced a variable number of
-inputs the first place, i.e. in patch #2. Most if this patch just
-retrofits it. Please squash these changes into that initial patch,
-and only add the platform stuff here.
+For pointers, yes, within the Linux kernel it is hopeless, thus the
+thought of a -fall-dependent-ptr or some such that makes the compiler
+pretend that each and every pointer is marked with the _Dependent_ptr
+qualifier.
 
-Thanks,
+New non-Linux-kernel code might want to use his qualifier explicitly,
+perhaps something like the following:
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+	_Dependent_ptr struct foo *p;  // Or maybe after the "*"?
+
+	rcu_read_lock();
+	p = rcu_dereference(gp);
+	// And so on...
+
+If a function is to take a dependent pointer as a function argument,
+then the corresponding parameter need the _Dependent_ptr marking.
+Ditto for return values.
+
+The proposal did not cover integers due to concerns about the number of
+optimization passes that would need to be reviewed to make that work.
+Nevertheless, using a marked integer would be safer than using an unmarked
+one, and if the review can be carried out, why not?  Maybe something
+like this:
+
+	_Dependent_ptr int idx;
+
+	rcu_read_lock();
+	idx = READ_ONCE(gidx);
+	d = rcuarray[idx];
+	rcu_read_unlock();
+	do_something_with(d);
+
+So use of this qualifier is quite reasonable.
+
+The prototype for GCC is here: https://github.com/AKG001/gcc/
+
+							Thanx, Paul
