@@ -2,74 +2,131 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56415C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4327C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270882073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA0C2073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593685957;
-	bh=enD74GEcyPx4GL7iY06xo1k0ra+cf1sbekcCKhJ09Cc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DvbybqDr7Aa663srQVZb1Xtz57AqKXhcwHdREccqNQtnKng9sHY219Ca1wvxsG2sJ
-	 HNbgRGk1SA+XYUKpmIXHcko/CTpZlIYJkQ8qKZhFGjPAPwoY8bsDc8c5+rXinXKtt8
-	 QCRSKhVCDfYW+UCGeiZMGYbRdE7LLe3p+Av6eVyE=
+	s=default; t=1593686007;
+	bh=f0uBBvmeVvrGpLdTlCXVe4XoZAQVtuO4TB+0l/AvExs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pmVTGWrY0J0/+/cTyctbVShdQNs0G7BE6QY2CQSTp9ObcZ+poD0euC2AQxSoaRzr6
+	 05vqHJsBQ7FNC8TFo5eZYvnhNycAj7FPGtwHiwNYyoP9f2V/MkdmWqs80FXBnyvr7K
+	 oKEvt4hS5/lUPKcCCGM242GPhwjsR55A8OS7GmK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgGBKcf (ORCPT
+        id S1728556AbgGBKd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:32:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgGBKcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:32:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F68420747;
-        Thu,  2 Jul 2020 10:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593685953;
-        bh=enD74GEcyPx4GL7iY06xo1k0ra+cf1sbekcCKhJ09Cc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H302ipcR8A1ukgCHgd47fGV/ik8fiGCINT2Qdp0wj5Li5gWW1M+DFvTYXeypnz9sC
-         K//rtH52//aBy3eoANq3H0/64IGxoV+tSduQhe/AFMYtsPtURtxDxRVjtMLnKXkQRU
-         IdLoHNqajHhE6JCdBvg9OP2naXnjgpwXu4BLRTyw=
-Date:   Thu, 2 Jul 2020 12:32:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-nfs@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: Re: [RFC PATCH 2/7] staging/rtl8192u: switch to RC4 library interface
-Message-ID: <20200702103236.GC1238594@kroah.com>
-References: <20200702101947.682-1-ardb@kernel.org>
- <20200702101947.682-3-ardb@kernel.org>
+        Thu, 2 Jul 2020 06:33:26 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42128 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728331AbgGBKdZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:33:25 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z17so23087709edr.9;
+        Thu, 02 Jul 2020 03:33:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DR+lES1GIWGKd96O7Mw57yL6n3Bv7BAuAb083PqM/vc=;
+        b=Vgcn5JO4j2Ws5OFQVSSjLq/dXdDjE6t8TIfqMMwjzsLQqvdmSbAdb9QKHZM7XkYrHB
+         Wt4wdRZ550pvonaDq9Lc9NuGy3SrfOQCzAvDpB9gEpqYW2M4Myod0YKnnP3vijrAXHca
+         yx6avUHWqflomyPCWTPZ/KhC7uzQrcHt6BS26XKVXhhrEiwP2FJA6EJQStCvLLYZNBu2
+         3tR5QoyIE5BnTgjM7oeQAikevF9lKGW+MP1hBGUGDHCJwAcA1QIWyNUeUE3fvftp09t5
+         CyF2uFx+7ZF+4YTUFD4O1/AWkKpXlUnkErYMUB0rK7l12BfGk4jdnORnd/Y/TP30V+NB
+         VcDQ==
+X-Gm-Message-State: AOAM530lwEMrYsdbkL4atjapypjdN4i7J/gPq2mUgRhFDjoDsQc4zwov
+        1n0f7bVFoziqCZ/hdwZNIuYetN6yeU8=
+X-Google-Smtp-Source: ABdhPJysPRepX9BL8RInKVMxjATPCxzVOhuz4zNtUbfvB25Drlu/WzIJoHK9l4kN4HHa77PuZZJvkg==
+X-Received: by 2002:aa7:c54e:: with SMTP id s14mr34307284edr.81.1593686003685;
+        Thu, 02 Jul 2020 03:33:23 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id w17sm6483135eju.42.2020.07.02.03.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 03:33:22 -0700 (PDT)
+From:   Ricardo Ribalda <ribalda@kernel.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Ricardo Ribalda <ribalda@kernel.org>
+Subject: [PATCH v6] i2c: designware: platdrv: Set class based on DMI
+Date:   Thu,  2 Jul 2020 12:33:21 +0200
+Message-Id: <20200702103321.2092254-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702101947.682-3-ardb@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:19:42PM +0200, Ard Biesheuvel wrote:
-> Switch to the ARC4 library interface, to remove the pointless
-> dependency on the skcipher API, from which we will hopefully be
-> able to drop ecb(arc4) skcipher support.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this patch we re-enable autodetection of hwmon-alike devices, so
+lm-sensors will be able to work automatically.
+
+It does not affect the boot-time of embedded devices, as the class is
+set based on the DMI information.
+
+DMI is probed only on Qtechnology QT5222 Industrial Camera Platform.
+
+DocLink: https://qtec.com/camera-technology-camera-platforms/
+Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v6: Removed extra line, sorry for the invalid v5
+ drivers/i2c/busses/i2c-designware-platdrv.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index c2efaaaac252..a71bc58fc03c 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -12,6 +12,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+@@ -191,6 +192,17 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+ 	return ret;
+ }
+ 
++static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
++	{
++		.ident = "Qtechnology QT5222",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
++		},
++	},
++	{ } /* terminate list */
++};
++
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
+ 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -267,7 +279,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 
+ 	adap = &dev->adapter;
+ 	adap->owner = THIS_MODULE;
+-	adap->class = I2C_CLASS_DEPRECATED;
++	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
++					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
+ 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->nr = -1;
+-- 
+2.27.0
+
