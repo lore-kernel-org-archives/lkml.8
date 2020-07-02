@@ -2,333 +2,205 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C779920936
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA0920936
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZqhzDJK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WgVIfEWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgGBHti (ORCPT
+        id S1728411AbgGBHtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        Thu, 2 Jul 2020 03:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgGBHtf (ORCPT
+        with ESMTP id S1727065AbgGBHtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:49:35 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5357EC08C5C1;
-        Thu,  2 Jul 2020 00:49:35 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so10979416plo.7;
-        Thu, 02 Jul 2020 00:49:35 -0700 (PDT)
+        Thu, 2 Jul 2020 03:49:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16DE5C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:49:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so26918406wrw.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4UHbhQFEdFPJ2RYno/xIf1h+jNRhusa+eWEK6fGK5jM=;
-        b=pZqhzDJKFXLW28kF6+0/00P3hNnIiZSIjop2A3REoKDLEAcF4CwFSv6pffel8OHXVK
-         Xa3JgTrUiSN6YIWcOq3o/bF37Nu2jl7qbzTdBIuatB3ChEhwVxwiWFU+jI++1se9tF6k
-         1AmN2R6JrOAsAFYoQtIEDuXOeldeugtU5t6eo91iY90vvuH6caRhFJCjNJdsrGw7laqr
-         6UR9WyhWbQseiUJ74YiMxfHgWln2OWAdZDi/G7+H56nSqIOCP0Ka4D82SCVutzUvgLdH
-         8qg/bq3otY3SZWPbQTG1OFUJcv6zOGPqMhOcBG5M8qSDs9OtW+weAlyhMNvfzy9kCrX9
-         Bq/A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fwfpJbIOu9tCKwQoSyX3k34gERv16DOUHr82n13fFPU=;
+        b=WgVIfEWIWIZsDgecYoHJoSr0ORxYBQu1XyICcQFQee2m5YpxvE/7h5C44SOwIIPfA7
+         B4s1XH8HyBK1NBAGTJO7fqytoZjouQN997rHEETXqn6YJNYAIWkZWnAQ1BwO020NEsab
+         fdDNbw3qPxfdcbCu+zHDpjucvXECP1Zo6kH4QqX5KEW7oKV1QepizpDHPgX3nH1uZ+Hu
+         L94LtUMjOQSl8aJMGSgHFKW8TeZzyDCwtCPC4Xe3zkPijqhSqMF/lrUI6VX4YkmChuVR
+         fziM3EWaVCZZFrGWajtFRrmCSSDl7AphYxCpxVLgy7BxashK8ws/d/s20l9Ao01eIa0b
+         1/1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4UHbhQFEdFPJ2RYno/xIf1h+jNRhusa+eWEK6fGK5jM=;
-        b=STxFLFTPpm/EQ+plZPsZqZPMOPEbBOzdoNSQzEOQRC6McAJVY5/J85nYv/h0bpssRc
-         QjeYWITTqZOx2+pKWFYdo0bB/th9rSJYlpg3Jlu9GvYIYFMKt6BUR80vBGNjqGzWoa72
-         wp3xRtXnp7msydwOreAYI8qoEkxdwwA74v0Yv4PwrGLbM8/xV240wRNV5x/1hmYjsxWZ
-         RJIWnVuQx5s7pqNx+2I7YUPFckAiw3w4wLTWJTaGqvNtcA42bpGS9JOs6SfbWmRDLueu
-         JtMxZa1TzxK0oCuxvXtXHVeTwwDVyeBUg6ePE+h8j2BS0Ar8r43KgD27H2notNi67B4I
-         7goQ==
-X-Gm-Message-State: AOAM532Vj7QChzR+2RXft4oDN0teNPNlzD1MVBt865uyybAfMY2/2BLk
-        aYTa6q3psAukiZgaMACND1k=
-X-Google-Smtp-Source: ABdhPJzo+47v2QY6N1oj7RydZM/DMTPv9/tLJu+97Hhlqb5Qr+YK1gcQR2DRq1JqZJWOsTfT0Dp8Gw==
-X-Received: by 2002:a17:90b:3809:: with SMTP id mq9mr31112781pjb.156.1593676174796;
-        Thu, 02 Jul 2020 00:49:34 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id 17sm6001953pfv.16.2020.07.02.00.49.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 00:49:34 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 8/8] powerpc/64s: remove paravirt from simple spinlocks (RFC only)
-Date:   Thu,  2 Jul 2020 17:48:39 +1000
-Message-Id: <20200702074839.1057733-9-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200702074839.1057733-1-npiggin@gmail.com>
-References: <20200702074839.1057733-1-npiggin@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fwfpJbIOu9tCKwQoSyX3k34gERv16DOUHr82n13fFPU=;
+        b=UByklJPVj9IhiN3EQKxKaOUFqzV/Q8HXURRmvReukcgeCVXXpCSxCD+HVRRwnYmeGy
+         ONL9+EfzNKiwnn92O1rZacnGFQkXJcvvTisKykWDeiG4Ps2rXUFP6n/iujBIHahUTq28
+         nmxvhCreqQYxUKMj0K2VHXDQkeY+cwUYOzMksgnyadKisq21EFxzmqR0cGBSAO8KeSFi
+         VR9HwCCFtyeHjCC0e/8OEcVEjD7w4wIsNBjT10MzMpJhLLV+en+I6EFQ8JoQ5qoQI6EU
+         rqLhva3nqCllDixX5Be9aQWvZCxND9qG+GR+H6GuLuoAROYcE2MDZSJHMvJFMhzR/tgl
+         3eZw==
+X-Gm-Message-State: AOAM530mrKrilEeY4Cvh6nbilACVuPYYDrK2tIS2fe8LEXNHMimyFCcA
+        OikmIn5RKfBwNmyrVW6ige8oVA==
+X-Google-Smtp-Source: ABdhPJwaAX9WCvA+Cv/JH1yjVGwEZ4Dgk4rEsDhdosusI9cN1k4Mq+Th3cnJEOK4rARIaKZ76qpJ0Q==
+X-Received: by 2002:adf:edc8:: with SMTP id v8mr29618741wro.125.1593676179630;
+        Thu, 02 Jul 2020 00:49:39 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:7023:727a:c688:cf9b? ([2a01:e35:2ec0:82b0:7023:727a:c688:cf9b])
+        by smtp.gmail.com with ESMTPSA id y20sm9704926wmi.8.2020.07.02.00.49.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 00:49:38 -0700 (PDT)
+Subject: Re: [PATCH v5 2/2] arm64: dts: meson-khadas-vim3: add Khadas MCU
+ nodes
+To:     khilman@baylibre.com
+Cc:     lee.jones@linaro.org, linux-amlogic@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        Amit Kucheria <amit.kucheria@linaro.org>
+References: <20200624161528.12664-1-narmstrong@baylibre.com>
+ <20200624161528.12664-3-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <b5a5de24-2fed-ebc4-52e1-9ff1ce3cfbc6@baylibre.com>
+Date:   Thu, 2 Jul 2020 09:49:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200624161528.12664-3-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RFC until we settle on queued spinlocks for 64s and remove the
-option to go back to simple locks. If other sub-archs want to keep
-simple spinlocks, the code can be nicely simplified.
----
- arch/powerpc/include/asm/simple_spinlock.h | 61 +-------------------
- arch/powerpc/kvm/book3s_hv_rm_mmu.c        |  6 --
- arch/powerpc/lib/Makefile                  |  4 --
- arch/powerpc/lib/locks.c                   | 65 ----------------------
- 4 files changed, 2 insertions(+), 134 deletions(-)
- delete mode 100644 arch/powerpc/lib/locks.c
+Hi Kevin,
 
-diff --git a/arch/powerpc/include/asm/simple_spinlock.h b/arch/powerpc/include/asm/simple_spinlock.h
-index e048c041c4a9..5f0980dea001 100644
---- a/arch/powerpc/include/asm/simple_spinlock.h
-+++ b/arch/powerpc/include/asm/simple_spinlock.h
-@@ -16,23 +16,10 @@
-  * (the type definitions are in asm/simple_spinlock_types.h)
-  */
- #include <linux/irqflags.h>
--#include <asm/paravirt.h>
--#ifdef CONFIG_PPC64
--#include <asm/paca.h>
--#endif
- #include <asm/synch.h>
- #include <asm/ppc-opcode.h>
- 
--#ifdef CONFIG_PPC64
--/* use 0x800000yy when locked, where yy == CPU number */
--#ifdef __BIG_ENDIAN__
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->lock_token))
--#else
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->paca_index))
--#endif
--#else
- #define LOCK_TOKEN	1
--#endif
- 
- static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
- {
-@@ -74,43 +61,14 @@ static inline int arch_spin_trylock(arch_spinlock_t *lock)
- 	return __arch_spin_trylock(lock) == 0;
- }
- 
--/*
-- * On a system with shared processors (that is, where a physical
-- * processor is multiplexed between several virtual processors),
-- * there is no point spinning on a lock if the holder of the lock
-- * isn't currently scheduled on a physical processor.  Instead
-- * we detect this situation and ask the hypervisor to give the
-- * rest of our timeslice to the lock holder.
-- *
-- * So that we can tell which virtual processor is holding a lock,
-- * we put 0x80000000 | smp_processor_id() in the lock when it is
-- * held.  Conveniently, we have a word in the paca that holds this
-- * value.
-- */
--
--#if defined(CONFIG_PPC_SPLPAR)
--/* We only yield to the hypervisor if we are in shared processor mode */
--void splpar_spin_yield(arch_spinlock_t *lock);
--void splpar_rw_yield(arch_rwlock_t *lock);
--#else /* SPLPAR */
--static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
--static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
--#endif
--
- static inline void spin_yield(arch_spinlock_t *lock)
- {
--	if (is_shared_processor())
--		splpar_spin_yield(lock);
--	else
--		barrier();
-+	barrier();
- }
- 
- static inline void rw_yield(arch_rwlock_t *lock)
- {
--	if (is_shared_processor())
--		splpar_rw_yield(lock);
--	else
--		barrier();
-+	barrier();
- }
- 
- static inline void arch_spin_lock(arch_spinlock_t *lock)
-@@ -120,8 +78,6 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
- 			break;
- 		do {
- 			HMT_low();
--			if (is_shared_processor())
--				splpar_spin_yield(lock);
- 		} while (unlikely(lock->slock != 0));
- 		HMT_medium();
- 	}
-@@ -139,8 +95,6 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
- 		local_irq_restore(flags);
- 		do {
- 			HMT_low();
--			if (is_shared_processor())
--				splpar_spin_yield(lock);
- 		} while (unlikely(lock->slock != 0));
- 		HMT_medium();
- 		local_irq_restore(flags_dis);
-@@ -166,13 +120,7 @@ static inline void arch_spin_unlock(arch_spinlock_t *lock)
-  * read-locks.
-  */
- 
--#ifdef CONFIG_PPC64
--#define __DO_SIGN_EXTEND	"extsw	%0,%0\n"
--#define WRLOCK_TOKEN		LOCK_TOKEN	/* it's negative */
--#else
--#define __DO_SIGN_EXTEND
- #define WRLOCK_TOKEN		(-1)
--#endif
- 
- /*
-  * This returns the old value in the lock + 1,
-@@ -184,7 +132,6 @@ static inline long __arch_read_trylock(arch_rwlock_t *rw)
- 
- 	__asm__ __volatile__(
- "1:	" PPC_LWARX(%0,0,%1,1) "\n"
--	__DO_SIGN_EXTEND
- "	addic.		%0,%0,1\n\
- 	ble-		2f\n"
- "	stwcx.		%0,0,%1\n\
-@@ -227,8 +174,6 @@ static inline void arch_read_lock(arch_rwlock_t *rw)
- 			break;
- 		do {
- 			HMT_low();
--			if (is_shared_processor())
--				splpar_rw_yield(rw);
- 		} while (unlikely(rw->lock < 0));
- 		HMT_medium();
- 	}
-@@ -241,8 +186,6 @@ static inline void arch_write_lock(arch_rwlock_t *rw)
- 			break;
- 		do {
- 			HMT_low();
--			if (is_shared_processor())
--				splpar_rw_yield(rw);
- 		} while (unlikely(rw->lock != 0));
- 		HMT_medium();
- 	}
-diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-index 88da2764c1bb..909025083161 100644
---- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-+++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
-@@ -410,12 +410,6 @@ long kvmppc_h_enter(struct kvm_vcpu *vcpu, unsigned long flags,
- 				 &vcpu->arch.regs.gpr[4]);
- }
- 
--#ifdef __BIG_ENDIAN__
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->lock_token))
--#else
--#define LOCK_TOKEN	(*(u32 *)(&get_paca()->paca_index))
--#endif
--
- static inline int is_mmio_hpte(unsigned long v, unsigned long r)
- {
- 	return ((v & HPTE_V_ABSENT) &&
-diff --git a/arch/powerpc/lib/Makefile b/arch/powerpc/lib/Makefile
-index d66a645503eb..158e71abc14c 100644
---- a/arch/powerpc/lib/Makefile
-+++ b/arch/powerpc/lib/Makefile
-@@ -41,10 +41,6 @@ obj-$(CONFIG_PPC_BOOK3S_64) += copyuser_power7.o copypage_power7.o \
- obj64-y	+= copypage_64.o copyuser_64.o mem_64.o hweight_64.o \
- 	   memcpy_64.o memcpy_mcsafe_64.o
- 
--ifndef CONFIG_PPC_QUEUED_SPINLOCKS
--obj64-$(CONFIG_SMP)	+= locks.o
--endif
--
- obj64-$(CONFIG_ALTIVEC)	+= vmx-helper.o
- obj64-$(CONFIG_KPROBES_SANITY_TEST)	+= test_emulate_step.o \
- 					   test_emulate_step_exec_instr.o
-diff --git a/arch/powerpc/lib/locks.c b/arch/powerpc/lib/locks.c
-deleted file mode 100644
-index e35fd1a16992..000000000000
---- a/arch/powerpc/lib/locks.c
-+++ /dev/null
-@@ -1,65 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Spin and read/write lock operations.
-- *
-- * Copyright (C) 2001-2004 Paul Mackerras <paulus@au.ibm.com>, IBM
-- * Copyright (C) 2001 Anton Blanchard <anton@au.ibm.com>, IBM
-- * Copyright (C) 2002 Dave Engebretsen <engebret@us.ibm.com>, IBM
-- *   Rework to support virtual processors
-- */
--
--#include <linux/kernel.h>
--#include <linux/spinlock.h>
--#include <linux/export.h>
--#include <linux/smp.h>
--
--/* waiting for a spinlock... */
--#if defined(CONFIG_PPC_SPLPAR)
--#include <asm/hvcall.h>
--#include <asm/smp.h>
--
--void splpar_spin_yield(arch_spinlock_t *lock)
--{
--	unsigned int lock_value, holder_cpu, yield_count;
--
--	lock_value = lock->slock;
--	if (lock_value == 0)
--		return;
--	holder_cpu = lock_value & 0xffff;
--	BUG_ON(holder_cpu >= NR_CPUS);
--
--	yield_count = yield_count_of(holder_cpu);
--	if ((yield_count & 1) == 0)
--		return;		/* virtual cpu is currently running */
--	smp_rmb();
--	if (lock->slock != lock_value)
--		return;		/* something has changed */
--	yield_to_preempted(holder_cpu, yield_count);
--}
--EXPORT_SYMBOL_GPL(splpar_spin_yield);
--
--/*
-- * Waiting for a read lock or a write lock on a rwlock...
-- * This turns out to be the same for read and write locks, since
-- * we only know the holder if it is write-locked.
-- */
--void splpar_rw_yield(arch_rwlock_t *rw)
--{
--	int lock_value;
--	unsigned int holder_cpu, yield_count;
--
--	lock_value = rw->lock;
--	if (lock_value >= 0)
--		return;		/* no write lock at present */
--	holder_cpu = lock_value & 0xffff;
--	BUG_ON(holder_cpu >= NR_CPUS);
--
--	yield_count = yield_count_of(holder_cpu);
--	if ((yield_count & 1) == 0)
--		return;		/* virtual cpu is currently running */
--	smp_rmb();
--	if (rw->lock != lock_value)
--		return;		/* something has changed */
--	yield_to_preempted(holder_cpu, yield_count);
--}
--#endif
--- 
-2.23.0
+Can you apply this patch ? the rest of the serie has been pulled into Lee's tree.
+
+Thanks,
+Neil
+
+On 24/06/2020 18:15, Neil Armstrong wrote:
+> Add the Khadas MCU node with active FAN thermal nodes for all the
+> Khadas VIM3 variants.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+> Hi Kevin,
+> 
+> The bindings has been reviewed and merged by Lee,
+> could you apply this one via the amlogic tree ?
+> 
+> Thanks,
+> Neil
+> 
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> index 1ef1e3672b96..27408c10a811 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+> @@ -183,6 +183,23 @@
+>  	hdmi-phandle = <&hdmi_tx>;
+>  };
+>  
+> +&cpu_thermal {
+> +	trips {
+> +		cpu_active: cpu-active {
+> +			temperature = <80000>; /* millicelsius */
+> +			hysteresis = <2000>; /* millicelsius */
+> +			type = "active";
+> +		};
+> +	};
+> +
+> +	cooling-maps {
+> +		map {
+> +			trip = <&cpu_active>;
+> +			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +		};
+> +	};
+> +};
+> +
+>  &ext_mdio {
+>  	external_phy: ethernet-phy@0 {
+>  		/* Realtek RTL8211F (0x001cc916) */
+> @@ -222,6 +239,12 @@
+>  	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
+>  	pinctrl-names = "default";
+>  
+> +	khadas_mcu: system-controller@18 {
+> +		compatible = "khadas,mcu";
+> +		reg = <0x18>;
+> +		#cooling-cells = <2>;
+> +	};
+> +
+>  	gpio_expander: gpio-controller@20 {
+>  		compatible = "ti,tca6408";
+>  		reg = <0x20>;
+> 
 
