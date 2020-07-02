@@ -2,159 +2,495 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E77C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D19A920760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5895206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hnLKPKeT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h/RcjT8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgGBX1t (ORCPT
+        id S1726908AbgGBX2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:27:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34660 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgGBX1t (ORCPT
+        Thu, 2 Jul 2020 19:28:10 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:38127 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbgGBX2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:27:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062NMkUp119523;
-        Thu, 2 Jul 2020 23:27:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=i/tsRFX8JHpMl5wiN39lBbymh9q/GHG0u/XCh+bRodU=;
- b=hnLKPKeT5NMY6L9PBMyt+A2/H197eXGoiG12wr2K0KQ0cicPM4DRtPocxdOzwJ5UzI7h
- cO3vONz4RYHkIAnB7xdIFIcnaCnxp8eJnOsYKGOZnsb9YkY4gbq3dqw/MdZVmWPuW6qa
- FmnHtoL68Wvq6R3AoiqOooz1P0LgJ49hZvdGvD97EIo4wavOLljDp38J+bd6wLBvfQKH
- EXMZNDlBtIvBRK/9mGowkfHYdxrHMVILH1huC3gNzslZ9ucsq4tH3w/pAp2S8SH3t8Pz
- xpTQbwIDSy2AmW1ouvIwh1SuYpIBPJPPJ6ThEZHkkWlrMUm9Hdyx5nCRJRChJjd4OdT6 mw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31ywrc19xg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 02 Jul 2020 23:27:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062NHsaE170427;
-        Thu, 2 Jul 2020 23:27:31 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 31xg21pvwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Jul 2020 23:27:31 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 062NRTTf031587;
-        Thu, 2 Jul 2020 23:27:29 GMT
-Received: from [192.168.29.236] (/73.249.50.119)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Jul 2020 23:27:29 +0000
-Subject: Re: [PATCH v2 1/4] x86/xen: remove 32-bit Xen PV guest support
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200701110650.16172-1-jgross@suse.com>
- <20200701110650.16172-2-jgross@suse.com>
- <6d0b517a-6c53-61d3-117b-40e33e013037@oracle.com>
- <9f8cc440-82f0-d6d8-945d-19c48f69a6b0@citrix.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <30b9ee7e-e590-d55e-6eb4-1623521642fd@oracle.com>
-Date:   Thu, 2 Jul 2020 19:27:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <9f8cc440-82f0-d6d8-945d-19c48f69a6b0@citrix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007020156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- clxscore=1015 cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007020156
+        Thu, 2 Jul 2020 19:28:07 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200702232802epoutp043ceecedf96b134ce9b7a08df3368dc2e~eEz_ZGBY11052910529epoutp044
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:28:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200702232802epoutp043ceecedf96b134ce9b7a08df3368dc2e~eEz_ZGBY11052910529epoutp044
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593732482;
+        bh=7bdDrtKfhDIeoE6nA3jqgvIZ53z3Zzgsj9GRaApA+3s=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=h/RcjT8ZmIrya7guSxQDosusgIvDLkydXqiDWNLn82oHvfdF+04eiL83LQycWYy7x
+         +Rt/07zdcMyejMGIaP6TkKP/2y//SWef1rUeR3Kb8b/4ZmZQ7yAvVbpvfgRZvyHq52
+         lz4EeIvOrBLlk84hxj4ifFJuNhQmIG6NxpVOQJaE=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200702232801epcas1p1cafab29e1b4ffb80b930cd2ade5956af~eEz9-a6Dx2105821058epcas1p1Q;
+        Thu,  2 Jul 2020 23:28:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v5 2/5] scsi: ufs: Add UFS-feature layer
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <231786897.01593732302018.JavaMail.epsvc@epcpadp1>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01593732481555.JavaMail.epsvc@epcpadp2>
+Date:   Fri, 03 Jul 2020 08:25:48 +0900
+X-CMS-MailID: 20200702232548epcms2p40e7f103a652035059f8c823e32672bcc
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4
+References: <231786897.01593732302018.JavaMail.epsvc@epcpadp1>
+        <963815509.21593732182531.JavaMail.epsvc@epcpadp2>
+        <CGME20200702231936epcms2p81557f83504ef1c1e81bfc81a0143a5b4@epcms2p4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 7:24 PM, Andrew Cooper wrote:
-> On 02/07/2020 23:59, Boris Ostrovsky wrote:
->> On 7/1/20 7:06 AM, Juergen Gross wrote:
->>>  
->>> -#ifdef CONFIG_X86_PAE
->>> -static void xen_set_pte_atomic(pte_t *ptep, pte_t pte)
->>> -{
->>> -	trace_xen_mmu_set_pte_atomic(ptep, pte);
->>> -	__xen_set_pte(ptep, pte);
->> Probably not for this series but I wonder whether __xen_set_pte() should
->> continue to use hypercall now that we are 64-bit only.
-> The hypercall path is a SYSCALL (and SYSRET out).
->
-> The "writeable" PTE path is a #PF, followed by an x86 instruction
-> emulation, which then reaches the same logic as the hypercall path (and
-> an IRET out).
+This patch is adding UFS feature layer to UFS core driver.
 
+UFS Driver data structure (struct ufs_hba)
+=09=E2=94=82
+=E2=94=8C--------------=E2=94=90
+=E2=94=82 UFS feature  =E2=94=82 <-- HPB module
+=E2=94=82    layer     =E2=94=82 <-- other extended feature module
+=E2=94=94--------------=E2=94=98
+Each extended UFS-Feature module has a bus of ufs-ext feature type.
+The UFS feature layer manages common APIs used by each extended feature
+module. The APIs are set of UFS Query requests and UFS Vendor commands
+related to each extended feature module.
 
-Then we should at least update the comment.
+Other extended features can also be implemented using the proposed APIs.
+For example, in Write Booster, "prep_fn" can be used to guarantee the
+lifetime of UFS by updating the amount of write IO.
+And reset/reset_host/suspend/resume can be used to manage the kernel task
+for checking lifetime of UFS.
 
+The following 6 callback functions have been added to "ufshcd.c".
+prep_fn: called after construct upiu structure
+reset: called after proving hba
+reset_host: called before ufshcd_host_reset_and_restore
+suspend: called before ufshcd_suspend
+resume: called after ufshcd_resume
+rsp_upiu: called in ufshcd_transfer_rsp_status with SAM_STAT_GOOD state
 
--boris
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/Makefile     |   2 +-
+ drivers/scsi/ufs/ufsfeature.c | 148 ++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufsfeature.h |  69 ++++++++++++++++
+ drivers/scsi/ufs/ufshcd.c     |  17 ++++
+ drivers/scsi/ufs/ufshcd.h     |   3 +
+ 5 files changed, 238 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/scsi/ufs/ufsfeature.c
+ create mode 100644 drivers/scsi/ufs/ufsfeature.h
+
+diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
+index f0c5b95ec9cc..433b871badfa 100644
+--- a/drivers/scsi/ufs/Makefile
++++ b/drivers/scsi/ufs/Makefile
+@@ -6,7 +6,7 @@ obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) +=3D cdns-pltfrm.o
+ obj-$(CONFIG_SCSI_UFS_QCOM) +=3D ufs-qcom.o
+ obj-$(CONFIG_SCSI_UFS_EXYNOS) +=3D ufs-exynos.o
+ obj-$(CONFIG_SCSI_UFSHCD) +=3D ufshcd-core.o
+-ufshcd-core-y=09=09=09=09+=3D ufshcd.o ufs-sysfs.o
++ufshcd-core-y=09=09=09=09+=3D ufshcd.o ufs-sysfs.o ufsfeature.o
+ ufshcd-core-$(CONFIG_SCSI_UFS_BSG)=09+=3D ufs_bsg.o
+ obj-$(CONFIG_SCSI_UFSHCD_PCI) +=3D ufshcd-pci.o
+ obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) +=3D ufshcd-pltfrm.o
+diff --git a/drivers/scsi/ufs/ufsfeature.c b/drivers/scsi/ufs/ufsfeature.c
+new file mode 100644
+index 000000000000..94c6be6babd3
+--- /dev/null
++++ b/drivers/scsi/ufs/ufsfeature.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Universal Flash Storage Feature Support
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *=09Yongmyung Lee <ymhungry.lee@samsung.com>
++ *=09Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#include "ufshcd.h"
++#include "ufsfeature.h"
++
++inline void ufsf_slave_configure(struct ufs_hba *hba,
++=09=09=09=09 struct scsi_device *sdev)
++{
++=09/* skip well-known LU */
++=09if (sdev->lun >=3D UFS_UPIU_MAX_UNIT_NUM_ID)
++=09=09return;
++
++=09if (!(hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT))
++=09=09return;
++
++=09atomic_inc(&hba->ufsf.slave_conf_cnt);
++
++=09wake_up(&hba->ufsf.sdev_wait);
++}
++
++inline void ufsf_ops_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.prep_fn)
++=09=09ufshpb_drv->ufshpb_ops.prep_fn(hba, lrbp);
++}
++
++inline void ufsf_ops_rsp_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp=
+)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.rsp_upiu)
++=09=09ufshpb_drv->ufshpb_ops.rsp_upiu(hba, lrbp);
++}
++
++inline void ufsf_ops_reset_host(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.reset_host)
++=09=09ufshpb_drv->ufshpb_ops.reset_host(hba);
++}
++
++inline void ufsf_ops_reset(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.reset)
++=09=09ufshpb_drv->ufshpb_ops.reset(hba);
++}
++
++inline void ufsf_ops_suspend(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.suspend)
++=09=09ufshpb_drv->ufshpb_ops.suspend(hba);
++}
++
++inline void ufsf_ops_resume(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.resume)
++=09=09ufshpb_drv->ufshpb_ops.resume(hba);
++}
++
++struct device_type ufshpb_dev_type =3D {
++=09.name =3D "ufshpb_device"
++};
++EXPORT_SYMBOL(ufshpb_dev_type);
++
++static int ufsf_bus_match(struct device *dev,
++=09=09=09 struct device_driver *gendrv)
++{
++=09if (dev->type =3D=3D &ufshpb_dev_type)
++=09=09return 1;
++
++=09return 0;
++}
++
++struct bus_type ufsf_bus_type =3D {
++=09.name =3D "ufsf_bus",
++=09.match =3D ufsf_bus_match,
++};
++EXPORT_SYMBOL(ufsf_bus_type);
++
++static void ufsf_dev_release(struct device *dev)
++{
++=09put_device(dev->parent);
++}
++
++void ufsf_scan_features(struct ufs_hba *hba)
++{
++=09int ret;
++
++=09init_waitqueue_head(&hba->ufsf.sdev_wait);
++=09atomic_set(&hba->ufsf.slave_conf_cnt, 0);
++
++=09if (hba->dev_info.wspecversion >=3D HPB_SUPPORTED_VERSION &&
++=09    (hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT)) {
++=09=09device_initialize(&hba->ufsf.hpb_dev);
++
++=09=09hba->ufsf.hpb_dev.bus =3D &ufsf_bus_type;
++=09=09hba->ufsf.hpb_dev.type =3D &ufshpb_dev_type;
++=09=09hba->ufsf.hpb_dev.parent =3D get_device(hba->dev);
++=09=09hba->ufsf.hpb_dev.release =3D ufsf_dev_release;
++
++=09=09dev_set_name(&hba->ufsf.hpb_dev, "ufshpb");
++=09=09ret =3D device_add(&hba->ufsf.hpb_dev);
++=09=09if (ret)
++=09=09=09dev_warn(hba->dev, "ufshpb: failed to add device\n");
++=09}
++}
++
++static int __init ufsf_init(void)
++{
++=09int ret;
++
++=09ret =3D bus_register(&ufsf_bus_type);
++=09if (ret)
++=09=09pr_err("%s bus_register failed\n", __func__);
++
++=09return ret;
++}
++device_initcall(ufsf_init);
+diff --git a/drivers/scsi/ufs/ufsfeature.h b/drivers/scsi/ufs/ufsfeature.h
+new file mode 100644
+index 000000000000..1822d9d8e745
+--- /dev/null
++++ b/drivers/scsi/ufs/ufsfeature.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Universal Flash Storage Feature Support
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *=09Yongmyung Lee <ymhungry.lee@samsung.com>
++ *=09Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#ifndef _UFSFEATURE_H_
++#define _UFSFEATURE_H_
++
++#define HPB_SUPPORTED_VERSION=09=09=090x0310
++
++struct ufs_hba;
++struct ufshcd_lrb;
++
++/**
++ * struct ufsf_operation - UFS feature specific callbacks
++ * @prep_fn: called after construct upiu structure. The prep_fn should wor=
+k
++ *=09     properly even if it processes the same SCSI command multiple
++ *=09     times by requeuing.
++ * @reset: called after probing hba
++ * @reset_host: called before ufshcd_host_reset_and_restore
++ * @suspend: called before ufshcd_suspend
++ * @resume: called after ufshcd_resume
++ * @rsp_upiu: called in ufshcd_transfer_rsp_status with SAM_STAT_GOOD stat=
+e
++ */
++struct ufsf_operation {
++=09void (*prep_fn)(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++=09void (*reset)(struct ufs_hba *hba);
++=09void (*reset_host)(struct ufs_hba *hba);
++=09void (*suspend)(struct ufs_hba *hba);
++=09void (*resume)(struct ufs_hba *hba);
++=09void (*rsp_upiu)(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++};
++
++struct ufshpb_driver {
++=09struct device_driver drv;
++=09struct list_head lh_hpb_lu;
++
++=09struct ufsf_operation ufshpb_ops;
++
++=09/* memory management */
++=09struct kmem_cache *ufshpb_mctx_cache;
++=09mempool_t *ufshpb_mctx_pool;
++=09mempool_t *ufshpb_page_pool;
++
++=09struct workqueue_struct *ufshpb_wq;
++};
++
++struct ufsf_feature_info {
++=09atomic_t slave_conf_cnt;
++=09wait_queue_head_t sdev_wait;
++=09struct device hpb_dev;
++};
++
++void ufsf_slave_configure(struct ufs_hba *hba, struct scsi_device *sdev);
++void ufsf_scan_features(struct ufs_hba *hba);
++void ufsf_ops_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++void ufsf_ops_rsp_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++void ufsf_ops_reset_host(struct ufs_hba *hba);
++void ufsf_ops_reset(struct ufs_hba *hba);
++void ufsf_ops_suspend(struct ufs_hba *hba);
++void ufsf_ops_resume(struct ufs_hba *hba);
++
++#endif /* End of Header */
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 59358bb75014..d02106bf80d8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2533,6 +2533,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host=
+, struct scsi_cmnd *cmd)
+=20
+ =09ufshcd_comp_scsi_upiu(hba, lrbp);
+=20
++=09ufsf_ops_prep_fn(hba, lrbp);
++
+ =09err =3D ufshcd_map_sg(hba, lrbp);
+ =09if (err) {
+ =09=09lrbp->cmd =3D NULL;
+@@ -4665,6 +4667,8 @@ static int ufshcd_slave_configure(struct scsi_device =
+*sdev)
+ =09struct ufs_hba *hba =3D shost_priv(sdev->host);
+ =09struct request_queue *q =3D sdev->request_queue;
+=20
++=09ufsf_slave_configure(hba, sdev);
++
+ =09blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
+=20
+ =09if (ufshcd_is_rpm_autosuspend_allowed(hba))
+@@ -4791,6 +4795,9 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struc=
+t ufshcd_lrb *lrbp)
+ =09=09=09=09 */
+ =09=09=09=09pm_runtime_get_noresume(hba->dev);
+ =09=09=09}
++
++=09=09=09if (scsi_status =3D=3D SAM_STAT_GOOD)
++=09=09=09=09ufsf_ops_rsp_upiu(hba, lrbp);
+ =09=09=09break;
+ =09=09case UPIU_TRANSACTION_REJECT_UPIU:
+ =09=09=09/* TODO: handle Reject UPIU Response */
+@@ -6539,6 +6546,8 @@ static int ufshcd_host_reset_and_restore(struct ufs_h=
+ba *hba)
+ =09 * Stop the host controller and complete the requests
+ =09 * cleared by h/w
+ =09 */
++=09ufsf_ops_reset_host(hba);
++
+ =09ufshcd_hba_stop(hba);
+=20
+ =09spin_lock_irqsave(hba->host->host_lock, flags);
+@@ -6973,6 +6982,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ =09/* getting Specification Version in big endian format */
+ =09dev_info->wspecversion =3D desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 8 |
+ =09=09=09=09      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
++=09dev_info->b_ufs_feature_sup =3D desc_buf[DEVICE_DESC_PARAM_UFS_FEAT];
+=20
+ =09model_index =3D desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
+=20
+@@ -7343,6 +7353,7 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+ =09}
+=20
+ =09ufs_bsg_probe(hba);
++=09ufsf_scan_features(hba);
+ =09scsi_scan_host(hba->host);
+ =09pm_runtime_put_sync(hba->dev);
+=20
+@@ -7431,6 +7442,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool=
+ async)
+ =09/* Enable Auto-Hibernate if configured */
+ =09ufshcd_auto_hibern8_enable(hba);
+=20
++=09ufsf_ops_reset(hba);
+ out:
+=20
+ =09trace_ufshcd_init(dev_name(hba->dev), ret,
+@@ -8188,6 +8200,8 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum u=
+fs_pm_op pm_op)
+ =09=09req_link_state =3D UIC_LINK_OFF_STATE;
+ =09}
+=20
++=09ufsf_ops_suspend(hba);
++
+ =09/*
+ =09 * If we can't transition into any of the low power modes
+ =09 * just gate the clocks.
+@@ -8309,6 +8323,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum u=
+fs_pm_op pm_op)
+ =09hba->clk_gating.is_suspended =3D false;
+ =09hba->dev_info.b_rpm_dev_flush_capable =3D false;
+ =09ufshcd_release(hba);
++=09ufsf_ops_resume(hba);
+ out:
+ =09if (hba->dev_info.b_rpm_dev_flush_capable) {
+ =09=09schedule_delayed_work(&hba->rpm_dev_flush_recheck_work,
+@@ -8405,6 +8420,8 @@ static int ufshcd_resume(struct ufs_hba *hba, enum uf=
+s_pm_op pm_op)
+ =09/* Enable Auto-Hibernate if configured */
+ =09ufshcd_auto_hibern8_enable(hba);
+=20
++=09ufsf_ops_resume(hba);
++
+ =09if (hba->dev_info.b_rpm_dev_flush_capable) {
+ =09=09hba->dev_info.b_rpm_dev_flush_capable =3D false;
+ =09=09cancel_delayed_work(&hba->rpm_dev_flush_recheck_work);
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index c774012582b4..6fe5c9b3a0e7 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -46,6 +46,7 @@
+ #include "ufs.h"
+ #include "ufs_quirks.h"
+ #include "ufshci.h"
++#include "ufsfeature.h"
+=20
+ #define UFSHCD "ufshcd"
+ #define UFSHCD_DRIVER_VERSION "0.2"
+@@ -736,6 +737,8 @@ struct ufs_hba {
+ =09bool wb_buf_flush_enabled;
+ =09bool wb_enabled;
+ =09struct delayed_work rpm_dev_flush_recheck_work;
++
++=09struct ufsf_feature_info ufsf;
+ };
+=20
+ /* Returns true if clocks can be gated. Otherwise false */
+--=20
+2.17.1
+
 
