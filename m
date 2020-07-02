@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3048C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00446C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E5B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DF420874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653079;
-	bh=OGAKdSZ8VrrAKRK37I5vA2jSCvJPF1tOH1IbD7gGY10=;
+	s=default; t=1593653085;
+	bh=sj7Mgy53uvCuBJN5AxCbcIf+Ao8fcs55/4IY3bzKD68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4RQe50Jb0i6HqB1Uo6v/0XOJRzSpefZhSES62FcNf78KSvkqlhPtRz1w2sRkobhJ
-	 loGEKN3+V1E4hdYKNpMra8Kc0vob32+wz4ADMDTcFquZoTtGQrnCiaoT14Msgl7koA
-	 YbVfBnjY8xxPHPldS+9OPoGeUCB3wIgyINxz3djM=
+	b=SXaXlpYFuSc1rdWXtMg30roLIYa01i0GA6wDEJ+IniOXbB7qPdF12Eb/hfQg5v0Vl
+	 qJs8e/dYUZRBYfAwQQVE+jwfnCOvPhDq5oeyEVc/05Iv3yQUhZPud6eaLXYqQjupK6
+	 0D9I/DmdsiUIU52o6kcMzkqwR6CuNan7gGbbiBUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgGBBX7 (ORCPT
+        id S1728700AbgGBBYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728462AbgGBBXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:46 -0400
+        id S1728558AbgGBBX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5252320B80;
-        Thu,  2 Jul 2020 01:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C896B2145D;
+        Thu,  2 Jul 2020 01:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653026;
-        bh=OGAKdSZ8VrrAKRK37I5vA2jSCvJPF1tOH1IbD7gGY10=;
+        s=default; t=1593653038;
+        bh=sj7Mgy53uvCuBJN5AxCbcIf+Ao8fcs55/4IY3bzKD68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xphRXpJtICTGFsPyIbYPqoiO7CLCzUx51jkuIvgpeMurOvROCfAcMdq17fqkvp7RM
-         KFs8cAQpx7iMwyXgV1CLHfdRMo3Q2HGoCenseQWUlM7ytfJnNN1vn4SAK5Ik/Qrn/f
-         BuOdPtYIRysO9qmAZ1J6IIfAt6uaFzKKWJ7aOdSg=
+        b=VdnRDpFu5v8J0eUxcnNL6EaglWISOwebQKUEVHTmsf18LOU358c5i8HQpxeL5FdrK
+         0k0/Mhgu9TRStx8NKXfSUWmfAncppK/kbrtH4o+htTRcLplDOnzEYPviRHuTaVavXr
+         00m8C4iaI4SaKNoavCAaQ/1vwUvOwn8TDdW1/BrQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 41/53] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Date:   Wed,  1 Jul 2020 21:21:50 -0400
-Message-Id: <20200702012202.2700645-41-sashal@kernel.org>
+Cc:     Tom Rix <trix@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 51/53] nfs: Fix memory leak of export_path
+Date:   Wed,  1 Jul 2020 21:22:00 -0400
+Message-Id: <20200702012202.2700645-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -59,69 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
+[ Upstream commit 4659ed7cc8514369043053463514408ca16ad6f3 ]
 
-if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
-corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+The try_location function is called within a loop by nfs_follow_referral.
+try_location calls nfs4_pathname_string to created the export_path.
+nfs4_pathname_string allocates the memory. export_path is stored in the
+nfs_fs_context/fs_context structure similarly as hostname and source.
+But whereas the ctx hostname and source are freed before assignment,
+export_path is not.  So if there are multiple loops, the new export_path
+will overwrite the old without the old being freed.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+So call kfree for export_path.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfs/nfs4namespace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index dd34dff137626..40c74b4c4d730 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -493,14 +493,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
+index a3ab6e219061b..873342308dc0d 100644
+--- a/fs/nfs/nfs4namespace.c
++++ b/fs/nfs/nfs4namespace.c
+@@ -308,6 +308,7 @@ static int try_location(struct fs_context *fc,
+ 	if (IS_ERR(export_path))
+ 		return PTR_ERR(export_path);
  
- 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
++	kfree(ctx->nfs_server.export_path);
+ 	ctx->nfs_server.export_path = export_path;
  
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -523,7 +523,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
- 	if (ret) {
- 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
-@@ -570,7 +570,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 		&imx6_suspend,
- 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
- 
--	goto put_node;
-+	goto put_device;
- 
- pl310_cache_map_failed:
- 	iounmap(pm_info->gpc_base.vbase);
-@@ -580,6 +580,8 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	iounmap(pm_info->src_base.vbase);
- src_map_failed:
- 	iounmap(pm_info->mmdc_base.vbase);
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
+ 	source = kmalloc(len + 1 + ctx->nfs_server.export_path_len + 1,
 -- 
 2.25.1
 
