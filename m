@@ -2,119 +2,127 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D57DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F8420720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HEU/4DXs"
+	by mail.kernel.org (Postfix) with ESMTP id A565920720
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593678250;
+	bh=A4x8rASu1MxlGaK4Uw98Lg3c9yofoP0D7gnk1mnvwQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tW5+XcQzJuL27IfeyC+mPNo9Ok4cApsNOea9C5IFHllweSRCavSg/09yy0NhpXA/t
+	 thjqSuQ0FVhGuLgTNDPUBbMSo6dNjYwRfOacaRVtnT0Y1Il18wzxDVX6w6fiM9am1w
+	 SivH1vvrMbYEmaP+ZOREaNBFn0UzZZobj8SD9S8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgGBIXe (ORCPT
+        id S1728801AbgGBIYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:23:34 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59596 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgGBIXa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:23:30 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0628NL3E082026;
-        Thu, 2 Jul 2020 03:23:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593678201;
-        bh=ogem8OEd0B1KK4dvO1xOb9/ggBhFiU5Os5ncLUubhLU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HEU/4DXsWuzYfdUEEOO77ST1979/soZJPDuJUCzGAvxmewNGEmE4zfLzI7ww5YTzZ
-         m7doXWRZWlJkxYO0tciaPf451IzSjvAlvkTO+hMhshLQfX4smwzZ29wHGD0WEInyd/
-         7/CTp/uz2fcR0iBA4D5Z1RVCP0l6gvjPWMmC/1+4=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0628NLlT067307
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jul 2020 03:23:21 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 2 Jul
- 2020 03:23:20 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 2 Jul 2020 03:23:21 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0628LiYS006145;
-        Thu, 2 Jul 2020 03:23:15 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
+        Thu, 2 Jul 2020 04:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728746AbgGBIYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:24:03 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 635FF20720;
+        Thu,  2 Jul 2020 08:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593678242;
+        bh=A4x8rASu1MxlGaK4Uw98Lg3c9yofoP0D7gnk1mnvwQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x7OVPlAjY6MGQp6wnGj9/IFkiOBoc/jegOMFsboi3w/M/7o0WD9ubPagnMIcFwMyJ
+         6ruT2TpqQtkJGu5k2iETtFULovOrL+bhlfJqgN/oX3AczHJOtX8v2Cf5YpBhZsQ3U7
+         vnxCNNP9F5uS2V+vYf57H/iyktY5nVDHGvMzGNts=
+Received: by pali.im (Postfix)
+        id D496DE92; Thu,  2 Jul 2020 10:23:59 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 10:23:59 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>
-Subject: [RFC PATCH 16/22] samples/rpmsg: Wait for address to be bound to rpdev for sending message
-Date:   Thu, 2 Jul 2020 13:51:37 +0530
-Message-ID: <20200702082143.25259-17-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200702082143.25259-1-kishon@ti.com>
-References: <20200702082143.25259-1-kishon@ti.com>
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200702082359.h6f6r3hsr57fnquh@pali>
+References: <20200701082044.4494-1-pali@kernel.org>
+ <20200701213442.GA3662456@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200701213442.GA3662456@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rpmsg_client_sample can use either virtio_rpmsg_bus or vhost_rpmsg_bus
-to send messages. In the case of vhost_rpmsg_bus, the destination
-address of rpdev will be assigned only after receiving address service
-notification from the remote virtio_rpmsg_bus. Wait for address to be
-bound to rpdev (rpmsg_client_sample running in vhost system) before
-sending messages to the remote virtio_rpmsg_bus.
+On Wednesday 01 July 2020 16:34:42 Bjorn Helgaas wrote:
+> On Wed, Jul 01, 2020 at 10:20:44AM +0200, Pali Rohár wrote:
+> > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > root bridge, the aardvark driver throws the following error message:
+> > 
+> >   advk-pcie d0070000.pcie: config read/write timed out
+> > 
+> > Obviously accessing PCIe registers of disconnected card is not possible.
+> > 
+> > Extend check in advk_pcie_valid_device() function for validating
+> > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > as Not Found and the driver does not try to access these registers.
+> > 
+> > This is just an optimization to prevent accessing PCIe registers when card
+> > is disconnected. Trying to access PCIe registers of disconnected card does
+> > not cause any crash, kernel just needs to wait for a timeout. So if card
+> > disappear immediately after checking for PCIe link (before accessing PCIe
+> > registers), it does not cause any problems.
+> 
+> Thanks, this is good.  I'd really like a short comment in the code as
+> well, because this sort of link-up check tends to get copied to new
+> drivers where it shouldn't be used, e.g., something like this:
+> 
+>   /*
+>    * If the link goes down after we check for link-up, nothing bad
+>    * happens but the config access times out.
+>    */
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- samples/rpmsg/rpmsg_client_sample.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Ok, it makes sense! I will send a new patch version.
 
-diff --git a/samples/rpmsg/rpmsg_client_sample.c b/samples/rpmsg/rpmsg_client_sample.c
-index 514a51945d69..07149d7fbd0c 100644
---- a/samples/rpmsg/rpmsg_client_sample.c
-+++ b/samples/rpmsg/rpmsg_client_sample.c
-@@ -57,10 +57,14 @@ static void rpmsg_sample_send_msg_work(struct work_struct *work)
- 	struct rpmsg_device *rpdev = idata->rpdev;
- 	int ret;
- 
--	/* send a message to our remote processor */
--	ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
--	if (ret)
--		dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-+	if (rpdev->dst != RPMSG_ADDR_ANY) {
-+		/* send a message to our remote processor */
-+		ret = rpmsg_send(rpdev->ept, MSG, strlen(MSG));
-+		if (ret)
-+			dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-+	} else {
-+		schedule_delayed_work(&idata->send_msg_work, msecs_to_jiffies(50));
-+	}
- }
- 
- static int rpmsg_sample_probe(struct rpmsg_device *rpdev)
--- 
-2.17.1
-
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > ---
+> > Changes in V2:
+> > * Update commit message, mention that this is optimization
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 90ff291c24f0..53a4cfd7d377 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> >  		return false;
+> >  
+> > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > +		return false;
+> > +
+> >  	return true;
+> >  }
+> >  
+> > -- 
+> > 2.20.1
+> > 
