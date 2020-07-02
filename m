@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7159206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B27F206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653552;
-	bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
+	s=default; t=1593653557;
+	bh=LfinL+qf+xYekFkB6evl9bPpa9Gp5TmB/+oAhC/yJoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U17gUdYP0TuhTYM4fGhfdVh8Oat/Hd/AQjv1WZw0IkJaWVNAMqC1pD/+luz2+x+7S
-	 Dop+h3w1mgPeYwv/Me4sn2wdw2d0DuIhA8Xz+JQfI2YNECXNXKn12qQJz51y1DMVkD
-	 VLOdE9VczNDpA+T476yJUgSNSxKKnq8AuRZ9Q+m4=
+	b=bYCd6VGzrG8i2eut4bI/ILim7QZIbUSdDuMYVI0xAvQ7dS+cqAKdjxMLFwNn9cw5o
+	 p/tcSHOy4TBY37lVBjG9UvGRzzqdLl2D5oLjZWBL6DkdFNHHPn6S+hAQ8QZ+Gtt2GO
+	 Yq9BKINtg4lbbEvUn0r4ru4va++Pzf5YB39N+nHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgGBB0M (ORCPT
+        id S1729137AbgGBBcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbgGBBZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:59 -0400
+        id S1729096AbgGBB0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2DDD206BE;
-        Thu,  2 Jul 2020 01:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016E220899;
+        Thu,  2 Jul 2020 01:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653158;
-        bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
+        s=default; t=1593653170;
+        bh=LfinL+qf+xYekFkB6evl9bPpa9Gp5TmB/+oAhC/yJoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPsUSdbdLciNPMWK6J1VktoTl+1ZKfNxB3wqoqszstDi53OouASyl+AXRAMBAxOR2
-         dmS1j0YuqmV0tCTvOUxIMHPCtXhkGzWyVIZlDoXqchC9KNPJpXPqV5GnEvfV0+ve2E
-         fSAEjszcJ26YKJHkDhbiJMmDs3ISdWSZWysGeF6E=
+        b=hC6ME8wuCUkKLPbJST8PhuufIZa42oVH4M6mmCm/7ItLUr83ipB3OS/6/TFapQ9sD
+         U4XyvQ2NxKbbMNjBzRn4bWaBNUazdJT4FJwWTOdpA76CqzbrjsHTRjpDQwcWCBlJL5
+         LRgD8qhxITrn84ToBm38X7y4bBJRDxSrvPwa12aM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 27/40] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
-Date:   Wed,  1 Jul 2020 21:23:48 -0400
-Message-Id: <20200702012402.2701121-27-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 37/40] nvme-rdma: assign completion vector correctly
+Date:   Wed,  1 Jul 2020 21:23:58 -0400
+Message-Id: <20200702012402.2701121-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -60,50 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
+[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
 
-The Acer S1003 has proper DMI strings for sys-vendor and product-name,
-so we do not need to match by BIOS-date.
+The completion vector index that is given during CQ creation can't
+exceed the number of support vectors by the underlying RDMA device. This
+violation currently can accure, for example, in case one will try to
+connect with N regular read/write queues and M poll queues and the sum
+of N + M > num_supported_vectors. This will lead to failure in establish
+a connection to remote target. Instead, in that case, share a completion
+vector between queues.
 
-This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
-drm_dmi_panel_orientation_data struct which is also used by other quirks.
-
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/nvme/host/rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index d11d83703931e..d00ea384dcbfe 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
- 	int orientation;
- };
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 73e8475ddc8ab..cd0d499781908 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -451,7 +451,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
+ 	 * Spread I/O queues completion vectors according their queue index.
+ 	 * Admin queues can always go on completion vector 0.
+ 	 */
+-	comp_vector = idx == 0 ? idx : idx - 1;
++	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
  
--static const struct drm_dmi_panel_orientation_data acer_s1003 = {
--	.width = 800,
--	.height = 1280,
--	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
--};
--
- static const struct drm_dmi_panel_orientation_data asus_t100ha = {
- 	.width = 800,
- 	.height = 1280,
-@@ -114,7 +108,7 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
- 		},
--		.driver_data = (void *)&acer_s1003,
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* Asus T100HA */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 	/* Polling queues need direct cq polling context */
+ 	if (nvme_rdma_poll_queue(queue))
 -- 
 2.25.1
 
