@@ -2,127 +2,112 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A82C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83366C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE26207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="pFEIifpa"
+	by mail.kernel.org (Postfix) with ESMTP id 6147B207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 05:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgGBFAB (ORCPT
+        id S1726120AbgGBFCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 01:00:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgGBFAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 01:00:01 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5464C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 22:00:00 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id u8so11609556pje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 22:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Pr1sEuloYTO3PoNym4dRyjYz9qutOl3oSwCRaMr1Qxg=;
-        b=pFEIifpaBqZWHvwxUpSwh0W7TzHeaTDCSDtJ1ae/lb5eGHqX1AJ2pV1Jd8FVaA0Yiq
-         m5OamhhubkR0o08wref97YKddAjP/s2+5FLM3seKRDDCgUnpuVOJz6Hwg1G8B03D7zIW
-         5ildj3m+L/5NVN6lUl35/M5TiytE5eXxlnNEm/bdVCLtKTBSR1AKrI9jYNrWAhGXkbhF
-         YLBuVJMXWb01NSDVWD0KVUL88hZ/ordoGNOIu/IEbJbCaDOibE+2Emx2jzLQX0jZd/Ie
-         DwGwPugNG1JQnD4EP8Ye1OC6AhfrOi0Bdbfx2tS5AYZRU/pkq9W5ezwx3SXCiM8WEt+9
-         knFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Pr1sEuloYTO3PoNym4dRyjYz9qutOl3oSwCRaMr1Qxg=;
-        b=B3Zm2KPqc8mflq93vORTM5yv3M/d139YJbGEtwJM8w1W1/BiZlV6WgVKChtMeIsMcx
-         4r1o3w8AR9M/xlfRm+1Kr5soMe9HIQW9onx6SahbofPsAE80cejJrX7+OsFrOr5a2yRo
-         SwuoJ6aHYD/PtnaYUOWwqeTtUyinzqo+1/usQsIsSvsKWBqc+nHyXsIcltvAzoo1mPsu
-         uuqy8Gy5bhOznPjKOHxj56c9JtRfVHvphj+h/8sUXtMCR2HQvmB74X3q2BxmorpjXMZg
-         hRgpdAM+hfc93UyZAQtOMj+4PK+o23VS6r8bdVFWjKqK77vv6ha1D0YPKZokRn6euF3M
-         peEA==
-X-Gm-Message-State: AOAM531bsxL2ZeoylyIX8/ET+7zXDGsa2EPeWI1eJcN0ZDO3dXjqlPfT
-        uk99KabliBXeXh9V3O70ONt+1w==
-X-Google-Smtp-Source: ABdhPJxJeD/qSJ2W5mN0WChKiANAnBgmITS+BdwTUUmTkLuh2e9SYjdr2/DSRzrng1kbTqu6gbjzNQ==
-X-Received: by 2002:a17:902:8f83:: with SMTP id z3mr24313007plo.203.1593666000448;
-        Wed, 01 Jul 2020 22:00:00 -0700 (PDT)
-Received: from localhost ([2406:7400:73:3271:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id h17sm6936442pgv.41.2020.07.01.21.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 21:59:59 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 2 Jul 2020 00:59:52 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: rtl8188eu: include: rtw_pwrctrl.h: fixed a
- blank space coding style issue.
-Message-ID: <20200702045952.upb3aroqvyo5o7u5@pesu-pes-edu>
+        Thu, 2 Jul 2020 01:02:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56821 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgGBFCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 01:02:09 -0400
+IronPort-SDR: f9cFO4cXLqCC4JFFiVoIQ5wBcoSKpbIeo3fgn6msJD2F6q1txIA0Ugl1J88Ux5jBoDgup5K9Eu
+ ijxZkXRSEzBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="134248177"
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="134248177"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 22:02:08 -0700
+IronPort-SDR: MyyxQQ8g6JkMfyH8jmNxP9XjOz5K/O3Nte8eq9pu15YuiVO558HbtrUYlrwT9E+2rkAfKAFid9
+ wAdyKi1O0cqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="266975060"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jul 2020 22:02:06 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kbusch@kernel.org>, <yang.shi@linux.alibaba.com>,
+        <dan.j.williams@intel.com>
+Subject: Re: [RFC][PATCH 3/8] mm/vmscan: Attempt to migrate page in lieu of discard
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+        <20200629234509.8F89C4EF@viggo.jf.intel.com>
+        <alpine.DEB.2.22.394.2006301732010.1644114@chino.kir.corp.google.com>
+        <c06b4453-c533-a9ba-939a-8877fb301ad6@intel.com>
+        <alpine.DEB.2.23.453.2007011203500.1908531@chino.kir.corp.google.com>
+Date:   Thu, 02 Jul 2020 13:02:03 +0800
+In-Reply-To: <alpine.DEB.2.23.453.2007011203500.1908531@chino.kir.corp.google.com>
+        (David Rientjes's message of "Wed, 1 Jul 2020 12:25:08 -0700")
+Message-ID: <87mu4ijyr8.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="arxmo2od4a4upx6r"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+David Rientjes <rientjes@google.com> writes:
 
---arxmo2od4a4upx6r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Wed, 1 Jul 2020, Dave Hansen wrote:
+>
+>> > Could this cause us to break a user's mbind() or allow a user to 
+>> > circumvent their cpuset.mems?
+>> 
+>> In its current form, yes.
+>> 
+>> My current rationale for this is that while it's not as deferential as
+>> it can be to the user/kernel ABI contract, it's good *overall* behavior.
+>>  The auto-migration only kicks in when the data is about to go away.  So
+>> while the user's data might be slower than they like, it is *WAY* faster
+>> than they deserve because it should be off on the disk.
+>> 
+>
+> It's outside the scope of this patchset, but eventually there will be a 
+> promotion path that I think requires a strict 1:1 relationship between 
+> DRAM and PMEM nodes because otherwise mbind(), set_mempolicy(), and 
+> cpuset.mems become ineffective for nodes facing memory pressure.
 
-add blank spaces to improve code readability.
+I have posted an patchset for AutoNUMA based promotion support,
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/rtl8188eu/include/rtw_pwrctrl.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/lkml/20200218082634.1596727-1-ying.huang@intel.com/
 
-diff --git a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-index c89328142731..b4cf0f1ce6d3 100644
---- a/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_pwrctrl.h
-@@ -84,7 +84,7 @@ struct reportpwrstate_parm {
-	unsigned short rsvd;
- };
+Where, the page is promoted upon NUMA hint page fault.  So all memory
+policy (mbind(), set_mempolicy(), and cpuset.mems) are available.  We
+can refuse promoting the page to the DRAM nodes that are not allowed by
+any memory policy.  So, 1:1 relationship isn't necessary for promotion.
 
--#define LPS_DELAY_TIME	(1*HZ) /*  1 sec */
-+#define LPS_DELAY_TIME	(1 * HZ) /*  1 sec */
+> For the purposes of this patchset, agreed that DRAM -> PMEM -> swap makes 
+> perfect sense.  Theoretically, I think you could have DRAM N0 and N1 and 
+> then a single PMEM N2 and this N2 can be the terminal node for both N0 and 
+> N1.  On promotion, I think we need to rely on something stronger than 
+> autonuma to decide which DRAM node to promote to: specifically any user 
+> policy put into effect (memory tiering or autonuma shouldn't be allowed to 
+> subvert these user policies).
+>
+> As others have mentioned, we lose the allocation or process context at the 
+> time of demotion or promotion
 
- #define EXE_PWR_NONE	0x01
- #define EXE_PWR_IPS		0x02
---
-2.20.1
+As above, we have process context at time of promotion.
 
+> and any workaround for that requires some 
+> hacks, such as mapping the page to cpuset (what is the right solution for 
+> shared pages?) or adding NUMA locality handling to memcg.
 
---arxmo2od4a4upx6r
-Content-Type: application/pgp-signature; name="signature.asc"
+It sounds natural to me to add NUMA nodes restriction to memcg.
 
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79accACgkQ471Q5AHe
-Z2o9iAwAivoR5wWeV+tLwLnB+bL8rRMzoLHOVGGCMl32HWYU7W6i4djQ37CoQQtY
-YknQEGY/1LojpxrqhyBcWmjfa9GE/ULREas/UClYmbxroG6ifuOwT7EFfWUkWSDy
-0/nvwMyGQRr+2wxLE+4i0nmIb/oWIaTaCKSIHKFl0pVPMlS0lEDhjp8eE4j4S+m/
-35waq0gwHTNEEw1H0cYF2NYKzLtrJ5xHaZw9OvAu6C+7p0FpkcALAsFQ3r2sIRY0
-q1M/2obqlTkuawy47jsnPgevEknqR/eNvS+ndavVCZPDeYDdVeuPBfSNjacbNPJW
-af5Ijhsl0uSYHFifkfbBx/x2pKnyWWsfHi6fOvHpn9W7oJPA41JzIDeT1Q62j4IT
-RuWgzhi2ZH09hmQdhbbzX9xMVb0anadH8D/C6aJryKImMIkb/N08VzgUQsjvOzSg
-a0Dl3Ui6AvhohVUrg62YYOniGLhMRFJ0+e4f+TP0W7HSyi6RV4w7VKuNLM7HONY/
-5bWho8XF
-=nlZX
------END PGP SIGNATURE-----
-
---arxmo2od4a4upx6r--
+Best Regards,
+Huang, Ying
