@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96496C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753ED20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DFE2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgGBN42 (ORCPT
+        id S1729580AbgGBN4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:56:28 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43064 "EHLO huawei.com"
+        Thu, 2 Jul 2020 09:56:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43088 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729473AbgGBN4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:56:25 -0400
+        id S1729472AbgGBN4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:56:22 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8FA50E69E0B83810267D;
+        by Forcepoint Email with ESMTP id A246244A5C93F08B323C;
         Thu,  2 Jul 2020 21:56:15 +0800 (CST)
 Received: from DESKTOP-5IS4806.china.huawei.com (10.174.187.22) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 21:56:05 +0800
+ 14.3.487.0; Thu, 2 Jul 2020 21:56:09 +0800
 From:   Keqian Zhu <zhukeqian1@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -44,9 +44,9 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         Alexios Zavras <alexios.zavras@intel.com>,
         <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
         <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH v2 5/8] KVM: arm64: Steply write protect page table by mask bit
-Date:   Thu, 2 Jul 2020 21:55:53 +0800
-Message-ID: <20200702135556.36896-6-zhukeqian1@huawei.com>
+Subject: [PATCH v2 8/8] KVM: Omit dirty log sync in log clear if initially all set
+Date:   Thu, 2 Jul 2020 21:55:56 +0800
+Message-ID: <20200702135556.36896-9-zhukeqian1@huawei.com>
 X-Mailer: git-send-email 2.8.4.windows.1
 In-Reply-To: <20200702135556.36896-1-zhukeqian1@huawei.com>
 References: <20200702135556.36896-1-zhukeqian1@huawei.com>
@@ -59,46 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During dirty log clear, page table entries are write protected
-according to a mask. In the past we write protect all entries
-corresponding to the mask from ffs to fls. Though there may be
-zero bits between this range, we are holding the kvm mmu lock
-so we won't write protect entries that we don't want to.
+Synchronizing dirty log during log clear is useful only when the dirty
+bitmap of userspace contains dirty bits that memslot dirty bitmap does
+not contain, because we can sync new dirty bits to memslot dirty bitmap,
+then we can clear them by the way and avoid reporting them to userspace
+later.
 
-We are about to add support for hardware management of dirty state
-to arm64, holding kvm mmu lock will be not enough. We should write
-protect entries steply by mask bit.
+With dirty bitmap "initially all set" feature, the above situation will
+not appear if userspace logic is normal, so we can omit dirty log sync in
+log clear. This is valuable when dirty log sync is a high-cost operation,
+such as arm64 DBM.
 
 Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
-Signed-off-by: Peng Liang <liangpeng10@huawei.com>
 ---
- arch/arm64/kvm/mmu.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ virt/kvm/kvm_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index d0c34549ef3b..adfa62f1fced 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1703,10 +1703,16 @@ static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
- 		gfn_t gfn_offset, unsigned long mask)
- {
- 	phys_addr_t base_gfn = slot->base_gfn + gfn_offset;
--	phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
--	phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
-+	phys_addr_t start, end;
-+	u32 i;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index a852af5c3214..3f9e51d52b7a 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1554,7 +1554,8 @@ static int kvm_clear_dirty_log_protect(struct kvm *kvm,
+ 	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
+ 	    return -EINVAL;
  
--	stage2_wp_range(kvm, start, end);
-+	for (i = __ffs(mask); i <= __fls(mask); i++) {
-+		if (test_bit_le(i, &mask)) {
-+			start = (base_gfn + i) << PAGE_SHIFT;
-+			end = (base_gfn + i + 1) << PAGE_SHIFT;
-+			stage2_wp_range(kvm, start, end);
-+		}
-+	}
- }
+-	kvm_arch_sync_dirty_log(kvm, memslot);
++	if (!kvm_dirty_log_manual_protect_and_init_set(kvm))
++		kvm_arch_sync_dirty_log(kvm, memslot);
  
- /*
+ 	flush = false;
+ 	dirty_bitmap_buffer = kvm_second_dirty_bitmap(memslot);
 -- 
 2.19.1
 
