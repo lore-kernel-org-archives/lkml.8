@@ -1,86 +1,265 @@
-Return-Path: <SRS0=SbvM=AM=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E257C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA72C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F04206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Jul 2020 23:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EE820748
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsLBVTPp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSrJfnam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGAXxV (ORCPT
+        id S1727813AbgGBAAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 19:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbgGAXxU (ORCPT
+        Wed, 1 Jul 2020 20:00:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55170 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726764AbgGBAAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 19:53:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3EBC08C5C1;
-        Wed,  1 Jul 2020 16:53:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so12540301pgq.1;
-        Wed, 01 Jul 2020 16:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=qz59MSmfS2mAKgrUKsnCwDqosbn7gTCiCcMCCTFlaCw=;
-        b=WsLBVTPpoZoexUm3Bc5NxV67yHDB3eM2oLnpWDCQedXXggap8/fsbxcMf8CarP3dmT
-         49ZbB/8n+ricwgRRw0TcFb0wiD5gCeM+hwi1S/OTrTO4hj707AQk3PnpqfJVEDIcsiA+
-         C1Q+h/PlmrqKJMhhZLIW590sYyTg7t9ZrVIhNHm2PkaAOdJRBHiqyAvuAgchjXcQ+K/1
-         MaEIhnobxaKWLEyf+UInVOTT0wsyx9d636pb6zLgwm9WIavg3mecGoykGN8MRfB0Rbnp
-         4lNvdzc2UbcbGqA3YJ2B8tsKsfyvcs36Q3FlgC2MF2zZAbopAq4/lFnJ6bqL3GbDZpHz
-         vVNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=qz59MSmfS2mAKgrUKsnCwDqosbn7gTCiCcMCCTFlaCw=;
-        b=nXq9vJqauQ3xNqtAx+8kpad/mvvdn32ixKHslcgGOJMIUZneCsKzxiVo+07qVSTpUm
-         ZE8CJ7ldFOrGmph2/qWDfiJntTwsu8FypB2TpbhaeK9mVG7/tQIgV1H5b1hHBQ0Y/BLZ
-         2VRvgQ54U3G8leEVMdzu71ZtHKmR7GLkrACg8lDaAVM2kXmeMkp7qqxJ5xjbHrKhYirf
-         NF4J4oYjnPQtPfFNHR92ztI08TuvyzMNHFyS53wmVC4n/hwXqdmQeInU5+PjQqWVeKf8
-         N4Y/ycP8ScWpNrLaNdiAi1bIF4kg1hM5PJydNmKEDaLOKOsLClW8Bb8L20VRFd9kgjZp
-         tWXg==
-X-Gm-Message-State: AOAM531CQJ3bD3d6+iDiXQQowE8LMf9UrG0T0BRQjsT0Fe850rNlAW7I
-        5yYa8j2c2Ekkz3lkYFZdwYI=
-X-Google-Smtp-Source: ABdhPJwQX3APAq4pjkF/Sl8UADwfnwabKrXmZXRDq9j4+2n6Pcv2Kzqrv+UoPeWcsNjibXA2HcAlMQ==
-X-Received: by 2002:a62:7653:: with SMTP id r80mr3820373pfc.236.1593647600003;
-        Wed, 01 Jul 2020 16:53:20 -0700 (PDT)
-Received: from [127.0.0.1] ([103.86.69.165])
-        by smtp.gmail.com with ESMTPSA id n62sm6575448pjb.42.2020.07.01.16.53.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Jul 2020 16:53:19 -0700 (PDT)
-From:   hackapple <2538082724huangjinhai@gmail.com>
-X-Google-Original-From: hackapple <2538082724@qq.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC v2 15/26] mm/asi: Initialize the ASI page-table with core
- mappings
-Message-Id: <A0849063-49C8-450F-B5C3-3740D8A180CF@qq.com>
-Date:   Thu, 2 Jul 2020 07:53:12 +0800
-Cc:     bp@alien8.de, dave.hansen@linux.intel.com, graf@amazon.de,
-        hpa@zytor.com, jan.setjeeilers@oracle.com, jwadams@google.com,
-        konrad.wilk@oracle.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        liran.alon@oracle.com, luto@kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, peterz@infradead.org, rkrcmar@redhat.com,
-        rppt@linux.vnet.ibm.com, tglx@linutronix.de, x86@kernel.org
-To:     alexandre.chartre@oracle.com
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 1 Jul 2020 20:00:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593648050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BWlg4nprW+lT5HSpnWRIE5bylNtxirhxTV64sLs4Vrs=;
+        b=aSrJfnam/ApHu3jv0xp0BiUCq3fJIdDTfI5iWKrMHGY56bHIAR02WXTeqzlqC1OB5Ze3zv
+        2FK9uOI9xkqVDzm0GWbkxZQgCIoUqZYcNr5bYjurgFGvmgGw3YLvDPD9t8B1kOKCZkLmvF
+        Da+OJB+u81ibAkeQ2GETGs+pIeG8gCo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-sB73hjoBNmCbM2OEsCtKUA-1; Wed, 01 Jul 2020 20:00:46 -0400
+X-MC-Unique: sB73hjoBNmCbM2OEsCtKUA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 708708014D7;
+        Thu,  2 Jul 2020 00:00:45 +0000 (UTC)
+Received: from treble (ovpn-117-134.rdu2.redhat.com [10.10.117.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A628460CD1;
+        Thu,  2 Jul 2020 00:00:44 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 19:00:41 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: objtool clac/stac handling change..
+Message-ID: <20200702000041.movaiqpyzdmhlu67@treble>
+References: <CAHk-=wizu7DA7EDrsHQLmkTFBvCRxNyPMHaeMDYMF_U75s9RvQ@mail.gmail.com>
+ <5F1767D0-416A-4BA4-9DFF-E82D1EA3F5EE@amacapital.net>
+ <20200701205108.wtgfnijav7lgfiqe@treble>
+ <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiY-67yt4kGd2EW-7kChQgnLHZ_2aJ+=ps7i7rCz894PQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will it affect TLB? I mean maybe cause TLB miss.
+On Wed, Jul 01, 2020 at 02:02:42PM -0700, Linus Torvalds wrote:
+> So the objtool rule might be:
+> 
+>  - in a STAC region, no exception handlers at all except for that
+> ex_handler_uaccess case
+> 
+>  - and that case will clear AC if it triggers.
+> 
+> and maybe such an objtool check would show some case where I'm wrong,
+> and we do some MSR read other other fault thing within a STAC region.
+> That _sounds_ wrong to me, but maybe we have reason to do so that I
+> just can't think or right now?
+
+Here's an attempt at implementing this, in case anybody wants to play
+with it.  Usual disclaimers apply...
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5e0d70a89fb8..470447225314 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -24,7 +24,7 @@
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+-	bool skip_orig;
++	bool skip_orig, exception, uaccess;
+ };
+ 
+ const char *objname;
+@@ -1023,8 +1023,13 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
+ 
+ 		alt->insn = new_insn;
++
+ 		alt->skip_orig = special_alt->skip_orig;
++		alt->exception = special_alt->exception;
++		alt->uaccess   = special_alt->uaccess;
++
+ 		orig_insn->ignore_alts |= special_alt->skip_alt;
++
+ 		list_add_tail(&alt->list, &orig_insn->alts);
+ 
+ 		list_del(&special_alt->list);
+@@ -2335,6 +2340,35 @@ static void fill_alternative_cfi(struct objtool_file *file, struct instruction *
+ 	}
+ }
+ 
++static int handle_stac(struct symbol *func, struct instruction *insn,
++		       struct insn_state *state)
++{
++	if (state->uaccess) {
++		WARN_FUNC("recursive UACCESS enable", insn->sec, insn->offset);
++		return -1;
++	}
++
++	state->uaccess = true;
++	return 0;
++}
++
++static int handle_clac(struct symbol *func, struct instruction *insn,
++		       struct insn_state *state)
++{
++	if (!state->uaccess && func) {
++		WARN_FUNC("redundant UACCESS disable", insn->sec, insn->offset);
++		return -1;
++	}
++
++	if (func_uaccess_safe(func) && !state->uaccess_stack) {
++		WARN_FUNC("UACCESS-safe disables UACCESS", insn->sec, insn->offset);
++		return -1;
++	}
++
++	state->uaccess = false;
++	return 0;
++}
++
+ /*
+  * Follow the branch starting at the given instruction, and recursively follow
+  * any other branches (jumps).  Meanwhile, track the frame pointer state at
+@@ -2393,6 +2427,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 				if (alt->skip_orig)
+ 					skip_orig = true;
+ 
++				if (alt->exception) {
++					if (!alt->uaccess && state.uaccess) {
++						WARN_FUNC("non-user-access exception with uaccess enabled",
++							  sec, insn->offset);
++						return 1;
++					}
++
++					if (alt->uaccess && handle_clac(func, insn, &state))
++						return 1;
++				}
++
+ 				ret = validate_branch(file, func, alt->insn, state);
+ 				if (ret) {
+ 					if (backtrace)
+@@ -2478,26 +2523,13 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			return 0;
+ 
+ 		case INSN_STAC:
+-			if (state.uaccess) {
+-				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
++			if (handle_stac(func, insn, &state))
+ 				return 1;
+-			}
+-
+-			state.uaccess = true;
+ 			break;
+ 
+ 		case INSN_CLAC:
+-			if (!state.uaccess && func) {
+-				WARN_FUNC("redundant UACCESS disable", sec, insn->offset);
++			if (handle_clac(func, insn, &state))
+ 				return 1;
+-			}
+-
+-			if (func_uaccess_safe(func) && !state.uaccess_stack) {
+-				WARN_FUNC("UACCESS-safe disables UACCESS", sec, insn->offset);
+-				return 1;
+-			}
+-
+-			state.uaccess = false;
+ 			break;
+ 
+ 		case INSN_STD:
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index e74e0189de22..41f27199cae6 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -18,6 +18,7 @@
+ #define EX_ENTRY_SIZE		12
+ #define EX_ORIG_OFFSET		0
+ #define EX_NEW_OFFSET		4
++#define EX_HANDLER_OFFSET	8
+ 
+ #define JUMP_ENTRY_SIZE		16
+ #define JUMP_ORIG_OFFSET	0
+@@ -35,8 +36,9 @@
+ 
+ struct special_entry {
+ 	const char *sec;
+-	bool group, jump_or_nop;
++	bool group, jump_or_nop, exception;
+ 	unsigned char size, orig, new;
++	unsigned char handler; /* __ex_table only */
+ 	unsigned char orig_len, new_len; /* group only */
+ 	unsigned char feature; /* ALTERNATIVE macro CPU feature */
+ };
+@@ -61,9 +63,11 @@ struct special_entry entries[] = {
+ 	},
+ 	{
+ 		.sec = "__ex_table",
++		.exception = true,
+ 		.size = EX_ENTRY_SIZE,
+ 		.orig = EX_ORIG_OFFSET,
+ 		.new = EX_NEW_OFFSET,
++		.handler = EX_HANDLER_OFFSET,
+ 	},
+ 	{},
+ };
+@@ -118,6 +122,20 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
+ 		}
+ 	}
+ 
++	if (entry->exception) {
++		struct rela *handler_rela;
++
++		alt->exception = true;
++
++		handler_rela = find_rela_by_dest(elf, sec, offset + entry->handler);
++		if (!handler_rela) {
++			WARN_FUNC("can't find handler rela", sec, offset + entry->handler);
++			return -1;
++		}
++		if (!strcmp(handler_rela->sym->name, "ex_handler_uaccess"))
++			alt->uaccess = true;
++	}
++
+ 	orig_rela = find_rela_by_dest(elf, sec, offset + entry->orig);
+ 	if (!orig_rela) {
+ 		WARN_FUNC("can't find orig rela", sec, offset + entry->orig);
+diff --git a/tools/objtool/special.h b/tools/objtool/special.h
+index 35061530e46e..3a62daef14b3 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/special.h
+@@ -16,6 +16,7 @@ struct special_alt {
+ 	bool skip_orig;
+ 	bool skip_alt;
+ 	bool jump_or_nop;
++	bool exception, uaccess;
+ 
+ 	struct section *orig_sec;
+ 	unsigned long orig_off;
+
