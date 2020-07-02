@@ -2,117 +2,97 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4673AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2324120702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B19020702
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C37eoVAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgGBJ22 (ORCPT
+        id S1727109AbgGBJbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:28:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:58526 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgGBJ22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:28:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7771331B;
-        Thu,  2 Jul 2020 02:28:27 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B38553F71E;
-        Thu,  2 Jul 2020 02:28:25 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: update_pick_idlest() Select group with lowest
- group_util when idle_cpus are equal
-To:     Peter Puhov <peter.puhov@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Robert Foley <robert.foley@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-References: <20200616164801.18644-1-peter.puhov@linaro.org>
- <jhjo8pidl01.mognet@arm.com>
- <CAMDPZ0iNtaZ7p3bre31-m6E4Rb92EFshxrcsTjj3cm6=yr_ctw@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <106350c5-c2b7-a63c-2b06-761f523ee67c@arm.com>
-Date:   Thu, 2 Jul 2020 11:27:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 05:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725287AbgGBJbR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:31:17 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042EBC08C5C1;
+        Thu,  2 Jul 2020 02:31:17 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc9so5701058pjb.2;
+        Thu, 02 Jul 2020 02:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sQCFiGzSC0dQIzc+FHc1PqcfHEnA/cl3jUVDZmdRB1g=;
+        b=C37eoVAss5f7k3Jv6M1iLAjeI0qjZql1L9XOz1cJU9NT4j+QdpYRAqo5uQ6Xa4HmaD
+         4h99BFUHabpORXI0pNfdVpO/p4DR5w6RgW0AO3zzuRjY4/csAAqOjlnZ5uQ8b93fR1Q2
+         pZgsuuZcBRreKuM37BSD9v5HCMhq8SPvdf18Ked0UwFkVaugq6ji2/7c301lfqXbMgTO
+         zIeh3TZwtWfVHMurUj0AvYzbREUKmDjeFQgXeQrGQny0dwjY0xdtCzURvPlRfG8iPSIS
+         UOCY8CkuNklRk5umzA7hxrh+EuM2MukAWKcNksgoH8oG1o35jUVpk8RNCgDpwHUFOtlf
+         Wr/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQCFiGzSC0dQIzc+FHc1PqcfHEnA/cl3jUVDZmdRB1g=;
+        b=Nwzsit+1UowUpFzFqEWzjvIOoOCwrnM6shLKvwdEDo650g0KJgNFbHaaIkOBnigXCs
+         scwwyxG3MW9FsfuT8EBtsznaJkA7PH482KUkM2iufwyOaxL5G7RuagvmPnynzdIxTQ0B
+         VlHvs7frA5lQYAQsPneju9IZubT31W+uOELZm03pdffbUuF/dArx9Ex8qVWaJIRIUWek
+         jrH3Wvn508DskmQ86AM6H/JRc7xM8lWIiUiL5Ed3eav/RGUMfoogyGHFw6xbZp4bR5lM
+         J1CQWhbUli/Y0FgLRIZ89Aow1h0p7cRGCOlH6GS1XKlc1aGprAM/RZ3Hj7tG70KWijak
+         UpeA==
+X-Gm-Message-State: AOAM5339OUZqrXMsicsRCCbQjVvPZcqQJ1e1aHfOFhJfXDKclPTEY38i
+        elFV5oh1nqGQhZyHT4Fd+CAF6AGNWYVeIR7gSMY=
+X-Google-Smtp-Source: ABdhPJwzDsePThPXr8Uly2OY7DxQ0JKn7Q0cvpe4wEjpbNZ2ZOHX85j9e962wmtLBEBC4Dq2HnM3RGnphjPRRYtcQr8=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr27289148pjb.129.1593682276453;
+ Thu, 02 Jul 2020 02:31:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMDPZ0iNtaZ7p3bre31-m6E4Rb92EFshxrcsTjj3cm6=yr_ctw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200702085520.16901-1-aaron.ma@canonical.com>
+In-Reply-To: <20200702085520.16901-1-aaron.ma@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 2 Jul 2020 12:30:59 +0300
+Message-ID: <CAHp75VeCHW=GMgyHRswsTrZ7b3TEnFh15F-5fyHcUsqXzoFS_g@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: not loading brightness_init
+ when _BCL invalid
+To:     Aaron Ma <aaron.ma@canonical.com>
+Cc:     mapengyu@gmail.com,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 16:52, Peter Puhov wrote:
-> On Wed, 17 Jun 2020 at 06:50, Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
->>
->>
->> On 16/06/20 17:48, peter.puhov@linaro.org wrote:
->>> From: Peter Puhov <peter.puhov@linaro.org>
->>> We tested this patch with following benchmarks:
->>>   perf bench -f simple sched pipe -l 4000000
->>>   perf bench -f simple sched messaging -l 30000
->>>   perf bench -f simple  mem memset -s 3GB -l 15 -f default
->>>   perf bench -f simple futex wake -s -t 640 -w 1
->>>   sysbench cpu --threads=8 --cpu-max-prime=10000 run
->>>   sysbench memory --memory-access-mode=rnd --threads=8 run
->>>   sysbench threads --threads=8 run
->>>   sysbench mutex --mutex-num=1 --threads=8 run
->>>   hackbench --loops 20000
->>>   hackbench --pipe --threads --loops 20000
->>>   hackbench --pipe --threads --loops 20000 --datasize 4096
->>>
->>> and found some performance improvements in:
->>>   sysbench threads
->>>   sysbench mutex
->>>   perf bench futex wake
->>> and no regressions in others.
->>>
->>
->> One nitpick for the results of those: condensing them in a table form would
->> make them more reader-friendly. Perhaps something like:
->>
->> | Benchmark        | Metric   | Lower is better? | BASELINE | SERIES | DELTA |
->> |------------------+----------+------------------+----------+--------+-------|
->> | Sysbench threads | # events | No               |    45526 |  56567 |  +24% |
->> | Sysbench mutex   | ...      |                  |          |        |       |
->>
->> If you want to include more stats for each benchmark, you could have one table
->> per (e.g. see [1]) - it'd still be a more readable form (or so I believe).
+On Thu, Jul 2, 2020 at 11:55 AM Aaron Ma <aaron.ma@canonical.com> wrote:
+>
+> When _BCL invalid, disable thinkpad_acpi backlight brightness control.
+>
+> brightness_enable is already checked at the beginning,
 
-Wouldn't Unix Bench's 'execl' and 'spawn' be the ultimate test cases
-for those kind of changes?
+> Always print notice when enabled brightness control.
 
-I only see minor improvements with tip/sched/core as base on hikey620
-(Arm64 octa-core).
+Why?
 
-				base		w/ patch
-./Run spawn -c 8 -i 10		 633.6		 635.1
+...
 
-./Run execl -c 8 -i 10		1187.5		1190.7	
+> +       pr_notice("thinkpad_acpi native brightness control enabled\n");
 
+'notice' level is quite high, why do we spam users with this?
 
-At the end of find_idlest_group(), when comparing local and idlest, it
-is explicitly mentioned that number of idle_cpus is used instead of
-utilization.
-The comparision between potential idle groups and local & idlest group
-should probably follow the same rules.
-
-I haven't tested it with 
-
-https://lkml.kernel.org/r/20200624154422.29166-1-vincent.guittot@linaro.org
-
-which might have an influence here too.
+-- 
+With Best Regards,
+Andy Shevchenko
