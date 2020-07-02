@@ -2,187 +2,128 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D48C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D149820899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934D52089D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0wnyQKo"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="dMwz+HNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgGBOFq (ORCPT
+        id S1729527AbgGBOFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgGBOFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:05:46 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9436C08C5C1;
-        Thu,  2 Jul 2020 07:05:45 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id w17so23050303oie.6;
-        Thu, 02 Jul 2020 07:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ghi5I6FQPFCJV598Mj1sHVoYNDxoqOeLitKMBnVIQ/o=;
-        b=a0wnyQKoXd9SIXdU3rYrOtarjAQusQGdOoNiUSkTTpEjgqs2fFmd9eQ9py/1UTlD8T
-         UIHnDuHtRTiSz0H7slYNlvdY20J/A+22MsfX/UlkcFFxy5JnHjbXe3f4IGT+nw0IhKMf
-         UxyLDBy3iEPwGr3kjoPmVPzRqie2ieXMHRU/y8ONuz7TqpCxbD84qLUKXvQdtjKduJqY
-         DKr+LlmcQp3mOn+KIRnVyp4OxZSQRazAMEzSM+vhMGzZWdJGJ1PFkOWuDTGYaVns2IA7
-         r4YEonCZh1DS7ZqsxT1HbVWCaoVQyKGBkrpSCni5DWIiSxEynlPNcxRqYuvaswhDKMhY
-         TUZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ghi5I6FQPFCJV598Mj1sHVoYNDxoqOeLitKMBnVIQ/o=;
-        b=GH5yWHB4Bmd0GCkq4VOd4D5TLvCLtHdj9iCmLzNg833VBE2PTGUMmbLSx9OazORXTK
-         FLGhrQZb/4bfgTvBL3UN7ljNOQrMZbrCwlx75XXYQSYKAVOfinuIpwQ/F9PMQojnqvwF
-         54Qhz9X6+NPkK32yWjQP9OP8O27qcftG29ws9UQ/3jmIOGfmqWiEKlW9RGPc1V0Zs4Fw
-         w2RjvkHEV7ygNdK6RDO9sZiSInHeqFmvTVWWdnldtlH1QbqQgRtVWueXxutjP4ISdcyK
-         Z22egpGE0hcXqZ92XpJBwRpx90LRcq838Z5yRw/gUFmvfdSEDoz794Gvo3zpVIa5OUuY
-         oGEw==
-X-Gm-Message-State: AOAM530x2mQR1gMn8gVy5jFRquA+VzzBPgeHd/z4ZDHSkiytJW4E37tE
-        RTbwcuqmxwBwbKK2NWOKV9z5R8g8Xx6V0jKQqFB08iq6ZDGA+w==
-X-Google-Smtp-Source: ABdhPJziPh3AHKlzBuHofMZA7BCMDSpq+m4v0ul0GQcv4GUYId0SN1MivWgrj0tIkQYERO7AAdnlaplvMr/FAP8dVeQ=
-X-Received: by 2002:aca:4fd3:: with SMTP id d202mr21740943oib.142.1593698745193;
- Thu, 02 Jul 2020 07:05:45 -0700 (PDT)
+        Thu, 2 Jul 2020 10:05:54 -0400
+Received: from mail-am6eur05on2100.outbound.protection.outlook.com ([40.107.22.100]:43201
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726500AbgGBOFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:05:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MunJuAj5ksgVJRQcnJaVFtxmwmfsWhdJ1goCFPv7Jsz61j2ZiSNY9Dt55rCXhLzDiQpGYoMSfFGnnUvQotJ451F6p9IhvRJRmlydGDqvL0NOwAaWw8rLH83cUYFiC7HgIFWYWhoYXQ7nk2S1XYrk2wPJF8WssDoBJnc6oyPf4aYT8Z4W6Wrv2zSdPA09fuYKz2BpSXNGCO/5mTMc+VHk6oHbW6NpUOEmalfTqVnZTmTD5iw9eiDxjN6+SjCSCuUmgz7j3EGyRGGTBP61riiwbQlO+lAxJUo23OU/xeTIpIOywlOLhDOuPTjUER6dX/zIIKGVLv8tG8bW592vlvrw9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2wLCWd5bmqmtpUSt2p9Fg+Zu1/TY1FGbB9fTYcGSaBY=;
+ b=SAdU8Ef55+XpF6WAZjDHaP2wMtfSvhEnSDQYMvRrws6lLQGk9pCMShk4FDfp4Hram3qJo3DSCNWyiS6NZaMwlC5ZBtu5MVgYu+LwhzpQjng7w5m62anUZAOfE4EMrj1hte0oLvmUK70ltdJqYpfgc5q/crleNdLPIsSdEi1DDTXOSVnknnXcQNNRLp2EOUGQSJ2bzGROF88orHuYEuo1C/EAiP0Fg5gWGOTKft3BBuJmzIjOB+86dMbXBiTu9BoceXoMP12ue5KjRGxcxjTtn1Lpi7IALFBiIAK6yPIz9dvBaOyjF/aozDsQsp5E/2+2rg+5O3DLAMTxvJ/nWbmfWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2wLCWd5bmqmtpUSt2p9Fg+Zu1/TY1FGbB9fTYcGSaBY=;
+ b=dMwz+HNgN4wcVa7JJVt66mlLcmRvWZk0i9gKrcyE/DlXWzgbYojoo94q7x8ZxO2uIfX+pVpdzCIsWrPPAcw0Kgo8Fcbx5xMYF1wK4cCSZV/zVjNcYem79ii2RjJOjNJhEQocJ7awIUM4eFBr3dItKc+jrxT34Cxg73bnPlS29dI=
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB8PR10MB3211.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:117::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Thu, 2 Jul
+ 2020 14:05:50 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3131.036; Thu, 2 Jul 2020
+ 14:05:50 +0000
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Subject: [PATCH] mtd: spi-nor: Add support for Macronix MX25R1635F
+Thread-Topic: [PATCH] mtd: spi-nor: Add support for Macronix MX25R1635F
+Thread-Index: AQHWUHnkhm0KGucB80SMpr/0kNl38w==
+Date:   Thu, 2 Jul 2020 14:05:50 +0000
+Message-ID: <20200702140523.6811-1-frieder.schrempf@kontron.de>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none header.from=kontron.de;
+x-originating-ip: [46.142.79.231]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a2e70ef-7e11-4073-ccac-08d81e9106bc
+x-ms-traffictypediagnostic: DB8PR10MB3211:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR10MB321170F7A62848A0D8FCA2F7E96D0@DB8PR10MB3211.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0452022BE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PguM3HAS7oo8aZUXS2L6aTDjMcE/V0DY6QMzMvKxYlf8qI/XX4ITCiicQA47GDYVTQlYXg6Ta42RpJURwrZSGQUrKiPaPCT3gYb6PPNAlpQPXY9DCP+c8xpbQiobHYsaTIOrEltB8i0Ot4a4pyVEA5n6w9qTZ8HjAAf7PsXM2jYWwReQaM8kw/hm3D832b5hSTws5n18VTiDc3xfy6T5ttMhvwM+LJMISwSYQgfmkuywFFVMhO69hgndUuQ5BFO4rAgt1VsMSnsBNfyRmzYS5e36sLJ9slwkT6u7ML6CQqBTm8ZrVDo252vwd0/naZT6
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(39850400004)(136003)(396003)(8936002)(1076003)(8676002)(26005)(5660300002)(186003)(66946007)(64756008)(66556008)(66476007)(66446008)(86362001)(2616005)(36756003)(71200400001)(76116006)(91956017)(4326008)(2906002)(54906003)(6486002)(316002)(6506007)(6916009)(6512007)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: BRz4XYNqB2LhetPntB7GlpeyiA4cwIWF0yENH0pzZrtx2Z3rxOeYA5/JdLVw78Y2jrgW+B6+YbWkLBZfuy06w0oqJH6aAmve6CIT1sNR1Lo9MhR5Ld2pP807I0KlxdEIkEcO9OMf+WQfNVX+gJUe3PxThjP5ER61RVs5VM/llKkVn8uLzj9Pt1Xgg3gPFH/8P2tDAKukXcR65nnneYWIPtALZ1VG+F++Wvbd8WBR/lGo3qWHUFPxEoUGtbzI3eT/MXcRPaER07c3MG6DQ8CrzigwEWHlHhncYpKM2FqVLKoQP/UYJkZw02UzRw5iwKVCLCJJRsML1pUn1P7VdkBg2+2rY1aJIf4V8hkmuhuO15Uqezt2m1nONeynOhsQYzgrMk32CYeqpQ50fUVdgXLRU0U3QxCP+SlLmHvgMWGRCb5eh3y/o7s9dyEOboZG1a6JU3Uv7aNAn576gk85dQVJ/iz4dET2crZMtar7KhQXK8k=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWU7kVJMuNMSGxZSjErmj7rB=tvXH3GANmPRjYz+=JP1g@mail.gmail.com>
- <CA+V-a8v+2fhqwRNCaGYbmh8E1FDyc2Xss3PHk12dpTt_pgmCFg@mail.gmail.com>
- <CAMuHMdVdCH-r-xMnDgUYzJfDCzUJCYt8CkSDp9E=tgfP01FrKw@mail.gmail.com>
- <CA+V-a8s3JgtGsSSsCF335p1S6Yq5veqe6nAQNK03wNSxAU0XCA@mail.gmail.com>
- <CA+V-a8vq4rJAoA583O_28NK2cCEFAzDszDQTPRQHWiXCtDxd-w@mail.gmail.com> <CAMuHMdU2N6TD9=eHZPBozo-yTP-c0uQLqmGszHmsJDc6YGHeoQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdU2N6TD9=eHZPBozo-yTP-c0uQLqmGszHmsJDc6YGHeoQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jul 2020 15:05:18 +0100
-Message-ID: <CA+V-a8u+NYL9MNV_oFz6JnfQzE=bNo0fx6jnzVgj2xsvquT8eg@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a2e70ef-7e11-4073-ccac-08d81e9106bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2020 14:05:50.3733
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0U7//6McMAzo0/R/16KiaRNNvmYpSjN6KKxgaPXlf0/duRG7XDJiTqLspfQBSElljRtqrXuOpbrFpwDmkyNDDS0lygb8fi3CVWkdbsghToA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3211
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-On Thu, Jul 2, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Jul 2, 2020 at 1:42 PM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Thu, Jul 2, 2020 at 11:49 AM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Thu, Jul 2, 2020 at 10:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Wed, Jul 1, 2020 at 7:28 PM Lad, Prabhakar
-> > > > <prabhakar.csengg@gmail.com> wrote:
-> > > > > On Wed, Jul 1, 2020 at 6:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > On Wed, Jul 1, 2020 at 5:42 PM Lad Prabhakar
-> > > > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > > > serial core expects the spinlock to be initialized by the controller
-> > > > > > > driver for serial console, this patch makes sure the spinlock is
-> > > > > > > initialized, fixing the below issue:
-> > > > > > >
-> > > > > > > [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
-> > > > > > > [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-> > > > > > > [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
-> > > > > > > [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
-> > > > > > > [    0.865968] Call trace:
-> > > > > > > [    0.865979]  dump_backtrace+0x0/0x1d8
-> > > > > > > [    0.865985]  show_stack+0x14/0x20
-> > > > > > > [    0.865996]  dump_stack+0xe8/0x130
-> > > > > > > [    0.866006]  spin_dump+0x6c/0x88
-> > > > > > > [    0.866012]  do_raw_spin_lock+0xb0/0xf8
-> > > > > > > [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
-> > > > > > > [    0.866032]  uart_add_one_port+0x3a4/0x4e0
-> > > > > > > [    0.866039]  sci_probe+0x504/0x7c8
-> > > > > > > [    0.866048]  platform_drv_probe+0x50/0xa0
-> > > > > > > [    0.866059]  really_probe+0xdc/0x330
-> > > > > > > [    0.866066]  driver_probe_device+0x58/0xb8
-> > > > > > > [    0.866072]  device_driver_attach+0x6c/0x90
-> > > > > > > [    0.866078]  __driver_attach+0x88/0xd0
-> > > > > > > [    0.866085]  bus_for_each_dev+0x74/0xc8
-> > > > > > > [    0.866091]  driver_attach+0x20/0x28
-> > > > > > > [    0.866098]  bus_add_driver+0x14c/0x1f8
-> > > > > > > [    0.866104]  driver_register+0x60/0x110
-> > > > > > > [    0.866109]  __platform_driver_register+0x40/0x48
-> > > > > > > [    0.866119]  sci_init+0x2c/0x34
-> > > > > > > [    0.866127]  do_one_initcall+0x88/0x428
-> > > > > > > [    0.866137]  kernel_init_freeable+0x2c0/0x328
-> > > > > > > [    0.866143]  kernel_init+0x10/0x108
-> > > > > > > [    0.866150]  ret_from_fork+0x10/0x18
-> > > > > >
-> > > > > > Interesting...
-> > > > > >
-> > > > > > How can I reproduce that? I do have CONFIG_DEBUG_SPINLOCK=y.
-> > > > > > I'm wondering why haven't we seen this before...
-> > > > > >
-> > > > > I have attached .config for your reference.
-> > > >
-> > > > Thank you!
-> > > >
-> > > > I gave it a try with v5.8-rc1 on Salvator-XS with R-Car H3 ES2.0.
-> > > > However, I couldn't reproduce the issue.
-> > > > Does it happen on that specific board only? Is this serdev-related?
-> > > > Note that I had to disable CONFIG_EXTRA_FIRMWARE, as I don't have the
-> > > > firmware blobs it referenced.  Do I need them to trigger the issue?
-> > > > As the .config has a few non-upstream options, do you have any patches
-> > > > applied that might impact the issue?
-> > > >
-> > > Can't think of any patches that might cause an issue, most of it are
-> > > just the DT's and config additions. Nor do firmware blobs should
-> > > affect it. I'll try and reproduce it on M3N and get back to you.
-> > >
-> > I did manage to replicate this issue on M3N (v5.8-rc3 tag with no
-> > modifications), I have attached the config file and also the boot log
-> > without this patch for your reference, after applying this patch I no
-> > more see this issue.
->
-> Thanks, the boot log finally gave me a clue, and allowed me to reproduce.
-> The issue happens only when adding:
->
->     console=ttySC0,115200n8
->
-Ack tested it on G2H.
+The MX25R1635F is the smaller sibling of the MX25R3235F that is
+already supported. It's only half the size (16Mb).
 
-> to the kernel command line.  Which is something we never did on R-Car
-> Gen3, as the console= parameter had been deprecated by chosen/stdout-path
-> on DT systems long before.
->
-> As we did use console= before on arm32, and drivers/tty/serial/sh-sci.c
-> never called spinlock_init(), I'm wondering if this spinlock bug is
-> actually a regression in serial_core.c?
->
-Not sure if it's a regression in serial_core.c as I see some drivers
-calling spin_lock_init().
+It was tested on the Kontron Electronics i.MX8MM SoM (N8010)
+using raw read and write from and to the mtd device and
+the 'flash_erase' command.
 
-Cheers,
---Prabhakar
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/mtd/spi-nor/macronix.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.=
+c
+index 96735d83c77c..0ae0815a3633 100644
+--- a/drivers/mtd/spi-nor/macronix.c
++++ b/drivers/mtd/spi-nor/macronix.c
+@@ -52,6 +52,9 @@ static const struct flash_info macronix_parts[] =3D {
+ 	{ "mx25u6435f",  INFO(0xc22537, 0, 64 * 1024, 128, SECT_4K) },
+ 	{ "mx25l12805d", INFO(0xc22018, 0, 64 * 1024, 256, 0) },
+ 	{ "mx25l12855e", INFO(0xc22618, 0, 64 * 1024, 256, 0) },
++	{ "mx25r1635f",  INFO(0xc22815, 0, 64 * 1024,  32,
++			      SECT_4K | SPI_NOR_DUAL_READ |
++			      SPI_NOR_QUAD_READ) },
+ 	{ "mx25r3235f",  INFO(0xc22816, 0, 64 * 1024,  64,
+ 			      SECT_4K | SPI_NOR_DUAL_READ |
+ 			      SPI_NOR_QUAD_READ) },
+--=20
+2.17.1
