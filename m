@@ -2,131 +2,117 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0E4207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1EB207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hLnUjzHh"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="dqkOLlTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgGBNGg (ORCPT
+        id S1729049AbgGBNIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbgGBNGf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:06:35 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFECBC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 06:06:35 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id a11so15883860ilk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 06:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zqZZnAc3Jm/n7Smq/DxgygE6EQ2lhk2n98XwSpXb0RU=;
-        b=hLnUjzHhfTedPF4jpVK5uE9TMUUOiZWYludIhvLqWR9/HOAViSVHlTdJc0I8/CfSNN
-         Q4VceRKFmTrYEaH34MuzYp0cMq4pD6E8sukjJpYleVpOTB57vrxCJswrNg5TcEVF6uCf
-         VAT67vP1jU0uEU9tgPpuB/7/2klSZYFZ7QrGaxbekHD9LgAgezweQ52l+leLpfFPE0gy
-         D866sFaH8LC2aYdKAxpA+mdvO93shIRA/d4cJjViD1NTP6QzMFpt4+OfLUqWeshhW3Zq
-         vXWRkzW2gZrCkpqMuNR3ebQTmqRB+L36IT9xNz6jo1kB2la4oWFKLtP7vqH9Ny8L8Ch/
-         spWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zqZZnAc3Jm/n7Smq/DxgygE6EQ2lhk2n98XwSpXb0RU=;
-        b=rUyDhvpc733w6fiCtcr8IrWEJQl96MXRTbOAzDNH+wcAmsa0NgS2qdesi2XnB8k2Iz
-         lIQC+iMtsmQH7CEI4xuslKhDAPcXcLWj+RjEbE9AyCvlgo4JKlhmzVaYYo5BnyqZIqRv
-         fACO9nbsL2guSz+8xKswhYMP7XQ0RtS8h7zqGQGuRs7ifPRpXVCZ+RQol2RuZEb6m09/
-         ZkT6h4NyAlGQpBeO/vPYlR5JuFU+c2NwC73lPwz6vlQCS76Yb0N+lNJGVLwGIHoY7h8G
-         A54LwAYB4Ggk0OZ7QbcstYLcb+aa0MLWxhtBQ5J5xP7K6z/8mpHzeU9s5F34cd61Awtm
-         zw5g==
-X-Gm-Message-State: AOAM5316DYebxBOxAehD3wlY+++0XyTGxA8vEwj5Kvm4brsefcLuAXrw
-        3w0fLxQjApmdGFmgPghuZjRLAUDlfwEaVcKzpCSt+A==
-X-Google-Smtp-Source: ABdhPJzVVB5XahRflUVJctFkIuINfk+noXnsMc1NKChoIoFoswcoLo0pLtTGRTZu8jm8CSw3rvxtt3WvtxpW/Bpfcoc=
-X-Received: by 2002:a05:6e02:dc5:: with SMTP id l5mr10658654ilj.220.1593695194982;
- Thu, 02 Jul 2020 06:06:34 -0700 (PDT)
+        Thu, 2 Jul 2020 09:08:21 -0400
+Received: from mail-eopbgr140085.outbound.protection.outlook.com ([40.107.14.85]:45318
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbgGBNIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:08:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZHJTSQySR02rpWIihnucPPdcy60NabUypK2T33YqKolGojQhlDGDMgydD2puH0LYXX9AyPelbMMJWqR8ir+e7unG79A6bJHZti5laQaH3rgWhyfVYO41SlfJRNaIB/YBGWs+0DOF/OCBLHKeUqPTQnXMzLa4m83Anivb4/p7GalF6Bh+8cfNJHvLXnq4+fzmlr+iGprua1JSrOH1XloW5IBjZlTBAULP/8rdf6ye/YvsDJ5WkDheqSSW9jxwHXmwWCvitxSCT42wdE3vyQMknwx9a+cxL/64KXP0vC+VltA0dS4mAmGyQ3wKeiFcA0qX6kUyLL9NHBndd1NBdHivRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nMInviAA8cs4uNL2+Oy/Dp9w9d3NwX0J1zGCYu8nKoU=;
+ b=AuM27LcMgcTU6fZ7QBJGQnQGuyB1kMnbWVW1a/HUNm9u9oMwZOHW7Jdp6n77d7kuAvxxVwP2Cvsgh6+sZFEbH8T5U+8nElWLo405/URZysPZtIum+4kHzxddSdpIc0DO4k//yYIBAzap08u0kM/zja+ybCpjwyGHVnKVWGiZ8OYe/ejTXi8Lta0zcZsEVDFdLXuyl9MRX9NPIHNbE/6NO0MV0FEiknhtiH1fHY+Di3YaUZOsVcMcXfRiOmUHH3LvhVZO1usvzJvjLhSVMYD1XJWwIAbfRm8ruKUnV3VCgYW2PIym7PMmYtFhjOZDDWsnvdBsxC5Mp2pPwe/0dPx7Wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nMInviAA8cs4uNL2+Oy/Dp9w9d3NwX0J1zGCYu8nKoU=;
+ b=dqkOLlTBye7GpJQXrfMNaInk7CIbrdwdpwJfJxT3BUGFu+KoiyMwvyjeR6crGmJXHY+QlPAOf6htSdNNINjpiqhne3WVdg3T37JwgyYoW3b/XZZmQQQylgVyZYaxUH6jpYqedOz5x8s11I1+2zcJvOqFsEpaKBRB9UWWnlHwAQQ=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR0501MB2334.eurprd05.prod.outlook.com (2603:10a6:800:24::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Thu, 2 Jul
+ 2020 13:08:16 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::848b:fcd0:efe3:189e%7]) with mapi id 15.20.3153.027; Thu, 2 Jul 2020
+ 13:08:16 +0000
+Date:   Thu, 2 Jul 2020 10:08:09 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: [PATCH rdma-next 0/6] Cleanup mlx5_ib main file
+Message-ID: <20200702130809.GU23821@mellanox.com>
+References: <20200702081809.423482-1-leon@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702081809.423482-1-leon@kernel.org>
+X-ClientProxiedBy: BL0PR02CA0064.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::41) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-References: <20200629065008.27620-1-brgl@bgdev.pl> <20200629065008.27620-7-brgl@bgdev.pl>
- <20200702124419.GB1882489@kroah.com>
-In-Reply-To: <20200702124419.GB1882489@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 2 Jul 2020 15:06:24 +0200
-Message-ID: <CAMRc=MfcJ04mCZe9AGLZO0q93-oUoidQM6wLkg1et2XOf2wnwA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] hwmon: pmbus: use more devres helpers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (193.47.165.251) by BL0PR02CA0064.namprd02.prod.outlook.com (2603:10b6:207:3d::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23 via Frontend Transport; Thu, 2 Jul 2020 13:08:16 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@mellanox.com>)      id 1jqywj-002rl8-4p; Thu, 02 Jul 2020 10:08:09 -0300
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4da8e0e0-972f-4253-5a9d-08d81e88fbb5
+X-MS-TrafficTypeDiagnostic: VI1PR0501MB2334:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0501MB2334089CDD6981B1813D4E63CF6D0@VI1PR0501MB2334.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Iq/IvOwWOU8zVSjr2r7dWBDOJPUk94RPyVpddFIhIHQDmFe0LeZFs2oT2rfb/AJYljmKfQ95CULOD2ZSqyBgkT7MomMPh2GhF5dAl3iiqiqyzXjekzl4PzPnVZwOMBe8hV+R66JmFm6EJdCJk8RAla6s5FT+ZRAf90FEGchhWBabUY7e2zxQMMQXOyUl+fTFDCsz0SurdV7ltEQUT14E9Hhub7ax7EibP/H6GaP1QCn1o1h+kn0WzPKn7/CnxRp719tWxfgulcVbuS2cn11RQmFwzLaNBcyo44+p9WUGYVgSazJViMZAuBMS2A9J7BYosQBoej6pUs42iR9QlN4Lpq6DumoINJSdU3VBb/2+qGA1Rq2/s4KZ26eWNcWNNGztEVL335Yt8rkApxFB9r9/vQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(6916009)(107886003)(8676002)(4326008)(426003)(2616005)(33656002)(54906003)(966005)(9746002)(9786002)(36756003)(8936002)(186003)(478600001)(26005)(66476007)(66556008)(5660300002)(316002)(4744005)(1076003)(2906002)(66946007)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: W99Li2/HiKNDJRMe1yiIb27puQKxSfdzG3kIwOExR0gG+ccJ7GJ1lxp11PWxGoDkIj1htuwzE6RvIwVx0v2otHN/gjz450PrRJuiuvufOU93LY//qghx0lJbeVgKtase4q1lkHc5NU9YFk/2qASg55yEgUSA8vWflFZWcAWoJnWMk+6VIu7+D25176Zb7gcJoExWiHIRYziWqZp4Zu5a/jQso4o6oEZA8HUnJZf846rcFABpPBV9LxIR1AE4FqwFKN1mSltfXpYzGshiDTGw6fLWGxYr2bbnax3V/jcwi6GB8fTLXyquBNhpLyEE9WaR9OXwTWykjKtIMkEUra1PvxuDTZiR3zl63zmBm/1ILKbdxeupe/ODUpqskbUJ+IJFNsTxdN9TIIYeGbN5KL4rUxsZ8D/fSKquKYe2DJVspAEjqdcg5/GhFrH5feRI+uHMa/mQxo5VYCcddJvqtM7In4MEal21wJv5QagpBI7Af/FtT8tLnrzrbyhjAuLmRFvo
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4da8e0e0-972f-4253-5a9d-08d81e88fbb5
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 13:08:16.2146
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7wA6zmfBaLbCc8vso6oPJ6ex6mjfwsG0eZnnM2GGcD4PXmzR6rAlc+AO0qQqA6eEeMAOiEyou4wmSqrs3d6kDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2334
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 2:44 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 29, 2020 at 08:50:08AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Shrink pmbus code by using devm_hwmon_device_register_with_groups()
-> > and devm_krealloc() instead of their non-managed variants.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/hwmon/pmbus/pmbus_core.c | 28 +++++++++-------------------
-> >  1 file changed, 9 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> > index a420877ba533..225d0ac162c7 100644
-> > --- a/drivers/hwmon/pmbus/pmbus_core.c
-> > +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> > @@ -1022,9 +1022,9 @@ static int pmbus_add_attribute(struct pmbus_data *data, struct attribute *attr)
-> >  {
-> >       if (data->num_attributes >= data->max_attributes - 1) {
-> >               int new_max_attrs = data->max_attributes + PMBUS_ATTR_ALLOC_SIZE;
-> > -             void *new_attrs = krealloc(data->group.attrs,
-> > -                                        new_max_attrs * sizeof(void *),
-> > -                                        GFP_KERNEL);
-> > +             void *new_attrs = devm_krealloc(data->dev, data->group.attrs,
-> > +                                             new_max_attrs * sizeof(void *),
-> > +                                             GFP_KERNEL);
->
-> dynamic sysfs attributes in a devm-allocated chunk of memory?  What
-> could go wrong...
->
+On Thu, Jul 02, 2020 at 11:18:03AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Over the years, the main.c file grew above all imagination and was >8K
+> LOC of the code. This caused to a huge burden while I started to work on
+> ib_flow allocation patches.
+> 
+> This series implements long standing "internal" wish to move flow logic
+> from the main to separate file.
+> 
+> Based on
+> https://lore.kernel.org/linux-rdma/20200630101855.368895-4-leon@kernel.org
 
-So what *can* go wrong, which it couldn't before this patch? The
-drivers in this directory kfree() this memory anyway on driver detach.
-Using devm here is equivalent to the previous behavior - only that the
-memory is freed after remove() not inside it.
+Isn't this the series you said to drop? Can this be applied
+independently?
 
-> Anyway, is this the only in-kernel user that you could find for this
-> function?  If so, it feels like it's a lot of extra work for no real
-> gain.
->
-
-No. There are around 100 calls to krealloc() in drivers/. I assume
-that at least half of these are called with an attached struct device.
-I chose this driver, because it has a commit in its history that
-explicitly says that it would use devm_krealloc() if it were available
-(commit 85cfb3a83536 ("hwmon: (pmbus) Use krealloc to allocate
-attribute memory"). I didn't want to spend a lot of time on converting
-other users in case this patch gets rejected.
-
-Bartosz
+Jason
