@@ -2,207 +2,104 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEE1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFCDC2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E7F2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593669632;
-	bh=sZD/Sgng7t7Ta+o/FVbjB7xz2NntagZdy2lTpgW53/U=;
+	s=default; t=1593669681;
+	bh=hi9Y9/0kmE7oL+s9W44L8V1BELNv8ne95GsOncSLQgc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qDZOPlgDlj6CsEK979c4hFAw5EtbJAb0yhnYBDNQvjbsaLQbe+ii4APozx6z3t5s2
-	 MLWZVKSpx6ZSV395bhO58kdzxSAJSbzFjXMQ5BbyvKG5TczO3iXtU578Jd1Vr6EFEN
-	 iS2EBqp3XQiZvDuh1LN9QwUDncuaaJwP2wj1lS1k=
+	b=zWUT+wkyN3uvAFZlw6wiT2hVKfykVK2uFjy0iJbuZkh0oFtvdLIGvtEUIbG1+BpDF
+	 SXGyT+b4bn+YS7QK76zvIvw1fgBF8rdvpAeOzjBjkiBd0p+HERisdhc8R8lul8gygd
+	 d03Ync10I20MQ4+WeKwLaLynftvuxvt4jCav9e3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGBGAa (ORCPT
+        id S1726368AbgGBGBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:00:30 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37898 "EHLO
+        Thu, 2 Jul 2020 02:01:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33647 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGBGAa (ORCPT
+        with ESMTP id S1725263AbgGBGBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:00:30 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n2so13298432edr.5;
-        Wed, 01 Jul 2020 23:00:27 -0700 (PDT)
+        Thu, 2 Jul 2020 02:01:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h28so22353723edz.0;
+        Wed, 01 Jul 2020 23:01:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VD/gVc+HcHe6Q7arl/FRj+PTG4DxUMmDhPympKTISEw=;
-        b=b9HjHhZAPAbDFbAfwyStB+BS9PeRmoDYGq7zLoKiXhV1jd+/s9Lpiepku8A48j1JGQ
-         +wMp0Nq7oR8OQUs3psUSwWM+o8aTeuRgyByy9AytvXMdVqF1jnPU9RFXca7G9uqaWRMt
-         +E5I6VuQq3ZkB2YTxjffapMArCDiyIzP8DTK9spTkcGsohy/Xy5lU+4M2nCGHvQ09SBW
-         P5MMWqQlJnpa//BooAKDhMzpEdBg8+Lrm5DBVTImuj3XP1YYRUyBVppMylod7C7c9q/5
-         t0JANBOAogc/KZDD/4rIRr5+V6aO9jdiTXYzvuhaXyIe79JTT8yAnK+HAzod91jLe5/7
-         iprA==
-X-Gm-Message-State: AOAM531r2BtrNjGlByRNenfgFyhnkkqQUdXfuANDYtP4qs3VBunVJC5k
-        geNWfKFX327MJXz+CDWiDY6yKS8K
-X-Google-Smtp-Source: ABdhPJx5+YkMNLxIRjRr3EAyKBhNAZ8xbXatCv8pRGW9xTlbp+iXDQnIK9JdstwNvwtDNIQiRuqi1w==
-X-Received: by 2002:a50:ee8a:: with SMTP id f10mr13220502edr.383.1593669627142;
-        Wed, 01 Jul 2020 23:00:27 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id n9sm6099876ejk.21.2020.07.01.23.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 23:00:26 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:00:24 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/2] mm/memcontrol: Fix OOPS inside
- mem_cgroup_get_nr_swap_pages()
-Message-ID: <20200702060024.GA18446@dhcp22.suse.cz>
-References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
- <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lh8nOJbCY3dntMrTsg/+G+LQq9DAGDc6JO+HAJfI85o=;
+        b=Ce3r43SloDlJ5LMaa/k+5ABrs3d7Pu6Uu1Ug54Nd3Qhacy/JSAlpTRJ+4wfQKdzxE7
+         9Q79lYBylxeBXWSvI8zc0Dk+Ig3ooJoaaz6YmRUSTTInyfwheG7Hpf0FNI9w4cU41SPJ
+         WfiRRbU+7PoYFdp6uj3tUEzaoPF8a7yAC7aVLdIrh6uSqx3ZQJgAFf847WG7HMiFcVCT
+         PzrYvc3QY2IAcoyBi2J8o6q3NfKY9MrX8G/zwZZzuTNlYEIV5oCsgGVSCVeHyIx27eS0
+         YlgqDZRl5p/zs+09riQ1TA3OlKPIW2TQKI4B3CTMeQjXg5fUnkh3dtPPheImO/ALBU/K
+         G6LQ==
+X-Gm-Message-State: AOAM532r4B7CnzoaYyazLLbTxkJher2slrBj8gnVtQaJdsc8p5Pl7T2v
+        jqW6+CaPNR7KEi7j/E3l0X8=
+X-Google-Smtp-Source: ABdhPJytqNBKyu/7EesZQUeT1QVMje4jzUxwKQOO1ElwidZDiWnDP+YK1VCjC1i7ybpkImxk+ckfUg==
+X-Received: by 2002:a50:f9c9:: with SMTP id a9mr34533109edq.89.1593669677760;
+        Wed, 01 Jul 2020 23:01:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id r17sm8046146edw.68.2020.07.01.23.01.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Jul 2020 23:01:17 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:01:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 3/4] arm64: dts: exynos: Align DMA controller bus node
+ name with dtschema
+Message-ID: <20200702060115.GB4175@kozik-lap>
+References: <20200629204442.17336-1-krzk@kernel.org>
+ <CGME20200629205541eucas1p16e9c5848ed7ac84ca87c045f3a6f928b@eucas1p1.samsung.com>
+ <20200629204442.17336-3-krzk@kernel.org>
+ <3c1eb3fe-8eef-1f91-ff4e-3081a871fc80@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <3c1eb3fe-8eef-1f91-ff4e-3081a871fc80@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-07-20 03:44:19, Bhupesh Sharma wrote:
-> Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
-> function in a corner case seen on some arm64 boards when kdump kernel
-> runs with "cgroup_disable=memory" passed to the kdump kernel via
-> bootargs.
+On Tue, Jun 30, 2020 at 09:34:52AM +0200, Marek Szyprowski wrote:
+> Hi Krzysztof,
 > 
-> The root-cause behind the same is that currently mem_cgroup_swap_init()
-> function is implemented as a subsys_initcall() call instead of a
-> core_initcall(), this means 'cgroup_memory_noswap' still
-> remains set to the default value (false) even when memcg is disabled via
-> "cgroup_disable=memory" boot parameter.
+> On 29.06.2020 22:44, Krzysztof Kozlowski wrote:
+> > AMBA is a bus so name the node with DMA controllers just as "bus" to fix
+> > dtschema warnings like:
+> >
+> >      amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
-> function in corner cases:
+> Do we really need a separate 'bus' for those DMA controllers?
 > 
->   [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
->   [    0.274495] Mem abort info:
->   [    0.277311]   ESR = 0x96000006
->   [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
->   [    0.285751]   SET = 0, FnV = 0
->   [    0.288830]   EA = 0, S1PTW = 0
->   [    0.291995] Data abort info:
->   [    0.294897]   ISV = 0, ISS = 0x00000006
->   [    0.298765]   CM = 0, WnR = 0
->   [    0.301757] [0000000000000188] user address but active_mm is swapper
->   [    0.308174] Internal error: Oops: 96000006 [#1] SMP
->   [    0.313097] Modules linked in:
->   <..snip..>
->   [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
->   [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
->   [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
->   [    0.347564] sp : fffffe0012b6f800
->   [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
->   [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
->   [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
->   [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
->   [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
->   [    0.377720] x19: 0000000000000000 x18: 0000000000000010
->   [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
->   [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
->   [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
->   [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
->   [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
->   [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
->   [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
->   [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
->   [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
->   [    0.431346] Call trace:
->   [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
->   [    0.438735]  shrink_lruvec+0x404/0x4f8
->   [    0.442516]  shrink_node+0x1a8/0x688
->   [    0.446121]  do_try_to_free_pages+0xe8/0x448
->   [    0.450429]  try_to_free_pages+0x110/0x230
->   [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
->   [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
->   [    0.464938]  alloc_page_interleave+0x20/0x90
->   [    0.469246]  alloc_pages_current+0xdc/0xf8
->   [    0.473379]  atomic_pool_expand+0x60/0x210
->   [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
->   [    0.481910]  dma_atomic_pool_init+0xac/0x158
->   [    0.486220]  do_one_initcall+0x50/0x218
->   [    0.490091]  kernel_init_freeable+0x22c/0x2d0
->   [    0.494489]  kernel_init+0x18/0x110
->   [    0.498007]  ret_from_fork+0x10/0x18
->   [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
->   [    0.507770] ---[ end trace 9795948475817de4 ]---
->   [    0.512429] Kernel panic - not syncing: Fatal exception
->   [    0.517705] Rebooting in 10 seconds..
-> 
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
+> IMHO they are not different from the hw perspective from the other 
+> devices available on the SoC. A separate bus is a historical thing, they 
+> work fine when moved directly under the 'soc' node. The separate bus 
+> only mimics the way Linux organizes its drivers. This comment affects 
+> both ARM and ARM64.
 
-Fixes: eccb52e78809 ("mm: memcontrol: prepare swap controller setup for integration")
+Good point, other boards keep them under SoC usually. Thanks for
+feedback.
 
-> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Best regards,
+Krzysztof
 
-This is subtle as hell, I have to say. I find the ordering in the init
-calls very unintuitive and extremely hard to follow. The above commit
-has introduced the problem but the code previously has worked mostly by
-a luck because our default was flipped.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/memcontrol.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 19622328e4b5..8323e4b7b390 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
->  	{ },	/* terminate */
->  };
->  
-> +/*
-> + * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
-> + * instead of a core_initcall(), this could mean cgroup_memory_noswap still
-> + * remains set to false even when memcg is disabled via "cgroup_disable=memory"
-> + * boot parameter. This may result in premature OOPS inside 
-> + * mem_cgroup_get_nr_swap_pages() function in corner cases.
-> + */
->  static int __init mem_cgroup_swap_init(void)
->  {
->  	/* No memory control -> no swap control */
-> @@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
->  
->  	return 0;
->  }
-> -subsys_initcall(mem_cgroup_swap_init);
-> +core_initcall(mem_cgroup_swap_init);
->  
->  #endif /* CONFIG_MEMCG_SWAP */
-> -- 
-> 2.7.4
-
--- 
-Michal Hocko
-SUSE Labs
