@@ -2,53 +2,50 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 690A920748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B636B206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653643;
-	bh=QiABNGIC6INiRA8Y6M1rckpaH1GiJ7V5407vAG7OMGg=;
+	s=default; t=1593653646;
+	bh=Con61WNuWQAr5TO/MbZ6p7QE5r9Yg5CGIDIyLLHtmSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1TDzN01mqKxOb0yVNdBonEaLbGbZzWNMZyHJZDqdIo7uk77vpM/xMhyD8TU942dH
-	 zx+ojk0UAOjE14KKhMmeH3AHg7/f6z982q8xsjUr4Js2XKb05nz9JTiehIjs+fqOnC
-	 tvqZGtxIX7VjVoJm7d1fASI2fX1se/frk54v1TR0=
+	b=UXjH+OTHutSZmj6WQPt8ubdT7UYW3VdW3e0ZIu58DzKIcoVdnqEfa2O8b4SMpvLVB
+	 FB2aFVeD32xIghG/z8MQDDpe0L6bhyTJdgx4Rt9+JcF0frlYis6yvw4lYA05y3OftB
+	 WRm/8FZaZ07klFO+oovjznLILLO6z8EgGk0zIv68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgGBBeB (ORCPT
+        id S1728857AbgGBBZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgGBBZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:41 -0400
+        id S1728822AbgGBBZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5398820748;
-        Thu,  2 Jul 2020 01:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1830B20874;
+        Thu,  2 Jul 2020 01:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653141;
-        bh=QiABNGIC6INiRA8Y6M1rckpaH1GiJ7V5407vAG7OMGg=;
+        s=default; t=1593653134;
+        bh=Con61WNuWQAr5TO/MbZ6p7QE5r9Yg5CGIDIyLLHtmSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3EfmhRAc6uIxKb8iZLhV2ZRw7wpv9KCJAsOPeMPyvUrjiHOaEWWUOOZ6WnKWcN2L
-         jE+fqxqb8bxwItib5F0t5KVesxPlVu9WJBezjmEEGZguLRF0Tlwp3puhVHVKZK9PqL
-         tMGAlNxsU9TDOqS53kqC4Nd1NuA1C7FmYFW3lXr0=
+        b=wR/qan006fDkICug1tMfa3vTYft3RwpdjJvUcS3SIzoVtjnTG3gSI21PeWA3Uo7FX
+         BKgyqvuIKToBEETWkTmDhU1M08GfnmRQZfBkv3GO/jaqwlDBaBi1kABvA347Z7iwzd
+         ZHl3a11CLfteRe04pDg9N4hxzL15QSxy1o+mGUfg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 13/40] ALSA: hda: Intel: add missing PCI IDs for ICL-H, TGL-H and EKL
-Date:   Wed,  1 Jul 2020 21:23:34 -0400
-Message-Id: <20200702012402.2701121-13-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/40] btrfs: use kfree() in btrfs_ioctl_get_subvol_info()
+Date:   Wed,  1 Jul 2020 21:23:29 -0400
+Message-Id: <20200702012402.2701121-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
 References: <20200702012402.2701121-1-sashal@kernel.org>
@@ -61,51 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit d50313a5a0d803bcf55121a2b82086633060d05e ]
+[ Upstream commit b091f7fede97cc64f7aaad3eeb37965aebee3082 ]
 
-Mirror PCI ids used for SOF.
+In btrfs_ioctl_get_subvol_info(), there is a classic case where kzalloc()
+was incorrectly paired with kzfree(). According to David Sterba, there
+isn't any sensitive information in the subvol_info that needs to be
+cleared before freeing. So kzfree() isn't really needed, use kfree()
+instead.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200617164909.18225-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 612441508e80a..95b0fdffc504c 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2433,6 +2433,9 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Icelake */
- 	{ PCI_DEVICE(0x8086, 0x34c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Icelake-H */
-+	{ PCI_DEVICE(0x8086, 0x3dc8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Jasperlake */
- 	{ PCI_DEVICE(0x8086, 0x38c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-@@ -2441,9 +2444,14 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Tigerlake */
- 	{ PCI_DEVICE(0x8086, 0xa0c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* Tigerlake-H */
-+	{ PCI_DEVICE(0x8086, 0x43c8),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Elkhart Lake */
- 	{ PCI_DEVICE(0x8086, 0x4b55),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	{ PCI_DEVICE(0x8086, 0x4b58),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Broxton-P(Apollolake) */
- 	{ PCI_DEVICE(0x8086, 0x5a98),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON },
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index d88b8d8897cc5..08d8bb421848a 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -2735,7 +2735,7 @@ static int btrfs_ioctl_get_subvol_info(struct file *file, void __user *argp)
+ 
+ out:
+ 	btrfs_free_path(path);
+-	kzfree(subvol_info);
++	kfree(subvol_info);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
