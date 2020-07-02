@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C539C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1790206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CBF206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653417;
-	bh=eip0WKfdDA8lajYhVDvk9hUuNxCkzAYHw/ksBOVYXwc=;
+	s=default; t=1593653423;
+	bh=RuIX7iairByS9vmms37vTUc7xISPXnSus2zIBvT/u58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKqeixi4li91515TkTto0k7ybqkoMnP8FZDU1baOpOPoFmH/bfaPl67DpvZ2wfAj5
-	 mpiqyurKMTLqi6OVa48wla3yDK1Mil2zNXuY4X2wKpKVB5xS8bNh62Nov++gpqqJkA
-	 wyLhGXNePu9Uz34PKsss53qS81xcvdbTsX+m4Rcw=
+	b=VuvHCnKlZYSkTOekkm0+47qJRex/PWs3nHWVv7+EwRgsdtUXp/tK7ZiF9wikdv9oa
+	 mphIkuAS6eQSRLVM5PWbnGm03N6cOXVZ9o0fZ3LQU7YS6ktZEOTYLWU7C76axqT553
+	 oY4pCmXzWVWKv15ubIQBknxbgTI5PRNDgKlMXaUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgGBBaQ (ORCPT
+        id S1728907AbgGBBaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbgGBB1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:03 -0400
+        id S1728629AbgGBB1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1279B20874;
-        Thu,  2 Jul 2020 01:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEBE820748;
+        Thu,  2 Jul 2020 01:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653222;
-        bh=eip0WKfdDA8lajYhVDvk9hUuNxCkzAYHw/ksBOVYXwc=;
+        s=default; t=1593653221;
+        bh=RuIX7iairByS9vmms37vTUc7xISPXnSus2zIBvT/u58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FIgjvU9Dv1KzJ7QUQnQR75gWX47lP88tnuNExE9opApAH6/wP+rtzY1N/hU//WDSc
-         lwO5NP2ILMnd40fXK9T8UG7m4MPsF6cL235m+IZzpj3npG5vXE2IA/wLrzLdPprk3+
-         nqtv0FTg2lD8HPByvQ9BQcnKK0fKLeJP0yiOO+ZI=
+        b=Cfa7G8HfRtNo4Kzebrn9QoK2atCzOLeeUBBQevguTeuxRUQlUFXs2H0UJ1c1vdncI
+         m5On+EFVJLnv4kekrmtNd8NQ1L9HiPVdA0SRoUlXgtS3cjCNRvYNWpR/KgC6tFF06J
+         REQwod93vdwlCFcR5pXD3eQFnj5VjH2TN6zJELAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/17] s390/kasan: fix early pgm check handler execution
-Date:   Wed,  1 Jul 2020 21:26:42 -0400
-Message-Id: <20200702012649.2701799-10-sashal@kernel.org>
+Cc:     Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/17] usbnet: smsc95xx: Fix use-after-free after removal
+Date:   Wed,  1 Jul 2020 21:26:41 -0400
+Message-Id: <20200702012649.2701799-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
 References: <20200702012649.2701799-1-sashal@kernel.org>
@@ -60,40 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
 
-[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
+[ Upstream commit b835a71ef64a61383c414d6bf2896d2c0161deca ]
 
-Currently if early_pgm_check_handler is called it ends up in pgm check
-loop. The problem is that early_pgm_check_handler is instrumented by
-KASAN but executed without DAT flag enabled which leads to addressing
-exception when KASAN checks try to access shadow memory.
+Syzbot reports an use-after-free in workqueue context:
 
-Fix that by executing early handlers with DAT flag on under KASAN as
-expected.
+BUG: KASAN: use-after-free in mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
+ __smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:217 [inline]
+ smsc95xx_mdio_read+0x583/0x870 drivers/net/usb/smsc95xx.c:278
+ check_carrier+0xd1/0x2e0 drivers/net/usb/smsc95xx.c:644
+ process_one_work+0x777/0xf90 kernel/workqueue.c:2274
+ worker_thread+0xa8f/0x1430 kernel/workqueue.c:2420
+ kthread+0x2df/0x300 kernel/kthread.c:255
 
-Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+It looks like that smsc95xx_unbind() is freeing the structures that are
+still in use by the concurrently running workqueue callback. Thus switch
+to using cancel_delayed_work_sync() to ensure the work callback really
+is no longer active.
+
+Reported-by: syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com
+Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/early.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/smsc95xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-index 4ba5ad44a21a2..73045142febf0 100644
---- a/arch/s390/kernel/early.c
-+++ b/arch/s390/kernel/early.c
-@@ -317,6 +317,8 @@ static noinline __init void setup_lowcore_early(void)
- 	psw_t psw;
+diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
+index fc48da1c702d7..bcb99bee450a5 100644
+--- a/drivers/net/usb/smsc95xx.c
++++ b/drivers/net/usb/smsc95xx.c
+@@ -1338,7 +1338,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
  
- 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		psw.mask |= PSW_MASK_DAT;
- 	psw.addr = (unsigned long) s390_base_ext_handler;
- 	S390_lowcore.external_new_psw = psw;
- 	psw.addr = (unsigned long) s390_base_pgm_handler;
+ 	if (pdata) {
+-		cancel_delayed_work(&pdata->carrier_check);
++		cancel_delayed_work_sync(&pdata->carrier_check);
+ 		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
+ 		kfree(pdata);
+ 		pdata = NULL;
 -- 
 2.25.1
 
