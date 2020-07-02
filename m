@@ -2,197 +2,124 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9800C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A5C207E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB0E20836
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5lHQdj5"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fIjN/ltn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgGBEaL (ORCPT
+        id S1726772AbgGBEa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 00:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
+        Thu, 2 Jul 2020 00:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgGBE3v (ORCPT
+        with ESMTP id S1726110AbgGBEa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 00:29:51 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D5DC08C5C1;
-        Wed,  1 Jul 2020 21:29:51 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id j19so5966299pgm.11;
-        Wed, 01 Jul 2020 21:29:51 -0700 (PDT)
+        Thu, 2 Jul 2020 00:30:27 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78264C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 21:30:26 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m9so1703177pfh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 21:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SaAU3hiUVjWUOyctEYYV6JFwfF6beu9s6jHYabXwfSA=;
-        b=G5lHQdj5Pr4h4MJTATX1WSjQXr2p/dUKlJKcKTN76mRq8mGEobeT3q6rLcIELyvYvj
-         y1N71K2gFsDty2BQA9tFML8QOIA+1quS3kuwCZB/X+5tIWDxy1DUXgZs1EK9Ya1Lztzy
-         bXRfYDYgOn4KyJzjUyrFU58YuKJ4t2E02dRxs6hjDLjVZMka79q+Dmtnrj1gmyuW5Ded
-         NCWNNZkdbAGt5hBFF3aTaJNh01O4K0v3DlIzz1KIVHK6fcXWIsVp02L/a/xxMEihuyaj
-         mE66dFBkHr/BICkaGr3HBZj+5zPFsgAD6xtAdjsHJ5f44OrG/YtEufzpbktMQ1Yk3Ybn
-         3ARw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=YuWU5A2IqitBQEhu7RzxvcgZH9jiOWunaMDOKPdr4C8=;
+        b=fIjN/ltnJT3kkTEpSLCLZGcyZLszso4xAq4nzS1PXln00egC0Zx+DhGISzCBzt8jhH
+         uzNjiFb0lxo0vYW7XCBfDEAuqNW0TakRC+UMnzAhllrhEh5W+ZkUNFAK9kYLCby+wJ8i
+         Ck5tWUEWPrf5nxCWu0sFFFgXtLdLOGlTbGobmQsl2xPVi7OmH2Jhh5cj2KUt3TUqrG34
+         W6FcbVfC3BfnGf3CMximDi5FXEK5WvYtBANAIMB7ZfFanloz/mWGKrzlQWUQ9PUBBItf
+         0P88Dxe5yNqsyhprd/Acn5zh5cajuDXA/ZnWOVqukhJfm/MTJppCPSHoAw5ljA2a4lZw
+         RD5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SaAU3hiUVjWUOyctEYYV6JFwfF6beu9s6jHYabXwfSA=;
-        b=bzx7tyRz+mVscSq3hYsDGhHMQUubQ+31hx10SFlqqLVgqk2OKnzdKaiIaUo3Cx7/0X
-         TYyn+aN8s/FkOj/pv/babMils1RFlQ5hkMn3uGXzJTqlGnlamPr3Arbla5jU5+gqiJTF
-         7turi5N1vmRbD+yFu5xUmihBJJiYBB+Oj6nCCYg1px5KuxGcYdFJioJDrmEhCIe8ZlrY
-         yNSXh7MU6HydTuXwJ1JbawA3ZeOiOpncptLRDPts/cxtSKR1rcjIZHsJ/vxU9923mVQw
-         psHAxbt8adTXpOiOloOagS3KhDiBptUzVT40kv1OLWT1wN0j+pUbzV4inGy0EX7U5rQ0
-         FlSA==
-X-Gm-Message-State: AOAM533bNDnxM9oedUEauu8GW5w+hv/YJiM8xrDwHb7e4cAAOO15yX+l
-        X/xObtT2STdAhLoidH1RNMe+FHfe
-X-Google-Smtp-Source: ABdhPJz3/KKfzHuDvNfqVxeI/Jgth8b2+1UZulOFJWzmi4ZzNpNZgMMaOXW2LbaOZDW6Yp2tBRjeFg==
-X-Received: by 2002:a63:5a20:: with SMTP id o32mr14284177pgb.15.1593664190745;
-        Wed, 01 Jul 2020 21:29:50 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id np5sm6806248pjb.43.2020.07.01.21.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 21:29:49 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/4] net: phy: Change cable test arguments to net_device
-Date:   Wed,  1 Jul 2020 21:29:40 -0700
-Message-Id: <20200702042942.76674-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702042942.76674-1-f.fainelli@gmail.com>
-References: <20200702042942.76674-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=YuWU5A2IqitBQEhu7RzxvcgZH9jiOWunaMDOKPdr4C8=;
+        b=fdcLTvqmIh431KmkpgtCTL48tshIzy+HuCywcbDTWBLm/zWPNXKIS8zhfRbpEZuyih
+         1/HuV/TzfCPVPzfBqY926XGHi7MJFSzwS9FIAJ6F6cbrVOxlM3E/xCQ5H2MItQuRnK7H
+         g3a2Y3cEoml3Ba2swexuCsD7u6MDSA462F4z2bN7UER+2QbwA4YhpGarp8wupcBX/+07
+         fBApFq+BKuWRyoo+BUQWLp5c3JFElBvw3U0PpwJBBj3JeyhjVrRURYZODP2y5sMp5omt
+         T4iwRHdxe82pJ1CiHn4FLhXGGxF5Oh2xhD4SUo6YciHr1xlhboqn2bS4OpyNVl2mB6sC
+         VG1Q==
+X-Gm-Message-State: AOAM533DrxdMWl7jmf2G59z+9Dw+c66r6pIceaxuBOGrQ87ALq3GZhFN
+        HsreXYhR0FSTuCI1+tHIm82vXg==
+X-Google-Smtp-Source: ABdhPJy1W84Qjro6DWnqEx+YwTfLXIsNs9vkrWH8iX+a/w+C7F9p21L++ZCYkSNRgG5ej9JgiANy9g==
+X-Received: by 2002:a65:6089:: with SMTP id t9mr23264258pgu.236.1593664225960;
+        Wed, 01 Jul 2020 21:30:25 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:b0a2:2229:1cbe:53d2? ([2605:e000:100e:8c61:b0a2:2229:1cbe:53d2])
+        by smtp.gmail.com with ESMTPSA id u25sm7221103pfm.115.2020.07.01.21.30.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 21:30:25 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        io-uring <io-uring@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.8-rc4
+Message-ID: <ac36babd-3eb7-8f91-7ba1-e722def24b67@kernel.dk>
+Date:   Wed, 1 Jul 2020 22:30:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to untangle the ethtool/cabletest feature with the PHY library,
-make the PHY library functions take a net_device argument and derive the
-phy_device reference from there.
+Hi Linus,
 
-No functional changes introduced.
+One fix in here, for a regression in 5.7 where a task is waiting in the
+kernel for a condition, but that condition won't become true until
+task_work is run. The task_work can't be run exactly because the task is
+waiting in the kernel, so we'll never make any progress. One example of
+that is registering an eventfd and queueing io_uring work, and then the
+task goes and waits in eventfd read with the expectation that it'll get
+woken (and read an event) when the io_uring request completes. The
+io_uring request is finished through task_work, which won't get run
+while the task is looping in eventfd read.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/phy.c   | 18 ++++++++++++++----
- include/linux/phy.h     |  8 ++++----
- net/ethtool/cabletest.c |  4 ++--
- 3 files changed, 20 insertions(+), 10 deletions(-)
+Please pull!
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 56cfae950472..fbb74f37b961 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -489,12 +489,17 @@ static void phy_abort_cable_test(struct phy_device *phydev)
- 		phydev_err(phydev, "Error while aborting cable test");
- }
- 
--int phy_start_cable_test(struct phy_device *phydev,
-+int phy_start_cable_test(struct net_device *dev,
- 			 struct netlink_ext_ack *extack)
- {
--	struct net_device *dev = phydev->attached_dev;
-+	struct phy_device *phydev = dev->phydev;
- 	int err = -ENOMEM;
- 
-+	if (!dev->phydev) {
-+		NL_SET_ERR_MSG(extack, "Network device not attached to a PHY");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (!(phydev->drv &&
- 	      phydev->drv->cable_test_start &&
- 	      phydev->drv->cable_test_get_status)) {
-@@ -552,13 +557,18 @@ int phy_start_cable_test(struct phy_device *phydev,
- }
- EXPORT_SYMBOL(phy_start_cable_test);
- 
--int phy_start_cable_test_tdr(struct phy_device *phydev,
-+int phy_start_cable_test_tdr(struct net_device *dev,
- 			     struct netlink_ext_ack *extack,
- 			     const struct phy_tdr_config *config)
- {
--	struct net_device *dev = phydev->attached_dev;
-+	struct phy_device *phydev = dev->phydev;
- 	int err = -ENOMEM;
- 
-+	if (!dev->phydev) {
-+		NL_SET_ERR_MSG(extack, "Network device not attached to a PHY");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (!(phydev->drv &&
- 	      phydev->drv->cable_test_tdr_start &&
- 	      phydev->drv->cable_test_get_status)) {
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 101a48fa6750..53b95c52869d 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1266,21 +1266,21 @@ int phy_restart_aneg(struct phy_device *phydev);
- int phy_reset_after_clk_enable(struct phy_device *phydev);
- 
- #if IS_ENABLED(CONFIG_PHYLIB)
--int phy_start_cable_test(struct phy_device *phydev,
-+int phy_start_cable_test(struct net_device *dev,
- 			 struct netlink_ext_ack *extack);
--int phy_start_cable_test_tdr(struct phy_device *phydev,
-+int phy_start_cable_test_tdr(struct net_device *dev,
- 			     struct netlink_ext_ack *extack,
- 			     const struct phy_tdr_config *config);
- #else
- static inline
--int phy_start_cable_test(struct phy_device *phydev,
-+int phy_start_cable_test(struct net_device *dev,
- 			 struct netlink_ext_ack *extack)
- {
- 	NL_SET_ERR_MSG(extack, "Kernel not compiled with PHYLIB support");
- 	return -EOPNOTSUPP;
- }
- static inline
--int phy_start_cable_test_tdr(struct phy_device *phydev,
-+int phy_start_cable_test_tdr(struct net_device *dev,
- 			     struct netlink_ext_ack *extack,
- 			     const struct phy_tdr_config *config)
- {
-diff --git a/net/ethtool/cabletest.c b/net/ethtool/cabletest.c
-index 7194956aa09e..0d940a91493b 100644
---- a/net/ethtool/cabletest.c
-+++ b/net/ethtool/cabletest.c
-@@ -85,7 +85,7 @@ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		goto out_rtnl;
- 
--	ret = phy_start_cable_test(dev->phydev, info->extack);
-+	ret = phy_start_cable_test(dev, info->extack);
- 
- 	ethnl_ops_complete(dev);
- 
-@@ -341,7 +341,7 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		goto out_rtnl;
- 
--	ret = phy_start_cable_test_tdr(dev->phydev, info->extack, &cfg);
-+	ret = phy_start_cable_test_tdr(dev, info->extack, &cfg);
- 
- 	ethnl_ops_complete(dev);
- 
+The following changes since commit d60b5fbc1ce8210759b568da49d149b868e7c6d3:
+
+  io_uring: fix current->mm NULL dereference on exit (2020-06-25 07:20:43 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-01
+
+for you to fetch changes up to ce593a6c480a22acba08795be313c0c6d49dd35d:
+
+  io_uring: use signal based task_work running (2020-06-30 12:39:05 -0600)
+
+----------------------------------------------------------------
+io_uring-5.8-2020-07-01
+
+----------------------------------------------------------------
+Jens Axboe (1):
+      io_uring: use signal based task_work running
+
+Oleg Nesterov (1):
+      task_work: teach task_work_add() to do signal_wake_up()
+
+ fs/io_uring.c                | 32 ++++++++++++++++++++++++--------
+ include/linux/sched/jobctl.h |  4 +++-
+ include/linux/task_work.h    |  5 ++++-
+ kernel/signal.c              | 10 +++++++---
+ kernel/task_work.c           | 16 ++++++++++++++--
+ 5 files changed, 52 insertions(+), 15 deletions(-)
+
 -- 
-2.25.1
+Jens Axboe
 
