@@ -2,69 +2,125 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A4CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01552075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N5oiHn9g"
+	by mail.kernel.org (Postfix) with ESMTP id 7931120747
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593688003;
+	bh=cHsK5mF5nNH5iN+pJBfbiyUa5aZmOYP0klJmX15sfPs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CJGa05RUbSegeAJnREIZD/GigTLNB4UZftBquXOSq6qCsljaX55KYdVuhGJAjRJ+i
+	 ha5BBzWOoXE+HEA3+3A29PYykhFmI4XD0RBFAc6jLTyGQhntueooW1l1xtazoD6oTG
+	 8+66ylueAyq8JxHqlcZqqS9qv3nER8XliUJzEJVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgGBLFz (ORCPT
+        id S1728492AbgGBLGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbgGBLFy (ORCPT
+        Thu, 2 Jul 2020 07:06:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46367 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgGBLGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:05:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C833BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=W7vOkyxsbYhaQ0GGmRUCdYNP3bzUA8L6GrJCj+KCQMo=; b=N5oiHn9gfkXS1SWEc806/XUf6k
-        vUSGLyKW9Cx/xBI2iSjUwMKmOD2jkbGkGhEe8YywPJfM716/TfAZbVZ7mo85ZJftrNve8sR+D9j5r
-        WyckWcckppDAXPvlaU8PoECAK5z8f/rMEmz6dtoajx3dOirlVLoDzsFcAb1bi/ymuDZeVGgVk4b9r
-        D18gi9NUXThq/kURC3l7QuQyDSGtkRjv/MX7DVNyNEo0ieo7VGS9pUZiwM9yD/rgDokSr25vBcGU2
-        LjXKOeTqcjQQesDwSw9o1Y+Cs2a4UgxIdArGi/3ZFmKh1oPKjv4/dw2NFrkKtgrk2LRgEKqqffplV
-        bQT0/pAA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqx2F-0008PQ-Ic; Thu, 02 Jul 2020 11:05:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 970CB30015A;
-        Thu,  2 Jul 2020 13:05:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8409022172012; Thu,  2 Jul 2020 13:05:42 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 13:05:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     jpoimboe@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: fix potential memory leak special_get_alts()
-Message-ID: <20200702110542.GP4800@hirez.programming.kicks-ass.net>
-References: <20200702110025.16883-1-chenwandun@huawei.com>
+        Thu, 2 Jul 2020 07:06:42 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l63so21899799oih.13;
+        Thu, 02 Jul 2020 04:06:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mk2LAIHGGpKqNwJUJPoO04wxdPnLESxVTBpWLnTWEx8=;
+        b=kWwrKwzPDAE5jEVO4AV7ty3PfvoElGVkRiuxO/CKrbHEFrGYwcRXNFszCtVVUExDPl
+         381INC9dJBZVCjGET3KOyItjNMCJIN7TznirqwwvxIsFx2QQIE4JrJ6N/fDvIghvzs33
+         EYxmAfjK00AcEQozgkNcGfr9VVJYgkq9y3WMKIAEfDzwGOJK4FZPOCuz0xei6vKwBz0p
+         hVFx+psm3bIEjbe38ns1ugTcjEY27p1FQ8zYzJIirq+PQpTo0qSIJXKBa+9ZbIb4MPnF
+         0+d+N/BkvEhYkYi7G1i1Qi+yyWZ1ZwY32hiCvPPkqQEutxTUO29XVqeHpztv+FQLGafG
+         eFwQ==
+X-Gm-Message-State: AOAM531MKWhkfGgz3wXdcqyl5zZ1EOgwnRJ/hqW9V8HwgmiskkcGArBl
+        icEbAMpzAPzuAvA+GWsHv60PQapjMX3rzdxejFk=
+X-Google-Smtp-Source: ABdhPJy2Imxm3S4iN13OtdrOo/s1d+kV62jw/R6SxO0ppeA29ZbnDSlHB9LJq+Y5TgGQWcM3ofog32Om4Wbrr7aHHao=
+X-Received: by 2002:aca:f58a:: with SMTP id t132mr17454561oih.68.1593688001042;
+ Thu, 02 Jul 2020 04:06:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702110025.16883-1-chenwandun@huawei.com>
+References: <20200701042007.13333-1-xhao@linux.alibaba.com>
+ <20200701045227.epojzjwuky5kkdzj@vireshk-i7> <CAJZ5v0iRW25n9CqvJ=ODbVh2osocx+wJVz62GqaWV9m4sdL12g@mail.gmail.com>
+ <20200702023746.li2uf4zl7bwzg62x@vireshk-i7>
+In-Reply-To: <20200702023746.li2uf4zl7bwzg62x@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 2 Jul 2020 13:06:28 +0200
+Message-ID: <CAJZ5v0jbsinLBZqNiCPH0NFk0b8H4Uxuf8U5y0R5nkxUH8tX8g@mail.gmail.com>
+Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
+ value in cppc_perf_caps struct
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Xin Hao <xhao@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 07:00:25PM +0800, Chen Wandun wrote:
-> If get_alt_entry() return error, struct special_alt will leak.
-> 
-> Fixes: 442f04c34a1a ("objtool: Add tool to perform compile-time stack metadata validation")
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+On Thu, Jul 2, 2020 at 4:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 01-07-20, 14:16, Rafael J. Wysocki wrote:
+> > On Wed, Jul 1, 2020 at 6:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 01-07-20, 12:20, Xin Hao wrote:
+> > > >  The 'caps' variable has been defined, so there is no need to get
+> > > >  'highest_perf' value through 'cpu->caps.highest_perf', you can use
+> > > >  'caps->highest_perf' instead.
+> > > >
+> > > > Signed-off-by: Xin Hao <xhao@linux.alibaba.com>
+> > > > ---
+> > > >  drivers/cpufreq/cppc_cpufreq.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> > > > index 257d726a4456..051d0e56c67a 100644
+> > > > --- a/drivers/cpufreq/cppc_cpufreq.c
+> > > > +++ b/drivers/cpufreq/cppc_cpufreq.c
+> > > > @@ -161,7 +161,7 @@ static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
+> > > >               if (!max_khz)
+> > > >                       max_khz = cppc_get_dmi_max_khz();
+> > > >               mul = max_khz;
+> > > > -             div = cpu->perf_caps.highest_perf;
+> > > > +             div = caps->highest_perf;
+> > > >       }
+> > > >       return (u64)perf * mul / div;
+> > > >  }
+> > > > @@ -184,7 +184,7 @@ static unsigned int cppc_cpufreq_khz_to_perf(struct cppc_cpudata *cpu,
+> > > >       } else {
+> > > >               if (!max_khz)
+> > > >                       max_khz = cppc_get_dmi_max_khz();
+> > > > -             mul = cpu->perf_caps.highest_perf;
+> > > > +             mul = caps->highest_perf;
+> > > >               div = max_khz;
+> > > >       }
+> > >
+> > > Applied. Thanks.
+> >
+> > I applied the previous cppc_cpufreq patch, hopefully it will not clash
+> > with this one.
+> >
+> > Are you going to take care of this driver going forward?
+>
+> I started picking up the patches for this driver as it was mostly ARM
+> stuff and FWIW, I picked the previous one as well and because it was
+> sent by me, I never replied with the "Applied" message :)
 
-https://lkml.kernel.org/r/20200427144439.rrywv56mjfypupgh@treble
+But you could respond to the "applied" message from me. :-)
+
+> Will it be possible for you to drop that one?
+
+Dropped now and I will be assuming that you will pick up cppc_cpufreq
+patches from now on.
+
+Thanks!
