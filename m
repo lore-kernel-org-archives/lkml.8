@@ -2,113 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A550A2085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95E22085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgGBHDw (ORCPT
+        id S1726903AbgGBHET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:03:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:53197 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgGBHDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:03:52 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MLA2e-1jZuL90XNi-00IClm; Thu, 02 Jul 2020 09:03:49 +0200
-Received: by mail-qk1-f172.google.com with SMTP id k18so24695955qke.4;
-        Thu, 02 Jul 2020 00:03:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533/8N3rpApox64MT2iAtrjVg7SBZz82+5U9I97yZ+M4W79k3cNO
-        G7oBZJXkS1gYRTc8qMRlPUL0A633PrqGkDVhBV4=
-X-Google-Smtp-Source: ABdhPJy1J9OKRiOFi7eXG30KY3L0LxGjT1O8dCnD25KnYneALqn8NIrOpou0Mi3/xlE6GFnLs09LBh9Q++KQPysW2EU=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr28916015qke.286.1593673427914;
- Thu, 02 Jul 2020 00:03:47 -0700 (PDT)
+        Thu, 2 Jul 2020 03:04:19 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbgGBHET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:04:19 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 4564DCF9CC776307FF85;
+        Thu,  2 Jul 2020 15:04:14 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Thu, 2 Jul 2020 15:04:00 +0800
+Received: from dggeme759-chm.china.huawei.com (10.3.19.105) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 2 Jul 2020 15:04:00 +0800
+Received: from dggeme759-chm.china.huawei.com ([10.7.64.73]) by
+ dggeme759-chm.china.huawei.com ([10.7.64.73]) with mapi id 15.01.1913.007;
+ Thu, 2 Jul 2020 15:04:00 +0800
+From:   "tiantao (H)" <tiantao6@hisilicon.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "xinliang.liu@linaro.org" <xinliang.liu@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Linuxarm <linuxarm@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGRybS9oaXNpbGljb246IFVzZSBkcm1tX2t6YWxs?=
+ =?utf-8?Q?oc()_instead_of_devm=5Fkzalloc()?=
+Thread-Topic: [PATCH] drm/hisilicon: Use drmm_kzalloc() instead of
+ devm_kzalloc()
+Thread-Index: AQHWUDv5oF9N4eaD8EOIzTbHFGOwPKjz3NAQ
+Date:   Thu, 2 Jul 2020 07:04:00 +0000
+Message-ID: <8f415f3d92584498bd979787d1846e5e@hisilicon.com>
+References: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
+ <50ea833a-7d8d-a1ad-3622-3456afc87719@suse.de>
+In-Reply-To: <50ea833a-7d8d-a1ad-3622-3456afc87719@suse.de>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.60.129]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1593656074-10092-1-git-send-email-Anson.Huang@nxp.com>
- <1593656074-10092-4-git-send-email-Anson.Huang@nxp.com> <CAA+hA=S0G7Na0ieEpPq3aN6GN1BEHtYp9vbF9x2tjmknDSVjZw@mail.gmail.com>
- <DB3PR0402MB391610595D40C11CF26CD990F56D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAA+hA=Rtkm_FpkoBvHNnB0TSeTrqXaRVwOzkywsL7QO6ec_K7Q@mail.gmail.com>
- <AM6PR0402MB3911049CC1B136327345F11CF56D0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
- <CAA+hA=S9ENXtD7q362=y84qKAtR090pZOd6MF6uN8W223UK-+Q@mail.gmail.com>
-In-Reply-To: <CAA+hA=S9ENXtD7q362=y84qKAtR090pZOd6MF6uN8W223UK-+Q@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Jul 2020 09:03:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a31bZ1XDjjv1LRvpgifxqYUuBRFbPEc+eFD8Dby+mRE8Q@mail.gmail.com>
-Message-ID: <CAK8P3a31bZ1XDjjv1LRvpgifxqYUuBRFbPEc+eFD8Dby+mRE8Q@mail.gmail.com>
-Subject: Re: [PATCH V4 3/5] clk: imx: Support building i.MX common clock
- driver as module
-To:     Dong Aisheng <dongas86@gmail.com>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:7bOCzNp5Raruey2KRYtDaaMrPtdeP5ZFJqLXmLWlnz6ojji+ouN
- VqBf/jEvWts7m85Y0Ryj4vLlxbg031p3GPIGz2eVjkcnQQdBcdL1x1WpBZSOvrgyChg5fZ8
- F6j3lzaOO4y3w3Ccj1mtnsNQspIEF7XUBnaGsjgfaaZS5I46u/JIxakYxSAmlRvUNtD8HLQ
- 1aZlMq3b/pPMQC+sbfDTw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Tda3zbNPZV8=:D1Ic8xSUfHkfJ6v1TABpbJ
- hMHsTXk6CcBZXCT8JM7xq5zo+2aws/zyt3Kz6YSG/t1apmv++UqWJKzrgUiI8JtOgohxRyruF
- hNCdkQIKi1JXV82ovMs9uAMxGGmc/VrPdMKFDRFRzg6NYd2N3q2yICK9o5JvzTFs8/DuPdUfh
- bEJZ3XdgDtwcheIQ9OMKvezd/ZUAlrgxGJ4hNpOxVknnBFt9gI0y5HTJYgO6TamLzaQHaK5tv
- seZ2z8dwEuJUrN1efkV5yDWUyJBwhOXONUQcR1x/LK5H0QMJp+J47BGBJs9VM1g/JJ10Z8/YQ
- G6Dp9diFeJAEa+JVq5FIePo47bBBzRLY5wEyKuo2al+JOGclM5ubIIO754fdvG6ZLRT9pneOm
- 2o5tZVMVU+88tyAvAWHk9MKsJTknyqGFh6fwg9JqJClbSj6UHDXf1zpWQCfti+RkCE3tqqMjx
- btgbA7W+CvWA8UR3TFPz7vmGjOBLDvY5ycPiMf6Je9auSCpaQkCzzk70geJsi8/WW9A2Rd/V6
- 4eeC8W7k7zeiZj9uxBQxIu/KkM/V0n1o0/xbKGH4/hngMw1ngIvC6DCUZfKpx2hJcKrv+g+jo
- vesL1U0WNuXuJGedGj7S33aMRy9vq20RhsrWPoEN0WCANRQaCg5R2++1DpiDrGPtnDmnfWZuy
- nCX3PDsgC0UdBwASU/ER5bQ18XKkM/VNxYUFNJ6BAa4JSTVl16gUWK8FFg8wXg2krWo4vRGWV
- MNTuawCz/V95qAYPvdB0Q+x8CSdX29Oz1w4PK4+pFj/BuH1vGizi3n/Jar+jYlmN4jDu0hv7x
- 7NbekmRGhLn5wnD7eMJmw8cnOqbu9+H7M7UmzBaRIilrlvAhnU=
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 8:40 AM Dong Aisheng <dongas86@gmail.com> wrote:
-> On Thu, Jul 2, 2020 at 2:11 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > > Subject: Re: [PATCH V4 3/5] clk: imx: Support building i.MX common clock
-> >
-> > I am fine of adding the '#ifndef MODULE' to imx_clk_disable_uart() and imx_keep_uart_clocks_param()
-> > as well in next patch series. Others like ' imx_keep_uart_clocks ' and imx_register_uart_clocks() need to
-> > be kept always built, since they are used by each clock driver no matter built-in or module build.
-> >
-> > So that means I have to add another 'ifndef MODULE' or I need to adjust some code sequence to make
-> > those code can be built-out in same block and just use single 'ifndef MODULE', I think adjust the code
-> > sequence should be better, will go with this way.
->
-> What if we  condionally compile it in clk.h? Will that be easiser?
-
-Yes, that's what I expected to see in v4 after the previous discussion. If
-imx_register_uart_clocks() is an empty inline function, then the arrays
-passed to it are unused and also get dropped by the compiler.
-
-The question is whether the #ifdef check in the header to test for MODULE
-(only calling it if this particular soc has a built-in clk driver,
-which is sufficient)
-or for IS_MODULE(CONFIG_MXC_CLK) (call it if _any_ clk driver is built-in
-and the function exists, which leaves extra code in the driver but is a more
-conventional check).
-
-     Arnd
+SGnvvJoNCg0KCVRoYW5rcyBmb3IgdGhlIGhlbHAgd2l0aCB0aGUgcmV2aWV3IGNvZGUuIEkgd2ls
+bCBzZW5kIHYyIHRvIGZpeGVkIHRoaXMuDQoNCkJlc3QNCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0t
+LQ0K5Y+R5Lu25Lq6OiBUaG9tYXMgWmltbWVybWFubiBbbWFpbHRvOnR6aW1tZXJtYW5uQHN1c2Uu
+ZGVdIA0K5Y+R6YCB5pe26Ze0OiAyMDIw5bm0N+aciDLml6UgMTQ6NDMNCuaUtuS7tuS6ujogdGlh
+bnRhbyAoSCkgPHRpYW50YW82QGhpc2lsaWNvbi5jb20+OyBDaGVuZmVuZyAocHVjaykgPHB1Y2su
+Y2hlbkBoaXNpbGljb24uY29tPjsgYWlybGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xsLmNoOyBr
+cmF4ZWxAcmVkaGF0LmNvbTsgYWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbTsgdGdseEBsaW51dHJv
+bml4LmRlOyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyB4aW5saWFuZy5saXVAbGlu
+YXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0K5oqE6YCBOiBpbnV4YXJtQGh1
+YXdlaS5jb20NCuS4u+mimDogUmU6IFtQQVRDSF0gZHJtL2hpc2lsaWNvbjogVXNlIGRybW1fa3ph
+bGxvYygpIGluc3RlYWQgb2YgZGV2bV9remFsbG9jKCkNCg0KSGkNCg0KQW0gMDIuMDcuMjAgdW0g
+MDM6MjEgc2NocmllYiBUaWFuIFRhbzoNCj4gdXNpbmcgdGhlIG5ldyBBUEkgZHJtbV9remFsbG9j
+KCkgaW5zdGVhZCBvZiBkZXZtX2t6YWxsb2MoKQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGlhbiBU
+YW8gPHRpYW50YW82QGhpc2lsaWNvbi5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL2hp
+c2lsaWNvbi9oaWJtYy9oaWJtY19kcm1fZHJ2LmMgfCAzICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24vaGlibWMvaGlibWNfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUv
+ZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJtY19kcm1fZHJ2LmMNCj4gaW5kZXggYTZmZDBjMi4uMmYy
+MDcwNCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJt
+Y19kcm1fZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaWJtYy9oaWJt
+Y19kcm1fZHJ2LmMNCj4gQEAgLTIzLDYgKzIzLDcgQEANCj4gICNpbmNsdWRlIDxkcm0vZHJtX3By
+aW50Lmg+DQo+ICAjaW5jbHVkZSA8ZHJtL2RybV9wcm9iZV9oZWxwZXIuaD4NCj4gICNpbmNsdWRl
+IDxkcm0vZHJtX3ZibGFuay5oPg0KPiArI2luY2x1ZGUgPGRybS9kcm1fbWFuYWdlZC5oPg0KDQpQ
+bGVhc2Uga2VlcCB0aGUgRFJNIGluY2x1ZGUgc3RhdGVtZW50cyBzb3J0ZWQgYWxwaGFiZXRpY2Fs
+bHkuDQoNCldpdGggdGhpcyBmaXhlZA0KDQpSZXZpZXdlZC1ieTogVGhvbWFzIFppbW1lcm1hbm4g
+PHR6aW1tZXJtYW5uQHN1c2UuZGU+DQoNCj4gIA0KPiAgI2luY2x1ZGUgImhpYm1jX2RybV9kcnYu
+aCINCj4gICNpbmNsdWRlICJoaWJtY19kcm1fcmVncy5oIg0KPiBAQCAtMjY3LDcgKzI2OCw3IEBA
+IHN0YXRpYyBpbnQgaGlibWNfbG9hZChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQ0KPiAgCXN0cnVj
+dCBoaWJtY19kcm1fcHJpdmF0ZSAqcHJpdjsNCj4gIAlpbnQgcmV0Ow0KPiAgDQo+IC0JcHJpdiA9
+IGRldm1fa3phbGxvYyhkZXYtPmRldiwgc2l6ZW9mKCpwcml2KSwgR0ZQX0tFUk5FTCk7DQo+ICsJ
+cHJpdiA9IGRybW1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdGUF9LRVJORUwpOw0KPiAg
+CWlmICghcHJpdikgew0KPiAgCQlEUk1fRVJST1IoIm5vIG1lbW9yeSB0byBhbGxvY2F0ZSBmb3Ig
+aGlibWNfZHJtX3ByaXZhdGVcbiIpOw0KPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gDQoNCi0tIA0K
+VGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNzIERyaXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdh
+cmUgU29sdXRpb25zIEdlcm1hbnkgR21iSA0KTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJn
+LCBHZXJtYW55DQooSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcpDQpHZXNjaMOkZnRzZsO8aHJlcjog
+RmVsaXggSW1lbmTDtnJmZmVyDQoNCg==
