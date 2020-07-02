@@ -2,253 +2,134 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7457C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64303208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B1920899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rnd7ZVz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgGBOtM (ORCPT
+        id S1730326AbgGBOtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:49:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57000 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730308AbgGBOtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:49:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BD5A1ADFF;
-        Thu,  2 Jul 2020 14:49:01 +0000 (UTC)
-Subject: Re: [PATCH 16/20] block: move ->make_request_fn to struct
- block_device_operations
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-References: <20200701085947.3354405-1-hch@lst.de>
- <20200701085947.3354405-17-hch@lst.de>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- mQINBFYX6S8BEAC9VSamb2aiMTQREFXK4K/W7nGnAinca7MRuFUD4JqWMJ9FakNRd/E0v30F
- qvZ2YWpidPjaIxHwu3u9tmLKqS+2vnP0k7PRHXBYbtZEMpy3kCzseNfdrNqwJ54A430BHf2S
- GMVRVENiScsnh4SnaYjFVvB8SrlhTsgVEXEBBma5Ktgq9YSoy5miatWmZvHLFTQgFMabCz/P
- j5/xzykrF6yHo0rHZtwzQzF8rriOplAFCECp/t05+OeHHxjSqSI0P/G79Ll+AJYLRRm9til/
- K6yz/1hX5xMToIkYrshDJDrUc8DjEpISQQPhG19PzaUf3vFpmnSVYprcWfJWsa2wZyyjRFkf
- J51S82WfclafNC6N7eRXedpRpG6udUAYOA1YdtlyQRZa84EJvMzW96iSL1Gf+ZGtRuM3k49H
- 1wiWOjlANiJYSIWyzJjxAd/7Xtiy/s3PRKL9u9y25ftMLFa1IljiDG+mdY7LyAGfvdtIkanr
- iBpX4gWXd7lNQFLDJMfShfu+CTMCdRzCAQ9hIHPmBeZDJxKq721CyBiGAhRxDN+TYiaG/UWT
- 7IB7LL4zJrIe/xQ8HhRO+2NvT89o0LxEFKBGg39yjTMIrjbl2ZxY488+56UV4FclubrG+t16
- r2KrandM7P5RjR+cuHhkKseim50Qsw0B+Eu33Hjry7YCihmGswARAQABtBhDb2x5IExpIDxj
- b2x5bGlAc3VzZS5kZT6JAlYEEwEIAEACGyMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgBYh
- BOo+RS/0+Uhgjej60Mc5B5Nrffj8BQJcR84dBQkY++fuAAoJEMc5B5Nrffj8ixcP/3KAKg1X
- EcoW4u/0z+Ton5rCyb/NpAww8MuRjNW82UBUac7yCi1y3OW7NtLjuBLw5SaVG5AArb7IF3U0
- qTOobqfl5XHsT0o5wFHZaKUrnHb6y7V3SplsJWfkP3JmOooJsQB3z3K96ZTkFelsNb0ZaBRu
- gV+LA4MomhQ+D3BCDR1it1OX/tpvm2uaDF6s/8uFtcDEM9eQeqATN/QAJ49nvU/I8zDSY9rc
- 0x9mP0x+gH4RccbnoPu/rUG6Fm1ZpLrbb6NpaYBBJ/V1BC4lIOjnd24bsoQrQmnJn9dSr60X
- 1MY60XDszIyzRw7vbJcUn6ZzPNFDxFFT9diIb+wBp+DD8ZlD/hnVpl4f921ZbvfOSsXAJrKB
- 1hGY17FPwelp1sPcK2mDT+pfHEMV+OQdZzD2OCKtza/5IYismJJm3oVUYMogb5vDNAw9X2aP
- XgwUuG+FDEFPamFMUwIfzYHcePfqf0mMsaeSgtA/xTxzx/0MLjUJHl46Bc0uKDhv7QUyGz0j
- Ywgr2mHTvG+NWQ/mDeHNGkcnsnp3IY7koDHnN2xMFXzY4bn9m8ctqKo2roqjCzoxD/njoAhf
- KBzdybLHATqJG/yiZSbCxDA1n/J4FzPyZ0rNHUAJ/QndmmVspE9syFpFCKigvvyrzm016+k+
- FJ59Q6RG4MSy/+J565Xj+DNY3/dCuQINBFYX6S8BEADZP+2cl4DRFaSaBms08W8/smc5T2CO
- YhAoygZn71rB7Djml2ZdvrLRjR8Qbn0Q/2L2gGUVc63pJnbrjlXSx2LfAFE0SlfYIJ11aFdF
- 9w7RvqWByQjDJor3Z0fWvPExplNgMvxpD0U0QrVT5dIGTx9hadejCl/ug09Lr6MPQn+a4+qs
- aRWwgCSHaIuDkH3zI1MJXiqXXFKUzJ/Fyx6R72rqiMPHH2nfwmMu6wOXAXb7+sXjZz5Po9GJ
- g2OcEc+rpUtKUJGyeQsnCDxUcqJXZDBi/GnhPCcraQuqiQ7EGWuJfjk51vaI/rW4bZkA9yEP
- B9rBYngbz7cQymUsfxuTT8OSlhxjP3l4ZIZFKIhDaQeZMj8pumBfEVUyiF6KVSfgfNQ/5PpM
- R4/pmGbRqrAAElhrRPbKQnCkGWDr8zG+AjN1KF6rHaFgAIO7TtZ+F28jq4reLkur0N5tQFww
- wFwxzROdeLHuZjL7eEtcnNnzSkXHczLkV4kQ3+vr/7Gm65mQfnVpg6JpwpVrbDYQeOFlxZ8+
- GERY5Dag4KgKa/4cSZX2x/5+KkQx9wHwackw5gDCvAdZ+Q81nm6tRxEYBBiVDQZYqO73stgT
- ZyrkxykUbQIy8PI+g7XMDCMnPiDncQqgf96KR3cvw4wN8QrgA6xRo8xOc2C3X7jTMQUytCz9
- 0MyV1QARAQABiQI8BBgBCAAmAhsMFiEE6j5FL/T5SGCN6PrQxzkHk2t9+PwFAlxHziAFCRj7
- 5/EACgkQxzkHk2t9+PxgfA//cH5R1DvpJPwraTAl24SUcG9EWe+NXyqveApe05nk15zEuxxd
- e4zFEjo+xYZilSveLqYHrm/amvQhsQ6JLU+8N60DZHVcXbw1Eb8CEjM5oXdbcJpXh1/1BEwl
- 4phsQMkxOTns51bGDhTQkv4lsZKvNByB9NiiMkT43EOx14rjkhHw3rnqoI7ogu8OO7XWfKcL
- CbchjJ8t3c2XK1MUe056yPpNAT2XPNF2EEBPG2Y2F4vLgEbPv1EtpGUS1+JvmK3APxjXUl5z
- 6xrxCQDWM5AAtGfM/IswVjbZYSJYyH4BQKrShzMb0rWUjkpXvvjsjt8rEXpZEYJgX9jvCoxt
- oqjCKiVLpwje9WkEe9O9VxljmPvxAhVqJjX62S+TGp93iD+mvpCoHo3+CcvyRcilz+Ko8lfO
- hS9tYT0HDUiDLvpUyH1AR2xW9RGDevGfwGTpF0K6cLouqyZNdhlmNciX48tFUGjakRFsxRmX
- K0Jx4CEZubakJe+894sX6pvNFiI7qUUdB882i5GR3v9ijVPhaMr8oGuJ3kvwBIA8lvRBGVGn
- 9xvzkQ8Prpbqh30I4NMp8MjFdkwCN6znBKPHdjNTwE5PRZH0S9J0o67IEIvHfH0eAWAsgpTz
- +jwc7VKH7vkvgscUhq/v1/PEWCAqh9UHy7R/jiUxwzw/288OpgO+i+2l11Y=
-Message-ID: <ded333a3-c6d9-2a4d-b427-b06aaa1e925c@suse.de>
-Date:   Thu, 2 Jul 2020 22:48:54 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Thu, 2 Jul 2020 10:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729966AbgGBOqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:46:44 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9C5C08C5E0
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l17so27117679wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zCvEYr43bmvAI4c/u02EnPe5wklhcOBr52WpV3Wdhnc=;
+        b=rnd7ZVz1ZhbElscG9Bkyx7lA4/DyNELrmIlS9pFIxHeR0jZ64UUgjYI7/xmq7V/nBQ
+         ZjeYBcOXpxnMVFhStvkm3qSrrk39Vbmp5EY9GY7i2drA52md+rN3AH5t9d8r0TgeFZNz
+         tw/ORXRpXc9E6zjDPBTC35hNIHMr+7X2+Bt/wd9jC/lvPleiDxFGAMeKNMn6tZwOKAMw
+         +Fr6OtBOW8Ck2cXOQadIEhvAe9qMjojndUc9IB+nRn8EfKDQNJv3QpZ+jbkkt3DrMn/x
+         Qq4i23HE176PnzXDn8TVDQOGIPyiW8rEvw2ymMaPpVPUI/C+iiH4DcU3ekAl1SEKJ2/j
+         EL8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zCvEYr43bmvAI4c/u02EnPe5wklhcOBr52WpV3Wdhnc=;
+        b=Vk6u9LY32KjHPbj5wEHRWRVNw6fhKBiuPswD7QV+uYOlh421xMf+lFGY4vsXsFMYKh
+         Gx+Eu7mLaXn4+UhdHkZy54hv+kV0phaC2FaJrV6p2HKQetXSCtcGMq8bX7BhM/6V4ZTr
+         F+a0XsV2t4bv3/YyG5DGWJM84lgCCWkq1Lv4LAIwuc/uuhN8xr6/MaeaJCvZJCwEMbMM
+         uo6gVPTO9DrkAnOsq4BiBZ/IT7I3m7K5zUTAPrbNCTHo58BsqPVsBUmOsCYqcpQPR1Hh
+         VVXuhkycdF2L04FRYG4MObAa5C+M3NRk4KQjFwLGqkzhcRgG6u905nMWDmu7ANollngS
+         yuEA==
+X-Gm-Message-State: AOAM530NXO2RwudcFv+UYIFTrrsBdWERXFECjG9SGexL/xwiZps9DMkZ
+        H56u8bGKaR5Zd4rPZL+6vvvtyg==
+X-Google-Smtp-Source: ABdhPJxTZlxUGKYXKggwnjvqFMcBCaf45y5q+liL9GM89JskjMNjlM3bEhXyNhYs3yNR7dMSBMPRZA==
+X-Received: by 2002:a1c:cc12:: with SMTP id h18mr30459205wmb.3.1593701202335;
+        Thu, 02 Jul 2020 07:46:42 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 07:46:41 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH 08/30] usb: dwc3: dwc3-omap: Do not read DMA status
+Date:   Thu,  2 Jul 2020 15:46:03 +0100
+Message-Id: <20200702144625.2533530-9-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200701085947.3354405-17-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/1 16:59, Christoph Hellwig wrote:
-> The make_request_fn is a little weird in that it sits directly in
-> struct request_queue instead of an operation vector.  Replace it with
-> a block_device_operations method called submit_bio (which describes much
-> better what it does).  Also remove the request_queue argument to it, as
-> the queue can be derived pretty trivially from the bio.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Commit af566a0be6e49 ("usb: dwc3: omap: get rid of dma_status") rendered
+reading DMA status from the H/W even more redundant.  The variable hasn't
+been read/used since 2016.  Remove the set but unused variable and the call
+which populates it.
 
-For the bcache part,
+Fixes the following W=1 warning:
 
-Acked-by: Coly Li <colyli@suse.de>
+ drivers/usb/dwc3/dwc3-omap.c: In function ‘dwc3_omap_probe’:
+ drivers/usb/dwc3/dwc3-omap.c:460:8: warning: variable ‘reg’ set but not used [-Wunused-but-set-variable]
+ 460 | u32 reg;
+ | ^~~
 
-> ---
->  Documentation/block/biodoc.rst                |  2 +-
->  .../block/writeback_cache_control.rst         |  2 +-
->  arch/m68k/emu/nfblock.c                       |  5 +-
->  arch/xtensa/platforms/iss/simdisk.c           |  5 +-
->  block/blk-cgroup.c                            |  2 +-
->  block/blk-core.c                              | 53 +++++++------------
->  block/blk-mq.c                                | 10 ++--
->  block/blk.h                                   |  2 -
->  drivers/block/brd.c                           |  5 +-
->  drivers/block/drbd/drbd_int.h                 |  2 +-
->  drivers/block/drbd/drbd_main.c                |  9 ++--
->  drivers/block/drbd/drbd_req.c                 |  2 +-
->  drivers/block/null_blk_main.c                 | 17 ++++--
->  drivers/block/pktcdvd.c                       | 11 ++--
->  drivers/block/ps3vram.c                       | 15 +++---
->  drivers/block/rsxx/dev.c                      |  7 ++-
->  drivers/block/umem.c                          |  5 +-
->  drivers/block/zram/zram_drv.c                 | 11 ++--
->  drivers/lightnvm/core.c                       |  8 +--
->  drivers/lightnvm/pblk-init.c                  | 12 +++--
->  drivers/md/bcache/request.c                   |  4 +-
->  drivers/md/bcache/request.h                   |  4 +-
->  drivers/md/bcache/super.c                     | 23 +++++---
->  drivers/md/dm.c                               | 23 ++++----
->  drivers/md/md.c                               |  5 +-
->  drivers/nvdimm/blk.c                          |  5 +-
->  drivers/nvdimm/btt.c                          |  5 +-
->  drivers/nvdimm/pmem.c                         |  5 +-
->  drivers/nvme/host/core.c                      |  1 +
->  drivers/nvme/host/multipath.c                 |  5 +-
->  drivers/nvme/host/nvme.h                      |  1 +
->  drivers/s390/block/dcssblk.c                  |  9 ++--
->  drivers/s390/block/xpram.c                    |  6 +--
->  include/linux/blk-mq.h                        |  2 +-
->  include/linux/blkdev.h                        |  7 +--
->  include/linux/lightnvm.h                      |  3 +-
->  36 files changed, 153 insertions(+), 140 deletions(-)
-> 
-[snipped]
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-omap@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/usb/dwc3/dwc3-omap.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-> diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
-> index 7acf024e99f351..fc5702b10074d6 100644
-> --- a/drivers/md/bcache/request.c
-> +++ b/drivers/md/bcache/request.c
-> @@ -1158,7 +1158,7 @@ static void quit_max_writeback_rate(struct cache_set *c,
->  
->  /* Cached devices - read & write stuff */
->  
-> -blk_qc_t cached_dev_make_request(struct request_queue *q, struct bio *bio)
-> +blk_qc_t cached_dev_submit_bio(struct bio *bio)
->  {
->  	struct search *s;
->  	struct bcache_device *d = bio->bi_disk->private_data;
-> @@ -1291,7 +1291,7 @@ static void flash_dev_nodata(struct closure *cl)
->  	continue_at(cl, search_free, NULL);
->  }
->  
-> -blk_qc_t flash_dev_make_request(struct request_queue *q, struct bio *bio)
-> +blk_qc_t flash_dev_submit_bio(struct bio *bio)
->  {
->  	struct search *s;
->  	struct closure *cl;
-> diff --git a/drivers/md/bcache/request.h b/drivers/md/bcache/request.h
-> index bb005c93dd7218..82b38366a95deb 100644
-> --- a/drivers/md/bcache/request.h
-> +++ b/drivers/md/bcache/request.h
-> @@ -37,10 +37,10 @@ unsigned int bch_get_congested(const struct cache_set *c);
->  void bch_data_insert(struct closure *cl);
->  
->  void bch_cached_dev_request_init(struct cached_dev *dc);
-> -blk_qc_t cached_dev_make_request(struct request_queue *q, struct bio *bio);
-> +blk_qc_t cached_dev_submit_bio(struct bio *bio);
->  
->  void bch_flash_dev_request_init(struct bcache_device *d);
-> -blk_qc_t flash_dev_make_request(struct request_queue *q, struct bio *bio);
-> +blk_qc_t flash_dev_submit_bio(struct bio *bio);
->  
->  extern struct kmem_cache *bch_search_cache;
->  
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index 21aa168113d30b..de13f6e916966d 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -680,7 +680,16 @@ static int ioctl_dev(struct block_device *b, fmode_t mode,
->  	return d->ioctl(d, mode, cmd, arg);
->  }
->  
-> -static const struct block_device_operations bcache_ops = {
-> +static const struct block_device_operations bcache_cached_ops = {
-> +	.submit_bio	= cached_dev_submit_bio,
-> +	.open		= open_dev,
-> +	.release	= release_dev,
-> +	.ioctl		= ioctl_dev,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const struct block_device_operations bcache_flash_ops = {
-> +	.submit_bio	= flash_dev_submit_bio,
->  	.open		= open_dev,
->  	.release	= release_dev,
->  	.ioctl		= ioctl_dev,
-> @@ -820,8 +829,8 @@ static void bcache_device_free(struct bcache_device *d)
->  }
->  
->  static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
-> -			      sector_t sectors, make_request_fn make_request_fn,
-> -			      struct block_device *cached_bdev)
-> +		sector_t sectors, struct block_device *cached_bdev,
-> +		const struct block_device_operations *ops)
->  {
->  	struct request_queue *q;
->  	const size_t max_stripes = min_t(size_t, INT_MAX,
-> @@ -868,10 +877,10 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
->  
->  	d->disk->major		= bcache_major;
->  	d->disk->first_minor	= idx_to_first_minor(idx);
-> -	d->disk->fops		= &bcache_ops;
-> +	d->disk->fops		= ops;
->  	d->disk->private_data	= d;
->  
-> -	q = blk_alloc_queue(make_request_fn, NUMA_NO_NODE);
-> +	q = blk_alloc_queue(NUMA_NO_NODE);
->  	if (!q)
->  		return -ENOMEM;
->  
-> @@ -1355,7 +1364,7 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
->  
->  	ret = bcache_device_init(&dc->disk, block_size,
->  			 dc->bdev->bd_part->nr_sects - dc->sb.data_offset,
-> -			 cached_dev_make_request, dc->bdev);
-> +			 dc->bdev, &bcache_cached_ops);
->  	if (ret)
->  		return ret;
->  
-> @@ -1468,7 +1477,7 @@ static int flash_dev_run(struct cache_set *c, struct uuid_entry *u)
->  	kobject_init(&d->kobj, &bch_flash_dev_ktype);
->  
->  	if (bcache_device_init(d, block_bytes(c), u->sectors,
-> -			flash_dev_make_request, NULL))
-> +			NULL, &bcache_flash_ops))
->  		goto err;
->  
->  	bcache_device_attach(d, c, u - c->uuids);
-
+diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+index 8c3de2d258bf7..11288a370828c 100644
+--- a/drivers/usb/dwc3/dwc3-omap.c
++++ b/drivers/usb/dwc3/dwc3-omap.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * dwc3-omap.c - OMAP Specific Glue layer
+  *
+  * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
+@@ -457,8 +457,6 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+ 	int			ret;
+ 	int			irq;
+ 
+-	u32			reg;
+-
+ 	void __iomem		*base;
+ 
+ 	if (!node) {
+@@ -503,9 +501,6 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+ 	dwc3_omap_map_offset(omap);
+ 	dwc3_omap_set_utmi_mode(omap);
+ 
+-	/* check the DMA Status */
+-	reg = dwc3_omap_readl(omap->base, USBOTGSS_SYSCONFIG);
+-
+ 	ret = dwc3_omap_extcon_register(omap);
+ 	if (ret < 0)
+ 		goto err1;
+-- 
+2.25.1
 
