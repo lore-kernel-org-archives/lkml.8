@@ -2,125 +2,133 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E219E221EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385F120885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="y2q6/ZIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGBV7l (ORCPT
+        id S1726791AbgGBWA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbgGBV6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:58:33 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0F0921532;
-        Thu,  2 Jul 2020 21:58:32 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jr7Dz-004Bdt-R9; Thu, 02 Jul 2020 17:58:31 -0400
-Message-ID: <20200702215831.710770737@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Thu, 02 Jul 2020 17:58:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [for-next][PATCH 02/18] x86/ftrace: Make non direct case the default in ftrace_regs_caller
-References: <20200702215812.428188663@goodmis.org>
+        Thu, 2 Jul 2020 18:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgGBWAX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 18:00:23 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF010C08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 15:00:22 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id y10so31577184eje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 15:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hQjS9Ie2JLW+5joMKLIKCU6b/2UCakl57GgRGFSlTtk=;
+        b=y2q6/ZImKC9EyqaN+Cp25cLz1ciVm4U7qtXibl4rJLq7yDQxPIwOaQiDW4uPnhkAI8
+         VRW0HSRxSAmlfFw/Jce/k0WugBY6dAl4O6HQ/sc/VLK6/v4c05dZ28qBMUNFtXbku8Ch
+         AULevi22Fz6RKjCBjNEoLvV62nXHhiI0ALpbVAFFC6eC3/8cU19LT7W6/+o8hdExkIVp
+         SpzhSXPTolBo/5B/rPenjUqcOQ+Q44Ekpah8XqISOcoMHY3/BTSU/R5r9kYGnOKn1iQ4
+         3Eelioz4+/tk104uJvI7uaxboR8nMC2mTgZeV8NgshGTgOJtB/3rVeJ8cjXz8tU5nKfO
+         mLBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hQjS9Ie2JLW+5joMKLIKCU6b/2UCakl57GgRGFSlTtk=;
+        b=scs1oMpIo7HgFxYTjsO+XHV3GWmsShWeeDMe2uPHHGtQPhC1TLTQn4xKAY8syJvaoZ
+         Yh/yutJFiGNw3VSDgS11k3kdkKx0ewsVSBDc3yFPxXu6lNJyDDlDOgNknnsrscslblTd
+         ciROxU3kErWvx2bUiPKQ6Zn3UVhR8KdvjONbpgaDXnU8AVYfw9GS9F2+LPFWxT+wkV2j
+         hF/XBpE+lunzKCRGyiSU/hheO9E21foNC4EdhL1D5PAMG/4Y7pLwyQbuWYGA0CaoyEIu
+         XXAHAVcMi3i+CZl0Y+5CAGw20ezRfhOT2T5KHjD1y8Mn4siUaXueau+J1A/uz/7aqZ0f
+         cLGQ==
+X-Gm-Message-State: AOAM531xaJIgw9q7/FL/mKPXYRtSId4eidoxIwuBEP+0edn1+IuIdjN3
+        9Odsyhb+46cl1iEicpYsx2bAeWbkQDoE0n7P8EKX
+X-Google-Smtp-Source: ABdhPJymg7hoMn4NQo9VkFS8SsNN1VIXxrtL9dctJ/u8BOTmybW6CezLxVIBxEEQqtZorAPFuFOU58gSTBkhV1lUPSk=
+X-Received: by 2002:a17:906:456:: with SMTP id e22mr23944788eja.178.1593727221274;
+ Thu, 02 Jul 2020 15:00:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20200701064906.323185-1-areber@redhat.com> <20200701064906.323185-4-areber@redhat.com>
+ <20200702211647.GB3283@mail.hallyn.com>
+In-Reply-To: <20200702211647.GB3283@mail.hallyn.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 2 Jul 2020 18:00:10 -0400
+Message-ID: <CAHC9VhQZ=cwiOay6OMMdM1UHm69wDaga9HBkyTbx8-1OU=aBvA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] prctl: Allow ptrace capable processes to change /proc/self/exe
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Thu, Jul 2, 2020 at 5:16 PM Serge E. Hallyn <serge@hallyn.com> wrote:
+> On Wed, Jul 01, 2020 at 08:49:06AM +0200, Adrian Reber wrote:
+> > From: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+> >
+> > Previously, the current process could only change the /proc/self/exe
+> > link with local CAP_SYS_ADMIN.
+> > This commit relaxes this restriction by permitting such change with
+> > CAP_CHECKPOINT_RESTORE, and the ability to use ptrace.
+> >
+> > With access to ptrace facilities, a process can do the following: fork a
+> > child, execve() the target executable, and have the child use ptrace()
+> > to replace the memory content of the current process. This technique
+> > makes it possible to masquerade an arbitrary program as any executable,
+> > even setuid ones.
+> >
+> > Signed-off-by: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+> > Signed-off-by: Adrian Reber <areber@redhat.com>
+>
+> This is scary.  But I believe it is safe.
+>
+> Reviewed-by: Serge Hallyn <serge@hallyn.com>
+>
+> I am a bit curious about the implications of the selinux patch.
+> IIUC you are using the permission of the tracing process to
+> execute the file without transition, so this is a way to work
+> around the policy which might prevent the tracee from doing so.
+> Given that SELinux wants to be MAC, I'm not *quite* sure that's
+> considered kosher.  You also are skipping the PROCESS__PTRACE
+> to SECCLASS_PROCESS check which selinux_bprm_set_creds does later
+> on.  Again I'm just not quite sure what's considered normal there
+> these days.
+>
+> Paul, do you have input there?
 
-If a direct function is hooked along with one of the ftrace registered
-functions, then the ftrace_regs_caller is attached to the function that
-shares the direct hook as well as the ftrace hook. The ftrace_regs_caller
-will call ftrace_ops_list_func() that iterates through all the registered
-ftrace callbacks, and if there's a direct callback attached to that
-function, the direct ftrace_ops callback is called to notify that
-ftrace_regs_caller to return to the direct caller instead of going back to
-the function that called it.
+I agree, the SELinux hook looks wrong.  Building on what Christian
+said, this looks more like a ptrace operation than an exec operation.
 
-But this is a very uncommon case. Currently, the code has it as the default
-case. Modify ftrace_regs_caller to make the default case (the non jump) to
-just return normally, and have the jump to the handling of the direct
-caller.
-
-Link: http://lkml.kernel.org/r/20200422162750.350373278@goodmis.org
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/kernel/ftrace_64.S | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 083a3da7bb73..3ba32cc58f01 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -241,22 +241,9 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	 */
- 	movq ORIG_RAX(%rsp), %rax
- 	testq	%rax, %rax
--	jz	1f
-+	jnz	1f
- 
--	/* Swap the flags with orig_rax */
--	movq MCOUNT_REG_SIZE(%rsp), %rdi
--	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
--	movq %rax, MCOUNT_REG_SIZE(%rsp)
--
--	restore_mcount_regs 8
--	/* Restore flags */
--	popfq
--
--SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
--	UNWIND_HINT_RET_OFFSET
--	jmp	ftrace_epilogue
--
--1:	restore_mcount_regs
-+	restore_mcount_regs
- 	/* Restore flags */
- 	popfq
- 
-@@ -266,9 +253,21 @@ SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
- 	 * The trampoline will add the code to jump
- 	 * to the return.
- 	 */
--SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-+SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL)
- 	jmp ftrace_epilogue
- 
-+	/* Swap the flags with orig_rax */
-+1:	movq MCOUNT_REG_SIZE(%rsp), %rdi
-+	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
-+	movq %rax, MCOUNT_REG_SIZE(%rsp)
-+
-+	restore_mcount_regs 8
-+	/* Restore flags */
-+	popfq
-+SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-+	UNWIND_HINT_RET_OFFSET
-+	jmp	ftrace_epilogue
-+
- SYM_FUNC_END(ftrace_regs_caller)
- 
- 
 -- 
-2.26.2
-
-
+paul moore
+www.paul-moore.com
