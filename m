@@ -2,106 +2,85 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15472077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124282088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593670582;
-	bh=dN0mizsIIkB+I5Pm1n6gaqSQctATXJofWBLGecbcwGA=;
+	s=default; t=1593670777;
+	bh=MxgNV0Luz6uzOBEruxYvte7N0aBjm3Mo8LXs6BS4BXc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ho/zyJgnDWYrZa9M3S7PjIhzPibB4xWzKFgKShSuXw9JJpRH9wh41BRiZcCrmoNR9
-	 bRp7FV5qaRIToWqQJoHnMSGkdqPlNDlbjeXW5hcLB0N2UZLearIdr3Qla9ACtNjLWJ
-	 Aek0bqYUB8KPrg/tnQbDOpoGISDAUxEarcK30omY=
+	b=Uv4MQtFlCYZMVGfevUPUxNWp0CBrek49igO2O1Sojhe0wfFFKRukiuxkFZwUJwRdI
+	 DyHL94+h33Vmqjsk2YB9mdmTpAbu9KDJ0eg2HWQ/pY+FW0bQPfLkoRC0TUNdnkxT8K
+	 y6xd2olwbXBdfwC2q7ubaFcmcCQKXQ1jSjWieOZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgGBGQV (ORCPT
+        id S1726244AbgGBGTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:16:21 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:35113 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgGBGQU (ORCPT
+        Thu, 2 Jul 2020 02:19:35 -0400
+Received: from mail-ej1-f45.google.com ([209.85.218.45]:41016 "EHLO
+        mail-ej1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgGBGTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:16:20 -0400
-Received: by mail-ej1-f67.google.com with SMTP id rk21so27844107ejb.2;
-        Wed, 01 Jul 2020 23:16:19 -0700 (PDT)
+        Thu, 2 Jul 2020 02:19:35 -0400
+Received: by mail-ej1-f45.google.com with SMTP id dp18so27834620ejc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:19:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=asJB3DmZKuKIHGzbAUilqlxuUPwGBy0bD6WFb3w9qmI=;
-        b=twQsTXfHAm3Ofy9WGo6iTQth94PkIC2erWUGbCr8ejJUVxy+4cvInBm5WkS9i5gNPv
-         NtYlyd+Z33Anz/mKP+UNatXb6rabybxpYfbwkEvju/lzwkwu2Yi+3WWUET/todkGmHAE
-         ecE5P9jEgw+fOqos4BcVK6Fn2/5xNA25+H3QmCugrbWyS+veGdpqCGHfq8fIAukSRhSx
-         zS2eHLJ1umZBk0mzSVkwmIzSlGbFae5lj1byXu7vbF7FAUPAE7a/gVPC+1COS8PS1tCe
-         OqYQ7w+zN6KQmtEs4zxJqsVx6FhjNLlGGk2uwQAdhe0jXmrFgxzjB2oJkYKybXDSIthf
-         ugMw==
-X-Gm-Message-State: AOAM532Vc/wpPQdX+K2yoE6oN07rCgkskHNpSKG7zAvxB5/YHugv1mkO
-        SU62tIsypg5OO86WO4jo3126yjx6
-X-Google-Smtp-Source: ABdhPJysWqg+M+Y1cev+9zbHZwY89lD8Vq/lDl/1VbeLtMjuR39qx67zQwvhvBQsiIQ0edve30zw1g==
-X-Received: by 2002:a17:906:57c6:: with SMTP id u6mr25548743ejr.194.1593670578627;
-        Wed, 01 Jul 2020 23:16:18 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id ck6sm7155992edb.18.2020.07.01.23.16.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Jul 2020 23:16:17 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 08:16:11 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Fix missing empty reg/ranges
- property regulators on Trats
-Message-ID: <20200702061611.GC4175@kozik-lap>
-References: <CGME20200629210025eucas1p219a52e75ecce9e813aa80f0126780189@eucas1p2.samsung.com>
- <20200629205948.32250-1-krzk@kernel.org>
- <97651868-30f3-6b91-1ea2-551ee1ebad8f@samsung.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=KI1xByR8EdweHRLmqVp5qJFfLoJv1RlZqf4LrtxTZZM=;
+        b=q7CmMA87d1Zuz6FIZ/BGtV8lP/MyyMednrHQRUyQG8btlBXMU9B2vWNkDfpWalhf9P
+         bOgj68tJ+TRmPeE69iw5eICSaySMydOLWvsoHT/5G9fmT6zSX+eeY5yfM8STd/jq7vd2
+         BkcD4XMp8Ej5exJdZNSgMsIAnjAoNF7sIp3J/96ZT6vOyKbajo9OAS7r7p804YV2vSbH
+         Rfz5sN768ygNx9OFmWCbiZoBLfoIpwF4semljfszyTDMI/gY4AsBIeRDhCvz6+F26z0C
+         wfkmCTWmBGCenJZ/hP7iIYjnLbYWMnbFBRm72HLCj25V0kcZkC2+lJeJ92YdXOYOLwKP
+         X1Gw==
+X-Gm-Message-State: AOAM531i6LFX8lLYuc8tyvU/+ot4J8ZWm4Oe0nU6g4wjKcP4D9QDAOyr
+        hMX+pLwWX+s1SPwfDuHc5B4=
+X-Google-Smtp-Source: ABdhPJzZfQ/Vzu5+dRVQkkNl0kWBWztA+Fk3jN9N0Ylyp4s2Cn6jrsAZ5Vcgq6iJfuiL4Ft9VS55sQ==
+X-Received: by 2002:a17:906:33ca:: with SMTP id w10mr18728327eja.171.1593670773586;
+        Wed, 01 Jul 2020 23:19:33 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id u19sm9559612edd.62.2020.07.01.23.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 23:19:32 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 08:19:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>
+Subject: Re: BUG: Bad page state in process - page dumped because: page still
+ charged to cgroup
+Message-ID: <20200702061931.GB18446@dhcp22.suse.cz>
+References: <CA+G9fYs=3UG3k-2trqQuB-gJh9D1YygkNQ4qWiHtcaRMSWTmrQ@mail.gmail.com>
+ <20200701082904.GM2369@dhcp22.suse.cz>
+ <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97651868-30f3-6b91-1ea2-551ee1ebad8f@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:27:01AM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
-> 
-> On 29.06.2020 22:59, Krzysztof Kozlowski wrote:
-> > Remove the regulators node entirely because its children do not have any
-> > unit addresses.  This fixes DTC warning:
-> >
-> >      Warning (simple_bus_reg): /regulators/regulator-0: missing or empty reg/ranges property
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> 
-> What about removing the regulators node from other boards: 
-> exynos4412-origen.dts, exynos5420-smdk5420.dts and exynos5250-arndale.dts?
-> 
-> On the other hand, maybe it would be really easier to add missing 
-> address/size-cells properties to exynos4210-trats.dts/regulators node?
+On Wed 01-07-20 11:45:52, Roman Gushchin wrote:
+[...]
+> So it makes me think that somehow memcg_kmem_enabled() became false
+> after being true, which can cause refcounting problems as well.
 
-Indeed let's keep it consistent so in such case better to add here
-proper address/size-cells.
-
-Thanks for feedback!
-
-Best regards,
-Krzysztof
-
+Isn't this a similar class of problem as
+http://lkml.kernel.org/r/1593641660-13254-2-git-send-email-bhsharma@redhat.com?
+-- 
+Michal Hocko
+SUSE Labs
