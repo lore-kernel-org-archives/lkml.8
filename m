@@ -2,120 +2,117 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8348BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E47C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E09B21473
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:29:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcA01VsI"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6DC20899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 08:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593678687;
+	bh=QGpdAyRMoNsVdtVoCbNXP1VWmICFLyANXqWYO+rUTTs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F5lllI4EsIaaC/V1Va3oeiOuJJJlqdXzt9WlRmgmf1j/i44QfJWBM5y8AAmY28pQb
+	 cO5/FAmEOMIlMs0yBzS0YU/QxRLwEyIjZzTgMHqVIaEHtaFVoPhmu+AQIEtW4SDll8
+	 0RyjB3xki52q2gMJaeo5ojq4HtVW6y9dJnmmAhr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgGBI3w (ORCPT
+        id S1726924AbgGBIb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 04:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgGBI3v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 04:29:51 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B7EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 01:29:51 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id i18so23482861ilk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 01:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PFI6JgeUlJ0zCkzBIfqc7DEBAwFXOrcce0CKNSdhhaY=;
-        b=NcA01VsImeoYRghLx1f/WoCed8K77wkg/n2nxdjujvgeFu2ykNf91zWIdX1PgDF3bV
-         em7xudIT0qkiaGrFgK6BufPqJwFNBNTqz7dFJj7d3rvB0/bWFTarqjivuOptBwOD8Ust
-         +rmOlxyPBS8wJ5Ya/rrAkyuLHuOS3I6efbcAFYqVTRJ+pOEDgUeYfddbbaf+Cq8JnoN8
-         zktQlYolsZJThAht2LFFVUCgSkokUdBPvLowvkkzUaU/R6CM31lQjrFcRKMqndGnx5KB
-         JGWd9gfpLVsaNfW/EUkWNkcFqZ3PlycrOxGIhRVzY5gUOASui0lREVAWgEph38VQzlAH
-         XERQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PFI6JgeUlJ0zCkzBIfqc7DEBAwFXOrcce0CKNSdhhaY=;
-        b=S6G/qsN/jaApvJOZGfzbwko3N5N0hQ4d7cKIdikL39YpZIjEhsZnwYyTTX8+pUSwG5
-         XXuIDKGPfgxI4mouB9OS98uQLG4/118jJojLjnKNMfILG0Jcoa3hQ4a6AfUF26a8ZJVV
-         RKSPX3D6nHtN5OGSYyH9TxrSGLx3oSE5iCBgSZgO34gk6KF/hrBygpLx37eMs1OhfIoT
-         Pi03bYMmAS+9l7w8jjGNbgFJAKZhhqj2uTA3FfvO4MALqIVLXZFMatqntAkDsd57TOpI
-         A66uukMFVzWl0O1zs4Z8Jk3al1y940zEyHivr9CzbOzJmTiAe+eOxu3Cfvm1ceIZ/C5h
-         Nupw==
-X-Gm-Message-State: AOAM532tbPZSQ+UoSaGVO5FpzjFj51fu5hNPrGETHBax/IXOvBDnYEQm
-        QeY1izr8PQmwIUZPG7En4jZKL3e1xhD0iuJLtiM=
-X-Google-Smtp-Source: ABdhPJwNPbq0R1jANb1XdVAr90ksp6Cce11K5919+RTL7nX3VNOYDmwKtakBxB6hfuabbbme20388qd6mlT1cFzkquM=
-X-Received: by 2002:a92:9f96:: with SMTP id z22mr8671290ilk.266.1593678591282;
- Thu, 02 Jul 2020 01:29:51 -0700 (PDT)
+        Thu, 2 Jul 2020 04:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgGBIbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:31:25 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08AE8206A1;
+        Thu,  2 Jul 2020 08:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593678685;
+        bh=QGpdAyRMoNsVdtVoCbNXP1VWmICFLyANXqWYO+rUTTs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z1epipgTDmBHHxSLs1kheGHs/9TjzD4Pzu+GyUKLJ143corYoaQnOjaV6M4AZG8Cl
+         yaZqpViNj9UGoHkMZv/XMoDNCfiECTq00dmdP1Qkv3FUTuZgvkP26Ki5JBNnQbBpYT
+         hGB4gfDrBgh7bdE3oezH9cl61u67W2SDkluwi/4g=
+Received: by pali.im (Postfix)
+        id 2A905E92; Thu,  2 Jul 2020 10:31:23 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card connected
+Date:   Thu,  2 Jul 2020 10:30:36 +0200
+Message-Id: <20200702083036.12230-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200528143141.29956-1-pali@kernel.org>
+References: <20200528143141.29956-1-pali@kernel.org>
 MIME-Version: 1.0
-References: <1592567631-20363-1-git-send-email-gene.chen.richtek@gmail.com>
- <1592567631-20363-3-git-send-email-gene.chen.richtek@gmail.com> <20200701071620.GQ1179328@dell>
-In-Reply-To: <20200701071620.GQ1179328@dell>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Thu, 2 Jul 2020 16:29:38 +0800
-Message-ID: <CAE+NS35Kj_H9uSgBiff4hogTWmwh6z+vmPNWDh_yU1=p68xQZA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: mt6360: implement i2c R/W with CRC
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jic23@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        matthias.bgg@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, dmurphy@ti.com, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B47=E6=9C=881=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=883:16=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Fri, 19 Jun 2020, Gene Chen wrote:
->
-> > From: Gene Chen <gene_chen@richtek.com>
-> >
-> > imlement i2c R/W with CRC when access sub-device PMIC and LDO part
->
-> Please use proper grammar, including capital letters at the start of
-> the sentence and for abbreviations such as "I2C" and full stops.
->
-> Also this doesn't make sense to me.  Please elaborate.
->
+When there is no PCIe card connected and advk_pcie_rd_conf() or
+advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+root bridge, the aardvark driver throws the following error message:
 
-ACK
+  advk-pcie d0070000.pcie: config read/write timed out
 
-> > Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> > ---
-> >  drivers/mfd/Kconfig        |   1 +
-> >  drivers/mfd/mt6360-core.c  | 541 +++++++++++++++++++++++++++++--------=
---------
->
-> This patch is doing way too much wacky stuff all at once, making it
-> very difficult to review.  Please break it up into functional pieces
-> and submit as separate logical patches (in a set of course).
->
+Obviously accessing PCIe registers of disconnected card is not possible.
 
-If I understand correctly, I need to separate patch[2/4] but not
-entire mt6362-core.c into several patches.
+Extend check in advk_pcie_valid_device() function for validating
+availability of PCIe bus. If PCIe link is down, then the device is marked
+as Not Found and the driver does not try to access these registers.
 
-> >  include/linux/mfd/mt6360.h | 240 --------------------
-> >  3 files changed, 357 insertions(+), 425 deletions(-)
-> >  delete mode 100644 include/linux/mfd/mt6360.h
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+This is just an optimization to prevent accessing PCIe registers when card
+is disconnected. Trying to access PCIe registers of disconnected card does
+not cause any crash, kernel just needs to wait for a timeout. So if card
+disappear immediately after checking for PCIe link (before accessing PCIe
+registers), it does not cause any problems.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+
+---
+Changes in V3:
+* Add comment to the code
+Changes in V2:
+* Update commit message, mention that this is optimization
+---
+ drivers/pci/controller/pci-aardvark.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 90ff291c24f0..d18f389b36a1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -644,6 +644,13 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+ 	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+ 		return false;
+ 
++	/*
++	 * If the link goes down after we check for link-up, nothing bad
++	 * happens but the config access times out.
++	 */
++	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
++		return false;
++
+ 	return true;
+ }
+ 
+-- 
+2.20.1
+
