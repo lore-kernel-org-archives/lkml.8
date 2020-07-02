@@ -2,95 +2,108 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED327C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C15FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C134B20760
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCY4DxR8"
+	by mail.kernel.org (Postfix) with ESMTP id 40DAA20760
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 09:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgGBJqa (ORCPT
+        id S1727906AbgGBJsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 05:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbgGBJqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 05:46:30 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B70BC08C5C1;
-        Thu,  2 Jul 2020 02:46:29 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c11so15633383lfh.8;
-        Thu, 02 Jul 2020 02:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ziNTEH7a/u4WtxooTaLjfTLBlD+cFdaZkcpe66wJNrQ=;
-        b=dCY4DxR83TkZUzSuEFKMdLgVxrtaCm7ny9MsL+C20yxSAbs40TUFGG5cn6gzNR04ri
-         SAb6uN+xlYaV3BMCxvhEhpniQXlQIYkMJMnSvRCU/BZHtTA4c1mf4bhqGzMlDAfty/6l
-         jjPUUEX++xSA3dbIcjb0duOyEd9rdaIxFSrYWA+bNgQK5lx5r6tMRuui3yjOuCgwwEz7
-         BQbgh6Eh8AmxNiH+kSMZ6kJFM/tkvQKm8ANva9NpGRWxcmiwU3P+y4R9XQyVfI8uBPaw
-         Cp7FS7VCg80XmfUdu6GF1ChaCJh7Bnk8Y/8K3Cfwybd2DKcfrEjpudPssCS2LHJUQs7f
-         zHBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ziNTEH7a/u4WtxooTaLjfTLBlD+cFdaZkcpe66wJNrQ=;
-        b=t2ENDGSHz7CnNtRej1ibThKfEMWnYIKegUTf1hfEer0Mn7tLHHL9SWUtuMATKEG81/
-         YGi76RFdWBgff59PpJblknVeyHXHImYV1We1nYKtvTVuXakIdAqP/RlTO6XF22BTD32c
-         hVPMkKzmM9wCsSMI8OFtY4ftoCBmvkd8l3m84Hb4VnOjrcSY5Ekccu6pB+6i8ir+nSBg
-         mSoK2VB5PJ49TrAlMRZKEnjmXqzJkoSzfZAx2ItX3n9wgppt2o02h5IjJmEKKMseiFl2
-         ZIQvkHKdmfB036XPiMSUuXH8eqa8Anw0QEQf4lboHuWL4tw0WqK1HoubETz9eVhr+8El
-         7Owg==
-X-Gm-Message-State: AOAM532grnU6doxwMGAR7JZwdn6ab9crEhylQaKL2WgrKmiX0TIoPAlx
-        JlLG/eIkKtpCtzTNcjd9NoKyVbSQHvEQlQQBFow=
-X-Google-Smtp-Source: ABdhPJxfK4BDsZqz4Aifp6YcuY0H9tlI5VdJFUkNhexgbBdZ61vRE9kzltWFWhH/qBpO6UYfYH5xChvVItl1/PlQC2c=
-X-Received: by 2002:ac2:46f0:: with SMTP id q16mr17941299lfo.51.1593683188191;
- Thu, 02 Jul 2020 02:46:28 -0700 (PDT)
+        Thu, 2 Jul 2020 05:48:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25208 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726555AbgGBJsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 05:48:09 -0400
+IronPort-SDR: NGBI4Fq2mlW8pYu/gBtQwUHP34eXyVplRtl5HUJtxCpGCXLnJ/MuBbRiIRmzdpMA4p/9/RNQ+g
+ /sbkW+43EJiw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="126935773"
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="126935773"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 02:48:08 -0700
+IronPort-SDR: MfId8Xsu+pXlIBLT1E+9fv/iiNoFYtd++gWymsw2yHsvG9sWxYALZwFkKAD2yM4c+SnyCT72lE
+ YVtF4tDtg/8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="265657264"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Jul 2020 02:48:07 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jqvpA-00HBHk-Oy; Thu, 02 Jul 2020 12:48:08 +0300
+Date:   Thu, 2 Jul 2020 12:48:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ricardo Ribalda <ribalda@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v3] i2c: designware: platdrv: Set class based on dmi
+Message-ID: <20200702094808.GP3703480@smile.fi.intel.com>
+References: <20200702093832.2077252-1-ribalda@kernel.org>
 MIME-Version: 1.0
-References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de>
-In-Reply-To: <20200701200951.3603160-17-hch@lst.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 2 Jul 2020 11:46:17 +0200
-Message-ID: <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
-Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method calls
- to seq_read_iter
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702093832.2077252-1-ribalda@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Thu, Jul 02, 2020 at 11:38:32AM +0200, Ricardo Ribalda wrote:
+> Current AMD's zen-based APUs use this core for some of its i2c-buses.
+> 
+> With this patch we re-enable autodetection of hwmon-alike devices, so
+> lm-sensors will be able to work automatically.
+> 
+> It does not affect the boot-time of embedded devices, as the class is
+> set based on the dmi information.
 
-On Wed, Jul 1, 2020 at 10:25 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Switch over all instances used directly as methods using these sed
-> expressions:
->
-> sed -i -e 's/\.read\(\s*=\s*\)seq_read/\.read_iter\1seq_read_iter/g'
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+dmi -> DMI
 
-Nit: the replacements don't take into account the spaces/tabs needed
-to align the designated initializers.
+> Dmi is probed only on Qtechnology QT5222 Industrial Camera Platform
 
-Cheers,
-Miguel
+Dmi -> DMI
+
+> https://qtec.com/camera-technology-camera-platforms/
+
+Use DocLink: tag.
+
+...
+
+> +static const struct dmi_system_id allow_probe[] = {
+
+allow_probe -> dw_i2c_hwmon_class_dmi
+
+> +	{
+> +		.ident = "Qtechnology QT5222",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
+
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222")
+
+Comma is missed.
+
+> +		}
+> +	},
+
+> +
+
+Redundant.
+
+> +	{ }
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
