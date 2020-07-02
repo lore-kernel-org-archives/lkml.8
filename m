@@ -2,119 +2,226 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2238C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3377BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BAF207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A17207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cit2iqZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgGBSyE (ORCPT
+        id S1726100AbgGBSzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:54:04 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33859 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgGBSyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:54:03 -0400
-IronPort-SDR: S9ILGZcGBBcjMcL0lYqjP9z3mJWEqF6tNU7eVKyQikHXNJddRwGCWqzZQ+r1y9L8LCaK5Aplah
- zEEO4Xodtzaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="212034227"
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="212034227"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 11:54:03 -0700
-IronPort-SDR: CC/vtgNsaWOz//xrtb6pWysiLk9porL5m+VulPA8Ik9jNfAKqYSRTILgihgSFwQbuTT8sMN++q
- BRAUNlUi0hxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
-   d="scan'208";a="455622731"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 11:54:03 -0700
-Date:   Thu, 2 Jul 2020 11:54:03 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] KVM: X86: Go on updating other CPUID leaves when
- leaf 1 is absent
-Message-ID: <20200702185403.GH3575@linux.intel.com>
-References: <20200623115816.24132-1-xiaoyao.li@intel.com>
- <20200623115816.24132-3-xiaoyao.li@intel.com>
+        Thu, 2 Jul 2020 14:55:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54907 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725915AbgGBSzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:55:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593716143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bv4WKkdC+fvRUd3hbwVt1FRHxjhG8fwl0G5V2XBrHX8=;
+        b=cit2iqZfBRoxxizb4uiXlJZ5TWVnOkpf1U7EppfFNdscIA/h68vwU5UfcwUx0DEIUO0gw+
+        MU+UICADfh4Z9G1sjTheObh/5158ggxBqesihKcPbEm+k3ZAtrRnI6Qzh3WbK0aK41YFme
+        j/ZaQDXba/kBsKXh+CsrPOzzZxfFQvA=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-129-8GMUtQhRNke1EE8-3kADwg-1; Thu, 02 Jul 2020 14:55:42 -0400
+X-MC-Unique: 8GMUtQhRNke1EE8-3kADwg-1
+Received: by mail-qt1-f197.google.com with SMTP id o11so19946008qti.23
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:55:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bv4WKkdC+fvRUd3hbwVt1FRHxjhG8fwl0G5V2XBrHX8=;
+        b=hCrwtHRLWVb8uu8a8pcwWtidedlMbYd4ShJ/Ay4R6hnszAHBhPEiJ3vDkfyzq9Wtyb
+         CIzPTAN0D7L2NS7c+Fogz42Gm5ZfuEzCYDwXf748at2gl17PEb0tfLVdYHgpZk/aoTRS
+         fN48vlYJF0piZwpuhs+ilkZ65T2bFwV9GWuZkjAJDs9j2cIXsDLMk3GYoEZL9Z9tLzV3
+         F7NpgFK+XCsyLn0qG0rJDyOrTCu6APMAZowGygmNRdMYOSqV4qAo9A98VNK9VdFCTPYo
+         bwWSANyCvAct25wt/BunWRSq2FwSc/4sRhSF+9VhQEbrcEsceE4oWeicqKxiwtB9bOeN
+         EY9A==
+X-Gm-Message-State: AOAM532E5zAG2thpunDWdLruBdE1eNvovU7aya1N347fz85LSRA/CRFz
+        YPJdN9G5Xu0ndXC5bA75jwmsBuyXFw/WxlPN2MGHJVd0q+QkIJaHEphgw4yl1QpIdzm0gTYSJ8a
+        0ib/UYo79/cpeaunQH41qqYdlh9my35g/GA5yqNDQ
+X-Received: by 2002:a05:620a:a1d:: with SMTP id i29mr30837123qka.29.1593716141432;
+        Thu, 02 Jul 2020 11:55:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwC/GKhfGSPW/4u2gS6vbyX3rvreRTTq9PBRiST/sZ1yzsqE82Z8QEBNCcVVf9zm6QL4FO/GBvYlD3O8+Du2w4=
+X-Received: by 2002:a05:620a:a1d:: with SMTP id i29mr30837101qka.29.1593716141105;
+ Thu, 02 Jul 2020 11:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623115816.24132-3-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ <1593641660-13254-2-git-send-email-bhsharma@redhat.com> <20200702060024.GA18446@dhcp22.suse.cz>
+In-Reply-To: <20200702060024.GA18446@dhcp22.suse.cz>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Fri, 3 Jul 2020 00:25:29 +0530
+Message-ID: <CACi5LpPhCSzRbY=f0pAy5pMkgQWuScHs0qzChDZgy1hjYsjyRA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/memcontrol: Fix OOPS inside mem_cgroup_get_nr_swap_pages()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:58:11PM +0800, Xiaoyao Li wrote:
-> As handling of bits other leaf 1 added over time, kvm_update_cpuid()
-> should not return directly if leaf 1 is absent, but should go on
-> updateing other CPUID leaves.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Hi Michal,
 
-This should probably be marked for stable.
+On Thu, Jul 2, 2020 at 11:30 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 02-07-20 03:44:19, Bhupesh Sharma wrote:
+> > Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
+> > function in a corner case seen on some arm64 boards when kdump kernel
+> > runs with "cgroup_disable=memory" passed to the kdump kernel via
+> > bootargs.
+> >
+> > The root-cause behind the same is that currently mem_cgroup_swap_init()
+> > function is implemented as a subsys_initcall() call instead of a
+> > core_initcall(), this means 'cgroup_memory_noswap' still
+> > remains set to the default value (false) even when memcg is disabled via
+> > "cgroup_disable=memory" boot parameter.
+> >
+> > This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
+> > function in corner cases:
+> >
+> >   [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
+> >   [    0.274495] Mem abort info:
+> >   [    0.277311]   ESR = 0x96000006
+> >   [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
+> >   [    0.285751]   SET = 0, FnV = 0
+> >   [    0.288830]   EA = 0, S1PTW = 0
+> >   [    0.291995] Data abort info:
+> >   [    0.294897]   ISV = 0, ISS = 0x00000006
+> >   [    0.298765]   CM = 0, WnR = 0
+> >   [    0.301757] [0000000000000188] user address but active_mm is swapper
+> >   [    0.308174] Internal error: Oops: 96000006 [#1] SMP
+> >   [    0.313097] Modules linked in:
+> >   <..snip..>
+> >   [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
+> >   [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+> >   [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
+> >   [    0.347564] sp : fffffe0012b6f800
+> >   [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
+> >   [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
+> >   [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
+> >   [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
+> >   [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
+> >   [    0.377720] x19: 0000000000000000 x18: 0000000000000010
+> >   [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
+> >   [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
+> >   [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
+> >   [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
+> >   [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
+> >   [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
+> >   [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
+> >   [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
+> >   [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
+> >   [    0.431346] Call trace:
+> >   [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+> >   [    0.438735]  shrink_lruvec+0x404/0x4f8
+> >   [    0.442516]  shrink_node+0x1a8/0x688
+> >   [    0.446121]  do_try_to_free_pages+0xe8/0x448
+> >   [    0.450429]  try_to_free_pages+0x110/0x230
+> >   [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
+> >   [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
+> >   [    0.464938]  alloc_page_interleave+0x20/0x90
+> >   [    0.469246]  alloc_pages_current+0xdc/0xf8
+> >   [    0.473379]  atomic_pool_expand+0x60/0x210
+> >   [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
+> >   [    0.481910]  dma_atomic_pool_init+0xac/0x158
+> >   [    0.486220]  do_one_initcall+0x50/0x218
+> >   [    0.490091]  kernel_init_freeable+0x22c/0x2d0
+> >   [    0.494489]  kernel_init+0x18/0x110
+> >   [    0.498007]  ret_from_fork+0x10/0x18
+> >   [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
+> >   [    0.507770] ---[ end trace 9795948475817de4 ]---
+> >   [    0.512429] Kernel panic - not syncing: Fatal exception
+> >   [    0.517705] Rebooting in 10 seconds..
+> >
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: cgroups@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: kexec@lists.infradead.org
+>
+> Fixes: eccb52e78809 ("mm: memcontrol: prepare swap controller setup for integration")
+>
+> > Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>
+> This is subtle as hell, I have to say. I find the ordering in the init
+> calls very unintuitive and extremely hard to follow. The above commit
+> has introduced the problem but the code previously has worked mostly by
+> a luck because our default was flipped.
+>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-> ---
->  arch/x86/kvm/cpuid.c | 23 +++++++++++------------
->  1 file changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 1d13bad42bf9..0164dac95ef5 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -60,22 +60,21 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  
->  	best = kvm_find_cpuid_entry(vcpu, 1, 0);
-> -	if (!best)
-> -		return 0;
+Thanks for reviewing the patch. Indeed its quite a corner case seen
+only selected arm64 machines.
 
-Rather than wrap the existing code, what about throwing it in a separate
-helper?  That generates an easier to read diff and also has the nice
-property of getting 'apic' out of the common code.
+Regards,
+Bhupesh
 
-> -
-> -	/* Update OSXSAVE bit */
-> -	if (boot_cpu_has(X86_FEATURE_XSAVE) && best->function == 0x1)
-> -		cpuid_entry_change(best, X86_FEATURE_OSXSAVE,
-> +	if (best) {
-> +		/* Update OSXSAVE bit */
-> +		if (boot_cpu_has(X86_FEATURE_XSAVE))
-> +			cpuid_entry_change(best, X86_FEATURE_OSXSAVE,
->  				   kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE));
->  
-> -	cpuid_entry_change(best, X86_FEATURE_APIC,
-> +		cpuid_entry_change(best, X86_FEATURE_APIC,
->  			   vcpu->arch.apic_base & MSR_IA32_APICBASE_ENABLE);
->  
-> -	if (apic) {
-> -		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
-> -			apic->lapic_timer.timer_mode_mask = 3 << 17;
-> -		else
-> -			apic->lapic_timer.timer_mode_mask = 1 << 17;
-> +		if (apic) {
-> +			if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
-> +				apic->lapic_timer.timer_mode_mask = 3 << 17;
-> +			else
-> +				apic->lapic_timer.timer_mode_mask = 1 << 17;
-> +		}
->  	}
->  
->  	best = kvm_find_cpuid_entry(vcpu, 7, 0);
-> -- 
-> 2.18.2
-> 
+> > ---
+> >  mm/memcontrol.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 19622328e4b5..8323e4b7b390 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
+> >       { },    /* terminate */
+> >  };
+> >
+> > +/*
+> > + * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
+> > + * instead of a core_initcall(), this could mean cgroup_memory_noswap still
+> > + * remains set to false even when memcg is disabled via "cgroup_disable=memory"
+> > + * boot parameter. This may result in premature OOPS inside
+> > + * mem_cgroup_get_nr_swap_pages() function in corner cases.
+> > + */
+> >  static int __init mem_cgroup_swap_init(void)
+> >  {
+> >       /* No memory control -> no swap control */
+> > @@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
+> >
+> >       return 0;
+> >  }
+> > -subsys_initcall(mem_cgroup_swap_init);
+> > +core_initcall(mem_cgroup_swap_init);
+> >
+> >  #endif /* CONFIG_MEMCG_SWAP */
+> > --
+> > 2.7.4
+>
+> --
+> Michal Hocko
+> SUSE Labs
+>
+
