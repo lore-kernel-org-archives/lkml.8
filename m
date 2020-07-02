@@ -2,83 +2,154 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E793EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D4920780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBF520780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGBQtm (ORCPT
+        id S1726786AbgGBQvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:49:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:42966 "EHLO foss.arm.com"
+        Thu, 2 Jul 2020 12:51:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:43094 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgGBQtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:49:41 -0400
+        id S1726300AbgGBQvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:51:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ED211FB;
-        Thu,  2 Jul 2020 09:49:41 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DCAF3F71E;
-        Thu,  2 Jul 2020 09:49:40 -0700 (PDT)
-References: <20200701190656.10126-1-valentin.schneider@arm.com> <20200701190656.10126-3-valentin.schneider@arm.com> <20200702121536.GA765585@google.com> <jhjk0zm7zv8.mognet@arm.com> <20200702154514.GA1072702@google.com> <jhjfta9994q.mognet@arm.com> <20200702163748.GA1125675@google.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
-Subject: Re: [PATCH v3 2/7] sched/topology: Define and assign sched_domain flag metadata
-In-reply-to: <20200702163748.GA1125675@google.com>
-Date:   Thu, 02 Jul 2020 17:49:38 +0100
-Message-ID: <jhjeept980t.mognet@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E9D11FB;
+        Thu,  2 Jul 2020 09:51:07 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 772803F71E;
+        Thu,  2 Jul 2020 09:51:05 -0700 (PDT)
+Subject: Re: [PATCH RFT] iio: adc: xilinx-xadc: use devm_krealloc()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200702162509.11254-1-brgl@bgdev.pl>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b3456494-ce89-f981-a76e-fcb1b252a0bd@arm.com>
+Date:   Thu, 2 Jul 2020 17:51:04 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200702162509.11254-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-07-02 17:25, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Use the managed variant of krealloc() and shrink the code a bit.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+> NOTE: this patch depends on the series adding devm_krealloc() which is
+> not yet accepted.
+> 
+> Greg,
+> 
+> here's just a quick example of a second user of devm_krealloc(). This time
+> we're reallocing memory allocated with devm_kmemdup(). Hopefully this is
+> enough to prove this helper is useful enough to merge it.
 
-On 02/07/20 17:37, Quentin Perret wrote:
-> On Thursday 02 Jul 2020 at 17:25:41 (+0100), Valentin Schneider wrote:
->> It's actually pretty close to what happens with the LLC domain on SMP -
->> select_idle_sibling() doesn't look outside of it. The wake_affine() stuff
->> might steer the task towards a different LLC, but that's about it for
->> wakeups. We rely on load balancing (fork/exec, newidle, nohz and periodic)
->> to spread this further - and we would here too.
->
-> Sure, but on SMP the search space in select_idle_sibling is always
-> consistent -- you search within the LLC. With the fix you suggested,
-> CPUs 0-3 will search within their LLCs, while CPU4 searches the entire
-> system, which creates an imbalanced mess IMO.
->
+Ooh, interesting - I also had to open-code an effective devm_krealloc() 
+to subclass an devres-managed allocation in cavium_smmu_impl_init() 
+(drivers/iommu/arm-smmu-impl.c), and we've got patches in-flight for 
+another SMMU quirk that wants to follow the same pattern. I'd gladly 
+have the extra clarity of a proper helper (and save a couple of lines) 
+for those cases as well.
 
-Yeah, it is a mess.
+Robin.
 
-> For affine wake-ups, you could migrate from CPU4 -> CPU0-3, but CPU0-3
-> to CPU4 is not possible
-
-AIU the wake_affine bits, you get to steer the wakeup towards the waking
-CPU. So if the task previously ran on CPU0-3, wake_affine can make the
-target CPU4 (waking CPU), so it would become a possible candidate.
-
-But as you say, this thing is still an ugly asymmetric mess.
-
-> so this asymmetry is almost guaranteed to
-> actively create imbalance. And sure, the periodic load balancer ought to
-> fix it, but really wake-up balance and periodic load balance should be
-> pushing in the same direction and not fighting against each other.
->
-> Anyways, enough bikeshedding for today, I'll try and have look at the
-> rest of the series :)
->
-
-Thanks!
-
-> Cheers,
-> Quentin
+> I can't test it due to lack of HW though.
+> 
+>   drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+> index d7fecab9252e..5bdbe502e983 100644
+> --- a/drivers/iio/adc/xilinx-xadc-core.c
+> +++ b/drivers/iio/adc/xilinx-xadc-core.c
+> @@ -1094,6 +1094,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
+>   static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
+>   	unsigned int *conf)
+>   {
+> +	struct device *dev = indio_dev->dev.parent;
+>   	struct xadc *xadc = iio_priv(indio_dev);
+>   	struct iio_chan_spec *channels, *chan;
+>   	struct device_node *chan_node, *child;
+> @@ -1138,7 +1139,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
+>   		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
+>   	}
+>   
+> -	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
+> +	channels = devm_kmemdup(dev, xadc_channels,
+> +				sizeof(xadc_channels), GFP_KERNEL);
+>   	if (!channels)
+>   		return -ENOMEM;
+>   
+> @@ -1174,8 +1176,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
+>   	of_node_put(chan_node);
+>   
+>   	indio_dev->num_channels = num_channels;
+> -	indio_dev->channels = krealloc(channels, sizeof(*channels) *
+> -					num_channels, GFP_KERNEL);
+> +	indio_dev->channels = devm_krealloc(dev, channels,
+> +					    sizeof(*channels) * num_channels,
+> +					    GFP_KERNEL);
+>   	/* If we can't resize the channels array, just use the original */
+>   	if (!indio_dev->channels)
+>   		indio_dev->channels = channels;
+> @@ -1229,14 +1232,14 @@ static int xadc_probe(struct platform_device *pdev)
+>   
+>   	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
+>   	if (ret)
+> -		goto err_device_free;
+> +		return ret;
+>   
+>   	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
+>   		ret = iio_triggered_buffer_setup(indio_dev,
+>   			&iio_pollfunc_store_time, &xadc_trigger_handler,
+>   			&xadc_buffer_ops);
+>   		if (ret)
+> -			goto err_device_free;
+> +			return ret;
+>   
+>   		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
+>   		if (IS_ERR(xadc->convst_trigger)) {
+> @@ -1354,8 +1357,6 @@ static int xadc_probe(struct platform_device *pdev)
+>   err_triggered_buffer_cleanup:
+>   	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
+>   		iio_triggered_buffer_cleanup(indio_dev);
+> -err_device_free:
+> -	kfree(indio_dev->channels);
+>   
+>   	return ret;
+>   }
+> @@ -1375,7 +1376,6 @@ static int xadc_remove(struct platform_device *pdev)
+>   	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+>   	clk_disable_unprepare(xadc->clk);
+>   	kfree(xadc->data);
+> -	kfree(indio_dev->channels);
+>   
+>   	return 0;
+>   }
+> 
