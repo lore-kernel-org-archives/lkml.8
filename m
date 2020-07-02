@@ -2,196 +2,145 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D91C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9012084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="YlQ9pF7A"
+	by mail.kernel.org (Postfix) with ESMTP id B0B822084C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgGBKB6 (ORCPT
+        id S1728343AbgGBKCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgGBKB5 (ORCPT
+        Thu, 2 Jul 2020 06:02:17 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:40469 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgGBKCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:01:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB673C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 03:01:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so26054476wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=zR26Xhy2G+eY0HqU3wMJ0rmUDSZXWCuQzZljZslDQZc=;
-        b=YlQ9pF7ADm8jiiTkcapeL+FYckkTO+KJpnPdbVSBoYaiBvOUHfZAx9CodOizdKgsNc
-         a2FIWapk4J0D/kJogR20vITg9TwvrDUyZkE2F7pOEHaCg11+3y8dmdFIwZt6EZQfLfV2
-         N7AX34BsMO+vxLb2ThbB57hpkMRlEuuzprGrM=
+        Thu, 2 Jul 2020 06:02:15 -0400
+Received: by mail-il1-f197.google.com with SMTP id m64so19169646ill.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 03:02:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zR26Xhy2G+eY0HqU3wMJ0rmUDSZXWCuQzZljZslDQZc=;
-        b=M4VeuB9dSfFu5DcjHpOL39cXB9iNI/w+DpI5a6y7WsdIkwoHgHeDwvSZWB6iKLOXxc
-         sO9Jh0MdWNLgHB2ET6gtE/DUAanj89qHLDKqm8PlmXSBdMtGQxuOr14iGgI7dAow6fVD
-         Fpv+z4bKyfgV4muhPf0lUwrD5ie3S7lT5R7uadTCxGvd0sf8BgRQhNHMJcKlEq6voD9z
-         XEoC6WfeN1oYBIG0adWCtvwu+/sP4MTOeC6Nqu8ziHUmJQ2sKsUR7mEpsQbPAEE5MbZr
-         xr907Ud2fWAUT8Ifm+2U+2byCS/r75c75zO9QR74nWCAF7tTnLIz5blNSjj9WbF7lv8q
-         v4jA==
-X-Gm-Message-State: AOAM533P3tgKsarFZVHH0BSQ2A5O8u7USL/Ti2V+cesrfs7M1ZgCoC6A
-        lXArJ7gntR6JCBfucX7XM3WnVQ==
-X-Google-Smtp-Source: ABdhPJxFd4KPobStYvRWnTWiqoQM4UsiF6fqmUXbsmW+fDq6oEBtC8UpFkSOL+liCdPm4paeAmQHWA==
-X-Received: by 2002:a7b:cd09:: with SMTP id f9mr32406526wmj.160.1593684115437;
-        Thu, 02 Jul 2020 03:01:55 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id z63sm5566702wmb.2.2020.07.02.03.01.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 03:01:54 -0700 (PDT)
-Subject: Re: [PATCH net-next v3 2/3] bridge: mrp: Add br_mrp_fill_info
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
-        jiri@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org,
-        UNGLinuxDriver@microchip.com
-References: <20200702081307.933471-1-horatiu.vultur@microchip.com>
- <20200702081307.933471-3-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <64dd72f9-2b81-335a-e6ae-85376c72aa47@cumulusnetworks.com>
-Date:   Thu, 2 Jul 2020 13:01:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=I2TZiyWWg+x4g0ftnTY+ci49EZOdDdJP5dPgJjQJwsY=;
+        b=a1VCMTTCOa9WpruzNWJgrgtIyGGEi1JhFsYYlMHDCvaPqlF0lwV8riS4Bu16VTRiKb
+         4kuggG66wghex1E7shBy7+Pe3w3mT+DabUIw/a7qx6kyWhtoZ5vNthnIkM0OR7nke8By
+         IrglSDecbroZNHrVmPMNgB1Ua0+fvqJIsY52VW/NIl2LeDWAqAyQ39AYs+KlmGYYbiEF
+         vgfIJukW1X4HUZYpfkoexzsPP9sESf8URGla0pcQwjuybx6jA8/0+JL0FToZ4bJ6c8U5
+         LllYBTSKZzrLZNYvPHkmIzhlVF4+dX0UodkgibweXxsbU5dGK/+JHlo7ZK7BN8UQx72U
+         LkBQ==
+X-Gm-Message-State: AOAM533IynL6EqZh5O3hqQD+cG3VSZphwKJlCu34GjFLHZZVq2neBVPz
+        3zYEyUZq3bdpvz0UzIEE7u/7e+Y01K/Qzm8tRXgZLUNtgup+
+X-Google-Smtp-Source: ABdhPJwWFsGZdUwNgwwL/ZmJRM0bbrRycFiGovtXtYUFJl3vRmUcVyotoaJKtU4bmn1JJjWjWZoSBiqDMEqogG9ysN5+HCIvwtaR
 MIME-Version: 1.0
-In-Reply-To: <20200702081307.933471-3-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:4409:: with SMTP id r9mr6501262ioa.158.1593684134778;
+ Thu, 02 Jul 2020 03:02:14 -0700 (PDT)
+Date:   Thu, 02 Jul 2020 03:02:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bcdeaa05a97280e4@google.com>
+Subject: linux-next test error: KASAN: stack-out-of-bounds Read in bio_alloc_bioset
+From:   syzbot <syzbot+bf04628c1f6179269b0b@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2020 11:13, Horatiu Vultur wrote:
-> Add the function br_mrp_fill_info which populates the MRP attributes
-> regarding the status of each MRP instance.
-> 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  net/bridge/br_mrp_netlink.c | 64 +++++++++++++++++++++++++++++++++++++
->  net/bridge/br_private.h     |  7 ++++
->  2 files changed, 71 insertions(+)
-> 
+Hello,
 
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+syzbot found the following crash on:
 
-> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> index 34b3a8776991f..c4f5c356811f3 100644
-> --- a/net/bridge/br_mrp_netlink.c
-> +++ b/net/bridge/br_mrp_netlink.c
-> @@ -304,6 +304,70 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
->  	return 0;
->  }
->  
-> +int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
-> +{
-> +	struct nlattr *tb, *mrp_tb;
-> +	struct br_mrp *mrp;
-> +
-> +	mrp_tb = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP);
-> +	if (!mrp_tb)
-> +		return -EMSGSIZE;
-> +
-> +	list_for_each_entry_rcu(mrp, &br->mrp_list, list) {
-> +		struct net_bridge_port *p;
-> +
-> +		tb = nla_nest_start_noflag(skb, IFLA_BRIDGE_MRP_INFO);
-> +		if (!tb)
-> +			goto nla_info_failure;
-> +
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_ID,
-> +				mrp->ring_id))
-> +			goto nla_put_failure;
-> +
-> +		p = rcu_dereference(mrp->p_port);
-> +		if (p && nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_P_IFINDEX,
-> +				     p->dev->ifindex))
-> +			goto nla_put_failure;
-> +
-> +		p = rcu_dereference(mrp->s_port);
-> +		if (p && nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_S_IFINDEX,
-> +				     p->dev->ifindex))
-> +			goto nla_put_failure;
-> +
-> +		if (nla_put_u16(skb, IFLA_BRIDGE_MRP_INFO_PRIO,
-> +				mrp->prio))
-> +			goto nla_put_failure;
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_STATE,
-> +				mrp->ring_state))
-> +			goto nla_put_failure;
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_RING_ROLE,
-> +				mrp->ring_role))
-> +			goto nla_put_failure;
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_INTERVAL,
-> +				mrp->test_interval))
-> +			goto nla_put_failure;
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_MAX_MISS,
-> +				mrp->test_max_miss))
-> +			goto nla_put_failure;
-> +		if (nla_put_u32(skb, IFLA_BRIDGE_MRP_INFO_TEST_MONITOR,
-> +				mrp->test_monitor))
-> +			goto nla_put_failure;
-> +
-> +		nla_nest_end(skb, tb);
-> +	}
-> +	nla_nest_end(skb, mrp_tb);
-> +
-> +	return 0;
-> +
-> +nla_put_failure:
-> +	nla_nest_cancel(skb, tb);
-> +
-> +nla_info_failure:
-> +	nla_nest_cancel(skb, mrp_tb);
-> +
-> +	return -EMSGSIZE;
-> +}
-> +
->  int br_mrp_port_open(struct net_device *dev, u8 loc)
->  {
->  	struct net_bridge_port *p;
-> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-> index 6a7d8e218ae7e..65d2c163a24ab 100644
-> --- a/net/bridge/br_private.h
-> +++ b/net/bridge/br_private.h
-> @@ -1317,6 +1317,7 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
->  int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
->  bool br_mrp_enabled(struct net_bridge *br);
->  void br_mrp_port_del(struct net_bridge *br, struct net_bridge_port *p);
-> +int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br);
->  #else
->  static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
->  			       struct nlattr *attr, int cmd,
-> @@ -1339,6 +1340,12 @@ static inline void br_mrp_port_del(struct net_bridge *br,
->  				   struct net_bridge_port *p)
->  {
->  }
-> +
-> +static inline int br_mrp_fill_info(struct sk_buff *skb, struct net_bridge *br)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif
->  
->  /* br_netlink.c */
-> 
+HEAD commit:    d37d5704 Add linux-next specific files for 20200702
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1549d0a3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a0a0972a399422ff
+dashboard link: https://syzkaller.appspot.com/bug?extid=bf04628c1f6179269b0b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bf04628c1f6179269b0b@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: stack-out-of-bounds in bio_list_empty include/linux/bio.h:561 [inline]
+BUG: KASAN: stack-out-of-bounds in bio_alloc_bioset+0x5b2/0x5d0 block/bio.c:482
+Read of size 8 at addr ffffc90000fc7150 by task kworker/u4:4/169
+
+CPU: 0 PID: 169 Comm: kworker/u4:4 Not tainted 5.8.0-rc3-next-20200702-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ bio_list_empty include/linux/bio.h:561 [inline]
+ bio_alloc_bioset+0x5b2/0x5d0 block/bio.c:482
+ bio_clone_fast+0x21/0x1b0 block/bio.c:710
+ bio_split+0xc7/0x2c0 block/bio.c:1477
+ blk_bio_segment_split block/blk-merge.c:281 [inline]
+ __blk_queue_split+0x10e2/0x1650 block/blk-merge.c:331
+ blk_mq_submit_bio+0x1b0/0x1760 block/blk-mq.c:2169
+ __submit_bio_noacct_mq block/blk-core.c:1181 [inline]
+ submit_bio_noacct+0xc9e/0x12d0 block/blk-core.c:1214
+ submit_bio+0x263/0x5b0 block/blk-core.c:1284
+ ext4_io_submit fs/ext4/page-io.c:382 [inline]
+ io_submit_add_bh fs/ext4/page-io.c:423 [inline]
+ ext4_bio_write_page+0x9a8/0x1c27 fs/ext4/page-io.c:550
+ mpage_submit_page+0x140/0x2c0 fs/ext4/inode.c:2082
+ mpage_map_and_submit_buffers fs/ext4/inode.c:2330 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2469 [inline]
+ ext4_writepages+0x237e/0x3960 fs/ext4/inode.c:2782
+ do_writepages+0xec/0x290 mm/page-writeback.c:2352
+ __writeback_single_inode+0x125/0x1400 fs/fs-writeback.c:1461
+ writeback_sb_inodes+0x53d/0xf40 fs/fs-writeback.c:1721
+ __writeback_inodes_wb+0xc6/0x280 fs/fs-writeback.c:1790
+ wb_writeback+0x8bb/0xd40 fs/fs-writeback.c:1896
+ wb_check_background_flush fs/fs-writeback.c:1964 [inline]
+ wb_do_writeback fs/fs-writeback.c:2052 [inline]
+ wb_workfn+0xb20/0x13e0 fs/fs-writeback.c:2080
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+
+addr ffffc90000fc7150 is located in stack of task kworker/u4:4/169 at offset 80 in frame:
+ arch_atomic64_read arch/x86/include/asm/atomic64_64.h:22 [inline]
+ arch_atomic64_fetch_add_unless include/linux/atomic-arch-fallback.h:2195 [inline]
+ arch_atomic64_add_unless include/linux/atomic-arch-fallback.h:2220 [inline]
+ arch_atomic64_inc_not_zero include/linux/atomic-arch-fallback.h:2236 [inline]
+ atomic64_inc_not_zero include/asm-generic/atomic-instrumented.h:1609 [inline]
+ atomic_long_inc_not_zero include/asm-generic/atomic-long.h:497 [inline]
+ percpu_ref_tryget_live include/linux/percpu-refcount.h:282 [inline]
+ submit_bio_noacct+0x0/0x12d0 block/blk-core.c:433
+
+this frame has 3 objects:
+ [32, 40) 'bio'
+ [64, 80) 'bio_list'
+ [96, 128) 'bio_list_on_stack'
+
+Memory state around the buggy address:
+ ffffc90000fc7000: 00 00 00 f2 f2 f2 00 00 00 00 00 f3 f3 f3 f3 f3
+ ffffc90000fc7080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc90000fc7100: f1 f1 f1 f1 00 f2 f2 f2 00 00 f2 f2 00 00 00 00
+                                                 ^
+ ffffc90000fc7180: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc90000fc7200: 00 00 00 f1 f1 f1 f1 00 f2 f2 f2 00 00 00 00 f3
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
