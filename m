@@ -2,111 +2,118 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F077C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4922088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91CD2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ivDhSFxF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pW3OTAOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgGBT6h (ORCPT
+        id S1726265AbgGBT7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:58:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39563 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725915AbgGBT6g (ORCPT
+        Thu, 2 Jul 2020 15:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGBT7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:58:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593719914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BCLQe5LsYyu8+abDQmSCBVAAF5BIKekyAy1XEbhzlKo=;
-        b=ivDhSFxFRaZunoCtIeH5Up8PVHF6cVZPZ+dQPnCkQMlRTvOdW+sEqOjONKnTWKwNYW/PKM
-        5bT37aGKqHguX0qvK3hN3fGnbOhb9LTFJUpMB6ILqRo/s+LpnmRuJ4lvwSCdkZi9VUMGs+
-        Tli5mRQ3pfKclnLBFkZH5VQfbZ/KQ6s=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-lD7J-lzWMz2o-A2leOn6gg-1; Thu, 02 Jul 2020 15:58:33 -0400
-X-MC-Unique: lD7J-lzWMz2o-A2leOn6gg-1
-Received: by mail-oi1-f199.google.com with SMTP id n67so15945448oif.14
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 12:58:32 -0700 (PDT)
+        Thu, 2 Jul 2020 15:59:15 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC27CC08C5C1;
+        Thu,  2 Jul 2020 12:59:14 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o8so28704897wmh.4;
+        Thu, 02 Jul 2020 12:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Sn8FkMa3krbqM8mmfm6ud5V1sSg7l8Y8Fkbs+NZhIHk=;
+        b=pW3OTAOnVEGuX+d9PS4rXy5WEU6yN/BeJXnezhxh50m2JTgSCrclOfQ1qWilAtkUw1
+         IuPFMFAy7M2qwsfmJvM5Ws9EuLGFyg+eTqx6EfNWdVmWl5Qhnf9Iz4zUwp4iPBHErUf+
+         VW6wdvFAp4AXrMO2912e/baqJVly/MFmcSOKnw6nfHRueOIhudKE6TmCTs3V6OzJ9mNG
+         Hkp9ihaNJG9RCwaCpJfnLpsUQa+97HWfJ18DuBDNnxNIJtSRgt77S7FPVirQrd9DfRCH
+         A7fP4tKYte+W0Oq4HM2jPs7W3kgHpC+y9yE/cKXxGczDGflwQXkzygMPb7441UDHtspg
+         JL/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BCLQe5LsYyu8+abDQmSCBVAAF5BIKekyAy1XEbhzlKo=;
-        b=I1WO2QXaOZ7R+BsO+sNxDRIkkUMBcO3aTV7j8XhFnXLX7oHGL1+WQJhUolo0AsNtwb
-         AeHc8gXxRJFyf1fxhLcYNGk2RKgFM+Dnqwt04Olam/MjGNn+p/3oCHseeimBLvMdsUwG
-         uN8CUIQXyzGa9GaEihigigTgQMTKDuMxh47f+9kGgC4+T+Qk5lb5T1+M/cbDoCOmNI1s
-         gzrCLe6yighG1m9lpjrBcFOHh99wdngbrAs/s1zmEBMrb7kDP2riiok6TCsabUKu1MNW
-         ReUkItlkStxK6FCcsk/I24jUxgB6LBj1cBqxF8LP0mrOX0QFMU2N8MUTm6umAg49sG6s
-         eE4Q==
-X-Gm-Message-State: AOAM5301sAZcM/34Sx81BtbS12QCxw1HM05W4BFI9QK3ZMNReqHuKjHE
-        QhpJtROQTvmZcsDjQ2WhBcUZYI3KM5E/wp6eU4+kOtz/cvTZoG5TGTHp3wzxSyTNHGqDiu54oAG
-        vJ73A5ADW3U/oc+1+QlTzF3OgPfo/ztB7HVTqANSN
-X-Received: by 2002:aca:494d:: with SMTP id w74mr7056888oia.72.1593719912200;
-        Thu, 02 Jul 2020 12:58:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw1L6FpDy+eyJr4Pj9GcmJ4apoM6n8berudx0byqdTDebDSJ2HNON1jP0UpltmJ0Pff2egMjbmK6hUutlfdI4E=
-X-Received: by 2002:aca:494d:: with SMTP id w74mr7056871oia.72.1593719911999;
- Thu, 02 Jul 2020 12:58:31 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sn8FkMa3krbqM8mmfm6ud5V1sSg7l8Y8Fkbs+NZhIHk=;
+        b=HRKQJCR0K9hB7vBbbUw/e5hG2PfvI3iQE9D5mBcpx6ZBi+GsBZTGU0QzfyZR3PSRa/
+         g4cF3bF8I0w48PsR1fdOpoo/u6gLMxiojT3zG/PSAVw2hQI7dEgD38QUoRlIDOZ1AMX7
+         YfBAbX+suBalh7TRCFVtKyr3hDnLQ1rOjffwhc7H+9TnrpS3L6KcolgUmH+nD0GszK/B
+         +n++iT0EFOowstc7OFW9Kdtut1vlccIxL1dTWnpVfFSZ8UKtP94v/A9+T2tqr3eLuGYj
+         WjEvNJ9rV3seuNUDPTp4g5kBqbuxI870VbfHRi7tu8RM1ltzzpXlVU9BAZDsLHXcp/2r
+         nYXw==
+X-Gm-Message-State: AOAM533oFmVroDjPhe6GId8mLuTk0Ygv4d7a8Bzhd2Q1llbKJ4fLKJHI
+        0Rde00GNLDq9igW8wnDsaDs=
+X-Google-Smtp-Source: ABdhPJwJiDR/PXzZEsvkH2mruteSVvKaUqVs/VBrynpu4Ag0rUBsGLoSfBkfYHGnonZIkZozd2RLjQ==
+X-Received: by 2002:a1c:f60d:: with SMTP id w13mr34925368wmc.51.1593719953696;
+        Thu, 02 Jul 2020 12:59:13 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id j24sm13143317wrd.43.2020.07.02.12.59.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 12:59:13 -0700 (PDT)
+Subject: Re: [net-next,PATCH 2/4] net: mdio-ipq4019: add clock support
+To:     Robert Marko <robert.marko@sartura.hr>, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+References: <20200702103001.233961-1-robert.marko@sartura.hr>
+ <20200702103001.233961-3-robert.marko@sartura.hr>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <e4921b83-0c80-65ad-6ddd-be2a12347d9c@gmail.com>
+Date:   Thu, 2 Jul 2020 12:59:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702165120.1469875-1-agruenba@redhat.com> <20200702165120.1469875-3-agruenba@redhat.com>
- <CAHk-=wgpsuC6ejzr3pn5ej5Yn5z4xthNUUOvmA7KXHHGynL15Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgpsuC6ejzr3pn5ej5Yn5z4xthNUUOvmA7KXHHGynL15Q@mail.gmail.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 2 Jul 2020 21:58:20 +0200
-Message-ID: <CAHc6FU5_JnK=LHtLL9or6E2+XMwNgmftdM_V71hDqk8apawC4A@mail.gmail.com>
-Subject: Re: [RFC 2/4] fs: Add IOCB_NOIO flag for generic_file_read_iter
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702103001.233961-3-robert.marko@sartura.hr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 8:06 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Thu, Jul 2, 2020 at 9:51 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> > Add an IOCB_NOIO flag that indicates to generic_file_read_iter that it
-> > shouldn't trigger any filesystem I/O for the actual request or for
-> > readahead.  This allows to do tentative reads out of the page cache as
-> > some filesystems allow, and to take the appropriate locks and retry the
-> > reads only if the requested pages are not cached.
->
-> This looks sane to me, except for this part:
-> >                 if (!PageUptodate(page)) {
-> > -                       if (iocb->ki_flags & IOCB_NOWAIT) {
-> > +                       if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_NOIO)) {
-> >                                 put_page(page);
-> >                                 goto would_block;
-> >                         }
->
-> This path doesn't actually initiate reads at all - it waits for
-> existing reads to finish.
->
-> So I think it should only check for IOCB_NOWAIT.
->
-> Of course, if you want to avoid both new reads to be submitted _and_
-> avoid waiting for existing pending reads, you should just set both
-> flags, and you get the semantics you want. So for your case, this may
-> not make any difference.
 
-Indeed, in the gfs2 case, waiting for existing pending reads should be
-fine. I'll send an update after some testing.
 
-Thanks,
-Andreas
+On 7/2/2020 3:29 AM, Robert Marko wrote:
+> Some newer SoC-s have a separate MDIO clock that needs to be enabled.
+> So lets add support for handling the clocks to the driver.
+> 
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  drivers/net/phy/mdio-ipq4019.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/mdio-ipq4019.c b/drivers/net/phy/mdio-ipq4019.c
+> index 0e78830c070b..7660bf006da0 100644
+> --- a/drivers/net/phy/mdio-ipq4019.c
+> +++ b/drivers/net/phy/mdio-ipq4019.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_mdio.h>
+> +#include <linux/clk.h>
+>  #include <linux/phy.h>
+>  #include <linux/platform_device.h>
+>  
+> @@ -24,8 +25,12 @@
+>  #define IPQ4019_MDIO_TIMEOUT	10000
+>  #define IPQ4019_MDIO_SLEEP		10
+>  
+> +#define QCA_MDIO_CLK_DEFAULT_RATE	100000000
 
+100MHz? Is not that going to be a tad too much for most MDIO devices out
+there?
+-- 
+Florian
