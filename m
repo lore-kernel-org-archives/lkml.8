@@ -2,103 +2,116 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA13C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E07AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3175720836
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:19:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aV2nyORk"
+	by mail.kernel.org (Postfix) with ESMTP id 33EFF207E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 04:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgGBES7 (ORCPT
+        id S1726418AbgGBE2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 00:18:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4351 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725805AbgGBES7 (ORCPT
+        Thu, 2 Jul 2020 00:28:25 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58243 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGBE2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 00:18:59 -0400
-X-UUID: 85ef42937a6b4e188dd4301f889dcbda-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/qeQiCFhQmAtM64O6dojVLSgPjBT9w/q1FMAsMB08+A=;
-        b=aV2nyORkzJYYiT6Gs1BsnJsWPTb2nM169cI40FCjrhWNY7q7VUcQqNxIplVbcPhfOKgzI54TCWo79ZxZpsXeQRRmpvjtwMAvcBI9dRoHJOplsTyRV50akMpQ/uFqvazZwa5jptrsmtUh0RfUC3Sy/UdBecZB6Dsnie8d8wm6z30=;
-X-UUID: 85ef42937a6b4e188dd4301f889dcbda-20200702
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2103082871; Thu, 02 Jul 2020 12:18:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 2 Jul 2020 12:18:50 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 12:18:50 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <bvanassche@acm.org>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2] scsi: ufs: Cleanup completed request without interrupt notification
-Date:   Thu, 2 Jul 2020 12:18:50 +0800
-Message-ID: <20200702041850.28028-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 2 Jul 2020 00:28:24 -0400
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0624QsOL032532;
+        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
+ Thu, 02 Jul 2020 13:26:54 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0624Qsh8032529
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+Date:   Thu, 2 Jul 2020 13:26:53 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C1DD82904CC95CD3D55608FC5688E3E24E6DF85F9CF1A10FBA16024867C278752000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200701153859.GT4332@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgc29tZWhvdyBubyBpbnRlcnJ1cHQgbm90aWZpY2F0aW9uIGlzIHJhaXNlZCBmb3IgYSBjb21w
-bGV0ZWQgcmVxdWVzdA0KYW5kIGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJlZCBieSBob3N0LCBV
-RlMgZHJpdmVyIG5lZWRzIHRvIGNsZWFudXANCml0cyBvdXRzdGFuZGluZyBiaXQgaW4gdWZzaGNk
-X2Fib3J0KCkuDQoNCk90aGVyd2lzZSwgc3lzdGVtIG1heSBjcmFzaCBieSBiZWxvdyBhYm5vcm1h
-bCBmbG93Og0KDQpBZnRlciB0aGlzIHJlcXVlc3QgaXMgcmVxdWV1ZWQgYnkgU0NTSSBsYXllciB3
-aXRoIGl0cw0Kb3V0c3RhbmRpbmcgYml0IHNldCwgdGhlIG5leHQgY29tcGxldGVkIHJlcXVlc3Qg
-d2lsbCB0cmlnZ2VyDQp1ZnNoY2RfdHJhbnNmZXJfcmVxX2NvbXBsKCkgdG8gaGFuZGxlIGFsbCAi
-Y29tcGxldGVkIG91dHN0YW5kaW5nDQpiaXRzIi4gSW4gdGhpcyB0aW1lLCB0aGUgImFibm9ybWFs
-IG91dHN0YW5kaW5nIGJpdCIgd2lsbCBiZSBkZXRlY3RlZA0KYW5kIHRoZSAicmVxdWV1ZWQgcmVx
-dWVzdCIgd2lsbCBiZSBjaG9zZW4gdG8gZXhlY3V0ZSByZXF1ZXN0DQpwb3N0LXByb2Nlc3Npbmcg
-Zmxvdy4gVGhpcyBpcyB3cm9uZyBhbmQgYmxrX2ZpbmlzaF9yZXF1ZXN0KCkgd2lsbA0KQlVHX09O
-IGJlY2F1c2UgdGhpcyByZXF1ZXN0IGlzIHN0aWxsICJhbGl2ZSIuDQoNCkl0IGlzIHdvcnRoIG1l
-bnRpb25pbmcgdGhhdCBiZWZvcmUgdWZzaGNkX2Fib3J0KCkgY2xlYW5zIHRoZSB0aW1lZC1vdXQN
-CnJlcXVlc3QsIGRyaXZlciBuZWVkcyB0byBjaGVjayBhZ2FpbiBpZiB0aGlzIHJlcXVlc3QgaXMg
-cmVhbGx5IG5vdA0KaGFuZGxlZCBieSBfX3Vmc2hjZF90cmFuc2Zlcl9yZXFfY29tcGwoKSB5ZXQg
-YmVjYXVzZSBpdCBpcyBwb3NzaWJsZQ0KdGhhdCBpdHMgaW50ZXJydXB0IGNvbWVzIHZlcnkgbGF0
-ZWx5IGJlZm9yZSB0aGUgY2xlYW5pbmcuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxz
-dGFubGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5j
-IHwgOSArKysrKysrLS0NCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZl
-cnMvc2NzaS91ZnMvdWZzaGNkLmMNCmluZGV4IGNhZGZhOTAwNjk3Mi4uMGY0ZjMyNTVlNDAzIDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9zY3Np
-L3Vmcy91ZnNoY2QuYw0KQEAgLTY0NjIsNyArNjQ2Miw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fi
-b3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkNCiAJCQkvKiBjb21tYW5kIGNvbXBsZXRlZCBhbHJl
-YWR5ICovDQogCQkJZGV2X2VycihoYmEtPmRldiwgIiVzOiBjbWQgYXQgdGFnICVkIHN1Y2Nlc3Nm
-dWxseSBjbGVhcmVkIGZyb20gREIuXG4iLA0KIAkJCQlfX2Z1bmNfXywgdGFnKTsNCi0JCQlnb3Rv
-IG91dDsNCisJCQlnb3RvIGNsZWFudXA7DQogCQl9IGVsc2Ugew0KIAkJCWRldl9lcnIoaGJhLT5k
-ZXYsDQogCQkJCSIlczogbm8gcmVzcG9uc2UgZnJvbSBkZXZpY2UuIHRhZyA9ICVkLCBlcnIgJWRc
-biIsDQpAQCAtNjQ5Niw5ICs2NDk2LDE0IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2Fib3J0KHN0cnVj
-dCBzY3NpX2NtbmQgKmNtZCkNCiAJCWdvdG8gb3V0Ow0KIAl9DQogDQorY2xlYW51cDoNCisJc3Bp
-bl9sb2NrX2lycXNhdmUoaG9zdC0+aG9zdF9sb2NrLCBmbGFncyk7DQorCWlmICghdGVzdF9iaXQo
-dGFnLCBoYmEtPm91dHN0YW5kaW5nX3JlcXMpKSB7DQorCQlzcGluX3VubG9ja19pcnFyZXN0b3Jl
-KGhvc3QtPmhvc3RfbG9jaywgZmxhZ3MpOw0KKwkJZ290byBvdXQ7DQorCX0NCiAJc2NzaV9kbWFf
-dW5tYXAoY21kKTsNCiANCi0Jc3Bpbl9sb2NrX2lycXNhdmUoaG9zdC0+aG9zdF9sb2NrLCBmbGFn
-cyk7DQogCXVmc2hjZF9vdXRzdGFuZGluZ19yZXFfY2xlYXIoaGJhLCB0YWcpOw0KIAloYmEtPmxy
-Ylt0YWddLmNtZCA9IE5VTEw7DQogCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoaG9zdC0+aG9zdF9s
-b2NrLCBmbGFncyk7DQotLSANCjIuMTguMA0K
+On 2020/07/02 0:38, Luis Chamberlain wrote:
+> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+>  		 */
+>  		if (KWIFEXITED(ret))
+>  			sub_info->retval = KWEXITSTATUS(ret);
+> +		/*
+> +		 * Do we really want to be passing the signal, or do we pass
+> +		 * a single error code for all cases?
+> +		 */
+> +		else if (KWIFSIGNALED(ret))
+> +			sub_info->retval = KWTERMSIG(ret);
+
+No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
+and e.g. SIGKILL'ed by the OOM-killer. Please pass raw exit status value.
+
+I feel that caller of usermode helper should not use exit status value.
+For example, call_sbin_request_key() is checking
+
+  test_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags) || key_validate(key) < 0
+
+condition (if usermode helper was invoked) in order to "ignore any errors from
+userspace if the key was instantiated".
+
+> +		/* Same here */
+> +		else if (KWIFSTOPPED((ret)))
+> +			sub_info->retval = KWSTOPSIG(ret);
+> +		/* And are we really sure we want this? */
+> +		else if (KWIFCONTINUED((ret)))
+> +			sub_info->retval = 0;
+>  	}
+>  
+>  	/* Restore default kernel sig handler */
+> 
 
