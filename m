@@ -2,117 +2,100 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62422C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334A220720
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EFB207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 03:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z8kwD0sC"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="HJNGE/iV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgGBDGX (ORCPT
+        id S1726474AbgGBDIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 23:06:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50133 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726094AbgGBDGX (ORCPT
+        Wed, 1 Jul 2020 23:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgGBDIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 23:06:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593659181;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qeIaIEJc94t9oaVvAhehA4A3clx6kWGL/yNP4QpP1wc=;
-        b=Z8kwD0sCmFQLJ8g6Ljk4s9YvmFCSEoQe7qAWygGTCnl2+yaGx5rsZnfgvaIGo2XKKppWTT
-        y4w+MDkSg3fvveVmCss5s/V8UFZm1+n+C18MDVeI1caHNSSneOzy6fk50gnClTpR2NlZKO
-        L0H4lWdgmYCP8CVD4+sKGxwHT3k2kL0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-5_ARSzpKPziJDyNbg8kvtA-1; Wed, 01 Jul 2020 23:06:18 -0400
-X-MC-Unique: 5_ARSzpKPziJDyNbg8kvtA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8C5B800D5C;
-        Thu,  2 Jul 2020 03:06:17 +0000 (UTC)
-Received: from [10.72.13.248] (ovpn-13-248.pek2.redhat.com [10.72.13.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B237079233;
-        Thu,  2 Jul 2020 03:06:12 +0000 (UTC)
-Subject: Re: [PATCH 2/2] virtio-mmio: Reject invalid IRQ 0 command line
- argument
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org
-References: <20200701221040.3667868-1-helgaas@kernel.org>
- <20200701221040.3667868-3-helgaas@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <032d0424-4876-6322-76d2-d733db28addb@redhat.com>
-Date:   Thu, 2 Jul 2020 11:06:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200701221040.3667868-3-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 1 Jul 2020 23:08:39 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4DCC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 20:08:39 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id q17so11876592pfu.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 20:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=nX4jifuVUD4wv3dvKuEbLJYR6Iy5QHbia6zFZRrUfLQ=;
+        b=HJNGE/iVrjl41L5e3nwu2leRVLp42WbAHGKCOLTJAGMERTEKWvoWlDbYd/4qLu1Kn3
+         48+pcDPNyOPN6QsHJUv8RglMc8NMmNr+JGmMfpy37riOe4M5EwihMAq7gV9IqTnUcUjD
+         i2wW6wT7Wb1zipA65eOzxw1YiVPX55yhPtuP696VjAQtUuqZLlyb04CtaxTQC2nPJOEB
+         jwU/YMwB9qWDY6reG9BnbEDMC3NN6TM1sKyOuP38yy6NfnDl3dNwu4os2d9lLxUcLEZ9
+         5EZbUbonPixPnHPCQDn8rEV44OVmwZAla3RDqE1r2UrS/3e1F9OuDWT0G2rN+PP1u2H0
+         O4PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=nX4jifuVUD4wv3dvKuEbLJYR6Iy5QHbia6zFZRrUfLQ=;
+        b=FF7GENmWWyRnjg9xiRFCNc9fD69vohO7CClTyYydmIs0V7R2H9iHC3bjkDdnYXblbP
+         vgZ4lx83TKLvvZUk9pVTdM6sunW6zZS3XPegWPrxbEZK+NjW3hzteXFOwgeGB0GJLYZq
+         OtCcnY177B9fO3aET4I/dsTFuRPeSdYj6Itwo36xXVYsyz0EOXFUcWbtsCyO96xNC+el
+         Gy92W9Uedq3RZaPd5QxS0pJeuBSzMkQqGVQDJmhZ5b5gRCOWtk/TB8MOmmjIxqo8Tmlv
+         O9sehqcUDLEVazt9IKB3KA2mkvLVS44b9oCXbLkb9BBZWHNQDwVJ5jBDJ70gL5TG7TyJ
+         0g7g==
+X-Gm-Message-State: AOAM533rYHZhmlqPEqbEGqKVyCHimKsCmRgzzcemG/O3JqAuvr/QoL2K
+        vsS8VrMlzCyAPCCtD7wKZe1vmg==
+X-Google-Smtp-Source: ABdhPJzGryBl1zzI9Sjl18IeYrLO+6//97HpZ6bzh7J6TtqubS+bIb1s9tn4ZXWr5IovpoA6bHRoiQ==
+X-Received: by 2002:a65:63ca:: with SMTP id n10mr23100362pgv.252.1593659318743;
+        Wed, 01 Jul 2020 20:08:38 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:acd6:6304:8edb:f3fc? ([2601:646:c200:1ef2:acd6:6304:8edb:f3fc])
+        by smtp.gmail.com with ESMTPSA id 73sm7333278pfy.24.2020.07.01.20.08.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jul 2020 20:08:37 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: objtool clac/stac handling change..
+Date:   Wed, 1 Jul 2020 20:08:36 -0700
+Message-Id: <B9CF61D4-50F7-4A82-8327-86CA18450669@amacapital.net>
+References: <CAHk-=wjXftMyC93Jg8J=_HiuERsHujPOa-RbOmMLuuxVoJCrfQ@mail.gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAHk-=wjXftMyC93Jg8J=_HiuERsHujPOa-RbOmMLuuxVoJCrfQ@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17F80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/7/2 上午6:10, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> The "virtio_mmio.device=" command line argument allows a user to specify
-> the size, address, and IRQ of a virtio device.  Previously the only
-> requirement for the IRQ was that it be an unsigned integer.
->
-> Zero is an unsigned integer but an invalid IRQ number, and after
-> a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid"),
-> attempts to use IRQ 0 cause warnings.
->
-> If the user specifies IRQ 0, return failure instead of registering a device
-> with IRQ 0.
->
-> Fixes: a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: virtualization@lists.linux-foundation.org
-> ---
->   drivers/virtio/virtio_mmio.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index 9d16aaffca9d..627ac0487494 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -641,11 +641,11 @@ static int vm_cmdline_set(const char *device,
->   			&vm_cmdline_id, &consumed);
->   
->   	/*
-> -	 * sscanf() must processes at least 2 chunks; also there
-> +	 * sscanf() must process at least 2 chunks; also there
->   	 * must be no extra characters after the last chunk, so
->   	 * str[consumed] must be '\0'
->   	 */
-> -	if (processed < 2 || str[consumed])
-> +	if (processed < 2 || str[consumed] || irq == 0)
->   		return -EINVAL;
->   
->   	resources[0].flags = IORESOURCE_MEM;
+> On Jul 1, 2020, at 7:30 PM, Linus Torvalds <torvalds@linux-foundation.org>=
+ wrote:
+>=20
+> =EF=BB=BFOn Wed, Jul 1, 2020 at 5:48 PM Andy Lutomirski <luto@kernel.org> w=
+rote:
+>>=20
+>> You inspired me to mock it up.
+>=20
+> Ahh, you want to just use the jump folding of gcc to avoid the problem.
+>=20
+> I guess we could do that. Are there cases where this actually helps?
+>=20
 
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-
+I was thinking it would help avoid brain melt. For better or for worse, the k=
+ernel is written in C, and readers don=E2=80=99t really expect call_some_fun=
+ction(arg, other arg) to actually teleport elsewhere in the function.  I=E2=80=
+=99m all for goto err; but at least that=E2=80=99s spelled =E2=80=9Cgoto=E2=80=
+=9D and it=E2=80=99s really obvious what it does.=
