@@ -2,150 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48440C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F61420772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F7E20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kKX0pWMw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eTwEnRvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbgGBOM2 (ORCPT
+        id S1729742AbgGBOM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
+        Thu, 2 Jul 2020 10:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgGBOMV (ORCPT
+        with ESMTP id S1729348AbgGBOMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 10:12:21 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0ACC08C5C1;
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EA4C08C5DC;
         Thu,  2 Jul 2020 07:12:21 -0700 (PDT)
-Received: from xps.home (unknown [IPv6:2a01:e35:2fb5:1510:315a:ecf0:6250:a3ed])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aferraris)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 35F8E2A5EC4;
-        Thu,  2 Jul 2020 15:12:19 +0100 (BST)
-From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 2/2] ASoC: fsl-asoc-card: add support for generic I2S slave use-case
-Date:   Thu,  2 Jul 2020 16:11:15 +0200
-Message-Id: <20200702141114.232688-3-arnaud.ferraris@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
-References: <20200702141114.232688-1-arnaud.ferraris@collabora.com>
+Date:   Thu, 2 Jul 2020 16:12:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593699138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cwTVNjRP46CGgsTBRixpnycU9jLYSLhEYRlI1gaMWYo=;
+        b=kKX0pWMwnPp5WQSJFDYNNGgxzoRwWlwHYx/dhsfi59qGaidMG9d5j4G/jHrvmVzaQU4UXv
+        9v6nFNe1//vG8mHw1b2wwwZVhTz/v0swjoBwp+yTu/0lT3IgLDlJWuiRXetM2Tj8im7OpH
+        lbBGLs/PwcT+lutRhvAflyZnIhGgloQnY3ZEl1hOjzD0zFClc+NrKAqiZt97XM1iinwMlo
+        8qGbo6W8sycMjh8ld8q3YrSSWglUkuiEkeH+i2JP6cYYsfkeYUAd4dMcMb23K7JGCr1eGx
+        63L8wTpCvPqqpawrKzQ5jSwFUNZBbh8x5KCmRzQlCftWRzK3QlIK4sMUY5zrlw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593699138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cwTVNjRP46CGgsTBRixpnycU9jLYSLhEYRlI1gaMWYo=;
+        b=eTwEnRvlYJS0kZTlP2TOH/CU4wZd1QyZzsY1ezBUN8Y5EG4wmE1qY4MIBe3C6xl68JAhGa
+        pIVv6XMIN0n+AWAg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200702141216.r4rbt5w3hjzafpgg@linutronix.de>
+References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+ <20200624201226.21197-3-paulmck@kernel.org>
+ <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
+ <20200630183534.GG9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200630183534.GG9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit implements support for generic codecs with the SoC acting as
-I2S slave, by implementing the new `fsl,imx-audio-i2s-slave` compatible
-and related properties.
+On 2020-06-30 11:35:34 [-0700], Paul E. McKenney wrote:
+> > This is not going to work together with the "wait context validator"
+> > (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
+> > printk() which is why it is still disabled by default.
+> 
+> Fixing that should be "interesting".  In particular, RCU CPU stall
+> warnings rely on the raw spin lock to reduce false positives due
+> to race conditions.  Some thought will be required here.
 
-This is particularly useful when using a Bluetooth controller acting as
-I2S master, but other simple or dummy codecs might benefit from it too.
+I don't get this part. Can you explain/give me an example where to look
+at?
 
-Signed-off-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
----
- sound/soc/fsl/fsl-asoc-card.c | 46 ++++++++++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 11 deletions(-)
+> > So assume that this is fixed and enabled then on !PREEMPT_RT it will
+> > complain that you have a raw_spinlock_t acquired (the one from patch
+> > 02/17) and attempt to acquire a spinlock_t in the memory allocator.
+> 
+> Given that the slab allocator doesn't acquire any locks until it gets
+> a fair way in, wouldn't it make sense to allow a "shallow" allocation
+> while a raw spinlock is held?  This would require yet another GFP_ flag,
+> but that won't make all that much of a difference in the total.  ;-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 57ea1b072326..6076b963c873 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -166,12 +166,15 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 		return 0;
- 
- 	/* Specific configurations of DAIs starts from here */
--	ret = snd_soc_dai_set_sysclk(asoc_rtd_to_cpu(rtd, 0), cpu_priv->sysclk_id[tx],
--				     cpu_priv->sysclk_freq[tx],
--				     cpu_priv->sysclk_dir[tx]);
--	if (ret && ret != -ENOTSUPP) {
--		dev_err(dev, "failed to set sysclk for cpu dai\n");
--		return ret;
-+	if (cpu_priv->sysclk_freq[tx] > 0) {
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_cpu(rtd, 0),
-+					     cpu_priv->sysclk_id[tx],
-+					     cpu_priv->sysclk_freq[tx],
-+					     cpu_priv->sysclk_dir[tx]);
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to set sysclk for cpu dai\n");
-+			return ret;
-+		}
- 	}
- 
- 	if (cpu_priv->slot_width) {
-@@ -475,11 +478,14 @@ static int fsl_asoc_card_late_probe(struct snd_soc_card *card)
- 		return 0;
- 	}
- 
--	ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
--				     codec_priv->mclk_freq, SND_SOC_CLOCK_IN);
--	if (ret && ret != -ENOTSUPP) {
--		dev_err(dev, "failed to set sysclk in %s\n", __func__);
--		return ret;
-+	if (codec_priv->mclk_freq > 0) {
-+		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
-+					     codec_priv->mclk_freq,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to set sysclk in %s\n", __func__);
-+			return ret;
-+		}
- 	}
- 
- 	return 0;
-@@ -620,6 +626,23 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->cpu_priv.slot_width = 32;
- 		priv->card.dapm_routes = audio_map_tx;
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
-+	} else if (of_device_is_compatible(np, "fsl,imx-audio-i2s-slave")) {
-+		ret = of_property_read_string(np, "audio-codec-dai-name",
-+					      &codec_dai_name);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get codec DAI name\n");
-+			ret = -EINVAL;
-+			goto asrc_fail;
-+		}
-+		ret = of_property_read_u32(np, "audio-slot-width",
-+					   &priv->cpu_priv.slot_width);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to get slot width\n");
-+			ret = -EINVAL;
-+			goto asrc_fail;
-+		}
-+		priv->card.set_bias_level = NULL;
-+		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else {
- 		dev_err(&pdev->dev, "unknown Device Tree compatible\n");
- 		ret = -EINVAL;
-@@ -763,6 +786,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 
- static const struct of_device_id fsl_asoc_card_dt_ids[] = {
- 	{ .compatible = "fsl,imx-audio-ac97", },
-+	{ .compatible = "fsl,imx-audio-i2s-slave", },
- 	{ .compatible = "fsl,imx-audio-cs42888", },
- 	{ .compatible = "fsl,imx-audio-cs427x", },
- 	{ .compatible = "fsl,imx-audio-sgtl5000", },
--- 
-2.27.0
+That would be one way of dealing with. But we could go back to
+spinlock_t and keep the memory allocation even for RT as is. I don't see
+a downside of this. And we would worry about kfree_rcu() from real
+IRQ-off region once we get to it.
 
+> 							Thanx, Paul
+> 
+> > >  			bnode = (struct kfree_rcu_bulk_data *)
+> > >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> > >  		}
+
+Sebastian
