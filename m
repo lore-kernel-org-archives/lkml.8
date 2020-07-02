@@ -2,65 +2,79 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A177EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058852145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862EF2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgGBV1p (ORCPT
+        id S1726213AbgGBV26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBV1p (ORCPT
+        Thu, 2 Jul 2020 17:28:58 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33735 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbgGBV26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:27:45 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32832C08C5C1;
-        Thu,  2 Jul 2020 14:27:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BEE83128449C8;
-        Thu,  2 Jul 2020 14:27:43 -0700 (PDT)
-Date:   Thu, 02 Jul 2020 14:27:42 -0700 (PDT)
-Message-Id: <20200702.142742.455023767824311035.davem@davemloft.net>
-To:     codrin.ciubotariu@microchip.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        kuba@kernel.org
-Subject: Re: [PATCH net] net: dsa: microchip: set the correct number of
- ports
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200702094450.1353917-1-codrin.ciubotariu@microchip.com>
-References: <20200702094450.1353917-1-codrin.ciubotariu@microchip.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 02 Jul 2020 14:27:44 -0700 (PDT)
+        Thu, 2 Jul 2020 17:28:58 -0400
+Received: from [88.147.89.201] (port=34632 helo=melee.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jr6lK-000AXd-E7; Thu, 02 Jul 2020 23:28:54 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-clk@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH 1/5] MAINTAINERS: take over IDT VersaClock 5 clock driver
+Date:   Thu,  2 Jul 2020 23:28:32 +0200
+Message-Id: <20200702212837.10657-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Date: Thu, 2 Jul 2020 12:44:50 +0300
+Marek has been the primary developer of this driver (thanks!). Now as
+he is not working on it anymore he suggested I take over maintainership.
 
-> The number of ports is incorrectly set to the maximum available for a DSA
-> switch. Even if the extra ports are not used, this causes some functions
-> to be called later, like port_disable() and port_stp_state_set(). If the
-> driver doesn't check the port index, it will end up modifying unknown
-> registers.
-> 
-> Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied and queued up for -stable, thanks.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 496fd4eafb68..079e19ed2ec9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8324,7 +8324,7 @@ W:	https://github.com/o2genum/ideapad-slidebar
+ F:	drivers/input/misc/ideapad_slidebar.c
+ 
+ IDT VersaClock 5 CLOCK DRIVER
+-M:	Marek Vasut <marek.vasut@gmail.com>
++M:	Luca Ceresoli <luca@lucaceresoli.net>
+ S:	Maintained
+ F:	drivers/clk/clk-versaclock5.c
+ 
+-- 
+2.27.0
+
