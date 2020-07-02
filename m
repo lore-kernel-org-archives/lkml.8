@@ -2,128 +2,88 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E029EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F2A20780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3AD920B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="hH8W2oJb"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="n4QCK53q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGBLUT (ORCPT
+        id S1728674AbgGBLUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgGBLUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:20:18 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D20C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:20:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bf7so1874917plb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=w32r7hP9DyDdYKhcgit4fHbtLWUQgHNgxb3Y7c+rxpY=;
-        b=hH8W2oJbiuals+PcHNVm7hmYsiZVfkIogdIqUTC/fcLnRcsKxm0SLQ0Aw0GPyUEQvD
-         DFGHstWxhDzx/isFWh3bBA6DI6XGcr9l3O6eKLR/KVJ/xawPke0g5fkaowESqirepd/e
-         ljSR8p+931wEQpbx5RLhIBPKAsXx/lkiPQPxyiX0z+Lj3cywCoPwBbcQasOB1DZjBThT
-         Z/ziutu/3kLUjYccx5OqoevdLU4DQ9eghMNqNXntzBcVrXjGFSivF5RopNbZ2i6RdW87
-         z6phHTamPlFf6PrXQfhpCgsqDu0mCfQc/z2aFgfn0VUMrhmXV5QUdJB2XAIapqfuESag
-         gvZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=w32r7hP9DyDdYKhcgit4fHbtLWUQgHNgxb3Y7c+rxpY=;
-        b=Or1raO8ua1DzLfTMhSXrAk3y8RMn2bIOVag2lKDGx88kwBYqh+6R2FaLckRO7ZPX4R
-         o4hY4GN0DsHsbRpK+gbCJcaP3SpSsQKlvU5iRgKQC5DcCJ5iV0qeypovSi62Xsszck1R
-         HUMX0s1xSeA5mfm2K2SU/9ZshN57aYZZAvCV2sWpzQyaRr0N6ogUZzydvyN1nevdQ0fq
-         /K2Cq3vDWzD/Biqk5pcmmJvBqJ57T4yLXA3hriQ5leoZEyTCcNFms2HcQxaqaXmoMcl7
-         pb3nkSvJx8ozMs1y2/CWljAtBKn4QAlMw0g8ew5ZEhkIHlGl+sJ1YOXcIpYAC0IVgvz5
-         6jhA==
-X-Gm-Message-State: AOAM531WVEGy40pHF8Eze5CLRpfDbTptq417rFvruoQxGjIqzH/OSqOu
-        B2EbbDwu/pPTyoQyHdjXx6g0ENV4fFY=
-X-Google-Smtp-Source: ABdhPJxyKrvnwA/G6ip9llUHSVcbD3cH52NH4wYdGk7r+mRgXdFqnKp1QbolGJ5p5x4+nIk9t/TDeg==
-X-Received: by 2002:a17:90a:2562:: with SMTP id j89mr29546187pje.218.1593688817973;
-        Thu, 02 Jul 2020 04:20:17 -0700 (PDT)
-Received: from localhost ([2406:7400:73:3271:908:f18a:1156:5c38])
-        by smtp.gmail.com with ESMTPSA id a68sm7979172pje.35.2020.07.02.04.20.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 04:20:17 -0700 (PDT)
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
-Date:   Thu, 2 Jul 2020 07:20:09 -0400
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: include: rtw_recv.h: fixed a blank space
- coding style issue.
-Message-ID: <20200702112009.6qe6v3rb5n7jklsh@pesu-pes-edu>
+        Thu, 2 Jul 2020 07:20:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43314 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgGBLUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 07:20:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593688846; bh=go0JdX7XFPhOmCWXHUyH3tuiM0ZgDTsynh7wj3EqIvg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n4QCK53qp060EUWa35hUt80FMgydnnZkQ2XG6iuUal6kv6OKE+kXy9NaxCbtGSHNK
+         lDn0lhYMBacAfhcBrcXT1x0NMmhj2CFjX+RTlSETIPrf7spro4PSQTTh/SehdW8w9j
+         UwHNoOPrrbF9XEnStwFqsg7Fgo01vE66V1HolEwA=
+From:   Ondrej Jirman <megous@megous.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/4] Add support for vibrator motor for TBS A711 Tablet
+Date:   Thu,  2 Jul 2020 13:20:37 +0200
+Message-Id: <20200702112041.1942707-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ec5skvv4ljvpvhat"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The tablet has a vibrator motor. This patch series exposes it via
+input subsystem (EV_FF).
 
---ec5skvv4ljvpvhat
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'd like to ask input maintainers to take the patches 1 and 2.
+Patches 3 and 4 should go via the sunxi tree.
 
-added blank spaces to improve code readability.
+The change to the vibrator driver is meant to enable toggling the
+vibrator motor just via a power supply itself. There's not additional
+gpio driven switch on this tablet between the power supply for the
+motor and the motor.
 
-Signed-off-by: B K Karthik <karthik.bk2000@live.com>
----
- drivers/staging/rtl8188eu/include/rtw_recv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please take a look.
 
-diff --git a/drivers/staging/rtl8188eu/include/rtw_recv.h b/drivers/staging/rtl8188eu/include/rtw_recv.h
-index e383cb119e1b..b281b9e7fcea 100644
---- a/drivers/staging/rtl8188eu/include/rtw_recv.h
-+++ b/drivers/staging/rtl8188eu/include/rtw_recv.h
-@@ -13,7 +13,7 @@
- #define NR_RECVFRAME 256
+Changes in v3:
+- Changed dt-binding to require at least one of enable/supply, dropped ack
+- Changed driver to bail out if neither supply nor gpio is given
 
- #define RXFRAME_ALIGN	8
--#define RXFRAME_ALIGN_SZ	(1<<RXFRAME_ALIGN)
-+#define RXFRAME_ALIGN_SZ	(1 << RXFRAME_ALIGN)
-
- #define MAX_RXFRAME_CNT	512
- #define MAX_RX_NUMBLKS		(32)
---
-2.20.1
+Changes in v2:
+- Added DT ack tag
+- Add more information to the commit log (re use of LDO for the power)
 
 
---ec5skvv4ljvpvhat
-Content-Type: application/pgp-signature; name="signature.asc"
+thank you and regards,
+  Ondrej Jirman
 
------BEGIN PGP SIGNATURE-----
+Ondrej Jirman (4):
+  dt-bindings: input: gpio-vibrator: Don't require enable-gpios
+  input: gpio-vibra: Allow to use vcc-supply alone to control the
+    vibrator
+  ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
+  ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
 
-iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl79wukACgkQ471Q5AHe
-Z2qzmwv9HGfnIeRPc6bPWSi8yr+D5OnkpdgD8B/keJnaXqqaCWdHHRyko+of2Jlu
-xe/xqU3pTln6YyynMYXIx3A+lXmbRKHr269OGMztg9VV2smu8sS3EXODg8G7GnjH
-VfHa2vRcyHhyWQnT3TrZ+6rntn15wWuhHRVtTlTCO2BcUX9YPvm3OPL7UPZJk2MI
-zZw8vyFwK76dvDZDJl8ZI+7wZefqxKiMXnSOVC2SzKiVUbvn+ExYbXk3BSABquIy
-v6gn4/ZBIZTFECdDOxWsqPvzDBoW72KrihP5BFUUMBlF/ZQ2B2zckHXnCYYwyBnl
-AIpb5Tk0pkyVDqxWXX4M4GlF6Rmd8NjDN3N4tCEH3ba8duJvWFKkYGoq+sMUkcc0
-SKyWziXwBRlE8t8ZICiXYfsOBV0SkVTO3iC8j4lzY38H8V8uP90iNrV0TwY+E+Ra
-G9TPLU619Cx1D2J5m0DUkG4F7txUViM7Wgrl10tBGSqQj1SJZXyTSvzQ1wCCBDIx
-QvShBdK2
-=ukqj
------END PGP SIGNATURE-----
+ .../devicetree/bindings/input/gpio-vibrator.yaml   |  7 ++++++-
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts          |  9 +++++++--
+ drivers/input/misc/gpio-vibra.c                    | 14 ++++++++++----
+ 3 files changed, 23 insertions(+), 7 deletions(-)
 
---ec5skvv4ljvpvhat--
+-- 
+2.27.0
+
