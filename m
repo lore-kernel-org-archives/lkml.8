@@ -2,288 +2,449 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD77C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E397BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45AA208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593703443;
-	bh=RzpuYZk2rjqOOWbVaIon9DtDIOb7yEpeKnFn6R9dNAY=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=1jAYA13tZrdDNinqJgnAIC1MgQ6dAUVQHDIWII4qcQ6dbp/GS86WlilWaqYzwNm25
-	 M+Eh8uV9uZJtwS1DaklR1kHYPoAGUQcotWozZqF1OgoN2VJAyAt+FyM3kIMWtZYAex
-	 K7XPiV5J+e3hMbhfoO5dYfiWBdoByfnpaJH8xZN4=
+	by mail.kernel.org (Postfix) with ESMTP id AE20F208B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:24:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s4m0vWDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgGBPYC (ORCPT
+        id S1730324AbgGBPYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgGBPX6 (ORCPT
+        Thu, 2 Jul 2020 11:24:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730174AbgGBPX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:23:58 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693EFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 08:23:58 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id e4so15838805oib.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 08:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=B4Ar3fpA3HhwCaigMczgSpA2w+YvUJd42HYXvnQydWY=;
-        b=ZPv6cx92wk+wl3iQVPR7rcCaSByWPwAMHkBZDRRnVtsZzEOjtZh7EJ9SQDOgW2zvnE
-         chfGNQt5cJ+DehMkKw+8jqH19FrshSLmVgDFguKrDQhrfXekgvm3gpeDZAGhv5Z2D2yN
-         ti1cqJ8/XrhSH8YbZNaH2jTnvDsoEpJTkdl08=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=B4Ar3fpA3HhwCaigMczgSpA2w+YvUJd42HYXvnQydWY=;
-        b=VErt6rWT5bJtvIIgKhyI2SdoArCmIUr1fC+XdyeWRmACvzhq18fS+pMj3SZRQ+/75u
-         PxzVXc4cib4ddEgHBOrdU5YplJOB6jPlKuSmBwnqB09PRHuWzxff5ae9Ktds03otYDID
-         JycryHAm5yU0SGWeg2PVcXkDePV+VhQ1kDl/PGv+QC731gpp1Xg0g/XRiC6kcVVRszkr
-         Lpm7gKdyTKZljHUVkDZBRAA7G/eqfLtOgTCNHs0SfThDsZLoeUigf9xBVuV+MRAXb7Ki
-         QV/vrBdXCRZTZGtoFoDdiWRfcdzZTd4Y5Iy9IFerXwGjYFfI+HXiL70OYCuvDu63GmZS
-         iqJQ==
-X-Gm-Message-State: AOAM53143XJXK2tpbYrUKPTapMoMostUwYBN2dhIDi9pk/zS6BdWr8dA
-        Ay+E/fpdpNWNyP8ZEct40+FH3w==
-X-Google-Smtp-Source: ABdhPJzRLtOaeIiDSxEPiK5IDPEWLft3Ryb8hfoSeSB1WD89Aes2qQa6F5iXonXK0zaQT4eZihuUKw==
-X-Received: by 2002:aca:230f:: with SMTP id e15mr23489002oie.164.1593703437711;
-        Thu, 02 Jul 2020 08:23:57 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g8sm2279335otb.39.2020.07.02.08.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 08:23:56 -0700 (PDT)
-To:     torvalds@linux-foundation.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>, skhan@linuxfoundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kunit fixes update for Linux 5.8-rc4
-Message-ID: <39219b27-98db-609c-d77b-3db2eb64345a@linuxfoundation.org>
-Date:   Thu, 2 Jul 2020 09:23:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------4311EBEE68346305983AB55B"
-Content-Language: en-US
+        Thu, 2 Jul 2020 11:23:57 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062FMUbb003889;
+        Thu, 2 Jul 2020 15:23:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=R61Jh+hn64l5CJ9uvrtSxUHZqNe6xBjzDGrq0AjcO+0=;
+ b=s4m0vWDYbrAvqLxVAY2sgAxwoPfNTx0Q0FH3Yh0mUXSUjkIBRtKybAoU5oEst/xGsd7Q
+ YLelblo3aniqYZX/3dLGXdOvFTNqt/x50RaydkyCxlcEuL/G63l9hEZIpi2EljSCCpd0
+ NYHlXCdO2gqnKL3JXRtmnW1z45pGW1UV+wHm5lPTM6lYEt3CgQvWqpUfjGbUoPSCOa7u
+ BgDH58ErJ3JVlv++nRUlhDHBMayRfulOmL9DTVL6FgUiDa/5G4qD1fvv8+B7RTFbY73t
+ rPEsMo16XqXzh0IUWYV08seQAcPi5OLwRmM8ZAUa6SPyf9F/RFZjjKGHVgHtQ4mu8QV+ Dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31wxrnh2wb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 02 Jul 2020 15:23:46 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062EwmI5066438;
+        Thu, 2 Jul 2020 15:21:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31xfvvs90u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jul 2020 15:21:45 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 062FLh2g021034;
+        Thu, 2 Jul 2020 15:21:43 GMT
+Received: from mihai.localdomain (/10.153.73.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jul 2020 15:20:51 +0000
+From:   Mihai Carabas <mihai.carabas@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
+        Mihai Carabas <mihai.carabas@oracle.com>
+Subject: [PATCH RFC 1/7] x86: cpu: bugs.c: remove init attribute from functions and variables
+Date:   Thu,  2 Jul 2020 18:18:21 +0300
+Message-Id: <1593703107-8852-2-git-send-email-mihai.carabas@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com>
+References: <1593703107-8852-1-git-send-email-mihai.carabas@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=1 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------4311EBEE68346305983AB55B
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+in order to be able to call them after the system has booted.
 
-Hi Linus,
+Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+---
+ arch/x86/kernel/cpu/bugs.c   | 76 ++++++++++++++++++++++----------------------
+ arch/x86/kernel/cpu/common.c |  4 +--
+ arch/x86/kernel/cpu/cpu.h    |  4 +--
+ arch/x86/kernel/cpu/tsx.c    |  6 ++--
+ kernel/cpu.c                 |  2 +-
+ 5 files changed, 46 insertions(+), 46 deletions(-)
 
-Please pull the following Kunit fixes update for Linux 5.8-rc4.
-
-This kunit fixes update for Linux 5.8-rc4 consists of fixes to build
-and run-times failures. Also includes troubleshooting tips updates
-to kunit user documentation.
-
-These tips in the doc patch helped me with my test runs.
-
-diff is included.
-
-thanks,
--- Shuah
-
-
-----------------------------------------------------------------
-
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
-
-   Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-kunit-fixes-5.8-rc4
-
-for you to fetch changes up to c63d2dd7e134ebddce4745c51f9572b3f0d92b26:
-
-   Documentation: kunit: Add some troubleshooting tips to the FAQ 
-(2020-06-26 14:29:55 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-kunit-fixes-5.8-rc4
-
-This kunit fixes update for Linux 5.8-rc4 consists of fixes to build
-and run-times failures. Also includes troubleshooting tips updates
-to kunit user documentation.
-
-----------------------------------------------------------------
-David Gow (2):
-       kunit: kunit_tool: Fix invalid result when build fails
-       Documentation: kunit: Add some troubleshooting tips to the FAQ
-
-Rikard Falkeborn (1):
-       kunit: kunit_config: Fix parsing of CONFIG options with space
-
-Uriel Guajardo (1):
-       kunit: show error if kunit results are not present
-
-  Documentation/dev-tools/kunit/faq.rst              |  40 
-+++++++++++++++++++++
-  tools/testing/kunit/kunit.py                       |   4 ++-
-  tools/testing/kunit/kunit_config.py                |   2 +-
-  tools/testing/kunit/kunit_parser.py                |   8 ++---
-  tools/testing/kunit/kunit_tool_test.py             |  11 ++++++
-  .../kunit/test_data/test_insufficient_memory.log   | Bin
-  6 files changed, 59 insertions(+), 6 deletions(-)
-  create mode 100644 
-tools/testing/kunit/test_data/test_insufficient_memory.log
-----------------------------------------------------------------
-
-
---------------4311EBEE68346305983AB55B
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-kunit-fixes-5.8-rc4.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-kunit-fixes-5.8-rc4.diff"
-
-diff --git a/Documentation/dev-tools/kunit/faq.rst b/Documentation/dev-tools/kunit/faq.rst
-index ea55b2467653..1628862e7024 100644
---- a/Documentation/dev-tools/kunit/faq.rst
-+++ b/Documentation/dev-tools/kunit/faq.rst
-@@ -61,3 +61,43 @@ test, or an end-to-end test.
-   kernel by installing a production configuration of the kernel on production
-   hardware with a production userspace and then trying to exercise some behavior
-   that depends on interactions between the hardware, the kernel, and userspace.
-+
-+KUnit isn't working, what should I do?
-+======================================
-+
-+Unfortunately, there are a number of things which can break, but here are some
-+things to try.
-+
-+1. Try running ``./tools/testing/kunit/kunit.py run`` with the ``--raw_output``
-+   parameter. This might show details or error messages hidden by the kunit_tool
-+   parser.
-+2. Instead of running ``kunit.py run``, try running ``kunit.py config``,
-+   ``kunit.py build``, and ``kunit.py exec`` independently. This can help track
-+   down where an issue is occurring. (If you think the parser is at fault, you
-+   can run it manually against stdin or a file with ``kunit.py parse``.)
-+3. Running the UML kernel directly can often reveal issues or error messages
-+   kunit_tool ignores. This should be as simple as running ``./vmlinux`` after
-+   building the UML kernel (e.g., by using ``kunit.py build``). Note that UML
-+   has some unusual requirements (such as the host having a tmpfs filesystem
-+   mounted), and has had issues in the past when built statically and the host
-+   has KASLR enabled. (On older host kernels, you may need to run ``setarch
-+   `uname -m` -R ./vmlinux`` to disable KASLR.)
-+4. Make sure the kernel .config has ``CONFIG_KUNIT=y`` and at least one test
-+   (e.g. ``CONFIG_KUNIT_EXAMPLE_TEST=y``). kunit_tool will keep its .config
-+   around, so you can see what config was used after running ``kunit.py run``.
-+   It also preserves any config changes you might make, so you can
-+   enable/disable things with ``make ARCH=um menuconfig`` or similar, and then
-+   re-run kunit_tool.
-+5. Try to run ``make ARCH=um defconfig`` before running ``kunit.py run``. This
-+   may help clean up any residual config items which could be causing problems.
-+6. Finally, try running KUnit outside UML. KUnit and KUnit tests can run be
-+   built into any kernel, or can be built as a module and loaded at runtime.
-+   Doing so should allow you to determine if UML is causing the issue you're
-+   seeing. When tests are built-in, they will execute when the kernel boots, and
-+   modules will automatically execute associated tests when loaded. Test results
-+   can be collected from ``/sys/kernel/debug/kunit/<test suite>/results``, and
-+   can be parsed with ``kunit.py parse``. For more details, see "KUnit on
-+   non-UML architectures" in :doc:`usage`.
-+
-+If none of the above tricks help, you are always welcome to email any issues to
-+kunit-dev@googlegroups.com.
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 787b6d4ad716..f9b769f3437d 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -82,7 +82,9 @@ def build_tests(linux: kunit_kernel.LinuxSourceTree,
- 					request.make_options)
- 	build_end = time.time()
- 	if not success:
--		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
-+		return KunitResult(KunitStatus.BUILD_FAILURE,
-+				   'could not build kernel',
-+				   build_end - build_start)
- 	if not success:
- 		return KunitResult(KunitStatus.BUILD_FAILURE,
- 				   'could not build kernel',
-diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
-index e75063d603b5..02ffc3a3e5dc 100644
---- a/tools/testing/kunit/kunit_config.py
-+++ b/tools/testing/kunit/kunit_config.py
-@@ -10,7 +10,7 @@ import collections
- import re
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 0b71970..7091947 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -34,14 +34,14 @@
  
- CONFIG_IS_NOT_SET_PATTERN = r'^# CONFIG_(\w+) is not set$'
--CONFIG_PATTERN = r'^CONFIG_(\w+)=(\S+)$'
-+CONFIG_PATTERN = r'^CONFIG_(\w+)=(\S+|".*")$'
+ #include "cpu.h"
  
- KconfigEntryBase = collections.namedtuple('KconfigEntry', ['name', 'value'])
+-static void __init spectre_v1_select_mitigation(void);
+-static void __init spectre_v2_select_mitigation(void);
+-static void __init ssb_select_mitigation(void);
+-static void __init l1tf_select_mitigation(void);
+-static void __init mds_select_mitigation(void);
+-static void __init mds_print_mitigation(void);
+-static void __init taa_select_mitigation(void);
+-static void __init srbds_select_mitigation(void);
++static void spectre_v1_select_mitigation(void);
++static void spectre_v2_select_mitigation(void);
++static void ssb_select_mitigation(void);
++static void l1tf_select_mitigation(void);
++static void mds_select_mitigation(void);
++static void mds_print_mitigation(void);
++static void taa_select_mitigation(void);
++static void srbds_select_mitigation(void);
  
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 64aac9dcd431..f13e0c0d6663 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -265,11 +265,9 @@ def bubble_up_suite_errors(test_suite_list: List[TestSuite]) -> TestStatus:
- 	return bubble_up_errors(lambda x: x.status, test_suite_list)
+ /* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+ u64 x86_spec_ctrl_base;
+@@ -52,14 +52,14 @@
+  * The vendor and possibly platform specific bits which can be modified in
+  * x86_spec_ctrl_base.
+  */
+-static u64 __ro_after_init x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
++static u64 x86_spec_ctrl_mask = SPEC_CTRL_IBRS;
  
- def parse_test_result(lines: List[str]) -> TestResult:
--	if not lines:
--		return TestResult(TestStatus.NO_TESTS, [], lines)
- 	consume_non_diagnositic(lines)
--	if not parse_tap_header(lines):
--		return None
-+	if not lines or not parse_tap_header(lines):
-+		return TestResult(TestStatus.NO_TESTS, [], lines)
- 	test_suites = []
- 	test_suite = parse_test_suite(lines)
- 	while test_suite:
-@@ -282,6 +280,8 @@ def parse_run_tests(kernel_output) -> TestResult:
- 	failed_tests = 0
- 	crashed_tests = 0
- 	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
-+	if test_result.status == TestStatus.NO_TESTS:
-+		print_with_timestamp(red('[ERROR] ') + 'no kunit output detected')
- 	for test_suite in test_result.suites:
- 		if test_suite.status == TestStatus.SUCCESS:
- 			print_suite_divider(green('[PASSED] ') + test_suite.name)
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index 5bb7b118ebd9..f9eeaea94cad 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -170,6 +170,17 @@ class KUnitParserTest(unittest.TestCase):
- 			result.status)
- 		file.close()
+ /*
+  * AMD specific MSR info for Speculative Store Bypass control.
+  * x86_amd_ls_cfg_ssbd_mask is initialized in identify_boot_cpu().
+  */
+-u64 __ro_after_init x86_amd_ls_cfg_base;
+-u64 __ro_after_init x86_amd_ls_cfg_ssbd_mask;
++u64 x86_amd_ls_cfg_base;
++u64 x86_amd_ls_cfg_ssbd_mask;
  
-+	def test_no_kunit_output(self):
-+		crash_log = get_absolute_path(
-+			'test_data/test_insufficient_memory.log')
-+		file = open(crash_log)
-+		print_mock = mock.patch('builtins.print').start()
-+		result = kunit_parser.parse_run_tests(
-+			kunit_parser.isolate_kunit_output(file.readlines()))
-+		print_mock.assert_any_call(StrContains("no kunit output detected"))
-+		print_mock.stop()
-+		file.close()
-+
- 	def test_crashed_test(self):
- 		crashed_log = get_absolute_path(
- 			'test_data/test_is_test_passed-crash.log')
-diff --git a/tools/testing/kunit/test_data/test_insufficient_memory.log b/tools/testing/kunit/test_data/test_insufficient_memory.log
-new file mode 100644
-index 000000000000..e69de29bb2d1
+ /* Control conditional STIBP in switch_to() */
+ DEFINE_STATIC_KEY_FALSE(switch_to_cond_stibp);
+@@ -75,7 +75,7 @@
+ DEFINE_STATIC_KEY_FALSE(mds_idle_clear);
+ EXPORT_SYMBOL_GPL(mds_idle_clear);
+ 
+-void __init check_bugs(void)
++void __ref check_bugs(void)
+ {
+ 	identify_boot_cpu();
+ 
+@@ -228,7 +228,7 @@ static void x86_amd_ssb_disable(void)
+ #define pr_fmt(fmt)	"MDS: " fmt
+ 
+ /* Default mitigation for MDS-affected CPUs */
+-static enum mds_mitigations mds_mitigation __ro_after_init = MDS_MITIGATION_FULL;
++static enum mds_mitigations mds_mitigation = MDS_MITIGATION_FULL;
+ static bool mds_nosmt __ro_after_init = false;
+ 
+ static const char * const mds_strings[] = {
+@@ -237,7 +237,7 @@ static void x86_amd_ssb_disable(void)
+ 	[MDS_MITIGATION_VMWERV]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
+ };
+ 
+-static void __init mds_select_mitigation(void)
++static void mds_select_mitigation(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
+ 		mds_mitigation = MDS_MITIGATION_OFF;
+@@ -256,7 +256,7 @@ static void __init mds_select_mitigation(void)
+ 	}
+ }
+ 
+-static void __init mds_print_mitigation(void)
++static void mds_print_mitigation(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off())
+ 		return;
+@@ -296,7 +296,7 @@ enum taa_mitigations {
+ };
+ 
+ /* Default mitigation for TAA-affected CPUs */
+-static enum taa_mitigations taa_mitigation __ro_after_init = TAA_MITIGATION_VERW;
++static enum taa_mitigations taa_mitigation = TAA_MITIGATION_VERW;
+ static bool taa_nosmt __ro_after_init;
+ 
+ static const char * const taa_strings[] = {
+@@ -306,7 +306,7 @@ enum taa_mitigations {
+ 	[TAA_MITIGATION_TSX_DISABLED]	= "Mitigation: TSX disabled",
+ };
+ 
+-static void __init taa_select_mitigation(void)
++static void taa_select_mitigation(void)
+ {
+ 	u64 ia32_cap;
+ 
+@@ -410,7 +410,7 @@ enum srbds_mitigations {
+ 	SRBDS_MITIGATION_HYPERVISOR,
+ };
+ 
+-static enum srbds_mitigations srbds_mitigation __ro_after_init = SRBDS_MITIGATION_FULL;
++static enum srbds_mitigations srbds_mitigation = SRBDS_MITIGATION_FULL;
+ 
+ static const char * const srbds_strings[] = {
+ 	[SRBDS_MITIGATION_OFF]		= "Vulnerable",
+@@ -452,7 +452,7 @@ void update_srbds_msr(void)
+ 	wrmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
+ }
+ 
+-static void __init srbds_select_mitigation(void)
++static void srbds_select_mitigation(void)
+ {
+ 	u64 ia32_cap;
+ 
+@@ -498,7 +498,7 @@ enum spectre_v1_mitigation {
+ 	SPECTRE_V1_MITIGATION_AUTO,
+ };
+ 
+-static enum spectre_v1_mitigation spectre_v1_mitigation __ro_after_init =
++static enum spectre_v1_mitigation spectre_v1_mitigation =
+ 	SPECTRE_V1_MITIGATION_AUTO;
+ 
+ static const char * const spectre_v1_strings[] = {
+@@ -527,7 +527,7 @@ static bool smap_works_speculatively(void)
+ 	return true;
+ }
+ 
+-static void __init spectre_v1_select_mitigation(void)
++static void spectre_v1_select_mitigation(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V1) || cpu_mitigations_off()) {
+ 		spectre_v1_mitigation = SPECTRE_V1_MITIGATION_NONE;
+@@ -585,12 +585,12 @@ static int __init nospectre_v1_cmdline(char *str)
+ #undef pr_fmt
+ #define pr_fmt(fmt)     "Spectre V2 : " fmt
+ 
+-static enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init =
++static enum spectre_v2_mitigation spectre_v2_enabled =
+ 	SPECTRE_V2_NONE;
+ 
+-static enum spectre_v2_user_mitigation spectre_v2_user_stibp __ro_after_init =
++static enum spectre_v2_user_mitigation spectre_v2_user_stibp =
+ 	SPECTRE_V2_USER_NONE;
+-static enum spectre_v2_user_mitigation spectre_v2_user_ibpb __ro_after_init =
++static enum spectre_v2_user_mitigation spectre_v2_user_ibpb =
+ 	SPECTRE_V2_USER_NONE;
+ 
+ #ifdef CONFIG_RETPOLINE
+@@ -653,7 +653,7 @@ enum spectre_v2_user_cmd {
+ 	const char			*option;
+ 	enum spectre_v2_user_cmd	cmd;
+ 	bool				secure;
+-} v2_user_options[] __initconst = {
++} v2_user_options[] = {
+ 	{ "auto",		SPECTRE_V2_USER_CMD_AUTO,		false },
+ 	{ "off",		SPECTRE_V2_USER_CMD_NONE,		false },
+ 	{ "on",			SPECTRE_V2_USER_CMD_FORCE,		true  },
+@@ -663,13 +663,13 @@ enum spectre_v2_user_cmd {
+ 	{ "seccomp,ibpb",	SPECTRE_V2_USER_CMD_SECCOMP_IBPB,	false },
+ };
+ 
+-static void __init spec_v2_user_print_cond(const char *reason, bool secure)
++static void spec_v2_user_print_cond(const char *reason, bool secure)
+ {
+ 	if (boot_cpu_has_bug(X86_BUG_SPECTRE_V2) != secure)
+ 		pr_info("spectre_v2_user=%s forced on command line.\n", reason);
+ }
+ 
+-static enum spectre_v2_user_cmd __init
++static enum spectre_v2_user_cmd
+ spectre_v2_parse_user_cmdline(enum spectre_v2_mitigation_cmd v2_cmd)
+ {
+ 	char arg[20];
+@@ -701,7 +701,7 @@ static void __init spec_v2_user_print_cond(const char *reason, bool secure)
+ 	return SPECTRE_V2_USER_CMD_AUTO;
+ }
+ 
+-static void __init
++static void
+ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
+ {
+ 	enum spectre_v2_user_mitigation mode = SPECTRE_V2_USER_NONE;
+@@ -801,7 +801,7 @@ static void __init spec_v2_user_print_cond(const char *reason, bool secure)
+ 	const char *option;
+ 	enum spectre_v2_mitigation_cmd cmd;
+ 	bool secure;
+-} mitigation_options[] __initconst = {
++} mitigation_options[] = {
+ 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
+ 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
+ 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
+@@ -810,13 +810,13 @@ static void __init spec_v2_user_print_cond(const char *reason, bool secure)
+ 	{ "auto",		SPECTRE_V2_CMD_AUTO,		  false },
+ };
+ 
+-static void __init spec_v2_print_cond(const char *reason, bool secure)
++static void spec_v2_print_cond(const char *reason, bool secure)
+ {
+ 	if (boot_cpu_has_bug(X86_BUG_SPECTRE_V2) != secure)
+ 		pr_info("%s selected on command line.\n", reason);
+ }
+ 
+-static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
++static enum spectre_v2_mitigation_cmd spectre_v2_parse_cmdline(void)
+ {
+ 	enum spectre_v2_mitigation_cmd cmd = SPECTRE_V2_CMD_AUTO;
+ 	char arg[20];
+@@ -862,7 +862,7 @@ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
+ 	return cmd;
+ }
+ 
+-static void __init spectre_v2_select_mitigation(void)
++static void spectre_v2_select_mitigation(void)
+ {
+ 	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
+ 	enum spectre_v2_mitigation mode = SPECTRE_V2_NONE;
+@@ -1061,7 +1061,7 @@ void cpu_bugs_smt_update(void)
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"Speculative Store Bypass: " fmt
+ 
+-static enum ssb_mitigation ssb_mode __ro_after_init = SPEC_STORE_BYPASS_NONE;
++static enum ssb_mitigation ssb_mode = SPEC_STORE_BYPASS_NONE;
+ 
+ /* The kernel command line selection */
+ enum ssb_mitigation_cmd {
+@@ -1082,7 +1082,7 @@ enum ssb_mitigation_cmd {
+ static const struct {
+ 	const char *option;
+ 	enum ssb_mitigation_cmd cmd;
+-} ssb_mitigation_options[]  __initconst = {
++} ssb_mitigation_options[] = {
+ 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
+ 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
+ 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
+@@ -1090,7 +1090,7 @@ enum ssb_mitigation_cmd {
+ 	{ "seccomp",	SPEC_STORE_BYPASS_CMD_SECCOMP }, /* Disable Speculative Store Bypass via prctl and seccomp */
+ };
+ 
+-static enum ssb_mitigation_cmd __init ssb_parse_cmdline(void)
++static enum ssb_mitigation_cmd ssb_parse_cmdline(void)
+ {
+ 	enum ssb_mitigation_cmd cmd = SPEC_STORE_BYPASS_CMD_AUTO;
+ 	char arg[20];
+@@ -1122,7 +1122,7 @@ static enum ssb_mitigation_cmd __init ssb_parse_cmdline(void)
+ 	return cmd;
+ }
+ 
+-static enum ssb_mitigation __init __ssb_select_mitigation(void)
++static enum ssb_mitigation __ssb_select_mitigation(void)
+ {
+ 	enum ssb_mitigation mode = SPEC_STORE_BYPASS_NONE;
+ 	enum ssb_mitigation_cmd cmd;
+@@ -1402,7 +1402,7 @@ void x86_spec_ctrl_setup_ap(void)
+ #define pr_fmt(fmt)	"L1TF: " fmt
+ 
+ /* Default mitigation for L1TF-affected CPUs */
+-enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
++enum l1tf_mitigations l1tf_mitigation = L1TF_MITIGATION_FLUSH;
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ EXPORT_SYMBOL_GPL(l1tf_mitigation);
+ #endif
+@@ -1448,7 +1448,7 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
+-static void __init l1tf_select_mitigation(void)
++static void l1tf_select_mitigation(void)
+ {
+ 	u64 half_pa;
+ 
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 95c090a..c11daa6 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1018,7 +1018,7 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ #define VULNWL_HYGON(family, whitelist)		\
+ 	VULNWL(HYGON, family, X86_MODEL_ANY, whitelist)
+ 
+-static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
++static const struct x86_cpu_id cpu_vuln_whitelist[] = {
+ 	VULNWL(ANY,	4, X86_MODEL_ANY,	NO_SPECULATION),
+ 	VULNWL(CENTAUR,	5, X86_MODEL_ANY,	NO_SPECULATION),
+ 	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
+@@ -1094,7 +1094,7 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+ 	{}
+ };
+ 
+-static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long which)
++static bool cpu_matches(const struct x86_cpu_id *table, unsigned long which)
+ {
+ 	const struct x86_cpu_id *m = x86_match_cpu(table);
+ 
+diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+index 9d03369..bf025b8 100644
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -51,9 +51,9 @@ enum tsx_ctrl_states {
+ 	TSX_CTRL_NOT_SUPPORTED,
+ };
+ 
+-extern __ro_after_init enum tsx_ctrl_states tsx_ctrl_state;
++extern enum tsx_ctrl_states tsx_ctrl_state;
+ 
+-extern void __init tsx_init(void);
++extern void tsx_init(void);
+ extern void tsx_enable(void);
+ extern void tsx_disable(void);
+ #else
+diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
+index e2ad30e..7c46581 100644
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -17,7 +17,7 @@
+ #undef pr_fmt
+ #define pr_fmt(fmt) "tsx: " fmt
+ 
+-enum tsx_ctrl_states tsx_ctrl_state __ro_after_init = TSX_CTRL_NOT_SUPPORTED;
++enum tsx_ctrl_states tsx_ctrl_state = TSX_CTRL_NOT_SUPPORTED;
+ 
+ void tsx_disable(void)
+ {
+@@ -58,7 +58,7 @@ void tsx_enable(void)
+ 	wrmsrl(MSR_IA32_TSX_CTRL, tsx);
+ }
+ 
+-static bool __init tsx_ctrl_is_supported(void)
++static bool tsx_ctrl_is_supported(void)
+ {
+ 	u64 ia32_cap = x86_read_arch_cap_msr();
+ 
+@@ -84,7 +84,7 @@ static enum tsx_ctrl_states x86_get_tsx_auto_mode(void)
+ 	return TSX_CTRL_ENABLE;
+ }
+ 
+-void __init tsx_init(void)
++void tsx_init(void)
+ {
+ 	char arg[5] = {};
+ 	int ret;
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 6ff2578..fe67a01 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -391,7 +391,7 @@ void __weak arch_smt_update(void) { }
+ #ifdef CONFIG_HOTPLUG_SMT
+ enum cpuhp_smt_control cpu_smt_control __read_mostly = CPU_SMT_ENABLED;
+ 
+-void __init cpu_smt_disable(bool force)
++void cpu_smt_disable(bool force)
+ {
+ 	if (!cpu_smt_possible())
+ 		return;
+-- 
+1.8.3.1
 
---------------4311EBEE68346305983AB55B--
