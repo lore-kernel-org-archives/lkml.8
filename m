@@ -2,84 +2,78 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B4DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26782C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A677920672
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F9A20672
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="MV54ND7H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGfKjGqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgGBUvB (ORCPT
+        id S1726309AbgGBUvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50010 "EHLO
+        Thu, 2 Jul 2020 16:51:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGBUvA (ORCPT
+        with ESMTP id S1726100AbgGBUvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:51:00 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328EEC08C5DF
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:51:00 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l6so26991266qkc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:51:00 -0700 (PDT)
+        Thu, 2 Jul 2020 16:51:01 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4A9C08C5C1;
+        Thu,  2 Jul 2020 13:51:01 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a8so24188338edy.1;
+        Thu, 02 Jul 2020 13:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/Xy1whvuko1GTsGsLTQjwBeZFEtLbfclioQ2pv5Xu6I=;
-        b=MV54ND7H7Bc/oHzR94MnTdFW9fv2FGROmlNBcDZrWXgvoT/VmKwgxlTWT3hktSplFw
-         iP3MfIk5Y2XICm7EUWaYBtACPCQWB5EUNXe1AGRfVDg5ad6VV4QG7NEEMFRoar9rFPJW
-         wHwTHWrFEUJOW0t0OLUyzQL4EmDv6JjiMkIEN5cFC9veqIGf2C8OpeeajSNDRXfXXVL1
-         Bo7A7STqI3qD6RpE9tdBuxBc8lCi/jDEOE/ZNN65LV3VROIWPH8HjPq79QteqXSkdNZC
-         bN41FVA5tRvdrrBIKU4V4TJX9T9cBXkAk9zz8Vwf8TkaCUqXq95l6i+zxtziUmc8UVfy
-         HccA==
+        bh=ufie2CDrhQ/r4KkbF9WWsSi4czhI/yseQTh/49H/EYA=;
+        b=dGfKjGqOosSamvdrgWcRCV0ymB4gV9kROaMvgyKQsEZVq2gwsQeWvHGIfTyUSjhzQw
+         P+gEUd3QePrewPSAwY7CQjZ3yfh0hrB03KxI4xvnnspX8T/4dgV6qxLE6G4Zlqc+bf0J
+         uDIoTxVtqi9Jaf24z4Hlw+o/KIgSyIRTuESdGYsM/V+SgptlFPDJ27YhaPerjHw4r0cr
+         XMxLdmS+4qu+foLql6mUAlb8qJmebfvdFJohbaiVbrkHnWjMvQrD3dZ1iSe6vviu7T0D
+         z5EA+YAe53qh3orxBuZaMk8gKk+BdmzBCxGtBoRVMu3KHkjr38KpOFJbpvS/pJvq5YeZ
+         vcbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/Xy1whvuko1GTsGsLTQjwBeZFEtLbfclioQ2pv5Xu6I=;
-        b=n8oo89mFsEg8lg6YIgzE2QgXNJosllgkP0Lz+wzGRONJhAXLgEDh1oaqwkIQdslloD
-         zAgpkURhYARW0iEMN2hMggtumirUu9Sjbf4KINTIcdEIP5GqvuY/nWsa2mmtELeQuw/Y
-         1Pwpn/jghwKhziQj6W0t2Tnb2Xwoljnl8sCJiglijDGHgatsBP8EvrP29DoETa5BElR7
-         3y7u7RKXqgKncjd08ygGMWE2a9mIkAfdype7pP9BknjJrl0JyPgkd5W+BXQ/FdtB13qL
-         uJgYjBVBI2X7Lm/POlThmSCRjPcQbicuaOrzEGdstXRGpsTv4B2M6JmFaQLfNDMV6Zy0
-         R8/w==
-X-Gm-Message-State: AOAM531+CEdOdBLQamI0VEWr/GmSEMOzJ73NhuVUDeYZig0Q0eFH+INJ
-        MJ8fqq62gNbxtZp97T7h6ek7+2qd46U=
-X-Google-Smtp-Source: ABdhPJyEOUFyVKlZLOsHKYeSe6ToCPD5eqg11IHVIqUFrAjlkKiBPSPt3z0mdIyyfRpDRR6bNbmyuw==
-X-Received: by 2002:a05:620a:1369:: with SMTP id d9mr31646444qkl.419.1593723059117;
-        Thu, 02 Jul 2020 13:50:59 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id u58sm9918787qth.77.2020.07.02.13.50.58
+        bh=ufie2CDrhQ/r4KkbF9WWsSi4czhI/yseQTh/49H/EYA=;
+        b=CzZeMnzm35aCDQkfY13NLSgbIa8uFPGKjMk6d9DvVPcp+0a9jw2skGqe58QJC+fOVw
+         HemH+VYf1Zj++h+CmFAU5bc/zskfGaDAwtpWO9rtTFA2wkFyLzyMWf/S3WIAcOjX/eqF
+         Ju9ODQdqFU3yakNtNzXJi0U86hTcmFjHwx60UtPCH4QUVgXBM9rI/1W4hsk8JU/8w+yZ
+         TlZBLUCcahYmm8hbcizfr1LZHxSgJmKu1sUIDwDJEcEBF2XfJSQZmLssfh5X+yv/NpxM
+         fdSeDGNC1+HrwVab5vbS7JvHBGm3yhVOdFKWBf0QPmcO+6sdZUucdDmwsPlF5TdVk0Dj
+         yKGg==
+X-Gm-Message-State: AOAM533d66BY6zcON/kpEOGDW1F1HE4iO/JpynD3XNJjoDg+0n0LCtwU
+        AtO6OwOh67RpJLDTmLzkLOSGblIv
+X-Google-Smtp-Source: ABdhPJycjQwX4+oNVImACY03PvV89lnvZCJAQc0HM4ZfEg1DbOqvUmAaCyQb4XoSPsVXewoYViDVAQ==
+X-Received: by 2002:aa7:c2cf:: with SMTP id m15mr12345977edp.27.1593723060101;
+        Thu, 02 Jul 2020 13:51:00 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:55bc:8b0a:d3af:949c? ([2a01:110f:b59:fd00:55bc:8b0a:d3af:949c])
+        by smtp.gmail.com with ESMTPSA id da20sm10014362edb.27.2020.07.02.13.50.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 13:50:58 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM
- Graphics clock bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Thu, 02 Jul 2020 13:50:59 -0700 (PDT)
+Subject: Re: [PATCH v2] leds: core: Flush scheduled work for system suspend
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, pavel@ucw.cz
+Cc:     anthony.wong@canonical.com, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-References: <20200629211725.2592-1-jonathan@marek.ca>
- <20200629211725.2592-8-jonathan@marek.ca> <20200702204624.GA1661017@bogus>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <50620a20-0721-b5b7-8bc9-217536d51c29@marek.ca>
-Date:   Thu, 2 Jul 2020 16:49:47 -0400
+References: <20200702054500.11251-1-kai.heng.feng@canonical.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a5a931e5-771d-3356-89c2-b0e49f74161c@gmail.com>
+Date:   Thu, 2 Jul 2020 22:50:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200702204624.GA1661017@bogus>
+In-Reply-To: <20200702054500.11251-1-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,153 +82,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 4:46 PM, Rob Herring wrote:
-> On Mon, Jun 29, 2020 at 05:17:13PM -0400, Jonathan Marek wrote:
->> Add device tree bindings for graphics clock controller for
->> Qualcomm Technology Inc's SM8250 SoCs.
->>
+Hi Kai-Heng,
+
+Thank you for the update.
+
+On 7/2/20 7:45 AM, Kai-Heng Feng wrote:
+> Sometimes LED won't be turned off by LED_CORE_SUSPENDRESUME flag upon
+> system suspend.
 > 
-> Looks like these 2 schemas could be a single one.
+> led_set_brightness_nopm() uses schedule_work() to set LED brightness.
+> However, there's no guarantee that the scheduled work gets executed
+> because no one flushes the work.
+> 
+> So flush the scheduled work to make sure LED gets turned off.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v2:
+>   - Use flush_work() instead.
+> 
+>   drivers/leds/led-class.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 3363a6551a70..cc3929f858b6 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -173,6 +173,7 @@ void led_classdev_suspend(struct led_classdev *led_cdev)
+>   {
+>   	led_cdev->flags |= LED_SUSPENDED;
+>   	led_set_brightness_nopm(led_cdev, 0);
+> +	flush_work(&led_cdev->set_brightness_work);
+>   }
+>   EXPORT_SYMBOL_GPL(led_classdev_suspend);
+>   
 > 
 
-I agree, but there are already separate schemas for sdm845 and sc7180 
-gpucc (which these are a copy paste of), so should those be removed and 
-use the single one too?
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
->> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> ---
->>   .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
->>   include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
->>   2 files changed, 114 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
->> new file mode 100644
->> index 000000000000..2b9c8f97b76d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
->> @@ -0,0 +1,74 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
->> +
->> +maintainers:
->> +  -
->> +
->> +description: |
->> +  Qualcomm graphics clock control module which supports the clocks, resets and
->> +  power domains on SM8250.
->> +
->> +  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,sm8250-gpucc
->> +
->> +  clocks:
->> +    items:
->> +      - description: Board XO source
->> +      - description: GPLL0 main branch source
->> +      - description: GPLL0 div branch source
->> +
->> +  clock-names:
->> +    items:
->> +      - const: bi_tcxo
->> +      - const: gcc_gpu_gpll0_clk_src
->> +      - const: gcc_gpu_gpll0_div_clk_src
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +  '#power-domain-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - '#clock-cells'
->> +  - '#reset-cells'
->> +  - '#power-domain-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,gcc-sm8250.h>
->> +    #include <dt-bindings/clock/qcom,rpmh.h>
->> +    clock-controller@3d90000 {
->> +      compatible = "qcom,sm8250-gpucc";
->> +      reg = <0x3d90000 0x9000>;
->> +      clocks = <&rpmhcc RPMH_CXO_CLK>,
->> +               <&gcc GCC_GPU_GPLL0_CLK_SRC>,
->> +               <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
->> +      clock-names = "bi_tcxo",
->> +                    "gcc_gpu_gpll0_clk_src",
->> +                    "gcc_gpu_gpll0_div_clk_src";
->> +      #clock-cells = <1>;
->> +      #reset-cells = <1>;
->> +      #power-domain-cells = <1>;
->> +    };
->> +...
->> diff --git a/include/dt-bindings/clock/qcom,gpucc-sm8250.h b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
->> new file mode 100644
->> index 000000000000..c8fe64e399fd
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
->> @@ -0,0 +1,40 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
->> +#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
->> +
->> +/* GPU_CC clock registers */
->> +#define GPU_CC_AHB_CLK				0
->> +#define GPU_CC_CRC_AHB_CLK			1
->> +#define GPU_CC_CX_APB_CLK			2
->> +#define GPU_CC_CX_GMU_CLK			3
->> +#define GPU_CC_CX_QDSS_AT_CLK			4
->> +#define GPU_CC_CX_QDSS_TRIG_CLK			5
->> +#define GPU_CC_CX_QDSS_TSCTR_CLK		6
->> +#define GPU_CC_CX_SNOC_DVM_CLK			7
->> +#define GPU_CC_CXO_AON_CLK			8
->> +#define GPU_CC_CXO_CLK				9
->> +#define GPU_CC_GMU_CLK_SRC			10
->> +#define GPU_CC_GX_GMU_CLK			11
->> +#define GPU_CC_GX_QDSS_TSCTR_CLK		12
->> +#define GPU_CC_GX_VSENSE_CLK			13
->> +#define GPU_CC_PLL1				14
->> +#define GPU_CC_SLEEP_CLK			15
->> +#define GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK		16
->> +
->> +/* GPU_CC Resets */
->> +#define GPUCC_GPU_CC_ACD_BCR			0
->> +#define GPUCC_GPU_CC_CX_BCR			1
->> +#define GPUCC_GPU_CC_GFX3D_AON_BCR		2
->> +#define GPUCC_GPU_CC_GMU_BCR			3
->> +#define GPUCC_GPU_CC_GX_BCR			4
->> +#define GPUCC_GPU_CC_XO_BCR			5
->> +
->> +/* GPU_CC GDSCRs */
->> +#define GPU_CX_GDSC				0
->> +#define GPU_GX_GDSC				1
->> +
->> +#endif
->> -- 
->> 2.26.1
->>
+Pavel, this needs to go to stable as well, so let's add the tag:
+
+Fixes: 81fe8e5b73e3 ("leds: core: Add led_set_brightness_nosleep{nopm} 
+functions")
+
+-- 
+Best regards,
+Jacek Anaszewski
