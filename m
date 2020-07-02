@@ -2,146 +2,138 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB47C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4238C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06DD3206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEA820772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593685378;
+	bh=h4X388artUNIVz+IWAOlQwFeJ3Od7WTT7Py6PUtGojE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BX/+I0XBKO9IJCP0Oh9itFE8mHaN1ilxoKFPUfFMW33/ciRpAfTeelBa7TMvBOeAX
+	 HGZYJpfkQ0XgYsCLdH5bvE65Mwon6RiwvwzEgTtR4RsFRUMxnf/Ma8Dcs46XDfuwcw
+	 s1HynjoqjtgG4N8o/r1ne0ZIJT8+KP9NIuBvHZkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgGBKWm (ORCPT
+        id S1728366AbgGBKW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:22:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:28946 "EHLO mga02.intel.com"
+        Thu, 2 Jul 2020 06:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgGBKWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:22:39 -0400
-IronPort-SDR: dsPbSql/bl7ovclrbH0fR67Eg6Ftj9j4Ou09eoffC/yZP9NgoDHiIP0sJaA78u74TMiY+skW9a
- WTZ2LF0wb/jg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="135145707"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="135145707"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 03:22:37 -0700
-IronPort-SDR: lmbUQJU0DJo2wuEKqO0vUMPiDNNAexulGJc+oSPgo0ui52mcoR0yMDmhg1HWous4a+zz6ERGWc
- NCI83yhGW0tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="481648277"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 03:22:36 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jqwMX-00HBXS-6k; Thu, 02 Jul 2020 13:22:37 +0300
-Date:   Thu, 2 Jul 2020 13:22:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ricardo Ribalda <ribalda@kernel.org>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH v4] i2c: designware: platdrv: Set class based on DMI
-Message-ID: <20200702102237.GS3703480@smile.fi.intel.com>
-References: <20200702101028.2088666-1-ribalda@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702101028.2088666-1-ribalda@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1728323AbgGBKUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:20:21 -0400
+Received: from e123331-lin.nice.arm.com (lfbn-nic-1-188-42.w2-15.abo.wanadoo.fr [2.15.37.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE787206DD;
+        Thu,  2 Jul 2020 10:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593685220;
+        bh=h4X388artUNIVz+IWAOlQwFeJ3Od7WTT7Py6PUtGojE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A9ZkuZDHiPRmAAIULwilEVaJNM4a3NENPr7Q0BVVzdpHbUZvpJri/EOl5Mn9KzVha
+         uBVtqfVU9BlnMzB0aziUSNQnWwdkmZi9kR/dmM5ud59EX3Eqvsg+JixtTFB7diQqIK
+         tDPmsf2nmtZJ0CecESB5Z3LqUucylh19S8p7sZY4=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org
+Subject: [RFC PATCH 0/7] crypto: get rid of ecb(arc4)
+Date:   Thu,  2 Jul 2020 12:19:40 +0200
+Message-Id: <20200702101947.682-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:10:28PM +0200, Ricardo Ribalda wrote:
-> Current AMD's zen-based APUs use this core for some of its i2c-buses.
-> 
-> With this patch we re-enable autodetection of hwmon-alike devices, so
-> lm-sensors will be able to work automatically.
-> 
-> It does not affect the boot-time of embedded devices, as the class is
-> set based on the DMI information.
+The RC4 algorithm does not fit the sckipher model very well: it is a stream
+cipher that combines the key and IV into a single vector, which implies that
+using the same key more than once amounts to stream cipher IV reuse, and
+therefore catastrophic failure.
 
-Thanks for an update, my comments below. Either Wolfram (if he is okay with
-that), or you can address them.
+So let's replace the remaining legacy users (WEP and TKIP in the staging
+tree) to the ARC4 library interface, which does not rely on the crypto API
+at all. Also, remove the obsolete RC4-HMAC-MD5 algorithm from the SUNRPC
+driver stack.
 
-After addressing,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+NOTE: It should not be too difficult to switch the kerberos code over to
+the ARC4 library interface as well, given that much of it uses a different
+code path already. But we should only do so if we really need to keep this
+support around, and it seems that this was only ever intended as a transitional
+algorithm for Windows NT/2000 clients.
 
-> DMI is probed only on Qtechnology QT5222 Industrial Camera Platform
+That leaves no remaining users of the ecb(arc4) skcipher, so we can remove
+any implementations as well.
 
-Still missed period at the end.
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: "J. Bruce Fields" <bfields@fieldses.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Eric Biggers <ebiggers@google.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: devel@driverdev.osuosl.org
+Cc: linux-nfs@vger.kernel.org
 
-> DocLink: https://qtec.com/camera-technology-camera-platforms/
-> Fixes: 3eddad96c439 ("i2c: designware: reverts "i2c: designware: Add support for AMD I2C controller"")
-> Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
-> ---
-> v2: Comments by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->   - dmi -> DMI
->   - Doclink
->   - CodeStyle
->   (I do not know what you meant by redundant in the dmi match list ...)
-> 
-> 
->  drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index c2efaaaac252..630e28ef2412 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -12,6 +12,7 @@
->  #include <linux/clk-provider.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/i2c.h>
-> @@ -191,6 +192,18 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
->  	return ret;
->  }
->  
-> +static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
-> +	{
-> +		.ident = "Qtechnology QT5222",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Qtechnology"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "QT5222"),
-> +		},
-> +	},
+Ard Biesheuvel (7):
+  staging/rtl8192e: switch to RC4 library interface
+  staging/rtl8192u: switch to RC4 library interface
+  SUNRPC: remove RC4-HMAC-MD5 support from KerberosV
+  crypto: remove ARC4 support from the skcipher API
+  crypto: n2 - remove ecb(arc4) support
+  crypto: bcm-iproc - remove ecb(arc4) support
+  crypto: tcrypt - remove ecb(arc4) testing/benchmarking support
 
-> +
-
-Still not needed blank line.
-
-> +	{ } /* terminate list */
-> +};
-> +
->  static int dw_i2c_plat_probe(struct platform_device *pdev)
->  {
->  	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> @@ -267,7 +280,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->  
->  	adap = &dev->adapter;
->  	adap->owner = THIS_MODULE;
-> -	adap->class = I2C_CLASS_DEPRECATED;
-> +	adap->class = dmi_check_system(dw_i2c_hwmon_class_dmi) ?
-> +					I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
->  	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
->  	adap->dev.of_node = pdev->dev.of_node;
->  	adap->nr = -1;
-> -- 
-> 2.27.0
-> 
+ crypto/Kconfig                                |  12 -
+ crypto/Makefile                               |   1 -
+ crypto/arc4.c                                 |  76 -----
+ crypto/tcrypt.c                               |  21 +-
+ crypto/testmgr.c                              |   7 -
+ crypto/testmgr.h                              |  62 ----
+ drivers/crypto/bcm/cipher.c                   |  96 +-----
+ drivers/crypto/bcm/cipher.h                   |   1 -
+ drivers/crypto/bcm/spu.c                      |  23 +-
+ drivers/crypto/bcm/spu.h                      |   1 -
+ drivers/crypto/bcm/spu2.c                     |  12 +-
+ drivers/crypto/bcm/spu2.h                     |   1 -
+ drivers/crypto/n2_core.c                      |  46 ---
+ drivers/net/wireless/intel/ipw2x00/Kconfig    |   1 -
+ drivers/net/wireless/intersil/hostap/Kconfig  |   1 -
+ drivers/staging/rtl8192e/Kconfig              |   4 +-
+ drivers/staging/rtl8192e/rtllib_crypt_tkip.c  |  70 +----
+ drivers/staging/rtl8192e/rtllib_crypt_wep.c   |  72 +----
+ drivers/staging/rtl8192u/Kconfig              |   1 +
+ .../rtl8192u/ieee80211/ieee80211_crypt_tkip.c |  82 +-----
+ .../rtl8192u/ieee80211/ieee80211_crypt_wep.c  |  64 +---
+ include/linux/sunrpc/gss_krb5.h               |  11 -
+ include/linux/sunrpc/gss_krb5_enctypes.h      |   9 +-
+ net/sunrpc/Kconfig                            |   1 -
+ net/sunrpc/auth_gss/gss_krb5_crypto.c         | 276 ------------------
+ net/sunrpc/auth_gss/gss_krb5_mech.c           |  95 ------
+ net/sunrpc/auth_gss/gss_krb5_seal.c           |   1 -
+ net/sunrpc/auth_gss/gss_krb5_seqnum.c         |  87 ------
+ net/sunrpc/auth_gss/gss_krb5_unseal.c         |   1 -
+ net/sunrpc/auth_gss/gss_krb5_wrap.c           |  65 +----
+ 30 files changed, 78 insertions(+), 1122 deletions(-)
+ delete mode 100644 crypto/arc4.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
