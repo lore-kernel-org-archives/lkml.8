@@ -2,110 +2,211 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC96C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B87C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5014420702
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B51A207E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o6Tn63Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgGBTEk (ORCPT
+        id S1726029AbgGBTHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:04:40 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:51372 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgGBTEk (ORCPT
+        Thu, 2 Jul 2020 15:07:51 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14215 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGBTHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:04:40 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr4Vg-0000Na-3K; Thu, 02 Jul 2020 13:04:36 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jr4Ve-00069I-03; Thu, 02 Jul 2020 13:04:35 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Matt Bennett <matt.bennett@alliedtelesis.co.nz>
-Cc:     netdev@vger.kernel.org, zbr@ioremap.net,
-        linux-kernel@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>
-References: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz>
-Date:   Thu, 02 Jul 2020 13:59:59 -0500
-In-Reply-To: <20200702002635.8169-1-matt.bennett@alliedtelesis.co.nz> (Matt
-        Bennett's message of "Thu, 2 Jul 2020 12:26:30 +1200")
-Message-ID: <87k0zlspxs.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Jul 2020 15:07:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efe30530000>; Thu, 02 Jul 2020 12:06:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Jul 2020 12:07:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Jul 2020 12:07:50 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jul
+ 2020 19:07:45 +0000
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.56) by
+ HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Thu, 2 Jul 2020 19:07:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AndpIFn/5YDVY2pXIVcQQwgzDIJ6ZZh6D2q3Q9sCyEe2xVWOvtUOpONLnKkY6Hlz5272kryENzBMN6FyW9QXHW5elSpXTNfYpjgJzOI1+6hpN/uXFzaCNpV1WYcc7/oRb+bcsjXUT9uO2YcTQcLl39XYOmiH7R/yw30FJYHFdwF/7Td/GFNH5gL6O7vz5tAnpL5vnP9OWbP1CF+oO0uIOt9cZFmo6tp/3lXL980+NKVmYNyhADqZF2DwCd5sFy6fjsiJHgSW0e77hcrb5bWeb657+i6UvBgNe7Lzh6TWQqzR0c5kHjpYE9puGKvO9Cg3Wdym1DV/81vlHIiBQguqJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJcIV0H/7sLJnyzq/5mftK6dzrpUhm/WeBEm6WHN+TU=;
+ b=Ye9xsNEi6WukUoKKRQR/Jhk+ylE1yTucM5rybccCnxAXQoD3G2TsFUC4K7NdC7luIAW0Wjq2P55wWNRqRd15xtzAlT0xNNpBWS51owgrOGGV/b7hN852HxC/Ku8eAyRon/iJGJ7WUzx48+/hi6KSuoDoigJSUCFwBIYRKzph4qIk/+puYefNOAWLFaQhIAA6BKvZ+9WehY0YTGdAEoQPyRpjDUN3kZs25d13vOA4QsMtkovSa2dnpVq7NWObBY9tAX530JceXtRq6I5WYKzmJM6d5z+I/uem/Jk3skemeaJBvdbR6ENlh2bDL+jkD//EymQjq6jLvPsa5tuORnLXiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1436.namprd12.prod.outlook.com (2603:10b6:3:78::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3131.21; Thu, 2 Jul 2020 19:07:43 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3153.027; Thu, 2 Jul 2020
+ 19:07:43 +0000
+Date:   Thu, 2 Jul 2020 16:07:38 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Divya Indi <divya.indi@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH v4] IB/sa: Resolving use-after-free in ib_nl_send_msg
+Message-ID: <20200702190738.GA759483@nvidia.com>
+References: <1592964789-14533-1-git-send-email-divya.indi@oracle.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1592964789-14533-1-git-send-email-divya.indi@oracle.com>
+X-ClientProxiedBy: MN2PR15CA0018.namprd15.prod.outlook.com
+ (2603:10b6:208:1b4::31) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jr4Ve-00069I-03;;;mid=<87k0zlspxs.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/cThDAnv+o2eEuqq0eobQSsw98Xk5vfJg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 0/5] RFC: connector: Add network namespace awareness
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (193.47.165.251) by MN2PR15CA0018.namprd15.prod.outlook.com (2603:10b6:208:1b4::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22 via Frontend Transport; Thu, 2 Jul 2020 19:07:43 +0000
+Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jr4Yc-003Bay-PI; Thu, 02 Jul 2020 16:07:38 -0300
+X-Originating-IP: [193.47.165.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5ad86ae0-f029-4e53-dbff-08d81ebb3300
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1436:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB14367DE9ED18D1EAB01316E3C26D0@DM5PR12MB1436.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0452022BE1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zGi98CJRmdF61g2kkqIoQNK4ISz1wEWeK/RALd1tMXwfRUqgFGoIvJpgx1wYynUbokU0gPWQc14s0qVORygzybNV6jJDZ4zoFDRGOjgoVEOYHOHjPr4VubdtUJFCxnE/m8TrIzOI16yVYDk4qEWzKqo/fKCwGewMJW8VH9cR5Q9zEeA8YmMk31KEcSSd7bOfwx7qas4t9PiVI323bRyXDAZQFgqCdrpyo3CpDIpSjk4nTJq3gXG0IPSviBj+8RxB4leA0zs93ciqHJ52zgHz+ehxOQYrDRe5MiwT+Jq9bzEa3taG+dTcAOOlHRTb/CpoPl6qA/HB6oPr3x770E46xSHsapVWPGnkOtwGnKbOYG4feiMYNJhZR7atGM+KlCcr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(5660300002)(478600001)(186003)(66556008)(66476007)(66946007)(8936002)(8676002)(33656002)(7416002)(4326008)(2616005)(26005)(6916009)(83380400001)(316002)(2906002)(1076003)(9746002)(9786002)(86362001)(36756003)(54906003)(426003)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: jxELYGLdgdiTVaApIslGEeNtao5NaTH1cFH2rRJtTt55FJQYTzDTvZ+ow2Vij9oNQOFeBJT5syxqGbpgwRyzfXUOhUOffm/thfm7MYv9/7dEA9gY556qpcaPNP2rS0OyrQ1z9I/wP/bO8QvuNWKkdtQxxHTfHy9yGa0AgioAOa4r9ak6VLL0hBHxDnWsm1d/TjQnuVejmLMRTd44QHM4mJlMEwtFBDoaMf9CLa4VnoMJUwXMSKUt56x8PErwTHftX/54k/EMUylXPerKJRqjADFV6ra+vDFR9JYyJS1/irBwQKhU7lGjo7/Ux5PO+jf9BJgshSPg6Q9T0STUyTXjjE1PhipkGjEcNGk0s7GdhStjKFPcMLdQT5RP92IAbIei0sSTpnWLDYlKxdVRS/oDXOgo61S5lmxOstNhMxiO7X7rNT6GNiDQ1Vortx32OSk1oKvDYDCXwgyBOPSmEEVjjtPAXN7vDSI+5CGnYbnR61vQv6ZL1tGDhl+IsvP/WWWA
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ad86ae0-f029-4e53-dbff-08d81ebb3300
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 19:07:43.7966
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZP7BnaFwKmIrFRqwV46eChYTbb6Bv39gqacbMT1NIxSeAzh8LJWwQhiOIH/zOWUO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1436
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593716819; bh=qJcIV0H/7sLJnyzq/5mftK6dzrpUhm/WeBEm6WHN+TU=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-Forefront-PRVS:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=o6Tn63Jt006KD2uWppZknmN9DFFYH0MCv9da8QNZbwH7+/54Kgqd3aY4T0HVRjoWC
+         DltQM5KgdhRVSy6RGP29xJIAwbNlFIPMIQrw8Q2U9UXFX+peXtvAIdcOivhF0/BlJV
+         yaiWYPklLFJ42A03HeSfIQOxZreYY2QUB2aDMFbTdDBp7nBlOJFX0c0ul1SiA1FWjI
+         SnXWslK74bq+ugRu/DbHAmPTkxhQMYRYwIUzJLJw/Kx5EMcSzT/c/AQBdRf3IS3yW1
+         PXmSQiro5SFB41SVPZvsJ6yqQR+C9VKHJR5NHix2/CXGbPRpVISM8WL8I/XQ6nV/Vz
+         nNwtgpVTt8RUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matt Bennett <matt.bennett@alliedtelesis.co.nz> writes:
+On Tue, Jun 23, 2020 at 07:13:09PM -0700, Divya Indi wrote:
+> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+> -
+> 1. Adds the query to the request list before ib_nl_snd_msg.
+> 2. Moves ib_nl_send_msg out of spinlock, hence safe to use gfp_mask as is.
+> 
+> However, if there is a delay in sending out the request (For
+> eg: Delay due to low memory situation) the timer to handle request timeout
+> might kick in before the request is sent out to ibacm via netlink.
+> ib_nl_request_timeout may release the query causing a use after free situation
+> while accessing the query in ib_nl_send_msg.
+> 
+> Call Trace for the above race:
+> 
+> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> [rds_rdma]
+> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> [rds_rdma]
+> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> ....
+> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+> 
+> To resolve the above issue -
+> 1. Add the req to the request list only after the request has been sent out.
+> 2. To handle the race where response comes in before adding request to
+> the request list, send(rdma_nl_multicast) and add to list while holding the
+> spinlock - request_lock.
+> 3. Use non blocking memory allocation flags for rdma_nl_multicast since it is
+> called while holding a spinlock.
+> 
+> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> before sending")
+> 
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> ---
+> v1:
+> - Use flag IB_SA_NL_QUERY_SENT to prevent the use-after-free.
+> 
+> v2:
+> - Use atomic bit ops for setting and testing IB_SA_NL_QUERY_SENT.
+> - Rewording and adding comments.
+> 
+> v3:
+> - Change approach and remove usage of IB_SA_NL_QUERY_SENT.
+> - Add req to request list only after the request has been sent out.
+> - Send and add to list while holding the spinlock (request_lock).
+> - Overide gfp_mask and use GFP_NOWAIT for rdma_nl_multicast since we
+>   need non blocking memory allocation while holding spinlock.
+> 
+> v4:
+> - Formatting changes.
+> - Use GFP_NOWAIT conditionally - Only when GFP_ATOMIC is not provided by caller.
+> ---
+>  drivers/infiniband/core/sa_query.c | 41 ++++++++++++++++++++++----------------
+>  1 file changed, 24 insertions(+), 17 deletions(-)
 
-> Previously the connector functionality could only be used by processes running in the
-> default network namespace. This meant that any process that uses the connector functionality
-> could not operate correctly when run inside a container. This is a draft patch series that
-> attempts to now allow this functionality outside of the default network namespace.
->
-> I see this has been discussed previously [1], but am not sure how my changes relate to all
-> of the topics discussed there and/or if there are any unintended side
-> effects from my draft
+I made a few edits, and applied to for-rc
 
-In a quick skim this patchset does not look like it approaches a correct
-conversion to having code that works in multiple namespaces.
-
-I will take the changes to proc_id_connector for example.
-You report the values in the callers current namespaces.
-
-Which means an unprivileged user can create a user namespace and get
-connector to report whichever ids they want to users in another
-namespace.  AKA lie.
-
-So this appears to make connector completely unreliable.
-
-Eric
-
-
-
-> changes.
->
-> Thanks.
->
-> [1] https://marc.info/?l=linux-kernel&m=150806196728365&w=2
->
-> Matt Bennett (5):
->   connector: Use task pid helpers
->   connector: Use 'current_user_ns' function
->   connector: Ensure callback entry is released
->   connector: Prepare for supporting multiple namespaces
->   connector: Create connector per namespace
->
->  Documentation/driver-api/connector.rst |   6 +-
->  drivers/connector/cn_proc.c            | 110 +++++++-------
->  drivers/connector/cn_queue.c           |   9 +-
->  drivers/connector/connector.c          | 192 ++++++++++++++++++++-----
->  drivers/hv/hv_fcopy.c                  |   1 +
->  drivers/hv/hv_utils_transport.c        |   6 +-
->  drivers/md/dm-log-userspace-transfer.c |   6 +-
->  drivers/video/fbdev/uvesafb.c          |   8 +-
->  drivers/w1/w1_netlink.c                |  19 +--
->  include/linux/connector.h              |  38 +++--
->  include/net/net_namespace.h            |   4 +
->  kernel/exit.c                          |   2 +-
->  samples/connector/cn_test.c            |   6 +-
->  13 files changed, 286 insertions(+), 121 deletions(-)
+Thanks,
+Jason
