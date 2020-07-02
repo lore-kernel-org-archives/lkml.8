@@ -2,88 +2,94 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87656C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2B9207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC1B207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593707749;
-	bh=rGNKmO07ReYGewo3jFdWR8QXf223+xTSsCx/NpM/Ewk=;
+	s=default; t=1593707809;
+	bh=1ydFiyyVngUAcsAU9csrnJizTY4RtX1aoV1iBzBWUlI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OJoldtGWzb6SCHzwF7vV/QgEgY8x2nqZsK7bOlnPRX6uUCWayIV793VjXKDNjIQHL
-	 +SUevCS7ZriCBQ3IYPLOMgajbplwnWNkDHJIwjyrVdTIkRO7PASXzeSbjJYXuHp9Jz
-	 7gXubPhThSSLNDrxEwpZ02KLOQs7EV313yWZ8mWw=
+	b=RXBIQR/ktl8tAog/pZYdk1JvFYV9mIGgQWCin0ZM59/7pKyaZoG68vMbUeSWBmoBD
+	 SreupFeFO1Lwi7BVhhATUU5v6x4yLhCVaPjE/Qw0EEPQcfhY/4WhBvoQRtYbS+C/CU
+	 3FkEawtJ8Wx82Nb5CHHLNTuYF1osDFDxZbFB2OOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGBQfs (ORCPT
+        id S1726895AbgGBQgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 12:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgGBQfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:35:48 -0400
+        id S1726140AbgGBQgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:36:47 -0400
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 720FB20720;
-        Thu,  2 Jul 2020 16:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463C320720;
+        Thu,  2 Jul 2020 16:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593707747;
-        bh=rGNKmO07ReYGewo3jFdWR8QXf223+xTSsCx/NpM/Ewk=;
+        s=default; t=1593707806;
+        bh=1ydFiyyVngUAcsAU9csrnJizTY4RtX1aoV1iBzBWUlI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZJ0pdQbxr+sSQechj3qDo+8J71drf+D7PoVp9r0DTP2FbPziWtZntsXMbqz1xO9Ro
-         MPLtbNwPF9bAIO7TiUBqLUDU1qN/9K7xacminlnEiFdbaZ+f8vPY22N38Ja7lybRL8
-         zCajvfnCOvSKBzpQfI2iyuEPNKiBlqGq6+kkzrBo=
-Date:   Thu, 2 Jul 2020 09:35:45 -0700
+        b=TSOdujByBkyI0xINU2tkk0vhYTIWtDh73W4gCqhyvEaWlGwnx+IWwIaE24ysdf1Fj
+         9q1Qz83OusuUWT8nFFKHu4ErPQ+0Ikb7tT7v86bvJ+PvQY1tHAAOtOh1PdxhsiaXzk
+         wF2H/sV/ZVyDVLypv6l9e5SKv/CIGCaoCth0ZtiI=
+Date:   Thu, 2 Jul 2020 09:36:45 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 0/4] net: ethtool: Untangle PHYLIB dependency
-Message-ID: <20200702093545.5ee3371a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200702163424.GG752507@lunn.ch>
-References: <20200702042942.76674-1-f.fainelli@gmail.com>
-        <20200702155652.ivokudjptoect6ch@lion.mk-sys.cz>
-        <20200702163424.GG752507@lunn.ch>
+        Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Shahed Shaikh <shshaikh@marvell.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH v1 2/2] qlcninc: use generic power management
+Message-ID: <20200702093645.13e0018a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200702063632.289959-3-vaibhavgupta40@gmail.com>
+References: <20200702063632.289959-1-vaibhavgupta40@gmail.com>
+        <20200702063632.289959-3-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 18:34:24 +0200 Andrew Lunn wrote:
-> On Thu, Jul 02, 2020 at 05:56:52PM +0200, Michal Kubecek wrote:
-> > On Wed, Jul 01, 2020 at 09:29:38PM -0700, Florian Fainelli wrote:  
-> > > Hi all,
-> > > 
-> > > This patch series untangles the ethtool netlink dependency with PHYLIB
-> > > which exists because the cable test feature calls directly into PHY
-> > > library functions. The approach taken here is to utilize a new set of
-> > > net_device_ops function pointers which are automatically set to the PHY
-> > > library variants when a network device driver attaches to a PHY device.  
-> > 
-> > I'm not sure about the idea of creating a copy of netdev_ops for each
-> > device using phylib. First, there would be some overhead (just checked
-> > my 5.8-rc3 kernel, struct netdev_ops is 632 bytes). Second, there is
-> > quite frequent pattern of comparing dev->netdev_ops against known
-> > constants to check if a network device is of certain type; I can't say
-> > for sure if it is also used with devices using phylib in existing code
-> > but it feels risky.  
-> 
-> I agree with Michal here. I don't like this.
-> 
-> I think we need phylib to register a set of ops with ethtool when it
-> loads. It would also allow us to clean up phy_ethtool_get_strings(),
-> phy_ethtool_get_sset_count(), phy_ethtool_get_stats().
+On Thu,  2 Jul 2020 12:06:32 +0530 Vaibhav Gupta wrote:
+> With legacy PM, drivers themselves were responsible for managing the
+> device's power states and takes care of register states. And they use PCI
+> helper functions to do it.
+>=20
+> After upgrading to the generic structure, PCI core will take care of
+> required tasks and drivers should do only device-specific operations.
+>=20
+> .suspend() calls __qlcnic_shutdown, which then calls qlcnic_82xx_shutdown;
+> .resume()  calls __qlcnic_resume,   which then calls qlcnic_82xx_resume;
+>=20
+> Both ...82xx..() are define in
+> drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c and are used only in
+> drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c.
+>=20
+> Hence upgrade them and remove PCI function calls, like pci_save_state() a=
+nd
+> pci_enable_wake(), inside them
+>=20
+> Compile-tested only.
+>=20
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-+1
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c: In function =E2=80=98qlcnic=
+_82xx_shutdown=E2=80=99:
+drivers/net/ethernet/qlogic/qlcnic/qlcnic_hw.c:1652:6: warning: unused vari=
+able =E2=80=98retval=E2=80=99 [-Wunused-variable]
+ 1652 |  int retval;
+      |      ^~~~~~
