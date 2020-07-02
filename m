@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B50BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C812083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5970F2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653666;
-	bh=3ku+PiRpae9Jp7+rrfv+SYcIAqrcFJfFgtBJfoDHm7o=;
+	s=default; t=1593653670;
+	bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IQjgnUiSf6i8yEsbLUZ0UaGKoWMhthsEeQF6r/bi5en5ZppzSsBo6WOmLe0bKHPw8
-	 4U64xiY9JtfJ1jTCrzcQwiqAFX/yoKjO9MBExIqJ4SdR9ZTe05ITmTi7GhKEVyfqoo
-	 1aH9myKuHX0BRpD7cvj14mA63PKfvRWNNSjxGjuA=
+	b=DenBMWHE/Tz/m29zJoX4nTGL07MtsylMMpADVQAjosnZ5s0gkR9+OT9S0iPaLAk7X
+	 S2qHLR5fttvMwUon0ZQvfMQGJBhsnqio0e//dA1i6oytRNhmUjDFZlnJMUiaUrLx3h
+	 xatmLH8pQtR6o81VWov/2dlK7IjQRJWMQAfF6Qsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgGBBZe (ORCPT
+        id S1728490AbgGBBe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728450AbgGBBXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:43 -0400
+        id S1728816AbgGBBZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4DB52082F;
-        Thu,  2 Jul 2020 01:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC2E220748;
+        Thu,  2 Jul 2020 01:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653022;
-        bh=3ku+PiRpae9Jp7+rrfv+SYcIAqrcFJfFgtBJfoDHm7o=;
+        s=default; t=1593653133;
+        bh=bP4Svco64tcbNZ0VKLuxdblCqIX6tIwtPXqy85bho7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=heD5aE2fAswYC8ttjnyGyuMkU8MLAZJvyQMWGL1rThusub83f2COfL60q9IC3O96F
-         TM31FeFmgqDBhMgWx7BWOQ9pGdmxNO035u6TGpJScJGUVLFGY1E2vf7L3w/AnBu/wO
-         vhHvlPai6Ydcfn5ievT45oSMb02YbmvIkfKYldKs=
+        b=ZX+EHSL3CxRL4meXo5nLgSx+46MuW/fmNNNJRIrHTgTCJ17NwK9WZWaz4jSLtKz1b
+         fwHUI+AxEWGAbef/3ur5oYStRj+QI9TwZ0xtfQ1iocwzSD+ybDcugy5CZ+vSE+vsig
+         eXdFbBBVoEf2sCBb9/rKic3WwrzGWHS9Iqe7NXc8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 38/53] drm/sun4i: mixer: Call of_dma_configure if there's an IOMMU
-Date:   Wed,  1 Jul 2020 21:21:47 -0400
-Message-Id: <20200702012202.2700645-38-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/40] gpu: host1x: Detach driver on unregister
+Date:   Wed,  1 Jul 2020 21:23:28 -0400
+Message-Id: <20200702012402.2701121-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
-References: <20200702012202.2700645-1-sashal@kernel.org>
+In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
+References: <20200702012402.2701121-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,53 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime@cerno.tech>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 842ec61f4006a6477a9deaedd69131e9f46e4cb5 ]
+[ Upstream commit d9a0a05bf8c76e6dc79230669a8b5d685b168c30 ]
 
-The main DRM device is actually a virtual device so it doesn't have the
-iommus property, which is instead on the DMA masters, in this case the
-mixers.
+Currently when a host1x device driver is unregistered, it is not
+detached from the host1x controller, which means that the device
+will stay around and when the driver is registered again, it may
+bind to the old, stale device rather than the new one that was
+created from scratch upon driver registration. This in turn can
+cause various weird crashes within the driver core because it is
+confronted with a device that was already deleted.
 
-Add a call to of_dma_configure with the mixers DT node but on the DRM
-virtual device to configure it in the same way than the mixers.
+Fix this by detaching the driver from the host1x controller when
+it is unregistered. This ensures that the deleted device also is
+no longer present in the device list that drivers will bind to.
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/9a4daf438dd3f2fe07afb23688bfb793a0613d7d.1589378833.git-series.maxime@cerno.tech
-(cherry picked from commit b718102dbdfd0285ad559687a30e27cc9124e592)
-[Maxime: Applied to -fixes since it missed the merge window and display is
-         broken without it]
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reported-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/host1x/bus.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-index 4a64f7ae437a8..19b3b41847046 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -452,6 +452,19 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
- 	mixer->engine.ops = &sun8i_engine_ops;
- 	mixer->engine.node = dev->of_node;
- 
-+	if (of_find_property(dev->of_node, "iommus", NULL)) {
-+		/*
-+		 * This assume we have the same DMA constraints for
-+		 * all our the mixers in our pipeline. This sounds
-+		 * bad, but it has always been the case for us, and
-+		 * DRM doesn't do per-device allocation either, so we
-+		 * would need to fix DRM first...
-+		 */
-+		ret = of_dma_configure(drm->dev, dev->of_node, true);
-+		if (ret)
-+			return ret;
-+	}
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index 742aa9ff21b87..fcda8621ae6f9 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -686,8 +686,17 @@ EXPORT_SYMBOL(host1x_driver_register_full);
+  */
+ void host1x_driver_unregister(struct host1x_driver *driver)
+ {
++	struct host1x *host1x;
 +
- 	/*
- 	 * While this function can fail, we shouldn't do anything
- 	 * if this happens. Some early DE2 DT entries don't provide
+ 	driver_unregister(&driver->driver);
+ 
++	mutex_lock(&devices_lock);
++
++	list_for_each_entry(host1x, &devices, list)
++		host1x_detach_driver(host1x, driver);
++
++	mutex_unlock(&devices_lock);
++
+ 	mutex_lock(&drivers_lock);
+ 	list_del_init(&driver->list);
+ 	mutex_unlock(&drivers_lock);
 -- 
 2.25.1
 
