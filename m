@@ -2,126 +2,113 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC49C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F06A206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B49320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="sBmrw1y3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wAQqKXwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgGBOrl (ORCPT
+        id S1730187AbgGBOrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:47:41 -0400
-Received: from vps.xff.cz ([195.181.215.36]:46886 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgGBOri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:47:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593701256; bh=uDf9d/uRJiCtCt1AKubcJLejRj1GRrlsMFGfiGhHhXQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sBmrw1y3Ge453s/b6duoEIXe2POYkrOzZJaYL8FeCWY463xCsUurnLS8sONz2cBlT
-         TSBlhuShDIyYHOYS0GSD76SQCtKKzw8SP3rbDuWRBcA2wk1tM0SLTISlAGO3FT7xHi
-         EuL4TmVsgJGT2xKBpvFq6vxbOMZnYfHTTL8Sp7I8=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM)
-Subject: [PATCH RFC] leds: Add support for per-LED device triggers
-Date:   Thu,  2 Jul 2020 16:47:11 +0200
-Message-Id: <20200702144712.1994685-1-megous@megous.com>
+        Thu, 2 Jul 2020 10:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730074AbgGBOrC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 10:47:02 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48812C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:47:02 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so27095208wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cen7jwZ+l5/fZQV9+f4eKCsdCtb++xjGqhYwjDReG4s=;
+        b=wAQqKXwNUvkayHtIMBV6LS0l4vt72aFTjRZSPiSvZJ5C/hqTBy3STN6t0PpK9LZ9Sl
+         Lb2UEfzaiMVbpQgMEOWrkp/dkAtB7fHH/UdXXaH4Bf/pD65LBDmzIoAElaEn6uRbkhsr
+         Sq6KZ9fmigZNrcfwKtfJpaz/LqAUX/icEFbG3MXXNaTW9OxviX1QsPqnDatS1kMepeKS
+         ppuFUZVk6RIA9kGXBgwQV83qvsCFqp560ZzvnuFh2RPn028KWAA/WSY3RrZ3P7YNx2HP
+         rVxY/LyhKyYUKA1wHnrnUWETqAHP/uHelYufgGMcwMsaC+Gn9/8D884fgDtbffl5wEIf
+         Db4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cen7jwZ+l5/fZQV9+f4eKCsdCtb++xjGqhYwjDReG4s=;
+        b=UeL8uOwtfRZY+kkJUstISMFNEMLv1EFqcT11y20kqYoLFdSP8VsTFstsfajBVZ3fmD
+         5aXwMGOsg9iYsl1LTeNS/uQD+L3D1cM53th6Hgivlwgp5PN6a8YdhvspPKLffEDPpzeO
+         CX87r8u43vnMnYzps5dFZfD4Xno249pxBdndrmfpmsMpMVZQ2Dyl4ZxILKU8jPXsWrlw
+         8VD6W3w/S0M96GyMDd2seXZq7E1PWVsNOYyRo3+LU6PFJIfWUlBaU0hxKXWG/j08dxqk
+         X6xq01AJmdcbxRxSDy54Ha4EQc82nGwSqhmD3ce4R6r6OLcWAQp+QvxGlPvU7LQi7i9b
+         bVGw==
+X-Gm-Message-State: AOAM5321lGCbQpOKAoyTTm3toq5Uz3JStcmlFP1cFJPbqie6xIpT6jdy
+        YmECuH0xVQBmVm2ApPHVLPQ+wfs8CRc=
+X-Google-Smtp-Source: ABdhPJyKXHl2Fi+reKwJfYF/na/idnzE4RoZeL56RxRf05pfTe+1N4F2X4OdO6C8BsdOK8Y+xUFvgg==
+X-Received: by 2002:a1c:4b09:: with SMTP id y9mr18364006wma.46.1593701221058;
+        Thu, 02 Jul 2020 07:47:01 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.47.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 07:47:00 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 24/30] usb: mtu3: mtu3_trace: Supply missing mtu3_debug.h include file
+Date:   Thu,  2 Jul 2020 15:46:19 +0100
+Message-Id: <20200702144625.2533530-25-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some LED controllers may come with an internal HW triggering mechanism
-for the LED and an ability to switch between user control of the LED,
-or the internal control. One such example is AXP20X PMIC, that allows
-wither for user control of the LED, or for internal control based on
-the state of the battery charger.
+If the header file containing a function's prototype isn't included by
+the sourcefile containing the associated function, the build system
+complains of missing prototypes.
 
-Add support for registering per-LED device trigger.
+Fixes the following W=1 kernel build warning(s):
 
-Names of private triggers need to be globally unique, but may clash
-with other private triggers. This is enforced during trigger
-registration. Developers can register private triggers just like
-the normal triggers, by setting private_led to a classdev
-of the LED the trigger is associated with.
+ drivers/usb/mtu3/mtu3_trace.c:13:6: warning: no previous prototype for ‘mtu3_dbg_trace’ [-Wmissing-prototypes]
+ 13 | void mtu3_dbg_trace(struct device *dev, const char *fmt, ...)
+ | ^~~~~~~~~~~~~~
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/leds/led-triggers.c | 12 +++++++++---
- include/linux/leds.h        |  3 +++
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/usb/mtu3/mtu3_trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 79e30d2cb7a5..3011e2658404 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -50,7 +50,8 @@ ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+diff --git a/drivers/usb/mtu3/mtu3_trace.c b/drivers/usb/mtu3/mtu3_trace.c
+index 155eae126e5e2..d17ddb87cdcf2 100644
+--- a/drivers/usb/mtu3/mtu3_trace.c
++++ b/drivers/usb/mtu3/mtu3_trace.c
+@@ -8,6 +8,7 @@
+  */
  
- 	down_read(&triggers_list_lock);
- 	list_for_each_entry(trig, &trigger_list, next_trig) {
--		if (sysfs_streq(buf, trig->name)) {
-+		if (sysfs_streq(buf, trig->name) &&
-+		    (!trig->private_led || trig->private_led == led_cdev)) {
- 			down_write(&led_cdev->trigger_lock);
- 			led_trigger_set(led_cdev, trig);
- 			up_write(&led_cdev->trigger_lock);
-@@ -96,6 +97,9 @@ static int led_trigger_format(char *buf, size_t size,
- 		bool hit = led_cdev->trigger &&
- 			!strcmp(led_cdev->trigger->name, trig->name);
+ #define CREATE_TRACE_POINTS
++#include "mtu3_debug.h"
+ #include "mtu3_trace.h"
  
-+		if (trig->private_led && trig->private_led != led_cdev)
-+			continue;
-+
- 		len += led_trigger_snprintf(buf + len, size - len,
- 					    " %s%s%s", hit ? "[" : "",
- 					    trig->name, hit ? "]" : "");
-@@ -243,7 +247,8 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
- 	down_read(&triggers_list_lock);
- 	down_write(&led_cdev->trigger_lock);
- 	list_for_each_entry(trig, &trigger_list, next_trig) {
--		if (!strcmp(led_cdev->default_trigger, trig->name)) {
-+		if (!strcmp(led_cdev->default_trigger, trig->name) &&
-+		    (!trig->private_led || trig->private_led == led_cdev)) {
- 			led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
- 			led_trigger_set(led_cdev, trig);
- 			break;
-@@ -280,7 +285,8 @@ int led_trigger_register(struct led_trigger *trig)
- 	down_write(&triggers_list_lock);
- 	/* Make sure the trigger's name isn't already in use */
- 	list_for_each_entry(_trig, &trigger_list, next_trig) {
--		if (!strcmp(_trig->name, trig->name)) {
-+		if (!strcmp(_trig->name, trig->name) &&
-+		    (!_trig->private_led || _trig->private_led == trig->private_led)) {
- 			up_write(&triggers_list_lock);
- 			return -EEXIST;
- 		}
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 2451962d1ec5..0d7577c752ad 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -345,6 +345,9 @@ struct led_trigger {
- 	int		(*activate)(struct led_classdev *led_cdev);
- 	void		(*deactivate)(struct led_classdev *led_cdev);
- 
-+	/* LED-private triggers have the LED device set here. */
-+	struct led_classdev *private_led;
-+
- 	/* LEDs under control by this trigger (for simple triggers) */
- 	rwlock_t	  leddev_list_lock;
- 	struct list_head  led_cdevs;
+ void mtu3_dbg_trace(struct device *dev, const char *fmt, ...)
 -- 
-2.27.0
+2.25.1
 
