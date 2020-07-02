@@ -2,119 +2,159 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A423CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5060EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1A52075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593686934;
-	bh=g1cKP96vnhwpBadUWi+K/NTNmduKoAdrQtOe2iZfYXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IBR30M1ahYQj9l6GPDRWWP4Y7rWO0fSFzs5ERj8MHbm0IIRss/ghkr+l4CFFG1VSa
-	 qV5Y63kJHirTF6vvGeM8mxlySTA1onVs9Di29xA8zx3qsx8OEGT/53NYp/i+30nIHc
-	 RvexfQgSShJf+A78XtuOa3TqHA3XNTFAQfPOUhTU=
+	by mail.kernel.org (Postfix) with ESMTP id 25E1F20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7T/iMX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgGBKsw (ORCPT
+        id S1728400AbgGBKtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgGBKsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:48:51 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 874412075D;
-        Thu,  2 Jul 2020 10:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593686931;
-        bh=g1cKP96vnhwpBadUWi+K/NTNmduKoAdrQtOe2iZfYXg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rND6qhP59jK5UT3eXdMAPYj3XlxaRqljjqiK6gfVkN56KQRkwXJI42Wa2o9R7S9C4
-         VFijU4tvdYZpSIS8Qv0WJJv8LFLP7+yGyqLBBAyv8zPZtGwUf/Wc5UzxBctdMWfWvP
-         z8yinVoQFqZAzTvxE9QCVMXFJXdbBY07btq8tQFU=
-Date:   Thu, 2 Jul 2020 11:48:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 5/8] powerpc/64s: implement queued spinlocks and rwlocks
-Message-ID: <20200702104845.GB16418@willie-the-truck>
-References: <20200702074839.1057733-1-npiggin@gmail.com>
- <20200702074839.1057733-6-npiggin@gmail.com>
- <20200702080219.GB16113@willie-the-truck>
- <1593685459.r2tfxtfdp6.astroid@bobo.none>
- <20200702103506.GA16418@willie-the-truck>
- <1593686722.w9psaqk7yp.astroid@bobo.none>
+        Thu, 2 Jul 2020 06:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgGBKtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:49:31 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66984C08C5C1;
+        Thu,  2 Jul 2020 03:49:31 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k22so11955631oib.0;
+        Thu, 02 Jul 2020 03:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gxqq8NCF6HVwevmO1JjZvMIZt+L9jEoM+QxI55ZZgMw=;
+        b=K7T/iMX2sqHgOdzMW1RXGrOV4jlVBLKHXJFQm+0xI92qgXEdmCzOLzY5H+TDel2YWt
+         xMKNSTWqnZPBL3ywzEDQRUQhuG9+GXUT0nzTR5yr7GvGR6bhxgb/ZTWwIkD91ukaG0VW
+         f5FrdFEfK8j/EtnsRjAbu3nQEMaRh+KjRBNAryCWGCLpYU3/xqTRWK3uW8/KIjukOcAW
+         470xfbJ6WwhJfhfvX4yuvUnsAkWiHcMOUf/JBEDyUX+Af9j7A8JXR4LAvogrefQtJo9i
+         FwDKpE4TCdJBZA9htOW/ysKzBG1dmYIw7+YkM0/nH6zhLmET0y2BTwW24kayL57VXlSX
+         LUGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gxqq8NCF6HVwevmO1JjZvMIZt+L9jEoM+QxI55ZZgMw=;
+        b=JDOUVPCqGWd7p7mD3mOCzdOGjLBWKXOKUQzXk/z+QEBum18Tn7o/oBSAJqo4uviWJg
+         8y5/dqGu/ptRiwmGVC8qYkQSFzbQq5J38B2BvDLxbjJnB9ySaFkDmbDPIy6j4/QfQGJr
+         wXzhnN5j+L6xhYykVmy6zWR71bWj0oTgMto8KmQcxsmWAXEUP9TPg6eeceM5GENP9lUX
+         iAjxeT8IZpwLeaRaJhghlMp49FVAPR4hArc2jkzbH2cRd7pouqdhPj3S/w3O2FK5OFuq
+         XdaWHU2prtS+Fkm/34h1tFXtJ6t7mLkzxwT+Y/octKEvZ6V4ACOcZGKxNNCqLhI0qlNW
+         M1+Q==
+X-Gm-Message-State: AOAM5308AF13nFN+0NMMIumxbPbwlfAPFTmTNOtDo1RhwtzxiLyEbDVu
+        mwlVQsCgp8ymJuCv/j2SHZdWlGHATWiK4+jyars=
+X-Google-Smtp-Source: ABdhPJzW+zDa07jaIg+VLfamaq0OKviXSCjIADr2Zt4zLPT/+HVYjP41UbGUQjkpemrHHoVXl54erQqEZUqLsEl4ayw=
+X-Received: by 2002:aca:4fd3:: with SMTP id d202mr21117225oib.142.1593686970753;
+ Thu, 02 Jul 2020 03:49:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593686722.w9psaqk7yp.astroid@bobo.none>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1593618100-2151-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWU7kVJMuNMSGxZSjErmj7rB=tvXH3GANmPRjYz+=JP1g@mail.gmail.com>
+ <CA+V-a8v+2fhqwRNCaGYbmh8E1FDyc2Xss3PHk12dpTt_pgmCFg@mail.gmail.com> <CAMuHMdVdCH-r-xMnDgUYzJfDCzUJCYt8CkSDp9E=tgfP01FrKw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVdCH-r-xMnDgUYzJfDCzUJCYt8CkSDp9E=tgfP01FrKw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 2 Jul 2020 11:49:04 +0100
+Message-ID: <CA+V-a8s3JgtGsSSsCF335p1S6Yq5veqe6nAQNK03wNSxAU0XCA@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Initialize spinlock for uart console
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:47:05PM +1000, Nicholas Piggin wrote:
-> Excerpts from Will Deacon's message of July 2, 2020 8:35 pm:
-> > On Thu, Jul 02, 2020 at 08:25:43PM +1000, Nicholas Piggin wrote:
-> >> Excerpts from Will Deacon's message of July 2, 2020 6:02 pm:
-> >> > On Thu, Jul 02, 2020 at 05:48:36PM +1000, Nicholas Piggin wrote:
-> >> >> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
-> >> >> new file mode 100644
-> >> >> index 000000000000..f84da77b6bb7
-> >> >> --- /dev/null
-> >> >> +++ b/arch/powerpc/include/asm/qspinlock.h
-> >> >> @@ -0,0 +1,20 @@
-> >> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> >> +#ifndef _ASM_POWERPC_QSPINLOCK_H
-> >> >> +#define _ASM_POWERPC_QSPINLOCK_H
-> >> >> +
-> >> >> +#include <asm-generic/qspinlock_types.h>
-> >> >> +
-> >> >> +#define _Q_PENDING_LOOPS	(1 << 9) /* not tuned */
-> >> >> +
-> >> >> +#define smp_mb__after_spinlock()   smp_mb()
-> >> >> +
-> >> >> +static __always_inline int queued_spin_is_locked(struct qspinlock *lock)
-> >> >> +{
-> >> >> +	smp_mb();
-> >> >> +	return atomic_read(&lock->val);
-> >> >> +}
-> >> > 
-> >> > Why do you need the smp_mb() here?
-> >> 
-> >> A long and sad tale that ends here 51d7d5205d338
-> >> 
-> >> Should probably at least refer to that commit from here, since this one 
-> >> is not going to git blame back there. I'll add something.
-> > 
-> > Is this still an issue, though?
-> > 
-> > See 38b850a73034 (where we added a similar barrier on arm64) and then
-> > c6f5d02b6a0f (where we removed it).
-> > 
-> 
-> Oh nice, I didn't know that went away. Thanks for the heads up.
-> 
-> I'm going to say I'm too scared to remove it while changing the
-> spinlock algorithm, but I'll open an issue and we should look at 
-> removing it.
+Hi Geert,
 
-Makes sense to me -- it certainly needs a deeper look! In the meantime,
-please put some of this in a comment next to the barrier.
+On Thu, Jul 2, 2020 at 10:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Wed, Jul 1, 2020 at 7:28 PM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Wed, Jul 1, 2020 at 6:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, Jul 1, 2020 at 5:42 PM Lad Prabhakar
+> > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > serial core expects the spinlock to be initialized by the controller
+> > > > driver for serial console, this patch makes sure the spinlock is
+> > > > initialized, fixing the below issue:
+> > > >
+> > > > [    0.865928] BUG: spinlock bad magic on CPU#0, swapper/0/1
+> > > > [    0.865945]  lock: sci_ports+0x0/0x4c80, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+> > > > [    0.865955] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #112
+> > > > [    0.865961] Hardware name: HopeRun HiHope RZ/G2H with sub board (DT)
+> > > > [    0.865968] Call trace:
+> > > > [    0.865979]  dump_backtrace+0x0/0x1d8
+> > > > [    0.865985]  show_stack+0x14/0x20
+> > > > [    0.865996]  dump_stack+0xe8/0x130
+> > > > [    0.866006]  spin_dump+0x6c/0x88
+> > > > [    0.866012]  do_raw_spin_lock+0xb0/0xf8
+> > > > [    0.866023]  _raw_spin_lock_irqsave+0x80/0xa0
+> > > > [    0.866032]  uart_add_one_port+0x3a4/0x4e0
+> > > > [    0.866039]  sci_probe+0x504/0x7c8
+> > > > [    0.866048]  platform_drv_probe+0x50/0xa0
+> > > > [    0.866059]  really_probe+0xdc/0x330
+> > > > [    0.866066]  driver_probe_device+0x58/0xb8
+> > > > [    0.866072]  device_driver_attach+0x6c/0x90
+> > > > [    0.866078]  __driver_attach+0x88/0xd0
+> > > > [    0.866085]  bus_for_each_dev+0x74/0xc8
+> > > > [    0.866091]  driver_attach+0x20/0x28
+> > > > [    0.866098]  bus_add_driver+0x14c/0x1f8
+> > > > [    0.866104]  driver_register+0x60/0x110
+> > > > [    0.866109]  __platform_driver_register+0x40/0x48
+> > > > [    0.866119]  sci_init+0x2c/0x34
+> > > > [    0.866127]  do_one_initcall+0x88/0x428
+> > > > [    0.866137]  kernel_init_freeable+0x2c0/0x328
+> > > > [    0.866143]  kernel_init+0x10/0x108
+> > > > [    0.866150]  ret_from_fork+0x10/0x18
+> > >
+> > > Interesting...
+> > >
+> > > How can I reproduce that? I do have CONFIG_DEBUG_SPINLOCK=y.
+> > > I'm wondering why haven't we seen this before...
+> > >
+> > I have attached .config for your reference.
+>
+> Thank you!
+>
+> I gave it a try with v5.8-rc1 on Salvator-XS with R-Car H3 ES2.0.
+> However, I couldn't reproduce the issue.
+> Does it happen on that specific board only? Is this serdev-related?
+> Note that I had to disable CONFIG_EXTRA_FIRMWARE, as I don't have the
+> firmware blobs it referenced.  Do I need them to trigger the issue?
+> As the .config has a few non-upstream options, do you have any patches
+> applied that might impact the issue?
+>
+Can't think of any patches that might cause an issue, most of it are
+just the DT's and config additions. Nor do firmware blobs should
+affect it. I'll try and reproduce it on M3N and get back to you.
 
 Cheers,
+--Prabhakar
 
-Will
+> Thanks again!
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
