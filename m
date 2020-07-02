@@ -2,178 +2,202 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4CC20747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9E92070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IoSraQx8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFfBpLyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgGBLKN (ORCPT
+        id S1728573AbgGBLL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:10:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20080 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728605AbgGBLKJ (ORCPT
+        Thu, 2 Jul 2020 07:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgGBLL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:10:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593688208; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=AS7RKTrJyz8Bs8XYK2abIazfD8EKpRKD3viZRHhzjlQ=; b=IoSraQx8yXMgcfprY+3cVMYn4BHVtvSyYiOP43HeV7Jc2xVKZXxr+VbIKL0zfJwAM/KYKYrn
- 2hWX+chM/Yg13S3DQwxb9xk/zdqww0dwI+ukW4iKbdMzm4ZbK3hD1UJ7lLU4WAwnPk1pSdm8
- RIUsS/dvU26aJlix0bnEu/179nI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5efdc086a6e154319f818e20 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:09:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CDA94C43395; Thu,  2 Jul 2020 11:09:57 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38460C43391;
-        Thu,  2 Jul 2020 11:09:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38460C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 3/4] arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
-Date:   Thu,  2 Jul 2020 16:39:10 +0530
-Message-Id: <1593688151-22616-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
-References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
+        Thu, 2 Jul 2020 07:11:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B579CC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 04:11:26 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r12so27631507wrj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 04:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EP4mIxEbTa2u7jpvr40EEMAGhOAwuykUNeTsn1WTCCk=;
+        b=zFfBpLyxH6ZSt2sNv14lPq6aaA1kWUbVElWIUkMvuqR7bDo3IVlT2v2uaRUe8Gi29k
+         CZLNUJOM0aUiuEGKBTY5yRMLIuAVo6GD8ha0zs5T0MR1RPn9Y6foojTjZJ+76XMnC5DL
+         nKfx+bSQ0whmQP19yNleY9nDdJA6MC8bRwurC2uBVmirwPLtG2+4kFnD3Zt7OkpVDQap
+         rUqr1IulYqGDTcMuUQ2lCd9DHbmwwLq8y6leC/gwCktBHhyYA4/LMjRZSAxEGyNDOrxs
+         D18zfAJ5yWIlvZsRdQpv11JWQdTi9O2Q5pMooh1ZYb5VT1pB9FjbO7xCSivUpA5D6sLP
+         sBUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EP4mIxEbTa2u7jpvr40EEMAGhOAwuykUNeTsn1WTCCk=;
+        b=nbcAzC8+BxHq7nG2+is8s98qsPGtdQCF6AVMlu/Ldx2ohW1Dk/taNXLZqETZJf3jZN
+         4neCXyF0Ld8bDRd6sP+7wbjnfDaEEpPWTitBhVJAWybS/yZ0/QyuH4zrgSekpqhlSDmW
+         PR7mX4KLJvOIMRvIsvv7On047H+48+S3L3n+v1PKfiFqXJffmQSbzchDBqMgG0YtF1va
+         XRdkxhfGk9YzEVzgU1l1ATL4oCHuyx0MzneEodJ+45Dq5lB/vSuOb+Xe1whJ/VtNv4jH
+         BAiLXrrybZ4Jnn2WB3GQgxpTm/yH0ygv39tIFlUohFtmmf6GxK3S/5dj2aBlR+qdU41T
+         RcjA==
+X-Gm-Message-State: AOAM5333RxxkdvQf0HIOTmpzNlkihodSmr2wMDPgpB1J+S8AvXfw2mlT
+        mADzs6SZbCwYgmL4xr4Xmw4BoVlYTcg=
+X-Google-Smtp-Source: ABdhPJyS5oKx0yim8v9iWhytgy1KkzBevo2CpUyPHtLaxLxwdvgkAS70IknqROe7wlPin77if/mQHg==
+X-Received: by 2002:a5d:56c7:: with SMTP id m7mr30630239wrw.223.1593688284949;
+        Thu, 02 Jul 2020 04:11:24 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id p8sm10418763wrq.29.2020.07.02.04.11.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jul 2020 04:11:24 -0700 (PDT)
+Subject: Re: [PATCH 4/4] interconnect: qcom: Fix small BW votes being
+ truncated to zero
+To:     Mike Tipton <mdtipton@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200623040814.23791-1-mdtipton@codeaurora.org>
+ <20200623040814.23791-5-mdtipton@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <09f21847-33bc-64fb-aeb7-df5bafa5593c@linaro.org>
+Date:   Thu, 2 Jul 2020 14:11:23 +0300
+MIME-Version: 1.0
+In-Reply-To: <20200623040814.23791-5-mdtipton@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables for DSI and MDP based on the perf state/clk
-requirements, and add the power-domains property to specify the
-scalable power domain.
+Hi Mike,
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+On 6/23/20 07:08, Mike Tipton wrote:
+> Small BW votes that translate to less than a single BCM unit are
+> currently truncated to zero. Ensure that non-zero BW requests always
+> result in at least a vote of 1 to BCM.
+> 
+> Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
+> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+> index a68c858ca6b7..9e2612fe7fad 100644
+> --- a/drivers/interconnect/qcom/bcm-voter.c
+> +++ b/drivers/interconnect/qcom/bcm-voter.c
+> @@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+>  		return 1;
+>  }
+>  
+> +static u64 bcm_div(u64 num, u64 base)
+> +{
+> +	/* Ensure that small votes aren't lost. */
+> +	if (num && num < base)
+> +		return 1;
+> +
+> +	do_div(num, base);
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31..b6afeb2 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3296,6 +3296,35 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		dsi_opp_table: dsi-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-19200000 {
-+				opp-hz = /bits/ 64 <19200000>;
-+				required-opps = <&rpmhpd_opp_min_svs>;
-+			};
-+
-+			opp-180000000 {
-+				opp-hz = /bits/ 64 <180000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
-+
-+			opp-275000000 {
-+				opp-hz = /bits/ 64 <275000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
-+
-+			opp-328580000 {
-+				opp-hz = /bits/ 64 <328580000>;
-+				required-opps = <&rpmhpd_opp_svs_l1>;
-+			};
-+
-+			opp-358000000 {
-+				opp-hz = /bits/ 64 <358000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
-@@ -3340,6 +3369,8 @@
- 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
- 				assigned-clock-rates = <300000000>,
- 						       <19200000>;
-+				operating-points-v2 = <&mdp_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				interrupt-parent = <&mdss>;
- 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-@@ -3364,6 +3395,30 @@
- 						};
- 					};
- 				};
-+
-+				mdp_opp_table: mdp-opp-table {
-+					compatible = "operating-points-v2";
-+
-+					opp-19200000 {
-+						opp-hz = /bits/ 64 <19200000>;
-+						required-opps = <&rpmhpd_opp_min_svs>;
-+					};
-+
-+					opp-171428571 {
-+						opp-hz = /bits/ 64 <171428571>;
-+						required-opps = <&rpmhpd_opp_low_svs>;
-+					};
-+
-+					opp-344000000 {
-+						opp-hz = /bits/ 64 <344000000>;
-+						required-opps = <&rpmhpd_opp_svs_l1>;
-+					};
-+
-+					opp-430000000 {
-+						opp-hz = /bits/ 64 <430000000>;
-+						required-opps = <&rpmhpd_opp_nom>;
-+					};
-+				};
- 			};
- 
- 			dsi0: dsi@ae94000 {
-@@ -3386,6 +3441,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi0_phy>;
- 				phy-names = "dsi";
-@@ -3450,6 +3507,8 @@
- 					      "core",
- 					      "iface",
- 					      "bus";
-+				operating-points-v2 = <&dsi_opp_table>;
-+				power-domains = <&rpmhpd SDM845_CX>;
- 
- 				phys = <&dsi1_phy>;
- 				phy-names = "dsi";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+do_div() does a 64-by-32 division, which will truncate these to 32-bit.
 
+> +
+> +	return num;
+> +}
+> +
+>  static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+>  {
+> +	struct qcom_icc_node *node;
+>  	size_t i, bucket;
+>  	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
+>  	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+> @@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+>  
+>  	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
+>  		for (i = 0; i < bcm->num_nodes; i++) {
+> -			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
+> -			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
+> +			node = bcm->nodes[i];
+> +			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
+> +				       node->buswidth * node->channels);
+>  			agg_avg[bucket] = max(agg_avg[bucket], temp);
+>  
+> -			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
+> -			do_div(temp, bcm->nodes[i]->buswidth);
+> +			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
+> +				       node->buswidth);
+>  			agg_peak[bucket] = max(agg_peak[bucket], temp);
+>  		}
+>  
+>  		temp = agg_avg[bucket] * bcm->vote_scale;
+> -		do_div(temp, bcm->aux_data.unit);
+> -		bcm->vote_x[bucket] = temp;
+> +		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
+>  
+>  		temp = agg_peak[bucket] * bcm->vote_scale;
+> -		do_div(temp, bcm->aux_data.unit);
+> -		bcm->vote_y[bucket] = temp;
+> +		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
+>  	}
+>  
+>  	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
+> 
+
+The rest looks good.
+
+Thanks,
+Georgi
