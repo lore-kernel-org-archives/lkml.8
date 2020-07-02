@@ -2,78 +2,113 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A134FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851E3214F1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8241A2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593653143;
+	bh=b5jdvZDPD6ml204vSzGfDe6ECT0U8SxmPQJ9on/jplE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZBiTn1IAr6GpJkFHX5SonaTH4sDFXjIdNjIev693wir9K65P9kLgnfhhy7LtLv+dZ
+	 BmxhbFExCNiH6Tgts6YC0uIvyK4ScAgz9OAd8wNZdbQgnXafvFGZbRm6NYVeMlA64+
+	 AvyaP+icbSplo237Q18b05dSbQjsuAun+07BO5BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgGBBZf (ORCPT
+        id S1728880AbgGBBZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:25:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6794 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728427AbgGBBXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:42 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8754BC6A2447C86627A7;
-        Thu,  2 Jul 2020 09:23:37 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 09:23:29 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <inuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Use drmm_kzalloc() instead of devm_kzalloc()
-Date:   Thu, 2 Jul 2020 09:21:54 +0800
-Message-ID: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 1 Jul 2020 21:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728374AbgGBBZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:25:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50C92145D;
+        Thu,  2 Jul 2020 01:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593653138;
+        bh=b5jdvZDPD6ml204vSzGfDe6ECT0U8SxmPQJ9on/jplE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lBIhyrsEUKvPOWJihOaye62fHEG6qGxcocCZbvbTbnEYFXQieOF4lgyoOQ9k3v90J
+         RD+hST4d3ay5OFK8y562HCGAsXNTTqbSy54CtLlVpRwSKtVyxg51YuW9MrvruiO7fX
+         DZlCLIVfP4Rf6bevFTNg+bOdE5khSs7Q6rrgmRF8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 11/40] ASoC: SOF: Intel: add PCI IDs for ICL-H and TGL-H
+Date:   Wed,  1 Jul 2020 21:23:32 -0400
+Message-Id: <20200702012402.2701121-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
+References: <20200702012402.2701121-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-using the new API drmm_kzalloc() instead of devm_kzalloc()
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+[ Upstream commit c8d2e2bfaeffa0f914330e8b4e45b986c8d30b58 ]
+
+Usually the DSP is not traditionally enabled on H skews but this might
+be used moving forward.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200617164755.18104-4-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/sof/sof-pci-dev.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index a6fd0c2..2f20704 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -23,6 +23,7 @@
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_vblank.h>
-+#include <drm/drm_managed.h>
- 
- #include "hibmc_drm_drv.h"
- #include "hibmc_drm_regs.h"
-@@ -267,7 +268,7 @@ static int hibmc_load(struct drm_device *dev)
- 	struct hibmc_drm_private *priv;
- 	int ret;
- 
--	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-+	priv = drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv) {
- 		DRM_ERROR("no memory to allocate for hibmc_drm_private\n");
- 		return -ENOMEM;
+diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
+index 3f79cd03507c9..9e2ae6e62e7f9 100644
+--- a/sound/soc/sof/sof-pci-dev.c
++++ b/sound/soc/sof/sof-pci-dev.c
+@@ -410,8 +410,11 @@ static const struct pci_device_id sof_pci_ids[] = {
+ 		.driver_data = (unsigned long)&skl_desc},
+ #endif
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_ICELAKE)
+-	{ PCI_DEVICE(0x8086, 0x34C8),
++	{ PCI_DEVICE(0x8086, 0x34C8), /* ICL-LP */
+ 		.driver_data = (unsigned long)&icl_desc},
++	{ PCI_DEVICE(0x8086, 0x3dc8), /* ICL-H */
++		.driver_data = (unsigned long)&icl_desc},
++
+ #endif
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_LP)
+ 	{ PCI_DEVICE(0x8086, 0x02c8),
+@@ -424,8 +427,11 @@ static const struct pci_device_id sof_pci_ids[] = {
+ 		.driver_data = (unsigned long)&cml_desc},
+ #endif
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_TIGERLAKE)
+-	{ PCI_DEVICE(0x8086, 0xa0c8),
++	{ PCI_DEVICE(0x8086, 0xa0c8), /* TGL-LP */
+ 		.driver_data = (unsigned long)&tgl_desc},
++	{ PCI_DEVICE(0x8086, 0x43c8), /* TGL-H */
++		.driver_data = (unsigned long)&tgl_desc},
++
+ #endif
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_ELKHARTLAKE)
+ 	{ PCI_DEVICE(0x8086, 0x4b55),
 -- 
-2.7.4
+2.25.1
 
