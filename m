@@ -2,140 +2,181 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E32C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C6320884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6DD207E8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:43:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NTUQWz78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgGBGmk (ORCPT
+        id S1726802AbgGBGnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:42:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51028 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbgGBGmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:42:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D4347AB7D;
-        Thu,  2 Jul 2020 06:42:37 +0000 (UTC)
-Subject: Re: [PATCH] drm/hisilicon: Use drmm_kzalloc() instead of
- devm_kzalloc()
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     inuxarm@huawei.com
-References: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <50ea833a-7d8d-a1ad-3622-3456afc87719@suse.de>
-Date:   Thu, 2 Jul 2020 08:42:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 02:43:46 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:44303 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726382AbgGBGnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:43:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593672221; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=6f1hBImubSguouxbGX6vkeK05F05hauxyhVr5E0zwrU=; b=NTUQWz78mvzqqVJccKICzjdos4zaWm09imXkTD20HuxY2T7/6XLtkeI4G8u6vS0pnRSgOJMT
+ TdXA5XHNVjftmi1JsdWwyBi9zOfDv+f7PORqYw98+UU7DHGbRi2+9bUns57J6yWDliGVs9ET
+ 5wmwgGKUVU96zSWmqOZ4i+GqHa8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5efd8205c76a4e7a2a8c81a3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 06:43:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B350FC4339C; Thu,  2 Jul 2020 06:43:16 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6580EC433CA;
+        Thu,  2 Jul 2020 06:43:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6580EC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Viktor =?utf-8?B?SsOkZ2Vyc2vDvHBwZXI=?= 
+        <viktor_jaegerskuepper@freenet.de>
+Cc:     Roman Mamedov <rm@romanrm.net>, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] Revert "ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb"
+References: <20200404041838.10426-1-hqjagain@gmail.com>
+        <20200404041838.10426-6-hqjagain@gmail.com>
+        <20200621020428.6417d6fb@natsu> <87lfkff9qe.fsf@codeaurora.org>
+        <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de>
+Date:   Thu, 02 Jul 2020 09:43:11 +0300
+In-Reply-To: <53940af0-d156-3117-ac86-2f3ccaee9513@freenet.de> ("Viktor
+        \=\?utf-8\?Q\?J\=C3\=A4gersk\=C3\=BCpper\=22's\?\= message of "Wed, 1 Jul 2020
+ 17:53:27 +0200")
+Message-ID: <87imf6beo0.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="HkQdo8CuyD11ZMY15qc1sXizDvmjfLw22"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---HkQdo8CuyD11ZMY15qc1sXizDvmjfLw22
-Content-Type: multipart/mixed; boundary="29yr6CmlInDzUlDanFunYns2V6k80gprO";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: inuxarm@huawei.com
-Message-ID: <50ea833a-7d8d-a1ad-3622-3456afc87719@suse.de>
-Subject: Re: [PATCH] drm/hisilicon: Use drmm_kzalloc() instead of
- devm_kzalloc()
-References: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1593652914-19639-1-git-send-email-tiantao6@hisilicon.com>
+Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.de> writes:
 
---29yr6CmlInDzUlDanFunYns2V6k80gprO
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 02.07.20 um 03:21 schrieb Tian Tao:
-> using the new API drmm_kzalloc() instead of devm_kzalloc()
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Kalle Valo writes:
+>> Roman Mamedov <rm@romanrm.net> writes:
+>>=20
+>>> On Sat,  4 Apr 2020 12:18:38 +0800
+>>> Qiujun Huang <hqjagain@gmail.com> wrote:
+>>>
+>>>> In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
+>>>> usb_ifnum_to_if(urb->dev, 0)
+>>>> But it isn't always true.
+>>>>
+>>>> The case reported by syzbot:
+>>>> https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.=
+com
+>>>> usb 2-1: new high-speed USB device number 2 using dummy_hcd
+>>>> usb 2-1: config 1 has an invalid interface number: 2 but max is 0
+>>>> usb 2-1: config 1 has no interface number 0
+>>>> usb 2-1: New USB device found, idVendor=3D0cf3, idProduct=3D9271, bcdD=
+evice=3D
+>>>> 1.08
+>>>> usb 2-1: New USB device strings: Mfr=3D1, Product=3D2, SerialNumber=3D3
+>>>> general protection fault, probably for non-canonical address
+>>>> 0xdffffc0000000015: 0000 [#1] SMP KASAN
+>>>> KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
+>>>> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+>>>>
+>>>> Call Trace
+>>>> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+>>>> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+>>>> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+>>>> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+>>>> expire_timers kernel/time/timer.c:1449 [inline]
+>>>> __run_timers kernel/time/timer.c:1773 [inline]
+>>>> __run_timers kernel/time/timer.c:1740 [inline]
+>>>> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+>>>> __do_softirq+0x21e/0x950 kernel/softirq.c:292
+>>>> invoke_softirq kernel/softirq.c:373 [inline]
+>>>> irq_exit+0x178/0x1a0 kernel/softirq.c:413
+>>>> exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+>>>> smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+>>>> apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>>>>
+>>>> Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotm=
+ail.com
+>>>> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+>>>
+>>> This causes complete breakage of ath9k operation across all the stable =
+kernel
+>>> series it got backported to, and I guess the mainline as well. Please s=
+ee:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
+>>> https://bugzilla.redhat.com/show_bug.cgi?id=3D1848631
+>>=20
+>> So there's no fix for this? I was under impression that someone fixed
+>> this, but maybe I'm mixing with something else.
+>>=20
+>> If this is not fixed can someone please submit a patch to revert the
+>> offending commit (or commits) so that we get ath9k working again?
+>>=20
+>
+> This reverts commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 ("ath9k: Fix=
+ general protection fault
+> in ath9k_hif_usb_rx_cb") because the driver gets stuck like this:
+>
+>   [    5.778803] usb 1-5: Manufacturer: ATHEROS
+>   [   21.697488] usb 1-5: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.fw=
+ requested
+>   [   21.701377] usbcore: registered new interface driver ath9k_htc
+>   [   22.053705] usb 1-5: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1=
+.4.0.fw, size: 51008
+>   [   22.306182] ath9k_htc 1-5:1.0: ath9k_htc: HTC initialized with 33 cr=
+edits
+>   [  115.708513] ath9k_htc: Failed to initialize the device
+>   [  115.708683] usb 1-5: ath9k_htc: USB layer deinitialized
+>
+> Reported-by: Roman Mamedov <rm@romanrm.net>
+> Ref: https://bugzilla.kernel.org/show_bug.cgi?id=3D208251
+> Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_us=
+b_rx_cb")
+> Tested-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freenet.d=
+e>
+> Signed-off-by: Viktor J=C3=A4gersk=C3=BCpper <viktor_jaegerskuepper@freen=
+et.de>
 > ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index a6fd0c2..2f20704 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -23,6 +23,7 @@
->  #include <drm/drm_print.h>
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_vblank.h>
-> +#include <drm/drm_managed.h>
+>
+> I couldn't find any fix for this, so here is the patch which reverts the
+> offending commit. I have tested it with 5.8.0-rc3 and with 5.7.4.
+>
+> Feel free to change the commit message if it is necessary or appropriate,=
+ I am
+> just a user affected by this bug.
 
-Please keep the DRM include statements sorted alphabetically.
+This was badly formatted:
 
-With this fixed
+https://patchwork.kernel.org/patch/11636783/
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+But v2 looks correct:
 
-> =20
->  #include "hibmc_drm_drv.h"
->  #include "hibmc_drm_regs.h"
-> @@ -267,7 +268,7 @@ static int hibmc_load(struct drm_device *dev)
->  	struct hibmc_drm_private *priv;
->  	int ret;
-> =20
-> -	priv =3D devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-> +	priv =3D drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv) {
->  		DRM_ERROR("no memory to allocate for hibmc_drm_private\n");
->  		return -ENOMEM;
->=20
+https://patchwork.kernel.org/patch/11637341/
+
+Thanks, I'll take a closer look at this as soon as I can.
 
 --=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---29yr6CmlInDzUlDanFunYns2V6k80gprO--
-
---HkQdo8CuyD11ZMY15qc1sXizDvmjfLw22
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl79gd0UHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiNm1wf/d7B9/p6rLC/KHbnag1cY9+sy59pp
-5ahpPxXK/NQX7TIyaaDc6b3o1lwP8ytXJ28vI9ptltsH3cWHzKflyYoSpW/rvXyG
-3OPW0kH6CP3WbICVPS0PPpuThZfn2YyX3VfdrO3fug3JRaX6AaTH2wqQTXC7X2Xu
-/hOoQtP/+nzD9ihqiepuS8qu60fKF5MoEwV+jcjgJ6GclrYuPcDSI+B5lfDgErlL
-Z8x0HD4C4BMgW44qzDAKZihAjFJ99f4WLEK0b2xSgSRBTP5+ucLuxOFfUzrgTXxV
-Hz18e9xVpYg6BOpT42pnVa8Z023OesL3Db6h6Ar0KmTFxz+lIlcdr+LIog==
-=7BsW
------END PGP SIGNATURE-----
-
---HkQdo8CuyD11ZMY15qc1sXizDvmjfLw22--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
