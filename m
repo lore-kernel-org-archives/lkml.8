@@ -2,85 +2,109 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCD1207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F078F207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:02:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqGpjMEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGBQBA (ORCPT
+        id S1726257AbgGBQCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:01:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38956 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgGBQBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:01:00 -0400
-IronPort-SDR: ymFLz1hv0Ok17xOhw2sa88x5qq6dnt0nchufVV+bFJ6hUbCdVP1QS7dAD/SSNiswKGe7w6jdtQ
- 3mhQaMbZYybQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148484204"
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="148484204"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:00:59 -0700
-IronPort-SDR: uhwaa7uGNaoqs+PK3xjQnx7NweL6s2+zvtP9lCnnjnKJs+Ggylown6aJ0ORyzmj9w3md68k77K
- CwvEPA5TFikA==
-X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
-   d="scan'208";a="304292241"
-Received: from nchava-mobl1.amr.corp.intel.com (HELO [10.252.135.144]) ([10.252.135.144])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 09:00:58 -0700
-Subject: Re: [PATCH AUTOSEL 5.7 15/53] ASoC: SOF: Intel: add PCI IDs for ICL-H
- and TGL-H
-To:     Mark Brown <broonie@kernel.org>, Sasha Levin <sashal@kernel.org>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        sound-open-firmware@alsa-project.org
-References: <20200702012202.2700645-1-sashal@kernel.org>
- <20200702012202.2700645-15-sashal@kernel.org>
- <20200702111835.GB4483@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0baf17f3-1af8-a4a1-644c-ab27490f9b44@linux.intel.com>
-Date:   Thu, 2 Jul 2020 10:42:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 2 Jul 2020 12:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgGBQCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:02:45 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3D9C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 09:02:44 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id b25so29319641ljp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 09:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qL79Nq3oCLFzOTMGpWbet7Io9CHFHxAF6y2OIH7P7B4=;
+        b=RqGpjMEFoC3lPt7KB5/BrJPpVJGiDboNINqnwfCYmwDrhIvPjrU8U25m/Sjjsza80o
+         gwFlMK3yYzKmar3WB1+skx2vfiyQIUhmkGMckZnhQOgw7kQFuXw7s26o6FwmY5Ialcq9
+         mRWAxhnwDxCbuZPYuVI8jOPnzFzUVRGvsygQtP+VMypMmGE0tvuJwmlp1vbGuhgq8To0
+         /pmULktjB/VuQnV8+bwdvvgkTOpuiMJ5UN7U7K44+WoZ1bJ1fy9SSpt3I9WYn9K6vMPC
+         RXG5tl9aFn5Dl0iSVKQxdnoVYpGRdYuF1bThn0bYrsmSotKsa4hU4euoPK4GC/XCGbr4
+         dRTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qL79Nq3oCLFzOTMGpWbet7Io9CHFHxAF6y2OIH7P7B4=;
+        b=bkcE9dxSNIxY4YoBZhig1JpMlK17XviKu93b0UCp/cFSODvOgiR5OvV1RROCXKezlX
+         pk8UaRienwZoXUsP7yeppvZcdBiQUr2hkGaPFI+c/rikcSOetROkh/C05nKZMVT0s7aq
+         xiR3UH7rDC7iSQhlNeQWsNqv+Ib3Q3jmr0CaEL1bt9+eBcZBZwaKtsnOaE3ouQ6HdR+t
+         3ri+N94w8sETyUvjcoeotYeKMMYA6KnuKWtaH2WjXLtbcHq/xw0uxW4eo4zl3M+lRfs6
+         mCqzr5l7sa1ksfGtly+MT+INEAuGnK5RiRKbLNDLFZf644/9h6kCD39YugEcoBd62QPw
+         jw2Q==
+X-Gm-Message-State: AOAM530B7f4wLu8QznkBU023iY+Nhohdqmvbmi9+nJINx342u2W4RpS1
+        Gb+OKjTzR5BVHyw+mUJh+n1Q2AFazntnbOpsn1ADLw==
+X-Google-Smtp-Source: ABdhPJzCSv9gW+kUPkCq9nD0isczBmSZEYe52kFZeGBvtWJCQvuyMUHN2aap+/6Q57WOe2Z+S0BUzBeDFfKgGNHmdBI=
+X-Received: by 2002:a2e:8e36:: with SMTP id r22mr16765350ljk.77.1593705763073;
+ Thu, 02 Jul 2020 09:02:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702111835.GB4483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYs=3UG3k-2trqQuB-gJh9D1YygkNQ4qWiHtcaRMSWTmrQ@mail.gmail.com>
+ <20200701082904.GM2369@dhcp22.suse.cz> <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 2 Jul 2020 09:02:31 -0700
+Message-ID: <CALvZod6hZ4R=pZsURg4zKYNO2GTOsCumiQc32cvWUQe01ZB0vw@mail.gmail.com>
+Subject: Re: BUG: Bad page state in process - page dumped because: page still
+ charged to cgroup
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Chris Down <chris@chrisdown.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 1, 2020 at 11:46 AM Roman Gushchin <guro@fb.com> wrote:
+...
+> --
+>
+> From c97afecd32c0db5e024be9ba72f43d22974f5bcd Mon Sep 17 00:00:00 2001
+> From: Roman Gushchin <guro@fb.com>
+> Date: Wed, 1 Jul 2020 11:05:32 -0700
+> Subject: [PATCH] mm: kmem: make memcg_kmem_enabled() irreversible
+>
+> Historically the kernel memory accounting was an opt-in feature, which
+> could be enabled for individual cgroups. But now it's not true, and
+> it's on by default both on cgroup v1 and cgroup v2.  And as long as a
+> user has at least one non-root memory cgroup, the kernel memory
+> accounting is on. So in most setups it's either always on (if memory
+> cgroups are in use and kmem accounting is not disabled), either always
+> off (otherwise).
+>
+> memcg_kmem_enabled() is used in many places to guard the kernel memory
+> accounting code. If memcg_kmem_enabled() can reverse from returning
+> true to returning false (as now), we can't rely on it on release paths
+> and have to check if it was on before.
+>
+> If we'll make memcg_kmem_enabled() irreversible (always returning true
+> after returning it for the first time), it'll make the general logic
+> more simple and robust. It also will allow to guard some checks which
+> otherwise would stay unguarded.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-
-On 7/2/20 6:18 AM, Mark Brown wrote:
-> On Wed, Jul 01, 2020 at 09:21:24PM -0400, Sasha Levin wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> [ Upstream commit c8d2e2bfaeffa0f914330e8b4e45b986c8d30b58 ]
->>
->> Usually the DSP is not traditionally enabled on H skews but this might
->> be used moving forward.
-> 
-> "This might be used moving forward"?
-
-There are two conditions for the SOF driver to be used in a distro:
-a) the DSP needs to be enabled (as reported by the pci class info)
-b) sound/hda/intel-dsp-config.c needs to contain a quirk to select SOF 
-over the legacy HDaudio, such as presence of DMIC/SoundWire or a known 
-vendor DMI.
-
-Traditionally for desktops neither a) nor b) are true, but this is 
-changing: we will start adding quirks for specific product lines as 
-requested by OEMs.
-
-Does this answer to your question?
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
