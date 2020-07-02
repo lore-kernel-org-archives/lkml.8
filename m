@@ -2,110 +2,112 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB578C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C04C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E32520885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593709369;
-	bh=bDQl5qvzxkTi9ZCnxC0GowCAYQCv6zA9MuDUFOcZCJo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=WrRddvswY9D9PKSUCmI3k8f1brrEHnG14L4Z0iikTyloW7tKQwbHm/qXtGAW0XLGL
-	 KvC0Zb0DLSSO7E3sRkPpxGsFWcfBwvLIrmMFpNAvvFQqzy9XSTPESP2pLwWln7oXP+
-	 hPaVhLWmjsQnRuUzoNXVnOkd6VF3Hvevy7Xtp4cc=
+	by mail.kernel.org (Postfix) with ESMTP id 73DE120885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 17:03:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIk2bIct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgGBRCs (ORCPT
+        id S1727771AbgGBRDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 13:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgGBRCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 13:02:48 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F027206E2;
-        Thu,  2 Jul 2020 17:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593709367;
-        bh=bDQl5qvzxkTi9ZCnxC0GowCAYQCv6zA9MuDUFOcZCJo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=dNHu7uwwlByzYKVhuYPFATnwTsNThKdOicvR2SDQ5sqxC1EWT2ma5t6qetH3p5nXQ
-         s30IMGZp9b36Ba7H/OPmmq07+r9roQWe5oYdftQXYo63br5zauxZdJEVDvmQCr0g97
-         YRk1iV7hPxB+jvIsmUlzIoOEFbcGvy9uRoUxrnz4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 589AE3523164; Thu,  2 Jul 2020 10:02:47 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 10:02:47 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Hulk Robot <hulkci@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] scftorture: Make symbol 'scf_torture_rand' static
-Message-ID: <20200702170247.GS9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200702144700.3602-1-weiyongjun1@huawei.com>
+        Thu, 2 Jul 2020 13:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbgGBRDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 13:03:05 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE62DC08C5C1;
+        Thu,  2 Jul 2020 10:03:05 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a14so8219229pfi.2;
+        Thu, 02 Jul 2020 10:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sdX4HaTp9icl96MrCuNrfjEqzJvThTeDSS/Lnbk9eSI=;
+        b=qIk2bIctJuCw/nX0bYoysOksrp7u5CkoSzEjixR3X+RCXSGs7q5D1/l6rUJdVlSgSI
+         TKQZE6MLK9wmKW5WLX0W+Zyn+ZIqbr3KB0Aw44bz0u7qbT++5115Uc9A4zByiAd2GKve
+         3t/P4oa/c8FUJJCqE3KiD7eegicbFbRUSTl77earMKh33vDPuq/nj9dPSvfp/Jr0WnqJ
+         sKWcFckkLmmJ0TstROceDpwp8n4xfjLL2b1vfBRdWDiF0Bxmag5t0C/icsv40WKdV084
+         OxXGWUiA4bkbv3mPmQ7dRO817I87lhgLzIFoFMOzpmNjc6oqR9ZZfCHQhNxforOJdj1a
+         Pz+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sdX4HaTp9icl96MrCuNrfjEqzJvThTeDSS/Lnbk9eSI=;
+        b=ucZkh+oClaA7iWIsLaPNfMJ6UCuckJYqoDmwK7FfkdKRkTDMJZQRktjD+DAlkjPMHB
+         60Dy2dDJT2R2xnOYMirVJOa2WwKLJZffzZDLFSJeyN7XqcPrZyY1r7KWKq4xFic1+T1V
+         S/WjDnIdCYvYkoH8NPxyW060mR6+xByb89bVHFIF+WN6K9yI7Edd+5z+x//XY4YwTSFV
+         R4b66x3JQtonU8jxWdUTf5hcqTZ39PWoFiHlx5ZuDjbQURBDI2b2ESLI+k1vIeCvJiGB
+         Fp0nsVDmizu8hIl4/1f3zi9HVnYHr8+Oz6sxYKjoY/fME//0eBYakpHwjuqMlZSExXnp
+         P6Kg==
+X-Gm-Message-State: AOAM532O8cia7ShEyXumvLm6h5vUqzHgsnsz8y/4VG588AQv9V9Rzp+K
+        svIxWiLlYuFf8vShtBeC6sk=
+X-Google-Smtp-Source: ABdhPJzsKs1R5yuKZm5NZySSEZZHZPlNsiGXwAR+dvp1/5lvQkYtz7GeTgWdeKqHCK0mCo0ZRiOznQ==
+X-Received: by 2002:a65:43cb:: with SMTP id n11mr24992540pgp.160.1593709385187;
+        Thu, 02 Jul 2020 10:03:05 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id j21sm9230429pfa.133.2020.07.02.10.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 10:03:04 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Shahed Shaikh <shshaikh@marvell.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 0/2] qlogic: use generic power management
+Date:   Thu,  2 Jul 2020 22:31:41 +0530
+Message-Id: <20200702170143.27201-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702144700.3602-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:47:00PM +0800, Wei Yongjun wrote:
-> Fix sparse build warning:
-> 
-> kernel/scftorture.c:124:1: warning:
->  symbol '__pcpu_scope_scf_torture_rand' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Good catch, applied, thank you!
+The purpose of this patch series is to remove legacy power management callbacks
+from qlogic ethernet drivers.
 
-Due to recent changes, I hand-applied this as shown below.  Please
-let me know if I messed anything up.
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the power management
+themselves, which is not recommended.
 
-							Thanx, Paul
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
 
-------------------------------------------------------------------------
+All patches are compile-tested only.
 
-commit ff9210137b0b8d8f045dd1fd116253ba7686e892
-Author: Wei Yongjun <weiyongjun1@huawei.com>
-Date:   Thu Jul 2 09:56:50 2020 -0700
+V2: Fix unused variable warning in v1.
 
-    scftorture: Make symbol 'scf_torture_rand' static
-    
-    The sparse tool complains as follows
-    
-    kernel/scftorture.c:124:1: warning:
-     symbol '__pcpu_scope_scf_torture_rand' was not declared. Should it be static?
-    
-    And this per-CPU variable is not used outside of scftorture.c,
-    so this commit marks it static.
-    
-    Reported-by: Hulk Robot <hulkci@huawei.com>
-    Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Vaibhav Gupta (2):
+  netxen_nic: use generic power management
+  qlcninc: use generic power management
 
-diff --git a/kernel/scftorture.c b/kernel/scftorture.c
-index 52f74f1..a7fea76 100644
---- a/kernel/scftorture.c
-+++ b/kernel/scftorture.c
-@@ -134,7 +134,7 @@ static atomic_t n_alloc_errs;
- static bool scfdone;
- static char *bangstr = "";
- 
--DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
-+static DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
- 
- // Print torture statistics.  Caller must ensure serialization.
- static void scf_torture_stats_print(void)
+ .../ethernet/qlogic/netxen/netxen_nic_main.c  | 59 +++++++++----------
+ .../net/ethernet/qlogic/qlcnic/qlcnic_hw.c    | 11 +---
+ .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  | 33 +++--------
+ 3 files changed, 37 insertions(+), 66 deletions(-)
+
+-- 
+2.27.0
+
