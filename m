@@ -2,344 +2,870 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933CC20885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D36D20885
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 15:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="oVtrROFR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ve/+NlIp"
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="Mf32lyCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgGBPts (ORCPT
+        id S1726118AbgGBPt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 11:49:48 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:26168 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725878AbgGBPtr (ORCPT
+        Thu, 2 Jul 2020 11:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGBPt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 11:49:47 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062FmAQS031862;
-        Thu, 2 Jul 2020 08:49:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=F2wckg+ZBppXJw0LatlPc0ncRWNExDm19JnyPWORq6Y=;
- b=oVtrROFRttdC2H9tpKwpnxM0zem9/U/gdOffwsAq2yy6J8ZLSBYicP/1YSyjphaiEYbp
- kcJze+7e3degYtGiMksx97MCWHL+ERqaFIqb9Z6Z/gyJmvfpWcCeWTEVL3cIqtngFLn6
- M8ZEujRHlYccmyiyQwcUwdNrQtrpGcTBgR0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31xp3rwjvj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 02 Jul 2020 08:49:31 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 2 Jul 2020 08:49:30 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gkFg7dG3bISqV22PspyFPbztzpGaLdSroPxz/cjmq3UKQLJAdhL4Zn0UO9Scf+Lb7Mzfg4KMNulJWMBm6SdbXSD44j86Kr1RSXDdsgLtr0c/pPiSy1iXtFQsjcUbrNc4WMR6GNAMXdQgurmUcmcWCuSD0r/upPbMSe0Tb/M46OWSmD66vLNSPRIzBf3kPEwn52NacdeX9jTlAa9KOvlMYI8Yt6mJXCO4VhZFyCgXq/zCwsBYhGbrFZMFq/MTGaf4HNIVwbCCjciJrXrJEnVpvlLq8vFPqvo3tKLVWD2Ff3dwFu1CYC6a4BZkLM//QE3DBpuZZcgz24RUTQxIEKAxSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F2wckg+ZBppXJw0LatlPc0ncRWNExDm19JnyPWORq6Y=;
- b=PBN8bRIXD5xUFQ5SdTfTer0FlyegbuMCzqTF2R8o8+QzU4O7zAXQ+ItQfHa4wIOspoJn/g59HjKVutxMpRoqiKM3RavvRNXSIPPLdoUJ9tYPE/N/VPn78wQSyWB0wOHKogV19dJUSUycJpqru7K+Mmd/hU4ulH4b2KadwDq28vXVaTEMmJmyqjnIJ+jbuJG1cpAtG5ylPSNw2p4qu4iNZzuGDpdoNziuxgqYEXBWCXqLPU/XGyu48/9YliOC0Efzn/FBBgMWb3OpmwX+329vqT8H4oXKlKU0aXOkAUaIolA3oTl9fd2fiLuDfM1KhPpY3SXlH2JQHl09EWe32wZHpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F2wckg+ZBppXJw0LatlPc0ncRWNExDm19JnyPWORq6Y=;
- b=Ve/+NlIpDj+xjswFtQ6XsjoamdfvmP0QOxcV2qxvIKuEecrNUCCQ3S5JqUbKDMgDoUtCrdpMl4Y9In6pftE1FlmdotqvlqMg/FdgkE8AXDQ3xOMOzhhlq6OyEZ+1Bf8lvhpuSikVv/q0FPh/apNXeM5qDhKmQVhjhS340b1I9ZU=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3479.namprd15.prod.outlook.com (2603:10b6:a03:106::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Thu, 2 Jul
- 2020 15:49:28 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3131.034; Thu, 2 Jul 2020
- 15:49:28 +0000
-Date:   Thu, 2 Jul 2020 08:49:20 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>, Chris Down <chris@chrisdown.name>
-Subject: Re: BUG: Bad page state in process - page dumped because: page still
- charged to cgroup
-Message-ID: <20200702154920.GA90961@carbon.dhcp.thefacebook.com>
-References: <CA+G9fYs=3UG3k-2trqQuB-gJh9D1YygkNQ4qWiHtcaRMSWTmrQ@mail.gmail.com>
- <20200701082904.GM2369@dhcp22.suse.cz>
- <20200701184552.GA61684@carbon.DHCP.thefacebook.com>
- <CA+G9fYvC_+Gmab=b5pJW+5m1cR=JnLKLuMfxh3p-j8XKBzseSA@mail.gmail.com>
+        Thu, 2 Jul 2020 11:49:57 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60918C08C5C1;
+        Thu,  2 Jul 2020 08:49:57 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 872A16A41; Thu,  2 Jul 2020 11:49:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 872A16A41
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1593704996;
+        bh=BQVHePyMIoeLXE0pHAdLNzuAL8cBMw2VJT7xG10vIS8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mf32lyCEivx+H9M1Ub+RSMjQSodTEAFuridmGhcZNKQQpewuwRkVbvhMdUDX9Zydd
+         6P7OXj8r1DSYYsn3808pxKmImmXHN3fY+Ctd6JFjrKCPUVifbCdsyCJOul+glkml/J
+         qWOpLBUpofAFGkQSPZWImDYemhZumCJ9CQnoyLCw=
+Date:   Thu, 2 Jul 2020 11:49:56 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-nfs@vger.kernel.org,
+        smayhew@redhat.com, bcoddings@redhat.com
+Subject: Re: [RFC PATCH 3/7] SUNRPC: remove RC4-HMAC-MD5 support from
+ KerberosV
+Message-ID: <20200702154956.GA9047@fieldses.org>
+References: <20200702101947.682-1-ardb@kernel.org>
+ <20200702101947.682-4-ardb@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYvC_+Gmab=b5pJW+5m1cR=JnLKLuMfxh3p-j8XKBzseSA@mail.gmail.com>
-X-ClientProxiedBy: BYAPR05CA0069.namprd05.prod.outlook.com
- (2603:10b6:a03:74::46) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:b0bf) by BYAPR05CA0069.namprd05.prod.outlook.com (2603:10b6:a03:74::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.14 via Frontend Transport; Thu, 2 Jul 2020 15:49:28 +0000
-X-Originating-IP: [2620:10d:c090:400::5:b0bf]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dd22e6e4-5c10-4a5d-be37-08d81e9f80fa
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3479:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3479FFBEA168C6A67B1D3343BE6D0@BYAPR15MB3479.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0452022BE1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nw58Qdh9+sycsP9SYOMOHqdJECtpM8YplRTeAzGdx/biLvytMu3FotuUcFttTysWa5WopVpoXtAsBLx996OzgU37Ik1m7uAPS0fSU+SdhmDTTzA15c5+xKMaIN5IkCGEVvUgXH4wz17fXJqUgd2d0fHv5w0QuWzNh2Qr/vcee/MbEl14El0NAF8kCZ2wqHGblXQpunwGpE13Gwe76tAPokmpOSxZRkjmB4Wg12rOosEkk1wczxPAmQ1YUHlEpAF9NUKqvkmaeDEWzpDmuDCxwVaVpSWC62kab8qJnMihT3SjxJGTjtS+w1yQmguOu2LeXMD6MtAyJfcSVKCfb8ULvIy8IkbhsUWvAHp0KmNxd7K78KoecXhxiTGRBXVPcjxrdCe3GH6wHN49hAN9RbKySQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(376002)(366004)(136003)(39860400002)(45080400002)(6916009)(86362001)(186003)(33656002)(4326008)(6666004)(53546011)(6506007)(83380400001)(1076003)(478600001)(7696005)(52116002)(316002)(2906002)(66556008)(66476007)(66946007)(966005)(8936002)(54906003)(16526019)(8676002)(5660300002)(55016002)(9686003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: ZwQCnZJJlCQreD59vw4hCN85PvhAZRJW0aWeeH8oSS5pPZ174Ci5PbX/sL4eBwEX3wkRUGd6Ors8QBhP1yiajzWXr034Z8BU1nnuQG/rhCxTi/Y6z1PN0S6AK0jjspU9/87c4nGugeiyNwE4yJ5eGbnhn0TOefssd2mULrRmj1K/+KiJmJvR+uz6xgH7JIMsbqkA9wka5H2EV/Bf2sudKjXIWDCecTVlOmUriHGe6q20QNv6VNTuM6FY71FBUc8phYmSMUSsmo1AjqwnNJIXGUqzaWiBs39wHjMVaNPjAV/sbFd1XlZg67PYmh1TXW2nFkv6o4aKPzOvt9K4mGeN1C0qBSfHZWLiZOGAN4qPL5dpFsagw+dvWe8ptrrxpDQ/ZmNEt96/eKbPIDmsPqi1yOjjNCDRv/StAqN6kXLv6lYx6iQaHnTpXRNrc0WEFiUBS81ctkqbjc0g9Fbnk938hKCOh+jdqmx0V/OX4OCpMkYI79771PLXykqhmAmdGNyI9y547evPu1nOEk8OJTCpmw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd22e6e4-5c10-4a5d-be37-08d81e9f80fa
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2020 15:49:28.6534
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5oXEoYIwQUjI+4Y7xuTo5m2lJibUIH9740oQvG2q+rVe14sNLY1RexiLaF8WLbUW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3479
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 bulkscore=0
- phishscore=0 spamscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- cotscore=-2147483648 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007020109
-X-FB-Internal: deliver
+In-Reply-To: <20200702101947.682-4-ardb@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:22:03PM +0530, Naresh Kamboju wrote:
-> On Thu, 2 Jul 2020 at 00:16, Roman Gushchin <guro@fb.com> wrote:
-> >
-> > On Wed, Jul 01, 2020 at 10:29:04AM +0200, Michal Hocko wrote:
-> > > Smells like a different observable problem with the same/similar culprit
-> > > as http://lkml.kernel.org/r/CA+G9fYtrgF_EZHi0vi+HyWiXT5LGggDhVXtNspc=OzzFhL=xRQ@mail.gmail.com
-> > >
-> > > On Wed 01-07-20 13:48:57, Naresh Kamboju wrote:
-> > > > While running LTP mm test suite on x86_64 device the BUG: Bad page
-> > > > state in process
-> > > > noticed on linux-next 20200630 tag.
-> > > >
-> > > > Steps to reproduce:
-> > > > - boot linux-next 20200630 kernel on x86_64 device
-> > > > - cd /opt/ltp
-> > > > - ./runltp -f mm
-> > > >
-> > > > metadata:
-> > > >   git branch: master
-> > > >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > > >   git commit: f2b92b14533e646e434523abdbafddb727c23898
-> > > >   git describe: next-20200630
-> > > >   kernel-config:
-> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__builds.tuxbuild.com_j60yrp7CUpq3LCmqMB8Wdg_kernel.config&d=DwIBAg&c=5VD0RTtNlTh3ycd41b3MUw&r=jJYgtDM7QT-W-Fz_d29HYQ&m=h_KJ0e7abuh0BK2eDlDmWnAxqHPccpqchPgBS-oJcVE&s=qofg2XRToTeHvi8vSdOvDPtKpJsUqf3IWfqwieZqITg&e=
-> > > >
-> > > > Test crash dump:
-> > > > [  803.905169] Node 0 Normal: 2608*4kB (UMEH) 1380*8kB (UMEH) 64*16kB
-> > > > (MEH) 28*32kB (MEH) 13*64kB (UMEH) 164*128kB (UMEH) 39*256kB (UE)
-> > > > 1*512kB (M) 1*1024kB (M) 1*2048kB (M) 1*4096kB (M) = 62880kB
-> > > > [  803.922375] Node 0 hugepages_total=0 hugepages_free=0
-> > > > hugepages_surp=0 hugepages_size=2048kB
-> > > > [  803.930806] 2418 total pagecache pages
-> > > > [  803.934559] 0 pages in swap cache
-> > > > [  803.937878] Swap cache stats: add 0, delete 0, find 0/0
-> > > > [  803.943108] Free swap  = 0kB
-> > > > [  803.945997] Total swap = 0kB
-> > > > [  803.948885] 4181245 pages RAM
-> > > > [  803.951857] 0 pages HighMem/MovableOnly
-> > > > [  803.955695] 626062 pages reserved
-> > > > [  803.959016] Tasks state (memory values in pages):
-> > > > [  803.963722] [  pid  ]   uid  tgid total_vm      rss pgtables_bytes
-> > > > swapents oom_score_adj name
-> > > > [  803.972336] [    332]     0   332     8529      507   106496
-> > > > 0             0 systemd-journal
-> > > > [  803.981387] [    349]     0   349    10730      508   118784
-> > > > 0         -1000 systemd-udevd
-> > > > [  803.990262] [    371]   993   371     8666      108   118784
-> > > > 0             0 systemd-network
-> > > > [  803.999306] [    379]   992   379     9529       99   110592
-> > > > 0             0 systemd-resolve
-> > > > [  804.008347] [    388]     0   388     2112       19    61440
-> > > > 0             0 syslogd
-> > > > [  804.016709] [    389]   995   389     9308      108   122880
-> > > > 0             0 avahi-daemon
-> > > > [  804.025517] [    391]     0   391     1075       21    57344
-> > > > 0             0 acpid
-> > > > [  804.033695] [    394]   995   394     9277       68   114688
-> > > > 0             0 avahi-daemon
-> > > > [  804.042476] [    396]   996   396     7241      154   102400
-> > > > 0          -900 dbus-daemon
-> > > > [  804.051170] [    397]     0   397     2313       72    65536
-> > > > 0             0 crond
-> > > > [  804.059349] [    399]     0   399    34025      161   167936
-> > > > 0             0 thermald
-> > > > [  804.067783] [    400]     0   400     8615      115   110592
-> > > > 0             0 systemd-logind
-> > > > [  804.076734] [    401]     0   401     2112       32    57344
-> > > > 0             0 klogd
-> > > > [  804.084907] [    449] 65534   449     3245       39    69632
-> > > > 0             0 dnsmasq
-> > > > [  804.093254] [    450]     0   450     3187       33    73728
-> > > > 0             0 agetty
-> > > > [  804.101541] [    452]     0   452     3187       33    73728
-> > > > 0             0 agetty
-> > > > [  804.109826] [    453]     0   453    14707      107   159744
-> > > > 0             0 login
-> > > > [  804.118007] [    463]     0   463     9532      163   122880
-> > > > 0             0 systemd
-> > > > [  804.126362] [    464]     0   464    16132      424   172032
-> > > > 0             0 (sd-pam)
-> > > > [  804.134803] [    468]     0   468     4538      105    81920
-> > > > 0             0 sh
-> > > > [  804.142741] [    472]     0   472    11102       83   131072
-> > > > 0             0 su
-> > > > [  804.150680] [    473]     0   473     4538       99    81920
-> > > > 0             0 sh
-> > > > [  804.158637] [    519]     0   519     2396       57    61440
-> > > > 0             0 lava-test-runne
-> > > > [  804.167700] [   1220]     0  1220     2396       52    61440
-> > > > 0             0 lava-test-shell
-> > > > [  804.176738] [   1221]     0  1221     2396       55    61440
-> > > > 0             0 sh
-> > > > [  804.184680] [   1223]     0  1223     2462      135    61440
-> > > > 0             0 ltp.sh
-> > > > [  804.192946] [   1242]     0  1242     2462      134    61440
-> > > > 0             0 ltp.sh
-> > > > [  804.201207] [   1243]     0  1243     2462      134    61440
-> > > > 0             0 ltp.sh
-> > > > [  804.209475] [   1244]     0  1244     2462      134    61440
-> > > > 0             0 ltp.sh
-> > > > [  804.217742] [   1245]     0  1245     2561      229    65536
-> > > > 0             0 runltp
-> > > > [  804.226010] [   1246]     0  1246     1072       15    53248
-> > > > 0             0 tee
-> > > > [  804.234012] [   1313]     0  1313     1070       29    53248
-> > > > 0             0 ltp-pan
-> > > > [  804.242374] [   3216]     0  3216     1613       20    53248
-> > > > 0             0 oom01
-> > > > [  804.250554] [   3217]     0  3217     1646       31    57344
-> > > > 0             0 oom01
-> > > > [  804.258728] [   3245]     0  3245    81271      469   266240
-> > > > 0             0 NetworkManager
-> > > > [  804.267688] [   3249]     0  3249     6422       54    98304
-> > > > 0             0 systemd-hostnam
-> > > > [  804.276734] [   3250]     0  3250    52976      178   172032
-> > > > 0             0 nm-dispatcher
-> > > > [  804.285603] [   3254]   998  3254   131113      828   245760
-> > > > 0             0 polkitd
-> > > > [  804.293956] [   3261]     0  3261  4726385  3349389 26939392
-> > > > 0             0 oom01
-> > > > [  804.302129] [   3265]     0  3265     3187       33    73728
-> > > > 0             0 agetty
-> > > > [  804.310397] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/,task=oom01,pid=3261,uid=0
-> > > > [  804.322751] Out of memory: Killed process 3261 (oom01)
-> > > > total-vm:18905540kB, anon-rss:13397556kB, file-rss:0kB, shmem-rss:0kB,
-> > > > UID:0 pgtables:26308kB oom_score_adj:0
-> > > > [  806.652952] oom_reaper: reaped process 3261 (oom01), now
-> > > > anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> > > > [  807.579373] BUG: Bad page state in process kworker/u8:12  pfn:374308
-> > > > [  807.579521] BUG: Bad page state in process kworker/u8:13  pfn:4182a4
-> > > > [  807.585734] page:ffffea000dd0c200 refcount:0 mapcount:0
-> > > > mapping:0000000000000000 index:0xffff88837430e000
-> > > > head:ffffea000dd0c200 order:3 compound_mapcount:0 compound_pincount:0
-> > > > [  807.585736] flags: 0x200000000010000(head)
-> > > > [  807.585740] raw: 0200000000010000 ffffea000dce6e00 0000000200000002
-> > > > 0000000000000000
-> > > > [  807.592099] page:ffffea001060a900 refcount:0 mapcount:0
-> > > > mapping:0000000000000000 index:0xffff8884182a5e00
-> > > > head:ffffea001060a900 order:1 compound_mapcount:0
-> > > > [  807.607719] raw: ffff88837430e000 0000000000040000 00000000ffffffff
-> > > > ffff8883bda6cac1
-> > > > [  807.607720] page dumped because: page still charged to cgroup
-> > > > [  807.607720] page->mem_cgroup:ffff8883bda6cac1
-> > > > [  807.607721] Modules linked in: x86_pkg_temp_thermal
-> > > > [  807.607725] CPU: 0 PID: 3242 Comm: kworker/u8:12 Not tainted
-> > > > 5.8.0-rc3-next-20200630 #1
-> > > > [  807.607727] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > > 2.0b 07/27/2017
-> > > > [  807.607731] Workqueue: rpciod rpc_async_schedule
-> > > > [  807.611836] flags: 0x200000000010000(head)
-> > > > [  807.619563] Call Trace:
-> > > > [  807.619567]  dump_stack+0x84/0xba
-> > > > [  807.619569]  bad_page.cold+0x7b/0xac
-> > > > [  807.619573]  __free_pages_ok+0x95b/0xab0
-> > > > [  807.633461] raw: 0200000000010000 dead000000000100 dead000000000122
-> > > > 0000000000000000
-> > > > [  807.641189]  __free_pages+0x42/0x50
-> > > > [  807.641191]  __free_slab+0xcd/0x1f0
-> >
-> > Hm, interesting, it means that page->obj_cgroups is still set.
-> > But before __free_pages() __free_slab() always calls uncharge_slab_page(),
-> > which sets page->obj_cgroups to NULL except when !memcg_kmem_enabled().
-> >
-> > So it makes me think that somehow memcg_kmem_enabled() became false
-> > after being true, which can cause refcounting problems as well.
-> >
-> > Naresh, can you, please, check if the following patch solves problems?
-> > And thank you for reporting the problem!
-> >
+Acked-by: J. Bruce Fields <bfields@redhat.com>
+
+On Thu, Jul 02, 2020 at 12:19:43PM +0200, Ard Biesheuvel wrote:
+> The RC4-HMAC-MD5 KerberosV algorithm is based on RFC 4757 [0], which
+> was specifically issued for interoperability with Windows 2000, but was
+> never intended to receive the same level of support. The RFC says
 > 
-> Thanks for providing a quick fix patch.
+>   The IETF Kerberos community supports publishing this specification as
+>   an informational document in order to describe this widely
+>   implemented technology.  However, while these encryption types
+>   provide the operations necessary to implement the base Kerberos
+>   specification [RFC4120], they do not provide all the required
+>   operations in the Kerberos cryptography framework [RFC3961].  As a
+>   result, it is not generally possible to implement potential
+>   extensions to Kerberos using these encryption types.  The Kerberos
+>   encryption type negotiation mechanism [RFC4537] provides one approach
+>   for using such extensions even when a Kerberos infrastructure uses
+>   long-term RC4 keys.  Because this specification does not implement
+>   operations required by RFC 3961 and because of security concerns with
+>   the use of RC4 and MD4 discussed in Section 8, this specification is
+>   not appropriate for publication on the standards track.
 > 
-> >
-> > From c97afecd32c0db5e024be9ba72f43d22974f5bcd Mon Sep 17 00:00:00 2001
-> > From: Roman Gushchin <guro@fb.com>
-> > Date: Wed, 1 Jul 2020 11:05:32 -0700
-> > Subject: [PATCH] mm: kmem: make memcg_kmem_enabled() irreversible
-> >
-> > Historically the kernel memory accounting was an opt-in feature, which
-> > could be enabled for individual cgroups. But now it's not true, and
-> > it's on by default both on cgroup v1 and cgroup v2.  And as long as a
-> > user has at least one non-root memory cgroup, the kernel memory
-> > accounting is on. So in most setups it's either always on (if memory
-> > cgroups are in use and kmem accounting is not disabled), either always
-> > off (otherwise).
-> >
-> > memcg_kmem_enabled() is used in many places to guard the kernel memory
-> > accounting code. If memcg_kmem_enabled() can reverse from returning
-> > true to returning false (as now), we can't rely on it on release paths
-> > and have to check if it was on before.
-> >
-> > If we'll make memcg_kmem_enabled() irreversible (always returning true
-> > after returning it for the first time), it'll make the general logic
-> > more simple and robust. It also will allow to guard some checks which
-> > otherwise would stay unguarded.
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+>   The RC4-HMAC encryption types are used to ease upgrade of existing
+>   Windows NT environments, provide strong cryptography (128-bit key
+>   lengths), and provide exportable (meet United States government
+>   export restriction requirements) encryption.  This document describes
+>   the implementation of those encryption types.
 > 
-> The below patch applied on top of linux-next 20200701and tested and
-> the reported bug got fixed on arm64, arm, x86_64 and i386.
-
-Hello, Naresh!
-
-Thank you very much for testing the patch!
-
-Btw, did it also fix the problem reported here: 
-https://lore.kernel.org/linux-mm/20200701081951.GL2369@dhcp22.suse.cz/T/#t ?
-
-Thanks!
-
-Roman
+> Furthermore, this RFC was re-classified as 'historic' by RFC 8429 [1] in
+> 2018, stating that 'none of the encryption types it specifies should be
+> used'
+> 
+> Note that other outdated algorithms are left in place (some of which are
+> guarded by CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES), so this should only
+> adversely affect interoperability with Windows NT/2000 systems that have
+> not received any updates since 2008 (but are connected to a network
+> nonetheless)
+> 
+> [0] https://tools.ietf.org/html/rfc4757
+> [1] https://tools.ietf.org/html/rfc8429
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  include/linux/sunrpc/gss_krb5.h          |  11 -
+>  include/linux/sunrpc/gss_krb5_enctypes.h |   9 +-
+>  net/sunrpc/Kconfig                       |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_crypto.c    | 276 --------------------
+>  net/sunrpc/auth_gss/gss_krb5_mech.c      |  95 -------
+>  net/sunrpc/auth_gss/gss_krb5_seal.c      |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_seqnum.c    |  87 ------
+>  net/sunrpc/auth_gss/gss_krb5_unseal.c    |   1 -
+>  net/sunrpc/auth_gss/gss_krb5_wrap.c      |  65 +----
+>  9 files changed, 16 insertions(+), 530 deletions(-)
+> 
+> diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
+> index e8f8ffe7448b..91f43d86879d 100644
+> --- a/include/linux/sunrpc/gss_krb5.h
+> +++ b/include/linux/sunrpc/gss_krb5.h
+> @@ -141,14 +141,12 @@ enum sgn_alg {
+>  	SGN_ALG_MD2_5 = 0x0001,
+>  	SGN_ALG_DES_MAC = 0x0002,
+>  	SGN_ALG_3 = 0x0003,		/* not published */
+> -	SGN_ALG_HMAC_MD5 = 0x0011,	/* microsoft w2k; no support */
+>  	SGN_ALG_HMAC_SHA1_DES3_KD = 0x0004
+>  };
+>  enum seal_alg {
+>  	SEAL_ALG_NONE = 0xffff,
+>  	SEAL_ALG_DES = 0x0000,
+>  	SEAL_ALG_1 = 0x0001,		/* not published */
+> -	SEAL_ALG_MICROSOFT_RC4 = 0x0010,/* microsoft w2k; no support */
+>  	SEAL_ALG_DES3KD = 0x0002
+>  };
+>  
+> @@ -316,14 +314,5 @@ gss_krb5_aes_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
+>  		     struct xdr_buf *buf, u32 *plainoffset,
+>  		     u32 *plainlen);
+>  
+> -int
+> -krb5_rc4_setup_seq_key(struct krb5_ctx *kctx,
+> -		       struct crypto_sync_skcipher *cipher,
+> -		       unsigned char *cksum);
+> -
+> -int
+> -krb5_rc4_setup_enc_key(struct krb5_ctx *kctx,
+> -		       struct crypto_sync_skcipher *cipher,
+> -		       s32 seqnum);
+>  void
+>  gss_krb5_make_confounder(char *p, u32 conflen);
+> diff --git a/include/linux/sunrpc/gss_krb5_enctypes.h b/include/linux/sunrpc/gss_krb5_enctypes.h
+> index 981c89cef19d..87eea679d750 100644
+> --- a/include/linux/sunrpc/gss_krb5_enctypes.h
+> +++ b/include/linux/sunrpc/gss_krb5_enctypes.h
+> @@ -13,15 +13,13 @@
+>  #ifdef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
+>  
+>  /*
+> - * NB: This list includes encryption types that were deprecated
+> - * by RFC 8429 (DES3_CBC_SHA1 and ARCFOUR_HMAC).
+> + * NB: This list includes DES3_CBC_SHA1, which was deprecated by RFC 8429.
+>   *
+>   * ENCTYPE_AES256_CTS_HMAC_SHA1_96
+>   * ENCTYPE_AES128_CTS_HMAC_SHA1_96
+>   * ENCTYPE_DES3_CBC_SHA1
+> - * ENCTYPE_ARCFOUR_HMAC
+>   */
+> -#define KRB5_SUPPORTED_ENCTYPES "18,17,16,23"
+> +#define KRB5_SUPPORTED_ENCTYPES "18,17,16"
+>  
+>  #else	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+>  
+> @@ -32,12 +30,11 @@
+>   * ENCTYPE_AES256_CTS_HMAC_SHA1_96
+>   * ENCTYPE_AES128_CTS_HMAC_SHA1_96
+>   * ENCTYPE_DES3_CBC_SHA1
+> - * ENCTYPE_ARCFOUR_HMAC
+>   * ENCTYPE_DES_CBC_MD5
+>   * ENCTYPE_DES_CBC_CRC
+>   * ENCTYPE_DES_CBC_MD4
+>   */
+> -#define KRB5_SUPPORTED_ENCTYPES "18,17,16,23,3,1,2"
+> +#define KRB5_SUPPORTED_ENCTYPES "18,17,16,3,1,2"
+>  
+>  #endif	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+>  
+> diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
+> index 3bcf985507be..bbbb5af0af13 100644
+> --- a/net/sunrpc/Kconfig
+> +++ b/net/sunrpc/Kconfig
+> @@ -21,7 +21,6 @@ config RPCSEC_GSS_KRB5
+>  	depends on SUNRPC && CRYPTO
+>  	depends on CRYPTO_MD5 && CRYPTO_DES && CRYPTO_CBC && CRYPTO_CTS
+>  	depends on CRYPTO_ECB && CRYPTO_HMAC && CRYPTO_SHA1 && CRYPTO_AES
+> -	depends on CRYPTO_ARC4
+>  	default y
+>  	select SUNRPC_GSS
+>  	help
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/gss_krb5_crypto.c
+> index e7180da1fc6a..634b6c6e0dcb 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
+> @@ -138,135 +138,6 @@ checksummer(struct scatterlist *sg, void *data)
+>  	return crypto_ahash_update(req);
+>  }
+>  
+> -static int
+> -arcfour_hmac_md5_usage_to_salt(unsigned int usage, u8 salt[4])
+> -{
+> -	unsigned int ms_usage;
+> -
+> -	switch (usage) {
+> -	case KG_USAGE_SIGN:
+> -		ms_usage = 15;
+> -		break;
+> -	case KG_USAGE_SEAL:
+> -		ms_usage = 13;
+> -		break;
+> -	default:
+> -		return -EINVAL;
+> -	}
+> -	salt[0] = (ms_usage >> 0) & 0xff;
+> -	salt[1] = (ms_usage >> 8) & 0xff;
+> -	salt[2] = (ms_usage >> 16) & 0xff;
+> -	salt[3] = (ms_usage >> 24) & 0xff;
+> -
+> -	return 0;
+> -}
+> -
+> -static u32
+> -make_checksum_hmac_md5(struct krb5_ctx *kctx, char *header, int hdrlen,
+> -		       struct xdr_buf *body, int body_offset, u8 *cksumkey,
+> -		       unsigned int usage, struct xdr_netobj *cksumout)
+> -{
+> -	struct scatterlist              sg[1];
+> -	int err = -1;
+> -	u8 *checksumdata;
+> -	u8 *rc4salt;
+> -	struct crypto_ahash *md5;
+> -	struct crypto_ahash *hmac_md5;
+> -	struct ahash_request *req;
+> -
+> -	if (cksumkey == NULL)
+> -		return GSS_S_FAILURE;
+> -
+> -	if (cksumout->len < kctx->gk5e->cksumlength) {
+> -		dprintk("%s: checksum buffer length, %u, too small for %s\n",
+> -			__func__, cksumout->len, kctx->gk5e->name);
+> -		return GSS_S_FAILURE;
+> -	}
+> -
+> -	rc4salt = kmalloc_array(4, sizeof(*rc4salt), GFP_NOFS);
+> -	if (!rc4salt)
+> -		return GSS_S_FAILURE;
+> -
+> -	if (arcfour_hmac_md5_usage_to_salt(usage, rc4salt)) {
+> -		dprintk("%s: invalid usage value %u\n", __func__, usage);
+> -		goto out_free_rc4salt;
+> -	}
+> -
+> -	checksumdata = kmalloc(GSS_KRB5_MAX_CKSUM_LEN, GFP_NOFS);
+> -	if (!checksumdata)
+> -		goto out_free_rc4salt;
+> -
+> -	md5 = crypto_alloc_ahash("md5", 0, CRYPTO_ALG_ASYNC);
+> -	if (IS_ERR(md5))
+> -		goto out_free_cksum;
+> -
+> -	hmac_md5 = crypto_alloc_ahash(kctx->gk5e->cksum_name, 0,
+> -				      CRYPTO_ALG_ASYNC);
+> -	if (IS_ERR(hmac_md5))
+> -		goto out_free_md5;
+> -
+> -	req = ahash_request_alloc(md5, GFP_NOFS);
+> -	if (!req)
+> -		goto out_free_hmac_md5;
+> -
+> -	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
+> -
+> -	err = crypto_ahash_init(req);
+> -	if (err)
+> -		goto out;
+> -	sg_init_one(sg, rc4salt, 4);
+> -	ahash_request_set_crypt(req, sg, NULL, 4);
+> -	err = crypto_ahash_update(req);
+> -	if (err)
+> -		goto out;
+> -
+> -	sg_init_one(sg, header, hdrlen);
+> -	ahash_request_set_crypt(req, sg, NULL, hdrlen);
+> -	err = crypto_ahash_update(req);
+> -	if (err)
+> -		goto out;
+> -	err = xdr_process_buf(body, body_offset, body->len - body_offset,
+> -			      checksummer, req);
+> -	if (err)
+> -		goto out;
+> -	ahash_request_set_crypt(req, NULL, checksumdata, 0);
+> -	err = crypto_ahash_final(req);
+> -	if (err)
+> -		goto out;
+> -
+> -	ahash_request_free(req);
+> -	req = ahash_request_alloc(hmac_md5, GFP_NOFS);
+> -	if (!req)
+> -		goto out_free_hmac_md5;
+> -
+> -	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, NULL, NULL);
+> -
+> -	err = crypto_ahash_setkey(hmac_md5, cksumkey, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out;
+> -
+> -	sg_init_one(sg, checksumdata, crypto_ahash_digestsize(md5));
+> -	ahash_request_set_crypt(req, sg, checksumdata,
+> -				crypto_ahash_digestsize(md5));
+> -	err = crypto_ahash_digest(req);
+> -	if (err)
+> -		goto out;
+> -
+> -	memcpy(cksumout->data, checksumdata, kctx->gk5e->cksumlength);
+> -	cksumout->len = kctx->gk5e->cksumlength;
+> -out:
+> -	ahash_request_free(req);
+> -out_free_hmac_md5:
+> -	crypto_free_ahash(hmac_md5);
+> -out_free_md5:
+> -	crypto_free_ahash(md5);
+> -out_free_cksum:
+> -	kfree(checksumdata);
+> -out_free_rc4salt:
+> -	kfree(rc4salt);
+> -	return err ? GSS_S_FAILURE : 0;
+> -}
+> -
+>  /*
+>   * checksum the plaintext data and hdrlen bytes of the token header
+>   * The checksum is performed over the first 8 bytes of the
+> @@ -284,11 +155,6 @@ make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
+>  	u8 *checksumdata;
+>  	unsigned int checksumlen;
+>  
+> -	if (kctx->gk5e->ctype == CKSUMTYPE_HMAC_MD5_ARCFOUR)
+> -		return make_checksum_hmac_md5(kctx, header, hdrlen,
+> -					      body, body_offset,
+> -					      cksumkey, usage, cksumout);
+> -
+>  	if (cksumout->len < kctx->gk5e->cksumlength) {
+>  		dprintk("%s: checksum buffer length, %u, too small for %s\n",
+>  			__func__, cksumout->len, kctx->gk5e->name);
+> @@ -942,145 +808,3 @@ gss_krb5_aes_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
+>  		ret = GSS_S_FAILURE;
+>  	return ret;
+>  }
+> -
+> -/*
+> - * Compute Kseq given the initial session key and the checksum.
+> - * Set the key of the given cipher.
+> - */
+> -int
+> -krb5_rc4_setup_seq_key(struct krb5_ctx *kctx,
+> -		       struct crypto_sync_skcipher *cipher,
+> -		       unsigned char *cksum)
+> -{
+> -	struct crypto_shash *hmac;
+> -	struct shash_desc *desc;
+> -	u8 Kseq[GSS_KRB5_MAX_KEYLEN];
+> -	u32 zeroconstant = 0;
+> -	int err;
+> -
+> -	dprintk("%s: entered\n", __func__);
+> -
+> -	hmac = crypto_alloc_shash(kctx->gk5e->cksum_name, 0, 0);
+> -	if (IS_ERR(hmac)) {
+> -		dprintk("%s: error %ld, allocating hash '%s'\n",
+> -			__func__, PTR_ERR(hmac), kctx->gk5e->cksum_name);
+> -		return PTR_ERR(hmac);
+> -	}
+> -
+> -	desc = kmalloc(sizeof(*desc) + crypto_shash_descsize(hmac),
+> -		       GFP_NOFS);
+> -	if (!desc) {
+> -		dprintk("%s: failed to allocate shash descriptor for '%s'\n",
+> -			__func__, kctx->gk5e->cksum_name);
+> -		crypto_free_shash(hmac);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	desc->tfm = hmac;
+> -
+> -	/* Compute intermediate Kseq from session key */
+> -	err = crypto_shash_setkey(hmac, kctx->Ksess, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = crypto_shash_digest(desc, (u8 *)&zeroconstant, 4, Kseq);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	/* Compute final Kseq from the checksum and intermediate Kseq */
+> -	err = crypto_shash_setkey(hmac, Kseq, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = crypto_shash_digest(desc, cksum, 8, Kseq);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = crypto_sync_skcipher_setkey(cipher, Kseq, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = 0;
+> -
+> -out_err:
+> -	kzfree(desc);
+> -	crypto_free_shash(hmac);
+> -	dprintk("%s: returning %d\n", __func__, err);
+> -	return err;
+> -}
+> -
+> -/*
+> - * Compute Kcrypt given the initial session key and the plaintext seqnum.
+> - * Set the key of cipher kctx->enc.
+> - */
+> -int
+> -krb5_rc4_setup_enc_key(struct krb5_ctx *kctx,
+> -		       struct crypto_sync_skcipher *cipher,
+> -		       s32 seqnum)
+> -{
+> -	struct crypto_shash *hmac;
+> -	struct shash_desc *desc;
+> -	u8 Kcrypt[GSS_KRB5_MAX_KEYLEN];
+> -	u8 zeroconstant[4] = {0};
+> -	u8 seqnumarray[4];
+> -	int err, i;
+> -
+> -	dprintk("%s: entered, seqnum %u\n", __func__, seqnum);
+> -
+> -	hmac = crypto_alloc_shash(kctx->gk5e->cksum_name, 0, 0);
+> -	if (IS_ERR(hmac)) {
+> -		dprintk("%s: error %ld, allocating hash '%s'\n",
+> -			__func__, PTR_ERR(hmac), kctx->gk5e->cksum_name);
+> -		return PTR_ERR(hmac);
+> -	}
+> -
+> -	desc = kmalloc(sizeof(*desc) + crypto_shash_descsize(hmac),
+> -		       GFP_NOFS);
+> -	if (!desc) {
+> -		dprintk("%s: failed to allocate shash descriptor for '%s'\n",
+> -			__func__, kctx->gk5e->cksum_name);
+> -		crypto_free_shash(hmac);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	desc->tfm = hmac;
+> -
+> -	/* Compute intermediate Kcrypt from session key */
+> -	for (i = 0; i < kctx->gk5e->keylength; i++)
+> -		Kcrypt[i] = kctx->Ksess[i] ^ 0xf0;
+> -
+> -	err = crypto_shash_setkey(hmac, Kcrypt, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = crypto_shash_digest(desc, zeroconstant, 4, Kcrypt);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	/* Compute final Kcrypt from the seqnum and intermediate Kcrypt */
+> -	err = crypto_shash_setkey(hmac, Kcrypt, kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	seqnumarray[0] = (unsigned char) ((seqnum >> 24) & 0xff);
+> -	seqnumarray[1] = (unsigned char) ((seqnum >> 16) & 0xff);
+> -	seqnumarray[2] = (unsigned char) ((seqnum >> 8) & 0xff);
+> -	seqnumarray[3] = (unsigned char) ((seqnum >> 0) & 0xff);
+> -
+> -	err = crypto_shash_digest(desc, seqnumarray, 4, Kcrypt);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = crypto_sync_skcipher_setkey(cipher, Kcrypt,
+> -					  kctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err;
+> -
+> -	err = 0;
+> -
+> -out_err:
+> -	kzfree(desc);
+> -	crypto_free_shash(hmac);
+> -	dprintk("%s: returning %d\n", __func__, err);
+> -	return err;
+> -}
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> index 75b3c2e9e8f8..ae9acf3a7389 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> @@ -51,27 +51,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+>  	  .keyed_cksum = 0,
+>  	},
+>  #endif	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+> -	/*
+> -	 * RC4-HMAC
+> -	 */
+> -	{
+> -	  .etype = ENCTYPE_ARCFOUR_HMAC,
+> -	  .ctype = CKSUMTYPE_HMAC_MD5_ARCFOUR,
+> -	  .name = "rc4-hmac",
+> -	  .encrypt_name = "ecb(arc4)",
+> -	  .cksum_name = "hmac(md5)",
+> -	  .encrypt = krb5_encrypt,
+> -	  .decrypt = krb5_decrypt,
+> -	  .mk_key = NULL,
+> -	  .signalg = SGN_ALG_HMAC_MD5,
+> -	  .sealalg = SEAL_ALG_MICROSOFT_RC4,
+> -	  .keybytes = 16,
+> -	  .keylength = 16,
+> -	  .blocksize = 1,
+> -	  .conflen = 8,
+> -	  .cksumlength = 8,
+> -	  .keyed_cksum = 1,
+> -	},
+>  	/*
+>  	 * 3DES
+>  	 */
+> @@ -401,78 +380,6 @@ context_derive_keys_des3(struct krb5_ctx *ctx, gfp_t gfp_mask)
+>  	return -EINVAL;
+>  }
+>  
+> -/*
+> - * Note that RC4 depends on deriving keys using the sequence
+> - * number or the checksum of a token.  Therefore, the final keys
+> - * cannot be calculated until the token is being constructed!
+> - */
+> -static int
+> -context_derive_keys_rc4(struct krb5_ctx *ctx)
+> -{
+> -	struct crypto_shash *hmac;
+> -	char sigkeyconstant[] = "signaturekey";
+> -	int slen = strlen(sigkeyconstant) + 1;	/* include null terminator */
+> -	struct shash_desc *desc;
+> -	int err;
+> -
+> -	dprintk("RPC:       %s: entered\n", __func__);
+> -	/*
+> -	 * derive cksum (aka Ksign) key
+> -	 */
+> -	hmac = crypto_alloc_shash(ctx->gk5e->cksum_name, 0, 0);
+> -	if (IS_ERR(hmac)) {
+> -		dprintk("%s: error %ld allocating hash '%s'\n",
+> -			__func__, PTR_ERR(hmac), ctx->gk5e->cksum_name);
+> -		err = PTR_ERR(hmac);
+> -		goto out_err;
+> -	}
+> -
+> -	err = crypto_shash_setkey(hmac, ctx->Ksess, ctx->gk5e->keylength);
+> -	if (err)
+> -		goto out_err_free_hmac;
+> -
+> -
+> -	desc = kmalloc(sizeof(*desc) + crypto_shash_descsize(hmac), GFP_NOFS);
+> -	if (!desc) {
+> -		dprintk("%s: failed to allocate hash descriptor for '%s'\n",
+> -			__func__, ctx->gk5e->cksum_name);
+> -		err = -ENOMEM;
+> -		goto out_err_free_hmac;
+> -	}
+> -
+> -	desc->tfm = hmac;
+> -
+> -	err = crypto_shash_digest(desc, sigkeyconstant, slen, ctx->cksum);
+> -	kzfree(desc);
+> -	if (err)
+> -		goto out_err_free_hmac;
+> -	/*
+> -	 * allocate hash, and skciphers for data and seqnum encryption
+> -	 */
+> -	ctx->enc = crypto_alloc_sync_skcipher(ctx->gk5e->encrypt_name, 0, 0);
+> -	if (IS_ERR(ctx->enc)) {
+> -		err = PTR_ERR(ctx->enc);
+> -		goto out_err_free_hmac;
+> -	}
+> -
+> -	ctx->seq = crypto_alloc_sync_skcipher(ctx->gk5e->encrypt_name, 0, 0);
+> -	if (IS_ERR(ctx->seq)) {
+> -		crypto_free_sync_skcipher(ctx->enc);
+> -		err = PTR_ERR(ctx->seq);
+> -		goto out_err_free_hmac;
+> -	}
+> -
+> -	dprintk("RPC:       %s: returning success\n", __func__);
+> -
+> -	err = 0;
+> -
+> -out_err_free_hmac:
+> -	crypto_free_shash(hmac);
+> -out_err:
+> -	dprintk("RPC:       %s: returning %d\n", __func__, err);
+> -	return err;
+> -}
+> -
+>  static int
+>  context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
+>  {
+> @@ -649,8 +556,6 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+>  	switch (ctx->enctype) {
+>  	case ENCTYPE_DES3_CBC_RAW:
+>  		return context_derive_keys_des3(ctx, gfp_mask);
+> -	case ENCTYPE_ARCFOUR_HMAC:
+> -		return context_derive_keys_rc4(ctx);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+>  		return context_derive_keys_new(ctx, gfp_mask);
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
+> index f1d280accf43..33061417ec97 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_seal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+> @@ -214,7 +214,6 @@ gss_get_mic_kerberos(struct gss_ctx *gss_ctx, struct xdr_buf *text,
+>  		BUG();
+>  	case ENCTYPE_DES_CBC_RAW:
+>  	case ENCTYPE_DES3_CBC_RAW:
+> -	case ENCTYPE_ARCFOUR_HMAC:
+>  		return gss_get_mic_v1(ctx, text, token);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_seqnum.c b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
+> index 507105127095..fb117817ff5d 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_seqnum.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
+> @@ -39,42 +39,6 @@
+>  # define RPCDBG_FACILITY        RPCDBG_AUTH
+>  #endif
+>  
+> -static s32
+> -krb5_make_rc4_seq_num(struct krb5_ctx *kctx, int direction, s32 seqnum,
+> -		      unsigned char *cksum, unsigned char *buf)
+> -{
+> -	struct crypto_sync_skcipher *cipher;
+> -	unsigned char *plain;
+> -	s32 code;
+> -
+> -	dprintk("RPC:       %s:\n", __func__);
+> -	cipher = crypto_alloc_sync_skcipher(kctx->gk5e->encrypt_name, 0, 0);
+> -	if (IS_ERR(cipher))
+> -		return PTR_ERR(cipher);
+> -
+> -	plain = kmalloc(8, GFP_NOFS);
+> -	if (!plain)
+> -		return -ENOMEM;
+> -
+> -	plain[0] = (unsigned char) ((seqnum >> 24) & 0xff);
+> -	plain[1] = (unsigned char) ((seqnum >> 16) & 0xff);
+> -	plain[2] = (unsigned char) ((seqnum >> 8) & 0xff);
+> -	plain[3] = (unsigned char) ((seqnum >> 0) & 0xff);
+> -	plain[4] = direction;
+> -	plain[5] = direction;
+> -	plain[6] = direction;
+> -	plain[7] = direction;
+> -
+> -	code = krb5_rc4_setup_seq_key(kctx, cipher, cksum);
+> -	if (code)
+> -		goto out;
+> -
+> -	code = krb5_encrypt(cipher, cksum, plain, buf, 8);
+> -out:
+> -	kfree(plain);
+> -	crypto_free_sync_skcipher(cipher);
+> -	return code;
+> -}
+>  s32
+>  krb5_make_seq_num(struct krb5_ctx *kctx,
+>  		struct crypto_sync_skcipher *key,
+> @@ -85,10 +49,6 @@ krb5_make_seq_num(struct krb5_ctx *kctx,
+>  	unsigned char *plain;
+>  	s32 code;
+>  
+> -	if (kctx->enctype == ENCTYPE_ARCFOUR_HMAC)
+> -		return krb5_make_rc4_seq_num(kctx, direction, seqnum,
+> -					     cksum, buf);
+> -
+>  	plain = kmalloc(8, GFP_NOFS);
+>  	if (!plain)
+>  		return -ENOMEM;
+> @@ -108,50 +68,6 @@ krb5_make_seq_num(struct krb5_ctx *kctx,
+>  	return code;
+>  }
+>  
+> -static s32
+> -krb5_get_rc4_seq_num(struct krb5_ctx *kctx, unsigned char *cksum,
+> -		     unsigned char *buf, int *direction, s32 *seqnum)
+> -{
+> -	struct crypto_sync_skcipher *cipher;
+> -	unsigned char *plain;
+> -	s32 code;
+> -
+> -	dprintk("RPC:       %s:\n", __func__);
+> -	cipher = crypto_alloc_sync_skcipher(kctx->gk5e->encrypt_name, 0, 0);
+> -	if (IS_ERR(cipher))
+> -		return PTR_ERR(cipher);
+> -
+> -	code = krb5_rc4_setup_seq_key(kctx, cipher, cksum);
+> -	if (code)
+> -		goto out;
+> -
+> -	plain = kmalloc(8, GFP_NOFS);
+> -	if (!plain) {
+> -		code = -ENOMEM;
+> -		goto out;
+> -	}
+> -
+> -	code = krb5_decrypt(cipher, cksum, buf, plain, 8);
+> -	if (code)
+> -		goto out_plain;
+> -
+> -	if ((plain[4] != plain[5]) || (plain[4] != plain[6])
+> -				   || (plain[4] != plain[7])) {
+> -		code = (s32)KG_BAD_SEQ;
+> -		goto out_plain;
+> -	}
+> -
+> -	*direction = plain[4];
+> -
+> -	*seqnum = ((plain[0] << 24) | (plain[1] << 16) |
+> -					(plain[2] << 8) | (plain[3]));
+> -out_plain:
+> -	kfree(plain);
+> -out:
+> -	crypto_free_sync_skcipher(cipher);
+> -	return code;
+> -}
+> -
+>  s32
+>  krb5_get_seq_num(struct krb5_ctx *kctx,
+>  	       unsigned char *cksum,
+> @@ -164,9 +80,6 @@ krb5_get_seq_num(struct krb5_ctx *kctx,
+>  
+>  	dprintk("RPC:       krb5_get_seq_num:\n");
+>  
+> -	if (kctx->enctype == ENCTYPE_ARCFOUR_HMAC)
+> -		return krb5_get_rc4_seq_num(kctx, cksum, buf,
+> -					    direction, seqnum);
+>  	plain = kmalloc(8, GFP_NOFS);
+>  	if (!plain)
+>  		return -ENOMEM;
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> index aaab91cf24c8..ba04e3ec970a 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> @@ -218,7 +218,6 @@ gss_verify_mic_kerberos(struct gss_ctx *gss_ctx,
+>  		BUG();
+>  	case ENCTYPE_DES_CBC_RAW:
+>  	case ENCTYPE_DES3_CBC_RAW:
+> -	case ENCTYPE_ARCFOUR_HMAC:
+>  		return gss_verify_mic_v1(ctx, message_buffer, read_token);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> index cf0fd170ac18..a412a734ee17 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> @@ -236,26 +236,9 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
+>  			       seq_send, ptr + GSS_KRB5_TOK_HDR_LEN, ptr + 8)))
+>  		return GSS_S_FAILURE;
+>  
+> -	if (kctx->enctype == ENCTYPE_ARCFOUR_HMAC) {
+> -		struct crypto_sync_skcipher *cipher;
+> -		int err;
+> -		cipher = crypto_alloc_sync_skcipher(kctx->gk5e->encrypt_name,
+> -						    0, 0);
+> -		if (IS_ERR(cipher))
+> -			return GSS_S_FAILURE;
+> -
+> -		krb5_rc4_setup_enc_key(kctx, cipher, seq_send);
+> -
+> -		err = gss_encrypt_xdr_buf(cipher, buf,
+> -					  offset + headlen - conflen, pages);
+> -		crypto_free_sync_skcipher(cipher);
+> -		if (err)
+> -			return GSS_S_FAILURE;
+> -	} else {
+> -		if (gss_encrypt_xdr_buf(kctx->enc, buf,
+> -					offset + headlen - conflen, pages))
+> -			return GSS_S_FAILURE;
+> -	}
+> +	if (gss_encrypt_xdr_buf(kctx->enc, buf,
+> +				offset + headlen - conflen, pages))
+> +		return GSS_S_FAILURE;
+>  
+>  	return (kctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
+>  }
+> @@ -316,37 +299,9 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+>  	crypt_offset = ptr + (GSS_KRB5_TOK_HDR_LEN + kctx->gk5e->cksumlength) -
+>  					(unsigned char *)buf->head[0].iov_base;
+>  
+> -	/*
+> -	 * Need plaintext seqnum to derive encryption key for arcfour-hmac
+> -	 */
+> -	if (krb5_get_seq_num(kctx, ptr + GSS_KRB5_TOK_HDR_LEN,
+> -			     ptr + 8, &direction, &seqnum))
+> -		return GSS_S_BAD_SIG;
+> -
+> -	if ((kctx->initiate && direction != 0xff) ||
+> -	    (!kctx->initiate && direction != 0))
+> -		return GSS_S_BAD_SIG;
+> -
+>  	buf->len = len;
+> -	if (kctx->enctype == ENCTYPE_ARCFOUR_HMAC) {
+> -		struct crypto_sync_skcipher *cipher;
+> -		int err;
+> -
+> -		cipher = crypto_alloc_sync_skcipher(kctx->gk5e->encrypt_name,
+> -						    0, 0);
+> -		if (IS_ERR(cipher))
+> -			return GSS_S_FAILURE;
+> -
+> -		krb5_rc4_setup_enc_key(kctx, cipher, seqnum);
+> -
+> -		err = gss_decrypt_xdr_buf(cipher, buf, crypt_offset);
+> -		crypto_free_sync_skcipher(cipher);
+> -		if (err)
+> -			return GSS_S_DEFECTIVE_TOKEN;
+> -	} else {
+> -		if (gss_decrypt_xdr_buf(kctx->enc, buf, crypt_offset))
+> -			return GSS_S_DEFECTIVE_TOKEN;
+> -	}
+> +	if (gss_decrypt_xdr_buf(kctx->enc, buf, crypt_offset))
+> +		return GSS_S_DEFECTIVE_TOKEN;
+>  
+>  	if (kctx->gk5e->keyed_cksum)
+>  		cksumkey = kctx->cksum;
+> @@ -370,6 +325,14 @@ gss_unwrap_kerberos_v1(struct krb5_ctx *kctx, int offset, int len,
+>  
+>  	/* do sequencing checks */
+>  
+> +	if (krb5_get_seq_num(kctx, ptr + GSS_KRB5_TOK_HDR_LEN,
+> +			     ptr + 8, &direction, &seqnum))
+> +		return GSS_S_BAD_SIG;
+> +
+> +	if ((kctx->initiate && direction != 0xff) ||
+> +	    (!kctx->initiate && direction != 0))
+> +		return GSS_S_BAD_SIG;
+> +
+>  	/* Copy the data back to the right position.  XXX: Would probably be
+>  	 * better to copy and encrypt at the same time. */
+>  
+> @@ -605,7 +568,6 @@ gss_wrap_kerberos(struct gss_ctx *gctx, int offset,
+>  		BUG();
+>  	case ENCTYPE_DES_CBC_RAW:
+>  	case ENCTYPE_DES3_CBC_RAW:
+> -	case ENCTYPE_ARCFOUR_HMAC:
+>  		return gss_wrap_kerberos_v1(kctx, offset, buf, pages);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> @@ -624,7 +586,6 @@ gss_unwrap_kerberos(struct gss_ctx *gctx, int offset,
+>  		BUG();
+>  	case ENCTYPE_DES_CBC_RAW:
+>  	case ENCTYPE_DES3_CBC_RAW:
+> -	case ENCTYPE_ARCFOUR_HMAC:
+>  		return gss_unwrap_kerberos_v1(kctx, offset, len, buf,
+>  					      &gctx->slack, &gctx->align);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+> -- 
+> 2.17.1
