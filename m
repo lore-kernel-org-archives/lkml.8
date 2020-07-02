@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF89C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3C420780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE362208B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjLnSEq5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="li/iRMGK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbgGBOyB (ORCPT
+        id S1730176AbgGBOyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
+        Thu, 2 Jul 2020 10:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbgGBOx7 (ORCPT
+        with ESMTP id S1730146AbgGBOyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:53:59 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D527C08C5C1;
-        Thu,  2 Jul 2020 07:53:59 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so11413663plk.3;
-        Thu, 02 Jul 2020 07:53:59 -0700 (PDT)
+        Thu, 2 Jul 2020 10:54:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA24DC08C5C1;
+        Thu,  2 Jul 2020 07:54:03 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id cm21so3227192pjb.3;
+        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xG+I+OhzhwmJtUntwedWWvLVF9hdPz7VJjHJ9UQuwVg=;
-        b=WjLnSEq5QSel1YiqPF8jirofURmebUG6KhyUBCrXkhaDNdQWrSe3wqTAklpISsEMY8
-         5b995mGnZbWC3CLjbGVd820M65pBbW1aVZCK8QuLw3138li6+JfLO1Cyxcy5ZYCoQ80I
-         NX8jIHGJP+4XYZ9wQPdYI5vCsiE+GMIVr5Y7kd5F8+wIzv2y8oS1gSu+tSTIB45EVt7w
-         qInGxlWZEq93iC5vmi3zIHy4BEnZ3TTm28YA4qEFJ+iMM//UOy0r8NOoPO2lpLNWaFnQ
-         m0CR1KJJ7ONkEjiJlpBllmGpKxCyaWIjub6fUlwOljWl3H6jCDq7NhM9e0UyhOqBMxRl
-         EjjQ==
+        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
+        b=li/iRMGK1qmwA85z7TyIQB8rzEwcpW3lVJcAwYVcxGy4xXPWlYZow+e6hNmEH1nMaG
+         caz3keLrkucWhYLsNYp8n+S3KIGktp5D2yilmH9iggZS3ktNjMmxscQm2cAETwAqCOr0
+         uReKfSFCTZi0153Rr03CYwo0/xl6fhWtbqOIT0TU/WN5/2G2ykhCgwkq7hUyr+mVg0FT
+         eZ+kOMoKaIONivxGMmrqfeyTb3a7RzDLpsvzwDwCQBOSORNGB8LVNRCgIPTiMzxjRawu
+         CBflcAO7xFc/qbxsjUo5cFleKTk0qHiAwL/gRMM72HUtgzH+QpjER/jtDXxPD0j3wgUX
+         3b9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xG+I+OhzhwmJtUntwedWWvLVF9hdPz7VJjHJ9UQuwVg=;
-        b=STdHpBs6HLEBAK8AeqIlmdCGRDHCFUdugXXXKSioDKFZiaeX6w5CVvWYrK8/zBsry5
-         +X3ZWswtomrWAB1SpISaJjXp5E1u2c8obG5WTooP7jk470kZr4HiWL1QZm9rw7JJOq7w
-         Ck7/MBq0I/dXwwyd8KlPwKJ8WGB4S/3uE8bqFNcSX1rm5ue5bqi3C84MLH6Po9LsTPzY
-         1WZiH0JjBjMEe6VB3koFsTM+jUN/MGksuYoA5NxaetxONaOWwIMf9VdjkirYquem9WqC
-         40yi14rpjxnrbumddc/YTOP6gnbQO3eEStDSmIbaZv8YPZ6e9YK5Josui/QIdlLMOnWm
-         2wTw==
-X-Gm-Message-State: AOAM531TYMajPH8ZvXiFXsGD0Gd4C4M3hB44cnEiJSLEK8t3nZtqf4Vt
-        wu2jm8thUpbdCGeAedMJrEo=
-X-Google-Smtp-Source: ABdhPJym9JYnI8irA2HRmbdSHqii3UHpsFvDSpvttgbVeTn8plv+/3TQHwr+lTaFymLK80ioDAoctg==
-X-Received: by 2002:a17:902:7204:: with SMTP id ba4mr25554410plb.250.1593701638478;
-        Thu, 02 Jul 2020 07:53:58 -0700 (PDT)
+        bh=2wOYN/0g0f5pbtH8g7BnJjydy7AU6qktq0S+o7E8FNM=;
+        b=GB/nnJv8IQvF0BVMyNHnzA+LEy61GiOVB/XWzWEk0+5331WLW6Z7HGYMFRLGWCHxBo
+         9xCJC0pMwfxWiPV0wRu7BjLnyF6qaNxuaozu/QlgRjHjt7HzACxQfd800lCb7bXQnV33
+         QHI20c4zBrpZgjX0PWhX5/jTFJSQI6i7zT2Qr+UP1UICNWn8y+3QdbG5yd+/xhshRkSh
+         TMzdvgUJQR/Clw4YjZcUqeDAaPlQ49BlBfhCbQIHLb2EKKv5MLFXpSUxMRw4sAgkaqBz
+         imMOU4AmVV0OAL47q4TAiBCygZD3vlX9LMnIWCSuYJSVIKzW8qioRE22JyZSf5FHni6o
+         oKmA==
+X-Gm-Message-State: AOAM533VKyd7lW7nZAr14MQemQHZ4GMhaPx8xqCQsKqP5LpWcSvPTEnA
+        w4mehUl5mjmLAZetV1O7C7w=
+X-Google-Smtp-Source: ABdhPJzteWrhGhXZLrpA2r7Wt2Dm1p8TiSi9Df05rcAtFbe3Dju+8vv5u638WNYUlvV80s05qtO+NA==
+X-Received: by 2002:a17:90b:4c91:: with SMTP id my17mr30750529pjb.81.1593701643332;
+        Thu, 02 Jul 2020 07:54:03 -0700 (PDT)
 Received: from localhost.localdomain ([223.190.0.253])
-        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.54
+        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.58
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 07:53:57 -0700 (PDT)
+        Thu, 02 Jul 2020 07:54:02 -0700 (PDT)
 From:   Amit Singh Tomar <amittomer25@gmail.com>
 To:     andre.przywara@arm.com, afaerber@suse.de,
         manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
 Cc:     cristian.ciocaltea@gmail.com, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 09/10] arm64: dts: actions: Add MMC controller support for S700
-Date:   Thu,  2 Jul 2020 20:22:55 +0530
-Message-Id: <1593701576-28580-10-git-send-email-amittomer25@gmail.com>
+Subject: [PATCH v5 10/10] arm64: dts: actions: Add uSD support for Cubieboard7
+Date:   Thu,  2 Jul 2020 20:22:56 +0530
+Message-Id: <1593701576-28580-11-git-send-email-amittomer25@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
 References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
@@ -76,9 +76,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commits adds support for MMC controllers present on Actions S700 SoC,
-there are 3 MMC controllers in this SoC which can be used for accessing
-SD/EMMC/SDIO cards.
+This commit adds uSD support for Cubieboard7 board based on Actions Semi
+S700 SoC. SD0 is connected to uSD slot. Since there is no PMIC support
+added yet, fixed regulator has been used as a regulator node.
 
 Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 ---
@@ -89,56 +89,96 @@ Changes since v3:
 Changes since v2:
         * No change.
 Changes since v1:
-        * Added SoC specific compatibe string.
+        * No change.
 Changes since RFC:
-        * No change
+        * No change.
 ---
- arch/arm64/boot/dts/actions/s700.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 41 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/actions/s700.dtsi            |  1 +
+ 2 files changed, 42 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+index 63e375cd9eb4..ec117eb12f3a 100644
+--- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
++++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+@@ -13,6 +13,7 @@
+ 
+ 	aliases {
+ 		serial3 = &uart3;
++		mmc0 = &mmc0;
+ 	};
+ 
+ 	chosen {
+@@ -28,6 +29,23 @@
+ 		device_type = "memory";
+ 		reg = <0x1 0xe0000000 0x0 0x0>;
+ 	};
++
++	/* Fixed regulator used in the absence of PMIC */
++	vcc_3v1: vcc-3v1 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.1V";
++		regulator-min-microvolt = <3100000>;
++		regulator-max-microvolt = <3100000>;
++	};
++
++	/* Fixed regulator used in the absence of PMIC */
++	sd_vcc: sd-vcc {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.1V";
++		regulator-min-microvolt = <3100000>;
++		regulator-max-microvolt = <3100000>;
++		regulator-always-on;
++	};
+ };
+ 
+ &i2c0 {
+@@ -81,6 +99,14 @@
+ 			bias-pull-up;
+ 		};
+ 	};
++
++	mmc0_default: mmc0_default {
++		pinmux {
++			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
++				 "sd0_cmd_mfp", "sd0_clk_mfp";
++			function = "sd0";
++		};
++	};
+ };
+ 
+ &timer {
+@@ -90,3 +116,18 @@
+ &uart3 {
+ 	status = "okay";
+ };
++
++/* uSD */
++&mmc0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_default>;
++	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
++	no-sdio;
++	no-mmc;
++	no-1-8-v;
++	bus-width = <4>;
++	vmmc-supply = <&sd_vcc>;
++	vqmmc-supply = <&sd_vcc>;
++};
++
 diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 2c78caebf515..9ed88aafc2da 100644
+index 9ed88aafc2da..ba498cf9217d 100644
 --- a/arch/arm64/boot/dts/actions/s700.dtsi
 +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -259,5 +259,38 @@
- 			clocks = <&cmu CLK_DMAC>;
- 			power-domains = <&sps S700_PD_DMA>;
- 		};
-+
-+		mmc0: mmc@e0210000 {
-+			compatible = "actions,s700-mmc", "actions,owl-mmc";
-+			reg = <0x0 0xe0210000 0x0 0x4000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cmu CLK_SD0>;
-+			resets = <&cmu RESET_SD0>;
-+			dmas = <&dma 2>;
-+			dma-names = "mmc";
-+			status = "disabled";
-+		};
-+
-+		mmc1: mmc@e0214000 {
-+			compatible = "actions,s700-mmc", "actions,owl-mmc";
-+			reg = <0x0 0xe0214000 0x0 0x4000>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cmu CLK_SD1>;
-+			resets = <&cmu RESET_SD1>;
-+			dmas = <&dma 3>;
-+			dma-names = "mmc";
-+			status = "disabled";
-+		};
-+
-+		mmc2: mmc@e0218000 {
-+			compatible = "actions,s700-mmc", "actions,owl-mmc";
-+			reg = <0x0 0xe0218000 0x0 0x4000>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cmu CLK_SD2>;
-+			resets = <&cmu RESET_SD2>;
-+			dmas = <&dma 4>;
-+			dma-names = "mmc";
-+			status = "disabled";
-+		};
- 	};
- };
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <dt-bindings/clock/actions,s700-cmu.h>
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/owl-s700-powergate.h>
+ #include <dt-bindings/reset/actions,s700-reset.h>
 -- 
 2.7.4
 
