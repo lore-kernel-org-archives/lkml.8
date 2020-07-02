@@ -2,91 +2,106 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C46C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E88C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FDC20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593670962;
-	bh=qUQS9WYY2oyPoyjWnwNnXzFofBRbxf66JWC23zR+dmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sD++v8j+PwIpT/scD792fpVTZ9mPll11n9ONic7Je8HIntnjsPlGx/6ax6f55cvdq
-	 sKjputkeHaM/c+bZEv18DwBN0Yl1//JHZYPefHp5ngoTcWEsJcaqU0F98SlWPpdYtI
-	 Yqv0PrrzFQt1ht7/qsE06EIOxoiMCfzJ9bUIQ0QY=
+	by mail.kernel.org (Postfix) with ESMTP id 898CD20874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 06:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpxj/6h7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgGBGWl (ORCPT
+        id S1726364AbgGBGXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 02:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725263AbgGBGWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 02:22:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4E6208FE;
-        Thu,  2 Jul 2020 06:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593670960;
-        bh=qUQS9WYY2oyPoyjWnwNnXzFofBRbxf66JWC23zR+dmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eD3QrVuRFDGGm+yneWPwxxH3MDozAE/nJv3qw1VtkUU4u1TFVfHL6nKN8bh3AFjZl
-         HvxdAyLmRcyg69neowIqz7aPtdSKdO0/V3g8josGClm/nT5ueqPrM5O0s3ctiX/VIu
-         3KZC5qesHo1FikB0Z2VT+rMdufrMDcRnp7gYx7Ik=
-Date:   Thu, 2 Jul 2020 08:19:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8188eu: include: rtw_cmd.h: fixed a blank
- space coding style issue.
-Message-ID: <20200702061942.GA935451@kroah.com>
-References: <20200702045004.5wp7fnzw5pg4yov5@pesu-pes-edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702045004.5wp7fnzw5pg4yov5@pesu-pes-edu>
+        Thu, 2 Jul 2020 02:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgGBGX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:23:29 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F06C08C5DC
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Jul 2020 23:23:29 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id u186so18852459qka.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Jul 2020 23:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=POlxROtWP+TdhSt/IwD+NQVip9L3Y5x9YnPtFWg67x4=;
+        b=rpxj/6h7LxbFJdRPv4XUXmB3CwjKxdzrNxrDw479CqOJvCJBa15OGqM6qLMrR+P2hV
+         /ZnsX4v6hMyD7EThA1EX0nPBd92+MTQq4vMrWxCKUC6IiIPD/MHr4xj34XM0Izk3HgUZ
+         yDd2TgxNnkowIC3h7jOoe7mNev/g75SAz4x1RxRc/m1Hqa2GqJUB/B2v/lK0HMBrRiZn
+         ehiKDNUi05kNQiJtsQSDHt/ZY7KORFmfB5eedBikViLh061NVy0Ejfu2S7JLg+MxNaY1
+         bYCE0U5smeuCVoWoApxKSkUbfIT3tDjD/y+M5jRqHDoy2G8EObzbhe6DDRCDqVyv8Y4D
+         SeWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=POlxROtWP+TdhSt/IwD+NQVip9L3Y5x9YnPtFWg67x4=;
+        b=pmNM/fO4OaqYmO/AI7vtPg6HnGaEnGt8Zx2zm/0iADJwmATBdP9JnzyoSx92oukeMW
+         nleH+Dq0Ps6KBG4mihhoi3IvlW4S62R2iYdiBLRZTn95D9qzzB4MKQnN3Y0/x86Fo6hl
+         VJyH7ot3TFeDEfrvdupj79tPOIFcPLpVO/ZQhK4GEmbIDGLC55aRdApWXHILSRAbWZ/i
+         xGDtElpc5WsmYMz1sIhbfN1ClG5pvwaZBQdeNS4+KnkxFdfssO9eZn98kHHGs/b/ywou
+         /Zxd4OXdgA9cQCSE+4n0MfguDSwdYOec8kRCu/9LWwzWUomFZAp7Aho3lgA0h+6m8fAM
+         iT0A==
+X-Gm-Message-State: AOAM533km8ojPvrqu6Llm5kzGmnYZCIxOdjXzgfh2NOQ1BClBnlglJll
+        2Xa7gCn/NYsSnll6hVWnjO+75kz/N5Q5
+X-Google-Smtp-Source: ABdhPJy5eHr/trRqCcGcW58GmHYqTpcc6XIc1oWgRIjo/XEkCmsHA7/SrT3ezbzBSGmGU44rU6GXmA+dLl80
+X-Received: by 2002:ad4:4645:: with SMTP id y5mr29421993qvv.163.1593671008207;
+ Wed, 01 Jul 2020 23:23:28 -0700 (PDT)
+Date:   Thu,  2 Jul 2020 16:23:16 +1000
+Message-Id: <20200702062320.2903147-1-amistry@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH v2 0/4] regulator: mt6397: Implement of_map_mode
+ regulator_desc function
+From:   Anand K Mistry <amistry@google.com>
+To:     linux-mediatek@lists.infradead.org
+Cc:     hsin-hsiung.wang@mediatek.com, drinkcat@chromium.org,
+        Anand K Mistry <amistry@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:50:04AM -0400, B K Karthik wrote:
-> add blank spaces for improved code readability.
-> 
-> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
-> ---
->  drivers/staging/rtl8188eu/include/rtw_cmd.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/include/rtw_cmd.h b/drivers/staging/rtl8188eu/include/rtw_cmd.h
-> index fa5e212fc9e0..002a797c6d0a 100644
-> --- a/drivers/staging/rtl8188eu/include/rtw_cmd.h
-> +++ b/drivers/staging/rtl8188eu/include/rtw_cmd.h
-> @@ -115,7 +115,7 @@ struct	setopmode_parm {
->   */
-> 
->  #define RTW_SSID_SCAN_AMOUNT 9 /*  for WEXT_CSCAN_AMOUNT 9 */
-> -#define RTW_CHANNEL_SCAN_AMOUNT (14+37)
-> +#define RTW_CHANNEL_SCAN_AMOUNT (14 + 37)
->  struct sitesurvey_parm {
->  	int scan_mode;	/* active: 1, passive: 0 */
->  	u8 ssid_num;
+This patchset adds support for being able to change regulator modes for
+the mt6397 regulator. This is needed to allow the voltage scaling
+support in the MT8173 SoC to be used on the elm (Acer Chromebook R13)
+and hana (several Lenovo Chromebooks) devices.
 
-You sent 8 patches, some of them duplicates (I think), with no sense of
-what order to apply these in.
+Without a of_map_mode implementation, the regulator-allowed-modes
+devicetree field is skipped, and attempting to change the regulator mode
+results in an error:
+[    1.439165] vpca15: mode operation not allowed
 
-Please resend them all as a patch series, properly numbered, so that I
-have a chance to figure this out, I have dropped all of your patches
-from my review queue.
+Changes in v2:
+- Introduce constants in dt-bindings
+- Improve conditional readability
 
-thanks,
+Anand K Mistry (4):
+  regulator: mt6397: Move buck modes into header file
+  dt-bindings: regulator: mt6397: Document valid modes
+  regulator: mt6397: Implement of_map_mode
+  arm64: dts: mediatek: Update allowed mt6397 regulator modes for elm
+    boards
 
-greg k-h
+ .../bindings/regulator/mt6397-regulator.txt     |  3 +++
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi    |  4 +++-
+ drivers/regulator/mt6397-regulator.c            | 17 ++++++++++++++---
+ .../regulator/mediatek,mt6397-regulator.h       | 15 +++++++++++++++
+ 4 files changed, 35 insertions(+), 4 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/mediatek,mt6397-regulator.h
+
+-- 
+2.27.0.212.ge8ba1cc988-goog
 
