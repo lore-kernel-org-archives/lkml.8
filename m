@@ -2,197 +2,110 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB618C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 984D32088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B35E208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 19:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgGBTyU (ORCPT
+        id S1726129AbgGBTye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 15:54:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40742 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725915AbgGBTyT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 15:54:19 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062J2B8T084082;
-        Thu, 2 Jul 2020 15:54:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320wfgt4g4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 15:54:08 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062J9vH0114687;
-        Thu, 2 Jul 2020 15:54:08 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320wfgt4fa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 15:54:07 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062Jj1Rm007779;
-        Thu, 2 Jul 2020 19:54:05 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 31wwr831w3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jul 2020 19:54:05 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062Jqfpg56099092
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jul 2020 19:52:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79FF44C044;
-        Thu,  2 Jul 2020 19:54:01 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56FEE4C040;
-        Thu,  2 Jul 2020 19:53:58 +0000 (GMT)
-Received: from hbathini.in.ibm.com (unknown [9.102.21.221])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Jul 2020 19:53:58 +0000 (GMT)
-Subject: [PATCH v2 00/12] ppc64: enable kdump support for kexec_file_load
- syscall
-From:   Hari Bathini <hbathini@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Date:   Fri, 03 Jul 2020 01:23:57 +0530
-Message-ID: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 2 Jul 2020 15:54:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6136 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725915AbgGBTyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 15:54:33 -0400
+IronPort-SDR: i0GOb7Bk8vNt0ltnzeAq8kW2igZ5pdSLzHeWVGhJ72n5xOH5rt7q/avs3/Xh1n9VPadq6wYz0n
+ fF4LwP6WnYoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134476845"
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="134476845"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 12:54:33 -0700
+IronPort-SDR: xBXPaVJZ/1VjL78CnhmPGTxk4I1uFJ9lQe+ZjEYTD1W5JKBaxO6P/o41jt7j+5z1oOICEkocd9
+ cCgAtnDJJ0kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,305,1589266800"; 
+   d="scan'208";a="313121847"
+Received: from frichard-mobl.ger.corp.intel.com (HELO localhost) ([10.249.44.59])
+  by orsmga008.jf.intel.com with ESMTP; 02 Jul 2020 12:54:27 -0700
+Date:   Thu, 2 Jul 2020 22:54:26 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+Message-ID: <20200702195426.GA31291@linux.intel.com>
+References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+ <8d19d5e2-91bc-09ad-6b94-d51a7aad6376@linux.ibm.com>
+ <20200625212556.GC20341@linux.intel.com>
+ <031020b9-dc0a-3c2f-32e4-4bb2db4b5a2b@linux.ibm.com>
+ <20200626114815.GA5847@linux.intel.com>
+ <5d786bca-6a0f-0c7f-e856-04dac2f280f6@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- suspectscore=0 impostorscore=0 mlxlogscore=999 cotscore=-2147483648
- adultscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007020125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d786bca-6a0f-0c7f-e856-04dac2f280f6@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series enables kdump support for kexec_file_load system
-call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-code but heavily modified for kernel consumption. There is scope to
-expand purgatory to verify sha256 digest along with other improvements
-in purgatory code. Will deal with those changes in a separate patch
-series later.
+On Fri, Jun 26, 2020 at 08:16:45AM -0400, Stefan Berger wrote:
+> On 6/26/20 7:48 AM, Jarkko Sakkinen wrote:
+> > On Thu, Jun 25, 2020 at 05:27:50PM -0400, Stefan Berger wrote:
+> > > On 6/25/20 5:25 PM, Jarkko Sakkinen wrote:
+> > > > On Thu, Jun 25, 2020 at 08:41:18AM -0400, Stefan Berger wrote:
+> > > > > On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
+> > > > > > Re-allocate context and session buffers when needed. Scale them in page
+> > > > > > increments so that the reallocation is only seldomly required, and thus
+> > > > > > causes minimal stress to the system. Add a static maximum limit of four
+> > > > > > pages for buffer sizes.
+> > > > > > 
+> > > > > > Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> > > > > > Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > You don't want to try a fixes tag? None of the previous versions of this
+> > > > > code will work with newer versions of the TPM 2 then...
+> > > > It's not a regression.
+> > > Ok, so distros will have to backport it.
+> > Now that you mentioned PPC64 in some other email that would make this a
+> > regression since x86 provides less space for keys than PPC64.
+> > 
+> > I studied PPC64 a bit and it actually allows max 256 kB page size, which
+> > is too much for us, given that there is no accounting implemented for
+> > TPM spaces (so far, should be done eventually).
+> > 
+> > So to summarize: 0 the idea would decrease the limit on PPC64 and
+> > increase it on ther arch's.  `
+> > 
+> > Dynamic scaling is over to top for fixing the issue, which means that I
+> > will just define static size of 16 kB for the buffer. We can reconsider
+> > it if we hit the roof again.
+> 
+> 16kb is plenty of space for years to come. Maybe just enlarge the buffer for
+> the regression and then do dynamic allocation as the final solution for the
+> tip. I can try to test compile it on one or two long term stable kernels.
+> Hopefully it applies cleanly. Simple test just in case you had a setup with
+> a VM and libtpms master:
 
-The first patch adds a weak arch_kexec_locate_mem_hole() function to
-override locate memory hole logic suiting arch needs. There are some
-special regions in ppc64 which should be avoided while loading buffer
-& there are multiple callers to kexec_add_buffer making it complicated
-to maintain range sanity and using generic lookup at the same time.
+3*4096 bytes is based on absolutely nothing.
 
-The second patch marks ppc64 specific code within arch/powerpc/kexec
-and arch/powerpc/purgatory to make the subsequent code changes easy
-to understand.
+The chosen page size is based on the PPC64 default page size.
 
-The next patch adds helper function to setup different memory ranges
-needed for loading kdump kernel, booting into it and exporting the
-crashing kernel's elfcore.
-
-The fourth patch overrides arch_kexec_locate_mem_hole() function to
-locate memory hole for kdump segments by accounting for the special
-memory regions, referred to as excluded memory ranges, and sets
-kbuf->mem when a suitable memory region is found.
-
-The fifth patch moves walk_drmem_lmbs() out of .init section with
-a few changes to reuse it for setting up kdump kernel's usable memory
-ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
-and set linux,drconf-usable-memory & linux,usable-memory properties
-in order to restrict kdump kernel's memory usage.
-
-The seventh patch adds relocation support for the purgatory. Patch 8
-helps setup the stack for the purgatory. The next patch setups up
-backup region as a segment while loading kdump kernel and teaches
-purgatory to copy it from source to destination.
-
-Patch 10 builds the elfcore header for the running kernel & passes
-the info to kdump kernel via "elfcorehdr=" parameter to export as
-/proc/vmcore file. The next patch sets up the memory reserve map
-for the kexec kernel and also claims kdump support for kdump as
-all the necessary changes are added.
-
-The last patch fixes a lookup issue for `kexec -l -s` case when
-memory is reserved for crashkernel.
-
-Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
-boxes and a simulator.
-
-Changes in v2:
-* Introduced arch_kexec_locate_mem_hole() for override and dropped
-  weak arch_kexec_add_buffer().
-* Addressed warnings reported by lkp.
-* Added patch to address kexec load issue when memory is reserved
-  for crashkernel.
-* Used the appropriate license header for the new files added.
-* Added an option to merge ranges to minimize reallocations while
-  adding memory ranges.
-* Dropped within_crashkernel parameter for add_opal_mem_range() &
-  add_rtas_mem_range() functions as it is not really needed.
-
----
-
-Hari Bathini (12):
-      kexec_file: allow archs to handle special regions while locating memory hole
-      powerpc/kexec_file: mark PPC64 specific code
-      powerpc/kexec_file: add helper functions for getting memory ranges
-      ppc64/kexec_file: avoid stomping memory used by special regions
-      powerpc/drmem: make lmb walk a bit more flexible
-      ppc64/kexec_file: restrict memory usage of kdump kernel
-      ppc64/kexec_file: add support to relocate purgatory
-      ppc64/kexec_file: setup the stack for purgatory
-      ppc64/kexec_file: setup backup region for kdump kernel
-      ppc64/kexec_file: prepare elfcore header for crashing kernel
-      ppc64/kexec_file: add appropriate regions for memory reserve map
-      ppc64/kexec_file: fix kexec load failure with lack of memory hole
-
-
- arch/powerpc/include/asm/crashdump-ppc64.h |   15 
- arch/powerpc/include/asm/drmem.h           |    9 
- arch/powerpc/include/asm/kexec.h           |   35 +
- arch/powerpc/include/asm/kexec_ranges.h    |   18 
- arch/powerpc/include/asm/purgatory.h       |   11 
- arch/powerpc/kernel/prom.c                 |   13 
- arch/powerpc/kexec/Makefile                |    2 
- arch/powerpc/kexec/elf_64.c                |   35 +
- arch/powerpc/kexec/file_load.c             |   78 +
- arch/powerpc/kexec/file_load_64.c          | 1509 ++++++++++++++++++++++++++++
- arch/powerpc/kexec/ranges.c                |  397 +++++++
- arch/powerpc/mm/drmem.c                    |   87 +-
- arch/powerpc/mm/numa.c                     |   13 
- arch/powerpc/purgatory/Makefile            |   28 -
- arch/powerpc/purgatory/purgatory_64.c      |   36 +
- arch/powerpc/purgatory/trampoline.S        |  117 --
- arch/powerpc/purgatory/trampoline_64.S     |  175 +++
- include/linux/kexec.h                      |   29 -
- kernel/kexec_file.c                        |   16 
- 19 files changed, 2413 insertions(+), 210 deletions(-)
- create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
- create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/include/asm/purgatory.h
- create mode 100644 arch/powerpc/kexec/file_load_64.c
- create mode 100644 arch/powerpc/kexec/ranges.c
- create mode 100644 arch/powerpc/purgatory/purgatory_64.c
- delete mode 100644 arch/powerpc/purgatory/trampoline.S
- create mode 100644 arch/powerpc/purgatory/trampoline_64.S
-
+/Jarkko
