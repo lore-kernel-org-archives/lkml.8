@@ -2,123 +2,251 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D63AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1924C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED9A208D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9517320899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="coTUImIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgGBNl1 (ORCPT
+        id S1729374AbgGBNok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:41:27 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56554 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgGBNl0 (ORCPT
+        Thu, 2 Jul 2020 09:44:40 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42938 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729277AbgGBNoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:41:26 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 062DeGHr064859;
-        Thu, 2 Jul 2020 22:40:16 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Thu, 02 Jul 2020 22:40:16 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 062DeAdE064698
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 2 Jul 2020 22:40:16 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
- <87eepwzqhd.fsf@x220.int.ebiederm.org>
- <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
- <87pn9euks9.fsf@x220.int.ebiederm.org>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
-Date:   Thu, 2 Jul 2020 22:40:09 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <87pn9euks9.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Jul 2020 09:44:37 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200702134435euoutp02498e344c140d594f7ea4f3a2a48bbf5d~d82kIVFIo3195031950euoutp025
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:44:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200702134435euoutp02498e344c140d594f7ea4f3a2a48bbf5d~d82kIVFIo3195031950euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593697475;
+        bh=Wcn/fZwn0l0I3UrXznsXGlfRgX1zzz/eHT6cU1JUJ98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=coTUImIXandF5sPwA8906cKi/QS9cqx/iqXawoGD7LBBvkCASPVFfheEvILlvt4J8
+         Y0IHpte5+lkdtPjPpDN9luu9X5+Fq4h9flkYlViCWI1JYmezY1ZHYmowZqLBlLmp+r
+         aUimFdb7LptZhIDZQFTsESvS/hzZgIQxD6/78Pto=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200702134435eucas1p277a21a6696e124b42c102540c6665951~d82j2tuHL1813018130eucas1p2-;
+        Thu,  2 Jul 2020 13:44:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 92.F2.05997.3C4EDFE5; Thu,  2
+        Jul 2020 14:44:35 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297~d82je7wnZ3023830238eucas1p2_;
+        Thu,  2 Jul 2020 13:44:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200702134434eusmtrp21c06ae96bce6fb9cbe4c5cc8fdfb920f~d82jeDPk60528405284eusmtrp2c;
+        Thu,  2 Jul 2020 13:44:34 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-fd-5efde4c3265d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D4.94.06017.2C4EDFE5; Thu,  2
+        Jul 2020 14:44:34 +0100 (BST)
+Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200702134434eusmtip2c307019c112809392842a9a51d543146~d82ivfvFs2865128651eusmtip2L;
+        Thu,  2 Jul 2020 13:44:34 +0000 (GMT)
+From:   Andrzej Hajda <a.hajda@samsung.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Subject: [PATCH v8 2/5] driver core: add deferring probe reason to
+ devices_deferred property
+Date:   Thu,  2 Jul 2020 15:44:21 +0200
+Message-Id: <20200702134421.6412-1-a.hajda@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAHp75VegHLG5tgVFjwmpmDfSqELqNXcb9dFSM4jLRx+anW7Lsw@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSbUhTYRTHeXbv7r2OFtcZ+KCRtNKySCsDHyrMIuRSBPUhisLVahe13KZb
+        mvpFw/Kl1GYh1lZmZSqmzpeypq1kmktkmi+TaS4xjdJcEmqaNW3z9vLt9/zP/5z/4fBQmKiL
+        70PFKC6wKoU0VkwI8Ia2H51bWsackq2D91egwepOPhrXtABUe0vPRwUjYwRaasjHUN/sFIHS
+        H+oJZJ0bx1D7pBVH2fklJKob7eej3sY7BDIVGAGqarWTyJR3Et2dKcDCaaa3vxtjpmxXSMb4
+        vRhnDFo7yeiybvOZuopsgnmj6eExr+5WkszwNTOPqS9JZfKeVACmOfcmzkzXrTksPCHYLWNj
+        YxJZVXDYaUF01UImFte6PslosYI00LbmKvCgIL0DlnbN864CASWiywEsLW4huccMgFNN9Ty3
+        S0RPA5hz89zfjsXPOpwzlQH4JX+J96+j0vyJdLsIOhA66wcIN6+iQ+B1i3Z5LEYv4NCamcF3
+        F7xoCay1DWBuxml/eHnOCtwspEPhe20WwcX5wcc1zcseD/oINOpLlqMhPU7C3rIPfM60H76e
+        t+Mce8EJ8xOS49VwyXCPx3EqHC6/jHHNWQA+rTFgXGEXHOpccKVRrvUCob4xmJP3wvqefuCW
+        Ib0S2hyebhlz4Y2GQoyThTArQ8S518Jhy9M/A73ho7ezf9ZnYPqHeYI7UAmAn+wfgQb4af+H
+        FQNQAbzZBLU8ilVvV7AXg9RSuTpBERV0VimvA65v1rFonnkOGn+dMQGaAuIVQo3ZKRHxpYnq
+        ZLkJQAoTrxLus3RIREKZNDmFVSlPqRJiWbUJ+FK42FsY8mA8UkRHSS+w51k2jlX9rfIoD580
+        gHd/fZaY0e5/dE+zb2RFn+fEYuD3dYORP/2KqDPHj5myz94PDy0P6ylrCvCZCwLKwnidjd5s
+        SBMLlIcc12wHhswB8Q++rXck1eSllvV4R6CNBZdephdGMEXGiykHlbJjylz7u/wcz5AXI+0E
+        vqFaEf8MrZtw+O8UOI+P6mSTHmJcHS3dtglTqaW/Ad2DKRRiAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7qHnvyNM7h5WN/i1rpzrBYvJxxm
+        tNg4Yz2rxdSHT9gs/m+byGxx5et7NovmxevZLK5+f8lscfLNVRaLzolL2C02Pb7GanF51xw2
+        i0NT9zJarD1yl93iUF+0xdwvU5kdBDwuX7vI7PH+Riu7x95vC1g8ds66y+4xu2Mmq8emVZ1s
+        HicmXGLy2D93DbvH/e7jTB6bl9R79G1ZxehxoHcyi8fnTXIBvFF6NkX5pSWpChn5xSW2StGG
+        FkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GWt/tTMXHFGp2Hv2KmMD4zG5LkZO
+        DgkBE4l/L2azgNhCAksZJZ7sNoGIi0vsnv+WGcIWlvhzrYsNouYTo8TEpWBxNgFNib+bb4LF
+        RQSMJfrPzmLvYuTiYBZoY5WYe/4JO0hCWCBG4u+Nd4wgNouAqkTL96tgNq+AucS9WR1sEAvk
+        JVZvOAA2lFMgUGLv+iVQBwVInLjZxzaBkW8BI8MqRpHU0uLc9NxiI73ixNzi0rx0veT83E2M
+        wMjaduznlh2MXe+CDzEKcDAq8fBOOP43Tog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWpRfnx
+        RaU5qcWHGE2BjprILCWanA+M+rySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalF
+        MH1MHJxSDYyTjA/6fM878yhdRnDj1unBz/knyIXxLsoMf9wm+alsW2Hbv+hL56JtncV9A5MN
+        Jzfqdi9zXNyj+aqoZdd2N67giQGu2Svfp/7KYNl7amWmbbFd8qedM5QzVVRsVG3VQp+t5nTa
+        ftDZrfvXvugrYhb8H07nT7krcb17r8v6gvWhKrtsrKp/r1FiKc5INNRiLipOBABK6oWQwgIA
+        AA==
+X-CMS-MailID: 20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297
+References: <CAHp75VegHLG5tgVFjwmpmDfSqELqNXcb9dFSM4jLRx+anW7Lsw@mail.gmail.com>
+        <CGME20200702134434eucas1p233a3f66f5bdb4b97f4f49d2d43d45297@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/02 22:08, Eric W. Biederman wrote:
-> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
-> 
->> On 2020/06/30 21:29, Eric W. Biederman wrote:
->>> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
->>> release_task is called so there is a race.  As it is possible to wake
->>> up and then go back to sleep before pid_has_task becomes false.
->>
->> What is the reason we want to wait until pid_has_task() becomes false?
->>
->> - wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
->> + while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
-> 
-> So that it is safe to call bpfilter_umh_cleanup.  The previous code
-> performed the wait by having a callback in do_exit.
+/sys/kernel/debug/devices_deferred property contains list of deferred devices.
+This list does not contain reason why the driver deferred probe, the patch
+improves it.
+The natural place to set the reason is dev_err_probe function introduced
+recently, ie. if dev_err_probe will be called with -EPROBE_DEFER instead of
+printk the message will be attached to a deferred device and printed when user
+reads devices_deferred property.
 
-But bpfilter_umh_cleanup() does only
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+---
+v8:
+- improved commit message
+---
+ drivers/base/base.h |  3 +++
+ drivers/base/core.c |  8 ++++++--
+ drivers/base/dd.c   | 23 ++++++++++++++++++++++-
+ 3 files changed, 31 insertions(+), 3 deletions(-)
 
-	fput(info->pipe_to_umh);
-	fput(info->pipe_from_umh);
-	put_pid(info->tgid);
-	info->tgid = NULL;
-
-which is (I think) already safe regardless of the usermode process because
-bpfilter_umh_cleanup() merely closes one side of two pipes used between
-two processes and forgets about the usermode process.
-
-> 
-> It might be possible to call bpf_umh_cleanup early but I have not done
-> that analysis.
-> 
-> To perform the test correctly what I have right now is:
-
-Waiting for the termination of a SIGKILLed usermode process is not
-such simple. If a usermode process was killed by the OOM killer, it
-might take minutes for the killed process to reach do_exit() due to
-invisible memory allocation dependency chain. Since the OOM killer
-kicks the OOM reaper, and the OOM reaper forgets about the killed
-process after one second if mmap_sem could not be held (in order to
-avoid OOM deadlock), the OOM situation will be eventually solved; but
-there is no guarantee that the killed process can reach do_exit()
-in a short period.
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index 95c22c0f9036..6954fccab3d7 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -93,6 +93,7 @@ struct device_private {
+ 	struct klist_node knode_class;
+ 	struct list_head deferred_probe;
+ 	struct device_driver *async_driver;
++	char *deferred_probe_reason;
+ 	struct device *device;
+ 	u8 dead:1;
+ };
+@@ -134,6 +135,8 @@ extern void device_release_driver_internal(struct device *dev,
+ extern void driver_detach(struct device_driver *drv);
+ extern int driver_probe_device(struct device_driver *drv, struct device *dev);
+ extern void driver_deferred_probe_del(struct device *dev);
++extern void device_set_deferred_probe_reson(const struct device *dev,
++					    struct va_format *vaf);
+ static inline int driver_match_device(struct device_driver *drv,
+ 				      struct device *dev)
+ {
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 3a827c82933f..fee047f03681 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3963,6 +3963,8 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+  * This helper implements common pattern present in probe functions for error
+  * checking: print debug or error message depending if the error value is
+  * -EPROBE_DEFER and propagate error upwards.
++ * In case of -EPROBE_DEFER it sets also defer probe reason, which can be
++ * checked later by reading devices_deferred debugfs attribute.
+  * It replaces code sequence:
+  * 	if (err != -EPROBE_DEFER)
+  * 		dev_err(dev, ...);
+@@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
+ 	vaf.fmt = fmt;
+ 	vaf.va = &args;
+ 
+-	if (err != -EPROBE_DEFER)
++	if (err != -EPROBE_DEFER) {
+ 		dev_err(dev, "error %d: %pV", err, &vaf);
+-	else
++	} else {
++		device_set_deferred_probe_reson(dev, &vaf);
+ 		dev_dbg(dev, "error %d: %pV", err, &vaf);
++	}
+ 
+ 	va_end(args);
+ 
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 9a1d940342ac..dd5683b61f74 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -27,6 +27,7 @@
+ #include <linux/async.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pinctrl/devinfo.h>
++#include <linux/slab.h>
+ 
+ #include "base.h"
+ #include "power/power.h"
+@@ -136,6 +137,8 @@ void driver_deferred_probe_del(struct device *dev)
+ 	if (!list_empty(&dev->p->deferred_probe)) {
+ 		dev_dbg(dev, "Removed from deferred list\n");
+ 		list_del_init(&dev->p->deferred_probe);
++		kfree(dev->p->deferred_probe_reason);
++		dev->p->deferred_probe_reason = NULL;
+ 	}
+ 	mutex_unlock(&deferred_probe_mutex);
+ }
+@@ -211,6 +214,23 @@ void device_unblock_probing(void)
+ 	driver_deferred_probe_trigger();
+ }
+ 
++/**
++ * device_set_deferred_probe_reson() - Set defer probe reason message for device
++ * @dev: the pointer to the struct device
++ * @vaf: the pointer to va_format structure with message
++ */
++void device_set_deferred_probe_reson(const struct device *dev, struct va_format *vaf)
++{
++	const char *drv = dev_driver_string(dev);
++
++	mutex_lock(&deferred_probe_mutex);
++
++	kfree(dev->p->deferred_probe_reason);
++	dev->p->deferred_probe_reason = kasprintf(GFP_KERNEL, "%s: %pV", drv, vaf);
++
++	mutex_unlock(&deferred_probe_mutex);
++}
++
+ /*
+  * deferred_devs_show() - Show the devices in the deferred probe pending list.
+  */
+@@ -221,7 +241,8 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+ 	mutex_lock(&deferred_probe_mutex);
+ 
+ 	list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
+-		seq_printf(s, "%s\n", dev_name(curr->device));
++		seq_printf(s, "%s\t%s", dev_name(curr->device),
++			   curr->device->p->deferred_probe_reason ?: "\n");
+ 
+ 	mutex_unlock(&deferred_probe_mutex);
+ 
+-- 
+2.17.1
 
