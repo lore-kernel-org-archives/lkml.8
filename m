@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E46BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A1B207CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB76A207CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgGBS57 (ORCPT
+        id S1726139AbgGBS5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48382 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 14:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGBS5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:57:06 -0400
+        id S1725878AbgGBS5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:57:05 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E320421534;
-        Thu,  2 Jul 2020 18:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EAB20A8B;
+        Thu,  2 Jul 2020 18:57:04 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jr4OO-004BES-V5; Thu, 02 Jul 2020 14:57:04 -0400
-Message-ID: <20200702185704.844582602@goodmis.org>
+        id 1jr4ON-004BAI-OR; Thu, 02 Jul 2020 14:57:03 -0400
+Message-ID: <20200702185703.619656282@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 02 Jul 2020 14:53:53 -0400
+Date:   Thu, 02 Jul 2020 14:53:45 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
         "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Subject: [PATCH v2 09/15] tools lib traceevent: Add more SVM exit reasons
+Subject: [PATCH v2 01/15] tools lib traceevent: Add API to read time information from kbuffer
 References: <20200702185344.913492689@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -47,64 +46,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kiszka <jan.kiszka@siemens.com>
+From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
 
-Exceptions require individual decoding (only feasible intercepts
-listed), XSETBV was missing and the AVIC brought in two new exit codes.
+Add the functions kbuffer_subbuf_timestamp() and kbuffer_ptr_delta() to get
+the timing data stored in the ring buffer that is used to produced the time
+stamps of the records.
 
-Link: http://lkml.kernel.org/r/5741D822.3030203@web.de
-Link: http://lore.kernel.org/linux-trace-devel/20200625100516.365338-10-tz.stoyanov@gmail.com
+This is useful for tools like trace-cmd to be able to display the content of
+the read data to understand why the records show the time stamps that they
+do.
 
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Link: http://lore.kernel.org/linux-trace-devel/20200625100516.365338-2-tz.stoyanov@gmail.com
+
 Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 [ Ported from trace-cmd.git ]
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/lib/traceevent/plugins/plugin_kvm.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/kbuffer-parse.c | 28 ++++++++++++++++++++++++++++
+ tools/lib/traceevent/kbuffer.h       |  2 ++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/tools/lib/traceevent/plugins/plugin_kvm.c b/tools/lib/traceevent/plugins/plugin_kvm.c
-index c8e623065a7e..768c658f5904 100644
---- a/tools/lib/traceevent/plugins/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugins/plugin_kvm.c
-@@ -155,7 +155,23 @@ static const char *disassemble(unsigned char *insn, int len, uint64_t rip,
- 	_ER(EXIT_WRITE_DR5,	0x035)		\
- 	_ER(EXIT_WRITE_DR6,	0x036)		\
- 	_ER(EXIT_WRITE_DR7,	0x037)		\
--	_ER(EXIT_EXCP_BASE,     0x040)		\
-+	_ER(EXIT_EXCP_DE,	0x040)		\
-+	_ER(EXIT_EXCP_DB,	0x041)		\
-+	_ER(EXIT_EXCP_BP,	0x043)		\
-+	_ER(EXIT_EXCP_OF,	0x044)		\
-+	_ER(EXIT_EXCP_BR,	0x045)		\
-+	_ER(EXIT_EXCP_UD,	0x046)		\
-+	_ER(EXIT_EXCP_NM,	0x047)		\
-+	_ER(EXIT_EXCP_DF,	0x048)		\
-+	_ER(EXIT_EXCP_TS,	0x04a)		\
-+	_ER(EXIT_EXCP_NP,	0x04b)		\
-+	_ER(EXIT_EXCP_SS,	0x04c)		\
-+	_ER(EXIT_EXCP_GP,	0x04d)		\
-+	_ER(EXIT_EXCP_PF,	0x04e)		\
-+	_ER(EXIT_EXCP_MF,	0x050)		\
-+	_ER(EXIT_EXCP_AC,	0x051)		\
-+	_ER(EXIT_EXCP_MC,	0x052)		\
-+	_ER(EXIT_EXCP_XF,	0x053)		\
- 	_ER(EXIT_INTR,		0x060)		\
- 	_ER(EXIT_NMI,		0x061)		\
- 	_ER(EXIT_SMI,		0x062)		\
-@@ -201,7 +217,10 @@ static const char *disassemble(unsigned char *insn, int len, uint64_t rip,
- 	_ER(EXIT_MONITOR,	0x08a)		\
- 	_ER(EXIT_MWAIT,		0x08b)		\
- 	_ER(EXIT_MWAIT_COND,	0x08c)		\
--	_ER(EXIT_NPF,		0x400)		\
-+	_ER(EXIT_XSETBV,	0x08d)		\
-+	_ER(EXIT_NPF, 		0x400)		\
-+	_ER(EXIT_AVIC_INCOMPLETE_IPI,		0x401)	\
-+	_ER(EXIT_AVIC_UNACCELERATED_ACCESS,	0x402)	\
- 	_ER(EXIT_ERR,		-1)
+diff --git a/tools/lib/traceevent/kbuffer-parse.c b/tools/lib/traceevent/kbuffer-parse.c
+index 27f3b07fdae8..583db99aee94 100644
+--- a/tools/lib/traceevent/kbuffer-parse.c
++++ b/tools/lib/traceevent/kbuffer-parse.c
+@@ -546,6 +546,34 @@ int kbuffer_load_subbuffer(struct kbuffer *kbuf, void *subbuffer)
+ 	return 0;
+ }
  
- #define _ER(reason, val)	{ #reason, val },
++/**
++ * kbuffer_subbuf_timestamp - read the timestamp from a sub buffer
++ * @kbuf:      The kbuffer to load
++ * @subbuf:    The subbuffer to read from.
++ *
++ * Return the timestamp from a subbuffer.
++ */
++unsigned long long kbuffer_subbuf_timestamp(struct kbuffer *kbuf, void *subbuf)
++{
++	return kbuf->read_8(subbuf);
++}
++
++/**
++ * kbuffer_ptr_delta - read the delta field from a record
++ * @kbuf:      The kbuffer to load
++ * @ptr:       The record in the buffe.
++ *
++ * Return the timestamp delta from a record
++ */
++unsigned int kbuffer_ptr_delta(struct kbuffer *kbuf, void *ptr)
++{
++	unsigned int type_len_ts;
++
++	type_len_ts = read_4(kbuf, ptr);
++	return ts4host(kbuf, type_len_ts);
++}
++
++
+ /**
+  * kbuffer_read_event - read the next event in the kbuffer subbuffer
+  * @kbuf:	The kbuffer to read from
+diff --git a/tools/lib/traceevent/kbuffer.h b/tools/lib/traceevent/kbuffer.h
+index ed4d697fc137..5fa8292e341b 100644
+--- a/tools/lib/traceevent/kbuffer.h
++++ b/tools/lib/traceevent/kbuffer.h
+@@ -49,6 +49,8 @@ int kbuffer_load_subbuffer(struct kbuffer *kbuf, void *subbuffer);
+ void *kbuffer_read_event(struct kbuffer *kbuf, unsigned long long *ts);
+ void *kbuffer_next_event(struct kbuffer *kbuf, unsigned long long *ts);
+ unsigned long long kbuffer_timestamp(struct kbuffer *kbuf);
++unsigned long long kbuffer_subbuf_timestamp(struct kbuffer *kbuf, void *subbuf);
++unsigned int kbuffer_ptr_delta(struct kbuffer *kbuf, void *ptr);
+ 
+ void *kbuffer_translate_data(int swap, void *data, unsigned int *size);
+ 
 -- 
 2.26.2
 
