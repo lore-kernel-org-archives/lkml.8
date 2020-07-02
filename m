@@ -2,179 +2,185 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBBD20884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CE92073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="QW+gWvDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgGBHUg (ORCPT
+        id S1727948AbgGBHVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:20:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39576 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgGBHUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:20:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B7D7CADD9;
-        Thu,  2 Jul 2020 07:20:33 +0000 (UTC)
-Subject: Re: [PATCH v2] drm/hisilicon: Use drmm_kzalloc() instead of
- devm_kzalloc()
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1593673602-49027-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <31a82ab1-e140-5e4d-774b-355a68f44add@suse.de>
-Date:   Thu, 2 Jul 2020 09:20:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 03:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgGBHVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:21:48 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6DAC08C5C1;
+        Thu,  2 Jul 2020 00:21:48 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id DD6C522EEB;
+        Thu,  2 Jul 2020 09:21:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593674506;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yYh2/aIFWhUNCc355H6HdrFH3gHWvQp1I0ovSaO/mqQ=;
+        b=QW+gWvDDGXW32OkPetPXQmwmoBHdnbvoMHEmol7FzAO6BYr41/MKv+DCCo0zCbpwZoq+kg
+        dOpbYm1g2XBrKRtuw2NpMfug4zS27QbuOjREIPQekpaGB+/wotQaQvuYSWiQaaBgC+2GnF
+        1hyTBcBy+7mkCs8Z4QWWpGE9TZPyK90=
 MIME-Version: 1.0
-In-Reply-To: <1593673602-49027-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="rRMyF5m1L3QxZNeFgEJed0wTPQUm0B0sO"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 Jul 2020 09:21:45 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
+        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+In-Reply-To: <20200702071402.GP1179328@dell>
+References: <20200622075145.1464020-1-lee.jones@linaro.org>
+ <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc> <20200702071402.GP1179328@dell>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <a8fc222a555f1b5bceb7405e94f7df0e@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---rRMyF5m1L3QxZNeFgEJed0wTPQUm0B0sO
-Content-Type: multipart/mixed; boundary="cxHHqSSparaUC5MYFuCGNwSnEcHFGNJ4Q";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <31a82ab1-e140-5e4d-774b-355a68f44add@suse.de>
-Subject: Re: [PATCH v2] drm/hisilicon: Use drmm_kzalloc() instead of
- devm_kzalloc()
-References: <1593673602-49027-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1593673602-49027-1-git-send-email-tiantao6@hisilicon.com>
+Am 2020-07-02 09:14, schrieb Lee Jones:
+> On Tue, 30 Jun 2020, Michael Walle wrote:
+> 
+>> Hi Lee,
+>> 
+>> I'm just trying to use this for my sl28 driver. Some remarks, see 
+>> below.
+>> 
+>> Am 2020-06-22 09:51, schrieb Lee Jones:
+>> > The existing SYSCON implementation only supports MMIO (memory mapped)
+>> > accesses, facilitated by Regmap.  This extends support for registers
+>> > held behind I2C busses.
+>> >
+>> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> > ---
+>> > Changelog:
+>> >
+>> > v3 => v4
+>> >   - Add ability to provide a non-default Regmap configuration
+>> >
+>> > v2 => v3
+>> >   - Change 'is CONFIG' present check to include loadable modules
+>> >     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if
+>> > IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
+>> >
+>> > v1 => v2
+>> >   - Remove legacy references to OF
+>> >   - Allow building as a module (fixes h8300 0-day issue)
+>> >
+>> > drivers/mfd/Kconfig            |   7 +++
+>> >  drivers/mfd/Makefile           |   1 +
+>> >  drivers/mfd/syscon-i2c.c       | 104 +++++++++++++++++++++++++++++++++
+>> >  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
+>> >  4 files changed, 148 insertions(+)
+>> >  create mode 100644 drivers/mfd/syscon-i2c.c
+>> >  create mode 100644 include/linux/mfd/syscon-i2c.h
+>> >
+>> 
+>> [..]
+>> 
+>> > +static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client,
+>> > +					    struct regmap_config *regmap_config)
+>> > +{
+>> > +	struct device *dev = &client->dev;
+>> > +	struct syscon *entry, *syscon = NULL;
+>> > +
+>> > +	spin_lock(&syscon_i2c_list_slock);
+>> > +
+>> > +	list_for_each_entry(entry, &syscon_i2c_list, list)
+>> > +		if (entry->dev == dev) {
+>> > +			syscon = entry;
+>> > +			break;
+>> > +		}
+>> > +
+>> > +	spin_unlock(&syscon_i2c_list_slock);
+>> > +
+>> > +	if (!syscon)
+>> > +		syscon = syscon_i2c_register(client, regmap_config);
+>> > +
+>> > +	if (IS_ERR(syscon))
+>> > +		return ERR_CAST(syscon);
+>> > +
+>> > +	return syscon->regmap;
+>> > +}
+>> > +
+>> > +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
+>> > +					   struct regmap_config *regmap_config)
+>> > +{
+>> > +	return syscon_i2c_get_regmap(client, regmap_config);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
+>> > +
+>> > +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
+>> > +{
+>> > +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
+>> 
+>> What do you think about
+>> 
+>> struct regmap *syscon_i2c_to_regmap(struct device *dev)
+>> {
+>> 	struct i2c_client *client = i2c_verify_client(dev);
+>> 
+>> 	if (!client)
+>> 		return ERR_PTR(-EINVAL);
+>> 
+>> 	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+>> }
+>> 
+>> Or even move it to syscon_i2c_get_regmap().
+>> 
+>> This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" 
+>> just
+>> to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do 
+>> it
+>> all over again in all sub drivers.
+> 
+> What is your use-case?
 
---cxHHqSSparaUC5MYFuCGNwSnEcHFGNJ4Q
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Still my sl28 mfd driver. There the sub devices just need a regmap.
 
-Hi
+>  This is set-up for based I2C drivers to call
+> into.  'client' is given to them as their .probe() arg.
 
-Am 02.07.20 um 09:06 schrieb Tian Tao:
-> using the new API drmm_kzalloc() instead of devm_kzalloc()
->=20
-> v2:
-> keep the DRM include statements sorted alphabetically.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 18 +++++++++--------=
--
->  1 file changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index a6fd0c2..b557728 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -11,18 +11,18 @@
->   *	Jianhua Li <lijianhua@huawei.com>
->   */
-> =20
-> +#include <drm/drm_gem_vram_helper.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_fb_helper.h>
-> +#include <drm/drm_managed.h>
-> +#include <drm/drm_vblank.h>
-> +#include <drm/drm_print.h>
->  #include <linux/console.h>
->  #include <linux/module.h>
-> -#include <linux/pci.h>
-> -
-> -#include <drm/drm_atomic_helper.h>
->  #include <drm/drm_drv.h>
-> -#include <drm/drm_fb_helper.h>
-> -#include <drm/drm_gem_vram_helper.h>
->  #include <drm/drm_irq.h>
-> -#include <drm/drm_print.h>
-> -#include <drm/drm_probe_helper.h>
-> -#include <drm/drm_vblank.h>
-> +#include <linux/pci.h>
+Ok, I see. Then this doesn't fit.
 
-Ok, that's a bit too much. :D
+-michael
 
-First of all, it's still not alphabetically. Second, linux headers go
-first, then drm headers follow. It should look like
-
- #include <linux/...>
- #include <linux/...>
- #include <linux/...>
-
- #include <drm/...>
- #include <drm/...>
- #include <drm/...>
-
-with each block sorted alphabetically.
-
-If you include drm_managed.h right before drm_print.h, it should be fine
-already.
-
-Best regards
-Thomas
-
-> =20
->  #include "hibmc_drm_drv.h"
->  #include "hibmc_drm_regs.h"
-> @@ -267,7 +267,7 @@ static int hibmc_load(struct drm_device *dev)
->  	struct hibmc_drm_private *priv;
->  	int ret;
-> =20
-> -	priv =3D devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-> +	priv =3D drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv) {
->  		DRM_ERROR("no memory to allocate for hibmc_drm_private\n");
->  		return -ENOMEM;
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---cxHHqSSparaUC5MYFuCGNwSnEcHFGNJ4Q--
-
---rRMyF5m1L3QxZNeFgEJed0wTPQUm0B0sO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl79ir0UHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiNxmwf/T+1KsEjCZPwfy7v4tgGrq3eZQkbB
-KB3230daBqr8HMjjFOQJVbdXN92GDlvzFMh/7KY3C5epuJq+PfrQGj/bOvKa4esF
-A1Tbwim0xe2W59bkYxKgjWWpcmsgw1PiXFNKiwWvfrmgdFplFGruXziaUg6RAKKL
-qchgRC/7QVXNzHLIKxXKw0D/CtlVeEsE4MreKJz3ui/eufuaguAQ83CtSnTg2WiH
-zwYeKN9iVwD2g5QNg+k/6ybg28h/pzcQUiniGcNstNspEac/kS9vWzBP9NITcjCO
-CQkeShEUin57z4x0DlJNeE2vgVV4UQk01tyZGZqSms2kXSy2rXX8rfY/Dw==
-=t20u
------END PGP SIGNATURE-----
-
---rRMyF5m1L3QxZNeFgEJed0wTPQUm0B0sO--
+>> So you could just do a
+>>   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
+>> 
+>> I've also noticed that the mmio syscon uses device_node as parameter. 
+>> What
+>> was the reason to divert from that? Just curious.
+> 
+> This is a helper for I2C clients.  There aren't any OF helpers in here
+> (yet).  If you think they would be helpful we can add them.  How do
+> you see them being used?
