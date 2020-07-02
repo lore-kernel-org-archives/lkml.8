@@ -2,183 +2,75 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93745C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E511C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C21A20748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t2BdkH4S"
+	by mail.kernel.org (Postfix) with ESMTP id 32B5F20780
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGBAsd (ORCPT
+        id S1727027AbgGBAwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:48:33 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:23467 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgGBAsd (ORCPT
+        Wed, 1 Jul 2020 20:52:18 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:44777 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgGBAwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:48:33 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200702004829epoutp0161b145875d81d3c5c3626c18c1c56f63~dyQ8UE2Vi2118821188epoutp01L
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:48:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200702004829epoutp0161b145875d81d3c5c3626c18c1c56f63~dyQ8UE2Vi2118821188epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593650909;
-        bh=I77Z4g8yokv4VG82pYM0RXw1CCZQHU9fQ0hoIEmNIYI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=t2BdkH4SUdFJGpl4O600JqiHfEHdDtHXGWc1oyyyv7vtoaw8Gk4eKspo6GGAwIdIM
-         k3cAIecyOmgaeubi4+2vJJIJFBmCqoCMTwOvrnfq6mMsjWwJAbZ3SN9QpnB1/cTGkP
-         7wIjMAtG9rVgUXhkaPOCZo2ERdZNZodGctGjFmu8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200702004829epcas1p103b066ef2ba4e6dbecf27cb2b7e61460~dyQ7p7pkJ1740417404epcas1p1X;
-        Thu,  2 Jul 2020 00:48:29 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49xzwp1xhJzMqYkZ; Thu,  2 Jul
-        2020 00:48:26 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E5.3B.29173.ADE2DFE5; Thu,  2 Jul 2020 09:48:26 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200702004825epcas1p33fdd93cfedaf14e3331e4b943ed7be67~dyQ3_rDbK2059920599epcas1p3d;
-        Thu,  2 Jul 2020 00:48:25 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200702004825epsmtrp13dd5c1d03d0937c96bce740a77b5493b~dyQ39riMf2782827828epsmtrp1E;
-        Thu,  2 Jul 2020 00:48:25 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-fc-5efd2edafb71
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.D2.08382.8DE2DFE5; Thu,  2 Jul 2020 09:48:24 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200702004824epsmtip2b64ef5cd823d2a5cb8525b53f607b606~dyQ3tQXm50823308233epsmtip2k;
-        Thu,  2 Jul 2020 00:48:24 +0000 (GMT)
-Subject: Re: [PATCH v4 11/37] PM / devfreq: tegra30: Silence deferred probe
- error
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <136b430d-2097-7b2b-d7dd-b438deee8f5d@samsung.com>
-Date:   Thu, 2 Jul 2020 09:59:40 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <20200609131404.17523-12-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNJsWRmVeSWpSXmKPExsWy7bCmvu4tvb9xBk0HeSzuz2tltHj36Smr
-        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
-        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
-        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-        5koKeYm5qbZKLj4Bum6ZOUC/KCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0
-        ihNzi0vz0vWS83OtDA0MjEyBChOyMz52iBV85q442nuVrYHxImcXIweHhICJxNPv5l2MnBxC
-        AjsYJRqusXQxcgHZnxglJv2bBuV8A0o0fGcCqQJp+P77EzNEYi+jxOttX6Gc94wSH19OYAap
-        EhYIljj2+hI7SEJE4AizxOrO44wgDrPAZUaJs21f2ECq2AS0JPa/uAFm8wsoSlz98ZgR5Che
-        ATuJW/9kQMIsAioSD2feZgSxRQXCJE5uawGzeQUEJU7OfMICUs4pYC5x8WcMSJhZQFzi1pP5
-        TBC2vMT2t3PAjpMQaOeUmLdoL9QLLhIXtr5ghLCFJV4d38IOYUtJvOxvg7KrJVaePMIG0dzB
-        KLFl/wVWiISxxP6lk5lAFjMLaEqs36UPEVaU2Pl7LiPEYj6Jd197WCHhyyvR0SYEUaIscfnB
-        XagTJCUWt3eyTWBUmoXkm1lIXpiF5IVZCMsWMLKsYhRLLSjOTU8tNiwwRo7rTYzgVK5lvoNx
-        2tsPeocYmTgYDzFKcDArifCeNvgVJ8SbklhZlVqUH19UmpNafIjRFBi+E5mlRJPzgdkkryTe
-        0NTI2NjYwsTQzNTQUEmc19fqQpyQQHpiSWp2ampBahFMHxMHp1QD09m/YpxLErenxl30Fuz+
-        xP7N7fiN9UsllRUrj2YzH/7GU1ns45xUq3t2zj/xnv9LvWb0iC0V3VebMtPcpDxtCaMBi4SH
-        ddPZP3kzvff96O9eOcX8dMKS/nvPdj6d/WEN3+5TP9lsGf8l+zAsDZHh3XM/bkpxcLvF2aw1
-        sZU81gbvlnpkbXqt5SWS/XnVkuP3LvAJePF8fsOioPNY4vwB42e3I3sdS5X/CMScKp16z35d
-        7Lnz4pk1ey38gl7lnN7GzNWdoaW+WlHa5tmyPNlFVl/L1xjP4cwuVTM+aO07nenxdVO7LIGk
-        9RKX/gqabpTmjjJ6o7t6z/FDTNrv2vt6JUsyD5kIifDf2xrZOXeWEktxRqKhFnNRcSIAt0jh
-        ym4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsWy7bCSvO4Nvb9xBp3rbCzuz2tltHj36Smr
-        xfwj51gtVn98zGhx5et7NovpezexWbTMWsRicbbpDbvF5V1z2Cw+9x5htOj8MovN4uIpV4vb
-        jSvYLCatncpo0br3CLvFv2sbWSx+7prH4iDo8f5GK7vHzll32T0unfvD7LFpVSebx51re9g8
-        7ncfZ/LobX7H5tG3ZRWjx+dNcgGcUVw2Kak5mWWpRfp2CVwZHzvECj5zVxztvcrWwHiRs4uR
-        k0NCwETi++9PzF2MXBxCArsZJV5/XscGkZCUmHbxKFCCA8gWljh8uBii5i2jxJc5e1hBaoQF
-        giWOvb7EDpIQETjGLLHp9GkmEIdZ4DKjxI7Or2wQLdsYJda1TGECaWET0JLY/+IG2Ap+AUWJ
-        qz8eM4Ks4BWwk7j1TwYkzCKgIvFw5m1GEFtUIExi55LHYK28AoISJ2c+YQEp5xQwl7j4MwYk
-        zCygLvFn3iVmCFtc4taT+UwQtrzE9rdzmCcwCs9C0j0LScssJC2zkLQsYGRZxSiZWlCcm55b
-        bFhgmJdarlecmFtcmpeul5yfu4kRHNdamjsYt6/6oHeIkYmD8RCjBAezkgjvaYNfcUK8KYmV
-        ValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFwSjUwTcjuWKBpzxi+/1/V
-        tIlBqjocnw36Xzq805E4Pb/pFfNj/54tH4z7G4ImPK0rXPos2rAsYZ5k8cyUuUuUG2UjAu5e
-        2MR31FzzyWr3wLk5D76WLLx8UVNM9ZhlqfH0maeZPgUxCm+wZ+x0+Mcs8yJ2+ZtFQfU/ryjx
-        rIvgvFsavLMo//P0dBblb5/KBbbKdOSHNATazRcLNthqVLX70hy1m8mLDzLslf7Uwt55YsEB
-        hnlG9b96Dy64ujmO05QhWOEg5wGTPPU7LlvZHlw7ldD3apFmeaGSu7P6LtH63hkvPC/JH9tW
-        n7/Gw0fcatkSlWJbexaRmZkiDyJL77Vt2ptg6GfTbidlcXlpxvVFU3uUWIozEg21mIuKEwGn
-        KlUGWgMAAA==
-X-CMS-MailID: 20200702004825epcas1p33fdd93cfedaf14e3331e4b943ed7be67
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200609131843epcas1p3a5b06308559ff03ef1b27521f412b656
-References: <20200609131404.17523-1-digetx@gmail.com>
-        <CGME20200609131843epcas1p3a5b06308559ff03ef1b27521f412b656@epcas1p3.samsung.com>
-        <20200609131404.17523-12-digetx@gmail.com>
+        Wed, 1 Jul 2020 20:52:18 -0400
+Date:   02 Jul 2020 09:52:17 +0900
+X-IronPort-AV: E=Sophos;i="5.75,302,1589209200"; 
+   d="scan'208";a="50880523"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 02 Jul 2020 09:52:17 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D4FCE400C09E;
+        Thu,  2 Jul 2020 09:52:16 +0900 (JST)
+Message-ID: <87d05ezqlc.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 15/23] ASoC: soc-core: Identify 'no_pcm' DAI links for DPCM
+In-Reply-To: <9c7871ae-6649-7b0d-4780-c8389c299b04@nvidia.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+        <1593233625-14961-16-git-send-email-spujar@nvidia.com>
+        <87h7utytlx.wl-kuninori.morimoto.gx@renesas.com>
+        <9c7871ae-6649-7b0d-4780-c8389c299b04@nvidia.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 6/9/20 10:13 PM, Dmitry Osipenko wrote:
-> Tegra EMC driver was turned into a regular kernel driver, it also could
-> be compiled as a loadable kernel module now. Hence EMC clock isn't
-> guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
-> there is no good reason to spam KMSG with a error about missing EMC clock
-> in this case, so let's silence the deferred probe error.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index e94a27804c20..423dd35c95b3 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -801,9 +801,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  	}
->  
->  	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
-> -	if (IS_ERR(tegra->emc_clock)) {
-> -		dev_err(&pdev->dev, "Failed to get emc clock\n");
-> -		return PTR_ERR(tegra->emc_clock);
-> +	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
-> +	if (err) {
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to get emc clock: %d\n",
-> +				err);
-> +		return err;
->  	}
->  
->  	err = platform_get_irq(pdev, 0);
-> 
+Hi Sameer
 
-As I commented on patch10, I recommend that you add the Tegra EMC driver
-commit information into patch description and Looks good to me.
+> > At least my CPU driver doesn't use component:pcm_construct
+> > but is using DAI:pcm_new for some reasons.
+> > I'm not sure checking DAI:pcm here is enough, or not...
+> 
+> OK. If adding DAI:pcm_new above here is not sufficient, then a flag
+> can be used to describe FE component? or is there a better
+> alternative?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+soc_component_is_pcm() is called from simple_dai_link_of_dpcm :: "FE" side.
+I wonder component->driver->non_legacy_dai_naming can't work for you ?
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
