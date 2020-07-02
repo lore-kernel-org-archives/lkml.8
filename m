@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81792C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5537220772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E95F208B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="k0iCN5ih"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="awIazyPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgGBURO (ORCPT
+        id S1726291AbgGBURS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44784 "EHLO
+        Thu, 2 Jul 2020 16:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgGBURE (ORCPT
+        with ESMTP id S1726048AbgGBURB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:17:04 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8BCC08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:17:03 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g2so16998142lfb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:17:03 -0700 (PDT)
+        Thu, 2 Jul 2020 16:17:01 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC65C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:17:00 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s9so33811545ljm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=semihalf-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9CjV5IRbtLXef4ZCaeYQurLNNMYOTEz6UYo91B3a5us=;
-        b=k0iCN5ihLSHYr/tu3lX8IHxHRFnBO0uko2hOdV4yefDcfwPQNH0zao1tLfjU7VdtDp
-         yzwD13qE4V91Qdu1YysJEf4ruLqoH+zF7N2yhUcqHPuGZtHvijipXrXSor25eaBQRXxf
-         4WRPpyYpOACNSVtDpQgLWzOhjBj/WJMkNzUyE8OeeG/PENbRDXcJ1tK9Gl6aMe6EjGcg
-         O8BYLzwF9uBTPabqhpVVkeTZ2V7RnNpCI1ZGvgAN9J/9sxPulR8jZlF+woDcaWTtjcmv
-         5sITNIpuzVE3tV1Mv3K6AyD6plDTzYeP342sKCeOSA18wsHZ0Xcaup89hlzLtP3zFw/y
-         BT6w==
+        bh=eJKWwwb5sZNIMmtDeQlyT8Jj6wSl1CFV9/fEuSXAZwU=;
+        b=awIazyPjnY7Ozy4WBmf6iohjAWMeVLUmfItYZqGlKzRi8S3I0MoV5VXXXlo1rju0he
+         jH/oGOQOZv88hF8lDWgEo1s+4BfuzWa0QW51ddyQhfF5yiTZefpWoWrFOHbqARF2pRXL
+         g/lRtzvGd7SRzaQMda6Nh8Rel7M7ZksicGl8MPm9NICfmZAYzCd+N3rn7NUmSg3Wu99B
+         tjismAzWn1MJMSeY+kzWTBb+IMhWnpx7M0jT7x4z/64ov+8UKR/FANC8VIPhGBKdvQdL
+         xAQT61yrooLnwYiKogRqY3HmOcbJlMFI37eJKIzd19v+3BkvmVrNraFkxIbCy6Pzda7L
+         1RAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9CjV5IRbtLXef4ZCaeYQurLNNMYOTEz6UYo91B3a5us=;
-        b=AZ8AZW2ioEIVILjCx6F5FQB+KBj0w6dOat7YP9cilu4r5/fppXw43NyaxMgOQTAYQe
-         yG5xpFxfcVGdKuyofcY8xARKkrKJAqkVJOj+HbwkqTnrvSCOEJ3m8hjwSEe6+G+Aclu0
-         680vHLiCxg2EZrbhOJdMIGApy+XVjeCe4cgN+O/d3OtrRvl31TtEN9YJ2BLcEo4N2vAr
-         fex33As4/JbPaECASiTLL6w/yWx9nVqLe/ntOehvtaEpGyM4+5rxjHOlFEaEYf8ZxHnj
-         035o0e/dUL1UgBmVsSg39Dyaz57Uwjaphm8ds9m/9KrVwLbSC/NRx2lK/teOzDVFupl9
-         LsGw==
-X-Gm-Message-State: AOAM531y/WNaetQhNzN99dpPw2QiUIlG8MkFU+ZuXQ9G6/34bwC7aksr
-        OV9/TXoxDtflPsJnbNAN0lpnaw==
-X-Google-Smtp-Source: ABdhPJxTvF+/sQ/1u1yKMPhEvQ5mwhQosMRjvbLgIX8F/hyPFunxwmUI84tWTJ/RmeamcAMTQWMgCQ==
-X-Received: by 2002:a05:6512:20f:: with SMTP id a15mr19339346lfo.118.1593721022420;
-        Thu, 02 Jul 2020 13:17:02 -0700 (PDT)
+        bh=eJKWwwb5sZNIMmtDeQlyT8Jj6wSl1CFV9/fEuSXAZwU=;
+        b=i+GC7zVsb7XEp26Te8pEGq7R8bppnQbNH1CThsSvH/nSu0EMcfxBJ6BY7rDAiSeTQt
+         YKuvIVKNhIbEVO9qIm0seEmEjpkYzVm+X49g8BO5QjhMkryqmnBFzYb9iz4XBLOQWulN
+         rtbXUIVcOW4AXsK/ZMys6xNFizoJHpiNuEHLNLAaj7bWsc8FJPwLSf7L6w3TTyuMwRiq
+         lg7+9cU1kqV/JT+e1sLCoEoVziCACcIPE+kTx+tTbHe4OTa4jCFE+1rBEMkbDTf4IqNa
+         iCENqKnBIlotifIFFkJIWevrPOVsNye9A/5RRJj4rLgbYJ+QRGlbVsUW2PblD0OhIGyh
+         VXxA==
+X-Gm-Message-State: AOAM532NXtBrJm8xJayNIYuXllacUM+5x7yq8zB6qLUHCX47gQirvcIF
+        jrvmF7WmGF/jwW1qQrnTJbm2sQ==
+X-Google-Smtp-Source: ABdhPJwhWFHlehhdaC1EHXHyukD2VZsiZOAASUSH4+v3yoslhRemMCOLsyiK2U3r+dNAOF51WBRqZw==
+X-Received: by 2002:a2e:b554:: with SMTP id a20mr16177178ljn.108.1593721019380;
+        Thu, 02 Jul 2020 13:16:59 -0700 (PDT)
 Received: from localhost.localdomain ([83.68.95.66])
-        by smtp.gmail.com with ESMTPSA id y2sm3320372lji.8.2020.07.02.13.17.01
+        by smtp.gmail.com with ESMTPSA id y2sm3320372lji.8.2020.07.02.13.16.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 13:17:01 -0700 (PDT)
+        Thu, 02 Jul 2020 13:16:58 -0700 (PDT)
 From:   Tomasz Nowicki <tn@semihalf.com>
 To:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
         gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         devicetree@vger.kernel.org, catalin.marinas@arm.com,
         nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
         mw@semihalf.com, Tomasz Nowicki <tn@semihalf.com>
-Subject: [PATCH v3 3/4] dt-bindings: arm-smmu: add compatible string for Marvell Armada-AP806 SMMU-500
-Date:   Thu,  2 Jul 2020 22:16:32 +0200
-Message-Id: <20200702201633.22693-4-tn@semihalf.com>
+Subject: [PATCH v3 1/4] iommu/arm-smmu: Add SMMU ID2 register fixup hook
+Date:   Thu,  2 Jul 2020 22:16:30 +0200
+Message-Id: <20200702201633.22693-2-tn@semihalf.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200702201633.22693-1-tn@semihalf.com>
 References: <20200702201633.22693-1-tn@semihalf.com>
@@ -76,35 +76,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add specific compatible string for Marvell usage due to errata of
-accessing 64bits registers of ARM SMMU, in AP806.
+We already have 'cfg_probe' hook which meant to override and apply
+workarounds while probing ID registers. However, 'cfg_probe' is called
+at the very end and therefore for some cases fixing up things becomes complex
+or requires exporting of SMMU driver structures. Hence, seems it is better and
+cleaner to do ID fixup right away. In preparation for adding Marvell
+errata add an extra ID2 fixup hook.
 
-AP806 SoC uses the generic ARM-MMU500, and there's no specific
-implementation of Marvell, this compatible is used for errata only.
-
-Signed-off-by: Hanna Hawa <hannah@marvell.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
 ---
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/iommu/arm-smmu.c | 3 +++
+ drivers/iommu/arm-smmu.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index d7ceb4c34423..7beca9c00b12 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -38,6 +38,11 @@ properties:
-               - qcom,sc7180-smmu-500
-               - qcom,sdm845-smmu-500
-           - const: arm,mmu-500
-+      - description: Marvell SoCs implementing "arm,mmu-500"
-+        items:
-+          - enum:
-+              - marvell,ap806-smmu-500
-+          - const: arm,mmu-500
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 243bc4cb2705..17c92e319754 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1857,6 +1857,9 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+ 
+ 	/* ID2 */
+ 	id = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_ID2);
++	if (smmu->impl && smmu->impl->cfg_id2_fixup)
++		id = smmu->impl->cfg_id2_fixup(id);
++
+ 	size = arm_smmu_id_size_to_bits(FIELD_GET(ARM_SMMU_ID2_IAS, id));
+ 	smmu->ipa_size = size;
+ 
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index d172c024be61..f4c8bd7d0b34 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -382,6 +382,7 @@ struct arm_smmu_impl {
+ 	void (*write_reg64)(struct arm_smmu_device *smmu, int page, int offset,
+ 			    u64 val);
+ 	int (*cfg_probe)(struct arm_smmu_device *smmu);
++	u32 (*cfg_id2_fixup)(u32 id);
+ 	int (*reset)(struct arm_smmu_device *smmu);
+ 	int (*init_context)(struct arm_smmu_domain *smmu_domain);
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
 -- 
 2.17.1
 
