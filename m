@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2B3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A120AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB3132083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6852D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653270;
-	bh=7KAztGtg5zIFVJoJpv7CQCGrmy5Zf3wf58AWBtyQj04=;
+	s=default; t=1593653277;
+	bh=EwCvbKD99LhUvvDLGR7ZX5EpZgYdVpsHJlAuL0pgn1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dg9EitR92iYyiEe96W7GaKJpNYdjD6VTwl4VVLQXBAdmLoyU04rvlzt8V/OB6WJWM
-	 +AovMxr8TeDvV+OPu1BbTnEs766WJN9MfbxTbLSTKMIQT5qmDhBKxcblcDhjAhmBhW
-	 qEaAdP/F91ug0Lvt/IStBGQ8ypclmozrIclgXrxk=
+	b=oh7/9u7a6LWJ6A91aBfrG64cECbQ1g2RbnwsSvrIJU0c/LchDfqA5PzlunBfjRb5c
+	 UPyEuhkocDLIYi88iMbveRl6rKz/rYyQOttt/1eXL/pCoCCdjnAxyJbVbTEMApFzSq
+	 tNNoNanEuwSfukwHlj/osg/9oMDJGPkG5MkfUpHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgGBB1s (ORCPT
+        id S1728712AbgGBB1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbgGBB1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:09 -0400
+        id S1729105AbgGBB1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46C7D214D8;
-        Thu,  2 Jul 2020 01:27:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB0A214F1;
+        Thu,  2 Jul 2020 01:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653229;
-        bh=7KAztGtg5zIFVJoJpv7CQCGrmy5Zf3wf58AWBtyQj04=;
+        s=default; t=1593653238;
+        bh=EwCvbKD99LhUvvDLGR7ZX5EpZgYdVpsHJlAuL0pgn1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3Yx1Y6Y+8szKr712igEHEcAP/NQDLSHakcELQX+QtiPF+NYTcoyq+SNkGBGocdVf
-         z4EqlgxFFCYWDAjiLCfsk9PtXjGKYAxOBB8Olk5BcAR7EAIxuL7J7nes9vr6/wE0hK
-         PeqSCt9QDOG4+UcpHbh/1EYE8Rl7AjcONAab3NNI=
+        b=BfwT+WfxiMvEawJuortA1iIMU8LeXEDiRDC25JtBDgtcp/j9N71Rf45EhOcwBQtgv
+         PSuj+mcWhd5OktdpIPGNfJl6HWeYOUUPawNJLN4e/1xqO+N+n0X9K8ut8jQIk5j3Bp
+         f2iHMF2/10arFEE0aAdoiVRbcMg94FJc31XfTSpE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 15/17] nvme-rdma: assign completion vector correctly
-Date:   Wed,  1 Jul 2020 21:26:47 -0400
-Message-Id: <20200702012649.2701799-15-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/13] spi: spidev: fix a potential use-after-free in spidev_release()
+Date:   Wed,  1 Jul 2020 21:27:04 -0400
+Message-Id: <20200702012712.2701986-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
-References: <20200702012649.2701799-1-sashal@kernel.org>
+In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
+References: <20200702012712.2701986-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,38 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
+[ Upstream commit 06096cc6c5a84ced929634b0d79376b94c65a4bd ]
 
-The completion vector index that is given during CQ creation can't
-exceed the number of support vectors by the underlying RDMA device. This
-violation currently can accure, for example, in case one will try to
-connect with N regular read/write queues and M poll queues and the sum
-of N + M > num_supported_vectors. This will lead to failure in establish
-a connection to remote target. Instead, in that case, share a completion
-vector between queues.
+If an spi device is unbounded from the driver before the release
+process, there will be an NULL pointer reference when it's
+referenced in spi_slave_abort().
 
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fix it by checking it's already freed before reference.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Link: https://lore.kernel.org/r/20200618032125.4650-2-zhenzhong.duan@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spidev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 9fffe41ead500..c91bfd839cabe 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -470,7 +470,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
- 	 * Spread I/O queues completion vectors according their queue index.
- 	 * Admin queues can always go on completion vector 0.
- 	 */
--	comp_vector = idx == 0 ? idx : idx - 1;
-+	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 67ad7e46da42d..c364d9ce6d4b5 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -636,15 +636,20 @@ static int spidev_open(struct inode *inode, struct file *filp)
+ static int spidev_release(struct inode *inode, struct file *filp)
+ {
+ 	struct spidev_data	*spidev;
++	int			dofree;
  
- 	/* +1 for ib_stop_cq */
- 	queue->ib_cq = ib_alloc_cq(ibdev, queue,
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
+ 
++	spin_lock_irq(&spidev->spi_lock);
++	/* ... after we unbound from the underlying device? */
++	dofree = (spidev->spi == NULL);
++	spin_unlock_irq(&spidev->spi_lock);
++
+ 	/* last close? */
+ 	spidev->users--;
+ 	if (!spidev->users) {
+-		int		dofree;
+ 
+ 		kfree(spidev->tx_buffer);
+ 		spidev->tx_buffer = NULL;
+@@ -652,19 +657,14 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		kfree(spidev->rx_buffer);
+ 		spidev->rx_buffer = NULL;
+ 
+-		spin_lock_irq(&spidev->spi_lock);
+-		if (spidev->spi)
+-			spidev->speed_hz = spidev->spi->max_speed_hz;
+-
+-		/* ... after we unbound from the underlying device? */
+-		dofree = (spidev->spi == NULL);
+-		spin_unlock_irq(&spidev->spi_lock);
+-
+ 		if (dofree)
+ 			kfree(spidev);
++		else
++			spidev->speed_hz = spidev->spi->max_speed_hz;
+ 	}
+ #ifdef CONFIG_SPI_SLAVE
+-	spi_slave_abort(spidev->spi);
++	if (!dofree)
++		spi_slave_abort(spidev->spi);
+ #endif
+ 	mutex_unlock(&device_list_lock);
+ 
 -- 
 2.25.1
 
