@@ -2,84 +2,110 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00042C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC764207E8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:08:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fp6Gy8ho"
+	by mail.kernel.org (Postfix) with ESMTP id 91B3A2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgGBAIs (ORCPT
+        id S1727984AbgGBAL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgGBAIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:08:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99E3C08C5C1;
-        Wed,  1 Jul 2020 17:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=itjXWeaWl+zoa6+Nj8NLNZzan7LY+vRjjEzZZHqOrYM=; b=Fp6Gy8ho+HdQ37oJzO5GcfbzPO
-        tK7QdXC2EBz0292qLZmdskbeO1Ty2g01IgVzQaLZSMeC8zx6+wd05QSflw931WXEz+uBRdKrz35IN
-        IicFK8/euW9rhv7Ovj3mtRuWyt4BD7/IM2R3BP/T8Nz3h2zIawgGeOe4JtvUCHPzx29QaYKwaq/XX
-        8kjuMV+rOVgU0y1f61KhO+bdl6b1/4Bz4REU9kgTDSkgYJMrZC3hQka5RO3Py3fp76wMtbcVA0Rxm
-        /I1VJq+tympjYY42JqiQF8Qya5gs1ovHHHFMoCNpO6SN82JEz61cXSd5JFTthuOZ0Q1nMgcJC6ctO
-        i0HwZD/Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqmmR-0003Uc-22; Thu, 02 Jul 2020 00:08:43 +0000
-Date:   Thu, 2 Jul 2020 01:08:43 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [v2] Documentation: Coccinelle: fix typos and command example
-Message-ID: <20200702000843.GV25523@casper.infradead.org>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
- <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
- <2a3940de-6a81-1aff-8109-53c1c5a6aa1b@web.de>
- <f2aaa91a-f935-bc2d-26f2-712576c1bbd7@infradead.org>
- <2f80fb10-dc7f-29be-dc3e-2715f8bafc6d@web.de>
- <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfa2ed9f-fe68-58d1-c3d0-ac436f9bee09@infradead.org>
+        Wed, 1 Jul 2020 20:11:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60622 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727811AbgGBAL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:11:28 -0400
+IronPort-SDR: mRC70VIOh709/gDQPktr5c5EVBeXWf8dIILww1G0TZT9B5vpebY9CFrOkGsJFMZHfI6VpcFRE6
+ as10eNIKrH8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="146734362"
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="146734362"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:11:27 -0700
+IronPort-SDR: I/ump2lWM/lC/2qxq2przIm/+UyuIz8O7/sFbUWqEVbP8X8PekO6jQbH2ek8JNadEeCZAA6qv1
+ oLwByjRZGpUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
+   d="scan'208";a="313944369"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jul 2020 17:11:25 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com, sureshkumar.mp@intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Subject: [PATCH v6 0/2] phy: intel: Add Keem Bay eMMC PHY support
+Date:   Thu,  2 Jul 2020 08:09:32 +0800
+Message-Id: <20200702000934.3258-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 07:52:58AM -0700, Randy Dunlap wrote:
-> On 7/1/20 6:32 AM, Markus Elfring wrote:
-> >>> How do you think about to use the following command variant
-> >>> for the adjustment of the software documentation?
-> >>>
-> >>> +    make C=1 CHECK='scripts/coccicheck' 'path/to/file.o'
-> >>
-> >> I don't understand the reason for that change...
-> 
-> IOW, your "patch" needs justification and/or explanation. It was missing that info.
+Hi.
 
-What Markus is trying so completely ineptly to say is that
-  make C=1 CHECK=scripts/coccicheck path/to/file.c
-doesn't work.  You need to use the .o suffix to check the .c file.
+The first part is to document DT bindings for Keem Bay eMMC PHY.
+
+The second is the driver file, loosely based on phy-rockchip-emmc.c
+and phy-intel-emmc.c. The latter is not being reused as there are
+quite a number of differences i.e. registers offset, supported clock
+rates, bitfield to set.
+
+The patch was tested with Keem Bay evaluation module board.
+
+Thank you.
+
+Best regards,
+Zainie
+
+Changes since resend v5:
+- In keembay_emmc_phy_power(), remove redundant return ret;.
+
+Resend v5:
+- Include missing changes done for phy-keembay-emmc.c (See Changes since
+  v3)
+
+Changes since v4:
+- In Kconfig file, add depends on ARM64 || COMPILE_TEST and
+  depends on OF && HAS_IOMEM.
+- In Kconfig file, reword the help section to be more verbose.
+
+Changes since v3:
+- Exit keembay_emmc_phy_power() with return ret;.
+- In keembay_emmc_phy_init(), use PTR_ERR_OR_ZERO(...).
+- In keembay_emmc_phy_probe(), devm_regmap_init_mmio(...) in single
+  line.
+
+Changes since v2:
+- Modify DT example to use single cell for address and size.
+
+Changes since v1:
+- Rework phy-keembay-emmc.c to make it similar to phy-intel-emmc.c.
+- Use regmap_mmio, and remove reference to intel,syscon.
+- Use node name phy@....
+- Update license i.e. use dual license.
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
+  phy: intel: Add Keem Bay eMMC PHY support
+
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  |  44 +++
+ drivers/phy/intel/Kconfig                     |  12 +
+ drivers/phy/intel/Makefile                    |   1 +
+ drivers/phy/intel/phy-keembay-emmc.c          | 314 ++++++++++++++++++
+ 4 files changed, 371 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
+
+-- 
+2.17.1
 
