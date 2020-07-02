@@ -2,270 +2,201 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2255C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92336C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A132089D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593675145;
-	bh=9uMGCANmWxBqzGlyaZHnPio5yurOzxTiArpPB34Pebc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vziYAk4llCFi1J9QYlwWl2CEl02H2hu8z8dZMFkVxQujkOzuD5EZEOMT0AZAO/EvT
-	 OOhxk1bErg5DP+FJHKsNlV71mVdLC2/rowVheqzA1kS8cNRDmJdV7KglsljEFDlALs
-	 oVk4jkN8Q5CBy4xHweYM3j0HYmVtY8Hp0XIVuOE0=
+	by mail.kernel.org (Postfix) with ESMTP id 6298C206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="AoJlUpa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgGBHcY (ORCPT
+        id S1728004AbgGBHfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60050 "EHLO mail.kernel.org"
+        Thu, 2 Jul 2020 03:35:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14226 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbgGBHcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:32:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A882073E;
-        Thu,  2 Jul 2020 07:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593675142;
-        bh=9uMGCANmWxBqzGlyaZHnPio5yurOzxTiArpPB34Pebc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xtAUKiF9XpawbXtRL3SVO2WstqWIFh8gKEXMnezWRDH6VBXFMuet1kN0lJRAQGk7U
-         wks4t4KltOcfWeoBt7MF071uhuTRxXBqaKUmCS7Pxc+jKmXfoVm13MoUwax5Yz+1Qa
-         3Kp5HekQXyKIgWlreAnE1+523V+MlF/l2UlGjnVA=
-Date:   Thu, 2 Jul 2020 09:32:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     Rajat Jain <rajatja@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-Message-ID: <20200702073226.GB1073011@kroah.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com>
- <20200630125216.GA1109228@kroah.com>
- <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
- <20200630153816.GD1785141@kroah.com>
- <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
- <20200630170012.GB1894898@kroah.com>
- <CACK8Z6Fcrb8PtmbUJLn8RgiGnC8eqTC9GjsgjPmQgU212WPU0Q@mail.gmail.com>
- <CAOSf1CEZ82iXhYnig0UScS+oRRaxHzSCge9LbA1hW3NaQAiSxQ@mail.gmail.com>
+        id S1726858AbgGBHfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:35:20 -0400
+IronPort-SDR: sq8sJLRaj/HWX5iUAzoHxogygqRujKq5MA4y/Ssq5wyncIy6RGV0IvSut+tUK7XjSDutogFZjX
+ 4WcKxWf7q1yQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="135116066"
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="135116066"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 00:35:19 -0700
+IronPort-SDR: ubZVH0Cvjow8acJF1a3yf1bLmV+27TThH1joze1Vs4+6qibm60CxAV/5a+Oi95Eq9TF65VVVK8
+ EiCtg7nKZi5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,303,1589266800"; 
+   d="scan'208";a="321453454"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Jul 2020 00:35:18 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jul 2020 00:35:18 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX122.amr.corp.intel.com (10.22.225.227) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jul 2020 00:35:18 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jul 2020 00:35:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YQsk5VLm8qZBrxeDlfm4P9D8wgzpaw2jGnqDOkZb5TD2WgN8Z5uupe/fi0DNqc+Vl/Y+sSgdRbE5XAyJcQFfm9KvJH6CsQeyery61a/O5dthOpz/Ck23F+LXrLdHRn6tavwW8jh61o4UXciAzqjZ+gNeiTGKEYm7Fw0enVETW8usAOOwMzsoahyy5jpjCFEEHjZ/eln/dr8XdVwLpWPLx0wSYT3Hlf4uP/UR2Hh9omD/uCI4Cfv35X528BODtwp9hYiBw/qflE7TC6nSEzyKVcNE0hsVhcxXyDio/o5nOId07AzG2tyF39tdphzg32L62ExLbabK0IUf6dOiiobleA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5j/5uQ/aUieLdeXoPikFHxwouzXeMABwmRg88xAkX0=;
+ b=kT+MYWpFmhEgdCg+WIjp9DjbRGsBLtwhbMAa8GZEoJr0xEMF9D50W9eBOANLsSfHBVDyhhTqSueeSkube5U/4Q0ujTqwbNH46+mkoBuSVZ0CU7rAwdzyjGrDG9+h78j6N/NeT+rdiLBVfWzCXokNsrj1llvvky/nrCcDwPKXJiy/Gp5XlRYH7QN8LKmcXnenVx/+L9qKZKIFVdM212VPTgrW1cst+FVXS6YNEhpTamWXz2WG/L79g9URR/SSEOMrRgolUzmJUumw0ChHJZ+aYEmbXkM2e8UE8R6UK/fr9V5DTJHHjRgJ/3YZxMA42S/Ld3FMhWRWpjs18/nzA2SpnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5j/5uQ/aUieLdeXoPikFHxwouzXeMABwmRg88xAkX0=;
+ b=AoJlUpa2zBYmSsLnbvtvXGgkl6Fq4zxf2FHQm1dlOy2P1LcTPy3D11714ZZotVh+pY4x0mfWzWpnIlUFCCS7Tz6wYKNXAR9DuwuULtAW8v5vHHrNZ32hrqzg0hZRCWwOMFfihXQDAl4xF1vC9P/heej7Fzv5RemJrd9dyPOApHA=
+Received: from MN2PR11MB4080.namprd11.prod.outlook.com (2603:10b6:208:137::27)
+ by MN2PR11MB4238.namprd11.prod.outlook.com (2603:10b6:208:188::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Thu, 2 Jul
+ 2020 07:35:16 +0000
+Received: from MN2PR11MB4080.namprd11.prod.outlook.com
+ ([fe80::9fd:f54f:62f9:a24e]) by MN2PR11MB4080.namprd11.prod.outlook.com
+ ([fe80::9fd:f54f:62f9:a24e%6]) with mapi id 15.20.3131.028; Thu, 2 Jul 2020
+ 07:35:16 +0000
+From:   "Liao, Bard" <bard.liao@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+CC:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>
+Subject: RE: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interrupt
+ handlers/threads
+Thread-Topic: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interrupt
+ handlers/threads
+Thread-Index: AQHWSeihfI1JFQJUyEWaiZs1lVW7K6jxYiAAgAAGM4CAANimAIABonmg
+Date:   Thu, 2 Jul 2020 07:35:16 +0000
+Message-ID: <MN2PR11MB4080CF23D00A3AF817AC1E7CFF6D0@MN2PR11MB4080.namprd11.prod.outlook.com>
+References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
+ <20200623173546.21870-8-yung-chuan.liao@linux.intel.com>
+ <20200630162448.GS2599@vkoul-mobl>
+ <55fbc41e-cb41-8bdf-bdbd-1d1b76938683@linux.intel.com>
+ <20200701054224.GV2599@vkoul-mobl>
+In-Reply-To: <20200701054224.GV2599@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [220.133.4.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fbc1e39-9fa3-4b64-03e8-08d81e5a76cd
+x-ms-traffictypediagnostic: MN2PR11MB4238:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB42385665A4AD145D4E8BE623FF6D0@MN2PR11MB4238.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0452022BE1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UUUCOPRTOv2wKsuQnqKsw1SP6ZHaXTBTNHMDYCbh2XeVm9sOyLVcAblYokCQJKfsFQKPp+x7bI2ZXVipBaFdvTavlCP/K9Jwi3SelA6dVSxb3PqW5SrwodLlsoPbBRI8t1UbEUofQUy8w94KW0nhOrdMPhIHQ2I9PD8NKURnUNsFnUr0f8vKojlpAsSDP/rgaY7Ex/sRE1D67T4qOEjwv01yuqv0CJn2i8mrE/TrxGpXvIH/7Moxy7H/gzLgRlNJO7cFEJMm9NBTZzthaugWjMGFKnkF0ruZlbr0ZMwIRel0PoNgH6SgUIb/2rq/Au9X1sy4AeGeaPJ7C8abr1Ce5g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4080.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(83380400001)(55016002)(8676002)(8936002)(86362001)(7416002)(478600001)(54906003)(110136005)(316002)(33656002)(9686003)(7696005)(2906002)(26005)(6506007)(4326008)(186003)(76116006)(53546011)(66446008)(66556008)(64756008)(66476007)(52536014)(5660300002)(66946007)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: A+D+rOdiT67zNP/qGldB8P9Vwe3tmgTAAZcREzyklL4ZiiLDWDpIDXNA+1G3+r9HhNGrsvsGxJhqXQkwWHQv1RMdLObKisgbzlXpiTkpB2nl0Sr0nH3scFAyZZ0xOd7Gdgc/TnrN8bCChfCRsxQv+N8tYTn9oTBX4TJi6HJQfqAT4Vhefjvjm3j9chhwcQg34mZJ7bXmuS8z6xTh3Yta67n0FBNhDhaqaZVxeFEUp26bzrNIrvgfGJHf122jGmOIobB9uGgFtwGmUCevOZBCtq8j0CrtaBDgk86T13DboKiF6hDI+9AOEDFOve25d0VklwMP4iqb4/PALqAOi9FbzYXUbxFddmPLySBDQ5cElpRE4SxqTFycpQbcLNGH2CPMNaq5hjnA3ISBIqXnnFF+j/rVSDa5q7/3xDS2ufk3ONwe1LC6Y3KEReTYw2y4wQgqTj8tRSyAI5spZ95+PZMd39rQ0xBEOiIVE69HqEyQBys=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOSf1CEZ82iXhYnig0UScS+oRRaxHzSCge9LbA1hW3NaQAiSxQ@mail.gmail.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB4080.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fbc1e39-9fa3-4b64-03e8-08d81e5a76cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2020 07:35:16.0723
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GbEGflzLV3eAZhiYNiqEQGjyKdWpZMPvc8YRzd84m/QN8MVv2gmor4qN5DyYWCK6km/3WS/8uymcbiDZ7VY3yg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4238
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:23:23PM +1000, Oliver O'Halloran wrote:
-> On Thu, Jul 2, 2020 at 4:07 AM Rajat Jain <rajatja@google.com> wrote:
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Wednesday, July 1, 2020 1:42 PM
+> To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>; alsa-devel@alsa-project.=
+org;
+> tiwai@suse.de; gregkh@linuxfoundation.org; linux-kernel@vger.kernel.org;
+> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com;
+> broonie@kernel.org; srinivas.kandagatla@linaro.org; jank@cadence.com; Lin=
+,
+> Mengdong <mengdong.lin@intel.com>; Blauciak, Slawomir
+> <slawomir.blauciak@intel.com>; Kale, Sanyog R <sanyog.r.kale@intel.com>;
+> rander.wang@linux.intel.com; Liao, Bard <bard.liao@intel.com>
+> Subject: Re: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interr=
+upt
+> handlers/threads
+>=20
+> On 30-06-20, 11:46, Pierre-Louis Bossart wrote:
+>=20
+> > > Is this called from irq context or irq thread or something else?
 > >
-> > *snip*
+> > from IRQ thread, hence the name, see pointers above.
 > >
-> > > > I guess it would make sense to have an attribute for user space to
-> > > > write to in order to make the kernel reject device plug-in events
-> > > > coming from a given port or connector, but the kernel has no reliable
-> > > > means to determine *which* ports or connectors are "safe", and even if
-> > > > there was a way for it to do that, it still may not agree with user
-> > > > space on which ports or connectors should be regarded as "safe".
-> > >
-> > > Again, we have been doing this for USB devices for a very long time, PCI
-> > > shouldn't be any different.  Why people keep ignoring working solutions
-> > > is beyond me, there's nothing "special" about PCI devices here for this
-> > > type of "worry" or reasoning to try to create new solutions.
-> > >
-> > > So, again, I ask, go do what USB does, and to do that, take the logic
-> > > out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
-> > > code. Why the original submitter keeps ignoring my request to do this
-> > > is beyond me, I guess they like making patches that will get rejected :(
-> >
-> > IMHO I'm actually trying to precisely do what I think was the
-> > conclusion of our discussion, and then some changes because of the
-> > further feedback I received on those patches. Let's take a step back
-> > and please allow me to explain how I got here (my apologies but this
-> > spans a couple of threads, and I"m trying to tie them all together
-> > here):
-> 
-> The previous thread had some suggestions, but no real conclusions.
-> That's probably why we're still arguing about it...
-> 
-> > GOAL: To allow user space to control what (PCI) drivers he wants to
-> > allow on external (thunderbolt) ports. There was a lot of debate about
-> > the need for such a policy at
-> > https://lore.kernel.org/linux-pci/CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com/
-> > with the final conclusion that it should be OK to implement such a
-> > policy in userspace, as long as the policy is not implemented in the
-> > kernel. The kernel only needs to expose bits & info that is needed by
-> > the userspace to implement such a policy, and it can be used in
-> > conjunction with "drivers_autoprobe" to implement this policy:
-> > --------------------------------------------------------------------
-> > ....
-> > That's an odd thing, but sure, if you want to write up such a policy for
-> > your systems, great.  But that policy does not belong in the kernel, it
-> > belongs in userspace.
-> > ....
-> > --------------------------------------------------------------------
-> > 1) The post https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
-> > lists out the approach that was agreed on. Replicating it here:
-> > -----------------------------------------------------------------------
-> >   - Expose the PCI pdev->untrusted bit in sysfs.  We don't expose this
-> >     today, but doing so would be trivial.  I think I would prefer a
-> >     sysfs name like "external" so it's more descriptive and less of a
-> >     judgment.
-> >
-> >     This comes from either the DT "external-facing" property or the
-> >     ACPI "ExternalFacingPort" property.
-> >
-> >   - All devices present at boot are enumerated.  Any statically built
-> >     drivers will bind to them before any userspace code runs.
-> >
-> >     If you want to keep statically built drivers from binding, you'd
-> >     need to invent some mechanism so pci_driver_init() could clear
-> >     drivers_autoprobe after registering pci_bus_type.
-> >
-> >   - Early userspace code prevents modular drivers from automatically
-> >     binding to PCI devices:
-> >
-> >       echo 0 > /sys/bus/pci/drivers_autoprobe
-> >
-> >     This prevents modular drivers from binding to all devices, whether
-> >     present at boot or hot-added.
-> >
-> >   - Userspace code uses the sysfs "bind" file to control which drivers
-> >     are loaded and can bind to each device, e.g.,
-> >
-> >       echo 0000:02:00.0 > /sys/bus/pci/drivers/nvme/bind
-> 
-> I think this is a reasonable suggestion. However, as Greg pointed out
-> it's gratuitously different to what USB does for no real reason.
+> > The key part is that we could only make the hardware work as intended b=
+y
+> > using a single thread for all interrupt sources, and that patch is just=
+ the
+> > generalization of what was implemented for HDaudio in mid-2019 after
+> months
+> > of lost interrupts and IPC errors. See below the code from
+> > sound/soc/sof/intel/hda.c for interrupt handling.
+>=20
+> Sounds good. Now that you are already in irq thread, does it make sense
+> to spawn a worker thread for this and handle it there? Why not do in the
+> irq thread itself. Using a thread kind of defeats the whole point behind
+> concept of irq threads
 
-Agreed.
+Not sure If you are talking about cdns_update_slave_status_work().
+The reason we need to spawn a worker thread in sdw_cdns_irq() is
+that we will do sdw transfer which will generate an interrupt when
+a slave interrupt is triggered. And the handler will not be invoked if the
+previous handler is not return yet.=20
+Please see the scenario below for better explanation.
+1. Slave interrupt arrives
+	2.1 Try to read Slave register and waiting for the transfer response
+	2.2 Get the transfer response interrupt and finish the sdw transfer.
+3. Finish the Slave interrupt handling.
 
-> > -----------------------------------------------------------------------
-> > 2) As part of implementing the above agreed approach, when I exposed
-> > PCI "untrusted" attribute to userspace, it ran into discussion that
-> > concluded that instead of this, the device core should be enhanced
-> > with a location attribute.
-> > https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
-> > -----------------------------------------------------------------------
-> > ...
-> > The attribute should be called something like "location" or something
-> > like that (naming is hard), as you don't always know if something is
-> > external or not (it could be internal, it could be unknown, it could be
-> > internal to an external device that you trust (think PCI drawers for
-> > "super" computers that are hot pluggable but yet really part of the
-> > internal bus).
-> > ....
-> > "trust" has no direct relation to the location, except in a policy of
-> > what you wish to do with that device, so as long as you keep them
-> > separate that way, I am fine with it.
-> > ...
-> > -----------------------------------------------------------------------
-> >
-> > And hence this patch. I don't see an attribute in USB comparable to
-> > this new attribute, except for the boolean "removable" may be. Are you
-> > suggesting to pull that into the device core instead of adding this
-> > "physical_location" attribute?
-> 
-> He's suggesting you pull the "authorized" attribute into the driver
-> core. That's the mechanism USB uses to block drivers binding unless
-> userspace authorizes them. I don't see any reason why we can't re-use
-> that sysfs interface for PCI devices since the problem being solved is
-> fundamentally the same. The main question is what we should do as a
-> default policy in the kernel. For USB the default comes from the
-> "authorized_default" module param of usbcore:
-> 
-> > /* authorized_default behaviour:
-> >  * -1 is authorized for all devices except wireless (old behaviour)
-> >  * 0 is unauthorized for all devices
-> >  * 1 is authorized for all devices
-> >  * 2 is authorized for internal devices
-> >  */
-> > #define USB_AUTHORIZE_WIRED   -1
-> > #define USB_AUTHORIZE_NONE    0
-> > #define USB_AUTHORIZE_ALL     1
-> > #define USB_AUTHORIZE_INTERNAL        2
-> >
-> > static int authorized_default = USB_AUTHORIZE_WIRED;
-> > module_param(authorized_default, int, S_IRUGO|S_IWUSR);
-> 
-> So the default policy for USB is to authorize any wired USB device and
-> we can optionally restrict that to just integrated devices. Sounding
-> familiar?
+Interrupts are triggered in step 1 and 2.2, but step 2.2's handler will not=
+ be
+invoked if step 1's handler is not return yet.
+What we do is to spawn a worker thread to do step 2 and return from step 1.
+So the handler can be invoked when the transfer response interrupt arrives.
 
-Thank you, that is what I have been trying to get across here, obviously
-I didn't do a good job.  :)
-
-Thanks for the summary.
-
-> The internal / external status is still useful to know so we might
-> want to make a sysfs attribute for that too. However, I'd like to
-> point out that internal / external isn't the whole story. As I
-> mentioned in the last thread if I have a BMC device I *really* don't
-> want it to be authorized by default even though it's an internal
-> device. Similarly, if I know all my internal cards support PCIe
-> Component Authentication then I might choose not to trust any PCI
-> devices unless they authenticate successfully.
-
-Agreed.
-
-> > 3) The one deviation from the agreed approach in (1) is
-> > https://patchwork.kernel.org/patch/11633095/ . The reason is I
-> > realized that contrary to what I earlier believed, we might not be
-> > able to disable the PCI link to all external PCI devices at boot. So
-> > external PCI devices may actually bind to drivers before userspace
-> > comes up and does "echo 0 > /sys/bus/pci/drivers_autoprobe").
-> 
-> Yep, that's a problem. If we want to provide a useful mechanism to
-> userspace then the default behaviour of the kernel can't undermine
-> that mechanism. If that means we need another kernel command line
-> parameter then I guess we just have to live with it.
-
-I really do not want yet-another-kernel-command-line-option if we can
-help it at all.  Sane defaults are the best thing to do here.  Userspace
-comes up really early, put your policy in there, not in blobs passed
-from your bootloader.
-
-thanks,
-
-greg k-h
+>=20
+> --
+> ~Vinod
