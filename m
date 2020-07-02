@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2857E20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3132083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653266;
-	bh=PeKvIN1kjCHm+SwAwXuvBKYp1u9GRzDXbVJh2Y8Q7CU=;
+	s=default; t=1593653270;
+	bh=7KAztGtg5zIFVJoJpv7CQCGrmy5Zf3wf58AWBtyQj04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MWWZmCQc5ppwUE2SgP3NNQWf/NvZh/wnjYCaE11OkCkj9mDUyPWn/qshh/CrFQAN
-	 5ZRKii4hXMxauXJnmDkH7L23JO36z6HccpOUxWMWrYupqUHtt3VYkl3E3I0bjl3x/r
-	 r/jq89w3ZsMFD7/1jjsl11m/HivcW/rFxFZRHwk0=
+	b=dg9EitR92iYyiEe96W7GaKJpNYdjD6VTwl4VVLQXBAdmLoyU04rvlzt8V/OB6WJWM
+	 +AovMxr8TeDvV+OPu1BbTnEs766WJN9MfbxTbLSTKMIQT5qmDhBKxcblcDhjAhmBhW
+	 qEaAdP/F91ug0Lvt/IStBGQ8ypclmozrIclgXrxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgGBB1o (ORCPT
+        id S1729590AbgGBB1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgGBB1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:01 -0400
+        id S1729395AbgGBB1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5653A20C56;
-        Thu,  2 Jul 2020 01:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46C7D214D8;
+        Thu,  2 Jul 2020 01:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653220;
-        bh=PeKvIN1kjCHm+SwAwXuvBKYp1u9GRzDXbVJh2Y8Q7CU=;
+        s=default; t=1593653229;
+        bh=7KAztGtg5zIFVJoJpv7CQCGrmy5Zf3wf58AWBtyQj04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jy6ej8OgPUwk5kvktOTrs0LNBoElS6STMy3XQrt9RsrA8sTiKS9fvr2rosyk+fl56
-         va/OBfUuDuE9eym4hEGf05pWiOUSes8T+K1MBr/g5q6H2nFErJ9h93kFUsW4MyFoN0
-         SpdC1ZeVOJUTNBc+r3OmcWQo2aGjdKzYgTwzFXLg=
+        b=q3Yx1Y6Y+8szKr712igEHEcAP/NQDLSHakcELQX+QtiPF+NYTcoyq+SNkGBGocdVf
+         z4EqlgxFFCYWDAjiLCfsk9PtXjGKYAxOBB8Olk5BcAR7EAIxuL7J7nes9vr6/wE0hK
+         PeqSCt9QDOG4+UcpHbh/1EYE8Rl7AjcONAab3NNI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ciara Loftus <ciara.loftus@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/17] ixgbe: protect ring accesses with READ- and WRITE_ONCE
-Date:   Wed,  1 Jul 2020 21:26:40 -0400
-Message-Id: <20200702012649.2701799-8-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 15/17] nvme-rdma: assign completion vector correctly
+Date:   Wed,  1 Jul 2020 21:26:47 -0400
+Message-Id: <20200702012649.2701799-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012649.2701799-1-sashal@kernel.org>
 References: <20200702012649.2701799-1-sashal@kernel.org>
@@ -62,110 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ciara Loftus <ciara.loftus@intel.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit f140ad9fe2ae16f385f8fe4dc9cf67bb4c51d794 ]
+[ Upstream commit 032a9966a22a3596addf81dacf0c1736dfedc32a ]
 
-READ_ONCE should be used when reading rings prior to accessing the
-statistics pointer. Introduce this as well as the corresponding WRITE_ONCE
-usage when allocating and freeing the rings, to ensure protected access.
+The completion vector index that is given during CQ creation can't
+exceed the number of support vectors by the underlying RDMA device. This
+violation currently can accure, for example, in case one will try to
+connect with N regular read/write queues and M poll queues and the sum
+of N + M > num_supported_vectors. This will lead to failure in establish
+a connection to remote target. Instead, in that case, share a completion
+vector between queues.
 
-Signed-off-by: Ciara Loftus <ciara.loftus@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c  | 12 ++++++------
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 14 +++++++++++---
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ drivers/nvme/host/rdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-index f1bfae0c41d0c..3cf8b3ea43b08 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c
-@@ -917,7 +917,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 			ring->queue_index = txr_idx;
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 9fffe41ead500..c91bfd839cabe 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -470,7 +470,7 @@ static int nvme_rdma_create_queue_ib(struct nvme_rdma_queue *queue)
+ 	 * Spread I/O queues completion vectors according their queue index.
+ 	 * Admin queues can always go on completion vector 0.
+ 	 */
+-	comp_vector = idx == 0 ? idx : idx - 1;
++	comp_vector = (idx == 0 ? idx : idx - 1) % ibdev->num_comp_vectors;
  
- 		/* assign ring to adapter */
--		adapter->tx_ring[txr_idx] = ring;
-+		WRITE_ONCE(adapter->tx_ring[txr_idx], ring);
- 
- 		/* update count and index */
- 		txr_count--;
-@@ -944,7 +944,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 		set_ring_xdp(ring);
- 
- 		/* assign ring to adapter */
--		adapter->xdp_ring[xdp_idx] = ring;
-+		WRITE_ONCE(adapter->xdp_ring[xdp_idx], ring);
- 
- 		/* update count and index */
- 		xdp_count--;
-@@ -991,7 +991,7 @@ static int ixgbe_alloc_q_vector(struct ixgbe_adapter *adapter,
- 			ring->queue_index = rxr_idx;
- 
- 		/* assign ring to adapter */
--		adapter->rx_ring[rxr_idx] = ring;
-+		WRITE_ONCE(adapter->rx_ring[rxr_idx], ring);
- 
- 		/* update count and index */
- 		rxr_count--;
-@@ -1020,13 +1020,13 @@ static void ixgbe_free_q_vector(struct ixgbe_adapter *adapter, int v_idx)
- 
- 	ixgbe_for_each_ring(ring, q_vector->tx) {
- 		if (ring_is_xdp(ring))
--			adapter->xdp_ring[ring->queue_index] = NULL;
-+			WRITE_ONCE(adapter->xdp_ring[ring->queue_index], NULL);
- 		else
--			adapter->tx_ring[ring->queue_index] = NULL;
-+			WRITE_ONCE(adapter->tx_ring[ring->queue_index], NULL);
- 	}
- 
- 	ixgbe_for_each_ring(ring, q_vector->rx)
--		adapter->rx_ring[ring->queue_index] = NULL;
-+		WRITE_ONCE(adapter->rx_ring[ring->queue_index], NULL);
- 
- 	adapter->q_vector[v_idx] = NULL;
- 	napi_hash_del(&q_vector->napi);
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 64ee45b6680a0..9c3fa0b555519 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -6842,7 +6842,10 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
- 	}
- 
- 	for (i = 0; i < adapter->num_rx_queues; i++) {
--		struct ixgbe_ring *rx_ring = adapter->rx_ring[i];
-+		struct ixgbe_ring *rx_ring = READ_ONCE(adapter->rx_ring[i]);
-+
-+		if (!rx_ring)
-+			continue;
- 		non_eop_descs += rx_ring->rx_stats.non_eop_descs;
- 		alloc_rx_page_failed += rx_ring->rx_stats.alloc_rx_page_failed;
- 		alloc_rx_buff_failed += rx_ring->rx_stats.alloc_rx_buff_failed;
-@@ -6861,15 +6864,20 @@ void ixgbe_update_stats(struct ixgbe_adapter *adapter)
- 	packets = 0;
- 	/* gather some stats to the adapter struct that are per queue */
- 	for (i = 0; i < adapter->num_tx_queues; i++) {
--		struct ixgbe_ring *tx_ring = adapter->tx_ring[i];
-+		struct ixgbe_ring *tx_ring = READ_ONCE(adapter->tx_ring[i]);
-+
-+		if (!tx_ring)
-+			continue;
- 		restart_queue += tx_ring->tx_stats.restart_queue;
- 		tx_busy += tx_ring->tx_stats.tx_busy;
- 		bytes += tx_ring->stats.bytes;
- 		packets += tx_ring->stats.packets;
- 	}
- 	for (i = 0; i < adapter->num_xdp_queues; i++) {
--		struct ixgbe_ring *xdp_ring = adapter->xdp_ring[i];
-+		struct ixgbe_ring *xdp_ring = READ_ONCE(adapter->xdp_ring[i]);
- 
-+		if (!xdp_ring)
-+			continue;
- 		restart_queue += xdp_ring->tx_stats.restart_queue;
- 		tx_busy += xdp_ring->tx_stats.tx_busy;
- 		bytes += xdp_ring->stats.bytes;
+ 	/* +1 for ib_stop_cq */
+ 	queue->ib_cq = ib_alloc_cq(ibdev, queue,
 -- 
 2.25.1
 
