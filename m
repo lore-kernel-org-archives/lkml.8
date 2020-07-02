@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46684C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F3220748
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36C2206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653686;
-	bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+	s=default; t=1593653697;
+	bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vm0D1KQL6pNx6FFfTV0MTWhMIbk1NOA+1qceJ4GRBuZdU+IgP0IDmh/aUYtnWK6hC
-	 ohjQbAd1T6URPkS695Z8JA96D34TzZFE6Ful1YIirgqwiuk4sdxpZlvan9a25kuP8W
-	 Jk2V+fpy4bU+BtRikqc1T8lIH/JLJzcs/DiIS3JU=
+	b=QYMv7fIBRvNIbDpebYCiUI8vJxsIfYtE4ffmpW5ZW45XLcxritN0oYOGrNEgh5iZq
+	 4NXMLDXzIQJbSXHOlEjDycFNfnQh0k2+GK7ZEQhvk52VZSt/9JODKAYLRwnc80XHaS
+	 JKunWvtelWl56jCvOhGsErn0vZCC3Pw/VgZWilh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgGBBeo (ORCPT
+        id S1729139AbgGBBe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgGBBZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:25:28 -0400
+        id S1728410AbgGBBXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1ECE20748;
-        Thu,  2 Jul 2020 01:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7212088E;
+        Thu,  2 Jul 2020 01:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653128;
-        bh=sIUlAmhTnfBS1jKcMvo/2Rk0jPaABNfNX5aq1FKva4I=;
+        s=default; t=1593653017;
+        bh=YTaFIXKUgmcdP1e9IE1EuXcT+y6FsRB2iZKzwevw40I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEh0HavWZPIC3UI4p6rfcFjLA3I/cx7X2AgPo2vJzpCU+W/jsCjko/3mGbB6wwA6+
-         JfbkWVn2JueOE7+vZF3xqTdja0dMFbtu3SfLafhUE6CdR+3h8sYuFZPAKsM2IyN8t3
-         6nSlL8juyyv63SGdoktMQNBWy2TJ9H6ARdB+NqFk=
+        b=SFE+0cW5RBNlPt8/ttmNZhznXFnqv/ynMlpUqZTnr1AglOFUZaDkKpdVSiBjjV0CU
+         JhHtnSUuYOl2B31rWtemc9tBoCcbQ6nUo98GLFZJHXShbidS0tlaCeh6GzSsQtsF5y
+         D3gWAVZDG72s8kLjUSamgGYBT5ZhQ+FX0KH6m8Tw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 03/40] perf/x86/rapl: Fix RAPL config variable bug
-Date:   Wed,  1 Jul 2020 21:23:24 -0400
-Message-Id: <20200702012402.2701121-3-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 34/53] drm: panel-orientation-quirks: Use generic orientation-data for Acer S1003
+Date:   Wed,  1 Jul 2020 21:21:43 -0400
+Message-Id: <20200702012202.2700645-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702012402.2701121-1-sashal@kernel.org>
-References: <20200702012402.2701121-1-sashal@kernel.org>
+In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
+References: <20200702012202.2700645-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 16accae3d97f97d7f61c4ee5d0002bccdef59088 ]
+[ Upstream commit a05caf9e62a85d12da27e814ac13195f4683f21c ]
 
-This patch fixes a bug introduced by:
+The Acer S1003 has proper DMI strings for sys-vendor and product-name,
+so we do not need to match by BIOS-date.
 
-  fd3ae1e1587d6 ("perf/x86/rapl: Move RAPL support to common x86 code")
+This means that the Acer S1003 can use the generic lcd800x1280_rightside_up
+drm_dmi_panel_orientation_data struct which is also used by other quirks.
 
-The Kconfig variable name was wrong. It was missing the CONFIG_ prefix.
-
-Signed-off-by: Stephane Eranian <eraniangoogle.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200528201614.250182-1-eranian@google.com
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200531093025.28050-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index b418ef6878796..726e83c0a31a1 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y					+= core.o probe.o
--obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
-+obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= rapl.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index d11d83703931e..d00ea384dcbfe 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -30,12 +30,6 @@ struct drm_dmi_panel_orientation_data {
+ 	int orientation;
+ };
+ 
+-static const struct drm_dmi_panel_orientation_data acer_s1003 = {
+-	.width = 800,
+-	.height = 1280,
+-	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+-};
+-
+ static const struct drm_dmi_panel_orientation_data asus_t100ha = {
+ 	.width = 800,
+ 	.height = 1280,
+@@ -114,7 +108,7 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Acer"),
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "One S1003"),
+ 		},
+-		.driver_data = (void *)&acer_s1003,
++		.driver_data = (void *)&lcd800x1280_rightside_up,
+ 	}, {	/* Asus T100HA */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
 2.25.1
 
