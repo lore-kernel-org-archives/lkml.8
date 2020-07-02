@@ -2,153 +2,152 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681B620936
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C7C2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e+KGmqng"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HV4SxcyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgGBVCp (ORCPT
+        id S1726325AbgGBVC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:02:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36223 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgGBVCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:02:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593723764; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=N0Ded94Yw/A97ejOt/Byw9brMZzuEH1tTLERSwoMMfg=; b=e+KGmqngERNIJy0+BRmIUPi8uiOYh0EQDsHFR/FRxW5qnvH5ykuMk9h2lKzoXtkUCFQ3Zy86
- 4tO+p81gT+CcH92ZNepYC24BchES40b4XzlmUrFN2xmZa/gXIS+9otE9ToH2bX9cFv8ES5yK
- /HiVPmpqTNfXr+4IUc8ubhFnlNQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5efe4b63117610c7ff6eed26 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 21:02:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B5E81C43391; Thu,  2 Jul 2020 21:02:26 +0000 (UTC)
-Received: from [192.168.1.117] (ip70-179-20-127.sd.sd.cox.net [70.179.20.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C160DC433C6;
-        Thu,  2 Jul 2020 21:02:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C160DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-Subject: Re: [PATCH 4/4] interconnect: qcom: Fix small BW votes being
- truncated to zero
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200623040814.23791-1-mdtipton@codeaurora.org>
- <20200623040814.23791-5-mdtipton@codeaurora.org>
- <09f21847-33bc-64fb-aeb7-df5bafa5593c@linaro.org>
-From:   Mike Tipton <mdtipton@codeaurora.org>
-Message-ID: <d093fed9-dede-93dc-2990-80769d0d4439@codeaurora.org>
-Date:   Thu, 2 Jul 2020 14:02:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 17:02:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43374 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgGBVC6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 17:02:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062KktL2183409;
+        Thu, 2 Jul 2020 21:02:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=YiWks5ex821tPWXOK4J5iyPZscj0Ms1G+WO1UwXxeWo=;
+ b=HV4SxcyKJ5QMnsrtkXPtkqL1uFB4p4iNEG3t/8gTX4iXpKsqwVdxHJ5vlUISWSb6aQ8L
+ OIEsPTYEkp9wdWDfNorx2fcdSzkfN/Sb2/3yUH5JHNMOzrcM3WAzk2ZsBPnIbuhRM5q1
+ A8qNujxk/bz0EygVq49sVtp8HEtqz/oXlPrCHbw4PmRO+s/6N4+gnZlWeJCuF2V421Wl
+ WUjyfpdZuSwwX/hxENZZdXh5/pp84l5Z3P9CeySNXFdg8Wl8VdkgHL+jSYJA0J8hacDD
+ IlAhK2KSGBq+ybP/rIrkusWzr2I1vfp1TP/HpxsCKe9dSrRUVxUFRXhohH/kj008vm79 ZA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31wxrnjn86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 02 Jul 2020 21:02:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 062Kmut9122943;
+        Thu, 2 Jul 2020 21:02:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 31y52nac7f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Jul 2020 21:02:47 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 062L2hLw032250;
+        Thu, 2 Jul 2020 21:02:44 GMT
+Received: from [10.39.209.60] (/10.39.209.60)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Jul 2020 21:02:43 +0000
+Subject: Re: [PATCH v2 1/2] xen/xenbus: avoid large structs and arrays on the
+ stack
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200701121638.19840-1-jgross@suse.com>
+ <20200701121638.19840-2-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <80b8927f-d654-44f3-a860-fb3e395652d6@oracle.com>
+Date:   Thu, 2 Jul 2020 17:02:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <09f21847-33bc-64fb-aeb7-df5bafa5593c@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200701121638.19840-2-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/2020 4:11 AM, Georgi Djakov wrote:
-> Hi Mike,
-> 
-> On 6/23/20 07:08, Mike Tipton wrote:
->> Small BW votes that translate to less than a single BCM unit are
->> currently truncated to zero. Ensure that non-zero BW requests always
->> result in at least a vote of 1 to BCM.
->>
->> Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
->> Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
->> ---
->>   drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
->>   1 file changed, 19 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
->> index a68c858ca6b7..9e2612fe7fad 100644
->> --- a/drivers/interconnect/qcom/bcm-voter.c
->> +++ b/drivers/interconnect/qcom/bcm-voter.c
->> @@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
->>   		return 1;
->>   }
->>   
->> +static u64 bcm_div(u64 num, u64 base)
->> +{
->> +	/* Ensure that small votes aren't lost. */
->> +	if (num && num < base)
->> +		return 1;
->> +
->> +	do_div(num, base);
-> 
-> do_div() does a 64-by-32 division, which will truncate these to 32-bit.
-I can change base to a u32. It doesn't need anything more than that.
+On 7/1/20 8:16 AM, Juergen Gross wrote:
+> xenbus_map_ring_valloc() and its sub-functions are putting quite large
+> structs and arrays on the stack. This is problematic at runtime, but
+> might also result in build failures (e.g. with clang due to the option
+> -Werror,-Wframe-larger-than=... used).
+>
+> Fix that by moving most of the data from the stack into a dynamically
+> allocated struct. Performance is no issue here, as
+> xenbus_map_ring_valloc() is used only when adding a new PV device to
+> a backend driver.
+>
+> While at it move some duplicated code from pv/hvm specific mapping
+> functions to the single caller.
+>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-> 
->> +
->> +	return num;
->> +}
->> +
->>   static void bcm_aggregate(struct qcom_icc_bcm *bcm)
->>   {
->> +	struct qcom_icc_node *node;
->>   	size_t i, bucket;
->>   	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
->>   	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
->> @@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
->>   
->>   	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
->>   		for (i = 0; i < bcm->num_nodes; i++) {
->> -			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
->> -			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
->> +			node = bcm->nodes[i];
->> +			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
->> +				       node->buswidth * node->channels);
->>   			agg_avg[bucket] = max(agg_avg[bucket], temp);
->>   
->> -			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
->> -			do_div(temp, bcm->nodes[i]->buswidth);
->> +			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
->> +				       node->buswidth);
->>   			agg_peak[bucket] = max(agg_peak[bucket], temp);
->>   		}
->>   
->>   		temp = agg_avg[bucket] * bcm->vote_scale;
->> -		do_div(temp, bcm->aux_data.unit);
->> -		bcm->vote_x[bucket] = temp;
->> +		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
->>   
->>   		temp = agg_peak[bucket] * bcm->vote_scale;
->> -		do_div(temp, bcm->aux_data.unit);
->> -		bcm->vote_y[bucket] = temp;
->> +		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
->>   	}
->>   
->>   	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
->>
-> 
-> The rest looks good.
-> 
-> Thanks,
-> Georgi
-> 
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+
