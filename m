@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B69C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B57BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7635E212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E2D20874
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653212;
-	bh=7unQuD6RQF9evWNzPIBBNm4pqs2Zj8iAyTBFtKok13Y=;
+	s=default; t=1593653216;
+	bh=73609KfXOAIqlc6B/woCVMBcJsoRgZARJtEgN0Js7a4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOfPSRr9g6q4kTHV9ltmDE4Q+Klb9qCiAglpe2LaULj+J6RY9k5dOWzx1JvTzE0K4
-	 559vA8oF4WWHUEMIoYQ7n5++PkQLnj/F/PfX7/h27Y9ksYBLnQXncSZsd4qEMc8Eds
-	 2cxKbm+Z5KERTECNWnpajPANFSeGKDtsCidriwbA=
+	b=jUnnAkrTO5AYcMT+wuzUcUCvQghHC7Rrxdt4WFIosDJzYkZPkPni4xcDcJ5rPPcVs
+	 eaSFZrqudXCWGZOKoHwDXZpS5JOVBmNfgQHCA1QB17CQETEP9TNPd+DaQ/sdrFLoHe
+	 AN1lnsvde88VYpWot2f6GuoaeBe9GbgzPwcLeHRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgGBB0u (ORCPT
+        id S1729303AbgGBB0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57560 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgGBB0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:26:19 -0400
+        id S1728328AbgGBB0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:26:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E3F320899;
-        Thu,  2 Jul 2020 01:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366022083E;
+        Thu,  2 Jul 2020 01:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653178;
-        bh=7unQuD6RQF9evWNzPIBBNm4pqs2Zj8iAyTBFtKok13Y=;
+        s=default; t=1593653181;
+        bh=73609KfXOAIqlc6B/woCVMBcJsoRgZARJtEgN0Js7a4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMZXpvCI3c2PeSERQiIM1IinkpuoWQWaQF8dALoINsLkpvoK9VGmFv1rFtGOcGee7
-         djAMkQy9zcDSVR81ccY0FUjZWEeFL0dgrWBuoC6w96V0jsAx+MQyWSzq4oCnfi7o6l
-         h/pMtsBUCh2soORxPJ2z/ZlHtFF1GXLui2DaW/TM=
+        b=PyJzOPbjdXTykmA2AtsLAJrBLBqP3Hq1VIIOhIK6bZAm3mL7Mws7iBOAjJYIwb+aN
+         2qohf5S9xY2IwVEJZ47TOx3e0oUhO0kJjkv9ZrZ9rORAHqow7wLkyQqufBHyIjE4Bh
+         TbR7fLhpgACV/RHLKgS5CqlkjRwSs67gBnfmkqj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/27] ARM: dts: omap4-droid4: Fix spi configuration and increase rate
-Date:   Wed,  1 Jul 2020 21:25:50 -0400
-Message-Id: <20200702012615.2701532-2-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/27] btrfs: use kfree() in btrfs_ioctl_get_subvol_info()
+Date:   Wed,  1 Jul 2020 21:25:53 -0400
+Message-Id: <20200702012615.2701532-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012615.2701532-1-sashal@kernel.org>
 References: <20200702012615.2701532-1-sashal@kernel.org>
@@ -61,50 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 0df12a01f4857495816b05f048c4c31439446e35 ]
+[ Upstream commit b091f7fede97cc64f7aaad3eeb37965aebee3082 ]
 
-We can currently sometimes get "RXS timed out" errors and "EOT timed out"
-errors with spi transfers.
+In btrfs_ioctl_get_subvol_info(), there is a classic case where kzalloc()
+was incorrectly paired with kzfree(). According to David Sterba, there
+isn't any sensitive information in the subvol_info that needs to be
+cleared before freeing. So kzfree() isn't really needed, use kfree()
+instead.
 
-These errors can be made easy to reproduce by reading the cpcap iio
-values in a loop while keeping the CPUs busy by also reading /dev/urandom.
-
-The "RXS timed out" errors we can fix by adding spi-cpol and spi-cpha
-in addition to the spi-cs-high property we already have.
-
-The "EOT timed out" errors we can fix by increasing the spi clock rate
-to 9.6 MHz. Looks similar MC13783 PMIC says it works at spi clock rates
-up to 20 MHz, so let's assume we can pick any rate up to 20 MHz also
-for cpcap.
-
-Cc: maemo-leste@lists.dyne.org
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index f57acf8f66b95..75de8134b1d1f 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -16,8 +16,10 @@ cpcap: pmic@0 {
- 		#interrupt-cells = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		spi-max-frequency = <3000000>;
-+		spi-max-frequency = <9600000>;
- 		spi-cs-high;
-+		spi-cpol;
-+		spi-cpha;
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index a5ae02bf3652b..60418b1fcef5b 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -2723,7 +2723,7 @@ static int btrfs_ioctl_get_subvol_info(struct file *file, void __user *argp)
  
- 		cpcap_adc: adc {
- 			compatible = "motorola,mapphone-cpcap-adc";
+ out:
+ 	btrfs_free_path(path);
+-	kzfree(subvol_info);
++	kfree(subvol_info);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
