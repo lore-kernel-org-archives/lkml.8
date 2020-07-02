@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0CE7206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513F0206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653346;
-	bh=9KSiEnsen1Uz6+bjwmI6z98B+CHqqeoJN7y2wg4gS0I=;
+	s=default; t=1593653351;
+	bh=HQ0RL3PqNuqnPSDpWahWC774iELBt8xrsGRygVPHgJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ks2NUBbXEefFa+vX+lSFhB5o6Z7XVwS6y0SxRbCSK/Pa2MIMHuTakRdnyM6JEhDCd
-	 6vWWIRzemFvWdb2VDNHe1idD8a8PMdnmXmnfkctcHw9nquqq9MvgZ+E07TKlOdH5ca
-	 FgL8t6M5/yzClEtLBND/B7FMHajhmhf5OeFmOR5A=
+	b=wS+FY2ncYjWfKL7dDyxfNEcnsYJ3RXwKNXdDodiXXbEultF1PQzszhj4WD5g2ZBIv
+	 KNcMqBXOlFsABasTWzEkhlnlS7XrsSlwdf0zKaECcj12VQ8lek//O6C7koH8j0J4tQ
+	 HMGiSmqkbPvwOYnYDiolyf2uRthB54vAKSlVxl24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgGBB3D (ORCPT
+        id S1729519AbgGBB3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:29:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgGBB10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:27:26 -0400
+        id S1729111AbgGBB1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:27:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F5720C56;
-        Thu,  2 Jul 2020 01:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBDD221473;
+        Thu,  2 Jul 2020 01:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653246;
-        bh=9KSiEnsen1Uz6+bjwmI6z98B+CHqqeoJN7y2wg4gS0I=;
+        s=default; t=1593653242;
+        bh=HQ0RL3PqNuqnPSDpWahWC774iELBt8xrsGRygVPHgJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alqfmE8rXpybkPZ6L6rsPAOyEsoTG3Y7HUv5yp/dlWA9u/bvCO98+kLzaPbp1/zfp
-         onj2jef+3pcKcV0XXmrsSK9lQ6HM+CtryNua5uVb/xV6xqjpxiExw0fjT8DelfgoJQ
-         EHP4WMcFnPLhV9AgNg+YjVRCcpPn5CmwiFO+5s00=
+        b=RvgjfNRPIgMaHNMRdAdCrgEuOwajU88Vte4npnAyLxpFAdqcgwbEppCJSUxFptyGv
+         2pocrGr+8mxZTbhGwVVZEcGR0yvROvviL1O2eezD4svY/Nu9EzYq23qIFG+/wmkHqh
+         swGVeV88uezgd8sIt3kcQezy54lMS8OEjsca8xkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 11/13] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Date:   Wed,  1 Jul 2020 21:27:10 -0400
-Message-Id: <20200702012712.2701986-11-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/13] s390/kasan: fix early pgm check handler execution
+Date:   Wed,  1 Jul 2020 21:27:07 -0400
+Message-Id: <20200702012712.2701986-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012712.2701986-1-sashal@kernel.org>
 References: <20200702012712.2701986-1-sashal@kernel.org>
@@ -59,69 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 4845446036fc9c13f43b54a65c9b757c14f5141b ]
+[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
 
-if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
-corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+Currently if early_pgm_check_handler is called it ends up in pgm check
+loop. The problem is that early_pgm_check_handler is instrumented by
+KASAN but executed without DAT flag enabled which leads to addressing
+exception when KASAN checks try to access shadow memory.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fix that by executing early handlers with DAT flag on under KASAN as
+expected.
+
+Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/s390/kernel/early.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index dd9eb3f14f45c..6da26692f2fde 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -481,14 +481,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
+index a651c2bc94ef8..f862cc27fe98f 100644
+--- a/arch/s390/kernel/early.c
++++ b/arch/s390/kernel/early.c
+@@ -288,6 +288,8 @@ static noinline __init void setup_lowcore_early(void)
+ 	psw_t psw;
  
- 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -511,7 +511,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
- 	if (ret) {
- 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
-@@ -558,7 +558,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 		&imx6_suspend,
- 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
- 
--	goto put_node;
-+	goto put_device;
- 
- pl310_cache_map_failed:
- 	iounmap(pm_info->gpc_base.vbase);
-@@ -568,6 +568,8 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	iounmap(pm_info->src_base.vbase);
- src_map_failed:
- 	iounmap(pm_info->mmdc_base.vbase);
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
+ 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
++	if (IS_ENABLED(CONFIG_KASAN))
++		psw.mask |= PSW_MASK_DAT;
+ 	psw.addr = (unsigned long) s390_base_ext_handler;
+ 	S390_lowcore.external_new_psw = psw;
+ 	psw.addr = (unsigned long) s390_base_pgm_handler;
 -- 
 2.25.1
 
