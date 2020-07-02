@@ -2,100 +2,126 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE39C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2647F20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DD8207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="H7qg5TDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgGBNp3 (ORCPT
+        id S1729422AbgGBNqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:45:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45060 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgGBNp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:45:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1EAA1AD88;
-        Thu,  2 Jul 2020 13:45:26 +0000 (UTC)
-Subject: Re: [PATCH v6 6/6] mm/vmscan: restore active/inactive ratio for
- anonymous LRU
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592371583-30672-7-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <ed5a75ea-42bb-9acf-c567-3ff2d2af4fcb@suse.cz>
-Date:   Thu, 2 Jul 2020 15:45:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 2 Jul 2020 09:46:48 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:40176 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729047AbgGBNqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:46:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593697607; x=1625233607;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=npTNr8twP/tyLNtM3PSd3ahFvXvXe/yaEybXuDL7ItU=;
+  b=H7qg5TDCWJd4LCgSbz64hN631JCpsmHFHRqAJlPnJ3OwKCbGOd/hSAUZ
+   e4klBvWqg9gKpohMvZQcOM/1H2QEWwmFfNmpufBV3OToCg72Fs0xq+nic
+   Aptep0L35ZQQd/GCM9fhkElAxTqiwQXVcSJG1BNLDohNJAW05hsLjpBTq
+   Wu/exJfMKVM66SdFr1/EOa0G0EoeaW1vslAqBuZ+WEjnWQPyLLYeryGmD
+   1KZzZ9asrv9g+89F8uOja4f/6PwJ0o4T9U3/D78vCLRD7Vcy+AX2R5DCc
+   0HE5/j2+UoHt8mkp8MUE/ljBcpylj5x+4FnWF/6FweR1yQz/ySXx5tTZL
+   A==;
+IronPort-SDR: OGNPd1Jr05acijLqDonYJw21klvbQUik4rG4Uo+B+UvaJ9paa1izCinxXA64RieVLRcf+RS61G
+ qvsDcMBeQEulK8aHy8XRx+OZBOG7sfVu1t7xY/4GlVow410jmtbpI2x3JuVCXtOg33Xp6Jtb2a
+ b7sUrKxb7lOeiMn1O+CGzBox9gy3wUnpzCDw4RyuFxERXIIsexEDn8aY67SeQ1KU7wNp/TFing
+ J0MdUYaVsL6t3NQfwhXWit//au+7oWsmuVvGpzVKw4MxMybd3kd9WXFZLawDvqR/Jq3ThVDDcU
+ ihM=
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="82397838"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:46:46 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 06:46:46 -0700
+Received: from localhost.localdomain (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 06:46:21 -0700
+From:   <nicolas.ferre@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>, <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH] MAINTAINERS: Change Maintainer for some at91 drivers
+Date:   Thu, 2 Jul 2020 15:42:24 +0200
+Message-ID: <20200702134224.3750-1-nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <1592371583-30672-7-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 7:26 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> Now, workingset detection is implemented for anonymous LRU.
-> We don't have to worry about the misfound for workingset due to
-> the ratio of active/inactive. Let's restore the ratio.
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-How about:
+I hand over the maintenance of these drivers to my colleagues. Claudiu,
+Codrin and Tudor already have experience with these controllers and
+sub-systems.
 
-Now that workingset detection is implemented for anonymous LRU, we don't need
-large inactive list to allow detecting frequently accessed pages before they are
-reclaimed, anymore. This effectively reverts the temporary measure put in by
-commit "mm/vmscan: make active/inactive ratio as 1:1 for anon lru".
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+Mark, Sebastian,
 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+I kept these entries together as it may generate conflicts if handled
+separately. I suggest that Mark take the chunk as maintainer of SPI and
+Audio sub-systems.
+Anyway, don't hesitate to tell me if I should handle this change
+differently or at another time during the development cycle.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Best regards,
+  Nicolas
 
-Thanks!
-I still hope Matthew can review updated patch 4/6 (I'm not really familiar with
-proper xarray handling), and Johannes patch 5/6.
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-And then we just need a nice Documentation file describing how reclaim really
-works after all the recent changes :)
-
-Vlastimil
-
-> ---
->  mm/vmscan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index eb02d18..ec77691 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2211,7 +2211,7 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
->  	active = lruvec_page_state(lruvec, NR_LRU_BASE + active_lru);
->  
->  	gb = (inactive + active) >> (30 - PAGE_SHIFT);
-> -	if (gb && is_file_lru(inactive_lru))
-> +	if (gb)
->  		inactive_ratio = int_sqrt(10 * gb);
->  	else
->  		inactive_ratio = 1;
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 496fd4eafb68..1c1527a34d99 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11333,17 +11333,17 @@ F:	drivers/iio/adc/at91-sama5d2_adc.c
+ F:	include/dt-bindings/iio/adc/at91-sama5d2_adc.h
+ 
+ MICROCHIP SAMA5D2-COMPATIBLE SHUTDOWN CONTROLLER
+-M:	Nicolas Ferre <nicolas.ferre@microchip.com>
++M:	Claudiu Beznea <claudiu.beznea@microchip.com>
+ S:	Supported
+ F:	drivers/power/reset/at91-sama5d2_shdwc.c
+ 
+ MICROCHIP SPI DRIVER
+-M:	Nicolas Ferre <nicolas.ferre@microchip.com>
++M:	Tudor Ambarus <tudor.ambarus@microchip.com>
+ S:	Supported
+ F:	drivers/spi/spi-atmel.*
+ 
+ MICROCHIP SSC DRIVER
+-M:	Nicolas Ferre <nicolas.ferre@microchip.com>
++M:	Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+ F:	drivers/misc/atmel-ssc.c
+-- 
+2.27.0
 
