@@ -2,84 +2,109 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D04C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E244220772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593695521;
-	bh=giOuJWzTkbHlW5F2N4y7TcNM6fnozOkTyNNF4tYNyLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cKo4PqQLXR6Rc8LzDdFx9FdBLFYbhgfWgqy3qCq0LxVkc/ky8GICStAwrNuqcsyFJ
-	 6SMd8qUB0QdbAURvbdl8F96RNfoY7FyQak1KXdmB1sqUVgse1dq8A9n20TFGEcrOxB
-	 e7cfk7nD58RHlzUhsZ7/dfRWHNet9vPGCS6XCE8I=
+	by mail.kernel.org (Postfix) with ESMTP id 1AA0B20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="uEOFXLPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgGBNL6 (ORCPT
+        id S1729192AbgGBNL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbgGBNL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 09:11:57 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0EC20772;
-        Thu,  2 Jul 2020 13:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593695516;
-        bh=giOuJWzTkbHlW5F2N4y7TcNM6fnozOkTyNNF4tYNyLE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MeT2PsfbjMC86fZNUKR8lHLwGTMPEqoxVC0OfcVXuwslXHP2lbhNrUCEGwN2BpMqC
-         au6gNQq0WJ2FvURwr6xR8UPkIHjWS+2CiJTewMMV2AFslRLhBpUXZKl2dV+wyLWbyG
-         88r72qSfRMZKBwjHduqYYOeGAh2B4oVnogY9y8eY=
-Date:   Thu, 2 Jul 2020 16:11:52 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: [PATCH rdma-next 0/6] Cleanup mlx5_ib main file
-Message-ID: <20200702131152.GD4837@unreal>
-References: <20200702081809.423482-1-leon@kernel.org>
- <20200702130809.GU23821@mellanox.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729147AbgGBNL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:11:56 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82BD9C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 06:11:56 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id s21so9000663ilk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 06:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4T2/tOm2utLxkDVCIclRjvAJrzJlAzfQSBQGwPXBCYw=;
+        b=uEOFXLPJjXSm2OFaf2ftEyA9WHX4un8w0jz/SrqobbbqcKZnZm/R7Esv+xGohE4MSX
+         eYEgfWhHvh0fgQxGHuEEO0WpWgZmd1UrVO8QB9xNXvI0znnn+W7ztqH7Zhj07zQCFq+r
+         aLLxLhWFkiKdwmHS953X14WU/Ob6SPxfNjepQpEM7BQasYN4jba3hNaxfYOgeCKN52t7
+         oa7EMBUUr2WjO0ZDK2B/8U2UkhKWMWNEdtZZ334qav4caKjlapdqQbSyaWcaeFvValTB
+         NMizvIvdBO9+L8ANXX23ViPVhPcNkK6qaSu8pk/YZf3oGjs96BDk8FUEfeI7YNgDv60N
+         QezA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4T2/tOm2utLxkDVCIclRjvAJrzJlAzfQSBQGwPXBCYw=;
+        b=MkPm5WSFDysgzwZlrayxJXZXUAQkF/2wCE2pZgLj2RUuCUApFZVZBJz4oIslFHGnQn
+         DRXDalDwR0seDsLl7oqtZzSodMflF+sG2QfHRe8QGTQSA/8RQh6xz0lt+y1IfStvRh89
+         uX43cqblEu8yQEvCx7737HVxCtbHTL0G+jaJkniVMF3P+Mzi1VHiwFcYifR140SQl4cV
+         KiYqf9+2GC3DOpx4QFI31jj8jnHQKw+Xoc8XGZunMYjMvZDz+9cOYGpNJHygE2FUXhBL
+         tRpDUhROnbtJ3Z9MW09UPPhSa0Vf9MRx/nSfRI6MqH6HfzfmNzEcqqqQ6vijajeCHn8w
+         YaYg==
+X-Gm-Message-State: AOAM531OxeMmozIVLlK5KNZ/j68eBqAePvIw8pTVi6zkEXDvKSLuqTVG
+        e20eJUxBXdQR4Td7i7tPy5pRDsGe6dRNvqNB2J8k2g==
+X-Google-Smtp-Source: ABdhPJyOSZEb1Tz8D5+CyElWjiUEsBaXIB3CS2khF5aWcydrghdsdkSKPSM7V/wF+6D+m6eN8BOs+6GQiTgfBM3EQRM=
+X-Received: by 2002:a92:c213:: with SMTP id j19mr12764064ilo.40.1593695515892;
+ Thu, 02 Jul 2020 06:11:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702130809.GU23821@mellanox.com>
+References: <20200629065008.27620-1-brgl@bgdev.pl> <20200629065008.27620-6-brgl@bgdev.pl>
+ <20200702124258.GA1882489@kroah.com>
+In-Reply-To: <20200702124258.GA1882489@kroah.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 2 Jul 2020 15:11:44 +0200
+Message-ID: <CAMRc=Mc6dWCtnFT_SMGLUsggf68i3y7Njr61NyDQ7KeQ-rSErg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] devres: provide devm_krealloc()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 10:08:09AM -0300, Jason Gunthorpe wrote:
-> On Thu, Jul 02, 2020 at 11:18:03AM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@mellanox.com>
-> >
-> > Over the years, the main.c file grew above all imagination and was >8K
-> > LOC of the code. This caused to a huge burden while I started to work on
-> > ib_flow allocation patches.
-> >
-> > This series implements long standing "internal" wish to move flow logic
-> > from the main to separate file.
-> >
-> > Based on
-> > https://lore.kernel.org/linux-rdma/20200630101855.368895-4-leon@kernel.org
+On Thu, Jul 2, 2020 at 2:42 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Isn't this the series you said to drop? Can this be applied
-> independently?
+> On Mon, Jun 29, 2020 at 08:50:07AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Implement the managed variant of krealloc(). This function works with
+> > all memory allocated by devm_kmalloc() (or devres functions using it
+> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+> >
+> > Managed realloc'ed chunks can be manually released with devm_kfree().
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I asked to drop one patch in question, the one that revealed issue with
-reference counting and convoluted error unwind flow.
-https://lore.kernel.org/lkml/20200630145926.GA4837@unreal
-
-It probably can be applied independently, but I didn't try.
-
-Thanks
+[snip!]
 
 >
-> Jason
+> That's a lot of logic that does not seem to match up with the krealloc()
+> logic in mm/slab_common.c, are you sure we need to do all of that?
+>
+
+What are you referring to exactly? The check for rodata? It's because
+devm_kfree() handles this case, while regular kfree() (or krealloc())
+doesn't - there's kfree_const() but no devm_kfree_const().
+
+> Who wants this?
+
+The hwmon commit I mentioned in my response to patch 6/6 explicitly
+mentions the lack of this helper.
+
+Bartosz
