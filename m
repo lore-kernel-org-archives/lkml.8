@@ -2,404 +2,252 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ABDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9219C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4E4208B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6812070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 21:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OREoCa8v"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DF6F1yP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgGBVSq (ORCPT
+        id S1726367AbgGBVTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 17:18:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32643 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726017AbgGBVSq (ORCPT
+        Thu, 2 Jul 2020 17:19:18 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19124 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgGBVTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 17:18:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593724724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NOOEVG8oMXwoAzoP5nGjWD3KW8ptoT68CY6diDWD2bc=;
-        b=OREoCa8vmlk8iOYzWXxCH3ek+eem+LqiHmgA2R5RR3Pl5rJSFwWDO9rsYyEpE+fp2/BKya
-        MtTWeNsw/SE5oWL9sc4IlBiQzraSWNwyGx/3ub+Blkh0a5ejk3J15+UDA/i9tXkiEjWBIw
-        1dNjwRAizflppdkeYgb552gLtCYwUgA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-ovRhBTUfMo6fWiUchCydrw-1; Thu, 02 Jul 2020 17:18:41 -0400
-X-MC-Unique: ovRhBTUfMo6fWiUchCydrw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7ECC4107ACCA;
-        Thu,  2 Jul 2020 21:18:39 +0000 (UTC)
-Received: from x1.home (ovpn-112-156.phx2.redhat.com [10.3.112.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAFEA60CD3;
-        Thu,  2 Jul 2020 21:18:32 +0000 (UTC)
-Date:   Thu, 2 Jul 2020 15:18:32 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     eric.auger@redhat.com, baolu.lu@linux.intel.com, joro@8bytes.org,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com, hao.wu@intel.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/14] vfio/type1: Add VFIO_IOMMU_PASID_REQUEST
- (alloc/free)
-Message-ID: <20200702151832.048b44d1@x1.home>
-In-Reply-To: <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-7-git-send-email-yi.l.liu@intel.com>
-Organization: Red Hat
+        Thu, 2 Jul 2020 17:19:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efe4f480000>; Thu, 02 Jul 2020 14:19:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Jul 2020 14:19:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Jul 2020 14:19:17 -0700
+Received: from [10.2.167.4] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jul
+ 2020 21:19:16 +0000
+Subject: Re: [RFC PATCH v2 12/18] media: tegra-video: Add support for
+ selection ioctl ops
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-13-git-send-email-skomatineni@nvidia.com>
+ <efc84cff-76d5-78a2-e84e-0342459d3756@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <c82a000a-7766-c933-fd69-24eb4885fc14@nvidia.com>
+Date:   Thu, 2 Jul 2020 14:20:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <efc84cff-76d5-78a2-e84e-0342459d3756@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593724744; bh=m/gn6LzfNZLbZK2Es4F3qd/uO2/udwSor8bR8MoCELU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=DF6F1yP0x+ZvpigDgkgCzzAq7ZG8eB/VmAT54tm4bGGJDnmHwESZFAWBAoxNTlkog
+         x7act8InfOZSGD0rEKomeCxuEn9T2C2yIhbgFloqcxDHdlBx/SgttuS0bQNIC2xC/I
+         icYDYmSW8LzUTMljW63ostU1/kQxr089GuPMPOgzbIU5vVeiIR3j/6mJ7fkS5xCk3W
+         ylvDIPisXGGZLBiRTA7wtC5arKBha73ngZzSjH13OBOMA177Uqh3GBzVSWx0SbIWNj
+         XC3xxyuINkGU/Od82WVzcEvhpV68DxV9JpjISAz+4YGEkTZP+aPASI8t/0u//gz+TK
+         cquvkPBJnClsQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 01:55:19 -0700
-Liu Yi L <yi.l.liu@intel.com> wrote:
 
-> This patch allows user space to request PASID allocation/free, e.g. when
-> serving the request from the guest.
-> 
-> PASIDs that are not freed by userspace are automatically freed when the
-> IOASID set is destroyed when process exits.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
-> v1 -> v2:
-> *) move the vfio_mm related code to be a seprate module
-> *) use a single structure for alloc/free, could support a range of PASIDs
-> *) fetch vfio_mm at group_attach time instead of at iommu driver open time
-> ---
->  drivers/vfio/Kconfig            |  1 +
->  drivers/vfio/vfio_iommu_type1.c | 96 ++++++++++++++++++++++++++++++++++++++++-
->  drivers/vfio/vfio_pasid.c       | 10 +++++
->  include/linux/vfio.h            |  6 +++
->  include/uapi/linux/vfio.h       | 36 ++++++++++++++++
->  5 files changed, 147 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-> index 3d8a108..95d90c6 100644
-> --- a/drivers/vfio/Kconfig
-> +++ b/drivers/vfio/Kconfig
-> @@ -2,6 +2,7 @@
->  config VFIO_IOMMU_TYPE1
->  	tristate
->  	depends on VFIO
-> +	select VFIO_PASID if (X86)
->  	default n
->  
->  config VFIO_IOMMU_SPAPR_TCE
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 8c143d5..d0891c5 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -73,6 +73,7 @@ struct vfio_iommu {
->  	bool			v2;
->  	bool			nesting;
->  	struct iommu_nesting_info *nesting_info;
-> +	struct vfio_mm		*vmm;
-
-Structure alignment again.
-
->  	bool			dirty_page_tracking;
->  	bool			pinned_page_dirty_scope;
->  };
-> @@ -1933,6 +1934,17 @@ static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
->  
->  	list_splice_tail(iova_copy, iova);
->  }
-> +
-> +static void vfio_iommu_release_nesting_info(struct vfio_iommu *iommu)
-> +{
-> +	if (iommu->vmm) {
-> +		vfio_mm_put(iommu->vmm);
-> +		iommu->vmm = NULL;
-> +	}
-> +
-> +	kfree(iommu->nesting_info);
-
-iommu->nesting_info = NULL;
-
-> +}
-> +
->  static int vfio_iommu_type1_attach_group(void *iommu_data,
->  					 struct iommu_group *iommu_group)
->  {
-> @@ -2067,6 +2079,25 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  			goto out_detach;
->  		}
->  		iommu->nesting_info = info;
-> +
-> +		if (info->features & IOMMU_NESTING_FEAT_SYSWIDE_PASID) {
-> +			struct vfio_mm *vmm;
-> +			int sid;
-> +
-> +			vmm = vfio_mm_get_from_task(current);
-> +			if (IS_ERR(vmm)) {
-> +				ret = PTR_ERR(vmm);
-> +				goto out_detach;
-> +			}
-> +			iommu->vmm = vmm;
-> +
-> +			sid = vfio_mm_ioasid_sid(vmm);
-> +			ret = iommu_domain_set_attr(domain->domain,
-> +						    DOMAIN_ATTR_IOASID_SID,
-> +						    &sid);
-
-This looks pretty dicey in the case of !CONFIG_VFIO_PASID, can we get
-here in that case?  If so it looks like we're doing bad things with
-setting the domain->ioasid_sid.
-
-> +			if (ret)
-> +				goto out_detach;
-> +		}
->  	}
->  
->  	/* Get aperture info */
-> @@ -2178,7 +2209,8 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	return 0;
->  
->  out_detach:
-> -	kfree(iommu->nesting_info);
-> +	if (iommu->nesting_info)
-> +		vfio_iommu_release_nesting_info(iommu);
-
-Make vfio_iommu_release_nesting_info() check iommu->nesting_info, then
-call it unconditionally?
-
->  	vfio_iommu_detach_group(domain, group);
->  out_domain:
->  	iommu_domain_free(domain->domain);
-> @@ -2380,7 +2412,8 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  				else
->  					vfio_iommu_unmap_unpin_reaccount(iommu);
->  
-> -				kfree(iommu->nesting_info);
-> +				if (iommu->nesting_info)
-> +					vfio_iommu_release_nesting_info(iommu);
->  			}
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
-> @@ -2852,6 +2885,63 @@ static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
->  	return -EINVAL;
->  }
->  
-> +static int vfio_iommu_type1_pasid_alloc(struct vfio_iommu *iommu,
-> +					unsigned int min,
-> +					unsigned int max)
-> +{
-> +	int ret = -ENOTSUPP;
-> +
-> +	mutex_lock(&iommu->lock);
-> +	if (iommu->vmm)
-> +		ret = vfio_pasid_alloc(iommu->vmm, min, max);
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
-> +}
-> +
-> +static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
-> +					unsigned int min,
-> +					unsigned int max)
-> +{
-> +	int ret = -ENOTSUPP;
-> +
-> +	mutex_lock(&iommu->lock);
-> +	if (iommu->vmm) {
-> +		vfio_pasid_free_range(iommu->vmm, min, max);
-> +		ret = 0;
-> +	}
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
-> +}
-> +
-> +static int vfio_iommu_type1_pasid_request(struct vfio_iommu *iommu,
-> +					  unsigned long arg)
-> +{
-> +	struct vfio_iommu_type1_pasid_request req;
-> +	unsigned long minsz;
-> +
-> +	minsz = offsetofend(struct vfio_iommu_type1_pasid_request, range);
-> +
-> +	if (copy_from_user(&req, (void __user *)arg, minsz))
-> +		return -EFAULT;
-> +
-> +	if (req.argsz < minsz || (req.flags & ~VFIO_PASID_REQUEST_MASK))
-> +		return -EINVAL;
-> +
-> +	if (req.range.min > req.range.max)
-
-Is it exploitable that a user can spin the kernel for a long time in
-the case of a free by calling this with [0, MAX_UINT] regardless of
-their actual allocations?
-
-> +		return -EINVAL;
-> +
-> +	switch (req.flags & VFIO_PASID_REQUEST_MASK) {
-> +	case VFIO_IOMMU_ALLOC_PASID:
-> +		return vfio_iommu_type1_pasid_alloc(iommu,
-> +					req.range.min, req.range.max);
-> +	case VFIO_IOMMU_FREE_PASID:
-> +		return vfio_iommu_type1_pasid_free(iommu,
-> +					req.range.min, req.range.max);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -2868,6 +2958,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  		return vfio_iommu_type1_unmap_dma(iommu, arg);
->  	case VFIO_IOMMU_DIRTY_PAGES:
->  		return vfio_iommu_type1_dirty_pages(iommu, arg);
-> +	case VFIO_IOMMU_PASID_REQUEST:
-> +		return vfio_iommu_type1_pasid_request(iommu, arg);
->  	}
->  
->  	return -ENOTTY;
-> diff --git a/drivers/vfio/vfio_pasid.c b/drivers/vfio/vfio_pasid.c
-> index dd5b6d1..2ea9f1a 100644
-> --- a/drivers/vfio/vfio_pasid.c
-> +++ b/drivers/vfio/vfio_pasid.c
-> @@ -54,6 +54,7 @@ void vfio_mm_put(struct vfio_mm *vmm)
->  {
->  	kref_put_mutex(&vmm->kref, vfio_mm_release, &vfio_pasid.vfio_mm_lock);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_mm_put);
->  
->  static void vfio_mm_get(struct vfio_mm *vmm)
->  {
-> @@ -103,6 +104,13 @@ struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task)
->  	mmput(mm);
->  	return vmm;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> +
-> +int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
-> +{
-> +	return vmm->ioasid_sid;
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_mm_ioasid_sid);
->  
->  int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
->  {
-> @@ -112,6 +120,7 @@ int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
->  
->  	return (pasid == INVALID_IOASID) ? -ENOSPC : pasid;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pasid_alloc);
->  
->  void vfio_pasid_free_range(struct vfio_mm *vmm,
->  			    ioasid_t min, ioasid_t max)
-> @@ -129,6 +138,7 @@ void vfio_pasid_free_range(struct vfio_mm *vmm,
->  	for (; pasid <= max; pasid++)
->  		ioasid_free(pasid);
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pasid_free_range);
->  
->  static int __init vfio_pasid_init(void)
->  {
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 74e077d..8e60a32 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -101,6 +101,7 @@ struct vfio_mm;
->  #if IS_ENABLED(CONFIG_VFIO_PASID)
->  extern struct vfio_mm *vfio_mm_get_from_task(struct task_struct *task);
->  extern void vfio_mm_put(struct vfio_mm *vmm);
-> +int vfio_mm_ioasid_sid(struct vfio_mm *vmm);
->  extern int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max);
->  extern void vfio_pasid_free_range(struct vfio_mm *vmm,
->  					ioasid_t min, ioasid_t max);
-> @@ -114,6 +115,11 @@ static inline void vfio_mm_put(struct vfio_mm *vmm)
->  {
->  }
->  
-> +static inline int vfio_mm_ioasid_sid(struct vfio_mm *vmm)
-> +{
-> +	return -ENOTTY;
-> +}
-> +
->  static inline int vfio_pasid_alloc(struct vfio_mm *vmm, int min, int max)
->  {
->  	return -ENOTTY;
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index f1f39e1..657b2db 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1162,6 +1162,42 @@ struct vfio_iommu_type1_dirty_bitmap_get {
->  
->  #define VFIO_IOMMU_DIRTY_PAGES             _IO(VFIO_TYPE, VFIO_BASE + 17)
->  
-> +/**
-> + * VFIO_IOMMU_PASID_REQUEST - _IOWR(VFIO_TYPE, VFIO_BASE + 18,
-> + *				struct vfio_iommu_type1_pasid_request)
-> + *
-> + * PASID (Processor Address Space ID) is a PCIe concept for tagging
-> + * address spaces in DMA requests. When system-wide PASID allocation
-> + * is required by underlying iommu driver (e.g. Intel VT-d), this
-> + * provides an interface for userspace to request pasid alloc/free
-> + * for its assigned devices. Userspace should check the availability
-> + * of this API through VFIO_IOMMU_GET_INFO.
-> + *
-> + * @flags=VFIO_IOMMU_ALLOC_PASID, allocate a single PASID within @range.
-> + * @flags=VFIO_IOMMU_FREE_PASID, free the PASIDs within @range.
-> + * @range is [min, max], which means both @min and @max are inclusive.
-> + * ALLOC_PASID and FREE_PASID are mutually exclusive.
-> + *
-> + * returns: allocated PASID value on success, -errno on failure for
-> + *	     ALLOC_PASID;
-> + *	     0 for FREE_PASID operation;
-> + */
-> +struct vfio_iommu_type1_pasid_request {
-> +	__u32	argsz;
-> +#define VFIO_IOMMU_ALLOC_PASID	(1 << 0)
-> +#define VFIO_IOMMU_FREE_PASID	(1 << 1)
-
-VFIO_IOMMU_PASID_FLAG_{ALLOC,FREE} would be more similar to other VFIO
-UAPI conventions.  Thanks,
-
-Alex
-
-> +	__u32	flags;
-> +	struct {
-> +		__u32	min;
-> +		__u32	max;
-> +	} range;
-> +};
-> +
-> +#define VFIO_PASID_REQUEST_MASK	(VFIO_IOMMU_ALLOC_PASID | \
-> +					 VFIO_IOMMU_FREE_PASID)
-> +
-> +#define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 18)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
-
+On 7/2/20 6:54 AM, Hans Verkuil wrote:
+> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+>> This patch adds selection v4l2 ioctl operations to allow configuring
+>> a selection rectangle in the sensor through the Tegra video device
+>> node.
+>>
+>> Some sensor drivers supporting crop uses try_crop rectangle from
+>> v4l2_subdev_pad_config during try format for computing binning.
+>>
+>> So with selection ops support, this patch also updates try format
+>> to use try crop rectangle either from subdev frame size enumeration
+>> or from subdev crop boundary.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
+>>   1 file changed, 106 insertions(+)
+>>
+>> diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+>> index 506c263..f9eb96b 100644
+>> --- a/drivers/staging/media/tegra-video/vi.c
+>> +++ b/drivers/staging/media/tegra-video/vi.c
+>> @@ -427,6 +427,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>>   	struct v4l2_subdev *subdev;
+>>   	struct v4l2_subdev_format fmt;
+>>   	struct v4l2_subdev_pad_config *pad_cfg;
+>> +	struct v4l2_subdev_frame_size_enum fse = {
+>> +		.which = V4L2_SUBDEV_FORMAT_TRY,
+>> +	};
+>> +	struct v4l2_subdev_selection sdsel = {
+>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>> +		.target = V4L2_SEL_TGT_CROP_BOUNDS,
+>> +	};
+>>   	int ret;
+>>   
+>>   	subdev = tegra_channel_get_remote_subdev(chan, true);
+>> @@ -449,6 +456,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>>   	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
+>>   	fmt.pad = 0;
+>>   	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
+>> +
+>> +	/*
+>> +	 * Attempt to obtain the format size from subdev.
+>> +	 * If not available, try to get crop boundary from subdev.
+>> +	 */
+>> +	fse.code = fmtinfo->code;
+>> +	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
+>> +	if (ret) {
+>> +		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+>> +		if (ret)
+>> +			return -EINVAL;
+>> +		pad_cfg->try_crop.width = sdsel.r.width;
+>> +		pad_cfg->try_crop.height = sdsel.r.height;
+>> +	} else {
+>> +		pad_cfg->try_crop.width = fse.max_width;
+>> +		pad_cfg->try_crop.height = fse.max_height;
+>> +	}
+>> +
+>>   	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
+>>   	if (ret < 0)
+>>   		return ret;
+>> @@ -540,6 +565,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
+>>   	return 0;
+>>   }
+>>   
+>> +static int tegra_channel_g_selection(struct file *file, void *priv,
+>> +				     struct v4l2_selection *sel)
+>> +{
+>> +	struct tegra_vi_channel *chan = video_drvdata(file);
+>> +	struct v4l2_subdev *subdev;
+>> +	struct v4l2_subdev_format fmt = {
+>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>> +	};
+>> +	struct v4l2_subdev_selection sdsel = {
+>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>> +		.target = sel->target,
+>> +	};
+>> +	int ret;
+>> +
+>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>> +		return -ENOTTY;
+>> +
+>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>> +		return -EINVAL;
+>> +	/*
+>> +	 * Try the get selection operation and fallback to get format if not
+>> +	 * implemented.
+>> +	 */
+>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+>> +	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+>> +	if (!ret)
+>> +		sel->r = sdsel.r;
+>> +	if (ret != -ENOIOCTLCMD)
+>> +		return ret;
+>> +
+>> +	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	sel->r.left = 0;
+>> +	sel->r.top = 0;
+>> +	sel->r.width = fmt.format.width;
+>> +	sel->r.height = fmt.format.height;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_channel_s_selection(struct file *file, void *fh,
+>> +				     struct v4l2_selection *sel)
+>> +{
+>> +	struct tegra_vi_channel *chan = video_drvdata(file);
+>> +	struct v4l2_subdev *subdev;
+>> +	int ret;
+>> +	struct v4l2_subdev_selection sdsel = {
+>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>> +		.target = sel->target,
+>> +		.flags = sel->flags,
+>> +		.r = sel->r,
+>> +	};
+>> +
+> This function doesn't check if the subdev actually supports set_selection.
+> The imx219 is one such driver: it supports get_selection, but not set_selection.
+>
+> So this code should add these lines to fix the v4l2-compliance fail:
+>
+>         subdev = tegra_channel_get_remote_subdev(chan, true);
+>
+>         if (!v4l2_subdev_has_op(subdev, pad, set_selection))
+>                 return -ENOTTY;
+>
+v4l2_subdev_call() does that check and returns -ENOIOCTLCMD when 
+specified subdev ops does not exist.
+>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>> +		return -ENOTTY;
+>> +
+>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>> +		return -EINVAL;
+>> +
+>> +	if (vb2_is_busy(&chan->queue))
+>> +		return -EBUSY;
+>> +
+>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+> And this line can be dropped.
+>
+> Regards,
+>
+> 	Hans
+>
+>> +	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
+>> +	if (!ret) {
+>> +		sel->r = sdsel.r;
+>> +		/*
+>> +		 * Subdev active format resolution may have changed during
+>> +		 * set selection operation. So, update channel format to
+>> +		 * the sub-device active format.
+>> +		 */
+>> +		return tegra_channel_set_subdev_active_fmt(chan);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static int tegra_channel_enum_input(struct file *file, void *fh,
+>>   				    struct v4l2_input *inp)
+>>   {
+>> @@ -597,6 +701,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
+>>   	.vidioc_streamoff		= vb2_ioctl_streamoff,
+>>   	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+>>   	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+>> +	.vidioc_g_selection		= tegra_channel_g_selection,
+>> +	.vidioc_s_selection		= tegra_channel_s_selection,
+>>   };
+>>   
+>>   /*
+>>
