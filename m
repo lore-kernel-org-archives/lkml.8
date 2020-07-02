@@ -2,175 +2,135 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B94DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C8120899
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593720822;
-	bh=V1mGD+WcVwqJtI3De7HRKQK2CbpJSCu0TaBaDkLvr5Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lcU91NYPZG5iY8ZlE91I+OvbVsVdP/Qs6N21xHMe4MwaM26PXKBlPuU3a2BJLDUAv
-	 jKJ4w7fTpjbGhjv/Jdjzq6akzhOPGsocUr37twyODVUQts+A5qAj+GBle4laxmNH66
-	 X00SOOrra0bkLXQwMACbS5rcJYneZ6aYJLODsA38=
+	by mail.kernel.org (Postfix) with ESMTP id F127F2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 20:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kwLccC1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgGBUNk (ORCPT
+        id S1726119AbgGBUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 16:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44240 "EHLO
+        Thu, 2 Jul 2020 16:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBUNk (ORCPT
+        with ESMTP id S1725937AbgGBUNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 16:13:40 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8F2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:13:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s9so33800595ljm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:13:39 -0700 (PDT)
+        Thu, 2 Jul 2020 16:13:53 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDD2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 13:13:52 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so30016977wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n2cxC2G42fruU9YdkmbCscagSDf6t96aQCpiutnLY+g=;
-        b=DplINtv0upehX4JKVd1BaB5fDTBrK0Tpj6XHJusYd3DBT15AFa6OeN3s8ZDNK+FyEi
-         mlIaXr4aZ5fRHhgOjj0wMhKdldjgKDPEEFpofCOXVKgG24eXsbrAoVLcOEgjkgZ+O5f9
-         /Wsp7kcTOMkLYf+9QrtBTNzYP2+yfpBIicKhY=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=U0gw4d6sEKgljMIw/xorufjd8mwmlkHltY0nbeUDOQM=;
+        b=kwLccC1jdmZ9S/sUIxMZYAluj9tT/wXdOzG/dR+FetpUWimq2lxiiwlfHzplVLVXRi
+         mDeojQYiHjHJSxP9Hj/LYA9pKrxGWiVnsrIMuPwq4b9oZ2N1v7L2+JskNhJ9RfA0uMou
+         S9j+a80Bdri/1MJ8MybUrqsRQuChqJVpE6b75FeQUqf3ofjIuNMWp2u1rTkZcP+G2ssK
+         IGpG5EfgjFe498A8JMuQ+KZWWWPRm8ymFfC9u0MLTy81n8g2APX42whPf2sdrigH7PFJ
+         ZT5oVGApgWFiuJd6eq3mH4Tm2a/EOohFPQ8rNG+KMJr7F3Bj0x7uCKCfD7V4376q1HHM
+         nsOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n2cxC2G42fruU9YdkmbCscagSDf6t96aQCpiutnLY+g=;
-        b=gbAtT43viVqfNRLb55Dy76C8wqNh8ETQeDJ4QBJk3Qoavdo2rG5SjO4U0lg7UVH84I
-         HjbcJb5wQ9SbFAhTHnftLtBDhbeRBk7Palb7UdsDfpg3V7U/FlkvPYJiL67qFkgeZz3v
-         s9p6FQFKlzT52likPMzvKS0Uea5YXow8ODCSPkHR89tjU5R2lCrsChmZMaZHw0SdYwcr
-         J3rs/vZySgEbs5RpDgegw9DQ1yJ+bcGKL/7r6zk97UmRApl1UJeitXUYAXBbTc5WGebW
-         TxWyY0JGKd1kR3ksph8qFYo0eMUSORy9PAPzcd7IuFHW3vOQnAy33yZ+haIXPkeaIhgn
-         BBCA==
-X-Gm-Message-State: AOAM531wPBxtrwR+jPiTQPZnd1wCfo+B1E/ZmtDE8VgzpYzksMqgrTKP
-        pbbIg1TC8Ctsi/xq4TidWL79hWUviQU=
-X-Google-Smtp-Source: ABdhPJyGY6cOnf4HaQQhbtW6oGwHwMOYnl1P4N57vDYmS1d19yFu3NbyRPlrArPBgIzWwdLqRV5utA==
-X-Received: by 2002:a2e:8ed6:: with SMTP id e22mr12900245ljl.426.1593720817527;
-        Thu, 02 Jul 2020 13:13:37 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id v3sm3330705ljj.110.2020.07.02.13.13.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 13:13:36 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id h22so26686658lji.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 13:13:36 -0700 (PDT)
-X-Received: by 2002:a2e:86c4:: with SMTP id n4mr2566985ljj.312.1593720815949;
- Thu, 02 Jul 2020 13:13:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=U0gw4d6sEKgljMIw/xorufjd8mwmlkHltY0nbeUDOQM=;
+        b=Npdvj8q9jBCjLIwAWF4isnQcmmXO6tMqpgSWWZg8wQ8XgEjAfxO6BZF6lkFVZx9f7T
+         341cAWvcsmjN7QS41YjE+UtaIYQdH8L+ake9z3yEXAGbKylPoMWiQPXRubxj6lA9Xp/m
+         96ZsTSocrrupvtPj0p8VLUBrMYz0kDRVeI8KHRHguvlndJ5k6V1Zskbu/8qYMnZzPh0N
+         hGoPs1Eob00Yj4I8jfA5hBhLyDU2xJTcwOJgdvpT/tA6cUE4lvEMxL+4hX/BuTzilZdL
+         hcI23qFEcoHHYlA9tI588ChtT9XN8CaevrWO2QBVHH+n/eW8CzQJANDFVinwGK82wxEQ
+         au5A==
+X-Gm-Message-State: AOAM532Hvi90zVJ1f4bdfURh/DqK1IQxg4ELWCWE49vX8Cz+ZrJTYac/
+        1MSdDNCE4vyq0fKixfRExhZJdA==
+X-Google-Smtp-Source: ABdhPJzTK2k0WyLaXLeQ6CWKeQub3nkJmFi+VIBMJau3t+pYqru1fQrmoNRj4kXNlirbg6PvravgPw==
+X-Received: by 2002:a05:600c:414f:: with SMTP id h15mr23304225wmm.82.1593720831500;
+        Thu, 02 Jul 2020 13:13:51 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id u1sm2812615wrb.78.2020.07.02.13.13.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 13:13:50 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 21:13:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH 15/15] mmc: host: sdhci-iproc: Tell the compiler that
+ ACPI functions may not be used
+Message-ID: <20200702201348.GT1179328@dell>
+References: <20200701124702.908713-1-lee.jones@linaro.org>
+ <20200701124702.908713-16-lee.jones@linaro.org>
+ <3a32b98c-45c6-6f8d-0853-161f91e65b57@broadcom.com>
 MIME-Version: 1.0
-References: <CAHk-=wjc-ktbOr7ZHMY8gfAmHxUK+aMdDsQjeh+BvmQwnQfN_g@mail.gmail.com>
- <20200701184131.GI2786714@ZenIV.linux.org.uk> <CAHk-=wj_2v9m+yZioE4vOLGW1mc9SBa5+++LdeJ86aEeB5OXcw@mail.gmail.com>
- <20200701195914.GK2786714@ZenIV.linux.org.uk> <CAHk-=wj-CYhKZR8ZKQgi=VTx=o7n6dtwPXikvgkJ3SdiqRPd8A@mail.gmail.com>
- <87lfk26nx4.fsf@mpe.ellerman.id.au> <8be7cf19-9fc9-ce9c-091f-c8824a01a3c8@csgroup.eu>
-In-Reply-To: <8be7cf19-9fc9-ce9c-091f-c8824a01a3c8@csgroup.eu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Jul 2020 13:13:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whNbR76bJSkYKSd4-iHBcksZaw=_3Dy7eELxPVuv5wa5g@mail.gmail.com>
-Message-ID: <CAHk-=whNbR76bJSkYKSd4-iHBcksZaw=_3Dy7eELxPVuv5wa5g@mail.gmail.com>
-Subject: Re: objtool clac/stac handling change..
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a32b98c-45c6-6f8d-0853-161f91e65b57@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 8:13 AM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
-> Isn't it something easy to do in bad_page_fault() ?
+On Thu, 02 Jul 2020, Scott Branden wrote:
 
-Can't the user access functions take any other faults on ppc?
+> Hi Lee,
+> 
+> On 2020-07-01 5:47 a.m., Lee Jones wrote:
+> > ... as is the case when !CONFIG_ACPI.
+> > 
+> > Fixes the following W=1 kernel build warning:
+> > 
+> >   mmc/host/sdhci-iproc.c:297:36: warning: ‘sdhci_iproc_acpi_ids’ defined but not used [-Wunused-const-variable=]
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ray Jui <rjui@broadcom.com>
+> > Cc: Scott Branden <sbranden@broadcom.com>
+> > Cc: bcm-kernel-feedback-list@broadcom.com
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >   drivers/mmc/host/sdhci-iproc.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+> > index 225603148d7de..9c7d130205edd 100644
+> > --- a/drivers/mmc/host/sdhci-iproc.c
+> > +++ b/drivers/mmc/host/sdhci-iproc.c
+> > @@ -294,7 +294,7 @@ static const struct of_device_id sdhci_iproc_of_match[] = {
+> >   };
+> >   MODULE_DEVICE_TABLE(of, sdhci_iproc_of_match);
 
-On x86-64, we have the "address is non-canonical" case which doesn't
-take a page fault at all, but takes a general protection fault
-instead.
+> Would it better to compile this in if CONFIG_ACPI is defined instead?
+> #if CONFIG_ACPI
 
-But note that depending on how you nest and save/restore the state,
-things can be very subtle.
+Literally can't win.
 
-For example, what can happen is:
+ https://lore.kernel.org/linux-arm-kernel/CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com/
 
- (a) user_access_begin()..
+Damned if we do, damned if we don't. ;)
 
- (b) we take a normal interrupt
+> > -static const struct acpi_device_id sdhci_iproc_acpi_ids[] = {
+> > +static const struct acpi_device_id __maybe_unused sdhci_iproc_acpi_ids[] = {
+> >   	{ .id = "BRCM5871", .driver_data = (kernel_ulong_t)&iproc_cygnus_data },
+> >   	{ .id = "BRCM5872", .driver_data = (kernel_ulong_t)&iproc_data },
+> >   	{ /* sentinel */ }
+> 
 
- (c) the interrupt code does something that has an exception handling
-case entirely unrelated to the user access (on x86, it might be the
-"unsafe_msr' logic, for example.
-
- (d) we take that exception, do "fixup_exception()" for whatever that
-interrupt did.
-
- (e) we return from that exception to the fixed up state
-
- (d) we return from the interrupt
-
- (e) we should still have user accesses enabled.
-
-NOTE! on x86, we can have "all fixup_exceptions() will clear AC in the
-exception pt_regs", because AC is part of rflags which is saved on
-(and cleared for the duration of) all interrupt and exceptions.
-
-So what happens is that on x86 all of (b)-(d) will run with AC clear
-and no user accesses allowed, and (e) will have user accesses enabled
-again, because the "fixup_exception()" at (d) only affected the state
-of the interrupt hander (which already had AC clear anyway).
-
-But I don't think exceptions and interrupts save/restore the user
-access state on powerpc, do they?
-
-So on powerpc you do need to be more careful. You would only need to
-disable user access on exceptions that happen _on_ user accesses.
-
-The easiest way to do that is to do what x86 does: different
-exceptions have different handlers. It's not what we did originally,
-but it's been useful.
-
-Hmm.
-
-And again, on x86, this all works fine because of how exceptions
-save/restore the user_access state and it all nests fine. But I'm
-starting to wonder how the nesting works AT ALL for powerpc?
-
-Because that nesting happens even without
-
-IOW, even aside from this whole thing, what happens on PPC, when you have
-
- (a) user_access_begin();
-     - profile NMI or interrupt happens
-     - it wants to do user stack tracing so does
-                pagefault_disable();
-       (b)         get_user();
-                pagefault_enable();
-   - profile NMI/interrupt returns
- (c) user accesss should work here!
-
-even if the "get_user()" in (b) would have done a
-"user_access_begin/end" pair, and regardless of whether (b) might have
-triggered a "fixup_exception()", and whether that fixup_exception()
-then did the user_access_end().
-
-On x86, this is all ok exactly because of how we only have the AC bit,
-and it nests very naturally with any exception handling.
-
-Is the ppc code nesting-safe? Particularly since it has that whole
-range-handling?
-
-                 Linus
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
