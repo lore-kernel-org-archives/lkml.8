@@ -2,133 +2,160 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385F120885
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35ED208B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 22:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="y2q6/ZIm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aDpOVh4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgGBWA0 (ORCPT
+        id S1726342AbgGBWBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 18:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60674 "EHLO
+        Thu, 2 Jul 2020 18:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgGBWAX (ORCPT
+        with ESMTP id S1726017AbgGBWBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 18:00:23 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF010C08C5DE
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 15:00:22 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y10so31577184eje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 15:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hQjS9Ie2JLW+5joMKLIKCU6b/2UCakl57GgRGFSlTtk=;
-        b=y2q6/ZImKC9EyqaN+Cp25cLz1ciVm4U7qtXibl4rJLq7yDQxPIwOaQiDW4uPnhkAI8
-         VRW0HSRxSAmlfFw/Jce/k0WugBY6dAl4O6HQ/sc/VLK6/v4c05dZ28qBMUNFtXbku8Ch
-         AULevi22Fz6RKjCBjNEoLvV62nXHhiI0ALpbVAFFC6eC3/8cU19LT7W6/+o8hdExkIVp
-         SpzhSXPTolBo/5B/rPenjUqcOQ+Q44Ekpah8XqISOcoMHY3/BTSU/R5r9kYGnOKn1iQ4
-         3Eelioz4+/tk104uJvI7uaxboR8nMC2mTgZeV8NgshGTgOJtB/3rVeJ8cjXz8tU5nKfO
-         mLBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hQjS9Ie2JLW+5joMKLIKCU6b/2UCakl57GgRGFSlTtk=;
-        b=scs1oMpIo7HgFxYTjsO+XHV3GWmsShWeeDMe2uPHHGtQPhC1TLTQn4xKAY8syJvaoZ
-         Yh/yutJFiGNw3VSDgS11k3kdkKx0ewsVSBDc3yFPxXu6lNJyDDlDOgNknnsrscslblTd
-         ciROxU3kErWvx2bUiPKQ6Zn3UVhR8KdvjONbpgaDXnU8AVYfw9GS9F2+LPFWxT+wkV2j
-         hF/XBpE+lunzKCRGyiSU/hheO9E21foNC4EdhL1D5PAMG/4Y7pLwyQbuWYGA0CaoyEIu
-         XXAHAVcMi3i+CZl0Y+5CAGw20ezRfhOT2T5KHjD1y8Mn4siUaXueau+J1A/uz/7aqZ0f
-         cLGQ==
-X-Gm-Message-State: AOAM531xaJIgw9q7/FL/mKPXYRtSId4eidoxIwuBEP+0edn1+IuIdjN3
-        9Odsyhb+46cl1iEicpYsx2bAeWbkQDoE0n7P8EKX
-X-Google-Smtp-Source: ABdhPJymg7hoMn4NQo9VkFS8SsNN1VIXxrtL9dctJ/u8BOTmybW6CezLxVIBxEEQqtZorAPFuFOU58gSTBkhV1lUPSk=
-X-Received: by 2002:a17:906:456:: with SMTP id e22mr23944788eja.178.1593727221274;
- Thu, 02 Jul 2020 15:00:21 -0700 (PDT)
+        Thu, 2 Jul 2020 18:01:31 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9596DC08C5C1;
+        Thu,  2 Jul 2020 15:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=M9o/yoakftKlRxGmFhWGkioeRiqSbXBUgs5p6s59O+0=; b=aDpOVh4x4GOtkt487bsCMFmLSw
+        BslNH2ww+Y8SlYgWBognViQiZOYQ6VTKshjcPKegMCvXiA3j0oYopZF6UvSS8zaZM5hDObhUAzQVG
+        LqPztF+/XEFRB85h2czRWj+OsWShXyoZ8ImCpfANrh/FLOJVgTiYyDWemFFKK/61XGNIjAioTzbCE
+        VIcKncMxdL4casr61+Vnh251PCDTUvOJq2ulf8nVAEJeGhdgk9KbPNoXixYAxB0Zz568ML0mGHRla
+        7ggYV3A1rYw2PSvtNxz6BBXgo3AIBAI7U48I6go6z2zO8zrJufEL+Cs7ENsxyLGOpEynIAAsM53Sm
+        hP64XkLA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jr7Gd-0008S8-LM; Thu, 02 Jul 2020 22:01:15 +0000
+Subject: Re: [PATCH v2] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Abhishek Bhardwaj <abhishekbh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Anthony Steinhauser <asteinhauser@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+References: <20200702213807.2511503-1-abhishekbh@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9c648d11-6b52-c755-d0a6-58f035ccd99d@infradead.org>
+Date:   Thu, 2 Jul 2020 15:01:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200701064906.323185-1-areber@redhat.com> <20200701064906.323185-4-areber@redhat.com>
- <20200702211647.GB3283@mail.hallyn.com>
-In-Reply-To: <20200702211647.GB3283@mail.hallyn.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 2 Jul 2020 18:00:10 -0400
-Message-ID: <CAHC9VhQZ=cwiOay6OMMdM1UHm69wDaga9HBkyTbx8-1OU=aBvA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] prctl: Allow ptrace capable processes to change /proc/self/exe
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200702213807.2511503-1-abhishekbh@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 2, 2020 at 5:16 PM Serge E. Hallyn <serge@hallyn.com> wrote:
-> On Wed, Jul 01, 2020 at 08:49:06AM +0200, Adrian Reber wrote:
-> > From: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
-> >
-> > Previously, the current process could only change the /proc/self/exe
-> > link with local CAP_SYS_ADMIN.
-> > This commit relaxes this restriction by permitting such change with
-> > CAP_CHECKPOINT_RESTORE, and the ability to use ptrace.
-> >
-> > With access to ptrace facilities, a process can do the following: fork a
-> > child, execve() the target executable, and have the child use ptrace()
-> > to replace the memory content of the current process. This technique
-> > makes it possible to masquerade an arbitrary program as any executable,
-> > even setuid ones.
-> >
-> > Signed-off-by: Nicolas Viennot <Nicolas.Viennot@twosigma.com>
-> > Signed-off-by: Adrian Reber <areber@redhat.com>
->
-> This is scary.  But I believe it is safe.
->
-> Reviewed-by: Serge Hallyn <serge@hallyn.com>
->
-> I am a bit curious about the implications of the selinux patch.
-> IIUC you are using the permission of the tracing process to
-> execute the file without transition, so this is a way to work
-> around the policy which might prevent the tracee from doing so.
-> Given that SELinux wants to be MAC, I'm not *quite* sure that's
-> considered kosher.  You also are skipping the PROCESS__PTRACE
-> to SECCLASS_PROCESS check which selinux_bprm_set_creds does later
-> on.  Again I'm just not quite sure what's considered normal there
-> these days.
->
-> Paul, do you have input there?
+Hi--
 
-I agree, the SELinux hook looks wrong.  Building on what Christian
-said, this looks more like a ptrace operation than an exec operation.
+On 7/2/20 2:38 PM, Abhishek Bhardwaj wrote:
+> This change adds a new kernel configuration that sets the l1d cache
+> flush setting at compile time rather than at run time.
+> 
+> Signed-off-by: Abhishek Bhardwaj <abhishekbh@google.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Fix typo in the help of the new KConfig.
+> 
+>  arch/x86/kernel/cpu/bugs.c |  8 ++++++++
+>  arch/x86/kvm/Kconfig       | 17 +++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 0b71970d2d3d2..1dcc875cf5547 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -1406,7 +1406,15 @@ enum l1tf_mitigations l1tf_mitigation __ro_after_init = L1TF_MITIGATION_FLUSH;
+>  #if IS_ENABLED(CONFIG_KVM_INTEL)
+>  EXPORT_SYMBOL_GPL(l1tf_mitigation);
+>  #endif
+> +#if (CONFIG_KVM_VMENTRY_L1D_FLUSH == 1)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NEVER;
+> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 2)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_COND;
+> +#elif (CONFIG_KVM_VMENTRY_L1D_FLUSH == 3)
+> +enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_ALWAYS;
+> +#else
+>  enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+> +#endif
+>  EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
+>  
+>  /*
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index b277a2db62676..d375dcedd447d 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -107,4 +107,21 @@ config KVM_MMU_AUDIT
+>  	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
+>  	 auditing of KVM MMU events at runtime.
+>  
+> +config KVM_VMENTRY_L1D_FLUSH
+> +	int "L1D cache flush settings (1-3)"
+> +	range 1 3
+> +	default "2"
+> +	depends on KVM && X86 && X86_64
+
+Why does this apply only to KVM?
+
+and the "X86 && X86_64" is more than is needed. Just "X86_64" alone
+should be enough.
+
+
+> +	help
+> +	 This setting determines the L1D cache flush behavior before a VMENTER.
+> +	 This is similar to setting the option / parameter to
+> +	 kvm-intel.vmentry_l1d_flush.
+> +	 1 - Never flush.
+> +	 2 - Conditionally flush.
+> +	 3 - Always flush.
+> +
+> +# OK, it's a little counter-intuitive to do this, but it puts it neatly under
+> +# the virtualization menu.
+> +source "drivers/vhost/Kconfig"
+
+
+I don't quite understand why this 'source' line is here.
+Can you explain more about that, please?
+
+It puts "VHOST drivers" in the menu 2 times, in 2 totally unrelated
+places.  Seems like it could be confusing.
+
+> +
+>  endif # VIRTUALIZATION
+
 
 -- 
-paul moore
-www.paul-moore.com
+~Randy
+
