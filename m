@@ -2,60 +2,64 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C97A20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFB320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgGBNuT (ORCPT
+        id S1729427AbgGBNu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:50:19 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43724 "EHLO vps0.lunn.ch"
+        Thu, 2 Jul 2020 09:50:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:44181 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbgGBNuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:50:19 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jqzbU-003KUp-JR; Thu, 02 Jul 2020 15:50:16 +0200
-Date:   Thu, 2 Jul 2020 15:50:16 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, kuba@kernel.org
-Subject: Re: [PATCH net] net: dsa: microchip: set the correct number of ports
-Message-ID: <20200702135016.GL730739@lunn.ch>
-References: <20200702094450.1353917-1-codrin.ciubotariu@microchip.com>
+        id S1728989AbgGBNu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:50:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3C93A68AFE; Thu,  2 Jul 2020 15:50:54 +0200 (CEST)
+Date:   Thu, 2 Jul 2020 15:50:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method
+ calls to seq_read_iter
+Message-ID: <20200702135054.GA29240@lst.de>
+References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de> <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702094450.1353917-1-codrin.ciubotariu@microchip.com>
+In-Reply-To: <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:44:50PM +0300, Codrin Ciubotariu wrote:
-> The number of ports is incorrectly set to the maximum available for a DSA
-> switch. Even if the extra ports are not used, this causes some functions
-> to be called later, like port_disable() and port_stp_state_set(). If the
-> driver doesn't check the port index, it will end up modifying unknown
-> registers.
+On Thu, Jul 02, 2020 at 11:46:17AM +0200, Miguel Ojeda wrote:
+> Hi Christoph,
 > 
-> Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> On Wed, Jul 1, 2020 at 10:25 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > Switch over all instances used directly as methods using these sed
+> > expressions:
+> >
+> > sed -i -e 's/\.read\(\s*=\s*\)seq_read/\.read_iter\1seq_read_iter/g'
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Nit: the replacements don't take into account the spaces/tabs needed
+> to align the designated initializers.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Thanks for the minimum patch.
-
-If you wait about a week, net will get merged into net-next. You can
-then submit a refactoring patch based on your previous version.
-
-    Andrew
+Do you have a suggestion for an automated replacement which does?
+I'll happily switch over to that.
