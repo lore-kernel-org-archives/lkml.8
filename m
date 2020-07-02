@@ -2,105 +2,134 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A43BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3119E20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4DC20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WtVk/mGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgGBKMz (ORCPT
+        id S1728306AbgGBKNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:12:55 -0400
-Received: from elvis.franken.de ([193.175.24.41]:46108 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728210AbgGBKMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:12:55 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jqwD4-0001E1-00; Thu, 02 Jul 2020 12:12:50 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 151F3C0725; Thu,  2 Jul 2020 12:12:29 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 12:12:29 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200702101229.GA9924@alpha.franken.de>
-References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
- <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
- <20200619110524.GA9391@alpha.franken.de>
- <CAOMZO5CuxzMm+XFX6-mh55mcw5jgf5iYs-ej5NqjCsD6hSnr7Q@mail.gmail.com>
+        Thu, 2 Jul 2020 06:13:52 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:55304 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgGBKNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:13:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593684831; x=1625220831;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8+cmfMl8STke39loCF9+Y2W12FqffVX09lpGcUyOefo=;
+  b=WtVk/mGDYE6fqJiYTkedsN/LzQta6/s99qRLOqnU/SUeIu/JoFTg4HOH
+   8mEv0CTLzAwCgMAyFCvkfCsad1mMqPauC0F0BFMUiYInqbaWq6wCVqWPt
+   Vh7VY6PMgn2tZRk4ZYswK+1+iCFVKmSrPrMhzSHBNiWXQgI3CFga3kuqV
+   k087ChaUAOcv5JcGJ8ln3Xlob88qyGgHKqn6zitULpaH9sr8uUOyjmk/a
+   Z/sPVSYsHwT30FkWlbyd/fsAOmA9Ka1K2SscQUBOpQxjFqVoaA/Ht3+zL
+   kLBKW4mE7jM8knpHZqT6R6V2Fn5vV0tXhq8S1aMtDuPk8bSdk3PE2Weq8
+   A==;
+IronPort-SDR: +wdcuJ+VBDclE695fkpRHK6OplxcpMoJbk5thf8eMgoPu2i6Aw6nS7XMMrOtms3eNHvzw2KC3B
+ BSUuZ7yDc1YlnFKQ4V47xSxgUcYmjRe32aH6Ao3aU6KT/nlI79Bp0EzYgc5sDWuWfXVPHci34o
+ 3n5U43Bb/LjfWCTSWE3BhuEyx8XFkMjIBo4gtRQEd509hpNKQPtcG7WiAgfSOgALVyFQE7/sP1
+ cmPCJi4wHofADOsHKb/eXMvPyok7iuOVeIVeAUoP8VqcqSrDkNXKZaiU351EaEIUsSenYYJVNB
+ SaU=
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="85979627"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 03:13:50 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 03:13:50 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 2 Jul 2020 03:13:27 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 0/8] spi: Adding support for Microchip Sparx5 SoC
+Date:   Thu, 2 Jul 2020 12:13:23 +0200
+Message-ID: <20200702101331.26375-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5CuxzMm+XFX6-mh55mcw5jgf5iYs-ej5NqjCsD6hSnr7Q@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:28:31PM -0300, Fabio Estevam wrote:
-> On Fri, Jun 19, 2020 at 9:48 AM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> >
-> > On Wed, Jun 03, 2020 at 02:33:54AM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> > > Document the available properties for the SoC root node and the
-> > > CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> > >
-> > > Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> > > Tested-by: Paul Boddie <paul@boddie.org.uk>
-> > > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> > > ---
-> > >
-> > > Notes:
-> > >     v1->v2:
-> > >     1.Remove unnecessary "items".
-> > >     2.Add "clocks" as suggested by Paul Cercueil.
-> > >
-> > >  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
-> > >  1 file changed, 67 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> >
-> > applied to mips-next.
-> 
-> This causes 'make dt_binding_check' to fail:
-> 
-> $ make dt_binding_check
->   CHKDT   Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml:
-> while scanning a block scalar
->   in "<unicode string>", line 42, column 5
-> found a tab character where an indentation space is expected
->   in "<unicode string>", line 46, column 1
-> Documentation/devicetree/bindings/Makefile:20: recipe for target
-> 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts'
-> failed
-> make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts]
-> Error 1
-> Makefile:1343: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
+This is an add-on series to the main SoC Sparx5 series
+(Message-ID: <20200615133242.24911-1-lars.povlsen@microchip.com>
 
+The series add support for the Sparx5 SoC SPI controller in the
+spi-dw-mmio.c spi driver.
 
-thank you for noticing. It's my fault, I've changed spaces into tabs while
-applying, which is of course wrong for yaml files... I've commited a fix
-for this to mips-next and 'make dt_binding_check' now passes for me.
+v3 changes:
+- Added mux support for controlling SPI bus interface. This is new mux
+  driver, bindings and added to sparx5 base DT.
+- Removed "microchip,spi-interface2" property in favour of
+  "mux-controls" property in SPI controller (sparx5 only).
+- Changed dw_spi_sparx5_set_cs() to use the mux control instead of
+  directly acessing "mux" register. Associated code/defines moved to mux
+  driver.
+- Changed dw_spi_sparx5_set_cs() to match other similar functions in
+  signature and avoid explicit CS toggling.
+- Spun off duplicated NAND device DT chunks into separate DT file.
 
-Thomas.
+v2 changes:
+- Moved all RX sample delay into spi-dw-core.c, using
+  the "snps,rx-sample-delay-ns" device property.
+- Integrated Sparx5 support directly in spi-dw-mmio.c
+- Changed SPI2 configuration to per-slave "microchip,spi-interface2"
+  property.
+- Added bindings to existing snps,dw-apb-ssi.yaml file
+- Dropped patches for polled mode and SPI memory operations.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Lars Povlsen (8):
+  spi: dw: Add support for RX sample delay register
+  arm64: dts: sparx5: Add SPI controller and SPI mux
+  spi: dw: Add Microchip Sparx5 support
+  mux: sparx5: Add Sparx5 SPI mux driver
+  dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus
+    snps,rx-sample-delay-ns property
+  dt-bindings: microchip,sparx5-spi-mux: Add Sparx5 SPI mux driver
+    bindings
+  arm64: dts: sparx5: Add spi-nor support
+  arm64: dts: sparx5: Add spi-nand devices
+
+ .../mux/microchip,sparx5-spi-mux.yaml         |  71 +++++++++
+ .../bindings/spi/snps,dw-apb-ssi.yaml         |  28 ++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  43 ++++++
+ .../arm64/boot/dts/microchip/sparx5_nand.dtsi |  32 ++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  16 ++
+ .../boot/dts/microchip/sparx5_pcb134.dts      |   1 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    |   9 ++
+ .../boot/dts/microchip/sparx5_pcb135.dts      |   1 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |   9 ++
+ drivers/mux/Makefile                          |   2 +
+ drivers/mux/sparx5-spi.c                      | 138 ++++++++++++++++++
+ drivers/spi/Kconfig                           |   1 +
+ drivers/spi/spi-dw-core.c                     |  20 +++
+ drivers/spi/spi-dw-mmio.c                     |  79 +++++++++-
+ drivers/spi/spi-dw.h                          |   2 +
+ 15 files changed, 451 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mux/microchip,sparx5-spi-mux.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
+ create mode 100644 drivers/mux/sparx5-spi.c
+
+--
+2.27.0
