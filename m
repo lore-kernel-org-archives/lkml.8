@@ -2,27 +2,27 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46013C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4646420884
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C7520884
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 12:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgGBMRt (ORCPT
+        id S1728936AbgGBMRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 08:17:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:48804 "EHLO
+        Thu, 2 Jul 2020 08:17:52 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44656 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgGBMRn (ORCPT
+        with ESMTP id S1728730AbgGBMRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 08:17:43 -0400
+        Thu, 2 Jul 2020 08:17:42 -0400
 Received: from 89-64-84-242.dynamic.chello.pl (89.64.84.242) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 160ca2da34263fd4; Thu, 2 Jul 2020 14:17:41 +0200
+ id c59e2b59b8593f71; Thu, 2 Jul 2020 14:17:40 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux ACPI <linux-acpi@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -31,9 +31,11 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Len Brown <len.brown@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Dan Williams <dan.j.williams.korg@gmail.com>
-Subject: [PATCH 0/3] ACPI: OSL: Always use deferred unmapping of memory
-Date:   Thu, 02 Jul 2020 14:09:38 +0200
-Message-ID: <22474080.3crLlKV2y5@kreacher>
+Subject: [PATCH 1/3] ACPI: OSL: Use deferred unmapping in acpi_os_unmap_generic_address()
+Date:   Thu, 02 Jul 2020 14:11:12 +0200
+Message-ID: <2627540.Zly3GVl0Zp@kreacher>
+In-Reply-To: <22474080.3crLlKV2y5@kreacher>
+References: <22474080.3crLlKV2y5@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -42,26 +44,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-This series is on top of the git branch at
+There is no reason (knwon to me) why any of the existing users of
+acpi_os_unmap_generic_address() would need to wait for the unused
+memory mappings left by it to actually go away, so use the deferred
+unmapping of ACPI memory introduced previously in that function.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpica-osl
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/osl.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-and it basically makes the deferred unmapping of ACPI memory introduced by
-the first commit in that branch be the only option.
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index abbf8630f774..5c56f084e8b0 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -518,12 +518,9 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	if (acpi_os_drop_map_ref(map, false))
+-		map = NULL;
++	acpi_os_drop_map_ref(map, true);
+ 
+ 	mutex_unlock(&acpi_ioremap_lock);
+-
+-	acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
+-- 
+2.26.2
 
-Arguably, it could be done in a single patch, but I prefer to do that in
-smaller steps in case something breaks, to make it easier to identify
-the point of breakage.
-
-Patch [1/3] causes acpi_os_unmap_generic_address() to use the deferred
-unmapping, patch [2/3] makes acpi_os_unmap_iomem() use it too and patch
-[3/3] is a cleanup of top of the latter.
-
-Thanks,
-Rafael
 
 
 
