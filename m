@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A769BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B78206BE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DF9206BE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 01:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593653701;
-	bh=j+luVCOiuymvrU9XJJwT00XGVyNwYxhXbV+YSqKKWww=;
+	s=default; t=1593653711;
+	bh=MZ2iJx/qJnONWSY1ZZ0fE/jzrPllTcmAvUkRUH8FEx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZdL8Y7f9dT5NsPEydxuo2+rS/3gajSH9xDahXUEK4r5o9Fbg5DYrE4wn4PwMqBIcL
-	 4QLuCsFArXwtKTw1J7eB9BAoBeWuO3fEZEqcAzx8I0PPym2SsjQB5SVFNZ2okiD7fx
-	 Cxen8lYB26wU7qnebOODPgS94iJtkJXDcZsdbxn0=
+	b=ILf2zggTulhHMtgihS8fvM976Trca8Isfjt8mPBstHE94ykep8hJAo8y5KErJSwBR
+	 vHaR0B2nVUO6AlzED+Uc4gpT6bKCQV3iSiadWmFCLM8wLnWOeWvynKnKZQ+OyTNDxD
+	 ZvEG6NauYuF/Ei12pDKJ5kL8Zl1oMeo8agdGUesY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgGBBe7 (ORCPT
+        id S1729315AbgGBBfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 21:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54160 "EHLO mail.kernel.org"
+        Wed, 1 Jul 2020 21:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgGBBXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 21:23:34 -0400
+        id S1728376AbgGBBXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 204792083E;
-        Thu,  2 Jul 2020 01:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE24020874;
+        Thu,  2 Jul 2020 01:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593653014;
-        bh=j+luVCOiuymvrU9XJJwT00XGVyNwYxhXbV+YSqKKWww=;
+        s=default; t=1593653012;
+        bh=MZ2iJx/qJnONWSY1ZZ0fE/jzrPllTcmAvUkRUH8FEx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFHUeN3IpOWrN5KelyWzWMreCvWoxRRc53UGyZQ2UZFOfiKBze3dYVNCjOdHaiPUa
-         o+m89Imt4VEKRooEVEjuINbnqn7gInfbk8h20lphNFxTVeHnn5gGExlXi+2NBwQiNT
-         KT1OcT8c1XLobOEvEDn4QFiPqSTISkp5q58kj8P0=
+        b=NEb5egsCCNEVlhrBY/2PVK9ic23hCOpIvOMLpDuTtvWffjPS/9uRUAMzD+BNZMzUD
+         WULcoy3Ge7ze7JZrR1PJOCAcIMT7HnFGHzzh2nOJkhdrNTlMlXwINd/PzL5xtxM97z
+         iH6cp95DujtxK7UI8o6AkA9P2xqVGyqEcApP1bNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 31/53] usbnet: smsc95xx: Fix use-after-free after removal
-Date:   Wed,  1 Jul 2020 21:21:40 -0400
-Message-Id: <20200702012202.2700645-31-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 30/53] xprtrdma: Prevent dereferencing r_xprt->rx_ep after it is freed
+Date:   Wed,  1 Jul 2020 21:21:39 -0400
+Message-Id: <20200702012202.2700645-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
 References: <20200702012202.2700645-1-sashal@kernel.org>
@@ -61,47 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit b835a71ef64a61383c414d6bf2896d2c0161deca ]
+[ Upstream commit 2acc5cae292355f5f18ad377a2a966e7f03c8fec ]
 
-Syzbot reports an use-after-free in workqueue context:
+r_xprt->rx_ep is known to be good while the transport's send lock is
+held.  Otherwise additional references on rx_ep must be held when it
+is used outside of that lock's critical sections.
 
-BUG: KASAN: use-after-free in mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
- mutex_unlock+0x19/0x40 kernel/locking/mutex.c:737
- __smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:217 [inline]
- smsc95xx_mdio_read+0x583/0x870 drivers/net/usb/smsc95xx.c:278
- check_carrier+0xd1/0x2e0 drivers/net/usb/smsc95xx.c:644
- process_one_work+0x777/0xf90 kernel/workqueue.c:2274
- worker_thread+0xa8f/0x1430 kernel/workqueue.c:2420
- kthread+0x2df/0x300 kernel/kthread.c:255
+For now, bump the rx_ep reference count once whenever there is at
+least one outstanding Receive WR. This avoids the memory bandwidth
+overhead of taking and releasing the reference count for every
+ib_post_recv() and Receive completion.
 
-It looks like that smsc95xx_unbind() is freeing the structures that are
-still in use by the concurrently running workqueue callback. Thus switch
-to using cancel_delayed_work_sync() to ensure the work callback really
-is no longer active.
-
-Reported-by: syzbot+29dc7d4ae19b703ff947@syzkaller.appspotmail.com
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/smsc95xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/verbs.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/usb/smsc95xx.c b/drivers/net/usb/smsc95xx.c
-index 355be77f42418..3cf4dc3433f91 100644
---- a/drivers/net/usb/smsc95xx.c
-+++ b/drivers/net/usb/smsc95xx.c
-@@ -1324,7 +1324,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
- 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 05c4d3a9cda27..db0259c6467ef 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -84,7 +84,8 @@ static void rpcrdma_rep_destroy(struct rpcrdma_rep *rep);
+ static void rpcrdma_reps_unmap(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_destroy(struct rpcrdma_xprt *r_xprt);
+-static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep);
++static void rpcrdma_ep_get(struct rpcrdma_ep *ep);
++static int rpcrdma_ep_put(struct rpcrdma_ep *ep);
+ static struct rpcrdma_regbuf *
+ rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
+ 		     gfp_t flags);
+@@ -97,7 +98,8 @@ static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb);
+  */
+ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
+ {
+-	struct rdma_cm_id *id = r_xprt->rx_ep->re_id;
++	struct rpcrdma_ep *ep = r_xprt->rx_ep;
++	struct rdma_cm_id *id = ep->re_id;
  
- 	if (pdata) {
--		cancel_delayed_work(&pdata->carrier_check);
-+		cancel_delayed_work_sync(&pdata->carrier_check);
- 		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
- 		kfree(pdata);
- 		pdata = NULL;
+ 	/* Flush Receives, then wait for deferred Reply work
+ 	 * to complete.
+@@ -108,6 +110,8 @@ static void rpcrdma_xprt_drain(struct rpcrdma_xprt *r_xprt)
+ 	 * local invalidations.
+ 	 */
+ 	ib_drain_sq(id->qp);
++
++	rpcrdma_ep_put(ep);
+ }
+ 
+ /**
+@@ -267,7 +271,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		xprt_force_disconnect(xprt);
+ 		goto disconnected;
+ 	case RDMA_CM_EVENT_ESTABLISHED:
+-		kref_get(&ep->re_kref);
++		rpcrdma_ep_get(ep);
+ 		ep->re_connect_status = 1;
+ 		rpcrdma_update_cm_private(ep, &event->param.conn);
+ 		trace_xprtrdma_inline_thresh(ep);
+@@ -290,7 +294,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 		ep->re_connect_status = -ECONNABORTED;
+ disconnected:
+ 		xprt_force_disconnect(xprt);
+-		return rpcrdma_ep_destroy(ep);
++		return rpcrdma_ep_put(ep);
+ 	default:
+ 		break;
+ 	}
+@@ -346,7 +350,7 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+ 	return ERR_PTR(rc);
+ }
+ 
+-static void rpcrdma_ep_put(struct kref *kref)
++static void rpcrdma_ep_destroy(struct kref *kref)
+ {
+ 	struct rpcrdma_ep *ep = container_of(kref, struct rpcrdma_ep, re_kref);
+ 
+@@ -370,13 +374,18 @@ static void rpcrdma_ep_put(struct kref *kref)
+ 	module_put(THIS_MODULE);
+ }
+ 
++static noinline void rpcrdma_ep_get(struct rpcrdma_ep *ep)
++{
++	kref_get(&ep->re_kref);
++}
++
+ /* Returns:
+  *     %0 if @ep still has a positive kref count, or
+  *     %1 if @ep was destroyed successfully.
+  */
+-static int rpcrdma_ep_destroy(struct rpcrdma_ep *ep)
++static noinline int rpcrdma_ep_put(struct rpcrdma_ep *ep)
+ {
+-	return kref_put(&ep->re_kref, rpcrdma_ep_put);
++	return kref_put(&ep->re_kref, rpcrdma_ep_destroy);
+ }
+ 
+ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+@@ -493,7 +502,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 	return 0;
+ 
+ out_destroy:
+-	rpcrdma_ep_destroy(ep);
++	rpcrdma_ep_put(ep);
+ 	rdma_destroy_id(id);
+ out_free:
+ 	kfree(ep);
+@@ -522,8 +531,12 @@ int rpcrdma_xprt_connect(struct rpcrdma_xprt *r_xprt)
+ 
+ 	ep->re_connect_status = 0;
+ 	xprt_clear_connected(xprt);
+-
+ 	rpcrdma_reset_cwnd(r_xprt);
++
++	/* Bump the ep's reference count while there are
++	 * outstanding Receives.
++	 */
++	rpcrdma_ep_get(ep);
+ 	rpcrdma_post_recvs(r_xprt, true);
+ 
+ 	rc = rpcrdma_sendctxs_create(r_xprt);
+@@ -588,7 +601,7 @@ void rpcrdma_xprt_disconnect(struct rpcrdma_xprt *r_xprt)
+ 	rpcrdma_mrs_destroy(r_xprt);
+ 	rpcrdma_sendctxs_destroy(r_xprt);
+ 
+-	if (rpcrdma_ep_destroy(ep))
++	if (rpcrdma_ep_put(ep))
+ 		rdma_destroy_id(id);
+ 
+ 	r_xprt->rx_ep = NULL;
 -- 
 2.25.1
 
