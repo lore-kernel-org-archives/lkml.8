@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B3C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD945C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8645D20747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A211B2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 11:10:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nea94jP7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AHcAmehG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgGBLJ7 (ORCPT
+        id S1728579AbgGBLKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 07:09:59 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:32038 "EHLO
+        Thu, 2 Jul 2020 07:10:04 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:20080 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728546AbgGBLJ4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728584AbgGBLKD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 07:09:56 -0400
+        Thu, 2 Jul 2020 07:10:03 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593688195; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1593688203; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=VdziHzaqJ2L8vDYSBajh7gQkeREpPKM1zryKiyyoxLU=; b=Nea94jP71s3hLyUAL+J6Bw/GhoSQFAa7wGplo6gKoLeyVjbshA31c7BoJhPaQoIVaac0HepK
- eoS2oFgpiZSpSbJzCNweMcx02sYmtbngZfXQZJ+vnQ7BBOhawtZedlQjuFiGdPj1Fb4SGFqR
- N7IkOGYTSIA/cl/W1yNfqfpA4+g=
+ bh=OKu1EM6eiLid9WUfX5EOnISzTQlacwjoK78xIqopTHw=; b=AHcAmehG/okVv481BRB85b244Qr2ZKzlA4BMjsPp8k2kWyRXvhgTs4EAorcut0xV55LktcNU
+ e8EQIkQMErFzD5o2C7yovxxDdZLQUOtp4OjhHBVwQSFopfx/iTvqC9ZFOYVGMzKDdM41HGBd
+ pemj6LNq7ZPdXq4IS6fMInorTxU=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5efdc08386de6ccd4448d66a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:09:55
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5efdc08a3a8a8b20b8812c4c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 02 Jul 2020 11:10:02
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5111FC433C8; Thu,  2 Jul 2020 11:09:54 +0000 (UTC)
+        id C58F9C433B2; Thu,  2 Jul 2020 11:10:01 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E64B9C433CA;
-        Thu,  2 Jul 2020 11:09:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E64B9C433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AC49C433CA;
+        Thu,  2 Jul 2020 11:09:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AC49C433CA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -54,9 +54,9 @@ To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
 Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 2/4] drm/msm: dsi: Use OPP API to set clk/perf state
-Date:   Thu,  2 Jul 2020 16:39:09 +0530
-Message-Id: <1593688151-22616-3-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v2 4/4] arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+Date:   Thu,  2 Jul 2020 16:39:11 +0530
+Message-Id: <1593688151-22616-5-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
 References: <1593688151-22616-1-git-send-email-rnayak@codeaurora.org>
@@ -65,93 +65,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On SDM845 and SC7180 DSI needs to express a performance state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
-
-dev_pm_opp_set_rate() is designed to be equivalent to clk_set_rate()
-for devices without an OPP table, hence the change works fine
-on devices/platforms which only need to set a clock rate.
+Add the OPP tables for DSI and MDP based on the perf state/clk
+requirements, and add the power-domains property to specify the
+scalable power domain.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 11ae5b8..09e16b8 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -14,6 +14,7 @@
- #include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_opp.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
-@@ -111,6 +112,9 @@ struct msm_dsi_host {
- 	struct clk *pixel_clk_src;
- 	struct clk *byte_intf_clk;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index ad57df2..3430c33f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2482,6 +2482,8 @@
+ 						       <19200000>,
+ 						       <19200000>,
+ 						       <19200000>;
++				operating-points-v2 = <&mdp_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
  
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
+ 				interrupt-parent = <&mdss>;
+ 				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2499,6 +2501,31 @@
+ 						};
+ 					};
+ 				};
 +
- 	u32 byte_clk_rate;
- 	u32 pixel_clk_rate;
- 	u32 esc_clk_rate;
-@@ -512,9 +516,10 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
- 	DBG("Set clk rates: pclk=%d, byteclk=%d",
- 		msm_host->mode->clock, msm_host->byte_clk_rate);
- 
--	ret = clk_set_rate(msm_host->byte_clk, msm_host->byte_clk_rate);
-+	ret = dev_pm_opp_set_rate(&msm_host->pdev->dev,
-+				  msm_host->byte_clk_rate);
- 	if (ret) {
--		pr_err("%s: Failed to set rate byte clk, %d\n", __func__, ret);
-+		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
- 		return ret;
- 	}
- 
-@@ -658,6 +663,8 @@ int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host)
- 
- void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
- {
-+	/* Drop the performance state vote */
-+	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
- 	clk_disable_unprepare(msm_host->esc_clk);
- 	clk_disable_unprepare(msm_host->pixel_clk);
- 	if (msm_host->byte_intf_clk)
-@@ -1879,6 +1886,18 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
- 		goto fail;
- 	}
- 
-+	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
-+	if (IS_ERR(msm_host->opp_table))
-+		return PTR_ERR(msm_host->opp_table);
-+	/* OPP table is optional */
-+	ret = dev_pm_opp_of_add_table(&pdev->dev);
-+	if (!ret) {
-+		msm_host->has_opp_table = true;
-+	} else if (ret != -ENODEV) {
-+		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-+		return ret;
-+	}
++				mdp_opp_table: mdp-opp-table {
++					compatible = "operating-points-v2";
 +
- 	init_completion(&msm_host->dma_comp);
- 	init_completion(&msm_host->video_comp);
- 	mutex_init(&msm_host->dev_mutex);
-@@ -1914,6 +1933,9 @@ void msm_dsi_host_destroy(struct mipi_dsi_host *host)
- 	mutex_destroy(&msm_host->cmd_mutex);
- 	mutex_destroy(&msm_host->dev_mutex);
++					opp-200000000 {
++						opp-hz = /bits/ 64 <200000000>;
++						required-opps = <&rpmhpd_opp_low_svs>;
++					};
++
++					opp-300000000 {
++						opp-hz = /bits/ 64 <300000000>;
++						required-opps = <&rpmhpd_opp_svs>;
++					};
++
++					opp-345000000 {
++						opp-hz = /bits/ 64 <345000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++
++					opp-460000000 {
++						opp-hz = /bits/ 64 <460000000>;
++						required-opps = <&rpmhpd_opp_nom>;
++					};
++				};
++
+ 			};
  
-+	if (msm_host->has_opp_table)
-+		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
-+	dev_pm_opp_put_clkname(msm_host->opp_table);
- 	pm_runtime_disable(&msm_host->pdev->dev);
- }
+ 			dsi0: dsi@ae94000 {
+@@ -2522,6 +2549,9 @@
+ 					      "iface",
+ 					      "bus";
  
++				operating-points-v2 = <&dsi_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
++
+ 				phys = <&dsi_phy>;
+ 				phy-names = "dsi";
+ 
+@@ -2547,6 +2577,25 @@
+ 						};
+ 					};
+ 				};
++
++				dsi_opp_table: dsi-opp-table {
++					compatible = "operating-points-v2";
++
++					opp-187500000 {
++						opp-hz = /bits/ 64 <187500000>;
++						required-opps = <&rpmhpd_opp_low_svs>;
++					};
++
++					opp-300000000 {
++						opp-hz = /bits/ 64 <300000000>;
++						required-opps = <&rpmhpd_opp_svs>;
++					};
++
++					opp-358000000 {
++						opp-hz = /bits/ 64 <358000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++				};
+ 			};
+ 
+ 			dsi_phy: dsi-phy@ae94400 {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
