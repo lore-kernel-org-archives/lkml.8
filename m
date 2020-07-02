@@ -2,80 +2,94 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75459207D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593708740;
-	bh=1Dc4a88o2pgoyERwCLj8WwiC1rEHywYQ+2ewNscYFH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WGCNyvxu/YuFPnvrRxxoZiYlDAZSfUciihDKleCUA+sg0JTx756AZ4lEap9DGffy/
-	 OvQS0XhghZFnprmneRo1tX1oVxbhbDa9nQ/1ZnZDln4jVmYUDrFRiVd5Kq/vLUYw07
-	 p8vcgyzvNpVx5f/IbAGApU2exs/e/DIzAhEqe81o=
+	by mail.kernel.org (Postfix) with ESMTP id A5ED0207D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 16:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgGBQwT (ORCPT
+        id S1726779AbgGBQyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 12:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgGBQwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 12:52:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAA7A20780;
-        Thu,  2 Jul 2020 16:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593708738;
-        bh=1Dc4a88o2pgoyERwCLj8WwiC1rEHywYQ+2ewNscYFH0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zkPRoev13M9+q3yl0+fzuz1JWfpkTl3Yuma+DodmWnvoWpqRPd7xs4FgANUaeikIv
-         kaCXZw78sf7qQP53iD3KFOycXvRROFTJWRoeiuWW8zEi+B0BUvqytDW+KBVee++V4I
-         Vud/owNgOair3sQg+lTF3yGTpupEPJsdxVoSGEVA=
-Date:   Thu, 2 Jul 2020 18:52:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        John Warthog9 Hawley <warthog9@kernel.org>
-Subject: Re: [for-next][PATCH 8/8] ktest.pl: Add MAIL_MAX_SIZE to limit the
- amount of log emailed
-Message-ID: <20200702165221.GB2147773@kroah.com>
-References: <20200701231717.757834010@goodmis.org>
- <20200701231756.790637968@goodmis.org>
- <20200702074103.GA1076415@kroah.com>
- <20200702081949.2bfd2417@oasis.local.home>
- <20200702123402.GA1773770@kroah.com>
- <20200702085849.16999b39@oasis.local.home>
+        Thu, 2 Jul 2020 12:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgGBQyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 12:54:25 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F0BC08C5C1;
+        Thu,  2 Jul 2020 09:54:24 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 825BC2A5FA0
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com,
+        tfiga@chromium.org, eddie.cai.linux@gmail.com,
+        zhengsq@rock-chips.com
+Subject: [PATCH v3 0/9] move Rockchip ISP bindings out of staging / add
+Date:   Thu,  2 Jul 2020 13:54:01 -0300
+Message-Id: <20200702165410.2583375-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702085849.16999b39@oasis.local.home>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:58:49AM -0400, Steven Rostedt wrote:
-> On Thu, 2 Jul 2020 14:34:02 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > > I can add an option to do that if you want. My full logs end up being a
-> > > few hundred megabytes. Perhaps I could add a compress option too.  
-> > 
-> > It's fine, the default should be good enough for me for now.  If not,
-> > I'll just bump the value, or add compression.
-> 
-> If we compress, it would need to be an attachment. I'm guessing you are
-> fine with that. Do you already make it an attachment?
+Move the bindings out of drivers/staging and place them in
+Documentation/devicetree/bindings instead.
 
-Yes I do, so attachments are fine.
+Also, add DT nodes for RK3399 and verify with make ARCH=arm64 dtbs_check
+and make ARCH=arm64 dt_binding_check.
 
-thanks,
+Tested by verifying images streamed from Scarlet Chromebook
 
-greg k-h
+Changes in v3:
+- dropped accepted patches
+- cleanup clocks
+- fix "no reg" error in dt-bindings parent@0 example
+- add linux-rockchip list in MAINTAINERS and reorder items
+- add Scarlet sensors dt nodes to the series
+
+Changes in v2:
+Add patches modifying bindings, as sugested by Johan Jonker in v1,
+before moving them out of staging.
+
+
+Eddie Cai (1):
+  arm64: dts: rockchip: add isp and sensors for scarlet
+
+Helen Koike (7):
+  media: staging: dt-bindings: rkisp1: add missing required nodes
+  media: staging: dt-bindings: rkisp1: add required items in i2c example
+  media: staging: dt-bindings: rkisp1: re-order properties
+  media: staging: dt-bindings: rkisp1: fix "no reg" error in parent node
+  media: staging: rkisp1: remove unecessary clocks
+  dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
+  media: MAINTAINERS: rkisp1: add path to dt-bindings
+
+Shunqian Zheng (1):
+  arm64: dts: rockchip: add isp0 node for rk3399
+
+ .../bindings/media/rockchip-isp1.yaml         | 65 +++++++++-------
+ MAINTAINERS                                   |  2 +
+ .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 74 +++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 27 +++++++
+ drivers/staging/media/rkisp1/rkisp1-dev.c     |  2 -
+ 5 files changed, 143 insertions(+), 27 deletions(-)
+ rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (81%)
+
+-- 
+2.26.0
+
