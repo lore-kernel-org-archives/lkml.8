@@ -2,80 +2,473 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28625C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6550B2073E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7812073E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 07:31:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x+EHr3Cg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgGBHag (ORCPT
+        id S1728112AbgGBHbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 03:30:36 -0400
-Received: from verein.lst.de ([213.95.11.211]:42963 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgGBHaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 03:30:35 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9BC9868B02; Thu,  2 Jul 2020 09:30:31 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 09:30:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 17/23] proc: add a read_iter method to proc proc_ops
-Message-ID: <20200702073031.GA855@lst.de>
-References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-18-hch@lst.de> <20200701212751.GL2786714@ZenIV.linux.org.uk> <20200702051811.GB30361@lst.de>
+        Thu, 2 Jul 2020 03:31:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbgGBHbJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 03:31:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8966C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 00:31:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o11so26894323wrv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 00:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TeNO9fvZBv4kp0oe/KUun/TtlQ2KC3o5EXDHauIoTOY=;
+        b=x+EHr3Cg3DlzD0LJJmEIY4F3k9HhgNMafAXT5KX39PMsPJmnc14UFZ9bgosN9aoky5
+         qBYQUXGbSh64n6AguwEpujbGGTRK9o0T2LTllFDViR6MG7X83v3SjRx/WxJHgtJzl4C/
+         ViXhV7Kt8f23Q6XIzrnPwJgQCCYSYaeBjoT8Ck+iVROygtkFTsOvfMwG4/PjIHkS3mae
+         RA/C4XMW5EnrCPbZWiyh2lYxPlilJi1ZbJGxS7T0I+uKunDfaShj9zWfJG6osVDs/+up
+         e7pb5a8IDd9+ySOq4+zjhVqVwpmgcO9ENh2tR16Qx7Lv2XlI4CrzniyuM/EF+nAwVtCs
+         OKEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TeNO9fvZBv4kp0oe/KUun/TtlQ2KC3o5EXDHauIoTOY=;
+        b=PDggJvmntXEb3XWeFIN13Fnkys8KT/nFCcTe5IeFEPs1pVG+Azoe7M3eAirRuFEwuh
+         JW4LqWiFux3hW6Wkbf2PZXFR7pVvdsIGZ1rZo8Ln9WRC8xa7dAGajBr0XVfL+o/OivpB
+         4PE0oJwi47ruilPLumxQZEaTR4Exfr0F8bKKYBWLONx4LbE1FdVUFjkZ/H2IzZmOpLNd
+         xuIprCvRT1jD1kxdwkHPvxIK57g5qnASPayPPbEP8j82bDFI9scLTTzBKgCWwUU+aY+X
+         gkWXgGJHSJEBtwu+F/3DhO3mFvifv7DyN271Q9GSqD5MkdJ+5qXBpeNQa2SR8qlfudr1
+         D1ww==
+X-Gm-Message-State: AOAM530VRoooPBRq0Y/hKS91mLoBCREdnlClk1arE4DfnnQ1rYt7FJYB
+        Y+pZ0Z4roFDWtSZNjskpIV4VsiZX6nA=
+X-Google-Smtp-Source: ABdhPJwbGVQD75dvLJX42ivcJBkDhhpTJYy3DStS2YXIVX1ehCFXTgp374qjs/I2K1Vju+loXr9fog==
+X-Received: by 2002:adf:9148:: with SMTP id j66mr27968405wrj.311.1593675067451;
+        Thu, 02 Jul 2020 00:31:07 -0700 (PDT)
+Received: from apalos.home (athedsl-4423884.home.otenet.gr. [79.130.240.188])
+        by smtp.gmail.com with ESMTPSA id n14sm10252956wro.81.2020.07.02.00.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 00:31:06 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 10:31:04 +0300
+From:   ilias.apalodimas@linaro.org
+To:     Matteo Croce <mcroce@linux.microsoft.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH net-next 2/4] mvpp2: use page_pool allocator
+Message-ID: <20200702073104.GA496703@apalos.home>
+References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+ <20200630180930.87506-3-mcroce@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702051811.GB30361@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200630180930.87506-3-mcroce@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 07:18:11AM +0200, Christoph Hellwig wrote:
-> On Wed, Jul 01, 2020 at 10:27:51PM +0100, Al Viro wrote:
-> > On Wed, Jul 01, 2020 at 10:09:45PM +0200, Christoph Hellwig wrote:
-> > > This will allow proc files to implement iter read semantics.
-> > 
-> > *UGH*
-> > 
-> > You are introducing file_operations with both ->read() and ->read_iter();
-> > worse, in some cases they are not equivalent.  Sure, ->read() takes
-> > precedence right now, but...  why not a separate file_operations for
-> > ->read_iter-capable files?
+Hi Matteo, 
+
+Thanks for working on this!
+
+On Tue, Jun 30, 2020 at 08:09:28PM +0200, Matteo Croce wrote:
+> From: Matteo Croce <mcroce@microsoft.com>
 > 
-> I looked at that initially.  We'd need to more instances as there
-> already are two due to compat stuff.  If that is preferably I can
-> switch to that version.
+> Use the page_pool API for memory management. This is a prerequisite for
+> native XDP support.
 > 
-> > I really hate the fallbacks of that sort - they tend to be brittle
-> > as hell.  And while we are at it, I'm not sure that your iter_read() 
-> > has good cause to be non-static.
+> Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+> Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+> ---
+>  drivers/net/ethernet/marvell/Kconfig          |   1 +
+>  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   8 +
+>  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 155 +++++++++++++++---
+>  3 files changed, 139 insertions(+), 25 deletions(-)
 > 
-> The other user of it is seq_file, which as-is should go away, but
-> will probably keep the occasional version of it in the caller.  I just
-> got really tired of reimplementing it a few times.
+> diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
+> index cd8ddd1ef6f2..ef4f35ba077d 100644
+> --- a/drivers/net/ethernet/marvell/Kconfig
+> +++ b/drivers/net/ethernet/marvell/Kconfig
+> @@ -87,6 +87,7 @@ config MVPP2
+>  	depends on ARCH_MVEBU || COMPILE_TEST
+>  	select MVMDIO
+>  	select PHYLINK
+> +	select PAGE_POOL
+>  	help
+>  	  This driver supports the network interface units in the
+>  	  Marvell ARMADA 375, 7K and 8K SoCs.
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+> index 543a310ec102..4c16c9e9c1e5 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/phy.h>
+>  #include <linux/phylink.h>
+>  #include <net/flow_offload.h>
+> +#include <net/page_pool.h>
+>  
+>  /* Fifo Registers */
+>  #define MVPP2_RX_DATA_FIFO_SIZE_REG(port)	(0x00 + 4 * (port))
+> @@ -820,6 +821,9 @@ struct mvpp2 {
+>  
+>  	/* RSS Indirection tables */
+>  	struct mvpp2_rss_table *rss_tables[MVPP22_N_RSS_TABLES];
+> +
+> +	/* page_pool allocator */
+> +	struct page_pool *page_pool[MVPP2_PORT_MAX_RXQ];
+>  };
+>  
+>  struct mvpp2_pcpu_stats {
+> @@ -1161,6 +1165,10 @@ struct mvpp2_rx_queue {
+>  
+>  	/* Port's logic RXQ number to which physical RXQ is mapped */
+>  	int logic_rxq;
+> +
+> +	/* XDP memory accounting */
+> +	struct xdp_rxq_info xdp_rxq_short;
+> +	struct xdp_rxq_info xdp_rxq_long;
+>  };
+>  
+>  struct mvpp2_bm_pool {
+> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> index 027de7291f92..9e2e8fb0a0b8 100644
+> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> @@ -95,6 +95,22 @@ static inline u32 mvpp2_cpu_to_thread(struct mvpp2 *priv, int cpu)
+>  	return cpu % priv->nthreads;
+>  }
+>  
+> +static struct page_pool *
+> +mvpp2_create_page_pool(struct device *dev, int num, int len)
+> +{
+> +	struct page_pool_params pp_params = {
+> +		/* internal DMA mapping in page_pool */
+> +		.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
+> +		.pool_size = num,
+> +		.nid = NUMA_NO_NODE,
+> +		.dev = dev,
+> +		.dma_dir = DMA_FROM_DEVICE,
+> +		.max_len = len,
+> +	};
+> +
+> +	return page_pool_create(&pp_params);
+> +}
+> +
+>  /* These accessors should be used to access:
+>   *
+>   * - per-thread registers, where each thread has its own copy of the
+> @@ -327,17 +343,26 @@ static inline int mvpp2_txq_phys(int port, int txq)
+>  	return (MVPP2_MAX_TCONT + port) * MVPP2_MAX_TXQ + txq;
+>  }
+>  
+> -static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool)
+> +/* Returns a struct page if page_pool is set, otherwise a buffer */
+> +static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool,
+> +			      struct page_pool *page_pool)
+>  {
+> +	if (page_pool)
+> +		return page_pool_alloc_pages(page_pool,
+> +					     GFP_ATOMIC | __GFP_NOWARN);
 
-I've force puhed a new version to the existing location:
+page_pool_dev_alloc_pages() can set these flags for you, instead of explicitly
+calling them
 
-   git://git.infradead.org/users/hch/misc.git set_fs-rw
+> +
+>  	if (likely(pool->frag_size <= PAGE_SIZE))
+>  		return netdev_alloc_frag(pool->frag_size);
+> -	else
+> -		return kmalloc(pool->frag_size, GFP_ATOMIC);
+> +
+> +	return kmalloc(pool->frag_size, GFP_ATOMIC);
+>  }
+>  
+> -static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool, void *data)
+> +static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool,
+> +			    struct page_pool *page_pool, void *data)
+>  {
+> -	if (likely(pool->frag_size <= PAGE_SIZE))
+> +	if (page_pool)
+> +		page_pool_put_full_page(page_pool, virt_to_head_page(data), false);
+> +	else if (likely(pool->frag_size <= PAGE_SIZE))
+>  		skb_free_frag(data);
+>  	else
+>  		kfree(data);
+> @@ -442,6 +467,7 @@ static void mvpp2_bm_bufs_get_addrs(struct device *dev, struct mvpp2 *priv,
+>  static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
+>  			       struct mvpp2_bm_pool *bm_pool, int buf_num)
+>  {
+> +	struct page_pool *pp = NULL;
+>  	int i;
+>  
+>  	if (buf_num > bm_pool->buf_num) {
+> @@ -450,6 +476,9 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
+>  		buf_num = bm_pool->buf_num;
+>  	}
+>  
+> +	if (priv->percpu_pools)
+> +		pp = priv->page_pool[bm_pool->id];
+> +
+>  	for (i = 0; i < buf_num; i++) {
+>  		dma_addr_t buf_dma_addr;
+>  		phys_addr_t buf_phys_addr;
+> @@ -458,14 +487,15 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
+>  		mvpp2_bm_bufs_get_addrs(dev, priv, bm_pool,
+>  					&buf_dma_addr, &buf_phys_addr);
+>  
+> -		dma_unmap_single(dev, buf_dma_addr,
+> -				 bm_pool->buf_size, DMA_FROM_DEVICE);
+> +		if (!pp)
+> +			dma_unmap_single(dev, buf_dma_addr,
+> +					 bm_pool->buf_size, DMA_FROM_DEVICE);
+>  
+>  		data = (void *)phys_to_virt(buf_phys_addr);
+>  		if (!data)
+>  			break;
+>  
+> -		mvpp2_frag_free(bm_pool, data);
+> +		mvpp2_frag_free(bm_pool, pp, data);
+>  	}
+>  
+>  	/* Update BM driver with number of buffers removed from pool */
+> @@ -496,6 +526,9 @@ static int mvpp2_bm_pool_destroy(struct device *dev, struct mvpp2 *priv,
+>  	int buf_num;
+>  	u32 val;
+>  
+> +	if (priv->percpu_pools)
+> +		page_pool_destroy(priv->page_pool[bm_pool->id]);
+> +
+>  	buf_num = mvpp2_check_hw_buf_num(priv, bm_pool);
+>  	mvpp2_bm_bufs_free(dev, priv, bm_pool, buf_num);
+>  
+> @@ -548,8 +581,20 @@ static int mvpp2_bm_init(struct device *dev, struct mvpp2 *priv)
+>  {
+>  	int i, err, poolnum = MVPP2_BM_POOLS_NUM;
+>  
+> -	if (priv->percpu_pools)
+> +	if (priv->percpu_pools) {
+>  		poolnum = mvpp2_get_nrxqs(priv) * 2;
+> +		for (i = 0; i < poolnum; i++) {
+> +			/* the pool in use */
+> +			int pn = i / (poolnum / 2);
+> +
+> +			priv->page_pool[i] =
+> +				mvpp2_create_page_pool(dev,
+> +						       mvpp2_pools[pn].buf_num,
+> +						       mvpp2_pools[pn].pkt_size);
+> +			if (IS_ERR(priv->page_pool[i]))
+> +				return PTR_ERR(priv->page_pool[i]);
+> +		}
+> +	}
+>  
+>  	dev_info(dev, "using %d %s buffers\n", poolnum,
+>  		 priv->percpu_pools ? "per-cpu" : "shared");
+> @@ -632,23 +677,31 @@ static void mvpp2_rxq_short_pool_set(struct mvpp2_port *port,
+>  
+>  static void *mvpp2_buf_alloc(struct mvpp2_port *port,
+>  			     struct mvpp2_bm_pool *bm_pool,
+> +			     struct page_pool *page_pool,
+>  			     dma_addr_t *buf_dma_addr,
+>  			     phys_addr_t *buf_phys_addr,
+>  			     gfp_t gfp_mask)
+>  {
+>  	dma_addr_t dma_addr;
+> +	struct page *page;
+>  	void *data;
+>  
+> -	data = mvpp2_frag_alloc(bm_pool);
+> +	data = mvpp2_frag_alloc(bm_pool, page_pool);
+>  	if (!data)
+>  		return NULL;
+>  
+> -	dma_addr = dma_map_single(port->dev->dev.parent, data,
+> -				  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
+> -				  DMA_FROM_DEVICE);
+> -	if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
+> -		mvpp2_frag_free(bm_pool, data);
+> -		return NULL;
+> +	if (page_pool) {
+> +		page = (struct page *)data;
+> +		dma_addr = page_pool_get_dma_addr(page);
+> +		data = page_to_virt(page);
+> +	} else {
+> +		dma_addr = dma_map_single(port->dev->dev.parent, data,
+> +					  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
+> +					  DMA_FROM_DEVICE);
+> +		if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
+> +			mvpp2_frag_free(bm_pool, NULL, data);
+> +			return NULL;
+> +		}
+>  	}
+>  	*buf_dma_addr = dma_addr;
+>  	*buf_phys_addr = virt_to_phys(data);
+> @@ -706,6 +759,7 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
+>  	int i, buf_size, total_size;
+>  	dma_addr_t dma_addr;
+>  	phys_addr_t phys_addr;
+> +	struct page_pool *pp = NULL;
+>  	void *buf;
+>  
+>  	if (port->priv->percpu_pools &&
+> @@ -726,8 +780,10 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
+>  		return 0;
+>  	}
+>  
+> +	if (port->priv->percpu_pools)
+> +		pp = port->priv->page_pool[bm_pool->id];
+>  	for (i = 0; i < buf_num; i++) {
+> -		buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr,
+> +		buf = mvpp2_buf_alloc(port, bm_pool, pp, &dma_addr,
+>  				      &phys_addr, GFP_KERNEL);
+>  		if (!buf)
+>  			break;
+> @@ -2374,10 +2430,11 @@ static int mvpp2_aggr_txq_init(struct platform_device *pdev,
+>  /* Create a specified Rx queue */
+>  static int mvpp2_rxq_init(struct mvpp2_port *port,
+>  			  struct mvpp2_rx_queue *rxq)
+> -
+>  {
+> +	struct mvpp2 *priv = port->priv;
+>  	unsigned int thread;
+>  	u32 rxq_dma;
+> +	int err;
+>  
+>  	rxq->size = port->rx_ring_size;
+>  
+> @@ -2415,7 +2472,41 @@ static int mvpp2_rxq_init(struct mvpp2_port *port,
+>  	/* Add number of descriptors ready for receiving packets */
+>  	mvpp2_rxq_status_update(port, rxq->id, 0, rxq->size);
+>  
+> +	if (priv->percpu_pools) {
+> +		err = xdp_rxq_info_reg(&rxq->xdp_rxq_short, port->dev, rxq->id);
+> +		if (err < 0)
+> +			goto err_free_dma;
+> +
+> +		err = xdp_rxq_info_reg(&rxq->xdp_rxq_long, port->dev, rxq->id);
+> +		if (err < 0)
+> +			goto err_unregister_rxq_short;
+> +
+> +		/* Every RXQ has a pool for short and another for long packets */
+> +		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_short,
+> +						 MEM_TYPE_PAGE_POOL,
+> +						 priv->page_pool[rxq->logic_rxq]);
+> +		if (err < 0)
+> +			goto err_unregister_rxq_short;
+> +
+> +		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_long,
+> +						 MEM_TYPE_PAGE_POOL,
+> +						 priv->page_pool[rxq->logic_rxq +
+> +								 port->nrxqs]);
+> +		if (err < 0)
+> +			goto err_unregister_rxq_long;
 
-That gets uses separate ops in proc after a few preparational cleanups
-and rid of the iter_read() patch entirely.  Let me know what you think,
-I don't really want to send the whole patch bomb again already.
+Since mvpp2_rxq_init() will return an error shouldn't we unregister the short 
+memory pool as well?
 
-Gitweb is also avaiable here:
-
-   http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/set_fs-rw
+> +	}
+> +
+>  	return 0;
+> +
+> +err_unregister_rxq_long:
+> +	xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
+> +err_unregister_rxq_short:
+> +	xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
+> +err_free_dma:
+> +	dma_free_coherent(port->dev->dev.parent,
+> +			  rxq->size * MVPP2_DESC_ALIGNED_SIZE,
+> +			  rxq->descs, rxq->descs_dma);
+> +	return err;
+>  }
+>  
+>  /* Push packets received by the RXQ to BM pool */
+> @@ -2449,6 +2540,12 @@ static void mvpp2_rxq_deinit(struct mvpp2_port *port,
+>  {
+>  	unsigned int thread;
+>  
+> +	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_short))
+> +		xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
+> +
+> +	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_long))
+> +		xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
+> +
+>  	mvpp2_rxq_drop_pkts(port, rxq);
+>  
+>  	if (rxq->descs)
+> @@ -2890,14 +2987,15 @@ static void mvpp2_rx_csum(struct mvpp2_port *port, u32 status,
+>  
+>  /* Allocate a new skb and add it to BM pool */
+>  static int mvpp2_rx_refill(struct mvpp2_port *port,
+> -			   struct mvpp2_bm_pool *bm_pool, int pool)
+> +			   struct mvpp2_bm_pool *bm_pool,
+> +			   struct page_pool *page_pool, int pool)
+>  {
+>  	dma_addr_t dma_addr;
+>  	phys_addr_t phys_addr;
+>  	void *buf;
+>  
+> -	buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr, &phys_addr,
+> -			      GFP_ATOMIC);
+> +	buf = mvpp2_buf_alloc(port, bm_pool, page_pool,
+> +			      &dma_addr, &phys_addr, GFP_ATOMIC);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -2956,6 +3054,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  	while (rx_done < rx_todo) {
+>  		struct mvpp2_rx_desc *rx_desc = mvpp2_rxq_next_desc_get(rxq);
+>  		struct mvpp2_bm_pool *bm_pool;
+> +		struct page_pool *pp = NULL;
+>  		struct sk_buff *skb;
+>  		unsigned int frag_size;
+>  		dma_addr_t dma_addr;
+> @@ -2989,6 +3088,9 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  					DMA_FROM_DEVICE);
+>  		prefetch(data);
+>  
+> +		if (port->priv->percpu_pools)
+> +			pp = port->priv->page_pool[pool];
+> +
+>  		if (bm_pool->frag_size > PAGE_SIZE)
+>  			frag_size = 0;
+>  		else
+> @@ -3000,15 +3102,18 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
+>  			goto err_drop_frame;
+>  		}
+>  
+> -		err = mvpp2_rx_refill(port, bm_pool, pool);
+> +		err = mvpp2_rx_refill(port, bm_pool, pp, pool);
+>  		if (err) {
+>  			netdev_err(port->dev, "failed to refill BM pools\n");
+>  			goto err_drop_frame;
+>  		}
+>  
+> -		dma_unmap_single_attrs(dev->dev.parent, dma_addr,
+> -				       bm_pool->buf_size, DMA_FROM_DEVICE,
+> -				       DMA_ATTR_SKIP_CPU_SYNC);
+> +		if (pp)
+> +			page_pool_release_page(pp, virt_to_page(data));
+> +		else
+> +			dma_unmap_single_attrs(dev->dev.parent, dma_addr,
+> +					       bm_pool->buf_size, DMA_FROM_DEVICE,
+> +					       DMA_ATTR_SKIP_CPU_SYNC);
+>  
+>  		rcvd_pkts++;
+>  		rcvd_bytes += rx_bytes;
+> -- 
+> 2.26.2
+> 
