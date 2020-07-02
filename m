@@ -2,113 +2,125 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38269C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040C7206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1091220899
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 14:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hYKVXrVg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emc+bdZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729965AbgGBOqn (ORCPT
+        id S1729980AbgGBOqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 10:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729921AbgGBOqd (ORCPT
+        Thu, 2 Jul 2020 10:46:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31585 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729940AbgGBOqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 10:46:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D3EC08C5DE
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 07:46:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f2so816148wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 07:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e63YwYltHzireeUJAWeq6I/Q+T+q+YjnJiKdRakYXIQ=;
-        b=hYKVXrVgkHraKOfZu3k2KQgkRHrWpQyoiVNITKkt1laLeRsQphMY2/cCQQJu6Yxeq3
-         THAbytYMpx+LL+OHe5i6N7aqfDGUYS1nwUVkXo86nqmsL/g1r1+o4D2Wwlw7xa1TDcb9
-         W0FNCE+rSz6eQGz46KlgSPYSL4YHs4RZlLpdVVMup84vGo0tmQSvHfVCcsPjRekNJ5wW
-         vdrw4fSR2Y/feAsgx9WotHu0jT2Hbr9cs6ccIIjdBkeW/AtD7DchmnTKJHB6qWLyY16k
-         twS52qFRMzmBCJOAOfwieDFpf/GDvlmB11h6Ajzx0RAxYR6IyNt/wbeNQ17pzw3BSd8F
-         407g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e63YwYltHzireeUJAWeq6I/Q+T+q+YjnJiKdRakYXIQ=;
-        b=qP0DD5eocAquG/JXEWkcLECDrJp/nLmdbzqLB+Qj2G1BTAFbznMdWOUPr8/kQem1IA
-         k75S+dqwvUs+q6swkBwxkCYWjoHdM8g3tFtSwuecM5WwJxCNfWIXreltU6+31oz3W3oz
-         I27k/D/H+7kGwfc/uC5ydgXkwScC3OoY9hBsX8ro8HQoWz8eOnj/dJWBYsOBJY0waDqz
-         e45IgislNv8X4lJVpGtVkZULZgOFElou9kcUClSM4X/x03p/CZVsJiek88dQX5QnkyiN
-         kKJG1wewn85P6XPYMYgNmhSvLjtOai3ZXUofwLq7ouCyDjmULsXQZJufqYfEWoFpEh7h
-         QviQ==
-X-Gm-Message-State: AOAM533CMsXM4Peli09VWy3SS1NdFOBqb+Qndka0PY+0VatW8FBLCSGX
-        C0x2e74NrPuMZ8UsSwL2o6+KWA==
-X-Google-Smtp-Source: ABdhPJwVhXexGFtE5J767EHYTZ5ksk2T2JcVdBbrTkdpijHJTFgDlRPbD9D3pIbKZH4I57pFWKs9HA==
-X-Received: by 2002:adf:aa90:: with SMTP id h16mr32393226wrc.356.1593701191570;
-        Thu, 02 Jul 2020 07:46:31 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g14sm7002737wrw.83.2020.07.02.07.46.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 07:46:30 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Martin Mares <mj@ucw.cz>, aleksey_gorelov@phoenix.com
-Subject: [PATCH 02/30] usb: host: pci-quirks: Demote function header from kerneldoc to comment block
-Date:   Thu,  2 Jul 2020 15:45:57 +0100
-Message-Id: <20200702144625.2533530-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
+        Thu, 2 Jul 2020 10:46:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593701198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sfReHjMG1okIi6bUbbQpOqD3Ch8gtx1iU9O9hVtsN/8=;
+        b=emc+bdZ4qTXh9qfjakR7wbzVYuHXSwygSqm2Lrv+4aywCVnZCuYlHXq9d1w6D80k1lcGnP
+        bXkTp6BNpPGkO0DMMB46C7slWX0BkTTdRBKOOjLAK9JRrwVDnkqPSafPkoWqsJKxXjXPNT
+        49SXu079n17mEPzr5PjHtzhd/aT2+ps=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-GbGUuS2aPx2QW6v9bWRqWQ-1; Thu, 02 Jul 2020 10:46:32 -0400
+X-MC-Unique: GbGUuS2aPx2QW6v9bWRqWQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C383A879512;
+        Thu,  2 Jul 2020 14:46:24 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-162.ams2.redhat.com [10.36.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8557B1CA;
+        Thu,  2 Jul 2020 14:46:18 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Carlos O'Donell <carlos@redhat.com>
+Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and thread creation (v22)
+References: <20200629190036.26982-1-mathieu.desnoyers@efficios.com>
+        <20200629190036.26982-2-mathieu.desnoyers@efficios.com>
+Date:   Thu, 02 Jul 2020 16:46:17 +0200
+In-Reply-To: <20200629190036.26982-2-mathieu.desnoyers@efficios.com> (Mathieu
+        Desnoyers via Libc-alpha's message of "Mon, 29 Jun 2020 15:00:34
+        -0400")
+Message-ID: <87o8oy9dqe.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-quirk_usb_handoff_xhci()'s function header is the only one across
-the sourcefile which is denoted as a kerneldoc header.  Despite
-no attempt to document its arguments.  Drop it down in status from
-kerneldoc to a standard comment block to match the other headers
-in the file.
+* Mathieu Desnoyers via Libc-alpha:
 
-Fixes the following W=1 kernel build warning:
+> Register rseq TLS for each thread (including main), and unregister for
+> each thread (excluding main).  "rseq" stands for Restartable Sequences.
+>
+> See the rseq(2) man page proposed here:
+>   https://lkml.org/lkml/2018/9/19/647
+>
+> Those are based on glibc master branch commit 3ee1e0ec5c.
+> The rseq system call was merged into Linux 4.18.
+>
+> The TLS_STATIC_SURPLUS define is increased to leave additional room for
+> dlopen'd initial-exec TLS, which keeps elf/tst-auditmany working.
+>
+> The increase (76 bytes) is larger than 32 bytes because it has not been
+> increased in quite a while.  The cost in terms of additional TLS storage
+> is quite significant, but it will also obscure some initial-exec-related
+> dlopen failures.
 
- drivers/usb/host/pci-quirks.c:1145: warning: Function parameter or member 'pdev' not described in 'quirk_usb_handoff_xhci'
+We need another change to get this working on most non-x86
+architectures:
 
-Cc: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Martin Mares <mj@ucw.cz>
-Cc: aleksey_gorelov@phoenix.com
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/usb/host/pci-quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/elf/dl-tls.c b/elf/dl-tls.c
+index 817bcbbf59..ca13778ca9 100644
+--- a/elf/dl-tls.c
++++ b/elf/dl-tls.c
+@@ -134,6 +134,12 @@ void
+ _dl_determine_tlsoffset (void)
+ {
+   size_t max_align = TLS_TCB_ALIGN;
++  /* libc.so with rseq has TLS with 32-byte alignment.  Since TLS is
++     initialized before audit modules are loaded and slotinfo
++     information is available, this is not taken into account below in
++     the audit case.  */
++  max_align = MAX (max_align, 32U);
++
+   size_t freetop = 0;
+   size_t freebottom = 0;
 
-diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-index 0b949acfa2589..b8961c0381cfd 100644
---- a/drivers/usb/host/pci-quirks.c
-+++ b/drivers/usb/host/pci-quirks.c
-@@ -1133,7 +1133,7 @@ void usb_disable_xhci_ports(struct pci_dev *xhci_pdev)
- }
- EXPORT_SYMBOL_GPL(usb_disable_xhci_ports);
- 
--/**
-+/*
-  * PCI Quirks for xHCI.
-  *
-  * Takes care of the handoff between the Pre-OS (i.e. BIOS) and the OS.
--- 
-2.25.1
+This isn't visible on x86-64 because TLS_TCB_ALIGN is already 64 there.
+
+I plan to re-test with this fix and push the series.
+
+Carlos, is it okay if I fold in the dl-tls.c change if testing looks
+good?
+
+Thanks,
+Florian
 
