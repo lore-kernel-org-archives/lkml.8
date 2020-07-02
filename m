@@ -2,94 +2,121 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2299BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD3F20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/eW4I1U"
+	by mail.kernel.org (Postfix) with ESMTP id 04AEE20771
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 18:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgGBSoU (ORCPT
+        id S1726017AbgGBSqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 14:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGBSoU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 14:44:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD79C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 11:44:20 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u5so12906968pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 11:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FP9n0qRIXc4AGMB2Cuj6evDveqJfblRxHMETVqaiIRE=;
-        b=Y/eW4I1UJ6ndSlD7IHhSytnpBWDxb+Jw8Q0hLbNMEnuoySdgmvAUxHuc3C+ftqBOpN
-         Lb+W15tgmK6Ryygl4oh6VGa4phdiNK184gn15nEqRVOreI5OGZ3qhIhyRkh/C/GGOmOV
-         nMKdP039o6wfud5iisiozwbW58Xg/HOEiR7ymbC+2xUG7zJVX1hYcOYFZNfwiNLge27b
-         ZvOUMD8IPQkfZCkG4bN/uoD7aQGFpxE0FIPb+6Colv7RsU8COSWGAWccY3kG/JKDHV2t
-         6zmz9inr5prww1u+YJZ9sKz81TMTceg1Cddydsz2YUPQEO3LBVSlVhK3qbYcsy8A2ZqW
-         Pshg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FP9n0qRIXc4AGMB2Cuj6evDveqJfblRxHMETVqaiIRE=;
-        b=OdQGNc5zResnFqtAaf685v4ofzC+CY3L8GnRO5TL8Qw9KJOU8bemVRVTVDaL2nvhUB
-         TMZtOe1D+BkyuqqyrhxOvuNg50jAMqPIxOSmdblbPdgzr4H3GCRsD2ljZhZyoOVQQFzx
-         8ObZeAKjSqHZL16KHYXSkHhVJiwgu7jItFmepYut4F9viIsO3amLmF9tJ9n24W9P0eLB
-         MabxrZqRALULbcEmyRJJEhTcRUR4fD25GAd5AcDvMnp5LyUNzZ4nqCeVbrT6DqjoPRfb
-         q7IMcOrUohjiraz+ZXx4k1uKHnVnJR6eY7Ustro88IQVCuH69ZdtMgbi6KVSsnHXAjhc
-         f0Ug==
-X-Gm-Message-State: AOAM5300qKoUUNXmOloUnqZhOP/3R1ylj2YKo6QEk1D+vrPjrzUaGFMp
-        HpueCszik+pYH8oBBR1jMJc=
-X-Google-Smtp-Source: ABdhPJwoL6GaAMdB9x4/AlPN6Z249mGTQ4ZjldoorgeCh7p+TR+j2RyiDDnQdqYC3t17qCULfe8YMg==
-X-Received: by 2002:aa7:9630:: with SMTP id r16mr24760416pfg.144.1593715459899;
-        Thu, 02 Jul 2020 11:44:19 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id n12sm9474759pgr.88.2020.07.02.11.44.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 Jul 2020 11:44:19 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 11:44:15 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "open list:FREESCALE SOC SOUND DRIVERS" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/6] ASoC: fsl: fsl_ssi: fix kernel-doc
-Message-ID: <20200702184414.GC23935@Asurada-Nvidia>
-References: <20200702172227.164474-1-pierre-louis.bossart@linux.intel.com>
- <20200702172227.164474-3-pierre-louis.bossart@linux.intel.com>
+        Thu, 2 Jul 2020 14:46:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:53100 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgGBSqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 14:46:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3AA41FB;
+        Thu,  2 Jul 2020 11:46:43 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDE453F71E;
+        Thu,  2 Jul 2020 11:46:42 -0700 (PDT)
+References: <20200701190656.10126-1-valentin.schneider@arm.com> <20200701190656.10126-5-valentin.schneider@arm.com> <ef77cdb1-d3b9-c77f-2bbe-e3dd9883e5d8@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Morten Rasmussen <morten.rasmussen@arm.com>, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org
+Subject: Re: [PATCH v3 4/7] arm, sched/topology: Remove SD_SHARE_POWERDOMAIN
+In-reply-to: <ef77cdb1-d3b9-c77f-2bbe-e3dd9883e5d8@arm.com>
+Date:   Thu, 02 Jul 2020 19:46:40 +0100
+Message-ID: <jhjblkx92lr.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702172227.164474-3-pierre-louis.bossart@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:22:23PM -0500, Pierre-Louis Bossart wrote:
-> Fix W=1 warnings. The kernel-doc support is partial, add more
-> descriptions and follow proper syntax
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+On 02/07/20 17:44, Dietmar Eggemann wrote:
+> On 01/07/2020 21:06, Valentin Schneider wrote:
+>> This flag was introduced in 2014 by commit
+>>
+>>   d77b3ed5c9f8 ("sched: Add a new SD_SHARE_POWERDOMAIN for sched_domain")
+>>
+>> but AFAIA it was never leveraged by the scheduler. The closest thing I can
+>> think of is EAS caring about frequency domains, and it does that by
+>> leveraging performance domains.
+>
+> ... and even this was purely out of tree (SD_SHARE_CAP_STATES).
+>
+>> Remove the flag.
+>>
+>> Suggested-by: Morten Rasmussen <morten.rasmussen@arm.com>
+>> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+>> ---
+>>  arch/arm/kernel/topology.c     |  2 +-
+>>  include/linux/sched/sd_flags.h | 20 ++++++--------------
+>>  kernel/sched/topology.c        | 10 +++-------
+>>  3 files changed, 10 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+>> index b5adaf744630..353f3ee660e4 100644
+>> --- a/arch/arm/kernel/topology.c
+>> +++ b/arch/arm/kernel/topology.c
+>> @@ -243,7 +243,7 @@ void store_cpu_topology(unsigned int cpuid)
+>>
+>>  static inline int cpu_corepower_flags(void)
+>>  {
+>> -	return SD_SHARE_PKG_RESOURCES  | SD_SHARE_POWERDOMAIN;
+>> +	return SD_SHARE_PKG_RESOURCES;
+>>  }
+>>
+>>  static struct sched_domain_topology_level arm_topology[] = {
+>
+> I guess with SD_SHARE_POWERDOMAIN gone, arch arm can even use the default_topology[]:
+
+That does look like it! I never noticed we declared this GMC topology
+level. Given it uses the thread_sibling mask, and that no (upstream) arm DT
+uses the thread topology binding, I guess that makes sense.
+
+>
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index b5adaf744630..87dd193165cc 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -241,20 +241,6 @@ void store_cpu_topology(unsigned int cpuid)
+>         update_siblings_masks(cpuid);
+>  }
+>
+> -static inline int cpu_corepower_flags(void)
+> -{
+> -       return SD_SHARE_PKG_RESOURCES  | SD_SHARE_POWERDOMAIN;
+> -}
+> -
+> -static struct sched_domain_topology_level arm_topology[] = {
+> -#ifdef CONFIG_SCHED_MC
+> -       { cpu_corepower_mask, cpu_corepower_flags, SD_INIT_NAME(GMC) },
+> -       { cpu_coregroup_mask, cpu_core_flags, SD_INIT_NAME(MC) },
+> -#endif
+> -       { cpu_cpu_mask, SD_INIT_NAME(DIE) },
+> -       { NULL, },
+> -};
+> -
+>  /*
+>   * init_cpu_topology is called at boot when only one cpu is running
+>   * which prevent simultaneous write access to cpu_topology array
+> @@ -265,7 +251,4 @@ void __init init_cpu_topology(void)
+>         smp_wmb();
+>
+>         parse_dt_topology();
+> -
+> -       /* Set scheduler topology descriptor */
+> -       set_sched_topology(arm_topology);
+>  }
