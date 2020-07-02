@@ -2,106 +2,173 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6166CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAC8207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E41E207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 00:59:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRhMEajk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgGBA7i (ORCPT
+        id S1727930AbgGBA7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Jul 2020 20:59:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36580 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbgGBA7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Jul 2020 20:59:38 -0400
-IronPort-SDR: E39jGFPxKgcQR13ZbuAHIdV5uR3poGiAjRuL0VO9y88aiSPNS2Cy5oXUclwdyfTsgfeWgJ247H
- 0tfwQIiFWA5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="134215309"
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="134215309"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 17:59:37 -0700
-IronPort-SDR: k5ecF3Q6zcI3nWdx6Qxil4zw34HSk4hd+mydaYVi7w6tm8PQg46p6c+8WxquLmwqn9ztPbCacq
- Z4wN3zre0KZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,302,1589266800"; 
-   d="scan'208";a="304061442"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jul 2020 17:59:34 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v3 6/7] iommu/vt-d: Warn on out-of-range invalidation
- address
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1593617636-79385-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1593617636-79385-7-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <a960a831-e763-6ee6-e012-64f8acb365b6@linux.intel.com>
-Date:   Thu, 2 Jul 2020 08:55:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <1593617636-79385-7-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 1 Jul 2020 20:59:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30861 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726814AbgGBA7j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Jul 2020 20:59:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593651578;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=Sh4KPebLPMiQTSq94J+ueizqXBs0f85eCZhJCTEhzNY=;
+        b=IRhMEajkdDGIXMrKMMAmIchS1uCPQ7B5cjPeK6QVnECxG6ZvaG9zxKCrqJk4+eh9CMhh9X
+        n8w/ryyndBPg7UeDV6CAaU4HSGsh0sm8AqH+/qrDkKtZJNiulwhfQPBG/ggaMVB9HsfewH
+        dTh4ORQdzuKpe7MMPuA7lRRgCKxOs/I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-sz62XHqhMWyXVzIL3G8wBQ-1; Wed, 01 Jul 2020 20:59:37 -0400
+X-MC-Unique: sz62XHqhMWyXVzIL3G8wBQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1FF6185B39B;
+        Thu,  2 Jul 2020 00:59:35 +0000 (UTC)
+Received: from llong.com (ovpn-118-140.rdu2.redhat.com [10.10.118.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CCEA73FD2;
+        Thu,  2 Jul 2020 00:59:28 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v5] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Date:   Wed,  1 Jul 2020 20:59:23 -0400
+Message-Id: <20200702005923.10064-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/20 11:33 PM, Jacob Pan wrote:
-> For guest requested IOTLB invalidation, address and mask are provided as
-> part of the invalidation data. VT-d HW silently ignores any address bits
-> below the mask. SW shall also allow such case but give warning if
-> address does not align with the mask. This patch relax the fault
-> handling from error to warning and proceed with invalidation request
-> with the given mask.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Depending on the workloads, the following circular locking dependency
+warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+lock) may show up:
 
-Fixes: 6ee1b77ba3ac0 ("iommu/vt-d: Add svm/sva invalidate function")
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+======================================================
+WARNING: possible circular locking dependency detected
+5.0.0-rc1+ #60 Tainted: G        W
+------------------------------------------------------
+fsfreeze/4346 is trying to acquire lock:
+0000000026f1d784 (fs_reclaim){+.+.}, at:
+fs_reclaim_acquire.part.19+0x5/0x30
 
-Best regards,
-baolu
+but task is already holding lock:
+0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
 
-> ---
->   drivers/iommu/intel/iommu.c | 7 +++----
->   1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 6a0c62c7395c..2e1b53ade784 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   
->   		switch (BIT(cache_type)) {
->   		case IOMMU_CACHE_INV_TYPE_IOTLB:
-> +			/* HW will ignore LSB bits based on address mask */
->   			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
->   			    size &&
->   			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> -				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
-> -						   inv_info->addr_info.addr, size);
-> -				ret = -ERANGE;
-> -				goto out_unlock;
-> +				pr_err_ratelimited("User address not aligned, 0x%llx, size order %llu\n",
-> +					  inv_info->addr_info.addr, size);
->   			}
->   
->   			/*
-> 
+which lock already depends on the new lock.
+  :
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_internal);
+                               lock(fs_reclaim);
+                               lock(sb_internal);
+  lock(fs_reclaim);
+
+ *** DEADLOCK ***
+
+4 locks held by fsfreeze/4346:
+ #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+ #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+ #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+ #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+
+stack backtrace:
+Call Trace:
+ dump_stack+0xe0/0x19a
+ print_circular_bug.isra.10.cold.34+0x2f4/0x435
+ check_prev_add.constprop.19+0xca1/0x15f0
+ validate_chain.isra.14+0x11af/0x3b50
+ __lock_acquire+0x728/0x1200
+ lock_acquire+0x269/0x5a0
+ fs_reclaim_acquire.part.19+0x29/0x30
+ fs_reclaim_acquire+0x19/0x20
+ kmem_cache_alloc+0x3e/0x3f0
+ kmem_zone_alloc+0x79/0x150
+ xfs_trans_alloc+0xfa/0x9d0
+ xfs_sync_sb+0x86/0x170
+ xfs_log_sbcount+0x10f/0x140
+ xfs_quiesce_attr+0x134/0x270
+ xfs_fs_freeze+0x4a/0x70
+ freeze_super+0x1af/0x290
+ do_vfs_ioctl+0xedc/0x16c0
+ ksys_ioctl+0x41/0x80
+ __x64_sys_ioctl+0x73/0xa9
+ do_syscall_64+0x18f/0xd23
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This is a false positive as all the dirty pages are flushed out before
+the filesystem can be frozen.
+
+One way to avoid this splat is to add GFP_NOFS to the affected allocation
+calls. This is what PF_MEMALLOC_NOFS per-process flag is for. This does
+reduce the potential source of memory where reclaim can be done. This
+shouldn't matter unless the system is really running out of memory.
+In that particular case, the filesystem freeze operation may fail while
+it was succeeding previously.
+
+Without this patch, the command sequence below will show that the lock
+dependency chain sb_internal -> fs_reclaim exists.
+
+ # fsfreeze -f /home
+ # fsfreeze --unfreeze /home
+ # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+
+After applying the patch, such sb_internal -> fs_reclaim lock dependency
+chain can no longer be found. Because of that, the locking dependency
+warning will not be shown.
+
+Suggested-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ fs/xfs/xfs_super.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..dcc97bad950a 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -913,11 +913,21 @@ xfs_fs_freeze(
+ 	struct super_block	*sb)
+ {
+ 	struct xfs_mount	*mp = XFS_M(sb);
++	unsigned long		pflags;
++	int			ret;
+ 
++	/*
++	 * Disable fs reclaim in memory allocation for fs freeze to avoid
++	 * causing a possible circular locking dependency lockdep splat
++	 * relating to fs reclaim.
++	 */
++	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+ 	xfs_stop_block_reaping(mp);
+ 	xfs_save_resvblks(mp);
+ 	xfs_quiesce_attr(mp);
+-	return xfs_sync_sb(mp, true);
++	ret = xfs_sync_sb(mp, true);
++	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
++	return ret;
+ }
+ 
+ STATIC int
+-- 
+2.18.1
+
