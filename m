@@ -2,120 +2,82 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE276C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA9920772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715EF206B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 10:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dipNb7Qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgGBKS0 (ORCPT
+        id S1728356AbgGBKT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 06:18:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:35036 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgGBKSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 06:18:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E240D1FB;
-        Thu,  2 Jul 2020 03:18:24 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.12.193])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EA193F71E;
-        Thu,  2 Jul 2020 03:18:22 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 11:18:19 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH 1/3] arm64: Introduce a way to disable the 32bit vdso
-Message-ID: <20200702101819.GB15391@C02TD0UTHF1T.local>
-References: <20200701161824.1346732-1-maz@kernel.org>
- <20200701161824.1346732-2-maz@kernel.org>
+        Thu, 2 Jul 2020 06:19:56 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56468 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgGBKTr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 06:19:47 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 128C620B4908;
+        Thu,  2 Jul 2020 03:19:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 128C620B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593685187;
+        bh=ZRE3Um+pEieTG0xQ4M5QSrkZwd1HX5P5rC1a9rLmt4A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dipNb7Qug4jfFGzFeCOIJdI906FopJ4r6tVy0NmSvYNC6do8vxuIl9zHemP36ptex
+         DHOULzJARvCOhemO/1rss/0su3tNnNHQZn+KigcFdzsuIxFbacmTUFVBlYGXG7RcLx
+         UFTF/wcQ6hhN8drPU4vmUbItLpgSw2xoW6EIJGoc=
+Received: by mail-qk1-f169.google.com with SMTP id j80so25096026qke.0;
+        Thu, 02 Jul 2020 03:19:46 -0700 (PDT)
+X-Gm-Message-State: AOAM530DmTbrh/9HI+BGz4BgIvsnJiyVAfR2FdF7XI0E8WeJ8VYra2di
+        7Ecqpk//jTrYYqir/HbyPwHZ3sBWfzKcLLrxavg=
+X-Google-Smtp-Source: ABdhPJyaL79MLwN6jUkDoThwrjYPK6m7eQDH1idLQ3gYMwTdWyls/DyyzNAD9JwVI3tIxKdJauDvpIXwdo3vImtofhs=
+X-Received: by 2002:a37:9a96:: with SMTP id c144mr29319278qke.207.1593685185937;
+ Thu, 02 Jul 2020 03:19:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701161824.1346732-2-maz@kernel.org>
+References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+ <20200630180930.87506-4-mcroce@linux.microsoft.com> <20200702080819.GA499364@apalos.home>
+ <20200702090956.GA7682@ranger.igk.intel.com>
+In-Reply-To: <20200702090956.GA7682@ranger.igk.intel.com>
+From:   Matteo Croce <mcroce@linux.microsoft.com>
+Date:   Thu, 2 Jul 2020 12:19:10 +0200
+X-Gmail-Original-Message-ID: <CAFnufp1yB8Cqxy=KqWan+E0ukiEDwq=aSWt1hYFYXdqoW9P4Sg@mail.gmail.com>
+Message-ID: <CAFnufp1yB8Cqxy=KqWan+E0ukiEDwq=aSWt1hYFYXdqoW9P4Sg@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/4] mvpp2: add basic XDP support
+To:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc:     ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Sven Auhagen <sven.auhagen@voleatech.de>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 05:18:22PM +0100, Marc Zyngier wrote:
-> We have a class of errata (grouped under the ARM64_WORKAROUND_1418040
-> banner) that force the trapping of counter access from 32bit EL0.
-> 
-> We would normally disable the whole vdso for such defect, except that
-> it would disable it for 64bit userspace as well, which is a shame.
-> 
-> Instead, add a new vdso_clock_mode, which signals that the vdso
-> isn't usable for compat tasks.  This gets checked in the new
-> vdso_clocksource_ok() helper, now provided for the 32bit vdso.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+On Thu, Jul 2, 2020 at 11:14 AM Maciej Fijalkowski
+<maciej.fijalkowski@intel.com> wrote:
+> > > +   if (port->dev->mtu > ETH_DATA_LEN) {
+> > > +           netdev_err(port->dev, "Jumbo frames are not supported by XDP, current MTU %d.\n",
+> > > +                      port->dev->mtu);
+> >
+> > ditto
+>
+> Here I agree and for every other netdev_err within mvpp2_xdp_setup().
+>
 
-As-is this looks sound to me. It's not entirely clear to me how this
-will compose with VDSO_CLOCKMODE_TIMENS, but given this series is fixing
-an existing brokenness I think this has higher priority.
+Nice idea, I'll add extack error reporting where possible.
 
-Minor comment below, but regardless:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-> ---
->  arch/arm64/include/asm/vdso/clocksource.h         | 7 +++++--
->  arch/arm64/include/asm/vdso/compat_gettimeofday.h | 8 +++++++-
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/vdso/clocksource.h b/arch/arm64/include/asm/vdso/clocksource.h
-> index df6ea65c1dec..b054d9febfb5 100644
-> --- a/arch/arm64/include/asm/vdso/clocksource.h
-> +++ b/arch/arm64/include/asm/vdso/clocksource.h
-> @@ -2,7 +2,10 @@
->  #ifndef __ASM_VDSOCLOCKSOURCE_H
->  #define __ASM_VDSOCLOCKSOURCE_H
->  
-> -#define VDSO_ARCH_CLOCKMODES	\
-> -	VDSO_CLOCKMODE_ARCHTIMER
-> +#define VDSO_ARCH_CLOCKMODES					\
-> +	/* vdso clocksource for both 32 and 64bit tasks */	\
-> +	VDSO_CLOCKMODE_ARCHTIMER,				\
-> +	/* vdso clocksource for 64bit tasks only */		\
-> +	VDSO_CLOCKMODE_ARCHTIMER_NOCOMPAT
->  
->  #endif
-> diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> index b6907ae78e53..9a625e8947ff 100644
-> --- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> +++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> @@ -111,7 +111,7 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
->  	 * update. Return something. Core will do another round and then
->  	 * see the mode change and fallback to the syscall.
->  	 */
-> -	if (clock_mode == VDSO_CLOCKMODE_NONE)
-> +	if (clock_mode != VDSO_CLOCKMODE_ARCHTIMER)
->  		return 0;
->  
->  	/*
-> @@ -152,6 +152,12 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
->  	return ret;
->  }
->  
-> +static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
-> +{
-> +	return vd->clock_mode == VDSO_CLOCKMODE_ARCHTIMER;
-> +}
-> +#define vdso_clocksource_ok	vdso_clocksource_ok
-
-Existing issue, but it's a shame this doesn't take the clock mode
-directly, then we wouldn't have to duplicate the conditions (as above,
-inverted).
-
-Mark.
+-- 
+per aspera ad upstream
