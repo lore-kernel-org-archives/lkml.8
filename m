@@ -2,64 +2,103 @@ Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFB320772
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF9A2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 13:51:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0EXNx9PB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgGBNu5 (ORCPT
+        id S1729457AbgGBNvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 09:50:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:44181 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbgGBNu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 09:50:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3C93A68AFE; Thu,  2 Jul 2020 15:50:54 +0200 (CEST)
-Date:   Thu, 2 Jul 2020 15:50:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method
- calls to seq_read_iter
-Message-ID: <20200702135054.GA29240@lst.de>
-References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de> <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
+        Thu, 2 Jul 2020 09:51:23 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:39031 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbgGBNvW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 09:51:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593697882; x=1625233882;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=cc8l3e6t3w7Fnm6NpfUfd3gTNmzkaJ44p8OlfIYexmg=;
+  b=0EXNx9PBYsCTM8oiZgbKaV3k2bsX3Uzgpj2ufcwnWU63BheoM+PJfynt
+   ykILMWfTu55DJX6BhGIzacnmKO0sJKysry+Llw3/36QAuPj+dR8TMh8N/
+   hT6fslt7/b6iuu+q5mdq93Hhwl4bBqCPs+Es+Sr1GkKjcmb9iK3+cXJ7w
+   gfX1tY56pU5wKX9rypMitrfP4GDgoVfbopA8HnD1KHRyGX/Ki2s11XSZt
+   WSbZtZ3LqHdE1iLDmIF4Og8lUYoX0jJCm6PuBXnnAfS9jP2+KVuojf6aO
+   yG+QlGqpqTvTmtXQQYxtsO1flqouCsYrfdbqqAFTp6CT3tGrEYzL8zdYI
+   g==;
+IronPort-SDR: JUfC97s1Ylnw1pe1BaOL8f1FC7cq2SZbjn2ZHdo3U+gV6NuTFCg82FOlFQPxzdQyN0WzAH+UIr
+ XHRosIXoZMiA9mxt52IGV6BaupN674wakQqM2F4EMRkswSdvDVEDg7+iZ4/F7FrqCI9G0OuQLv
+ n2YttJYaiYl/3UfMmATZD3YXCSS+NVqHFM4ZE2z1piLsmhyOKSxiBu96HJdkFYjwrqEYbZLYuz
+ i+9x06RIWW9hlo8VuwuqAwnFP3DMIsTveRSy/6bWQOZUutKN/wj+83c3UR32sVHOz+hYe1vPaR
+ CbE=
+X-IronPort-AV: E=Sophos;i="5.75,304,1589266800"; 
+   d="scan'208";a="86000751"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Jul 2020 06:51:22 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 2 Jul 2020 06:51:01 -0700
+Received: from [10.171.246.36] (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 2 Jul 2020 06:51:19 -0700
+Subject: Re: [PATCH net-next v2 0/4] net: macb: few code cleanups
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1593680761-11427-1-git-send-email-claudiu.beznea@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <5c3b7121-159b-94f6-c362-79a11a8ae062@microchip.com>
+Date:   Thu, 2 Jul 2020 15:51:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1593680761-11427-1-git-send-email-claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:46:17AM +0200, Miguel Ojeda wrote:
-> Hi Christoph,
+On 02/07/2020 at 11:05, Claudiu Beznea wrote:
+> Hi,
 > 
-> On Wed, Jul 1, 2020 at 10:25 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > Switch over all instances used directly as methods using these sed
-> > expressions:
-> >
-> > sed -i -e 's/\.read\(\s*=\s*\)seq_read/\.read_iter\1seq_read_iter/g'
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Patches in this series cleanup a bit macb code.
 > 
-> Nit: the replacements don't take into account the spaces/tabs needed
-> to align the designated initializers.
+> Thank you,
+> Claudiu Beznea
+> 
+> Changes in v2:
+> - in patch 2/4 use hweight32() instead of hweight_long()
+> 
+> Claudiu Beznea (4):
+>    net: macb: do not set again bit 0 of queue_mask
+>    net: macb: use hweight32() to count set bits in queue_mask
+>    net: macb: do not initialize queue variable
+>    net: macb: remove is_udp variable
+> 
+>   drivers/net/ethernet/cadence/macb_main.c | 19 +++++--------------
+>   1 file changed, 5 insertions(+), 14 deletions(-)
 
-Do you have a suggestion for an automated replacement which does?
-I'll happily switch over to that.
+You can add my:
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+
+For the whole series.
+
+Best regards,
+   Nicolas
+
+-- 
+Nicolas Ferre
