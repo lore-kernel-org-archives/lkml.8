@@ -2,189 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE86C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E68C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCC720781
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD6720748
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="r8p9duiM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cq47F5TL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgGCAdN (ORCPT
+        id S1726074AbgGCAgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:33:13 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:18337 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgGCAdM (ORCPT
+        Thu, 2 Jul 2020 20:36:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53680 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726015AbgGCAgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:33:12 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200703003310epoutp01dd2e1eb7fce2eafd9b0dd8ea16aaa264~eFs2RIF7v1534515345epoutp01Q
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:33:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200703003310epoutp01dd2e1eb7fce2eafd9b0dd8ea16aaa264~eFs2RIF7v1534515345epoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593736390;
-        bh=WgDPUYOS70hgOg400YBVb5DhaHc/yBFjmgoXoUJmDMw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r8p9duiMBKndbOsMEPllv2s58Cu+2nfi05VcJX8bELHBNIh5xaGhiy1AFIktpxo1E
-         3eBYRGrqYol8TvVJAz+qQF2yTW90FrceeeOS3vatEOm1QibV718Kp2gIxmXlVV+kUK
-         /33+DTFnb3PsoVaLo/9ElqMYE4atDOSTWf5aVrRc=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200703003309epcas1p3caf2fd985ec2c237f1e0bcbf83990f01~eFs18fMzl2651926519epcas1p33;
-        Fri,  3 Jul 2020 00:33:09 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49ybXg5G4szMqYkv; Fri,  3 Jul
-        2020 00:33:07 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4A.4E.18978.3CC7EFE5; Fri,  3 Jul 2020 09:33:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200703003307epcas1p20b58f82e8e7e0beb335410cd4b877884~eFsziTrw82396023960epcas1p2Z;
-        Fri,  3 Jul 2020 00:33:07 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200703003307epsmtrp233b13333867cbb0d370434cc05862122~eFszhjaJP0418304183epsmtrp2X;
-        Fri,  3 Jul 2020 00:33:07 +0000 (GMT)
-X-AuditID: b6c32a35-b8298a8000004a22-25-5efe7cc36538
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EA.CB.08382.3CC7EFE5; Fri,  3 Jul 2020 09:33:07 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200703003307epsmtip285aa2853c809377373831f3619fdd8db~eFszSmAja2432224322epsmtip2Q;
-        Fri,  3 Jul 2020 00:33:07 +0000 (GMT)
-Subject: Re: [PATCH v2] PM / devfreq: tegra: Add Dmitry as a maintainer
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Organization: Samsung Electronics
-Message-ID: <a08f16bc-df90-2199-91c8-f2acfe0f94ad@samsung.com>
-Date:   Fri, 3 Jul 2020 09:44:22 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 2 Jul 2020 20:36:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593736575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H02gDnpUqaBFoqy+Gmqb6/mcQ7fzguEDru28MyLbZRk=;
+        b=cq47F5TLkgV9BvdNcebCxJMBVjlpEDlWtIqIgkpNxfvLC/Fph2t+Seeq3WglTO0Qj0UU1c
+        eWkCIejrTpaIoMFqS6UO04aR9wvjPUstCOxiIJiNRDWLzb89mGHLpmnxb1gEvuFMnPyFzm
+        5q/wdaucl9Ev9Xo0FxZzfAAjT907Ygs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-130-GreJcrfjNq-bNoQeshMd9Q-1; Thu, 02 Jul 2020 20:36:11 -0400
+X-MC-Unique: GreJcrfjNq-bNoQeshMd9Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9851D1009616;
+        Fri,  3 Jul 2020 00:36:09 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-121.rdu2.redhat.com [10.10.112.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EAD779256;
+        Fri,  3 Jul 2020 00:36:07 +0000 (UTC)
+Subject: Re: [PATCH 6/8] powerpc/pseries: implement paravirt qspinlocks for
+ SPLPAR
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20200702074839.1057733-7-npiggin@gmail.com>
+ <202007030059.nT5quxzB%lkp@intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <3730577a-1e14-0e3e-7f7b-0c6cb68fb1f2@redhat.com>
+Date:   Thu, 2 Jul 2020 20:36:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <921abb5e-8c12-db8b-b345-fbe49080dc1c@samsung.com>
+In-Reply-To: <202007030059.nT5quxzB%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmvu7hmn9xBu/ua1is/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZnDl9idXi5655LA6cHjtn3WX36G1+x+ax5Wo7
-        i0ffllWMHp83yQWwRmXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoq
-        ufgE6Lpl5gAdpKRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpsCzQK07MLS7NS9dL
-        zs+1MjQwMDIFKkzIzli2+QFrwQ7eip/3XzM1ML7j6mLk5JAQMJHoP/6SGcQWEtjBKLHjfGgX
-        IxeQ/YlRYu6N2+wQzjdGiU+3PrHCdKzdto0JIrGXUeLK37+MEM57RomGn1uAWjg4hAXcJfrn
-        24I0sAloSex/cYMNpEZE4A+jxIXbl8AmMQtEShzeuZoJxOYXUJS4+uMxI4jNK2AnMbN3AjuI
-        zSKgIvF68l6wuKhAmMTJbS1QNYISJ2c+YQGxOQXsJc6t/sAEMVNc4taT+VC2vMT2t3OYQRZL
-        CKzkkHj9tJ0J4gUXiTef/zFD2MISr45vYYewpSQ+v9vLBmFXS6w8eYQNormDUWLL/gtQ/xtL
-        7F86mQnkS2YBTYn1u/QhwooSO3/PZYRYzCfx7msPK0iJhACvREebEESJssTlB3ehTpCUWNze
-        yTaBUWkWkndmIXlhFpIXZiEsW8DIsopRLLWgODc9tdiwwBA5tjcxghOrlukOxolvP+gdYmTi
-        YDzEKMHBrCTCm6D6L06INyWxsiq1KD++qDQntfgQoykwgCcyS4km5wNTe15JvKGpkbGxsYWJ
-        oZmpoaGSOK+4zIU4IYH0xJLU7NTUgtQimD4mDk6pBqbz135auy2ZVHHP8Wtw7+Ha9/91Z61r
-        2tI2t2DH5veb98zZ+zR22z9ZxdyEJaVrpBgsXlpP+zyz8sC5z5z7/p9mL8nPbnyzj/Xy29wv
-        +npXD0kE2LrFOxXvFFZcuqrviHaI/Sop/fr9Jz2e7Y+P/sA3ZaGOoCBHf/YScfmzsvuS+N9v
-        6lKvjY1TfpW93n6DXeUUnWlZt4yrXD4c39i1VEF6epRSpmzu84sG20+FNzmkOWsuSI23Ttu5
-        r8V4wWKb2yyhPxWk9j9+sD3b5o74hxnF03d+1y1vcj034+6dRPcnG+efyzBQvvdG3ivaWXu/
-        0FX7W6JHTgovYrkc7Xwp5l3OOY3mcLfKE6s8fr9N27hJiaU4I9FQi7moOBEABYj04TUEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42LZdlhJXvdwzb84g33reC1Wf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gszpy+xGrxc9c8FgdOj52z7rJ79Da/Y/PYcrWd
-        xaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgylm1+wFqwg7fi5/3XTA2M77i6GDk5JARMJNZu
-        28bUxcjFISSwm1Fi5u8LLBAJSYlpF48ydzFyANnCEocPF0PUvGWUeHnmPCtIXFjAXaJ/vi1I
-        OZuAlsT+FzfYQGpEBBqYJFoXLWMCSTALREr0zN3CBtG8l1Hi/byFzCAJfgFFias/HjOC2LwC
-        dhIzeyewg9gsAioSryfvBYuLCoRJ7FzymAmiRlDi5MwnYMdxCthLnFv9AWqBusSfeZeYIWxx
-        iVtP5kPF5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLS
-        vHS95PzcTYzgGNPS3MG4fdUHvUOMTByMhxglOJiVRHgTVP/FCfGmJFZWpRblxxeV5qQWH2KU
-        5mBREue9UbgwTkggPbEkNTs1tSC1CCbLxMEp1cBUrbgk5NH3by+fb5g5pT5wkpb0Xu0J11pO
-        Clq9/D3p5MbTWf4d1kWX1RjX39dV5vXgiN9slsWewC8T8b/+r/Anq8cx0iFe3Jsm87sUNS5u
-        YzwQra78wN006MyP0Bds+YumfUuXYt4++2iFqHaBqM6zJY/ain9s79kaFWb6YLv3okrWnM1l
-        3IefnLG5HM/+zodBfm58jJn/a/12sz45F52j4WbCLAEBxm9O6lcuF7dsEPknPu2n8vKtqSf/
-        9r3qZE1/eTqgRfAL2wv/m8dCFJVd6lL5Zk//cX7ftoUJi81vnpDpXCX3y69mhXLDnZbEjc8C
-        bGKqvl2fFlP+8sWjsnCB2OmicxQT3qfcDVv8+YkSS3FGoqEWc1FxIgDb/Ma6IAMAAA==
-X-CMS-MailID: 20200703003307epcas1p20b58f82e8e7e0beb335410cd4b877884
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200402222006epcas1p4027cd509b32ba2d2bdf90e9e84cf4bec
-References: <CGME20200402222006epcas1p4027cd509b32ba2d2bdf90e9e84cf4bec@epcas1p4.samsung.com>
-        <20200402221723.6064-1-digetx@gmail.com>
-        <921abb5e-8c12-db8b-b345-fbe49080dc1c@samsung.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On 7/2/20 12:15 PM, kernel test robot wrote:
+> Hi Nicholas,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on powerpc/next]
+> [also build test ERROR on tip/locking/core v5.8-rc3 next-20200702]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/Nicholas-Piggin/powerpc-queued-spinlocks-and-rwlocks/20200702-155158
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+> config: powerpc-allyesconfig (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>     kernel/locking/lock_events.c:61:16: warning: no previous prototype for 'lockevent_read' [-Wmissing-prototypes]
+>        61 | ssize_t __weak lockevent_read(struct file *file, char __user *user_buf,
+>           |                ^~~~~~~~~~~~~~
+>     kernel/locking/lock_events.c: In function 'skip_lockevent':
+>>> kernel/locking/lock_events.c:126:12: error: implicit declaration of function 'pv_is_native_spin_unlock' [-Werror=implicit-function-declaration]
+>       126 |   pv_on = !pv_is_native_spin_unlock();
+>           |            ^~~~~~~~~~~~~~~~~~~~~~~~
+>     cc1: some warnings being treated as errors
+>
+> vim +/pv_is_native_spin_unlock +126 kernel/locking/lock_events.c
 
-On 5/8/20 1:04 PM, Chanwoo Choi wrote:
-> Hi Rafael,
-> 
-> Could you please apply it to linux-pm directly?
-> 
-> I think that it is better to be applied directly
-> for preventing the possible merge conflict of MAINTAINERS file.
-> 
-> Best Regards,
-> Chanwoo Choi
-> 
-> On 4/3/20 7:17 AM, Dmitry Osipenko wrote:
->> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
->> want to help keep them working and evolving in the future.
->>
->> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>
->> Changelog:
->>
->> v2: - Addressed review comments made by Chanwoo Choi to v1 by correcting
->>       git's address, making this patch standalone and adding Rafael Wysocki
->>       to the list of email recipients.
->>
->>  MAINTAINERS | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 245a96316636..0a694e20ea19 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -10922,6 +10922,15 @@ F:	include/linux/memblock.h
->>  F:	mm/memblock.c
->>  F:	Documentation/core-api/boot-time-mm.rst
->>  
->> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
->> +M:	Dmitry Osipenko <digetx@gmail.com>
->> +L:	linux-pm@vger.kernel.org
->> +L:	linux-tegra@vger.kernel.org
->> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
->> +S:	Maintained
->> +F:	drivers/devfreq/tegra20-devfreq.c
->> +F:	drivers/devfreq/tegra30-devfreq.c
->> +
->>  MEMORY MANAGEMENT
->>  M:	Andrew Morton <akpm@linux-foundation.org>
->>  L:	linux-mm@kvack.org
->>
-> 
-> 
+I think you will need to add the following into 
+arch/powerpc/include/asm/qspinlock_paravirt.h:
 
-I applied it to devfreq-next branch. Thanks.
+static inline pv_is_native_spin_unlock(void)
+{
+     return !is_shared_processor();
+}
 
+Cheers,
+Longman
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
