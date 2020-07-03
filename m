@@ -2,117 +2,164 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B94C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1B920870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C07320899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZntdsKx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgGCPtz (ORCPT
+        id S1726514AbgGCPuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:49:55 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:41054 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGCPtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:49:55 -0400
-Received: from p5b127e6f.dip0.t-ipconnect.de ([91.18.126.111] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jrNwk-0002vB-3e; Fri, 03 Jul 2020 17:49:50 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-rockchip@lists.infradead.org
-Cc:     mylene.josserand@collabora.com, mturquette@baylibre.com,
-        sboyd@kernel.org, jagan@amarulasolutions.com,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        ezequiel@collabora.com, linux-clk@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v2] clk: rockchip: use separate compatibles for rk3288w-cru
-Date:   Fri,  3 Jul 2020 17:49:48 +0200
-Message-Id: <20200703154948.260369-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
+        Fri, 3 Jul 2020 11:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbgGCPui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:50:38 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF172C08C5DE
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:50:37 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x11so12783553plo.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HE29F07Osusj5HNcfEPahMCK2eK+sh7WURl9R1YcKaA=;
+        b=ZntdsKx0q/X5BPxShRDTPN11hCcSNaNHSwjYuk5fD2zlng44030b5MdJoootVDfoMt
+         /zMEuSjPxSOlCICh/mSeuMSVGxvISSp17ScJcCfOsSQLQHmwf6J7V/nxPWaHl2Iyx6Fs
+         qSddYBQyaFDD0x35D51sBJSuAMeRDMUD/R088=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HE29F07Osusj5HNcfEPahMCK2eK+sh7WURl9R1YcKaA=;
+        b=r/EW8L/h83ccRQ8j6O2bCJEzp82csm0Tf4GbfANyreCR/qkx9XKJwcRKTfudSHQiA3
+         kKmsDHP2om98gcZ47ZekdpiE+Fxs4pqGA8JjxkC8YK/MaClA24pe6bWjiAG7zJORC57f
+         yMCkx8Aj0AZ/F+MxKLHJuudpEun1h96RxKexqzqGV/yDtqxZYdWO3lQV0YVLpJgbK6lo
+         VtMguM10iP51aGjPVdmldtHBMmDjLaR518xH2NPF5QG6OCmwEtgOajL7YEZNwQVzGYhZ
+         4wWABjk76PWLFldwP7sRa/+7qcV+LrwniDTej/VPflfNQVva5+KXoqrwx4RPkGjk+mA0
+         5YhQ==
+X-Gm-Message-State: AOAM5324Yyf0B/LgCzLnRZnzWDdun+CXKd52RejRDcdCWfyDa+GmzEFa
+        5kTKRvPC79CXbhulF5EhBOfo+Q==
+X-Google-Smtp-Source: ABdhPJy2fp+PA9eTVGG0CLDemDjBxvxEKp4qXDHoN/nIW/lHbFv8vp/wBCvpcPnAWwfB3Q7cMslcYQ==
+X-Received: by 2002:a17:902:7:: with SMTP id 7mr28627375pla.209.1593791437392;
+        Fri, 03 Jul 2020 08:50:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d9sm11879987pgg.74.2020.07.03.08.50.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 08:50:36 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 08:50:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        stable <stable@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] kprobes: Do not expose probe addresses to
+ non-CAP_SYSLOG
+Message-ID: <202007030848.265EA58@keescook>
+References: <20200702232638.2946421-1-keescook@chromium.org>
+ <20200702232638.2946421-5-keescook@chromium.org>
+ <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Thu, Jul 02, 2020 at 06:00:17PM -0700, Linus Torvalds wrote:
+> If somebody is interested in looking into things like that, it might
+> be a good idea to have kernel threads with that counter incremented by
+> default.
 
-Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
-added the check for rk3288w-specific clock-tree changes but in turn would
-require a double-compatible due to re-using the main rockchip,rk3288-cru
-compatible as entry point.
+With 67 kthreads on a booted system, this patch does not immediately
+blow up... And it likely needs some beautification. (Note that
+current_cred_*() calls current_cred() under the hood, so AFAICT, only
+current_cred() needs coverage.)
 
-The binding change actually describes the compatibles as one or the other
-so adapt the code accordingly and add a real second entry-point for the
-clock controller.
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
-changes in v2:
-- type enum instead of boolean (Ezequiel)
-
- drivers/clk/rockchip/clk-rk3288.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 204976e2d0cb..93c794695c46 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -15,6 +15,11 @@
- #define RK3288_GRF_SOC_CON(x)	(0x244 + x * 4)
- #define RK3288_GRF_SOC_STATUS1	0x284
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 18639c069263..a624847cb0ce 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -295,7 +295,10 @@ static inline void put_cred(const struct cred *_cred)
+  * since nobody else can modify it.
+  */
+ #define current_cred() \
+-	rcu_dereference_protected(current->cred, 1)
++({							\
++	WARN_ON_ONCE(current->warn_on_current_cred);	\
++	rcu_dereference_protected(current->cred, 1);	\
++})
  
-+enum rk3288_variant {
-+	RK3288_CRU,
-+	RK3288W_CRU,
-+};
-+
- enum rk3288_plls {
- 	apll, dpll, cpll, gpll, npll,
- };
-@@ -922,7 +927,8 @@ static struct syscore_ops rk3288_clk_syscore_ops = {
- 	.resume = rk3288_clk_resume,
- };
+ /**
+  * current_real_cred - Access the current task's objective credentials
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b62e6aaf28f0..21ab1b81aa40 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -652,6 +652,7 @@ struct task_struct {
+ 	/* Per task flags (PF_*), defined further below: */
+ 	unsigned int			flags;
+ 	unsigned int			ptrace;
++	unsigned int			warn_on_current_cred;
  
--static void __init rk3288_clk_init(struct device_node *np)
-+static void __init rk3288_common_init(struct device_node *np,
-+				      enum rk3288_variant soc)
- {
- 	struct rockchip_clk_provider *ctx;
+ #ifdef CONFIG_SMP
+ 	struct llist_node		wake_entry;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 142b23645d82..2e181b9bfd3f 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2527,8 +2527,12 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+ 		.stack		= (unsigned long)fn,
+ 		.stack_size	= (unsigned long)arg,
+ 	};
++	pid_t pid;
  
-@@ -945,7 +951,7 @@ static void __init rk3288_clk_init(struct device_node *np)
- 	rockchip_clk_register_branches(ctx, rk3288_clk_branches,
- 				  ARRAY_SIZE(rk3288_clk_branches));
- 
--	if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
-+	if (soc == RK3288W_CRU)
- 		rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
- 					       ARRAY_SIZE(rk3288w_hclkvio_branch));
- 	else
-@@ -970,4 +976,15 @@ static void __init rk3288_clk_init(struct device_node *np)
- 
- 	rockchip_clk_of_add_provider(np, ctx);
+-	return _do_fork(&args);
++	pid = _do_fork(&args);
++	if (pid == 0)
++		current->warn_on_current_cred = 1;
++	return pid;
  }
-+
-+static void __init rk3288_clk_init(struct device_node *np)
-+{
-+	rk3288_common_init(np, RK3288_CRU);
-+}
- CLK_OF_DECLARE(rk3288_cru, "rockchip,rk3288-cru", rk3288_clk_init);
-+
-+static void __init rk3288w_clk_init(struct device_node *np)
-+{
-+	rk3288_common_init(np, RK3288W_CRU);
-+}
-+CLK_OF_DECLARE(rk3288w_cru, "rockchip,rk3288w-cru", rk3288w_clk_init);
--- 
-2.26.2
+ 
+ #ifdef __ARCH_WANT_SYS_FORK
 
+
+-- 
+Kees Cook
