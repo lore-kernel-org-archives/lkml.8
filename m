@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1979C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E5120BED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2C020BED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgGCMyd (ORCPT
+        id S1726946AbgGCMyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:54:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25746 "EHLO mga18.intel.com"
+        Fri, 3 Jul 2020 08:54:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25720 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgGCMxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:53:44 -0400
-IronPort-SDR: BsIR8Rh0YCxhPAfvx5x7Yj722m0CeK8zFqR0Oks58PnncQpmbi5h6tKrUrlOm5/qmJ5JfNnzSP
- 4f6923TGtv8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134598389"
+        id S1726546AbgGCMxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:53:37 -0400
+IronPort-SDR: 4e51CoRbBILPk34kgr4noGKuwI0x5T430Al2ZGLrDznsGSgCwDunCcpNVF3ADy7SXjkKbcMBUA
+ 7bIpoL5U3gHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134598377"
 X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="134598389"
+   d="scan'208";a="134598377"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 05:53:43 -0700
-IronPort-SDR: oEw7/pb7AKkih7xnCGTDnw+HPxOcY3ryd0XpjY3T67dZrj50McWfHO6LDMDAXgBxYUkZUuMC5N
- /21jjqBa/fmQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 05:53:37 -0700
+IronPort-SDR: rT9rIsAgLF6BHwScu3dW92J6WMcLoq4HPzH0xrFizAW+cM8tl6Z2gKtefEeKhoEB2foeY7WdEz
+ uusvEbQyeeiQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="265964026"
+   d="scan'208";a="265964001"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 05:53:42 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 03 Jul 2020 05:53:36 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
@@ -47,9 +47,9 @@ Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         ak@linux.intel.com, like.xu@linux.intel.com,
         yao.jin@linux.intel.com, wei.w.wang@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 15/23] perf/core: Factor out functions to allocate/free the task_ctx_data
-Date:   Fri,  3 Jul 2020 05:49:21 -0700
-Message-Id: <1593780569-62993-16-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V3 10/23] perf/x86/intel/lbr: Unify the stored format of LBR information
+Date:   Fri,  3 Jul 2020 05:49:16 -0700
+Message-Id: <1593780569-62993-11-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
 References: <1593780569-62993-1-git-send-email-kan.liang@linux.intel.com>
@@ -60,79 +60,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The method to allocate/free the task_ctx_data is going to be changed in
-the following patch. Currently, the task_ctx_data is allocated/freed in
-several different places. To avoid repeatedly modifying the same codes
-in several different places, alloc_task_ctx_data() and
-free_task_ctx_data() are factored out to allocate/free the
-task_ctx_data. The modification only needs to be applied once.
+Current LBR information in the structure x86_perf_task_context is stored
+in a different format from the PEBS LBR record and Architecture LBR,
+which prevents the sharing of the common codes.
+
+Use the format of the PEBS LBR record as a unified format. Use a generic
+name lbr_entry to replace pebs_lbr_entry.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- kernel/events/core.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/x86/events/intel/ds.c        |  4 ++--
+ arch/x86/events/intel/lbr.c       | 12 ++++++------
+ arch/x86/events/perf_event.h      |  4 +---
+ arch/x86/include/asm/perf_event.h |  4 ++--
+ 4 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 856d98c..0df2db0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1237,12 +1237,22 @@ static void get_ctx(struct perf_event_context *ctx)
- 	refcount_inc(&ctx->refcount);
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index dc43cc1..0d33f85 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -954,7 +954,7 @@ static void adaptive_pebs_record_size_update(void)
+ 	if (pebs_data_cfg & PEBS_DATACFG_XMMS)
+ 		sz += sizeof(struct pebs_xmm);
+ 	if (pebs_data_cfg & PEBS_DATACFG_LBRS)
+-		sz += x86_pmu.lbr_nr * sizeof(struct pebs_lbr_entry);
++		sz += x86_pmu.lbr_nr * sizeof(struct lbr_entry);
+ 
+ 	cpuc->pebs_record_size = sz;
  }
+@@ -1598,7 +1598,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
+ 		struct pebs_lbr *lbr = next_record;
+ 		int num_lbr = ((format_size >> PEBS_DATACFG_LBR_SHIFT)
+ 					& 0xff) + 1;
+-		next_record = next_record + num_lbr*sizeof(struct pebs_lbr_entry);
++		next_record = next_record + num_lbr * sizeof(struct lbr_entry);
  
-+static void *alloc_task_ctx_data(struct pmu *pmu)
-+{
-+	return kzalloc(pmu->task_ctx_size, GFP_KERNEL);
-+}
-+
-+static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
-+{
-+	kfree(task_ctx_data);
-+}
-+
- static void free_ctx(struct rcu_head *head)
- {
- 	struct perf_event_context *ctx;
+ 		if (has_branch_stack(event)) {
+ 			intel_pmu_store_pebs_lbrs(lbr);
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 7742562..815b3ce 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -372,11 +372,11 @@ void intel_pmu_lbr_restore(void *ctx)
+ 	mask = x86_pmu.lbr_nr - 1;
+ 	for (i = 0; i < task_ctx->valid_lbrs; i++) {
+ 		lbr_idx = (tos - i) & mask;
+-		wrlbr_from(lbr_idx, task_ctx->lbr_from[i]);
+-		wrlbr_to  (lbr_idx, task_ctx->lbr_to[i]);
++		wrlbr_from(lbr_idx, task_ctx->lbr[i].from);
++		wrlbr_to(lbr_idx, task_ctx->lbr[i].to);
  
- 	ctx = container_of(head, struct perf_event_context, rcu_head);
--	kfree(ctx->task_ctx_data);
-+	free_task_ctx_data(ctx->pmu, ctx->task_ctx_data);
- 	kfree(ctx);
- }
- 
-@@ -4470,7 +4480,7 @@ find_get_context(struct pmu *pmu, struct task_struct *task,
- 		goto errout;
- 
- 	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
--		task_ctx_data = kzalloc(pmu->task_ctx_size, GFP_KERNEL);
-+		task_ctx_data = alloc_task_ctx_data(pmu);
- 		if (!task_ctx_data) {
- 			err = -ENOMEM;
- 			goto errout;
-@@ -4528,11 +4538,11 @@ find_get_context(struct pmu *pmu, struct task_struct *task,
- 		}
+ 		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
+-			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
++			wrmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr[i].info);
  	}
  
--	kfree(task_ctx_data);
-+	free_task_ctx_data(pmu, task_ctx_data);
- 	return ctx;
+ 	for (; i < x86_pmu.lbr_nr; i++) {
+@@ -440,10 +440,10 @@ void intel_pmu_lbr_save(void *ctx)
+ 		from = rdlbr_from(lbr_idx);
+ 		if (!from)
+ 			break;
+-		task_ctx->lbr_from[i] = from;
+-		task_ctx->lbr_to[i]   = rdlbr_to(lbr_idx);
++		task_ctx->lbr[i].from = from;
++		task_ctx->lbr[i].to = rdlbr_to(lbr_idx);
+ 		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
+-			rdmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
++			rdmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr[i].info);
+ 	}
+ 	task_ctx->valid_lbrs = i;
+ 	task_ctx->tos = tos;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ba89e56..5689036 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -765,13 +765,11 @@ struct x86_perf_task_context_opt {
+ };
  
- errout:
--	kfree(task_ctx_data);
-+	free_task_ctx_data(pmu, task_ctx_data);
- 	return ERR_PTR(err);
- }
+ struct x86_perf_task_context {
+-	u64 lbr_from[MAX_LBR_ENTRIES];
+-	u64 lbr_to[MAX_LBR_ENTRIES];
+-	u64 lbr_info[MAX_LBR_ENTRIES];
+ 	u64 lbr_sel;
+ 	int tos;
+ 	int valid_lbrs;
+ 	struct x86_perf_task_context_opt opt;
++	struct lbr_entry lbr[MAX_LBR_ENTRIES];
+ };
  
-@@ -12409,8 +12419,7 @@ inherit_event(struct perf_event *parent_event,
- 	    !child_ctx->task_ctx_data) {
- 		struct pmu *pmu = child_event->pmu;
+ #define x86_add_quirk(func_)						\
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 9ffce7d..8aea47a 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -282,12 +282,12 @@ struct pebs_xmm {
+ 	u64 xmm[16*2];	/* two entries for each register */
+ };
  
--		child_ctx->task_ctx_data = kzalloc(pmu->task_ctx_size,
--						   GFP_KERNEL);
-+		child_ctx->task_ctx_data = alloc_task_ctx_data(pmu);
- 		if (!child_ctx->task_ctx_data) {
- 			free_event(child_event);
- 			return ERR_PTR(-ENOMEM);
+-struct pebs_lbr_entry {
++struct lbr_entry {
+ 	u64 from, to, info;
+ };
+ 
+ struct pebs_lbr {
+-	struct pebs_lbr_entry lbr[0]; /* Variable length */
++	struct lbr_entry lbr[0]; /* Variable length */
+ };
+ 
+ /*
 -- 
 2.7.4
 
