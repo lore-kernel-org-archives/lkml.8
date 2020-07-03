@@ -2,209 +2,189 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E339C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2917FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 757BB206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0742C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="N1nzdZ90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgGCNDm (ORCPT
+        id S1726148AbgGCNIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:03:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:2369 "EHLO mga09.intel.com"
+        Fri, 3 Jul 2020 09:08:13 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42170 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgGCNDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:03:41 -0400
-IronPort-SDR: cIP8GOLE/yqoNzlF7A29nki64BbBElEWTbEl7JgmgAAhBpwTxKcxsgUVFm9drzILAFGKaSLJ12
- KuWmEJk461fg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148666523"
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="148666523"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 06:03:41 -0700
-IronPort-SDR: 541MY+9a1wehPmnglnlofxb9SDxgud0nuOwEcQgugeVQ9k4VWDstyRJ1u80YG3IQlsw0SLk+Oq
- E21Adl/7UdTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="426290785"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 03 Jul 2020 06:03:40 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jrLLv-0000E0-Du; Fri, 03 Jul 2020 13:03:39 +0000
-Date:   Fri, 03 Jul 2020 21:02:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- 78c2141b654375079e3737f06f19cabfc0fcecd7
-Message-ID: <5eff2c6c.QeA0EnovzNJa5lqP%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726035AbgGCNIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:08:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1593781689; bh=p6X5Q7+LkJZdzuX+IC0XR31s1h+IfCcWhRImKLam3uY=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=N1nzdZ90yRiDiRWfezkpv0AqT2b2QvVYB2IS/tRKbejO3qw/ooBkVNr1Df9StNidy
+         72YQ+jrs7zUiql44/6XlcKMK6ZOqSuL3LUxcJX8QHoZVRq7PCnRxhrhAQvxIp+i1cg
+         I5EJysOgwOxjm66ZCcjD1MTH8Yg6zEuVRrsC5xew=
+Date:   Fri, 3 Jul 2020 15:08:09 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200703130809.h4mvhwbdiymuo5pn@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+References: <20200702144712.1994685-1-megous@megous.com>
+ <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  perf/core
-branch HEAD: 78c2141b654375079e3737f06f19cabfc0fcecd7  Merge branch 'perf/vlbr'
+Hello Marek,
 
-elapsed time: 1385m
+On Fri, Jul 03, 2020 at 12:06:02PM +0200, Marek Behún wrote:
+> On Thu,  2 Jul 2020 16:47:11 +0200
+> Ondrej Jirman <megous@megous.com> wrote:
+> 
+> > Some LED controllers may come with an internal HW triggering mechanism
+> > for the LED and an ability to switch between user control of the LED,
+> > or the internal control. One such example is AXP20X PMIC, that allows
+> > wither for user control of the LED, or for internal control based on
+> > the state of the battery charger.
+> > 
+> > Add support for registering per-LED device trigger.
+> > 
+> > Names of private triggers need to be globally unique, but may clash
+> > with other private triggers. This is enforced during trigger
+> > registration. Developers can register private triggers just like
+> > the normal triggers, by setting private_led to a classdev
+> > of the LED the trigger is associated with.
+> > 
 
-configs tested: 139
-configs skipped: 7
+[...]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> 
+> Hi Ondrej,
+> 
+> Some criticism to this approach to HW triggers:
+> - every hw trigger for each LED has to be registered via current trigger
+>   API. This will grow code size and memory footprint once this API is
+>   widely used
+> - one HW trigger can only master one LED device (via private_led
+>   member). So if I have, for example an ethernet switch with 8 ports,
+>   and each port has 2 LEDs, and each LED has 10 possible HW triggering
+>   mechanisms, with your proposed API one would need to register 8*2*10
+>   = 160 triggers
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                       aspeed_g4_defconfig
-m68k                       m5249evb_defconfig
-arm                            mmp2_defconfig
-sh                            shmin_defconfig
-powerpc                      pmac32_defconfig
-parisc                           allmodconfig
-sh                               j2_defconfig
-sh                             espt_defconfig
-x86_64                           alldefconfig
-arm                          exynos_defconfig
-arc                     nsimosci_hs_defconfig
-arc                          axs103_defconfig
-arm                           efm32_defconfig
-sh                               alldefconfig
-powerpc                    mvme5100_defconfig
-mips                          rb532_defconfig
-xtensa                          iss_defconfig
-h8300                               defconfig
-powerpc                  mpc885_ads_defconfig
-arm                   milbeaut_m10v_defconfig
-sh                        dreamcast_defconfig
-openrisc                    or1ksim_defconfig
-arm                         lubbock_defconfig
-m68k                       bvme6000_defconfig
-microblaze                          defconfig
-arm                         orion5x_defconfig
-mips                         cobalt_defconfig
-sh                           se7721_defconfig
-powerpc                     mpc5200_defconfig
-s390                          debug_defconfig
-ia64                                defconfig
-s390                             alldefconfig
-powerpc                      tqm8xx_defconfig
-mips                     loongson1b_defconfig
-powerpc                    gamecube_defconfig
-arm                        trizeps4_defconfig
-nios2                         10m50_defconfig
-powerpc                          alldefconfig
-arm                           stm32_defconfig
-arc                            hsdk_defconfig
-mips                        jmr3927_defconfig
-parisc                generic-64bit_defconfig
-mips                 decstation_r4k_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200701
-i386                 randconfig-a001-20200701
-i386                 randconfig-a006-20200701
-i386                 randconfig-a005-20200701
-i386                 randconfig-a004-20200701
-i386                 randconfig-a003-20200701
-x86_64               randconfig-a012-20200701
-x86_64               randconfig-a016-20200701
-x86_64               randconfig-a014-20200701
-x86_64               randconfig-a011-20200701
-x86_64               randconfig-a015-20200701
-x86_64               randconfig-a013-20200701
-i386                 randconfig-a011-20200701
-i386                 randconfig-a015-20200701
-i386                 randconfig-a014-20200701
-i386                 randconfig-a016-20200701
-i386                 randconfig-a012-20200701
-i386                 randconfig-a013-20200701
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+Do you have such a switch? Also what's your real usecase?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+My usecase is a PMIC which has either a user-controllable or self-working mode
+for a single LED it controls. I want to be able to switch between those quickly
+and easily.
+
+I want the LED to be mostly controlled by PMIC, because that way PMIC can signal
+events that are not exposed to OS like overvoltage, overheating, etc. ... all
+automagically, but also be able to control it sometimes via SW (for non PMIC
+related notifications, eg.).
+
+So in my mindset LED is either controlled by Linux via various SW triggers, or
+it's self-working in some arbitrary device specific configuration that doesn't
+need any passing of the data via CPU for the LED to reflect some HW state.
+
+So I'd expose a 'hw-trigger' only on the LED device that allows this, that you
+can select among all the other regular triggers as you do now, and then
+configure its precise mode/options in sysfs (on the trigger kobj). The driver
+would come with some sane device specific defaults for the self-working mode.
+
+User can then select hw-trigger, in the triggers and would get a nice PMIC LED
+behavior controlled by HW, or a common LED behavior of the ehternet port, or
+on the wireless card, or whatever.
+
+From the perspective of this use case the interface is nice and generic:
+
+- you set LED to hw-trigger mode on boot
+- you set trigger to none and poke the LED with a pattern you want for the
+  notification and put it back to hw-trigger mode again afterwards
+
+We can standardize on hw-trigger, or self-controlled, or some other name
+for this kind of private LED trigger, and then the userspace would not need
+to even care about the specific LED device type, when sitching between
+SW controlled and self-working modes.
+
+You'd be able to take SW control of the ethernet PHY controlled LEDs this way
+just the same as the PMIC LED with the same interface, described above. And
+if you don't like the default self-controled mode, you can change it via
+sysfs attributes on the trigger.
+
+It would also allow the user to switch between SW and HW control, without
+having to remember the previous HW triggering mode, because that could be
+persisted by the LED HW trigger device. So you can go back to previous
+HW triggering mode just by 'echo hw-trigger > your-led/trigger'.
+
+I've read through the discussions, and this seems like a workable interface.
+
+Most of the LED devices would just add one extra private trigger to the
+triggers_list, so it would not explode in the way you describe above.
+
+Also benefit of this approach is that it fits quite nicely with the existing
+code, and requires minimal changes. The trigger already allows for specifying
+sysfs attributes, too.
+
+regards,
+	o.
+
+> I too have been thinking about an API for HW LED triggers, and I
+> tinkered with it a little. Some time ago I sent some emails, with
+> subjects:
+>   "RFC: LED hw triggering API"
+>   "about my trigger-sources work"
+
+
+
+> My current thoughts about how HW LED triggers could work nicely is as
+> such:
+>   - these members (maybe with different names) shall be added to struct
+>     led_classdev:
+>       available_hw_triggers()
+>         - shall return a NULL terminated list of HW trigger names
+>           available for this LED
+>       set_hw_trigger()
+>         - sets HW trigger for this LED. The LED triggering API shall
+>           call this method after previous LED trigger is unset. If
+>           called with NULL parameter, unsets HW trigger
+>       current_hw_trigger
+>         - name of the currently set HW LED trigger for this LED
+>   - the driver registering the LED cdev informs abouth the LED being
+>     capable of HW triggering - members available_hw_triggers and
+>     set_hw_trigger must be set
+>   - SW LED trigger and HW LED trigger are mutualy exclusive on one LED
+>   - the trigger file in sysfs (/sys/class/leds/LED/trigger) shall first
+>     list the available SW triggers, and then available hw triggers for
+>     this LED, prefixed with "hw:"
+>     When written, if the written trigger name starts with "hw:",
+>     instead of setting SW trigger, a HW trigger is set via
+>     set_hw_trigger() method
+> 
+> This could also nicely work with trigger-source DTS property - when the
+> driver registers a LED, it can determine what other device is
+> triggering the LED (for example a netdevice), and correspondingly set
+> the correct name for the LED. Code for that could be shared between HW
+> and SW triggering API.
+> 
+> Marek
