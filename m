@@ -2,131 +2,197 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23777C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EDD208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86E7208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dae73+uy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGCEMG (ORCPT
+        id S1725960AbgGCETh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 00:12:06 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:56276 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725294AbgGCEMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 00:12:05 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj98OsP5eRPVOAA--.774S2;
-        Fri, 03 Jul 2020 12:11:59 +0800 (CST)
-From:   Xingxing Su <suxingxing@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] MIPS: Do not use smp_processor_id() in preemptible code
-Date:   Fri,  3 Jul 2020 12:11:58 +0800
-Message-Id: <1593749518-16722-1-git-send-email-suxingxing@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxj98OsP5eRPVOAA--.774S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4kuw17Ar4UKryfXFWDJwb_yoWrXw15pr
-        1UXr1UGr48Jr17Jr47try5Jr1UKF45A3W7JF1UJw1YqF1UWr1UJr18tFWUKr1DJry5Jry7
-        XryDtw4Utr1UGw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWU
-        JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5s
-        jjDUUUU
-X-CM-SenderInfo: pvx0x0xj0l0wo6or00hjvr0hdfq/1tbiAQAGC13QvL2z8gAAsB
+        Fri, 3 Jul 2020 00:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgGCETh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 00:19:37 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244F5C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 21:19:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z3so4162340pfn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 21:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EvLTEidoAGZVVhYEfJ1iRMW1yqo2GUTqtH2XjpP1cdI=;
+        b=dae73+uy+g+DPGJTvHno9/JIfwzZ+ouEgSwh/WQpD+Evttdxkvo/JHXoaZ99vF4MyY
+         6jp7GTQ2vBBWKKGv0rc4H4kPMGafGqb/NiQdaAx7KHfdPKmV/ul3/V5mv508RuDSA2nJ
+         LKpEybpiuxOAL9IRXBlg6aRj82NaOVUlZs8X0lGR3iY3TvSXeX8z9CWqShk70OD4I+m2
+         ZE20xVAhWGV7bPQsDJI/zxYxRsZqZ+kTZQ6Gr980wPD/OsL5K+MvnFpshjmaM/8w3Zg0
+         0QHjy6X9aal2dymKloturpL2STcXCtoYlzsb14zyV3L/1VxQ89RvG+4mdAyFT73hqvg5
+         L7ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EvLTEidoAGZVVhYEfJ1iRMW1yqo2GUTqtH2XjpP1cdI=;
+        b=lKdonwQiwPdnhzcNQKy96z1JAQgUv/QJ3/9TKFUJRAgXfwQHiOc8jUU9RSmAGnwu0u
+         vVMW5fystpSnZMqWJrWQscavl/gIjg262+pMjvDiGM3/FaqygXk3nX0M7nF8715k1DW5
+         t/Ewyfu/r+aLqhpnnKFcV66NYaKdBy9oDlDbFxn3VDWwZXrU1Sy2jXKvENntB5h6PXrq
+         pjHTNq+G8U9Wk311q2vWApGTk1Vw6+hB3bp8aU0jipz34C2YziPqzx+Xg3zW5vZ/aXVF
+         HuBOxsI1NRDNUT40Uy7BVz+v8SajwHMtvRuJVwcKcqfqCxDUEXKGrBGEX5MEkcTHmw7n
+         UEEg==
+X-Gm-Message-State: AOAM5302fMbrathLvsWadVpjZ7YNIfTFMBAzT9wY98A9BcsjAV3F4tap
+        8uCoMDbKphIDePZlLhaaVw2iPGOPtMQ=
+X-Google-Smtp-Source: ABdhPJwzVTvQq9xkJUChZhhcG9h0YRPIxbVXnm0+G5A8bNIBIVaEUatdjjmHDZNV3VYLMiJzDHyuLA==
+X-Received: by 2002:aa7:8389:: with SMTP id u9mr30319839pfm.269.1593749975964;
+        Thu, 02 Jul 2020 21:19:35 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
+        by smtp.gmail.com with ESMTPSA id n18sm10622481pfd.99.2020.07.02.21.19.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 21:19:35 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v2] f2fs: add symbolic link to kobject in sysfs
+Date:   Fri,  3 Jul 2020 13:19:29 +0900
+Message-Id: <20200703041929.3290946-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use preempt_disable() to fix the following bug under CONFIG_DEBUG_PREEMPT.
+From: Daeho Jeong <daehojeong@google.com>
 
-[   21.915305] BUG: using smp_processor_id() in preemptible [00000000] code: qemu-system-mip/1056
-[   21.923996] caller is do_ri+0x1d4/0x690
-[   21.927921] CPU: 0 PID: 1056 Comm: qemu-system-mip Not tainted 5.8.0-rc2 #3
-[   21.934913] Stack : 0000000000000001 ffffffff81370000 ffffffff8071cd60 a80f926d5ac95694
-[   21.942984]         a80f926d5ac95694 0000000000000000 98000007f0043c88 ffffffff80f2fe40
-[   21.951054]         0000000000000000 0000000000000000 0000000000000001 0000000000000000
-[   21.959123]         ffffffff802d60cc 98000007f0043dd8 ffffffff81f4b1e8 ffffffff81f60000
-[   21.967192]         ffffffff81f60000 ffffffff80fe0000 ffff000000000000 0000000000000000
-[   21.975261]         fffffffff500cce1 0000000000000001 0000000000000002 0000000000000000
-[   21.983331]         ffffffff80fe1a40 0000000000000006 ffffffff8077f940 0000000000000000
-[   21.991401]         ffffffff81460000 98000007f0040000 98000007f0043c80 000000fffba8cf20
-[   21.999471]         ffffffff8071cd60 0000000000000000 0000000000000000 0000000000000000
-[   22.007541]         0000000000000000 0000000000000000 ffffffff80212ab4 a80f926d5ac95694
-[   22.015610]         ...
-[   22.018086] Call Trace:
-[   22.020562] [<ffffffff80212ab4>] show_stack+0xa4/0x138
-[   22.025732] [<ffffffff8071cd60>] dump_stack+0xf0/0x150
-[   22.030903] [<ffffffff80c73f5c>] check_preemption_disabled+0xf4/0x100
-[   22.037375] [<ffffffff80213b84>] do_ri+0x1d4/0x690
-[   22.042198] [<ffffffff8020b828>] handle_ri_int+0x44/0x5c
-[   24.359386] BUG: using smp_processor_id() in preemptible [00000000] code: qemu-system-mip/1072
-[   24.368204] caller is do_ri+0x1a8/0x690
-[   24.372169] CPU: 4 PID: 1072 Comm: qemu-system-mip Not tainted 5.8.0-rc2 #3
-[   24.379170] Stack : 0000000000000001 ffffffff81370000 ffffffff8071cd60 a80f926d5ac95694
-[   24.387246]         a80f926d5ac95694 0000000000000000 98001007ef06bc88 ffffffff80f2fe40
-[   24.395318]         0000000000000000 0000000000000000 0000000000000001 0000000000000000
-[   24.403389]         ffffffff802d60cc 98001007ef06bdd8 ffffffff81f4b818 ffffffff81f60000
-[   24.411461]         ffffffff81f60000 ffffffff80fe0000 ffff000000000000 0000000000000000
-[   24.419533]         fffffffff500cce1 0000000000000001 0000000000000002 0000000000000000
-[   24.427603]         ffffffff80fe0000 0000000000000006 ffffffff8077f940 0000000000000020
-[   24.435673]         ffffffff81460020 98001007ef068000 98001007ef06bc80 000000fffbbbb370
-[   24.443745]         ffffffff8071cd60 0000000000000000 0000000000000000 0000000000000000
-[   24.451816]         0000000000000000 0000000000000000 ffffffff80212ab4 a80f926d5ac95694
-[   24.459887]         ...
-[   24.462367] Call Trace:
-[   24.464846] [<ffffffff80212ab4>] show_stack+0xa4/0x138
-[   24.470029] [<ffffffff8071cd60>] dump_stack+0xf0/0x150
-[   24.475208] [<ffffffff80c73f5c>] check_preemption_disabled+0xf4/0x100
-[   24.481682] [<ffffffff80213b58>] do_ri+0x1a8/0x690
-[   24.486509] [<ffffffff8020b828>] handle_ri_int+0x44/0x5c
+Added a symbolic link to directory of sysfs. It will
+create a symbolic link such as "mount_0" and "mount_1" to
+each f2fs mount in the order of mounting filesystem. But
+once one mount point was umounted, that sequential number
+@x in "mount_@x" could be reused by later newly mounted
+point. It will provide easy access to sysfs node even if
+not knowing the specific device node name like sda19 and
+dm-3.
 
-Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
- arch/mips/kernel/traps.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/f2fs/f2fs.h  |  4 ++++
+ fs/f2fs/sysfs.c | 31 +++++++++++++++++++++++++++----
+ 2 files changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-index 7c32c95..a46ce94 100644
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -723,12 +723,14 @@ static int simulate_loongson3_cpucfg(struct pt_regs *regs,
- 		perf_sw_event(PERF_COUNT_SW_EMULATION_FAULTS, 1, regs, 0);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4b28fd42fdbc..7d6c5f8ce16b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1419,6 +1419,8 @@ struct decompress_io_ctx {
+ #define MAX_COMPRESS_LOG_SIZE		8
+ #define MAX_COMPRESS_WINDOW_SIZE	((PAGE_SIZE) << MAX_COMPRESS_LOG_SIZE)
  
- 		/* Do not emulate on unsupported core models. */
--		if (!loongson3_cpucfg_emulation_enabled(&current_cpu_data))
-+		preempt_disable();
-+		if (!loongson3_cpucfg_emulation_enabled(&current_cpu_data)) {
-+			preempt_enable();
- 			return -1;
--
-+		}
- 		regs->regs[rd] = loongson3_cpucfg_read_synthesized(
- 			&current_cpu_data, sel);
--
-+		preempt_enable();
- 		return 0;
++#define MOUNT_NAME_SIZE			20
++
+ struct f2fs_sb_info {
+ 	struct super_block *sb;			/* pointer to VFS super block */
+ 	struct proc_dir_entry *s_proc;		/* proc entry */
+@@ -1599,6 +1601,8 @@ struct f2fs_sb_info {
+ 	/* For sysfs suppport */
+ 	struct kobject s_kobj;
+ 	struct completion s_kobj_unregister;
++	int s_mount_id;
++	char s_mount_name[MOUNT_NAME_SIZE];
+ 
+ 	/* For shrinker support */
+ 	struct list_head s_list;
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 2a140657fc4d..703d9f460d03 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -18,6 +18,7 @@
+ #include <trace/events/f2fs.h>
+ 
+ static struct proc_dir_entry *f2fs_proc_root;
++static struct ida f2fs_mount_ida;
+ 
+ /* Sysfs support for f2fs */
+ enum {
+@@ -908,6 +909,9 @@ int __init f2fs_init_sysfs(void)
+ 	} else {
+ 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
+ 	}
++
++	ida_init(&f2fs_mount_ida);
++
+ 	return ret;
+ }
+ 
+@@ -917,6 +921,7 @@ void f2fs_exit_sysfs(void)
+ 	kset_unregister(&f2fs_kset);
+ 	remove_proc_entry("fs/f2fs", NULL);
+ 	f2fs_proc_root = NULL;
++	ida_destroy(&f2fs_mount_ida);
+ }
+ 
+ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+@@ -928,12 +933,22 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+ 	init_completion(&sbi->s_kobj_unregister);
+ 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
+ 				"%s", sb->s_id);
+-	if (err) {
+-		kobject_put(&sbi->s_kobj);
+-		wait_for_completion(&sbi->s_kobj_unregister);
+-		return err;
++	if (err)
++		goto err1;
++
++	sbi->s_mount_id = ida_simple_get(&f2fs_mount_ida, 0, 0, GFP_KERNEL);
++	if (sbi->s_mount_id < 0) {
++		err = sbi->s_mount_id;
++		goto err1;
  	}
  
++	snprintf(sbi->s_mount_name, MOUNT_NAME_SIZE, "mount_%d",
++			sbi->s_mount_id);
++	err = sysfs_create_link(&f2fs_kset.kobj, &sbi->s_kobj,
++			sbi->s_mount_name);
++	if (err)
++		goto err2;
++
+ 	if (f2fs_proc_root)
+ 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
+ 
+@@ -948,6 +963,12 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+ 				victim_bits_seq_show, sb);
+ 	}
+ 	return 0;
++err2:
++	ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
++err1:
++	kobject_put(&sbi->s_kobj);
++	wait_for_completion(&sbi->s_kobj_unregister);
++	return err;
+ }
+ 
+ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
+@@ -959,6 +980,8 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
+ 		remove_proc_entry("victim_bits", sbi->s_proc);
+ 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
+ 	}
++	sysfs_remove_link(&f2fs_kset.kobj, sbi->s_mount_name);
++	ida_simple_remove(&f2fs_mount_ida, sbi->s_mount_id);
+ 	kobject_del(&sbi->s_kobj);
+ 	kobject_put(&sbi->s_kobj);
+ }
 -- 
-2.1.0
+2.27.0.383.g050319c2ae-goog
 
