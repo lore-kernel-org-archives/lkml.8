@@ -2,228 +2,104 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5904DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C129206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E35A208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgGCCuu (ORCPT
+        id S1726116AbgGCCyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:50:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:53669 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgGCCut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:50:49 -0400
-IronPort-SDR: Aav8GaqXIaqNER9VWFwb2NFsiCOth6Hqo+2nA4nYOa3ANCbXNn24UvtUvdHXqczpAPfDiB2LUB
- 3y2FEe3hyuCw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145215352"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="145215352"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:50:48 -0700
-IronPort-SDR: Ryb+uzj/cdSPq8TexoPl9iNgw04qYNPy19LxT5VOX6zyKwUJoYX0+4sZNWy2y3R5g991PZRcnk
- 2RCWfuWfRHnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="296082778"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 02 Jul 2020 19:50:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>
-Subject: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the affected memslot
-Date:   Thu,  2 Jul 2020 19:50:47 -0700
-Message-Id: <20200703025047.13987-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Thu, 2 Jul 2020 22:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGCCyg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 22:54:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3746BC08C5C1;
+        Thu,  2 Jul 2020 19:54:36 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B1CD62A2D53
+Message-ID: <8daa49704a14764bfe0797cbf802bad3d64ede17.camel@collabora.com>
+Subject: Re: [PATCH 1/9] media: rkvdec: h264: Support profile and level
+ controls
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Date:   Thu, 02 Jul 2020 23:54:23 -0300
+In-Reply-To: <20200701215616.30874-2-jonas@kwiboo.se>
+References: <20200701215616.30874-1-jonas@kwiboo.se>
+         <20200701215616.30874-2-jonas@kwiboo.se>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new capability, KVM_CAP_MEMSLOT_ZAP_CONTROL, to allow
-userspace to control the memslot zapping behavior on a per-VM basis.
-x86's default behavior is to zap all SPTEs, including the root shadow
-page, across all memslots.  While effective, the nuke and pave approach
-isn't exactly performant, especially for large VMs and/or VMs that
-heavily utilize RO memslots for MMIO devices, e.g. option ROMs.
+On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
+> The Rockchip Video Decoder used in RK3399 supports H.264 profiles from
+> Baseline to High 4:2:2 up to Level 5.1, except for the Extended profile.
+> 
+> Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE and the
+> V4L2_CID_MPEG_VIDEO_H264_LEVEL control, so that userspace can query the
+> driver for the list of supported profiles and level.
+> 
+> In current state only Baseline to High profile is supported by the driver.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-On a vanilla VM with 6gb of RAM, the targeted zap reduces the number of
-EPT violations during boot by ~14% with THP enabled in the host, and by
-~7% with THP disabled in the host.  On a much more custom VM with 32gb
-and a significant amount of memslot zapping, this can reduce the number
-of EPT violations by 50% during guest boot, and improve boot time by
-as much as 25%.
+I think the patch is good so:
 
-Keep the current x86 memslot zapping behavior as the default, as there's
-an unresolved bug that pops up when zapping only the affected memslot,
-and the exact conditions that trigger the bug are not fully known.  See
-https://patchwork.kernel.org/patch/10798453 for details.
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Implement the capability as a set of flags so that other architectures
-might be able to use the capability without having to conform to x86's
-semantics.
+However, feel free to just drop this patch and support the profiles
+and levels at the end of the patchset, once High 10 and High 422
+support is there.
 
-Cc: Xiong Zhang <xiong.y.zhang@intel.com>
-Cc: Wayne Boyer <wayne.boyer@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: Jun Nakajima <jun.nakajima@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- Documentation/virt/kvm/api.rst  | 21 +++++++++++++++++++++
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/mmu/mmu.c          | 21 ++++++++++++++++++++-
- arch/x86/kvm/x86.c              | 10 ++++++++++
- include/uapi/linux/kvm.h        |  4 ++++
- 5 files changed, 57 insertions(+), 1 deletion(-)
+Thanks,
+Ezequiel
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 426f94582b7a..4b7b48e9a376 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5843,6 +5843,27 @@ controlled by the kvm module parameter halt_poll_ns. This capability allows
- the maximum halt time to specified on a per-VM basis, effectively overriding
- the module parameter for the target VM.
- 
-+7.21 KVM_CAP_MEMSLOT_ZAP_CONTROL
-+--------------------------------
-+
-+:Architectures: x86
-+:Target: VM
-+:Parameters: args[0] controls which flags are enabled/disabled
-+:Returns: 0 on success; -1 on error
-+
-+Valid flags are::
-+
-+  #define KVM_ZAP_ONLY_MEMSLOT_SPTES   (1 << 0)
-+
-+This capability allows userspace to control the shadow PTE zapping behavior
-+when a memslot is deleted or moved via KVM_SET_USER_MEMORY_REGION.  By default,
-+x86 zaps all SPTEs across all memslots, which can negatively impact performance
-+but may be necessary for functional correctness for certain configurations.
-+
-+If KVM_ZAP_ONLY_MEMSLOT_SPTES is set, KVM zaps only the leaf/last SPTEs for the
-+deleted/moved memslot.  Upper level SPTEs are retained, as are SPTEs for other
-+memslots.
-+
- 8. Other capabilities.
- ======================
- 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index f852ee350beb..6803681238f5 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1002,6 +1002,8 @@ struct kvm_arch {
- 	bool guest_can_read_msr_platform_info;
- 	bool exception_payload_enabled;
- 
-+	bool zap_only_memslot_sptes;
-+
- 	struct kvm_pmu_event_filter *pmu_event_filter;
- 	struct task_struct *nx_lpage_recovery_thread;
- };
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 3dd0af7e7515..45edcf5dcd50 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5806,11 +5806,30 @@ static bool kvm_has_zapped_obsolete_pages(struct kvm *kvm)
- 	return unlikely(!list_empty_careful(&kvm->arch.zapped_obsolete_pages));
- }
- 
-+static void kvm_mmu_zap_memslot(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+	bool flush;
-+
-+	/*
-+	 * Zapping non-leaf SPTEs, a.k.a. not-last SPTEs, isn't required, worst
-+	 * case scenario we'll have unused shadow pages lying around until they
-+	 * are recycled due to age or when the VM is destroyed.
-+	 */
-+	spin_lock(&kvm->mmu_lock);
-+	flush = slot_handle_all_level(kvm, slot, kvm_zap_rmapp, true);
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+	spin_unlock(&kvm->mmu_lock);
-+}
-+
- static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
- 			struct kvm_memory_slot *slot,
- 			struct kvm_page_track_notifier_node *node)
- {
--	kvm_mmu_zap_all_fast(kvm);
-+	if (kvm->arch.zap_only_memslot_sptes)
-+		kvm_mmu_zap_memslot(kvm, slot);
-+	else
-+		kvm_mmu_zap_all_fast(kvm);
- }
- 
- void kvm_mmu_init_vm(struct kvm *kvm)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 00c88c2f34e4..3e07c9e4daac 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3471,6 +3471,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_MSR_PLATFORM_INFO:
- 	case KVM_CAP_EXCEPTION_PAYLOAD:
- 	case KVM_CAP_SET_GUEST_DEBUG:
-+	case KVM_CAP_MEMSLOT_ZAP_CONTROL:
- 		r = 1;
- 		break;
- 	case KVM_CAP_SYNC_REGS:
-@@ -4984,6 +4985,15 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		kvm->arch.exception_payload_enabled = cap->args[0];
- 		r = 0;
- 		break;
-+	case KVM_CAP_MEMSLOT_ZAP_CONTROL:
-+		r = -EINVAL;
-+		if (cap->args[0] & ~(u64)KVM_ZAP_ONLY_MEMSLOT_SPTES)
-+			break;
-+
-+		kvm->arch.zap_only_memslot_sptes = cap->args[0] &
-+						   KVM_ZAP_ONLY_MEMSLOT_SPTES;
-+		r = 0;
-+		break;
- 	default:
- 		r = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 4fdf30316582..5f75c348ceed 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_SECURE_GUEST 181
- #define KVM_CAP_HALT_POLL 182
- #define KVM_CAP_ASYNC_PF_INT 183
-+#define KVM_CAP_MEMSLOT_ZAP_CONTROL 184
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1685,4 +1686,7 @@ struct kvm_hyperv_eventfd {
- #define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE    (1 << 0)
- #define KVM_DIRTY_LOG_INITIALLY_SET            (1 << 1)
- 
-+/* Flags for KVM_CAP_MEMSLOT_ZAP_CONTROL */
-+#define KVM_ZAP_ONLY_MEMSLOT_SPTES	(1 << 0)
-+
- #endif /* __LINUX_KVM_H */
--- 
-2.26.0
+> ---
+>  drivers/staging/media/rkvdec/rkvdec.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> index 0f81b47792f6..b1de55aa6535 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> @@ -94,6 +94,19 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+>  		.cfg.def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>  		.cfg.max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>  	},
+> +	{
+> +		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> +		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+> +		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+> +		.cfg.menu_skip_mask =
+> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+> +		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+> +	},
+> +	{
+> +		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+> +		.cfg.min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
+> +		.cfg.max = V4L2_MPEG_VIDEO_H264_LEVEL_5_1,
+> +	},
+>  };
+>  
+>  static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
+
 
