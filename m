@@ -2,170 +2,105 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41AEF20826
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:19:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="ECVVeUrr"
+	by mail.kernel.org (Postfix) with ESMTP id BC4EC20899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593779031;
+	bh=vd4djFKYd31yL3oupRmWE2lyv4ORZWuNlPzVgna7t2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d9hiUBAKS3/VtvZ3/ErYWQJr+nZKmgLfzzY5rcg/nIo8lpMeN7PB/0FH9P+ZYu89z
+	 V+Oh7nvg5q7WS2Rkecn/pEhwkirFUNV4bWt0v5Sco3wAtYmSmMgylsCv7QRgXQNQ+H
+	 kuq6SOnh0CnyXZR0fUkdDNRCYyFTYkc74bH1PWH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbgGCMTK (ORCPT
+        id S1726178AbgGCMXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCMTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:19:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6619C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 05:19:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so11805071ljn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 05:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7O931kmm3paf7okPRfcKKYZ7fUbwC/bGh4mFYNw9eQ8=;
-        b=ECVVeUrrWasxx/3Ykp6gkyHcWv2GUyDXt5iEYlGHpeSH5HbfcBxkaYeKGCcrJUyh4R
-         kyMheSPII9/JJ8ZPGF498CvHID3yiVwFx55SjH4KzQ+Qq6bejphs+97AA1YU/6EjiV8E
-         i3eNm8C4Emrm6PWFERTDGdtCyMR6g8xQQiQk9ffkVJjCQWHg3PmT9XA9rCQ561KJrx5f
-         vWjQDFAQOsEmKZWAeaUyTHMohaQp9lf61Sqxy/r9cgBl09uOCL4zmGg08+x8FnY0itMK
-         AzJEuWfWMmUm+3IiyafOvlclS4+lqr0B5zmJBuYRSxmv3/LjpTwpT+CHD4DBoXS2pRNL
-         XT4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7O931kmm3paf7okPRfcKKYZ7fUbwC/bGh4mFYNw9eQ8=;
-        b=SGj/U3ymvOAgRDM9hibzvqElVQqPQkC7TvVnaXkYkNhPa1Y9xFKZPyfKn/Tp0A7I3o
-         6egIlbiHHccUPlqno79tUm9Lo2GHZljV+Bhf6sQOfZ3jfZC9U85DT/AbDLHqRYn1b+6M
-         LzXYJ7l8y2kb0evPbN1RWHQ7Dxi7VlGlrKH0yiZGxZEDUndv60Ud39RmoSZB2UJ0v0Gw
-         1tRgm0pn8tSWUZsYc4sPqVWdzwgAlkSai0Bc58VWiU0Q+WEDOsHha2cZyyZcpR8uOnSR
-         yZAPvOxJsLB0wVPCwPHN8mNdnElZSC9hJE1ghDXExHIfGnX7j3KlldfsY0dgZ5ImuSAW
-         YYng==
-X-Gm-Message-State: AOAM5336QYt/QhevmxdPOoOdkYnTWPuMG7eMGHxb2G43oL+G7bYRuEf9
-        SoRyJscIZ4TCJs9P8ufgQeDOLw==
-X-Google-Smtp-Source: ABdhPJwSIHi03yCU9SVIOEt6wVTbis+8NLv6w1BKDSwYmE0UiIPJQLuDa9E+M4ZR9r+95gX78Sxq1w==
-X-Received: by 2002:a2e:9050:: with SMTP id n16mr18850187ljg.376.1593778748176;
-        Fri, 03 Jul 2020 05:19:08 -0700 (PDT)
-Received: from localhost.localdomain (89-70-221-122.dynamic.chello.pl. [89.70.221.122])
-        by smtp.gmail.com with ESMTPSA id v20sm4589784lfe.46.2020.07.03.05.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 05:19:07 -0700 (PDT)
-From:   Lukasz Majczak <lma@semihalf.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Harsha Priya <harshapriya.n@intel.com>
-Cc:     Gopal Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
-        Sathya Prakash <sathya.prakash.m.r@intel.com>,
-        Bob Brandt <brndt@google.com>,
-        Alex Levin <levinale@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Radoslaw Biernacki <rad@semihalf.com>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH v4] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix kabylake_ssp_fixup function
-Date:   Fri,  3 Jul 2020 14:16:50 +0200
-Message-Id: <20200703121650.547944-1-lma@semihalf.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200521162518.1809995-1-lma@semihalf.com>
-References: <20200521162518.1809995-1-lma@semihalf.com>
+        Fri, 3 Jul 2020 08:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGCMXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:23:50 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3873A20826;
+        Fri,  3 Jul 2020 12:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593779029;
+        bh=vd4djFKYd31yL3oupRmWE2lyv4ORZWuNlPzVgna7t2M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WHs4GUDV2uRZU81RtdyMa3DLQpqpW5ngrnYAQ1k44tF5fi8qTpHzmkCTSxkOaQfsU
+         ntwU/A6Q0tZmFwA2MHJT/daqj1pZj6k2/Gzr7OZ4f0ZTXz1sxwbv7GuoFKbK7+n9lU
+         9INFciuKTMlV0H2WvUhE6AI4h2hCgkVbDcetQZXk=
+Date:   Fri, 3 Jul 2020 13:23:44 +0100
+From:   Will Deacon <will@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Subject: Re: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+Message-ID: <20200703122343.GB18652@willie-the-truck>
+References: <20200616061338.109499-1-john.stultz@linaro.org>
+ <20200616061338.109499-6-john.stultz@linaro.org>
+ <0be86735238a0f8b0c25934e2ed39eee@kernel.org>
+ <CALAqxLUZBdiLBRcp1GW9rGxt1KhgNVQ86MuPXZcXdx2wFLZk6w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLUZBdiLBRcp1GW9rGxt1KhgNVQ86MuPXZcXdx2wFLZk6w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kabylake_ssp_fixup function to distinguish codecs DAIs by names,
-as current approach, leads to crash while trying to get snd_soc_dpcm with
-container_of() macro in kabylake_ssp_fixup().
-The crash call path looks as below:
-soc_pcm_hw_params()
-snd_soc_dai_hw_params(codec_dai, substream, &codec_params);
-rtd->dai_link->be_hw_params_fixup(rtd, params)
-kabylake_ssp_fixup()
-In this case, codec_params is just a copy of an internal structure and is
-not embedded into struct snd_soc_dpcm thus we cannot use
-container_of() on it.
+On Tue, Jun 16, 2020 at 01:52:32PM -0700, John Stultz wrote:
+> On Tue, Jun 16, 2020 at 12:55 AM Marc Zyngier <maz@kernel.org> wrote:
+> > On 2020-06-16 07:13, John Stultz wrote:
+> > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > index b510f67dfa49..714893535dd2 100644
+> > > --- a/drivers/iommu/Kconfig
+> > > +++ b/drivers/iommu/Kconfig
+> > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
+> > >  config ARM_SMMU
+> > >       tristate "ARM Ltd. System MMU (SMMU) Support"
+> > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) &&
+> > > MMU
+> > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> >
+> > This looks a bit ugly. Could you explain why we need this at the SMMU
+> > level? I'd have expected the dependency to flow the other way around...
+> 
+> Yea, so the arm-smmu-qcom.c file calls directly into the qcom-scm code
+> via qcom_scm_qsmmu500_wait_safe_toggle()
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/arm-smmu-qcom.c?h=v5.8-rc1#n44
+> 
+> So if ARM_SMMU=y and QCOM_SCM=m we get:
+> drivers/iommu/arm-smmu-qcom.o: In function `qcom_smmu500_reset':
+> arm-smmu-qcom.c:(.text+0xb4): undefined reference to
+> `qcom_scm_qsmmu500_wait_safe_toggle'
+> 
+> Do you have a suggestion for an alternative approach?
 
-v1 -> v2:
-- Extract dmic from SSP0 as every BE should have own fixup function.
-v2 -> v3:
-- Restore naming in the dapm route table to not confuse with other
-drivers
-- Fixed indentations
-v3 -> v4:
-- Updated code and commit description according to
-solution proposed by Harsha
+Can you use symbol_get() or something like that? How are module dependencies
+handled by other drivers?
 
-Signed-off-by: Lukasz Majczak <lma@semihalf.com>
-Signed-off-by: Harsha Priya <harshapriya.n@intel.com>
----
- .../intel/boards/kbl_rt5663_rt5514_max98927.c | 28 ++++++++-----------
- 1 file changed, 12 insertions(+), 16 deletions(-)
-
-diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-index b34cf6cf11395..df454de40739a 100644
---- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-+++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-@@ -333,36 +333,32 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
- {
- 	struct snd_interval *rate = hw_param_interval(params,
- 			SNDRV_PCM_HW_PARAM_RATE);
--	struct snd_interval *chan = hw_param_interval(params,
-+	struct snd_interval *channels = hw_param_interval(params,
- 			SNDRV_PCM_HW_PARAM_CHANNELS);
- 	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
--	struct snd_soc_dpcm *dpcm = container_of(
--			params, struct snd_soc_dpcm, hw_params);
--	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
--	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
-+	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
- 
- 	/*
- 	 * The ADSP will convert the FE rate to 48k, stereo, 24 bit
- 	 */
--	if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
--	    !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
--	    !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
-+
-+	if (!strcmp(codec_dai->name, KBL_REALTEK_DMIC_CODEC_DAI)) {
-+		if (params_channels(params) == 2 ||
-+			DMIC_CH(dmic_constraints) == 2)
-+			channels->min = channels->max = 2;
-+		else
-+			channels->min = channels->max = 4;
-+	} else {
- 		rate->min = rate->max = 48000;
--		chan->min = chan->max = 2;
-+		channels->min = channels->max = 2;
- 		snd_mask_none(fmt);
- 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
--	} else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
--		if (params_channels(params) == 2 ||
--				DMIC_CH(dmic_constraints) == 2)
--			chan->min = chan->max = 2;
--		else
--			chan->min = chan->max = 4;
- 	}
- 	/*
- 	 * The speaker on the SSP0 supports S16_LE and not S24_LE.
- 	 * thus changing the mask here
- 	 */
--	if (!strcmp(be_dai_link->name, "SSP0-Codec"))
-+	if (!strcmp(codec_dai->name, KBL_MAXIM_CODEC_DAI))
- 		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
- 
- 	return 0;
--- 
-2.25.1
-
+Will
