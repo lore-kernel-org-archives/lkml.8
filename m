@@ -2,102 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E44C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0B8208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A61620A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgGCDTb (ORCPT
+        id S1726112AbgGCDV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:19:31 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51159 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbgGCDTb (ORCPT
+        Thu, 2 Jul 2020 23:21:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37664 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgGCDV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:19:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U1XFtt-_1593746368;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U1XFtt-_1593746368)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jul 2020 11:19:28 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: [Patch v2] mm/sparse: only sub-section aligned range would be populated
-Date:   Fri,  3 Jul 2020 11:18:28 +0800
-Message-Id: <20200703031828.14645-1-richard.weiyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Thu, 2 Jul 2020 23:21:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 1A8CB2A054D
+Message-ID: <d34520b6799ddf84d9bd6de1cc6352f28c665c9a.camel@collabora.com>
+Subject: Re: [PATCH 7/9] media: rkvdec: h264: Use bytesperline and buffer
+ height to calculate stride
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Date:   Fri, 03 Jul 2020 00:21:17 -0300
+In-Reply-To: <20200701215616.30874-8-jonas@kwiboo.se>
+References: <20200701215616.30874-1-jonas@kwiboo.se>
+         <20200701215616.30874-8-jonas@kwiboo.se>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two code path which invoke __populate_section_memmap()
+Hi Jonas,
 
-  * sparse_init_nid()
-  * sparse_add_section()
+On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
+> Use bytesperline and buffer height to calculate the strides configured.
+> 
+> This does not really change anything other than ensuring the bytesperline
+> that is signaled to userspace matches was is configured in HW.
+> 
 
-For both case, we are sure the memory range is sub-section aligned.
+Are you seeing any issue due to this?
 
-  * we pass PAGES_PER_SECTION to sparse_init_nid()
-  * we check range by check_pfn_span() before calling
-    sparse_add_section()
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/staging/media/rkvdec/rkvdec-h264.c | 27 +++++++++++++---------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+> index 9c8e49642cd9..1cb6af590138 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+> @@ -891,10 +891,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
+>  	dma_addr_t rlc_addr;
+>  	dma_addr_t refer_addr;
+>  	u32 rlc_len;
+> -	u32 hor_virstride = 0;
+> -	u32 ver_virstride = 0;
+> -	u32 y_virstride = 0;
+> -	u32 yuv_virstride = 0;
+> +	u32 hor_virstride;
+> +	u32 ver_virstride;
+> +	u32 y_virstride;
+> +	u32 uv_virstride;
+> +	u32 yuv_virstride;
+>  	u32 offset;
+>  	dma_addr_t dst_addr;
+>  	u32 reg, i;
+> @@ -904,16 +905,20 @@ static void config_registers(struct rkvdec_ctx *ctx,
+>  
+>  	f = &ctx->decoded_fmt;
+>  	dst_fmt = &f->fmt.pix_mp;
+> -	hor_virstride = (sps->bit_depth_luma_minus8 + 8) * dst_fmt->width / 8;
+> -	ver_virstride = round_up(dst_fmt->height, 16);
+> +	hor_virstride = dst_fmt->plane_fmt[0].bytesperline;
+> +	ver_virstride = dst_fmt->height;
+>  	y_virstride = hor_virstride * ver_virstride;
+>  
 
-Also, the counterpart of __populate_section_memmap(), we don't do such
-calculation and check since the range is checked by check_pfn_span() in
-__remove_pages().
+So far so good.
 
-Clear the calculation and check to keep it simple and comply with its
-counterpart.
+> -	if (sps->chroma_format_idc == 0)
+> -		yuv_virstride = y_virstride;
+> -	else if (sps->chroma_format_idc == 1)
+> -		yuv_virstride += y_virstride + y_virstride / 2;
+> +	if (sps->chroma_format_idc == 1)
+> +		uv_virstride = y_virstride / 2;
+>  	else if (sps->chroma_format_idc == 2)
+> -		yuv_virstride += 2 * y_virstride;
+> +		uv_virstride = y_virstride;
+> +	else if (sps->chroma_format_idc == 3)
+> +		uv_virstride = 2 * y_virstride;
+> +	else
+> +		uv_virstride = 0;
+> +
+> +	yuv_virstride = y_virstride + uv_virstride;
+>  
 
-Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Is the chunk above related to the patch, or mostly
+cleaning/improving the code?
 
----
-v2:
-  * add a warn on once for unaligned range, suggested by David
----
- mm/sparse-vmemmap.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+Thanks,
+Ezequiel
 
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 0db7738d76e9..8d3a1b6287c5 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -247,20 +247,12 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
- struct page * __meminit __populate_section_memmap(unsigned long pfn,
- 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
--	unsigned long start;
--	unsigned long end;
--
--	/*
--	 * The minimum granularity of memmap extensions is
--	 * PAGES_PER_SUBSECTION as allocations are tracked in the
--	 * 'subsection_map' bitmap of the section.
--	 */
--	end = ALIGN(pfn + nr_pages, PAGES_PER_SUBSECTION);
--	pfn &= PAGE_SUBSECTION_MASK;
--	nr_pages = end - pfn;
--
--	start = (unsigned long) pfn_to_page(pfn);
--	end = start + nr_pages * sizeof(struct page);
-+	unsigned long start = (unsigned long) pfn_to_page(pfn);
-+	unsigned long end = start + nr_pages * sizeof(struct page);
-+
-+	if (WARN_ON_ONCE(!IS_ALIGNED(pfn, PAGES_PER_SUBSECTION) ||
-+		!IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION)))
-+		return NULL;
- 
- 	if (vmemmap_populate(start, end, nid, altmap))
- 		return NULL;
--- 
-2.20.1 (Apple Git-117)
+>  	reg = RKVDEC_Y_HOR_VIRSTRIDE(hor_virstride / 16) |
+>  	      RKVDEC_UV_HOR_VIRSTRIDE(hor_virstride / 16) |
+
 
