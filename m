@@ -2,116 +2,155 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EBBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E052073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q7FuNIKP"
+	by mail.kernel.org (Postfix) with ESMTP id 4E2F120656
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgGCJpG (ORCPT
+        id S1726367AbgGCJpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:45:06 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:37982 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbgGCJpF (ORCPT
+        Fri, 3 Jul 2020 05:45:20 -0400
+Received: from lucky1.263xmail.com ([211.157.147.135]:33504 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGCJpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:45:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593769505; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=dl0rgC/HhlVxkyXbeJ+jwvTvXNECw4L3SLbh6WDhKSM=; b=Q7FuNIKP5qBhj0LgjL9N2FHYXZmPOTuhxPIrAIBgfbmMWPdKoCn6l2YaULD3fwXYRmuf+VxU
- bYneOibvk9mBAxWLllrAxlmpW5J+YXnH8jlNcNMN8SwrKkwWe6uQwU+55O7ONw4gvpaExIOJ
- GAqMMHxcBHfAuifA4ddi7c9R/X0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5efefe0d567385e8e707101c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 09:44:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 950E2C433AF; Fri,  3 Jul 2020 09:44:44 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9747C433AD;
-        Fri,  3 Jul 2020 09:44:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9747C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org, broonie@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 3/3] arm64: dts: sc7180: Add qspi opps and power-domains
-Date:   Fri,  3 Jul 2020 15:11:33 +0530
-Message-Id: <1593769293-6354-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
-References: <1593769293-6354-1-git-send-email-rnayak@codeaurora.org>
+        Fri, 3 Jul 2020 05:45:20 -0400
+Received: from localhost (unknown [192.168.167.13])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 29F09A17BF;
+        Fri,  3 Jul 2020 17:45:13 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P9648T140518671496960S1593769508246067_;
+        Fri, 03 Jul 2020 17:45:14 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <61a8935fbe4ef8a294067815218e3673>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: daniel@ffwll.ch
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Andy Yan <andy.yan@rock-chips.com>
+To:     daniel@ffwll.ch
+Cc:     airlied@linux.ie, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, tzimmermann@suse.de,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v2] drm/connector: Add of_drm_find_connector
+Date:   Fri,  3 Jul 2020 17:45:06 +0800
+Message-Id: <20200703094506.22527-1-andy.yan@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the power domain supporting performance state and the corresponding
-OPP tables for the qspi device on sc7180
+Add a function to look up a connector by
+device tree node, like what of_drm_find_bridge/panel
+does.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reported-by: kernel test robot <lkp@intel.com>
+
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 2be81a2..34a6d83 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2407,6 +2407,25 @@
- 			status = "disabled";
- 		};
+Changes in v2:
+- Add function declaration
+
+ drivers/gpu/drm/drm_connector.c | 33 +++++++++++++++++++++++++++++++++
+ include/drm/drm_connector.h     | 14 ++++++++++++++
+ 2 files changed, 47 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
+index d877ddc6dc57..516376cd1868 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -743,6 +743,39 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter)
+ }
+ EXPORT_SYMBOL(drm_connector_list_iter_end);
  
-+		qspi_opp_table: qspi-opp-table {
-+			compatible = "operating-points-v2";
++#ifdef CONFIG_OF
++/**
++ * of_drm_find_connector - look up a connector using a device tree node
++ * @np: device tree node of the connector
++ *
++ *
++ * Return: A pointer to the connector which match the specified device tree
++ * node or NULL if no panel matching the device tree node can be found, or
++ * -ENODEV: the device is not available (status != "okay" or "ok")
++ */
++struct drm_connector *of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
++{
++	struct drm_connector *connector;
++	struct drm_connector_list_iter conn_iter;
 +
-+			opp-75000000 {
-+				opp-hz = /bits/ 64 <75000000>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
-+			};
++	if (!of_device_is_available(np))
++		return ERR_PTR(-ENODEV);
 +
-+			opp-150000000 {
-+				opp-hz = /bits/ 64 <150000000>;
-+				required-opps = <&rpmhpd_opp_svs>;
-+			};
++	drm_connector_list_iter_begin(dev, &conn_iter);
++	drm_for_each_connector_iter(connector, &conn_iter) {
++		if (connector->of_node == np) {
++			drm_connector_list_iter_end(&conn_iter);
++			return connector;
++		}
++	}
++	drm_connector_list_iter_end(&conn_iter);
 +
-+			opp-300000000 {
-+				opp-hz = /bits/ 64 <300000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
-+		};
++	return NULL;
++}
++EXPORT_SYMBOL(of_drm_find_connector);
++#endif
 +
- 		qspi: spi@88dc000 {
- 			compatible = "qcom,qspi-v1";
- 			reg = <0 0x088dc000 0 0x600>;
-@@ -2419,6 +2438,8 @@
- 			interconnects = <&gem_noc MASTER_APPSS_PROC
- 					&config_noc SLAVE_QSPI_0>;
- 			interconnect-names = "qspi-config";
-+			power-domains = <&rpmhpd SC7180_CX>;
-+			operating-points-v2 = <&qspi_opp_table>;
- 			status = "disabled";
- 		};
++
+ static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
+ 	{ SubPixelUnknown, "Unknown" },
+ 	{ SubPixelHorizontalRGB, "Horizontal RGB" },
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index fd543d1db9b2..d249e0498375 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -1129,6 +1129,9 @@ struct drm_connector {
+ 	/** @attr: sysfs attributes */
+ 	struct device_attribute *attr;
  
++	/** @of_node: device tree node */
++	struct device_node *of_node;
++
+ 	/**
+ 	 * @head:
+ 	 *
+@@ -1647,6 +1650,17 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter);
+ bool drm_connector_has_possible_encoder(struct drm_connector *connector,
+ 					struct drm_encoder *encoder);
+ 
++#if defined(CONFIG_OF)
++struct drm_connector *
++of_drm_find_connector(struct drm_device *dev, const struct device_node *np);
++#else
++static inline struct drm_connector *
++of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
++{
++	return ERR_PTR(-ENODEV);
++}
++#endif
++
+ /**
+  * drm_for_each_connector_iter - connector_list iterator macro
+  * @connector: &struct drm_connector pointer used as cursor
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
+
 
