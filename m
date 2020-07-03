@@ -2,93 +2,69 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAEC120899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593794163;
-	bh=Zj4p0k6Evf62RoQy5ZALCr3HLy17aEKw/bGOhLnj5JE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NtaAN/XOnFBYIHixb+pOD02j1XXuoTX5BAOLdN+9FyFjFLHzFFnI3pyXPNKb5sN62
-	 qjP6VDMNUKSJ7tW0mLQ3lljfJLfA+TMaEArb1mWEq7F6hyPImIXLZkhb5WNgcWVRwf
-	 hRfiI4Xj+XvLWMmbf2GZPgBlXhlfKGpPg8m1d160=
+	by mail.kernel.org (Postfix) with ESMTP id 8FAB0214DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgGCQgC (ORCPT
+        id S1726379AbgGCQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46420 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 12:43:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:51022 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbgGCQgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:36:02 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73727207FF;
-        Fri,  3 Jul 2020 16:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593794161;
-        bh=Zj4p0k6Evf62RoQy5ZALCr3HLy17aEKw/bGOhLnj5JE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a0UfZU9UbhUIQmoev0bU15pFdle/jQUTHR5f7Z3DnpkKDF2kyl3dSaJZkiJqIHcA/
-         oA4q8yMFRpnUBauV7X4CjlfiOrO7pTM+MRiCwpvnDVvsxE5w6YwM9mktGpyTV0SXO2
-         PmRylj5fdDGlBreX80cyYU08LcouNCUGkrCBI6Z4=
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andre Przywara <andre.przywara@arm.com>,
-        linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] Add Kryo4xx gold and silver cores to applicable errata list
-Date:   Fri,  3 Jul 2020 17:35:51 +0100
-Message-Id: <159379075677.633846.7965925264336434359.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1593539394.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1593539394.git.saiprakash.ranjan@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726108AbgGCQnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:43:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7C1131B;
+        Fri,  3 Jul 2020 09:43:41 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BD9A3F73C;
+        Fri,  3 Jul 2020 09:43:41 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com
+Subject: [PATCH] hwmon: scmi: fix potential buffer overflow in scmi_hwmon_probe()
+Date:   Fri,  3 Jul 2020 17:43:29 +0100
+Message-Id: <20200703164329.3170-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 23:30:52 +0530, Sai Prakash Ranjan wrote:
-> This series adds the Kryo4xx gold/big and silver/LITTLE CPU cores to
-> the errata list which are applicable to them based on the revisions
-> of the Cortex CPU cores on which they are based on.
-> 
-> Patch 1 adds the MIDR value for Kryo4xx gold CPU cores.
-> Patch 2 adds Kryo4xx gold CPU cores to erratum list 1463225 and 1418040.
-> Patch 3 adds Kryo4xx silver CPU cores to erratum list 1530923 and 1024718.
-> 
-> [...]
+SMATCH detected a potential buffer overflow in the manipulation of
+hwmon_attributes array inside the scmi_hwmon_probe function:
 
-Applied to arm64 (for-next/fixes), thanks!
+drivers/hwmon/scmi-hwmon.c:226
+ scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
 
-[1/3] arm64: Add MIDR value for KRYO4XX gold CPU cores
-      https://git.kernel.org/arm64/c/dce4f2807f69
-[2/3] arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040
-      https://git.kernel.org/arm64/c/a9e821b89daa
-[3/3] arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718
-      https://git.kernel.org/arm64/c/9b23d95c539e
+Fix it by statically declaring the size of the array as the maximum
+possible as defined by hwmon_max define.
 
-Cheers,
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+ drivers/hwmon/scmi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 281454c5c5b1..758f66fc9afe 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -149,7 +149,7 @@ static enum hwmon_sensor_types scmi_types[] = {
+ 	[ENERGY] = hwmon_energy,
+ };
+ 
+-static u32 hwmon_attributes[] = {
++static u32 hwmon_attributes[hwmon_max] = {
+ 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+ 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
+ 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
 -- 
-Will
+2.17.1
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
