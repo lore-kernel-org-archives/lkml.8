@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D466C20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C96207CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgGCChL (ORCPT
+        id S1726802AbgGCChJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:37:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:33746 "EHLO mga05.intel.com"
+        Thu, 2 Jul 2020 22:37:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3196 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGCCgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726298AbgGCCgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Jul 2020 22:36:12 -0400
-IronPort-SDR: fev7SA6mIO86oDYA5xD3eASUY9VJpKZzLtWr6PiYW5mLyFkLJsxqQxuBmkI4UMKGC41YwbVGKm
- v6d7DcmIV6Yg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="231938498"
+IronPort-SDR: hFvRoRYo3Rt2JH3PV9fAGj9076p1NQD52V3nRxCjkghXheUy/mvGhzg1i8VPlGtpk0J8/XqzDw
+ zoDlnesQUjbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148599907"
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="231938498"
+   d="scan'208";a="148599907"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:06 -0700
-IronPort-SDR: K35bgh/6aKbEJg/QUqGh/ec5tjFH45En51iPDAm9ZlXe4aykXALUp1MykU8W4Eai5BNKUVoOU+
- yGO7C7d26F2g==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:05 -0700
+IronPort-SDR: AESbTuN/UT4ZkbG1N/XVt8y93FcKopX5vpg+RKbIC32XUvak9vEiWLEUl5G8Qd5f6UDgFmZHmi
+ FFTUYnoXWDwQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="278295785"
+   d="scan'208";a="278295735"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:06 -0700
+  by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:05 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
@@ -55,9 +55,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Peter Shier <pshier@google.com>,
         Junaid Shahid <junaids@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v3 19/21] KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
-Date:   Thu,  2 Jul 2020 19:35:43 -0700
-Message-Id: <20200703023545.8771-20-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 06/21] KVM: x86/mmu: Move fast_page_fault() call above mmu_topup_memory_caches()
+Date:   Thu,  2 Jul 2020 19:35:30 -0700
+Message-Id: <20200703023545.8771-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200703023545.8771-1-sean.j.christopherson@intel.com>
 References: <20200703023545.8771-1-sean.j.christopherson@intel.com>
@@ -68,59 +68,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the @max param in mmu_topup_memory_cache() and instead use
-ARRAY_SIZE() to terminate the loop to fill the cache.  This removes a
-BUG_ON() and sets the stage for moving MIPS to the common memory cache
-implementation.
+Avoid refilling the memory caches and potentially slow reclaim/swap when
+handling a fast page fault, which does not need to allocate any new
+objects.
 
-No functional change intended.
-
+Reviewed-by: Ben Gardon <bgardon@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/mips/kvm/mmu.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
-index 49bd160f4d85..d1f148db2449 100644
---- a/arch/mips/kvm/mmu.c
-+++ b/arch/mips/kvm/mmu.c
-@@ -25,15 +25,13 @@
- #define KVM_MMU_CACHE_MIN_PAGES 2
- #endif
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 748235877def..3d0768e16463 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4095,6 +4095,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	if (page_fault_handle_page_track(vcpu, error_code, gfn))
+ 		return RET_PF_EMULATE;
  
--static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
--				  int min, int max)
-+static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
- {
- 	void *page;
++	if (fast_page_fault(vcpu, gpa, error_code))
++		return RET_PF_RETRY;
++
+ 	r = mmu_topup_memory_caches(vcpu);
+ 	if (r)
+ 		return r;
+@@ -4102,9 +4105,6 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	if (lpage_disallowed)
+ 		max_level = PG_LEVEL_4K;
  
--	BUG_ON(max > KVM_NR_MEM_OBJS);
- 	if (cache->nobjs >= min)
- 		return 0;
--	while (cache->nobjs < max) {
-+	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
- 		page = (void *)__get_free_page(GFP_KERNEL);
- 		if (!page)
- 			return -ENOMEM;
-@@ -711,8 +709,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
- 		goto out;
- 
- 	/* We need a minimum of cached pages ready for page table creation */
--	err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES,
--				     KVM_NR_MEM_OBJS);
-+	err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
- 	if (err)
- 		goto out;
- 
-@@ -796,8 +793,7 @@ static pte_t *kvm_trap_emul_pte_for_gva(struct kvm_vcpu *vcpu,
- 	int ret;
- 
- 	/* We need a minimum of cached pages ready for page table creation */
--	ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES,
--				     KVM_NR_MEM_OBJS);
-+	ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
- 	if (ret)
- 		return NULL;
+-	if (fast_page_fault(vcpu, gpa, error_code))
+-		return RET_PF_RETRY;
+-
+ 	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+ 	smp_rmb();
  
 -- 
 2.26.0
