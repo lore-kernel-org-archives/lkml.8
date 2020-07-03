@@ -2,121 +2,99 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE86EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA39C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBFC206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF31206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOjpfDnU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rHQYeGqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgGCHn7 (ORCPT
+        id S1726449AbgGCHny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgGCHn5 (ORCPT
+        Fri, 3 Jul 2020 03:43:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55380 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgGCHnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:43:57 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F37C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:43:57 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m22so4357537pgv.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YMA1iG2DR+aP68KXSdCOsvrFA0oomq7Nb72Iy6OynAc=;
-        b=eOjpfDnUhW2ER3jbX+CxmRW1kTHS4ha9+B04YjM9WkSWY+zXrVbJT2nho+GrVniC88
-         BnCjbPqTEu6VpWFtFGMj8bLBasFsETuYhAbwBNQCzQFS7/Vb+t1pLMbXFG835Zj+IsRL
-         0W4UyF6ZzUUbTTsMtdXLYyxRplXcQDfKVICAn/Few/slDEK1DkowMQLsI/xXyPvDgh5c
-         l5elsPzMyrdTcr9fRdsfHJcByOUqB70ZECB//QgmXcR/LBlYIPBy314lkiaUv/SDGmeh
-         hiuDlBOP9XLlVd7AXYw11Cei7ORRt06qDlfLL14hhhgAbJmIEOQbm9V+1tOSQeCRD51I
-         TVvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YMA1iG2DR+aP68KXSdCOsvrFA0oomq7Nb72Iy6OynAc=;
-        b=BMpKpLoO0OaQhiAmzPMqOYwallHr/tei0YheaRcp1WZOVkHHBr2jhrMuuFGT6lLp7O
-         nLHPPm2c93E3tf3S3joYcmiNa6Md1Wk4aZgh1OUfmbRREd20J2BLlwaP7M6br61ch/rs
-         77Izi6F/3bZ0c/BSjA2lq100b05L9t4FMIJ3MgltO1395/flOyip5nqK8O+TrY7j1yzZ
-         o85mxUVcOdilksLvOXOh5aeNk5FZqgh9yPvhV7F3vxg2p6k7tvOzVWwIQHCacc/mPnZW
-         wRv1byojkzQWp2aggGC0UrN55VmgiSRTEXK///U9wblhORMkkR6HroM9ymK8HaWbeePR
-         JMmA==
-X-Gm-Message-State: AOAM5338fByE2Kba0AovQ57vLPJcAYOErRAuMCELqy+Gq0+9YG355mUQ
-        tAJjZjNcas6Ua8CxEEIAjl02aA==
-X-Google-Smtp-Source: ABdhPJxs34VyOJKNvK67gXc9kQBjJa6obMlUr6G9NDi43bUnL4tffZoy9+osusLsDh0iM0haQ0giAQ==
-X-Received: by 2002:a65:63c4:: with SMTP id n4mr15600593pgv.230.1593762236641;
-        Fri, 03 Jul 2020 00:43:56 -0700 (PDT)
-Received: from localhost ([122.172.40.201])
-        by smtp.gmail.com with ESMTPSA id 73sm10987491pfy.24.2020.07.03.00.43.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jul 2020 00:43:55 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 13:13:54 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [FOR-STABLE-3.9+] sched/rt: Show the 'sched_rr_timeslice'
- SCHED_RR timeslice tuning knob in milliseconds
-Message-ID: <20200703074354.btmylgn5mxhbxywc@vireshk-i7>
-References: <ffdfb849a11b9cd66e0aded2161869e36aec7fc0.1593757471.git.viresh.kumar@linaro.org>
- <20200703074025.GA2390868@kroah.com>
+        Fri, 3 Jul 2020 03:43:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0637hmPB045483;
+        Fri, 3 Jul 2020 02:43:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593762228;
+        bh=WDMC1z6jzpUNYiGQWlUKYjUaAdNa/terAf9fLOG3fwk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=rHQYeGqHX02tg3eBCScRycBMpMOpSTnCZSdY5t8xWGK1tyDbNd386O/qyM7vyhQt3
+         L2P/KSDUoAtUnvcYdSlgKp6uTVTUejTQTfS0lLJ2dpyBgyaEpREtBy9dFLyRwzi2zl
+         8C/1awVodUikxPcgg6aBa75kUVkeVvm42YD7Fs0o=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637hmGc092268;
+        Fri, 3 Jul 2020 02:43:48 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
+ 2020 02:43:47 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 3 Jul 2020 02:43:47 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637hhdp098446;
+        Fri, 3 Jul 2020 02:43:45 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <t-kristo@ti.com>, <nm@ti.com>
+CC:     <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>
+Subject: [PATCH v2 1/2] arm64: dts: ti: k3-j721e-common-proc-board: Remove duplicated main_i2c1_exp4_pins_default
+Date:   Fri, 3 Jul 2020 10:44:42 +0300
+Message-ID: <20200703074443.27142-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200703074443.27142-1-peter.ujfalusi@ti.com>
+References: <20200703074443.27142-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703074025.GA2390868@kroah.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-07-20, 09:40, Greg KH wrote:
-> On Fri, Jul 03, 2020 at 12:54:04PM +0530, Viresh Kumar wrote:
-> > From: Shile Zhang <shile.zhang@nokia.com>
-> > 
-> > We added the 'sched_rr_timeslice_ms' SCHED_RR tuning knob in this commit:
-> > 
-> >   ce0dbbbb30ae ("sched/rt: Add a tuning knob to allow changing SCHED_RR timeslice")
-> > 
-> > ... which name suggests to users that it's in milliseconds, while in reality
-> > it's being set in milliseconds but the result is shown in jiffies.
-> > 
-> > This is obviously confusing when HZ is not 1000, it makes it appear like the
-> > value set failed, such as HZ=100:
-> > 
-> >   root# echo 100 > /proc/sys/kernel/sched_rr_timeslice_ms
-> >   root# cat /proc/sys/kernel/sched_rr_timeslice_ms
-> >   10
-> > 
-> > Fix this to be milliseconds all around.
-> > 
-> > Cc: <stable@vger.kernel.org> # v3.9+
-> > Signed-off-by: Shile Zhang <shile.zhang@nokia.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Mike Galbraith <efault@gmx.de>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Link: http://lkml.kernel.org/r/1485612049-20923-1-git-send-email-shile.zhang@nokia.com
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> What is the git commit id of this patch in Linus's tree?
+Two pimux entry is present with the same name, remove one of them.
 
-I am really sorry for missing the only thing I was required to do :(
+Fixes: cb27354b38f3 ("arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 6 ------
+ 1 file changed, 6 deletions(-)
 
-commit 975e155ed8732cb81f55c021c441ae662dd040b5 upstream.
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 6df823aaa37c..1f1fee85acca 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -102,12 +102,6 @@ J721E_IOPAD(0x1d0, PIN_INPUT_PULLUP, 2) /* (AA3) SPI0_D1.I2C6_SCL */
+ 			J721E_IOPAD(0x1e4, PIN_INPUT_PULLUP, 2) /* (Y2) SPI1_D1.I2C6_SDA */
+ 		>;
+ 	};
+-
+-	main_i2c1_exp4_pins_default: main-i2c1-exp4-pins-default {
+-		pinctrl-single,pins = <
+-			J721E_IOPAD(0x230, PIN_INPUT, 7) /* (U2) ECAP0_IN_APWM_OUT.GPIO1_11 */
+-		 >;
+-	};
+ };
+ 
+ &wkup_pmx0 {
 -- 
-viresh
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
