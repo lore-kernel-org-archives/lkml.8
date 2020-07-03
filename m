@@ -2,186 +2,141 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DA72073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="pwoywm1M"
+	by mail.kernel.org (Postfix) with ESMTP id D0CC62073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgGCKGJ (ORCPT
+        id S1726063AbgGCKJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:06:09 -0400
-Received: from mail.nic.cz ([217.31.204.67]:51698 "EHLO mail.nic.cz"
+        Fri, 3 Jul 2020 06:09:00 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39116 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgGCKGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:06:08 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTPSA id D4A0E14078D;
-        Fri,  3 Jul 2020 12:06:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1593770762; bh=kV4j8O4Cdf60Mymne/xK8E9dxp4Yx5R0Zj2sfcDUqYY=;
-        h=Date:From:To;
-        b=pwoywm1MWjdIqRQvClsSnxw5czhMCeyDm/cJkvitVhOHOK7T8mdUx8NcW3RnKtY7d
-         CYl4K0Wm8ZN9Q8VOKZz+RumyVvt4BC/MQ9alz84VXEAmdmzkq57RpfuatvlRBdL7Cb
-         7bb20LzWCpEfofCh6aTyx6Put4Pii8Ue1LTzJPGw=
-Date:   Fri, 3 Jul 2020 12:06:02 +0200
-From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM)
-Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
-Message-ID: <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
-In-Reply-To: <20200702144712.1994685-1-megous@megous.com>
-References: <20200702144712.1994685-1-megous@megous.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725796AbgGCKJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 06:09:00 -0400
+Received: from p5b127e6f.dip0.t-ipconnect.de ([91.18.126.111] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jrIco-0005Z1-B5; Fri, 03 Jul 2020 12:08:54 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     John Keeping <john@metanate.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: rk3x: support master_xfer_atomic
+Date:   Fri, 03 Jul 2020 12:08:53 +0200
+Message-ID: <2391901.EFyQHPvyDf@phil>
+In-Reply-To: <20200623120646.2175569-1-john@metanate.com>
+References: <20200623120646.2175569-1-john@metanate.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Jul 2020 16:47:11 +0200
-Ondrej Jirman <megous@megous.com> wrote:
+Am Dienstag, 23. Juni 2020, 14:06:46 CEST schrieb John Keeping:
+> Enable i2c transactions in irq disabled contexts like poweroff where the
+> PMIC is connected via i2c.
+> 
+> Signed-off-by: John Keeping <john@metanate.com>
 
-> Some LED controllers may come with an internal HW triggering mechanism
-> for the LED and an ability to switch between user control of the LED,
-> or the internal control. One such example is AXP20X PMIC, that allows
-> wither for user control of the LED, or for internal control based on
-> the state of the battery charger.
-> 
-> Add support for registering per-LED device trigger.
-> 
-> Names of private triggers need to be globally unique, but may clash
-> with other private triggers. This is enforced during trigger
-> registration. Developers can register private triggers just like
-> the normal triggers, by setting private_led to a classdev
-> of the LED the trigger is associated with.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+on a rk3288:
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
 > ---
->  drivers/leds/led-triggers.c | 12 +++++++++---
->  include/linux/leds.h        |  3 +++
->  2 files changed, 12 insertions(+), 3 deletions(-)
+>  drivers/i2c/busses/i2c-rk3x.c | 39 +++++++++++++++++++++++++++++++----
+>  1 file changed, 35 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 79e30d2cb7a5..3011e2658404 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -50,7 +50,8 @@ ssize_t led_trigger_write(struct file *filp, struct
-> kobject *kobj, 
->  	down_read(&triggers_list_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (sysfs_streq(buf, trig->name)) {
-> +		if (sysfs_streq(buf, trig->name) &&
-> +		    (!trig->private_led || trig->private_led ==
-> led_cdev)) { down_write(&led_cdev->trigger_lock);
->  			led_trigger_set(led_cdev, trig);
->  			up_write(&led_cdev->trigger_lock);
-> @@ -96,6 +97,9 @@ static int led_trigger_format(char *buf, size_t
-> size, bool hit = led_cdev->trigger &&
->  			!strcmp(led_cdev->trigger->name, trig->name);
+> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+> index 15324bfbc6cb..8e3cc85d1921 100644
+> --- a/drivers/i2c/busses/i2c-rk3x.c
+> +++ b/drivers/i2c/busses/i2c-rk3x.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/platform_device.h>
+> @@ -1040,8 +1041,21 @@ static int rk3x_i2c_setup(struct rk3x_i2c *i2c, struct i2c_msg *msgs, int num)
+>  	return ret;
+>  }
 >  
-> +		if (trig->private_led && trig->private_led !=
-> led_cdev)
-> +			continue;
+> -static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+> -			 struct i2c_msg *msgs, int num)
+> +static int rk3x_i2c_wait_xfer_poll(struct rk3x_i2c *i2c)
+> +{
+> +	ktime_t timeout = ktime_add_ms(ktime_get(), WAIT_TIMEOUT);
 > +
->  		len += led_trigger_snprintf(buf + len, size - len,
->  					    " %s%s%s", hit ? "[" :
-> "", trig->name, hit ? "]" : "");
-> @@ -243,7 +247,8 @@ void led_trigger_set_default(struct led_classdev
-> *led_cdev) down_read(&triggers_list_lock);
->  	down_write(&led_cdev->trigger_lock);
->  	list_for_each_entry(trig, &trigger_list, next_trig) {
-> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
-> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
-> +		    (!trig->private_led || trig->private_led ==
-> led_cdev)) { led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
->  			led_trigger_set(led_cdev, trig);
->  			break;
-> @@ -280,7 +285,8 @@ int led_trigger_register(struct led_trigger *trig)
->  	down_write(&triggers_list_lock);
->  	/* Make sure the trigger's name isn't already in use */
->  	list_for_each_entry(_trig, &trigger_list, next_trig) {
-> -		if (!strcmp(_trig->name, trig->name)) {
-> +		if (!strcmp(_trig->name, trig->name) &&
-> +		    (!_trig->private_led || _trig->private_led ==
-> trig->private_led)) { up_write(&triggers_list_lock);
->  			return -EEXIST;
->  		}
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 2451962d1ec5..0d7577c752ad 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -345,6 +345,9 @@ struct led_trigger {
->  	int		(*activate)(struct led_classdev
-> *led_cdev); void		(*deactivate)(struct led_classdev
-> *led_cdev); 
-> +	/* LED-private triggers have the LED device set here. */
-> +	struct led_classdev *private_led;
+> +	while (READ_ONCE(i2c->busy) &&
+> +	       ktime_compare(ktime_get(), timeout) < 0) {
+> +		udelay(5);
+> +		rk3x_i2c_irq(0, i2c);
+> +	}
 > +
->  	/* LEDs under control by this trigger (for simple triggers)
-> */ rwlock_t	  leddev_list_lock;
->  	struct list_head  led_cdevs;
+> +	return !i2c->busy;
+> +}
+> +
+> +static int rk3x_i2c_xfer_common(struct i2c_adapter *adap,
+> +				struct i2c_msg *msgs, int num, bool polling)
+>  {
+>  	struct rk3x_i2c *i2c = (struct rk3x_i2c *)adap->algo_data;
+>  	unsigned long timeout, flags;
+> @@ -1075,8 +1089,12 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+>  
+>  		rk3x_i2c_start(i2c);
+>  
+> -		timeout = wait_event_timeout(i2c->wait, !i2c->busy,
+> -					     msecs_to_jiffies(WAIT_TIMEOUT));
+> +		if (!polling) {
+> +			timeout = wait_event_timeout(i2c->wait, !i2c->busy,
+> +						     msecs_to_jiffies(WAIT_TIMEOUT));
+> +		} else {
+> +			timeout = rk3x_i2c_wait_xfer_poll(i2c);
+> +		}
+>  
+>  		spin_lock_irqsave(&i2c->lock, flags);
+>  
+> @@ -1110,6 +1128,18 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+>  	return ret < 0 ? ret : num;
+>  }
+>  
+> +static int rk3x_i2c_xfer(struct i2c_adapter *adap,
+> +			 struct i2c_msg *msgs, int num)
+> +{
+> +	return rk3x_i2c_xfer_common(adap, msgs, num, false);
+> +}
+> +
+> +static int rk3x_i2c_xfer_polling(struct i2c_adapter *adap,
+> +				 struct i2c_msg *msgs, int num)
+> +{
+> +	return rk3x_i2c_xfer_common(adap, msgs, num, true);
+> +}
+> +
+>  static __maybe_unused int rk3x_i2c_resume(struct device *dev)
+>  {
+>  	struct rk3x_i2c *i2c = dev_get_drvdata(dev);
+> @@ -1126,6 +1156,7 @@ static u32 rk3x_i2c_func(struct i2c_adapter *adap)
+>  
+>  static const struct i2c_algorithm rk3x_i2c_algorithm = {
+>  	.master_xfer		= rk3x_i2c_xfer,
+> +	.master_xfer_atomic	= rk3x_i2c_xfer_polling,
+>  	.functionality		= rk3x_i2c_func,
+>  };
+>  
+> 
 
-Hi Ondrej,
 
-Some criticism to this approach to HW triggers:
-- every hw trigger for each LED has to be registered via current trigger
-  API. This will grow code size and memory footprint once this API is
-  widely used
-- one HW trigger can only master one LED device (via private_led
-  member). So if I have, for example an ethernet switch with 8 ports,
-  and each port has 2 LEDs, and each LED has 10 possible HW triggering
-  mechanisms, with your proposed API one would need to register 8*2*10
-  = 160 triggers
 
-I too have been thinking about an API for HW LED triggers, and I
-tinkered with it a little. Some time ago I sent some emails, with
-subjects:
-  "RFC: LED hw triggering API"
-  "about my trigger-sources work"
 
-My current thoughts about how HW LED triggers could work nicely is as
-such:
-  - these members (maybe with different names) shall be added to struct
-    led_classdev:
-      available_hw_triggers()
-        - shall return a NULL terminated list of HW trigger names
-          available for this LED
-      set_hw_trigger()
-        - sets HW trigger for this LED. The LED triggering API shall
-          call this method after previous LED trigger is unset. If
-          called with NULL parameter, unsets HW trigger
-      current_hw_trigger
-        - name of the currently set HW LED trigger for this LED
-  - the driver registering the LED cdev informs abouth the LED being
-    capable of HW triggering - members available_hw_triggers and
-    set_hw_trigger must be set
-  - SW LED trigger and HW LED trigger are mutualy exclusive on one LED
-  - the trigger file in sysfs (/sys/class/leds/LED/trigger) shall first
-    list the available SW triggers, and then available hw triggers for
-    this LED, prefixed with "hw:"
-    When written, if the written trigger name starts with "hw:",
-    instead of setting SW trigger, a HW trigger is set via
-    set_hw_trigger() method
-
-This could also nicely work with trigger-source DTS property - when the
-driver registers a LED, it can determine what other device is
-triggering the LED (for example a netdevice), and correspondingly set
-the correct name for the LED. Code for that could be shared between HW
-and SW triggering API.
-
-Marek
