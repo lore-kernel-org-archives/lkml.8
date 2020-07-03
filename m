@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EE2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF1620760
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2D120760
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoX9fUZY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGT6P/GM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGCRFU (ORCPT
+        id S1726819AbgGCRFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38718 "EHLO
+        Fri, 3 Jul 2020 13:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgGCRFS (ORCPT
+        with ESMTP id S1726779AbgGCRFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:05:18 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3502C061794;
-        Fri,  3 Jul 2020 10:05:17 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so21720375edz.12;
-        Fri, 03 Jul 2020 10:05:17 -0700 (PDT)
+        Fri, 3 Jul 2020 13:05:19 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F4DC061794;
+        Fri,  3 Jul 2020 10:05:19 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id f12so8767086eja.9;
+        Fri, 03 Jul 2020 10:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xQghqn+BdVK6MdFw7UQ7WWQRVvFzcu0qCSzHvd/dFL0=;
-        b=PoX9fUZYqBUFRRo3oVlwWTIQBHuDwzJ58TTGr5FrOn0RfhECKCyKfSu7FLqah+7NtT
-         KHbx557OXvJseGo83RIAsnaqUur9TljJKs0hWFQ7heth9HQ8gZ1LXAJhL+VQzU2rV9Wl
-         vI0v0ofCoTJfjNnHqbx7t91BNFLKZw2N4+JToAjRRlwXycCchISYVYKRmodRtMFSPS++
-         J46kGBGPljqPLUgM0CZI9bCAeoC23INdZY7WUUIoAcQQVb3RqDZ35Xn7SJXCOpVnXy4c
-         k2z8HpP6Ay25SP9SsPz4WZrwOh4XdTFIDxcKU6MXCCncHerYJuXnIxtlWC6cl10b/n7t
-         hFlw==
+        bh=UzXO2/YQtP7mmUtJI2Phdpl7tGijDa11G8t5gttXFS4=;
+        b=mGT6P/GMOidgiOrtYqyDw3Sl4cBH+iyMLzd9CQOMR3JWDJrDNh5bPf9Ogwz53kfUMn
+         XpodOhKWaVI8SKFxCd0Nb0sRaAaQ2bjAoPUWNnbXOiCCl1Ru5d9RsO6q00P9oMk9/eLS
+         gOzdal0yRhOZ+AJD8ti6Y5VRbs8q0PWlaYEIyeX1qCWcbfeFfELLJduDLQPlqzGDAU8T
+         wWD4WqzYX5bLHfK6+N0m/dMwtKNPNYWJJSTcczffbGtyaJbIL6WhcQjzT5MWA37y5Gzt
+         drRqxRs6dWEkZJrq4zc4P3Atf/tgkGgOX9ljCZpxq4msmT/55ZvpNpGZEbgs3RjXabLX
+         JrYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xQghqn+BdVK6MdFw7UQ7WWQRVvFzcu0qCSzHvd/dFL0=;
-        b=KJ3Rp90TdCtyG88MEhQwxIsgoU+MlLx0vtopqQ6sWqLoUpSOdNZbpii8GeZ60XNPwE
-         95Q1eeJi7oQUyHusanLh6dhT7cTOU+KpWCYzoylsfYM2Q4qQ1clfQb5XqlL0sLdCHnwT
-         XsHssTOwlRXD1QDCTem0OCakSm4N9Hfuv6h09ydaoYuqZwdRcuOIHssBk/KKhLljhlao
-         uvmkASmEyY+1bLvH+fDcQ0Wvo6EH/GU9eQ2JaieSUD6dr4RUV6Q0614s0PHd5JuriF+3
-         fIWgoC80ueSrqg4JFeAUxfYuVLHiFiUvRBRb+EqYRikfC+1M/TeRdv6LjI0nGsZfRc0n
-         t1gA==
-X-Gm-Message-State: AOAM5334dxL8T2GZyNf8PaTwuaF0FCCiMBHGBHX1k0seXqjHC8ImJl0X
-        d9nlRL9yW70/FTbuUkM4OHU=
-X-Google-Smtp-Source: ABdhPJytqKyGUgJ4iBt8m1t8/05Pp2xV4Xybk3nl/H3dB7jxgSgYlRX1u+kF5XrULpT3wyxAwx/Jig==
-X-Received: by 2002:a50:d8c2:: with SMTP id y2mr33760647edj.114.1593795916584;
-        Fri, 03 Jul 2020 10:05:16 -0700 (PDT)
+        bh=UzXO2/YQtP7mmUtJI2Phdpl7tGijDa11G8t5gttXFS4=;
+        b=F2fdhdBpcR+RPXy1MiC3lKrrJuuhTZBzUxJaQn7gXLQ6dxRx2EVS0wRGGsxhIUwYUE
+         yV9+8LKVGa3L2xkdcBtNN5C/Vng8v7Pl3mpyXVKORN9wAFj1rnhHLDk1dBuDV6ooFwmi
+         6YcCUKisq1Z46U1MVUw6z/xtS9UIVMt8Qz8r+DSHE+Rvgv5SJRmmVJCWw5zl34nIufPh
+         UI4tbwru/3BwOJACXfDRwDhDVlI9vJG+vDQnbyxbR9ejUHsfHCiVD8Z26QjPhRsd3eFV
+         sKNicV6RziX7WU/QG0znzXj6FoBFLLgxHosRjJ/2GtsC9pWSmytF8Ga1SkpLIkR2ULfk
+         qrxQ==
+X-Gm-Message-State: AOAM530GPsoobjFedujg8UVk4TNmNtJ4UkWDoPk9GKJtIfsiVRwSqLyX
+        wjuMyKXQLRtUZ0BCRqAMCE4=
+X-Google-Smtp-Source: ABdhPJx9uruR98eAolW4ynaII6t8dVZ1X1yNn3bW7ER9Gxn0hlnG465NOusilRAR8UnIwjfZOWL+FQ==
+X-Received: by 2002:a17:906:364a:: with SMTP id r10mr32650789ejb.122.1593795917982;
+        Fri, 03 Jul 2020 10:05:17 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id dg8sm14342272edb.56.2020.07.03.10.05.15
+        by smtp.gmail.com with ESMTPSA id dg8sm14342272edb.56.2020.07.03.10.05.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 10:05:16 -0700 (PDT)
+        Fri, 03 Jul 2020 10:05:17 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
@@ -70,9 +70,9 @@ To:     Stephen Boyd <sboyd@kernel.org>,
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-actions@lists.infradead.org
-Subject: [PATCH v3 1/6] clk: actions: Fix h_clk for Actions S500 SoC
-Date:   Fri,  3 Jul 2020 20:05:07 +0300
-Message-Id: <c57e7ebabfa970014f073b92fe95b47d3e5a70b1.1593788312.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH v3 2/6] dt-bindings: clock: Add APB, DMAC, GPIO bindings for Actions S500 SoC
+Date:   Fri,  3 Jul 2020 20:05:08 +0300
+Message-Id: <67112af4f5bc0cc5e70ce8410feb369cc72972b8.1593788312.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
 References: <cover.1593788312.git.cristian.ciocaltea@gmail.com>
@@ -83,36 +83,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The h_clk clock in the Actions Semi S500 SoC clock driver has an
-invalid parent. Replace with the correct one.
+Add the missing APB, DMAC and GPIO clock bindings constants for
+Actions Semi S500 SoC.
 
-Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
 Changes in v3:
- - Added Fixes tag
- - Added Mani's Reviewed-by tag
+ - Preserved the original values of the existing bindings and moved
+   the newly added constants bellow, as indicated by Stephen
 
 Changes in v2:
  - None
 
- drivers/clk/actions/owl-s500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/dt-bindings/clock/actions,s500-cmu.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-index e2007ac4d235..0eb83a0b70bc 100644
---- a/drivers/clk/actions/owl-s500.c
-+++ b/drivers/clk/actions/owl-s500.c
-@@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
- static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
+diff --git a/include/dt-bindings/clock/actions,s500-cmu.h b/include/dt-bindings/clock/actions,s500-cmu.h
+index 030981cd2d56..a250a52a6192 100644
+--- a/include/dt-bindings/clock/actions,s500-cmu.h
++++ b/include/dt-bindings/clock/actions,s500-cmu.h
+@@ -72,7 +72,12 @@
+ #define CLK_NAND		52
+ #define CLK_ECC			53
+ #define CLK_RMII_REF		54
++#define CLK_GPIO		55
  
- /* divider clocks */
--static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-+static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
- static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
+-#define CLK_NR_CLKS	       (CLK_RMII_REF + 1)
++/* system clock (part 2) */
++#define CLK_APB			56
++#define CLK_DMAC		57
++
++#define CLK_NR_CLKS		(CLK_DMAC + 1)
  
- /* factor clocks */
+ #endif /* __DT_BINDINGS_CLOCK_S500_CMU_H */
 -- 
 2.27.0
 
