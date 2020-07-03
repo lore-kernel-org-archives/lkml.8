@@ -2,137 +2,114 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2561C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B499020723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3FF20723
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvLZF1xJ"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R6OndPXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgGCKkq (ORCPT
+        id S1726276AbgGCKlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgGCKkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:40:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0FDC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 03:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fmVZy/L7vQSjkLgXMS2UoYcdHGF2DttwAYv3wCpQ/6I=; b=kvLZF1xJUMQ2Kl3DH0zhSAOgAh
-        upfnmRJi7AVzkPipzkFQLK+6prEEmNZi8MB7MEDm0C3dPJaKJdricuEPl7mC/Ehnuj16AzBQ/vPEf
-        rMSTJM+bSwGBcfZrcXj1bAvKAHx+e6jY2YOn4BSNPMx1VX/fE5y3PS+GKQGc05/caT4FpY0F3tS/e
-        zfFOp+40+jPzsS0Hlo9k1BlBy94jW+AhHi2Eb+ZT2LUs1gJORPxGNZ8WCxLwu383hG7wX2AISBF6U
-        pu7e6Iy/xGVDgHLz/MM97dXnPzB/7m1aB0K+Cbp8Tqe/xgCuAKn9Il5Vbg965fSyPhLc0ovX3kpyB
-        KlwAcMew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrJ7U-0006QM-Nt; Fri, 03 Jul 2020 10:40:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CA0C030411F;
-        Fri,  3 Jul 2020 12:40:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AA98A20B0AB14; Fri,  3 Jul 2020 12:40:33 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 12:40:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Dave Jones <davej@codemonkey.org.uk>,
-        Linux Kernel <linux-kernel@vger.kernel.org>, mingo@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: weird loadavg on idle machine post 5.7
-Message-ID: <20200703104033.GK117543@hirez.programming.kicks-ass.net>
-References: <20200702171548.GA11813@codemonkey.org.uk>
- <20200702213627.GF3183@techsingularity.net>
- <20200703090226.GV4800@hirez.programming.kicks-ass.net>
+        Fri, 3 Jul 2020 06:41:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43731 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbgGCKlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 06:41:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49ys2R4MTvz9sQt;
+        Fri,  3 Jul 2020 20:41:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1593772881;
+        bh=ouQdbcbhXEsmtXFYa0vga5m4RkRqU+lSip6svPkAoWE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=R6OndPXLKtiDiQ1Yg6qZjpgHLC6/QS2AlJZYtOzMgFSeYNh6Sx3B0ltJCzh7sjte5
+         WiiVS0RAL5X390ALRNp7CDkU1RVQeSH9Wca2ibJ08WXyPDBnyYO+Gxoy56H8T0H24A
+         F6WMbq5RKm4waWWNoG6ZJkS8Z04QD4Qfen0kPPO+o9GKjqMlrQM4oL+Hip9uWVFMld
+         UPez+VVedhg6+MIFlsUQ+LqzA6fjTMk4Lbg8v+KsyVDGxyvtiP2F5mRej5ntf0lZ9k
+         3JqKlIL/mXbyppKeQNjGxRorukCOGXpRzvqKB7CGr+jE5Hsx4Z3fp9XtqzVesL+Bm3
+         JD0xFqCJG+Szw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 (RESEND) 2/3] mm/sparsemem: Enable vmem_altmap support in vmemmap_alloc_block_buf()
+In-Reply-To: <20200702140752.GF22241@gaia>
+References: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com> <1592442930-9380-3-git-send-email-anshuman.khandual@arm.com> <20200702140752.GF22241@gaia>
+Date:   Fri, 03 Jul 2020 20:43:33 +1000
+Message-ID: <87blkw7uay.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703090226.GV4800@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:02:26AM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 02, 2020 at 10:36:27PM +0100, Mel Gorman wrote:
-> 
-> > > commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
-> > > Author: Peter Zijlstra <peterz@infradead.org>
-> 
-> > Peter, I'm not supremely confident about this but could it be because
-> > "p->sched_contributes_to_load = !!task_contributes_to_load(p)" potentially
-> > happens while a task is still being dequeued? In the final stages of a
-> > task switch we have
-> > 
-> >         prev_state = prev->state;
-> >         vtime_task_switch(prev);
-> >         perf_event_task_sched_in(prev, current);
-> >         finish_task(prev);
-> > 
-> > finish_task is when p->on_cpu is cleared after the state is updated.
-> > With the patch, we potentially update sched_contributes_to_load while
-> > p->state is transient so if the check below is true and ttwu_queue_wakelist
-> > is used then sched_contributes_to_load was based on a transient value
-> > and potentially wrong.
-> 
-> I'm not seeing it. Once a task hits schedule(), p->state doesn't change,
-> except through wakeup.
-> 
-> And while dequeue depends on p->state, it doesn't change it.
-> 
-> At this point in ttwu() we know p->on_rq == 0, which implies dequeue has
-> started, which means we've (at least) stopped executing the task -- we
-> started or finished schedule().
-> 
-> Let me stare at this more...
+Catalin Marinas <catalin.marinas@arm.com> writes:
+> On Thu, Jun 18, 2020 at 06:45:29AM +0530, Anshuman Khandual wrote:
+>> There are many instances where vmemap allocation is often switched between
+>> regular memory and device memory just based on whether altmap is available
+>> or not. vmemmap_alloc_block_buf() is used in various platforms to allocate
+>> vmemmap mappings. Lets also enable it to handle altmap based device memory
+>> allocation along with existing regular memory allocations. This will help
+>> in avoiding the altmap based allocation switch in many places.
+>> 
+>> While here also implement a regular memory allocation fallback mechanism
+>> when the first preferred device memory allocation fails. This will ensure
+>> preserving the existing semantics on powerpc platform. To summarize there
+>> are three different methods to call vmemmap_alloc_block_buf().
+>> 
+>> (., NULL,   false) /* Allocate from system RAM */
+>> (., altmap, false) /* Allocate from altmap without any fallback */
+>> (., altmap, true)  /* Allocate from altmap with fallback (system RAM) */
+> [...]
+>> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+>> index bc73abf0bc25..01e25b56eccb 100644
+>> --- a/arch/powerpc/mm/init_64.c
+>> +++ b/arch/powerpc/mm/init_64.c
+>> @@ -225,12 +225,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>>  		 * fall back to system memory if the altmap allocation fail.
+>>  		 */
+>>  		if (altmap && !altmap_cross_boundary(altmap, start, page_size)) {
+>> -			p = altmap_alloc_block_buf(page_size, altmap);
+>> -			if (!p)
+>> -				pr_debug("altmap block allocation failed, falling back to system memory");
+>> +			p = vmemmap_alloc_block_buf(page_size, node,
+>> +						    altmap, true);
+>> +		} else {
+>> +			p = vmemmap_alloc_block_buf(page_size, node,
+>> +						    NULL, false);
+>>  		}
+>> -		if (!p)
+>> -			p = vmemmap_alloc_block_buf(page_size, node);
+>>  		if (!p)
+>>  			return -ENOMEM;
+>
+> Is the fallback argument actually necessary. It may be cleaner to just
+> leave the code as is with the choice between altmap and NULL. If an arch
+> needs a fallback (only powerpc), they have the fallback in place
+> already. I don't see the powerpc code any better after this change.
 
-So ARM/Power/etc.. can speculate the load such that the
-task_contributes_to_load() value is from before ->on_rq.
+Yeah I agree.
 
-The compiler might similar re-order things -- although I've not found it
-doing so with the few builds I looked at.
-
-So I think at the very least we should do something like this. But i've
-no idea how to reproduce this problem.
-
-Mel's patch placed it too far down, as the WF_ON_CPU path also relies on
-this, and by not resetting p->sched_contributes_to_load it would skew
-accounting even worse.
-
----
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fcd56f04b706..cba8a56d0f7f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2799,9 +2799,6 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	}
- 
- #ifdef CONFIG_SMP
--	p->sched_contributes_to_load = !!task_contributes_to_load(p);
--	p->state = TASK_WAKING;
--
- 	/*
- 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
- 	 * possible to, falsely, observe p->on_cpu == 0.
-@@ -2823,6 +2820,9 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 */
- 	smp_rmb();
- 
-+	p->sched_contributes_to_load = !!task_contributes_to_load(p);
-+	p->state = TASK_WAKING;
-+
- 	/*
- 	 * If the owning (remote) CPU is still in the middle of schedule() with
- 	 * this task as prev, considering queueing p on the remote CPUs wake_list
+cheers
