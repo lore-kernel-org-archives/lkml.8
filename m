@@ -2,191 +2,115 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE799C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD99C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9030320782
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1A220782
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NuCxf3z6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NpNw9mV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGCNiW (ORCPT
+        id S1726376AbgGCNj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgGCNiV (ORCPT
+        Fri, 3 Jul 2020 09:39:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50879 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726048AbgGCNj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:38:21 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D451BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 06:38:21 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id s26so374807pfm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 06:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VFd81vfcBlp3Es3dpBrxLjfarRsAbMK7vh/f9iOrSDw=;
-        b=NuCxf3z6WqYbYeQD/SMMZHBdiw6c5t9v2q2YxbZrv6Zaojas+kJuGUPC1ScH7uZsRR
-         nhRA4XbnmEDBnvoEL/VQb4tVkpOR+vU5/B7CoUjVkszSCSjS3uj0/hyrUqVqFQvFz9j4
-         QT+FXMZBN4nUHJPeu86Z45y33e3NPSmT2+OLc+/8MdEUhStLRgzRPTFwyMpEvmH7fV/w
-         95tZySfGDiSLOx1MtiJ9PrDDwRtQgo+nHLid4jIjTgr+SBXiNUXdvNw1Ltzth6tQgsOM
-         IjHE+gYbI63OwcA5yBDU4LFKa9ZLSzzVgCmKLlUXiMJcVdwNuHmQOtnQaRQg4cN/xmxB
-         gRIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VFd81vfcBlp3Es3dpBrxLjfarRsAbMK7vh/f9iOrSDw=;
-        b=uGEoSBVnvKyKEWQ+3KiKU5IQqbyJl2o258w/dYMLOErjRoxSZD/9tMngihsC/np+b4
-         neaDGHeVToEOgHBxFpvFafoaeVgetgdCJJpf8+Dn7ibyc6w8fJd/3CYKQwHiipPXOXc4
-         6rzmlFVBGBVe1s3nAv3Qm4ese9G1j3nRlLsGldO9Bx9GkUbuq0Piuaz9d3KqspJyxJLE
-         j90+Ahyln6QmwTjQFQhptHvdzm2h6gC5Kqa8U52aZ8URy/4FNIiNlA1B86QCy1dqRjVL
-         NSBA81V9uZGG01fzkfXbHbzCFJS6Fra82/pm15ctVmlZX0COY6OdxprM6wCR8yHMMFKD
-         EOSg==
-X-Gm-Message-State: AOAM532neMdZ1zUgWi5Caf00/rGY90CcaIgwHnL9K13fMqyaacr0B2J6
-        u36J8ixc9xMRqmZmlCKwHis0Vs9lEND7XYqY
-X-Google-Smtp-Source: ABdhPJyfIBGoalH1o3MDckuQZrNhSkZAWShuJgSblfifU72BKYDJBrIzFNPbd90TLvmj4l57K/RIwQ==
-X-Received: by 2002:a63:db46:: with SMTP id x6mr26092809pgi.265.1593783501349;
-        Fri, 03 Jul 2020 06:38:21 -0700 (PDT)
-Received: from blackclown ([103.88.83.224])
-        by smtp.gmail.com with ESMTPSA id d9sm12219404pgv.45.2020.07.03.06.38.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jul 2020 06:38:20 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 19:08:06 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     airlied@linux.ie, daniel@ffwll.ch, mripard@kernel.org
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm: connector: Indent code using tabs.
-Message-ID: <20200703133805.GA11191@blackclown>
+        Fri, 3 Jul 2020 09:39:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593783567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Td4QKttHcVBeWloZzMNJtuF2odL1QYLKXY8pp4abVHs=;
+        b=NpNw9mV8bK/O3AW47kr+i1kuhxlKhXUktiflEyWQV0Ll+V9cM+ihwE4JP1Cwtb7nwP0rsx
+        TAKTtp3fVjd43ckRxHGCo8RL20DVlojtvEFu9JmxTeVzMOFOI8SadXX9uE8X2h3F2Gawhx
+        r9RBTpOWLY7EV5H96BG6P0z79kENHhg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-408-KX72pwCgMdS8-8e3QzyQlg-1; Fri, 03 Jul 2020 09:39:24 -0400
+X-MC-Unique: KX72pwCgMdS8-8e3QzyQlg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9640CBFC4;
+        Fri,  3 Jul 2020 13:39:22 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-0.ams2.redhat.com [10.36.114.0])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 170677AC7D;
+        Fri,  3 Jul 2020 13:39:17 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+Date:   Fri,  3 Jul 2020 15:39:08 +0200
+Message-Id: <20200703133917.39045-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series is based on the latest s390/features branch [1]. It implements
+vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
+- Freeing empty page tables (now also done for idendity mapping).
+- Handling cases where the vmemmap of a section does not fill huge pages
+  completely.
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+vmemmap_free() is currently never used, unless adiing standby memory fails
+(unlikely). This is relevant for virtio-mem, which adds/removes memory
+in memory block/section granularity (always removes memory in the same
+granularity it added it).
 
-Replace space-indents with tab-indents.
-Issues found with checkpatch.
+I gave this a proper test with my virtio-mem prototype (which I will share
+once the basic QEMU implementation is upstream), both with 56 byte memmap
+per page and 64 byte memmap per page, with and without huge page support.
+In both cases, removing memory (routed through arch_remove_memory()) will
+result in
+- all populated vmemmap pages to get removed/freed
+- all applicable page tables for the vmemmap getting removed/freed
+- all applicable page tables for the idendity mapping getting removed/freed
+Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
+environments.
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/gpu/drm/drm_connector.c | 38 ++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+This is the basis for real memory hotunplug support for s390x and should
+complete my journey to s390x vmem/vmemmap code for now :)
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connecto=
-r.c
-index 00e40a26a800..441d4075dfa5 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -1906,11 +1906,11 @@ int drm_connector_set_path_property(struct drm_conn=
-ector *connector,
- 	int ret;
-=20
- 	ret =3D drm_property_replace_global_blob(dev,
--	                                       &connector->path_blob_ptr,
--	                                       strlen(path) + 1,
--	                                       path,
--	                                       &connector->base,
--	                                       dev->mode_config.path_property);
-+					       &connector->path_blob_ptr,
-+					       strlen(path) + 1,
-+					       path,
-+					       &connector->base,
-+					       dev->mode_config.path_property);
- 	return ret;
- }
- EXPORT_SYMBOL(drm_connector_set_path_property);
-@@ -1936,11 +1936,11 @@ int drm_connector_set_tile_property(struct drm_conn=
-ector *connector)
-=20
- 	if (!connector->has_tile) {
- 		ret  =3D drm_property_replace_global_blob(dev,
--		                                        &connector->tile_blob_ptr,
--		                                        0,
--		                                        NULL,
--		                                        &connector->base,
--		                                        dev->mode_config.tile_property);
-+							&connector->tile_blob_ptr,
-+							0,
-+							NULL,
-+							&connector->base,
-+							dev->mode_config.tile_property);
- 		return ret;
- 	}
-=20
-@@ -1951,11 +1951,11 @@ int drm_connector_set_tile_property(struct drm_conn=
-ector *connector)
- 		 connector->tile_h_size, connector->tile_v_size);
-=20
- 	ret =3D drm_property_replace_global_blob(dev,
--	                                       &connector->tile_blob_ptr,
--	                                       strlen(tile) + 1,
--	                                       tile,
--	                                       &connector->base,
--	                                       dev->mode_config.tile_property);
-+					       &connector->tile_blob_ptr,
-+					       strlen(tile) + 1,
-+					       tile,
-+					       &connector->base,
-+					       dev->mode_config.tile_property);
- 	return ret;
- }
- EXPORT_SYMBOL(drm_connector_set_tile_property);
-@@ -2024,10 +2024,10 @@ int drm_connector_update_edid_property(struct drm_c=
-onnector *connector,
-=20
- 	ret =3D drm_property_replace_global_blob(dev,
- 					       &connector->edid_blob_ptr,
--	                                       size,
--	                                       edid,
--	                                       &connector->base,
--	                                       dev->mode_config.edid_property);
-+					       size,
-+					       edid,
-+					       &connector->base,
-+					       dev->mode_config.edid_property);
- 	if (ret)
- 		return ret;
- 	return drm_connector_set_tile_property(connector);
---=20
-2.17.1
+What needs double-checking is tlb flushing. AFAIKS, as there are no valid
+accesses, doing a single range flush at the end is sufficient, both when
+removing vmemmap pages and the idendity mapping.
 
+Along, some minor cleanups.
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features
 
------BEGIN PGP SIGNATURE-----
+David Hildenbrand (9):
+  s390/vmem: rename vmem_add_mem() to vmem_add_range()
+  s390/vmem: recursive implementation of vmem_remove_range()
+  s390/vmemmap: implement vmemmap_free()
+  s390/vmemmap: cleanup when vmemmap_populate() fails
+  s390/vmemmap: take the vmem_mutex when populating/freeing
+  s390/vmem: cleanup empty page tables
+  s390/vmemmap: fallback to PTEs if mapping large PMD fails
+  s390/vmemmap: remember unused sub-pmd ranges
+  s390/vmemmap: avoid memset(PAGE_UNUSED) when adding consecutive
+    sections
 
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl7/NL0ACgkQ+gRsbIfe
-745R2Q/+MrJ/7YsoeXHWQ5EIqUEJZeTQ0ohelFWFDlBOMNFjEWFIa9YI2+PK+zCS
-e+1Mm8vso9bcMBm42ahPUXkd42SKmUUTABQuq2FU15XQn0A7M9LOFliEqpmAnSYi
-BkOztVjxxq3rTcCM7VfGn7oytGtctu3Aruhk3MvdyvoTBzxRhLXLBuQfPfesUQoc
-ErzUBg4JAAD07erPir1XeliEQ/616qL+mozqqsnu5Ol7p9wV0zrmhLyF1uZIFYVT
-eP0V8YQEaJWOHXgplefcCY0f3kYnac971IzQgh9x13cgqYez22WTq6PmedP70/AY
-EQza2Qei/dsWHq6pUIaMjdTVes8psBnKTRriaJu68RSISID8oInueDUNcwD+tdrQ
-/gdHqppTadpozO36GjvCm72MJIQHoAveK8sqy/mF3UTWt5qucSgGk10sBMH3E7/f
-lhyGQiTRFVANRzBjPwrJu+lABL9dd0ItKJfzibydagcgs0GtKHVYIuv3hpHx5ARg
-YDzhq+tizgl6Vir8sBEPTKuywCANYRTlugutNitBO3IB/UzAmDSj8E+vUAK3XD6i
-7jFQnFeDpQNB5bAtVPXbuoioxAwXGQ49Mb3S7I6LjEJLiEXsLNftcVaTIeyhVqPb
-aMVP4fp6jfOlVu+NLMUVJLzR51e+fnAd+srKegPLDbV4OSSD4S4=
-=yF/2
------END PGP SIGNATURE-----
+ arch/s390/mm/vmem.c | 400 +++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 338 insertions(+), 62 deletions(-)
 
---bp/iNruPH9dso1Pn--
+-- 
+2.26.2
+
