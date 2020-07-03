@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B96AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BABC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E0E20723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8DE206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m0UNO7Mg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="15hnLrJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgGCX4K (ORCPT
+        id S1726996AbgGCX4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 19:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgGCX4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 19:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgGCX4B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 19:56:01 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04DFC061794;
-        Fri,  3 Jul 2020 16:56:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37A7C061794;
+        Fri,  3 Jul 2020 16:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=D7EX432nBtFqEp+MkJk86I1HSm+ERI1CDHH4KbcFcsA=; b=m0UNO7MgnL2+ty7U0Ocf4wRAPB
-        hBKWVGxtv/P3rPrTHSNDQWIIfoAhpcfVM7wwp9pmROcdcpVdAMi/znyIcXCqQCgaZ0iJeJ2UZfYUz
-        vl6uehSzLCGIDmF9BnauOF9uWobp+4Xdbo1x+sTgzuhLB+aZah8S25+br0EKBSV/PrIWGfGmCRNr1
-        Yu5XcPndqXlPRUQZe7RLCzgG0mx08sQDy4Dfh0PO2nlwMCjQEcv/b2MZZzX2A92Fb90lpMj77wbVV
-        UCWxzHZcm9IEwlnemk/zy/ikhzaTxnm+z7sXzKr1fOrMgfoP2lP1XjXHaKPmV95JLDiWyrAYYUePp
-        0Hem3HjQ==;
+        bh=naGz2EMyylKfCnoRSBwBVSaswzKbz0iw+wbLf0m3Sgc=; b=15hnLrJbJdMr26B6FYkCmRx8iS
+        h2tmjG+TYDYLZp+JO/6HmQDOG6Hg7R3xM8mZcmRZLv0Ohpyvyx2Mse7Uikuk3WXXU9A/x2xGyVerK
+        XK/Grhltv8uSaSNlG3PejPIZWCL9xAWHMXJ3CJqCVwe7MEsPiKwDrI/Agg85CwazbpgdqYDvqJRd6
+        QgRAjabEps5X/tVpmQfUFzMfR2ZG5lAVaiMGA4lX0UYZBrpmNu9TmGolleXODjO204WS2qv8rnjNX
+        nJz3P8XVmZp+3xwOJJUkX4FbTjjUIHOxzDKPz65zZYzO0/fET1Rs1PO9kNmvj3d7G/Bcl8mI+Akh0
+        OR4qfj8A==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrVXH-0005uW-C4; Fri, 03 Jul 2020 23:56:03 +0000
+        id 1jrVXC-0005uW-E0; Fri, 03 Jul 2020 23:55:58 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org
-Subject: [PATCH 09/11] Documentation: userspace-api/media: v4l/vidioc-g-ext-ctrls: drop doubled word
-Date:   Fri,  3 Jul 2020 16:55:34 -0700
-Message-Id: <20200703235536.30416-10-rdunlap@infradead.org>
+Subject: [PATCH 07/11] Documentation: userspace-api/media: dvb/audio: drop doubled word
+Date:   Fri,  3 Jul 2020 16:55:32 -0700
+Message-Id: <20200703235536.30416-8-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200703235536.30416-1-rdunlap@infradead.org>
 References: <20200703235536.30416-1-rdunlap@infradead.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "controls".
+Drop the doubled word "Any".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
@@ -66,17 +66,17 @@ Cc: linux-doc@vger.kernel.org
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: linux-media@vger.kernel.org
 ---
- Documentation/userspace-api/media/v4l/vidioc-g-ext-ctrls.rst |    2 +-
+ Documentation/userspace-api/media/v4l/buffer.rst |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200701.orig/Documentation/userspace-api/media/v4l/vidioc-g-ext-ctrls.rst
-+++ linux-next-20200701/Documentation/userspace-api/media/v4l/vidioc-g-ext-ctrls.rst
-@@ -61,7 +61,7 @@ by the ``controls`` fields.
- To get the current value of a set of controls applications initialize
- the ``id``, ``size`` and ``reserved2`` fields of each struct
- :c:type:`v4l2_ext_control` and call the
--:ref:`VIDIOC_G_EXT_CTRLS <VIDIOC_G_EXT_CTRLS>` ioctl. String controls controls must also set the
-+:ref:`VIDIOC_G_EXT_CTRLS <VIDIOC_G_EXT_CTRLS>` ioctl. String controls must also set the
- ``string`` field. Controls of compound types
- (``V4L2_CTRL_FLAG_HAS_PAYLOAD`` is set) must set the ``ptr`` field.
- 
+--- linux-next-20200701.orig/Documentation/userspace-api/media/v4l/buffer.rst
++++ linux-next-20200701/Documentation/userspace-api/media/v4l/buffer.rst
+@@ -615,7 +615,7 @@ Buffer Flags
+ 	:ref:`VIDIOC_DQBUF <VIDIOC_QBUF>` ioctl is called. Due to
+ 	hardware limitations, the last buffer may be empty. In this case
+ 	the driver will set the ``bytesused`` field to 0, regardless of
+-	the format. Any Any subsequent call to the
++	the format. Any subsequent call to the
+ 	:ref:`VIDIOC_DQBUF <VIDIOC_QBUF>` ioctl will not block anymore,
+ 	but return an ``EPIPE`` error code.
+     * .. _`V4L2-BUF-FLAG-REQUEST-FD`:
