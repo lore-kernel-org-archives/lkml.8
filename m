@@ -2,72 +2,110 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DATE_IN_PAST_24_48,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B023A208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6E9208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:03:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZV3DqdoA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgGCDCe (ORCPT
+        id S1726150AbgGCDDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:02:34 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:52016 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGCDCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:02:34 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 06330CNh013393
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Thu, 2 Jul 2020 20:00:45 -0700
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Jul 2020 20:00:06 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <ben.dooks@codethink.co.uk>, <bfields@redhat.com>,
-        <cl@rock-chips.com>, <peterz@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] kthread: Don't cancel a work that is being cancelled
-Date:   Thu, 2 Jul 2020 09:13:50 +0800
-Message-ID: <20200702011350.32125-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 2 Jul 2020 23:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCDDD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:03:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2457C08C5C1;
+        Thu,  2 Jul 2020 20:03:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j1so13380021pfe.4;
+        Thu, 02 Jul 2020 20:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pvp5GqQnObwsM2WQjJTtbVs7GSQZ7G4lQMiDZtzgLT0=;
+        b=ZV3DqdoAbv0sFGAPIy2vkGDpPQM3nJTjXxSxp1azMqqhWwEFZ4MNgt6imgmKYn5em9
+         I//8hxGOtjnFDUE87+sSiEPaqAZBuo1MA3v5wIJEkoKRw2uCndE3p0nq94bDdxm4GhAZ
+         NIYLUq7Jb8NgNXvScBQUQn8HhKRwuhU085HiMk/G+Z+0GtfDsbGK5V+Nhq4O+r7Wv6WO
+         3/Xdt/7xjKCGo0FyRtZ9AVsEbouMwK2gBxWlv9zi9XVjf/u99YBtc0DAUFdQ5fjkX1V7
+         dnerw5o3FWksd0dsim81SKJkQu6qVj+pHFJgBMjFYxuuKn1G1aJm8sVPbNZycGvysmLF
+         fBzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Pvp5GqQnObwsM2WQjJTtbVs7GSQZ7G4lQMiDZtzgLT0=;
+        b=Z11McIv6oF6ul+/eDDyOPSnHJrgpxtU0c89W3Ufes/tjVfpYalYcm2bD3ZpU57AQYO
+         JU0TcUIL5yQMikQawJMs8FtQzj6jZIgv3fm/xEe3nd7/SCYivjy2QsklXjO0CQXiDZTh
+         iKhKNz8fTbEsTH8PgqR+CmydUhCtho708BCL2PJ+EYU+8yEpE68HaeZKX2cIiKH7/fIf
+         Y58iKzATgYwR6+m/fEHad8OE/vZsNpKI9PRBdh0tUHc49E4y7wvzN1DxuDKgCga5bhl0
+         zh34kk3ebqVODzuVGe1xK47zslvMzCQzBdhwmp9yiWMHZwyBtg/cZUpJApDwHZfuHUL2
+         iX3w==
+X-Gm-Message-State: AOAM531LFyuTlMGsH44XVCrLIEDmtkVdAbEkdvSuJxOxgixxNAkrmkdS
+        KjGCJ+QE0B52nIsvjtFhmlw=
+X-Google-Smtp-Source: ABdhPJxqzBmZHDywKghAsAeSDH/TwjeYkBmOSJz/G1Ubh82iVyKdl/rlDNKTcaA6NcZxDscaEEpD3A==
+X-Received: by 2002:a63:5821:: with SMTP id m33mr27669386pgb.43.1593745383084;
+        Thu, 02 Jul 2020 20:03:03 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id h194sm9903223pfe.201.2020.07.02.20.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 20:03:02 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steve Glendinning <steve.glendinning@shawell.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 0/2] smsc: use generic power management
+Date:   Fri,  3 Jul 2020 08:31:36 +0530
+Message-Id: <20200703030138.25724-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-When canceling a work, if it is found that the work is in
-the cancelling state, we should directly exit the cancelled
-operation.
+The purpose of this patch series is to remove legacy power management callbacks
+from smsc ethernet drivers.
 
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
----
- kernel/kthread.c | 3 +++
- 1 file changed, 3 insertions(+)
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the power management
+themselves, which is not recommended.
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa481be3a..1166f2043e67 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -1103,6 +1103,9 @@ static bool __kthread_cancel_work_sync(struct kthread_work *work, bool is_dwork)
- 	/* Work must not be used with >1 worker, see kthread_queue_work(). */
- 	WARN_ON_ONCE(work->worker != worker);
- 
-+	if (work->canceling)
-+		goto out_fast;
-+
- 	ret = __kthread_cancel_work(work, is_dwork, &flags);
- 
- 	if (worker->current_work != work)
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
+
+All patches are compile-tested only.
+
+V2: Kbuild in V1, warning: variable 'err' is used uninitialized whenever 'if'
+conditio is false in funcution .resume() .
+
+Vaibhav Gupta (2):
+  epic100: use generic power management
+  smsc9420: use generic power management
+
+ drivers/net/ethernet/smsc/epic100.c  | 19 +++++--------
+ drivers/net/ethernet/smsc/smsc9420.c | 40 ++++++++--------------------
+ 2 files changed, 17 insertions(+), 42 deletions(-)
+
 -- 
-2.24.1
+2.27.0
 
