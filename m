@@ -2,142 +2,75 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA09DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E30C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C47E720723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6986F2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LMgDqgWY"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qS4t1aGR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgGCJrp (ORCPT
+        id S1726074AbgGCJvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgGCJro (ORCPT
+        Fri, 3 Jul 2020 05:51:23 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:53308 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725796AbgGCJvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:47:44 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE97C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:47:44 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id j18so31438093wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 02:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CkcJhb/CNLx6sxUe4/rACgYtwPj1y+jwOacbPr50x+o=;
-        b=LMgDqgWYbV1ZdV2LtPqUvab8ZY0vFAONXEIH4JLdgaLKjTv+JbfmTKXCgEPPkZLyzW
-         HigqLuD7MComI4DLhGktyLL0ZVy+DYZ9DZPT7nsnq/wugK2N+EPcAgu5W1Jyaa8sOgwH
-         YePRTaGZE0HTQpRqUovayORqwiVS90wk13Mt3oA+FZnKonc0pIE9vB4paaYYPEUcJkV5
-         Xpog7VEhMaYXz30xj7wL43As28gv49KjE9AOM18IjzVkMW/OEkrjBR4cAqJYc9B57URd
-         iLZVddIUUWayocz+8SkwXERSqfm26ClOov8LghNpeWYBx3CxlguJtye4KLJ8+sv73F6u
-         kreg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CkcJhb/CNLx6sxUe4/rACgYtwPj1y+jwOacbPr50x+o=;
-        b=ARhuG5aPAjHb0loLsHhr0o2HwMYNUcRFuO4vOAVRHg7vmK/Ay93K05WcQFtKPDcCrJ
-         OS25Blf3bbpCJ3lrf2mvG4Ek73T++Zm4gIKGkLQMwIS+xbYxRKRmpcI1XYMRKUSnhqIT
-         5iITYR9Wj2AnIokLkVPvohOp35MiQ7WHdJWR0D/MeVgCqbQykP4M7gFSZY9damHszmu3
-         w9LX85U1Fi8QTX81WfkGG6e7GxpjoRwQaQkNEh6c8lMfIaQ34EFLk+ykbYvWOms1QKEV
-         IMivl02CwBvMmK5EzcfEL71ukqNrY2NRSRNnGyV7Jk7TqXEu/DSgxy6wKkTylXNAMYZx
-         AsVg==
-X-Gm-Message-State: AOAM531jpywt9xi9XiJEmLrJOGQ/J98s0MSlJJP30YnOUZ1kCI6ganRn
-        pq4fuTZ9PBU4lD+Du1yhn9aa3g==
-X-Google-Smtp-Source: ABdhPJxUfA4HJx4Qj0EEgXwmd8e1DOTHGcqfQjIPYwamRL2l5AP7q+n0kNWsBx+aP3bY74kbgonzAA==
-X-Received: by 2002:a1c:5418:: with SMTP id i24mr34495057wmb.47.1593769661935;
-        Fri, 03 Jul 2020 02:47:41 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c11sm12711773wmb.45.2020.07.03.02.47.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Jul 2020 02:47:41 -0700 (PDT)
-Subject: Re: [RFC PATCH] ALSA: compress: add support to change codec profile
- in gapless playback
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
-        plai@codeaurora.org
-Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, vathota@codeaurora.org, bgoswami@codeaurora.org
-References: <20200702111114.32217-1-srinivas.kandagatla@linaro.org>
- <90ed95e0-8b01-6c87-b86b-dfa463181527@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <2444711a-319e-1f9b-1289-7744bb1a2987@linaro.org>
-Date:   Fri, 3 Jul 2020 10:47:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 3 Jul 2020 05:51:23 -0400
+X-UUID: 3f2ac1dc8754475295786640908615f3-20200703
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jsMFJtcW/JnItlp79G6hD6yY/tk89ErR3jd+rCAsl/A=;
+        b=qS4t1aGREGKIYkBDX7FYsJa5N5tHKwJP1kvJjAZGhbGePXUKI/gMI4WBWsPjzyVlpAJmS8Mcf/fSh2Q70PQ9JnqgBXRty4TaPUbwPCO+2tUPyrj+SBsl7LE5CNt0Vh/cSjugXdpw2/3T2VRiSvKsubTdWGfYfBD0CntbCEKTJcc=;
+X-UUID: 3f2ac1dc8754475295786640908615f3-20200703
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1627870794; Fri, 03 Jul 2020 17:51:18 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jul
+ 2020 17:51:15 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Fri, 3 Jul 2020 17:51:14 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH] drm/panel: auo,b116xw03: fix flash backlight when power on
+Date:   Fri, 3 Jul 2020 17:51:13 +0800
+Message-ID: <20200703095113.55712-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <90ed95e0-8b01-6c87-b86b-dfa463181527@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 5574DF20B4595058467B711402DB5E47F26C70718F5EC942B9184F35BC2AFF532000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Pierre for the comments,
+RGVsYXkgdGhlIGJhY2tsaWdodCBvbiB0byBtYWtlIHN1cmUgdGhlIHZpZGVvIHN0YWJsZS4NCg0K
+U2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPg0KLS0tDQog
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIHwgMyArKysNCiAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMN
+CmluZGV4IDNhZDgyOGVhZWZlMS4uMThmMzRmMjg2ZDNkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwv
+cGFuZWwtc2ltcGxlLmMNCkBAIC03MzQsNiArNzM0LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBw
+YW5lbF9kZXNjIGF1b19iMTE2eHcwMyA9IHsNCiAJCS53aWR0aCA9IDI1NiwNCiAJCS5oZWlnaHQg
+PSAxNDQsDQogCX0sDQorCS5kZWxheSA9IHsNCisJCS5lbmFibGUgPSA0MDAsDQorCX0sDQogfTsN
+CiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYXVvX2IxMzN4dG4wMV9t
+b2RlID0gew0KLS0gDQoyLjI1LjENCg==
 
-+Adding Patric Lai into loop,
-
-
-
-On 02/07/2020 16:00, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 7/2/20 6:11 AM, Srinivas Kandagatla wrote:
->> For gapless playback its possible that each track can have different
->> codec profile with same decoder, for example we have WMA album,
->> we may have different tracks as WMA v9, WMA v10 and so on
->>
->> Existing code does not allow to change this profile while doing gapless
->> playback.
->>
->> This patch adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL to allow
->> userspace to set this new parameters required for new codec profile.
-> 
-> That does not seem fully correct to me. WMA profiles are actually 
-> different encoding schemes - specifically the WMA 10 LBR.
-> 
-> The premise for gapless playback was that the same codec and profile be 
-> used between tracks, so that the same internal delay was used. If you 
-> look at the output data, it's made of zeroes for N samples, and then you 
-> see decoded data. When you change tracks, the first N samples actually 
-> come from the previous track.
-> 
-> If you change coding schemes between tracks, you cannot call this 
-> gapless playback. You will both remove the last N samples of the 
-> previous track and insert M zeroes (for the new decoder).
-> 
-> If you wanted to support such a mode, you would need to provide an 
-> indication of the delay difference, e.g. by looking at the ID3 tags and 
-> let firmware realign. Unfortunately, you don't send this information 
-> with the new IOCTL? You would also need firmware tricks for the first 
-> decoder to flush out its output and the new decoder to realign.
-> 
-> I also don't see how one might end-up with different profiles for an 
-> album in the first place. The gapless use came mostly from ripping live 
-> music recorded on audio CDs in different tracks, and it would have taken 
-> a twisted mind to select different encodings between tracks.
-> 
-> If the 'album' is really a playlist, then the gapless playback as 
-> supported by the ASoC compressed layer is nearly useless. What you would 
-> really want is cross-fade but that's a different use case and 
-> implementation that would be needed.
-
-Patrick seems to have discussed this topic in detail at one of the audio 
-conf!
-
-He might want to add more to this discussion.
-
-
-Thanks,
-srini
