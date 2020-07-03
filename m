@@ -2,248 +2,192 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7476CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723762088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5899F2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgGCPm0 (ORCPT
+        id S1726509AbgGCPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:42:26 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35594 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGCPm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:42:26 -0400
-Received: by mail-yb1-f194.google.com with SMTP id 187so15661821ybq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:42:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5LAxL4uO4XDxvHwlEd3JCGXmc8R4W7Gi9pL7QLuMUms=;
-        b=YGbkQS9nJfssEqF0/5SmftGt2DFg6vf4N4HDnDomQrtjmz8MUt+EcEh8k2/ZfrxFD1
-         +/Bp78cdbxntFxl5PWeCmScNKI5WDrC6CkR4/BiELtdlNtsqRmqYo9o+YtZGUDcyipaM
-         YgrfWmfZkT2Ys58jwCClqYzuhapQNMx4xTzk5vFD2WUmal849tNoF+hHmIkQZRAiCRrN
-         xUYCqpJ89eq3Rcq2jePFRps6d2hp3p2qKp/hj8k6IhzhjatumCFgPqOUG3+LUCI3WU+B
-         JnA15I5JLA7uq3cFfMfgFbHvG++BT/9EJvGvfsj+USX7WbymoAYGL5iADM9SUVpmkK8i
-         o/FA==
-X-Gm-Message-State: AOAM532jidp6b6y1PyCBG+Qxuhh/Zum3OOCmFVSLb5+V6hmIvBQyLcNl
-        ynSuYqKkkEP0s+fDA3j9P7QEbkfCe0ABI/Za1+uAAaKqZoA=
-X-Google-Smtp-Source: ABdhPJz3eRrHM9x9gIfw/Glqeq+NEh5F1xaujAQfLFry+atk8BYYXobTkwBUlCKsa4FEDCFmuoN1nWpj5htVu/Awr4Y=
-X-Received: by 2002:a25:4603:: with SMTP id t3mr48052500yba.471.1593790944839;
- Fri, 03 Jul 2020 08:42:24 -0700 (PDT)
+        Fri, 3 Jul 2020 11:43:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:45726 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbgGCPnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:43:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FBF431B;
+        Fri,  3 Jul 2020 08:43:21 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47F303F73C;
+        Fri,  3 Jul 2020 08:43:19 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for
+ rk3288w
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@collabora.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20200602080644.11333-1-mylene.josserand@collabora.com>
+ <1793210.9Kb5SQUFvz@phil>
+ <CAMty3ZB1n5uXmH=U4iXfgpyU-JZff74Rm2Mj+SS2LLtkM2fARQ@mail.gmail.com>
+ <1847101.XIPLBOrDxk@phil>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <8ebc6a0d-1c88-cf74-e19d-dd9f3cef728e@arm.com>
+Date:   Fri, 3 Jul 2020 16:43:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702200727.239348-1-kernel@esmil.dk>
-In-Reply-To: <20200702200727.239348-1-kernel@esmil.dk>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Fri, 3 Jul 2020 17:42:13 +0200
-Message-ID: <CANBLGczQ51LQCiubvu2HTYrdnW2q_6GY_dfVNrV6M+dnRh1KQw@mail.gmail.com>
-Subject: Re: [RFC] riscv: Add jump-label implementation
-To:     linux-riscv@lists.infradead.org
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1847101.XIPLBOrDxk@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 22:07, Emil Renner Berthing <kernel@esmil.dk> wrote:
->
-> Add basic jump-label implementation heavily based
-> on the ARM64 version.
->
-> Tested on the HiFive Unleashed.
->
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> ---
->
-> This seems to work on my HiFive Unleashed. At least boots, runs fine
-> and the static key self-tests doesn't complain, but I'm sure I've missed
-> something, so I'm sending this as an RFC.
->
-> /Emil
->
->  .../core/jump-labels/arch-support.txt         |  2 +-
->  arch/riscv/Kconfig                            |  2 +
->  arch/riscv/include/asm/jump_label.h           | 59 +++++++++++++++++++
->  arch/riscv/kernel/Makefile                    |  2 +
->  arch/riscv/kernel/jump_label.c                | 44 ++++++++++++++
->  5 files changed, 108 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/include/asm/jump_label.h
->  create mode 100644 arch/riscv/kernel/jump_label.c
->
-> diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
-> index 632a1c7aefa2..760243d18ed7 100644
-> --- a/Documentation/features/core/jump-labels/arch-support.txt
-> +++ b/Documentation/features/core/jump-labels/arch-support.txt
-> @@ -23,7 +23,7 @@
->      |    openrisc: | TODO |
->      |      parisc: |  ok  |
->      |     powerpc: |  ok  |
-> -    |       riscv: | TODO |
-> +    |       riscv: |  ok  |
->      |        s390: |  ok  |
->      |          sh: | TODO |
->      |       sparc: |  ok  |
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index fd639937e251..d2f5c53fdc19 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -46,6 +46,8 @@ config RISCV
->         select GENERIC_TIME_VSYSCALL if MMU && 64BIT
->         select HANDLE_DOMAIN_IRQ
->         select HAVE_ARCH_AUDITSYSCALL
-> +       select HAVE_ARCH_JUMP_LABEL
-> +       select HAVE_ARCH_JUMP_LABEL_RELATIVE
->         select HAVE_ARCH_KASAN if MMU && 64BIT
->         select HAVE_ARCH_KGDB
->         select HAVE_ARCH_KGDB_QXFER_PKT
-> diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
-> new file mode 100644
-> index 000000000000..29be6d351866
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/jump_label.h
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Emil Renner Berthing
-> + *
-> + * Based on arch/arm64/include/asm/jump_label.h
-> + */
-> +#ifndef __ASM_JUMP_LABEL_H
-> +#define __ASM_JUMP_LABEL_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#include <linux/types.h>
-> +
-> +#define JUMP_LABEL_NOP_SIZE 4
-> +
-> +static __always_inline bool arch_static_branch(struct static_key *key,
-> +                                              bool branch)
-> +{
-> +       asm_volatile_goto(
-> +               "       .option push                            \n\n"
-> +               "       .option norelax                         \n\n"
-> +               "       .option norvc                           \n\n"
-> +               "1:     nop                                     \n\t"
-> +               "       .option pop                             \n\n"
-> +               "       .pushsection    __jump_table, \"aw\"    \n\t"
-> +               "       .align          3                       \n\t"
-> +               "       .long           1b - ., %l[l_yes] - .   \n\t"
-> +               "       .quad           %0 - .                  \n\t"
+On 2020-07-03 15:48, Heiko Stuebner wrote:
+> Am Freitag, 3. Juli 2020, 16:23:27 CEST schrieb Jagan Teki:
+>> On Fri, Jul 3, 2020 at 7:41 PM Heiko Stuebner <heiko@sntech.de> wrote:
+>>>
+>>> Hi Jagan,
+>>>
+>>> Am Montag, 29. Juni 2020, 21:11:03 CEST schrieb Jagan Teki:
+>>>> On Tue, Jun 2, 2020 at 1:37 PM Mylène Josserand
+>>>> <mylene.josserand@collabora.com> wrote:
+>>>>>
+>>>>> The revision rk3288w has a different clock tree about "hclk_vio"
+>>>>> clock, according to the BSP kernel code.
+>>>>>
+>>>>> This patch handles this difference by detecting which device-tree
+>>>>> we are using. If it is a "rockchip,rk3288-cru", let's register
+>>>>> the clock tree as it was before. If the device-tree node is
+>>>>> "rockchip,rk3288w-cru", we will apply the difference with this
+>>>>> version of this SoC.
+>>>>>
+>>>>> Noticed that this new device-tree compatible must be handled in
+>>>>> bootloader such as u-boot.
+>>>>>
+>>>>> Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
+>>>>> ---
+>>>>>   drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
+>>>>>   1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+>>>>> index cc2a177bbdbf..204976e2d0cb 100644
+>>>>> --- a/drivers/clk/rockchip/clk-rk3288.c
+>>>>> +++ b/drivers/clk/rockchip/clk-rk3288.c
+>>>>> @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>>>>>          COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+>>>>>                          RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
+>>>>>                          RK3288_CLKGATE_CON(3), 0, GFLAGS),
+>>>>> -       DIV(0, "hclk_vio", "aclk_vio0", 0,
+>>>>> -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+>>>>>          COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+>>>>>                          RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
+>>>>>                          RK3288_CLKGATE_CON(3), 2, GFLAGS),
+>>>>> @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+>>>>>          INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
+>>>>>   };
+>>>>>
+>>>>> +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
+>>>>> +       DIV(0, "hclk_vio", "aclk_vio1", 0,
+>>>>> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+>>>>> +};
+>>>>> +
+>>>>> +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
+>>>>> +       DIV(0, "hclk_vio", "aclk_vio0", 0,
+>>>>> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+>>>>> +};
+>>>>> +
+>>>>>   static const char *const rk3288_critical_clocks[] __initconst = {
+>>>>>          "aclk_cpu",
+>>>>>          "aclk_peri",
+>>>>> @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
+>>>>>                                     RK3288_GRF_SOC_STATUS1);
+>>>>>          rockchip_clk_register_branches(ctx, rk3288_clk_branches,
+>>>>>                                    ARRAY_SIZE(rk3288_clk_branches));
+>>>>> +
+>>>>> +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
+>>>>> +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
+>>>>> +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
+>>>>> +       else
+>>>>> +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
+>>>>> +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
+>>>>> +
+>>>>
+>>>> Sorry for the late query on this. I am a bit unclear about this
+>>>> compatible change, does Linux expect to replace rockchip,rk3288-cru
+>>>> with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
+>>>> append the existing cru compatible node with rockchip,rk3288w-cru?
+>>>> because replace new cru node make clock never probe since the
+>>>> CLK_OF_DECLARE checking rockchip,rk3288-cru
+>>>
+>>> I guess right now we'd expect "rockchip,rk3288w-cru", "rockchip,rk3288-cru",
+>>>
+>>> Thinking again about this, I'm wondering if we should switch to having
+>>> only one per variant ... like on the two rk3188 variants,
+>>> so declaring separate rk3288-cru and rk3288w-cru of-clks with shared
+>>> common code.
+>>
+>> What if can check the root compatible instead cru compatible for revision W like
+>>
+>> -  if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
+>> + if (of_device_is_compatible(np, "rockchip,rk3288w"))
+> 
+> you'd need to check against the root compatible.
+> 
+>>
+>> This way we can have a single compatible update at bootloader that
+>> makes Linux adjust revision W chips code.
+>>
+>> Doesn't it make sense?
+> 
+> The compatible describes the block and the rk3288w's cru isn't the same as
+> the rk3288's ... as the clock routing is different, so it should have a
+> different compatible value, I think.
 
-With HAVE_ARCH_JUMP_LABEL_RELATIVE we get
-struct jump_entry {
-  s32 code;
-  s32 target;
-  long key;
-}
-..so this .quad and the one below should be replaced by the RISCV_PTR
-macro to match the struct in 32bit kernels.
+Right, if two devices behave differently in a way that one behaviour is 
+not a strict superset of the other, and there's no way to tell which is 
+which by simply looking at the device itself, then by definition they 
+are not compatible.
 
-> +               "       .popsection                             \n\t"
-> +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
-> +
-> +       return false;
-> +l_yes:
-> +       return true;
-> +}
-> +
-> +static __always_inline bool arch_static_branch_jump(struct static_key *key,
-> +                                                   bool branch)
-> +{
-> +       asm_volatile_goto(
-> +               "       .option push                            \n\n"
-> +               "       .option norelax                         \n\n"
-> +               "       .option norvc                           \n\n"
-> +               "1:     jal             zero, %l[l_yes]         \n\t"
-> +               "       .option pop                             \n\n"
-> +               "       .pushsection    __jump_table, \"aw\"    \n\t"
-> +               "       .align          3                       \n\t"
-> +               "       .long           1b - ., %l[l_yes] - .   \n\t"
-> +               "       .quad           %0 - .                  \n\t"
-> +               "       .popsection                             \n\t"
-> +               :  :  "i"(&((char *)key)[branch ? 1 : 0]) :  : l_yes);
-> +
-> +       return false;
-> +l_yes:
-> +       return true;
-> +}
-> +
-> +#endif  /* __ASSEMBLY__ */
-> +#endif /* __ASM_JUMP_LABEL_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index b355cf485671..a5287ab9f7f2 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -53,4 +53,6 @@ endif
->  obj-$(CONFIG_HOTPLUG_CPU)      += cpu-hotplug.o
->  obj-$(CONFIG_KGDB)             += kgdb.o
->
-> +obj-$(CONFIG_JUMP_LABEL)       += jump_label.o
-> +
->  clean:
-> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
-> new file mode 100644
-> index 000000000000..55b2d742efe1
-> --- /dev/null
-> +++ b/arch/riscv/kernel/jump_label.c
-> @@ -0,0 +1,44 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2020 Emil Renner Berthing
-> + *
-> + * Based on arch/arm64/kernel/jump_label.c
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/jump_label.h>
-> +#include <asm/patch.h>
-> +
-> +#define RISCV_INSN_NOP 0x00000013
-> +#define RISCV_INSN_JAL 0x0000006f
-> +
-> +void arch_jump_label_transform(struct jump_entry *entry,
-> +                              enum jump_label_type type)
-> +{
-> +       void *addr = (void *)jump_entry_code(entry);
-> +       u32 insn;
-> +
-> +       if (type == JUMP_LABEL_JMP) {
-> +               u32 offset = jump_entry_target(entry) - jump_entry_code(entry);
-> +
-> +               insn = RISCV_INSN_JAL |
-> +                       ((offset & GENMASK(19, 12)) << (12 - 12)) |
-> +                       ((offset & GENMASK(11, 11)) << (20 - 11)) |
-> +                       ((offset & GENMASK(10,  1)) << (21 -  1)) |
-> +                       ((offset & GENMASK(20, 20)) << (31 - 20));
-> +       } else
-> +               insn = RISCV_INSN_NOP;
-> +
-> +       patch_text_nosync(addr, &insn, sizeof(insn));
-> +}
-> +
-> +void arch_jump_label_transform_static(struct jump_entry *entry,
-> +                                     enum jump_label_type type)
-> +{
-> +       /*
-> +        * We use the same instructions in the arch_static_branch and
-> +        * arch_static_branch_jump inline functions, so there's no
-> +        * need to patch them up here.
-> +        * The core will call arch_jump_label_transform  when those
-> +        * instructions need to be replaced.
-> +        */
-> +}
-> --
-> 2.27.0
->
+> As the DT sis supposed to be a _generic_ description of the hardware,
+> we don't want to cement hacks to other implementations would need to copy.
+
+Indeed it's a pain in the bum for driver developers to be given a new 
+thing that's 99.9% compatible with the old thing but the one tiny 
+difference fundamentally breaks it, and the temptation to look for an 
+easy way out is strong, but c'est la vie ;)
+
+The question I always bear in mind for cases like these is this: If a 
+kernel without the driver patch runs on the new system with the expected 
+new DTB, will it:
+
+A) work entirely correctly
+B) ignore the device (with or without an error), but the rest of the 
+system still works fine
+C) ignore the device and fail to boot at all (with or without an error) 
+because it's critical to operation of the rest of the system
+D) probe the device and superficially appear to be OK but actually be 
+broken in weird and subtle ways
+
+A and B are the ideal answers. C is a little unfortunate, but acceptable 
+if neither A nor B is possible. D is a sign that you're doing something 
+wrong, unless there are *very* specific circumstances that might justify 
+it (e.g. the SoC is exclusively deployed in embedded devices with a 
+controlled update mechanism such that users could never introduce this 
+mismatch in the first place).
+
+Robin.
