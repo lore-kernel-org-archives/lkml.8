@@ -2,88 +2,65 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA80C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB562084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633372084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="baOJ/PJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgGCJFm (ORCPT
+        id S1726142AbgGCJIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:05:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:39880 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgGCJFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:05:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDBA52F;
-        Fri,  3 Jul 2020 02:05:41 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB4763F68F;
-        Fri,  3 Jul 2020 02:05:39 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] dt-bindings: arm-smmu: add compatible string for
- Marvell Armada-AP806 SMMU-500
-To:     Tomasz Nowicki <tn@semihalf.com>, will@kernel.org, joro@8bytes.org,
-        gregory.clement@bootlin.com, robh+dt@kernel.org, hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200702201633.22693-1-tn@semihalf.com>
- <20200702201633.22693-4-tn@semihalf.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3172ec21-d773-7fcb-f1ee-f557f72f20c5@arm.com>
-Date:   Fri, 3 Jul 2020 10:05:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 3 Jul 2020 05:08:13 -0400
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:34943 "EHLO
+        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgGCJIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:08:12 -0400
+Date:   Fri, 03 Jul 2020 09:08:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail; t=1593767290;
+        bh=50Eb/Y0e53WKbt5ES2NNmH1DcrZiBdBBPSjrZRHLhw4=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=baOJ/PJAnC9mWvp2rRn7RZGSJ7x8stNUldq45n/lekJ3Xk2iJQMjhL7/3qSoXC1j+
+         kO2G4Oamcvt5hEAE4qISxXVg2Hf788uP13ilRKuw4Q7jwcWvGZRqgEzr+6fT7pZA9Y
+         tKJPDix3+HTUSS/rw0rMr89vVzymMQ3GrF3MgCsU=
+To:     Neil Armstrong <narmstrong@baylibre.com>
+From:   Simon Ser <contact@emersion.fr>
+Cc:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "jianxin.pan@amlogic.com" <jianxin.pan@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: Re: [PATCH v9 1/6] drm/fourcc: Add modifier definitions for describing Amlogic Video Framebuffer Compression
+Message-ID: <RRm1buCbVQy5uesUHZhz8cPiCZfllmj0r1HzM7OoBmJBNMo9tuRfs3ju0iFnlPfDqECFq0tVj10h7bboBat7i619uNUN06HbwswBvYaPWMM=@emersion.fr>
+In-Reply-To: <20200703080728.25207-2-narmstrong@baylibre.com>
+References: <20200703080728.25207-1-narmstrong@baylibre.com> <20200703080728.25207-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702201633.22693-4-tn@semihalf.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-02 21:16, Tomasz Nowicki wrote:
-> Add specific compatible string for Marvell usage due to errata of
-> accessing 64bits registers of ARM SMMU, in AP806.
-> 
-> AP806 SoC uses the generic ARM-MMU500, and there's no specific
-> implementation of Marvell, this compatible is used for errata only.
-> 
-> Signed-off-by: Hanna Hawa <hannah@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
-> ---
->   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index d7ceb4c34423..7beca9c00b12 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -38,6 +38,11 @@ properties:
->                 - qcom,sc7180-smmu-500
->                 - qcom,sdm845-smmu-500
->             - const: arm,mmu-500
-> +      - description: Marvell SoCs implementing "arm,mmu-500"
-> +        items:
-> +          - enum:
-> +              - marvell,ap806-smmu-500
+Thanks for the update!
 
-Isn't a single-valued enum just a constant? :P
+The driver should also disallow importing a AMLOGIC_FBC_LAYOUT_SCATTER
+DMA-BUF from another device, but I guess this is clear enough ("not
+transferrable between Amlogic SoCs").
 
-Robin.
+From a user-space PoV:
 
-> +          - const: arm,mmu-500
->         - items:
->             - const: arm,mmu-500
->             - const: arm,smmu-v2
-> 
+Acked-by: Simon Ser <contact@emersion.fr>
