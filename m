@@ -2,189 +2,75 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B6320890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoC4LipQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5F920890
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGCDDR (ORCPT
+        id S1726288AbgGCDEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGCDDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:03:16 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EEEC08C5C1;
-        Thu,  2 Jul 2020 20:03:16 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so14408456pge.12;
-        Thu, 02 Jul 2020 20:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7/Ul8qd4qCPb+R/S6l8vvX2AsnTM3XBhH8ONOb+qXLQ=;
-        b=YoC4LipQqqn/jldCWdIAwlgUZTF9gieKYuAKku9Tnv3zXhPkcnjN5Ex4YHMxCRg+Tz
-         JFR3MBx0V8NkcXOW1tdInY6/PkI4mOD+mJ0y3sxH9WY8mSwoBg8xTjcb22CP7SIqnMQL
-         Gnskco/ZvZAZRUlXIcGNJxaP/X2udS9Eb/usJtqYHydr9TT8ZK27jLqN09QX8P+VTIHx
-         mAXZ3sP0jVw0wksFjjqFwD3AvTZdY/06V12rjtwPDYgQBvaw3dqHNAKwkF9zYc5MEIRA
-         UPLVa0CtmW3dEUAjIida+NqmzndBgaGCkpkJguc0YN+1r/0yNgQvLzqlGVYhkFgIo2NL
-         +uhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7/Ul8qd4qCPb+R/S6l8vvX2AsnTM3XBhH8ONOb+qXLQ=;
-        b=FHmet9i9nnSv3QaEJjTzwdYxh20nqYCuBzmRbMgTS5Zyjx9sqCpGKeil0cUMLXEPgh
-         f9TcqFlm8NEp7ypFoW2iENZMDZ3tz+W74I9sb+MpBvHJxNfxTDFHtTsGdiwokvtIGI52
-         H59qkSXBb3knCtNCZlf5aVYMWYt8Qb0Of3bctOyh4P0+/YjlUb6yk8INM+hjoOJs4/Go
-         42Yah3lY1V89tfjqVveH6Np0U70ua+BRg2LzUWaxTdtoLdAvxFc2jmicIdqBrtBeiupY
-         bBkcehk7xpU0AHgajuS4f7fSEX/Re9B0GuTzAU76ciWavmepMGmnm98dILIhfnebh6zD
-         t3QQ==
-X-Gm-Message-State: AOAM530Ar4QuJ3FwixkJkvw2bVmef1xreuoBG4Q8EJApD3nHcEAQ1bti
-        9LjkAAasfcLljEfjaB5xqfA=
-X-Google-Smtp-Source: ABdhPJwzVlWrSFL5uLiWLLBMd9oA1y/5jtIF2yAs0j4cPWQ5Io1OPeP+h7Tg01cSpuYLMNCue8Xo3Q==
-X-Received: by 2002:a63:ca11:: with SMTP id n17mr26926924pgi.439.1593745395573;
-        Thu, 02 Jul 2020 20:03:15 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id h194sm9903223pfe.201.2020.07.02.20.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 20:03:15 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steve Glendinning <steve.glendinning@shawell.net>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 2/2] smsc9420: use generic power management
-Date:   Fri,  3 Jul 2020 08:31:38 +0530
-Message-Id: <20200703030138.25724-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200703030138.25724-1-vaibhavgupta40@gmail.com>
-References: <20200703030138.25724-1-vaibhavgupta40@gmail.com>
+        Thu, 2 Jul 2020 23:04:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7362 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726033AbgGCDEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:04:40 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 22DB6E5DE6A194980ED4;
+        Fri,  3 Jul 2020 11:04:37 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 3 Jul 2020 11:04:27 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] ASoC: ti: j721e-evm: Fix missing unlock on error in j721e_audio_hw_params()
+Date:   Fri, 3 Jul 2020 03:09:10 +0000
+Message-ID: <20200703030910.75047-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions.
+Add the missing unlock before return from function j721e_audio_hw_params()
+in the error handling case.
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- drivers/net/ethernet/smsc/smsc9420.c | 40 ++++++++--------------------
- 1 file changed, 11 insertions(+), 29 deletions(-)
+ sound/soc/ti/j721e-evm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/smsc/smsc9420.c b/drivers/net/ethernet/smsc/smsc9420.c
-index 7312e522c022..42bef04d65ba 100644
---- a/drivers/net/ethernet/smsc/smsc9420.c
-+++ b/drivers/net/ethernet/smsc/smsc9420.c
-@@ -1422,11 +1422,9 @@ static int smsc9420_open(struct net_device *dev)
- 	return result;
- }
- 
--#ifdef CONFIG_PM
--
--static int smsc9420_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused smsc9420_suspend(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	struct smsc9420_pdata *pd = netdev_priv(dev);
- 	u32 int_cfg;
- 	ulong flags;
-@@ -1451,34 +1449,21 @@ static int smsc9420_suspend(struct pci_dev *pdev, pm_message_t state)
- 		netif_device_detach(dev);
+diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+index 3a2a8b1f3aa3..174306cf53ad 100644
+--- a/sound/soc/ti/j721e-evm.c
++++ b/sound/soc/ti/j721e-evm.c
+@@ -330,7 +330,7 @@ static int j721e_audio_hw_params(struct snd_pcm_substream *substream,
+ 		ret = snd_soc_dai_set_tdm_slot(codec_dai, 0x3, 0x3, 2,
+ 					       slot_width);
+ 		if (ret && ret != -ENOTSUPP)
+-			return ret;
++			goto out;
  	}
  
--	pci_save_state(pdev);
--	pci_enable_wake(pdev, pci_choose_state(pdev, state), 0);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-+	device_wakeup_disable(dev_d);
- 
- 	return 0;
- }
- 
--static int smsc9420_resume(struct pci_dev *pdev)
-+static int __maybe_unused smsc9420_resume(struct device *dev_d)
- {
--	struct net_device *dev = pci_get_drvdata(pdev);
--	struct smsc9420_pdata *pd = netdev_priv(dev);
-+	struct net_device *dev = dev_get_drvdata(dev_d);
- 	int err;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
--	err = pci_enable_device(pdev);
--	if (err)
--		return err;
-+	pci_set_master(to_pci_dev(dev_d));
- 
--	pci_set_master(pdev);
--
--	err = pci_enable_wake(pdev, PCI_D0, 0);
--	if (err)
--		netif_warn(pd, ifup, pd->dev, "pci_enable_wake failed: %d\n",
--			   err);
-+	device_wakeup_disable(dev_d);
- 
-+	err = 0;
- 	if (netif_running(dev)) {
- 		/* FIXME: gross. It looks like ancient PM relic.*/
- 		err = smsc9420_open(dev);
-@@ -1487,8 +1472,6 @@ static int smsc9420_resume(struct pci_dev *pdev)
- 	return err;
- }
- 
--#endif /* CONFIG_PM */
--
- static const struct net_device_ops smsc9420_netdev_ops = {
- 	.ndo_open		= smsc9420_open,
- 	.ndo_stop		= smsc9420_stop,
-@@ -1658,15 +1641,14 @@ static void smsc9420_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
-+static SIMPLE_DEV_PM_OPS(smsc9420_pm_ops, smsc9420_suspend, smsc9420_resume);
-+
- static struct pci_driver smsc9420_driver = {
- 	.name = DRV_NAME,
- 	.id_table = smsc9420_id_table,
- 	.probe = smsc9420_probe,
- 	.remove = smsc9420_remove,
--#ifdef CONFIG_PM
--	.suspend = smsc9420_suspend,
--	.resume = smsc9420_resume,
--#endif /* CONFIG_PM */
-+	.driver.pm = &smsc9420_pm_ops,
- };
- 
- static int __init smsc9420_init_module(void)
--- 
-2.27.0
+ 	ret = j721e_configure_refclk(priv, domain_id, params_rate(params));
+
+
 
