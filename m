@@ -6,59 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F51DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A412088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF822145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593795844;
-	bh=6qbXbqZcal6qUM8m7y1H835971AOT3MG+/JeJM4Mvvo=;
+	s=default; t=1593795849;
+	bh=oZBcivQgPufrQ0CRdFADQmR1QahIJ/BXtZ0XT8q6m6Q=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=f05BKqZw3UWLRbic8UsSOR1tpttdbhmR9B3pNFkTpqD0OJQSDCvgeINontnBrMt6r
-	 xPTbPJE9krznMivltPXt+vWiqN7Sdfwa96bZ/wFyMknbBvW1aMz+iJruyNsyLzc8VJ
-	 /ABd1kwGXznptjP2xVtUgf1aDj16ASGvRRwLlwm8=
+	b=jAp9WiVndh18Z0R75SDrwJTvu38Le4VhF6SQyabTLikKrX2mnyGWvuvRQ/RN4Z5pF
+	 tDdTryRjdcB1eGRRvpQ7+2hhv1Ezga+9DeEJXETLBlnzbhtEkACey6IcAOF7x9wY91
+	 hRcZVVI+FQS+bx/NYly6alKnz3224ZxttvZHhYpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgGCREC (ORCPT
+        id S1726972AbgGCREH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 13:04:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgGCREB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:04:01 -0400
+        id S1726632AbgGCREG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:04:06 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDB8220B80;
-        Fri,  3 Jul 2020 17:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E10052100A;
+        Fri,  3 Jul 2020 17:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593795841;
-        bh=6qbXbqZcal6qUM8m7y1H835971AOT3MG+/JeJM4Mvvo=;
+        s=default; t=1593795846;
+        bh=oZBcivQgPufrQ0CRdFADQmR1QahIJ/BXtZ0XT8q6m6Q=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kL89XxMCD1uP1P9nfTCwFTRCu7eRiXWQYekGDxRPBArb+k7sr1jh9+gY3jlLl7K+q
-         l3n9qQ4RV6nf2VcW3ZugUBQElUI2uF7AHQuci4M1KqhABFD3TXliGf6tCH/v3b4zU/
-         QVPfD/x5ctycONXovCHTF3GnPm3gHfGY9hS8kCh0=
-Date:   Fri, 03 Jul 2020 18:03:59 +0100
+        b=lZe1eYyULbDltiEUt/z1MLLTN/fzOzbKWl+sKZc09u+xXMRKnm/cZbfN9fBXNPIjL
+         0d1+D4wy3sZSYoG2klLYRlWhGkjOMwMuDYFaShDsAaSZzhF4+Cs4FawGbwjubHnT1i
+         zBIFvMD2Io66Ckdgj2SUnIifSZNP3gK28pp6n7Q8=
+Date:   Fri, 03 Jul 2020 18:04:04 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+To:     Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        alsa-devel@alsa-project.org
+Cc:     Alexander.Deucher@amd.com,
+        open list <linux-kernel@vger.kernel.org>,
         Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Hulk Robot <hulkci@huawei.com>, kernel-janitors@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200703030910.75047-1-weiyongjun1@huawei.com>
-References: <20200703030910.75047-1-weiyongjun1@huawei.com>
-Subject: Re: [PATCH -next] ASoC: ti: j721e-evm: Fix missing unlock on error in j721e_audio_hw_params()
-Message-Id: <159379581381.55795.18016494611644548015.b4-ty@kernel.org>
+        Liam Girdwood <lgirdwood@gmail.com>, hui.wang@canonical.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <1593710826-1106-1-git-send-email-Vijendar.Mukunda@amd.com>
+References: <1593710826-1106-1-git-send-email-Vijendar.Mukunda@amd.com>
+Subject: Re: [RESEND PATCH V3] ASoC: amd: add logic to check dmic hardware runtime
+Message-Id: <159379581381.55795.8623430713343303232.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Jul 2020 03:09:10 +0000, Wei Yongjun wrote:
-> Add the missing unlock before return from function j721e_audio_hw_params()
-> in the error handling case.
+On Thu, 2 Jul 2020 22:56:52 +0530, Vijendar Mukunda wrote:
+> Add logic to check DMIC hardware exists or not on
+> the platform at runtime.
+> 
+> Add module param for overriding DMIC hardware check
+> at runtime.
 
 Applied to
 
@@ -66,8 +69,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: ti: j721e-evm: Fix missing unlock on error in j721e_audio_hw_params()
-      commit: 59b44649a8f2380dfbf282db9922ef863c8812a6
+[1/1] ASoC: amd: add logic to check dmic hardware runtime
+      commit: 9e0d21e1210ffe27682a5ef71209af57f975b0d3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
