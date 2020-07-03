@@ -2,100 +2,81 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5987BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC90C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C582073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C2C20836
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:53:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIsHNkQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgGCJwC (ORCPT
+        id S1726409AbgGCJxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:52:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7369 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726287AbgGCJv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:51:58 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 68A429C50DBA215F809C;
-        Fri,  3 Jul 2020 17:51:49 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 17:51:41 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Dehe Gu <gudehe@huawei.com>,
-        Daiyue Zhang <zhangdaiyue1@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: remove write attribute of main_blkaddr sysfs node
-Date:   Fri, 3 Jul 2020 17:51:29 +0800
-Message-ID: <20200703095129.51276-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 3 Jul 2020 05:53:35 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24538 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726053AbgGCJxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 05:53:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593770013;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0PGiJVpJLRg1xkJmVjcLSvVDlRTvj62k3+35QdFjYI8=;
+        b=jIsHNkQFbxXqj5QvkJkNtInFGJsZ89nTYeFDQCc8Cc0CyBuMOzWiWm226IUt1OuoY6ENXM
+        0NWnOVJEoeBUhIvM01NLxhbpn3pLJJ8AfY+zdEEVQ/eQWww7OEqKauRabnVT3SFx2JptpC
+        7a1CFVoehcszh89RGZP1gsR3Y/Ik/Uk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-lP1u1ZQFMk6FNoHo3j0ckA-1; Fri, 03 Jul 2020 05:53:30 -0400
+X-MC-Unique: lP1u1ZQFMk6FNoHo3j0ckA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E24DF800401;
+        Fri,  3 Jul 2020 09:53:28 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.192.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ED9C6111F;
+        Fri,  3 Jul 2020 09:53:26 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [RFC v2 0/2] Fix gfs2 readahead deadlocks
+Date:   Fri,  3 Jul 2020 11:53:23 +0200
+Message-Id: <20200703095325.1491832-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dehe Gu <gudehe@huawei.com>
+Here's an improved version.  If the IOCB_NOIO flag can be added right
+away, we can just fix the locking in gfs2.
 
-Fuzzing main_blkaddr sysfs node will corrupt this field's value,
-causing kernel panic, remove its write attribute to avoid potential
-security risk.
+Thanks,
+Andreas
 
-[Chao Yu: add description]
+Andreas Gruenbacher (2):
+  fs: Add IOCB_NOIO flag for generic_file_read_iter
+  gfs2: Rework read and page fault locking
 
-Signed-off-by: Dehe Gu <gudehe@huawei.com>
-Signed-off-by: Daiyue Zhang <zhangdaiyue1@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/sysfs.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/gfs2/aops.c     | 45 +--------------------------------------
+ fs/gfs2/file.c     | 52 ++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/fs.h |  1 +
+ mm/filemap.c       | 17 +++++++++++++--
+ 4 files changed, 67 insertions(+), 48 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 64bbe0b3b830..0b7aa7acd9ec 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -224,6 +224,13 @@ static ssize_t avg_vblocks_show(struct f2fs_attr *a,
- }
- #endif
- 
-+static ssize_t main_blkaddr_show(struct f2fs_attr *a,
-+				struct f2fs_sb_info *sbi, char *buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%llu\n",
-+			(unsigned long long)MAIN_BLKADDR(sbi));
-+}
-+
- static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
- 			struct f2fs_sb_info *sbi, char *buf)
- {
-@@ -525,7 +532,6 @@ F2FS_RW_ATTR(GC_THREAD, f2fs_gc_kthread, gc_no_gc_sleep_time, no_gc_sleep_time);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_idle, gc_mode);
- F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_urgent, gc_mode);
- F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, reclaim_segments, rec_prefree_segments);
--F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, main_blkaddr, main_blkaddr);
- F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_small_discards, max_discards);
- F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_granularity, discard_granularity);
- F2FS_RW_ATTR(RESERVED_BLOCKS, f2fs_sb_info, reserved_blocks, reserved_blocks);
-@@ -568,6 +574,7 @@ F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
- F2FS_GENERAL_RO_ATTR(unusable);
- F2FS_GENERAL_RO_ATTR(encoding);
- F2FS_GENERAL_RO_ATTR(mounted_time_sec);
-+F2FS_GENERAL_RO_ATTR(main_blkaddr);
- #ifdef CONFIG_F2FS_STAT_FS
- F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_foreground_calls, cp_count);
- F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_background_calls, bg_cp_count);
 -- 
 2.26.2
 
