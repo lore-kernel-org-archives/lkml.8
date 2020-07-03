@@ -4,79 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE7DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D57A20782
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55E3206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q5tj3vcu"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="xQ+2yOZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgGCXz5 (ORCPT
+        id S1726832AbgGCX6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 19:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgGCXzx (ORCPT
+        Fri, 3 Jul 2020 19:58:08 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:18236 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726379AbgGCX6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 19:55:53 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F98AC061794;
-        Fri,  3 Jul 2020 16:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=B7Agd9VFNc/M+6Rnf3JjcxSaSmaMsPDpFgYMSTLxoDU=; b=q5tj3vcuTQeIsLrHIIdmionwkp
-        GHt6vJ/BTBDIn7r9lcihRDLyrW7LaE0+PfzfYpTQrzCDtQpCx6p0x1ga7Kzn5w5056JAZb/FGp2wK
-        gu1qBSVBVhdDU9AcFhdSS9sYN/HmeaY647b5cMuZW9DLmDfnY5yOdGVudgA8o6WlH6BYGJTh4EQxS
-        thKGq9C4QoJbdZDgbDfPnd+LQf/3KRSSom7MckX9rzO+6z9d6uCBCpxIR9JCNFTskEGQVsxaQHE56
-        OJWaEwUzMM4stvnY2d/0ryxFs4ZSoF/vpirusKPrwHZgnSmIWhQ4t4eqTfGKhIT56iBz24U/2j1iB
-        syRiS8Hg==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrVX5-0005uW-0W; Fri, 03 Jul 2020 23:55:51 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [PATCH 04/11] Documentation: userspace-api/media: dvb/dmx-qbuf: drop doubled word
-Date:   Fri,  3 Jul 2020 16:55:29 -0700
-Message-Id: <20200703235536.30416-5-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200703235536.30416-1-rdunlap@infradead.org>
-References: <20200703235536.30416-1-rdunlap@infradead.org>
+        Fri, 3 Jul 2020 19:58:05 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063Nw1WZ026868;
+        Fri, 3 Jul 2020 16:58:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=bqPoRX4VjkPGoPXE7CWXFKmFFzVZxQZaQqHY37LMe4E=;
+ b=xQ+2yOZ0AAhop9P+IE2lsOW/qjmNzoztOlKA/x5D7nSQJtQWFa+WNFF78lxustHcalxv
+ jLmv5yjcM5CeuhDLMP372aoF/1lzBRT5f0JSJuJViS+MiYUkN6mET7iz60vE/g3zgGRs
+ CPFXRAA9BcMGlKbiagtsuC5W0CfjyMq3nU0OjBRLBCy6CGYoU5Qc/ZKkxdZkjlkhiIH6
+ oNpbtJ+UlnspO+UwOGVF6QU0aW+12VUbj9Vf0caeYYYGDFj5KPSbrWcH7ayJJ3haDnM2
+ DhlthSqFD6LIDIkklIIf3vsSxCTIzUyZ6vzBX7PnxSFs892u3I6d3P2XDQ8flgdLnd+0 ZA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 321m92wjgr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 16:58:01 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jul
+ 2020 16:58:01 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jul
+ 2020 16:58:00 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 3 Jul 2020 16:58:00 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id F1B523F703F;
+        Fri,  3 Jul 2020 16:57:56 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     David Miller <davem@davemloft.net>
+CC:     Alexander Lobakin <alobakin@marvell.com>, <kuba@kernel.org>,
+        <irusskikh@marvell.com>, <michal.kalderon@marvell.com>,
+        <aelior@marvell.com>, <denis.bolotin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: qed: prevent buffer overflow when collecting debug data
+Date:   Sat, 4 Jul 2020 02:57:04 +0300
+Message-ID: <20200703235704.266-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200703.125933.1255981278532631718.davem@davemloft.net>
+References: <20200703.125933.1255981278532631718.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_18:2020-07-02,2020-07-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "the".
+From:   David Miller <davem@davemloft.net>
+Date:   Fri, 03 Jul 2020 12:59:33 -0700 (PDT)
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org
----
- Documentation/userspace-api/media/dvb/dmx-qbuf.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Alexander Lobakin <alobakin@marvell.com>
+> Date: Fri, 3 Jul 2020 12:02:58 +0300
+> 
+> > When generating debug dump, driver firstly collects all data in binary
+> > form, and then performs per-feature formatting to human-readable if it
+> > is supported.
+> > The size of the new formatted data is often larger than the raw's. This
+> > becomes critical when user requests dump via ethtool (-d/-w), as output
+> > buffer size is strictly determined (by ethtool_ops::get_regs_len() etc),
+> > as it may lead to out-of-bounds writes and memory corruption.
+> > 
+> > To not go past initial lengths, add a flag to return original,
+> > non-formatted debug data, and set it in such cases. Also set data type
+> > in regdump headers, so userland parsers could handle it.
+> > 
+> > Fixes: c965db444629 ("qed: Add support for debug data collection")
+> > Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+> > Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+> 
+> This is now how ethtool register dumps work.
+> 
+> It does not provide "human readable" versions of register data.  Instead
+> it is supposed to be purely raw data and then userland utilities interpret
+> that data and can make it human readable based upon the driver name and
+> reg dump version.
+> 
+> Please fix your ethtool -d implementation to comply with this.
 
---- linux-next-20200701.orig/Documentation/userspace-api/media/dvb/dmx-qbuf.rst
-+++ linux-next-20200701/Documentation/userspace-api/media/dvb/dmx-qbuf.rst
-@@ -57,7 +57,7 @@ by a :ref:`DMX_QUERYBUF` ioctl will do a
- When ``DMX_QBUF`` is called with a pointer to this structure, it locks the
- memory pages of the buffer in physical memory, so they cannot be swapped
- out to disk. Buffers remain locked until dequeued, until the
--the device is closed.
-+device is closed.
- 
- Applications call the ``DMX_DQBUF`` ioctl to dequeue a filled
- (capturing) buffer from the driver's outgoing queue.
+This is exactly what this patch does: forces driver to dump raw binary
+data. Current mainline version tries to perform formatting before passing
+data up to ethtool infra.
+
+> Thank you.
+
+Thanks,
+Al
