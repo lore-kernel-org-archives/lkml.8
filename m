@@ -2,155 +2,170 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F256BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DE720760
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBO1XJ5z"
+	by mail.kernel.org (Postfix) with ESMTP id D806920B80
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgGCNUW (ORCPT
+        id S1726309AbgGCNU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgGCNUV (ORCPT
+        Fri, 3 Jul 2020 09:20:27 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64056 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgGCNUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:20:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D89C08C5C1;
-        Fri,  3 Jul 2020 06:20:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 207so13801978pfu.3;
-        Fri, 03 Jul 2020 06:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LDiFULixaebs2MrsIr7/asrSZO8qQssL9OgufzsRRnY=;
-        b=KBO1XJ5zAIjPFUjuxrpGgKmLwz0mXFjXa559w/Dgr+rBE+hEw+sVLFas/aRJSVyQIX
-         cPfYRDxpl97pxvktYM6nSWFJZsN9ky9lLF+m4shdFGtqKIEmvxOYlPxIcJTvEqrtMAMz
-         dNrqX53T8KnWVVRCtTOs4bmOXUWuVditN/vPtyWVv766Y80sQ1mBJRXmfIDrb4I8vsI+
-         5Tj5jVn+UeU7Ksv9r780PQNE0FAJ9ixBdCcM7ZnM+nb4Xxir/v56dwD/yS+/hZ6fN0QG
-         2twPoKWn+cZNfm//ONxJUMVQNpEny3oJm3NSEiAtI7JnE4XGo9IfxelfiWwrc3FoHS0u
-         y4UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LDiFULixaebs2MrsIr7/asrSZO8qQssL9OgufzsRRnY=;
-        b=C82LmxLQfvcgMKp3VKRfe3E0xuPjwLUhNb3T3GmNFy95WgJdL+KANVkX/+yTx178XT
-         rTi0GW3aDc5TxVsjM+EoUzgl4Lv/+t80OtoIijmQ4AhRtMVQBdZsi1b+T/Uohrhx5EfC
-         PcXU7mGcA9TA55gT00hz5PAxxUn8pnpYgJ7/axMRMCxs9fAg3kgI7YYKv4FRrbTv8xq5
-         opGeEH+hqsNGNl/e23wb2hI4YmRQUeNEUPpV75JBU1i0Os62rWhXUNHTadNmz+XZSdCk
-         R8XqNb3LCTTgehTctJuKUhKOro3h5WrdWxobfnQ/ezuLhoCyJgBnKOPZuJzX9f/92H3M
-         5/dw==
-X-Gm-Message-State: AOAM531CObmX4uFx7Pwt5hkZsQQlNZQL+U/XxcrfrajKpiYoa63gGGf1
-        8S1/5o0rg11I8N6RZgz9e0M=
-X-Google-Smtp-Source: ABdhPJzurlv8AWULBx68fy6iuWnB779WRjX6EPfzmLgBnv+o31xLSHolYNxGWmjnGyerIGkgX1Nfzg==
-X-Received: by 2002:a62:8782:: with SMTP id i124mr32943371pfe.267.1593782420821;
-        Fri, 03 Jul 2020 06:20:20 -0700 (PDT)
-Received: from localhost.localdomain ([103.51.74.198])
-        by smtp.gmail.com with ESMTPSA id q10sm12706937pfk.86.2020.07.03.06.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 06:20:19 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] phy: samsung: Use readl_poll_timeout function
-Date:   Fri,  3 Jul 2020 13:20:12 +0000
-Message-Id: <20200703132012.579-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 3 Jul 2020 09:20:25 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 063DJNb2024792;
+        Fri, 3 Jul 2020 22:19:23 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
+ Fri, 03 Jul 2020 22:19:23 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 063DJMxC024786
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 3 Jul 2020 22:19:23 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+ <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+ <20200625120725.GA3493334@kroah.com>
+ <20200625.123437.2219826613137938086.davem@davemloft.net>
+ <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+ <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+ <87y2oac50p.fsf@x220.int.ebiederm.org>
+ <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+ <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
+ <87eepwzqhd.fsf@x220.int.ebiederm.org>
+ <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
+ <87pn9euks9.fsf@x220.int.ebiederm.org>
+ <757f37f8-5641-91d2-be80-a96ebc74cacb@i-love.sakura.ne.jp>
+ <87h7upucqi.fsf@x220.int.ebiederm.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d0266a24-dfab-83d0-e178-aa67c9f5ebc0@i-love.sakura.ne.jp>
+Date:   Fri, 3 Jul 2020 22:19:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87h7upucqi.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User readl_poll_timeout function instead of open
-coded handling in crport_handshake function.
+On 2020/07/02 22:08, Eric W. Biederman wrote:
+>> By the way, commit 4a9d4b024a3102fc ("switch fput to task_work_add") says
+>> that use of flush_delayed_fput() has to be careful. Al, is it safe to call
+>> flush_delayed_fput() from blob_to_mnt() from umd_load_blob() (which might be
+>> called from both kernel thread and from process context (e.g. init_module()
+>> syscall by /sbin/insmod )) ?
+> 
+> And __fput_sync needs to be even more careful.
+> umd_load_blob is called in these changes without any locks held.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 37 +++++++++---------------
- 1 file changed, 13 insertions(+), 24 deletions(-)
+But where is the guarantee that a thread which called flush_delayed_fput() waits for
+the completion of processing _all_ "struct file" linked into delayed_fput_list ?
+If some other thread or delayed_fput_work (scheduled by fput_many()) called
+flush_delayed_fput() between blob_to_mnt()'s fput(file) and flush_delayed_fput()
+sequence? blob_to_mnt()'s flush_delayed_fput() can miss the "struct file" which
+needs to be processed before execve(), can't it?
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index e510732afb8b..83274c5e3820 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -16,6 +16,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-+#include <linux/iopoll.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
-@@ -556,40 +557,28 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
- static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
- 			    u32 val, u32 cmd)
- {
--	u32 usec = 100;
-+	u32 timeout_us = 1000, sleep_us = 10;
- 	unsigned int result;
-+	int err;
- 
- 	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
- 
--	do {
--		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
--		if (result & PHYREG1_CR_ACK)
--			break;
--
--		udelay(1);
--	} while (usec-- > 0);
--
--	if (!usec) {
--		dev_err(phy_drd->dev,
--			"CRPORT handshake timeout1 (0x%08x)\n", val);
-+	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-+			result,	(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-+	if (err) {
-+		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
- 		return -ETIME;
- 	}
- 
--	usec = 100;
-+	timeout_us = 1000;
-+	sleep_us = 10;
- 
- 	writel(val, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
- 
--	do {
--		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
--		if (!(result & PHYREG1_CR_ACK))
--			break;
--
--		udelay(1);
--	} while (usec-- > 0);
--
--	if (!usec) {
--		dev_err(phy_drd->dev,
--			"CRPORT handshake timeout2 (0x%08x)\n", val);
-+	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-+			result,	!(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-+	if (err) {
-+		dev_err(phy_drd->dev, "CRPORT handshake timeout2 (0x%08x)\n", val);
- 		return -ETIME;
- 	}
- 
--- 
-2.27.0
+Also, I don't know how convoluted the dependency of all "struct file" linked into
+delayed_fput_list might be, for there can be "struct file" which will not be a
+simple close of tmpfs file created by blob_to_mnt()'s file_open_root() request.
+
+On the other hand, although __fput_sync() cannot be called from !PF_KTHREAD threads,
+there is a guarantee that __fput_sync() waits for the completion of "struct file"
+which needs to be flushed before execve(), isn't there?
+
+> 
+> We fundamentally AKA in any correct version of this code need to flush
+> the file descriptor before we call exec or exec can not open it a
+> read-only denying all writes from any other opens.
+> 
+> The use case of flush_delayed_fput is exactly the same as that used
+> when loading the initramfs.
+
+When loading the initramfs, the number of threads is quite few (which
+means that the possibility of hitting the race window and convoluted
+dependency is small).
+
+But like EXPORT_SYMBOL_GPL(umd_load_blob) indicates, blob_to_mnt()'s
+flush_delayed_fput() might be called after many number of threads already
+started running.
+
+
+
+On 2020/07/03 1:02, Eric W. Biederman wrote:
+>>>> On 2020/06/30 21:29, Eric W. Biederman wrote:
+>>>>> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
+>>>>> release_task is called so there is a race.  As it is possible to wake
+>>>>> up and then go back to sleep before pid_has_task becomes false.
+>>>>
+>>>> What is the reason we want to wait until pid_has_task() becomes false?
+>>>>
+>>>> - wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
+>>>> + while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
+>>>
+>>> So that it is safe to call bpfilter_umh_cleanup.  The previous code
+>>> performed the wait by having a callback in do_exit.
+>>
+>> But bpfilter_umh_cleanup() does only
+>>
+>> 	fput(info->pipe_to_umh);
+>> 	fput(info->pipe_from_umh);
+>> 	put_pid(info->tgid);
+>> 	info->tgid = NULL;
+>>
+>> which is (I think) already safe regardless of the usermode process because
+>> bpfilter_umh_cleanup() merely closes one side of two pipes used between
+>> two processes and forgets about the usermode process.
+> 
+> It is not safe.
+> 
+> Baring bugs there is only one use of shtudown_umh that matters.  The one
+> in fini_umh.  The use of the file by the mm must be finished before
+> umd_unload_blob.  AKA unmount.  Which completely frees the filesystem.
+
+Do we really need to mount upon umd_load_blob() and unmount upon umd_unload_blob() ?
+LSM modules might prefer only one instance of filesystem for umd blobs.
+
+For pathname based LSMs, since that filesystem is not visible from mount tree, only
+info->driver_name can be used for distinction. Therefore, one instance of filesystem
+with files created with file_open_root(O_CREAT | O_WRONLY | O_EXCL) might be preferable.
+
+For inode based LSMs, reusing one instance of filesystem created upon early boot might
+be convenient for labeling.
+
+Also, we might want a dedicated filesystem (say, "umdfs") instead of regular tmpfs in
+order to implement protections without labeling files. Then, we might also be able to
+implement minimal protections without LSMs.
 
