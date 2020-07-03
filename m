@@ -2,87 +2,109 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B30C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD90C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A63320760
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D5420936
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593782935;
+	bh=UPiZOo6ID3+xdr4knN6OGUVhtbu2OeFwQd8arqripq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qv7jUYBtEj1nyo3Wkklv7AXhLxYTiA3GfwGLz5XQJjvvxUmm0fc23aScAPQlK6cgR
+	 HlT7oH+2tIs2zLM/i0zsJb+kkDunT37zkmpUwJRZn9ExlQBLp9PmkS9IjRHYcZADKA
+	 GbGg/VzkYclc70HTkzWspLoEBvhpkE/5rQzzzS2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgGCN0H (ORCPT
+        id S1726363AbgGCN2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:26:07 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:33602 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgGCN0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:26:06 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 063DNHqc002307
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Fri, 3 Jul 2020 06:23:27 -0700
-Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 06:23:06 -0700
-Received: by yow-pgortmak-d1.corp.ad.wrs.com (Postfix, from userid 1000)        id
- 1A1512E0381; Fri,  3 Jul 2020 09:23:06 -0400 (EDT)
-Date:   Fri, 3 Jul 2020 09:23:06 -0400
-From:   Paul Gortmaker <paul.gortmaker@windriver.com>
-To:     Dave Jones <davej@codemonkey.org.uk>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        <peterz@infradead.org>, <mgorman@techsingularity.net>,
-        <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Michal Kubecek <mkubecek@suse.cz>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: weird loadavg on idle machine post 5.7
-Message-ID: <20200703132305.GA25509@windriver.com>
-References: <20200702171548.GA11813@codemonkey.org.uk>
- <20200702211555.GA27819@windriver.com>
+        Fri, 3 Jul 2020 09:28:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33519 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgGCN2x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:28:53 -0400
+Received: by mail-pl1-f195.google.com with SMTP id 72so2088344ple.0;
+        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nZixvdmK63kTxJGVp6SPuFsnYljJqU7VXv2wxF9MXFA=;
+        b=XlNdsEJKuh017yoaqze1QzzzKwb783SXTEXBcadTk0ed7oA0Sm9nPzkmkG/qKzrvEU
+         x65NJnpnvbpqJk3IIddNLcEFc7l4Q+/G3w8PRmJJKa6cnmgSZyNEpbNLnO003LUDNoWG
+         UcMNQqXDIw8J1ptTFItLwr8SKneXNiFzj1h/tEagCN1MbHMoVQPrkt+DyOCl+bJGan/v
+         ICsT56q9x2sRIMeVNfo1yDRB0cXK80hl+0mZJqzXYST5IwX7IUV7AYSp4gbZWsLBWolx
+         WFEpexWDUQ9c6YCO01nzQ46uHQn9/yp4qNK4vOr4JuUdvWMwqWutVPLflMZ87p8Y/qM2
+         3UPA==
+X-Gm-Message-State: AOAM5302es4kl5puR7Xy9zWGA/rez4EwCHDqFyMFAI9j3/0ffCfy5mgr
+        5qBgU2pGPtZDXLhiVgt8QlU=
+X-Google-Smtp-Source: ABdhPJx7Zgvv1Ln8YT3HW6KzNg/0D212spMjLCprFe2ez6VGItOK7VCNoHYcRalmweCVJasHt2okLw==
+X-Received: by 2002:a17:90a:3223:: with SMTP id k32mr38367135pjb.121.1593782932606;
+        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 125sm11298479pff.130.2020.07.03.06.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 06:28:51 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 5569C40945; Fri,  3 Jul 2020 13:28:50 +0000 (UTC)
+Date:   Fri, 3 Jul 2020 13:28:50 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200703132850.GW4332@42.do-not-panic.com>
+References: <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+ <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+ <20200702194656.GV4332@42.do-not-panic.com>
+ <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702211555.GA27819@windriver.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Re: weird loadavg on idle machine post 5.7] On 02/07/2020 (Thu 17:15) Paul Gortmaker wrote:
-
-> [weird loadavg on idle machine post 5.7] On 02/07/2020 (Thu 13:15) Dave Jones wrote:
-
-[...]
-
-> > both implicated this commit:
-> > 
-> > commit c6e7bd7afaeb3af55ffac122828035f1c01d1d7b (refs/bisect/bad)
-> > Author: Peter Zijlstra <peterz@infradead.org>
-> > Date:   Sun May 24 21:29:55 2020 +0100
-> > 
-> >     sched/core: Optimize ttwu() spinning on p->on_cpu
+On Fri, Jul 03, 2020 at 09:52:01AM +0900, Tetsuo Handa wrote:
+> On 2020/07/03 4:46, Luis Chamberlain wrote:
+> > The alternative to making a compromise is using generic wrappers for
+> > things which make sense and letting the callers use those.
 > 
-> I was down to 10 commits roughly above and below this guy before hearing
-> you were working the same problem.
-> 
-> I just got this guy to reveal a false load after a 2h test as well.
-> I want to let the one underneath soak overnight just to also confirm it
-> is "good" - so that is pending.
+> I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
+> macros and fixing the callers, for some callers are not aware of possibility of
+> KWIFSIGNALED() case.
 
-As per above, I ran a 12h test overnight on 505b8af5891 and it seems
-fine.  Every other "bad" bisect point failed in 7h or less.  So my
-testing seems to give the same result as Dave.
+OK so we open code all uses. Do that in a next iteration.
 
-Paul.
---
+  Luis
 
-root@t5610:/home/paul/git/linux-head# 
-[1]-  Done                    nohup
-tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 24 --duration 720 --configs TREE03 --trust-make > /tmp/kvm.sh.out 2>&1
-root@t5610:/home/paul/git/linux-head# uptime
- 09:10:56 up 13:12,  2 users,  load average: 0.00, 0.00, 0.14
-root@t5610:/home/paul/git/linux-head# cat /proc/version 
-Linux version 5.7.0-rc6-00029-gd505b8af5891 (paul@t5610) (gcc version 9.3.0 (Ubuntu 9.3.0-10ubuntu2), GNU ld (GNU Binutils for Ubuntu) 2.34) #2 SMP Thu Jul 2 18:55:40 EDT 2020
