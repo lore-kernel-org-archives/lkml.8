@@ -2,173 +2,207 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A76FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83005207D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F37E207D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIRZRhi1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmnICEnt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgGCOIr (ORCPT
+        id S1726287AbgGCOKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCOIr (ORCPT
+        Fri, 3 Jul 2020 10:10:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26382 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgGCOKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:08:47 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB5CC08C5C1;
-        Fri,  3 Jul 2020 07:08:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bj10so7472067plb.11;
-        Fri, 03 Jul 2020 07:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=k/gZbbxBL1FbsdsVnJIS8VLOXXgMCD5muIiPxPAUrTs=;
-        b=LIRZRhi1L6yqzhld/qIfRUiAfbyTldJkKDgAEsIiXJYp63oZny4YhOrRj2EySB+Mgf
-         e0gYoJx6I74SVZW84PnUPeODuvY6G9wMg4nh6sGlZwOLLj2eNcJkvNPJ06d0NK6VqiXA
-         AV41mV7+4J9cGM1dNpLeWhiVSXvuVrSBiot3SKoD5wIz8MbAqgz82JSVj+aw7YnnXXFN
-         ob7/xovanE6chUy77OCqFOnfDu6ZJyHp850yy7qwhBfZlySWXr1jCvq598zj6wU/EVsJ
-         yYEQ1IPVEfDmyDWzn4JXOHeei159aUQ8+IHh0xsHrCGE/OjTjtsT7lkgrRnyh3npK9E8
-         cQAw==
+        Fri, 3 Jul 2020 10:10:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593785415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/ebRijBQATYSDEWCLKpsWiFDOCYjmt1IWcFHzoBixqE=;
+        b=bmnICEntYSNdfft84ELvelLk9jG9wgNJDP8TitAKdiaqVEPYY/5qXlx9SFh4/6x66c5bxt
+        8P1zQo8u0zkfzYT1UYcszNazqLr8KEj23cbVpDD85rv/dxir7DS7sX8t05vuj/I6lgtXT2
+        kl07C6MnD6I4dgMKpr5jKOMkRztIFLs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-BFQSWqiXN2WpTyxlHGeVcw-1; Fri, 03 Jul 2020 10:10:13 -0400
+X-MC-Unique: BFQSWqiXN2WpTyxlHGeVcw-1
+Received: by mail-wr1-f70.google.com with SMTP id b8so17654467wro.19
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 07:10:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k/gZbbxBL1FbsdsVnJIS8VLOXXgMCD5muIiPxPAUrTs=;
-        b=RFXj46aTm86nrYcD9xJTKijNff6YVcfGcDNcMx9efc7+VpSo4UWwhIRkBz5OYZU/Lt
-         u6kPEeantWQ+WW8LubEUoEtSZflRt6VWL/sYrTi5XGJwKOf5hkGaeVFOLk25qWWnMu4h
-         VqudqUH9pDPzl3Zs6ZkZZTWA7CewBdhVchQpa4ezqHWqeW6xWW8Rxjq5pPHwN+3Gl2eQ
-         VY01/GKNhdrfYM5PWw8AzCXlsAzbYqjQ6mXLxIe92E7LpCcOPbnbcJCdZewUooxPblew
-         JGEqCyUjdevvaRfcrbRtS9nlVe37GVQL1SRNQUp0ruf6xk95098BFOvrekCmFvYuesNK
-         mkzQ==
-X-Gm-Message-State: AOAM531qAp2X2piEyoLxIivX7rXEYhy9R9CJ+UQSz3Z9QCtZzouPqyW7
-        xkab/QjIj+5v5IbvxEw6BX6jpgmlnQ==
-X-Google-Smtp-Source: ABdhPJyr9YJiZW6MQ7ITqj8LfQfQzNVw7oEYTTL4iOiZNLhRm0+ISkeVTjCNFiV4WuHXeJvHUytDyQ==
-X-Received: by 2002:a17:902:8f89:: with SMTP id z9mr29549487plo.229.1593785326385;
-        Fri, 03 Jul 2020 07:08:46 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4071:e03:4d74:9625:37f3:4070:3272])
-        by smtp.gmail.com with ESMTPSA id cl17sm10906217pjb.50.2020.07.03.07.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 07:08:45 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     paulmck@kernel.org, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] rculist : Introduce list/hlist_for_each_entry_srcu() macros
-Date:   Fri,  3 Jul 2020 19:38:28 +0530
-Message-Id: <20200703140828.7016-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/ebRijBQATYSDEWCLKpsWiFDOCYjmt1IWcFHzoBixqE=;
+        b=cOmZB9BectvD5UEANqQ/OWazfRbY6md5k6qxmviwmG59qFv+7tU+l9Q1adgMpuUWmU
+         w14PKaD+RbCZtlpvHVqZyUjpz4H82A8ulBr0C3V1PtqSlvqXNShMSxBfu0d4RzJKgL3A
+         xvA6DnI4k+XxBbNCH8Im/Q+B01s0gA61f0GMKU193mJExycYI4EdFFeJYeBrTF3RHChv
+         jfNtqMyUJfuUnMXtLWvvYSiFfjQ0F2cBd5rNr9MouEHwcMXWttV6ER9OyDqrSWTlI4a4
+         /3Gdn6gIhUjJjDh/r4+k834Dggwn9P5ffnaPbD16EKEw48QKj+a8Ir5YUBju/x2Wr0Eu
+         28Cg==
+X-Gm-Message-State: AOAM532eKhGCykXo6HKmI5aE33YSEmjqL9nzkuQaz1RXTc/ZvQPanifX
+        40LjCvNG/9AOW5wwpsMNEZbGXoaruANrP9Otsf8FDDXuYDWCwT841QHxu2XkxrKeXAFoCF4Q+BM
+        4pMMjp5+4alw2ctqdRLkLBoRb
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr36631627wru.79.1593785411823;
+        Fri, 03 Jul 2020 07:10:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyHX6Bp00bVK6KVzpUCW97N/dOtpfkG/01UM49qTtOjIlbCNVkIjoyz9PaR1xMKn2ZgfcDwug==
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr36631597wru.79.1593785411546;
+        Fri, 03 Jul 2020 07:10:11 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id e8sm14420110wrp.26.2020.07.03.07.10.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 07:10:10 -0700 (PDT)
+Subject: Re: [PATCH] brcmfmac: expose firmware config files through modinfo
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Double Lo <double.lo@cypress.com>,
+        Frank Kao <frank.kao@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        netdev@vger.kernel.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Soeren Moch <smoch@web.de>
+References: <20200701153123.25602-1-matthias.bgg@kernel.org>
+ <338e3cff-dfa0-c588-cf53-a160d75af2ee@redhat.com>
+ <1013c7e6-f1fb-af0c-fe59-4d6cd612f959@suse.com>
+ <35066b13-9fe2-211d-2ba8-5eb903b46bf7@redhat.com>
+ <ba8c2bfa-3f50-512e-e28c-a47896e5c242@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <bb56e702-3d4c-a089-0499-de79cb6db879@redhat.com>
+Date:   Fri, 3 Jul 2020 16:10:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <ba8c2bfa-3f50-512e-e28c-a47896e5c242@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi,
 
-list/hlist_for_each_entry_rcu() provides an optional cond argument
-to specify the lock held in the updater side.
-However for SRCU read side, not providing the cond argument results
-into false positive as whether srcu_read_lock is held or not is not
-checked implicitly. Therefore, on read side the lockdep expression
-srcu_read_lock_held(srcu struct) can solve this issue.
+On 7/3/20 4:01 PM, Matthias Brugger wrote:
+> 
+> 
+> On 02/07/2020 20:00, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 7/1/20 5:46 PM, Matthias Brugger wrote:
+>>> Hi Hans,
+>>>
+>>> On 01/07/2020 17:38, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 7/1/20 5:31 PM, matthias.bgg@kernel.org wrote:
+>>>>> From: Matthias Brugger <mbrugger@suse.com>
+>>>>>
+>>>>> Apart from a firmware binary the chip needs a config file used by the
+>>>>> FW. Add the config files to modinfo so that they can be read by
+>>>>> userspace.
+>>>>
+>>>> The configfile firmware filename is dynamically generated, just adding the list
+>>>> of all currently shipped ones is not really helpful and this is going to get
+>>>> out of sync with what we actually have in linux-firmware.
+>>>
+>>> I'm aware of this, and I agree.
+>>>
+>>>>
+>>>> I must honestly say that I'm not a fan of this, I guess you are trying to
+>>>> get some tool which builds a minimal image, such as an initrd generator
+>>>> to add these files to the image ?
+>>>>
+>>>
+>>> Yes exactly.
+>>>
+>>>> I do not immediately have a better idea, but IMHO the solution
+>>>> this patch proposes is not a good one, so nack from me for this change.
+>>>>
+>>>
+>>> Another path we could go is add a wildcard string instead, for example:
+>>> MODULE_FIRMWARE("brcm/brcmfmac43455-sdio.*.txt");
+>>
+>> I was thinking about the same lines, but I'm afraid some user-space
+>> utils may blow up if we introduce this, which is why I did not suggest
+>> it in my previous email.
+>>
+>>> AFAIK there is no driver in the kernel that does this. I checked with our dracut
+>>> developer and right now dracut can't cope with that.
+>>
+>> Can't cope as in tries to add "/lib/firmware/brcm/brcmfmac43455-sdio.*.txt"
+>> and then skips it (as it does for other missing firmware files); or can't
+>> cope as in blows-up and aborts without leaving a valid initrd behind.
+>>
+>> If is the former, that is fine, if it is the latter that is a problem.
+>>
+>>> But he will try to
+>>> implement that in the future.
+>>>
+>>> So my idea was to maintain that list for now and switch to the wildcard approach
+>>> once we have dracut support that.
+>>
+>> So lets assume that the wildcard approach is ok and any initrd tools looking at
+>> the MODULE_FIRMWARE metadata either accidentally do what we want; or fail
+>> gracefully.  Then if we temporarily add the long MODULE_FIRMWARE list now, those
+>> which fail gracefully will start doing the right thing (except they add too
+>> much firmware), and later on we cannot remove all the non wildcard
+>> MODULE_FIRMWARE list entries because that will cause a regression.
+>>
+>> Because of this I'm not a fan of temporarily fixing this like this. Using wifi
+>> inside the initrd is very much a cornercase anyways, so I think users can
+>> use a workaround by dropping an /etc/dracut.conf.d file adding the necessary
+>> config file for now.
+>>
+>> As for the long run, I was thinking that even with regular firmware files
+>> we are adding too much firmware to host-specific initrds since we add all
+>> the firmwares listed with MODULE_FIRMWARE, and typically only a few are
+>> actually necessary.
+>>
+>> We could modify the firmware_loader code under drivers/base/firmware_loader
+>> to keep a list of all files loaded since boot; and export that somewhere
+>> under /sys, then dracut could use that list in host-only mode and we get
+>> a smaller initrd. One challenge with this approach though is firmware files
+>> which are necessary for a new kernel, but not used by the running kernel ...
+>> I'm afraid I do not have a good answer to that.
+>>
+> 
+> That would work for creating a new minimal initrd from a working image. But it
+> would not help in bootstrapping an image. My understanding is that for
+> bootstrapping an image we will need to support wildcards in MODULE_FIRMWARE()
+> strings.
 
-However, the function still fails to check the cases where srcu
-protected list is traversed with rcu_read_lock() instead of
-srcu_read_lock(). Therefore, to remove the false negative,
-this patch introduces two new list traversal primitives :
-list_for_each_entry_srcu() and hlist_for_each_entry_srcu().
+Yes, I agree.
 
-Both of the functions have non-optional cond argument
-as it is required for both read and update side, and simply checks
-if the cond is true.
+Regards,
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- include/linux/rculist.h | 44 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index df587d181844..04a7e5791c39 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -63,9 +63,17 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
- 	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
- 			 "RCU-list traversed in non-reader section!");	\
- 	})
-+
-+#define __list_check_srcu(cond)					 \
-+	({								 \
-+	RCU_LOCKDEP_WARN(!(cond),					 \
-+		"RCU-list traversed without holding the required lock!");\
-+	})
- #else
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({ check_arg_count_one(extra); })
-+
-+#define __list_check_srcu(cond)
- #endif
- 
- /*
-@@ -383,6 +391,23 @@ static inline void list_splice_tail_init_rcu(struct list_head *list,
- 		&pos->member != (head);					\
- 		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
- 
-+/**
-+ * list_for_each_entry_srcu	-	iterate over rcu list of given type
-+ * @pos:	the type * to use as a loop cursor.
-+ * @head:	the head for your list.
-+ * @member:	the name of the list_head within the struct.
-+ * @cond:	lockdep expression for the lock required to traverse the list.
-+ *
-+ * This list-traversal primitive may safely run concurrently with
-+ * the _rcu list-mutation primitives such as list_add_rcu()
-+ * as long as the traversal is guarded by srcu_read_lock().
-+ */
-+#define list_for_each_entry_srcu(pos, head, member, cond)		\
-+	for (__list_check_srcu(cond),					\
-+	     pos = list_entry_rcu((head)->next, typeof(*pos), member);	\
-+		&pos->member != (head);					\
-+		pos = list_entry_rcu(pos->member.next, typeof(*pos), member))
-+
- /**
-  * list_entry_lockless - get the struct for this entry
-  * @ptr:        the &struct list_head pointer.
-@@ -681,6 +706,25 @@ static inline void hlist_add_behind_rcu(struct hlist_node *n,
- 		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
- 			&(pos)->member)), typeof(*(pos)), member))
- 
-+/**
-+ * hlist_for_each_entry_srcu - iterate over rcu list of given type
-+ * @pos:	the type * to use as a loop cursor.
-+ * @head:	the head for your list.
-+ * @member:	the name of the hlist_node within the struct.
-+ * @cond:	lockdep expression for the lock required to traverse the list.
-+ *
-+ * This list-traversal primitive may safely run concurrently with
-+ * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-+ * as long as the traversal is guarded by srcu_read_lock().
-+ */
-+#define hlist_for_each_entry_srcu(pos, head, member, cond)		\
-+	for (__list_check_srcu(cond),					\
-+	     pos = hlist_entry_safe(rcu_dereference_raw(hlist_first_rcu(head)),\
-+			typeof(*(pos)), member);			\
-+		pos;							\
-+		pos = hlist_entry_safe(rcu_dereference_raw(hlist_next_rcu(\
-+			&(pos)->member)), typeof(*(pos)), member))
-+
- /**
-  * hlist_for_each_entry_rcu_notrace - iterate over rcu list of given type (for tracing)
-  * @pos:	the type * to use as a loop cursor.
--- 
-2.17.1
+Hans
 
