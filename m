@@ -2,124 +2,100 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C15C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7092084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cn44muIG"
+	by mail.kernel.org (Postfix) with ESMTP id A2547208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593804303;
+	bh=GDS3ISNK5CTBY0IdVs1u8xzxVJCI3gVyHLbeigacmxg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PH2DxcLAgJttoiYhSGhZOnPxL/VwN3OkvUeQ5rN6UYy1HS+gkiOHqAw+f4TT4seRE
+	 YJ/b/yuIxs5eIjXVRTwtxy4zoiwnIKDsWbOpszjNy5fE/xZdYv9l7+u0r4X2XMpNnf
+	 sPMjcxakmcErgdAaHdajN10DVpipKFyQfSkr8H5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgGCTYF (ORCPT
+        id S1726752AbgGCTZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 15:24:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44071 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726147AbgGCTYF (ORCPT
+        Fri, 3 Jul 2020 15:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGCTZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 15:24:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593804244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=szNrRUnXkU/wXzHhuSNno6tjLuDfKJplDbKwsteOMYc=;
-        b=Cn44muIGd7b/9SqdrVoMXQsAvZaeUPROsL5+mJvZ3Bee1cKMxjoYMcslPg7xbKr/ypXCQT
-        iXtG+moUHmfYcpw/N7CAhYJITcpLiRfhpqtLV9DKahrUwaS/882NbTKI6VR12/6REPTeCJ
-        QA+uR7uTnRNcO1Y5Au+slo5/fo2/eYI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-LA8dt4VBMMi-IGn8CdzAPQ-1; Fri, 03 Jul 2020 15:24:02 -0400
-X-MC-Unique: LA8dt4VBMMi-IGn8CdzAPQ-1
-Received: by mail-qv1-f69.google.com with SMTP id r19so21021906qvz.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 12:24:02 -0700 (PDT)
+        Fri, 3 Jul 2020 15:25:01 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25949C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 12:25:01 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y13so19083473lfe.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 12:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nEMPMKHktF+3GiPNxFWdeLrXOxNE07nmroDOEVThA4A=;
+        b=EhC1qDxGOcHnqhdTefcfYAg7Ihgd+dyuCofQ5oRzGgTrAnhAQqF7OzcfuyTH4ovLGg
+         lVeESWYyUkkno7e5pvU5gocokHSLu0r0EG8L+u7jkct0aI3QhIpJFf9k8NwIciFyX7/7
+         9XeVBI0g2czxapfWKmluX0h7W/Jh645iHYlCI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=szNrRUnXkU/wXzHhuSNno6tjLuDfKJplDbKwsteOMYc=;
-        b=PJmGNwZTRCNOPKArZo4VkwpQl6p3ymsgruOSOtG+MkskIITAdfsAlvzVRcDy825SEu
-         KxY1kTSyHcujvqkNNFMyer+29KovyuJBRQYgYrTpNi59r7qUDUq6cuJb8w6AMhhgbECA
-         5GYkoKXYZk1SxfICHyr9SOZSmloLVTCYrSk4CuLb7QB83sFQHDxLFjTd5ZyKOPpEGSpr
-         4RhyC7ckezE+t6brmnMe9j3C6oZ7InYO7ZcMO9bktPAooiZWpzmDrixcIlv9jtCGfHuY
-         dFZXK/gZ+6fCh/YxCKOtacLKMPEwutskOrmfi3FFUgGg+sIZ1rkzCCjlRFb4GA7I9Q23
-         8OrQ==
-X-Gm-Message-State: AOAM531lbIXhom5G//OqHuqP8dU25UqwOjOOKooNA1o2XSh1nsYttTMg
-        cy4D58dWGsnC0nvezR/o9vr+pSqNWwnarwlWCl9o3e7L8G7ShvNj2dasuH22XJzqnfc3Ru4fvzT
-        UW6GyvLR0/DSDlqHIwHALAHbG
-X-Received: by 2002:ad4:5a46:: with SMTP id ej6mr36640572qvb.52.1593804241999;
-        Fri, 03 Jul 2020 12:24:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJycF3wW8f/a2ysnQEJ8tVL7mhIPYBL3A4AysD41s2ds0xEgv4QKsUjP796I+99lamtaNozpzA==
-X-Received: by 2002:ad4:5a46:: with SMTP id ej6mr36640550qvb.52.1593804241666;
-        Fri, 03 Jul 2020 12:24:01 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id i8sm11202871qtr.90.2020.07.03.12.24.00
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nEMPMKHktF+3GiPNxFWdeLrXOxNE07nmroDOEVThA4A=;
+        b=YEmNwsKFRhP3/NqTrwGWMYH53c8de+Lm7+81Mgexj67BZsJu5AgZ6nLqJ66Ba+2p3C
+         dx14fUC+jRCtmm8kx90soFjN1xs8a8cbi2FcWXxouf44kYK644ydhswGSN3vlvymWe0F
+         8Gc6rxbhj6ZdDI1u1SGOm1X/QE0WHJW/mEgbfdZn3rVlrAfQOxazQNsKaYCnPelDdQk4
+         BtoWiW9WbznuLHoxDEobsMl02Ksq9xR2BLdgUnqnIoZ/T7gmHIm7zxL0k4xC5vZkiN2H
+         dMln8W9sbGPpEz163oa0vdkywq+9nDgYxtmzbmCAMZjW7UQcaUard9v3V2nWoWrjFYc2
+         c7Tw==
+X-Gm-Message-State: AOAM5308KoBYywfWY3zINWZvF1Iifo3iJ2lpzeT1ODYpn2IYlRUstyhW
+        JpfkwWflP5sf5lJ1MfRB7hAzLy+3+OU=
+X-Google-Smtp-Source: ABdhPJwHPoZWNduliotGJmEPBPr4GJW3aSMV5KO1WXDxS7PoNCfM0fizpkN5/Hn0MVfPyC91pExr/w==
+X-Received: by 2002:a19:7f55:: with SMTP id a82mr22933417lfd.112.1593804299288;
+        Fri, 03 Jul 2020 12:24:59 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id k7sm4983225lfd.67.2020.07.03.12.24.58
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 12:24:01 -0700 (PDT)
-Subject: Re: [PATCH v2] mm: initialize return of vm_insert_pages
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200703155354.29132-1-trix@redhat.com>
- <20200703120436.4031b4ea23e28a3babca3d2d@linux-foundation.org>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <3fdd71e8-d149-888c-b7de-99e5f68871a0@redhat.com>
-Date:   Fri, 3 Jul 2020 12:23:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 03 Jul 2020 12:24:58 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id n23so38240845ljh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 12:24:58 -0700 (PDT)
+X-Received: by 2002:a2e:991:: with SMTP id 139mr20104619ljj.314.1593804298028;
+ Fri, 03 Jul 2020 12:24:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703120436.4031b4ea23e28a3babca3d2d@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200703095325.1491832-1-agruenba@redhat.com>
+In-Reply-To: <20200703095325.1491832-1-agruenba@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Jul 2020 12:24:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj9ObgMYF8QhPCJrHBBgVXG1J75-r8CgyQm88BbfSVYcg@mail.gmail.com>
+Message-ID: <CAHk-=wj9ObgMYF8QhPCJrHBBgVXG1J75-r8CgyQm88BbfSVYcg@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] Fix gfs2 readahead deadlocks
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/3/20 12:04 PM, Andrew Morton wrote:
-> On Fri,  3 Jul 2020 08:53:54 -0700 trix@redhat.com wrote:
+On Fri, Jul 3, 2020 at 2:53 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
 >
->> From: Tom Rix <trix@redhat.com>
->>
->> clang static analysis reports a garbage return
->>
->> In file included from mm/memory.c:84:
->> mm/memory.c:1612:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
->>         return err;
->>         ^~~~~~~~~~
->>
->> The setting of err depends on a loop executing.
->> So initialize err.
->>
->> ...
->>
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -1601,7 +1601,7 @@ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
->>  	return insert_pages(vma, addr, pages, num, vma->vm_page_prot);
->>  #else
->>  	unsigned long idx = 0, pgcount = *num;
->> -	int err;
->> +	int err = -EINVAL;
->>  
->>  	for (; idx < pgcount; ++idx) {
->>  		err = vm_insert_page(vma, addr + (PAGE_SIZE * idx), pages[idx]);
-> If a caller were to ask vm_insert_pages() to insert zero pages, I
-> suspect we should just return zero and set *num to zero.
+> Here's an improved version.  If the IOCB_NOIO flag can be added right
+> away, we can just fix the locking in gfs2.
 
-That would be v1 of the patch.
+I see nothing wrong with this, and would be ok with getting the
+patches as pulls from the gfs2 tree despite touching generic code.
 
-For the loop to not execute *num/pgcount is initially 0, and *num = pgcount - idx is 0 on exit.
+Maybe wait a bit for others to comment (I see Willy already did), but
+it seems like a fairly straightforward improvement, and the IOCB_NOIO
+flag conceptually seems to match well with the IOCB_NOWAIT one, so
+this all makes sense to me.
 
- 
-
->
-
+              Linus
