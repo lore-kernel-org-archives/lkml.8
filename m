@@ -2,94 +2,117 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A40C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B94C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2F320884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1B920870
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgGCPtG (ORCPT
+        id S1726427AbgGCPtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:49:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44968 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726035AbgGCPtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:49:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063FXnLq004740;
-        Fri, 3 Jul 2020 11:49:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 321ng24h09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 11:49:03 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063FmlGB095920;
-        Fri, 3 Jul 2020 11:49:03 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 321ng24gyh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 11:49:02 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063Fjb7m005437;
-        Fri, 3 Jul 2020 15:49:01 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 3217b01u7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 15:49:01 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063Fmw6r40304668
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 15:48:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8474D11C04A;
-        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C9F511C050;
-        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
-Received: from osiris (unknown [9.171.46.77])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 Jul 2020 15:48:58 +0000 (GMT)
-Date:   Fri, 3 Jul 2020 17:48:56 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
-Message-ID: <20200703154856.GA5294@osiris>
-References: <20200703133917.39045-1-david@redhat.com>
+        Fri, 3 Jul 2020 11:49:55 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:41054 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgGCPtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:49:55 -0400
+Received: from p5b127e6f.dip0.t-ipconnect.de ([91.18.126.111] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jrNwk-0002vB-3e; Fri, 03 Jul 2020 17:49:50 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     mylene.josserand@collabora.com, mturquette@baylibre.com,
+        sboyd@kernel.org, jagan@amarulasolutions.com,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        ezequiel@collabora.com, linux-clk@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2] clk: rockchip: use separate compatibles for rk3288w-cru
+Date:   Fri,  3 Jul 2020 17:49:48 +0200
+Message-Id: <20200703154948.260369-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703133917.39045-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_10:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- cotscore=-2147483648 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=517 bulkscore=0 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=5 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007030106
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
-> This series is based on the latest s390/features branch [1]. It implements
-> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
-> - Freeing empty page tables (now also done for idendity mapping).
-> - Handling cases where the vmemmap of a section does not fill huge pages
->   completely.
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Nice! You implemented some things I "always wanted to do". Maybe I
-should just do nothing and wait until patches appear ;)
+Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
+added the check for rk3288w-specific clock-tree changes but in turn would
+require a double-compatible due to re-using the main rockchip,rk3288-cru
+compatible as entry point.
 
-Will take a look at the series next week. Thanks!
+The binding change actually describes the compatibles as one or the other
+so adapt the code accordingly and add a real second entry-point for the
+clock controller.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+changes in v2:
+- type enum instead of boolean (Ezequiel)
+
+ drivers/clk/rockchip/clk-rk3288.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 204976e2d0cb..93c794695c46 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -15,6 +15,11 @@
+ #define RK3288_GRF_SOC_CON(x)	(0x244 + x * 4)
+ #define RK3288_GRF_SOC_STATUS1	0x284
+ 
++enum rk3288_variant {
++	RK3288_CRU,
++	RK3288W_CRU,
++};
++
+ enum rk3288_plls {
+ 	apll, dpll, cpll, gpll, npll,
+ };
+@@ -922,7 +927,8 @@ static struct syscore_ops rk3288_clk_syscore_ops = {
+ 	.resume = rk3288_clk_resume,
+ };
+ 
+-static void __init rk3288_clk_init(struct device_node *np)
++static void __init rk3288_common_init(struct device_node *np,
++				      enum rk3288_variant soc)
+ {
+ 	struct rockchip_clk_provider *ctx;
+ 
+@@ -945,7 +951,7 @@ static void __init rk3288_clk_init(struct device_node *np)
+ 	rockchip_clk_register_branches(ctx, rk3288_clk_branches,
+ 				  ARRAY_SIZE(rk3288_clk_branches));
+ 
+-	if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
++	if (soc == RK3288W_CRU)
+ 		rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
+ 					       ARRAY_SIZE(rk3288w_hclkvio_branch));
+ 	else
+@@ -970,4 +976,15 @@ static void __init rk3288_clk_init(struct device_node *np)
+ 
+ 	rockchip_clk_of_add_provider(np, ctx);
+ }
++
++static void __init rk3288_clk_init(struct device_node *np)
++{
++	rk3288_common_init(np, RK3288_CRU);
++}
+ CLK_OF_DECLARE(rk3288_cru, "rockchip,rk3288-cru", rk3288_clk_init);
++
++static void __init rk3288w_clk_init(struct device_node *np)
++{
++	rk3288_common_init(np, RK3288W_CRU);
++}
++CLK_OF_DECLARE(rk3288w_cru, "rockchip,rk3288w-cru", rk3288w_clk_init);
+-- 
+2.26.2
+
