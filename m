@@ -2,241 +2,114 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD3E206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F90206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593761831;
-	bh=1yqL2vPpVRdmj46GQEhej6JgtMfURcJom8VgYKkP6Vw=;
+	s=default; t=1593761843;
+	bh=3hXzjoxayCwIlMyaIVk4q1EyS1f0Z06EJ0cKKjqyt8o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pNdDS3WgfCgxBUTsJFlHoPpZ6pXdRsd1uu5MNEXXQyi163sYjYu9m4IsTm67uosLC
-	 QOzRxrPNcUhK0s61zNin7HBdpSo2kqFE48s6Y/ujfemeskqHf1fcoRKrPYvec4sW28
-	 EkI1lEonJLkf2EuGCl7E9y4DdMYoV1mE50JrGCYQ=
+	b=psIDq5LpDjSljw8YVGYojdGPY1nbU8PzRrpPjxAOXF5TupdVZE6PNITZzVRqoabh9
+	 kr456k0gquJlA5FU2F3QP4PMzyZQgJW+6znoeKwZKQ/Vjfdwz1mQaFG4TpQv1DCvV/
+	 +8p2rnurGhpVvEcv6S3lBDLYue/KigsKYPZ6xGC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgGCHhK (ORCPT
+        id S1726300AbgGCHhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 03:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgGCHhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:37:10 -0400
-Received: from localhost (unknown [122.182.251.219])
+        id S1725764AbgGCHhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:37:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 309E6206B6;
-        Fri,  3 Jul 2020 07:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 680E6206DF;
+        Fri,  3 Jul 2020 07:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593761829;
-        bh=1yqL2vPpVRdmj46GQEhej6JgtMfURcJom8VgYKkP6Vw=;
+        s=default; t=1593761841;
+        bh=3hXzjoxayCwIlMyaIVk4q1EyS1f0Z06EJ0cKKjqyt8o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2YhTkTZXBmEbVmczcUd0EmkoJbx3/h8OSrLros3IJrWKi5oBzDaKwoZDWbP88p7t
-         mJ9bgILACRoz0w+08uunNB0P3qD83hkhGUnGBX6SLLD3mvmIJAMvNDuIiklDIBmwit
-         fpSND3PKVISSwUUANeE8f28/JH9PvDH60wV/NQgM=
-Date:   Fri, 3 Jul 2020 13:07:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dmaengine: ptdma: register PTDMA controller as a
- DMA resource
-Message-ID: <20200703073704.GK273932@vkoul-mobl>
-References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
- <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
+        b=YzrdJFEh0vrcKI86nCxCh++RcbHDCzwbiU4e55HeK+TI72KS4sd7/fIXjUnp+cPaS
+         zE6JPTVO7fNm5DMx9ZvqmKLPyiOklTmkTpMmTH/LTr+uliOl6DETVwTsxz24ds1miT
+         ckY9Rw9DxTrVC5u5Gu/pcRBDmjVUa7HdtIWhAiT4=
+Date:   Fri, 3 Jul 2020 09:37:25 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 00/30] Fix a bunch of W=1 issues in USB
+Message-ID: <20200703073725.GA2370189@kroah.com>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <20200702144625.2533530-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-20, 20:11, Sanjay R Mehta wrote:
+On Thu, Jul 02, 2020 at 03:45:55PM +0100, Lee Jones wrote:
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
+> 
+> Lee Jones (30):
+>   usb: phy: phy: Fix-up a whole bunch of formatting issues
+>   usb: host: pci-quirks: Demote function header from kerneldoc to
+>     comment block
+>   usb: common: debug: Demote comment blocks which are obviously not
+>     kerneldoc
+>   usb: common: usb-conn-gpio: Demote comment block which is clearly not
+>     kerneldoc
+>   usb: dwc3: drd: File headers are not doc headers
+>   usb: dwc3: ulpi: File headers are not doc headers
+>   usb: common: ulpi: Fix a few kerneldoc related issues
+>   usb: dwc3: dwc3-omap: Do not read DMA status
+>   usb: dwc2: gadget: Do not read GINTMSK2
+>   usb: dwc2: gadget: Remove assigned but never used 'maxsize'
+>   usb: dwc2: gadget: Avoid pointless read of EP control register
+>   usb: host: ehci-omap: Provide documentation for
+>     ehci_hcd_omap_probe()'s arg 'pdev'
+>   usb: cdns3: core: Fix incorrect formatting and misspelled function arg
+>     docs
+>   usb: cdns3: ep0: Fix a bunch of kerneldoc issues
+>   usb: dwc3: dwc3-haps: Function headers are not suitable for kerneldoc
+>   usb: mtu3: mtu3_trace: Function headers are not suitable for kerneldoc
+>   usb: cdns3: gadget: Fix a bunch of kernel doc issues
+>   usb: dwc3: dwc3-of-simple: Function headers are not good candidates
+>     for kerneldoc
+>   usb: host: isp1362: Mark the many unused ISP1362_REG entries as
+>     __maybe_unused
+>   usb: host: ohci-at91: Demote kerneldoc headers down to basic comment
+>     blocks
+>   usb: host: ohci: Mark cc_to_error as __maybe_unused
+>   usb: cdns3: ep0: Move 'zlp' description to appropriate function header
+>   usb: host: oxu210hp-hcd: Move declaration of 'qtd' into 'ifdef
+>     OXU_URB_TRACE'
+>   usb: mtu3: mtu3_trace: Supply missing mtu3_debug.h include file
+>   usb: mtu3: mtu3_core: Demote obvious misuse of kerneldoc to standard
+>     comment block
+>   usb: c67x00: c67x00-ll-hpi: Demote obvious misuse of kerneldoc to
+>     standard comment blocks
+>   usb: class: cdc-wdm: Provide description for usb_cdc_wdm_register()'s
+>     manage_power arg
+>   usb: c67x00: c67x00-hcd: Demote obvious misuse of kerneldoc to
+>     standard comment blocks
+>   usb: class: usbtmc: File headers are not good candidates for kerneldoc
+>   usb: c67x00: c67x00-sched: Demote obvious misuse of kerneldoc to
+>     standard comment blocks
 
-> --- a/drivers/dma/ptdma/Makefile
-> +++ b/drivers/dma/ptdma/Makefile
-> @@ -5,6 +5,7 @@
->  
->  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
->  
-> -ptdma-objs := ptdma-dev.o
-> +ptdma-objs := ptdma-dev.o \
-> +	      ptdma-dmaengine.o
+I've applied 25 of these, if you could rebase and resend the remaining
+ones, after fixing up the review comments made on them, that would be
+wonderful.
 
-Single line?
+thanks,
 
-> +static void pt_free_chan_resources(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 vc.chan);
-> +
-> +	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
-
-drop the dbg artifacts here and other places in this and other patches
-
-> +static void pt_do_cleanup(struct virt_dma_desc	*vd)
-> +
-> +{
-> +	struct pt_dma_desc *desc = container_of(vd, struct pt_dma_desc, vd);
-> +	struct pt_device *pt = desc->pt;
-> +	struct pt_dma_chan *chan;
-> +
-> +	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
-> +			    vc.chan);
-
-add a to_pt_chan() macro for this?
-
-> +static int pt_issue_next_cmd(struct pt_dma_desc *desc)
-> +{
-> +	struct pt_passthru_engine *pt_engine;
-> +	struct pt_dma_cmd *cmd;
-> +	struct pt_device *pt;
-> +	struct pt_cmd *pt_cmd;
-> +	struct pt_cmd_queue *cmd_q;
-> +
-> +	cmd = list_first_entry(&desc->cmdlist, struct pt_dma_cmd, entry);
-> +	desc->actv = 1;
-
-active?
-
-> +
-> +	dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
-> +		desc->vd.tx.cookie, cmd);
-> +
-> +	pt_cmd = &cmd->pt_cmd;
-> +	pt = pt_cmd->pt;
-> +	cmd_q = &pt->cmd_q;
-> +	pt_engine = &pt_cmd->passthru;
-> +
-> +	if (!pt_engine->final)
-> +		return -EINVAL;
-
-what does final mean here?
-> +
-> +	if (!pt_engine->src_dma || !pt_engine->dst_dma)
-> +		return -EINVAL;
-
-what does this check do? we have a valid cmd which IIUC implies a valid
-dma txn so why would one of this be invalid?
-
-> +static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan)
-> +{
-> +	/* Get the next DMA descriptor on the active list */
-> +	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
-> +
-> +	if (list_empty(&chan->vc.desc_submitted))
-> +		return NULL;
-> +
-> +	vd = list_empty(&chan->vc.desc_issued) ?
-> +		  list_first_entry(&chan->vc.desc_submitted,
-> +				   struct virt_dma_desc, node) : NULL;
-
-Always remember there might already be a macro, so check. In this case
-use of list_first_entry_or_null() looks apt
-
-> +static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
-> +						 struct pt_dma_desc *desc)
-> +{
-> +	struct dma_async_tx_descriptor *tx_desc;
-> +	struct virt_dma_desc *vd;
-> +	unsigned long flags;
-> +
-> +	/* Loop over descriptors until one is found with commands */
-
-This bit is strange, am not sure I follow. The fn name tell me it would
-handle and active descriptor which is passed as an arg, so why do you
-loop?
-
-Can you explain this?
-
-> +static void pt_issue_pending(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 vc.chan);
-> +	struct pt_dma_desc *desc;
-> +	unsigned long flags;
-> +
-> +	dev_dbg(chan->pt->dev, "%s\n", __func__);
-> +
-> +	spin_lock_irqsave(&chan->vc.lock, flags);
-> +
-> +	desc = __pt_next_dma_desc(chan);
-> +
-> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> +
-> +	/* If there was nothing active, start processing */
-
-What if channel is already active and doing a transaction? This should
-check it first..
-
-> +int pt_dmaengine_register(struct pt_device *pt)
-> +{
-> +	struct pt_dma_chan *chan;
-> +	struct dma_device *dma_dev = &pt->dma_dev;
-> +	struct dma_chan *dma_chan;
-> +	char *dma_cmd_cache_name;
-> +	char *dma_desc_cache_name;
-> +	int ret;
-> +
-> +	pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
-> +				       sizeof(*pt->pt_dma_chan),
-> +				       GFP_KERNEL);
-
-If n is 1, why you kcalloc, why not devm_kzalloc()?
-
-> +	if (!pt->pt_dma_chan)
-> +		return -ENOMEM;
-> +
-> +	dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> +					    "%s-dmaengine-cmd-cache",
-> +					    pt->name);
-> +	if (!dma_cmd_cache_name)
-> +		return -ENOMEM;
-> +
-> +	pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
-> +					      sizeof(struct pt_dma_cmd),
-> +					      sizeof(void *),
-> +					      SLAB_HWCACHE_ALIGN, NULL);
-> +	if (!pt->dma_cmd_cache)
-> +		return -ENOMEM;
-> +
-> +	dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> +					     "%s-dmaengine-desc-cache",
-> +					     pt->name);
-> +	if (!dma_desc_cache_name) {
-> +		ret = -ENOMEM;
-> +		goto err_cache;
-> +	}
-> +
-> +	pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
-> +					       sizeof(struct pt_dma_desc),
-> +					       sizeof(void *),
-> +					       SLAB_HWCACHE_ALIGN, NULL);
-> +	if (!pt->dma_desc_cache) {
-> +		ret = -ENOMEM;
-> +		goto err_cache;
-> +	}
-> +
-> +	dma_dev->dev = pt->dev;
-> +	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->directions = DMA_MEM_TO_MEM;
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-
-Why DMA_PRIVATE if it supports only memcpy? Also have you tested this
-with dmatest?
-
--- 
-~Vinod
+greg k-h
