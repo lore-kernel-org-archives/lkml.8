@@ -2,138 +2,173 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ABBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F65C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABBB207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593794635;
-	bh=JKqba4dum7CUcdPT3b9HmjLgGzNPTd8lylgjy8ENnz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k031UNFH5fnlBAESwBbKJ8/d5VO0pxPDzEUPyksH4fJ6C1bAzMrcpZydKZn/7DupH
-	 hBlXXmmLUdzUgxNGJ1qTnI45J6UOq069N+wbegcVGjcjuXaMBP/S9maXFAcc0f6tJz
-	 7cGokYQbS+1qD7p1AxKKd9c9ptCdayQMsirX9pAc=
+	by mail.kernel.org (Postfix) with ESMTP id D6D5721D94
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BARYOUiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgGCQny (ORCPT
+        id S1726447AbgGCQvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:43:54 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:37901 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgGCQnx (ORCPT
+        Fri, 3 Jul 2020 12:51:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56433 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726147AbgGCQvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:43:53 -0400
-Received: by mail-ej1-f68.google.com with SMTP id w16so34920920ejj.5;
-        Fri, 03 Jul 2020 09:43:52 -0700 (PDT)
+        Fri, 3 Jul 2020 12:51:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593795108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=K41RwyHIydU6qmwjScGmq28Lh7mWIXkEeRHuEE+wuaE=;
+        b=BARYOUiZ/E8fMLHN0KWZJTRCpXmK9XFd39/ELBNEzV6PKW6+ZhvtvzNVeRWbLBQkgqkrl0
+        0cj55B2OpBz+pi/9tfO3dihSvbIBfvrkT3Iv6z6glryqmBqvaiWOpryFvDNKRdVS72GBhv
+        KfbO1LO2Z/aD8k9C4Py6uAoMaPutTmQ=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-TVkFfB3sMo-idMOC4jqbaQ-1; Fri, 03 Jul 2020 12:51:41 -0400
+X-MC-Unique: TVkFfB3sMo-idMOC4jqbaQ-1
+Received: by mail-qt1-f197.google.com with SMTP id e6so21189631qtb.19
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 09:51:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rkk6OrgsOeSgtd2LsYzmaJPd2S3kmEEwYFVFbwumjEo=;
-        b=S+YU0dXIPsNupYIPrrDfKj7DWIYz1EeYpyrY2DnSLsG+rgH/40RKyQwanxinfioNVw
-         2B72tOE5J0TfoB74l+pSKr/WbuDsYG+QPWLRCxM75ziA/cLXeMbgXiZZHkUimDtBzXlw
-         LUhHXwfuFPIEH0siefkOJpNe5ezcws7LX7QNR8lB9n0yUx2XYGH3SB8ulm5NX2KRV/hF
-         KIhB0ej30my4vIU8pfeYcCWH7bgkrgwk9afH36/YF9KGcm7/hzIHORJQ6Za+wPFjjUW1
-         dRG0DafN0W/yXeLLromvcMpzyGXhJvXY3pVcADiP8W5+NhxgFxC1sJ8hfdqikHMxZgo0
-         EWlw==
-X-Gm-Message-State: AOAM532FvlK9l6ZjnAWmM04Qe+YaMAZ4pKHW5E1lX41ZZByjuImGBNYO
-        50cIi3AGJmgJDb4aiGg93F4=
-X-Google-Smtp-Source: ABdhPJxSig7o5zgKxKiDVXDwxMN/PbN7CZaC4mj/1cwidQ/8xnp0CyN1AS5npbV5bwvuESV662XTHg==
-X-Received: by 2002:a17:906:3a0d:: with SMTP id z13mr25390578eje.109.1593794631769;
-        Fri, 03 Jul 2020 09:43:51 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id o18sm9722250ejr.45.2020.07.03.09.43.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Jul 2020 09:43:51 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 18:43:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] phy: samsung: Use readl_poll_timeout function
-Message-ID: <20200703164349.GA2914@kozik-lap>
-References: <20200703132012.579-1-linux.amoon@gmail.com>
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=K41RwyHIydU6qmwjScGmq28Lh7mWIXkEeRHuEE+wuaE=;
+        b=Kzdt9mCWkdSSwWURI39DCfy8Yr6+GkohsebCfMySGsA/f52oFwr5HOUfq7UL5uvk0S
+         jhFP1FoDaIswoNs/8sEPTvxXPwlPgD8iaKOaUUcSYKGZe3yOrMjTON7styKMCckxJ7zZ
+         oJ9DHLeLGgOdvaR6U++0PlIL1xe9o0d3AAruhv1olK5g+4KPTxP/ICjF1cJau2IMkKCY
+         KPHa68hSc+irfuDWq3gI2zmmuK6FZHQgGTwI/Bq1kWb6aVB3b4nFyVV29QDQaqo22yu3
+         ymGsm/UZivlo002z9OuGULbXo5yz2xOb7pi3WazuPeqmceVoI1iCA/10M2KOLB7SCxAi
+         p0Vg==
+X-Gm-Message-State: AOAM53311kcik22pULwu02GWkHSANfgMhwoyXyn9gmYs9t7MvFTd3vEW
+        0Ncf85Pvr3v+15T2Jmh98h9a3n9oaxBnMuPK6uiu2eA+bBBwO4sqvxsB2/lVgQqKn/zj6mIbOCu
+        HBGblBuqHa0JLIvZX1FGY+dyb
+X-Received: by 2002:a37:2c41:: with SMTP id s62mr29769863qkh.165.1593795100715;
+        Fri, 03 Jul 2020 09:51:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw1RP7VET+D3eXC8Ok2q/QrrPziPN8VOU/hxcUrPvcZJEBzLh6UL49H1rZSn59ozW+6dyUVBQ==
+X-Received: by 2002:a37:2c41:: with SMTP id s62mr29769830qkh.165.1593795100436;
+        Fri, 03 Jul 2020 09:51:40 -0700 (PDT)
+Received: from x1.bristot.me (host-87-16-204-193.retail.telecomitalia.it. [87.16.204.193])
+        by smtp.gmail.com with ESMTPSA id m4sm12860911qtf.43.2020.07.03.09.51.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 09:51:39 -0700 (PDT)
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [ANNOUNCE][CFP] Real-Time Micro Conference at LPC 2020
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Dhaval Giani <dhaval.giani@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        John Kacur <jkacur@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        =?UTF-8?Q?Luis_Claudio_R=2e_Gon=c3=a7alves?= <lclaudio@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Tom Rix <trix@redhat.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Christian Brauner <christian.brauner@canonical.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <72353caf-c2aa-f2e4-fe2d-778f04625b70@redhat.com>
+Date:   Fri, 3 Jul 2020 18:51:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200703132012.579-1-linux.amoon@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 01:20:12PM +0000, Anand Moon wrote:
-> User readl_poll_timeout function instead of open
-> coded handling in crport_handshake function.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 37 +++++++++---------------
->  1 file changed, 13 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index e510732afb8b..83274c5e3820 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/iopoll.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -556,40 +557,28 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->  static int crport_handshake(struct exynos5_usbdrd_phy *phy_drd,
->  			    u32 val, u32 cmd)
->  {
-> -	u32 usec = 100;
-> +	u32 timeout_us = 1000, sleep_us = 10;
->  	unsigned int result;
+This is the call for proposals for the Real-Time Micro Conference (RT-MC) at the
+Linux Plumbers Conference 2020. It will take place online during the Linux
+Plumbers Conference on August 24th-28th, 2020.
 
-You silently (without mentioning in commit msg and explaining why)
-changed both the sleep time and total timeout.
+The real-time micro-conference targets discussions about new features or open
+problems related to real-time Linux ecosystem. Each accepted topic will receive
+a 30 minutes slot. The presenter - or mediator - will introduce the problem in
+the first 10 minutes with a short presentation and then promote the discussion
+in the next 20 minutes.
 
-Nope, please explain why you chosen such values and change them in
-separate patch.
+We encourage submissions that do not present a final solution. Instead, that
+serves to get feedback from the community, to point to action items for future
+development, and that can result in patches for the real-time Linux ecosystem in
+the future.
 
-> +	int err;
->  
->  	writel(val | cmd, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->  
-> -	do {
-> -		result = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1);
-> -		if (result & PHYREG1_CR_ACK)
-> -			break;
-> -
-> -		udelay(1);
-> -	} while (usec-- > 0);
-> -
-> -	if (!usec) {
-> -		dev_err(phy_drd->dev,
-> -			"CRPORT handshake timeout1 (0x%08x)\n", val);
-> +	err = readl_poll_timeout(phy_drd->reg_phy + EXYNOS5_DRD_PHYREG1,
-> +			result,	(result & PHYREG1_CR_ACK), sleep_us, timeout_us);
-> +	if (err) {
-> +		dev_err(phy_drd->dev, "CRPORT handshake timeout1 (0x%08x)\n", val);
->  		return -ETIME;
->  	}
->  
-> -	usec = 100;
-> +	timeout_us = 1000;
-> +	sleep_us = 10;
+Please submit your proposals on the LPC website at:
 
-The same.
+https://www.linuxplumbersconf.org/event/7/abstracts/#submit-abstract
 
-Best regards,
-Krzysztof
+And be sure to select "Real-time MC" in the Track pulldown menu.
+
+Proposals must be submitted by August 2nd, and submitters will be notified of
+acceptance by August 9th.
+
+About the real-time MC:
+
+Since 2004 a project has improved the Real-time and low-latency features for
+Linux. This project has become know as PREEMPT_RT, formally the real-time patch.
+Over the past decade, many parts of the PREEMPT RT became part of the official
+Linux codebase. Examples of what came from PREEMPT_RT include: Mutexes,
+high-resolution timers, lockdep, ftrace, RT scheduling, SCHED_DEADLINE,
+RCU_PREEMPT, generic interrupts, priority inheritance futexes, threaded
+interrupt handlers and more. The number of patches that needs integration has
+been reduced in the last years, and the pieces left are now mature enough to
+make its way into mainline Linux. For real, this year could possibly be the year
+PREEMPT_RT is merged™!
+
+In the final lap of this race, the last patches are on the way to be merged, but
+there are still some very few pieces missing. When the merge occurs, the
+PREEMPT_RT will start to follow a new pace: the Linus one. So, it is possible to
+raise the following discussions:
+
+	- The status of the merge, and how can we resolve the last issues that
+	  block the merge
+	- How can we improve the testing of the -rt, to follow the problems
+	  raised as Linus tree advances
+	- What’s next?
+
+Other possible topics:
+
+	- Merge – what is missing and who can help?
+	- New tools for PREEMPT_RT analysis
+	- How do we teach the rest of the kernel developers how not to break
+	  PREEMPT_RT?
+	- Stable maintainers tools discussion & improvements
+	- The usage of PREEMPT_RT on safety critical-systems: what do we need to
+	  do?
+	- Interrupt threads are RT and are not protected by the RT Throttling
+	- How can we prevent interrupt thread starvation from a rogue RT task?
+
+If your topic is not listed here, it is a good sign that you need to propose
+your talk! This micro-conference is about new things, not things that people
+already know, so go ahead and fill a proposal!
+
+If you have any further doubt, feel free to contact me.
+
+Thanks!
+-- Daniel
 
