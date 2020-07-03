@@ -3,150 +3,202 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25007C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A79C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB434206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE3D20C56
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="G7PHcRIc";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="zAbiGc+K"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="dSQbI/Ys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgGCNCs (ORCPT
+        id S1726345AbgGCNDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:02:48 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:56667 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCNCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:02:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593781367; x=1625317367;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=d9wQppb/ZvEDda8ooX3NUuk0Ma9Oy0G2WC1EJihT9RY=;
-  b=G7PHcRIccTwR2ytE7b5T4lIWYsXWuLbtswFM8omFa/Rwd8DQQ9qn6Z6n
-   z75hpmtAUYp9hbpO7SxdAMV+U/aKiKwCzjGIh6vol5z5Glb9arUEQMTFq
-   Tjn8PXjVIP0OdQQPfu6DmEJkH7WeAdAfW615t+tGqCX3Y4QQlstWkBKm2
-   R+4sGfl3d3cd1vdBve/714CcDORXziRQvyO8HnSENT5n5wsay5+WkX8cd
-   OCbrS5MWYcx4OpxOvE0n9rC6bT56+JBs+z1osrsrN9dA4lveT2dKpyRHT
-   nf9SYmIOfXqAEbnlmAoU5hW/5JyB4cEqh6J+7SyKe/PMqwJHtzjS+ORQT
-   g==;
-IronPort-SDR: kB0a1BOwfldlr+Cuw+VKcVrrI4DP5Jx1SdXFJHjOC3rZgZe7q6+v7TyW0SESPC0fFmfJAW5l0r
- Uz5yL+nMHicURY6E5qbElauqAvVfbvk+5eg03Z69Nbd0NZs7/Jdhw56SCfy5HgmCFzWy3XhVbU
- WMLts68JRTDr6t2s13hHkdRWlrXT8jdM1faBADNaV3wzcC6qCn1eK1BQ/5u9u0BVhACwsgZJaR
- nZyY+Ay6gRwP3WNvNwiu1s28Tj5Fc6R96xlTxu4ZQlBhc+IGULfQL2l8Etn+FVJQ1f6P2FGp0X
- hcE=
-X-IronPort-AV: E=Sophos;i="5.75,308,1589212800"; 
-   d="scan'208";a="142922802"
-Received: from mail-mw2nam12lp2044.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.44])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2020 21:02:45 +0800
+        Fri, 3 Jul 2020 09:03:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58262 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgGCNDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:03:23 -0400
+IronPort-SDR: zaCfNkc1MSVoX9ViozOFC9yrvDN8h2QM+D3xI0fHpdUhsww36kEIgLKbMLphuztFDQp6dJrfgX
+ jTXmo2ysjSxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="232008318"
+X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
+   d="scan'208";a="232008318"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 06:03:21 -0700
+IronPort-SDR: Hkut/2puouWGmaAZeY+VYf+5C4xCrnI4e02oVjDsbdNGFqjY56gBbTZgkWGPleEVBQIFHmk2SZ
+ lNF4m4M38v7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
+   d="scan'208";a="356768316"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga001.jf.intel.com with ESMTP; 03 Jul 2020 06:03:19 -0700
+Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Jul 2020 06:03:19 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX158.amr.corp.intel.com (10.22.240.20) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Jul 2020 06:03:19 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.106)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Jul 2020 06:03:19 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HObZ8QccxtmbopyWfd10emA4pVqPNo/ItmgB4iCyEVN6jhKjr3Vg7yYjp/lxaHZFOo7pHLpwftkysf1n8cuJCLxQypBgsrvcBzELpgH0ehPkyvvup6XK323w5TjX4DSbbaNZX/rNkTUkv3/XQOotABbDypBwEWfN2aaOb2xKaxn6/cvPBhRk6gvDRHN4eiV1oGE3kXgZa2cje0zoGk4LQfTGBrl67GGFyRr/xY15o6FTTB0UeUd8Vvc02a0WTikNIQc0pJATHx++LDwEAwNq5p0l320Fbtwro6lKH+D08ug+p4Hf5ZLtH5Z8hG2ETSswW8M+4poE+dlVbhoSYivNaw==
+ b=dcL+vt2/mPmhNtfN5MW6zEw4/GztupIKlPCkBvS4hns8HVVO554iCe8xMOFyi+dEvxdUNmnu2wx1CUJbvjIYJPZCYbqLvajY/UuviTYTqGXlp/2uda1EVjcrpnPAI5+ff5zm/y6BffNTI+PjflehoXAI5lFPmmXTsolPFoRZE7jXsZ3cDVW5+NSynUfeOxUuqyX7KP/dPP5Dqkv74PA0wqXKSPFvZ0+vGwM61yKMeJCZX4MiLPaGskwMGlJlq2vLBFiLLbPOeFVLA7+p0AphWQ96hkMUhRuCjtrnp7qeMlHtqCZFvIINuUS7MQ/MfzCI1EhApus95oeEMHqg+NWcGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9wQppb/ZvEDda8ooX3NUuk0Ma9Oy0G2WC1EJihT9RY=;
- b=a1eS7ApS97Btiqb0vADmHsrURdgwWFvlQZ3Bai9Vy92jPwEZf151E/sS2UeIiHEMVr+XE7v0NgqahByNe3YCYu2zXx4p8E+6cJRecV4sPGtpV9WNgcB845pSKuCnTGX4StUK/GQsbNzuGrwe8ISjQD8FW9IutNwxNIsaS4PlZCFBdHONM6nnS06qYvIgxad47EQhB++osSimMG+L6h0xPHaKR0LLa1pJTNNV7c39rGJNxcf081roNN2Y5/TzCSoj/wSPMlQNK9dzxMRRNHJuBSMGGwKNKngsQFrRgMlG7I+Ovqjt+tepN56dsnF/h98u/44hXmI0nKBD4Hcsl0HqCA==
+ bh=hKhlnKumyE+XdOuasc0QNVgkoxoqjbS6zSN0GcsOVvI=;
+ b=jlAqtpETkrX8csMiKvwQQeyeNr69o6EVz+igzPRki+ugnDOW9kTozL2bdWVZIDcu+9AJSMMJbJoy1ozK/JNOwBTD2O8+z/16PunIL4pNd/Juw5qFgZMwGDQxM/s+X7f7dJXGyPx6KrBW+She5rOpr/24WxZK/stQ26/maJVh8kfk4jfH5TxRs+VFhgE0ufOvkz1AQEKeKDWWKc5jZxNfgrLL+yoBASmh+AJItjKbWE6xNuMHxbc+xOAPuq/VJuwhaPHsHNW+qiNQ4S/M6QtrKnaNwafNcKn49GcF8P6RoWRhxLwPmmPEhCWuTd+suAZhN0SlLjK2uw31HfLOOwnbGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9wQppb/ZvEDda8ooX3NUuk0Ma9Oy0G2WC1EJihT9RY=;
- b=zAbiGc+KZhdr6Oiy+tWkOx0RkR0NUgM3lOClNabTk++LuD06I7V4Utujo82PzLJVtfaUJqHWVhkfX+CzmCW/QLFyRTvlxBTAp71C8Ftxrxh7pFvstEHaeM3BLsIXnXtcYcIu8CeCPpwmZjJA4Vca04OVugDm7EjD0EBaUbHVXKM=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4159.namprd04.prod.outlook.com
- (2603:10b6:805:2f::29) with Microsoft SMTP Server (version=TLS1_2,
+ bh=hKhlnKumyE+XdOuasc0QNVgkoxoqjbS6zSN0GcsOVvI=;
+ b=dSQbI/YsPMU4zJwKbj0VvSWHGw7V6HgLiG8r5QaUta6ohNhBJ2pbxX2o2gFV6NNvMkX9P+omI1ToMYCdoHER4xsOPAypb5pzQkNOBd2THewhsZUnc/jJzwiNFlTxyYcdrc9p2pXD4A72TmT58Znh98kxMeTkzIMTzQgNEfTDcHQ=
+Received: from CY4PR11MB1432.namprd11.prod.outlook.com (2603:10b6:910:5::22)
+ by CY4PR11MB1783.namprd11.prod.outlook.com (2603:10b6:903:11d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Fri, 3 Jul
- 2020 13:02:44 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3153.028; Fri, 3 Jul 2020
- 13:02:44 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Kanchan Joshi <joshi.k@samsung.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 2/2] block: enable zone-append for iov_iter of bvec type
-Thread-Topic: [PATCH 2/2] block: enable zone-append for iov_iter of bvec type
-Thread-Index: AQHWUIdr8xWbLJJJdEuR1V88dlaKiQ==
-Date:   Fri, 3 Jul 2020 13:02:43 +0000
-Message-ID: <SN4PR0401MB3598BB905AE2F34D3D7C60749B6A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <1593704330-11540-1-git-send-email-joshi.k@samsung.com>
- <CGME20200702154213epcas5p4e8d42861cb5ae91ddeccf1ed73107304@epcas5p4.samsung.com>
- <1593704330-11540-3-git-send-email-joshi.k@samsung.com>
- <CY4PR04MB37516E788EC8804D7DF9780EE76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200703065311.GB26058@test-zns>
+ 2020 13:03:17 +0000
+Received: from CY4PR11MB1432.namprd11.prod.outlook.com
+ ([fe80::b46e:9dcb:b46b:884a]) by CY4PR11MB1432.namprd11.prod.outlook.com
+ ([fe80::b46e:9dcb:b46b:884a%4]) with mapi id 15.20.3153.027; Fri, 3 Jul 2020
+ 13:03:17 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 03/14] vfio/type1: Report iommu nesting info to
+ userspace
+Thread-Topic: [PATCH v3 03/14] vfio/type1: Report iommu nesting info to
+ userspace
+Thread-Index: AQHWSgRR9wDstDmC00qnq2+G1pK7Waj0rAKAgACc8/CAAJYLUA==
+Date:   Fri, 3 Jul 2020 13:03:17 +0000
+Message-ID: <CY4PR11MB1432BFE42BF336EE8C99CEC9C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+        <1592988927-48009-4-git-send-email-yi.l.liu@intel.com>
+ <20200702123847.384e7460@x1.home>
+ <CY4PR11MB14320E069DF2C75131A94DB3C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
+In-Reply-To: <CY4PR11MB14320E069DF2C75131A94DB3C36A0@CY4PR11MB1432.namprd11.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.205]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c72f9911-8596-4aad-e294-08d81f516043
-x-ms-traffictypediagnostic: SN6PR04MB4159:
+x-ms-office365-filtering-correlation-id: 5358174e-9f99-42ab-9070-08d81f5173ff
+x-ms-traffictypediagnostic: CY4PR11MB1783:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR04MB41599524431BE50F3BD1900A9B6A0@SN6PR04MB4159.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <CY4PR11MB178333A2FB19723F43572D86C36A0@CY4PR11MB1783.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 045315E1EE
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sVenqDRNcNvvze32Yv3Hk7p6i1kP0PTc2xyd9Q5+8fS0t9lrvgsmpsIam1ptpzYNgJtVWRYi14zI9H2xmwb3UEzZ9uBlZ7gN+e0JfuCcnE4yIkAkJRNDB6/y/A6y3Pn0Do3tXmKT0yEBqRoYKwZN1Q4akq+Wrk/gM5SJ2a2F3ctFqCXAbtJ54l2p5mzvELwpuIIbzK4kuvIOdhe8C73HZ9GHV/E6dWe6/nWrB+EUcA5Zrr+BTc7xZ7Ir8eLzQ0ZZLYEuDNlnwA7BjmBm7WGGNLyZ6cVzdHVde6bd9t2K285/wR5aYLAzki8km+1njNABuhv+aN3in4LqjC26j4gijw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(376002)(396003)(39860400002)(136003)(8936002)(4326008)(9686003)(2906002)(86362001)(66556008)(83380400001)(33656002)(66446008)(66476007)(64756008)(6506007)(53546011)(66946007)(91956017)(7696005)(76116006)(26005)(8676002)(55016002)(71200400001)(186003)(54906003)(6636002)(316002)(52536014)(5660300002)(478600001)(4744005)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: zQNlfDd7lm1SaxJp5YH6sg8Y4bGQte1YrnTG5ikHAUc974mzWJ7fzC+n0ahZQhbS8B8ce2DfhGm1lHrchsopnt347RxDFyeNtCjz+HW7RnK73zXiipQZvBejg40GLHopDkKNIkQ0uTwvHbeW1OqVFhLWywLIDTSH8YGXpttV8yoeSNQA+dSV0o4yP+9/SfWejFh2McUFwzp09w/ij+/O+Cfzh31MO9C6qqrWvumfk4gKrXJbJdR0gFtqFrY/yajH5O1B9QPVnignm3rHB3FHsk/BL1kd8qyznIEjbzDJIsCgYhFJtZyyaTwFgJhrYjBMqQHZcR17OKLW4xyUuNGJTr+VZzpkblQj8mQBsy4ZxIngmFpBYSspKX7D+0EY1QA/5s1brZv0QMIhdBM0F3QYN8QTM1P4ND/4MBXt3xblMnBvP+CbxtBc94BsxrhofzMXw93BBeD5CCEBRb+86/1QtuhWRUni/lbLJbYgqGnzYKBvANfw2C2KYEfzOZOf6Fpu
+x-microsoft-antispam-message-info: VkGHvO6BW1CrC9Tg4LHFPZxmQm7QJWuyhHENVVpy1kB06MSEog+XsAYvGUgdUgJ+LKupucbHNgiYazssp1EO2yVBBnripub8ooE2Gg60Xj43Csb4iH4CvcG+LT2w71iTOVxPnVwa+yk/fNFJ6atmM493y/07JL0uCub8FRaMA2ubZnxSu5KtLJEHWO3E8cxGN/PMDt0enSYEP4xMlYlCbePZuLWychZH23LP+GrBjeGOxcLphB+dVrguvcbbkHV/UDdBYgmO8o4TeQEZcjz0UNgAAVrjpxn0TMO7wq/LXMYZfc28GcDuwjPBDjjPGJHqapOSvW6g8+ncYxxSQcelbA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1432.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(346002)(396003)(136003)(26005)(6506007)(66946007)(52536014)(5660300002)(71200400001)(66446008)(66556008)(66476007)(64756008)(7696005)(478600001)(6916009)(86362001)(4326008)(186003)(76116006)(54906003)(33656002)(9686003)(7416002)(2940100002)(2906002)(8936002)(8676002)(55016002)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: yaxWodvcaZ0lXIoAUlhQbJBNaUr7T+q/lYjZ/pGUy4sBg7fQM4smAForQR3H+zLa3QudelbMkDTq5ZKFjRV/CixeiaO8Ub58EFLWSUeDXDrEf1dKPvDBCHdSmYNNngeITuOp9SyI73p3d/TBZSrXpUJbsJ0pmpJyATsLQxIQocmkyWcvd2yoyVmR2KahzTweewaQp6sckDIOR1lmYJisaZz4RP0h+CwIR8oBRkPhfywpjA/7WvOP934xUbiRRoP3n80nLIGipY/J5hm1Lb3h25yNy57ZyDo1Lk7OCwfQkIfhNgFLiJm5TjhOwo4nUFdel5/uoTGn7Cadr+Np4WbP84m6P/W4MdK5Trec6dmurEOv5y+jGb6f2WgCCYZn+MRTp+rtC4yzAJR7F0oceLe/AM35+VE9NQv8rCAuah0kcH9Pan79oAe14J61+E/VVW0mASt67gqXEOTRFAb5tVlyi4us2erzZvWXhGw5GxulEbvQ7izDqtRPsmePFtwx6tA7
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c72f9911-8596-4aad-e294-08d81f516043
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 13:02:43.9850
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1432.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5358174e-9f99-42ab-9070-08d81f5173ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 13:03:17.0736
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hapokm7eCjIVhe9xdPY/CuU18J0fKnkk4PyVda1rsXu65307QO5wILa8jWBkA8+f3sC+9hJ1RWEHCcxq4m8GWkgU8ZHpx31F6hKhqB+CxHM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4159
+X-MS-Exchange-CrossTenant-userprincipalname: RN1XwZlXINNoJt6T04Juvq4U11YfTXFGBH6A7QEQWvfovkqjFGNJdYVo1oGnTFZVpHHfbj1JrkhDn9xdqRxXCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1783
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/2020 08:56, Kanchan Joshi wrote:=0A=
-[...]=0A=
-> Yes, zonefs does not use bvec iter. But while enabling io-uring path for=
-=0A=
-> zone-append, I hit into this condition returning -EINVAL. =0A=
-> =0A=
-> Reference (from user zone-append series cover letter):=0A=
-> "Append using io_uring fixed-buffer --->=0A=
-> This is flagged as not-supported at the moment. Reason being, for fixed-b=
-uffer=0A=
-> io-uring sends iov_iter of bvec type. But current append-infra in block-l=
-ayer=0A=
-> does not support such iov_iter."=0A=
-> =0A=
-> And zone-append doesn't have a problem in using bvec iter as well, so=0A=
-> thought that this may make infra more complete/future-proof?=0A=
-=0A=
-As long as it's no problem for current in-tree users please keep it as is. =
-=0A=
-Please submit this patch together with your io_uring series as a preparator=
-y patch.=0A=
+Hi Alex,
+
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Friday, July 3, 2020 2:06 PM
+[...]
+> > > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  3
+> > > +
+> > > +struct vfio_iommu_type1_info_cap_nesting {
+> > > +	struct	vfio_info_cap_header header;
+> > > +	__u32	flags;
+> >
+> > I think there's an alignment issue here for a uapi.  The header field
+> > is 8-bytes total and info[] should start at an 8-byte alignment to
+> > allow data[] within info to have 8-byte alignment.  This could lead to
+> > the structure having a compiler dependent size and offsets.  We should
+> > add a 4-byte reserved field here to resolve.
+>=20
+> got it. or how about defining the flags as __u64?
+>=20
+> >
+> > > +	__u8	info[];
+> > > +};
+> >
+> > This should have a lot more description around it, a user could not
+> > infer that info[] is including a struct iommu_nesting_info from the
+> > information provided here.
+> > Thanks,
+>=20
+> sure. BTW. do you think it is necessary to add a flag to indicate the inf=
+o[] is a
+> struct iommu_nesting_info? or as a start, it's not necessary to do it.
+
+seems like I misunderstood your comment. Does below description suits
+your comment?
+
+/*
+ * Reporting nesting info to user space.
+ *
+ * @info:       the nesting info provided by IOMMU driver. Today
+ *              it is expected to be a struct iommu_nesting_info
+ *              data.
+ */
+struct vfio_iommu_type1_info_cap_nesting {
+        struct  vfio_info_cap_header header;
+        __u32   flags;
+        __u32   padding;
+        __u8    info[];
+};
+
+Thanks,
+Yi Liu
+
+> Regards,
+> Yi Liu
+>=20
+> > Alex
+> >
+> > > +
+> > >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+> > >
+> > >  /**
+
