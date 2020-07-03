@@ -2,113 +2,103 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F40C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7E20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:30:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iaD8iCHT"
+	by mail.kernel.org (Postfix) with ESMTP id B3D9D20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593747163;
+	bh=cY3ZXCphbp6Bd6g8eTIXgPjm8svRdi8PK6+pdgEY2Eg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Yusbwz0JakPBmOHrmduzae704C+gSoR5U1WSdkX0oOQzVGa2Zjd8VI3jDlmjg32V4
+	 4lBrmECZyS1k6qiH5Ly6McRk0jzt06F/kmPlA1tnq8A0r1J4uNNVsAb2BVEBGWgAtf
+	 xcFG7KGGcqL6FL0JezxXArsipvF1ShCoDkUn2Voc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGCDaI (ORCPT
+        id S1726100AbgGCDcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54934 "EHLO
+        Thu, 2 Jul 2020 23:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgGCDaH (ORCPT
+        with ESMTP id S1725937AbgGCDcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:30:07 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A335C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 20:30:07 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d4so14456172pgk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 20:30:07 -0700 (PDT)
+        Thu, 2 Jul 2020 23:32:42 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A2DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 20:32:41 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g139so17566924lfd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 20:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mhHWKWz4+7rswG/cVf5u/2XBys3C/A1wtkJS52atwvM=;
-        b=iaD8iCHT2tH5aaetOxDpmb+hp2NNKCSgqWir0PneWlfh4jPSqWmG3Fq/6hs0On7hGp
-         gI0BLO0U6dRmbAGhJjcsNID08E0c6sOnvn+Y0TDwzf4kOTQ8/QUp/wdQzgZVNfTKxMpZ
-         pED1PF+Nfrmmp0Zu8JYR/O0h5j4QoT8142OiY=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HKrI4dJKbvS2Zs02hCoAOreYiDF6WXutUVQY7w6Sug8=;
+        b=W1m9caZiHMlzdfuC0OJSkqCvPiBMLKBTPkMBKUZdOkTSwUAMzcgNEZKgW1Rn9mNH4h
+         +uo7lgPQDHrpxBNqC5wnv/A92dCP8bOq4BX8BB/ULboTx4ORD/cGKx4RVt2g91wWMcCL
+         ePEdPU1E3hINe6ohxBNFhIuv7OvpYEIxwVtZc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mhHWKWz4+7rswG/cVf5u/2XBys3C/A1wtkJS52atwvM=;
-        b=EV05ewFAcI5XPb9utm8rBBHjpSPVIlLwVoC8xmb/fqwD6PB1WwzKHuLlJ1UkVq0U43
-         wVkyBi6XiTxCAmJgBsK7Xu4LkWwaAEx4zZiKvVTW5AxJdntveqXS8mlkKpXmZiTp/gjS
-         vzzDiH6PkUrFpy5lKCJeF59+bbRLM2Y1miJ3IeWnKDLTyelHYoMKutPTxu6d0TlXotcX
-         ijNaK2NXox318Z1RCUO33hjEkwgKqeRjf4TV0EJXJ0n16S8WWhjrv8aoV2ugFHX5X+6n
-         l3948YrQL4pXU6iasdQ/+plrAl67QYFKe20hcLkoRK8919rmDCKMr4GLrGybCmgP/3gk
-         +nEw==
-X-Gm-Message-State: AOAM5324n7X3u//8ffTLP6H6a6wqbbMFqZ2g6GwuJ9jlJhovC5ziUhye
-        u2aW0tekttu6yh9x5A3MhbGxjpV/CiToKQ==
-X-Google-Smtp-Source: ABdhPJwOdorMAP4NfsHg8xE4MqSzD2/7knFWxWKzUNwHu1GYKFX+989l2/Yd0xXOGX/+GHWBW8hGOA==
-X-Received: by 2002:a65:448c:: with SMTP id l12mr26586535pgq.234.1593747006589;
-        Thu, 02 Jul 2020 20:30:06 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:725a:fff:fe46:44eb])
-        by smtp.gmail.com with ESMTPSA id 204sm10372466pfc.18.2020.07.02.20.30.03
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HKrI4dJKbvS2Zs02hCoAOreYiDF6WXutUVQY7w6Sug8=;
+        b=QiIDc55TsppIcvbAk3V+bFiiT05C3TtrypoAY3VjATfzSDRHPExfGy/coTNF7rZ7rw
+         gftu2fg2mfEZkYba8EbUU+YMmmm8qZgXq8h/yOaWphdqIe697PwC8aPiINPYML3VteCi
+         0MXgc+4nlnCSkBWKpKgQZy1Jw8d4QDPllu7FyE0g0tVyfvy3aeYkA8bXBpJha/Z86bYT
+         6C+LR2DztalvYcbVgUstF8HkKIjxzcO2PT6yRq2pLFNQX48eXUeoBNSUDmZZrP7CCdCJ
+         O8FF4uB/JOgLovgJiSmh9LP83aId2AX3R7n1ic7zq+kNKy6C6dJ8zvb0tDgg2etWUlph
+         /p5g==
+X-Gm-Message-State: AOAM533pnixCJ5DQQYoQsQW9wcaaYdn/z4K0LmON6K/JKs9LnXsvF0VS
+        h7DDprskXM+ShKZe457eJ4EOpcNTbLA=
+X-Google-Smtp-Source: ABdhPJwjwltvG3iwqjkPxnUAr/HgLPtjL08ZbvBbBBQBqm5bEucQE5m3xZaJOjRDq5wCVNWpS48D+g==
+X-Received: by 2002:ac2:5226:: with SMTP id i6mr20615126lfl.55.1593747159496;
+        Thu, 02 Jul 2020 20:32:39 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id k6sm4135349lfm.89.2020.07.02.20.32.37
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jul 2020 20:30:05 -0700 (PDT)
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Benson Leung <bleung@chromium.org>,
-        alsa-devel@alsa-project.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Subject: [PATCH] ASoC: cros_ec_codec: Log results when EC commands fail
-Date:   Fri,  3 Jul 2020 11:29:48 +0800
-Message-Id: <20200703032948.2185290-1-yuhsuan@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+        Thu, 02 Jul 2020 20:32:38 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id f5so19207008ljj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 20:32:37 -0700 (PDT)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr3550221ljj.312.1593747157671;
+ Thu, 02 Jul 2020 20:32:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200701184131.GI2786714@ZenIV.linux.org.uk> <CAHk-=wj_2v9m+yZioE4vOLGW1mc9SBa5+++LdeJ86aEeB5OXcw@mail.gmail.com>
+ <20200701195914.GK2786714@ZenIV.linux.org.uk> <CAHk-=wj-CYhKZR8ZKQgi=VTx=o7n6dtwPXikvgkJ3SdiqRPd8A@mail.gmail.com>
+ <87lfk26nx4.fsf@mpe.ellerman.id.au> <CAHk-=wicOPQwuDUzFyDTBgr4UvQJHPdCX7_6BLaK6cve6CqBSg@mail.gmail.com>
+ <20200702201755.GO2786714@ZenIV.linux.org.uk> <CAHk-=whW7qYEK-MJMS9gKf-K4cBNGTq0pv-5wo4bqE_QtUfkDw@mail.gmail.com>
+ <20200702205902.GP2786714@ZenIV.linux.org.uk> <CAHk-=whm66UhcEQgXHr8hPkzyDTOdbGikLbSg0zJ4-b93aSg8w@mail.gmail.com>
+ <20200703013328.GQ2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200703013328.GQ2786714@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 2 Jul 2020 20:32:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh-qbjVo5-cQCAjEbQ0ykN+x6CXpNqYHqaj8kikhnWHpA@mail.gmail.com>
+Message-ID: <CAHk-=wh-qbjVo5-cQCAjEbQ0ykN+x6CXpNqYHqaj8kikhnWHpA@mail.gmail.com>
+Subject: Re: objtool clac/stac handling change..
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Log results of failed EC commands to identify a problem more easily.
+On Thu, Jul 2, 2020 at 6:33 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> What about load_unaligned_zeropad()?
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
----
- sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+What about it? It doesn't care. It's for kernel addresses, clearing AC
+on exception does nothing.
 
-diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
-index 8d45c628e988e..a4ab62f59efa6 100644
---- a/sound/soc/codecs/cros_ec_codec.c
-+++ b/sound/soc/codecs/cros_ec_codec.c
-@@ -90,10 +90,17 @@ static int send_ec_host_command(struct cros_ec_device *ec_dev, uint32_t cmd,
- 	if (outsize)
- 		memcpy(msg->data, out, outsize);
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	ret = cros_ec_cmd_xfer(ec_dev, msg);
- 	if (ret < 0)
- 		goto error;
- 
-+	if (msg->result != EC_RES_SUCCESS) {
-+		dev_err(ec_dev->dev, "Command %d failed: %d\n", cmd,
-+			msg->result);
-+		ret = -EPROTO;
-+		goto error;
-+	}
-+
- 	if (insize)
- 		memcpy(in, msg->data, insize);
- 
--- 
-2.27.0.212.ge8ba1cc988-goog
+There's no user_access_begin/end anywhere around that thing that I can see.
 
+             Linus
