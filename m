@@ -2,150 +2,115 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAFC20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUMVPFF4"
+	by mail.kernel.org (Postfix) with ESMTP id 12ED220890
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593761794;
+	bh=Oentednt1zT1d2MtszJLU5AGg8bXKnXt96KHFyv+ulk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lRGrn7mCCOkIC7iGTzo4teQm3afNC+KVL0Jm64vxdduNGpAWvgp6imKXG+FVctGfp
+	 eAyiA/k6bSntbGapuk+fvhkQCscHgKuTBNnITvVZ/4LttLAz2a2jZZsEQ9/jXcx2R+
+	 snoldA0UMvDKDwhYMWmTPu8i5f8gs2NkzST4/AvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgGCHgC (ORCPT
+        id S1726446AbgGCHgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCHf7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:35:59 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FE2C08C5C1;
-        Fri,  3 Jul 2020 00:35:59 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m9so3388346pfh.0;
-        Fri, 03 Jul 2020 00:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kvRCd9PLGVjMWPK2r0TpbnS9leKQS2B3nkKMRCX0GBc=;
-        b=tUMVPFF4vP2G4/hgBKCTYJMF+Rw+SPYAjVXhxPe0fKu026bXGY5X+I5s+FA04mZq6a
-         Et0nP5rO88tHymCo1NOQQ/W/kJDXtP6UaLNrJgLJXf8JIfg9yGsu8i0ZSFQwVqPFYkBX
-         Wb6Vj1fQ2w43tn7SzVOKglgLx7emY1FiLNKNQIKSKfEbs73HUANA4nkFZ70EQNdNBHgB
-         kLu3aQQ0XiLbZOQRXQm1V4GyCEOvfFXXsND1+pAzYPksxSg2lNgJiEO8xDchGcWp3HaT
-         604/CxpVjNs6i0Fkg797X4y1Q+H9nLZnDzhhVAcrw64zCjA8NYJr7L1Gl1Wek4A7IMtT
-         ackg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kvRCd9PLGVjMWPK2r0TpbnS9leKQS2B3nkKMRCX0GBc=;
-        b=KM77fhNHvJYfgF//AXpK/CEv84v9mE3160l4FoZYePxhOsOYN5XqgLW3qLt9tTJVK6
-         NHD/bEUNA3YZRLuTrrL/PaLFZGaGhzMh3vZaYXrDlng04K/Ekmd1jgoRPC66tXZBKIJf
-         rNOvMH5xcCy8PyaBoMIy+dNehMv/JgH0oUHQkYGQydkWIgj86qCjUnpfaaTvAm2SCdT+
-         wDyozIRaiNLIXQCPtKcpMFhiXbpaUIC8rxxov6K0yJZLpaZ0xU3HK1Hv/2+rT9DonMmD
-         AP8LfI43wW/XSJptMqy/5zXuwWpkG//KKU+llwGH2Zo5WYSZaghE95ZkvJAw+8m265dO
-         3NPA==
-X-Gm-Message-State: AOAM5331p1annmOOHySzP5Jl3GdrJnj9ZhesGhISb9oMzmEt38qv8yhX
-        rh4ZrGj+Tw4wQaUijz8wCsE=
-X-Google-Smtp-Source: ABdhPJwRaPz9pu4t64jQMYoToKXv30O7t7kk9YVbA5y1a5jnOvLY5hddEayNHp5CZ6Ie32+ngdqn2w==
-X-Received: by 2002:a62:1c13:: with SMTP id c19mr17009102pfc.52.1593761759369;
-        Fri, 03 Jul 2020 00:35:59 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id y7sm10218499pgk.93.2020.07.03.00.35.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 00:35:59 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v2 6/6] powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the lock hint
-Date:   Fri,  3 Jul 2020 17:35:16 +1000
-Message-Id: <20200703073516.1354108-7-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200703073516.1354108-1-npiggin@gmail.com>
-References: <20200703073516.1354108-1-npiggin@gmail.com>
+        Fri, 3 Jul 2020 03:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725960AbgGCHgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:36:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 438E2206B6;
+        Fri,  3 Jul 2020 07:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593761791;
+        bh=Oentednt1zT1d2MtszJLU5AGg8bXKnXt96KHFyv+ulk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kF0XAOQMHGdSd0dtXCAyU3O7ghd04gWhLW67VC01rSbCFmq3g6lvehO4yb+gR4clx
+         X8il5WYAcNRHbxLEisp2nN1ayH6WM5bHCpIu97WufhBNCFGu087C2GtJCKWJqT6vdM
+         +Xn2Zm452MRCul3CBkZnTNd3kUPCMfEZANY7NCL0=
+Date:   Fri, 3 Jul 2020 09:36:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rodolfo Giometti <giometti@linux.it>,
+        "Eurotech S.p.A" <info@eurtech.it>
+Subject: Re: [PATCH 23/30] usb: host: oxu210hp-hcd: Move declaration of 'qtd'
+ into 'ifdef OXU_URB_TRACE'
+Message-ID: <20200703073635.GA2364726@kroah.com>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
+ <20200702144625.2533530-24-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200702144625.2533530-24-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This brings the behaviour of the uncontended fast path back to
-roughly equivalent to simple spinlocks -- a single atomic op with
-lock hint.
+On Thu, Jul 02, 2020 at 03:46:18PM +0100, Lee Jones wrote:
+> If we assign 'epnum' during the declaration we can also avoid "ISO
+> C90 forbids mixed declarations" issues.  So it does looks like we
+> can have our cake and eat it in this scenario.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/usb/host/oxu210hp-hcd.c: In function ‘submit_async’:
+>  drivers/usb/host/oxu210hp-hcd.c:2040:19: warning: variable ‘qtd’ set but not used [-Wunused-but-set-variable]
+>  2040 | struct ehci_qtd *qtd;
+>  | ^~~
+> 
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Rodolfo Giometti <giometti@linux.it>
+> Cc: "Eurotech S.p.A" <info@eurtech.it>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/usb/host/oxu210hp-hcd.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/host/oxu210hp-hcd.c b/drivers/usb/host/oxu210hp-hcd.c
+> index 120666a0d5901..b00673295c9fe 100644
+> --- a/drivers/usb/host/oxu210hp-hcd.c
+> +++ b/drivers/usb/host/oxu210hp-hcd.c
+> @@ -2037,16 +2037,15 @@ static struct ehci_qh *qh_append_tds(struct oxu_hcd *oxu,
+>  static int submit_async(struct oxu_hcd	*oxu, struct urb *urb,
+>  			struct list_head *qtd_list, gfp_t mem_flags)
+>  {
+> -	struct ehci_qtd	*qtd;
+> -	int epnum;
+> +	int epnum = urb->ep->desc.bEndpointAddress;
+>  	unsigned long flags;
+>  	struct ehci_qh *qh = NULL;
+>  	int rc = 0;
+> +#ifdef OXU_URB_TRACE
+> +	struct ehci_qtd	*qtd;
+>  
+>  	qtd = list_entry(qtd_list->next, struct ehci_qtd, qtd_list);
+> -	epnum = urb->ep->desc.bEndpointAddress;
+>  
+> -#ifdef OXU_URB_TRACE
+>  	oxu_dbg(oxu, "%s %s urb %p ep%d%s len %d, qtd %p [qh %p]\n",
+>  		__func__, urb->dev->devpath, urb,
+>  		epnum & 0x0f, (epnum & USB_DIR_IN) ? "in" : "out",
+> -- 
+> 2.25.1
+> 
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/include/asm/atomic.h    | 28 ++++++++++++++++++++++++++++
- arch/powerpc/include/asm/qspinlock.h |  2 +-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+Ugh, nice hack, but those OXU_URB_TRACE defines really just need to be
+dropped entirely.  I'll take this for now though, thanks.
 
-diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
-index 498785ffc25f..f6a3d145ffb7 100644
---- a/arch/powerpc/include/asm/atomic.h
-+++ b/arch/powerpc/include/asm/atomic.h
-@@ -193,6 +193,34 @@ static __inline__ int atomic_dec_return_relaxed(atomic_t *v)
- #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
- #define atomic_xchg_relaxed(v, new) xchg_relaxed(&((v)->counter), (new))
- 
-+/*
-+ * Don't want to override the generic atomic_try_cmpxchg_acquire, because
-+ * we add a lock hint to the lwarx, which may not be wanted for the
-+ * _acquire case (and is not used by the other _acquire variants so it
-+ * would be a surprise).
-+ */
-+static __always_inline bool
-+atomic_try_cmpxchg_lock(atomic_t *v, int *old, int new)
-+{
-+	int r, o = *old;
-+
-+	__asm__ __volatile__ (
-+"1:\t"	PPC_LWARX(%0,0,%2,1) "	# atomic_try_cmpxchg_acquire	\n"
-+"	cmpw	0,%0,%3							\n"
-+"	bne-	2f							\n"
-+"	stwcx.	%4,0,%2							\n"
-+"	bne-	1b							\n"
-+"\t"	PPC_ACQUIRE_BARRIER "						\n"
-+"2:									\n"
-+	: "=&r" (r), "+m" (v->counter)
-+	: "r" (&v->counter), "r" (o), "r" (new)
-+	: "cr0", "memory");
-+
-+	if (unlikely(r != o))
-+		*old = r;
-+	return likely(r == o);
-+}
-+
- /**
-  * atomic_fetch_add_unless - add unless the number is a given value
-  * @v: pointer of type atomic_t
-diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include/asm/qspinlock.h
-index 0960a0de2467..beb6aa4628e7 100644
---- a/arch/powerpc/include/asm/qspinlock.h
-+++ b/arch/powerpc/include/asm/qspinlock.h
-@@ -26,7 +26,7 @@ static __always_inline void queued_spin_lock(struct qspinlock *lock)
- {
- 	u32 val = 0;
- 
--	if (likely(atomic_try_cmpxchg_acquire(&lock->val, &val, _Q_LOCKED_VAL)))
-+	if (likely(atomic_try_cmpxchg_lock(&lock->val, &val, _Q_LOCKED_VAL)))
- 		return;
- 
- 	queued_spin_lock_slowpath(lock, val);
--- 
-2.23.0
-
+greg k-h
