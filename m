@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF22C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEC520870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250462088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593795827;
-	bh=KsrS7I9qqR/6iPnIWnW3dOayryKjYOf6ZmkkltC24D8=;
+	s=default; t=1593795833;
+	bh=avVmBYE85HqmZGz24vFbJj580KfAPUe9Qy5+/5Manoc=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=LFMRwKBqKv9G7zltqlKKMDIe/d88j6Ke5MHNTzQ9sfmtFOUs2SrqyVEz87tNh8GHs
-	 t+vqgVVW4azmGXVRZnHVbSdUsvQoJNA210P0ygZ7xXvf0SPyy8UK3DEQAv3saETDj7
-	 s9/Tm1dZKq5bVC+3MJav4UyNoAeQRVAp9202VjFw=
+	b=QlgjmymvG1srJVBv8T7Suiibw42XUTnvTICMPe0UmP1um6JMEyG3AWQJOaapBU5Mh
+	 bwvJX2dMKBP/t5cB277USkN5CQgR2wULbHyKfEv9Eu2Lmm2R31BGgZrZ37372u7aul
+	 YMmlaSIReBaMq/9yjSn/PSllFQL1p+z9bf+Bgsas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgGCRDq (ORCPT
+        id S1726926AbgGCRDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 13:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgGCRDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:03:46 -0400
+        id S1726911AbgGCRDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:03:51 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADB8208E4;
-        Fri,  3 Jul 2020 17:03:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B5A20870;
+        Fri,  3 Jul 2020 17:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593795826;
-        bh=KsrS7I9qqR/6iPnIWnW3dOayryKjYOf6ZmkkltC24D8=;
+        s=default; t=1593795831;
+        bh=avVmBYE85HqmZGz24vFbJj580KfAPUe9Qy5+/5Manoc=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=rgwVAHhjCRXbq+7n0OzhHWK+4uc5zj7+YlVT55AjXs2sdV7yoqqdUdLOHIxOxsehm
-         006Tf70B4NGnZO7dqN92/JLF8oLFDJM/SdiUAGBS6afpjiCbFuV9lyfRfPN51+GgXm
-         vsfNMGBQNL7bCi+4rxkHwAgIwDVJ96roSiej3V3o=
-Date:   Fri, 03 Jul 2020 18:03:43 +0100
+        b=kAxCMucRahfO2ghUeJK+MEqOP+R0sb8agJKsi5oXJcHuMs4fZ6Ol7ftUCaB5qerV1
+         gO7asNnUfNJ9DL/jfAdBrO1MlU6niawzdHr4C2MS9vF84zwDWKMmOdnJK6DQo0eaA3
+         qkEHs36FuA9MxZpytVjmfm9EfEzEnd01vTyCN2qI=
+Date:   Fri, 03 Jul 2020 18:03:48 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     tiwai@suse.com, festevam@gmail.com, lgirdwood@gmail.com,
-        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, timur@kernel.org,
-        perex@perex.cz, alsa-devel@alsa-project.org,
-        Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1593506876-14599-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1593506876-14599-1-git-send-email-shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v2] ASoC: fsl_asrc: Add an option to select internal ratio mode
-Message-Id: <159379581381.55795.16716505708033817338.b4-ty@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>,
+        Colin King <colin.king@canonical.com>,
+        Brent Lu <brent.lu@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200702114835.37889-1-colin.king@canonical.com>
+References: <20200702114835.37889-1-colin.king@canonical.com>
+Subject: Re: [PATCH][next] ASoC: Intel: bxt-da7219-max98357a: return -EINVAL on unrecognized speaker amplifier
+Message-Id: <159379581380.55795.4909094479360848314.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 16:47:56 +0800, Shengjiu Wang wrote:
-> The ASRC not only supports ideal ratio mode, but also supports
-> internal ratio mode.
-> 
-> For internal rato mode, the rate of clock source should be divided
-> with no remainder by sample rate, otherwise there is sound
-> distortion.
-> 
-> [...]
+On Thu, 2 Jul 2020 12:48:35 +0100, Colin King wrote:
+> Currently if the ctx->spkamp is not recognized an error message is
+> reported but the code continues to set up the device with uninitialized
+> variables such as the number of widgets.  Fix this by returning -EINVAL
+> for unrecognized speaker amplifier types.
 
 Applied to
 
@@ -70,8 +70,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: fsl_asrc: Add an option to select internal ratio mode
-      commit: d0250cf4f2abfbea64ed247230f08f5ae23979f0
+[1/1] ASoC: Intel: bxt-da7219-max98357a: return -EINVAL on unrecognized speaker amplifier
+      commit: c950e9fcc79b8fedd3126ede4dcd70add8ea5339
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
