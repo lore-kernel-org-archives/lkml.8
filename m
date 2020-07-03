@@ -2,56 +2,55 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B04FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A54A20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2941720674
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a+n+ymXi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="joEV550q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgGCDkl (ORCPT
+        id S1726117AbgGCDqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:40:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58803 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGCDkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:40:40 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com ([192.55.55.45])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0633eVnt1800193
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 2 Jul 2020 20:40:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0633eVnt1800193
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020062301; t=1593747633;
-        bh=817oCu8K6NZbSa3m7/cJOBsGe3z0gmQJiu7c/e326N0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=a+n+ymXiIIrIXe97vQU0jX0h5wBF/2nvDGCnmMQsbE7hP3weL+UD+vC0IIKcxBQ4u
-         llcKVTWJOPx24lHw7+MGSmxvb5vvnPxcxHSja8cF+lzLeA/lHXA9ZM8OH8GsUqe7KO
-         aOntkd4MWesL1SBDSDQzKSAXaJCbpKDLClNWVt20yoH3RmmrljoLB4JpB4k3x9qeIg
-         UT1VFZwB2gT05Z5s4lYsjvBe9gN/ImG64u8KFKSo6hXk8ZzdnPN57+dZ2N16DnVj7U
-         m0BenlB0+RXDIuVGaPYw+XIQwjSwq0dlE/oaRZ8sx0O9AS2s0Ifwq3PxwcPptydLWO
-         KBIELBW8lP/2A==
-Subject: Re: [PATCH 09/16] initrd: remove the BLKFLSBUF call in handle_initrd
-To:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Cc:     Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200615125323.930983-1-hch@lst.de>
- <20200615125323.930983-10-hch@lst.de>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <514b0176-d235-f640-b278-9a7d49af356f@zytor.com>
-Date:   Thu, 2 Jul 2020 20:40:31 -0700
+        Thu, 2 Jul 2020 23:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCDqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:46:24 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0863C08C5C1;
+        Thu,  2 Jul 2020 20:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=tl1FdWvpFQnPexFdlrgm6yvYDCYbeKdU9qtH/0JodSA=; b=joEV550q2IT7SFooW/7hNlij3c
+        gQLfbxh3lzKhQAl9VZB2eMkzINzD587BpyAA8Ns/6cElFEjiIv5HRdl4pzxQIoZfZ1Izy4IKhqPUn
+        UaDycqO6njqDaS8mK0JqtqnXR40aAqs6gqoRjjZTGmD5qSGRJIDQEExIJLXkcSSh/gxMv1S5ppcXw
+        tu2mMrvQS7Y64m83ni4AB3VINOJpY5Qhou20Rnb3+18VV1O0XP4lKk6f5qwcs84Xfhj729UbmJ0mG
+        qyKsw0ya5GLIKauycKTkb2Ay2T19yT3MIdQVT7FRlearjFkhfL398cjAogqQjzGL9LGWYl78P/JaZ
+        aScU8aOw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrCeZ-0005Fy-AJ; Fri, 03 Jul 2020 03:46:19 +0000
+Subject: Re: [RFC] many-files Documentation patch
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <ca6d7248-df70-4a39-3cbe-b49f286d5e50@infradead.org>
+ <20200702161207.082d42e5@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6ed53b44-0dd7-7191-74fc-382712a67de9@infradead.org>
+Date:   Thu, 2 Jul 2020 20:46:14 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200615125323.930983-10-hch@lst.de>
+In-Reply-To: <20200702161207.082d42e5@lwn.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,17 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-15 05:53, Christoph Hellwig wrote:
-> BLKFLSBUF used to be overloaded for the ramdisk driver to free the whole
-> ramdisk, which was completely different behavior compared to all other
-> drivers.  But this magic overload got removed in commit ff26956875c2
-> ("brd: remove support for BLKFLSBUF"), so this call is entirely
-> pointless now.
+On 7/2/20 3:12 PM, Jonathan Corbet wrote:
+> On Thu, 2 Jul 2020 15:05:01 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> This patch series eliminates/corrects many doubled words, such as
+>> "the the", "of of", "with with", and "and and".
+>> It mostly drops the doubled word, but sometimes it modifies one or two
+>> words so that they make sense.
+>>
+>>
+>> Can (will) Jon merge this patch series or do I send many separate patches
+>> to relevant subsystem maintainers?
+>> or trivial?
+> 
+> I'd have to see the actual patches, of course, but assuming it makes sense
+> and doesn't create a mess of conflicts it should be something I could
+> apply.
 
-Does *anyone* use initrd as opposed to initramfs anymore? It would seem
-like a good candidate for deprecation/removal.
 
-	-hpa
+Thanks, Jon. However, I have become hesitant to send a patch series of around 100
+patches at one time, given that submitting-patches.rst warns against doing that.
+(even though these are all small patches)
+(I guess that stable review is excused from that limit.)
+
+I think that I should break them up into smaller (logical?) groups
+to send them.
+
+We'll see...
+-- 
+~Randy
 
