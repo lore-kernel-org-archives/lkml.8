@@ -2,121 +2,129 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46E4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943F8207D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524792088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJjrrEkU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZ7Yr9sD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGCApT (ORCPT
+        id S1726460AbgGCAqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgGCApS (ORCPT
+        Thu, 2 Jul 2020 20:46:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49641 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725937AbgGCAqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:45:18 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A368C08C5C1;
-        Thu,  2 Jul 2020 17:45:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cv18so6738519pjb.1;
-        Thu, 02 Jul 2020 17:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xxCISvRtfhl8oL/cHz8IcSytvLoDXt2VBe6qFVBHxUE=;
-        b=nJjrrEkUAQCGFmGDNhnb5PVExZ3pDaEIWh7BZWYbQZD2UR9o86pnVnUTyuKaTuTJDW
-         Jpv6HrHW6Wd96BITv2uK8OH5weHw4hI8kcRDXFq3O1XzNvOlUrd+DUkufbneM1Hsi6JO
-         v3E0y8rkNX6xX9HKg44GveDw1iZsMMTNN8nogn4UObvseMisxlDOj+eeiCbfVr/pr/0m
-         JVMZVayOQCVBgveyiz63ZuW/T6mj4yECIx+Ui3dqVTXvj4WHXz2SXPuuaVC4XL8uWQvP
-         o8ct/VHBaCQkVA3WFDpmBrAzUREPYlYXnmBY40tobsjxomCu7nyheU/mGfpxUiCtZ5Fz
-         uPag==
+        Thu, 2 Jul 2020 20:46:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593737183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9rqwmq1BXfatZyLmM0JFLeV+p7atwrIAzGXvJ0Y4ZPM=;
+        b=HZ7Yr9sD3dyZ4XewrQz2BviK+WqzUeBm8Vm64qUj1FnjiU3aeA2CF/g+F12k1K6rViKY66
+        h0qUfS9rLODzGqUrc5KwMSr5zRFy63LP7ZfVygUSuIugMHnzp+94dIZrC6xTMAb5KIg0mw
+        FebPKwGi6TQ2SlhIcPXaq1W6AlvKDZI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-oJFzVXfkOjK0m6g-aZHR_w-1; Thu, 02 Jul 2020 20:46:22 -0400
+X-MC-Unique: oJFzVXfkOjK0m6g-aZHR_w-1
+Received: by mail-qv1-f69.google.com with SMTP id j6so19569958qvl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:46:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xxCISvRtfhl8oL/cHz8IcSytvLoDXt2VBe6qFVBHxUE=;
-        b=eKUpemZ8+x+FBdCqiH1eJGSJmZAnnrzKXgXRansfe/SNLmlIad3NilrcaOhK0zGH98
-         jj+NZufn8HJWjCR0Us6OAYCPZ8CXFm88tIE8unbomcfaPitCN31NQ8Uu/DFMYXR2tJp9
-         oOYiC3er2gJAmSUSM3BLEwcfnqlu0DfIuA4emtNYnKuu2ZiBnxXoUqWYPSZGHUfhSxP8
-         AA6MY6zbpsT5/Tu1/y2+279qEZHRK7ABgyct5OJiUoeoMfvBT+Ot/x4DnNmAAZY11jv+
-         T9EJ6N+klwYNLf3xyrP15u0GjLT6onEZ1/2SG5B59goF+RUxvknbAnrydVyU7L819QpA
-         mJ4g==
-X-Gm-Message-State: AOAM530OIiyzeaf6A7xxHA4Xf7wcMXBmKH/sJ2UiHnphUyVbJiv9m7LJ
-        c2H9FpawIfRWfH422DGiqzZm4huXj9o=
-X-Google-Smtp-Source: ABdhPJz+qnIK30TK5zKdKNpuN2jPEhIs1H8VMPfoPIeYzhAgJgFZjY/TlqevmnyCB1cDQRYUNKAH3A==
-X-Received: by 2002:a17:902:369:: with SMTP id 96mr6833712pld.214.1593737117645;
-        Thu, 02 Jul 2020 17:45:17 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 125sm9302049pff.130.2020.07.02.17.45.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 Jul 2020 17:45:17 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 17:45:16 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     rentao.bupt@gmail.com
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        openbmc@lists.ozlabs.org,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>, taoren@fb.com
-Subject: Re: [PATCH] hwmon: (pmbus) fix a typo in Kconfig SENSORS_IR35221
- option
-Message-ID: <20200703004516.GA100326@roeck-us.net>
-References: <20200702221349.18139-1-rentao.bupt@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9rqwmq1BXfatZyLmM0JFLeV+p7atwrIAzGXvJ0Y4ZPM=;
+        b=Y1AUJ3SwIKDlt7YcDGSO5YouqnaojpT1io4kj7K4aHE9pUcftwRF3uJakapxgKwbHn
+         svduJCq6eWlqAfhYcsuTpk0UqLyn5cIQ2JziJJKDReRKbZ8Uk1w6zi2G5p4L5XHJPt2t
+         kyafTYCHHPBhAAph5X48rUcBBhXOwQfDEY0wy8IB7haOSUtIYDZhoOqyhBidVNR9HRqv
+         yDfRkPfR7SD81EM1pWYgbJh5wfl8aSDkc1K6VOZz3np7OmH4zjrwGf5QltZ8vgQ+y0wY
+         N1CD+stmhDeLmni8eYe7noTX3YLsHEaXdDiZbjmzj5UPfVu/gYb7A+IuFJ4Dgj6cfDFy
+         AknA==
+X-Gm-Message-State: AOAM5337B8is10cJXdlqeXUVKe3SFmVzdjtwJ9MOMWkiHrI5XWPCwyFJ
+        57RvGzqgdaT/kJFlV9ZV2vUP61EezssAl6OlDJOHNTlPt0XuzXejqudajA636v/unUbAZ3uVxpm
+        AytOXjEIbQinjJ0ePt4vPdG0a
+X-Received: by 2002:a37:9fc2:: with SMTP id i185mr31515432qke.481.1593737181621;
+        Thu, 02 Jul 2020 17:46:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOZVt1rNwhhw6r5JjnkASIBSV0ZVmK0m+nybu6BuerB0f3qAECba+gztBqlgJIH0uHbePjfQ==
+X-Received: by 2002:a37:9fc2:: with SMTP id i185mr31515420qke.481.1593737181371;
+        Thu, 02 Jul 2020 17:46:21 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id p7sm9336307qki.61.2020.07.02.17.46.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 17:46:20 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 20:46:18 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v4 23/26] mm/x86: Use general page fault accounting
+Message-ID: <20200703004618.GA6677@xz-x1>
+References: <20200630204601.39591-1-peterx@redhat.com>
+ <f75ffbf6-5e88-74b8-ffb0-59a316dc6ff3@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200702221349.18139-1-rentao.bupt@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f75ffbf6-5e88-74b8-ffb0-59a316dc6ff3@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:13:49PM -0700, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> Fix a typo in SENSORS_IR35221 option: module name should be "ir35221"
-> instead of "ir35521".
-> 
-> Fixes: 8991ebd9c9a6 ("hwmon: (pmbus) Add client driver for IR35221")
-> 
-> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Hi, Dave,
 
-Applied.
+On Wed, Jul 01, 2020 at 08:35:40AM -0700, Dave Hansen wrote:
+> On 6/30/20 1:46 PM, Peter Xu wrote:
+> > Use the general page fault accounting by passing regs into handle_mm_fault().
+> ...
+> > -	/*
+> > -	 * Major/minor page fault accounting. If any of the events
+> > -	 * returned VM_FAULT_MAJOR, we account it as a major fault.
+> > -	 */
+> > -	if (major) {
+> > -		tsk->maj_flt++;
+> > -		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
+> > -	} else {
+> > -		tsk->min_flt++;
+> > -		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+> > -	}
+> > -
+> >  	check_v8086_mode(regs, address, tsk);
+> >  }
+> 
+> I did a quick grep and it wasn't obvious to me how
+> PERF_COUNT_SW_PAGE_FAULTS_MIN/MAJ get bumped in the handle_mm_fault() path.
+> 
+> Are you sure they get set?
+
+Sorry for missing the context.  This patch is based on the 1st patch of the
+same series:
+
+https://lore.kernel.org/lkml/20200630204504.38516-1-peterx@redhat.com/
+
+Both of them are set there.
 
 Thanks,
-Guenter
 
-> ---
->  drivers/hwmon/pmbus/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 3ad97fd5ce03..e35db489b76f 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -71,7 +71,7 @@ config SENSORS_IR35221
->  	  Infineon IR35221 controller.
->  
->  	  This driver can also be built as a module. If so, the module will
-> -	  be called ir35521.
-> +	  be called ir35221.
->  
->  config SENSORS_IR38064
->  	tristate "Infineon IR38064"
+-- 
+Peter Xu
+
