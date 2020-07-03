@@ -2,111 +2,118 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4776FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA45206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28C6206BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LMbY8QJn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RJajxqja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgGCH5Q (ORCPT
+        id S1726063AbgGCH7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgGCH5Q (ORCPT
+        Fri, 3 Jul 2020 03:59:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57510 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgGCH7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:57:16 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2837FC08C5C1;
-        Fri,  3 Jul 2020 00:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JV8hwZUbSwUCZKyuwgk4vToHzbaTKqDD4etCB411ay8=; b=LMbY8QJnU8h++lYC9Ixlw/dQWa
-        1WEUFZqzw7FpCURd1afG1Z6IWgkxwJebjf4YhQAGW5RoJJPc4LqTTJyzUkwXliHl97EBO2gCoRXIl
-        FA/OuG6pcbp879DUMmHe4MDL26QdmEMvu+pnAuY322ePYwqXIRH5bXR0s4AxkGj4yVu/m0KghQBay
-        owjS3vKCk3yMSTbz0oa2ugslQDKcabPuvXSJEvf7VizjnY8vgIU07t69wd/3clPscDBZ0oIJjwtG2
-        FSlDfZI1AlrLwieVW8Lz1yKfYcVr+tmt1usfsdKKWL9bMyaZczj7L90f7l39mHhwg87qNdo9QOOil
-        fSxvRchA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrGZ3-0000Uj-0I; Fri, 03 Jul 2020 07:56:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D481630377D;
-        Fri,  3 Jul 2020 09:56:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BFD8D203A6153; Fri,  3 Jul 2020 09:56:46 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 09:56:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
-        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
-Message-ID: <20200703075646.GJ117543@hirez.programming.kicks-ass.net>
-References: <20200613080958.132489-1-like.xu@linux.intel.com>
- <20200702074059.GX4781@hirez.programming.kicks-ass.net>
- <5d3980e3-1c49-4174-4cdb-f40fc21ee6c1@linux.intel.com>
- <20200702135842.GR4800@hirez.programming.kicks-ass.net>
+        Fri, 3 Jul 2020 03:59:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0637wv62049460;
+        Fri, 3 Jul 2020 02:58:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593763137;
+        bh=hRJk4qExkZmvzEg1cgK9sURYCcpGTnP5CZ1jdi0sLm0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RJajxqjaSvfdCZBLLTpNvGjpgM/SJyVwjTHopxbF9qAscEtreGY/BkVdSmtCsaZFm
+         uZXD1wAfnH9GLc/FOS1l0yi0hlp0ilj/Y+BYaUFuOy2a4fT15LJ21bDwVx0DL5NSnD
+         R1lbKGGSLer/UIZRLSZjEHqnBlLq9AdL0p6Fha+w=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0637wvJH090818
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Jul 2020 02:58:57 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
+ 2020 02:58:57 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 3 Jul 2020 02:58:57 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637wtXp122879;
+        Fri, 3 Jul 2020 02:58:55 -0500
+Subject: Re: [PATCH -next] ASoC: ti: j721e-evm: Fix missing unlock on error in
+ j721e_audio_hw_params()
+To:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+References: <20200703030910.75047-1-weiyongjun1@huawei.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <8ab2ddf8-88db-a5e5-b97a-76b4fe014bdd@ti.com>
+Date:   Fri, 3 Jul 2020 10:59:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702135842.GR4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200703030910.75047-1-weiyongjun1@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:58:42PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 02, 2020 at 09:11:06AM -0400, Liang, Kan wrote:
-> > On 7/2/2020 3:40 AM, Peter Zijlstra wrote:
-> > > On Sat, Jun 13, 2020 at 04:09:45PM +0800, Like Xu wrote:
-> > > > Like Xu (10):
-> > > >    perf/x86/core: Refactor hw->idx checks and cleanup
-> > > >    perf/x86/lbr: Add interface to get LBR information
-> > > >    perf/x86: Add constraint to create guest LBR event without hw counter
-> > > >    perf/x86: Keep LBR records unchanged in host context for guest usage
-> > > 
-> > > > Wei Wang (1):
-> > > >    perf/x86: Fix variable types for LBR registers
-> > > 
-> > > >   arch/x86/events/core.c            |  26 +--
-> > > >   arch/x86/events/intel/core.c      | 109 ++++++++-----
-> > > >   arch/x86/events/intel/lbr.c       |  51 +++++-
-> > > >   arch/x86/events/perf_event.h      |   8 +-
-> > > >   arch/x86/include/asm/perf_event.h |  34 +++-
-> > > 
-> > > These look good to me; but at the same time Kan is sending me
-> > > Architectural LBR patches.
-> > > 
-> > > Kan, if I take these perf patches and stick them in a tip/perf/vlbr
-> > > topic branch, can you rebase the arch lbr stuff on top, or is there
-> > > anything in the arch-lbr series that badly conflicts with this work?
-> > > 
-> > 
-> > Yes, I can rebase the arch lbr patches on top of them.
-> > Please push the tip/perf/vlbr branch, so I can pull and rebase my patches.
-> 
-> For now I have:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/vlbr
-> 
-> Once the 0day robot comes back all-green, I'll push it out to
-> tip/perf/vlbr and merge it into tip/perf/core.
 
-tip/perf/vlbr now exists, thanks!
+
+On 03/07/2020 6.09, Wei Yongjun wrote:
+> Add the missing unlock before return from function j721e_audio_hw_param=
+s()
+> in the error handling case.
+
+I'm not sure how that return made it in there in the first place..
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM=
+ (CPB and IVI)")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  sound/soc/ti/j721e-evm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+> index 3a2a8b1f3aa3..174306cf53ad 100644
+> --- a/sound/soc/ti/j721e-evm.c
+> +++ b/sound/soc/ti/j721e-evm.c
+> @@ -330,7 +330,7 @@ static int j721e_audio_hw_params(struct snd_pcm_sub=
+stream *substream,
+>  		ret =3D snd_soc_dai_set_tdm_slot(codec_dai, 0x3, 0x3, 2,
+>  					       slot_width);
+>  		if (ret && ret !=3D -ENOTSUPP)
+> -			return ret;
+> +			goto out;
+>  	}
+> =20
+>  	ret =3D j721e_configure_refclk(priv, domain_id, params_rate(params));=
+
+>=20
+>=20
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
