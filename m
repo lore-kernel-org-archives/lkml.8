@@ -2,83 +2,89 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE89EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCE720890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xMIOMhfE"
+	by mail.kernel.org (Postfix) with ESMTP id BCB6F20885
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 21:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593811920;
+	bh=12HoUnAnObPB1mx09APSYcuqlEl+FkuZnLvcO1zbS9Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=MEuPjXYfBkN+HJZUZOYsS5DZ27FTB3h9DgZVLAjp1PjK8rHU/Qh4Gq9A/ceNF7k+5
+	 vJSzHudt5YNaZejKg9ZkD0Y8SoAEPNu4SWetebfrRvElCxn7BY799JHVnrhxcTCyxE
+	 OVzi28k3G0eXYOFaCaEJgWZE8ULzG61+1rhW8OaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgGCVbZ (ORCPT
+        id S1727050AbgGCVb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 17:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgGCVbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 17:31:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9084C061794;
-        Fri,  3 Jul 2020 14:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=J3kyirEKv+fVXi6BKVKxdVL5gJBG/uLnw5IK1dy98z0=; b=xMIOMhfEPWCaNDcVy9h8Hkpfxu
-        J3mYESCsSIpk7MCQ1JjL0g1uv0TPJcMxba8bbszQqZUB2ZQZGssrCbBy3+OZ+8yHNOFifwvPFTtwg
-        fpNbtkwB3HF6s5h56XckaksNC8Ft1+roX0P1IMAxRPS8CxYoMqL8hwbrVX75nr1iFuGRNo3porMQ2
-        yFRnmMRG+Z6LH/TfKPMiqZTXhLTYa3eg2MXzQh9h998n/XpmjQZYApku3w/OKKImVtUCAvbMjf5SU
-        pIdgn1mQdQLaC3TkjVAqmxfjL6ZE14oKhZOMCe/clBhB1iGt+fAzT9o0/R3Qbb2lwRaGEuDmwvS44
-        nj1IxP2A==;
-Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrTHD-0006Rx-QV; Fri, 03 Jul 2020 21:31:20 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 1/2] Documentation: x86: machinecheck: drop doubled words
-Date:   Fri,  3 Jul 2020 14:31:07 -0700
-Message-Id: <20200703213107.30758-3-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200703213107.30758-1-rdunlap@infradead.org>
-References: <20200703213107.30758-1-rdunlap@infradead.org>
+        Fri, 3 Jul 2020 17:31:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726856AbgGCVb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 17:31:58 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7255F20782;
+        Fri,  3 Jul 2020 21:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593811918;
+        bh=12HoUnAnObPB1mx09APSYcuqlEl+FkuZnLvcO1zbS9Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Vn5JskN0tBDSaPDk/NSa7Q1v9Okrd+Q6RYCIw4AU//mdO2NBqFcSYfBHssGMJ8WmN
+         lqvFrMp+MnbFAdv7eDv8blEVN6mSbHzfwmXIIZYHg/q1L5JJEaWabujy/V8IWEZJbO
+         aqT56LosIoGQZrTMDR4utIqMBnLriRJLcyrBhalU=
+Date:   Fri, 3 Jul 2020 14:31:58 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: bug fixes for 5.8-rc4
+Message-ID: <20200703213158.GF7606@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the doubled word "see".
+Hi Linus,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- Documentation/x86/x86_64/machinecheck.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please pull this single UAF bug fix for -rc4.
 
---- linux-next-20200701.orig/Documentation/x86/x86_64/machinecheck.rst
-+++ linux-next-20200701/Documentation/x86/x86_64/machinecheck.rst
-@@ -81,5 +81,5 @@ TBD document entries for AMD threshold i
- For more details about the x86 machine check architecture
- see the Intel and AMD architecture manuals from their developer websites.
- 
--For more details about the architecture see
-+For more details about the architecture
- see http://one.firstfloor.org/~andi/mce.pdf
+This branch merges cleanly with master as of a few minutes ago, so
+please let me know if anything strange happens.
+
+--D
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.8-fixes-1
+
+for you to fetch changes up to c7f87f3984cfa1e6d32806a715f35c5947ad9c09:
+
+  xfs: fix use-after-free on CIL context on shutdown (2020-06-22 19:22:57 -0700)
+
+----------------------------------------------------------------
+Changes for 5.8-rc4:
+- Fix a use-after-free bug when the fs shuts down.
+
+----------------------------------------------------------------
+Dave Chinner (1):
+      xfs: fix use-after-free on CIL context on shutdown
+
+ fs/xfs/xfs_log_cil.c  | 10 +++++-----
+ fs/xfs/xfs_log_priv.h |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
