@@ -2,114 +2,296 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EA1208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:17:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JFeFvps/"
+	by mail.kernel.org (Postfix) with ESMTP id 014AA2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593760728;
+	bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AZZVKN4xQEiGUzl/nJ/7QzqLkhPL2ajYEil6McKwH2eqkuwkEHsjwkYu9IqrJf42J
+	 NPpzys3IJrbxkxcAZGrv04e6qPZfApc5AExw6lxbMR+EBEmH1d6n4ULpksnP7qop1X
+	 /i5YeahdU5Oc/Sklx1QvtppUdxSCYtLQbgid0WGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgGCHRi (ORCPT
+        id S1726140AbgGCHSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:17:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59178 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgGCHRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:17:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0637HWoL115147;
-        Fri, 3 Jul 2020 02:17:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593760652;
-        bh=tpCp46YgYhG/QrH4ChjpFQLXP5Ol+QOmEFujaXnFEPI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JFeFvps/w2XpkSxRKOeoGYS+r9rHLogTZ3ryq3TPoNHlrFsoSe73PrTb/r1LNGu1e
-         MoALpJE2Yvc8JCUNQ26yAkS3aRQ5Qaqb5I8S/egTIQBrt/xU2z1SB9+r9GsxG+REy4
-         eVNfNSyPqlsZR1ZlGZ0K0s9P3a0o0dhMru/IqdyU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0637HWPh031794
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Jul 2020 02:17:32 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
- 2020 02:17:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 3 Jul 2020 02:17:31 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637HTNE007840;
-        Fri, 3 Jul 2020 02:17:30 -0500
-Subject: Re: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
-To:     Adam Ford <aford173@gmail.com>, <linux-fbdev@vger.kernel.org>
-CC:     <stable@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, <linux-omap@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20200630182636.439015-1-aford173@gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <b9052a12-af5a-c1b9-5b86-907eac470cf8@ti.com>
-Date:   Fri, 3 Jul 2020 10:17:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 3 Jul 2020 03:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgGCHSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:18:46 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 805D62088E;
+        Fri,  3 Jul 2020 07:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593760725;
+        bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JWss+/2BfnU0BubfCD6CTXV7nP5QSOYbFhcRQ7yE7SM6q1YF9Y/8/En2cyjlBT85D
+         Shu0NYTOA2BUecDDg3egGC0Zhjty7g8MyqbzgX07Es2ey5tlP62Qaq76WH5NkGK+z3
+         rL+YWlBW7w3I9PE+RuxxOApAbGqewZFxx0P/bLqU=
+Date:   Fri, 3 Jul 2020 12:48:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PTDMA controller
+Message-ID: <20200703071841.GJ273932@vkoul-mobl>
+References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
+ <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630182636.439015-1-aford173@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/06/2020 21:26, Adam Ford wrote:
-> The drm/omap driver was fixed to correct an issue where using a
-> divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-> number.  Through experimentation, it appears that 31 works, and
-> it is consistent with the value used by the drm/omap driver.
-> 
-> This patch fixes the divider for fbdev driver instead of the drm.
-> 
-> Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-> 
-> Cc: <stable@vger.kernel.org> #4.9+
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
-> Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
-> 
-> The DRM version of this same fix is:
-> e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
-> 
-> 
-> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> index 7252d22dd117..bfc5c4c5a26a 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-> @@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
->   };
->   
->   static const struct dss_features omap3630_dss_feats = {
-> -	.fck_div_max		=	32,
-> +	.fck_div_max		=	31,
->   	.dss_fck_multiplier	=	1,
->   	.parent_clk_name	=	"dpll4_ck",
->   	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
-> 
+On 16-06-20, 20:11, Sanjay R Mehta wrote:
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> +static int pt_core_execute_cmd(struct ptdma_desc *desc,
+> +			       struct pt_cmd_queue *cmd_q)
+> +{
+> +	__le32 *mp;
+> +	u32 *dp;
+> +	u32 tail;
+> +	int	i;
 
-  Tomi
+no tabs, spaces pls
+
+> +	int ret = 0;
+
+ret is initialized to 0
+> +
+> +	if (desc->dw0.soc) {
+> +		desc->dw0.ioc = 1;
+> +		desc->dw0.soc = 0;
+> +	}
+> +	mutex_lock(&cmd_q->q_mutex);
+> +
+> +	mp = (__le32 *)&cmd_q->qbase[cmd_q->qidx];
+> +	dp = (u32 *)desc;
+> +	for (i = 0; i < 8; i++)
+> +		mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
+> +
+> +	cmd_q->qidx = (cmd_q->qidx + 1) % CMD_Q_LEN;
+> +
+> +	/* The data used by this command must be flushed to memory */
+> +	wmb();
+> +
+> +	/* Write the new tail address back to the queue register */
+> +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
+> +	iowrite32(tail, cmd_q->reg_tail_lo);
+> +
+> +	/* Turn the queue back on using our cached control register */
+> +	pt_start_queue(cmd_q);
+> +	mutex_unlock(&cmd_q->q_mutex);
+> +
+> +	return ret;
+
+and returned here!, why not return 0, or even do void return here
+
+> +int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+> +			     struct pt_passthru_engine *pt_engine)
+> +{
+> +	struct ptdma_desc desc;
+> +
+> +	cmd_q->cmd_error = 0;
+> +
+> +	memset(&desc, 0, Q_DESC_SIZE);
+
+why not sizeof(desc) insteadof Q_DESC_SIZE, this makes code harder to
+look to check what this is defined to
+
+> +int pt_core_init(struct pt_device *pt)
+> +{
+> +	struct device *dev = pt->dev;
+> +	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
+> +	struct dma_pool *dma_pool;
+> +	char dma_pool_name[MAX_DMAPOOL_NAME_LEN];
+> +	int ret;
+> +	u32 dma_addr_lo, dma_addr_hi;
+
+reverse christmas tree please
+
+> +
+> +	/* Allocate a dma pool for the queue */
+> +	snprintf(dma_pool_name, sizeof(dma_pool_name), "%s_q", pt->name);
+> +
+> +	dma_pool = dma_pool_create(dma_pool_name, dev,
+> +				   PT_DMAPOOL_MAX_SIZE,
+> +				   PT_DMAPOOL_ALIGN, 0);
+> +	if (!dma_pool) {
+> +		dev_err(dev, "unable to allocate dma pool\n");
+> +		ret = -ENOMEM;
+> +		return ret;
+> +	}
+> +
+> +	/* ptdma core initialisation */
+> +	iowrite32(CMD_CONFIG_VHB_EN, pt->io_regs + CMD_CONFIG_OFFSET);
+> +	iowrite32(CMD_QUEUE_PRIO, pt->io_regs + CMD_QUEUE_PRIO_OFFSET);
+> +	iowrite32(CMD_TIMEOUT_DISABLE, pt->io_regs + CMD_TIMEOUT_OFFSET);
+> +	iowrite32(CMD_CLK_GATE_CONFIG, pt->io_regs + CMD_CLK_GATE_CTL_OFFSET);
+> +	iowrite32(CMD_CONFIG_REQID, pt->io_regs + CMD_REQID_CONFIG_OFFSET);
+> +
+> +	cmd_q->pt = pt;
+> +	cmd_q->dma_pool = dma_pool;
+> +	mutex_init(&cmd_q->q_mutex);
+> +
+> +	/* Page alignment satisfies our needs for N <= 128 */
+> +	cmd_q->qsize = Q_SIZE(Q_DESC_SIZE);
+> +	cmd_q->qbase = dma_alloc_coherent(dev, cmd_q->qsize,
+> +					  &cmd_q->qbase_dma,
+> +					   GFP_KERNEL);
+
+last line seems misaligned, please run checkpatch with --strict options
+to find these.
+
+> +	if (!cmd_q->qbase) {
+> +		dev_err(dev, "unable to allocate command queue\n");
+> +		ret = -ENOMEM;
+> +		goto e_dma_alloc;
+> +	}
+> +
+> +	cmd_q->qidx = 0;
+> +
+> +	/* Preset some register values */
+> +	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
+> +	pt_init_cmdq_regs(cmd_q);
+> +
+> +	dev_dbg(dev, "queue available\n");
+
+debug artifacts, pls remove this and others
+
+> +static int pt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct pt_device *pt;
+> +	struct pt_msix *pt_msix;
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem * const *iomap_table;
+> +	int bar_mask;
+> +	int ret = -ENOMEM;
+> +
+> +	pt = pt_alloc_struct(dev);
+> +	if (!pt)
+> +		goto e_err;
+> +
+> +	pt_msix = devm_kzalloc(dev, sizeof(*pt_msix), GFP_KERNEL);
+> +	if (!pt_msix)
+> +		goto e_err;
+> +
+> +	pt->pt_msix = pt_msix;
+> +	pt->dev_vdata = (struct pt_dev_vdata *)id->driver_data;
+> +	if (!pt->dev_vdata) {
+> +		ret = -ENODEV;
+> +		dev_err(dev, "missing driver data\n");
+> +		goto e_err;
+> +	}
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "pcim_enable_device failed (%d)\n", ret);
+> +		goto e_err;
+> +	}
+> +
+> +	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
+> +	ret = pcim_iomap_regions(pdev, bar_mask, "ptdma");
+> +	if (ret) {
+> +		dev_err(dev, "pcim_iomap_regions failed (%d)\n", ret);
+> +		goto e_err;
+> +	}
+> +
+> +	iomap_table = pcim_iomap_table(pdev);
+> +	if (!iomap_table) {
+> +		dev_err(dev, "pcim_iomap_table failed\n");
+> +		ret = -ENOMEM;
+> +		goto e_err;
+> +	}
+> +
+> +	pt->io_regs = iomap_table[pt->dev_vdata->bar];
+> +	if (!pt->io_regs) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		ret = -ENOMEM;
+> +		goto e_err;
+> +	}
+> +
+> +	ret = pt_get_irqs(pt);
+> +	if (ret)
+> +		goto e_err;
+> +
+> +	pci_set_master(pdev);
+> +
+> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
+> +	if (ret) {
+> +		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +		if (ret) {
+> +			dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n",
+> +				ret);
+> +			goto e_err;
+> +		}
+> +	}
+> +
+> +	dev_set_drvdata(dev, pt);
+> +
+> +	if (pt->dev_vdata)
+> +		ret = pt_core_init(pt);
+> +
+> +	if (ret) {
+> +		dev_notice(dev, "PTDMA initialization failed\n");
+> +		goto e_err;
+> +	}
+> +
+> +	dev_notice(dev, "PTDMA enabled\n");
+
+dev_dbg?
+
+> +
+> +	return 0;
+> +
+> +e_err:
+> +	dev_notice(dev, "initialization failed\n");
+
+dev_err? Also no rollback?
+
+> +	return ret;
+> +}
+> +
+> +static void pt_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct pt_device *pt = dev_get_drvdata(dev);
+> +
+> +	if (!pt)
+> +		return;
+> +
+> +	if (pt->dev_vdata)
+> +		pt_core_destroy(pt);
+> +
+> +	pt_free_irqs(pt);
+> +}
+> +
+> +static const struct pt_dev_vdata dev_vdata[] = {
+> +	{
+> +		.bar = 2,
+
+Is this PCI bars?
+
+> +		.version = PT_VERSION(5, 0),
+
+Hw doesn't tell that?
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+~Vinod
