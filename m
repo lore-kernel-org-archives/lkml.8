@@ -2,268 +2,211 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE5A420782
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE2220782
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O/krohSb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QC8bEzwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGCNjd (ORCPT
+        id S1726382AbgGCNks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:39:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21441 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726048AbgGCNjb (ORCPT
+        Fri, 3 Jul 2020 09:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgGCNkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:39:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593783569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2y5grVF58/11v6H28319gKDFTeKgAjvdC69Mz1gFETA=;
-        b=O/krohSbqfn4FgEZHJdQyETVBwnXfyZN/2ejhvME87yhIhJWB3eSZEPuFZ5Xav6ZuNLC5Y
-        ci6qQgG0Go1VysMzMamk5+7lCZ57OKpxWd2/V/GVFjDiGw5xuv/chDOXt+TLKgmLtQSniW
-        UFWPttmsMCCzUO95OVZdQCckBCkL4KY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-nPbgXm4NNwSDldlC3XxwhQ-1; Fri, 03 Jul 2020 09:39:27 -0400
-X-MC-Unique: nPbgXm4NNwSDldlC3XxwhQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6957E1054FA1;
-        Fri,  3 Jul 2020 13:39:26 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-0.ams2.redhat.com [10.36.114.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C93057AC88;
-        Fri,  3 Jul 2020 13:39:24 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH v1 2/9] s390/vmem: recursive implementation of vmem_remove_range()
-Date:   Fri,  3 Jul 2020 15:39:10 +0200
-Message-Id: <20200703133917.39045-3-david@redhat.com>
-In-Reply-To: <20200703133917.39045-1-david@redhat.com>
-References: <20200703133917.39045-1-david@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Fri, 3 Jul 2020 09:40:47 -0400
+Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF73C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 06:40:46 -0700 (PDT)
+Received: by mail-wr1-x449.google.com with SMTP id i10so31552264wrn.21
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 06:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ls5EQRkUxBZzP7EqUh1IKI2XSD94zleYx8ufPET2dw8=;
+        b=QC8bEzwgWYyccfeOKyfq0/UYYEp93ZxZUOAiCO8YzRcyfA7lAnkrsVlew9+moU4MUG
+         DRDuXkCWla9vIaEJM3cvP237L651k/4hOV7IA9Jnh0mfEtb6gJmtwes/S2tn7UYkxeX6
+         a5a4LiHhgo2yaFtlDPTvAV4ShhZ5OH/8MOZcHKSMjq3celIQHtn88022nkpy0uWnqtm9
+         Wd8s5msxoBlY6XDBITplJoG520KVNOtyBJReU2/jx3IjWjpSPfXdyFjVuvMxp8zbiGVo
+         xf5tFrp+Lm079l47jdaV/s4a5AqD7dGSXAY4Pc5qlLsnU0Z+Kx9mVqSCHzdKRUu1YU81
+         Kogw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ls5EQRkUxBZzP7EqUh1IKI2XSD94zleYx8ufPET2dw8=;
+        b=NVV1BXdApatqJf+g/Sy5Zj2WqtTlZv9ZeaAS34MW7rTVuak22G2y8L/zqJL/ubmu2A
+         aIMCKaAMKHhLwDDRNftY9CIzfjl8e46BXkxCYS97jc1tB1SpZXjAwL9VXy227qK1nA/w
+         p+WsJntB32+I96ncH6yZZSLWXxZPQe1NBsn/hDTxAz+faFfP0UCsgwEAzE8a0IK3bGkv
+         9nnzAaIwMRqtfSgcAFdjr3il0KSf+mEQncJbpQ5h0CraT+qiwFP3UMAUmqz9fWRIkgtk
+         bPYj+ERczOtbgJPqGeAHlpwh3xAMOzBLSb/IzzMgUhWFunZvIreaAe2mZCROqAzJfrw3
+         mOhg==
+X-Gm-Message-State: AOAM533hD782IyrjvkXClDfqDbiWz+KMc8XnUqQAm3dSJdRacrLQhgvX
+        wY7OiVMGjO7M2MZ7NCPERYeVdZm3eA==
+X-Google-Smtp-Source: ABdhPJzQRn6zHi1Z9vLMAq4p2396wY3gPl6nh8x8/wacERQCIkGGGDaBzXhNJgylDDwcvlwNXQoHSrWWlA==
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr38298704wmk.126.1593783645449;
+ Fri, 03 Jul 2020 06:40:45 -0700 (PDT)
+Date:   Fri,  3 Jul 2020 15:40:29 +0200
+Message-Id: <20200703134031.3298135-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH 1/3] kcsan: Add support for atomic builtins
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, paulmck@kernel.org
+Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to reuse the same functionality in vmemmap_free(). Let's start by
-introducing recursive remove_pagetable(), inspired by x86. We'll extend
-it to cover the vmemmap similarly next.
+Some architectures (currently e.g. s390 partially) implement atomics
+using the compiler's atomic builtins (__atomic_*, __sync_*). To support
+enabling KCSAN on such architectures in future, or support experimental
+use of these builtins, implement support for them.
 
-A recursive implementation makes it easier to expand individual cases
-without harming readability. In addition, we minimize traversing the
-whole hierarchy over and over again.
+We should also avoid breaking KCSAN kernels due to use (accidental or
+otherwise) of atomic builtins in drivers, as has happened in the past:
+https://lkml.kernel.org/r/5231d2c0-41d9-6721-e15f-a7eedf3ce69e@infradead.org
 
-One change is that we don't unmap large PMDs/PUDs when not completely
-covered by the request, something that should never happen with direct
-mappings, unless one would be removing in other granularity than added,
-which would be broken already.
+The instrumentation is subtly different from regular reads/writes: TSAN
+instrumentation replaces the use of atomic builtins with a call into the
+runtime, and the runtime's job is to also execute the desired atomic
+operation. We rely on the __atomic_* compiler builtins, available with
+all KCSAN-supported compilers, to implement each TSAN atomic
+instrumentation function.
 
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- arch/s390/mm/vmem.c | 153 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 107 insertions(+), 46 deletions(-)
+ kernel/kcsan/core.c | 110 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-index 66c5333020ead..6fe156c3f035c 100644
---- a/arch/s390/mm/vmem.c
-+++ b/arch/s390/mm/vmem.c
-@@ -138,64 +138,125 @@ static int vmem_add_range(unsigned long start, unsigned long size)
- 	return ret;
- }
- 
--/*
-- * Remove a physical memory range from the 1:1 mapping.
-- * Currently only invalidates page table entries.
-- */
--static void vmem_remove_range(unsigned long start, unsigned long size)
-+static void remove_pte_table(pmd_t *pmd, unsigned long addr,
-+			     unsigned long end)
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index d803765603fb..6843169da759 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -856,3 +856,113 @@ void __tsan_init(void)
  {
--	unsigned long pages4k, pages1m, pages2g;
--	unsigned long end = start + size;
--	unsigned long address = start;
--	pgd_t *pg_dir;
--	p4d_t *p4_dir;
--	pud_t *pu_dir;
--	pmd_t *pm_dir;
--	pte_t *pt_dir;
-+	unsigned long pages = 0;
-+	pte_t *pte;
- 
--	pages4k = pages1m = pages2g = 0;
--	while (address < end) {
--		pg_dir = pgd_offset_k(address);
--		if (pgd_none(*pg_dir)) {
--			address += PGDIR_SIZE;
-+	pte = pte_offset_kernel(pmd, addr);
-+	for (; addr < end; addr += PAGE_SIZE, pte++) {
-+		if (pte_none(*pte))
- 			continue;
--		}
--		p4_dir = p4d_offset(pg_dir, address);
--		if (p4d_none(*p4_dir)) {
--			address += P4D_SIZE;
-+
-+		pte_clear(&init_mm, addr, pte);
-+		pages++;
-+	}
-+
-+	update_page_count(PG_DIRECT_MAP_4K, -pages);
-+}
-+
-+static void remove_pmd_table(pud_t *pud, unsigned long addr,
-+			     unsigned long end)
-+{
-+	unsigned long next, pages = 0;
-+	pmd_t *pmd;
-+
-+	pmd = pmd_offset(pud, addr);
-+	for (; addr < end; addr = next, pmd++) {
-+		next = pmd_addr_end(addr, end);
-+
-+		if (pmd_none(*pmd))
- 			continue;
--		}
--		pu_dir = pud_offset(p4_dir, address);
--		if (pud_none(*pu_dir)) {
--			address += PUD_SIZE;
-+
-+		if (pmd_large(*pmd)) {
-+			if (IS_ALIGNED(addr, PMD_SIZE) &&
-+			    IS_ALIGNED(next, PMD_SIZE)) {
-+				pmd_clear(pmd);
-+				pages++;
-+			}
- 			continue;
- 		}
--		if (pud_large(*pu_dir)) {
--			pud_clear(pu_dir);
--			address += PUD_SIZE;
--			pages2g++;
-+
-+		remove_pte_table(pmd, addr, next);
-+	}
-+
-+	update_page_count(PG_DIRECT_MAP_1M, -pages);
-+}
-+
-+static void remove_pud_table(p4d_t *p4d, unsigned long addr,
-+			     unsigned long end)
-+{
-+	unsigned long next, pages = 0;
-+	pud_t *pud;
-+
-+	pud = pud_offset(p4d, addr);
-+	for (; addr < end; addr = next, pud++) {
-+		next = pud_addr_end(addr, end);
-+
-+		if (pud_none(*pud))
- 			continue;
--		}
--		pm_dir = pmd_offset(pu_dir, address);
--		if (pmd_none(*pm_dir)) {
--			address += PMD_SIZE;
-+
-+		if (pud_large(*pud)) {
-+			if (IS_ALIGNED(addr, PUD_SIZE) &&
-+			    IS_ALIGNED(next, PUD_SIZE)) {
-+				pud_clear(pud);
-+				pages++;
-+			}
- 			continue;
- 		}
--		if (pmd_large(*pm_dir)) {
--			pmd_clear(pm_dir);
--			address += PMD_SIZE;
--			pages1m++;
-+
-+		remove_pmd_table(pud, addr, next);
-+	}
-+
-+	update_page_count(PG_DIRECT_MAP_2G, -pages);
-+}
-+
-+static void remove_p4d_table(pgd_t *pgd, unsigned long addr,
-+			     unsigned long end)
-+{
-+	unsigned long next;
-+	p4d_t *p4d;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	for (; addr < end; addr = next, p4d++) {
-+		next = p4d_addr_end(addr, end);
-+
-+		if (p4d_none(*p4d))
- 			continue;
--		}
--		pt_dir = pte_offset_kernel(pm_dir, address);
--		pte_clear(&init_mm, address, pt_dir);
--		address += PAGE_SIZE;
--		pages4k++;
-+
-+		remove_pud_table(p4d, addr, next);
- 	}
-+}
-+
-+static void remove_pagetable(unsigned long start, unsigned long end)
-+{
-+	unsigned long addr, next;
-+	pgd_t *pgd;
-+
-+	if (WARN_ON_ONCE(!PAGE_ALIGNED(start | end)))
-+		return;
-+
-+	for (addr = start; addr < end; addr = next) {
-+		next = pgd_addr_end(addr, end);
-+		pgd = pgd_offset_k(addr);
-+
-+		if (pgd_none(*pgd))
-+			continue;
-+
-+		remove_p4d_table(pgd, addr, next);
-+	}
-+
- 	flush_tlb_kernel_range(start, end);
--	update_page_count(PG_DIRECT_MAP_4K, -pages4k);
--	update_page_count(PG_DIRECT_MAP_1M, -pages1m);
--	update_page_count(PG_DIRECT_MAP_2G, -pages2g);
-+}
+ }
+ EXPORT_SYMBOL(__tsan_init);
 +
 +/*
-+ * Remove a physical memory range from the 1:1 mapping.
-+ * Currently only invalidates page table entries.
++ * Instrumentation for atomic builtins (__atomic_*, __sync_*).
++ *
++ * Normal kernel code _should not_ be using them directly, but some
++ * architectures may implement some or all atomics using the compilers'
++ * builtins.
++ *
++ * Note: If an architecture decides to fully implement atomics using the
++ * builtins, because they are implicitly instrumented by KCSAN (and KASAN,
++ * etc.), implementing the ARCH_ATOMIC interface (to get instrumentation via
++ * atomic-instrumented) is no longer necessary.
++ *
++ * TSAN instrumentation replaces atomic accesses with calls to any of the below
++ * functions, whose job is to also execute the operation itself.
 + */
-+static void vmem_remove_range(unsigned long start, unsigned long size)
++
++#define DEFINE_TSAN_ATOMIC_LOAD_STORE(bits)                                                        \
++	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder);                      \
++	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder)                       \
++	{                                                                                          \
++		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);                      \
++		return __atomic_load_n(ptr, memorder);                                             \
++	}                                                                                          \
++	EXPORT_SYMBOL(__tsan_atomic##bits##_load);                                                 \
++	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder);                   \
++	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder)                    \
++	{                                                                                          \
++		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
++		__atomic_store_n(ptr, v, memorder);                                                \
++	}                                                                                          \
++	EXPORT_SYMBOL(__tsan_atomic##bits##_store)
++
++#define DEFINE_TSAN_ATOMIC_RMW(op, bits, suffix)                                                   \
++	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder);                 \
++	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder)                  \
++	{                                                                                          \
++		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
++		return __atomic_##op##suffix(ptr, v, memorder);                                    \
++	}                                                                                          \
++	EXPORT_SYMBOL(__tsan_atomic##bits##_##op)
++
++/*
++ * Note: CAS operations are always classified as write, even in case they
++ * fail. We cannot perform check_access() after a write, as it might lead to
++ * false positives, in cases such as:
++ *
++ *	T0: __atomic_compare_exchange_n(&p->flag, &old, 1, ...)
++ *
++ *	T1: if (__atomic_load_n(&p->flag, ...)) {
++ *		modify *p;
++ *		p->flag = 0;
++ *	    }
++ *
++ * The only downside is that, if there are 3 threads, with one CAS that
++ * succeeds, another CAS that fails, and an unmarked racing operation, we may
++ * point at the wrong CAS as the source of the race. However, if we assume that
++ * all CAS can succeed in some other execution, the data race is still valid.
++ */
++#define DEFINE_TSAN_ATOMIC_CMPXCHG(bits, strength, weak)                                           \
++	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
++							      u##bits val, int mo, int fail_mo);   \
++	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
++							      u##bits val, int mo, int fail_mo)    \
++	{                                                                                          \
++		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
++		return __atomic_compare_exchange_n(ptr, exp, val, weak, mo, fail_mo);              \
++	}                                                                                          \
++	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_##strength)
++
++#define DEFINE_TSAN_ATOMIC_CMPXCHG_VAL(bits)                                                       \
++	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
++							   int mo, int fail_mo);                   \
++	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
++							   int mo, int fail_mo)                    \
++	{                                                                                          \
++		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
++		__atomic_compare_exchange_n(ptr, &exp, val, 0, mo, fail_mo);                       \
++		return exp;                                                                        \
++	}                                                                                          \
++	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_val)
++
++#define DEFINE_TSAN_ATOMIC_OPS(bits)                                                               \
++	DEFINE_TSAN_ATOMIC_LOAD_STORE(bits);                                                       \
++	DEFINE_TSAN_ATOMIC_RMW(exchange, bits, _n);                                                \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_add, bits, );                                                 \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_sub, bits, );                                                 \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_and, bits, );                                                 \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_or, bits, );                                                  \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_xor, bits, );                                                 \
++	DEFINE_TSAN_ATOMIC_RMW(fetch_nand, bits, );                                                \
++	DEFINE_TSAN_ATOMIC_CMPXCHG(bits, strong, 0);                                               \
++	DEFINE_TSAN_ATOMIC_CMPXCHG(bits, weak, 1);                                                 \
++	DEFINE_TSAN_ATOMIC_CMPXCHG_VAL(bits)
++
++DEFINE_TSAN_ATOMIC_OPS(8);
++DEFINE_TSAN_ATOMIC_OPS(16);
++DEFINE_TSAN_ATOMIC_OPS(32);
++DEFINE_TSAN_ATOMIC_OPS(64);
++
++void __tsan_atomic_thread_fence(int memorder);
++void __tsan_atomic_thread_fence(int memorder)
 +{
-+	remove_pagetable(start, start + size);
- }
- 
- /*
++	__atomic_thread_fence(memorder);
++}
++EXPORT_SYMBOL(__tsan_atomic_thread_fence);
++
++void __tsan_atomic_signal_fence(int memorder);
++void __tsan_atomic_signal_fence(int memorder) { }
++EXPORT_SYMBOL(__tsan_atomic_signal_fence);
 -- 
-2.26.2
+2.27.0.212.ge8ba1cc988-goog
 
