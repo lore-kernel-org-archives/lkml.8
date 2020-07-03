@@ -2,117 +2,181 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C925C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD78DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484B2207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B760F20826
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hv4+tKt2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiGOeYGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgGCKqg (ORCPT
+        id S1726427AbgGCKqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37096 "EHLO
+        Fri, 3 Jul 2020 06:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGCKqf (ORCPT
+        with ESMTP id S1725915AbgGCKqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:46:35 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 686BEC08C5C1;
-        Fri,  3 Jul 2020 03:46:35 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so32809696ljp.6;
-        Fri, 03 Jul 2020 03:46:35 -0700 (PDT)
+        Fri, 3 Jul 2020 06:46:39 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BF2C08C5C1;
+        Fri,  3 Jul 2020 03:46:39 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 5so24369508oty.11;
+        Fri, 03 Jul 2020 03:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZoL+j4Y+Z4WvYVFNGyL695fk3xg4Z6QZO/cWXb2X98s=;
-        b=Hv4+tKt2vemcSn1fWh46/PWtOJvinoHGrUakKW5/d0dZep1DX0iFI+84HcYvtSife2
-         0H0ut/5ViUhbrsQiH3Mb4HUjVbbUh0/ZhciON0hFmOEhR9GjFKLJZshW22HOfmGoFxfW
-         MiTLrWisu/BdnFf3Ld75vyR0wT4atm194bIui1ltI1dskBs2hYA6t5ESAj+R+4Cf5uki
-         KTJW6F8pr2gNb3KMSV5H/LBc7BqsbkAXk6vBJ2is1uviAvIK+HX/loWAIdKfp26t/hXs
-         8zc5g0tYA5Eyd8k59m/2ybZCU6Vk0Kpm/n3qxpLycOhl6ncG2nU5NNyG9/W+vxDX0aa8
-         b+kw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0c5wHg9VNJDHK0sa3QsCKAxp+om6hYF0jilSpO9w9y4=;
+        b=BiGOeYGCax7/oPiLMt4Z6w4thxBd15Pucyb6wzwm9ayylbBXjPbKcPMn3l4US3gxKl
+         3a9P3ymozjwGGbmCmfJkcEWBPFCjum2ytt4KF/NMM2a+TMkIMUhOZRBvmaQSrdWe8HxO
+         SRA4YAcWn4+aGzYPu5ia7biJCoQ+g6NwB+pdnRvO6KDOxZGLv4ZJfBEkege93pDsNm9m
+         0YqE+A6uO1o/11+Qz7Enq7db/XzHol53RA4CjLs66Tx931mv0sYxpPecF3a8vBdKkmdr
+         FxxjTK46Z4H86QU0qoCCgFxUuB9imHVi4fnVs1DbXo8twCcjvc6LU0+FKz1ErihB+eHF
+         1rgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZoL+j4Y+Z4WvYVFNGyL695fk3xg4Z6QZO/cWXb2X98s=;
-        b=o0F2F4yWPxYJuSIrAMXh105zGsuwNuA4bblzl7TF97E/OIO+PHukLeh8p3c4KRt2lx
-         Vf7FQOVmGMySNIxbzsE1yzfTHOfj67FwZh/ArhAtl43jGhgqmzzVlqmk0SiKGQER17kh
-         grPY4S00JfllO2BgaMg5UGrToutdklo0lEjVFV3qaM65up3dC43pKz7QNMEM2JsI5PrJ
-         NNXb0NVee1v50j/GMJLvm/34FDbYlO1bfdvZx0SmFzY05q/UC/J0Rd2Rtz6QL4Jce+j2
-         VKCHaF4NMR8hS4rhp7imlXX5sPVzZHxh1ricV+LW+gqxUs36C/2pjGbAQnuNnOKle/3F
-         ABLw==
-X-Gm-Message-State: AOAM530NyCQLHXMTfo7iiNlskn+WIlzvsTddCEBNT8wm3ez6VpLwTjDh
-        DNH6q/MEPTzGUg1HCk7e2sc=
-X-Google-Smtp-Source: ABdhPJxdtDhJ2zfGPUqdkG2FiChIxtnxwVhEYypRyXNFa+PrUnLKzsCkYfuFycSt3kRoLc47KYo86g==
-X-Received: by 2002:a2e:9d0b:: with SMTP id t11mr18612477lji.122.1593773193951;
-        Fri, 03 Jul 2020 03:46:33 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id l12sm3812618ljj.43.2020.07.03.03.46.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 03:46:31 -0700 (PDT)
-Subject: Re: [PATCH 2/2] PM / devfreq: Add governor flags to clarify the
- features
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
-        enric.balletbo@collabora.com, hl@rock-chips.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com
-References: <20200703100810.12304-1-cw00.choi@samsung.com>
- <CGME20200703095657epcas1p187b7f90a4a33da7791a83a78760f3a91@epcas1p1.samsung.com>
- <20200703100810.12304-3-cw00.choi@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6027cf29-ea6f-0a27-3e39-a80c24b80bb8@gmail.com>
-Date:   Fri, 3 Jul 2020 13:46:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0c5wHg9VNJDHK0sa3QsCKAxp+om6hYF0jilSpO9w9y4=;
+        b=nva5cordZ1UAt1popQZRQSUg8Sfy8F9457zQgOqtyBhq/Apj+LU539VxnIKeRFZisd
+         Md+235uYrIJ+EMCD9w7cAeOORNOKSL82jHmdTyU379aZQU4pR/lXxojBlFL8V2Ym2Fam
+         OKjtDhkKf5ZWHOjqtt1TqJJDJ/7c6AUMGM2cbfRqZD0FB1g5zFeLRMkjkSMR6IbWcNIt
+         caZUEbVL+W1RzNICzDZoRJVNp9c7QY7Ie8wjdZ2iYO6Ba5wY+s0MLldztFjRZGdrIXjo
+         L+ETTrqmpMvE19N7+La12C23bfGN/z8imm31knkNGB4ngLrjSMmnVLW+IuqXRLrGn8zd
+         8mXQ==
+X-Gm-Message-State: AOAM533+KXASeDeyGOPn6KsmgCaxae02VPom6JzKY3vfIPOkbZwe11jS
+        JLDKdXsvxQWqvd3jYXxXO0Fiij18BhzY+eSORIA=
+X-Google-Smtp-Source: ABdhPJy21MyHS89arWOkjOjzCKkhAW8rJyKdTPBlC3SxBSlhm8uBhnJ/okQbnyg8Agy85BzoVoq1mGIP+zq0w/SMlmA=
+X-Received: by 2002:a05:6830:1510:: with SMTP id k16mr10884514otp.336.1593773198367;
+ Fri, 03 Jul 2020 03:46:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703100810.12304-3-cw00.choi@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200629201845.28138-1-ruslan.bilovol@gmail.com> <20200630015843.GB12443@b29397-desktop>
+In-Reply-To: <20200630015843.GB12443@b29397-desktop>
+From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Date:   Fri, 3 Jul 2020 13:46:27 +0300
+Message-ID: <CAB=otbSnP7ecO9W5osxqSHSa4JRCUU4KR-g2BjBweDBUwjWobA@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: gadget: epautoconf: claim smallest endpoints first
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.07.2020 13:08, Chanwoo Choi пишет:
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index e94a27804c20..620ecd250d7c 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -765,10 +765,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->  
->  static struct devfreq_governor tegra_devfreq_governor = {
->  	.name = "tegra_actmon",
-> +	.flag = DEVFREQ_GOV_FLAG_ATTR_COMMON
-> +		| DEVFREQ_GOV_FLAG_ATTR_POLLING_INTERVAL,
+On Tue, Jun 30, 2020 at 4:58 AM Peter Chen <peter.chen@nxp.com> wrote:
+>
+> On 20-06-29 23:18:45, Ruslan Bilovol wrote:
+> > UDC hardware may have endpoints with different maxpacket
+> > size. Current endpoint matching code takes first matching
+> > endpoint from the list.
+> >
+> > It's always possible that gadget allocates endpoints for
+> > small transfers (maxpacket size) first, then larger ones.
+> > That works fine if all matching UDC endpoints have same
+> > maxpacket size or are big enough to serve that allocation.
+> >
+> > However, some UDCs have first endpoints in the list with
+> > bigger maxpacket size, whereas last endpoints are much
+> > smaller. In this case endpoint allocation will fail for
+> > the gadget (which allocates smaller endpoints first) on
+> > final endpoint allocations.
+> >
+> > To make endpoint allocation fair, pick up smallest
+> > matching endpoints first, leaving bigger ones for
+> > heavier applications.
+> >
+> > Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+> > ---
+> >
+> > v2: rebased onto latest balbi/next branch
+> >
+> >  drivers/usb/gadget/epautoconf.c | 23 ++++++++++++++++++-----
+> >  1 file changed, 18 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
+> > index 1eb4fa2e623f..6c453b5d87bb 100644
+> > --- a/drivers/usb/gadget/epautoconf.c
+> > +++ b/drivers/usb/gadget/epautoconf.c
+> > @@ -66,7 +66,7 @@ struct usb_ep *usb_ep_autoconfig_ss(
+> >       struct usb_ss_ep_comp_descriptor *ep_comp
+> >  )
+> >  {
+> > -     struct usb_ep   *ep;
+> > +     struct usb_ep   *ep, *ep_min = NULL;
+> >
+> >       if (gadget->ops->match_ep) {
+> >               ep = gadget->ops->match_ep(gadget, desc, ep_comp);
+> > @@ -74,14 +74,27 @@ struct usb_ep *usb_ep_autoconfig_ss(
+> >                       goto found_ep;
+> >       }
+> >
+> > -     /* Second, look at endpoints until an unclaimed one looks usable */
+> > +     /*
+> > +      * Second, look at endpoints until an unclaimed one looks usable.
+> > +      * Try to find one with smallest maxpacket limit, leaving larger
+> > +      * endpoints for heavier applications
+> > +      */
+> >       list_for_each_entry (ep, &gadget->ep_list, ep_list) {
+> > -             if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp))
+> > -                     goto found_ep;
+> > +             if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp)) {
+> > +                     if (desc->wMaxPacketSize == 0)
+> > +                             goto found_ep;
+>
+> Why you do special handling for this? You still could give the smallest
+> maxpacket_limit EP for it, right?
 
-Hello, Chanwoo!
+Of course it's technically possible. However in case "wMaxPacketSize == 0"
+gadget driver wants to get maximum possible wMaxPacketSize from endpoint
+configuration and I was thinking about avoiding regressions if we always provide
+smaller endpoints.
 
-There is a typo here, it should be ".attr = ".
+As I can see, providing smallest endpoint that matches requested wMaxPacketSize
+is OK, but if gadget driver just wants autoconf core to use it with
+maximum possible
+value, I'm thinking now if we can even change this part and if wMaxPacketSize
+is zero, find endpoint with maximum possible wMaxPacketSize
 
-> +	.flag = DEVFREQ_GOV_FLAG_FLAG_IMMUTABLE,
-> +		| DEVFREQ_GOV_FLAG_FLAG_IRQ_DRIVEN,
+Does it make sense?
 
-There is a typo here too FLAG_FLAG ^
+Thanks
+Ruslan
 
->  	.get_target_freq = tegra_governor_get_target,
->  	.event_handler = tegra_governor_event_handler,
-> -	.immutable = true,
-> -	.interrupt_driven = true,
->  };
->  
-
+>
+> Peter
+>
+> > +                     else if (!ep_min)
+> > +                             ep_min = ep;
+> > +                     else if (ep->maxpacket_limit < ep_min->maxpacket_limit)
+> > +                             ep_min = ep;
+> > +             }
+> >       }
+> >
+> >       /* Fail */
+> > -     return NULL;
+> > +     if (!ep_min)
+> > +             return NULL;
+> > +
+> > +     ep = ep_min;
+> >  found_ep:
+> >
+> >       /*
+> > --
+> > 2.17.1
+> >
+>
+> --
+>
+> Thanks,
+> Peter Chen
