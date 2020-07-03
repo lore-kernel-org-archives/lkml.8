@@ -2,237 +2,269 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D038C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05410C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D90C420884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2857207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dkYhkScD"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="uqKM0qgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgGCIGF (ORCPT
+        id S1726581AbgGCIGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:06:05 -0400
-Received: from mail-db8eur05on2074.outbound.protection.outlook.com ([40.107.20.74]:40128
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725891AbgGCIGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:06:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A9xNR90DsOuX14flHlmG7Wl4fLuOJM9TsiDV0na9/ts7FdnttYGRxIqQuiHIKmG9RSxFgYIvf04Hno7+jiIHo7Ipn1md34BjvRv6qKzAyzmqVnth3S8UDOs976XGsWKl2+djl19PDmJGoQi9ZEwVwN5KwkH+11u4o6FckWLTJ1TfUnyqJ1dbOIzTa6lSV/rM5WKAlFOqCIids9FS0AOt1zk5uQbFBnOZfqUuW/BEonRSDRq8VT6g+HsQdbeDInqeBHknZ7T4nWAkSYmpxiGeoKeRE6zJU1C62MnC/5IdFi3XSzRh51A85mupKr/RKObBNzGOrRclNJEuDaKsy6iprQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LU3HOonPFW03LpdtWfjDvYKUozaaKvRwmMxDOeBtCuQ=;
- b=btDF5RhGfTwTQ63udDChMJpeChZ2RVSWba/NSpu0FcEnHhNSmPhJzMvE+N5CtzlonX03Y7D6kVJr7ScwU0VMfvSYUWvvfbXvn5zsdG0qqwTKXlgtlvqQQF6LfV/oCgu1GTCRxraOHcJvIOEnoIWMUL+25TY/UKR78q9jWeL4nt+P7HKc7SYuxK1CCF2nqQQ00j5Xs4MwlmXtnLeTVc6ERJqpJChnkZOWXJgf4SnngYSCdRnwGckdXM0XdhZFRjadlG11rn5SCRU8ErpTQWpQd+LpoYRaAGkSnj4iP1Q3ij0upKsE6bvw6GR6UeqUFp35nVUZOUg0jF+6umMHFaesbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LU3HOonPFW03LpdtWfjDvYKUozaaKvRwmMxDOeBtCuQ=;
- b=dkYhkScDGWMElIXet1LGPvkFJkjRVVBrdZSkiUCFzjoXtP6JWMthYo7RnyMUXYTsAnD+iYIs4EWAP7uTV6kTaqNMIgeUiimpOn5PONae/rCmU3cVy+8kY8e76oH6mP9cuuxkEn0aKx4mWAFL+UgNU+w81FRgMX0PMLm0UZyCeik=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR0401MB2302.eurprd04.prod.outlook.com (2603:10a6:800:2b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.23; Fri, 3 Jul
- 2020 08:05:27 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3153.028; Fri, 3 Jul 2020
- 08:05:27 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        frieder.schrempf@kontron.de, catalin.marinas@arm.com,
-        will@kernel.org, shawnguo@kernel.org, anson.huang@nxp.com,
-        festevam@gmail.com, s.hauer@pengutronix.de, john.lee@nxp.com
-Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com
-Subject: [PATCH v2 3/4] arm64: dts: imx8mn-evk: add pca9450 for i.mx8mn-evk board
-Date:   Sat,  4 Jul 2020 00:19:37 +0800
-Message-Id: <1593793178-9737-4-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593793178-9737-1-git-send-email-yibin.gong@nxp.com>
-References: <1593793178-9737-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0160.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::16) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Fri, 3 Jul 2020 04:06:20 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:46349 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725891AbgGCIGT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:06:19 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id rGi2j86C1mVFqrGi5j7GWZ; Fri, 03 Jul 2020 10:06:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593763575; bh=b4jvdZMiRl+wQlE8aK7iGvK92VjV3a/6aX4pFQUlAY4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=uqKM0qgkfVWerqlbG6o3xBiv6+lkwTSdn60vng7VtUX2pCKAfz2b12dNbn4UJ5vsi
+         /B3ivaZOlPPDlw+I9/SyuEsyK9WRAdLWaQ+O/4mfNSw49CA0uoFERSqBRcpNXwADUU
+         s2DYzRfN8c1z9hSRV8JWH8szoCVvgtfCFZy0lsDDaQyYSbb2dOQZvHYY4F6HRnA2fm
+         p/knxlfOEA3ND2IsaeHeX87zsidWl/1CprmWYbzWMu5NCm+X+gspdYYjA+/lIH6ipM
+         F2J4TffZHGM6u99C2dz41Z6HQADENLofvftmn1nACb499MaCVYEomW1emX8Y/7ExNv
+         QMNhQ80petZlw==
+Subject: Re: [RFC PATCH v2 12/18] media: tegra-video: Add support for
+ selection ioctl ops
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-13-git-send-email-skomatineni@nvidia.com>
+ <efc84cff-76d5-78a2-e84e-0342459d3756@xs4all.nl>
+ <c82a000a-7766-c933-fd69-24eb4885fc14@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a95717b6-e2ee-78df-5145-de265805b3d4@xs4all.nl>
+Date:   Fri, 3 Jul 2020 10:06:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0160.apcprd01.prod.exchangelabs.com (2603:1096:4:28::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3153.21 via Frontend Transport; Fri, 3 Jul 2020 08:05:22 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f4132ecb-3af0-47e8-abfc-08d81f27d8bb
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2302:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB23025E727C12D76724E12307896A0@VI1PR0401MB2302.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:949;
-X-Forefront-PRVS: 045315E1EE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9FzQTUsRpr16dzgR2SDfccL1MWCZnVCWf+ihQ66gMCyca8IvCURVP3S7YlfH7PaTz7yOZRZ2VsoVZIvhH3QWuUTSE9pCLjlHaBv+UbflCjxVO2gCc4yI67h5d5MJiL7OV7+E7W6v5x3G0HzjAkHOMtRcFXKYffafEoknv/86QHrNTFwAU5dj0fYoRtrurGyfH1mIDNLgOE8jcGtA44KR+pv5EPdWFABpXOAenEqTujgriZbo9UABJNRWcYykW/R1/4q26VcZxawHj24GswJlTmmSwj7UKm6X390ua6x+qoWcafTPO5AnQ4Rrf48OdogP38r0wKsTcCAO4w7//XeABt4UHpwSfDsXFy+LNldMQwbK2dbuyJkAtGz9MdGr2UPdw8Jv+zKh1Xh+Z8Hh5zdoKg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(7416002)(6512007)(8676002)(6636002)(6666004)(8936002)(86362001)(52116002)(478600001)(5660300002)(16526019)(316002)(6506007)(2906002)(4326008)(2616005)(83380400001)(66556008)(26005)(186003)(66946007)(36756003)(956004)(6486002)(66476007)(921003)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: vLuWEieK3SS6766cK7C3ctJ81zaVa+2/pUBd2Q++iDBVcdKJizYvWyvcPcnYnLQsvUliLVnrzCnMQxgLBizziv2HEwu/g6tAplQTUM3N2AuIpbvy5Hjka1UZCGjOYmrZRuwAurSEubm3es67sB1OB48NeYUQTlgkI3J9YuAZEhdjjmtK6GCBa88BOT22zPxnKlzGKEQA4YeJRKliZZfjY5K8Stg95FgARBYU1YrFqjvUGfRZjofVqqCMI8otwSZQLxWzGGoGR4XItBGVp9spGZsqKkmuHXcee7QHUkdHGIPcoLPZa5CWnSrh2I9UNMgkYQgsQGJqbhgYhF2N4iHH/vexwGHVJjBQsGns0ChgPBMm1DxPrVWjkqHS3zBAOKvkx1AgJa1mKPvdDCK96ftkl3sE/DgL0fuscnhCc2OYmjMeRSIBGqLRqfPAd6R9b8vlvNKZDmv6MGiZ09xD8pMV3mhvY4X/i9bMhUWs4fnf+s0=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4132ecb-3af0-47e8-abfc-08d81f27d8bb
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2020 08:05:27.5617
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YkE+jXZrSPOok8UQZY6L0j4P/FgapbTc1LflwooXPq5ELLanOaA1lST9TXrAnHoiV9rJFTS57TLQpD88LFesmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2302
+In-Reply-To: <c82a000a-7766-c933-fd69-24eb4885fc14@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJibOq/j4tqoc36sc4WrtRfP/A0osTMUl1TNKLANrgu56/SySM9PwU8/7zlFaI92I2Zm+b7yAimCBtoVhEq0JGdG/Qu6rWHiZR2VRfdU8v3TAesoYmCf
+ 12+lmuLHRoPvH8otC/RKqgD6o2UUMxNGygKPVInnM34BF/htxuI8rRF6jG8IbW+Y05Ebu5IdKMwEu/FtgiAnQCvhSLMvGxIVTMF01lScqwjNQ/P/elK9XYLK
+ DCsRPHwA+4jMO4dF+3QmpcHeAsKsAdN3bjqSYSho3E6zHZYEP9a7V4HEjL2J66sJ/IYpfJD8zVYapSUiU9Si6ArWPuN1OkLmpmzy+07A1MybGJJf5TrZuz4/
+ mvSK/CItcwqWHuLoxQDh2IbdL7+Hp52d7L6QTMFWZQoXBXQujIRJckCIgnZDvueyk+AyhjMt8ZGAViX6dB01sBUyIzznC1nEweu7Rw5EkEJmj2UFrhJJfHUN
+ 5HtqnX3wzLVieIf0NHPwb0Fdj1ddMehpgkMmA4w0PzD1DLe4Ideui72Y7suyfaEy7GXK0/WwkTTu1C7/wlrLvMwUrQEVIMcxMyc080Eyo6CeFoje9z4iuiHy
+ USmgj20dEE+T9RxO/0IEl8dU61xTek0qZACAwgVjimcDDrD4JCV+RfscsZjN3urSkOLgUPAQlyOySgTitx1SJKDV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pca9450 pmic driver for i.mx8mn-evk board.
+On 02/07/2020 23:20, Sowjanya Komatineni wrote:
+> 
+> On 7/2/20 6:54 AM, Hans Verkuil wrote:
+>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+>>> This patch adds selection v4l2 ioctl operations to allow configuring
+>>> a selection rectangle in the sensor through the Tegra video device
+>>> node.
+>>>
+>>> Some sensor drivers supporting crop uses try_crop rectangle from
+>>> v4l2_subdev_pad_config during try format for computing binning.
+>>>
+>>> So with selection ops support, this patch also updates try format
+>>> to use try crop rectangle either from subdev frame size enumeration
+>>> or from subdev crop boundary.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
+>>>   1 file changed, 106 insertions(+)
+>>>
+>>> diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+>>> index 506c263..f9eb96b 100644
+>>> --- a/drivers/staging/media/tegra-video/vi.c
+>>> +++ b/drivers/staging/media/tegra-video/vi.c
+>>> @@ -427,6 +427,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>>>   	struct v4l2_subdev *subdev;
+>>>   	struct v4l2_subdev_format fmt;
+>>>   	struct v4l2_subdev_pad_config *pad_cfg;
+>>> +	struct v4l2_subdev_frame_size_enum fse = {
+>>> +		.which = V4L2_SUBDEV_FORMAT_TRY,
+>>> +	};
+>>> +	struct v4l2_subdev_selection sdsel = {
+>>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>>> +		.target = V4L2_SEL_TGT_CROP_BOUNDS,
+>>> +	};
+>>>   	int ret;
+>>>   
+>>>   	subdev = tegra_channel_get_remote_subdev(chan, true);
+>>> @@ -449,6 +456,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
+>>>   	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
+>>>   	fmt.pad = 0;
+>>>   	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
+>>> +
+>>> +	/*
+>>> +	 * Attempt to obtain the format size from subdev.
+>>> +	 * If not available, try to get crop boundary from subdev.
+>>> +	 */
+>>> +	fse.code = fmtinfo->code;
+>>> +	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
+>>> +	if (ret) {
+>>> +		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+>>> +		if (ret)
+>>> +			return -EINVAL;
+>>> +		pad_cfg->try_crop.width = sdsel.r.width;
+>>> +		pad_cfg->try_crop.height = sdsel.r.height;
+>>> +	} else {
+>>> +		pad_cfg->try_crop.width = fse.max_width;
+>>> +		pad_cfg->try_crop.height = fse.max_height;
+>>> +	}
+>>> +
+>>>   	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
+>>>   	if (ret < 0)
+>>>   		return ret;
+>>> @@ -540,6 +565,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
+>>>   	return 0;
+>>>   }
+>>>   
+>>> +static int tegra_channel_g_selection(struct file *file, void *priv,
+>>> +				     struct v4l2_selection *sel)
+>>> +{
+>>> +	struct tegra_vi_channel *chan = video_drvdata(file);
+>>> +	struct v4l2_subdev *subdev;
+>>> +	struct v4l2_subdev_format fmt = {
+>>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>>> +	};
+>>> +	struct v4l2_subdev_selection sdsel = {
+>>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>>> +		.target = sel->target,
+>>> +	};
+>>> +	int ret;
+>>> +
+>>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>>> +		return -ENOTTY;
+>>> +
+>>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>>> +		return -EINVAL;
+>>> +	/*
+>>> +	 * Try the get selection operation and fallback to get format if not
+>>> +	 * implemented.
+>>> +	 */
+>>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+>>> +	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
+>>> +	if (!ret)
+>>> +		sel->r = sdsel.r;
+>>> +	if (ret != -ENOIOCTLCMD)
+>>> +		return ret;
+>>> +
+>>> +	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	sel->r.left = 0;
+>>> +	sel->r.top = 0;
+>>> +	sel->r.width = fmt.format.width;
+>>> +	sel->r.height = fmt.format.height;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int tegra_channel_s_selection(struct file *file, void *fh,
+>>> +				     struct v4l2_selection *sel)
+>>> +{
+>>> +	struct tegra_vi_channel *chan = video_drvdata(file);
+>>> +	struct v4l2_subdev *subdev;
+>>> +	int ret;
+>>> +	struct v4l2_subdev_selection sdsel = {
+>>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>>> +		.target = sel->target,
+>>> +		.flags = sel->flags,
+>>> +		.r = sel->r,
+>>> +	};
+>>> +
+>> This function doesn't check if the subdev actually supports set_selection.
+>> The imx219 is one such driver: it supports get_selection, but not set_selection.
+>>
+>> So this code should add these lines to fix the v4l2-compliance fail:
+>>
+>>         subdev = tegra_channel_get_remote_subdev(chan, true);
+>>
+>>         if (!v4l2_subdev_has_op(subdev, pad, set_selection))
+>>                 return -ENOTTY;
+>>
+> v4l2_subdev_call() does that check and returns -ENOIOCTLCMD when 
+> specified subdev ops does not exist.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn-evk.dts  | 96 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi |  6 ++
- 2 files changed, 102 insertions(+)
+But that test happens too late. In the v4l2-compliance test it fails in the
+sel->type test below, so it returns EINVAL instead of ENOTTY.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-index 61f3519..b846526 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-@@ -13,6 +13,102 @@
- 	compatible = "fsl,imx8mn-evk", "fsl,imx8mn";
- };
- 
-+&i2c1 {
-+	pmic: pmic@25 {
-+		compatible = "nxp,pca9450b";
-+		reg = <0x25>;
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <3 GPIO_ACTIVE_LOW>;
-+
-+		regulators {
-+			buck1: BUCK1{
-+				regulator-name = "BUCK1";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <2187500>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <3125>;
-+			};
-+
-+			buck2: BUCK2 {
-+				regulator-name = "BUCK2";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <2187500>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <3125>;
-+				nxp,dvs-run-voltage = <950000>;
-+				nxp,dvs-standby-voltage = <850000>;
-+			};
-+
-+			buck4: BUCK4{
-+				regulator-name = "BUCK4";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck5: BUCK5{
-+				regulator-name = "BUCK5";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck6: BUCK6 {
-+				regulator-name = "BUCK6";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <3400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo1: LDO1 {
-+				regulator-name = "LDO1";
-+				regulator-min-microvolt = <1600000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2: LDO2 {
-+				regulator-name = "LDO2";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3: LDO3 {
-+				regulator-name = "LDO3";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo4: LDO4 {
-+				regulator-name = "LDO4";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo5: LDO5 {
-+				regulator-name = "LDO5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- &A53_0 {
- 	/delete-property/operating-points-v2;
- };
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-index 85fc0aa..98f5324 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-@@ -223,6 +223,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pmic: pmicirq {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-+		>;
-+	};
-+
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
- 		fsl,pins = <
- 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
--- 
-2.7.4
+>>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+>>> +		return -ENOTTY;
+
+I think this test should come before the v4l2_subdev_has_op test since there
+is probably no subdev if the TPG is enabled. So:
+
+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
+		return -ENOTTY;
+
+        subdev = tegra_channel_get_remote_subdev(chan, true);
+        if (!v4l2_subdev_has_op(subdev, pad, set_selection))
+                return -ENOTTY;
+
+
+Regards,
+
+	Hans
+
+>>> +
+>>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (vb2_is_busy(&chan->queue))
+>>> +		return -EBUSY;
+>>> +
+>>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
+>> And this line can be dropped.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> +	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
+>>> +	if (!ret) {
+>>> +		sel->r = sdsel.r;
+>>> +		/*
+>>> +		 * Subdev active format resolution may have changed during
+>>> +		 * set selection operation. So, update channel format to
+>>> +		 * the sub-device active format.
+>>> +		 */
+>>> +		return tegra_channel_set_subdev_active_fmt(chan);
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>>   static int tegra_channel_enum_input(struct file *file, void *fh,
+>>>   				    struct v4l2_input *inp)
+>>>   {
+>>> @@ -597,6 +701,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
+>>>   	.vidioc_streamoff		= vb2_ioctl_streamoff,
+>>>   	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+>>>   	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+>>> +	.vidioc_g_selection		= tegra_channel_g_selection,
+>>> +	.vidioc_s_selection		= tegra_channel_s_selection,
+>>>   };
+>>>   
+>>>   /*
+>>>
 
