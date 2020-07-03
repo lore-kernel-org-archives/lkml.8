@@ -2,118 +2,94 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8043EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D80DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4B6206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A4620782
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593783363;
-	bh=tYw1QVFf3l8wAmr8ShOa9rlUyconKQv6eBiz06jvs2Y=;
+	s=default; t=1593783461;
+	bh=h4AWXK1OzAabGjzRp78Qq4E/Pvb4iF6SmMTMkbta69E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r3ot20gnyn1zYUxipzIKaTfUQy7t7MYmVEwpCTFkagN8dOaoxIFKkctHUZN0WtP5W
-	 aBvdZUwcG7ffNZv/hI0NPyMs3J+3b9VSlC6wO7mjvnA61QE8/gggyC1pkRpkXxnaZa
-	 RL0caJpu+8T032dfHwFArqPbUOUqA26Gi9J6VWx4=
+	b=SrkuL6YsTTtiYthQ4FzS0W4ZHbpP3inwgwu/GJFFUBGMqPUwz70KrwP8laFe7kxUK
+	 KpxqXVREeqQCRgpuoWMKPZ1MLFBAVk1qpAuUGQLOoZI/1MYaZuG0lhBc30Y3eKILgH
+	 5F1oVF3ZLu6dyBkiddY5z6+bnG8CNIx28vzUJgIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgGCNgC (ORCPT
+        id S1726265AbgGCNhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:36:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43894 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCNgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:36:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j12so13997842pfn.10;
-        Fri, 03 Jul 2020 06:36:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T5rcVRIkgD/btpU3eP+kPgBcl/ql3dV8wsHC9ym85fc=;
-        b=dpoBSKt9u7PzGcULVVkb3BVVTC2SRONI/mFO7qKPCcsTKF4bMSB5wwEDanojpsXGUm
-         kwK2J5sW/qcLuKkg7HXJxYyiPTFgMIxbMBQ+qwzZzAGZiC64jo6gJKE9hkQjrT2ecJ8S
-         5RRKQHCIYvdyFK6p8pLC2sC1H6ozGDeuAu3brBCsqouH3ULIFK/O+oX+/om3n+zQjJdT
-         i4BI8TyxD1kr2/OzeliwlkLweUtmbWBKe/mTeTKXuzLWANMOcwJ90W02jjPdIV88+vZ1
-         rvusjmydEGS3A9de9HSIXr5ID45xehpaqNyh7fFMxO40qh2iTESR9gJnLQA82lYLFVNn
-         Gdzw==
-X-Gm-Message-State: AOAM533w9VkVaasqHDJDD2CoI2ePDu2dMzKUglzB3MmTWtQmnrjBmNQW
-        BA3i4NaqP2LGNvo4+SkpaYk=
-X-Google-Smtp-Source: ABdhPJzpEuquvHuz9dy6BTpylDSjUJQBr0XwgRqlpSIxXVt6avNzJ3DHhTKXkfB0Cil4QhB/QzoeTw==
-X-Received: by 2002:a65:640c:: with SMTP id a12mr28887324pgv.88.1593783360171;
-        Fri, 03 Jul 2020 06:36:00 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id m16sm12805082pfd.101.2020.07.03.06.35.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 06:35:58 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1885F40945; Fri,  3 Jul 2020 13:35:58 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 13:35:58 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        LTP List <ltp@lists.linux.it>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        lkft-triage@lists.linaro.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [v2 PATCH] crypto: af_alg - Fix regression on empty requests
-Message-ID: <20200703133558.GX4332@42.do-not-panic.com>
-References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
- <20200622224920.GA4332@42.do-not-panic.com>
- <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
- <20200623064056.GA8121@gondor.apana.org.au>
- <20200623170217.GB150582@gmail.com>
- <20200626062948.GA25285@gondor.apana.org.au>
- <CA+G9fYutuU55iL_6Qrk3oG3iq-37PaxvtA4KnEQHuLH9YpH-QA@mail.gmail.com>
- <20200702033221.GA19367@gondor.apana.org.au>
+        Fri, 3 Jul 2020 09:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbgGCNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:37:39 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF09206A1;
+        Fri,  3 Jul 2020 13:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593783459;
+        bh=h4AWXK1OzAabGjzRp78Qq4E/Pvb4iF6SmMTMkbta69E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zsco0pFHiu8uFn++3g+2aWZOGtMeDwXe2RdiKWXSiB1NAwLZTkzuswi6E4rPfoFgc
+         zQygwRBRrnKJMJ6YgutuQW39JaKYOgP2fttYqHsRZiFYssPejgjJ+6IYnBSkwhnVMp
+         cs70jkYqgCEvqEZxEg9urRaC6/8frYrllSxaMCbY=
+Date:   Fri, 3 Jul 2020 14:37:33 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system
+ cache(LLC)
+Message-ID: <20200703133732.GD18953@willie-the-truck>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+ <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702033221.GA19367@gondor.apana.org.au>
+In-Reply-To: <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 01:32:21PM +1000, Herbert Xu wrote:
-> On Tue, Jun 30, 2020 at 02:18:11PM +0530, Naresh Kamboju wrote:
-> > 
-> > Since we are on this subject,
-> > LTP af_alg02  test case fails on stable 4.9 and stable 4.4
-> > This is not a regression because the test case has been failing from
-> > the beginning.
-> > 
-> > Is this test case expected to fail on stable 4.9 and 4.4 ?
-> > or any chance to fix this on these older branches ?
-> > 
-> > Test output:
-> > af_alg02.c:52: BROK: Timed out while reading from request socket.
-> > 
-> > ref:
-> > https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884917/suite/ltp-crypto-tests/test/af_alg02/history/
-> > https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884606/suite/ltp-crypto-tests/test/af_alg02/log
-> 
-> Actually this test really is broken.
+On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index f455c597f76d..bd1d58229cc2 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+>  		iova |= GENMASK_ULL(63, 49);
+>  
+>  
+> +	if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
+> +		prot |= IOMMU_SYS_CACHE_ONLY;
 
-FWIW the patch "umh: fix processed error when UMH_WAIT_PROC is used" was
-dropped from linux-next for now as it was missing checking for signals.
-I'll be open coding iall checks for each UMH_WAIT_PROC callers next. Its
-not clear if this was the issue with this test case, but figured I'd let
-you know.
+Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then it
+looks like it should actually be a property on the domain because we never
+need to configure it on a per-mapping basis within a domain, and therefore
+it shouldn't be exposed by the IOMMU API as a prot flag.
 
-  Luis
+Do you agree?
+
+Will
