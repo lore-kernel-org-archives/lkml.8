@@ -2,98 +2,122 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05145C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD57DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03C7214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593816624;
-	bh=++Nj0WS/fbRoG0cYbUYNYqTBhY1hGfBC+wzNoS4TTOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NP2IALDWCfajFJaJB1tbIzESlKRxxrTM+sOl2vzn1UNrFAlbpnXfYLKgA6gToHQYU
-	 Pd7z8YMCdg91EqmN73y0bnaM25JFR+98JRvlA/dk5K44OZgcBPYrR1VkgPIEp0eCWC
-	 LbXSW5claZEYpybL1dkWTiawmHnDD8U/i1dY4scc=
+	by mail.kernel.org (Postfix) with ESMTP id 894712145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Aiyn4tkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgGCWuX (ORCPT
+        id S1726747AbgGCWvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 18:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgGCWuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 18:50:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D6C21531;
-        Fri,  3 Jul 2020 22:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593816622;
-        bh=++Nj0WS/fbRoG0cYbUYNYqTBhY1hGfBC+wzNoS4TTOg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Utl9Q+dLN0qukZp4Udwg5OOtrBeg3UBgS740gFxT4OZF2kru0R8LXQFFef3WW6dKt
-         L9wNatfUbwk4cpgbL/HvYjQnJSYg0BQofovZP3vD86gY11OAySg8Ez+DFhZN/2Q4sL
-         c05QdOHl8yK5ujur8V5wVvMa2XqgyTprLVSiAVO4=
-Date:   Fri, 3 Jul 2020 23:50:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     tiwai@suse.com, festevam@gmail.com, lgirdwood@gmail.com,
-        Xiubo.Lee@gmail.com, timur@kernel.org, perex@perex.cz,
-        alsa-devel@alsa-project.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: fsl_asrc: Add an option to select internal
- ratio mode
-Message-ID: <20200703225020.GB29047@sirena.org.uk>
-References: <1593506876-14599-1-git-send-email-shengjiu.wang@nxp.com>
- <159379581381.55795.16716505708033817338.b4-ty@kernel.org>
- <20200703224656.GA16467@Asurada-Nvidia>
+        Fri, 3 Jul 2020 18:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgGCWvD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 18:51:03 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F231C061794;
+        Fri,  3 Jul 2020 15:51:03 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id d16so22417379edz.12;
+        Fri, 03 Jul 2020 15:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HoJnjAdizKBcZS/TwdGFdcCHABPJEEKDcGriqvJQXl8=;
+        b=Aiyn4tkw+Jk2iDxJZDgHIBFvm9nZgBHvWtXlIUf9vqGwapr6RkAV3nJJskM7upei6H
+         V5qqqpyT33351Iiuer3bl4rf1DwooFpyugOWE8idDf5lgT8JqUUh0gaU0voAiFM6BJs5
+         Nxgyl6jmvNUejqWCQ2gYSWLQBfPR0AatS5MhiyhXA+tHVoNztHf31QL2Njn+TeW0zM6n
+         noHEoDYP266+Ds2VpCDzJiAnf/p/mKwoz1q4mzR0ZV26P0O7uDdYJrwHUARVKap0UZwk
+         zxxQExzAGCVKv56hc7Jbxx7AT4Al4J9HfvMg4eNadGN6Sk6Jyt/gdaebsu/lrh/9OXlA
+         6jng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HoJnjAdizKBcZS/TwdGFdcCHABPJEEKDcGriqvJQXl8=;
+        b=j0u5W56Br2Ey5btpQRCvcAHoaKqAHIoGSDYWSQZ2STNA4W2na5N6Aq0S66H7pNVvJu
+         rPW5BWZdqY/iupKQgEZ6DLZ/aJuzpmZWK1ZPJF7kLioyIAJxwDH3SitwaZPFqiAZasws
+         0RBIFsxd0Sipy6zRN4dgW1GQe+xBA6eCuirwPO+Tz4R/2iJleViuWAEROCaIx6sOCy9E
+         OAoIejxxA2ISSxPhSOICM4eS5kV1ZES2tdTdC5QNIfIX2zpMhi/0gpDxtu7nQk7SlRSk
+         OxT76n3W+osXAV49SomAmqQfDBxZOvX/osJz7uQ04OvycDFsUrCq6yTCJnT6LmHF6Qd/
+         687Q==
+X-Gm-Message-State: AOAM530AliTeFH9LfLboLeddmAGT2AvePcInC6eQYmWCte3H4RSYW4j5
+        cPqhz6uYQXptrN9vtUuDiD8AbMqW
+X-Google-Smtp-Source: ABdhPJwzOg7dxuPJBFeLCeyTj/hsz8BnW4Iwx8qroFdpbIfmXqPMr62Dvp/Am75GDKR2JIvVscEi+Q==
+X-Received: by 2002:aa7:d3ca:: with SMTP id o10mr44560137edr.138.1593816661803;
+        Fri, 03 Jul 2020 15:51:01 -0700 (PDT)
+Received: from localhost.localdomain (p200300f1372b7a00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:372b:7a00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id q25sm10440839ejz.97.2020.07.03.15.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 15:51:00 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     hminas@synopsys.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH for-5.8 v2] usb: dwc2: Add missing cleanups when usb_add_gadget_udc() fails
+Date:   Sat,  4 Jul 2020 00:50:43 +0200
+Message-Id: <20200703225043.387769-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
-Content-Disposition: inline
-In-Reply-To: <20200703224656.GA16467@Asurada-Nvidia>
-X-Cookie: NOBODY EXPECTS THE SPANISH INQUISITION!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Call dwc2_debugfs_exit() and dwc2_hcd_remove() (if the HCD was enabled
+earlier) when usb_add_gadget_udc() has failed. This ensures that the
+debugfs entries created by dwc2_debugfs_init() as well as the HCD are
+cleaned up in the error path.
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the udc class driver")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+Changes since v1 at [0]
+- also cleanup the HCD as suggested by Minas (thank you!)
+- updated the subject accordingly
 
-On Fri, Jul 03, 2020 at 03:46:58PM -0700, Nicolin Chen wrote:
 
-> > [1/1] ASoC: fsl_asrc: Add an option to select internal ratio mode
-> >       commit: d0250cf4f2abfbea64ed247230f08f5ae23979f0
+[0] https://patchwork.kernel.org/patch/11631381/
 
-> You already applied v3 of this change:
-> https://mailman.alsa-project.org/pipermail/alsa-devel/2020-July/169976.html
 
-> And it's already in linux-next also. Not sure what's happening...
+ drivers/usb/dwc2/platform.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-The script can't always tell the difference between versions - it looks
-like it's notified for v2 based on seeing v3 in git.
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index c347d93eae64..9febae441069 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -582,12 +582,16 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
+ 		if (retval) {
+ 			dwc2_hsotg_remove(hsotg);
+-			goto error_init;
++			goto error_debugfs;
+ 		}
+ 	}
+ #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
+ 	return 0;
+ 
++error_debugfs:
++	dwc2_debugfs_exit(hsotg);
++	if (hsotg->hcd_enabled)
++		dwc2_hcd_remove(hsotg);
+ error_init:
+ 	if (hsotg->params.activate_stm_id_vb_detection)
+ 		regulator_disable(hsotg->usb33d);
+-- 
+2.27.0
 
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7/tisACgkQJNaLcl1U
-h9CDTgf9ElvPFLdEUZthk4VSCqaieXYbsCqPXsP+cbaZLW4aECwO25C2crwaAeLH
-cP3VDBeRC1DMrnD5GTM4mqkVBkcfjXWVqVZ2BNkWQ3InpSvBb/ofmZ1fjkpKCdrc
-UpSq2wrcMeGWf1/rYlpgXdrzV7a5S/RxLJiLU2ipHvs9ajHWV33bGwvNN8ug4APq
-QH9RIhvDpWSM4V/D0eT+eIQtB+qdo3Fv/Db6f4fF9Ugn2pquAqZ4bmzvniqn2Et2
-zMDgEDA34cgB4Jm9D2Le7X9ySsROTLwpPv+XbsM8Sl2f/slHeYRHTr3vW4kJFBhG
-jkjwRIcv54fqhLCkLPFqhPvLLoMKcg==
-=gzcN
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
