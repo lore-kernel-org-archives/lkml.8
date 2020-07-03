@@ -2,100 +2,61 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A947BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8876120890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qq2T15TP"
+	by mail.kernel.org (Postfix) with ESMTP id CDC12206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgGCH1Z (ORCPT
+        id S1726129AbgGCH2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:27:25 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50578 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGCH1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:27:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0637R6X8008612;
-        Fri, 3 Jul 2020 02:27:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593761226;
-        bh=JAgfQZyZ5OCclljqyFUtrQi+fTILtIzhg4LOfF6ffNg=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=qq2T15TP8855E5+LM7HzRbH6C9+JEVm70rVxuj2SW/sudOvyVS7UL+qdm4YLdl9N6
-         ckrL7qObLBsqCSce5xhNyZNi+vTrwNEzo3Xo6vWYMms5ojoX+BJfHSyeMj4f8Ff8Tg
-         hd2086CZRwGgXUIcTV4FvgxwaHrFDLJRt8GkY2K0=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0637R6if050745
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Jul 2020 02:27:06 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
- 2020 02:27:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 3 Jul 2020 02:27:05 -0500
-Received: from [10.250.232.87] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0637R1SF002523;
-        Fri, 3 Jul 2020 02:27:02 -0500
-Subject: Re: [PATCH 0/7] Add support for SD card in AM654x-evm
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <adrian.hunter@intel.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>, <robh+dt@kernel.org>,
-        <ulf.hansson@linaro.org>
-References: <20200619125801.9530-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <10f765e4-d9ac-324d-623f-83720c997042@ti.com>
-Date:   Fri, 3 Jul 2020 12:57:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 3 Jul 2020 03:28:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47144 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgGCH2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:28:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E160CAF43;
+        Fri,  3 Jul 2020 07:28:18 +0000 (UTC)
+Date:   Fri, 3 Jul 2020 09:28:18 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     qiang.zhang@windriver.com
+Cc:     ben.dooks@codethink.co.uk, bfields@redhat.com, cl@rock-chips.com,
+        peterz@infradead.org, tj@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kthread: Don't cancel a work that is being cancelled
+Message-ID: <20200703072818.GC11587@alley>
+References: <20200702044324.32927-1-qiang.zhang@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619125801.9530-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702044324.32927-1-qiang.zhang@windriver.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu 2020-07-02 12:43:24, qiang.zhang@windriver.com wrote:
+> From: Zhang Qiang <qiang.zhang@windriver.com>
+> 
+> When canceling a work, if it is found that the work is in
+> the cancelling state, we should directly exit the cancelled
+> operation.
 
-On 19/06/20 6:27 pm, Faiz Abbas wrote:
-> The following patches add driver support for SD card on the
-> am654x-evm. It only enables high speed mode with UHS mode
-> support coming in a future series.
-> 
-> DTS support will be added in another series as well.
-> 
-> Faiz Abbas (7):
->   dt-bindings: mmc: sdhci-am654: Add ti,clkbuf-sel binding
->   mmc: sdhci_am654: Add flag for PHY calibration
->   mmc: sdhci_am654: Add Support for SR2.0
->   mmc: sdhci_am654: Fix conditions for enabling dll
->   mmc: sdhci_am654: Update delay chain configuration
->   mmc: sdhci_am654: Add support for clkbuf_sel property
->   arm64: defconfig: Enable AM654x SDHCI controller
-> 
->  .../devicetree/bindings/mmc/sdhci-am654.txt   |  1 +
->  arch/arm64/configs/defconfig                  |  1 +
->  drivers/mmc/host/sdhci_am654.c                | 86 ++++++++++++++-----
->  3 files changed, 65 insertions(+), 23 deletions(-)
-> 
+No, the function guarantees that the work is not longer running
+when it returns. This is why it has the suffix "_sync" in the name.
 
-Gentle ping.
+We would need to add kthread_cancel_work() without the "_sync"
+wrappers that would not wait for the work in progress. But it
+might be dangerous. The API users usually want to make sure
+that the work in not longer running to avoid races.
 
-Thanks,
-Faiz
+What is the use case for the non-sync behavior, please?
+
+Best Regards,
+Petr
