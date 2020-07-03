@@ -2,130 +2,120 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA83C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA86C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C6A208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBF1208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgGCDJo (ORCPT
+        id S1726082AbgGCDOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:09:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:43112 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGCDJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:09:44 -0400
-IronPort-SDR: Oh2U5pS+1iJOcn5ffAEMiQLvZ7/K5CqCouF7fxnmbCMFHzhix/p9hoZ+GMFsfXfiV3ZXGrAtd/
- zeKaE8Lt9H0A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="127166618"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="127166618"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 20:09:43 -0700
-IronPort-SDR: aPFCC2Rjr2grbjLW42eLLUBa1wZ2Pj6RM0b2nYbGW7eym/tg1+xXFs6GGgWYXShSYtcTco/gLx
- R/ivR5oK335g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="455744536"
-Received: from skochetx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.55.66])
-  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 20:09:29 -0700
-Date:   Fri, 3 Jul 2020 06:09:28 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200703030928.GE306897@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200626091419.GB27151@zn.tnic>
+        Thu, 2 Jul 2020 23:14:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37632 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCDOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:14:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4E34E2A054D
+Message-ID: <67a130a8fd8874c5dc639c924de959f88357b480.camel@collabora.com>
+Subject: Re: [PATCH 8/9] media: rkvdec: Add validate_fmt ops for pixelformat
+ validation
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Date:   Fri, 03 Jul 2020 00:14:36 -0300
+In-Reply-To: <20200701215616.30874-9-jonas@kwiboo.se>
+References: <20200701215616.30874-1-jonas@kwiboo.se>
+         <20200701215616.30874-9-jonas@kwiboo.se>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626091419.GB27151@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:14:19AM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > index 59472cd6a11d..35f713e3a267 100644
-> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > @@ -323,6 +323,7 @@ Code  Seq#    Include File                                           Comments
-> >                                                                       <mailto:tlewis@mindspring.com>
-> >  0xA3  90-9F  linux/dtlk.h
-> >  0xA4  00-1F  uapi/linux/tee.h                                        Generic TEE subsystem
-> > +0xA4  00-1F  uapi/asm/sgx.h                                          Intel SGX subsystem (a legit conflict as TEE and SGX do not co-exist)
-> 
-> Maybe add <mailto:linux-sgx@vger.kernel.org> ?
-> 
-> >  0xAA  00-3F  linux/uapi/linux/userfaultfd.h
-> >  0xAB  00-1F  linux/nbd.h
-> >  0xAC  00-1F  linux/raw.h
-> 
-> ...
-> 
-> > +static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
-> > +{
-> > +	unsigned long encl_size = secs->size + PAGE_SIZE;
-> 
-> Wait, you just copied @secs from user memory in sgx_ioc_enclave_create()
-> and now use ->size unverified? You're kidding, right?
+Hi Jonas,
 
-The validation is done in sgx_validate_secs().
+Thanks for working on this.
 
+On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
+> Add an optional validate_fmt operation that is used to validate the
+> pixelformat of CAPTURE buffers.
 > 
-> > +	struct sgx_epc_page *secs_epc;
-> > +	unsigned long ssaframesize;
-> > +	struct sgx_pageinfo pginfo;
-> > +	struct sgx_secinfo secinfo;
-> > +	struct file *backing;
-> > +	long ret;
-> > +
-> > +	if (atomic_read(&encl->flags) & SGX_ENCL_CREATED)
-> > +		return -EINVAL;
-> > +
-> > +	ssaframesize = sgx_calc_ssaframesize(secs->miscselect, secs->xfrm);
+> This is used in next patch to ensure correct pixelformat is used for 10-bit
+> and 4:2:2 content.
 > 
-> So this is using more un-validated user input to do further calculations.
-> What can possibly go wrong?
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/staging/media/rkvdec/rkvdec.c | 8 ++++++++
+>  drivers/staging/media/rkvdec/rkvdec.h | 1 +
+>  2 files changed, 9 insertions(+)
 > 
-> I sure hope *I* am wrong and am missing something here.
-> 
-> If not, please, for the next version, audit all your user input and
-> validate it before using it. Srsly.
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+> index b1de55aa6535..465444c58f13 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> @@ -239,6 +239,14 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
+>  	if (WARN_ON(!coded_desc))
+>  		return -EINVAL;
+>  
+> +	if (coded_desc->ops->validate_fmt) {
+> +		int ret;
+> +
+> +		ret = coded_desc->ops->validate_fmt(ctx, pix_mp->pixelformat);
+> +		if (ret)
+> +			return ret;
+> +	}
+> + 
 
-It works but is unclean. I'd guess reason for this is just that code has
-evolved into this state over time.
+I don't think this approach will be enough. Unless I'm mistaken,
+it's perfectly legal as per the stateless spec to first
+call S_FMT on the OUTPUT queue (which is propagated to the CAPTURE side),
+and then set the SPS and other controls.
 
-I'd just move the call to sgx_calc_ssaframesize() inside
-sgx_validate_secs().
+The application is not required to do a TRY_FMT after S_EXT_CTRLS.
 
-/Jarkko
+What I believe is needed is for the S_EXT_CTRLS to modify
+and restrict the CAPTURE format accordingly, so the application
+gets the correct format on G_FMT (and restrict future TRY_FMT).
+
+Also, V4L2 spec asks drivers not to fail on S_FMT
+format mismatch, but instead to adjust and return a legal format
+back to the application [1].
+
+Let me know what you think and thanks again.
+
+Ezequiel
+
+[1] Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst
+
+>  	for (i = 0; i < coded_desc->num_decoded_fmts; i++) {
+>  		if (coded_desc->decoded_fmts[i] == pix_mp->pixelformat)
+>  			break;
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
+> index 2fc9f46b6910..be4fc3645cde 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.h
+> +++ b/drivers/staging/media/rkvdec/rkvdec.h
+> @@ -64,6 +64,7 @@ vb2_to_rkvdec_decoded_buf(struct vb2_buffer *buf)
+>  struct rkvdec_coded_fmt_ops {
+>  	int (*adjust_fmt)(struct rkvdec_ctx *ctx,
+>  			  struct v4l2_format *f);
+> +	int (*validate_fmt)(struct rkvdec_ctx *ctx, u32 pixelformat);
+>  	int (*start)(struct rkvdec_ctx *ctx);
+>  	void (*stop)(struct rkvdec_ctx *ctx);
+>  	int (*run)(struct rkvdec_ctx *ctx);
+
+
