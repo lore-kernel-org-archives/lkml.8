@@ -2,369 +2,171 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA25A204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E10D204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="itr9zMrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgGCRKQ (ORCPT
+        id S1726946AbgGCRKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:10:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39478 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgGCRKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:10:15 -0400
-IronPort-SDR: ghiDkw/P7ykuImSow+JUHZQ+ay/pVukFV440noPOO8tq68iccLRaVl4fh+FoOxC0aNWd7UzeOX
- CCRLkQPd7MtA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="208692029"
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="gz'50?scan'50,208,50";a="208692029"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 10:10:06 -0700
-IronPort-SDR: WeTPtQrUL/18MywhanfHYeEq1XpvCbnIvGaT6QNLpReP2ggpzSJeIf72PSij4sshraf+HJDCLE
- K4CtE1R03wjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="gz'50?scan'50,208,50";a="455949641"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2020 10:10:04 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jrPCN-0000JT-Lw; Fri, 03 Jul 2020 17:10:03 +0000
-Date:   Sat, 4 Jul 2020 01:09:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v1 4/9] s390/vmemmap: cleanup when vmemmap_populate()
- fails
-Message-ID: <202007040129.TlExXvvF%lkp@intel.com>
-References: <20200703133917.39045-5-david@redhat.com>
+        Fri, 3 Jul 2020 13:10:23 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:58747 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgGCRKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:10:22 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200703171019epoutp01a8f593da756e5288db3f5a7c7eff84ec~eTTeKOCsQ0635106351epoutp01P
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 17:10:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200703171019epoutp01a8f593da756e5288db3f5a7c7eff84ec~eTTeKOCsQ0635106351epoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593796219;
+        bh=HcAGD6B1JnP2lDnlKdtr6p7vH/7+xhr07urK3N8AbhQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=itr9zMrpC0E5t5bisOhAlIc7t/aMmQaNOQjllqp0AKZD/0F8nmbWz2SH0I1Y0LxI2
+         AVfmsPRTsZCSaxPTmW2k08rdxBzIjfA5bg6W1oZj8WiZThQ5WfGBUKkokGVEYsQaSo
+         +qUiXKTMsi0KUejzHw2ULPdJEkiyb0CPRLAUKdQk=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200703171017epcas5p2e5662ec53557a62454d057d28b893d61~eTTcRzvND0205102051epcas5p2I;
+        Fri,  3 Jul 2020 17:10:17 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        27.DB.09703.8766FFE5; Sat,  4 Jul 2020 02:10:16 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200703171015epcas5p38d1995e1ba086fde1f8eee79dccc47db~eTTazyHSK0671706717epcas5p3X;
+        Fri,  3 Jul 2020 17:10:15 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200703171015epsmtrp1efffc6882f6ca01d3aab3a296b1f8249~eTTay68810607506075epsmtrp1k;
+        Fri,  3 Jul 2020 17:10:15 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-f7-5eff66780bd1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        57.87.08303.7766FFE5; Sat,  4 Jul 2020 02:10:15 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200703171011epsmtip2e6bc5aa70a6e5b90b86f4d723b439512~eTTXJO5uG3195631956epsmtip2L;
+        Fri,  3 Jul 2020 17:10:11 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Thierry Reding'" <thierry.reding@gmail.com>,
+        =?utf-8?Q?'Uwe_Kleine-K=C3=B6nig'?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "'Lee Jones'" <lee.jones@linaro.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>
+Cc:     "'Marek Szyprowski'" <m.szyprowski@samsung.com>,
+        "'Bartlomiej Zolnierkiewicz'" <b.zolnierkie@samsung.com>,
+        "'Sylwester Nawrocki'" <snawrocki@kernel.org>,
+        "'Chanwoo Choi'" <cw00.choi@samsung.com>,
+        "'Pankaj Dubey'" <pankaj.dubey@samsung.com>
+In-Reply-To: <20200702155149.12854-2-krzk@kernel.org>
+Subject: RE: [PATCH v2 2/8] arm64: dts: exynos: Describe PWM interrupts on
+ Exynos7
+Date:   Fri, 3 Jul 2020 22:40:09 +0530
+Message-ID: <000001d6515c$d19f7de0$74de79a0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-In-Reply-To: <20200703133917.39045-5-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFJ6dR4UxNy2lAmU1YfvCM6WVVcaQEv8itqAud1DcWp7UV0UA==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmum5F2v84g/VHLC02zljPanH9y3NW
+        i/lHzrFa9D9+zWxx/vwGdov7X48yWmx6fI3V4vKuOWwWd++uYrSYcX4fk8XaI3fZLRZt/cJu
+        0br3CLtF+9OXzBY/d81jsbg9cTKjg4DHzll32T02repk87hzbQ+bx+Yl9R79fw08+rasYvT4
+        vEkugD2KyyYlNSezLLVI3y6BK+PXl1ksBbPFK47NPsvYwLhVrIuRk0NCwERixq5Wti5GLg4h
+        gd2MEm2/Z7CAJIQEPjFKrP3nDZH4zCjxcM1MJpiOnTv2sEMkdjFKHLj8iBXCecMosf/DZrB2
+        NgFdiR2L28DmiggcZZbo+7oMzGEW+Mko0bThICtIFaeAqcTaDZvAOoQFQiSmr3/MCGKzCKhI
+        PPlxkxnE5hWwlFjx5i4LhC0ocXLmEzCbWUBbYtnC18wQNylI/Hy6DGymiICTxJxDvcwQNeIS
+        R3/2QNU84ZA4PUWni5EDyHaROL3DDyIsLPHq+BZ2CFtK4mV/GztESbZEzy5jiHCNxNJ5x1gg
+        bHuJA1fmsICUMAtoSqzfpQ+xiE+i9/cTJohOXomONiGIalWJ5ndXoTqlJSZ2d7NC2B4SH9Y2
+        ME5gVJyF5K1ZSN6aheT8WQjLFjCyrGKUTC0ozk1PLTYtMMpLLdcrTswtLs1L10vOz93ECE53
+        Wl47GB8++KB3iJGJg/EQowQHs5IIb4Lqvzgh3pTEyqrUovz4otKc1OJDjNIcLErivEo/zsQJ
+        CaQnlqRmp6YWpBbBZJk4OKUamMLqN/73i5j06UfFkU8fJN/xdiiLcaidOPN6+c5LpfvyGpZd
+        Dog5enHxDe6VJpNj4i5Oebf5xOO9Zremczbuz576QKpZ8xAf34MUjaddChc4rS9nx2q4RB0y
+        W9j5RmBj6iO7ZT0sj5jP/n0VtF+CtSVhz8kjx7mjbnQya2gyqhc+mmYlf7LzdVNbBsPTOuUj
+        jwSXuHLHGrGtfdSVv2TOjJkWf4VmyATJ5/S9V8wudLbzO6f7KDDl4v/NZZcFF7BFz19juEZT
+        b2+Q4ouQoozqez9CIm5s+Hih1laQnaNpO0OGjszhO+vWvj93V/rfv7UFLQoaTWqbOSsW8e0u
+        OFnVG922iE3y5Kdz1Z+7tNV8O5VYijMSDbWYi4oTAac9isfmAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsWy7bCSvG552v84g4vN4hYbZ6xntbj+5Tmr
+        xfwj51gt+h+/ZrY4f34Du8X9r0cZLTY9vsZqcXnXHDaLu3dXMVrMOL+PyWLtkbvsFou2fmG3
+        aN17hN2i/elLZoufu+axWNyeOJnRQcBj56y77B6bVnWyedy5tofNY/OSeo/+vwYefVtWMXp8
+        3iQXwB7FZZOSmpNZllqkb5fAlbH743zWgm8CFde/LGZvYGzj62Lk5JAQMJHYuWMPexcjF4eQ
+        wA5Gid45yxkhEtIS1zdOYIewhSVW/nsOVfSKUeL2gQ3MIAk2AV2JHYvb2EASIgJnmSXaDqxm
+        AXGYBX4zSjy9eIEVomU9o8TzlztZQFo4BUwl1m7YBGYLCwRJ3GifBzaKRUBF4smPm2A2r4Cl
+        xIo3d1kgbEGJkzOfgNnMAtoST28+hbOXLXzNDHGfgsTPp8tYQWwRASeJOYd6mSFqxCWO/uxh
+        nsAoPAvJqFlIRs1CMmoWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGC41dL
+        awfjnlUf9A4xMnEwHmKU4GBWEuFNUP0XJ8SbklhZlVqUH19UmpNafIhRmoNFSZz366yFcUIC
+        6YklqdmpqQWpRTBZJg5OqQamjk8fgt6UN//KSlseV5Eloa56fcN56eCgotx876nKMkaiSY7H
+        PtWc7dONeRnFs7jtwpGkYwp/S7zbykoW+r/TCjY44NddeE6lw9B+51f2a71KC9snXWldeGSv
+        5PRSv7C9hnvEeveU+wt+/Gxeofdhk2lY9NXL7M8YH95Vn3Zv+otVysvuRV8Jes0eKBfweq5b
+        ocf+OTY1zr1cCYfLfGPk7B6+bP188WQI27LpafPZOVTZjzwOnZC5avLmdotVKW2xHz5t2mRc
+        YPb68qoPSpO4e7e9FSxa6d6wdu12s2TWpElr72ztmSq3+OKfVad8asT/77+yOtzvHqtfyNwt
+        1jGik6p3i3lKuE/e8OCs8JoTSizFGYmGWsxFxYkA1W6Mhk4DAAA=
+X-CMS-MailID: 20200703171015epcas5p38d1995e1ba086fde1f8eee79dccc47db
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200702155204epcas5p34d7635968376b68fc243e8887cf16388
+References: <20200702155149.12854-1-krzk@kernel.org>
+        <CGME20200702155204epcas5p34d7635968376b68fc243e8887cf16388@epcas5p3.samsung.com>
+        <20200702155149.12854-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Krzysztof,
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi David,
-
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on s390/features]
-[also build test ERROR on next-20200703]
-[cannot apply to linux/master kvms390/next linus/master v5.8-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use  as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/David-Hildenbrand/s390-implement-and-optimize-vmemmap_free/20200703-214348
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
-config: s390-alldefconfig (attached as .config)
-compiler: s390-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All error/warnings (new ones prefixed by >>):
-
-   arch/s390/mm/vmem.c: In function 'vmemmap_populate':
->> arch/s390/mm/vmem.c:368:3: error: implicit declaration of function 'vmemmap_free'; did you mean 'vmem_altmap_free'? [-Werror=implicit-function-declaration]
-     368 |   vmemmap_free(start, end, altmap);
-         |   ^~~~~~~~~~~~
-         |   vmem_altmap_free
-   arch/s390/mm/vmem.c: At top level:
-   arch/s390/mm/vmem.c:372:6: warning: no previous prototype for 'vmemmap_free' [-Wmissing-prototypes]
-     372 | void vmemmap_free(unsigned long start, unsigned long end,
-         |      ^~~~~~~~~~~~
->> arch/s390/mm/vmem.c:372:6: warning: conflicting types for 'vmemmap_free'
-   arch/s390/mm/vmem.c:368:3: note: previous implicit declaration of 'vmemmap_free' was here
-     368 |   vmemmap_free(start, end, altmap);
-         |   ^~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-vim +368 arch/s390/mm/vmem.c
-
-   280	
-   281	/*
-   282	 * Add a backed mem_map array to the virtual mem_map array.
-   283	 */
-   284	int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-   285			struct vmem_altmap *altmap)
-   286	{
-   287		unsigned long pgt_prot, sgt_prot;
-   288		unsigned long address = start;
-   289		pgd_t *pg_dir;
-   290		p4d_t *p4_dir;
-   291		pud_t *pu_dir;
-   292		pmd_t *pm_dir;
-   293		pte_t *pt_dir;
-   294		int ret = -ENOMEM;
-   295	
-   296		pgt_prot = pgprot_val(PAGE_KERNEL);
-   297		sgt_prot = pgprot_val(SEGMENT_KERNEL);
-   298		if (!MACHINE_HAS_NX) {
-   299			pgt_prot &= ~_PAGE_NOEXEC;
-   300			sgt_prot &= ~_SEGMENT_ENTRY_NOEXEC;
-   301		}
-   302		for (address = start; address < end;) {
-   303			pg_dir = pgd_offset_k(address);
-   304			if (pgd_none(*pg_dir)) {
-   305				p4_dir = vmem_crst_alloc(_REGION2_ENTRY_EMPTY);
-   306				if (!p4_dir)
-   307					goto out;
-   308				pgd_populate(&init_mm, pg_dir, p4_dir);
-   309			}
-   310	
-   311			p4_dir = p4d_offset(pg_dir, address);
-   312			if (p4d_none(*p4_dir)) {
-   313				pu_dir = vmem_crst_alloc(_REGION3_ENTRY_EMPTY);
-   314				if (!pu_dir)
-   315					goto out;
-   316				p4d_populate(&init_mm, p4_dir, pu_dir);
-   317			}
-   318	
-   319			pu_dir = pud_offset(p4_dir, address);
-   320			if (pud_none(*pu_dir)) {
-   321				pm_dir = vmem_crst_alloc(_SEGMENT_ENTRY_EMPTY);
-   322				if (!pm_dir)
-   323					goto out;
-   324				pud_populate(&init_mm, pu_dir, pm_dir);
-   325			}
-   326	
-   327			pm_dir = pmd_offset(pu_dir, address);
-   328			if (pmd_none(*pm_dir)) {
-   329				/* Use 1MB frames for vmemmap if available. We always
-   330				 * use large frames even if they are only partially
-   331				 * used.
-   332				 * Otherwise we would have also page tables since
-   333				 * vmemmap_populate gets called for each section
-   334				 * separately. */
-   335				if (MACHINE_HAS_EDAT1) {
-   336					void *new_page;
-   337	
-   338					new_page = vmemmap_alloc_block(PMD_SIZE, node);
-   339					if (!new_page)
-   340						goto out;
-   341					pmd_val(*pm_dir) = __pa(new_page) | sgt_prot;
-   342					address = (address + PMD_SIZE) & PMD_MASK;
-   343					continue;
-   344				}
-   345				pt_dir = vmem_pte_alloc();
-   346				if (!pt_dir)
-   347					goto out;
-   348				pmd_populate(&init_mm, pm_dir, pt_dir);
-   349			} else if (pmd_large(*pm_dir)) {
-   350				address = (address + PMD_SIZE) & PMD_MASK;
-   351				continue;
-   352			}
-   353	
-   354			pt_dir = pte_offset_kernel(pm_dir, address);
-   355			if (pte_none(*pt_dir)) {
-   356				void *new_page;
-   357	
-   358				new_page = vmemmap_alloc_block(PAGE_SIZE, node);
-   359				if (!new_page)
-   360					goto out;
-   361				pte_val(*pt_dir) = __pa(new_page) | pgt_prot;
-   362			}
-   363			address += PAGE_SIZE;
-   364		}
-   365		ret = 0;
-   366	out:
-   367		if (ret)
- > 368			vmemmap_free(start, end, altmap);
-   369		return ret;
-   370	}
-   371	
- > 372	void vmemmap_free(unsigned long start, unsigned long end,
-   373			struct vmem_altmap *altmap)
-   374	{
-   375		remove_pagetable(start, end, false);
-   376	}
-   377	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---mYCpIKhGyMATD0i+
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---mYCpIKhGyMATD0i+--
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 02 July 2020 21:22
+> To: Thierry Reding <thierry.reding=40gmail.com>; Uwe Kleine-K=C3=B6nig=20=
+<u.kleine-=0D=0A>=20koenig=40pengutronix.de>;=20Lee=20Jones=20<lee.jones=40=
+linaro.org>;=20Rob=20Herring=0D=0A>=20<robh+dt=40kernel.org>;=20Kukjin=20Ki=
+m=20<kgene=40kernel.org>;=20Krzysztof=20Kozlowski=0D=0A>=20<krzk=40kernel.o=
+rg>;=20linux-pwm=40vger.kernel.org;=20devicetree=40vger.kernel.org;=0D=0A>=
+=20linux-kernel=40vger.kernel.org;=20linux-arm-kernel=40lists.infradead.org=
+;=20linux-=0D=0A>=20samsung-soc=40vger.kernel.org=0D=0A>=20Cc:=20Marek=20Sz=
+yprowski=20<m.szyprowski=40samsung.com>;=20Bartlomiej=20Zolnierkiewicz=0D=
+=0A>=20<b.zolnierkie=40samsung.com>;=20Sylwester=20Nawrocki=20<snawrocki=40=
+kernel.org>;=0D=0A>=20Alim=20Akhtar=20<alim.akhtar=40samsung.com>;=20Chanwo=
+o=20Choi=0D=0A>=20<cw00.choi=40samsung.com>;=20Pankaj=20Dubey=20<pankaj.dub=
+ey=40samsung.com>=0D=0A>=20Subject:=20=5BPATCH=20v2=202/8=5D=20arm64:=20dts=
+:=20exynos:=20Describe=20PWM=20interrupts=20on=0D=0A>=20Exynos7=0D=0A>=20=
+=0D=0A>=20Add=20interrupts=20property=20to=20PWM=20node=20on=20Exynos7=20to=
+=20describe=20the=20hardware=0D=0A>=20fully.=20=20No=20functional=20change=
+=20as=20the=20interrupts=20are=20not=20used=20by=20drivers.=0D=0A>=20=0D=0A=
+>=20Signed-off-by:=20Krzysztof=20Kozlowski=20<krzk=40kernel.org>=0D=0A>=20=
+=0D=0AReviewed-by:=20Alim=20Akhtar=20<alim.akhtar=40samsung.com>=0D=0A>=20-=
+--=0D=0A>=20=0D=0A>=20Changes=20since=20v1:=0D=0A>=201.=20Correct=20the=20i=
+nterrupts,=20change=20message.=0D=0A>=20=0D=0A>=20Not=20tested=0D=0A>=20---=
+=0D=0A>=20=20arch/arm64/boot/dts/exynos/exynos7.dtsi=20=7C=205=20+++++=0D=
+=0A>=20=201=20file=20changed,=205=20insertions(+)=0D=0A>=20=0D=0A>=20diff=
+=20--git=20a/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20b/arch/arm64/=
+boot/dts/exynos/exynos7.dtsi=0D=0A>=20index=20f590891efe25..709742b98c9c=20=
+100644=0D=0A>=20---=20a/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20++=
++=20b/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20=40=40=20-581,6=20+5=
+81,11=20=40=40=0D=0A>=20=20=09=09pwm:=20pwm=40136c0000=20=7B=0D=0A>=20=20=
+=09=09=09compatible=20=3D=20=22samsung,exynos4210-pwm=22;=0D=0A>=20=20=09=
+=09=09reg=20=3D=20<0x136c0000=200x100>;=0D=0A>=20+=09=09=09interrupts=20=3D=
+=20<GIC_SPI=20449=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=20=20=
+=20=20<GIC_SPI=20450=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=20=
+=20=20=20<GIC_SPI=20451=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=20=
+=20=20=20=20<GIC_SPI=20452=20IRQ_TYPE_LEVEL_HIGH>,=0D=0A>=20+=09=09=09=09=
+=20=20=20=20=20<GIC_SPI=20453=20IRQ_TYPE_LEVEL_HIGH>;=0D=0A>=20=20=09=09=09=
+samsung,pwm-outputs=20=3D=20<0>,=20<1>,=20<2>,=20<3>;=0D=0A>=20=20=09=09=09=
+=23pwm-cells=20=3D=20<3>;=0D=0A>=20=20=09=09=09clocks=20=3D=20<&clock_peric=
+0=20PCLK_PWM>;=0D=0A>=20--=0D=0A>=202.17.1=0D=0A=0D=0A=0D=0A
