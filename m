@@ -2,132 +2,168 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B32C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629AC2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D51220870
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fVsIrEfv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UzN//N9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgGCSpt (ORCPT
+        id S1726749AbgGCSrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:45:49 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:18532 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgGCSps (ORCPT
+        Fri, 3 Jul 2020 14:47:25 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47358 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgGCSrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:45:48 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200703184545epoutp01cd414374ac46377d6bc65584ebe431e3~eUmy8olx60975309753epoutp01X
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 18:45:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200703184545epoutp01cd414374ac46377d6bc65584ebe431e3~eUmy8olx60975309753epoutp01X
+        Fri, 3 Jul 2020 14:47:25 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200703184722euoutp016b1500a15adcef50bf201a8eb573c647~eUoN-gn8E2953829538euoutp01D
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 18:47:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200703184722euoutp016b1500a15adcef50bf201a8eb573c647~eUoN-gn8E2953829538euoutp01D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593801945;
-        bh=ZYub6H8gQX1Iy/PZwDCY/s4lpFyG7k81rGHbPOmeFUc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=fVsIrEfv4oSj0jyRtYdMihBrfhqArDArQ/1BKRedShXJYFgre7RkmxSGI/BNXddXl
-         XLNKKQhxnbEiqXnaR0AN9UNpWCdjkwm3u6kxDBw9cl8WlTcfGuEFT1GBzvaM7Zir65
-         ZTpymyZ+UMZ/7/sOZM5A3Cr2VoUFOIZ945jqnza4=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200703184544epcas5p32650181d3d75a5c7aa5e71eb2cf1a74e~eUmyi8VKc1350513505epcas5p3L;
-        Fri,  3 Jul 2020 18:45:44 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6C.DD.09475.8DC7FFE5; Sat,  4 Jul 2020 03:45:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba~eUmxO8UcQ1251212512epcas5p4J;
-        Fri,  3 Jul 2020 18:45:43 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200703184543epsmtrp22554f4300cbcdb7fff0b9551671820c2~eUmxOQWmb2407924079epsmtrp2_;
-        Fri,  3 Jul 2020 18:45:43 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-bc-5eff7cd8e914
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4F.E5.08382.7DC7FFE5; Sat,  4 Jul 2020 03:45:43 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200703184542epsmtip1af93ed4f5baeed3ff8936c34e753026f~eUmwFu7wm1737817378epsmtip1J;
-        Fri,  3 Jul 2020 18:45:41 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     rzk@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH] arm64: dts: exynos: Add minimal bootargs
-Date:   Fri,  3 Jul 2020 23:55:36 +0530
-Message-Id: <20200703182536.9190-1-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsWy7bCmlu6Nmv9xBjfOKFk8mLeNzWL+kXOs
-        FpseX2O1uLxrDpvFjPP7mCxa9x5ht9j5/gOjA7vHplWdbB6bl9R79G1ZxejxeZNcAEsUl01K
-        ak5mWWqRvl0CV8b364+YCrrZKuY9mcXSwDiLtYuRg0NCwETi/8HALkYuDiGB3YwSm29/Z4Nw
-        PjFK3J2wFMr5xihx6d8huI6HN8sh4nuB4s8bmboYOYGcFiaJ7VvzQGw2AW2Ju9O3gMVFBIQk
-        DjT8YgFpYBY4wijRcP4FWEJYwFJi9a0VzCA2i4CqRPetPrA4r4C1xP0v78HiEgLyEqs3HGAG
-        aZYQWMUu8fzrHHaIhIvE3P7HLBC2sMSr41ug4lISn9/tZYO4NFuiZ5cxRLhGYum8Y1Dl9hIH
-        rsxhASlhFtCUWL9LHyTMLMAn0fv7CRNEJ69ER5sQRLWqRPO7q1Cd0hITu7tZIWwPiT13H7FD
-        vB4rMePbA6YJjDKzEIYuYGRcxSiZWlCcm55abFpgnJdarlecmFtcmpeul5yfu4kRHM9a3jsY
-        Hz34oHeIkYmD8RCjBAezkghvguq/OCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Sj/OxAkJpCeW
-        pGanphakFsFkmTg4pRqYIn9zXMie53H48LHS54ozVlmVLkzvf/eU4a7n1KPtW4zKNiw9MP/u
-        90N7wzhenPnR9G5t4720pv3NLb84eFgdWTYULfx/JlySw/zznEQmz66rbbUfnkxb5cbpZ/7S
-        qjk9/9Ekl7Q5jm57Xf94n9o5L/bxudSY/p/2VRIiXiKa+37ec/4bfed/bu935yM5u79f2nGt
-        g8lo6cZJiXYnzEV/7OGT3WdjX356eYfow/39STnnN5/tedJzsSTiTfPhwspTbb6nXnh0CopO
-        CZb49uRS41WjlxNyFrUv877cEqP/YPfNRzxvbrlU9p5TLb7ZvVRAbiHbfdnZ0aZfQp1MeNY/
-        n2q/P3WuzeTPnFkpkZcnySuxFGckGmoxFxUnAgA4lJbQVgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJJMWRmVeSWpSXmKPExsWy7bCSnO71mv9xBrv3sls8mLeNzWL+kXOs
-        FpseX2O1uLxrDpvFjPP7mCxa9x5ht9j5/gOjA7vHplWdbB6bl9R79G1ZxejxeZNcAEsUl01K
-        ak5mWWqRvl0CV8b364+YCrrZKuY9mcXSwDiLtYuRg0NCwETi4c3yLkYuDiGB3YwSb9+9Y+li
-        5ASKS0tc3ziBHcIWllj57zk7RFETk8Sza3PAEmwC2hJ3p29hArFFBIQkDjT8YgEpYhY4xSjR
-        v30zWJGwgKXE6lsrmEFsFgFVie5bfWANvALWEve/vGeG2CAvsXrDAeYJjDwLGBlWMUqmFhTn
-        pucWGxYY5qWW6xUn5haX5qXrJefnbmIEh46W5g7G7as+6B1iZOJgPMQowcGsJMKboPovTog3
-        JbGyKrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6YklqdmpqQWpRTBZJg5OqQYmWY6Hutu+Nqn9
-        KOPZX6MSelTNeEITX6daudyTCTFGu1NnHUm8V8XvXs/3k1PEJn0fg5vls8sr5k9xvi5jr+u/
-        bZXzeet3bqILy2c0PE3dwctqYZRw3Pj6r18afyV/3vZSvShy7fohzbv7FxtMa/kvHqFaKf47
-        6ve3WDkHvdB9Lm3n439O93fgu/DlBG87u5zTBbZaD5to+/3HTr/xlio8KXUq49DrqENfzm6S
-        Fqve9/PHq/9a0fMP3LFINmd0nHHFaGX7uwczbnHtX+kkvST+f/v5dE8GzxZffZaCMOfOM0ab
-        0h+uSVz1tmr7oY40b63ihSYTntrfKHu6e2es6o/4d55r7zDzVhU9ant9wnWqEktxRqKhFnNR
-        cSIAq30LnIwCAAA=
-X-CMS-MailID: 20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba
+        s=mail20170921; t=1593802042;
+        bh=i1/uMDs8BgSjlm9bkstKj5YuscCvOGSa3GwGD5PZpt4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=UzN//N9y9ROTSnLGmoAzyFEWZM52vP6mxMwapCl/V99Yn+LQaR2rH3QNVGyZfraH0
+         J7Aspe2mQZ/IK2s0ieuweoPDXGLkBPM2GCQsj4NqX+Hc+gc315tTw6QKnoh6wNwL34
+         Svs9kVHPg+NKYIMGThxtBevOBqx7kxNVITsYzBhw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200703184722eucas1p22fcca6dd07e52aaf1251e85fc18db7b3~eUoNiCsmr2016720167eucas1p2s;
+        Fri,  3 Jul 2020 18:47:22 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1B.66.06318.A3D7FFE5; Fri,  3
+        Jul 2020 19:47:22 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200703184721eucas1p14d55ad6733d8edbc22237da65563d0bc~eUoNGzc-m0218502185eucas1p1M;
+        Fri,  3 Jul 2020 18:47:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200703184721eusmtrp2050d75dc1546f772412a0fa8183e36e2~eUoNGI9Qp1186411864eusmtrp2a;
+        Fri,  3 Jul 2020 18:47:21 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-d5-5eff7d3ab566
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C2.0E.06017.93D7FFE5; Fri,  3
+        Jul 2020 19:47:21 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200703184720eusmtip1f6a015963e019e47265fe8d15eb9bcc8~eUoML1gIE3172131721eusmtip10;
+        Fri,  3 Jul 2020 18:47:20 +0000 (GMT)
+Subject: Re: [PATCH 3/8] ASoC: samsung: pcm: fix kernel-doc
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        open list <linux-kernel@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <d6980967-5def-58c9-39a9-239a5c671f3f@samsung.com>
+Date:   Fri, 3 Jul 2020 20:47:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200702165901.164100-4-pierre-louis.bossart@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGvTPT6XS05FIwnKDBWDGuoAQwoyjBLRnjg/hmVKpFBkpY7QBu
+        IRoRhKJ1i0GbCkTDYo0BK4JgRAWFVCJYtxA3AqlEidUIBQUFdDoaefv+c89/z/1PLkNqHisC
+        meT0LMGYrk/V0ixV3zbaFbIqd1K3fHgYcy+cLQR3vtdFc11dtUpu5EUhwT1vstJcUdMpBTc2
+        2U9wzmoPwdV+v464Tzc/EzEsXzt0lOYbLe+UvN1WRPOljq18s7uS5s11NsTX1L2k+Jsdh/gh
+        e1Csaju7OkFITc4RjMuid7OGHx/CMsum77/27gw6giYYE2IYwBGQf583IZbR4GoEefX5pCw8
+        CDrNfUpZDCE49uoXbUIqr6PiQj8psQZXIXCbl8r8DcGg009iPxwFbQUVSon9sQ6qPF3ei0hc
+        QEDr1wGvmcZhcPKRGUmsxtFQYp2gJKZwMLy2Wr08E8eBuaKclnt8wXHR5a2r8GYYv+RUSEzi
+        AHjtKiNkngMNbqs3AmC3Ep7elQcA3gCD46OUzH4w0F6nlHk2TDZKZsmQh+DEnTdKWZxG0NNe
+        /tcdBW87x2hpYyReBDVNy+TyWhhvKCXkRfpAt9tXfoQPnK0vIeWyGgoLNHJ3MPy0lRAyB0Kx
+        a5I6jbSWKdEsU+JYpsSx/J9bjigbChCyxbQkQQxPF/aFivo0MTs9KXRPRpod/flhHRPtw7dR
+        86/4FoQZpJ2h/ugY12kU+hzxQFoLAobU+qvXPenQadQJ+gMHBWPGLmN2qiC2oFkMpQ1Qh1/+
+        FKfBSfosIUUQMgXjv1OCUQUeQZHxPolxa5bYG2Jj2noLot9fhkjPtYjE6odrTQNjD66kLDTl
+        Vs61t4Y1r0y+FxS14ELl4WDu5NWBPkMEu/HLFp1z7/VYbeXx+fMyc3uUNQu7DVmLVuxo7B25
+        u7N4TlnO9+dbp52L9OT9DB8NUq3bEL+JvcXGhDi4HaBYf+PZzvptfdO1lGjQhy0mjaL+N+Dn
+        NktdAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsVy+t/xu7qWtf/jDN4cMLC4cvEQk8XUh0/Y
+        LM6f38Bu8e1KB5PF5V1z2Cw6d/WzWvz6/4zJ4uKKL0wWG76vZbR4ufkNkwOXx4bPTWweO2fd
+        ZffYtKqTzWPeyUCPfW+XsXn0bVnF6LF+y1UWj82nqz0+b5IL4IzSsynKLy1JVcjILy6xVYo2
+        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy/jx1LBgPnfF6rsTGRsY/3F0MXJy
+        SAiYSCyd8Yy5i5GLQ0hgKaPEzcud7F2MHEAJKYn5LUoQNcISf651sUHUvGeUuL/0ETNIQljA
+        WuJY21J2EFtEIE5i98JDLCBFzAJtTBLfV/UwQnTcZ5T40NPDBFLFJmAo0Xu0jxHE5hWwk5g+
+        5x8LiM0ioCJxa84cMFtUIFbi270tbBA1ghInZz4Bi3MKeEv8nXuRFcRmFlCX+DPvEjOELS5x
+        68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy020itOzC0uzUvXS87P
+        3cQIjNttx35u2cHY9S74EKMAB6MSD++E43/jhFgTy4orcw8xSnAwK4nwOp09HSfEm5JYWZVa
+        lB9fVJqTWnyI0RTouYnMUqLJ+cCUklcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1
+        ILUIpo+Jg1OqgXGS45/DembLlq7r1rganz5j7YfASN4sLu/rEjc3t+t6eXI/dpK/v+q6r0fy
+        jlKzZJ1Z07yrJhzcbnO0aq2El6bYb/5CoVP2TvN33pyw8HBKtaLytWd3Zhp2PC2O3Lakvf5s
+        p6+ofHeh6h+dhPYvX0tcmcr/2y/Sy1mjlnav8eO3Xef8ntfu9lJiKc5INNRiLipOBADTRFEi
+        8QIAAA==
+X-CMS-MailID: 20200703184721eucas1p14d55ad6733d8edbc22237da65563d0bc
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba
-References: <CGME20200703184543epcas5p4adb3db7693094c72477b8469d9f205ba@epcas5p4.samsung.com>
+X-RootMTR: 20200702165920eucas1p236c3c4c82424ea459ea88ebacf9b8a6e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200702165920eucas1p236c3c4c82424ea459ea88ebacf9b8a6e
+References: <20200702165901.164100-1-pierre-louis.bossart@linux.intel.com>
+        <CGME20200702165920eucas1p236c3c4c82424ea459ea88ebacf9b8a6e@eucas1p2.samsung.com>
+        <20200702165901.164100-4-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add minimal bootargs to enable earlycon and console.
-This really useful in case kernel has crashed early in
-boot process.
+On 02.07.2020 18:58, Pierre-Louis Bossart wrote:
+> Fix W=1 warnings - missing fields in structure
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  sound/soc/samsung/pcm.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/sound/soc/samsung/pcm.c b/sound/soc/samsung/pcm.c
+> index a5b1a12b3496..86eefbc89e9e 100644
+> --- a/sound/soc/samsung/pcm.c
+> +++ b/sound/soc/samsung/pcm.c
+> @@ -104,8 +104,13 @@
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+Thank you for the patch, I have some suggestions to improve the comments.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 790f12ca8981..d7b42d5a3b2d 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -24,6 +24,7 @@
+>  /**
+>   * struct s3c_pcm_info - S3C PCM Controller information
+> + * @lock: Spin lock
+
+@lock: Spin lock to serialize access to the device registers and @idle_clk
+
+>   * @dev: The parent device passed to use from the probe.
+>   * @regs: The pointer to the device register block.
+> + * @sclk_per_fs: number of sclk per frame sync
+> + * @idleclk: Whether to keep PCMSCLK enabled even when idle(no active xfer)
+
+How about adding space before the opening parenthesis?
+
+> + * @pclk: the pclk pointer
+
+@pclk: the PCLK_PCM (pcm) clock pointer
+
+> + * @cclk: the clck pointer
+
+@cclk: the SCLK_AUDIO (audio-bus) clock pointer  
+
+>   * @dma_playback: DMA information for playback channel.
+>   * @dma_capture: DMA information for capture channel.
+>   */
  
- 	chosen {
- 		stdout-path = &serial_2;
-+		bootargs = "earlycon=exynos4210,0x14c30000 console=ttySAC0,115200n8";
- 	};
- 
- 	memory@40000000 {
+With above changes feel free to add:
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-base-commit: 9e50b94b3eb0d859a2586b5a40d7fd6e5afd9210
 -- 
-2.17.1
-
+Thanks,
+Sylwester
