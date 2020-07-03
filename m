@@ -2,146 +2,157 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7006C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 928132073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fJtjmx5d"
+	by mail.kernel.org (Postfix) with ESMTP id 3FEAA2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgGCAxC (ORCPT
+        id S1726509AbgGCAyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:53:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32527 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726028AbgGCAxC (ORCPT
+        Thu, 2 Jul 2020 20:54:07 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58398 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGCAyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:53:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593737580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CULJFp+mODjg6iHDkj5D4GeB51UD2IHVmmu+m4v/Di4=;
-        b=fJtjmx5dYNHTJiFx0Tr26pgI15ciNshqFU8r5FwDsQ3RWufZN/QisnYOss7O5gBBQ+VABy
-        cno6bxKAYZz9zyDO0CrWLtjrpY8S5crZGF/p7G3WHgmofIscDJ0w6qXelZt3+bK8evBK0j
-        hMgQL0kWWty8jGFZTcED7vy/gqHTNFU=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-CoHJ-_jGMyOBu-MUTq2h_Q-1; Thu, 02 Jul 2020 20:52:58 -0400
-X-MC-Unique: CoHJ-_jGMyOBu-MUTq2h_Q-1
-Received: by mail-qt1-f197.google.com with SMTP id o11so20575385qti.23
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:52:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CULJFp+mODjg6iHDkj5D4GeB51UD2IHVmmu+m4v/Di4=;
-        b=dbwSLG4gM4Y7szQl2+XIGuo7/1GT0433LiTuMPt2YAxZgj8DKv+Zb1OR/TfYMD3nQ5
-         bb+2NsmdZvL4miBCnaEy1grkhXOO+6cnYccs4SoKBRwtv7hbGiD34iIXENccS6VYXQV/
-         bSB8V3XNf4q7hxBmRUD2dp1IVbBqgz+lWPLVSLNY0c6dN2G+xbbkIoKJMrYkdc0tn9Re
-         c5WeQ+P0EPJ/8cND9vodnBNyWoFNqQyXDPPyDhHmC0k+b9kbllx2jMfN3ntnI3bjRzbe
-         bFu/jImbKskzZR9i+8AtBffSvORhIkVO4xjmQsXjtkjry3iSIUvyZRu0be/tcQPijwxv
-         PzJQ==
-X-Gm-Message-State: AOAM530mJeJv0N2FQM5nWeEtVMrQYxczX2f+FWE8cndcXj+tayW3gYJQ
-        TUbCjK5yTS6gR4SYg9z9ORdmtNLaAi4/8dAtsMcNwnIVF0KuWt4JXWQx2hxHiUtAH70zojh11d9
-        ggEFtjnJJ10VjyFDpOeCp0Cog
-X-Received: by 2002:a0c:fb47:: with SMTP id b7mr22636074qvq.129.1593737578213;
-        Thu, 02 Jul 2020 17:52:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyP1HYu8QJN62LP6dFLsqmw311h2Hp3lgkh95q++LJEn0WZi0TPW5UqaXSPu8EngNu1OXf2/g==
-X-Received: by 2002:a0c:fb47:: with SMTP id b7mr22636058qvq.129.1593737577992;
-        Thu, 02 Jul 2020 17:52:57 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id j9sm9602885qtr.60.2020.07.02.17.52.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 17:52:57 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 20:52:55 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 26/26] mm/gup: Remove task_struct pointer for all gup
- code
-Message-ID: <20200703005255.GB6677@xz-x1>
-References: <20200630204609.39736-1-peterx@redhat.com>
- <a5b6caba-28bf-4869-d1c9-984136f9f77b@nvidia.com>
+        Thu, 2 Jul 2020 20:54:06 -0400
+Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0630q3Dc066718;
+        Fri, 3 Jul 2020 09:52:03 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
+ Fri, 03 Jul 2020 09:52:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0630q2Yw066713
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Fri, 3 Jul 2020 09:52:02 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+ <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+ <20200702194656.GV4332@42.do-not-panic.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
+Date:   Fri, 3 Jul 2020 09:52:01 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200702194656.GV4332@42.do-not-panic.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a5b6caba-28bf-4869-d1c9-984136f9f77b@nvidia.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 02:55:40PM -0700, John Hubbard wrote:
-> On 2020-06-30 13:46, Peter Xu wrote:
-> > After the cleanup of page fault accounting, gup does not need to pass
-> > task_struct around any more.  Remove that parameter in the whole gup stack.
-> > 
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >   arch/arc/kernel/process.c                   |  2 +-
-> >   arch/s390/kvm/interrupt.c                   |  2 +-
-> >   arch/s390/kvm/kvm-s390.c                    |  2 +-
-> >   arch/s390/kvm/priv.c                        |  8 +-
-> >   arch/s390/mm/gmap.c                         |  4 +-
-> >   drivers/gpu/drm/i915/gem/i915_gem_userptr.c |  2 +-
-> >   drivers/infiniband/core/umem_odp.c          |  2 +-
-> >   drivers/vfio/vfio_iommu_type1.c             |  4 +-
-> >   fs/exec.c                                   |  2 +-
-> >   include/linux/mm.h                          |  9 +-
-> >   kernel/events/uprobes.c                     |  6 +-
-> >   kernel/futex.c                              |  2 +-
-> >   mm/gup.c                                    | 92 +++++++++------------
-> >   mm/memory.c                                 |  2 +-
-> >   mm/process_vm_access.c                      |  2 +-
-> >   security/tomoyo/domain.c                    |  2 +-
-> >   virt/kvm/async_pf.c                         |  2 +-
-> >   virt/kvm/kvm_main.c                         |  2 +-
-> >   18 files changed, 65 insertions(+), 82 deletions(-)
-> > 
+On 2020/07/03 4:46, Luis Chamberlain wrote:
+> On Thu, Jul 02, 2020 at 01:26:53PM +0900, Tetsuo Handa wrote:
+>> On 2020/07/02 0:38, Luis Chamberlain wrote:
+>>> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+>>>  		 */
+>>>  		if (KWIFEXITED(ret))
+>>>  			sub_info->retval = KWEXITSTATUS(ret);
+>>> +		/*
+>>> +		 * Do we really want to be passing the signal, or do we pass
+>>> +		 * a single error code for all cases?
+>>> +		 */
+>>> +		else if (KWIFSIGNALED(ret))
+>>> +			sub_info->retval = KWTERMSIG(ret);
+>>
+>> No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
+>> and e.g. SIGKILL'ed by the OOM-killer.
 > 
-> Looks good:
-> 
->     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> One minor refinement: in gup.c, if you add the following hunk on top of your
-> changes, that will eradicate the last reference to struct task, in that file:
-> 
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8ddc48022d74..75c4b305828b 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1902,10 +1902,9 @@ static long __get_user_pages_remote(struct mm_struct *mm,
->   *              Or NULL if the caller does not require them.
->   *
->   * This is the same as get_user_pages_remote(), just with a
-> - * less-flexible calling convention where we assume that the task
-> - * and mm being operated on are the current task's and don't allow
-> - * passing of a locked parameter.  We also obviously don't pass
-> - * FOLL_REMOTE in here.
-> + * less-flexible calling convention where we assume that the mm being operated
-> + * on belongs to the current task, and doesn't allow passing of a locked
-> + * parameter. We also obviously don't pass FOLL_REMOTE in here.
->   */
->  long get_user_pages(unsigned long start, unsigned long nr_pages,
->                 unsigned int gup_flags, struct page **pages,
+> Right, the question is: do we care?
 
-Right.  Fixed it up, and with the r-b kept.  Thanks!
+Yes, we have to care.
 
--- 
-Peter Xu
+> And the umh patch "umh: fix processed error when UMH_WAIT_PROC is used"
+> changed this to:
+> 
+> -       if (ret >= 0) {
+> +       if (ret != 0) {
+> 
+> Prior to the patch negative return values from userspace were still
+> being captured, and likewise signals, but the error value was not
+> raw, not the actual value. After the patch, since we check for ret != 0
+> we still upkeep the sanity check for any error, correct the error value,
+> but as you noted signals were ignored as I made the wrong assumption
+> we would ignore them. The umh sub_info->retval is set after my original
+> patch only if KWIFSIGNALED(ret)), and ignored signals, and so that
+> would be now capitured with the additional KWIFSIGNALED(ret)) check.
+
+"call_usermodehelper_keys() == 0" (i.e. usermode helper was successfully
+started and successfully terminated via exit(0)) is different from "there is
+nothing to do". call_sbin_request_key() == 0 case still has to check for
+possibility of -ENOKEY case.
+
+> 
+> The question still stands:
+> 
+> Do we want to open code all these checks or simply wrap them up in
+> the umh. If we do the later, as you note exit(9) and a SIGKILL will
+> be the same to the inspector in the kernel. But do we care?
+
+Yes, we do care.
+
+> 
+> Do we really want umh callers differntiatin between signals and exit values?
+
+Yes, we do.
+
+> 
+> The alternative to making a compromise is using generic wrappers for
+> things which make sense and letting the callers use those.
+
+I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
+macros and fixing the callers, for some callers are not aware of possibility of
+KWIFSIGNALED() case.
+
+For example, conn_try_outdate_peer() in drivers/block/drbd/drbd_nl.c misbehaves if
+drbd_usermode_helper process was terminated by a signal, for the switch() statement
+after returning from conn_helper() is assuming that the return value of conn_helper()
+is a KWEXITSTATUS() value if drbd_usermode_helper process was successfully started.
+If drbd_usermode_helper process was terminated by SIGQUIT (which is 3),
+conn_try_outdate_peer() will by error hit "case P_INCONSISTENT:" (which is 3);
+conn_try_outdate_peer() should hit "default: /* The script is broken ... */"
+unless KWIFEXITED() == true.
+
+Your patch is trying to obnubilate the return code.
 
