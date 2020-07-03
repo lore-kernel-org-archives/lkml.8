@@ -2,109 +2,152 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEADC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8EC20781
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980FC20781
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XTuzQY6/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQB1Gr6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgGCDFV (ORCPT
+        id S1726300AbgGCDFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:05:21 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56924 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726033AbgGCDFU (ORCPT
+        Thu, 2 Jul 2020 23:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgGCDFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:05:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593745519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nT5nUdX/XIXMp0SEBuIisefVG98qior59Pb7SabULTU=;
-        b=XTuzQY6/AwCBPgMjLylAFwmB6wLqvfstaxNdLyFXTHFafO7WR07pOjsJsUSXZ0xhnneB2s
-        uO4LtMmP+Ts68RUScq8SVb7oqbT5PhzZ2wCud4GT6oimv7fUnPfdPvmDOJyScR9cny9gnJ
-        ubleCbUUIAsvgifkmCAXy3W3bWjrYgE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-1z8sNEliMLCBosM8IsGV_g-1; Thu, 02 Jul 2020 23:05:17 -0400
-X-MC-Unique: 1z8sNEliMLCBosM8IsGV_g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0CE07BFC0;
-        Fri,  3 Jul 2020 03:05:15 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-82.rdu2.redhat.com [10.10.112.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D402612BA;
-        Fri,  3 Jul 2020 03:05:11 +0000 (UTC)
-Subject: Re: [PATCH v5] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-References: <20200702005923.10064-1-longman@redhat.com>
- <20200703010720.GH5369@dread.disaster.area>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <85cbaacf-6986-d363-5c80-530be9a6fa63@redhat.com>
-Date:   Thu, 2 Jul 2020 23:05:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 2 Jul 2020 23:05:35 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D64BC08C5C1;
+        Thu,  2 Jul 2020 20:05:35 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t4so12913159iln.1;
+        Thu, 02 Jul 2020 20:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C8+UQwuXxC+Hk3b/RHaKYib5FH1f4hDdnk1vs6FzplY=;
+        b=rQB1Gr6B2JLCZdZMlpDDPYmtUXdmlci/ut3szK2nGMpgrgDKccBRZAdg7fM3tFmJTm
+         SuEKqBqdyoSbj98eRtt5au0pjnW+ssSxt0i0mB6mYkfly1bWvVaww+ki975o0IK/G5+I
+         6oig7P8QXjKuD4bWBxbVtlJX0bDAPUmg85lXUCYHf/FiXgm1oq5rF1WvAfM4S8JSL8+t
+         Gr2oet6kSZgQcQuZ3H3NsK5sMeOCZlFiwz54Gf+qF0Fcy/FLIvALpVM440td7cnOW+0O
+         upMPb8cz/cqRBhnfWNycYTqsl52w7uE/YMH54czeX3ACQ/yKpavTldf7HhisQzyBwYod
+         BJpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C8+UQwuXxC+Hk3b/RHaKYib5FH1f4hDdnk1vs6FzplY=;
+        b=s4QjCKQY35ArgU2bMvfI29QDK1x3Oi77v7CcI9Cvc18Ot7bD67PDC1z9oYY2SoSbQU
+         azv0nNOkRA6reVU+t2GvCA/+proOF+Xqxv+qdJRZOIJb1bUiYBXGyWIq8z3LDBy/BAPe
+         uz8qmDKPjfNjbicb4+9Kkop8ZwreVarMcFY02Eabc6/k4knDirkc4sjSVTQV/kEbnKPY
+         no1ze6oDyybJ4V3f0gWk6Lxz4UpyUKsT4jmIxO8MirvSxvWys0fBJpxP1A3zMXn9IDpn
+         K4fRVc83mUHca1GzNJp2rqn4VkqWj+GRJR4CMgzRXwitt0bevfxlsN9miJWtHIZLOnPJ
+         GhyA==
+X-Gm-Message-State: AOAM531jQigfrKSAxpnj7jNOiZ+uiWKEtjMA8/aBOJdayBGkYkX4vAlV
+        QvoeRBZTmEZYFcKIJ5KRNm4bRs4yte/9SzSNfiU=
+X-Google-Smtp-Source: ABdhPJz4+ioeA2nP9zgX8fa88ROeI1ZyFyxLz8J8nizj7PhHFLtQKDEM9PXwCV1FqYNWrRydgcUhR8hBHGE4zJATX/A=
+X-Received: by 2002:a92:cc50:: with SMTP id t16mr15622736ilq.180.1593745534863;
+ Thu, 02 Jul 2020 20:05:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200703010720.GH5369@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200702105351.363880-3-vaibhavgupta40@gmail.com> <202007030309.DqqVrhAQ%lkp@intel.com>
+In-Reply-To: <202007030309.DqqVrhAQ%lkp@intel.com>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Fri, 3 Jul 2020 08:33:54 +0530
+Message-ID: <CAPBsFfDcugy2=wzd49riVkG+_CZJ01j4i9M44zpdDjGYEHFu8Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] smsc9420: use generic power management
+To:     kernel test robot <lkp@intel.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, bjorn@helgaas.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 9:07 PM, Dave Chinner wrote:
-> On Wed, Jul 01, 2020 at 08:59:23PM -0400, Waiman Long wrote:
->> Suggested-by: Dave Chinner <david@fromorbit.com>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>   fs/xfs/xfs_super.c | 12 +++++++++++-
->>   1 file changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
->> index 379cbff438bc..dcc97bad950a 100644
->> --- a/fs/xfs/xfs_super.c
->> +++ b/fs/xfs/xfs_super.c
->> @@ -913,11 +913,21 @@ xfs_fs_freeze(
->>   	struct super_block	*sb)
->>   {
->>   	struct xfs_mount	*mp = XFS_M(sb);
->> +	unsigned long		pflags;
->> +	int			ret;
->>   
->> +	/*
->> +	 * Disable fs reclaim in memory allocation for fs freeze to avoid
->> +	 * causing a possible circular locking dependency lockdep splat
->> +	 * relating to fs reclaim.
->> +	 */
-> 	/*
-> 	 * The filesystem is now frozen far enough that memory reclaim
-> 	 * cannot safely operate on the filesystem. Hence we need to
-> 	 * set a GFP_NOFS context here to avoid recursion deadlocks.
-> 	 */
+On Fri, 3 Jul 2020 at 01:38, kernel test robot <lkp@intel.com> wrote:
 >
->> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-> memalloc_nofs_save/restore(), please.
+> Hi Vaibhav,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v5.8-rc3 next-20200702]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/smsc-use-generic-power-management/20200702-185914
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cd77006e01b3198c75fb7819b3d0ff89709539bb
+> config: x86_64-allyesconfig (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 003a086ffc0d1affbb8300b36225fb8150a2d40a)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> drivers/net/ethernet/smsc/smsc9420.c:1466:6: warning: variable 'err' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+>            if (netif_running(dev)) {
+>                ^~~~~~~~~~~~~~~~~~
+>    drivers/net/ethernet/smsc/smsc9420.c:1471:9: note: uninitialized use occurs here
+>            return err;
+>                   ^~~
+>    drivers/net/ethernet/smsc/smsc9420.c:1466:2: note: remove the 'if' if its condition is always true
+>            if (netif_running(dev)) {
+>            ^~~~~~~~~~~~~~~~~~~~~~~~
+>    drivers/net/ethernet/smsc/smsc9420.c:1460:9: note: initialize the variable 'err' to silence this warning
+>            int err;
+>                   ^
+>                    = 0
+>    1 warning generated.
+>
+> vim +1466 drivers/net/ethernet/smsc/smsc9420.c
+>
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1456
+> 7d465053ec82e2 drivers/net/ethernet/smsc/smsc9420.c Vaibhav Gupta     2020-07-02  1457  static int __maybe_unused smsc9420_resume(struct device *dev_d)
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1458  {
+> 7d465053ec82e2 drivers/net/ethernet/smsc/smsc9420.c Vaibhav Gupta     2020-07-02  1459          struct net_device *dev = dev_get_drvdata(dev_d);
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1460          int err;
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1461
+> 7d465053ec82e2 drivers/net/ethernet/smsc/smsc9420.c Vaibhav Gupta     2020-07-02  1462          pci_set_master(to_pci_dev(dev_d));
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1463
+> 7d465053ec82e2 drivers/net/ethernet/smsc/smsc9420.c Vaibhav Gupta     2020-07-02  1464          device_wakeup_disable(dev_d);
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1465
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11 @1466          if (netif_running(dev)) {
+> b5a80837b7e125 drivers/net/ethernet/smsc/smsc9420.c Francois Romieu   2012-03-09  1467                  /* FIXME: gross. It looks like ancient PM relic.*/
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1468                  err = smsc9420_open(dev);
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1469                  netif_device_attach(dev);
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1470          }
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1471          return err;
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1472  }
+> 2cb377283f3469 drivers/net/smsc9420.c               Steve Glendinning 2008-12-11  1473
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Thanks for the comments, I will make the suggested change.
-
-Cheers,
-Longman
-
+Fixed. Thanks!
+-- Vaibhav Gupta
