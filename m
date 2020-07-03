@@ -2,192 +2,243 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A4820836
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593775365;
-	bh=6n28vpx/soKyjVr4Qm0kMEuzFjiXcM8KUitLv0Cgf/0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lYea1RBZxW9sUWIAQlV4ZQ35GfXsxH+le0vx9Lt5nvN1mlKJRJh9r4KL5q7u2Fp3U
-	 dkK09PefqBMdgwMpVfuf+NGhsz0JMitwhLJeQJgqTwariIRQWb9jtsxyqQFVVPWaeO
-	 JGqokka7gNw5T/bW8UDAdjCVDCvVvcaelFFqJzJg=
+	by mail.kernel.org (Postfix) with ESMTP id A5B0C20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="cNaVziwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgGCLWn (ORCPT
+        id S1726345AbgGCLYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgGCLWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:22:43 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA7F720674;
-        Fri,  3 Jul 2020 11:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593775362;
-        bh=6n28vpx/soKyjVr4Qm0kMEuzFjiXcM8KUitLv0Cgf/0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nQjxyVEI2yn5VgxkwVOEe2ufkTUTzgWidEE+rLTENbUwAvmEEZ4owS02JW0bP0d6f
-         +UCXbi2HQ+GyTycjMd2X+QcR6iOy0z4/jGPopVqgr273u8IGlLt5yEpLsImBk/8jTN
-         QgdT444JVHCw/x+Y2/yx/BX5NdIfdDvQawc/EMAE=
-Received: by pali.im (Postfix)
-        id 7B291121B; Fri,  3 Jul 2020 13:22:40 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: Fix reporting 'operation not supported' error code
-Date:   Fri,  3 Jul 2020 13:21:51 +0200
-Message-Id: <20200703112151.18917-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Jul 2020 07:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgGCLYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:24:30 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4891CC08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 04:24:30 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c11so18241382lfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 04:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
+        b=cNaVziwXP/FXl51uLD6P9SDqfM10xutFUrENHOk8xP7BmYZk+IWUPzeVhnaZQf9gvc
+         vxjGSLQIWpuBQfzo3o5bSoGUxFVJoZJ+ddZCWpOZTdGDg4ZTM6iHWWpMIycrEdxDjLOA
+         vmG5JZBPh8P6Kz+iwAHXiP4l9H8Z+T1SQpQa1c/s5/RCne8EgFXmQLHsH2L2jNGdkCz/
+         CX59J9EmjTO1g7YeQqxM/A0p57k3gU5y0rpUgm+GyfXUFvWU+HQJ6C7AvsG1olSZ5Wf2
+         RAH10ZnURTCqLtuTWy+hNEYQhv56R45INNiRlKhkTKPC2FJSuXDDeCOnYALAyOYuJ8NM
+         9Flw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oitMqipLEPO2Yj5xL/dlzZEeDLyWSmeeByxlVNYyd1g=;
+        b=X/XGMdGN9odnQqCOHYClPPQhDnvY/H3wlD2uOo0i6hAmLtMjh/k1Nu5Y5hHVmJj3q3
+         Z35uLWHASsOwOjqYRcgmJ0udh/TW1BXXFLR2B2eqBcDjBqFDB6ta+QmERGNNiol7wPqE
+         DIOp3EJ2BbnYqn//qj6wsdWLLTp1PKkD+TytqM64An2QBMdYjHjf+ucx92lV92FYur0w
+         e+d0Nhb0efIkfLxEyHDqXzVMhjs1M63eBYHhJWqd2xPekkA8AhJ9KT4TCniEO3ydOkhs
+         aOurVn2WflxIsOTmYhHEyaJLtwRWzZD7kGWy83IKzVZDh7cwSDmdo1mv48Xv6t6naFwZ
+         QENw==
+X-Gm-Message-State: AOAM531ujbs5ekmEocEvfxZdRUjl/59UTsIPRtH4wNRJEgtMtFJjW6Bo
+        8E8ma8s16WRvQi2wNbU9YitMsg==
+X-Google-Smtp-Source: ABdhPJwSnB2E+9qDy3UvGZ3TOCAmeByNzVFr4FH7BTY3Q5sjfcRDicXgAigg7pUSQRkrPg0kxImDPQ==
+X-Received: by 2002:ac2:5e29:: with SMTP id o9mr20757726lfg.196.1593775468529;
+        Fri, 03 Jul 2020 04:24:28 -0700 (PDT)
+Received: from [192.168.1.9] ([83.68.95.66])
+        by smtp.googlemail.com with ESMTPSA id g7sm4539921lfe.62.2020.07.03.04.24.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 04:24:27 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] iommu/arm-smmu: Workaround for Marvell
+ Armada-AP806 SoC erratum #582743
+To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
+        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
+        hannah@marvell.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, catalin.marinas@arm.com,
+        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
+        mw@semihalf.com
+References: <20200702201633.22693-1-tn@semihalf.com>
+ <20200702201633.22693-3-tn@semihalf.com>
+ <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
+From:   Tomasz Nowicki <tn@semihalf.com>
+Message-ID: <8fb0f73f-35ca-d8ec-43b8-ae89e9a21d0c@semihalf.com>
+Date:   Fri, 3 Jul 2020 13:24:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <f8c3fea9-2bd7-e776-447e-54886cd61568@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ENOTSUPP (double PP) is internal linux kernel code 524 available only in
-kernel include file linux/errno.h and not exported to userspace.
 
-EOPNOTSUPP (OP; double PP) is standard code 95 for reporting 'operation not
-supported' available via kernel include file uapi/asm-generic/errno.h.
 
-ENOTSUP (single P) is alias for EOPNOTSUPP defined only in userspace
-include file bits/errno.h and not available in kernel.
+On 03.07.2020 11:03, Robin Murphy wrote:
+> On 2020-07-02 21:16, Tomasz Nowicki wrote:
+>> From: Hanna Hawa <hannah@marvell.com>
+>>
+>> Due to erratum #582743, the Marvell Armada-AP806 can't access 64bit to
+>> ARM SMMUv2 registers.
+>>
+>> Provide implementation relevant hooks:
+>> - split the writeq/readq to two accesses of writel/readl.
+>> - mask the MMU_IDR2.PTFSv8 fields to not use AArch64 format (but
+>> only AARCH32_L) since with AArch64 format 32 bits access is not 
+>> supported.
+>>
+>> Note that separate writes/reads to 2 is not problem regards to
+>> atomicity, because the driver use the readq/writeq while initialize
+>> the SMMU, report for SMMU fault, and use spinlock in one
+>> case (iova_to_phys).
+> 
+> The comment about the spinlock seems to be out of date, and TBH that 
+> whole sentence is a bit unclear - how about something like:
+> 
+> "Note that most 64-bit registers like TTBRn can be accessed as two 
+> 32-bit halves without issue, and AArch32 format ensures that the 
+> register writes which must be atomic (for TLBI etc.) need only be 32-bit."
+> 
+>> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
+>> ---
+>>   Documentation/arm64/silicon-errata.rst |  3 ++
+>>   drivers/iommu/arm-smmu-impl.c          | 52 ++++++++++++++++++++++++++
+>>   2 files changed, 55 insertions(+)
+>>
+>> diff --git a/Documentation/arm64/silicon-errata.rst 
+>> b/Documentation/arm64/silicon-errata.rst
+>> index 936cf2a59ca4..157214d3abe1 100644
+>> --- a/Documentation/arm64/silicon-errata.rst
+>> +++ b/Documentation/arm64/silicon-errata.rst
+>> @@ -125,6 +125,9 @@ stable kernels.
+>>   | Cavium         | ThunderX2 Core  | #219            | 
+>> CAVIUM_TX2_ERRATUM_219      |
+>>   
+>> +----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>>   
+>> +----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>> +| Marvell        | ARM-MMU-500     | #582743         | 
+>> N/A                         |
+>> ++----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>> ++----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>>   | Freescale/NXP  | LS2080A/LS1043A | A-008585        | 
+>> FSL_ERRATUM_A008585         |
+>>   
+>> +----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>>   
+>> +----------------+-----------------+-----------------+-----------------------------+ 
+>>
+>> diff --git a/drivers/iommu/arm-smmu-impl.c 
+>> b/drivers/iommu/arm-smmu-impl.c
+>> index c75b9d957b70..c1fc5e1b8193 100644
+>> --- a/drivers/iommu/arm-smmu-impl.c
+>> +++ b/drivers/iommu/arm-smmu-impl.c
+>> @@ -147,6 +147,53 @@ static const struct arm_smmu_impl arm_mmu500_impl 
+>> = {
+>>       .reset = arm_mmu500_reset,
+>>   };
+>> +static u64 mrvl_mmu500_readq(struct arm_smmu_device *smmu, int page, 
+>> int off)
+>> +{
+>> +    u64 val;
+>> +
+>> +    /*
+>> +     * Marvell Armada-AP806 erratum #582743.
+>> +     * Split all the readq to double readl
+>> +     */
+>> +    val = (u64)readl_relaxed(arm_smmu_page(smmu, page) + off + 4) << 32;
+>> +    val |= readl_relaxed(arm_smmu_page(smmu, page) + off);
+> 
+> Even though io-64-nonatomic-hi-lo.h doesn't override readq() etc. for 
+> 64-bit builds, you can still use hi_lo_readq_relaxed() directly.
+> 
+>> +
+>> +    return val;
+>> +}
+>> +
+>> +static void mrvl_mmu500_writeq(struct arm_smmu_device *smmu, int 
+>> page, int off,
+>> +                   u64 val)
+>> +{
+>> +    /*
+>> +     * Marvell Armada-AP806 erratum #582743.
+>> +     * Split all the writeq to double writel
+>> +     */
+>> +    writel_relaxed(upper_32_bits(val), arm_smmu_page(smmu, page) + 
+>> off + 4);
+>> +    writel_relaxed(lower_32_bits(val), arm_smmu_page(smmu, page) + off);
+> 
+> Similarly, hi_lo_writeq_relaxed().
+> 
+>> +}
+>> +
+>> +static u32 mrvl_mmu500_cfg_id2_fixup(u32 id)
+>> +{
+>> +
+>> +    /*
+>> +     * Armada-AP806 erratum #582743.
+>> +     * Hide the SMMU_IDR2.PTFSv8 fields to sidestep the AArch64
+>> +     * formats altogether and allow using 32 bits access on the
+>> +     * interconnect.
+>> +     */
+>> +    id &= ~(ARM_SMMU_ID2_PTFS_4K | ARM_SMMU_ID2_PTFS_16K |
+>> +        ARM_SMMU_ID2_PTFS_64K);
+>> +
+>> +    return id;
+>> +}
+>> +
+>> +static const struct arm_smmu_impl mrvl_mmu500_impl = {
+>> +    .read_reg64 = mrvl_mmu500_readq,
+>> +    .write_reg64 = mrvl_mmu500_writeq,
+>> +    .cfg_id2_fixup = mrvl_mmu500_cfg_id2_fixup,
+>> +    .reset = arm_mmu500_reset,
+>> +};
+>> +
+>>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device 
+>> *smmu)
+>>   {
+>> @@ -160,6 +207,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct 
+>> arm_smmu_device *smmu)
+>>        */
+>>       switch (smmu->model) {
+>>       case ARM_MMU500:
+>> +        if (of_device_is_compatible(smmu->dev->of_node,
+> 
+> Nit: there's a local "np" variable now.
+> 
+>> +                        "marvell,ap806-smmu-500")) {
+>> +            smmu->impl = &mrvl_mmu500_impl;
+>> +            return smmu;
+>> +        }
+> 
+> Please put this with the other integration checks below the switch 
+> statement. Yes, it means we'll end up assigning smmu->impl twice for 
+> this particular case, but that's the intended pattern.
+> 
 
-Because Linux kernel does not support ENOTSUP (single P) and because
-userspace does not support ENOTSUPP (double PP), report error code for
-'operation not supported' via EOPNOTSUPP macro.
+Thanks, all above comments do make sense and will be fixed in next spin.
 
-This patch fixes problem that mwifiex kernel driver sends to userspace
-unsupported error codes like: "failed: -524 (No error information)".
-After applying this patch userspace see: "failed: -95 (Not supported)".
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- .../net/wireless/marvell/mwifiex/cfg80211.c    | 18 +++++++++---------
- drivers/net/wireless/marvell/mwifiex/main.c    |  2 +-
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c |  4 ++--
- 3 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 867b5cf385a8..96848fa0e417 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -3727,11 +3727,11 @@ mwifiex_cfg80211_tdls_mgmt(struct wiphy *wiphy, struct net_device *dev,
- 	int ret;
- 
- 	if (!(wiphy->flags & WIPHY_FLAG_SUPPORTS_TDLS))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	/* make sure we are in station mode and connected */
- 	if (!(priv->bss_type == MWIFIEX_BSS_TYPE_STA && priv->media_connected))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	switch (action_code) {
- 	case WLAN_TDLS_SETUP_REQUEST:
-@@ -3799,11 +3799,11 @@ mwifiex_cfg80211_tdls_oper(struct wiphy *wiphy, struct net_device *dev,
- 
- 	if (!(wiphy->flags & WIPHY_FLAG_SUPPORTS_TDLS) ||
- 	    !(wiphy->flags & WIPHY_FLAG_TDLS_EXTERNAL_SETUP))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	/* make sure we are in station mode and connected */
- 	if (!(priv->bss_type == MWIFIEX_BSS_TYPE_STA && priv->media_connected))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	mwifiex_dbg(priv->adapter, MSG,
- 		    "TDLS peer=%pM, oper=%d\n", peer, action);
-@@ -3833,7 +3833,7 @@ mwifiex_cfg80211_tdls_oper(struct wiphy *wiphy, struct net_device *dev,
- 	default:
- 		mwifiex_dbg(priv->adapter, ERROR,
- 			    "tdls_oper: operation not supported\n");
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	return mwifiex_tdls_oper(priv, peer, action);
-@@ -3914,11 +3914,11 @@ mwifiex_cfg80211_add_station(struct wiphy *wiphy, struct net_device *dev,
- 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
- 
- 	if (!(params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER)))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	/* make sure we are in station mode and connected */
- 	if ((priv->bss_type != MWIFIEX_BSS_TYPE_STA) || !priv->media_connected)
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	return mwifiex_tdls_oper(priv, mac, MWIFIEX_TDLS_CREATE_LINK);
- }
-@@ -4151,11 +4151,11 @@ mwifiex_cfg80211_change_station(struct wiphy *wiphy, struct net_device *dev,
- 
- 	/* we support change_station handler only for TDLS peers*/
- 	if (!(params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER)))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	/* make sure we are in station mode and connected */
- 	if ((priv->bss_type != MWIFIEX_BSS_TYPE_STA) || !priv->media_connected)
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 
- 	priv->sta_params = params;
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index 529099137644..9ee5600351a7 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -953,7 +953,7 @@ int mwifiex_set_mac_address(struct mwifiex_private *priv,
- 	} else {
- 		/* Internal mac address change */
- 		if (priv->bss_type == MWIFIEX_BSS_TYPE_ANY)
--			return -ENOTSUPP;
-+			return -EOPNOTSUPP;
- 
- 		mac_addr = old_mac_addr;
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index 8bd355d7974e..d3a968ef21ef 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -1723,7 +1723,7 @@ mwifiex_cmd_tdls_config(struct mwifiex_private *priv,
- 	default:
- 		mwifiex_dbg(priv->adapter, ERROR,
- 			    "Unknown TDLS configuration\n");
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	le16_unaligned_add_cpu(&cmd->size, len);
-@@ -1849,7 +1849,7 @@ mwifiex_cmd_tdls_oper(struct mwifiex_private *priv,
- 		break;
- 	default:
- 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS operation\n");
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	le16_unaligned_add_cpu(&cmd->size, config_len);
--- 
-2.20.1
-
+Thanks,
+Tomasz
