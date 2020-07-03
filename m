@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1011C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4248EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9D1218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1190821548
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="ozgXHUcV"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="CVuXoOBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgGCHGi (ORCPT
+        id S1726152AbgGCHGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59788 "EHLO
+        Fri, 3 Jul 2020 03:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCHGh (ORCPT
+        with ESMTP id S1725764AbgGCHGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:06:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D37E8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:06:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so3039587pls.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:06:37 -0700 (PDT)
+        Fri, 3 Jul 2020 03:06:55 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4ADC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:06:55 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f3so14700697pgr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bDYPa69LmDFvO+Xx7QJScqxnVDczXS9vz2dN5XkQbOo=;
-        b=ozgXHUcVDIllwsoVOCKyOzFhQmAoGtBeS7xRsINeTILHLSCMAJRkJ1Els+cxXSztnt
-         5F1xa1XAEYqYPvjFs3nTDNtanerAMu+YdgLLJZdhmh3gjNBdzutgYABmdAZHlJx1UqCQ
-         3DDaIyW86f7LQkbChMriANqcer9oWb4I8BSfisxcdlAomR6IfoQ2OM/F1R1pDZ3RVVgB
-         b4F7Lm7nFhwceAVhzSkS5v1KhtXfgmwVHLM+3t3pgx7pOGwfqGcHD6bsck4YsAB6dmMu
-         jb8SiOve0laFHMCP+nYidOHbj5bNrLi6KtjsXLf1SaQNhSTitdy8CC6HeDkzA4R/Mvfq
-         rM4g==
+        bh=qZjFkIVJTz9thTx+GrzMJX0wDRAys5DOTPVI0ovJ+iM=;
+        b=CVuXoOBOVKnzWQ1+4EX86/AeV4yV7/24FrDAkOtOKsSTcP0e7nrxWMsW1cJBLHTzYo
+         rvsZzOPMI26z2LP9nY6Zc/yPLYWQfU+0ad7x1RIpMJFnb1qU+wVhkVjGevC3VXaNNG5l
+         qeGf8+s4geDIaq2rt0pV8OShhDUD3XXJb+3abQAwXTox4ZVpdBVYnpvBXupyz5KT1D8W
+         zSzBDD7ifHAaf1Fv2IenQn/AWWai64JG3swoTUSJvJumxHb9AIHTLJUI3QQ72wCqpaHq
+         Lsi2m6PP4hFocDXVx+6UYgB+yXRFOJus2vBlbySvd0rEw+SHLnT11yGzbSt6kde+kmFc
+         DUYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bDYPa69LmDFvO+Xx7QJScqxnVDczXS9vz2dN5XkQbOo=;
-        b=CZ0VSRd35DvJlIQnLeEL7m+3RVcoGNdbFCyCylGrlR2GBSXn/4XJ5JNh+l3l12X6HP
-         lKkZtcb6oe10qSw/F4U+aLa2wOoOTLWsa1FHUD+ss4hrHMNBHjSD5Lkwl4oBgcIg2WYh
-         Eu8FdmSnOajCdsIuheeDZpelb1wppm25J9x9eCyr8dwqbQQnn0e6n2o/CS4STOlxK+wD
-         IUWjPO/3noZI2GeVKo8+A5ZTqGTC8jYZcMBfOpTd7cR7GW7FwqkMpbxi1Zf1Ku++O1YV
-         39bBgvpkApOnliPJW9AjDi/Lz3SZ2o1FOaprg9XolrHH9VbttcBSXY5OkdxP1qr8BANd
-         CHiQ==
-X-Gm-Message-State: AOAM530Tm0CBhqpHrjzicyTN71IKAelPGEuCt/m2n8w567sYQorGFDzj
-        LSUC7r+YsJHx4ED5wRAL9cuQ5g==
-X-Google-Smtp-Source: ABdhPJx4PsoUIB7GYssnL1xk6WAhTBYOnCuss0AkP3hpv9zos6Fft/tE+LbljWFRS1+vvFazagSO9w==
-X-Received: by 2002:a17:90b:30d0:: with SMTP id hi16mr38329964pjb.65.1593759997356;
-        Fri, 03 Jul 2020 00:06:37 -0700 (PDT)
+        bh=qZjFkIVJTz9thTx+GrzMJX0wDRAys5DOTPVI0ovJ+iM=;
+        b=BoDQVGYkmj2rYfoG4ZOKuxBxk4R7HWl0pX3HJ1qAi0OBd9xqvacv0vl+9uMc4Mu2lY
+         kI3lPbVVLfq+3qfAeIAFTzw+L1ZQI08qvHFPH9vFERszHpZkIwuS4g4Cjzybcz60bp+I
+         VG9Sg2v9Iab+8khmnYTM5qSQF+v2oJc6vv4F/FpjA542wy/9Ly4AX2wz7cYYgwjXMb0U
+         1lsev+L1X7p6VbAcVly6fLxXmhk2Vw27NFITAd3leuUM9kzZGf2Jh/0LfkbxjxV0s9gQ
+         w6fWkln5hM4LsK0HP/70/i1QyjB/grh7S4wxR2r2I1/97y1eT8U+ao2XVK5X0c6WK8TC
+         B2uQ==
+X-Gm-Message-State: AOAM531IiTy2fHfeg3N/PNdQBvXar0bT4HkQJqpZMlfFzYSFh7VqVkAp
+        kPltiL4RpJH6XZTJ3/Pl3MeiVYt5W0zDPwCU
+X-Google-Smtp-Source: ABdhPJyy3l4qFH7FwIRz0AG+TcbmJt6Z71Eiyguflbvc+p56xo8H509bviHjQYsZvaxm9C/QxUEdBA==
+X-Received: by 2002:a63:135b:: with SMTP id 27mr19533356pgt.37.1593760014502;
+        Fri, 03 Jul 2020 00:06:54 -0700 (PDT)
 Received: from starnight.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.googlemail.com with ESMTPSA id p1sm3529764pja.2.2020.07.03.00.06.34
+        by smtp.googlemail.com with ESMTPSA id p1sm3529764pja.2.2020.07.03.00.06.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 00:06:36 -0700 (PDT)
+        Fri, 03 Jul 2020 00:06:54 -0700 (PDT)
 From:   Jian-Hong Pan <jian-hong@endlessm.com>
 To:     Takashi Iwai <tiwai@suse.com>
 Cc:     Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>
-Subject: [PATCH 2/3] ALSA: hda/realtek: Enable headset mic of Acer C20-820 with ALC269VC
-Date:   Fri,  3 Jul 2020 15:05:14 +0800
-Message-Id: <20200703070512.174394-2-jian-hong@endlessm.com>
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH 3/3] ALSA: hda/realtek: Enable headset mic of Acer Veriton N4660G with ALC269VC
+Date:   Fri,  3 Jul 2020 15:05:16 +0800
+Message-Id: <20200703070512.174394-3-jian-hong@endlessm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200703070512.174394-1-jian-hong@endlessm.com>
 References: <20200703070512.174394-1-jian-hong@endlessm.com>
@@ -78,52 +77,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Acer Aspire C20-820 AIO's audio (1025:1065) with ALC269VC can't
-detect the headset microphone until ALC269VC_FIXUP_ACER_HEADSET_MIC
+The Acer Veriton N4660G desktop's audio (1025:1248) with ALC269VC cannot
+detect the headset microphone until ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE
 quirk maps the NID 0x18 as the headset mic pin.
 
 Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
  sound/pci/hda/patch_realtek.c | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index dfb4bca07d3f..3255da8b3849 100644
+index 3255da8b3849..02054a2a742f 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -6150,6 +6150,7 @@ enum {
- 	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+@@ -6151,6 +6151,7 @@ enum {
  	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
  	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
-+	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
++	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
  };
  
  static const struct hda_fixup alc269_fixups[] = {
-@@ -7339,6 +7340,15 @@ static const struct hda_fixup alc269_fixups[] = {
+@@ -7349,6 +7350,15 @@ static const struct hda_fixup alc269_fixups[] = {
  		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MODE
+ 		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
  	},
-+	[ALC269VC_FIXUP_ACER_HEADSET_MIC] = {
++	[ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE] = {
 +		.type = HDA_FIXUP_PINS,
 +		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x18, 0x02a11030 }, /* use as headset mic */
++			{ 0x18, 0x01a11130 }, /* use as headset mic, without its own jack detect */
 +			{ }
 +		},
 +		.chained = true,
-+		.chain_id = ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC
++		.chain_id = ALC269_FIXUP_HEADSET_MODE
 +	},
  };
  
  static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7354,6 +7364,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1025, 0x0775, "Acer Aspire E1-572", ALC271_FIXUP_HP_GATE_MIC_JACK_E1_572),
- 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
- 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x1025, 0x1065, "Acer Aspire C20-820", ALC269VC_FIXUP_ACER_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
- 	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+@@ -7370,6 +7380,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
  	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432", ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
+ 	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox", ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
++	SND_PCI_QUIRK(0x1025, 0x1248, "Acer Veriton N4660G", ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
 -- 
 2.27.0
 
