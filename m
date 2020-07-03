@@ -2,176 +2,352 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6C3208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC91A208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l7xLiC+V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omuPETJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgGCPRW (ORCPT
+        id S1726276AbgGCPTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
+        Fri, 3 Jul 2020 11:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGCPRW (ORCPT
+        with ESMTP id S1726039AbgGCPTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:17:22 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE97C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:17:21 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so12755719plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:17:21 -0700 (PDT)
+        Fri, 3 Jul 2020 11:19:54 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18882C061794;
+        Fri,  3 Jul 2020 08:19:54 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id a11so19339331ilk.0;
+        Fri, 03 Jul 2020 08:19:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QQoaO14EaS5b6YMbPDUFuhJJwubGyeInK0Uhm2izrow=;
-        b=l7xLiC+VmsoAXhSSr0rdkXYOoj+xiWLpO56jPFrD69RJQtZKS/rNAmFgtTsmPJikDz
-         BqV6CMRbgamYaauOgxS5v1msuiCTTA/ReDj14RbFbSxW+YE2r1lSgqTt2Ini4nlJOx3t
-         dkLn1EiRv8VHIySFfWJXdNjajyjQCEdw2Sb9w=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HZtgXI8eyf6R/eM3zMmGABuHuEawznAfaEEyn6Pbn8o=;
+        b=omuPETJZ+kexr5sG7kkBZD3iuBoGL8jBfT+ti+8F6xuKzc4LqyNwrpLWg8WxsMP3jO
+         eGAEW0f7f4npsFrUBxGYTyN/hH+Hub7jpGUA0ZHBezV3t/Lm0GU8lLFzHDdvc/DVJyWX
+         Fqzp46IvQgxGUN0nvqjuE8Keq4ssxXhg7OYy8soLf3Q5YJTR+fApvofwx0bMTMF2nbSJ
+         Dy9g4bF+9vNhSL/5tHNLAmUKm9z6mgl1dRqSrlEHmOi/Itld6VdS9aZqEpc9Wm4rbd45
+         bk48fpsKoU6JwGxmHbXk5oXswvBszF4veif97zRIhktYklCxZj+MKH+RfKdmZfNJsYdA
+         z3CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QQoaO14EaS5b6YMbPDUFuhJJwubGyeInK0Uhm2izrow=;
-        b=iw59fJXLtFSceqn18POdypKXaSFBJcuXa7cpwWbL6AQtup6LW22WTyFS3iqnjXd2TK
-         1WDiHqZtJb0NbVuz3e+Ai9v+cZb6jZfjcL7WD1FgQJ+rjZaad5I4mtTKngao81j4EmCE
-         x8DfrZ2qWxTSPvUzAIXVgmBTzWRj8BLX6Vr+AlLFUICqFXt4CTcmZ7ZlVIue4m+7doTs
-         HHQQg1ypBr3QjMG0vDKUtxTRmtaQQH6Rwt/nREGoMVh11RbqPrux0KJ0LqsC7H4BQuT1
-         QXj2rFQawy4WunPGJHBcx3mg8K59MsBlEd3kbmAtBnVYFf7nlkJn5iFv/PxrkuDEwKej
-         iOWQ==
-X-Gm-Message-State: AOAM5317dsLuJj0aJrrlo7AFEtjd3pSC5RHceKILAqveOlBES97orJ06
-        0y25CbqFh3LkDwcve53NJpKibQ==
-X-Google-Smtp-Source: ABdhPJwOn1ig28sc0JHhO/23CWki6UHs8oGqQpPZltv+FYmKOj0IBYRrjHfKUvPmhcSVmqEpPiwqSA==
-X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr30123847pls.204.1593789441351;
-        Fri, 03 Jul 2020 08:17:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d18sm11149170pjz.11.2020.07.03.08.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 08:17:20 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 08:17:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: ptrace: seccomp: Return value when the call was already invalid
-Message-ID: <202007030815.744AAB35D@keescook>
-References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
- <20200703083914.GA18516@willie-the-truck>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HZtgXI8eyf6R/eM3zMmGABuHuEawznAfaEEyn6Pbn8o=;
+        b=WBWlZ1i+WxhbBP7iVl2oluaQkRciHUF7PtM/WV0Wo9lGXBZV86wdKB/2+boP+6sYvY
+         cRJLcD9coPOxj7o2dW/dA0ZoX4n3J3MZCq3rmVn6mIOqYNliVXCwjve+M5F7GLiJhlYz
+         GOjF5ILv8bfoXH8PBSYQLSsWJVWLWrdJPkIGefrcagyz7KhJhC9BRF6uVk4QspnN/vMM
+         +Z4i3fYZEhW0Hp0JDBAum23QloZ1zQbe/7/j4jsGIV3S71IOSSbIiibHPUrUtsPq0sdc
+         LmMg389YfZsrycdAOWNtvljY2U/cmeShe/CHqwzd3XSyxE5zkEJAl+g2Zo4Pw2rbYq8P
+         XURw==
+X-Gm-Message-State: AOAM533MooXw6+rszgwvpMSGGr3wIHq045el5vGWSLBqjD354HzAjw/v
+        BC63xnoeRjIdU9NFteBvsmnaZLgn5pVUl7K+rjvvimEF2gI=
+X-Google-Smtp-Source: ABdhPJwLMD4vK7kaR7C86dVW8A4N+UWBrCGUYGctwFNksN6VFayQZy2lRn18PnatW0b8AHya94OnWfx+uB1g9xdN0y0=
+X-Received: by 2002:a92:ba0a:: with SMTP id o10mr17799773ili.217.1593789593236;
+ Fri, 03 Jul 2020 08:19:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703083914.GA18516@willie-the-truck>
+References: <20200702123651.12177-1-simhavcs@gmail.com> <20200703150637.GD25632@ravnborg.org>
+In-Reply-To: <20200703150637.GD25632@ravnborg.org>
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Fri, 3 Jul 2020 20:49:42 +0530
+Message-ID: <CAGWqDJ7Uby1jVrCCQr2o7OzHHKYGL=fPh0-PaE5oZU4+BNBmPg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 09:39:14AM +0100, Will Deacon wrote:
-> Hi Keno,
-> 
-> On Fri, May 22, 2020 at 09:01:01PM -0400, Keno Fischer wrote:
-> > I'm seeing the following while porting a ptracer from
-> > x86_64 to arm64 (cc'ing arm64 folks, but in this case
-> > x86_64 is the odd one out, I think other archs would
-> > be consistent with arm64).
-> > 
-> > Consider userspace code like the following:
-> > ```
-> > int ret = syscall(-10, 0);
-> > assert(ret == -ENOSYS);
-> > ```
-> > 
-> > (Never mind the fact that this is something userspace
-> > shouldn't do, I saw this in our test suite that tests
-> > corner cases where the ptracer shouldn't affect behavior).
-> > 
-> > Now, if we have a seccomp filter that simply does
-> > SECCOMP_RET_TRACE, and a ptracer that simply
-> > does PTRACE_CONT
-> 
-> Ok, so this means that we're _skipping_ the system call, right?
-> 
-> > then the assert will fire/fail on arm64, but not on x86_64.
-> 
-> It feels weird to me that skipping the system call has any effect on the
-> tracee registers...
-> 
-> > Interestingly, arm64 does do something different
-> > if the syscall is -1 rather than -10, where early
-> > in the ptrace stop it does.
-> > ```
-> > /* set default errno for user-issued syscall(-1) */
-> > if (scno == NO_SYSCALL)
-> >     regs->regs[0] = -ENOSYS;
-> 
-> ... so I think this should be fixed too. How about the diff below?
-> 
-> Will
-> 
-> --->8
-> 
-> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> index 68b7f34a08f5..cb3f653c9688 100644
-> --- a/arch/arm64/kernel/ptrace.c
-> +++ b/arch/arm64/kernel/ptrace.c
-> @@ -1833,12 +1833,12 @@ int syscall_trace_enter(struct pt_regs *regs)
->  	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
->  		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
->  		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
-> -			return -1;
-> +			return -ENOSYS;
->  	}
->  
->  	/* Do the secure computing after ptrace; failures should be fast. */
->  	if (secure_computing() == -1)
-> -		return -1;
-> +		return -ENOSYS;
->  
->  	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
->  		trace_sys_enter(regs, regs->syscallno);
-> @@ -1846,7 +1846,7 @@ int syscall_trace_enter(struct pt_regs *regs)
->  	audit_syscall_entry(regs->syscallno, regs->orig_x0, regs->regs[1],
->  			    regs->regs[2], regs->regs[3]);
->  
-> -	return regs->syscallno;
-> +	return 0;
->  }
->  
->  void syscall_trace_exit(struct pt_regs *regs)
-> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> index 5f5b868292f5..a13661f44818 100644
-> --- a/arch/arm64/kernel/syscall.c
-> +++ b/arch/arm64/kernel/syscall.c
-> @@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
->  	user_exit();
->  
->  	if (has_syscall_work(flags)) {
-> -		/* set default errno for user-issued syscall(-1) */
-> -		if (scno == NO_SYSCALL)
-> -			regs->regs[0] = -ENOSYS;
-> -		scno = syscall_trace_enter(regs);
-> -		if (scno == NO_SYSCALL)
-> +		if (syscall_trace_enter(regs))
->  			goto trace_exit;
-> +
-> +		scno = regs->syscallno;
->  	}
->  
->  	invoke_syscall(regs, scno, sc_nr, syscall_table);
+sam,
 
-What effect do either of these patches have on the existing seccomp
-selftests: tools/testing/selftests/seccomp/seccomp_bpf ?
+I will change to "GPL-2.0-only OR BSD-2-Clause", i thought running
+dt_binding_check is enough for .yaml.
+
+On Fri, Jul 3, 2020 at 8:36 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Vinay.
+>
+> On Thu, Jul 02, 2020 at 06:06:33PM +0530, Vinay Simha BN wrote:
+> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> >
+> > ---
+> > v1:
+> >  Initial version wast .txt file
+> >
+> > v2:
+> >  From txt to yaml file format
+> >
+> > v3:
+> > * Andrzej Hajda review comments incorporated
+> >   dual port lvds implemented
+> >
+> > * Laurent Pinchart review comments incorporated
+> >   dsi lanes property removed and it is dynamically
+> >   picked from the dsi ports
+> >   VESA/JEIDA format picked from panel-lvds dts
+> >
+> > v4:
+> > * Sam Ravnborg review comments incorporated
+> >   }' is indented properly in examples data-lanes
+> >   description for single-link and dual-link lvds
+> > ---
+> >  .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
+> >  1 file changed, 215 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> > new file mode 100644
+> > index 000000000000..9ddd63bee403
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> > @@ -0,0 +1,215 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> One detail that I missed - any specific reason this is not (GPL-2.0-only OR BSD-2-Clause)
+> This is the preferred license for new bindings - as checkpatch also
+> tells you.
+>
+>         Sam
+>
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> > +
+> > +maintainers:
+> > + - Vinay Simha BN <simhavcs@gmail.com>
+> > +
+> > +description: |
+> > + This binding supports DSI to LVDS bridge TC358775
+> > +
+> > + MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
+> > + Video frame size:
+> > + Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display panel
+> > + limited by 135 MHz LVDS speed
+> > + Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS display
+> > + panel, limited by 270 MHz LVDS speed.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: toshiba,tc358775
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: i2c address of the bridge, 0x0f
+> > +
+> > +  vdd-supply:
+> > +    maxItems: 1
+> > +    description:  1.2V LVDS Power Supply
+> > +
+> > +  vddio-supply:
+> > +    maxItems: 1
+> > +    description: 1.8V IO Power Supply
+> > +
+> > +  stby-gpios:
+> > +    maxItems: 1
+> > +    description: Standby pin, Low active
+> > +
+> > +  reset-gpios:
+> > +    maxItems: 1
+> > +    description: Hardware reset, Low active
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description:
+> > +      A node containing input and output port nodes with endpoint definitions
+> > +      as documented in
+> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +    properties:
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +      port@0:
+> > +        type: object
+> > +        description: |
+> > +          DSI Input. The remote endpoint phandle should be a
+> > +          reference to a valid mipi_dsi_host device node.
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description: |
+> > +          Video port for LVDS output (panel or connector).
+> > +
+> > +      port@2:
+> > +        type: object
+> > +        description: |
+> > +          Video port for Dual link LVDS output (panel or connector).
+> > +
+> > +    required:
+> > +      - port@0
+> > +      - port@1
+> > +
+> > +required:
+> > + - compatible
+> > + - reg
+> > + - vdd-supply
+> > + - vddio-supply
+> > + - stby-gpios
+> > + - reset-gpios
+> > + - ports
+> > +
+> > +examples:
+> > + - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    /* For single-link LVDS display panel */
+> > +
+> > +    i2c@78b8000 {
+> > +        /* On High speed expansion */
+> > +        label = "HS-I2C2";
+> > +        reg = <0x078b8000 0x500>;
+> > +        clock-frequency = <400000>; /* fastmode operation */
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        tc_bridge: bridge@f {
+> > +            compatible = "toshiba,tc358775";
+> > +            reg = <0x0f>;
+> > +
+> > +            vdd-supply = <&pm8916_l2>;
+> > +            vddio-supply = <&pm8916_l6>;
+> > +
+> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> > +
+> > +            ports {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                port@0 {
+> > +                    reg = <0>;
+> > +                    d2l_in_test: endpoint {
+> > +                        remote-endpoint = <&dsi0_out>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@1 {
+> > +                    reg = <1>;
+> > +                    lvds_out: endpoint {
+> > +                        remote-endpoint = <&panel_in>;
+> > +                    };
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +    dsi@1a98000 {
+> > +        reg = <0x1a98000 0x25c>;
+> > +        reg-names = "dsi_ctrl";
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dsi0_out: endpoint {
+> > +                    remote-endpoint = <&d2l_in_test>;
+> > +                    data-lanes = <0 1 2 3>;
+> > +                };
+> > +             };
+> > +         };
+> > +     };
+> > +
+> > + - |
+> > +    /* For dual-link LVDS display panel */
+> > +
+> > +    i2c@78b8000 {
+> > +        /* On High speed expansion */
+> > +        label = "HS-I2C2";
+> > +        reg = <0x078b8000 0x500>;
+> > +        clock-frequency = <400000>; /* fastmode operation */
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        tc_bridge_dual: bridge@f {
+> > +            compatible = "toshiba,tc358775";
+> > +            reg = <0x0f>;
+> > +
+> > +            vdd-supply = <&pm8916_l2>;
+> > +            vddio-supply = <&pm8916_l6>;
+> > +
+> > +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> > +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> > +
+> > +            ports {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                port@0 {
+> > +                    reg = <0>;
+> > +                    d2l_in_dual: endpoint {
+> > +                        remote-endpoint = <&dsi0_out_dual>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@1 {
+> > +                    reg = <1>;
+> > +                    lvds0_out: endpoint {
+> > +                        remote-endpoint = <&panel_in0>;
+> > +                    };
+> > +                };
+> > +
+> > +                port@2 {
+> > +                    reg = <2>;
+> > +                    lvds1_out: endpoint {
+> > +                        remote-endpoint = <&panel_in1>;
+> > +                    };
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +    dsi@1a98000 {
+> > +        reg = <0x1a98000 0x25c>;
+> > +        reg-names = "dsi_ctrl";
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dsi0_out_dual: endpoint {
+> > +                    remote-endpoint = <&d2l_in_dual>;
+> > +                    data-lanes = <0 1 2 3>;
+> > +                };
+> > +             };
+> > +         };
+> > +     };
+> > +...
+> > --
+> > 2.17.1
+> >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
 
 -- 
-Kees Cook
+regards,
+vinaysimha
