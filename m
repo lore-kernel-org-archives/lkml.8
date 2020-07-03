@@ -2,101 +2,112 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12857C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9BF20884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40DC2100A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z42IYkl5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KacU4DCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgGCOTV (ORCPT
+        id S1726140AbgGCOX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:19:21 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37926 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgGCOTV (ORCPT
+        Fri, 3 Jul 2020 10:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgGCOX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:19:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593785959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=H1wWTI7QYlHZxaFsJCKponeO6UgXh5yMDcs00qFvbfU=;
-        b=Z42IYkl55Y4NmQKq/BRqBIfKLIAZ30UyppBs+861Ksx+sEACwEs23x5pPShHNsRKc2Q101
-        Htv80/CzhfJ+/2ho6RbmRedj+n3TzzYl0OVXw5RZ3MaWgLlR8QieDBlRQsu8hua/Mp5XvX
-        3Sab8GmBzh3usG4B90m1YzKcOa97gNs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-hSnsQ8pwOhypj_SvCm9ZgQ-1; Fri, 03 Jul 2020 10:19:18 -0400
-X-MC-Unique: hSnsQ8pwOhypj_SvCm9ZgQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13BC018A8221;
-        Fri,  3 Jul 2020 14:19:17 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60C2218B05;
-        Fri,  3 Jul 2020 14:19:06 +0000 (UTC)
-Date:   Fri, 3 Jul 2020 10:19:03 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Jones Desougi <jones.desougi+netfilter@gmail.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Florian Westphal <fw@strlen.de>, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, tgraf@infradead.org,
-        dan.carpenter@oracle.com
-Subject: Re: [PATCH ghak124 v3fix] audit: add gfp parameter to audit_log_nfcfg
-Message-ID: <20200703141903.zniosc4bxuw5dhit@madcap2.tricolour.ca>
-References: <3eda864fb69977252a061c8c3ccd2d8fcd1f3a9b.1593278952.git.rgb@redhat.com>
- <CAGdUbJEwoxEFJZDUjF7ZwKurKNibPW86=s3yFSA6BBt-YsC=Nw@mail.gmail.com>
- <CAHC9VhTYy5Zd6kB77xYL6HbnqL29AL6jF8RzVAN6=UC6eVLqCg@mail.gmail.com>
+        Fri, 3 Jul 2020 10:23:27 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2B4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 07:23:27 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 9so37156986ljv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 07:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xAsbhYpysmstHPq0Op9MjqJaZ7YDRLDrp7Rg8i0eT+Q=;
+        b=KacU4DChX8owr3WxGngcQJG0ITHWxa2x5YJZMRcO1Oq8g8suqMxqCIKz2KIVn+GX0G
+         NlL4sAx7SWLe7wOoKqalqC8WPtCsOVDiIJl2ugaBNTqIy8m+xXXNOoboIPQNY0hU4eh5
+         Cv+CRClsFvZBzHLaY4R8w4zl6/ZmyudVjt3Ym/CNTRtKSCKgM5mCowbGng/unHeM1X6G
+         rX9V5/vB5ZifMJFjN2LTDNr4RYI0VvFlBsKbHhDWHWGHEv13TdNi3C8BfxPrrTetX9vs
+         vMD4jQOdARdwlqk8ECDSA4gMLt9sQnF8RfswofOxXeklF/ny6lafGO5LMCzz1KNSzmw1
+         ZJUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xAsbhYpysmstHPq0Op9MjqJaZ7YDRLDrp7Rg8i0eT+Q=;
+        b=Ee94ZbzAQRSsh/bjvat0A1MG7r5lHfeQms+2ZixgxUYjYj7kWo0yw/PD6pwNbq35d0
+         ypGLN2ETfUwpIwjyMihYpvBmiuchLRjWxi6pkAyNrkk7/25vB+hFSNOwM2q0XJUl/Bud
+         4ArI1RYi3s12T7MoZH3LW9qC3b5P2FCsAB7SxqzHanzsZp01YXJjm+PzYizeGADToLdn
+         AKvdLLF1XnJImvNkWwVRO2YnDY8edM4QdAoeYXL7X0B+yq/B0WSVuWZ6QqaZAWOOWdL8
+         swkQAxbGsNgjjE+h+2BZde+R9aOzanviuVMHnv3RFJv27D6un8aGRf0b9hDuBbot/Ad1
+         Y8+A==
+X-Gm-Message-State: AOAM531AlHFENLcXalJARGqllHjTXtgawh0QbZ6BS3bZWdomryRWEfgi
+        Mui1GXwkj3g43yabaiTeMFTmkQmo8Dar+vD3LTqOCA==
+X-Google-Smtp-Source: ABdhPJypEhgBGtdvE+CIOFMTHTIs6098Z3PwdIVQlW6tkGvx5BOconTGtFOIQ4CnrlAXgXA8D+jLajNgHO9BeuTBN1U=
+X-Received: by 2002:a2e:910c:: with SMTP id m12mr20890425ljg.332.1593786205575;
+ Fri, 03 Jul 2020 07:23:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTYy5Zd6kB77xYL6HbnqL29AL6jF8RzVAN6=UC6eVLqCg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200702152222.2630760-1-shakeelb@google.com> <20200703063548.GM18446@dhcp22.suse.cz>
+In-Reply-To: <20200703063548.GM18446@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 3 Jul 2020 07:23:14 -0700
+Message-ID: <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-03 09:41, Paul Moore wrote:
-> On Fri, Jul 3, 2020 at 8:41 AM Jones Desougi
-> <jones.desougi+netfilter@gmail.com> wrote:
+On Thu, Jul 2, 2020 at 11:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 02-07-20 08:22:22, Shakeel Butt wrote:
+> [...]
+> > Interface options:
+> > ------------------
 > >
-> > Doesn't seem entirely consistent now either though. Two cases below.
-> 
-> Yes, you're right, that patch was incorrect; thanks for catching that.
-> I just posted a fix (lore link below) that fixes the two problems you
-> pointed out as well as converts a call in a RCU protected section to
-> an ATOMIC.
+> > 1) memcg interface e.g. 'echo 10M > memory.reclaim'
+> >
+> > + simple
+> > + can be extended to target specific type of memory (anon, file, kmem).
+> > - most probably restricted to cgroup v2.
+> >
+> > 2) fadvise(PAGEOUT) on cgroup_dir_fd
+> >
+> > + more general and applicable to other FSes (actually we are using
+> > something similar for tmpfs).
+> > + can be extended in future to just age the LRUs instead of reclaim or
+> > some new use cases.
+>
+> Could you explain why memory.high as an interface to trigger pro-active
+> memory reclaim is not sufficient. Also memory.low limit to protect
+> latency sensitve workloads?
 
-Thanks Paul.  I was just about to switch branches and fix these.  :-)
-I really need to upgrade this devel machine so I can use git 2.x
-worktrees...
+Yes, we can use memory.high to trigger [proactive] reclaim in a memcg
+but note that it can also introduce stalls in the application running
+in that memcg. Let's suppose the memory.current of a memcg is 100MiB
+and we want to reclaim 20MiB from it, we can set the memory.high to
+80MiB but any allocation attempt from the application running in that
+memcg can get stalled/throttled. I want the functionality of the
+reclaim without potential stalls.
 
-I checked all of these (I thought) thoroughly before I started changing
-code and obviously didn't after.  :-/
-
-> https://lore.kernel.org/linux-audit/159378341669.5956.13490174029711421419.stgit@sifl
-> 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+The memory.min is for protection against the global reclaim and is
+unrelated to this discussion.
