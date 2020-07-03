@@ -7,66 +7,68 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60134C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8AF208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577E4208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMqJkwcM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxZsHJwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGCRoG (ORCPT
+        id S1726812AbgGCRm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
+        Fri, 3 Jul 2020 13:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgGCRmd (ORCPT
+        with ESMTP id S1726594AbgGCRmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:42:33 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD74C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:33 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so11353795wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:33 -0700 (PDT)
+        Fri, 3 Jul 2020 13:42:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF23C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:06 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 22so32760834wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hkP3qVBNEk6Kc5YTDzguCBFbl645cyK8MIjoauSGcJc=;
-        b=DMqJkwcMFbE16h4BXCAlhproq9OY9OTMS6yMlTWhnyElmGkSam1Nhg2OxHZdPKcjAV
-         fWMh1JQtMrUG+nF+S5TM02kB7g2XlgSG0aUiH2N7fo4tvH0W6QcegBqOL5TlgE4Tb8uU
-         sD9IP3QVUcbeuuFmEbW75bpiS8sTsnVeAORASEMdFtjTrJ4paWH3MEuIz3TiYhm7/jdO
-         pYSCxncRB6biQIICoD2NYpo69H8bsraYRPIqQXuhynZl7lIBGzwCSQfo53knK+w9zgNW
-         mlKrkddtqqQsp49JGkEEW3Fcd2AHsUc5Epv0TXK3FjLoSF05qYCsLrQGcCTF3+iVJENG
-         UPdQ==
+        bh=As8A0RVzBKjotvgXeoxk2ZtBQ/Bg0sCNtYggCVfAltY=;
+        b=vxZsHJwvvgk09IRk1MBBvInd06xDFaXaJSvUjtd1st5QBwE7HyMKZH7jepYLljpcQg
+         zUHRMk04EnmsYB1tHOAEOToKbahfZNCxa2IgNpGUJzAY8RUNWCNGf5YJiWejTxgPu1E/
+         0DNDIRZTdlSOPBhE42KiXRHEn84U1+zcJqILDik1LWMAVQR4OwHllAkevRZJAAxCxPdY
+         Yrs0IHBWbngpyzHbb5g2+htPJdQxKakwoR0jr3Mtt3yPL6c8ag7wc5DkOdqUDX/rJBUU
+         oD+k+3a0jVUSk5VbS3zeYPCF2xo/5RD7A7aQnMB21Z+a6om5KhL9zryyYKpkaJlLrsFB
+         AacA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hkP3qVBNEk6Kc5YTDzguCBFbl645cyK8MIjoauSGcJc=;
-        b=kSH88pwVmK2RZnGf2M8EOYajb0igzmJGJ/S9QZxakdtRARyAu0UkJHmkZ92PJ5Z6SI
-         T1NahYQx3zARRtiTez7gf2GFQJlVQhAN0Qk4RXZIPKS8NI2Dg24mDGkyS2GOHABU8HGX
-         2COEdgmgGkSUITCoILIrJFYTVv82dItvU3kVprVRvu9eCtlI/gY1xGYV9vf9ppLt+/uG
-         Eaxs3hr062bRPN9d0kJsDADYM0SjAkZrz25u7Xzt3/cZrHZCieQIwVbjwRMX+04M4iX8
-         PUBKKkta3IRamXDg1Kf5JCQwCxBldxd7JaQAkyqS9wmT3EFXc+i6JJWi2OIXmHzfT6yS
-         svRw==
-X-Gm-Message-State: AOAM532LrXyoMvxW13ft9zr1jYFKoyxVWAIQ82CrT7KIE3ZeJ1LdC/ei
-        8LL346/Ji7CdiDwB9vps0ncicQ==
-X-Google-Smtp-Source: ABdhPJyBCYm3ryMjBcp1zoZ4Rl9KiNphQ9CcsrkGIBJR3Mk9yN41fsP6rocveGpS/R7FreNKHpirUg==
-X-Received: by 2002:a1c:2d0d:: with SMTP id t13mr22258434wmt.43.1593798151974;
-        Fri, 03 Jul 2020 10:42:31 -0700 (PDT)
+        bh=As8A0RVzBKjotvgXeoxk2ZtBQ/Bg0sCNtYggCVfAltY=;
+        b=ZEwxAT2yAqvOPWWc1pnl8rrCIQGJmFrCdPThyrZJ/JkBUV4iqlLNg1iBLreyzXRXK6
+         48BjJHNRP6aE7r8ZahLKdDe6Q5uYVhqkxzS1KK9hjwnahoMz6tyTWo0TEu46T+U8ZwfM
+         i7AOV7hAO50f04mUYGEMeJG0sVpLziOof8cAuWTw5vGc44/W4TUNiQ6U163o9SgLaJvj
+         7gZx3/Gexs8VKqP6KUIrOt/wNRcW9mq6TVopCt6qVWF3tsBGIstCv2P8i2zClhpIMsxc
+         WmCaP/TlxKh04TrSjmmLdRtzIchA4K1foU0IHqoZGQL2hKsEzQGq/lZDFzd443xVIQG3
+         7GJg==
+X-Gm-Message-State: AOAM530GySFvKbBR11U0Gd+FHS5L/b1RyydmUYEYfuOJECrsYqTHC3fc
+        SVV376isTRNOH0zZ5bKush3upA==
+X-Google-Smtp-Source: ABdhPJwolAxrC9FaOIOAI5J97mqd3etXuXAGwhxu+GQ5gnBfEv/QxrYF0gQrtBPhDn4CwIqSE6hE0g==
+X-Received: by 2002:a1c:398b:: with SMTP id g133mr36495525wma.76.1593798125273;
+        Fri, 03 Jul 2020 10:42:05 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.30
+        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 10:42:31 -0700 (PDT)
+        Fri, 03 Jul 2020 10:42:04 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Peter Chen <Peter.Chen@nxp.com>
-Subject: [PATCH 11/30] usb: chipidea: udc: Add missing descriptions for function arg 'ci'
-Date:   Fri,  3 Jul 2020 18:41:29 +0100
-Message-Id: <20200703174148.2749969-12-lee.jones@linaro.org>
+        Matthieu CASTET <castet.matthieu@free.fr>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Damien Bergamini <damien.bergamini@free.fr>
+Subject: [PATCH 05/30] usb: atm: ueagle-atm: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Fri,  3 Jul 2020 18:41:23 +0100
+Message-Id: <20200703174148.2749969-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200703174148.2749969-1-lee.jones@linaro.org>
 References: <20200703174148.2749969-1-lee.jones@linaro.org>
@@ -77,118 +79,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like a very popular argument to omit descriptions for.
+No attempt has been made to document any of the functions here.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/usb/chipidea/udc.c:80: warning: Function parameter or member 'ci' not described in 'hw_device_state'
- drivers/usb/chipidea/udc.c:100: warning: Function parameter or member 'ci' not described in 'hw_ep_flush'
- drivers/usb/chipidea/udc.c:121: warning: Function parameter or member 'ci' not described in 'hw_ep_disable'
- drivers/usb/chipidea/udc.c:136: warning: Function parameter or member 'ci' not described in 'hw_ep_enable'
- drivers/usb/chipidea/udc.c:170: warning: Function parameter or member 'ci' not described in 'hw_ep_get_halt'
- drivers/usb/chipidea/udc.c:185: warning: Function parameter or member 'ci' not described in 'hw_ep_prime'
- drivers/usb/chipidea/udc.c:215: warning: Function parameter or member 'ci' not described in 'hw_ep_set_halt'
- drivers/usb/chipidea/udc.c:238: warning: Function parameter or member 'ci' not described in 'hw_port_is_high_speed'
- drivers/usb/chipidea/udc.c:251: warning: Function parameter or member 'ci' not described in 'hw_test_and_clear_complete'
- drivers/usb/chipidea/udc.c:263: warning: Function parameter or member 'ci' not described in 'hw_test_and_clear_intr_active'
- drivers/usb/chipidea/udc.c:277: warning: Function parameter or member 'ci' not described in 'hw_test_and_clear_setup_guard'
- drivers/usb/chipidea/udc.c:288: warning: Function parameter or member 'ci' not described in 'hw_test_and_set_setup_guard'
- drivers/usb/chipidea/udc.c:300: warning: Function parameter or member 'ci' not described in 'hw_usb_set_address'
- drivers/usb/chipidea/udc.c:312: warning: Function parameter or member 'ci' not described in 'hw_usb_reset'
+ drivers/usb/atm/ueagle-atm.c:578: warning: Function parameter or member 'usb' not described in 'uea_send_modem_cmd'
+ drivers/usb/atm/ueagle-atm.c:578: warning: Function parameter or member 'addr' not described in 'uea_send_modem_cmd'
+ drivers/usb/atm/ueagle-atm.c:578: warning: Function parameter or member 'size' not described in 'uea_send_modem_cmd'
+ drivers/usb/atm/ueagle-atm.c:578: warning: Function parameter or member 'buff' not described in 'uea_send_modem_cmd'
+ drivers/usb/atm/ueagle-atm.c:679: warning: Function parameter or member 'usb' not described in 'uea_load_firmware'
+ drivers/usb/atm/ueagle-atm.c:679: warning: Function parameter or member 'ver' not described in 'uea_load_firmware'
 
-Cc: Peter Chen <Peter.Chen@nxp.com>
+Cc: Matthieu CASTET <castet.matthieu@free.fr>
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Damien Bergamini <damien.bergamini@free.fr>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/chipidea/udc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/usb/atm/ueagle-atm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index db0cfde0cc3cb..c42b98c84f2f1 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -72,6 +72,7 @@ static inline int ep_to_bit(struct ci_hdrc *ci, int n)
+diff --git a/drivers/usb/atm/ueagle-atm.c b/drivers/usb/atm/ueagle-atm.c
+index e9fed9a887377..786299892c7f4 100644
+--- a/drivers/usb/atm/ueagle-atm.c
++++ b/drivers/usb/atm/ueagle-atm.c
+@@ -570,7 +570,7 @@ MODULE_PARM_DESC(annex,
+ #define LOAD_INTERNAL     0xA0
+ #define F8051_USBCS       0x7f92
  
- /**
-  * hw_device_state: enables/disables interrupts (execute without interruption)
-+ * @ci: the controller
-  * @dma: 0 => disable, !0 => enable and set dma engine
-  *
-  * This function returns an error code
-@@ -91,6 +92,7 @@ static int hw_device_state(struct ci_hdrc *ci, u32 dma)
- 
- /**
-  * hw_ep_flush: flush endpoint fifo (execute without interruption)
-+ * @ci: the controller
-  * @num: endpoint number
-  * @dir: endpoint direction
-  *
-@@ -112,6 +114,7 @@ static int hw_ep_flush(struct ci_hdrc *ci, int num, int dir)
- 
- /**
-  * hw_ep_disable: disables endpoint (execute without interruption)
-+ * @ci: the controller
-  * @num: endpoint number
-  * @dir: endpoint direction
-  *
-@@ -126,6 +129,7 @@ static int hw_ep_disable(struct ci_hdrc *ci, int num, int dir)
- 
- /**
-  * hw_ep_enable: enables endpoint (execute without interruption)
-+ * @ci: the controller
-  * @num:  endpoint number
-  * @dir:  endpoint direction
-  * @type: endpoint type
-@@ -161,6 +165,7 @@ static int hw_ep_enable(struct ci_hdrc *ci, int num, int dir, int type)
- 
- /**
-  * hw_ep_get_halt: return endpoint halt status
-+ * @ci: the controller
-  * @num: endpoint number
-  * @dir: endpoint direction
-  *
-@@ -175,6 +180,7 @@ static int hw_ep_get_halt(struct ci_hdrc *ci, int num, int dir)
- 
- /**
-  * hw_ep_prime: primes endpoint (execute without interruption)
-+ * @ci: the controller
-  * @num:     endpoint number
-  * @dir:     endpoint direction
-  * @is_ctrl: true if control endpoint
-@@ -205,6 +211,7 @@ static int hw_ep_prime(struct ci_hdrc *ci, int num, int dir, int is_ctrl)
- /**
-  * hw_ep_set_halt: configures ep halt & resets data toggle after clear (execute
-  *                 without interruption)
-+ * @ci: the controller
-  * @num:   endpoint number
-  * @dir:   endpoint direction
-  * @value: true => stall, false => unstall
-@@ -243,6 +250,7 @@ static int hw_port_is_high_speed(struct ci_hdrc *ci)
- /**
-  * hw_test_and_clear_complete: test & clear complete status (execute without
-  *                             interruption)
-+ * @ci: the controller
-  * @n: endpoint number
-  *
-  * This function returns complete status
-@@ -291,6 +299,7 @@ static int hw_test_and_set_setup_guard(struct ci_hdrc *ci)
- 
- /**
-  * hw_usb_set_address: configures USB address (execute without interruption)
-+ * @ci: the controller
-  * @value: new USB address
-  *
-  * This function explicitly sets the address, without the "USBADRA" (advance)
-@@ -610,8 +619,9 @@ static int _hardware_enqueue(struct ci_hw_ep *hwep, struct ci_hw_req *hwreq)
- 	return ret;
+-/**
++/*
+  * uea_send_modem_cmd - Send a command for pre-firmware devices.
+  */
+ static int uea_send_modem_cmd(struct usb_device *usb,
+@@ -672,7 +672,7 @@ static void uea_upload_pre_firmware(const struct firmware *fw_entry,
+ 	uea_leaves(usb);
  }
  
--/*
-+/**
-  * free_pending_td: remove a pending request for the endpoint
-+ * @ci: the controller
-  * @hwep: endpoint
+-/**
++/*
+  * uea_load_firmware - Load usb firmware for pre-firmware devices.
   */
- static void free_pending_td(struct ci_hw_ep *hwep)
+ static int uea_load_firmware(struct usb_device *usb, unsigned int ver)
 -- 
 2.25.1
 
