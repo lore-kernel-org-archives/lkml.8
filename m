@@ -2,99 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D83BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA94C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEF3B2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593783923;
-	bh=hm3Moh7xHMlFJvAAJ9OOz3vc20Ys5RgWmTwwcOCFC4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vt9foSMSuPpz2EumTcBXJt+4UN2mA+gT/6If1xf6Vze3GNeQ1kHBkH1/qDSCwWODq
-	 ynGSmxc3Qzfcbg3z5Sglcv2zQ+as+HVAZYeqqfmUrqmTG7A0o2RzXkYfeY8/g/D7qw
-	 UcR6MVkmpOx4sfGkz5ZcvyoEElHyz690ATI8C5dI=
+	by mail.kernel.org (Postfix) with ESMTP id 5D52020826
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 13:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgGCNpW (ORCPT
+        id S1726258AbgGCNtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 09:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGCNpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 09:45:22 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F10320826;
-        Fri,  3 Jul 2020 13:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593783921;
-        bh=hm3Moh7xHMlFJvAAJ9OOz3vc20Ys5RgWmTwwcOCFC4M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jXGop+ok38hzk7QdHVtN0HtuYUcBxp395jqRjI6yYNHKdC+4CWmuGgM/jDbgpN9Jb
-         W8jI0RaxPNXsAVQjw4meJCfSpmnZKWUDAz0s6BGZTviRf3Bj6gz9BVpSXym2hRmjxY
-         wDg8LS8/YBKzPcDpvmj/ZuNSE3rC2tNhpPiJD9F0=
-Date:   Fri, 3 Jul 2020 14:45:16 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v5 3/7] arm64: perf: Remove PMU locking
-Message-ID: <20200703134515.GF18953@willie-the-truck>
-References: <20200617113851.607706-1-alexandru.elisei@arm.com>
- <20200617113851.607706-4-alexandru.elisei@arm.com>
- <159242503203.62212.1690942414916053920@swboyd.mtv.corp.google.com>
- <bc265120-0d48-bcab-a58e-3b94f8c540ce@arm.com>
- <159255539947.62212.6059916295459835174@swboyd.mtv.corp.google.com>
+        Fri, 3 Jul 2020 09:49:45 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:57467 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726035AbgGCNtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 09:49:45 -0400
+Received: from hopp.molgen.mpg.de (hopp.molgen.mpg.de [141.14.25.186])
+        by mx.molgen.mpg.de (Postfix) with ESMTP id 9D27E20646DD8;
+        Fri,  3 Jul 2020 15:49:42 +0200 (CEST)
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org
+Subject: [PATCH v2 1/2] moduleparams: Add hexint type parameter
+Date:   Fri,  3 Jul 2020 15:49:39 +0200
+Message-Id: <20200703134940.27054-1-pmenzel@molgen.mpg.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159255539947.62212.6059916295459835174@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 01:29:59AM -0700, Stephen Boyd wrote:
-> Quoting Alexandru Elisei (2020-06-18 03:51:31)
-> > The armv8pmu_{start,stop}() functions are called from the irq handler, so we're
-> > safe from preemption in this case. They are also called via
-> > pmu->pmu_{enable,disable} callbacks, and I didn't find an explicit contract
-> > regarding preemption in include/linux/perf_event.h. I've checked the other call
-> > sites, and I didn't find any instances where they are called with preemption
-> > enabled, which makes sense as we don't want to disable the PMU on a another CPU by
-> > accident.
-> 
-> If they're all callbacks then it's overkill to add this. Presumably it
-> is better to enforce this wherever the callbacks are called from so as
-> to not litter the callee with random cant_sleep() calls. Probably best
-> to ignore my suggestion.
-> 
-> > 
-> > I would be inclined to add cant_sleep() calls to armv8pmu_{start,stop}(). In the
-> > previous iteration, there were WARN_ONs in these functions, and Will said [1] they
-> > can be removed because they are per-CPU operations. Will, what do you think about
-> > adding the lockdep assertions?
-> > 
-> > [1] https://www.spinics.net/lists/arm-kernel/msg745161.html
-> > 
-> 
-> If I read it correctly Will is saying the same thing in that thread.
+For bitmasks printing values in hex is more convenient.
 
-Right, in the cases where perf core already relies on things not being
-preemptible, we don't need to add extra checks.
+Prefix with `0x` to make it clear, that it’s a hex value, and pad it
+out.
 
-Will
+Using the helper for `amdgpu.ppfeaturemask`, it will look like below.
+
+Before:
+
+    $ more /sys/module/amdgpu/parameters/ppfeaturemask
+    4294950911
+
+After:
+
+    $ more /sys/module/amdgpu/parameters/ppfeaturemask
+    0xffffbfff
+
+Cc: linux-kernel@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+---
+v2: Address review comments: Rename hex to hexint, and pad sizes
+
+ include/linux/moduleparam.h |  7 ++++++-
+ kernel/params.c             | 17 +++++++++--------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index 3ef917ff0964..cff7261e98bb 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -118,7 +118,7 @@ struct kparam_array
+  * you can create your own by defining those variables.
+  *
+  * Standard types are:
+- *	byte, short, ushort, int, uint, long, ulong
++ *	byte, hexint, short, ushort, int, uint, long, ulong
+  *	charp: a character pointer
+  *	bool: a bool, values 0/1, y/n, Y/N.
+  *	invbool: the above, only sense-reversed (N = true).
+@@ -448,6 +448,11 @@ extern int param_set_ullong(const char *val, const struct kernel_param *kp);
+ extern int param_get_ullong(char *buffer, const struct kernel_param *kp);
+ #define param_check_ullong(name, p) __param_check(name, p, unsigned long long)
+ 
++extern const struct kernel_param_ops param_ops_hexint;
++extern int param_set_hexint(const char *val, const struct kernel_param *kp);
++extern int param_get_hexint(char *buffer, const struct kernel_param *kp);
++#define param_check_hexint(name, p) param_check_uint(name, p)
++
+ extern const struct kernel_param_ops param_ops_charp;
+ extern int param_set_charp(const char *val, const struct kernel_param *kp);
+ extern int param_get_charp(char *buffer, const struct kernel_param *kp);
+diff --git a/kernel/params.c b/kernel/params.c
+index 8e56f8b12d8f..487261eb836f 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -233,14 +233,15 @@ char *parse_args(const char *doing,
+ 	EXPORT_SYMBOL(param_ops_##name)
+ 
+ 
+-STANDARD_PARAM_DEF(byte,	unsigned char,		"%hhu", kstrtou8);
+-STANDARD_PARAM_DEF(short,	short,			"%hi",  kstrtos16);
+-STANDARD_PARAM_DEF(ushort,	unsigned short,		"%hu",  kstrtou16);
+-STANDARD_PARAM_DEF(int,		int,			"%i",   kstrtoint);
+-STANDARD_PARAM_DEF(uint,	unsigned int,		"%u",   kstrtouint);
+-STANDARD_PARAM_DEF(long,	long,			"%li",  kstrtol);
+-STANDARD_PARAM_DEF(ulong,	unsigned long,		"%lu",  kstrtoul);
+-STANDARD_PARAM_DEF(ullong,	unsigned long long,	"%llu", kstrtoull);
++STANDARD_PARAM_DEF(byte,	unsigned char,		"%hhu",  kstrtou8);
++STANDARD_PARAM_DEF(short,	short,			"%hi",   kstrtos16);
++STANDARD_PARAM_DEF(ushort,	unsigned short,		"%hu",   kstrtou16);
++STANDARD_PARAM_DEF(int,		int,			"%i",    kstrtoint);
++STANDARD_PARAM_DEF(uint,	unsigned int,		"%u",    kstrtouint);
++STANDARD_PARAM_DEF(long,	long,			"%li",   kstrtol);
++STANDARD_PARAM_DEF(ulong,	unsigned long,		"%lu",   kstrtoul);
++STANDARD_PARAM_DEF(ullong,	unsigned long long,	"%llu",  kstrtoull);
++STANDARD_PARAM_DEF(hexint,	unsigned int,		"%#08x", kstrtouint);
+ 
+ int param_set_charp(const char *val, const struct kernel_param *kp)
+ {
+-- 
+2.26.2
+
