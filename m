@@ -2,113 +2,105 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB55F20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BA720884
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=danweeks.net header.i=@danweeks.net header.b="FMXGToUT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2LHPoy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgGCPpX (ORCPT
+        id S1726418AbgGCPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:45:23 -0400
-Received: from p-impout008aa.msg.pkvw.co.charter.net ([47.43.26.139]:49659
-        "EHLO p-impout001.msg.pkvw.co.charter.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgGCPpW (ORCPT
+        Fri, 3 Jul 2020 11:46:38 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29134 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgGCPqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:45:22 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jul 2020 11:45:22 EDT
-Received: from opius.danweeks.net ([74.70.107.6])
-        by cmsmtp with ESMTP
-        id rNlVjtwY2rzR3rNlWj41C8; Fri, 03 Jul 2020 15:38:14 +0000
-X-Authority-Analysis: v=2.3 cv=Ne6YKFL4 c=1 sm=1 tr=0
- a=h7kw2a+/6g3zdzmQNwjrbw==:117 a=h7kw2a+/6g3zdzmQNwjrbw==:17
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7kYe3NcsAAAA:8
- a=noYv9r6eKZTnZH2xmfQA:9 a=CjuIK1q_8ugA:10 a=4VldaCG94jXMVy0yUZtu:22
-Received: from dev.danweeks.net (dev.danweeks.net [IPv6:2001:470:1f07:699::91])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by opius.danweeks.net (Postfix) with ESMTPSA id 083624410F;
-        Fri,  3 Jul 2020 11:37:54 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=danweeks.net;
-        s=opius.danweeks.net; t=1593790693;
-        bh=V2T+2N4lCCiebjUmaYDIhM8VGLdRvfUsoZG/BWe/uvY=;
-        h=Date:From:To:Cc:Subject;
-        b=FMXGToUTze8pdU99NXtup5gP8ln27pg5Sze2mTtacMLbZ18QtO0Phj15tOpE4y3oq
-         xD8YuO7vdX8OnBr+a9WJ144W146v83avFJ4MPqlGdy1GFVP7D4F+/dBP5vhjK0JOiA
-         4IChXZNY90RU7oZCCbzOXBBOE2Xg0ysNk4T1tgGQ=
-Date:   Fri, 3 Jul 2020 11:37:48 -0400
-From:   "Daniel M. Weeks" <dan@danweeks.net>
-To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Fri, 3 Jul 2020 11:46:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593791195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kZamksu9q4RTlXzhEF7oeFMOgoJ1Qb6qWkOIgdiQa7I=;
+        b=F2LHPoy/ikCLvo0s1d72nWd28RN64dszEs7ihUpMT/FcwiSvjN3iGuwsoIq0MHsTmYJavi
+        wQrl0nyPHGQaEAFAfg0Ok3LTsZ4V66QXRWa1VOkhn1fiS9Oyt7/h/AKrDBLoC87U3TYVH7
+        F14PHyOj8vJSfWZAnEdX3uTXlCNg5W4=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-qyKEGxILOF26Ily46xh4yQ-1; Fri, 03 Jul 2020 11:46:34 -0400
+X-MC-Unique: qyKEGxILOF26Ily46xh4yQ-1
+Received: by mail-qv1-f69.google.com with SMTP id r19so20686082qvz.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:46:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=kZamksu9q4RTlXzhEF7oeFMOgoJ1Qb6qWkOIgdiQa7I=;
+        b=ZENqXioCIEkm27aeRWgRL+epKFkqG/f6Tg1l/weme7hqT+6nguV1XE/dS2d/mhr0xL
+         FcuehKw5bGmcseSUXhvJv4UNOD53lXfsG63M38eZAe+qqVzlzRhxDXToSKrGG1s/dSgM
+         UObOAQiqskWUdGrKpa0n0lYHef3Ie1NENHuFOZcRsO5vzPa7Ho67QRqWyqfkcCC76Xb4
+         HhYroL4skeWTVpLUjAAEcLpioKscgCbkNYCuZlh8nkFvMNet5A6Ti+9EymvMUs1P2YVd
+         pU/QLcBg3G+6tzoSmnxalUHoj3DiYg6Z5UYBNvJlbw86Rm4OPNpb174mr3uCXE8Jd8Q6
+         ycow==
+X-Gm-Message-State: AOAM532nfr14GJQT9WHujJkbHYthHdT9PcxzUglNwqyvgHGBMuNiF6oe
+        4CsndrQy8oTcZm3yGYghkpo8K6VwQKz2zZehufjDxYzUqL3Mg91EBINJgYQCsrXK/siCwrCOu/J
+        xB9ar8iiKwct5QhkS250F87GF
+X-Received: by 2002:a05:6214:884:: with SMTP id cz4mr21705039qvb.3.1593791193268;
+        Fri, 03 Jul 2020 08:46:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwPFteIG/zDmV9OhkFZB+1yp9sGcAuhAQc+YY9Q88SZ8CcE37BbpMKtTkvgBPVirzToeV7QFw==
+X-Received: by 2002:a05:6214:884:: with SMTP id cz4mr21705023qvb.3.1593791193050;
+        Fri, 03 Jul 2020 08:46:33 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id k45sm13334427qtc.62.2020.07.03.08.46.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 08:46:32 -0700 (PDT)
+Subject: Re: [PATCH] mm: initialize return of vm_insert_pages
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
-Message-ID: <20200703153748.GA16156@dev.danweeks.net>
+References: <20200703145202.10629-1-trix@redhat.com>
+ <20200703145454.GH25523@casper.infradead.org>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <7b6eb14b-bbdc-dedb-c989-5e705cb9a453@redhat.com>
+Date:   Fri, 3 Jul 2020 08:46:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-CMAE-Envelope: MS4wfD9asncUoSFNcBiXAB2gHJXmvbabag/zMKGlIzoo9k3WTWdB0wpT8dB8m7/cIaBridhqyOJZ4vaRLy/C4qfX3QFpRPGowuxWj5I1BcAQO4kRZLaju3oZ
- s2pEKcPfIGD+DzLSSI+y950AXz+OfXrXYbnwlAepaXRcFrIriGTLcsmF+C7kq9xHiY0UG5MNDHDmrLCVMHj3rdw8CJ81b7fRbOsKdrOaiG94JUBwzdgVOB5V
- 8bzhWh4CvZFMAPuU880e1DCBS0UlARlw9Elg6bDN5k5cBD1pn5l397hKb2F5Bfj/7czbFi+xHejDqdDJEVVtSR+sU7dQDguMDwb0rqhXB/IJ9CydMic1jcYJ
- dPJrwtux
+In-Reply-To: <20200703145454.GH25523@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
----
- Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
- drivers/hwmon/lm75.c                             | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
-index 273616702c51..e5bb554cd2c3 100644
---- a/Documentation/devicetree/bindings/hwmon/lm75.txt
-+++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
-@@ -14,10 +14,10 @@ Required properties:
- 		"maxim,max6626",
- 		"maxim,max31725",
- 		"maxim,max31726",
--		"maxim,mcp980x",
- 		"nxp,pct2075",
- 		"st,stds75",
- 		"st,stlm75",
-+		"microchip,mcp980x",
- 		"microchip,tcn75",
- 		"ti,tmp100",
- 		"ti,tmp101",
-diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index ba0be48aeadd..a8cfc7e4a685 100644
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
- 		.compatible = "maxim,max31726",
- 		.data = (void *)max31725
- 	},
--	{
--		.compatible = "maxim,mcp980x",
--		.data = (void *)mcp980x
--	},
- 	{
- 		.compatible = "nxp,pct2075",
- 		.data = (void *)pct2075
-@@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
- 		.compatible = "st,stlm75",
- 		.data = (void *)stlm75
- 	},
-+	{
-+		.compatible = "microchip,mcp980x",
-+		.data = (void *)mcp980x
-+	},
- 	{
- 		.compatible = "microchip,tcn75",
- 		.data = (void *)tcn75
--- 
-Daniel M. Weeks
+On 7/3/20 7:54 AM, Matthew Wilcox wrote:
+> On Fri, Jul 03, 2020 at 07:52:02AM -0700, trix@redhat.com wrote:
+>> From: Tom Rix <trix@redhat.com>
+>>
+>> clang static analysis reports a garbage return
+>>
+>> In file included from mm/memory.c:84:
+>> mm/memory.c:1612:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+>>         return err;
+>>         ^~~~~~~~~~
+>>
+>> The setting of err depends on a loop executing.
+>> So initialize err.
+> I'd argue that returning zero is wrong.  If someone's asked to insert
+> zero pages, that's a nonsense thing to do so it should return -EINVAL..
+>
+good point, i'll respin.
+
+
