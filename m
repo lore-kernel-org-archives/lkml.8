@@ -3,249 +3,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DED2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5CD620885
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CEE20885
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpIy1IBv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tr1vg3PW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgGCJN0 (ORCPT
+        id S1726488AbgGCJOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51060 "EHLO
+        Fri, 3 Jul 2020 05:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgGCJNZ (ORCPT
+        with ESMTP id S1725796AbgGCJOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:13:25 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869EFC08C5C1;
-        Fri,  3 Jul 2020 02:13:25 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id s21so11572641ilk.5;
-        Fri, 03 Jul 2020 02:13:25 -0700 (PDT)
+        Fri, 3 Jul 2020 05:14:50 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD5DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:14:50 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id g22so2774138vke.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 02:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Iaw9LIET2b5Zr3PfzFEZD0ZO7MflodPo5riog/VYOpY=;
-        b=YpIy1IBvV/vLDmas280jG6wn7S0jnFsNNvzfC29z8poUfzNVniy27kGXdSPXMeuxQo
-         9JSXKH42L1HWQIH+kXrA0YiI/7Zy401o50eq+uimBMyWhCYYRt+uQa9lR/eGlV42uabK
-         mpvPUqYHyqrHmk7zLwDAln4Pr0T49Uc/f6p4N5Q+iN6sJwX1P4kCRJfrNMG2nUhf/nHL
-         l+FEcYMwI/gtkC5uhtXAgzG4qm6YpjwREqczaUT2sqkIBVhrKlVRVqnIsFEpspNOeCLI
-         ueS1v9GV7K3eTKXn1row8vxgATK6cOERngz1i7o3+hf+X25EKaGK0p1cFb/UagT0Ra2p
-         jVUw==
+        bh=HjLtRECZ4xF2T8beK0iYF5HUVoGI04zGUc7fJuaUDUM=;
+        b=tr1vg3PWzgcj46XCTU9K0bi6+NFfnGc+PieFv9e9XcIIxPLoTAJqDTKGVOSOVaYJDO
+         0MaH93nB9up68BBkr/e/KHSCkFvYwpVIzgTBODl5Kf5BUUxoQgdBjkHwFIdEtHAhPnEZ
+         TLA5quj/bgjLPmyF4a7iJCUXdMpg2qZjQ5p+S6BDb7DtKX1krZw2Ir8LAhRksXHUuZyp
+         3Kr/N1KnUSqmrSkiLOw626SR1lZ3arU/kr+KsirZaCZiU470zJqDGo2Pg1NGeK6pXspy
+         JS/ND+L85yDzXth/vl3tSea5Ungvw5Fql4rxDRY4MNCbCIC3iA8C2bKZpItviWaQ+XN1
+         0v7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Iaw9LIET2b5Zr3PfzFEZD0ZO7MflodPo5riog/VYOpY=;
-        b=pFcLMS2tpOPN3Cd4qVHwLxkmxOziTz0YTlWtBzE+73EHGr+F12DSoIROGk8CaNeQ+z
-         UOFsJlFEyYOOV62ZuK3ahFpAmE0mxN+qfl02gAk9UaD3G2WqQxrBXUzard1ET+/Sw8ta
-         LcHfYPgiDG/LoDkYE++suYJFbWVa+Qd2Y1ryRh9pz+OKDfdtNabE8cY+yUeuE7upFyoZ
-         QAbnAYAge4AvCQxqKTYxmODM73PN5vQV9ILHqjTESwv5j9/UNSUrBCuULJWpFzbXkZ0Z
-         PjC7FRE84nu4T9g5znX4jxtp0wag6HYjIBpwj6+4yF91ieo7ChVRZYtsqzZ8lDqZQ2io
-         9h5A==
-X-Gm-Message-State: AOAM533VRcrJzXqzHnDxaaW02CHVDftSPFjvDDJMYro1aoHJaB0V/Rjh
-        gXPrQI09XHbEqRPoe1hf4P1ioec53EyxbSMhcLY=
-X-Google-Smtp-Source: ABdhPJwXEBMUa2aMAP8q7reOsOn7JWMVBv9lH9Wka6vYuFUYz3A/Uc1V9oTxMQbgJosNCGX2ixDSbcUhc2wyDTuJKVs=
-X-Received: by 2002:a92:a148:: with SMTP id v69mr16694332ili.7.1593767604804;
- Fri, 03 Jul 2020 02:13:24 -0700 (PDT)
+        bh=HjLtRECZ4xF2T8beK0iYF5HUVoGI04zGUc7fJuaUDUM=;
+        b=JOUM7yjuPOe/WjJi32aJQRfPlbce6YF7CPk5FRrDVN6FAj5pRfgmRwUkEBD5Z7gd/t
+         LhcYZ0Hgz320sG7SnwX2F3J/GcYQxthbwS+VFj7UasQc0FqFvRprQ9/UooEOkYX6hVau
+         wLVxNJpIv+fQnGCmkKgpsU1H8bvQIJcWTeKoVyO1DVUBt4oA5AgrQLcsskvKTClqGBAD
+         WWw+InfX2d7bdt4lgLGtRDl44esVj/+hZDzx9Wwj9OZnyWq/YWXciZYj9oZZATjkJW8g
+         e8HI+4oiFoJwGJ3UE4kS0k3FkPe0HimSvEej5TzpeRfPHPKSo4dCpZtYALZSM4jAUBdt
+         MBxg==
+X-Gm-Message-State: AOAM532vve1c5MOcmiA2Fsh0fcCELoeOs8807sRY9KhUAIYPoB5RTiA5
+        QOxqruOf7ueRzJYIdmHxcB8x5WxfdTHrJuKFj20t8A==
+X-Google-Smtp-Source: ABdhPJzfbf5Nax4iS96K0l+ThgK+nVowfJb+1weNMs+rW7SolUPD+6MUGhyXzyhgTSw3v7GTRkqHJoG8Yk9mxnLxaz0=
+X-Received: by 2002:a1f:d783:: with SMTP id o125mr25421584vkg.46.1593767688546;
+ Fri, 03 Jul 2020 02:14:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com> <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1593752873-4493-16-git-send-email-alex.shi@linux.alibaba.com>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Fri, 3 Jul 2020 12:13:14 +0300
-Message-ID: <CALYGNiOkA_ZsycF_hqm3XLk55Ek1Mo9w1gO=6EeE35fUtA0i_w@mail.gmail.com>
-Subject: Re: [PATCH v14 15/20] mm/swap: serialize memcg changes during pagevec_lru_move_fn
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0KXQu9C10LHQvdC40LrQvtCy?= 
-        <khlebnikov@yandex-team.ru>, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, lkp@intel.com,
-        linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, shakeelb@google.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, richard.weiyang@gmail.com
+References: <20200703085309.32166-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200703085309.32166-1-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Fri, 3 Jul 2020 14:44:37 +0530
+Message-ID: <CAHLCerMu8YQZvt91qWKWBnWKZwFp=Ch-HpBK2-+Ut8nsM1S7ww@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] thermal: core: Add helpers to browse the cdev, tz
+ and governor list
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 8:09 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+On Fri, Jul 3, 2020 at 2:23 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 >
-> Hugh Dickins' found a memcg change bug on original version:
-> If we want to change the pgdat->lru_lock to memcg's lruvec lock, we have
-> to serialize mem_cgroup_move_account during pagevec_lru_move_fn. The
-> possible bad scenario would like:
+> The cdev, tz and governor list, as well as their respective locks are
+> statically defined in the thermal_core.c file.
 >
->         cpu 0                                   cpu 1
-> lruvec = mem_cgroup_page_lruvec()
->                                         if (!isolate_lru_page())
->                                                 mem_cgroup_move_account
+> In order to give a sane access to these list, like browsing all the
+> thermal zones or all the cooling devices, let's define a set of
+> helpers where we pass a callback as a parameter to be called for each
+> thermal entity.
 >
-> spin_lock_irqsave(&lruvec->lru_lock <== wrong lock.
+> We keep the self-encapsulation and ensure the locks are correctly
+> taken when looking at the list.
 >
-> So we need the ClearPageLRU to block isolate_lru_page(), then serialize
-> the memcg change here.
->
-> Reported-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Zhang Rui <rui.zhang@intel.com>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
 > ---
->  mm/swap.c | 31 +++++++++++++++++++------------
->  1 file changed, 19 insertions(+), 12 deletions(-)
+>  drivers/thermal/thermal_core.c | 51 ++++++++++++++++++++++++++++++++++
+>  drivers/thermal/thermal_core.h |  9 ++++++
+>  2 files changed, 60 insertions(+)
 >
-> diff --git a/mm/swap.c b/mm/swap.c
-> index b24d5f69b93a..55eb2c2eed03 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -203,7 +203,7 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
->  EXPORT_SYMBOL_GPL(get_kernel_page);
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index b71196eaf90e..9caaa0b6d662 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -617,6 +617,57 @@ void thermal_zone_device_rebind_exception(struct thermal_zone_device *tz,
+>         mutex_unlock(&thermal_list_lock);
+>  }
 >
->  static void pagevec_lru_move_fn(struct pagevec *pvec,
-> -       void (*move_fn)(struct page *page, struct lruvec *lruvec))
-> +       void (*move_fn)(struct page *page, struct lruvec *lruvec), bool add)
->  {
->         int i;
->         struct pglist_data *pgdat = NULL;
-> @@ -221,8 +221,15 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->                         spin_lock_irqsave(&pgdat->lru_lock, flags);
->                 }
->
-> +               /* new page add to lru or page moving between lru */
-> +               if (!add && !TestClearPageLRU(page))
-> +                       continue;
+> +int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+> +                             void *data)
+> +{
+> +       struct thermal_governor *gov;
+> +       int ret = 0;
 > +
->                 lruvec = mem_cgroup_page_lruvec(page, pgdat);
->                 (*move_fn)(page, lruvec);
+> +       mutex_lock(&thermal_governor_lock);
+> +       list_for_each_entry(gov, &thermal_governor_list, governor_list) {
+> +               ret = cb(gov, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_governor_lock);
 > +
-> +               if (!add)
-> +                       SetPageLRU(page);
->         }
->         if (pgdat)
->                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> @@ -259,7 +266,7 @@ void rotate_reclaimable_page(struct page *page)
->                 local_lock_irqsave(&lru_rotate.lock, flags);
->                 pvec = this_cpu_ptr(&lru_rotate.pvec);
->                 if (!pagevec_add(pvec, page) || PageCompound(page))
-> -                       pagevec_lru_move_fn(pvec, pagevec_move_tail_fn);
-> +                       pagevec_lru_move_fn(pvec, pagevec_move_tail_fn, false);
->                 local_unlock_irqrestore(&lru_rotate.lock, flags);
->         }
->  }
-> @@ -328,7 +335,7 @@ static void activate_page_drain(int cpu)
->         struct pagevec *pvec = &per_cpu(lru_pvecs.activate_page, cpu);
->
->         if (pagevec_count(pvec))
-> -               pagevec_lru_move_fn(pvec, __activate_page);
-> +               pagevec_lru_move_fn(pvec, __activate_page, false);
->  }
->
->  static bool need_activate_page_drain(int cpu)
-> @@ -346,7 +353,7 @@ void activate_page(struct page *page)
->                 pvec = this_cpu_ptr(&lru_pvecs.activate_page);
->                 get_page(page);
->                 if (!pagevec_add(pvec, page) || PageCompound(page))
-> -                       pagevec_lru_move_fn(pvec, __activate_page);
-> +                       pagevec_lru_move_fn(pvec, __activate_page, false);
->                 local_unlock(&lru_pvecs.lock);
->         }
->  }
-> @@ -621,21 +628,21 @@ void lru_add_drain_cpu(int cpu)
->
->                 /* No harm done if a racing interrupt already did this */
->                 local_lock_irqsave(&lru_rotate.lock, flags);
-> -               pagevec_lru_move_fn(pvec, pagevec_move_tail_fn);
-> +               pagevec_lru_move_fn(pvec, pagevec_move_tail_fn, false);
->                 local_unlock_irqrestore(&lru_rotate.lock, flags);
->         }
->
->         pvec = &per_cpu(lru_pvecs.lru_deactivate_file, cpu);
->         if (pagevec_count(pvec))
-> -               pagevec_lru_move_fn(pvec, lru_deactivate_file_fn);
-> +               pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, false);
->
->         pvec = &per_cpu(lru_pvecs.lru_deactivate, cpu);
->         if (pagevec_count(pvec))
-> -               pagevec_lru_move_fn(pvec, lru_deactivate_fn);
-> +               pagevec_lru_move_fn(pvec, lru_deactivate_fn, false);
->
->         pvec = &per_cpu(lru_pvecs.lru_lazyfree, cpu);
->         if (pagevec_count(pvec))
-> -               pagevec_lru_move_fn(pvec, lru_lazyfree_fn);
-> +               pagevec_lru_move_fn(pvec, lru_lazyfree_fn, false);
->
->         activate_page_drain(cpu);
->  }
-> @@ -664,7 +671,7 @@ void deactivate_file_page(struct page *page)
->                 pvec = this_cpu_ptr(&lru_pvecs.lru_deactivate_file);
->
->                 if (!pagevec_add(pvec, page) || PageCompound(page))
-> -                       pagevec_lru_move_fn(pvec, lru_deactivate_file_fn);
-> +                       pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, false);
->                 local_unlock(&lru_pvecs.lock);
->         }
->  }
-> @@ -686,7 +693,7 @@ void deactivate_page(struct page *page)
->                 pvec = this_cpu_ptr(&lru_pvecs.lru_deactivate);
->                 get_page(page);
->                 if (!pagevec_add(pvec, page) || PageCompound(page))
-> -                       pagevec_lru_move_fn(pvec, lru_deactivate_fn);
-> +                       pagevec_lru_move_fn(pvec, lru_deactivate_fn, false);
->                 local_unlock(&lru_pvecs.lock);
->         }
->  }
-> @@ -708,7 +715,7 @@ void mark_page_lazyfree(struct page *page)
->                 pvec = this_cpu_ptr(&lru_pvecs.lru_lazyfree);
->                 get_page(page);
->                 if (!pagevec_add(pvec, page) || PageCompound(page))
-> -                       pagevec_lru_move_fn(pvec, lru_lazyfree_fn);
-> +                       pagevec_lru_move_fn(pvec, lru_lazyfree_fn, false);
->                 local_unlock(&lru_pvecs.lock);
->         }
->  }
-> @@ -976,7 +983,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
->   */
->  void __pagevec_lru_add(struct pagevec *pvec)
+> +       return ret;
+> +}
+> +
+> +int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
+> +                                             void *), void *data)
+> +{
+> +       struct thermal_cooling_device *cdev;
+> +       int ret = 0;
+> +
+> +       mutex_lock(&thermal_list_lock);
+> +       list_for_each_entry(cdev, &thermal_cdev_list, node) {
+> +               ret = cb(cdev, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_list_lock);
+> +
+> +       return ret;
+> +}
+> +
+> +int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+> +                         void *data)
+> +{
+> +       struct thermal_zone_device *tz;
+> +       int ret = 0;
+> +
+> +       mutex_lock(&thermal_list_lock);
+> +       list_for_each_entry(tz, &thermal_tz_list, node) {
+> +               ret = cb(tz, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_list_lock);
+> +
+> +       return ret;
+> +}
+> +
+>  void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
+>                                           const char *cdev_type, size_t size)
 >  {
-> -       pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn);
-> +       pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn, true);
->  }
-
-It seems better to open code version in lru_add than adding a bool
-argument which is true just for one user.
-
-Also with this new lru protection logic lru_add could be optimized:
-It could prepare a list of pages and under lru_lock do only list
-splice and bumping counter.
-Since PageLRU isn't set yet nobody could touch these pages in lru.
-After that lru_add could iterate pages from first to last without
-lru_lock to set PageLRU and drop reference.
-
-So, lru_add will do O(1) operations under lru_lock regardless of the
-count of pages it added.
-
-Actually per-cpu vector for adding could be replaced with per-cpu
-lists and\or per-lruvec atomic slist.
-Thus incommig pages will be already in list structure rather than page vector.
-This allows to accumulate more pages and offload adding to kswapd or
-direct reclaim.
-
+> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+> index c95689586e19..71d88dac0791 100644
+> --- a/drivers/thermal/thermal_core.h
+> +++ b/drivers/thermal/thermal_core.h
+> @@ -41,6 +41,15 @@ extern struct thermal_governor *__governor_thermal_table_end[];
+>              __governor < __governor_thermal_table_end; \
+>              __governor++)
 >
->  /**
+> +int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+> +                         void *);
+> +
+> +int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
+> +                                             void *), void *);
+> +
+> +int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+> +                             void *thermal_governor);
+> +
+>  struct thermal_attr {
+>         struct device_attribute attr;
+>         char name[THERMAL_NAME_LENGTH];
 > --
-> 1.8.3.1
->
+> 2.17.1
 >
