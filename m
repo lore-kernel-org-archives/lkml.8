@@ -2,155 +2,99 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2F120656
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F05B20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:45:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1xPfCI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgGCJpU (ORCPT
+        id S1726385AbgGCJpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:45:20 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:33504 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGCJpU (ORCPT
+        Fri, 3 Jul 2020 05:45:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40780 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726082AbgGCJpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:45:20 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 29F09A17BF;
-        Fri,  3 Jul 2020 17:45:13 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P9648T140518671496960S1593769508246067_;
-        Fri, 03 Jul 2020 17:45:14 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <61a8935fbe4ef8a294067815218e3673>
-X-RL-SENDER: andy.yan@rock-chips.com
-X-SENDER: yxj@rock-chips.com
-X-LOGIN-NAME: andy.yan@rock-chips.com
-X-FST-TO: daniel@ffwll.ch
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Andy Yan <andy.yan@rock-chips.com>
-To:     daniel@ffwll.ch
-Cc:     airlied@linux.ie, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, tzimmermann@suse.de,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2] drm/connector: Add of_drm_find_connector
-Date:   Fri,  3 Jul 2020 17:45:06 +0800
-Message-Id: <20200703094506.22527-1-andy.yan@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Jul 2020 05:45:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593769537;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ySpXOJWsWymBGThH1fYgMecFR3cP9I6l2Ce0Wcjp214=;
+        b=g1xPfCI2g+JU5lrIN2ZKgq2xZRiFUs2/T1KPE+Xf8odtGDyhqQ4M7hqvPEvjpWCDEquTt+
+        ZvMRFhZ+gddq2QtPKMGEMX3wO55i2KZEWpEsw095x35A24WwiuqMvvDxBFtcNj3S3ru0lk
+        hbuNIG55KqLYqvf1JLIAxE9QzxAGsGo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-dhvov17KNQy3BmkVxlLjjA-1; Fri, 03 Jul 2020 05:45:33 -0400
+X-MC-Unique: dhvov17KNQy3BmkVxlLjjA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC8AC8015F5;
+        Fri,  3 Jul 2020 09:45:31 +0000 (UTC)
+Received: from gondolin (ovpn-113-54.ams2.redhat.com [10.36.113.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F3485BAD5;
+        Fri,  3 Jul 2020 09:45:29 +0000 (UTC)
+Date:   Fri, 3 Jul 2020 11:45:27 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio-ccw: Fix a build error due to missing include of
+ linux/slab.h
+Message-ID: <20200703114527.790ffb82.cohuck@redhat.com>
+In-Reply-To: <20200703022628.6036-1-sean.j.christopherson@intel.com>
+References: <20200703022628.6036-1-sean.j.christopherson@intel.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to look up a connector by
-device tree node, like what of_drm_find_bridge/panel
-does.
+On Thu,  2 Jul 2020 19:26:28 -0700
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Reported-by: kernel test robot <lkp@intel.com>
+> Include linux/slab.h to fix a build error due to kfree() being undefined.
+> 
+> Fixes: 3f02cb2fd9d2d ("vfio-ccw: Wire up the CRW irq and CRW region")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> Encountered this when cross-compiling with a pretty minimal config, didn't
+> bother digging into why the error only showed up in my environment.
+> 
+>  drivers/s390/cio/vfio_ccw_chp.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_chp.c
+> index a646fc81c872..13b26a1c7988 100644
+> --- a/drivers/s390/cio/vfio_ccw_chp.c
+> +++ b/drivers/s390/cio/vfio_ccw_chp.c
+> @@ -8,6 +8,7 @@
+>   *            Eric Farman <farman@linux.ibm.com>
+>   */
+>  
+> +#include <linux/slab.h>
+>  #include <linux/vfio.h>
+>  #include "vfio_ccw_private.h"
+>  
 
----
-
-Changes in v2:
-- Add function declaration
-
- drivers/gpu/drm/drm_connector.c | 33 +++++++++++++++++++++++++++++++++
- include/drm/drm_connector.h     | 14 ++++++++++++++
- 2 files changed, 47 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index d877ddc6dc57..516376cd1868 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -743,6 +743,39 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter)
- }
- EXPORT_SYMBOL(drm_connector_list_iter_end);
- 
-+#ifdef CONFIG_OF
-+/**
-+ * of_drm_find_connector - look up a connector using a device tree node
-+ * @np: device tree node of the connector
-+ *
-+ *
-+ * Return: A pointer to the connector which match the specified device tree
-+ * node or NULL if no panel matching the device tree node can be found, or
-+ * -ENODEV: the device is not available (status != "okay" or "ok")
-+ */
-+struct drm_connector *of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
-+{
-+	struct drm_connector *connector;
-+	struct drm_connector_list_iter conn_iter;
-+
-+	if (!of_device_is_available(np))
-+		return ERR_PTR(-ENODEV);
-+
-+	drm_connector_list_iter_begin(dev, &conn_iter);
-+	drm_for_each_connector_iter(connector, &conn_iter) {
-+		if (connector->of_node == np) {
-+			drm_connector_list_iter_end(&conn_iter);
-+			return connector;
-+		}
-+	}
-+	drm_connector_list_iter_end(&conn_iter);
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL(of_drm_find_connector);
-+#endif
-+
-+
- static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
- 	{ SubPixelUnknown, "Unknown" },
- 	{ SubPixelHorizontalRGB, "Horizontal RGB" },
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index fd543d1db9b2..d249e0498375 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1129,6 +1129,9 @@ struct drm_connector {
- 	/** @attr: sysfs attributes */
- 	struct device_attribute *attr;
- 
-+	/** @of_node: device tree node */
-+	struct device_node *of_node;
-+
- 	/**
- 	 * @head:
- 	 *
-@@ -1647,6 +1650,17 @@ void drm_connector_list_iter_end(struct drm_connector_list_iter *iter);
- bool drm_connector_has_possible_encoder(struct drm_connector *connector,
- 					struct drm_encoder *encoder);
- 
-+#if defined(CONFIG_OF)
-+struct drm_connector *
-+of_drm_find_connector(struct drm_device *dev, const struct device_node *np);
-+#else
-+static inline struct drm_connector *
-+of_drm_find_connector(struct drm_device *dev, const struct device_node *np)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
- /**
-  * drm_for_each_connector_iter - connector_list iterator macro
-  * @connector: &struct drm_connector pointer used as cursor
--- 
-2.17.1
-
-
+Thanks, applied.
 
