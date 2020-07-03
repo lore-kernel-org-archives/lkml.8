@@ -2,122 +2,136 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3266FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7F1B20899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A39A20B80
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KwXmSjzk"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lQwRKFro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgGCRFy (ORCPT
+        id S1726760AbgGCRIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38820 "EHLO
+        Fri, 3 Jul 2020 13:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgGCRFx (ORCPT
+        with ESMTP id S1726632AbgGCRIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:05:53 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A836AC061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:05:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id h18so14532823qvl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:05:53 -0700 (PDT)
+        Fri, 3 Jul 2020 13:08:07 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D6CC061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:08:06 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id k17so6106786lfg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:08:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uOxIRzqV33cwYiOayyd2WFVo6gUD/TXwDz0UDM2FxKs=;
-        b=KwXmSjzk/in70DsvZW/OqlJVbh7RjTtMHjUSsmmNvyH5aE7ZNj6NcWsyaamq+b+79b
-         VgSghhNlE0KbRfmk9RYQYiMvyqWl1/fsjdD9sIrMxJIJ007fdJxPuKPyqvtAYdQ5lMjA
-         NYCDxzvIrgOcaa0SRN+rU+dDlfqeeWRrAGsLe6tS2ojOxffdNA0NFJb9Dkd4gpfYNGpF
-         S1Dmd5e//uzU3TSzYsXNe+EnbbVjC9Zy2i322fansr6nSoSKGwqOYRum47dWPnJci6lN
-         +SNCJvdrTxsGybqIIbnSrud4z1YtiSwB6SlWOqx4pg5j/eFpO+uVgGDNJnA4nRCPA5xp
-         sruA==
+        bh=NGIWYGclw9/se36iCMUa3R+SNfFXJ4xJXXtTXZwYe78=;
+        b=lQwRKFroLLPm5QHChkg3JAbf09EtECvI6zfs4GvXqOv6vnLW7/Wzd13wD75qKSfnz7
+         W1oWm4sqRuHKPH1SdI5iJKGlkA0Xb2bvhBW7TZtX2L6BQcz3N0aW1yF8wULQzZlIztY4
+         7kjf7CwY4DS9N6TgXcRNaWIPTwxbCA1zxLgfB1vgO8Xf7Au25qL7io068STZgVpzTVlj
+         B2xlQGLVq9WMVnXwtAuwrqoZcn+ghylFGdG243Z7HRbA1YBhwJXVFclBTU65JPHo3c8y
+         ZJHiY2rY+ftttiBN6+jSkr3vdfkeY6y2ljaNxxWUyu5GeAP4NrTT/+E6zuHuGWzPstxj
+         1bIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uOxIRzqV33cwYiOayyd2WFVo6gUD/TXwDz0UDM2FxKs=;
-        b=trC0sqAFCX1NSFJhdUsO9qw+yiR7v/x21HyEb31ULytuute9REqLGUHinGAysXZRbN
-         z5NZ7poCZjGqKXmxOQADFwwLTMNvsFkIhJQzUEgV7acWwUDxsfDBfR6vaY2JSNcVPNh/
-         tJVBOEkd9TAmntNJOVV+PLxJXfBVtdb9z852tlyjB9VKyl1EWf60MTuYos07BWNwVIfK
-         0xvkZ3/C6oSbYHTEHfXuEgYoLQBQrfhevrZAykOyXtv1xk8/aFxCgdNgvQ9stwTr1nSo
-         yTyqeXDdzBCSKVat6bcLzDHo0xip0SuCxQ2I4RIEfcuM522jdZGhaIpDGgMP0tGNc3/o
-         ogJQ==
-X-Gm-Message-State: AOAM533eOmAenukiKfefahEZltukMz2BGdzCLdwnj6BuaDncXiwpthPB
-        C9XxYflk8ap5d6uD3kpbAsq7Vt/lN/RxKBH0A8Yd8A==
-X-Google-Smtp-Source: ABdhPJwmiuz2Y+CJRbdyQtdd6dbeRQNgpQTJtM4808f8jP39qAVc6vY+XdPGcwSFBZ91+L4uKjouCHEW2eXs8kWDPCA=
-X-Received: by 2002:a0c:b315:: with SMTP id s21mr35952885qve.53.1593795952915;
- Fri, 03 Jul 2020 10:05:52 -0700 (PDT)
+        bh=NGIWYGclw9/se36iCMUa3R+SNfFXJ4xJXXtTXZwYe78=;
+        b=NOYWgJCpMm4OodNw+jVV338kHNmBSNPy/Y118zCEd1HLs2+ERcJm1vnTjXQebCK22b
+         8IIYt2xehCfxpXXVfL6iYDeZGzyU38nT2DinuroqA9ct0FbtK9D0vcjQhRfY8FIL1LSk
+         dh1/ESQqib4AJPR9wbCyhF/WBxQrMUByPbg5PRbOWF6MIzsrEQTpC3Jxt1B4kII4LhTH
+         vqlGM3vAOaqcG9BZ8EevoOMlbf+8XORceDkmsJk3mBv6FI9VeC8IqpI7y3gWDpKZyLV1
+         0oyyoaJRJlOvdNDH+SzWV51wd0wBxB4gdk5aQEPwhzxg/36xNthjQgTEJb2Vfg6yf9n0
+         tA5A==
+X-Gm-Message-State: AOAM532GfDPkZPfNMARya24VPJ3JoNS0k5HRmt0QpPJBPkEqutT2Klt8
+        Agf4g3Yv0OkCFHssgHS2ZRSdGIYi8k5WKUw0/Q==
+X-Google-Smtp-Source: ABdhPJxUWKoOZWgsUGY+b0V4Mt13R2qjCpnNvZ54FXAo55sJdwmd5hZqaFXU13je82BQtku2OjEGo0UtL9y9uo7v7s0=
+X-Received: by 2002:ac2:5443:: with SMTP id d3mr22423704lfn.121.1593796085271;
+ Fri, 03 Jul 2020 10:08:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-6-git-send-email-grzegorz.jaszczyk@linaro.org> <d1b232c6f33a629117a2ecbd440622d0@kernel.org>
-In-Reply-To: <d1b232c6f33a629117a2ecbd440622d0@kernel.org>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Fri, 3 Jul 2020 19:05:41 +0200
-Message-ID: <CAMxfBF5p3kh-E-vUxo60a+QTuqQXbsSVYSTc_qYvN8ZckLPKzA@mail.gmail.com>
-Subject: Re: [PATCHv3 5/6] irqchip/irq-pruss-intc: Add support for ICSSG INTC
- on K3 SoCs
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>
+References: <20200703155749.GA6255@pc636>
+In-Reply-To: <20200703155749.GA6255@pc636>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Fri, 3 Jul 2020 19:07:39 +0200
+Message-ID: <CAEJqkgiFFh8CvXkM4ZzXxNQmOJLL7WcgDL6rM83safNgEewZ9w@mail.gmail.com>
+Subject: Re: nr_cpu_ids vs AMD 3970x(32 physical CPUs)
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        GregKroah-Hartmangregkh@linuxfoundation.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 19:59, Marc Zyngier <maz@kernel.org> wrote:
+Am Fr., 3. Juli 2020 um 17:58 Uhr schrieb Uladzislau Rezki <urezki@gmail.com>:
 >
-> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
-> > From: Suman Anna <s-anna@ti.com>
-> >
-> > The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS
-> > IP,
-> > commonly called ICSSG. The PRUSS INTC present within the ICSSG supports
-> > more System Events (160 vs 64), more Interrupt Channels and Host
-> > Interrupts
-> > (20 vs 10) compared to the previous generation PRUSS INTC instances.
-> > The
-> > first 2 and the last 10 of these host interrupt lines are used by the
-> > PRU and other auxiliary cores and sub-modules within the ICSSG, with 8
-> > host interrupts connected to MPU. The host interrupts 5, 6, 7 are also
-> > connected to the other ICSSG instances within the SoC and can be
-> > partitioned as per system integration through the board dts files.
-> >
-> > Enhance the PRUSS INTC driver to add support for this ICSSG INTC
-> > instance. This support is added using specific compatible and match
-> > data and updating the code to use this data instead of the current
-> > hard-coded macros. The INTC config structure is updated to use the
-> > higher events and channels on all SoCs, while limiting the actual
-> > processing to only the relevant number of events/channels/interrupts.
-> >
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> > ---
-> > v2->v3:
-> > - Change patch order: use it directly after "irqchip/irq-pruss-intc:
-> >   Implement irq_{get,set}_irqchip_state ops" and before new
-> >   "irqchip/irq-pruss-intc: Add event mapping support" in order to
-> > reduce
-> >   diff.
+> Hello, folk.
+
+Hello,
+
 >
-> The diff would be even smaller if you introduced a variable number of
-> inputs the first place, i.e. in patch #2. Most if this patch just
-> retrofits it. Please squash these changes into that initial patch,
-> and only add the platform stuff here.
+> I have a system based on AMD 3970x CPUs. It has 32 physical cores
+> and 64 threads. It seems that "nr_cpu_ids" variable is not correctly
+> set on latest 5.8-rc3 kernel. Please have a look below on dmesg output:
+>
+> <snip>
+> urezki@pc638:~$ sudo dmesg | grep 128
+> [    0.000000] IOAPIC[0]: apic_id 128, version 33, address 0xfec00000, GSI 0-23
+> [    0.000000] smpboot: Allowing 128 CPUs, 64 hotplug CPUs
+> [    0.000000] setup_percpu: NR_CPUS:512 nr_cpumask_bits:512 nr_cpu_ids:128 nr_node_ids:1
+> ...
+> [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=128, Nodes=1
+> [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=128.
+> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=128
+> urezki@pc638:~$
+> <snip>
+>
+> For example SLUB thinks that it deals with 128 CPUs in the system what is
+> wrong if i do not miss something. Since nr_cpu_ids is broken(?), thus the
+> "cpu_possible_mask" does not correspond to reality as well.
+>
+> Any thoughts?
 
-Sure I will do that.
+This is not a 5.8-rc3 problem. Almost all AMD CPUs and APUs are
+looking like this.
+The only CPUs I own are getting that right is a dual EPYC box,
+everything else is broken
+regarding the right C/T & socket(s) count, and that probably bc is
+using NUAM code
+to have the info.
 
-Thank you,
-Grzegorz
+I reported that a while back and no-one ever cared.
+
+There is even a comment in the hotplug code saying setting the wrong CPU count
+is a waste of resources.
+
+I have a 2200G is reporting 48Cores.
+
+AMD Ryzen 7 3750H reporting twice the cores and twice the socket.
+
+...
+
+[    0.040578] smpboot: Allowing 16 CPUs, 8 hotplug CPUs
+...
+[    0.382122] smpboot: Max logical packages: 2
+..
+
+I boot all the boxes restricting the cores to the correct count on the
+command line.
+
+Wasted resource or not, this is still a bug IMO.
+
+Best Regards,
+
+Gabriel C
