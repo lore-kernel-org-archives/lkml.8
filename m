@@ -2,296 +2,116 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014AA2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593760728;
-	bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AZZVKN4xQEiGUzl/nJ/7QzqLkhPL2ajYEil6McKwH2eqkuwkEHsjwkYu9IqrJf42J
-	 NPpzys3IJrbxkxcAZGrv04e6qPZfApc5AExw6lxbMR+EBEmH1d6n4ULpksnP7qop1X
-	 /i5YeahdU5Oc/Sklx1QvtppUdxSCYtLQbgid0WGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3F86B2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LuBmQALB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGCHSq (ORCPT
+        id S1726196AbgGCHTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCHSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:18:46 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 805D62088E;
-        Fri,  3 Jul 2020 07:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593760725;
-        bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JWss+/2BfnU0BubfCD6CTXV7nP5QSOYbFhcRQ7yE7SM6q1YF9Y/8/En2cyjlBT85D
-         Shu0NYTOA2BUecDDg3egGC0Zhjty7g8MyqbzgX07Es2ey5tlP62Qaq76WH5NkGK+z3
-         rL+YWlBW7w3I9PE+RuxxOApAbGqewZFxx0P/bLqU=
-Date:   Fri, 3 Jul 2020 12:48:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD
- PTDMA controller
-Message-ID: <20200703071841.GJ273932@vkoul-mobl>
-References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
- <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+        Fri, 3 Jul 2020 03:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgGCHTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:19:21 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17909C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:19:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l6so10439187pjq.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JylBBIg6s0EqS8bdMWdfMXLZabsAcyVLV5Ia1GF24jE=;
+        b=LuBmQALByFHpbapAUDv6bqBgiD40v2S3cpXHTBd494VfOxmTeAfoOVxc3X7KJq6rYf
+         mf3j3YomUb9B9FUv07321mneQR8s1v3xe+VZhtu4Ez8Gx6bEpl7muNosjsBi7YNyqExw
+         PvJH23Kq03SPfX55KZjdgzDNJufwLz/TYl3Go=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JylBBIg6s0EqS8bdMWdfMXLZabsAcyVLV5Ia1GF24jE=;
+        b=FI0CzYCMtk2Mk/44WG+dlV2xCkftLyIDaZxeo8PtLQQ3tnZ1E3PYf6w6cSffuhsk+n
+         I8xTqckJR7paD3eyxKbe8UoZfUlRv0xx4MXn1LwBBAxaBCOve9LWNiIJSo2cGkwzk96B
+         o/EXovnKHSNAOLVz3/VceWqKwLsaHbysSYsdboszHyGLELd1uIMWH2N3l6dwQ1agiK45
+         Wi+BNlJfi2sXdAehhHnIT9QsN8ywWvd3iFrC8tEu4ycP6TmVWNNmwqZGi9uG119s7Mo1
+         UgGx6DoSrwPsmkhf2FCewaZApSesmzSJJLONBq9ENDZsHdDywGHbxxecMoo5/bc8CQLl
+         vibg==
+X-Gm-Message-State: AOAM531NP6QoiBdSojvWtQ7Ak+xrrfSf5voUkELlIQutTpFBqHMi953f
+        KwGzBi0QApjMVIF1G0lZbhlC6NqpKxj4lw==
+X-Google-Smtp-Source: ABdhPJwc5DFMU7lUMcC9pIOl141dJmNWbcK3lxZkVUgks8KYeFld2VbYBWEOy49NWxeoXdxhvCf0ig==
+X-Received: by 2002:a17:902:c391:: with SMTP id g17mr30067388plg.330.1593760760320;
+        Fri, 03 Jul 2020 00:19:20 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:725a:fff:fe46:44eb])
+        by smtp.gmail.com with ESMTPSA id f3sm9603746pju.54.2020.07.03.00.19.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 00:19:18 -0700 (PDT)
+From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Benson Leung <bleung@chromium.org>,
+        alsa-devel@alsa-project.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Subject: [PATCH v2] ASoC: cros_ec_codec: Log results when EC commands fail
+Date:   Fri,  3 Jul 2020 15:19:13 +0800
+Message-Id: <20200703071913.2358882-1-yuhsuan@chromium.org>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-20, 20:11, Sanjay R Mehta wrote:
+Log results of failed EC commands to identify a problem more easily.
 
-> +static int pt_core_execute_cmd(struct ptdma_desc *desc,
-> +			       struct pt_cmd_queue *cmd_q)
-> +{
-> +	__le32 *mp;
-> +	u32 *dp;
-> +	u32 tail;
-> +	int	i;
+Replace cros_ec_cmd_xfer_status with cros_ec_cmd_xfer because the result
+has already been checked in this function. The wrapper is not needed.
 
-no tabs, spaces pls
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+---
+ sound/soc/codecs/cros_ec_codec.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-> +	int ret = 0;
-
-ret is initialized to 0
-> +
-> +	if (desc->dw0.soc) {
-> +		desc->dw0.ioc = 1;
-> +		desc->dw0.soc = 0;
-> +	}
-> +	mutex_lock(&cmd_q->q_mutex);
-> +
-> +	mp = (__le32 *)&cmd_q->qbase[cmd_q->qidx];
-> +	dp = (u32 *)desc;
-> +	for (i = 0; i < 8; i++)
-> +		mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
-> +
-> +	cmd_q->qidx = (cmd_q->qidx + 1) % CMD_Q_LEN;
-> +
-> +	/* The data used by this command must be flushed to memory */
-> +	wmb();
-> +
-> +	/* Write the new tail address back to the queue register */
-> +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-> +	iowrite32(tail, cmd_q->reg_tail_lo);
-> +
-> +	/* Turn the queue back on using our cached control register */
-> +	pt_start_queue(cmd_q);
-> +	mutex_unlock(&cmd_q->q_mutex);
-> +
-> +	return ret;
-
-and returned here!, why not return 0, or even do void return here
-
-> +int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
-> +			     struct pt_passthru_engine *pt_engine)
-> +{
-> +	struct ptdma_desc desc;
-> +
-> +	cmd_q->cmd_error = 0;
-> +
-> +	memset(&desc, 0, Q_DESC_SIZE);
-
-why not sizeof(desc) insteadof Q_DESC_SIZE, this makes code harder to
-look to check what this is defined to
-
-> +int pt_core_init(struct pt_device *pt)
-> +{
-> +	struct device *dev = pt->dev;
-> +	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-> +	struct dma_pool *dma_pool;
-> +	char dma_pool_name[MAX_DMAPOOL_NAME_LEN];
-> +	int ret;
-> +	u32 dma_addr_lo, dma_addr_hi;
-
-reverse christmas tree please
-
-> +
-> +	/* Allocate a dma pool for the queue */
-> +	snprintf(dma_pool_name, sizeof(dma_pool_name), "%s_q", pt->name);
-> +
-> +	dma_pool = dma_pool_create(dma_pool_name, dev,
-> +				   PT_DMAPOOL_MAX_SIZE,
-> +				   PT_DMAPOOL_ALIGN, 0);
-> +	if (!dma_pool) {
-> +		dev_err(dev, "unable to allocate dma pool\n");
-> +		ret = -ENOMEM;
-> +		return ret;
-> +	}
-> +
-> +	/* ptdma core initialisation */
-> +	iowrite32(CMD_CONFIG_VHB_EN, pt->io_regs + CMD_CONFIG_OFFSET);
-> +	iowrite32(CMD_QUEUE_PRIO, pt->io_regs + CMD_QUEUE_PRIO_OFFSET);
-> +	iowrite32(CMD_TIMEOUT_DISABLE, pt->io_regs + CMD_TIMEOUT_OFFSET);
-> +	iowrite32(CMD_CLK_GATE_CONFIG, pt->io_regs + CMD_CLK_GATE_CTL_OFFSET);
-> +	iowrite32(CMD_CONFIG_REQID, pt->io_regs + CMD_REQID_CONFIG_OFFSET);
-> +
-> +	cmd_q->pt = pt;
-> +	cmd_q->dma_pool = dma_pool;
-> +	mutex_init(&cmd_q->q_mutex);
-> +
-> +	/* Page alignment satisfies our needs for N <= 128 */
-> +	cmd_q->qsize = Q_SIZE(Q_DESC_SIZE);
-> +	cmd_q->qbase = dma_alloc_coherent(dev, cmd_q->qsize,
-> +					  &cmd_q->qbase_dma,
-> +					   GFP_KERNEL);
-
-last line seems misaligned, please run checkpatch with --strict options
-to find these.
-
-> +	if (!cmd_q->qbase) {
-> +		dev_err(dev, "unable to allocate command queue\n");
-> +		ret = -ENOMEM;
-> +		goto e_dma_alloc;
-> +	}
-> +
-> +	cmd_q->qidx = 0;
-> +
-> +	/* Preset some register values */
-> +	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
-> +	pt_init_cmdq_regs(cmd_q);
-> +
-> +	dev_dbg(dev, "queue available\n");
-
-debug artifacts, pls remove this and others
-
-> +static int pt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct pt_device *pt;
-> +	struct pt_msix *pt_msix;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem * const *iomap_table;
-> +	int bar_mask;
-> +	int ret = -ENOMEM;
-> +
-> +	pt = pt_alloc_struct(dev);
-> +	if (!pt)
-> +		goto e_err;
-> +
-> +	pt_msix = devm_kzalloc(dev, sizeof(*pt_msix), GFP_KERNEL);
-> +	if (!pt_msix)
-> +		goto e_err;
-> +
-> +	pt->pt_msix = pt_msix;
-> +	pt->dev_vdata = (struct pt_dev_vdata *)id->driver_data;
-> +	if (!pt->dev_vdata) {
-> +		ret = -ENODEV;
-> +		dev_err(dev, "missing driver data\n");
-> +		goto e_err;
-> +	}
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		dev_err(dev, "pcim_enable_device failed (%d)\n", ret);
-> +		goto e_err;
-> +	}
-> +
-> +	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
-> +	ret = pcim_iomap_regions(pdev, bar_mask, "ptdma");
-> +	if (ret) {
-> +		dev_err(dev, "pcim_iomap_regions failed (%d)\n", ret);
-> +		goto e_err;
-> +	}
-> +
-> +	iomap_table = pcim_iomap_table(pdev);
-> +	if (!iomap_table) {
-> +		dev_err(dev, "pcim_iomap_table failed\n");
-> +		ret = -ENOMEM;
-> +		goto e_err;
-> +	}
-> +
-> +	pt->io_regs = iomap_table[pt->dev_vdata->bar];
-> +	if (!pt->io_regs) {
-> +		dev_err(dev, "ioremap failed\n");
-> +		ret = -ENOMEM;
-> +		goto e_err;
-> +	}
-> +
-> +	ret = pt_get_irqs(pt);
-> +	if (ret)
-> +		goto e_err;
-> +
-> +	pci_set_master(pdev);
-> +
-> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
-> +	if (ret) {
-> +		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> +		if (ret) {
-> +			dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n",
-> +				ret);
-> +			goto e_err;
-> +		}
-> +	}
-> +
-> +	dev_set_drvdata(dev, pt);
-> +
-> +	if (pt->dev_vdata)
-> +		ret = pt_core_init(pt);
-> +
-> +	if (ret) {
-> +		dev_notice(dev, "PTDMA initialization failed\n");
-> +		goto e_err;
-> +	}
-> +
-> +	dev_notice(dev, "PTDMA enabled\n");
-
-dev_dbg?
-
-> +
-> +	return 0;
-> +
-> +e_err:
-> +	dev_notice(dev, "initialization failed\n");
-
-dev_err? Also no rollback?
-
-> +	return ret;
-> +}
-> +
-> +static void pt_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pt_device *pt = dev_get_drvdata(dev);
-> +
-> +	if (!pt)
-> +		return;
-> +
-> +	if (pt->dev_vdata)
-> +		pt_core_destroy(pt);
-> +
-> +	pt_free_irqs(pt);
-> +}
-> +
-> +static const struct pt_dev_vdata dev_vdata[] = {
-> +	{
-> +		.bar = 2,
-
-Is this PCI bars?
-
-> +		.version = PT_VERSION(5, 0),
-
-Hw doesn't tell that?
-
+diff --git a/sound/soc/codecs/cros_ec_codec.c b/sound/soc/codecs/cros_ec_codec.c
+index 8d45c628e988e..a4ab62f59efa6 100644
+--- a/sound/soc/codecs/cros_ec_codec.c
++++ b/sound/soc/codecs/cros_ec_codec.c
+@@ -90,10 +90,17 @@ static int send_ec_host_command(struct cros_ec_device *ec_dev, uint32_t cmd,
+ 	if (outsize)
+ 		memcpy(msg->data, out, outsize);
+ 
+-	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	ret = cros_ec_cmd_xfer(ec_dev, msg);
+ 	if (ret < 0)
+ 		goto error;
+ 
++	if (msg->result != EC_RES_SUCCESS) {
++		dev_err(ec_dev->dev, "Command %d failed: %d\n", cmd,
++			msg->result);
++		ret = -EPROTO;
++		goto error;
++	}
++
+ 	if (insize)
+ 		memcpy(in, msg->data, insize);
+ 
 -- 
-~Vinod
+2.27.0.212.ge8ba1cc988-goog
+
