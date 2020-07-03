@@ -2,89 +2,112 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3751CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801C8204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593757847;
-	bh=KHF2MMlAnVZH5QuuVgQtIY1BusorsR3zB8AWdQf+TSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kGWYi7cfpKdDkeAXNoNYZZcsqh0opxA0nFotG6tBrNtzmFHUwsZH7hqxudTNaYqTh
-	 N3shdoSSz0DzDchdTtYOSV/4SP8JMFRFstkx1ZMrrFJirG3BNYJtbVcQpXHkJ01z6H
-	 tGc1WprH6Sm5gDsa4utJOMXMvpbkMz64ae9bEYnI=
+	by mail.kernel.org (Postfix) with ESMTP id 1B35C204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgGCGaq (ORCPT
+        id S1726361AbgGCGcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:30:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40363 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCGap (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:30:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f139so32603107wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:30:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tjZBJs8X0nguidZg5CpdB0HmryO+5Vc7KMWihjNjkqQ=;
-        b=Q55dyzjg0W4iZiIJvX9xwa2G0RQq3ggQfZ0dVEfc8A5pQg9Dv1r7A/1WPFM8EoRG1u
-         KYqyZxJuXiba2dArl2sdmYGOTVUblYl+IdARl9AGuZ81UB3gkIqlFIBg42AQWjVRB6xd
-         NkxFeOUGTOP5mL0+2hcsM/ARWwF8AkH2xxP4Li2NhThdLJogqieRIL91GuwCoJFzIULx
-         1mHEit3tu1WHcqCNIZ18n8vWTu0TC53c6VRIhJEfk+nKhz/H+k4nq+s8G2l2R+ybNAzm
-         B8SZszZTeHUUZCBMo8BPEqbiukoY99n8/08wbO5x78FJUHr0nmlSldnTy4vj+dQFax+/
-         +78w==
-X-Gm-Message-State: AOAM530Txc20phqfwW/lR8KCLL+aa5jSpyZHlSCbXo+A8BT9Wb/SkMDe
-        +DTugQDHkAFCPek/QMWVvOCdCpi+RD3nGa3c1PM=
-X-Google-Smtp-Source: ABdhPJzJZznGHNaVY6+zpi2TVhlBSB0KmWvoLVJF2nf8zzzae0tezM0Uz5dksrJktgyLQYR8fT5tsFWetM00zErXGaA=
-X-Received: by 2002:a05:600c:2241:: with SMTP id a1mr34156620wmm.168.1593757843977;
- Thu, 02 Jul 2020 23:30:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200627133654.64863-1-changbin.du@gmail.com> <20200627133654.64863-10-changbin.du@gmail.com>
-In-Reply-To: <20200627133654.64863-10-changbin.du@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 3 Jul 2020 15:30:32 +0900
-Message-ID: <CAM9d7ch7gPmen8TJ9PbiK-QnQ_ojGVGqbR3bGYT4AMNW3Odp+A@mail.gmail.com>
-Subject: Re: [PATCH v2 09/15] perf ftrace: add support for tracing option 'func_stack_trace'
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fri, 3 Jul 2020 02:32:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:54846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725764AbgGCGcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 02:32:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADD9431B;
+        Thu,  2 Jul 2020 23:32:32 -0700 (PDT)
+Received: from [10.163.85.168] (unknown [10.163.85.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B20083F73C;
+        Thu,  2 Jul 2020 23:32:27 -0700 (PDT)
+Subject: Re: [PATCH V3 (RESEND) 2/3] mm/sparsemem: Enable vmem_altmap support
+ in vmemmap_alloc_block_buf()
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-mm@kvack.org, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
+ <1592442930-9380-3-git-send-email-anshuman.khandual@arm.com>
+ <20200702140752.GF22241@gaia>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <ef468b16-ca28-7d5d-c5fc-eb2e31de5e03@arm.com>
+Date:   Fri, 3 Jul 2020 12:02:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200702140752.GF22241@gaia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> This adds support to display call trace for function tracer. To do this,
-> just specify a '--func-call-graph' option.
 
-What if it's used with -G option?  Also it might be used only with
-the -T option..  How about showing a warning if it's missing.. ?
 
-Thanks
-Namhyung
+On 07/02/2020 07:37 PM, Catalin Marinas wrote:
+> On Thu, Jun 18, 2020 at 06:45:29AM +0530, Anshuman Khandual wrote:
+>> There are many instances where vmemap allocation is often switched between
+>> regular memory and device memory just based on whether altmap is available
+>> or not. vmemmap_alloc_block_buf() is used in various platforms to allocate
+>> vmemmap mappings. Lets also enable it to handle altmap based device memory
+>> allocation along with existing regular memory allocations. This will help
+>> in avoiding the altmap based allocation switch in many places.
+>>
+>> While here also implement a regular memory allocation fallback mechanism
+>> when the first preferred device memory allocation fails. This will ensure
+>> preserving the existing semantics on powerpc platform. To summarize there
+>> are three different methods to call vmemmap_alloc_block_buf().
+>>
+>> (., NULL,   false) /* Allocate from system RAM */
+>> (., altmap, false) /* Allocate from altmap without any fallback */
+>> (., altmap, true)  /* Allocate from altmap with fallback (system RAM) */
+> [...]
+>> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+>> index bc73abf0bc25..01e25b56eccb 100644
+>> --- a/arch/powerpc/mm/init_64.c
+>> +++ b/arch/powerpc/mm/init_64.c
+>> @@ -225,12 +225,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>>  		 * fall back to system memory if the altmap allocation fail.
+>>  		 */
+>>  		if (altmap && !altmap_cross_boundary(altmap, start, page_size)) {
+>> -			p = altmap_alloc_block_buf(page_size, altmap);
+>> -			if (!p)
+>> -				pr_debug("altmap block allocation failed, falling back to system memory");
+>> +			p = vmemmap_alloc_block_buf(page_size, node,
+>> +						    altmap, true);
+>> +		} else {
+>> +			p = vmemmap_alloc_block_buf(page_size, node,
+>> +						    NULL, false);
+>>  		}
+>> -		if (!p)
+>> -			p = vmemmap_alloc_block_buf(page_size, node);
+>>  		if (!p)
+>>  			return -ENOMEM;
+> 
+> Is the fallback argument actually necessary. It may be cleaner to just
+> leave the code as is with the choice between altmap and NULL. If an arch
+> needs a fallback (only powerpc), they have the fallback in place
+> already. I don't see the powerpc code any better after this change.
+> 
+> I'm fine with the altmap argument though.
 
->
-> $ sudo perf ftrace -T vfs_read --func-call-graph
->  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
->  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
->  => vfs_read
->  => ksys_read
->  => __x64_sys_read
->  => do_syscall_64
->  => entry_SYSCALL_64_after_hwframe
->  ...
->
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Okay. Will drop 'fallback' from vmemmap_alloc_block_buf() and update the
+callers. There will also be a single change in the subsequent patch i.e
+vmemmap_alloc_block_buf(PMD_SIZE, node, altmap).
