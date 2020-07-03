@@ -2,115 +2,151 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46064C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4B7206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="a+6dn6fC"
+	by mail.kernel.org (Postfix) with ESMTP id 64BFC20826
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593765561;
+	bh=MvXrb6r67qib7/+nzgg82KcxzQJ/w/+5fImFL7ixVXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NEssOJGxj7u/LtPPnX9+h4SzBQlIcttjJ53hl7uYCW+6Bpaxi7ga5oCfuvWnjySeZ
+	 TgqCshEHEIdSAdi51YIfgwxoQ+AoQD/a3iJBJhbiHNZ83b+vUwAcJjvA/Ngy2uqw1x
+	 JH5jwQTtGZqf3hrvaLJIBGbpyJ6rPHMVJwDHtze8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgGCIjB (ORCPT
+        id S1726356AbgGCIjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:39:01 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:55419 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725648AbgGCIjB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:39:01 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id rHDjj8Fb8mVFqrHDmj7MDr; Fri, 03 Jul 2020 10:38:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593765539; bh=t+CobNXMVOxHCVjy1njKnSsYBRTOdtR1TWHyIIr7Urs=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=a+6dn6fCPo663j3dBcDSpcsEwhtkPMiqZSeS7LAvNM4ojM5+rVGXEIQKdFrxPlpiQ
-         i7iogRRVK9vfU8dehzfpwiV4d0bmqWCxJkUMqxDFbioTyJrj0rKcWNhuEImoEp9MP4
-         zFRVywAOCb1mWTc6xSDpaoxckRQSsQeLF3ffUYnDabYGPjN0ykdkMAz7nxJ3qjaLjk
-         qxrV3qZH/g4ivjEkigNyB2WuExf48Qgl5ijQipvRN5Mk2gerkpb5FydeRb3i+oJjqv
-         KhjFGAnDreHp6C3l78YrWvypam3oaDR+erGEYeayCTJppJkltBFC/ZmnNnQ1boDrGP
-         Vyw2WN0OpF/vA==
-Subject: Re: [PATCH 4/9] media: add Mediatek's MM21 format
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200630062711.4169601-1-acourbot@chromium.org>
- <20200630062711.4169601-5-acourbot@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <d2c15fbf-0076-37b7-7b87-9ef51e0357d9@xs4all.nl>
-Date:   Fri, 3 Jul 2020 10:38:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 04:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgGCIjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:39:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23E57206DF;
+        Fri,  3 Jul 2020 08:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593765559;
+        bh=MvXrb6r67qib7/+nzgg82KcxzQJ/w/+5fImFL7ixVXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1odqj4HK1/iPAdyy6hPR85RJNmhvOSqeJj0AoSlxcxvwXLmgdDm4KVPy2NoOPuhKD
+         ZfzXhNoNv9YqTrL8/QU9WZe35bgzjVj3yyuKx04MjDdx9j1JZh7EWr2MBiP4lo76LM
+         ryzdngx7FCwDMwXW/NtAxhCxP0c+eklbSHDza558=
+Date:   Fri, 3 Jul 2020 09:39:14 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: ptrace: seccomp: Return value when the call was already invalid
+Message-ID: <20200703083914.GA18516@willie-the-truck>
+References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630062711.4169601-5-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKNZeseXYKwmOKbDZ0Vyx/e5xG+FeEKX8ZLoVJw6AZXiESC6p6M3iQAJHiAlhrRlpZ7A9AymnWQO5n1OGoWPya13myHFEiQv76VX4y5ok77oux4Ci1jk
- exJ93H6EIRZbF5+xba+mhaUYF+ekuotphgYY9qLYkc+fhAbcCCqMNiAB5xgsAP12qAWzAKYyDWo5VlxiLV8xh09hni3r/kOfCMKWfppPxACwBlMPzT2wylUl
- b4LhOgT5gTlBfY1vHlH+JacqzNIHRMO4orRQI7Gc9bwZ9UG/Y5PC5hy0bYPRJKMTsfkSEjwjbrZPotVnM05dt1M2NETtH69y5aviX8NScdBRprmj/babaExj
- 6LWXajcaXcIEFDttV8N9U/QIxBXFcN+tz1pQ9CHpwE98uetjuxePq27AKuuCiaEqDLz0q5gMGahT+VO5eJ/FDMlxFiXvsmQ6chHrTMwPKmxNoFrtv5KAJd46
- z5IUEKfbM25caYU1k6LJvsvCgWucFZAqJOh4kJAkHDyXvA8gdf5gWrpq96I=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/06/2020 08:27, Alexandre Courbot wrote:
-> Add Mediatek's non-compressed 8 bit block video mode. This format is
-> produced by the MT8183 codec and can be converted to a non-proprietary
-> format by the MDP3 component.
+Hi Keno,
+
+On Fri, May 22, 2020 at 09:01:01PM -0400, Keno Fischer wrote:
+> I'm seeing the following while porting a ptracer from
+> x86_64 to arm64 (cc'ing arm64 folks, but in this case
+> x86_64 is the odd one out, I think other archs would
+> be consistent with arm64).
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ioctl.c | 1 +
->  include/uapi/linux/videodev2.h       | 1 +
->  2 files changed, 2 insertions(+)
+> Consider userspace code like the following:
+> ```
+> int ret = syscall(-10, 0);
+> assert(ret == -ENOSYS);
+> ```
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 02bfef0da76d..612be602bf76 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1398,6 +1398,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->  	case V4L2_META_FMT_UVC:		descr = "UVC Payload Header Metadata"; break;
->  	case V4L2_META_FMT_D4XX:	descr = "Intel D4xx UVC Metadata"; break;
->  	case V4L2_META_FMT_VIVID:       descr = "Vivid Metadata"; break;
-> +	case V4L2_PIX_FMT_MM21:		descr = "Mediatek 8-bit block format"; break;
-
-Can you move this up so it comes after V4L2_PIX_FMT_KONICA420?
-
-This format should also be added to Documentation/userspace-api/media/v4l/pixfmt-reserved.rst.
-
-Regards,
-
-	Hans
-
->  
->  	default:
->  		/* Compressed formats */
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 303805438814..a35f65115bca 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -738,6 +738,7 @@ struct v4l2_pix_format {
->  #define V4L2_PIX_FMT_Y12I     v4l2_fourcc('Y', '1', '2', 'I') /* Greyscale 12-bit L/R interleaved */
->  #define V4L2_PIX_FMT_Z16      v4l2_fourcc('Z', '1', '6', ' ') /* Depth data 16-bit */
->  #define V4L2_PIX_FMT_MT21C    v4l2_fourcc('M', 'T', '2', '1') /* Mediatek compressed block mode  */
-> +#define V4L2_PIX_FMT_MM21     v4l2_fourcc('M', 'M', '2', '1') /* Mediatek 8-bit block mode, two non-contiguous planes */
->  #define V4L2_PIX_FMT_INZI     v4l2_fourcc('I', 'N', 'Z', 'I') /* Intel Planar Greyscale 10-bit and Depth 16-bit */
->  #define V4L2_PIX_FMT_SUNXI_TILED_NV12 v4l2_fourcc('S', 'T', '1', '2') /* Sunxi Tiled NV12 Format */
->  #define V4L2_PIX_FMT_CNF4     v4l2_fourcc('C', 'N', 'F', '4') /* Intel 4-bit packed depth confidence information */
+> (Never mind the fact that this is something userspace
+> shouldn't do, I saw this in our test suite that tests
+> corner cases where the ptracer shouldn't affect behavior).
 > 
+> Now, if we have a seccomp filter that simply does
+> SECCOMP_RET_TRACE, and a ptracer that simply
+> does PTRACE_CONT
 
+Ok, so this means that we're _skipping_ the system call, right?
+
+> then the assert will fire/fail on arm64, but not on x86_64.
+
+It feels weird to me that skipping the system call has any effect on the
+tracee registers...
+
+> Interestingly, arm64 does do something different
+> if the syscall is -1 rather than -10, where early
+> in the ptrace stop it does.
+> ```
+> /* set default errno for user-issued syscall(-1) */
+> if (scno == NO_SYSCALL)
+>     regs->regs[0] = -ENOSYS;
+
+... so I think this should be fixed too. How about the diff below?
+
+Will
+
+--->8
+
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 68b7f34a08f5..cb3f653c9688 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1833,12 +1833,12 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	if (flags & (_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE)) {
+ 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
+ 		if (!in_syscall(regs) || (flags & _TIF_SYSCALL_EMU))
+-			return -1;
++			return -ENOSYS;
+ 	}
+ 
+ 	/* Do the secure computing after ptrace; failures should be fast. */
+ 	if (secure_computing() == -1)
+-		return -1;
++		return -ENOSYS;
+ 
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+ 		trace_sys_enter(regs, regs->syscallno);
+@@ -1846,7 +1846,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	audit_syscall_entry(regs->syscallno, regs->orig_x0, regs->regs[1],
+ 			    regs->regs[2], regs->regs[3]);
+ 
+-	return regs->syscallno;
++	return 0;
+ }
+ 
+ void syscall_trace_exit(struct pt_regs *regs)
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index 5f5b868292f5..a13661f44818 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
+ 	user_exit();
+ 
+ 	if (has_syscall_work(flags)) {
+-		/* set default errno for user-issued syscall(-1) */
+-		if (scno == NO_SYSCALL)
+-			regs->regs[0] = -ENOSYS;
+-		scno = syscall_trace_enter(regs);
+-		if (scno == NO_SYSCALL)
++		if (syscall_trace_enter(regs))
+ 			goto trace_exit;
++
++		scno = regs->syscallno;
+ 	}
+ 
+ 	invoke_syscall(regs, scno, sc_nr, syscall_table);
