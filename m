@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC913C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF81520CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924692084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgGCIja (ORCPT
+        id S1726150AbgGCIk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:39:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7368 "EHLO huawei.com"
+        Fri, 3 Jul 2020 04:40:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42622 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725648AbgGCIj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:39:29 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B08A2E2E8CD71AA10A17;
-        Fri,  3 Jul 2020 16:39:28 +0800 (CST)
+        id S1725648AbgGCIk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 04:40:26 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EC97FCB10AA7DF8419DD;
+        Fri,  3 Jul 2020 16:40:24 +0800 (CST)
 Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 3 Jul 2020 16:39:21 +0800
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 3 Jul 2020 16:40:18 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix wrong description of compress feature in f2fs.rst
-Date:   Fri, 3 Jul 2020 16:39:09 +0800
-Message-ID: <20200703083909.42479-1-yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to wait GCed compressed page writeback
+Date:   Fri, 3 Jul 2020 16:40:11 +0800
+Message-ID: <20200703084011.42755-1-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,30 +45,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-f2fs will try compressing data in cluster only when "all logical
-blocks in cluster contain valid data" rather than "all logical
-blocks in file are valid".
+like we did for encrypted page.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- Documentation/filesystems/f2fs.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 535021c46260..de43239a3c31 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -739,8 +739,8 @@ Compression implementation
- 
- - In order to eliminate write amplification during overwrite, F2FS only
-   support compression on write-once file, data can be compressed only when
--  all logical blocks in file are valid and cluster compress ratio is lower
--  than specified threshold.
-+  all logical blocks in cluster contain valid data and compress ratio of
-+  cluster data is lower than specified threshold.
- 
- - To enable compression on regular inode, there are three ways:
- 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b3ecf7d4d6d8..3a847bc36748 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1152,6 +1152,13 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 		f2fs_set_compressed_page(cc->cpages[i], inode,
+ 					cc->rpages[i + 1]->index, cic);
+ 		fio.compressed_page = cc->cpages[i];
++
++		fio.old_blkaddr = data_blkaddr(dn.inode, dn.node_page,
++						dn.ofs_in_node + i + 1);
++
++		/* wait for GCed page writeback via META_MAPPING */
++		f2fs_wait_on_block_writeback(inode, fio.old_blkaddr);
++
+ 		if (fio.encrypted) {
+ 			fio.page = cc->rpages[i + 1];
+ 			err = f2fs_encrypt_one_page(&fio);
 -- 
 2.26.2
 
