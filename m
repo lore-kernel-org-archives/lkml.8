@@ -2,256 +2,92 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E86120723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB29D20723
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OdV2cKYB"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o2Tl32h/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgGCJxm (ORCPT
+        id S1726244AbgGCJzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:53:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726035AbgGCJxj (ORCPT
+        Fri, 3 Jul 2020 05:55:38 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48146 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725796AbgGCJzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:53:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593770018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mT7+S/JZ0X5UTjCHTtZu+xMVOeg7qKFbo24bRgqj2g8=;
-        b=OdV2cKYBF1AZyfNPRyggnxnp2foR6bPPDjTM6Dukz4OsVnSFNuI8Py8nX8oKudFjfY6KLJ
-        6xJgpxpcXR+bnkokyerI9rKGFWSpRhCVtYxbXurMJ5nRJzeJW+S//PBkWKFJqZY01Q99iv
-        vyK6DoQk9C0PfqE8vT8tg3iaFgqxI6s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-E3iaSV3zOIiSfGk0c4lyhw-1; Fri, 03 Jul 2020 05:53:34 -0400
-X-MC-Unique: E3iaSV3zOIiSfGk0c4lyhw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54630107ACCA;
-        Fri,  3 Jul 2020 09:53:33 +0000 (UTC)
-Received: from max.home.com (unknown [10.40.192.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71F656111F;
-        Fri,  3 Jul 2020 09:53:31 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [RFC v2 2/2] gfs2: Rework read and page fault locking
-Date:   Fri,  3 Jul 2020 11:53:25 +0200
-Message-Id: <20200703095325.1491832-3-agruenba@redhat.com>
-In-Reply-To: <20200703095325.1491832-1-agruenba@redhat.com>
-References: <20200703095325.1491832-1-agruenba@redhat.com>
+        Fri, 3 Jul 2020 05:55:37 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0639bMKr014401;
+        Fri, 3 Jul 2020 11:55:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=BScJztGlfYcevM6vG7P/xzi6490U6vbgga1vE9lI1xc=;
+ b=o2Tl32h/Gk9cJ9YiuPZJ0nWBn2ZUE9tEKMeRGD6+isCJgCUm6Tu4D32MYtlEFfcBReHK
+ Np1uqbf7NrA0HnodlLdDebrHHBL66qQOAdBVLUm9paVu/NqfaRoD4rfcQmtpgCCstLBb
+ r+W1TNLd/aOJ2Znr6tlp3XoJz7/dxDvFip6UA054MDXVLvUf5l8t0sOnBBjcNuyB6txr
+ rSM+wJMEIzFyHINR0junLiadv3dRLbF5uwr1o0mUAhDyiNHmvwhoG1WtzUat7SsIJeMg
+ 6DhzB4YUwXWdD6cwdQRi3ohAIfwTlFLkaRJB8g7KF2Ijdq0OJkjXWS3P231csmZy7ar3 xA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31ww0gp0hx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 11:55:24 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F290810002A;
+        Fri,  3 Jul 2020 11:55:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E09F72BAC64;
+        Fri,  3 Jul 2020 11:55:23 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 3 Jul 2020 11:55:23
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <lee.jones@linaro.org>,
+        <benjamin.gaignard@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] ARM: STM32: Add compatibles for syscon nodes
+Date:   Fri, 3 Jul 2020 11:55:15 +0200
+Message-ID: <20200703095520.30264-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_03:2020-07-02,2020-07-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, gfs2 has taken the inode glocks inside the ->readpage and
-->readahead address space operations.  Since commit d4388340ae0b ("fs:
-convert mpage_readpages to mpage_readahead"), gfs2_readahead is passed
-the pages to read ahead locked.  With that, the current holder of the
-inode glock may be trying to lock one of those pages while
-gfs2_readahead is trying to take the inode glock, resulting in a
-deadlock.
+Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
+it is required to provide at least 2 compatibles string for syscon node.
+This series update the syscon of the STM32 SoCs to fix the reported errors. 
 
-Fix that by moving the lock taking to the higher-level ->read_iter file
-and ->fault vm operations.  This also gets rid of an ugly lock inversion
-workaround in gfs2_readpage.
+Benjamin Gaignard (5):
+  dt-bingings: arm: stm32: Add compatibles for syscon nodes
+  ARM: dts: stm32: Add compatibles for syscon for stm32f426
+  ARM: dts: stm32: Add compatibles for syscon for stm32f746
+  ARM: dts: stm32: Add compatibles for syscon for stm32h743
+  ARM: dts: stm32: Add compatibles for syscon for stm32mp151
 
-The cache consistency model of filesystems like gfs2 is such that if
-data is found in the page cache, the data is up to date and can be used
-without taking any filesystem locks.  If a page is not cached,
-filesystem locks must be taken before populating the page cache.
+ .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
+ arch/arm/boot/dts/stm32f429.dtsi                           |  6 +++---
+ arch/arm/boot/dts/stm32f746.dtsi                           |  6 +++---
+ arch/arm/boot/dts/stm32h743.dtsi                           |  6 +++---
+ arch/arm/boot/dts/stm32mp151.dtsi                          |  2 +-
+ 5 files changed, 23 insertions(+), 11 deletions(-)
 
-To avoid taking the inode glock when the data is already cached,
-gfs2_file_read_iter first tries to read the data with the IOCB_NOIO flag
-set.  If that fails, the inode glock is taken and the operation is
-retried with the IOCB_NOIO flag cleared.
-
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
----
- fs/gfs2/aops.c | 45 +------------------------------------------
- fs/gfs2/file.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 51 insertions(+), 46 deletions(-)
-
-diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-index 72c9560f4467..68cd700a2719 100644
---- a/fs/gfs2/aops.c
-+++ b/fs/gfs2/aops.c
-@@ -468,21 +468,10 @@ static int stuffed_readpage(struct gfs2_inode *ip, struct page *page)
- }
- 
- 
--/**
-- * __gfs2_readpage - readpage
-- * @file: The file to read a page for
-- * @page: The page to read
-- *
-- * This is the core of gfs2's readpage. It's used by the internal file
-- * reading code as in that case we already hold the glock. Also it's
-- * called by gfs2_readpage() once the required lock has been granted.
-- */
--
- static int __gfs2_readpage(void *file, struct page *page)
- {
- 	struct gfs2_inode *ip = GFS2_I(page->mapping->host);
- 	struct gfs2_sbd *sdp = GFS2_SB(page->mapping->host);
--
- 	int error;
- 
- 	if (i_blocksize(page->mapping->host) == PAGE_SIZE &&
-@@ -505,36 +494,11 @@ static int __gfs2_readpage(void *file, struct page *page)
-  * gfs2_readpage - read a page of a file
-  * @file: The file to read
-  * @page: The page of the file
-- *
-- * This deals with the locking required. We have to unlock and
-- * relock the page in order to get the locking in the right
-- * order.
-  */
- 
- static int gfs2_readpage(struct file *file, struct page *page)
- {
--	struct address_space *mapping = page->mapping;
--	struct gfs2_inode *ip = GFS2_I(mapping->host);
--	struct gfs2_holder gh;
--	int error;
--
--	unlock_page(page);
--	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
--	error = gfs2_glock_nq(&gh);
--	if (unlikely(error))
--		goto out;
--	error = AOP_TRUNCATED_PAGE;
--	lock_page(page);
--	if (page->mapping == mapping && !PageUptodate(page))
--		error = __gfs2_readpage(file, page);
--	else
--		unlock_page(page);
--	gfs2_glock_dq(&gh);
--out:
--	gfs2_holder_uninit(&gh);
--	if (error && error != AOP_TRUNCATED_PAGE)
--		lock_page(page);
--	return error;
-+	return __gfs2_readpage(file, page);
- }
- 
- /**
-@@ -598,16 +562,9 @@ static void gfs2_readahead(struct readahead_control *rac)
- {
- 	struct inode *inode = rac->mapping->host;
- 	struct gfs2_inode *ip = GFS2_I(inode);
--	struct gfs2_holder gh;
- 
--	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
--	if (gfs2_glock_nq(&gh))
--		goto out_uninit;
- 	if (!gfs2_is_stuffed(ip))
- 		mpage_readahead(rac, gfs2_block_map);
--	gfs2_glock_dq(&gh);
--out_uninit:
--	gfs2_holder_uninit(&gh);
- }
- 
- /**
-diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
-index fe305e4bfd37..bebde537ac8c 100644
---- a/fs/gfs2/file.c
-+++ b/fs/gfs2/file.c
-@@ -558,8 +558,29 @@ static vm_fault_t gfs2_page_mkwrite(struct vm_fault *vmf)
- 	return block_page_mkwrite_return(ret);
- }
- 
-+static vm_fault_t gfs2_fault(struct vm_fault *vmf)
-+{
-+	struct inode *inode = file_inode(vmf->vma->vm_file);
-+	struct gfs2_inode *ip = GFS2_I(inode);
-+	struct gfs2_holder gh;
-+	vm_fault_t ret;
-+	int err;
-+
-+	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+	err = gfs2_glock_nq(&gh);
-+	if (err) {
-+		ret = block_page_mkwrite_return(err);
-+		goto out_uninit;
-+	}
-+	ret = filemap_fault(vmf);
-+	gfs2_glock_dq(&gh);
-+out_uninit:
-+	gfs2_holder_uninit(&gh);
-+	return ret;
-+}
-+
- static const struct vm_operations_struct gfs2_vm_ops = {
--	.fault = filemap_fault,
-+	.fault = gfs2_fault,
- 	.map_pages = filemap_map_pages,
- 	.page_mkwrite = gfs2_page_mkwrite,
- };
-@@ -824,6 +845,9 @@ static ssize_t gfs2_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
- 
- static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
-+	struct gfs2_inode *ip;
-+	struct gfs2_holder gh;
-+	size_t written = 0;
- 	ssize_t ret;
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
-@@ -832,7 +856,31 @@ static ssize_t gfs2_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 			return ret;
- 		iocb->ki_flags &= ~IOCB_DIRECT;
- 	}
--	return generic_file_read_iter(iocb, to);
-+	iocb->ki_flags |= IOCB_NOIO;
-+	ret = generic_file_read_iter(iocb, to);
-+	iocb->ki_flags &= ~IOCB_NOIO;
-+	if (ret >= 0) {
-+		if (!iov_iter_count(to))
-+			return ret;
-+		written = ret;
-+	} else {
-+		if (ret != -EAGAIN)
-+			return ret;
-+		if (iocb->ki_flags & IOCB_NOWAIT)
-+			return ret;
-+	}
-+	ip = GFS2_I(iocb->ki_filp->f_mapping->host);
-+	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+	ret = gfs2_glock_nq(&gh);
-+	if (ret)
-+		goto out_uninit;
-+	ret = generic_file_read_iter(iocb, to);
-+	if (ret > 0)
-+		written += ret;
-+	gfs2_glock_dq(&gh);
-+out_uninit:
-+	gfs2_holder_uninit(&gh);
-+	return written ? written : ret;
- }
- 
- /**
 -- 
-2.26.2
+2.15.0
 
