@@ -2,79 +2,74 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00611208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C839208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="cWy9qNEv"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="KmkgZokp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgGCDxP (ORCPT
+        id S1726302AbgGCDxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:53:15 -0400
-Received: from mga17.intel.com ([192.55.52.151]:46455 "EHLO mga17.intel.com"
+        Thu, 2 Jul 2020 23:53:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:61965 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGCDxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:53:15 -0400
-IronPort-SDR: Jnwk72BMuANr+Jx1eLNpp/KH3e9hjBc7+v2Yln46jfELkliPxHgEtUQoYfLn4uexZCOR6yPo4O
- gzfczVMnQqsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="127173997"
+        id S1725915AbgGCDxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 23:53:19 -0400
+IronPort-SDR: jZO/tren4WxxKFyk3jWN6muhgRx7FMSc6HJIAKheVewgm99Mlfqw6c+StVRLbvZe0BRxvPb+lo
+ OZZ6xvCPk/yQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165143940"
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="127173997"
+   d="scan'208";a="165143940"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 20:46:54 -0700
-IronPort-SDR: YZZ+R8sVe8k1qFj8KQNvZeXLdifIDr45Mu67IsR7LIMHy6bqcSEax7RDD7ChYIKSpsaSXrFO4Q
- irZvrqPBEQnQ==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 20:53:17 -0700
+IronPort-SDR: wnk8vVRTIdNDnVHaSdZVjtJ/lsEHD21zgtDOUKrSG0x1FDJHPpdCnmq8i7boOr3d2dhW7tfQ8d
+ ps+WKyefsbRQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="482233378"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 20:46:54 -0700
-Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 2 Jul 2020 20:46:53 -0700
-Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
- orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 2 Jul 2020 20:46:53 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX151.amr.corp.intel.com (10.22.226.38) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 2 Jul 2020 20:46:53 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 2 Jul 2020 20:46:53 -0700
+   d="scan'208";a="482234204"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jul 2020 20:53:17 -0700
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX121.amr.corp.intel.com (10.22.225.226) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 2 Jul 2020 20:53:16 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kShw9uER5ZK5H5m5CsFor6jUUBDVjwiwDSRBryvtgamDh7AjwZOBYMxOySxMkd+YyNnuGTF34NfCKm3b94S5gEijfPhiVxs3Dq8gSJL3fq0pVCrpN8WLZhXQ0zNgXgDUVqG0OLNHUeUi2E7r2fsX9SlhYqqAdRSPtu8XbNAAWeH88xDhvaoM5U5x/dFILBZKVWRT/pgROzh8qUqbeo5h4ZONHxvdLYJR+wn2OtEh0Dq/sZQrXrAFqQiSkrx4FWAUL6q5CHZtREdaOQYzz+cQRv2OvbBPY+hQ/YOlmWEvzK5bLhXwIvaSGK62xVK+Fv5BSe0OedikfNPvGM+rcmIVLw==
+ b=GC/JISaJL3G51KDV5GCsYOpjau130YfASO5lJO0bDAQBIaMZFxXhheAdC+/+fNJB6cALZaMwsZYMzPcka2bl5kAJ/tNtpjlszYQjevdcbqR3tirifR6J9Uw3ORmMop9a+QP5Qsq2e8DJzy8IkAMMr4FKj7tkxqpWYSfFq+AsnFLAVW5u9c/PuKXguJm57FVho4T3zVD94wbG7p2CUQcW7nKTPfjih0LB1n2HRNCaWU3NBy3GUjRkLFHXr5tbwHwC5nMAGlQKUb9A3CzqZBu48S+Yg/CI+FYOCVhQIsyND1m0psxUFspg1A3S+es2OepivF44xrOA1GNhte5i6/cftA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nGHYCZnqILqpEC0fZb3cPCOerWsct4PM7eKLNYBt8pk=;
- b=h0MZRAjJA2r0RbeMa6VPHRASsZajLoZM1hwMEjCDiHKW/O8K6lLo5qcO3/0+HmRzMCI2F9Qhi/wu0KoKWzqqg/3HdRR9EHmyQTy+YUwujXXCeXwHTwPXlHKbJcQHM1bDgZ3TKyDQ7pVQArVC7+/tlQ8LDTLeEQDcKsbq8+6BDXE60Qg2pae4bC0qGWcYLQNpp1ZV+5uE5lpPqviAZaEBj2iwiYKGeQdb169CC8AJL8p3+heykBrYnpBHcHkdAGhpJxTrqcbekWBhM50v5q2G17V63pXsvFJp2AFjs1IiEs1lEyrdLBboD7fNSugnjTeYsqF0kg/loJ33ih7gjT32og==
+ bh=UqDhzxooY0X6jtji1FR8chh3mj8SaZlGIU5mxuWeZUo=;
+ b=BiYheyfuWI2j2FqLtvwuD7eIr0rhm6b7z80pMxkpvhltX0CDRrgDGcn1IwydZeu4HVIUA5rv48itd/ld6mRAVN0BymLyGlkhagRffvLdb/mxMJPkuEmVIa04OObEKM0jV1gw0KKR23jMQXQVNOcWhasZeKmc7lsYrxVkIqtlwvNf6+6+kYhwLBcqadLcTsMK3loSodwydoNywyQOhYxwMcJAN7u5+TW/l2elu3qtbQufMIdWVtBvTYQ2YrAxRjSYRbBXyLOhT/WPDpCjelA7k+dylc2Y0pxy2/S8HTOxFtpv4wr3X71NfYHAJy4sZt/lYar9g6rq85saBDwVm6Mjcw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
  s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nGHYCZnqILqpEC0fZb3cPCOerWsct4PM7eKLNYBt8pk=;
- b=cWy9qNEvjmrOm4wd4+E7fgmyL/9Ml9AQnctaUOC1bhWJjWD3STfUVy/XGwl75teU/WxNIhAFWB/G+2NqAet+pGOHb0NiILtJ0bCTJr+7ySVWMdkXKinOoeYOzb8P5AdyshZyICJ8q8Na9FFykNbsyq2f+Iz6x41MXmKxNpOlsmk=
+ bh=UqDhzxooY0X6jtji1FR8chh3mj8SaZlGIU5mxuWeZUo=;
+ b=KmkgZokpmoqNBiVAkwoy5QlXR/hSjuKw9b+4gOTa7colpNC9ZV6y1L0wPpsori1JCW5+Q8vW77P1WWlKIX9QCLaRp7zLJPJODuBE/DmbMNEf5mr+5Q2BAvmNIZg7PTPXX1Yq5cX6any2K3FdrNb232x9AImwVAs4VaCPYHLagCI=
 Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB4076.namprd11.prod.outlook.com (2603:10b6:5:197::17) with Microsoft
+ DM6PR11MB2537.namprd11.prod.outlook.com (2603:10b6:5:cd::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3153.28; Fri, 3 Jul 2020 03:46:52 +0000
+ 15.20.3153.23; Fri, 3 Jul 2020 03:53:14 +0000
 Received: from DM5PR11MB1435.namprd11.prod.outlook.com
  ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
  ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.033; Fri, 3 Jul 2020
- 03:46:52 +0000
+ 03:53:14 +0000
 From:   "Liu, Yi L" <yi.l.liu@intel.com>
 To:     Alex Williamson <alex.williamson@redhat.com>
 CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
@@ -91,15 +86,15 @@ CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
         "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 01/14] vfio/type1: Refactor vfio_iommu_type1_ioctl()
-Thread-Topic: [PATCH v3 01/14] vfio/type1: Refactor vfio_iommu_type1_ioctl()
-Thread-Index: AQHWSgRP5alWmuhHv0+o228EmqQebKj02VaAgABmNOA=
-Date:   Fri, 3 Jul 2020 03:46:51 +0000
-Message-ID: <DM5PR11MB143599F220FA4FCA5492B919C36A0@DM5PR11MB1435.namprd11.prod.outlook.com>
+Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Index: AQHWSgRQVmc9Qp+Xi0mQEumzIJrE0qj0n78AgAClxmA=
+Date:   Fri, 3 Jul 2020 03:53:14 +0000
+Message-ID: <DM5PR11MB14353D6E0E4CE34BD839663BC36A0@DM5PR11MB1435.namprd11.prod.outlook.com>
 References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-        <1592988927-48009-2-git-send-email-yi.l.liu@intel.com>
- <20200702152101.7eb1e77b@x1.home>
-In-Reply-To: <20200702152101.7eb1e77b@x1.home>
+        <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
+ <20200702115454.058bd198@x1.home>
+In-Reply-To: <20200702115454.058bd198@x1.home>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -111,31 +106,31 @@ authentication-results: redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
 x-originating-ip: [192.198.147.205]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dbe28961-be32-49a5-b44c-08d81f03b8ec
-x-ms-traffictypediagnostic: DM6PR11MB4076:
+x-ms-office365-filtering-correlation-id: d152ba31-51d2-4546-015c-08d81f049cf8
+x-ms-traffictypediagnostic: DM6PR11MB2537:
 x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4076EC25DA92C0A33EC812A7C36A0@DM6PR11MB4076.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:389;
+x-microsoft-antispam-prvs: <DM6PR11MB2537D298C5EEF680952C5374C36A0@DM6PR11MB2537.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 045315E1EE
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GgWGPEzEk8s0ZJvLeTDwS9yCrh/+zNdKqbrKUj1CjYgsg8UiiqM+wAc2sDfLQeb5fW7jU06X9EFZxeRizA+czBEVHWxliUJepXPmmRxL5Zd98OdJEXW2zxalC0gTNc7Z+Xsn1YmSNFd1JtW2p8JYWMUgMVJ1rxecZtPorZQK53zsb+E95ibBpIKqBnYSTmsdTmH2wLZzQAUX6s+vM7XmYnz43bwCxfVy0WDcj2pOFz+ZKgQsVn4D+jgVw/G20HyLfTS6k+D2C42xQkAjK0TctKp+chZL5ej9XhYquqTI0DjX/e9h7KVim4tY8+CTis/IXfLPaCLUH4hgq1HGWJB36Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(52536014)(7696005)(186003)(76116006)(2906002)(54906003)(86362001)(66476007)(5660300002)(316002)(66946007)(478600001)(33656002)(66446008)(64756008)(66556008)(6506007)(26005)(8676002)(53546011)(6916009)(30864003)(8936002)(83380400001)(7416002)(55016002)(71200400001)(9686003)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Jd+cBkStUCfYjmt4vQ1AVLvc+P3XcbTzWzdLif1JZzzqqU2F105xJ7Vb07opwh/uVGILGuNilsr3GyrBUHMcinV1boZGky2HFREY4zmM+lKVhRxzmrOoKY5hb6UOydR15BHjxKJ8/mtGFHqc2UKv0ELNhEXd6GHFMpVxrQzruPE13wCI5jhhGGoqGnXxcwWKD6GMKq7jJNa4qgvw2OXoTrH5kKBBkfvLys7OsebRPNsLSY5X6uoDcIw9+aorqW24SZi2KBrY6JRcvbgEWlBVIeVDrfdZucpx/RtDnSqJweCGM0dKRRS6TECuzkMFWMImYLl2S/OXrE338Vl5288m2WOqMR9bP0RXqH+agy6FMLlvXuqVK96wluMYkxyrBLaNs10SbQyYsoZsy98uVQr0jUdIljlf/xB7kXNPZWk0t8ubpSKaHcm0naWQEAQ9mbtWT1lOnqVqUmAaR//FvoEfiYgmrVjBdggHT4NR3CGe95a8Q0x/Tt0uY+3t49ewMn/L
+x-microsoft-antispam-message-info: 3abHtGmnBgaVtqxvynip+nhzy1pb65YHdVn8N5g2QPB9GYXEIYqzXP2BrNyLY0HQd3mT+coM+HFl8JMtRzpBy99GMzdWlTHfHzQGBFbPEB3FDOiB4I35+FTHDGUWlYpmRwAm/Ppqt681CkZQKTlRFOBDYtCZu3gWlVldpcWm+6+TBeSY6Rr5VM+pg8OcreVwrfFjGh2Vsc52kJyacvFyeN8demMKwAudCmnmA9EQjSpKFnQy6BHXpvU6X0hUgUwpn6TxYezJZ1ap2r8fWzRYqR8+6+XXWThLAY52r4rN758P7cqRpAJl3dQTOPDCv7Z8TZ2I6Eeqi8rLjr/eYR5lFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(71200400001)(6916009)(54906003)(9686003)(316002)(55016002)(83380400001)(52536014)(7416002)(26005)(33656002)(6506007)(478600001)(4326008)(8936002)(7696005)(186003)(2906002)(8676002)(5660300002)(86362001)(66556008)(64756008)(66446008)(76116006)(66476007)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: oHLQuncbA04bo7wQW/ET5fJ4wsDOWjWPu6MKGnCZ3NwzsnkwjBYrkB08YYr/G7Gv7zylokVbS6ld7XUH26KV4TzeekZf3H42C+p1mHgkA8gcTq2t7nOahiKf15g0l0QXUPBfsQoUudGgoBxXbwicgbJ6d813lLnETNxFnIbsj2DhGNJV6wwaNvchvUiJUbljBX7j4KsEFC8O97m2B8Rwt83amxABXME0FVm2MHt5nfESaUApLvEc5k5I1wSvO8UZiouA+VBDDpRSeSJV6tFHw74pdOVOzGn7Q+3DJKTzCY19diM+EUjDKZiVvUjq7Ck64cE+WqcGPgSodCsjWOwkKv7Z3yR1kUxBaHDCcGWzceZ1BLFI1K/PT7hmvXXGD77nvPsUtNOdJlrHv5ZI8pWQfo23tkJrwBRUkpAlvFBVZr8BoYvOsGH7Zpu5zhvUxZW84Y5YGcBUHxj2wahuwRxnMYNqd4V7hkof/EDw0LmJQpOQK+XdQd95mBQCra940JH4
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbe28961-be32-49a5-b44c-08d81f03b8ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 03:46:51.7160
+X-MS-Exchange-CrossTenant-Network-Message-Id: d152ba31-51d2-4546-015c-08d81f049cf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 03:53:14.5145
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wlx0tm2plMU1YrTDkMpsfF5so7POcFYIr5gPgHaFDajyk96OZYl3lJyU4aPwtbyGdhLk67hNX+1mStOTJ92oQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4076
+X-MS-Exchange-CrossTenant-userprincipalname: T+/sL+heOP52hMKzlkD0DCyrTbwSmEMWz7wforblpbfDx1Fsfl3fftatEPA7xJi+SvvU7NXxboPC78pHSOO6aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2537
 X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -143,14 +138,23 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 > From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, July 3, 2020 5:21 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Friday, July 3, 2020 1:55 AM
 >=20
-> On Wed, 24 Jun 2020 01:55:14 -0700
+> On Wed, 24 Jun 2020 01:55:15 -0700
 > Liu Yi L <yi.l.liu@intel.com> wrote:
 >=20
-> > This patch refactors the vfio_iommu_type1_ioctl() to use switch
-> > instead of if-else, and each cmd got a helper function.
+> > IOMMUs that support nesting translation needs report the capability
+> > info to userspace, e.g. the format of first level/stage paging structur=
+es.
+> >
+> > This patch reports nesting info by DOMAIN_ATTR_NESTING. Caller can get
+> > nesting info after setting DOMAIN_ATTR_NESTING.
+> >
+> > v2 -> v3:
+> > *) remvoe cap/ecap_mask in iommu_nesting_info.
+> > *) reuse DOMAIN_ATTR_NESTING to get nesting info.
+> > *) return an empty iommu_nesting_info for SMMU drivers per Jean'
+> >    suggestion.
 > >
 > > Cc: Kevin Tian <kevin.tian@intel.com>
 > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -159,491 +163,242 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > > Cc: Joerg Roedel <joro@8bytes.org>
 > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Suggested-by: Christoph Hellwig <hch@infradead.org>
 > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 392
-> > ++++++++++++++++++++++------------------
-> >  1 file changed, 213 insertions(+), 179 deletions(-)
+> >  drivers/iommu/arm-smmu-v3.c | 29 ++++++++++++++++++++--
+> >  drivers/iommu/arm-smmu.c    | 29 ++++++++++++++++++++--
+> >  include/uapi/linux/iommu.h  | 59
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 113 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> > index f578677..0c45d4d 100644
+> > --- a/drivers/iommu/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -3019,6 +3019,32 @@ static struct iommu_group
+> *arm_smmu_device_group(struct device *dev)
+> >  	return group;
+> >  }
+> >
+> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
+> *smmu_domain,
+> > +					void *data)
+> > +{
+> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
+a;
+> > +	u32 size;
+> > +
+> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
+> > +		return -ENODEV;
+> > +
+> > +	size =3D sizeof(struct iommu_nesting_info);
+> > +
+> > +	/*
+> > +	 * if provided buffer size is not equal to the size, should
+> > +	 * return 0 and also the expected buffer size to caller.
+> > +	 */
+> > +	if (info->size !=3D size) {
+> > +		info->size =3D size;
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* report an empty iommu_nesting_info for now */
+> > +	memset(info, 0x0, size);
+> > +	info->size =3D size;
+> > +	return 0;
+> > +}
+> > +
+> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> >  				    enum iommu_attr attr, void *data)  { @@ -
+> 3028,8 +3054,7 @@
+> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> >  	case IOMMU_DOMAIN_UNMANAGED:
+> >  		switch (attr) {
+> >  		case DOMAIN_ATTR_NESTING:
+> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
+> ARM_SMMU_DOMAIN_NESTED);
+> > -			return 0;
+> > +			return arm_smmu_domain_nesting_info(smmu_domain,
+> data);
+> >  		default:
+> >  			return -ENODEV;
+> >  		}
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c index
+> > 243bc4c..908607d 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -1506,6 +1506,32 @@ static struct iommu_group
+> *arm_smmu_device_group(struct device *dev)
+> >  	return group;
+> >  }
+> >
+> > +static int arm_smmu_domain_nesting_info(struct arm_smmu_domain
+> *smmu_domain,
+> > +					void *data)
+> > +{
+> > +	struct iommu_nesting_info *info =3D (struct iommu_nesting_info *) dat=
+a;
+> > +	u32 size;
+> > +
+> > +	if (!info || smmu_domain->stage !=3D ARM_SMMU_DOMAIN_NESTED)
+> > +		return -ENODEV;
+> > +
+> > +	size =3D sizeof(struct iommu_nesting_info);
+> > +
+> > +	/*
+> > +	 * if provided buffer size is not equal to the size, should
+> > +	 * return 0 and also the expected buffer size to caller.
+> > +	 */
+> > +	if (info->size !=3D size) {
+> > +		info->size =3D size;
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* report an empty iommu_nesting_info for now */
+> > +	memset(info, 0x0, size);
+> > +	info->size =3D size;
+> > +	return 0;
+> > +}
+> > +
+> >  static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> >  				    enum iommu_attr attr, void *data)  { @@ -
+> 1515,8 +1541,7 @@
+> > static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> >  	case IOMMU_DOMAIN_UNMANAGED:
+> >  		switch (attr) {
+> >  		case DOMAIN_ATTR_NESTING:
+> > -			*(int *)data =3D (smmu_domain->stage =3D=3D
+> ARM_SMMU_DOMAIN_NESTED);
+> > -			return 0;
+> > +			return arm_smmu_domain_nesting_info(smmu_domain,
+> data);
+> >  		default:
+> >  			return -ENODEV;
+> >  		}
+> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> > index 1afc661..898c99a 100644
+> > --- a/include/uapi/linux/iommu.h
+> > +++ b/include/uapi/linux/iommu.h
+> > @@ -332,4 +332,63 @@ struct iommu_gpasid_bind_data {
+> >  	} vendor;
+> >  };
+> >
+> > +/*
+> > + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
+> > + *				user space should check it before using
+> > + *				nesting capability.
+> > + *
+> > + * @size:	size of the whole structure
+> > + * @format:	PASID table entry format, the same definition with
+> > + *		@format of struct iommu_gpasid_bind_data.
+> > + * @features:	supported nesting features.
+> > + * @flags:	currently reserved for future extension.
+> > + * @data:	vendor specific cap info.
+> > + *
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | feature       |  Notes                                           =
+  |
+> > + *
+> >
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =3D=3D=3D=3D=3D=3D=3D=3D
+> > ++
+> > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used=
+  |
+> > + * |               |  in the system should be allocated by host kernel=
+  |
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could =
+  |
+> > + * |               |  either be a host PASID passed in bind request or=
+  |
+> > + * |               |  default PASIDs (e.g. default PASID of aux-domain=
+) |
+> > + * +---------------+--------------------------------------------------=
+--+
+> > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU     =
+  |
+> > + *
+> > ++---------------+----------------------------------------------------
+> > ++
 >=20
-> I can go ahead and grab this one for my v5.9 next branch.  Thanks,
+> Agree with the previous comments on these descriptions and Kevin's sugges=
+tions.
 
-thanks, that would be great help. I'll monitor your next branch on github.
+I see. will follow the suggestions.
+
+> > + *
+> > + */
+> > +struct iommu_nesting_info {
+> > +	__u32	size;
+> > +	__u32	format;
+> > +	__u32	features;
+> > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> > +	__u32	flags;
+> > +	__u8	data[];
+>=20
+> How does the user determine which vendor structure is provided in data[]?
+
+it can be deduced by the @format field. @format field follows the definitio=
+n
+in the iommu_gpasid_bind_data.
+
+struct iommu_gpasid_bind_data {
+        __u32 argsz;
+#define IOMMU_GPASID_BIND_VERSION_1     1
+        __u32 version;
+#define IOMMU_PASID_FORMAT_INTEL_VTD    1
+        __u32 format;
+#define IOMMU_SVA_GPASID_VAL    (1 << 0) /* guest PASID valid */
+        __u64 flags;
+        __u64 gpgd;
+        __u64 hpasid;
+        __u64 gpasid;
+        __u32 addr_width;
+        __u8  padding[12];
+        /* Vendor specific data */
+        union {
+                struct iommu_gpasid_bind_data_vtd vtd;
+        } vendor;
+};
 
 Regards,
 Yi Liu
 
+> Thanks,
+>=20
 > Alex
 >=20
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c index 5e556ac..7accb59 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -2453,6 +2453,23 @@ static int vfio_domains_have_iommu_cache(struct
-> vfio_iommu *iommu)
-> >  	return ret;
-> >  }
-> >
-> > +static int vfio_iommu_type1_check_extension(struct vfio_iommu *iommu,
-> > +					    unsigned long arg)
-> > +{
-> > +	switch (arg) {
-> > +	case VFIO_TYPE1_IOMMU:
-> > +	case VFIO_TYPE1v2_IOMMU:
-> > +	case VFIO_TYPE1_NESTING_IOMMU:
-> > +		return 1;
-> > +	case VFIO_DMA_CC_IOMMU:
-> > +		if (!iommu)
-> > +			return 0;
-> > +		return vfio_domains_have_iommu_cache(iommu);
-> > +	default:
-> > +		return 0;
-> > +	}
-> > +}
+> > +};
 > > +
-> >  static int vfio_iommu_iova_add_cap(struct vfio_info_cap *caps,
-> >  		 struct vfio_iommu_type1_info_cap_iova_range *cap_iovas,
-> >  		 size_t size)
-> > @@ -2529,238 +2546,255 @@ static int
-> vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
-> >  	return vfio_info_add_capability(caps, &cap_mig.header,
-> > sizeof(cap_mig));  }
-> >
-> > -static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > -				   unsigned int cmd, unsigned long arg)
-> > +static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
-> > +				     unsigned long arg)
-> >  {
-> > -	struct vfio_iommu *iommu =3D iommu_data;
-> > +	struct vfio_iommu_type1_info info;
-> >  	unsigned long minsz;
-> > +	struct vfio_info_cap caps =3D { .buf =3D NULL, .size =3D 0 };
-> > +	unsigned long capsz;
-> > +	int ret;
-> >
-> > -	if (cmd =3D=3D VFIO_CHECK_EXTENSION) {
-> > -		switch (arg) {
-> > -		case VFIO_TYPE1_IOMMU:
-> > -		case VFIO_TYPE1v2_IOMMU:
-> > -		case VFIO_TYPE1_NESTING_IOMMU:
-> > -			return 1;
-> > -		case VFIO_DMA_CC_IOMMU:
-> > -			if (!iommu)
-> > -				return 0;
-> > -			return vfio_domains_have_iommu_cache(iommu);
-> > -		default:
-> > -			return 0;
-> > -		}
-> > -	} else if (cmd =3D=3D VFIO_IOMMU_GET_INFO) {
-> > -		struct vfio_iommu_type1_info info;
-> > -		struct vfio_info_cap caps =3D { .buf =3D NULL, .size =3D 0 };
-> > -		unsigned long capsz;
-> > -		int ret;
-> > -
-> > -		minsz =3D offsetofend(struct vfio_iommu_type1_info,
-> iova_pgsizes);
-> > +	minsz =3D offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
-> >
-> > -		/* For backward compatibility, cannot require this */
-> > -		capsz =3D offsetofend(struct vfio_iommu_type1_info, cap_offset);
-> > +	/* For backward compatibility, cannot require this */
-> > +	capsz =3D offsetofend(struct vfio_iommu_type1_info, cap_offset);
-> >
-> > -		if (copy_from_user(&info, (void __user *)arg, minsz))
-> > -			return -EFAULT;
-> > +	if (copy_from_user(&info, (void __user *)arg, minsz))
-> > +		return -EFAULT;
-> >
-> > -		if (info.argsz < minsz)
-> > -			return -EINVAL;
-> > +	if (info.argsz < minsz)
-> > +		return -EINVAL;
-> >
-> > -		if (info.argsz >=3D capsz) {
-> > -			minsz =3D capsz;
-> > -			info.cap_offset =3D 0; /* output, no-recopy necessary */
-> > -		}
-> > +	if (info.argsz >=3D capsz) {
-> > +		minsz =3D capsz;
-> > +		info.cap_offset =3D 0; /* output, no-recopy necessary */
-> > +	}
-> >
-> > -		mutex_lock(&iommu->lock);
-> > -		info.flags =3D VFIO_IOMMU_INFO_PGSIZES;
-> > +	mutex_lock(&iommu->lock);
-> > +	info.flags =3D VFIO_IOMMU_INFO_PGSIZES;
-> >
-> > -		info.iova_pgsizes =3D iommu->pgsize_bitmap;
-> > +	info.iova_pgsizes =3D iommu->pgsize_bitmap;
-> >
-> > -		ret =3D vfio_iommu_migration_build_caps(iommu, &caps);
-> > +	ret =3D vfio_iommu_migration_build_caps(iommu, &caps);
-> >
-> > -		if (!ret)
-> > -			ret =3D vfio_iommu_iova_build_caps(iommu, &caps);
-> > +	if (!ret)
-> > +		ret =3D vfio_iommu_iova_build_caps(iommu, &caps);
-> >
-> > -		mutex_unlock(&iommu->lock);
-> > +	mutex_unlock(&iommu->lock);
-> >
-> > -		if (ret)
-> > -			return ret;
-> > +	if (ret)
-> > +		return ret;
-> >
-> > -		if (caps.size) {
-> > -			info.flags |=3D VFIO_IOMMU_INFO_CAPS;
-> > +	if (caps.size) {
-> > +		info.flags |=3D VFIO_IOMMU_INFO_CAPS;
-> >
-> > -			if (info.argsz < sizeof(info) + caps.size) {
-> > -				info.argsz =3D sizeof(info) + caps.size;
-> > -			} else {
-> > -				vfio_info_cap_shift(&caps, sizeof(info));
-> > -				if (copy_to_user((void __user *)arg +
-> > -						sizeof(info), caps.buf,
-> > -						caps.size)) {
-> > -					kfree(caps.buf);
-> > -					return -EFAULT;
-> > -				}
-> > -				info.cap_offset =3D sizeof(info);
-> > +		if (info.argsz < sizeof(info) + caps.size) {
-> > +			info.argsz =3D sizeof(info) + caps.size;
-> > +		} else {
-> > +			vfio_info_cap_shift(&caps, sizeof(info));
-> > +			if (copy_to_user((void __user *)arg +
-> > +					sizeof(info), caps.buf,
-> > +					caps.size)) {
-> > +				kfree(caps.buf);
-> > +				return -EFAULT;
-> >  			}
-> > -
-> > -			kfree(caps.buf);
-> > +			info.cap_offset =3D sizeof(info);
-> >  		}
-> >
-> > -		return copy_to_user((void __user *)arg, &info, minsz) ?
-> > -			-EFAULT : 0;
-> > +		kfree(caps.buf);
-> > +	}
-> >
-> > -	} else if (cmd =3D=3D VFIO_IOMMU_MAP_DMA) {
-> > -		struct vfio_iommu_type1_dma_map map;
-> > -		uint32_t mask =3D VFIO_DMA_MAP_FLAG_READ |
-> > -				VFIO_DMA_MAP_FLAG_WRITE;
-> > +	return copy_to_user((void __user *)arg, &info, minsz) ?
-> > +			-EFAULT : 0;
-> > +}
-> >
-> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dma_map, size);
-> > +static int vfio_iommu_type1_map_dma(struct vfio_iommu *iommu,
-> > +				    unsigned long arg)
-> > +{
-> > +	struct vfio_iommu_type1_dma_map map;
-> > +	unsigned long minsz;
-> > +	uint32_t mask =3D VFIO_DMA_MAP_FLAG_READ |
-> > +			VFIO_DMA_MAP_FLAG_WRITE;
-> >
-> > -		if (copy_from_user(&map, (void __user *)arg, minsz))
-> > -			return -EFAULT;
-> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dma_map, size);
-> >
-> > -		if (map.argsz < minsz || map.flags & ~mask)
-> > -			return -EINVAL;
-> > +	if (copy_from_user(&map, (void __user *)arg, minsz))
-> > +		return -EFAULT;
-> >
-> > -		return vfio_dma_do_map(iommu, &map);
-> > +	if (map.argsz < minsz || map.flags & ~mask)
-> > +		return -EINVAL;
-> >
-> > -	} else if (cmd =3D=3D VFIO_IOMMU_UNMAP_DMA) {
-> > -		struct vfio_iommu_type1_dma_unmap unmap;
-> > -		struct vfio_bitmap bitmap =3D { 0 };
-> > -		int ret;
-> > +	return vfio_dma_do_map(iommu, &map); }
-> >
-> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dma_unmap,
-> size);
-> > +static int vfio_iommu_type1_unmap_dma(struct vfio_iommu *iommu,
-> > +				      unsigned long arg)
-> > +{
-> > +	struct vfio_iommu_type1_dma_unmap unmap;
-> > +	struct vfio_bitmap bitmap =3D { 0 };
-> > +	unsigned long minsz;
-> > +	long ret;
-> >
-> > -		if (copy_from_user(&unmap, (void __user *)arg, minsz))
-> > -			return -EFAULT;
-> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dma_unmap, size);
-> >
-> > -		if (unmap.argsz < minsz ||
-> > -		    unmap.flags &
-> ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
-> > -			return -EINVAL;
-> > +	if (copy_from_user(&unmap, (void __user *)arg, minsz))
-> > +		return -EFAULT;
-> >
-> > -		if (unmap.flags &
-> VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
-> > -			unsigned long pgshift;
-> > +	if (unmap.argsz < minsz ||
-> > +	    unmap.flags & ~VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP)
-> > +		return -EINVAL;
-> >
-> > -			if (unmap.argsz < (minsz + sizeof(bitmap)))
-> > -				return -EINVAL;
-> > +	if (unmap.flags & VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP) {
-> > +		unsigned long pgshift;
-> >
-> > -			if (copy_from_user(&bitmap,
-> > -					   (void __user *)(arg + minsz),
-> > -					   sizeof(bitmap)))
-> > -				return -EFAULT;
-> > +		if (unmap.argsz < (minsz + sizeof(bitmap)))
-> > +			return -EINVAL;
-> >
-> > -			if (!access_ok((void __user *)bitmap.data, bitmap.size))
-> > -				return -EINVAL;
-> > +		if (copy_from_user(&bitmap,
-> > +				   (void __user *)(arg + minsz),
-> > +				   sizeof(bitmap)))
-> > +			return -EFAULT;
-> >
-> > -			pgshift =3D __ffs(bitmap.pgsize);
-> > -			ret =3D verify_bitmap_size(unmap.size >> pgshift,
-> > -						 bitmap.size);
-> > -			if (ret)
-> > -				return ret;
-> > -		}
-> > +		if (!access_ok((void __user *)bitmap.data, bitmap.size))
-> > +			return -EINVAL;
-> >
-> > -		ret =3D vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-> > +		pgshift =3D __ffs(bitmap.pgsize);
-> > +		ret =3D verify_bitmap_size(unmap.size >> pgshift,
-> > +					 bitmap.size);
-> >  		if (ret)
-> >  			return ret;
-> > +	}
+> > +/*
+> > + * struct iommu_nesting_info_vtd - Intel VT-d specific nesting info
+> > + *
+> > + *
+> > + * @flags:	VT-d specific flags. Currently reserved for future
+> > + *		extension.
+> > + * @addr_width:	The output addr width of first level/stage translation
+> > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
+> > + *		support.
+> > + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
+> > + *		register.
+> > + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
+> > + *		extended capability register.
+> > + */
+> > +struct iommu_nesting_info_vtd {
+> > +	__u32	flags;
+> > +	__u16	addr_width;
+> > +	__u16	pasid_bits;
+> > +	__u64	cap_reg;
+> > +	__u64	ecap_reg;
+> > +};
 > > +
-> > +	ret =3D vfio_dma_do_unmap(iommu, &unmap, &bitmap);
-> > +	if (ret)
-> > +		return ret;
-> >
-> > -		return copy_to_user((void __user *)arg, &unmap, minsz) ?
-> > +	return copy_to_user((void __user *)arg, &unmap, minsz) ?
-> >  			-EFAULT : 0;
-> > -	} else if (cmd =3D=3D VFIO_IOMMU_DIRTY_PAGES) {
-> > -		struct vfio_iommu_type1_dirty_bitmap dirty;
-> > -		uint32_t mask =3D VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
-> > -				VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
-> > -
-> 	VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
-> > -		int ret =3D 0;
-> > +}
-> >
-> > -		if (!iommu->v2)
-> > -			return -EACCES;
-> > +static int vfio_iommu_type1_dirty_pages(struct vfio_iommu *iommu,
-> > +					unsigned long arg)
-> > +{
-> > +	struct vfio_iommu_type1_dirty_bitmap dirty;
-> > +	uint32_t mask =3D VFIO_IOMMU_DIRTY_PAGES_FLAG_START |
-> > +			VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP |
-> > +			VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP;
-> > +	unsigned long minsz;
-> > +	int ret =3D 0;
-> >
-> > -		minsz =3D offsetofend(struct vfio_iommu_type1_dirty_bitmap,
-> > -				    flags);
-> > +	if (!iommu->v2)
-> > +		return -EACCES;
-> >
-> > -		if (copy_from_user(&dirty, (void __user *)arg, minsz))
-> > -			return -EFAULT;
-> > +	minsz =3D offsetofend(struct vfio_iommu_type1_dirty_bitmap,
-> > +			    flags);
-> >
-> > -		if (dirty.argsz < minsz || dirty.flags & ~mask)
-> > -			return -EINVAL;
-> > +	if (copy_from_user(&dirty, (void __user *)arg, minsz))
-> > +		return -EFAULT;
-> > +
-> > +	if (dirty.argsz < minsz || dirty.flags & ~mask)
-> > +		return -EINVAL;
-> > +
-> > +	/* only one flag should be set at a time */
-> > +	if (__ffs(dirty.flags) !=3D __fls(dirty.flags))
-> > +		return -EINVAL;
-> > +
-> > +	if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
-> > +		size_t pgsize;
-> >
-> > -		/* only one flag should be set at a time */
-> > -		if (__ffs(dirty.flags) !=3D __fls(dirty.flags))
-> > +		mutex_lock(&iommu->lock);
-> > +		pgsize =3D 1 << __ffs(iommu->pgsize_bitmap);
-> > +		if (!iommu->dirty_page_tracking) {
-> > +			ret =3D vfio_dma_bitmap_alloc_all(iommu, pgsize);
-> > +			if (!ret)
-> > +				iommu->dirty_page_tracking =3D true;
-> > +		}
-> > +		mutex_unlock(&iommu->lock);
-> > +		return ret;
-> > +	} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP) {
-> > +		mutex_lock(&iommu->lock);
-> > +		if (iommu->dirty_page_tracking) {
-> > +			iommu->dirty_page_tracking =3D false;
-> > +			vfio_dma_bitmap_free_all(iommu);
-> > +		}
-> > +		mutex_unlock(&iommu->lock);
-> > +		return 0;
-> > +	} else if (dirty.flags &
-> > +			 VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
-> > +		struct vfio_iommu_type1_dirty_bitmap_get range;
-> > +		unsigned long pgshift;
-> > +		size_t data_size =3D dirty.argsz - minsz;
-> > +		size_t iommu_pgsize;
-> > +
-> > +		if (!data_size || data_size < sizeof(range))
-> >  			return -EINVAL;
-> >
-> > -		if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_START) {
-> > -			size_t pgsize;
-> > +		if (copy_from_user(&range, (void __user *)(arg + minsz),
-> > +				   sizeof(range)))
-> > +			return -EFAULT;
-> >
-> > -			mutex_lock(&iommu->lock);
-> > -			pgsize =3D 1 << __ffs(iommu->pgsize_bitmap);
-> > -			if (!iommu->dirty_page_tracking) {
-> > -				ret =3D vfio_dma_bitmap_alloc_all(iommu, pgsize);
-> > -				if (!ret)
-> > -					iommu->dirty_page_tracking =3D true;
-> > -			}
-> > -			mutex_unlock(&iommu->lock);
-> > +		if (range.iova + range.size < range.iova)
-> > +			return -EINVAL;
-> > +		if (!access_ok((void __user *)range.bitmap.data,
-> > +			       range.bitmap.size))
-> > +			return -EINVAL;
-> > +
-> > +		pgshift =3D __ffs(range.bitmap.pgsize);
-> > +		ret =3D verify_bitmap_size(range.size >> pgshift,
-> > +					 range.bitmap.size);
-> > +		if (ret)
-> >  			return ret;
-> > -		} else if (dirty.flags & VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP)
-> {
-> > -			mutex_lock(&iommu->lock);
-> > -			if (iommu->dirty_page_tracking) {
-> > -				iommu->dirty_page_tracking =3D false;
-> > -				vfio_dma_bitmap_free_all(iommu);
-> > -			}
-> > -			mutex_unlock(&iommu->lock);
-> > -			return 0;
-> > -		} else if (dirty.flags &
-> > -
-> VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP) {
-> > -			struct vfio_iommu_type1_dirty_bitmap_get range;
-> > -			unsigned long pgshift;
-> > -			size_t data_size =3D dirty.argsz - minsz;
-> > -			size_t iommu_pgsize;
-> > -
-> > -			if (!data_size || data_size < sizeof(range))
-> > -				return -EINVAL;
-> > -
-> > -			if (copy_from_user(&range, (void __user *)(arg + minsz),
-> > -					   sizeof(range)))
-> > -				return -EFAULT;
-> >
-> > -			if (range.iova + range.size < range.iova)
-> > -				return -EINVAL;
-> > -			if (!access_ok((void __user *)range.bitmap.data,
-> > -				       range.bitmap.size))
-> > -				return -EINVAL;
-> > +		mutex_lock(&iommu->lock);
-> >
-> > -			pgshift =3D __ffs(range.bitmap.pgsize);
-> > -			ret =3D verify_bitmap_size(range.size >> pgshift,
-> > -						 range.bitmap.size);
-> > -			if (ret)
-> > -				return ret;
-> > +		iommu_pgsize =3D (size_t)1 << __ffs(iommu->pgsize_bitmap);
-> >
-> > -			mutex_lock(&iommu->lock);
-> > +		/* allow only smallest supported pgsize */
-> > +		if (range.bitmap.pgsize !=3D iommu_pgsize) {
-> > +			ret =3D -EINVAL;
-> > +			goto out_unlock;
-> > +		}
-> > +		if (range.iova & (iommu_pgsize - 1)) {
-> > +			ret =3D -EINVAL;
-> > +			goto out_unlock;
-> > +		}
-> > +		if (!range.size || range.size & (iommu_pgsize - 1)) {
-> > +			ret =3D -EINVAL;
-> > +			goto out_unlock;
-> > +		}
-> >
-> > -			iommu_pgsize =3D (size_t)1 << __ffs(iommu-
-> >pgsize_bitmap);
-> > +		if (iommu->dirty_page_tracking)
-> > +			ret =3D vfio_iova_dirty_bitmap(range.bitmap.data,
-> > +					iommu, range.iova, range.size,
-> > +					range.bitmap.pgsize);
-> > +		else
-> > +			ret =3D -EINVAL;
-> > +out_unlock:
-> > +		mutex_unlock(&iommu->lock);
-> >
-> > -			/* allow only smallest supported pgsize */
-> > -			if (range.bitmap.pgsize !=3D iommu_pgsize) {
-> > -				ret =3D -EINVAL;
-> > -				goto out_unlock;
-> > -			}
-> > -			if (range.iova & (iommu_pgsize - 1)) {
-> > -				ret =3D -EINVAL;
-> > -				goto out_unlock;
-> > -			}
-> > -			if (!range.size || range.size & (iommu_pgsize - 1)) {
-> > -				ret =3D -EINVAL;
-> > -				goto out_unlock;
-> > -			}
-> > +		return ret;
-> > +	}
-> >
-> > -			if (iommu->dirty_page_tracking)
-> > -				ret =3D vfio_iova_dirty_bitmap(range.bitmap.data,
-> > -						iommu, range.iova, range.size,
-> > -						range.bitmap.pgsize);
-> > -			else
-> > -				ret =3D -EINVAL;
-> > -out_unlock:
-> > -			mutex_unlock(&iommu->lock);
-> > +	return -EINVAL;
-> > +}
-> >
-> > -			return ret;
-> > -		}
-> > +static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > +				   unsigned int cmd, unsigned long arg) {
-> > +	struct vfio_iommu *iommu =3D iommu_data;
-> > +
-> > +	switch (cmd) {
-> > +	case VFIO_CHECK_EXTENSION:
-> > +		return vfio_iommu_type1_check_extension(iommu, arg);
-> > +	case VFIO_IOMMU_GET_INFO:
-> > +		return vfio_iommu_type1_get_info(iommu, arg);
-> > +	case VFIO_IOMMU_MAP_DMA:
-> > +		return vfio_iommu_type1_map_dma(iommu, arg);
-> > +	case VFIO_IOMMU_UNMAP_DMA:
-> > +		return vfio_iommu_type1_unmap_dma(iommu, arg);
-> > +	case VFIO_IOMMU_DIRTY_PAGES:
-> > +		return vfio_iommu_type1_dirty_pages(iommu, arg);
-> >  	}
-> >
-> >  	return -ENOTTY;
+> >  #endif /* _UAPI_IOMMU_H */
 
