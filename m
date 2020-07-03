@@ -2,344 +2,144 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C07DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C34AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE59520B80
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FyDrVUHQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oK0rbY37"
+	by mail.kernel.org (Postfix) with ESMTP id 4A87C20BED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGCM4R (ORCPT
+        id S1726418AbgGCM7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:56:17 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:33833 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgGCM4Q (ORCPT
+        Fri, 3 Jul 2020 08:59:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2704 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726074AbgGCM7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:56:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3E8EE580A96;
-        Fri,  3 Jul 2020 08:56:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 03 Jul 2020 08:56:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=uPpl+lfVxDbJCXigKHHiQzdsypG
-        IWPPlBUTcBSClrZ8=; b=FyDrVUHQOvVC5qJxgrfdCHEN06b7Fnh5+jNNx3bcmQv
-        dHjsr7XNJb6D857VWQ8I1d2I/UG9RLg6cJ6QzA4Yp7ioAkMMdUyjusSIQZrxqnc9
-        h7ZLv8eUM02CkvXHQU641qgofhv884f+boCkGiaXwbR9HfJiZ0KpCexNRjrdan/j
-        8ovqq+w/+vx1fhYhZ9kUPdolMWnw+cjCQYZGe6VP6yvPvflN78gdm2jRyzeRhSqW
-        qReyAhltIMJf5f5zkIE/1nTmBNSmT/mJM43FhyCk37F8rmcoY/PCrSDnriJGtOqX
-        a/Yzya1huw+b7uOT2ffL2woxFxp43UcLnUMF9Aprgcg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uPpl+l
-        fVxDbJCXigKHHiQzdsypGIWPPlBUTcBSClrZ8=; b=oK0rbY37kDFFgiQoAl5J5z
-        67cDSbQJ+CJb3Qet03p0wy1pQPq3NZ/XU4Oq2KGULfBsOiTb9j+yR2bHW2HzjXcP
-        2V3AyVJS6//Z3WC+wAY15ojAvVYhLFfyIWBFME3Mpm7uM3c4SXPcbGp5+NiWQ8fK
-        AzGgyjk6WSj5okJuHrqr/gGjfW7UY4GKgHUBvs5ebF88TVyuXyEdYquwfi472NrV
-        sz2KgbCgd8+ytFnIDVlxQvHsouXP4ZeKAwjoNbn3gFqq036iWJNgtwlKW0faXwhq
-        yHtXipBTMxO5PZ6ViqX1HtVEeTD4UOqiGhLN7FvETdzbyBtLpjC2CTP12tGg06sg
-        ==
-X-ME-Sender: <xms:7Sr_XjzVID-yWnPQf-i1qobVycroPh4YqY-ZGrnbmtgmV0_dkzf1Mw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdeigdehkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeekgfeludfflefhteejvdekveefgeegvedtgfeiuedugefgfffhjeeludehffel
-    heenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpphgrsh
-    htvggsihhnrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhord
-    htvggthh
-X-ME-Proxy: <xmx:7Sr_XrTO1EPFgIwfnY7ApLJVswAdRwbrA9Z9pU1m4zayNIDPOw0RDA>
-    <xmx:7Sr_XtUSorAVpF9tGyCVf7_dorDeM79qG7WirhecQDBdoZg_yFPL7Q>
-    <xmx:7Sr_XtjOLCkaG4MVFaDkdp0pcthkv59EsPJiSMuL2lwjYjQU89s0LA>
-    <xmx:7ir_XptV86QAr12e4tOQpKg4CuVRT-MCOVvfq5IzicNuL8NOnermMg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0BF42328005D;
-        Fri,  3 Jul 2020 08:56:12 -0400 (EDT)
-Date:   Fri, 3 Jul 2020 14:56:11 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200703125611.7pny24kpqkvxiir6@gilmour.lan>
-References: <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
- <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
- <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
- <20200528073055.znutrhkryzu3grrl@gilmour.lan>
- <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
- <20200602110442.2ceuymhwuomvjj6i@gilmour>
- <CAPpJ_eePgLxO5URB3V5aeNMvBHOp+vXrW=+6SnVt4mB9J8oR+Q@mail.gmail.com>
- <20200629142145.aa2vdfkgeugrze4c@gilmour.lan>
- <CAPpJ_efVO9HxrYzbrZgYpcniX30YtvthcYAc=AOabLsThkO02Q@mail.gmail.com>
+        Fri, 3 Jul 2020 08:59:43 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063CUb5E062981;
+        Fri, 3 Jul 2020 08:58:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 321cve9ke5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 08:58:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063CWM5N068303;
+        Fri, 3 Jul 2020 08:58:30 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 321cve9kdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 08:58:30 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063CkiGd024370;
+        Fri, 3 Jul 2020 12:58:28 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 31wwch6tw9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 12:58:28 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063CwQNW63176796
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jul 2020 12:58:26 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73BE052051;
+        Fri,  3 Jul 2020 12:58:26 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id DDCCA5204E;
+        Fri,  3 Jul 2020 12:58:23 +0000 (GMT)
+Date:   Fri, 3 Jul 2020 18:28:23 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Michal Such?nek <msuchanek@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Christopher Lameter <cl@linux.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+Message-ID: <20200703125823.GA26243@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200701084200.GN2369@dhcp22.suse.cz>
+ <20200701100442.GB17918@linux.vnet.ibm.com>
+ <184102af-ecf2-c834-db46-173ab2e66f51@redhat.com>
+ <20200701110145.GC17918@linux.vnet.ibm.com>
+ <0468f965-8762-76a3-93de-3987cf859927@redhat.com>
+ <12945273-d788-710d-e8d7-974966529c7d@redhat.com>
+ <20200701122110.GT2369@dhcp22.suse.cz>
+ <20200703091001.GJ21462@kitsune.suse.cz>
+ <20200703092414.GR18446@dhcp22.suse.cz>
+ <20200703105944.GS18446@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yksztr2amnkhaur2"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAPpJ_efVO9HxrYzbrZgYpcniX30YtvthcYAc=AOabLsThkO02Q@mail.gmail.com>
+In-Reply-To: <20200703105944.GS18446@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_06:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0 clxscore=1011
+ bulkscore=0 malwarescore=0 adultscore=0 mlxscore=0 cotscore=-2147483648
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007030086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Michal Hocko <mhocko@kernel.org> [2020-07-03 12:59:44]:
 
---yksztr2amnkhaur2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Honestly, I do not have any idea. I've traced it down to
+> > Author: Andi Kleen <ak@suse.de>
+> > Date:   Tue Jan 11 15:35:48 2005 -0800
+> > 
+> >     [PATCH] x86_64: Fix ACPI SRAT NUMA parsing
+> > 
+> >     Fix fallout from the recent nodemask_t changes. The node ids assigned
+> >     in the SRAT parser were off by one.
+> > 
+> >     I added a new first_unset_node() function to nodemask.h to allocate
+> >     IDs sanely.
+> > 
+> >     Signed-off-by: Andi Kleen <ak@suse.de>
+> >     Signed-off-by: Linus Torvalds <torvalds@osdl.org>
+> > 
+> > which doesn't really tell all that much. The historical baggage and a
+> > long term behavior which is not really trivial to fix I suspect.
+> 
+> Thinking about this some more, this logic makes some sense afterall.
+> Especially in the world without memory hotplug which was very likely the
+> case back then. It is much better to have compact node mask rather than
+> sparse one. After all node numbers shouldn't really matter as long as
+> you have a clear mapping to the HW. I am not sure we export that
+> information (except for the kernel ring buffer) though.
+> 
+> The memory hotplug changes that somehow because you can hotremove numa
+> nodes and therefore make the nodemask sparse but that is not a common
+> case. I am not sure what would happen if a completely new node was added
+> and its corresponding node was already used by the renumbered one
+> though. It would likely conflate the two I am afraid. But I am not sure
+> this is really possible with x86 and a lack of a bug report would
+> suggest that nobody is doing that at least.
+> 
 
-Hi,
+JFYI,
+Satheesh copied in this mailchain had opened a bug a year on crash with vcpu
+hotplug on memoryless node. 
 
-On Tue, Jun 30, 2020 at 04:26:20PM +0800, Jian-Hong Pan wrote:
-> Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=8829=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:21=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Hi!
-> >
-> > On Fri, Jun 05, 2020 at 04:44:51PM +0800, Jian-Hong Pan wrote:
-> > > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=882=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:04=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
-> > > > > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=
-=8828=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > > > > >
-> > > > > > Hi Daniel,
-> > > > > >
-> > > > > > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> > > > > > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.t=
-ech> wrote:
-> > > > > > > > I'm about to send a v3 today or tomorrow, I can Cc you (and=
- Jian-Hong) if you
-> > > > > > > > want.
-> > > > > > >
-> > > > > > > That would be great, although given the potentially inconsist=
-ent
-> > > > > > > results we've been seeing so far it would be great if you cou=
-ld
-> > > > > > > additionally push a git branch somewhere.
-> > > > > > > That way we can have higher confidence that we are applying e=
-xactly
-> > > > > > > the same patches to the same base etc.
-> > > > > >
-> > > > > > So I sent a new iteration yesterday, and of course forgot to cc=
- you... Sorry for
-> > > > > > that.
-> > > > > >
-> > > > > > I've pushed my current branch here:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.g=
-it/log/?h=3Drpi4-kms
-> > > > >
-> > > > > Thanks to Maxime!
-> > > > >
-> > > > > I have tried your repository on branch rpi4-kms.  The DRM VC4 is =
-used!
-> > > > > But got some issues:
-> > > > > 1. Some weird error message in dmesg.  Not sure it is related, or=
- not
-> > > > > [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
-> > > > > HDMI state machine clock
-> > > > > https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
-> > > >
-> > > > That's a deferred probing. The first time the HDMI driver is being
-> > > > probed, the firmware clock driver has not been probed yet. It's mak=
-ing
-> > > > another attempt later on, which succeeds.
-> > > >
-> > > > > 2. The screen flashes suddenly sometimes.
-> > >
-> > > I append drm.debug=3D0x3 to boot command.  Whenever, the screen flash=
-es,
-> > > I notice the logs like this:
-> > >
-> > > Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-> > > crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-> > > Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-> > > crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-> > > Jun 01 15:22:40 endless kernel: [drm:drm_vblank_enable] enabling
-> > > vblank on crtc 3, ret: 0
-> > > Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ =
-ID: 159 (2)
-> > > Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ =
-ID: 154 (1)
-> > > Jun 01 15:22:40 endless kernel: [drm:vblank_disable_fn] disabling
-> > > vblank on crtc 3
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe2=
-00,
-> > > auth=3D1, DRM_IOCTL_MODE_CURSOR
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe2=
-00,
-> > > auth=3D1, DRM_IOCTL_MODE_CURSOR2
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 159=
- (1)
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 154=
- (1)
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-> > > crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-> > > crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_vblank_enable] enabling
-> > > vblank on crtc 3, ret: 0
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ =
-ID: 159 (2)
-> > > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ =
-ID: 154 (2)
-> > >
-> > > Here is the full log
-> > > https://gist.github.com/starnight/85d641819839eddc7a55ca7173990a56
-> > >
-> > > > > 3. The higher resolutions, like 1920x1080 ... are lost after hot
-> > > > > re-plug HDMI cable (HDMI0)
-> > >
-> > > I should explain this in more detail.  Here are the steps to reproduce
-> > > this issue:
-> > > 1. Before unplug the HDMI cable from HDMI0 port.
-> > > $ xrandr
-> > > Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-> > > HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x
-> > > axis y axis) 521mm x 293mm
-> > >    1920x1080     60.00*+  50.00    59.94
-> > >    1920x1080i    60.00    50.00    59.94
-> > >    1680x1050     59.88
-> > >    1280x1024     75.02    60.02
-> > >    1440x900      59.90
-> > >    1280x960      60.00
-> > >    1152x864      75.00
-> > >    1280x720      60.00    50.00    59.94
-> > >    1440x576      50.00
-> > >    1024x768      75.03    70.07    60.00
-> > >    1440x480      60.00    59.94
-> > >    832x624       74.55
-> > >    800x600       72.19    75.00    60.32    56.25
-> > >    720x576       50.00
-> > >    720x480       60.00    59.94
-> > >    640x480       75.00    72.81    66.67    60.00    59.94
-> > >    720x400       70.08
-> > > HDMI-2 disconnected (normal left inverted right x axis y axis)
-> > >
-> > > 2. Unplug the HDMI cable from HDMI0 port.
-> > > 3. Plug the HDMI cable to **HDMI1** port.
-> > > $ xrandr
-> > > Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-> > > HDMI-1 disconnected (normal left inverted right x axis y axis)
-> > > HDMI-2 connected primary 1920x1080+0+0 (normal left inverted right x
-> > > axis y axis) 521mm x 293mm
-> > >    1920x1080     60.00*+  50.00    59.94
-> > >    1920x1080i    60.00    50.00    59.94
-> > >    1680x1050     59.88
-> > >    1280x1024     75.02    60.02
-> > >    1440x900      59.90
-> > >    1280x960      60.00
-> > >    1152x864      75.00
-> > >    1280x720      60.00    50.00    59.94
-> > >    1440x576      50.00
-> > >    1024x768      75.03    70.07    60.00
-> > >    1440x480      60.00    59.94
-> > >    832x624       74.55
-> > >    800x600       72.19    75.00    60.32    56.25
-> > >    720x576       50.00
-> > >    720x480       60.00    59.94
-> > >    640x480       75.00    72.81    66.67    60.00    59.94
-> > >    720x400       70.08
-> > >
-> > > 4. Unplug the HDMI cable from **HDMI1** port.
-> > > 5. Plug the HDMI cable back to HDMI0 port.
-> > > $ xrandr
-> > > Screen 0: minimum 320 x 200, current 1368 x 768, maximum 2048 x 2048
-> > > HDMI-1 connected primary 1368x768+0+0 (normal left inverted right x
-> > > axis y axis) 0mm x 0mm
-> > >    1368x768      59.88*
-> > >    1360x768      59.80
-> > >    1280x800      59.81
-> > >    1152x864      60.00
-> > >    1280x720      59.86
-> > >    1024x768      60.00
-> > >    1024x576      59.90
-> > >    960x540       59.63
-> > >    800x600       60.32
-> > >    800x450       59.82
-> > >    700x450       59.88
-> > >    640x480       59.94
-> > >    684x384       59.88    59.85
-> > >    680x384       59.80    59.96
-> > >    640x400       59.88    59.98
-> > >    576x432       60.06
-> > >    640x360       59.86    59.83
-> > >    512x384       60.00
-> > >    512x288       60.00    59.92
-> > >    480x270       59.63    59.82
-> > >    400x300       60.32
-> > >    320x240       60.05
-> > > HDMI-2 disconnected (normal left inverted right x axis y axis)
-> >
-> > Sorry for getting back at it so late. I just tested with modetest only
-> > and my current branch and it seems to behave properly. Did you had to
-> > run X to get that issue, or is it just how you noticed it?
-> >
-> > Also, was that with the branch based on 5.7 I pushed on my git tree on
-> > kernel.org or some earlier revision of the series?
->=20
-> Thanks for coming back :)
->=20
-> I use GNOME 3.36 with Xorg 1.20.4.
->=20
-> To understand when it starts to hit the issues, I separate to step by ste=
-p:
-> 1. System boots into command line mode first (systemd multi-user.target)
-> 2. Execute Xorg, then xterm.
-> 3. Execute mutter upon the screen of Xorg.
->=20
-> I tried both branches rpi4-kms and rpi4-kms-5.7 of
-> https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
-> Both of the branches hit issues:
-> * The screen flashes suddenly sometimes.  This happens after mutter is la=
-unched.
-> * The higher resolutions, like 1920x1080 ... are lost after hot
-> re-plug HDMI cable (HDMI0).  HDMI cable connects to HDMI0 -> HDMI1 ->
-> HDMI0.  This happens not only with GNOME, but also pure Xorg.
+https://bugzilla.kernel.org/show_bug.cgi?id=202187
 
-I just tested with raspbian exactly this, running the same xorg version:
-https://pastebin.com/3fKeFPxf
-
-And without X involved, modetest also reports the modes properly, so
-it's probably something in either the DDX you're using or Gnome/mutter.
-
-Maxime
-
---yksztr2amnkhaur2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXv8q6wAKCRDj7w1vZxhR
-xabEAP9kaeHz1BWPFh3I27T/E6ShRFd3XIR8615gyS2pCZItIwD9GYtH2BgSIfMd
-ipmn9OI9AGceWKTVcQvOX9WrRlyATAo=
-=+Jlb
------END PGP SIGNATURE-----
-
---yksztr2amnkhaur2--
+-- 
+Thanks and Regards
+Srikar Dronamraju
