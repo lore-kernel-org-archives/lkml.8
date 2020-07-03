@@ -2,114 +2,135 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8897CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5650BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A5C20870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJbmAjGa"
+	by mail.kernel.org (Postfix) with ESMTP id 42A632088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgGCSxo (ORCPT
+        id S1726513AbgGCS5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        Fri, 3 Jul 2020 14:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGCSxo (ORCPT
+        with ESMTP id S1726147AbgGCS5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:53:44 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48215C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 11:53:44 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so14656940pgg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 11:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eWJU0FWdTff+uL3kEpD2oqqgtPNKxa9+VLRU7B17FDA=;
-        b=YJbmAjGaE5bR6H2KyJDYOzUTqDr92z7lklxVkbgr9r+PiQ/QOqfAoDLQlPIwUCCOxC
-         r/g5S7wYKDe7092l1uDIhNGTLJ/PYsmZbTEMAdQxQUZpFHZsGIYrGnih7kzbPoWWLQTL
-         VZwTCp5fGSJ7ehB6yWcDMhR2HRt9bApz7e6RKrAuwZyb4oE3o10+9+lQu9o03dKSUx+b
-         8GAzg7SydHbzqhVkZq2ONAEftka+6B36D1uwxQywN9B4vPBoaAp+IE8K2ybMa1rjWAHv
-         AEqrSdxpVO60NhE/W/jkRRD249JooqdUV49W4QVGawj/Z69xTKF1FVwmHTB7dVQt2ZyB
-         mOlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eWJU0FWdTff+uL3kEpD2oqqgtPNKxa9+VLRU7B17FDA=;
-        b=n3ipfdc3WC63DXsBJG9zE3kPVEAPKyZuksMS5uRsoggwF7YRHv9Fp1jUuNBuP3EPd7
-         KcCAjQDq3e0yhrL6XBoq3Ls94Ip/KDrTuuyIKzZHos8wKxLlu2izRxbfgMZUz4zmrU50
-         LMVEBLAqMEsVnIVA+qHnk9S36V8Dmk2kqM1CdZHXJ+NKQYAztRQB5j6UCdgJTCnLnbQS
-         6nRDs6ZLyCd8GMGKes38WqqjfTyqwtVtJ6pQMqTJN1lDYjhQYgJ6d0qoZjeSZB2cRC5R
-         dfZDwsdZs16UzZgf29y4wTLoWuMFpgdHx1Rg5cuCHY1qY//GZJTHcNTvSnmtk5hlqZ6x
-         2SGQ==
-X-Gm-Message-State: AOAM530vUP/yFDgAYtu3YY4/DtRfDMC19V1f8QZtG1En4FcqjTOmr+4z
-        ly8G5oRZ+HWIwucBkuzRgQnRWQ==
-X-Google-Smtp-Source: ABdhPJw+BSrPKtvkkkrRdaleQ9tyYprdic3o8VZZKjlUZnxXo1whRA6EaefvUsAIwuHWqtOnnDIMjQ==
-X-Received: by 2002:a63:3508:: with SMTP id c8mr31142500pga.9.1593802423724;
-        Fri, 03 Jul 2020 11:53:43 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a11sm6346638pjw.35.2020.07.03.11.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 11:53:43 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] arm64: defcondfig: Enable USB ACM and FTDI drivers
-Date:   Fri,  3 Jul 2020 11:53:54 -0700
-Message-Id: <20200703185354.1814337-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Fri, 3 Jul 2020 14:57:16 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EEDC061794;
+        Fri,  3 Jul 2020 11:57:15 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id BE7C4BC142;
+        Fri,  3 Jul 2020 18:57:11 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        etremblay@distech-controls.com, corbet@lwn.net,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] Replace HTTP links with HTTPS ones: TMP513 hardware monitor driver
+Date:   Fri,  3 Jul 2020 20:56:57 +0200
+Message-Id: <20200703185657.15329-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable USB serial drivers to provide UART access to various development
-boards from an ARM64 host.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+          If both the HTTP and HTTPS versions
+          return 200 OK and serve the same content:
+            Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ Continuing my work started at 93431e0607e5.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 883e8bace3ed..103ddad961cd 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -687,6 +687,7 @@ CONFIG_USB_OHCI_EXYNOS=y
- CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_RENESAS_USBHS_HCD=m
- CONFIG_USB_RENESAS_USBHS=m
-+CONFIG_USB_ACM=m
- CONFIG_USB_STORAGE=y
- CONFIG_USB_MUSB_HDRC=y
- CONFIG_USB_MUSB_SUNXI=y
-@@ -696,6 +697,8 @@ CONFIG_USB_CHIPIDEA=y
- CONFIG_USB_CHIPIDEA_UDC=y
- CONFIG_USB_CHIPIDEA_HOST=y
- CONFIG_USB_ISP1760=y
-+CONFIG_USB_SERIAL=m
-+CONFIG_USB_SERIAL_FTDI_SIO=m
- CONFIG_USB_HSIC_USB3503=y
- CONFIG_NOP_USB_XCEIV=y
- CONFIG_USB_GADGET=y
+ If there are any URLs to be removed completely or at least not HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See https://lkml.org/lkml/2020/6/26/837
+
+ Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml | 4 ++--
+ Documentation/hwmon/tmp513.rst                         | 4 ++--
+ drivers/hwmon/tmp513.c                                 | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+index 90b2fa3f7752..c17e5d3ee3f1 100644
+--- a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
++++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
+@@ -18,8 +18,8 @@ description: |
+   consumption.
+ 
+   Datasheets:
+-  http://www.ti.com/lit/gpn/tmp513
+-  http://www.ti.com/lit/gpn/tmp512
++  https://www.ti.com/lit/gpn/tmp513
++  https://www.ti.com/lit/gpn/tmp512
+ 
+ 
+ properties:
+diff --git a/Documentation/hwmon/tmp513.rst b/Documentation/hwmon/tmp513.rst
+index 6c8fae4b1a75..f2dfc1677ad9 100644
+--- a/Documentation/hwmon/tmp513.rst
++++ b/Documentation/hwmon/tmp513.rst
+@@ -9,13 +9,13 @@ Supported chips:
+ 
+     Prefix: 'tmp512'
+ 
+-    Datasheet: http://www.ti.com/lit/ds/symlink/tmp512.pdf
++    Datasheet: https://www.ti.com/lit/ds/symlink/tmp512.pdf
+ 
+   * Texas Instruments TMP513
+ 
+     Prefix: 'tmp513'
+ 
+-    Datasheet: http://www.ti.com/lit/ds/symlink/tmp513.pdf
++    Datasheet: https://www.ti.com/lit/ds/symlink/tmp513.pdf
+ 
+ Authors:
+ 
+diff --git a/drivers/hwmon/tmp513.c b/drivers/hwmon/tmp513.c
+index df66e0bc1253..23908dc5611b 100644
+--- a/drivers/hwmon/tmp513.c
++++ b/drivers/hwmon/tmp513.c
+@@ -5,12 +5,12 @@
+  * TMP513:
+  * Thermal/Power Management with Triple Remote and
+  * Local Temperature Sensor and Current Shunt Monitor
+- * Datasheet: http://www.ti.com/lit/gpn/tmp513
++ * Datasheet: https://www.ti.com/lit/gpn/tmp513
+  *
+  * TMP512:
+  * Thermal/Power Management with Dual Remote
+  *	and Local Temperature Sensor and Current Shunt Monitor
+- * Datasheet: http://www.ti.com/lit/gpn/tmp512
++ * Datasheet: https://www.ti.com/lit/gpn/tmp512
+  *
+  * Copyright (C) 2019 Eric Tremblay <etremblay@distech-controls.com>
+  *
 -- 
-2.26.2
+2.27.0
 
