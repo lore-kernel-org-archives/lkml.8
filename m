@@ -2,97 +2,119 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54D4206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1385B20899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593787817;
-	bh=hQcrcb6p0HvbYrZ4PlEgUIsgF+hR83rMKe+F1n/8Lx4=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=ogL63s2KQxEUUkgR6MDWkxya9fF2MhKA55933lBIQF+n1LKYglOKceFbdL5BXKpsG
-	 QqQo5ST/8FDti8bBWbODyicYY/N+s16gAniE6ZrdcgdCZ0a4KG3dAE3aaLLfr59EDG
-	 F9oeY6gWznNBQHHlfdBeUAJHmK5AYkI2nrLp8NqI=
+	s=default; t=1593787914;
+	bh=OfQ9QrrhTEkwVc9D/6kQ4OLMbBVifUwGjpIqyu/to+g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=w9TovDhnkczmiKolsc1ViXViuSq/bF90chouSYQhmVnjuygTcaqL6ypsgUb1vNUYW
+	 IdFaeJvm4J2GVgnGljS9oIVS33rT+ERI8h/SAPbQSestSruNzj0I1ULtFQ96+p+Jon
+	 YCWKRGLb5AFmrBUJTra2IdQ50RvNKsrSitrLbApU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgGCOuQ (ORCPT
+        id S1726594AbgGCOvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:50:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45801 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbgGCOuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:50:12 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h1so4681915otq.12;
-        Fri, 03 Jul 2020 07:50:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=vwkx7XgRaSUqdSbDPu09J5cnSNZxI1HAY90VoPthaf4=;
-        b=XdKpbMmVWMgH05Sd6roUcZw42QyLN5IB46AiMA10E27M8icNqfpn2+R+IjBO057rks
-         GoDjwGolxZ7P2CF6iND9TweOSMF7oIlIEjhAqjxSdTCVYFtXmP8cb+EiskCfRdpZLZT8
-         2Ex+orq1tc8M/ORw7ycbfwJIY1+VeqVkkGsvcwEPvLCTBgxwAQr5jZdWCKF43aFuUA8+
-         gi0fMUWdAQQoOVauh/Dj+iWhq2yf0tXAs1wWUK9+L6glggqquHTTnpqOng4l0i3DE7V/
-         xj1lLi0nxczCC0pE7uAC2zRYheEyaXAIlM5sUjdjmQTWvDgEEXx+SPCd1JRwdPBptUgx
-         Hplw==
-X-Gm-Message-State: AOAM530VfB/JWrBq8qTH77eiVoeg0MGdlndou649odNKvWelwP8hfJq9
-        1Skhunwe1obEyvGDGLl/hYXXCePkSkzr1ku+YrE4BbRS
-X-Google-Smtp-Source: ABdhPJzSdT2tYATsIKze58HiO5B8tkM/ruu2s9oCskwKqJcSphj4R7zDTUGzesBgVA6w9B0GlNvGeGAM3D7scSJ1Dz0=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr31862558otb.262.1593787811768;
- Fri, 03 Jul 2020 07:50:11 -0700 (PDT)
+        Fri, 3 Jul 2020 10:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbgGCOvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:51:52 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61D192088E;
+        Fri,  3 Jul 2020 14:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593787911;
+        bh=OfQ9QrrhTEkwVc9D/6kQ4OLMbBVifUwGjpIqyu/to+g=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=P08qXOSK/SsmY8VAxSWxJZlh9y2mElMtAZzYp/JpETdbeuKyxfeNiEOPVeAjMtgmm
+         cVQ6zWd/th8wPaVLaFElx/6ZkEKB/7VSwS0fonaGWl2nOftDG+g5Bf9ZqxlWOJSJrJ
+         eDszUhoHxsOqHSNzzZyn6clVtx/aI8MGpxWzyq84=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4C40135206C0; Fri,  3 Jul 2020 07:51:51 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 07:51:51 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200703145151.GG9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200630203016.GI9247@paulmck-ThinkPad-P72>
+ <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
+ <20200701114027.GO4800@hirez.programming.kicks-ass.net>
+ <20200701140654.GL9247@paulmck-ThinkPad-P72>
+ <20200701150512.GH4817@hirez.programming.kicks-ass.net>
+ <20200701160338.GN9247@paulmck-ThinkPad-P72>
+ <20200702082040.GB4781@hirez.programming.kicks-ass.net>
+ <20200702175948.GV9247@paulmck-ThinkPad-P72>
+ <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+ <20200703132523.GM117543@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 3 Jul 2020 16:50:01 +0200
-Message-ID: <CAJZ5v0i=ovJcb+0PkVj=_RR4FaUVgSiR4ON0ay1RvOk7t8UUZg@mail.gmail.com>
-Subject: [GIT PULL] ACPI updates for v5.8-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703132523.GM117543@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 03, 2020 at 03:25:23PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
+> > > The prototype for GCC is here: https://github.com/AKG001/gcc/
+> > 
+> > Thanks! Those test cases are somewhat over qualified though:
+> > 
+> >        static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
+> 
+> One question though; since its a qualifier, and we've recently spend a
+> whole lot of effort to strip qualifiers in say READ_ONCE(), how does,
+> and how do we want, this qualifier to behave.
 
-Please pull from the tag
+Dereferencing a _Dependent_ptr pointer gives you something that is not
+_Dependent_ptr, unless the declaration was like this:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.8-rc4
+	_Dependent_ptr _Atomic (TYPE) * _Dependent_ptr a;
 
-with top-most commit ef0c44c3e51ba051c500620685ee0b476ef2cbdf
+And if I recall correctly, the current state is that assigning a
+_Dependent_ptr variable to a non-_Dependent_ptr variable strips this
+marking (though the thought was to be able to ask for a warning).
 
- Merge branch 'acpi-fan'
+So, yes, it would be nice to be able to explicitly strip the
+_Dependent_ptr, perhaps the kill_dependency() macro, which is already
+in the C standard.
 
-on top of commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68
+> C++ has very convenient means of manipulating qualifiers, so it's not
+> much of a problem there, but for C it is, as we've found, really quite
+> cumbersome. Even with _Generic() we can't manipulate individual
+> qualifiers afaict.
 
- Linux 5.8-rc3
+Fair point, and in C++ this is a templated class, at least in the same
+sense that std::atomic<> is a templated class.
 
-to receive ACPI updates for 5.8-rc4.
+But in this case, would kill_dependency do what you want?
 
-These add a new device ID for Intel Tiger Lake to the DPTF battery
-participant driver (Srinivas Pandruvada) and fix the Tiger Lake fan
-device ID (Sumeet Pawnikar).
-
-Thanks!
-
-
----------------
-
-Srinivas Pandruvada (1):
-      ACPI: DPTF: Add battery participant for TigerLake
-
-Sumeet Pawnikar (1):
-      ACPI: fan: Fix Tiger Lake ACPI device ID
-
----------------
-
- drivers/acpi/dptf/dptf_power.c | 1 +
- drivers/acpi/fan.c             | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+							Thanx, Paul
