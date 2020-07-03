@@ -2,196 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558AE2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593787352;
-	bh=khFnCo/pGLEB19N//Rky8g6llITGKpNJBaJy6+SEmKk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gqaHfT/3KIb1FRgIk75YIv+/l7VgUxsHvIoPQsNfjOCgHZ/Z1JEQhiSc2QtJ7AFOr
-	 8b7T7WTlwcpHYckuAuIXh63eFKn/UTEQ+x5LXG3qgZbyyoAKe51BKjV9/P3cuqw05b
-	 xxBp61YprxHZc8Fa8EOctRqPoAjdQ0J6aKBWZPHk=
+	by mail.kernel.org (Postfix) with ESMTP id 60D9620899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGCOmb (ORCPT
+        id S1726363AbgGCOmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 10:42:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:40346 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgGCOm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:42:29 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E97632070B;
-        Fri,  3 Jul 2020 14:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593787349;
-        bh=khFnCo/pGLEB19N//Rky8g6llITGKpNJBaJy6+SEmKk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=H8guQjP2EdQJuyTAIEJlqPZ9dTsE/gpVH4wDM9sewh1jG32DEAkI7fY/6EIPtfWRt
-         NyBmWss1z52+Wh8CSogPzL9F5+r2IrZvHkDlIvzql19Whj6/KOdw2X9nWsqVjnP7x2
-         mDq3KPpQdR9rPAyB7igZQy3EgXuvigRcXxfXcWFQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D081235206C0; Fri,  3 Jul 2020 07:42:28 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 07:42:28 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200703144228.GF9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200630201243.GD4817@hirez.programming.kicks-ass.net>
- <20200630203016.GI9247@paulmck-ThinkPad-P72>
- <CANpmjNP+7TtE0WPU=nX5zs3T2+4hPkkm08meUm2VDVY3RgsHDw@mail.gmail.com>
- <20200701114027.GO4800@hirez.programming.kicks-ass.net>
- <20200701140654.GL9247@paulmck-ThinkPad-P72>
- <20200701150512.GH4817@hirez.programming.kicks-ass.net>
- <20200701160338.GN9247@paulmck-ThinkPad-P72>
- <20200702082040.GB4781@hirez.programming.kicks-ass.net>
- <20200702175948.GV9247@paulmck-ThinkPad-P72>
- <20200703131330.GX4800@hirez.programming.kicks-ass.net>
+        id S1726053AbgGCOmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:42:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2925931B;
+        Fri,  3 Jul 2020 07:42:34 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE9E03F73C;
+        Fri,  3 Jul 2020 07:42:32 -0700 (PDT)
+Subject: Re: [RFC PATCH] perf/smmuv3: Fix shared interrupt handling
+To:     Will Deacon <will@kernel.org>
+Cc:     mark.rutland@arm.com, tuanphan@os.amperecomputing.com,
+        john.garry@huawei.com, linux-kernel@vger.kernel.org,
+        shameerali.kolothum.thodi@huawei.com, harb@amperecomputing.com,
+        linux-arm-kernel@lists.infradead.org
+References: <d73dd8c3579fbf713d6215317404549aede8ad2d.1586363449.git.robin.murphy@arm.com>
+ <b7d056f7-3a3d-568d-ea6d-24bb30b4761b@arm.com>
+ <20200624125045.GC6270@willie-the-truck>
+ <dfa3fc60-dc6c-4ede-341e-24645e01b722@arm.com>
+ <20200703134213.GE18953@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6099af78-0fd8-77de-fe50-be40b239f06e@arm.com>
+Date:   Fri, 3 Jul 2020 15:42:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703131330.GX4800@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200703134213.GE18953@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 03:13:30PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 02, 2020 at 10:59:48AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jul 02, 2020 at 10:20:40AM +0200, Peter Zijlstra wrote:
-> > > On Wed, Jul 01, 2020 at 09:03:38AM -0700, Paul E. McKenney wrote:
-> > > 
-> > > > But it looks like we are going to have to tell the compiler.
-> > > 
-> > > What does the current proposal look like? I can certainly annotate the
-> > > seqcount latch users, but who knows what other code is out there....
-> > 
-> > For pointers, yes, within the Linux kernel it is hopeless, thus the
-> > thought of a -fall-dependent-ptr or some such that makes the compiler
-> > pretend that each and every pointer is marked with the _Dependent_ptr
-> > qualifier.
-> > 
-> > New non-Linux-kernel code might want to use his qualifier explicitly,
-> > perhaps something like the following:
-> > 
-> > 	_Dependent_ptr struct foo *p;  // Or maybe after the "*"?
+On 2020-07-03 14:42, Will Deacon wrote:
+> On Wed, Jun 24, 2020 at 02:08:30PM +0100, Robin Murphy wrote:
+>> On 2020-06-24 13:50, Will Deacon wrote:
+>>> On Wed, Jun 24, 2020 at 12:48:14PM +0100, Robin Murphy wrote:
+>>>> On 2020-04-08 17:49, Robin Murphy wrote:
+>>>>> IRQF_SHARED is dangerous, since it allows other agents to retarget the
+>>>>> IRQ's affinity without migrating PMU contexts to match, breaking the way
+>>>>> in which perf manages mutual exclusion for accessing events. Although
+>>>>> this means it's not realistically possible to support PMU IRQs being
+>>>>> shared with other drivers, we *can* handle sharing between multiple PMU
+>>>>> instances with some explicit affinity bookkeeping and manual interrupt
+>>>>> multiplexing.
+>>>>>
+>>>>> RCU helps us handle interrupts efficiently without having to worry about
+>>>>> fine-grained locking for relatively-theoretical race conditions with the
+>>>>> probe/remove/CPU hotplug slow paths. The resulting machinery ends up
+>>>>> looking largely generic, so it should be feasible to factor out with a
+>>>>> "system PMU" base class for similar multi-instance drivers.
+>>>>>
+>>>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>>>>> ---
+>>>>>
+>>>>> RFC because I don't have the means to test it, and if the general
+>>>>> approach passes muster then I'd want to tackle the aforementioned
+>>>>> factoring-out before merging anything anyway.
+>>>>
+>>>> Any comments on whether it's worth pursuing this?
+>>>
+>>> Sorry, I don't really get the problem that it's solving. Is there a crash
+>>> log somewhere I can look at? If all the users of the IRQ are managed by
+>>> this driver, why is IRQF_SHARED dangerous?
+>>
+>> Because as-is, multiple PMU instances may make different choices about which
+>> CPU they associate with, change the shared IRQ affinity behind each others'
+>> backs, and break the "IRQ handler runs on event->cpu" assumption that perf
+>> core relies on for correctness. I'm not sure how likely it would be to
+>> actually crash rather than just lead to subtle nastiness, but wither way
+>> it's not good, and since people seem to be tempted to wire up system PMU
+>> instances this way we could do with a general approach for dealing with it.
 > 
-> After, as you've written it, it's a pointer to a '_Dependent struct
-> foo'.
+> Ok, thanks for the explanation. If we're just talking about multiple
+> instances of the same driver, why is it not sufficient to have a static
+> atomic_t initialised to -1 which tracks the current affinity and then just
+> CAS that during probe()? Hotplug notifiers can just check whether or not
+> it points to an online CPU
 
-Yeah, I have to look that up every time.  :-/
+Yeah, forcing *all* PMUs owned by a driver to be affine to the same CPU 
+is another way to go about it, however it slightly penalises systems 
+that are wired up sensibly and *would* otherwise be able to distribute 
+non-shared affinities around in a balanced manner (optimising the 
+initial pmu->cpu selection in the face of NUMA is an exercise still on 
+the table in some cases).
 
-Thank you for checking!
+And we'd still have to have all the "has another instance already 
+requested this IRQ or not yet?" logic (the general condition is "1 <= 
+number of IRQs <= number of PMUs"), plus some way for the global 
+affinity to migrate all the PMU contexts and IRQs at once in a 
+controlled and race-free manner, so things wouldn't be *massively* 
+simpler even then.
 
-> > 	rcu_read_lock();
-> > 	p = rcu_dereference(gp);
-> > 	// And so on...
-> > 
-> > If a function is to take a dependent pointer as a function argument,
-> > then the corresponding parameter need the _Dependent_ptr marking.
-> > Ditto for return values.
-> > 
-> > The proposal did not cover integers due to concerns about the number of
-> > optimization passes that would need to be reviewed to make that work.
-> > Nevertheless, using a marked integer would be safer than using an unmarked
-> > one, and if the review can be carried out, why not?  Maybe something
-> > like this:
-> > 
-> > 	_Dependent_ptr int idx;
-> > 
-> > 	rcu_read_lock();
-> > 	idx = READ_ONCE(gidx);
-> > 	d = rcuarray[idx];
-> > 	rcu_read_unlock();
-> > 	do_something_with(d);
-> > 
-> > So use of this qualifier is quite reasonable.
-> 
-> The above usage might warrant a rename of the qualifier though, since
-> clearly there isn't anything ptr around.
-
-Given the large number of additional optimizations that need to be
-suppressed in the non-pointer case, any discouragement based on the "_ptr"
-at the end of the name is all to the good.
-
-And if that line of reasoning is unconvincing, please look at the program
-at the end of this email, which compiles without errors with -Wall and
-gives the expected output.  ;-)
-
-> > The prototype for GCC is here: https://github.com/AKG001/gcc/
-> 
-> Thanks! Those test cases are somewhat over qualified though:
-> 
->        static volatile _Atomic (TYPE) * _Dependent_ptr a;     		\
-
-Especially given that in C, _Atomic operations are implicitly volatile.
-But this is likely a holdover from Akshat's implementation strategy,
-which was to pattern _Dependent_ptr after the volatile keyword.
-
-> Also, if C goes and specifies load dependencies, in any form, is then
-> not the corrolary that they need to specify control dependencies? How
-> else can they exclude the transformation.
-
-By requiring that any temporaries generated from variables that are
-marked _Dependent_ptr also be marked _Dependent_ptr.  This is of course
-one divergence of _Dependent_ptr from the volatile keyword.
-
-> And of course, once we're there, can we get explicit support for control
-> dependencies too? :-) :-)
-
-Keep talking like this and I am going to make sure that you attend a
-standards committee meeting.  If need be, by arranging for you to be
-physically dragged there.  ;-)
-
-More seriously, for control dependencies, the variable that would need
-to be marked would be the program counter, which might require some
-additional syntax.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-int foo(int *p, int i)
-{
-	return i[p];
-}
-
-int arr[] = { 0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, };
-
-int main(int argc, char *argv[])
-{
-	int i = atoi(argv[1]);
-
-	printf("%d[arr] = %d\n", i, foo(arr, i));
-	return 0;
-}
+Robin.
