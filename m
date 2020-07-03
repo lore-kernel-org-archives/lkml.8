@@ -2,129 +2,103 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC103C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A37CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB92C20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9F02084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:36:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XwxLmeze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgGCSeD (ORCPT
+        id S1726575AbgGCSgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:34:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46846 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGCSeD (ORCPT
+        Fri, 3 Jul 2020 14:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGCSga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:34:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id E75842A65E6
-Message-ID: <c76893775a8c2ecee5093f9a7dfa872ec2afcefe.camel@collabora.com>
-Subject: Re: [PATCH v2] clk: rockchip: use separate compatibles for
- rk3288w-cru
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     mylene.josserand@collabora.com, mturquette@baylibre.com,
-        sboyd@kernel.org, jagan@amarulasolutions.com,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Date:   Fri, 03 Jul 2020 15:33:52 -0300
-In-Reply-To: <20200703154948.260369-1-heiko@sntech.de>
-References: <20200703154948.260369-1-heiko@sntech.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Fri, 3 Jul 2020 14:36:30 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A6FC061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 11:36:30 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c11so19002520lfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 11:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ENvEJ82iZJ8k/1p4VxclPU5jsWxmJbuO8tEGgnSMZLE=;
+        b=XwxLmeze6j9JIof0E9cCpQfSV+AgPdF9WzdCXwiKNdSmc9IirBHv/hWfOl4j7G/oo/
+         rIhQShtIg4/rtoajnYKJ9McM1TSyqXIAiEJOYPvBzCFhbXUCpOUTOiXspXbzHUYOTYBe
+         ZianoTYnE5ispJRMb3eRM3zPPAbci/bcY2NZxkknHH3cAMqHwKb33B+Yc/cj6QDpmTBq
+         6hDZ3IxDRoVTGEoCm72KrNvnKgeOw56oWvM/2bAHQZoAWHF2tCdBUK4S67nzdI/taiC1
+         Z4J9Gd6KCtukaDlE6lu1WJecVgL5+1bWmkQMy7CbbqWXr4uWicl1aNc+6ZeAsCsXQqUb
+         c7JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ENvEJ82iZJ8k/1p4VxclPU5jsWxmJbuO8tEGgnSMZLE=;
+        b=e83ljZ519OsIlLtQ+ZWrJa1GjNOG5W3Zgm1FawiIajnXZiLbM2Oz1opRzyPqEb1Lqx
+         Oj/ljm32aoubPkdueNKzLKBP9e+bAqq5RIA0FDBzXUs8z4J1rtfIJpW3IKqXyOCTSI4m
+         a5So7lXiQrYSjCeFHaiS60kS9gLkQ7+JbVScsEVI+x/i07yhCh6/JcfpbbzzfVx+Xmhh
+         mOk65KRTF+4og9ThJYPhD9BX4Hn8TkpLEFhyF1hlD3cy/Swp5yKOjrwKPnbJ6KYCqo9l
+         U1YVfBkuVt5ugGQ9n2QKN9c9DRZz9nATf6C9A5fSqR+nXzIcvqbLsklaZnf7DgG+lxGN
+         0Myw==
+X-Gm-Message-State: AOAM531/XVsy5twcLOXdmf/sJwQ3COR2h0UlJDKYJVAPuB9I3vz75YFr
+        GdPeXg1vmzXXw0zDl2KRz0pNEunlohtzsE8x8w==
+X-Google-Smtp-Source: ABdhPJzF2URyqJhurl9+AoFXr1fjEq65BZcVKDV/r0cgLEv/+7MX7swkIm3l0JoC1RWkRpj3GR2xvOxWiss+Yv2T6R0=
+X-Received: by 2002:a19:7014:: with SMTP id h20mr22350887lfc.49.1593801388730;
+ Fri, 03 Jul 2020 11:36:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200703155749.GA6255@pc636> <CAEJqkgiFFh8CvXkM4ZzXxNQmOJLL7WcgDL6rM83safNgEewZ9w@mail.gmail.com>
+ <20200703174539.GA4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200703174539.GA4800@hirez.programming.kicks-ass.net>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Fri, 3 Jul 2020 20:36:02 +0200
+Message-ID: <CAEJqkgh0samT7TkLqhBLw5x8-bV1iAX1a-PHxtgruMgpdsfvBQ@mail.gmail.com>
+Subject: Re: nr_cpu_ids vs AMD 3970x(32 physical CPUs)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-03 at 17:49 +0200, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> Commit 1627f683636d ("clk: rockchip: Handle clock tree for rk3288w variant")
-> added the check for rk3288w-specific clock-tree changes but in turn would
-> require a double-compatible due to re-using the main rockchip,rk3288-cru
-> compatible as entry point.
-> 
-> The binding change actually describes the compatibles as one or the other
-> so adapt the code accordingly and add a real second entry-point for the
-> clock controller.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Am Fr., 3. Juli 2020 um 19:45 Uhr schrieb Peter Zijlstra <peterz@infradead.org>:
+>
+> On Fri, Jul 03, 2020 at 07:07:39PM +0200, Gabriel C wrote:
+>
+> > I boot all the boxes restricting the cores to the correct count on the
+> > command line.
+>
+> This, because you're right about the wasted memory.
+>
+> > Wasted resource or not, this is still a bug IMO.
+>
+> Yeah, but not one we can do much about I think. It is the BIOS saying it
+> wants more because it expects someone to come along and stick another
+> CPU in.
+>
+> Possible we could say that for single socket machines overprovisioning
+> is 'silly', but then, I've no idea how to detect that. You'll need to
+> find an ACPI person.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+I know the EPYC box got that problem too initially, it reported twice
+the cores and twice the sockets,
+but got fixed in some kernel versions.
 
-Now all we need is someone to wire the U-Boot bits :)
+https://lkml.org/lkml/2018/5/20/102
 
-Thanks a lot Heiko,
-Ezequiel
-
-> ---
-> changes in v2:
-> - type enum instead of boolean (Ezequiel)
-> 
->  drivers/clk/rockchip/clk-rk3288.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> index 204976e2d0cb..93c794695c46 100644
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -15,6 +15,11 @@
->  #define RK3288_GRF_SOC_CON(x)	(0x244 + x * 4)
->  #define RK3288_GRF_SOC_STATUS1	0x284
->  
-> +enum rk3288_variant {
-> +	RK3288_CRU,
-> +	RK3288W_CRU,
-> +};
-> +
->  enum rk3288_plls {
->  	apll, dpll, cpll, gpll, npll,
->  };
-> @@ -922,7 +927,8 @@ static struct syscore_ops rk3288_clk_syscore_ops = {
->  	.resume = rk3288_clk_resume,
->  };
->  
-> -static void __init rk3288_clk_init(struct device_node *np)
-> +static void __init rk3288_common_init(struct device_node *np,
-> +				      enum rk3288_variant soc)
->  {
->  	struct rockchip_clk_provider *ctx;
->  
-> @@ -945,7 +951,7 @@ static void __init rk3288_clk_init(struct device_node *np)
->  	rockchip_clk_register_branches(ctx, rk3288_clk_branches,
->  				  ARRAY_SIZE(rk3288_clk_branches));
->  
-> -	if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
-> +	if (soc == RK3288W_CRU)
->  		rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
->  					       ARRAY_SIZE(rk3288w_hclkvio_branch));
->  	else
-> @@ -970,4 +976,15 @@ static void __init rk3288_clk_init(struct device_node *np)
->  
->  	rockchip_clk_of_add_provider(np, ctx);
->  }
-> +
-> +static void __init rk3288_clk_init(struct device_node *np)
-> +{
-> +	rk3288_common_init(np, RK3288_CRU);
-> +}
->  CLK_OF_DECLARE(rk3288_cru, "rockchip,rk3288-cru", rk3288_clk_init);
-> +
-> +static void __init rk3288w_clk_init(struct device_node *np)
-> +{
-> +	rk3288_common_init(np, RK3288W_CRU);
-> +}
-> +CLK_OF_DECLARE(rk3288w_cru, "rockchip,rk3288w-cru", rk3288w_clk_init);
-
-
+I never really looked at how this is calculated but I still believe
+there is a bug somewhere.
