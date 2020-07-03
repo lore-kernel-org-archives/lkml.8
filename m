@@ -2,79 +2,151 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F17C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76991C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE74E206CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0DF2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgGCPCd (ORCPT
+        id S1726760AbgGCPDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:02:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:12640 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbgGCPCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:02:33 -0400
-IronPort-SDR: bkPowF2edqM4SNMW+ZXM2oIbmEa75sNMweRolFdj3oAONGjh2Q2gPXedBgy2/KCtLwy/kcAPn1
- gxC3b7jtGChg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9671"; a="148677378"
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="148677378"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 08:02:32 -0700
-IronPort-SDR: I2r93TWooS2muxZUQq7lCmTm0YoO6HAnVgSof25s1rySGbz0pCw4BxN7+5+/QCIG7MBWJeHXbu
- yDt5y225by5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
-   d="scan'208";a="455921748"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2020 08:02:30 -0700
-Date:   Fri, 3 Jul 2020 23:02:27 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v13 03/11] KVM: VMX: Set guest CET MSRs per KVM and host
- configuration
-Message-ID: <20200703150227.GA3474@local-michael-cet-test>
-References: <20200701080411.5802-1-weijiang.yang@intel.com>
- <20200701080411.5802-4-weijiang.yang@intel.com>
- <75f0ef0b-ce95-fd92-00df-4231ffa1fa8e@intel.com>
+        Fri, 3 Jul 2020 11:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgGCPDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:03:05 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265CAC08C5C1;
+        Fri,  3 Jul 2020 08:03:05 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 210AC2A188D
+Message-ID: <8d667ae2554ebf3d9867f6f449973825c969b062.camel@collabora.com>
+Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for
+ rk3288w
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     =?ISO-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@collabora.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 03 Jul 2020 12:02:52 -0300
+In-Reply-To: <1793210.9Kb5SQUFvz@phil>
+References: <20200602080644.11333-1-mylene.josserand@collabora.com>
+         <20200602080644.11333-2-mylene.josserand@collabora.com>
+         <CAMty3ZDx-_-VHEwjbV05GBb-hQbPpo21aZbCrQ+GTaoT_gxAMg@mail.gmail.com>
+         <1793210.9Kb5SQUFvz@phil>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75f0ef0b-ce95-fd92-00df-4231ffa1fa8e@intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:13:35PM +0800, Xiaoyao Li wrote:
-> On 7/1/2020 4:04 PM, Yang Weijiang wrote:
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index c5835f9cb9ad..6390b62c12ed 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
-> >   				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
-> >   				| XFEATURE_MASK_PKRU)
-> > +#define KVM_SUPPORTED_XSS       (XFEATURE_MASK_CET_USER | \
-> > +				 XFEATURE_MASK_CET_KERNEL)
-> > +
+On Fri, 2020-07-03 at 16:11 +0200, Heiko Stuebner wrote:
+> Hi Jagan,
 > 
-> This definition need to be moved to Patch 5?
-> 
-Good capture, thanks! I'll move it in next series.
-
-> >   u64 __read_mostly host_efer;
-> >   EXPORT_SYMBOL_GPL(host_efer);
+> Am Montag, 29. Juni 2020, 21:11:03 CEST schrieb Jagan Teki:
+> > On Tue, Jun 2, 2020 at 1:37 PM Mylène Josserand
+> > <mylene.josserand@collabora.com> wrote:
+> > > The revision rk3288w has a different clock tree about "hclk_vio"
+> > > clock, according to the BSP kernel code.
+> > > 
+> > > This patch handles this difference by detecting which device-tree
+> > > we are using. If it is a "rockchip,rk3288-cru", let's register
+> > > the clock tree as it was before. If the device-tree node is
+> > > "rockchip,rk3288w-cru", we will apply the difference with this
+> > > version of this SoC.
+> > > 
+> > > Noticed that this new device-tree compatible must be handled in
+> > > bootloader such as u-boot.
+> > > 
+> > > Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
+> > > ---
+> > >  drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
+> > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> > > index cc2a177bbdbf..204976e2d0cb 100644
+> > > --- a/drivers/clk/rockchip/clk-rk3288.c
+> > > +++ b/drivers/clk/rockchip/clk-rk3288.c
+> > > @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+> > >         COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+> > >                         RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
+> > >                         RK3288_CLKGATE_CON(3), 0, GFLAGS),
+> > > -       DIV(0, "hclk_vio", "aclk_vio0", 0,
+> > > -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > >         COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
+> > >                         RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
+> > >                         RK3288_CLKGATE_CON(3), 2, GFLAGS),
+> > > @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+> > >         INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
+> > >  };
+> > > 
+> > > +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
+> > > +       DIV(0, "hclk_vio", "aclk_vio1", 0,
+> > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > > +};
+> > > +
+> > > +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
+> > > +       DIV(0, "hclk_vio", "aclk_vio0", 0,
+> > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
+> > > +};
+> > > +
+> > >  static const char *const rk3288_critical_clocks[] __initconst = {
+> > >         "aclk_cpu",
+> > >         "aclk_peri",
+> > > @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
+> > >                                    RK3288_GRF_SOC_STATUS1);
+> > >         rockchip_clk_register_branches(ctx, rk3288_clk_branches,
+> > >                                   ARRAY_SIZE(rk3288_clk_branches));
+> > > +
+> > > +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
+> > > +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
+> > > +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
+> > > +       else
+> > > +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
+> > > +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
+> > > +
 > > 
+> > Sorry for the late query on this. I am a bit unclear about this
+> > compatible change, does Linux expect to replace rockchip,rk3288-cru
+> > with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
+> > append the existing cru compatible node with rockchip,rk3288w-cru?
+> > because replace new cru node make clock never probe since the
+> > CLK_OF_DECLARE checking rockchip,rk3288-cru
+> 
+> I guess right now we'd expect "rockchip,rk3288w-cru", "rockchip,rk3288-cru",
+> 
+> Thinking again about this, I'm wondering if we should switch to having
+> only one per variant ... like on the two rk3188 variants,
+> so declaring separate rk3288-cru and rk3288w-cru of-clks with shared
+> common code.
+> 
+
+If we want to take this route (which I think makes sense), we should
+do that sooner than later, so we don't release two different implementations
+with two different requirements.
+
+This change should be quite simple, no?
+
+Thanks,
+Ezequiel
+
+
+
