@@ -2,255 +2,168 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A79EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE272C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B58720720
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADFB208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dr4MWrby"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mv9YdDou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgGCHXl (ORCPT
+        id S1726100AbgGCHYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:23:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32824 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725648AbgGCHXk (ORCPT
+        Fri, 3 Jul 2020 03:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgGCHYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:23:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593761018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=9IrB0nwoPQg3scxw1qShp/wCtwnU4uLcL7itN2Vnaqw=;
-        b=Dr4MWrbyCHuZMVy/2Z6SBH0c6/eJaQkscoyxCyGAPUrkx8bH8SK8s7qybJpm7/P21b3ygz
-        x/SEidaHexGXMZ3ZVBMDEgDJkQNODlXJAPnFqzkyY+zAAK8ZLMFSPyza3u4LgfbxLfyQ5/
-        VBSbdUs22IKuO6kbNq60qY+7zpRCgqc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-EbZGAn7VMRCA21lz1n8nmw-1; Fri, 03 Jul 2020 03:23:36 -0400
-X-MC-Unique: EbZGAn7VMRCA21lz1n8nmw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB035107ACF6;
-        Fri,  3 Jul 2020 07:23:33 +0000 (UTC)
-Received: from [10.36.114.0] (ovpn-114-0.ams2.redhat.com [10.36.114.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1515010013D9;
-        Fri,  3 Jul 2020 07:23:30 +0000 (UTC)
-Subject: Re: [PATCH] mm: define pte_add_end for consistency
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        akpm@linux-foundation.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org
-References: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
- <40362e99-a354-c44f-8645-e2326a6df680@redhat.com>
- <20200701021113.GA51306@L-31X9LVDL-1304.local>
- <da4a470e-f34c-fbf8-c95a-93a7d30a215b@redhat.com>
- <20200701115441.GA4979@L-31X9LVDL-1304.local>
- <7562991b-c1e7-4037-a3f0-124acd0669b7@redhat.com>
- <20200703013435.GA11340@L-31X9LVDL-1304.local>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <14e6a073-0a8c-3827-4d6f-072d08fbd6cc@redhat.com>
-Date:   Fri, 3 Jul 2020 09:23:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 3 Jul 2020 03:24:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3819EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 00:24:09 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so11597828pfu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 00:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1awR1oXatwAPM3CxqAnDzajgAUbbG1G7hC8t8yoUY2c=;
+        b=Mv9YdDouGyZG1BWTZV0nE63MJW8hW4IGvJDGE3bdMhdV/lzeXk7yELZAp5qGzaVDGn
+         NuZnGJtzD5Flz9oV2rKDVxlKBJszaGFz41w39ITwTdb273AKpj1Z2rfnnNyM0Lj+qTvE
+         A/oFxv6DVtea2p8eBjVHAyZO3gtI52jmAjRIliYzGXOUzWxQ+Cf6q1ya4yyHqJt0BC1H
+         suDP0/7G+nAfekDSMm9lo2zzTXvsOgyWvR2W4Iyi1bw4woGwVlkUjD3l3+2MJUbIW3oh
+         pJCBa2Jsx4g9ejD6GPtzmq1dJPwe+uyloJdPHz411gu0OFPYIPAcd1Zt9UV/LlW68JAN
+         2s7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1awR1oXatwAPM3CxqAnDzajgAUbbG1G7hC8t8yoUY2c=;
+        b=ezvREMtqM/V18W+22JAzz2gz7HpOeymat5PDfRAsoQln84kl5vRxgW/CZbF+rQnJx3
+         /WyF7FpDyvtylKJYNrlR42VZQ+TfiOLyExo+ws2JSFu2zA3KWoJUOajmNc2zqfYe082t
+         t+OpCwq1kGIo0tS0jP/AhNg+jruYxTG8rj61L8dkUL7UFsG5DL50qX0/TOGuLqcRBBkq
+         CR8ZbYOkq78X91KIz8AEgMjgAhzTKMBfOXY6FAoH8HHFExA4J+0iiDNE8TDFYPSvM5ZH
+         LihdFQkIEthygSDN+effT6HPA4J3614p4dg8wxh8wQnyOnvESvh3eE4Fikds5iS/Hx6i
+         WDjw==
+X-Gm-Message-State: AOAM531HrvzY5n+dtc4fRQ94YnR3rFpSHCEk/uOW+fEApihdnLe0yimG
+        XLnb8PNVqBJwrpjTm3QskU7swA==
+X-Google-Smtp-Source: ABdhPJwG26bdUSi0e1xDu2+9B7dUb5ve1+tns0gC1h3cIDe7TAGqK8L839gPpddHGM8v9METs1j4RQ==
+X-Received: by 2002:a65:4209:: with SMTP id c9mr27936332pgq.445.1593761048684;
+        Fri, 03 Jul 2020 00:24:08 -0700 (PDT)
+Received: from localhost ([122.172.40.201])
+        by smtp.gmail.com with ESMTPSA id nh14sm3877075pjb.4.2020.07.03.00.24.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jul 2020 00:24:08 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     stable@vger.kernel.org
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [FOR-STABLE-3.9+] sched/rt: Show the 'sched_rr_timeslice' SCHED_RR timeslice tuning knob in milliseconds
+Date:   Fri,  3 Jul 2020 12:54:04 +0530
+Message-Id: <ffdfb849a11b9cd66e0aded2161869e36aec7fc0.1593757471.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-In-Reply-To: <20200703013435.GA11340@L-31X9LVDL-1304.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.20 03:34, Wei Yang wrote:
-> On Thu, Jul 02, 2020 at 06:28:19PM +0200, David Hildenbrand wrote:
->> On 01.07.20 13:54, Wei Yang wrote:
->>> On Wed, Jul 01, 2020 at 10:29:08AM +0200, David Hildenbrand wrote:
->>>> On 01.07.20 04:11, Wei Yang wrote:
->>>>> On Tue, Jun 30, 2020 at 02:44:00PM +0200, David Hildenbrand wrote:
->>>>>> On 30.06.20 05:18, Wei Yang wrote:
->>>>>>> When walking page tables, we define several helpers to get the address of
->>>>>>> the next boundary. But we don't have one for pte level.
->>>>>>>
->>>>>>> Let's define it and consolidate the code in several places.
->>>>>>>
->>>>>>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->>>>>>> ---
->>>>>>>  arch/x86/mm/init_64.c   | 6 ++----
->>>>>>>  include/linux/pgtable.h | 7 +++++++
->>>>>>>  mm/kasan/init.c         | 4 +---
->>>>>>>  3 files changed, 10 insertions(+), 7 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
->>>>>>> index dbae185511cd..f902fbd17f27 100644
->>>>>>> --- a/arch/x86/mm/init_64.c
->>>>>>> +++ b/arch/x86/mm/init_64.c
->>>>>>> @@ -973,9 +973,7 @@ remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end,
->>>>>>>  
->>>>>>>  	pte = pte_start + pte_index(addr);
->>>>>>>  	for (; addr < end; addr = next, pte++) {
->>>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
->>>>>>> -		if (next > end)
->>>>>>> -			next = end;
->>>>>>> +		next = pte_addr_end(addr, end);
->>>>>>>  
->>>>>>>  		if (!pte_present(*pte))
->>>>>>>  			continue;
->>>>>>> @@ -1558,7 +1556,7 @@ void register_page_bootmem_memmap(unsigned long section_nr,
->>>>>>>  		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
->>>>>>>  
->>>>>>>  		if (!boot_cpu_has(X86_FEATURE_PSE)) {
->>>>>>> -			next = (addr + PAGE_SIZE) & PAGE_MASK;
->>>>>>> +			next = pte_addr_end(addr, end);
->>>>>>>  			pmd = pmd_offset(pud, addr);
->>>>>>>  			if (pmd_none(*pmd))
->>>>>>>  				continue;
->>>>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>>>>>> index 32b6c52d41b9..0de09c6c89d2 100644
->>>>>>> --- a/include/linux/pgtable.h
->>>>>>> +++ b/include/linux/pgtable.h
->>>>>>> @@ -706,6 +706,13 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
->>>>>>>  })
->>>>>>>  #endif
->>>>>>>  
->>>>>>> +#ifndef pte_addr_end
->>>>>>> +#define pte_addr_end(addr, end)						\
->>>>>>> +({	unsigned long __boundary = ((addr) + PAGE_SIZE) & PAGE_MASK;	\
->>>>>>> +	(__boundary - 1 < (end) - 1) ? __boundary : (end);		\
->>>>>>> +})
->>>>>>> +#endif
->>>>>>> +
->>>>>>>  /*
->>>>>>>   * When walking page tables, we usually want to skip any p?d_none entries;
->>>>>>>   * and any p?d_bad entries - reporting the error before resetting to none.
->>>>>>> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
->>>>>>> index fe6be0be1f76..89f748601f74 100644
->>>>>>> --- a/mm/kasan/init.c
->>>>>>> +++ b/mm/kasan/init.c
->>>>>>> @@ -349,9 +349,7 @@ static void kasan_remove_pte_table(pte_t *pte, unsigned long addr,
->>>>>>>  	unsigned long next;
->>>>>>>  
->>>>>>>  	for (; addr < end; addr = next, pte++) {
->>>>>>> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
->>>>>>> -		if (next > end)
->>>>>>> -			next = end;
->>>>>>> +		next = pte_addr_end(addr, end);
->>>>>>>  
->>>>>>>  		if (!pte_present(*pte))
->>>>>>>  			continue;
->>>>>>>
->>>>>>
->>>>>> I'm not really a friend of this I have to say. We're simply iterating
->>>>>> over single pages, not much magic ....
->>>>>
->>>>> Hmm... yes, we are iterating on Page boundary, while we many have the case
->>>>> when addr or end is not PAGE_ALIGN.
->>>>
->>>> I really do wonder if not having page aligned addresses actually happens
->>>> in real life. Page tables operate on page granularity, and
->>>> adding/removing unaligned parts feels wrong ... and that's also why I
->>>> dislike such a helper.
->>>>
->>>> 1. kasan_add_zero_shadow()/kasan_remove_zero_shadow(). If I understand
->>>> the logic (WARN_ON()) correctly, we bail out in case we would ever end
->>>> up in such a scenario, where we would want to add/remove things not
->>>> aligned to PAGE_SIZE.
->>>>
->>>> 2. remove_pagetable()...->remove_pte_table()
->>>>
->>>> vmemmap_free() should never try to de-populate sub-pages. Even with
->>>> sub-section hot-add/remove (2MB / 512 pages), with valid struct page
->>>> sizes (56, 64, 72, 80), we always end up with full pages.
->>>>
->>>> kernel_physical_mapping_remove() is only called via
->>>> arch_remove_memory(). That will never remove unaligned parts.
->>>>
->>>
->>> I don't have a very clear mind now, while when you look into
->>> remove_pte_table(), it has two cases based on alignment of addr and next.
->>>
->>> If we always remove a page, the second case won't happen?
->>
->> So, the code talks about that the second case can only happen for
->> vmemmap, never for direct mappings.
->>
->> I don't see a way how this could ever happen with current page sizes,
->> even with sub-section hotadd (2MB). Maybe that is a legacy leftover or
->> was never relevant? Or I am missing something important, where we could
->> have sub-4k-page vmemmap data.
->>
-> 
-> I took a calculation on the sub-section page struct size, it is page size (4K)
-> aligned. This means you are right, which we won't depopulate a sub-page.
-> 
-> And yes, I am not sure all those variants would fit this case. So I would like
-> to leave as it now. How about your opinion?
+From: Shile Zhang <shile.zhang@nokia.com>
 
-I'd say we clean this up and protect it by WARN_ON_ONCE(). Then, it
-won't need another round of investigation to find out that handling
-sub-pages is irrelevant.
+We added the 'sched_rr_timeslice_ms' SCHED_RR tuning knob in this commit:
 
-If you don't want to tackle this, I can have a look. Just let me know.
+  ce0dbbbb30ae ("sched/rt: Add a tuning knob to allow changing SCHED_RR timeslice")
 
+... which name suggests to users that it's in milliseconds, while in reality
+it's being set in milliseconds but the result is shown in jiffies.
+
+This is obviously confusing when HZ is not 1000, it makes it appear like the
+value set failed, such as HZ=100:
+
+  root# echo 100 > /proc/sys/kernel/sched_rr_timeslice_ms
+  root# cat /proc/sys/kernel/sched_rr_timeslice_ms
+  10
+
+Fix this to be milliseconds all around.
+
+Cc: <stable@vger.kernel.org> # v3.9+
+Signed-off-by: Shile Zhang <shile.zhang@nokia.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/1485612049-20923-1-git-send-email-shile.zhang@nokia.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ include/linux/sched/sysctl.h | 1 +
+ kernel/sched/core.c          | 5 +++--
+ kernel/sched/rt.c            | 1 +
+ kernel/sysctl.c              | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 596a0e007c62..7cae31be37cf 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -93,6 +93,7 @@ extern unsigned int sysctl_sched_cfs_bandwidth_slice;
+ extern unsigned int sysctl_sched_autogroup_enabled;
+ #endif
+ 
++extern int sysctl_sched_rr_timeslice;
+ extern int sched_rr_timeslice;
+ 
+ extern int sched_rr_handler(struct ctl_table *table, int write,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 45dd606138b0..df6daf7301ee 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7804,8 +7804,9 @@ int sched_rr_handler(struct ctl_table *table, int write,
+ 	/* make sure that internally we keep jiffies */
+ 	/* also, writing zero resets timeslice to default */
+ 	if (!ret && write) {
+-		sched_rr_timeslice = sched_rr_timeslice <= 0 ?
+-			RR_TIMESLICE : msecs_to_jiffies(sched_rr_timeslice);
++		sched_rr_timeslice =
++			sysctl_sched_rr_timeslice <= 0 ? RR_TIMESLICE :
++			msecs_to_jiffies(sysctl_sched_rr_timeslice);
+ 	}
+ 	mutex_unlock(&mutex);
+ 	return ret;
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e0e5b3314c5b..5523766af665 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -8,6 +8,7 @@
+ #include <linux/slab.h>
+ 
+ int sched_rr_timeslice = RR_TIMESLICE;
++int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
+ 
+ static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c5da3c8a67e8..db51f7b0e7a2 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -421,7 +421,7 @@ static struct ctl_table kern_table[] = {
+ 	},
+ 	{
+ 		.procname	= "sched_rr_timeslice_ms",
+-		.data		= &sched_rr_timeslice,
++		.data		= &sysctl_sched_rr_timeslice,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= sched_rr_handler,
 -- 
-Thanks,
-
-David / dhildenb
+2.25.0.rc1.19.g042ed3e048af
 
