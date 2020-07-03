@@ -2,183 +2,101 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5215720870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEE320724
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="Pa5s69St"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPAjz1hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgGCJdZ (ORCPT
+        id S1726505AbgGCJfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:33:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
+        Fri, 3 Jul 2020 05:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgGCJdY (ORCPT
+        with ESMTP id S1725786AbgGCJfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:33:24 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBC3C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 02:33:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d17so21474057ljl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 02:33:23 -0700 (PDT)
+        Fri, 3 Jul 2020 05:35:38 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C69C08C5C1;
+        Fri,  3 Jul 2020 02:35:37 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f5so20312765ljj.10;
+        Fri, 03 Jul 2020 02:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FxORWevFMuPysEWqwp7nhsVM+UgCIl2L6xusN6h/tRo=;
-        b=Pa5s69StIWHqUszCnn7WyIkhL3j+RajqkShp8k3dvCEVibyOe0GMLFnbZpxTqORJbm
-         DQrixJG2YkDXrhh1sLs/XgxA5tes5bCbL1xR6BOYa7f6P9j7t5W5rlnNav4M4qA0/Asm
-         QXPh//FRRJNTzfHoQViYPLngKyafB6kAZB1SNlf8blPIcbpmEDr1WiIpFWf50KZA1AeA
-         E/0FtRT62fkshSeBqe5ahRC3LI+WU97GHJVErWiqarDYYZP0ZPuOCEX6F3R4q5W7PAJg
-         8h1ZRUYYKKCWxhgNbzQpXwjLneJmKBEFO5kPyCU3mowvLD6bQ24f5JSQooY2fj9cehSa
-         qB7Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oLmfy2pnBy37MmMuk79InOyFQOgM0OuGfW1lA5Bezns=;
+        b=dPAjz1hRA/nWCvLhxUJ7uccVaEcwWGHbKTb44GQgl9LbzS4P6iJHC9rTS2nlOv1sFZ
+         ilJIhJrVs4lZNtbBpljQqJaP52MEfvlFZWtrFyCKDaq8EB9QBGfWgXivYQhySdghuDCw
+         xZbaZmTj+muqQhER3JHXJChUNdRVKAhEkYeYPBrFKKpz8vH/HepPR1Qgy/gOVXbF2G4l
+         UsEIzzrg4hjteJT84C6pImwA9mxXVrU3dpYN/25xEPNBPlqBmCOyoTaYqNyGzJBIlQFy
+         LoQyMyb7o49jAxi6ONh68RAoHketLxFTY9OgrDp8JB4d/gGx1DRmECcpXfDsRYBpEBgI
+         RnWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FxORWevFMuPysEWqwp7nhsVM+UgCIl2L6xusN6h/tRo=;
-        b=tS/9RDGFTRtzvRX+R6gz/xGKAELahdj507dxAEG7z//+zDZ9ipTXMNOC3qLNq5PtAc
-         ejd6qn2fFUpIc86Tx3xBgFcpwD871qZgqpeLXK8wFdEwpkCSz6hRxqidDJs3ZH17gxex
-         3DxeM3gplgZBhT705PjYUM+q3mbqHFVL66J/Oah4txr5EMVQxZFZ2kw9KgrzUfCa9hkF
-         BrM4OPvzmGJlq4rUdQaaR0Mc1zJBfWIm82d2W0ga0bH982s8f2/uWU3L0VmrgJSpqLMZ
-         NYJ9U4vChfxZ//i+oMUx8MMK1qeS3X6VBVLhbhJUEfOr51OogObrMC/N+lZgJnG/NdcQ
-         eLBw==
-X-Gm-Message-State: AOAM532Ti9Wj7FXAu1xaD4N0su7VWUNYCAplhjgnVX+zDuGo7kAOSHN1
-        CO2ZMoAaQWgaruDQh8o+R8RbcA==
-X-Google-Smtp-Source: ABdhPJzd/ZgbHMgl58AU/eQVn4qA4l5hP0brJ3GW/SvYfHe/nK8939nIQ/LSupb0XRiMYcgIBwPmfA==
-X-Received: by 2002:a2e:b6d2:: with SMTP id m18mr699203ljo.341.1593768802134;
-        Fri, 03 Jul 2020 02:33:22 -0700 (PDT)
-Received: from [192.168.1.9] ([83.68.95.66])
-        by smtp.googlemail.com with ESMTPSA id c14sm3908884ljj.112.2020.07.03.02.33.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 02:33:21 -0700 (PDT)
-Subject: Re: [PATCH v3 4/4] arm64: dts: marvell: add SMMU support
-To:     Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        joro@8bytes.org, gregory.clement@bootlin.com, robh+dt@kernel.org,
-        hannah@marvell.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        nadavh@marvell.com, linux-arm-kernel@lists.infradead.org,
-        mw@semihalf.com
-References: <20200702201633.22693-1-tn@semihalf.com>
- <20200702201633.22693-5-tn@semihalf.com>
- <ba29e839-79e0-7189-f735-d457544135e4@arm.com>
-From:   Tomasz Nowicki <tn@semihalf.com>
-Message-ID: <3d9b3d16-00e4-d3b5-344b-8515c70fb83e@semihalf.com>
-Date:   Fri, 3 Jul 2020 11:33:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oLmfy2pnBy37MmMuk79InOyFQOgM0OuGfW1lA5Bezns=;
+        b=OXRfnojiGdwe6lfW+/4932mWpfQxyLbbeN7Z+ntgQvrRWLKFVSR5us3yn/Et/xF0Vi
+         w1323nbTY+XiPV1Wd1FCBb40dNFofTFMu7xSlUSvBfXGWBunnWY63P49pR5PIE2/rqzp
+         edE744BnBEVLyoGADqWlk22q1BsqGU1kX3luMJpV1LJrSqHfG6+nXymenA4Q6ftakGb7
+         Yf0eTtQKdecB9xk4vShPch48HgGgytBzA1it89bx6Cs5fJePTC8/+alojhha5MeEKcaj
+         SLN9f4ZOc1wYVJcejjxeN7kJu6dwWyFhYKWzPqVg3gobFiZMt+WoPVYwg5+Agn5Uq80A
+         Vnxw==
+X-Gm-Message-State: AOAM533dQ+mPrPfaRIcf27ijYdhK932Ve4j74Tx7os/SXugA68cl2aUN
+        7JkhnX6jEzThR2Su9vG8gtE+/HA4JsLRHBWlQIA=
+X-Google-Smtp-Source: ABdhPJw1fRvCdmWXz1y7V1BJUhyPLgKVAwcYywSD36PjOkR8Vultjf9a5oAIaozxkYLgP29FTGmHL6QlT3bDv1jwa/A=
+X-Received: by 2002:a2e:9e87:: with SMTP id f7mr19865475ljk.44.1593768936347;
+ Fri, 03 Jul 2020 02:35:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ba29e839-79e0-7189-f735-d457544135e4@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200701200951.3603160-1-hch@lst.de> <20200701200951.3603160-17-hch@lst.de>
+ <CANiq72=CaKKzXSayH9bRpzMkU2zyHGLA4a-XqTH--_mpTvO7ZQ@mail.gmail.com>
+ <20200702135054.GA29240@lst.de> <CANiq72=8facdt7HBtoUZiJW5zfki-gYYESJzxjXf7wK7dYLm1Q@mail.gmail.com>
+ <d7c902f9eecffc51f3a5761fa343bedad89dff7e.camel@perches.com>
+In-Reply-To: <d7c902f9eecffc51f3a5761fa343bedad89dff7e.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 3 Jul 2020 11:35:25 +0200
+Message-ID: <CANiq72=LekNWFbK8_+88T2oGSqA5A0fjnvn28cY-tEOfKbSqdw@mail.gmail.com>
+Subject: Re: [PATCH 16/23] seq_file: switch over direct seq_read method calls
+ to seq_read_iter
+To:     Joe Perches <joe@perches.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.07.2020 11:16, Robin Murphy wrote:
-> On 2020-07-02 21:16, Tomasz Nowicki wrote:
->> From: Marcin Wojtas <mw@semihalf.com>
->>
->> Add IOMMU node for Marvell AP806 based SoCs together with platform
->> and PCI device Stream ID mapping.
->>
->> Signed-off-by: Marcin Wojtas <mw@semihalf.com>
->> Signed-off-by: Tomasz Nowicki <tn@semihalf.com>
->> ---
->>   arch/arm64/boot/dts/marvell/armada-8040.dtsi  | 36 +++++++++++++++++++
->>   arch/arm64/boot/dts/marvell/armada-ap80x.dtsi | 17 +++++++++
->>   2 files changed, 53 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi 
->> b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> index 7699b19224c2..25c1df709f72 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
->> @@ -23,3 +23,39 @@
->>   &cp0_rtc {
->>       status = "disabled";
->>   };
->> +
->> +&cp0_usb3_0 {
->> +    iommus = <&smmu 0x440>;
->> +};
->> +
->> +&cp0_usb3_1 {
->> +    iommus = <&smmu 0x441>;
->> +};
->> +
->> +&cp0_sata0 {
->> +    iommus = <&smmu 0x444>;
->> +};
->> +
->> +&cp0_sdhci0 {
->> +    iommus = <&smmu 0x445>;
->> +};
->> +
->> +&cp1_sata0 {
->> +    iommus = <&smmu 0x454>;
->> +};
->> +
->> +&cp1_usb3_0 {
->> +    iommus = <&smmu 0x450>;
->> +};
->> +
->> +&cp1_usb3_1 {
->> +    iommus = <&smmu 0x451>;
->> +};
->> +
->> +&cp0_pcie0 {
->> +    iommu-map =
->> +        <0x0   &smmu 0x480 0x20>,
->> +        <0x100 &smmu 0x4a0 0x20>,
->> +        <0x200 &smmu 0x4c0 0x20>;
->> +    iommu-map-mask = <0x031f>;
-> 
-> Nice! I do like a good compressed mapping :D
-> 
->> +};
->> diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi 
->> b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> index 7f9b9a647717..ded8b8082d79 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
->> @@ -56,6 +56,23 @@
->>               compatible = "simple-bus";
->>               ranges = <0x0 0x0 0xf0000000 0x1000000>;
->> +            smmu: iommu@5000000 {
->> +                compatible = "marvell,ap806-smmu-500", "arm,mmu-500";
->> +                reg = <0x100000 0x100000>;
->> +                dma-coherent;
->> +                #iommu-cells = <1>;
->> +                #global-interrupts = <1>;
->> +                interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> I'd recommend you have the node disabled by default here, then 
-> explicitly enable it in armada-8040.dtsi where you add the Stream IDs. 
-> Otherwise it will also end up enabled for 8020, 70x0, etc. where 
-> disable_bypass will then catastrophically break everything.
-> 
+On Fri, Jul 3, 2020 at 9:44 AM Joe Perches <joe@perches.com> wrote:
+>
+> And I'd generally not bother with 80 column rewrapping
 
-Good point! I will fix this.
+Thanks for the quick answer Joe -- here I was referring to the cases
+where one needs to move all the `=`s to the right like:
 
-Thanks,
-Tomasz
+ static const struct file_operations memtype_fops = {
+  .open    = memtype_seq_open,
+- .read    = seq_read,
++ .read_iter    = seq_read_iter,
+  .llseek  = seq_lseek,
+  .release = seq_release,
+ };
+
+(I don't think there is any/many cases of 80-column rewrapping here).
+
+Cheers,
+Miguel
