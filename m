@@ -3,150 +3,315 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76991C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0DF2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE732088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGCPDG (ORCPT
+        id S1726775AbgGCPDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgGCPDF (ORCPT
+        Fri, 3 Jul 2020 11:03:36 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:33702 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGCPDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:03:05 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265CAC08C5C1;
-        Fri,  3 Jul 2020 08:03:05 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 210AC2A188D
-Message-ID: <8d667ae2554ebf3d9867f6f449973825c969b062.camel@collabora.com>
-Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for
- rk3288w
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     =?ISO-8859-1?Q?Myl=E8ne?= Josserand 
-        <mylene.josserand@collabora.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 03 Jul 2020 12:02:52 -0300
-In-Reply-To: <1793210.9Kb5SQUFvz@phil>
-References: <20200602080644.11333-1-mylene.josserand@collabora.com>
-         <20200602080644.11333-2-mylene.josserand@collabora.com>
-         <CAMty3ZDx-_-VHEwjbV05GBb-hQbPpo21aZbCrQ+GTaoT_gxAMg@mail.gmail.com>
-         <1793210.9Kb5SQUFvz@phil>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Fri, 3 Jul 2020 11:03:35 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id BE4BC804EB;
+        Fri,  3 Jul 2020 17:03:31 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 17:03:30 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Vinay Simha BN <simhavcs@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Message-ID: <20200703150330.GC25632@ravnborg.org>
+References: <20200702123651.12177-1-simhavcs@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702123651.12177-1-simhavcs@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
+        a=e5mUnYsNAAAA:8 a=0rtKju-ii_ScJ6bGwYQA:9 a=Hzqs4R5-i81yDW6c:21
+        a=rITfdrKO3DDOFrQW:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-03 at 16:11 +0200, Heiko Stuebner wrote:
-> Hi Jagan,
+Hi Vinay.
+
+On Thu, Jul 02, 2020 at 06:06:33PM +0530, Vinay Simha BN wrote:
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 > 
-> Am Montag, 29. Juni 2020, 21:11:03 CEST schrieb Jagan Teki:
-> > On Tue, Jun 2, 2020 at 1:37 PM Mylène Josserand
-> > <mylene.josserand@collabora.com> wrote:
-> > > The revision rk3288w has a different clock tree about "hclk_vio"
-> > > clock, according to the BSP kernel code.
-> > > 
-> > > This patch handles this difference by detecting which device-tree
-> > > we are using. If it is a "rockchip,rk3288-cru", let's register
-> > > the clock tree as it was before. If the device-tree node is
-> > > "rockchip,rk3288w-cru", we will apply the difference with this
-> > > version of this SoC.
-> > > 
-> > > Noticed that this new device-tree compatible must be handled in
-> > > bootloader such as u-boot.
-> > > 
-> > > Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
-> > > ---
-> > >  drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
-> > >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> > > index cc2a177bbdbf..204976e2d0cb 100644
-> > > --- a/drivers/clk/rockchip/clk-rk3288.c
-> > > +++ b/drivers/clk/rockchip/clk-rk3288.c
-> > > @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
-> > >         COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
-> > >                         RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS,
-> > >                         RK3288_CLKGATE_CON(3), 0, GFLAGS),
-> > > -       DIV(0, "hclk_vio", "aclk_vio0", 0,
-> > > -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-> > >         COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IGNORE_UNUSED,
-> > >                         RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAGS,
-> > >                         RK3288_CLKGATE_CON(3), 2, GFLAGS),
-> > > @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
-> > >         INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, IFLAGS),
-> > >  };
-> > > 
-> > > +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata = {
-> > > +       DIV(0, "hclk_vio", "aclk_vio1", 0,
-> > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-> > > +};
-> > > +
-> > > +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata = {
-> > > +       DIV(0, "hclk_vio", "aclk_vio0", 0,
-> > > +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-> > > +};
-> > > +
-> > >  static const char *const rk3288_critical_clocks[] __initconst = {
-> > >         "aclk_cpu",
-> > >         "aclk_peri",
-> > > @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_node *np)
-> > >                                    RK3288_GRF_SOC_STATUS1);
-> > >         rockchip_clk_register_branches(ctx, rk3288_clk_branches,
-> > >                                   ARRAY_SIZE(rk3288_clk_branches));
-> > > +
-> > > +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
-> > > +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
-> > > +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
-> > > +       else
-> > > +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
-> > > +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
-> > > +
-> > 
-> > Sorry for the late query on this. I am a bit unclear about this
-> > compatible change, does Linux expect to replace rockchip,rk3288-cru
-> > with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
-> > append the existing cru compatible node with rockchip,rk3288w-cru?
-> > because replace new cru node make clock never probe since the
-> > CLK_OF_DECLARE checking rockchip,rk3288-cru
+> ---
+> v1:
+>  Initial version wast .txt file
 > 
-> I guess right now we'd expect "rockchip,rk3288w-cru", "rockchip,rk3288-cru",
+> v2:
+>  From txt to yaml file format
 > 
-> Thinking again about this, I'm wondering if we should switch to having
-> only one per variant ... like on the two rk3188 variants,
-> so declaring separate rk3288-cru and rk3288w-cru of-clks with shared
-> common code.
+> v3:
+> * Andrzej Hajda review comments incorporated
+>   dual port lvds implemented
 > 
+> * Laurent Pinchart review comments incorporated
+>   dsi lanes property removed and it is dynamically
+>   picked from the dsi ports
+>   VESA/JEIDA format picked from panel-lvds dts
+> 
+> v4:
+> * Sam Ravnborg review comments incorporated
+>   }' is indented properly in examples data-lanes
+>   description for single-link and dual-link lvds
 
-If we want to take this route (which I think makes sense), we should
-do that sooner than later, so we don't release two different implementations
-with two different requirements.
+If you add a proper changelog then this patch is:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-This change should be quite simple, no?
-
-Thanks,
-Ezequiel
-
-
-
+	Sam
+> ---
+>  .../display/bridge/toshiba,tc358775.yaml      | 215 ++++++++++++++++++
+>  1 file changed, 215 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> new file mode 100644
+> index 000000000000..9ddd63bee403
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+> @@ -0,0 +1,215 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +
+> +maintainers:
+> + - Vinay Simha BN <simhavcs@gmail.com>
+> +
+> +description: |
+> + This binding supports DSI to LVDS bridge TC358775
+> +
+> + MIPI DSI-RX Data 4-lane, CLK 1-lane with data rates up to 800 Mbps/lane.
+> + Video frame size:
+> + Up to 1600x1200 24-bit/pixel resolution for single-link LVDS display panel
+> + limited by 135 MHz LVDS speed
+> + Up to WUXGA (1920x1200 24-bit pixels) resolution for dual-link LVDS display
+> + panel, limited by 270 MHz LVDS speed.
+> +
+> +properties:
+> +  compatible:
+> +    const: toshiba,tc358775
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: i2c address of the bridge, 0x0f
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +    description:  1.2V LVDS Power Supply
+> +
+> +  vddio-supply:
+> +    maxItems: 1
+> +    description: 1.8V IO Power Supply
+> +
+> +  stby-gpios:
+> +    maxItems: 1
+> +    description: Standby pin, Low active
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Hardware reset, Low active
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          DSI Input. The remote endpoint phandle should be a
+> +          reference to a valid mipi_dsi_host device node.
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS output (panel or connector).
+> +
+> +      port@2:
+> +        type: object
+> +        description: |
+> +          Video port for Dual link LVDS output (panel or connector).
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - vdd-supply
+> + - vddio-supply
+> + - stby-gpios
+> + - reset-gpios
+> + - ports
+> +
+> +examples:
+> + - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    /* For single-link LVDS display panel */
+> +
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        tc_bridge: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_test: endpoint {
+> +                        remote-endpoint = <&dsi0_out>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds_out: endpoint {
+> +                        remote-endpoint = <&panel_in>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out: endpoint {
+> +                    remote-endpoint = <&d2l_in_test>;
+> +                    data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+> +
+> + - |
+> +    /* For dual-link LVDS display panel */
+> +
+> +    i2c@78b8000 {
+> +        /* On High speed expansion */
+> +        label = "HS-I2C2";
+> +        reg = <0x078b8000 0x500>;
+> +        clock-frequency = <400000>; /* fastmode operation */
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        tc_bridge_dual: bridge@f {
+> +            compatible = "toshiba,tc358775";
+> +            reg = <0x0f>;
+> +
+> +            vdd-supply = <&pm8916_l2>;
+> +            vddio-supply = <&pm8916_l6>;
+> +
+> +            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
+> +            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    d2l_in_dual: endpoint {
+> +                        remote-endpoint = <&dsi0_out_dual>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +                    lvds0_out: endpoint {
+> +                        remote-endpoint = <&panel_in0>;
+> +                    };
+> +                };
+> +
+> +                port@2 {
+> +                    reg = <2>;
+> +                    lvds1_out: endpoint {
+> +                        remote-endpoint = <&panel_in1>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    dsi@1a98000 {
+> +        reg = <0x1a98000 0x25c>;
+> +        reg-names = "dsi_ctrl";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi0_out_dual: endpoint {
+> +                    remote-endpoint = <&d2l_in_dual>;
+> +                    data-lanes = <0 1 2 3>;
+> +                };
+> +             };
+> +         };
+> +     };
+> +...
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
