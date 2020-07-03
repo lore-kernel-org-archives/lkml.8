@@ -4,135 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27452C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A82172084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A54C2084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6Ej3TQC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mof6JfwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgGCSla (ORCPT
+        id S1726721AbgGCSnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:41:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53674 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726148AbgGCSl3 (ORCPT
+        Fri, 3 Jul 2020 14:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgGCSnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:41:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593801688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c83Dgu3F7bsHrP60t6VLlQzU3WYklyXESDcu0K3MgRU=;
-        b=Q6Ej3TQCkc1Qeg2ZcIHOMLY2zCWH48g4Mvp0SUVqwQbeTsNHjVPXf0duSYvqmXCXcSnRd1
-        HgS+wDmpihf605mCgQCFktrdClz8/X4Hg/MQ/igD/8TwFXEoD10hDwPyqND1A93k2BhH19
-        mqmSA9UpP5nJHBj16J49jDfrJvU874o=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-H8CCHlhONMmkprjaoBDMMg-1; Fri, 03 Jul 2020 14:41:25 -0400
-X-MC-Unique: H8CCHlhONMmkprjaoBDMMg-1
-Received: by mail-qt1-f198.google.com with SMTP id i5so22379649qtw.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 11:41:25 -0700 (PDT)
+        Fri, 3 Jul 2020 14:43:31 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44267C08C5DD
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 11:43:31 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id h22so14319923pjf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 11:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=mPYr8lr3dKUW6vXJxZwhdaycJnvZSFeoH2v61Uj7UJE=;
+        b=mof6JfwP8HZHKdXOSnM0KGvAbs+aaGUl0ZRYqOy7DKbsrF/bsIBrdbBzKrZbUpKiMm
+         JDbUMsX26Or6vL/H/UMsIDo0B7NsONf7q+ErPdZeT38sPBCXXOu/rBZ3n5HxrlqbvG1X
+         I+U1/5ChNQAZvIVSMsUoSwM4Z1Cqd1NqwgqV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c83Dgu3F7bsHrP60t6VLlQzU3WYklyXESDcu0K3MgRU=;
-        b=L3DA5GEA4TCsMLO6yG83zBnqRTyK559f+TFCMhavkl9J/1tpzzQeIWuky0xvHmvR6p
-         YK6A2QKzYLw2ZphfKEMrt0VePIA4gsMYKxXC8SCaEJbmcx1aa67K56fIHqzpi2qBilYy
-         ue1xTvMBs4KItJSz6qyZlfyMeOGu6ZiBfJ7HojIX2q3qDp/R31nEV9vWj4Aaf5Re93rp
-         tOC1W783EX2al8lV4rD6CqzaNBhVlgRsV42tU6ao6Tp+G1hI0Gg83PPfUx3lzB7HZFQn
-         I1UyaTx8ZWLOo6pojCrcpzA2jfcxZ7B41pfgIuSjttXI/v1O/szswwFgXIiSgEl8i+Eq
-         Anug==
-X-Gm-Message-State: AOAM530UgW887K039SpJZjSpecIChlfwnjUYhVio9Da+y4iYnZdA0gMy
-        TdGkkJSwlFauRnnE9ZwzCwiIDmDJc9cRCtKz/RaJx0nN9F1UHArOcAfYFOa44IcFQg+sd8wYrnP
-        L/N13YnxAPHM5En8gSIRSPYIa
-X-Received: by 2002:a0c:db8a:: with SMTP id m10mr36623055qvk.21.1593801684762;
-        Fri, 03 Jul 2020 11:41:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwBEnbzWFcgnnEyEN9LPngYgaXBJvTYCdREKhTVEN13IPzAhqv4lj8Wr6UjTQ7Znh1FC+wJ5w==
-X-Received: by 2002:a0c:db8a:: with SMTP id m10mr36623028qvk.21.1593801684349;
-        Fri, 03 Jul 2020 11:41:24 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id a28sm10753840qko.45.2020.07.03.11.41.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=mPYr8lr3dKUW6vXJxZwhdaycJnvZSFeoH2v61Uj7UJE=;
+        b=fYgSn/ao0zjQRE+9fVNbOY3mEMnS59TW34gKRqDnNLZX62XYQFhXHCsJ3XVnxm/tjc
+         cxBldvzPYSC3cyMeRZIP5fA57XxhHWX59htFDUtYnu1W8CUkbmhsfqFn42epB+fRVx++
+         QP+KpWOznB042l6a5IKgvAXCD/QA+CC4DTBooX9MJmhsici8nq5Fy3pl21M8PgteMgKb
+         NKc/qJ4O3F/l147ZlW1ApYDOtFJu1N2PZnpcO1FhSMc4/j2VCnU3SDG5tVvJZ4QTsoAu
+         DFFwwYxE3ihFby67KYYXY91luSiefOl0eV28bMK19r65+FOwP/1M83XLWkQHfG3xBOsf
+         +2AA==
+X-Gm-Message-State: AOAM532d7N407RMgxxHOfjQ73X7n5YjeHSOLNAY8+/P0RCHkXE6rt/te
+        2Fy+rXBv8pSKUWtQtX3XajCokw==
+X-Google-Smtp-Source: ABdhPJyq6m8Qlb4zZJvG3Y12jlIiEeZ9iY6G937YP3me7No2ZXYqR9ki1WHJLdnN9BcRmfa7w8PCbw==
+X-Received: by 2002:a17:90a:764c:: with SMTP id s12mr25055306pjl.201.1593801810720;
+        Fri, 03 Jul 2020 11:43:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j36sm12672948pgj.39.2020.07.03.11.43.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 11:41:23 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 14:41:22 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCH v10 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200703184122.GF6677@xz-x1>
-References: <20200601115957.1581250-1-peterx@redhat.com>
- <20200601115957.1581250-3-peterx@redhat.com>
- <20200702230849.GL3575@linux.intel.com>
+        Fri, 03 Jul 2020 11:43:29 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 11:43:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: kmod: Add module address visibility test
+Message-ID: <202007031141.6AC2173@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702230849.GL3575@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 04:08:49PM -0700, Sean Christopherson wrote:
-> On Mon, Jun 01, 2020 at 07:59:45AM -0400, Peter Xu wrote:
-> > Cache the address space ID just like the slot ID.  It will be used in
-> > order to fill in the dirty ring entries.
-> > 
-> > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  include/linux/kvm_host.h | 1 +
-> >  virt/kvm/kvm_main.c      | 1 +
-> >  2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 01276e3d01b9..5e7bbaf7a36b 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -346,6 +346,7 @@ struct kvm_memory_slot {
-> >  	unsigned long userspace_addr;
-> >  	u32 flags;
-> >  	short id;
-> > +	u16 as_id;
-> >  };
-> >  
-> >  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 74bdb7bf3295..ebdd98a30e82 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -1243,6 +1243,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  	if (!mem->memory_size)
-> >  		return kvm_delete_memslot(kvm, mem, &old, as_id);
-> 
-> This technically needs to set as_id in the deleted memslot.  I highly doubt
-> it will ever matter from a functionality perspective, but it'd be confusing
-> to encounter a memslot whose as_id did not match that of its owner.
+Make sure we don't regress the CAP_SYSLOG behavior of the module address
+visibility via /proc/modules nor /sys/module/*/sections/*.
 
-Yeah it shouldn't matter because as_id is directly passed in to look up the
-pointer of kvm_memslots in kvm_delete_memslot, and memslot->as_id shouldn't be
-further referenced.
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+I forgot to include this patch in my kallsyms_show_value() f_cred series:
+https://lore.kernel.org/lkml/20200702232638.2946421-1-keescook@chromium.org/
+Since this depends on the changes, I'd like to include this in the
+series with acks/review, etc. :)
+---
+ tools/testing/selftests/kmod/kmod.sh | 36 ++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-I can add a comment above if this can clarify things a bit:
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 3702dbcc90a7..c82aa77958e5 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -63,6 +63,8 @@ ALL_TESTS="$ALL_TESTS 0008:150:1"
+ ALL_TESTS="$ALL_TESTS 0009:150:1"
+ ALL_TESTS="$ALL_TESTS 0010:1:1"
+ ALL_TESTS="$ALL_TESTS 0011:1:1"
++ALL_TESTS="$ALL_TESTS 0012:1:1"
++ALL_TESTS="$ALL_TESTS 0013:1:1"
+ 
+ # Kselftest framework requirement - SKIP code is 4.
+ ksft_skip=4
+@@ -470,6 +472,38 @@ kmod_test_0011()
+ 	echo "$MODPROBE" > /proc/sys/kernel/modprobe
+ }
+ 
++kmod_check_visibility()
++{
++	local name="$1"
++	local cmd="$2"
++
++	modprobe $DEFAULT_KMOD_DRIVER
++
++	local priv=$(eval $cmd)
++	local unpriv=$(capsh --drop=CAP_SYSLOG -- -c "$cmd")
++
++	if [ "$priv" = "$unpriv" ] || \
++	   [ "${priv:0:3}" = "0x0" ] || \
++	   [ "${unpriv:0:3}" != "0x0" ] ; then
++		echo "${FUNCNAME[0]}: FAIL, $name visible to unpriv: '$priv' vs '$unpriv'" >&2
++		exit 1
++	else
++		echo "${FUNCNAME[0]}: OK!"
++	fi
++}
++
++kmod_test_0012()
++{
++	kmod_check_visibility /proc/modules \
++		"grep '^${DEFAULT_KMOD_DRIVER}\b' /proc/modules | awk '{print \$NF}'"
++}
++
++kmod_test_0013()
++{
++	kmod_check_visibility '/sys/module/*/sections/*' \
++		"cat /sys/module/${DEFAULT_KMOD_DRIVER}/sections/.*text | head -n1"
++}
++
+ list_tests()
+ {
+ 	echo "Test ID list:"
+@@ -489,6 +523,8 @@ list_tests()
+ 	echo "0009 x $(get_test_count 0009) - multithreaded - push kmod_concurrent over max_modprobes for get_fs_type()"
+ 	echo "0010 x $(get_test_count 0010) - test nonexistent modprobe path"
+ 	echo "0011 x $(get_test_count 0011) - test completely disabling module autoloading"
++	echo "0012 x $(get_test_count 0012) - test /proc/modules address visibility under CAP_SYSLOG"
++	echo "0013 x $(get_test_count 0013) - test /sys/module/*/sections/* visibility under CAP_SYSLOG"
+ }
+ 
+ usage()
+-- 
+2.25.1
 
-+	u16 as_id; /* cache of as_id; only valid if npages != 0 */
-
-Thanks,
 
 -- 
-Peter Xu
-
+Kees Cook
