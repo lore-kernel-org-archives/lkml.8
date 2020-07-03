@@ -1,94 +1,80 @@
-Return-Path: <SRS0=maQP=AN=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C96AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D6420780
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Jul 2020 23:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F792088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="osQmIcYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgGBX5Z (ORCPT
+        id S1726148AbgGCAEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 19:57:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9519 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgGBX5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 19:57:25 -0400
-IronPort-SDR: Writ7GFlqQM+pzM6GUF6l7eWJBklM3+ps9qkTwT+4XXSNg1hA4OEjDhMw0J26ibh+rToVjO73v
- iopcHVZQmPkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="144572124"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="144572124"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 16:57:24 -0700
-IronPort-SDR: +yYtbwe8ez2z9Sh14NIXVLtojyMdup0jF+My1NFWwh7wOTLutIjw20Pma2hCj90y3iyH19ZONc
- 56aZFZOZH71Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="481859602"
-Received: from chadjitt-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.41.125])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jul 2020 16:57:19 -0700
-Date:   Fri, 3 Jul 2020 02:57:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200702235718.GI31291@linux.intel.com>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
- <20200617230958.GC62794@linux.intel.com>
- <20200630183321.GE4694@sequoia>
+        Thu, 2 Jul 2020 20:04:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGCAEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 20:04:11 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9C9C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 17:04:11 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id l12so31885198ejn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eR453wzeWt8OI8WdKhu67tJlFuD79V2ZuDVAjiUvm2c=;
+        b=osQmIcYiPfIrkDD+ZwM6dC63hjNoQl5eJ2OZwLavbQurYzG9Dke7CSXqDk4DOJMxmq
+         mgZDjJ+OYp+hGtROGwdoSWE8k+7Ul7qx0yhNJ2S6CoF/ARBU9hpEeFz02oxAuRrFXgQP
+         EbA+DPpPc3p10H91Ec4VT/tWZZD1B6F/UC1Z9FkhsBfm0LJM8G8zUeRvdO6tJnqFGaDU
+         ZDKJ0tZoIml3IJ9T6aMwOpfsfxAN3DSLJs9ospeLrtHaEEMwMr97YnR+gQM4MKocVdRX
+         Q+X7ZC+cjkDAJCc9nEgJOry7EIJtaGRAq7TEYnPZO5KzrxXOvrUJRtxBmF4TFnGcI4q9
+         pxzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eR453wzeWt8OI8WdKhu67tJlFuD79V2ZuDVAjiUvm2c=;
+        b=OApl+/laKXSlBMPdPaixZ81WoZES7npGkkLGGYmGQA428ZZkCzn+YDOsQV7tD1cRRL
+         18y2L5Mh/Jlk2+M29kCqdJIT3Mpdn+GWdxXcblVtZTgDo8CkzOnXoOeCPXfmmuOjcI36
+         fcK/4h1ITcM1SpIWoraDpF2CXapcGXN5qaDXQY6GgafABmzmieIQE4MUhxRBEWakvgI+
+         zPQCc3q1nbjaF7QbmJYi84vummYQMsKEOojKGv2SU6Dg7XNzoOBi7Fr5e9hK4fdkhCqs
+         x6IpgNUEDBwaJlqwQsw+Fxtb+q+f0az/Bma3svFs45HsW0yPgQKPolx9Ml/fc2FaaXm1
+         Tfwg==
+X-Gm-Message-State: AOAM530X6Y1kfUETLW+OQ/RtPHBz5f+vC4P/FSVjnO6//BK0/hXbP9Ca
+        d6HU37BOlY6uxvtEpeZxmsbtTEcc
+X-Google-Smtp-Source: ABdhPJySk384Au0n5AEnqWU1kZU6d1Am6vMA3dKTtIlPspHynbbfi1s40NUEi53UJMrJkqgRiMAEJQ==
+X-Received: by 2002:a17:907:41dc:: with SMTP id og20mr5805150ejb.183.1593734647918;
+        Thu, 02 Jul 2020 17:04:07 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:bd38:c82d:5283:9f1])
+        by smtp.gmail.com with ESMTPSA id 23sm12455446edw.63.2020.07.02.17.04.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 17:04:07 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 02:04:06 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] tidy-up options / reorganize lib.c
+Message-ID: <20200703000406.74363gobwhd3oj3w@ltop.local>
+References: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630183321.GE4694@sequoia>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200702231039.55015-1-luc.vanoostenryck@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:33:21PM -0500, Tyler Hicks wrote:
-> Jarkko, is this an ack from you?
-> 
-> Is there anything I can do to help along this fix?
-> 
-> I've spoke with two others that have poured through these specs to
-> implement firmware event log parsers and they thought the change made
-> sense.
-> 
-> Tyler
+Deepest apologies, I've sent this to the wrong ML.
 
-I revisited the original patch and this stroke into my eye:
-
-"This is true, for example, when firmware passes the event log to the
-kernel via a reserved memory region described in device tree."
-
-During this discussion you gave an explanation what can trigger the bug
-but in the commit message nothing anchors to anything.
-
-Please give a concrete example what can trigger the issue directly in
-the commit message instead. It's obviously needed.
-
-In addition, you could also rewrite the existing inline comment to be
-something more reasonable to the context.
-
-/Jarkko
+-- Luc
