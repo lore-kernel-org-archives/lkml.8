@@ -2,106 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFE742084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593804059;
-	bh=PEmsm7KiYhEynj7JM9OkcWwJJEMC5FTZ1MgB7GC3/kw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1bCbOXEHKyz38IiXN7UKCsdSBoOeiMHG47FQ9GcSLkaLZ+BZJ2T7g6xlvLnm+AJLD
-	 n0uNXD93zMNsYgiPdvn8tjMxtAAs9XOfnrvHlqmbd2qfflNU5VzFqciyH3ptS4eIGp
-	 PCKFLidSz0b9dj2GHugYKIlm2GUTHpZAI3hTc198=
+	by mail.kernel.org (Postfix) with ESMTP id 167E72084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgGCTU6 (ORCPT
+        id S1726767AbgGCTVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 15:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgGCTU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 15:20:57 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB37F207FF;
-        Fri,  3 Jul 2020 19:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593804057;
-        bh=PEmsm7KiYhEynj7JM9OkcWwJJEMC5FTZ1MgB7GC3/kw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cZz3+cYtChLGxVGtGhI0iqF8NG4vRe7SyHyKP6rwlrniscYuLOgqOM9tC5bBvh6V9
-         rCNuVMRKKdD1/I05cjOph+0nERO2OeeH/Y1QSjn/3szq+YCjsBxWz49TxA/V8HiT6F
-         N6pBBTbIdf7MhFFMTY1BRtmYQCvTyvOSvJ4M/pzg=
-Date:   Fri, 3 Jul 2020 12:20:55 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v9 2/4] fs: Add standard casefolding support
-Message-ID: <20200703192055.GA2825@sol.localdomain>
-References: <20200624043341.33364-1-drosen@google.com>
- <20200624043341.33364-3-drosen@google.com>
- <20200624055707.GG844@sol.localdomain>
- <CA+PiJmTDXTKnccJdADX=ir+PtqsDD72xHGbzObpntkjkVmKHxQ@mail.gmail.com>
+        Fri, 3 Jul 2020 15:21:10 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51470 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGCTVJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 15:21:09 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E91E01C0BD2; Fri,  3 Jul 2020 21:21:06 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 21:21:03 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 4.19 119/131] tracing: Fix event trigger to accept
+ redundant spaces
+Message-ID: <20200703192102.GA31738@amd>
+References: <20200629153502.2494656-1-sashal@kernel.org>
+ <20200629153502.2494656-120-sashal@kernel.org>
+ <20200702211728.GD5787@amd>
+ <20200703060439.GB6344@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
 Content-Disposition: inline
-In-Reply-To: <CA+PiJmTDXTKnccJdADX=ir+PtqsDD72xHGbzObpntkjkVmKHxQ@mail.gmail.com>
+In-Reply-To: <20200703060439.GB6344@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:01:37PM -0700, Daniel Rosenberg wrote:
-> On Tue, Jun 23, 2020 at 10:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > Note that the '!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir)' check can
-> > be racy, because a process can be looking up a no-key token in a directory while
-> > concurrently another process initializes the directory's ->i_crypt_info, causing
-> > fscrypt_has_encryption_key(dir) to suddenly start returning true.
-> >
-> > In my rework of filename handling in f2fs, I actually ended up removing all
-> > calls to needs_casefold(), thus avoiding this race.  f2fs now decides whether
-> > the name is going to need casefolding early on, in __f2fs_setup_filename(),
-> > where it knows in a race-free way whether the filename is a no-key token or not.
-> >
-> > Perhaps ext4 should work the same way?  It did look like there would be some
-> > extra complexity due to how the ext4 directory hashing works in comparison to
-> > f2fs's, but I haven't had a chance to properly investigate it.
-> >
-> > - Eric
-> 
-> Hm. I think I should be able to just check for DCACHE_ENCRYPTED_NAME
-> in the dentry here, right? I'm just trying to avoid casefolding the
-> no-key token, and that flag should indicate that.
 
-Ideally yes, but currently the 'struct dentry' isn't always available.  See how
-fscrypt_setup_filename(), f2fs_setup_filename(), f2fs_find_entry(),
-ext4_find_entry(), etc. take a 'struct qstr', not a 'struct dentry'.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-At some point we should fix that by passing down the dentry whenever it's
-available, so that we reliably know whether the name is a no-key name or not.
 
-So even my new f2fs code is still racy.  But it at least handles each filename
-in a consistent way within each directory operation.  In comparison, your
-proposed ext4 code can treat a filename as a no-key name while matching one
-dir_entry and then as a regular filename while matching the next.  I think the
-f2fs way is more on the right track, both correctness-wise and efficiency-wise.
+> > > commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+> > >=20
+> > > Fix the event trigger to accept redundant spaces in
+> > > the trigger input.
+> > >=20
+> > > For example, these return -EINVAL
+> > >=20
+> > > echo " traceon" > events/ftrace/print/trigger
+> > > echo "traceon  if common_pid =3D=3D 0" > events/ftrace/print/trigger
+> > > echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
+> > >=20
+> > > But these are hard to find what is wrong.
+> > >=20
+> > > To fix this issue, use skip_spaces() to remove spaces
+> > > in front of actual tokens, and set NULL if there is no
+> > > token.
+> >=20
+> > For the record, I'm not fan of this one. It is ABI change, not a
+> > bugfix.
+> >=20
+> > Yes, it makes kernel interface "easier to use". It also changes
+> > interface in the middle of stable series, and if people start relying
+> > on new interface and start putting extra spaces, they'll get nasty
+> > surprise when they move code to the older kernel.
+>=20
+> If an interface changes anywhere that breaks userspace, it needs to be
+> not done, stable kernels are not an issue here or not.
 
-- Eric
+I'm not saying it is a regression; I'd scream way more if that was the
+case. I'm saying it is nowhere near a fix.
+
+We really don't want userspace doing:
+
+> > > echo " traceon" > events/ftrace/print/trigger
+
+Because it does not work on older kernels. It will work on 4.19.131
+and break on 5.6.19.
+
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7/hR4ACgkQMOfwapXb+vKmYwCghKkPCwuF8Pk0V5QFUxPxyy/5
+CWEAnj9xFfErmFoPgeAdx9X9x2gN3LFG
+=UJ3w
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
