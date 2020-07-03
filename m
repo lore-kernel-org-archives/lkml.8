@@ -2,157 +2,124 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF3DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEAA2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8228C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwdqCTnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgGCAyH (ORCPT
+        id S1726639AbgGCAyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:54:07 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58398 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgGCAyG (ORCPT
+        Thu, 2 Jul 2020 20:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGCAyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:54:06 -0400
-Received: from fsav303.sakura.ne.jp (fsav303.sakura.ne.jp [153.120.85.134])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0630q3Dc066718;
-        Fri, 3 Jul 2020 09:52:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav303.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp);
- Fri, 03 Jul 2020 09:52:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav303.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0630q2Yw066713
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 3 Jul 2020 09:52:02 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
- <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
- <20200701153859.GT4332@42.do-not-panic.com>
- <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
- <20200702194656.GV4332@42.do-not-panic.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
-Date:   Fri, 3 Jul 2020 09:52:01 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 2 Jul 2020 20:54:35 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94250C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 17:54:35 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w34so2731882qte.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gmp3Sx0pjIvLynX6ju8pg2+6n+L9gz/8CB7hRCXkhfk=;
+        b=fwdqCTnZCLxC184dA8HxziJBoAe0zO52Ae1M2LCViDgVE+qlKTRZt5IInzpUEVU5Jx
+         XXWbiMOEeY5wBa9HQH6Kz2c65qVpf2wc6V50kEx/KgToQCtAwOizLd/F+crebi7LZZEF
+         dRAV7gt1RcMoOPuOjKvT7UrQivfvxZzpnOWrLoXPMBhrxrt0bY3oxOYd6gEQKEUnMpG/
+         +gLfJqft9x6XvsJd4AUg7/jlfZKZrxkgeiyfFBNPnb5rmtnvkdUth0fJp1lK/XQ3LIkM
+         CKggfbt431MdbhyZWRFMASmWg46z3NdY90ZDn/eOFrl26NFhvpyp+M3Sp9TtJnI+3noY
+         uDvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gmp3Sx0pjIvLynX6ju8pg2+6n+L9gz/8CB7hRCXkhfk=;
+        b=Tb7D5RlHeTSbtrcTHtRrKkG4J4YI+NnKFZ9aJ8zqi5EsCbBho4TLIfsl2OVAUaXrfA
+         QnNMHSdZWf48CcagP01cLitvlQp1H6TdxuT77qH0N/6U+WeZGtz8cB0UOKD0yOdSWVeL
+         YcPSxkaJ9SFEDiX5BofA1NaRaZNQE8qvqnqHAPTO+B0T5QgCG1C0ue3l3CfSRjWBdEgC
+         P5sL6i6pQUS+V+SMGsO00ayZMNRcmm6qLcwAG1xMLwSa3vCTAP0x6gMxzlUR9q5V59Cp
+         pKqGTsI3gXkjg+c7gDMqxKal6MfOvEmHvcAnu45sXCyqRQDZ+xeiVpApFBmmNxvj4oQC
+         wcIA==
+X-Gm-Message-State: AOAM5320vUIZwSRtD3D/GOOA7i7/2/DNCIIaKcGxxWn7/c2lUVYbIi/+
+        EdzztBJ+2JzKUeeq8Q6wAZ+55tAkMZG1FkDd28HnlHfT
+X-Google-Smtp-Source: ABdhPJzsWvh1evlYg5LXH01AzOqky+X9zniwui4WabZN4uqJTUu4SWHWM9IUtD/ko5W0xinzq/Q8ecLMkZZli/hM5U0=
+X-Received: by 2002:ac8:5691:: with SMTP id h17mr30471835qta.35.1593737674869;
+ Thu, 02 Jul 2020 17:54:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200702194656.GV4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592371583-30672-7-git-send-email-iamjoonsoo.kim@lge.com> <ed5a75ea-42bb-9acf-c567-3ff2d2af4fcb@suse.cz>
+In-Reply-To: <ed5a75ea-42bb-9acf-c567-3ff2d2af4fcb@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 3 Jul 2020 09:54:23 +0900
+Message-ID: <CAAmzW4OOe9+NHZ5CxL-e=Gf8rd4MwtM-C2+L14uWQBc6zoXsWA@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] mm/vmscan: restore active/inactive ratio for
+ anonymous LRU
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/03 4:46, Luis Chamberlain wrote:
-> On Thu, Jul 02, 2020 at 01:26:53PM +0900, Tetsuo Handa wrote:
->> On 2020/07/02 0:38, Luis Chamberlain wrote:
->>> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->>>  		 */
->>>  		if (KWIFEXITED(ret))
->>>  			sub_info->retval = KWEXITSTATUS(ret);
->>> +		/*
->>> +		 * Do we really want to be passing the signal, or do we pass
->>> +		 * a single error code for all cases?
->>> +		 */
->>> +		else if (KWIFSIGNALED(ret))
->>> +			sub_info->retval = KWTERMSIG(ret);
->>
->> No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
->> and e.g. SIGKILL'ed by the OOM-killer.
-> 
-> Right, the question is: do we care?
+2020=EB=85=84 7=EC=9B=94 2=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 10:45, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On 6/17/20 7:26 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > Now, workingset detection is implemented for anonymous LRU.
+> > We don't have to worry about the misfound for workingset due to
+> > the ratio of active/inactive. Let's restore the ratio.
+>
+> How about:
+>
+> Now that workingset detection is implemented for anonymous LRU, we don't =
+need
+> large inactive list to allow detecting frequently accessed pages before t=
+hey are
+> reclaimed, anymore. This effectively reverts the temporary measure put in=
+ by
+> commit "mm/vmscan: make active/inactive ratio as 1:1 for anon lru".
 
-Yes, we have to care.
+Much better!. I will use the comment you suggested. Thanks.
 
-> And the umh patch "umh: fix processed error when UMH_WAIT_PROC is used"
-> changed this to:
-> 
-> -       if (ret >= 0) {
-> +       if (ret != 0) {
-> 
-> Prior to the patch negative return values from userspace were still
-> being captured, and likewise signals, but the error value was not
-> raw, not the actual value. After the patch, since we check for ret != 0
-> we still upkeep the sanity check for any error, correct the error value,
-> but as you noted signals were ignored as I made the wrong assumption
-> we would ignore them. The umh sub_info->retval is set after my original
-> patch only if KWIFSIGNALED(ret)), and ignored signals, and so that
-> would be now capitured with the additional KWIFSIGNALED(ret)) check.
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> Thanks!
+> I still hope Matthew can review updated patch 4/6 (I'm not really familia=
+r with
+> proper xarray handling), and Johannes patch 5/6.
 
-"call_usermodehelper_keys() == 0" (i.e. usermode helper was successfully
-started and successfully terminated via exit(0)) is different from "there is
-nothing to do". call_sbin_request_key() == 0 case still has to check for
-possibility of -ENOKEY case.
+Okay, I hope so, too. :)
 
-> 
-> The question still stands:
-> 
-> Do we want to open code all these checks or simply wrap them up in
-> the umh. If we do the later, as you note exit(9) and a SIGKILL will
-> be the same to the inspector in the kernel. But do we care?
+> And then we just need a nice Documentation file describing how reclaim re=
+ally
+> works after all the recent changes :)
 
-Yes, we do care.
+Agreed.
 
-> 
-> Do we really want umh callers differntiatin between signals and exit values?
-
-Yes, we do.
-
-> 
-> The alternative to making a compromise is using generic wrappers for
-> things which make sense and letting the callers use those.
-
-I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
-macros and fixing the callers, for some callers are not aware of possibility of
-KWIFSIGNALED() case.
-
-For example, conn_try_outdate_peer() in drivers/block/drbd/drbd_nl.c misbehaves if
-drbd_usermode_helper process was terminated by a signal, for the switch() statement
-after returning from conn_helper() is assuming that the return value of conn_helper()
-is a KWEXITSTATUS() value if drbd_usermode_helper process was successfully started.
-If drbd_usermode_helper process was terminated by SIGQUIT (which is 3),
-conn_try_outdate_peer() will by error hit "case P_INCONSISTENT:" (which is 3);
-conn_try_outdate_peer() should hit "default: /* The script is broken ... */"
-unless KWIFEXITED() == true.
-
-Your patch is trying to obnubilate the return code.
-
+Thanks.
