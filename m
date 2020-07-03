@@ -2,82 +2,257 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D0420B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE7D20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:48:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gTpT5exU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brYMw3xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGCBlw (ORCPT
+        id S1726465AbgGCBqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 21:41:52 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:45582 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgGCBlv (ORCPT
+        Thu, 2 Jul 2020 21:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgGCBqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 21:41:51 -0400
-X-UUID: ca18e9f1428243f9bbdd55803ab32466-20200703
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=sUHdggt26F3MOMSAq41fK1KG/YmQcbQ9D5Hb4j4vHwE=;
-        b=gTpT5exURc8zkpN1I2YB09E+U1WngkCfzhZbBniWYXIIouonZMOUHgZv1apcRyPZx4fI1x7Mx9tvlA8vXU3qn7JJ20luTSuI2eVOHEFpcDkoL5uc5qw9dKZkhpb5ZyH5w40FmtHW0aaoTLiAOtBiC+l3mMAHulyZHqXFrW0jpjI=;
-X-UUID: ca18e9f1428243f9bbdd55803ab32466-20200703
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1849453336; Fri, 03 Jul 2020 09:41:35 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Jul
- 2020 09:41:30 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 3 Jul 2020 09:41:30 +0800
-Message-ID: <1593740465.23885.19.camel@mhfsdcap03>
-Subject: Re: [PATCH 16/30] usb: mtu3: mtu3_trace: Function headers are not
- suitable for kerneldoc
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <gregkh@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 3 Jul 2020 09:41:05 +0800
-In-Reply-To: <20200702144625.2533530-17-lee.jones@linaro.org>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
-         <20200702144625.2533530-17-lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 2 Jul 2020 21:46:47 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F5EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 18:46:47 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id h28so26043120edz.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 18:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=qLfiDSVGg8dEfX7H/ROzYciq9xBdzFyzcF564zjEEEg=;
+        b=brYMw3xgb295hMMOFsRoJbIg9S3lYWKCJj1HKtFyykC5xptIURUn/5m87F8t3s1P20
+         NZ8HfGOqrZvbxxG4Kme5nRQ3ymD9yBRfDjC7IzQ3zW/K8iRI+SMQzTi5WOpMjC6Caw0P
+         1+J+wlelVd3JTTISG4OiewowQ21jHNmJD4nKLirrFflSL1CJ+hXKIJHgakBsT09Tz+91
+         noeOb4D3PDtudeqHf/LzNAAyeuQRTMCzXO/AKHSErGpuANbuDyAmy6SV83wDzyfufB4d
+         EKHpGmOpUhCzqDr+ZAxaFSZSGWn0P61TaZVGp+2YyfW4aYe7h+St/SgWjuWp9oi1cOdD
+         TuNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=qLfiDSVGg8dEfX7H/ROzYciq9xBdzFyzcF564zjEEEg=;
+        b=OTypJRIBnlF7Dn+qxYfUpwB1G1xMM3O75Wv92r51+OR3mxev0hE6ohmLYhXV4rfnf6
+         t8SvzGHpdcFnFLn76gHO3EtLKPZ9K5GDXtVgeorDAGsfQNvUyczCgRl/uanYDmOprms8
+         oK90xPNufBaY1VTbzqvlmh+TcV3OIHYR+uoj0xdnXOeZrs646d8qsaTki+DPmm2dM7ek
+         tzyVXWrOJeVyLrv9NA4GfoVozZ3sk5it3lu34JB0FyRo3+P1TmP/da5an3UfwpddpKqr
+         YxktFqwRFSSbW/tqm/eY65Tp9wuq2ADW2xr1aIXEkAon97QUD2NPas3cK7vxn1iBPVoT
+         v1Hw==
+X-Gm-Message-State: AOAM532CwZge9FEH3oT8NenT1PbfJrsE5C2VR58C2Tii49RjU2imIUzD
+        hfa9dm0PquRCEdUYh9JgkSKZBn8pXx33lJJP4Wgw190BFkE=
+X-Google-Smtp-Source: ABdhPJyvQTydtXIP+ZxCaDjd7fW3WuNA6PUXIaUEdGV3/8+NR9OWrkU+8hc5H1HlpWfRv1RXbg0x8uaTa7xWXK75/XM=
+X-Received: by 2002:aa7:ce84:: with SMTP id y4mr36809935edv.113.1593740805713;
+ Thu, 02 Jul 2020 18:46:45 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 6C16EDA848D1FBDB58785863678FD0E8CB02C388F192B15DB8BCAD8D1E917B032000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 3 Jul 2020 11:46:34 +1000
+Message-ID: <CAPM=9tx-1Z5fRAAENHe-qnpBPvaQfn24-84QR-vnivH5-qQDEg@mail.gmail.com>
+Subject: [git pull] drm fixes for 5.8-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTAyIGF0IDE1OjQ2ICswMTAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IEZp
-eGVzIHRoZSBmb2xsb3dpbmcgVz0xIGtlcm5lbCBidWlsZCB3YXJuaW5nczoNCj4gDQo+ICBkcml2
-ZXJzL3VzYi9tdHUzL210dTNfdHJhY2UuYzoxMzo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90
-b3R5cGUgZm9yIOKAmG10dTNfZGJnX3RyYWNl4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCj4g
-IDEzIHwgdm9pZCBtdHUzX2RiZ190cmFjZShzdHJ1Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGNoYXIg
-KmZtdCwgLi4uKQ0KPiAgfCBefn5+fn5+fn5+fn5+fg0KVGhlIGRlc2NyaXB0aW9uIGRvZXNuJ3Qg
-bWF0Y2ggd2l0aCB0aGUgdGl0bGUgYW5kIGNvZGUgY2hhbmdlcw0KDQo+IA0KPiBDYzogQ2h1bmZl
-bmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KPiBDYzogbGludXgtbWVkaWF0ZWtA
-bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25l
-c0BsaW5hcm8ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvdXNiL210dTMvbXR1M190cmFjZS5jIHwg
-MiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvbXR1My9tdHUzX3RyYWNlLmMgYi9kcml2ZXJz
-L3VzYi9tdHUzL210dTNfdHJhY2UuYw0KPiBpbmRleCA0ZjVlNzg1N2VjMzEyLi4xNTVlYWUxMjZl
-NWUyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9tdHUzL210dTNfdHJhY2UuYw0KPiArKysg
-Yi9kcml2ZXJzL3VzYi9tdHUzL210dTNfdHJhY2UuYw0KPiBAQCAtMSw1ICsxLDUgQEANCj4gIC8v
-IFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+IC0vKioNCj4gKy8qDQo+ICAgKiBt
-dHUzX3RyYWNlLmMgLSB0cmFjZSBzdXBwb3J0DQo+ICAgKg0KPiAgICogQ29weXJpZ2h0IChDKSAy
-MDE5IE1lZGlhVGVrIEluYy4NCg0K
+Hey Linus,
 
+Pretty usual rc4 pull, two usual amdgpu, i915 pulls, and some misc arm
+driver fixes.
+The bigger bit is including the asm sources for some GPU shaders that
+were contained in the i915 driver, otherwise it's pretty much business
+as usual.
+
+Dave.
+
+drm-fixes-2020-07-03:
+drm fixes for 5.8-rc4
+
+dma-buf:
+- fix a use-after-free bug
+
+amdgpu:
+- Fix for vega20 boards without RAS support
+- DC bandwidth revalidation fix
+- Fix Renoir vram info fetching
+- Fix hwmon freq printing
+
+i915:
+- GVT fixes
+  - Two missed MMIO handler fixes for SKL/CFL
+  - Fix mask register bits check
+  - Fix one lockdep error for debugfs entry access
+- Include asm sources for render cache clear batches
+
+msm:
+- memleak fix
+- display block fix
+- address space fixes
+
+exynos:
+- error value and reference count fix
+- error print removal
+
+sun4i:
+- remove HPD polling
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+
+are available in the Git repository at:
+
+  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-07-03
+
+for you to fetch changes up to 1298a549e22abe36c82208406c7069280553c7dd:
+
+  Merge tag 'drm-misc-fixes-2020-07-02' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes (2020-07-03
+11:18:21 +1000)
+
+----------------------------------------------------------------
+drm fixes for 5.8-rc4
+
+dma-buf:
+- fix a use-after-free bug
+
+amdgpu:
+- Fix for vega20 boards without RAS support
+- DC bandwidth revalidation fix
+- Fix Renoir vram info fetching
+- Fix hwmon freq printing
+
+i915:
+- GVT fixes
+  - Two missed MMIO handler fixes for SKL/CFL
+  - Fix mask register bits check
+  - Fix one lockdep error for debugfs entry access
+- Include asm sources for render cache clear batches
+
+msm:
+- memleak fix
+- display block fix
+- address space fixes
+
+exynos:
+- error value and reference count fix
+- error print removal
+
+sun4i:
+- remove HPD polling
+
+----------------------------------------------------------------
+Alex Deucher (2):
+      drm/amdgpu/atomfirmware: fix vram_info fetching for renoir
+      drm/amdgpu: use %u rather than %d for sclk/mclk
+
+Bernard Zhao (1):
+      drm/msm: fix potential memleak in error branch
+
+Chen Tao (1):
+      drm/msm/dpu: fix error return code in dpu_encoder_init
+
+Chen-Yu Tsai (1):
+      drm: sun4i: hdmi: Remove extra HPD polling
+
+Colin Xu (4):
+      drm/i915/gvt: Add one missing MMIO handler for D_SKL_PLUS
+      drm/i915/gvt: Fix two CFL MMIO handling caused by regression.
+      drm/i915/gvt: Fix incorrect check of enabled bits in mask registers
+      drm/i915/gvt: Use GFP_ATOMIC instead of GFP_KERNEL in atomic context
+
+Dave Airlie (5):
+      Merge tag 'drm-msm-fixes-2020-06-25' of
+https://gitlab.freedesktop.org/drm/msm into drm-fixes
+      Merge tag 'exynos-drm-fixes-for-v5.8-rc4' of
+git://git.kernel.org/.../daeinki/drm-exynos into drm-fixes
+      Merge tag 'drm-intel-fixes-2020-07-01' of
+git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
+      Merge tag 'amd-drm-fixes-5.8-2020-07-01' of
+git://people.freedesktop.org/~agd5f/linux into drm-fixes
+      Merge tag 'drm-misc-fixes-2020-07-02' of
+git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
+
+Eric Anholt (2):
+      drm/msm: Fix address space size after refactor.
+      drm/msm: Fix setup of a6xx create_address_space.
+
+Ivan Mironov (1):
+      drm/amd/powerplay: Fix NULL dereference in lock_bus() on Vega20 w/o RAS
+
+Jani Nikula (1):
+      Merge tag 'gvt-fixes-2020-06-17' of
+https://github.com/intel/gvt-linux into drm-intel-fixes
+
+John Stultz (1):
+      drm/msm: Fix 0xfffflub in "Refactor address space initialization"
+
+Jordan Crouse (1):
+      drm/msm: Fix up the rest of the messed up address sizes
+
+Kalyan Thota (1):
+      drm/msm/dpu: request for display color blocks based on hw catalog entry
+
+Krishna Manikandan (1):
+      drm/msm/dpu: allow initialization of encoder locks during encoder init
+
+Marek Szyprowski (1):
+      drm/exynos: Properly propagate return value in drm_iommu_attach_device()
+
+Navid Emamdoost (1):
+      drm/exynos: fix ref count leak in mic_pre_enable
+
+Nicholas Kazlauskas (1):
+      drm/amd/display: Only revalidate bandwidth on medium and fast updates
+
+Rodrigo Vivi (1):
+      drm/i915: Include asm sources for {ivb, hsw}_clear_kernel.c
+
+Sumit Semwal (1):
+      dma-buf: Move dma_buf_release() from fops to dentry_ops
+
+Tamseel Shams (1):
+      drm/exynos: Remove dev_err() on platform_get_irq() failure
+
+ drivers/dma-buf/dma-buf.c                          |  54 +++++-----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atomfirmware.c   |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |   4 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c           |  10 +-
+ .../gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c   |  11 +-
+ drivers/gpu/drm/exynos/exynos_drm_dma.c            |   4 +-
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c            |   1 -
+ drivers/gpu/drm/exynos/exynos_drm_mic.c            |   4 +-
+ drivers/gpu/drm/i915/gt/shaders/README             |  46 ++++++++
+ .../gpu/drm/i915/gt/shaders/clear_kernel/hsw.asm   | 119 +++++++++++++++++++++
+ .../gpu/drm/i915/gt/shaders/clear_kernel/ivb.asm   | 117 ++++++++++++++++++++
+ drivers/gpu/drm/i915/gvt/debugfs.c                 |   2 +-
+ drivers/gpu/drm/i915/gvt/handlers.c                |  24 +++--
+ drivers/gpu/drm/i915/gvt/mmio_context.h            |   6 +-
+ drivers/gpu/drm/i915/gvt/reg.h                     |   5 +
+ drivers/gpu/drm/msm/adreno/a2xx_gpu.c              |   2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              |   2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |   2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c            |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  18 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   2 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |   2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c           |   2 +-
+ drivers/gpu/drm/msm/msm_submitqueue.c              |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |   5 +-
+ 25 files changed, 373 insertions(+), 76 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/gt/shaders/README
+ create mode 100644 drivers/gpu/drm/i915/gt/shaders/clear_kernel/hsw.asm
+ create mode 100644 drivers/gpu/drm/i915/gt/shaders/clear_kernel/ivb.asm
