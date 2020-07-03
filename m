@@ -2,168 +2,120 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53349C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94001C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD1F208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593758639;
-	bh=v1FMDcY5Pi9fs6iVelxUUQh7Wuc4woj4RWY6/kUjJOc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HOI7ZPMncKHOvM2BdhLrL71r37inYpIkINyhpNUuvHsalffcm/Cnp2Pp8lRTRhSzW
-	 QBqb3gqNCzZlh2TrrPMXY1pNWL6HR0KBMcKrjmkiguJFu5zDQR9nK+arCmHDs2srgd
-	 1XJd+gWGA0kmjNJzuDPh//eDp16aV9nFbkxJPx08=
+	by mail.kernel.org (Postfix) with ESMTP id 69906208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kKUS7IMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgGCGn5 (ORCPT
+        id S1726443AbgGCGo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:43:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40106 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCGn5 (ORCPT
+        Fri, 3 Jul 2020 02:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGCGoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:43:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f2so3475430wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:43:56 -0700 (PDT)
+        Fri, 3 Jul 2020 02:44:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2F4C08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:44:25 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id o5so31373035iow.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=odGB8TNyWCdqWFOvUPdduy/mDuwvatkITzLXwOy1S7Q=;
+        b=kKUS7IMNGJY2+SzWhECJRvZNNLG61zPX5yQWSTMsnOPMQh1wEqANmYx1X5IwvVjZDo
+         LlF1J+5FtWC1ePNf1VvN8on1sudpcFECX9oPYqa9OdYuMACu26oR+JKAkC+IuIB5XyQm
+         FC5/vvVnssevvXfbTwP6cEKK0n6Vi5kUl2Nms2ozUsiK3CT6mcYmkmD4hxcm6/N5SP5s
+         wYYAaepu5Lo97ReO3dMVJJOa63tQMh/da8qLLsj77aRqN49f5IHWl6kgysAuRVOPU40Z
+         CgbK1UV4X2sEjNbxzoFETpcyMT6Ey3pRY29i1VePvCaMRyr/evpln+3V1+AsxqlXZZTC
+         MVow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MZq9MpoAdPD5UWC2CLSSHKSsbw3XN/pMdjELns1KMFw=;
-        b=sEI8wb0hQJcZPG9WsqrQS5qN++mvDXOlA9DGBKG9FXAKqMJpCG7LgrFaxB0EDYGzxj
-         Tc7zZYg2VCch5o0fJg21MmzFiqGSkO+dkU6xo9LlXYj8JrmtGDniWbZjyOJhm0pMTOSY
-         uOemfL4wHAh/TAKCEWKMa3ca3FuywBxanJH/BfpgmAyduWQFk0qTcI3Z9EfileeyLjvJ
-         c6hEjReVYvmqPaxbC4JvGTA3Tvj+xSedyK+9l//9ABTbgkj7lPywNvua6gytPGDsWUeR
-         Bs+bvZ+avsELrlSxm8ON8sw8i1fXKUFJcpi2MVF+aWpW9aA/doaOJGL4dPZS5ZtoKGK/
-         5Vog==
-X-Gm-Message-State: AOAM531/69o8tBGG9vwNlfqT5q8jFjilG/ajHw5Zo588pM6Y5eduiJaq
-        O8i3azOg9mydhB98ZphWzg7krjzTRnIhWnavKxM=
-X-Google-Smtp-Source: ABdhPJxuhT9W2xGcHsDH1JWwuABOtsDWSgcmlBIq3P3mL01+aHBdqvcPuCv03qdlhFQg8mSUXnCvUy4dfBbE8UiEiP8=
-X-Received: by 2002:adf:fcc5:: with SMTP id f5mr39041360wrs.60.1593758635438;
- Thu, 02 Jul 2020 23:43:55 -0700 (PDT)
+        bh=odGB8TNyWCdqWFOvUPdduy/mDuwvatkITzLXwOy1S7Q=;
+        b=RS8vTmUp5GTfr006b5p4DRtqUvzZpV0L6STt8ClaKzZO6IOhEll+r4P9vmHGAXewce
+         9xvl5hlnY8xXu0C7jvnbnh6mxEQ/4RYfGgPoOAWARakSAE7bs8vSEHmIsexqxNefz0qE
+         /r0it2BAyUKtWBnOwuYbNJzlXiEKJ2w5deC5MFWio9j4PwBdvq1WYYBcPnMdYgl8SLqb
+         +lVURwkD62Q0Jcy59JggqvK5vKy5SjcTkmXfbi4v1v9oRpN7QeMz/zLvnxiJnFvtazob
+         mURT4VBYHe6UVoB3iv+Skq1w9/t0gcuvH4E6Jt+PS7d22dj8xDJqA1oXWC2ZKqTRUcFR
+         9icw==
+X-Gm-Message-State: AOAM530Z91ochj6w78IDArF+VF6ig+9KxQwAsG2HXV5AyzIGIr+XsMTL
+        gvqZQwgwwxbuCTzg1a3PJ+GE6vMEgGdCntxUmcD/4A==
+X-Google-Smtp-Source: ABdhPJzPjYsVNTjPsHGn5aGpeM2rXoN818Ai/fS/PfHZI4ezHdmCt4f8T4PdyoBQUvwn6ueXUn0EW38be6NrYO+Dk9A=
+X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr11019260iow.13.1593758664519;
+ Thu, 02 Jul 2020 23:44:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200627133654.64863-1-changbin.du@gmail.com> <20200627133654.64863-12-changbin.du@gmail.com>
-In-Reply-To: <20200627133654.64863-12-changbin.du@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 3 Jul 2020 15:43:38 +0900
-Message-ID: <CAM9d7ciOwcviSnDra4WL2d3CrF6FsReuxz8VEZszJvqnNGPRjQ@mail.gmail.com>
-Subject: Re: [PATCH v2 11/15] perf ftrace: add support for trace option funcgraph-irqs
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+References: <20200702221237.2517080-1-abhishekbh@google.com>
+ <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+In-Reply-To: <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+From:   Abhishek Bhardwaj <abhishekbh@google.com>
+Date:   Thu, 2 Jul 2020 23:43:47 -0700
+Message-ID: <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+To:     Anthony Steinhauser <asteinhauser@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>, Doug Anderson <dianders@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 10:38 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> This adds an option '--graph-noirqs' to filter out functions executed
-> in irq context.
+We have tried to steer away from kernel command line args for a few reasons.
 
-Ditto.
+I am paraphrasing my colleague Doug's argument here (CC'ed him as well) -
 
->
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
->
-> ---
-> v2: option name '--nofuncgraph-irqs' -> '--graph-noirqs'.
-> ---
->  tools/perf/Documentation/perf-ftrace.txt |  3 +++
->  tools/perf/builtin-ftrace.c              | 20 ++++++++++++++++++++
->  2 files changed, 23 insertions(+)
->
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-> index a3000436f80b..b616e05d5156 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -107,6 +107,9 @@ OPTIONS
->  --graph-nosleep-time::
->         Measure on-CPU time only for function_graph tracer.
->
-> +--graph-noirqs::
-> +       Ignore functions that happen inside interrupt for function_graph tracer.
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-record[1], linkperf:perf-trace[1]
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index eba125a60820..876c8e800425 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -43,6 +43,7 @@ struct perf_ftrace {
->         bool                    inherit;
->         bool                    func_stack_trace;
->         bool                    graph_nosleep_time;
-> +       bool                    graph_noirqs;
->  };
->
->  struct filter_entry {
-> @@ -202,6 +203,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
->         write_tracing_option_file("function-fork", "0");
->         write_tracing_option_file("func_stack_trace", "0");
->         write_tracing_option_file("sleep-time", "1");
-> +       write_tracing_option_file("funcgraph-irqs", "1");
->  }
->
->  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
-> @@ -393,6 +395,17 @@ static int set_tracing_sleep_time(struct perf_ftrace *ftrace)
->         return 0;
->  }
->
-> +static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
-> +{
-> +       if (!ftrace->graph_noirqs)
-> +               return 0;
-> +
-> +       if (write_tracing_option_file("funcgraph-irqs", "0") < 0)
-> +               return -1;
-> +
-> +       return 0;
-> +}
-> +
->  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->  {
->         char *trace_file;
-> @@ -477,6 +490,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->                 goto out_reset;
->         }
->
-> +       if (set_tracing_funcgraph_irqs(ftrace) < 0) {
-> +               pr_err("failed to set tracing option funcgraph-irqs\n");
-> +               goto out_reset;
-> +       }
+- The command line args are getting unwieldy. Kernel command line
+parameters are not a scalable way to set kernel config. It's intended
+as a super limited way for the bootloader to pass info to the kernel
+and also as a way for end users who are not compiling the kernel
+themselves to tweak kernel behavior.
 
-Why not add set_tracing_options() which calls these individual functions
-to handle option processing altogether?  It seems consistent to its
-'reset' counterpart.
+- Also, we know we want this setting from the start. This is a
+definite smell that it deserves to be a compile time thing rather than
+adding extra code + whatever miniscule time at runtime to pass an
+extra arg.
 
-Thanks
-Namhyung
+I think this was what CONFIGS were intended for. I'm happy to add all
+this to the commit message once it's approved in spirit by the
+maintainers.
+
+On Thu, Jul 2, 2020 at 8:18 PM Anthony Steinhauser
+<asteinhauser@google.com> wrote:
+>
+> Yes, this probably requires an explanation why the change is necessary
+> or useful. Without that it is difficult to give some meaningful
+> feedback.
 
 
-> +
->         if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
->                 pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
->                 goto out_reset;
-> @@ -658,6 +676,8 @@ int cmd_ftrace(int argc, const char **argv)
->                     "trace children processes"),
->         OPT_BOOLEAN(0, "graph-nosleep-time", &ftrace.graph_nosleep_time,
->                     "measure on-CPU time only for function_graph tracer"),
-> +       OPT_BOOLEAN(0, "graph-noirqs", &ftrace.graph_noirqs,
-> +                   "ignore functions that happen inside interrupt for function_graph tracer"),
->         OPT_END()
->         };
->
-> --
-> 2.25.1
->
+
+-- 
+Abhishek
