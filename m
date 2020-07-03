@@ -2,161 +2,332 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D07C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB77C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808B620870
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F1B2084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilCOu9gY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eY0KG8vB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgGCOA0 (ORCPT
+        id S1726368AbgGCOBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38588 "EHLO
+        Fri, 3 Jul 2020 10:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCOAZ (ORCPT
+        with ESMTP id S1726035AbgGCOBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:00:25 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65244C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 07:00:25 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id h1so7045462vkn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 07:00:25 -0700 (PDT)
+        Fri, 3 Jul 2020 10:01:08 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B294C08C5C1;
+        Fri,  3 Jul 2020 07:01:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f7so29790864wrw.1;
+        Fri, 03 Jul 2020 07:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5F3VEjoP3FKUljXbLKCPFmED7t6N7RsImdk24VNfSc=;
-        b=ilCOu9gYBMdqPI/WloUGvxq/+wnGHnQ1ZAHN1ZxENszq7GPp9XNKx9zUBnE+fK9TgU
-         kQxMN49VEXWiecCYQDAL/WKl0bVLcsUEfsmWRF1OqyDngNlhJxLHKL5br824jjZHpUjJ
-         7hdtRocMgi9/yp6SHT51EkOw9NH2gxFvrwG3GVZa6/L7YD+wxw1rIg9Gl4V8GOyMVAaE
-         cpP+FflthlLgMOCHyBLj9hCGNiq5UWE+L7Cd0KnzVOHXaoX++5r96myY1zSsJ810tV+B
-         fijJbiHJsmfDJ/u/k7Z4OHk1777RqOIaN0m4d2ZRnvaostA+caNpfnc2Ov0C5PnO46BU
-         +LoQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6bBD353wa9oOGAllNHqdK+eyXz4Kyyl8Jv53eUCZE30=;
+        b=eY0KG8vB+nGTiTyYby+J3tGYqBmR0XZUQER1jLykSgsIe2ekhxZkqUBMfqKilI0JO7
+         RM6aCSUTcDQFm2vuYjZkekbSATq/YuguYuJpnTqAW+jMlpV1MRFi4I4UmC8lAn7un/mX
+         aji1ubi37eKChSa15jTSoAGOlLjBwNz3XYHViT+sj4Tnx4lrBSaKp2hYV/+5eaK3n5A1
+         /+lOa2tgIIb9/i2eps5h443srl9pgaXS5Uf9Gg1AFL7cy8LIsVTdnSJ6B3/CdTlzDf40
+         TVkNtBOJkslRpuRPAgW55mDwkyeAMyu8vbVI/U+6ObjmH87ewObClFDZfutSfBrwwh16
+         NO0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5F3VEjoP3FKUljXbLKCPFmED7t6N7RsImdk24VNfSc=;
-        b=HSPU4AemdqG0j1GCNvpVnN5qrC/ao5L2uCKWTwffviuZVPEU9pLtUXCi+ork/6BgJs
-         ULFDs8YftiKWZcbMU3AjfSBeQ1sYZIeNMK2QFwAU46HQR2RviTBTF/s+PBKDK3DgMR7V
-         1utPfvNlUtV59CpsbBz2N0XIpQs6Z3Z0F4hCypd34RbY06/GtT+k2u55lDRK4RNd6d45
-         SBgRpG91yfk+F23IKcWInPWdSxdqa78HyItA5+ig4iAJfHdaBlp+hAGimCBxS+VIjVn6
-         DO+q0TAYIhc30rU/dtcQNczUbeA0K3nljeVTAXMs0LEsOgqRufAJv+s3+sqe0BI7g+Px
-         xuGw==
-X-Gm-Message-State: AOAM531T8Uc+0acoPu3VMZTRdjp7HHnP3IlFXy/Pz/4ztGArJ8Ie+TV4
-        Kli6lFioNlaFSuk0Ceyq02Zstnz8DfAWGJjR2aqXIw==
-X-Google-Smtp-Source: ABdhPJwx16TCC0yxwEDEAWqU8RVaCCWww0gPA4ZSJHucJ6hbfJede4vfqOlpKj94dbBKxrLzf14j6uvN3giH1XMSxM4=
-X-Received: by 2002:a1f:3f05:: with SMTP id m5mr1556534vka.92.1593784823956;
- Fri, 03 Jul 2020 07:00:23 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6bBD353wa9oOGAllNHqdK+eyXz4Kyyl8Jv53eUCZE30=;
+        b=Iet7t085qyQ2Yinu3VvJnUEbuk0mh7qkFsCCoQPjVLS9Wv8daTpQ1iKl7I+3AOL4ij
+         tdSqEFGc/+zsMnfJP+9sp5TNoJe1XVAu4mHzNhAXQJhSZ24VPaZRK84lIczFb1GvkL+5
+         5G0VKMG2Qa3MDYRsImHKl5BM7mLiG8APBBVJ/Y+ZSp52IrFq1ZGaIXXEH6VsDrvc2xqX
+         NdvtBrd3GDBMmt7/+av0SE1NkPmgvhaWcJpeDQTaYovyK7T1DlNsegd358WFwINk67fB
+         KG/749Ynuim3dgNd8vaATo4kh5c+PwbHY6PTON6Ss5uggJrw6c/jyZ1upHMthE8xvg6u
+         UwOA==
+X-Gm-Message-State: AOAM531N9+tSntXzV52DdtbBmlCFkJGw9VtEOyUqd1yicBSQp0tJ6Z4q
+        9ZtS73amKQ4MMKKisVd3qaI=
+X-Google-Smtp-Source: ABdhPJyiJXs/n2wp9EINdUtUPcWxHxkCQnEm1p8H8CmVuUSf6pDKfxeFCqDF3/79iFmOZbSXXG/fBg==
+X-Received: by 2002:adf:c185:: with SMTP id x5mr40322595wre.403.1593784865770;
+        Fri, 03 Jul 2020 07:01:05 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.245])
+        by smtp.gmail.com with ESMTPSA id k20sm13654569wmi.27.2020.07.03.07.01.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 07:01:05 -0700 (PDT)
+Subject: Re: [PATCH] brcmfmac: expose firmware config files through modinfo
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Chung-Hsien Hsu <stanley.hsu@cypress.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Double Lo <double.lo@cypress.com>,
+        Frank Kao <frank.kao@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        netdev@vger.kernel.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Saravanan Shanmugham <saravanan.shanmugham@cypress.com>,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Soeren Moch <smoch@web.de>
+References: <20200701153123.25602-1-matthias.bgg@kernel.org>
+ <338e3cff-dfa0-c588-cf53-a160d75af2ee@redhat.com>
+ <1013c7e6-f1fb-af0c-fe59-4d6cd612f959@suse.com>
+ <35066b13-9fe2-211d-2ba8-5eb903b46bf7@redhat.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ba8c2bfa-3f50-512e-e28c-a47896e5c242@gmail.com>
+Date:   Fri, 3 Jul 2020 16:01:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200702221237.2517080-1-abhishekbh@google.com>
- <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com> <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
- <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com> <20200703114037.GD2999146@linux.ibm.com>
-In-Reply-To: <20200703114037.GD2999146@linux.ibm.com>
-From:   Doug Anderson <dianders@google.com>
-Date:   Fri, 3 Jul 2020 07:00:11 -0700
-Message-ID: <CAD=FV=XRbrFqSbR619h+9HXNyrYNbqfBF2e-+iUZco9qQ8Wokg@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Abhishek Bhardwaj <abhishekbh@google.com>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <35066b13-9fe2-211d-2ba8-5eb903b46bf7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Jul 3, 2020 at 4:40 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> On Thu, Jul 02, 2020 at 11:43:47PM -0700, Abhishek Bhardwaj wrote:
-> > We have tried to steer away from kernel command line args for a few reasons.
-> >
-> > I am paraphrasing my colleague Doug's argument here (CC'ed him as well) -
-> >
-> > - The command line args are getting unwieldy. Kernel command line
-> > parameters are not a scalable way to set kernel config. It's intended
-> > as a super limited way for the bootloader to pass info to the kernel
-> > and also as a way for end users who are not compiling the kernel
-> > themselves to tweak kernel behavior.
->
-> Why cannot you simply add this option to CONFIG_CMDLINE at your kernel build
-> scripts?
-
-At least in the past I've seen that 'CONFIG_CMDLINE' interacts badly
-with the bootloader provided command line in some architectures.  In
-days of yore I tried to post a patch to fix this, at least on ARM
-targets, but it never seemed to go anywhere upstream.  I'm going to
-assume this is still a problem because I still see an ANDROID tagged
-patch in the Chrome OS 5.4 tree:
-
-In any case, as per my previous arguments, stuffing lots of config
-into the cmdline is a bit clunky and doesn't scale well.  You end up
-with a really long run on command line and it's hard to tell where one
-config option ends and the next one starts and if the same concept is
-there more than one time it's hard to tell and something might cancel
-out a previous config option or maybe it won't and by the time you end
-up finishing this it's hard to tell where you started.  :-)
 
 
-> > - Also, we know we want this setting from the start. This is a
-> > definite smell that it deserves to be a compile time thing rather than
-> > adding extra code + whatever miniscule time at runtime to pass an
-> > extra arg.
->
-> This might be a compile time thing in your environment, but not
-> necessarily it must be the same in others. For instance, what option
-> should distro kernels select?
+On 02/07/2020 20:00, Hans de Goede wrote:
+> Hi,
+> 
+> On 7/1/20 5:46 PM, Matthias Brugger wrote:
+>> Hi Hans,
+>>
+>> On 01/07/2020 17:38, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 7/1/20 5:31 PM, matthias.bgg@kernel.org wrote:
+>>>> From: Matthias Brugger <mbrugger@suse.com>
+>>>>
+>>>> Apart from a firmware binary the chip needs a config file used by the
+>>>> FW. Add the config files to modinfo so that they can be read by
+>>>> userspace.
+>>>
+>>> The configfile firmware filename is dynamically generated, just adding the list
+>>> of all currently shipped ones is not really helpful and this is going to get
+>>> out of sync with what we actually have in linux-firmware.
+>>
+>> I'm aware of this, and I agree.
+>>
+>>>
+>>> I must honestly say that I'm not a fan of this, I guess you are trying to
+>>> get some tool which builds a minimal image, such as an initrd generator
+>>> to add these files to the image ?
+>>>
+>>
+>> Yes exactly.
+>>
+>>> I do not immediately have a better idea, but IMHO the solution
+>>> this patch proposes is not a good one, so nack from me for this change.
+>>>
+>>
+>> Another path we could go is add a wildcard string instead, for example:
+>> MODULE_FIRMWARE("brcm/brcmfmac43455-sdio.*.txt");
+> 
+> I was thinking about the same lines, but I'm afraid some user-space
+> utils may blow up if we introduce this, which is why I did not suggest
+> it in my previous email.
+> 
+>> AFAIK there is no driver in the kernel that does this. I checked with our dracut
+>> developer and right now dracut can't cope with that.
+> 
+> Can't cope as in tries to add "/lib/firmware/brcm/brcmfmac43455-sdio.*.txt"
+> and then skips it (as it does for other missing firmware files); or can't
+> cope as in blows-up and aborts without leaving a valid initrd behind.
+> 
+> If is the former, that is fine, if it is the latter that is a problem.
+> 
+>> But he will try to
+>> implement that in the future.
+>>
+>> So my idea was to maintain that list for now and switch to the wildcard approach
+>> once we have dracut support that.
+> 
+> So lets assume that the wildcard approach is ok and any initrd tools looking at
+> the MODULE_FIRMWARE metadata either accidentally do what we want; or fail
+> gracefully.  Then if we temporarily add the long MODULE_FIRMWARE list now, those
+> which fail gracefully will start doing the right thing (except they add too
+> much firmware), and later on we cannot remove all the non wildcard
+> MODULE_FIRMWARE list entries because that will cause a regression.
+> 
+> Because of this I'm not a fan of temporarily fixing this like this. Using wifi
+> inside the initrd is very much a cornercase anyways, so I think users can
+> use a workaround by dropping an /etc/dracut.conf.d file adding the necessary
+> config file for now.
+> 
+> As for the long run, I was thinking that even with regular firmware files
+> we are adding too much firmware to host-specific initrds since we add all
+> the firmwares listed with MODULE_FIRMWARE, and typically only a few are
+> actually necessary.
+> 
+> We could modify the firmware_loader code under drivers/base/firmware_loader
+> to keep a list of all files loaded since boot; and export that somewhere
+> under /sys, then dracut could use that list in host-only mode and we get
+> a smaller initrd. One challenge with this approach though is firmware files
+> which are necessary for a new kernel, but not used by the running kernel ...
+> I'm afraid I do not have a good answer to that.
+> 
 
-Nothing prevents people from continuing to use the command line
-options if they want, right?  This just allows a different default.
-So if a distro is security focused and decided that it wanted a slower
-/ more secure default then it could ship that way but individual users
-could still override, right?
+That would work for creating a new minimal initrd from a working image. But it
+would not help in bootstrapping an image. My understanding is that for
+bootstrapping an image we will need to support wildcards in MODULE_FIRMWARE()
+strings.
 
+Regards,
+Matthias
 
-> > I think this was what CONFIGS were intended for. I'm happy to add all
-> > this to the commit message once it's approved in spirit by the
-> > maintainers.
-> >
-> > On Thu, Jul 2, 2020 at 8:18 PM Anthony Steinhauser
-> > <asteinhauser@google.com> wrote:
-> > >
-> > > Yes, this probably requires an explanation why the change is necessary
-> > > or useful. Without that it is difficult to give some meaningful
-> > > feedback.
-> >
-> >
-> >
-> > --
-> > Abhishek
->
-> --
-> Sincerely yours,
-> Mike.
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+>>>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>>>>
+>>>> ---
+>>>>
+>>>>    .../wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 16 ++++++++++++++++
+>>>>    1 file changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>>> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>>> index 310d8075f5d7..ba18df6d8d94 100644
+>>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>>> @@ -624,6 +624,22 @@ BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
+>>>>    BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
+>>>>    BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
+>>>>    +/* firmware config files */
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac4330-sdio.Prowise-PT301.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43340-sdio.meegopad-t08.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43340-sdio.pov-tab-p1006w-data.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43362-sdio.cubietech,cubietruck.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43430a0-sdio.jumper-ezpad-mini3.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430a0-sdio.ONDA-V80
+>>>> PLUS.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.AP6212.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43430-sdio.MUR1DX.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH "brcm/brcmfmac43455-sdio.MINIX-NEO
+>>>> Z83-4.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac43455-sdio.raspberrypi,4-model-b.txt");
+>>>> +MODULE_FIRMWARE(BRCMF_FW_DEFAULT_PATH
+>>>> "brcm/brcmfmac4356-pcie.gpd-win-pocket.txt");
+>>>> +
+>>>>    static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
+>>>>        BRCMF_FW_ENTRY(BRCM_CC_43143_CHIP_ID, 0xFFFFFFFF, 43143),
+>>>>        BRCMF_FW_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
+>>>>
+>>>
+>>
+> 
