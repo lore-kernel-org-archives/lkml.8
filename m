@@ -2,164 +2,175 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ED9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C07320899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCB020899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZntdsKx0"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pJFhCArg";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dADx657t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgGCPuj (ORCPT
+        id S1726568AbgGCPvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgGCPui (ORCPT
+        Fri, 3 Jul 2020 11:51:06 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:7458 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726152AbgGCPvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:50:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF172C08C5DE
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 08:50:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so12783553plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HE29F07Osusj5HNcfEPahMCK2eK+sh7WURl9R1YcKaA=;
-        b=ZntdsKx0q/X5BPxShRDTPN11hCcSNaNHSwjYuk5fD2zlng44030b5MdJoootVDfoMt
-         /zMEuSjPxSOlCICh/mSeuMSVGxvISSp17ScJcCfOsSQLQHmwf6J7V/nxPWaHl2Iyx6Fs
-         qSddYBQyaFDD0x35D51sBJSuAMeRDMUD/R088=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HE29F07Osusj5HNcfEPahMCK2eK+sh7WURl9R1YcKaA=;
-        b=r/EW8L/h83ccRQ8j6O2bCJEzp82csm0Tf4GbfANyreCR/qkx9XKJwcRKTfudSHQiA3
-         kKmsDHP2om98gcZ47ZekdpiE+Fxs4pqGA8JjxkC8YK/MaClA24pe6bWjiAG7zJORC57f
-         yMCkx8Aj0AZ/F+MxKLHJuudpEun1h96RxKexqzqGV/yDtqxZYdWO3lQV0YVLpJgbK6lo
-         VtMguM10iP51aGjPVdmldtHBMmDjLaR518xH2NPF5QG6OCmwEtgOajL7YEZNwQVzGYhZ
-         4wWABjk76PWLFldwP7sRa/+7qcV+LrwniDTej/VPflfNQVva5+KXoqrwx4RPkGjk+mA0
-         5YhQ==
-X-Gm-Message-State: AOAM5324Yyf0B/LgCzLnRZnzWDdun+CXKd52RejRDcdCWfyDa+GmzEFa
-        5kTKRvPC79CXbhulF5EhBOfo+Q==
-X-Google-Smtp-Source: ABdhPJy2fp+PA9eTVGG0CLDemDjBxvxEKp4qXDHoN/nIW/lHbFv8vp/wBCvpcPnAWwfB3Q7cMslcYQ==
-X-Received: by 2002:a17:902:7:: with SMTP id 7mr28627375pla.209.1593791437392;
-        Fri, 03 Jul 2020 08:50:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d9sm11879987pgg.74.2020.07.03.08.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 08:50:36 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 08:50:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        stable <stable@vger.kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Fri, 3 Jul 2020 11:51:06 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063FopgE017594;
+        Fri, 3 Jul 2020 08:50:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=DOcCYCRB4XfTEDIs7MNiR/yhRdd2F+O90NRnnfO9C2c=;
+ b=pJFhCArgRqeDZ/NqhIoEaZG0CDaA0hN7HiMWBT3ri4KroCCcW57iJ6Apf5QfVvtaPubz
+ 9eORplTaRh3xI0USCnM7h0YbPpWTmJisIer41MV5zFVnj53TIPJ9jtdXN5Q6psuLvyXA
+ kDIEYf0lnZrqJpVnqxjXaITh6gDoRKI1VB8= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3216k88406-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 03 Jul 2020 08:50:51 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 3 Jul 2020 08:50:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oER130iP97jU4L4Sjhw+8U6UjUT6c9ze3GYWjaEhOUh+yVXczYHENp1rAQEs7IM4gkFim4ObazoM8oQDviV92/nxTMCjgxND3gZJsNKK3MIpfro7qu4Wgp6nNdhbvDDSFXsaI96cxOab9Y+X5zHHpJQv/QDYwWGsXC9w5E9JR519o1OqRJuCgXcAI2Od6oWp9WaTPpsZJw8W+HDtnYPwcfgsvQFV5a80KitTYs4gd2JmaZRwXGS0WFAoGRMiPChyklYbwJt/CNYCcP+aP0cfB854RiQzXo3qDEpeHNMLFzygODzvUngBrIXQZpbxfuKinbidaACmEjJ6I4+f7oB4CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DOcCYCRB4XfTEDIs7MNiR/yhRdd2F+O90NRnnfO9C2c=;
+ b=IXHu0daL+UhQ+eLpUSEMF7tK5NwSZz3tB5OWwWpt6205jxUYOaM3J61j7tU4zXRXbsj/L3PMkR/OaA9pu9MSdHwlsFAloPHN6tDsxpN9/wZCk5zdGZ7TE0Qr6BQNFRPCS+vTUobrqrVCIePCyXOVhFy3xLgCjAn7xyRNbI2e16oXOTx/iIGUXrqDDMAxysMlj60YMqO6X5SOzcE5KDcJxJ22xgDtLGCPfKsKOuZmLY7Q+SkJW1dniOc7DpsliAFvJglCTg/VTIIzroQVY8KiiJGchwVRujw3n7u45wag2eonH0olu5OYLS+sgRaRko0kB9LJE3OEq8W4QJnaDKVs7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DOcCYCRB4XfTEDIs7MNiR/yhRdd2F+O90NRnnfO9C2c=;
+ b=dADx657th+/HWQyt7uhNfD2tGwIeJhmC4X1wQG46y7tHi7NCjFM0OgnPuZH4nJSDTAIw2TlzjlqOEGdiws0N3V+WtPZTemWNvgrNLgYflhOh60YNclQvXGYNHrlXwAwEBbDxETt62shl1yBJ6+AxbOB+p/AO+6b6P5JENPIpHbY=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2630.namprd15.prod.outlook.com (2603:10b6:a03:14c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Fri, 3 Jul
+ 2020 15:50:24 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3131.034; Fri, 3 Jul 2020
+ 15:50:24 +0000
+Date:   Fri, 3 Jul 2020 08:50:21 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] kprobes: Do not expose probe addresses to
- non-CAP_SYSLOG
-Message-ID: <202007030848.265EA58@keescook>
-References: <20200702232638.2946421-1-keescook@chromium.org>
- <20200702232638.2946421-5-keescook@chromium.org>
- <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
-MIME-Version: 1.0
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [RFC PROPOSAL] memcg: per-memcg user space reclaim interface
+Message-ID: <20200703155021.GB114903@carbon.dhcp.thefacebook.com>
+References: <20200702152222.2630760-1-shakeelb@google.com>
+ <20200703063548.GM18446@dhcp22.suse.cz>
+ <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiZi-v8Xgu_B3wV0B4RQYngKyPeONdiXNgrHJFU5jbe1w@mail.gmail.com>
+In-Reply-To: <CALvZod5gthVX5m6o50OiYsXa=0_NpXK-tVvjTF42Oj4udr4Nuw@mail.gmail.com>
+X-ClientProxiedBy: BY5PR17CA0029.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::42) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:93e7) by BY5PR17CA0029.namprd17.prod.outlook.com (2603:10b6:a03:1b8::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.27 via Frontend Transport; Fri, 3 Jul 2020 15:50:23 +0000
+X-Originating-IP: [2620:10d:c090:400::5:93e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b068f59a-963c-4cc0-6067-08d81f68cc8d
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2630:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB263085D6A2D81C7240D963CEBE6A0@BYAPR15MB2630.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 045315E1EE
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: umkhnyktxUMEfbwt4DIko2R88Wt5LxnVytX6/1MHoVN4I/46rbdkN/xFjxswj5YLCCuraAHHY/tw1+gkO6MK0EKgEHoUgrDMVae0hugX2e2EyU268ndsw8D4Vh1wBEav97LnLV0zlF0r/KukMBziFI4neq2SWNfHPt8RwR3IOnsHstkKTf1vKy24O1fLYHLDxerk44kFFUxNgMa6hu6xA2238CnGmytWtNzJFOeC+DOXpmyePeF0i+4WZVOO8azqw0Kv2oOaXIWLPIY43cfeCBaxu5cntADDAWgksAUxWR0NvL9FihsVTVXYDshJBI/SeV9CKD2TFHF7VVGXxjbgmt2Wapi/lXDSu7GY/v3MQ4Rk6SFG+PFU8ifrmPLRGmSL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(39860400002)(376002)(9686003)(55016002)(316002)(8676002)(83380400001)(7416002)(478600001)(52116002)(7696005)(6506007)(53546011)(8936002)(66946007)(54906003)(1076003)(186003)(16526019)(5660300002)(2906002)(33656002)(86362001)(6916009)(66556008)(66476007)(4326008)(200143005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: dm8idg7kyxPF+wZ7p1zEnQ/im5ff9X5JFrtB/n3sKONeUMLNQ+M3ggceoWCbs/QYtMQWebG84cSci9vo274x1WsaRiWlcAYRmaHOGWIZIAatc1gv0QXGgEATqiLw9w3vkxeWIKt2j9HUhZtu7CM5gVDzLhoT1QDWvFu0Lb76rbZBl4chq6Mlj26sz6vLVCBeTVsELyBsEHuUq+9iHFIAYzPDRIKCuqJOS6XGHXmmI1yGw3+LJWAodAu/No2ruhHEBSe2BH9wGa5zvOj9WMNuY1MkAmKtpwY7Z36nD63/BanTMk+JKWBMWqHI93YirGRUouHKCi0fR2xrbWjZGXenE7E6/RkfZ2l3pYRdYYyBbPPJBE6xapiBH6kiaDKus69AcxIIokEY0dQ9/Y9CtD9+u+cNfCfsXjixaK/Mv5KnZurneVlPx+5n1UUmqFyUJpzXE3z1QBB7WY00SIThpYrbGOHROCMvf1LHsF5ikLZI60ZATq3gB8ypVOhDrE1TejrD1aqB6oDLx5QO3g6QbJSqsA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: b068f59a-963c-4cc0-6067-08d81f68cc8d
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2020 15:50:24.3181
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g5O0ZX6NyuR5e0FeAKzjJ0ie3fJdhCK7bH3mYkrUtZICnyrPfxLzIR+qKx7S2IY7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2630
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_10:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ clxscore=1011 bulkscore=0 impostorscore=0 priorityscore=1501
+ suspectscore=1 spamscore=0 mlxlogscore=837 cotscore=-2147483648
+ adultscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030108
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 06:00:17PM -0700, Linus Torvalds wrote:
-> If somebody is interested in looking into things like that, it might
-> be a good idea to have kernel threads with that counter incremented by
-> default.
+On Fri, Jul 03, 2020 at 07:23:14AM -0700, Shakeel Butt wrote:
+> On Thu, Jul 2, 2020 at 11:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Thu 02-07-20 08:22:22, Shakeel Butt wrote:
+> > [...]
+> > > Interface options:
+> > > ------------------
+> > >
+> > > 1) memcg interface e.g. 'echo 10M > memory.reclaim'
+> > >
+> > > + simple
+> > > + can be extended to target specific type of memory (anon, file, kmem).
+> > > - most probably restricted to cgroup v2.
+> > >
+> > > 2) fadvise(PAGEOUT) on cgroup_dir_fd
+> > >
+> > > + more general and applicable to other FSes (actually we are using
+> > > something similar for tmpfs).
+> > > + can be extended in future to just age the LRUs instead of reclaim or
+> > > some new use cases.
+> >
+> > Could you explain why memory.high as an interface to trigger pro-active
+> > memory reclaim is not sufficient. Also memory.low limit to protect
+> > latency sensitve workloads?
 
-With 67 kthreads on a booted system, this patch does not immediately
-blow up... And it likely needs some beautification. (Note that
-current_cred_*() calls current_cred() under the hood, so AFAICT, only
-current_cred() needs coverage.)
+I initially liked the proposal, but after some thoughts I've realized
+that I don't know a good use case where memory.high is less useful.
+Shakeel, what's the typical use case you thinking of?
+Who and how will use the new interface?
 
-diff --git a/include/linux/cred.h b/include/linux/cred.h
-index 18639c069263..a624847cb0ce 100644
---- a/include/linux/cred.h
-+++ b/include/linux/cred.h
-@@ -295,7 +295,10 @@ static inline void put_cred(const struct cred *_cred)
-  * since nobody else can modify it.
-  */
- #define current_cred() \
--	rcu_dereference_protected(current->cred, 1)
-+({							\
-+	WARN_ON_ONCE(current->warn_on_current_cred);	\
-+	rcu_dereference_protected(current->cred, 1);	\
-+})
- 
- /**
-  * current_real_cred - Access the current task's objective credentials
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..21ab1b81aa40 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -652,6 +652,7 @@ struct task_struct {
- 	/* Per task flags (PF_*), defined further below: */
- 	unsigned int			flags;
- 	unsigned int			ptrace;
-+	unsigned int			warn_on_current_cred;
- 
- #ifdef CONFIG_SMP
- 	struct llist_node		wake_entry;
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 142b23645d82..2e181b9bfd3f 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2527,8 +2527,12 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
- 		.stack		= (unsigned long)fn,
- 		.stack_size	= (unsigned long)arg,
- 	};
-+	pid_t pid;
- 
--	return _do_fork(&args);
-+	pid = _do_fork(&args);
-+	if (pid == 0)
-+		current->warn_on_current_cred = 1;
-+	return pid;
- }
- 
- #ifdef __ARCH_WANT_SYS_FORK
+> 
+> Yes, we can use memory.high to trigger [proactive] reclaim in a memcg
+> but note that it can also introduce stalls in the application running
+> in that memcg. Let's suppose the memory.current of a memcg is 100MiB
+> and we want to reclaim 20MiB from it, we can set the memory.high to
+> 80MiB but any allocation attempt from the application running in that
+> memcg can get stalled/throttled. I want the functionality of the
+> reclaim without potential stalls.
 
+But reclaiming some pagecache/swapping out anon pages can always
+generate some stalls caused by pagefaults, no?
 
--- 
-Kees Cook
+Thanks!
