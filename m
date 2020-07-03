@@ -2,96 +2,74 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A08C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F69BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6CF206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dv0YDx32"
+	by mail.kernel.org (Postfix) with ESMTP id 437D020724
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 04:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgGCEER (ORCPT
+        id S1726116AbgGCEEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 00:04:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47042 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGCEER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 00:04:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06341T68158538;
-        Fri, 3 Jul 2020 04:04:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=4L+MvHZ8M0MvEMta2g/UXgscdME5fkuFvt18ijNsUvo=;
- b=Dv0YDx32DKkhCTdrcTlPqRsXzlU7vadB3rutxYdtUFV19ufD4QAZU90xAouj8L2D7Usk
- laShj28q5iHavmbWCF8PURH/TmK1yRk4XbY/ewzXXO15GNrp0aZRlkZo8UHyeWChgTaf
- 7rIM6cKDYUMMVuM53wutvXveqdaVHvPDPrv1+tv4c4DHe0Muo0H/OJhcNZKY0mOi+5+u
- GIgW95vOHExJc6vsmV+WmytryJWZQZpfJES4QNaiZbPWOHiShiaHkQxvgVpCMxJOpuSL
- u5opThqHZYq34SAAxj8HN5yVqXwHmYIkSZ9hbzFv/ADD2+AeqiSnTAXQagJg+JYsjsNu tw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 31ywrc1wrg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 03 Jul 2020 04:04:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0633wp5d161637;
-        Fri, 3 Jul 2020 04:04:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 31xg1b5p4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Jul 2020 04:04:03 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06343xPM005839;
-        Fri, 3 Jul 2020 04:03:59 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Jul 2020 04:03:58 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     linux@armlinux.org.uk,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        jejb@linux.ibm.com
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V2] scsi: eesox: Fix different dev_id between 'request_irq()' and 'free_irq()'
-Date:   Fri,  3 Jul 2020 00:03:52 -0400
-Message-Id: <159374899165.14731.1540154014107361984.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200626040553.944352-1-christophe.jaillet@wanadoo.fr>
-References: <26d388f5-be67-b643-c76c-b9fe52f111f7@wanadoo.fr> <20200626040553.944352-1-christophe.jaillet@wanadoo.fr>
+        Fri, 3 Jul 2020 00:04:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9178 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgGCEEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 00:04:24 -0400
+IronPort-SDR: T0PMF1y7rpgIPB8g5nCfQQhdUGvPovYA8IFm4OjJcqbZISUENd8Zf2lypln2etoSyTDAJgUjs9
+ HaOXllDbLKmw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="208604063"
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="208604063"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 21:04:23 -0700
+IronPort-SDR: fnx8n/5dfBVrfbLT24PWc42gDpm6Xk9Uw46kztNqKbJ6gFnmskAg2zxmCEqSASO0pUJAv/fmSi
+ Wbsn0b/sJxpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
+   d="scan'208";a="387520208"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2020 21:04:22 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] KVM: VMX: CR0/CR4 guest/host masks cleanup
+Date:   Thu,  2 Jul 2020 21:04:20 -0700
+Message-Id: <20200703040422.31536-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- mlxlogscore=907 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007030027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9670 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=916
- clxscore=1015 cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007030027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 06:05:53 +0200, Christophe JAILLET wrote:
+Fix a bug where CR4.TSD isn't correctly marked as being possibly owned by
+the guest in the common x86 macro, then clean up the mess that made the
+bug possible by throwing away VMX's mix of duplicate code and open coded
+tweaks.  The lack of a define for the guest-owned CR0 bit has bugged me
+for a long time, but adding another define always seemed ridiculous.
 
-> The dev_id used in 'request_irq()' and 'free_irq()' should match.
-> So use 'info' in both cases.
+Sean Christopherson (2):
+  KVM: x86: Mark CR4.TSD as being possibly owned by the guest
+  KVM: VMX: Use KVM_POSSIBLE_CR*_GUEST_BITS to initialize guest/host
+    masks
 
-Applied to 5.9/scsi-queue, thanks!
-
-[1/1] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
-      https://git.kernel.org/mkp/scsi/c/86f2da1112cc
+ arch/x86/kvm/kvm_cache_regs.h |  2 +-
+ arch/x86/kvm/vmx/nested.c     |  4 ++--
+ arch/x86/kvm/vmx/vmx.c        | 13 +++++--------
+ 3 files changed, 8 insertions(+), 11 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.26.0
+
