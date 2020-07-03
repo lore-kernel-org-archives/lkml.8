@@ -2,105 +2,94 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE52DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEBC208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxY130Fy"
+	by mail.kernel.org (Postfix) with ESMTP id 9D21B2100A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGCRmM (ORCPT
+        id S1726836AbgGCRmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbgGCRmJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:42:09 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE627C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:08 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so34855985wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rg3aFGb8OfRKBHM94n8q4FN1ZasqFE+4EzVqNDg7yKc=;
-        b=YxY130FyIPR9Gm07AHbGYOGYZ5uDSYNgEhKE/C8aNhqL0yl8qgwg6rJUkdr2CCU2YW
-         AtopIVNMNXMk47KxDB72Sj9A0L+dPsHtfXJA12sLuN2SWhKv+LkgOVOmMbDdpCr2Br75
-         OmCUEdF/2uQ58MLoN0jVA4nrwnOU7TVriTfuR2ggV0OueDEdCv0f27/TDEJKITw+vl2c
-         X9eJHC4Z6ZZC594uHVV1hjOQpMWfai3gaKh2m+Map4HqjdepflZHEKdAbyCzC0gpr14j
-         MBKxodujMzGU+ZAD48XZM8Gx6heyNRAfAjRvj9Z2FUJNpiG/EVBOcsd+KbZYw2BG6Rnw
-         t5+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rg3aFGb8OfRKBHM94n8q4FN1ZasqFE+4EzVqNDg7yKc=;
-        b=g7TvKwtq9/6XgZJatafPifCb/U23qafDWEjVFDlIKMJvy1qs/A81x+YYRQ/dRJIFsz
-         1WT9IjapdQ6NuRHaLkkvqoK2FgdqK+fQABir6wDQw9AFgj9j18o91q6xf6sRu1ayR+qw
-         HH8nRmWThW0HtNLQRfpxGOE0dERbVycQHolt/lJHIXnRdjrmvPF8Qwahq9csSQCSd+a6
-         7ibtGpH0sZjoJXdjjXljgudqTz9esSsDIRgeIeqWs+R1/vI1YDf62cav4gzGDfQ/f6Pa
-         Jw+RUuI0Nsst1CGvoVcFLpAifaCha/r0xeV1UytMfaLmxPVV6Is0GEItZ1fOlQUNPTrs
-         pkGg==
-X-Gm-Message-State: AOAM531dTBTRCiy1sXpFQyUZy+KyitY+CXZqWNUIDY9oWYxaNXfCGDAN
-        +HOgU7lijyKF9ksFG+v7YqrkkA==
-X-Google-Smtp-Source: ABdhPJy+9vIk0iVFK825nCyPVCUC0qAi9muP8YyXvlu55JUrNIhVbPA9fpJn844SKSTCo2SOUdiiIg==
-X-Received: by 2002:a7b:c5c1:: with SMTP id n1mr39360654wmk.21.1593798127542;
-        Fri, 03 Jul 2020 10:42:07 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 10:42:06 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        David Lopo <dlopo@chipidea.mips.com>
-Subject: [PATCH 07/30] usb: chipidea: core: Document hw_port_test_set()'s missing 'ci' argument
-Date:   Fri,  3 Jul 2020 18:41:25 +0100
-Message-Id: <20200703174148.2749969-8-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200703174148.2749969-1-lee.jones@linaro.org>
-References: <20200703174148.2749969-1-lee.jones@linaro.org>
+        Fri, 3 Jul 2020 13:42:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:56312 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726801AbgGCRm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:42:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2175831B;
+        Fri,  3 Jul 2020 10:42:27 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFF653F73C;
+        Fri,  3 Jul 2020 10:42:25 -0700 (PDT)
+Subject: Re: [BUG] XHCI getting ZONE_DMA32 memory > than its bus_dma_limit
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, linux-mm@kvack.org,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        rientjes@google.com, Christoph Hellwig <hch@lst.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+References: <34619bdf-6527-ae82-7e4d-e2ea7c67ed56@arm.com>
+ <a9058fd2c54bbea69fdf97e30277338a61b5c0b4.camel@suse.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <cc17fe85-99a3-ec8c-985a-2a21cf09bf49@arm.com>
+Date:   Fri, 3 Jul 2020 18:42:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9058fd2c54bbea69fdf97e30277338a61b5c0b4.camel@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On 2020-07-03 15:53, Nicolas Saenz Julienne wrote:
+> Hi Jeremy,
+> thanks for the bug report.
+> 
+> Just for the record the offending commit is: c84dc6e68a1d2 ("dma-pool: add
+> additional coherent pools to map to gfp mask").
+> 
+> On Thu, 2020-07-02 at 12:49 -0500, Jeremy Linton wrote:
+>> Hi,
+>>
+>> Using 5.8rc3:
+>>
+>> The rpi4 has a 3G dev->bus_dma_limit on its XHCI controller. With a usb3
+>> hub, plus a few devices plugged in, randomly devices will fail
+>> operations. This appears to because xhci_alloc_container_ctx() is
+>> getting buffers > 3G via dma_pool_zalloc().
+>>
+>> Tracking that down, it seems to be caused by dma_alloc_from_pool() using
+>> dev_to_pool()->dma_direct_optimal_gfp_mask() to "optimistically" select
+>> the atomic_pool_dma32 but then failing to verify that the allocations in
+>> the pool are less than the dev bus_dma_limit.
+> 
+> I can reproduce this too.
+> 
+> The way I see it, dev_to_pool() wants a strict dma_direct_optimal_gfp_mask()
+> that is never wrong, since it's going to stick to that pool for the device's
+> lifetime. I've been looking at how to implement it, and it's not so trivial as
+> I can't see a failproof way to make a distinction between who needs DMA32 and
+> who is OK with plain KERNEL memory.
+> 
+> Otherwise, as Jeremy points out, the patch needs to implement allocations with
+> an algorithm similar to __dma_direct_alloc_pages()'s, which TBH I don't know if
+> it's a little overkill for the atomic context.
+> 
+> Short of finding a fix in the coming rc's, I suggest we revert this.
 
- drivers/usb/chipidea/core.c:163: warning: Function parameter or member 'ci' not described in 'hw_port_test_set'
+Or perhaps just get rid of atomic_pool_dma32 (and allocate 
+atomic_pool_dma from ZONE_DMA32 if !ZONE_DMA). That should make it fall 
+pretty much back in line while still preserving the potential benefit of 
+the kernel pool for non-address-constrained devices.
 
-Cc: Peter Chen <Peter.Chen@nxp.com>
-Cc: David Lopo <dlopo@chipidea.mips.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/usb/chipidea/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 9a7c53d09ab4f..1016596532a9e 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -155,6 +155,7 @@ u32 hw_read_intr_status(struct ci_hdrc *ci)
- 
- /**
-  * hw_port_test_set: writes port test mode (execute without interruption)
-+ * @ci: the controller
-  * @mode: new value
-  *
-  * This function returns an error code
--- 
-2.25.1
-
+Robin.
