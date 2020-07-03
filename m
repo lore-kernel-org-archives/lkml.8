@@ -2,141 +2,117 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C925C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC7D20836
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484B2207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="bOsFxfpm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hv4+tKt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgGCKow (ORCPT
+        id S1726309AbgGCKqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:44:52 -0400
-Received: from vps.xff.cz ([195.181.215.36]:40334 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgGCKov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:44:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593773088; bh=nrh0KH3J1yRnIENV/8zoqi7FGv+zeQdvh0IitngxK0Y=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=bOsFxfpm7+YVeVF6lMZ7ESyBG9Mwl6LGVE+CCno+DbO2ejqDClY6BUiSyoPu0TRYk
-         Xa8+qSCWumhmlSTrd90JG6QCyWwxVOeP0KYLZVFFnmjy/fM6mfauaQF3X0jXFZQG+H
-         FZw9vAu834beeDCk2qCS7l0BIkK+VRwyUrOKCbHM=
-Date:   Fri, 3 Jul 2020 12:44:48 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 02/13] dt-bindings: panel: Convert rocktech,
- jh057n00900 to yaml
-Message-ID: <20200703104448.iwhxk77d2hyrr3x5@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
-        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
-        Martijn Braam <martijn@brixit.nl>, Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200701162928.1638874-1-megous@megous.com>
- <20200701162928.1638874-3-megous@megous.com>
- <20200702205143.GA1670522@bogus>
- <20200702210354.562wkzpdmyrlwojx@core.my.home>
- <20200703051155.GA1685118@ravnborg.org>
+        Fri, 3 Jul 2020 06:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCKqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 06:46:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 686BEC08C5C1;
+        Fri,  3 Jul 2020 03:46:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so32809696ljp.6;
+        Fri, 03 Jul 2020 03:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZoL+j4Y+Z4WvYVFNGyL695fk3xg4Z6QZO/cWXb2X98s=;
+        b=Hv4+tKt2vemcSn1fWh46/PWtOJvinoHGrUakKW5/d0dZep1DX0iFI+84HcYvtSife2
+         0H0ut/5ViUhbrsQiH3Mb4HUjVbbUh0/ZhciON0hFmOEhR9GjFKLJZshW22HOfmGoFxfW
+         MiTLrWisu/BdnFf3Ld75vyR0wT4atm194bIui1ltI1dskBs2hYA6t5ESAj+R+4Cf5uki
+         KTJW6F8pr2gNb3KMSV5H/LBc7BqsbkAXk6vBJ2is1uviAvIK+HX/loWAIdKfp26t/hXs
+         8zc5g0tYA5Eyd8k59m/2ybZCU6Vk0Kpm/n3qxpLycOhl6ncG2nU5NNyG9/W+vxDX0aa8
+         b+kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZoL+j4Y+Z4WvYVFNGyL695fk3xg4Z6QZO/cWXb2X98s=;
+        b=o0F2F4yWPxYJuSIrAMXh105zGsuwNuA4bblzl7TF97E/OIO+PHukLeh8p3c4KRt2lx
+         Vf7FQOVmGMySNIxbzsE1yzfTHOfj67FwZh/ArhAtl43jGhgqmzzVlqmk0SiKGQER17kh
+         grPY4S00JfllO2BgaMg5UGrToutdklo0lEjVFV3qaM65up3dC43pKz7QNMEM2JsI5PrJ
+         NNXb0NVee1v50j/GMJLvm/34FDbYlO1bfdvZx0SmFzY05q/UC/J0Rd2Rtz6QL4Jce+j2
+         VKCHaF4NMR8hS4rhp7imlXX5sPVzZHxh1ricV+LW+gqxUs36C/2pjGbAQnuNnOKle/3F
+         ABLw==
+X-Gm-Message-State: AOAM530NyCQLHXMTfo7iiNlskn+WIlzvsTddCEBNT8wm3ez6VpLwTjDh
+        DNH6q/MEPTzGUg1HCk7e2sc=
+X-Google-Smtp-Source: ABdhPJxdtDhJ2zfGPUqdkG2FiChIxtnxwVhEYypRyXNFa+PrUnLKzsCkYfuFycSt3kRoLc47KYo86g==
+X-Received: by 2002:a2e:9d0b:: with SMTP id t11mr18612477lji.122.1593773193951;
+        Fri, 03 Jul 2020 03:46:33 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id l12sm3812618ljj.43.2020.07.03.03.46.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2020 03:46:31 -0700 (PDT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add governor flags to clarify the
+ features
+To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
+        enric.balletbo@collabora.com, hl@rock-chips.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com
+References: <20200703100810.12304-1-cw00.choi@samsung.com>
+ <CGME20200703095657epcas1p187b7f90a4a33da7791a83a78760f3a91@epcas1p1.samsung.com>
+ <20200703100810.12304-3-cw00.choi@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6027cf29-ea6f-0a27-3e39-a80c24b80bb8@gmail.com>
+Date:   Fri, 3 Jul 2020 13:46:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703051155.GA1685118@ravnborg.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200703100810.12304-3-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sam,
+03.07.2020 13:08, Chanwoo Choi пишет:
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index e94a27804c20..620ecd250d7c 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -765,10 +765,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+>  
+>  static struct devfreq_governor tegra_devfreq_governor = {
+>  	.name = "tegra_actmon",
+> +	.flag = DEVFREQ_GOV_FLAG_ATTR_COMMON
+> +		| DEVFREQ_GOV_FLAG_ATTR_POLLING_INTERVAL,
 
-On Fri, Jul 03, 2020 at 07:11:55AM +0200, Sam Ravnborg wrote:
-> Hi Ondrej.
-> 
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > > 
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: '#address-cells', '#size-cells', 'port@0' do not match any of the regexes: 'pinctrl-[0-9]+'
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'vcc-supply' is a required property
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'iovcc-supply' is a required property
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'reset-gpios' is a required property
-> > 
-> > Paths look bogus ^^^^
-> > 
-> > It should be .../rocktech,jh057n00900.yaml: ...
-> 
-> The example in nwl-dsi.yaml contains:
-> 	compatible = "rocktech,jh057n00900";
-> 
-> So the example is checked against your updated binding.
-> And the binding check fails because the example is no longer valid.
+Hello, Chanwoo!
 
-Ah, now I understand.
+There is a typo here, it should be ".attr = ".
 
-> This needs to be fixed as we do not wat to introduce new errors.
-> Either the example or the binding needs the fix.
+> +	.flag = DEVFREQ_GOV_FLAG_FLAG_IMMUTABLE,
+> +		| DEVFREQ_GOV_FLAG_FLAG_IRQ_DRIVEN,
 
-I think we can unrequire the supplies, but reset is needed really.
+There is a typo here too FLAG_FLAG ^
 
-The panel only has one port, so there should be no address/size-cells
-in the example, and port@0 should be just port to match existing binding.
-If it had  multiple ports, port@0 would have to be inside ports { } node
-anyway, according to the existing binding. Then add reset-gpios to
-the example...
+>  	.get_target_freq = tegra_governor_get_target,
+>  	.event_handler = tegra_governor_event_handler,
+> -	.immutable = true,
+> -	.interrupt_driven = true,
+>  };
+>  
 
-And that should fix it.
-
-I'll prepare the patch shortly.
-
-regards,
-	o.
-
-> 	Sam
-> 
-> 
-> > 
-> > regards,
-> > 	o.
-> > 
-> > > 
-> > > See https://patchwork.ozlabs.org/patch/1320690
-> > > 
-> > > If you already ran 'make dt_binding_check' and didn't see the above
-> > > error(s), then make sure dt-schema is up to date:
-> > > 
-> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> > > 
-> > > Please check and re-submit.
-> > > 
