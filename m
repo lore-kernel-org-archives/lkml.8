@@ -2,136 +2,127 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3266FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9563C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A39A20B80
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lQwRKFro"
+	by mail.kernel.org (Postfix) with ESMTP id B5E0920760
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGCRIH (ORCPT
+        id S1726839AbgGCRI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGCRIH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:08:07 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D6CC061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:08:06 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k17so6106786lfg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NGIWYGclw9/se36iCMUa3R+SNfFXJ4xJXXtTXZwYe78=;
-        b=lQwRKFroLLPm5QHChkg3JAbf09EtECvI6zfs4GvXqOv6vnLW7/Wzd13wD75qKSfnz7
-         W1oWm4sqRuHKPH1SdI5iJKGlkA0Xb2bvhBW7TZtX2L6BQcz3N0aW1yF8wULQzZlIztY4
-         7kjf7CwY4DS9N6TgXcRNaWIPTwxbCA1zxLgfB1vgO8Xf7Au25qL7io068STZgVpzTVlj
-         B2xlQGLVq9WMVnXwtAuwrqoZcn+ghylFGdG243Z7HRbA1YBhwJXVFclBTU65JPHo3c8y
-         ZJHiY2rY+ftttiBN6+jSkr3vdfkeY6y2ljaNxxWUyu5GeAP4NrTT/+E6zuHuGWzPstxj
-         1bIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NGIWYGclw9/se36iCMUa3R+SNfFXJ4xJXXtTXZwYe78=;
-        b=NOYWgJCpMm4OodNw+jVV338kHNmBSNPy/Y118zCEd1HLs2+ERcJm1vnTjXQebCK22b
-         8IIYt2xehCfxpXXVfL6iYDeZGzyU38nT2DinuroqA9ct0FbtK9D0vcjQhRfY8FIL1LSk
-         dh1/ESQqib4AJPR9wbCyhF/WBxQrMUByPbg5PRbOWF6MIzsrEQTpC3Jxt1B4kII4LhTH
-         vqlGM3vAOaqcG9BZ8EevoOMlbf+8XORceDkmsJk3mBv6FI9VeC8IqpI7y3gWDpKZyLV1
-         0oyyoaJRJlOvdNDH+SzWV51wd0wBxB4gdk5aQEPwhzxg/36xNthjQgTEJb2Vfg6yf9n0
-         tA5A==
-X-Gm-Message-State: AOAM532GfDPkZPfNMARya24VPJ3JoNS0k5HRmt0QpPJBPkEqutT2Klt8
-        Agf4g3Yv0OkCFHssgHS2ZRSdGIYi8k5WKUw0/Q==
-X-Google-Smtp-Source: ABdhPJxUWKoOZWgsUGY+b0V4Mt13R2qjCpnNvZ54FXAo55sJdwmd5hZqaFXU13je82BQtku2OjEGo0UtL9y9uo7v7s0=
-X-Received: by 2002:ac2:5443:: with SMTP id d3mr22423704lfn.121.1593796085271;
- Fri, 03 Jul 2020 10:08:05 -0700 (PDT)
+        Fri, 3 Jul 2020 13:08:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:53300 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbgGCRI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 13:08:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0883431B;
+        Fri,  3 Jul 2020 10:08:56 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8FBA3F73C;
+        Fri,  3 Jul 2020 10:08:53 -0700 (PDT)
+Subject: Re: [PATCH] usb: host: ohci-platform: Disable ohci for rk3288
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@collabora.com>,
+        linux-usb@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Kever Yang <kever.yang@rock-chips.com>
+References: <20200702090504.36670-1-jagan@amarulasolutions.com>
+ <f0ae5915-9cb8-9550-f05c-6cebad191a14@arm.com>
+ <CAMty3ZBBdYdNOf-nQTdKZfi-VagaML6k+4PkAh6Uz936h9auow@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a3d2bc2a-9c19-25fa-f2d7-1a26fcc0c047@arm.com>
+Date:   Fri, 3 Jul 2020 18:08:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200703155749.GA6255@pc636>
-In-Reply-To: <20200703155749.GA6255@pc636>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Fri, 3 Jul 2020 19:07:39 +0200
-Message-ID: <CAEJqkgiFFh8CvXkM4ZzXxNQmOJLL7WcgDL6rM83safNgEewZ9w@mail.gmail.com>
-Subject: Re: nr_cpu_ids vs AMD 3970x(32 physical CPUs)
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        GregKroah-Hartmangregkh@linuxfoundation.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMty3ZBBdYdNOf-nQTdKZfi-VagaML6k+4PkAh6Uz936h9auow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Fr., 3. Juli 2020 um 17:58 Uhr schrieb Uladzislau Rezki <urezki@gmail.com>:
->
-> Hello, folk.
+On 2020-07-03 12:39, Jagan Teki wrote:
+> On Thu, Jul 2, 2020 at 8:08 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 2020-07-02 10:05, Jagan Teki wrote:
+>>> rk3288 has usb host0 ohci controller but doesn't actually work
+>>> on real hardware but it works with new revision chip rk3288w.
+>>>
+>>> So, disable ohci for rk3288.
+>>>
+>>> For rk3288w chips the compatible update code is handled by bootloader.
+>>>
+>>> Cc: William Wu <william.wu@rock-chips.com>
+>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>> ---
+>>> Note:
+>>> - U-Boot patch for compatible update
+>>> https://patchwork.ozlabs.org/project/uboot/patch/20200702084820.35942-1-jagan@amarulasolutions.com/
+>>>
+>>>    drivers/usb/host/ohci-platform.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+>>> index 7addfc2cbadc..24655ed6a7e0 100644
+>>> --- a/drivers/usb/host/ohci-platform.c
+>>> +++ b/drivers/usb/host/ohci-platform.c
+>>> @@ -96,7 +96,7 @@ static int ohci_platform_probe(struct platform_device *dev)
+>>>        struct ohci_hcd *ohci;
+>>>        int err, irq, clk = 0;
+>>>
+>>> -     if (usb_disabled())
+>>> +     if (usb_disabled() || of_machine_is_compatible("rockchip,rk3288"))
+>>
+>> This seems unnecessary to me - if we've even started probing a driver
+>> for a broken piece of hardware to the point that we need magic checks to
+>> bail out again, then something is already fundamentally wrong.
+>>
+>> Old boards only sold with the original SoC variant have no reason to
+>> enable the OHCI (since it never worked originally), thus will never
+>> execute this check.
+>>
+>> New boards designed around the W variant to make use of the OHCI can
+>> freely enable it either way.
+>>
+>> The only relative-edge-case where it might matter is older board designs
+>> still in production which have shipped with both SoC variants. Enabling
+>> OHCI can't be *necessary* given that it's still broken on a lot of
+>> deployed boards, so at best it must be an opportunistic nice-to-have.
+>> Since we're already having to rely on the bootloader to patch up the
+>> devicetree for other low-level differences in this case, it should be
+>> part of that responsibility for it to only enable the OHCI on the
+>> appropriate SoC variant too. Statically enabling it in the DTS for a
+>> board where it may well not work is just bad.
+> 
+> You mean enable OHCI by identifying revision W with dts status "okay"?
+> doesn't it complex for the bootloader to update all effecting changes?
 
-Hello,
+Well, on boards which may have either SoC it's already got to detect the 
+difference and make at least a couple of other DT adjustments; a handful 
+more lines to check for a specific node and flip its status wouldn't be 
+too horrendous (although I suppose you'd also want to check whether the 
+EHCI is enabled first, to guess at whether the port's even wired up at all).
 
->
-> I have a system based on AMD 3970x CPUs. It has 32 physical cores
-> and 64 threads. It seems that "nr_cpu_ids" variable is not correctly
-> set on latest 5.8-rc3 kernel. Please have a look below on dmesg output:
->
-> <snip>
-> urezki@pc638:~$ sudo dmesg | grep 128
-> [    0.000000] IOAPIC[0]: apic_id 128, version 33, address 0xfec00000, GSI 0-23
-> [    0.000000] smpboot: Allowing 128 CPUs, 64 hotplug CPUs
-> [    0.000000] setup_percpu: NR_CPUS:512 nr_cpumask_bits:512 nr_cpu_ids:128 nr_node_ids:1
-> ...
-> [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=128, Nodes=1
-> [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=128.
-> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=128
-> urezki@pc638:~$
-> <snip>
->
-> For example SLUB thinks that it deals with 128 CPUs in the system what is
-> wrong if i do not miss something. Since nr_cpu_ids is broken(?), thus the
-> "cpu_possible_mask" does not correspond to reality as well.
->
-> Any thoughts?
+Or alternatively, as I said, simply don't bother doing anything - boards 
+that only use RK3288W can enable OHCI in their DTS, and other boards 
+that have been not using it for however many years can continue not 
+using it even if it might technically be available on newer production runs.
 
-This is not a 5.8-rc3 problem. Almost all AMD CPUs and APUs are
-looking like this.
-The only CPUs I own are getting that right is a dual EPYC box,
-everything else is broken
-regarding the right C/T & socket(s) count, and that probably bc is
-using NUAM code
-to have the info.
-
-I reported that a while back and no-one ever cared.
-
-There is even a comment in the hotplug code saying setting the wrong CPU count
-is a waste of resources.
-
-I have a 2200G is reporting 48Cores.
-
-AMD Ryzen 7 3750H reporting twice the cores and twice the socket.
-
-...
-
-[    0.040578] smpboot: Allowing 16 CPUs, 8 hotplug CPUs
-...
-[    0.382122] smpboot: Max logical packages: 2
-..
-
-I boot all the boxes restricting the cores to the correct count on the
-command line.
-
-Wasted resource or not, this is still a bug IMO.
-
-Best Regards,
-
-Gabriel C
+Robin.
