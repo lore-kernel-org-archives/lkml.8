@@ -7,66 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39445C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED8320C56
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEBC208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oiU0dmtO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxY130Fy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGCRmQ (ORCPT
+        id S1726733AbgGCRmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        Fri, 3 Jul 2020 13:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgGCRmL (ORCPT
+        with ESMTP id S1726670AbgGCRmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:42:11 -0400
+        Fri, 3 Jul 2020 13:42:09 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7310BC08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:11 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 17so34829821wmo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE627C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so34855985wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xjIIWeYNclz40pA7bk2Qh3oqQG2tAVOyN4aYQkn6OiY=;
-        b=oiU0dmtOVMkBf6TzSeh/ny3md+5yRm4OM/IM4zkiiOFwgo/Qi47cQKLIay8N30COvv
-         nFCgi9+MuTJUdQoM+EYjFAVSSXHFDahthwfrL2L0uG8tX9INuhlJ7/cmRhrmdxrLtuFz
-         oJKhV9g+/B0+eQoFWwl2PcOTlD1idbOo5vbWQavXnyYORLwCMEqSIw3W8buDHcalnHaF
-         MERyReX3fR+NEYYYVX4PHBzMSPy0uiKfTR+qpcIAq0s5oyM5UQiVkJVZ3hVqKAq+kN3d
-         XFrtBQe2kaUyEK2PovU4zqVElnVtkGu+bfCfgt47nCsd0sAKqBjbKOLLmRrOqVDszAd0
-         jxjQ==
+        bh=rg3aFGb8OfRKBHM94n8q4FN1ZasqFE+4EzVqNDg7yKc=;
+        b=YxY130FyIPR9Gm07AHbGYOGYZ5uDSYNgEhKE/C8aNhqL0yl8qgwg6rJUkdr2CCU2YW
+         AtopIVNMNXMk47KxDB72Sj9A0L+dPsHtfXJA12sLuN2SWhKv+LkgOVOmMbDdpCr2Br75
+         OmCUEdF/2uQ58MLoN0jVA4nrwnOU7TVriTfuR2ggV0OueDEdCv0f27/TDEJKITw+vl2c
+         X9eJHC4Z6ZZC594uHVV1hjOQpMWfai3gaKh2m+Map4HqjdepflZHEKdAbyCzC0gpr14j
+         MBKxodujMzGU+ZAD48XZM8Gx6heyNRAfAjRvj9Z2FUJNpiG/EVBOcsd+KbZYw2BG6Rnw
+         t5+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xjIIWeYNclz40pA7bk2Qh3oqQG2tAVOyN4aYQkn6OiY=;
-        b=dv0hZozidwNGmXyV9M8OilbSb27jcNRwITYlsM4KdWXCy6ibwA2qFkTFTHIoxUFaCY
-         uFmUlN8zYzfB2dM1uM9YbJPGneAQwJ+LvxAztmZFqc7MTgMazx1KsP+wfQ4LE/yLNge3
-         DTFRliBsPXk61H09rKw1G8L6sFp36PptYleS3KuhNhaZgM3B3Yoq0JWsW4Gl2nJn4js+
-         8NsBiAXOOvQgis7mEz8zIpfi3lTop92NoWrPO4ECTLhRqpV5KmNiTB6F6mxNgyPvef7d
-         GD4Sj0JvgI0Gn+/AvWqdGY8D4jMlHsrav/DH6dz8N3Z10lNwMurV48E2qUWYJd0wm770
-         W6dA==
-X-Gm-Message-State: AOAM533+wMeAqNnrcFtt32+JL2eRsW5C/c/t27l4FIVbUmg4AHO9RTi9
-        SvGa5S9eeDmG/3+vouG2rOSpBw==
-X-Google-Smtp-Source: ABdhPJw4mjZPthdniRStWHtZC5npFeRT01E/oMZEzrllITbRXHeQCaCUndaY9yDxanGEL4ylb/oaYg==
-X-Received: by 2002:a7b:c14a:: with SMTP id z10mr36486119wmi.19.1593798130185;
-        Fri, 03 Jul 2020 10:42:10 -0700 (PDT)
+        bh=rg3aFGb8OfRKBHM94n8q4FN1ZasqFE+4EzVqNDg7yKc=;
+        b=g7TvKwtq9/6XgZJatafPifCb/U23qafDWEjVFDlIKMJvy1qs/A81x+YYRQ/dRJIFsz
+         1WT9IjapdQ6NuRHaLkkvqoK2FgdqK+fQABir6wDQw9AFgj9j18o91q6xf6sRu1ayR+qw
+         HH8nRmWThW0HtNLQRfpxGOE0dERbVycQHolt/lJHIXnRdjrmvPF8Qwahq9csSQCSd+a6
+         7ibtGpH0sZjoJXdjjXljgudqTz9esSsDIRgeIeqWs+R1/vI1YDf62cav4gzGDfQ/f6Pa
+         Jw+RUuI0Nsst1CGvoVcFLpAifaCha/r0xeV1UytMfaLmxPVV6Is0GEItZ1fOlQUNPTrs
+         pkGg==
+X-Gm-Message-State: AOAM531dTBTRCiy1sXpFQyUZy+KyitY+CXZqWNUIDY9oWYxaNXfCGDAN
+        +HOgU7lijyKF9ksFG+v7YqrkkA==
+X-Google-Smtp-Source: ABdhPJy+9vIk0iVFK825nCyPVCUC0qAi9muP8YyXvlu55JUrNIhVbPA9fpJn844SKSTCo2SOUdiiIg==
+X-Received: by 2002:a7b:c5c1:: with SMTP id n1mr39360654wmk.21.1593798127542;
+        Fri, 03 Jul 2020 10:42:07 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.07
+        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 10:42:09 -0700 (PDT)
+        Fri, 03 Jul 2020 10:42:06 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 08/30] usb: gadget: udc: core: Fix a bunch of kerneldoc misdemeanours
-Date:   Fri,  3 Jul 2020 18:41:26 +0100
-Message-Id: <20200703174148.2749969-9-lee.jones@linaro.org>
+        Peter Chen <Peter.Chen@nxp.com>,
+        David Lopo <dlopo@chipidea.mips.com>
+Subject: [PATCH 07/30] usb: chipidea: core: Document hw_port_test_set()'s missing 'ci' argument
+Date:   Fri,  3 Jul 2020 18:41:25 +0100
+Message-Id: <20200703174148.2749969-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200703174148.2749969-1-lee.jones@linaro.org>
 References: <20200703174148.2749969-1-lee.jones@linaro.org>
@@ -77,76 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firstly, file headers should not be in kerneldoc format.  Function
-args should be in the format '@.*: '.  We also take the time to
-add some descriptions for various argument which have been
-previously left out.  Finally we remove descriptions for absent
-arguments.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/usb/gadget/udc/core.c:25: warning: Incorrect use of kernel-doc format:  * struct usb_udc - describes one usb device controller
- drivers/usb/gadget/udc/core.c:36: warning: cannot understand function prototype: 'struct usb_udc '
- drivers/usb/gadget/udc/core.c:901: warning: Function parameter or member 'ep' not described in 'usb_gadget_giveback_request'
- drivers/usb/gadget/udc/core.c:901: warning: Function parameter or member 'req' not described in 'usb_gadget_giveback_request'
- drivers/usb/gadget/udc/core.c:1098: warning: Function parameter or member 'udc' not described in 'usb_gadget_udc_stop'
- drivers/usb/gadget/udc/core.c:1098: warning: Excess function parameter 'gadget' description in 'usb_gadget_udc_stop'
- drivers/usb/gadget/udc/core.c:1098: warning: Excess function parameter 'driver' description in 'usb_gadget_udc_stop'
+ drivers/usb/chipidea/core.c:163: warning: Function parameter or member 'ci' not described in 'hw_port_test_set'
 
-Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Peter Chen <Peter.Chen@nxp.com>
+Cc: David Lopo <dlopo@chipidea.mips.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/gadget/udc/core.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/usb/chipidea/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-index 2e28dde8376f6..16790c02a530c 100644
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--/**
-+/*
-  * udc.c - Core UDC Framework
-  *
-  * Copyright (C) 2010 Texas Instruments
-@@ -23,11 +23,11 @@
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 9a7c53d09ab4f..1016596532a9e 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -155,6 +155,7 @@ u32 hw_read_intr_status(struct ci_hdrc *ci)
  
  /**
-  * struct usb_udc - describes one usb device controller
-- * @driver - the gadget driver pointer. For use by the class code
-- * @dev - the child device to the actual controller
-- * @gadget - the gadget. For use by the class code
-- * @list - for use by the udc class driver
-- * @vbus - for udcs who care about vbus status, this value is real vbus status;
-+ * @driver: the gadget driver pointer. For use by the class code
-+ * @dev: the child device to the actual controller
-+ * @gadget: the gadget. For use by the class code
-+ * @list: for use by the udc class driver
-+ * @vbus: for udcs who care about vbus status, this value is real vbus status;
-  * for udcs who do not care about vbus status, this value is always true
+  * hw_port_test_set: writes port test mode (execute without interruption)
++ * @ci: the controller
+  * @mode: new value
   *
-  * This represents the internal data structure which is used by the UDC-class
-@@ -891,6 +891,9 @@ EXPORT_SYMBOL_GPL(usb_gadget_unmap_request);
- 
- /**
-  * usb_gadget_giveback_request - give the request back to the gadget layer
-+ * @ep: the endpoint to be used with with the request
-+ * @req: the request being given back
-+ *
-  * Context: in_interrupt()
-  *
-  * This is called by device controller drivers in order to return the
-@@ -1084,8 +1087,7 @@ static inline int usb_gadget_udc_start(struct usb_udc *udc)
- 
- /**
-  * usb_gadget_udc_stop - tells usb device controller we don't need it anymore
-- * @gadget: The device we want to stop activity
-- * @driver: The driver to unbind from @gadget
-+ * @udc: The UDC to be stopped
-  *
-  * This call is issued by the UDC Class driver after calling
-  * gadget driver's unbind() method.
+  * This function returns an error code
 -- 
 2.25.1
 
