@@ -2,232 +2,224 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1334BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51111C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70F8206A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2084D20826
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iSFKeOVq";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="adwT/VQJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="irvooNni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgGCIHq (ORCPT
+        id S1726734AbgGCIHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:07:46 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:63169 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgGCIHl (ORCPT
+        Fri, 3 Jul 2020 04:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgGCIHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:07:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593763661; x=1625299661;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=MAgDcj5/BEAEu7KbmMVmbGbaHu5cNoCNf8rGudqD3ks=;
-  b=iSFKeOVqZ5iZ4O8w3GbeVxvh4gfqbkI51FaEfhCrYbGfpD0LV55YFv9G
-   Rjy5EhRH/r/AkqhnFtWLesdf9OZyzpg5jeKfqipnt7d9+z08vGhY5Rgj5
-   hwqVSIc/+GXZt69V/UvTAnFXcIwbjd1k4hBV3NrpKSp8AVTyDClHTo7U5
-   DIYfddpGMr19UGjW1hUukZQkR/xU0uxFoK/+C+5t7A6v636IGERwuPBbC
-   ohrQWkTeEps6WpL08ETu3U1fJqK8t8ZwdANxGRaVCt42rctMTy/NLpE3v
-   GWX7no6dx6yQz6fdLv/eX8IgtXtBepVa/9ISmXy01YnlesCMGQk5fjjXv
-   Q==;
-IronPort-SDR: 2oYiCVJmazMRnbduVWOv+mVVie2LPFbjBmKXQLKGerIixG6Y8gKxSttga8NFL8hZLC62SRitY8
- hJYcjJsgiDvny+4tvdOSZYpP665nQFozfQFPGy1m0ONm/9b28HL9IRpbnyBaB8SQ1gLo2mrMCr
- UHurnZ1N+vJsR37ekeG35ULFdJQ91kNgtNu3MJdFpZnCwCQZ/b/vnvz+BLklfOQxkYB2IrYrir
- lsbVkBccdXboV5rShuvDAy4NgKX/DctSJfIxEClvfyI/m2cjC4r1MzhR2aVUAKwC7LPi8rzylG
- kOI=
-X-IronPort-AV: E=Sophos;i="5.75,307,1589212800"; 
-   d="scan'208";a="250797420"
-Received: from mail-bn8nam11lp2170.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.170])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2020 16:07:39 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MAv1Pvf+ekdjo5UHGZtNsOaU/+YLm1Vspj5toSteRWLdBxN91JgAoroN8WMx1H5IEQ4KMtbebtaXHlhNz220h8lx+KHytQvqwquBgMkVCS+bl9v+j90TkOCqojew8OWo90DQRF9sX4o1lucQQ9sAsY0U9rsFBmVqwxaOOeX8bI01zeMakAhSkJVaij7nMBRc1MvqYNYxpW/n9FBcp61a8UI7bUQnEC9vqh7moK+cU4kspnDT7Zvjw/47E6mB61j9yoVXhrXOxY549PeWgdoEaB52FZdq8tFqhbRipdQ6SzyEbuPIAMjfvEsQyof24dSePWsNhvSR9GhzfisSbP/hZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+seU6I09ONvIJTEDp03RtJU7OTVIlSYRJUg9eSx/YVI=;
- b=V+VW75oP540rsdy+SC0tg4fVjjaOT4HitDcPTIZN+ATJw+dMrVBbAFsNUXofDe1UAKGiNP+U2e7ErCb3+nrsuwnu6P360uCRdNIAHpHqMCyMadRycigLPONtCz1qsdsZdhIqh/vwN+fTj4mLbZyusyw/KLJutxb3A7yCJgU8bxe1uCbPxIUPossljv+H1RBKvx41D/HsktzmFxBMQ4guLH6bYA8c0wU4csewKGBwX/qP6fQReuYUqnMQG2Z9i0k69jLdlwk9HsTE0o8VFbrBWG3HQvs/du7AiVjf+FmUhdmHsZTcce7EzjyP+7ek3X+WAKiksYxRtnnu895CtSxyWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Fri, 3 Jul 2020 04:07:42 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8936DC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 01:07:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so31663849wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 01:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+seU6I09ONvIJTEDp03RtJU7OTVIlSYRJUg9eSx/YVI=;
- b=adwT/VQJTTX5YnmgfFTFz3Ta6vdhgLEg/r/ly7+oVcR8r9rLnxprOfkrCAb7tA+zxcYJ3U+5TV9tRTjmcuaSNatBQExCTLmCYL3ZXttt6rivlvUY4ZQlskRQSWmPxbRal9fXSCzkc/ZzIWHdWM2piNWDgJBBCDURRP+vDDHLmko=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB1048.namprd04.prod.outlook.com (2603:10b6:910:54::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.28; Fri, 3 Jul
- 2020 08:07:38 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3153.022; Fri, 3 Jul 2020
- 08:07:38 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH 2/2] block: enable zone-append for iov_iter of bvec type
-Thread-Topic: [PATCH 2/2] block: enable zone-append for iov_iter of bvec type
-Thread-Index: AQHWUIdfrrkmUrgUfEeGzF+AR69QhA==
-Date:   Fri, 3 Jul 2020 08:07:38 +0000
-Message-ID: <CY4PR04MB375124BE75E2E824F543EA11E76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <1593704330-11540-1-git-send-email-joshi.k@samsung.com>
- <CGME20200702154213epcas5p4e8d42861cb5ae91ddeccf1ed73107304@epcas5p4.samsung.com>
- <1593704330-11540-3-git-send-email-joshi.k@samsung.com>
- <CY4PR04MB37516E788EC8804D7DF9780EE76A0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200703065311.GB26058@test-zns>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27ee0aa2-d7c1-42dd-6508-08d81f2826d0
-x-ms-traffictypediagnostic: CY4PR04MB1048:
-x-microsoft-antispam-prvs: <CY4PR04MB10483D9E310325FD4BB02388E76A0@CY4PR04MB1048.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: icJr1vkJncYv/InXJhilfUJOoOl+enWid4hXUenoWgiRx5YWufEa7rjj8DCQmzhiFCLSRi8Su/2lebP5lAK6yJ4mRSg1S9dP35gPp5hzF+LiXT/RbUoGw+KfVNpVkcrmhJuCwxgrTPApUgsh/ySv4bcGvuM2Ahn0PEh/l5vOi7wc9gdZSFA+CEQ/3vVIDdMxeB6ohcmINYbrztbt9bdR70EUPSpQxhSvAYkm/z/jx7ePo+60xK59o/oS6gtj3/pcM9XMC2efvq1FDKHRbA2e5zK6Dk4UwsYRoUpNrVn+tqPZWAXdjc9CKh65G8d0CSa8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(366004)(396003)(39860400002)(5660300002)(64756008)(66556008)(66476007)(66946007)(66446008)(9686003)(186003)(478600001)(91956017)(76116006)(53546011)(71200400001)(6506007)(55016002)(316002)(7696005)(33656002)(8676002)(2906002)(6916009)(4326008)(8936002)(86362001)(83380400001)(54906003)(26005)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: HlN5I5zK/vmw+wvnM6ot5VgSgKJ/jorgFJnChCs2zfUHwbV50/h4QljE2sFyZB0LbGv7w7uLH5Gv+mNHxC0gwrotnY8sLwAWG3HBFMvEYzl3x41ZckuOa0hfWfrGUFg1AcPZUfgmdNMkgyKOXee6D9byWcEN5mamrxnQv78t7Tr6R7DWZ4MjQopIp5jrSXa55kmsSOE80x8x0YWy0hBnEb88Sqw5yueEWpI7Nw44OfdWLXe7NZFO3J1ZW863sogBaS/isFPMjkhfn2r0vqS+IJQs9/+JtxBnhrwbwgc/djN98J1wqJO9mkjhv928mZhxl77GeyrILQhhf1iWmZzRnHWPG2uxjYLfRLhBfM9cO3I0HziGSohAOlHEUCyUrUI0Ype74jnjB5KCQllxvAuiXdo2cCPCGPs8mlD5aR5A3tkg7B2EIV+paVnk179X0DaWl0Ec2taptvg4vb35Fi+Lz9KPAL0RxRpauNqn8lKDErQocwsUQdKYh/Yx347pB69k
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=S/mjHwVM8f0rq/Zev4sBdcwtGb3gRo37tSIraZ81Plk=;
+        b=irvooNni8ppF3zhYSkb/ma6Pn6BlcuWTZojl7IUEdTWT36NOdSsRD7FBBpzx1dKc8V
+         bHL83/EEdFaG4ln+dbldWAHt3tysxIGry6zJbQCDHs1ic6yUaWjCtwpVlIJOUr/DbeI4
+         gj7InTpRBK+jW4ZY8HJGoEnGI/+Gj5FkuUwqwgzImwxdUrHtDUpnRwhD6xW71WXwngaM
+         59H2nEh0/s3yO91j0l/BeQ5zenmqSKX2pxb3U0loZqupj8XUqoCzsl2D92mP9YhbLxzg
+         BZuRrPE3qsgAVBEDdaCGopVWl9gCfSC94SERSvCLnz5cQyp8uq6IrGiMaKVrQ+gz1pF7
+         MCIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=S/mjHwVM8f0rq/Zev4sBdcwtGb3gRo37tSIraZ81Plk=;
+        b=iryGK2sZuZfnWnBDCcMuqeYZq6Zy3PDT54IB+70O5yuFCerIgLGWAAfQKdbPME7hRa
+         NKIjGNQZBYqmK3peDXJW+QwGj0v0/r/VvTFR2aBzQVUURAnyM19gcD8kBX1bLcdXtQnI
+         xrvR1Gw4GrTmn0MQFT0ulVqBbX0naD6D96bGcW/f6RDKDDoZHXRA66LAtz39LoNOT90H
+         WWxWI3UO6gDCHgaO9Af1tzcB5ZWnLlsxLuV+hRr1JqP/9C5E+j9AeeM6fzsbOjBCbr55
+         qqSai9KwQXk2U/s4+2WPwwVeM9DNkn7E0L7CYZj7m8/ihgn9tiQcKtCQPHon9SUJ0Vu7
+         wu4g==
+X-Gm-Message-State: AOAM532fAELrbHT8RezgG9cR1duO29B/27syxD9wmX0P6WzRyTINFBGt
+        FFGWGdZdLacAUh41U/nxF3aKzw==
+X-Google-Smtp-Source: ABdhPJxJJLudOK1rkxvKjKdG1LD8N7XgXA9RJ1vkVwlFVeqM2UG9fzwUDJOU18lmeGymV5QC28y1RQ==
+X-Received: by 2002:adf:e74e:: with SMTP id c14mr37517057wrn.143.1593763658916;
+        Fri, 03 Jul 2020 01:07:38 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:6959:e617:6562:cabf])
+        by smtp.gmail.com with ESMTPSA id 1sm12682403wmf.0.2020.07.03.01.07.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 01:07:38 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH v9 1/6] drm/fourcc: Add modifier definitions for describing Amlogic Video Framebuffer Compression
+Date:   Fri,  3 Jul 2020 10:07:23 +0200
+Message-Id: <20200703080728.25207-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200703080728.25207-1-narmstrong@baylibre.com>
+References: <20200703080728.25207-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27ee0aa2-d7c1-42dd-6508-08d81f2826d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 08:07:38.1930
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SlcijtfZi0FFpKlB1kQ02PhkQp2B5rqidpD6baagyqCHkz8U3Vn42NLjJhAGZEtfGEn/OPzYGq0k+9u2u9+CgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1048
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/03 15:56, Kanchan Joshi wrote:=0A=
-> On Fri, Jul 03, 2020 at 05:32:56AM +0000, Damien Le Moal wrote:=0A=
->> On 2020/07/03 0:42, Kanchan Joshi wrote:=0A=
->>> zone-append with bvec iov_iter gives WARN_ON, and returns -EINVAL.=0A=
->>> Add new helper to process such iov_iter and add pages in bio honoring=
-=0A=
->>> zone-append specific constraints.=0A=
->>>=0A=
->>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>=0A=
->>> Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>=0A=
->>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>=0A=
->>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>=0A=
->>> ---=0A=
->>>  block/bio.c | 31 ++++++++++++++++++++++++++++---=0A=
->>>  1 file changed, 28 insertions(+), 3 deletions(-)=0A=
->>>=0A=
->>> diff --git a/block/bio.c b/block/bio.c=0A=
->>> index 0cecdbc..ade9da7 100644=0A=
->>> --- a/block/bio.c=0A=
->>> +++ b/block/bio.c=0A=
->>> @@ -975,6 +975,30 @@ static int __bio_iov_bvec_add_pages(struct bio *bi=
-o, struct iov_iter *iter)=0A=
->>>  	iov_iter_advance(iter, size);=0A=
->>>  	return 0;=0A=
->>>  }=0A=
->>> +static int __bio_iov_bvec_append_add_pages(struct bio *bio, struct iov=
-_iter *iter)=0A=
->>> +{=0A=
->>> +	const struct bio_vec *bv =3D iter->bvec;=0A=
->>> +	unsigned int len;=0A=
->>> +	size_t size;=0A=
->>> +	struct request_queue *q =3D bio->bi_disk->queue;=0A=
->>> +	unsigned int max_append_sectors =3D queue_max_zone_append_sectors(q);=
-=0A=
->>> +	bool same_page =3D false;=0A=
->>> +=0A=
->>> +	if (WARN_ON_ONCE(!max_append_sectors))=0A=
->>> +		return -EINVAL;=0A=
->>> +=0A=
->>> +	if (WARN_ON_ONCE(iter->iov_offset > bv->bv_len))=0A=
->>> +		return -EINVAL;=0A=
->>> +=0A=
->>> +	len =3D min_t(size_t, bv->bv_len - iter->iov_offset, iter->count);=0A=
->>> +	size =3D bio_add_hw_page(q, bio, bv->bv_page, len,=0A=
->>> +				bv->bv_offset + iter->iov_offset,=0A=
->>> +				max_append_sectors, &same_page);=0A=
->>> +	if (unlikely(size !=3D len))=0A=
->>> +		return -EINVAL;=0A=
->>> +	iov_iter_advance(iter, size);=0A=
->>> +	return 0;=0A=
->>> +}=0A=
->>>=0A=
->>>  #define PAGE_PTRS_PER_BVEC     (sizeof(struct bio_vec) / sizeof(struct=
- page *))=0A=
->>>=0A=
->>> @@ -1105,9 +1129,10 @@ int bio_iov_iter_get_pages(struct bio *bio, stru=
-ct iov_iter *iter)=0A=
->>>=0A=
->>>  	do {=0A=
->>>  		if (bio_op(bio) =3D=3D REQ_OP_ZONE_APPEND) {=0A=
->>> -			if (WARN_ON_ONCE(is_bvec))=0A=
->>> -				return -EINVAL;=0A=
->>> -			ret =3D __bio_iov_append_get_pages(bio, iter);=0A=
->>> +			if (is_bvec)=0A=
->>> +				ret =3D __bio_iov_bvec_append_add_pages(bio, iter);=0A=
->>> +			else=0A=
->>> +				ret =3D __bio_iov_append_get_pages(bio, iter);=0A=
->>>  		} else {=0A=
->>>  			if (is_bvec)=0A=
->>>  				ret =3D __bio_iov_bvec_add_pages(bio, iter);=0A=
->>>=0A=
->>=0A=
->> The only user of this function that issues zone append requests is zonef=
-s. The=0A=
->> issued requests are not using bvec iter but a user direct IO buffer iter=
-. So=0A=
->> this change would have no user at all as far as I can see. Am I missing=
-=0A=
->> something ? What IO path makes this change necessary ?=0A=
-> =0A=
-> Yes, zonefs does not use bvec iter. But while enabling io-uring path for=
-=0A=
-> zone-append, I hit into this condition returning -EINVAL. =0A=
-> =0A=
-> Reference (from user zone-append series cover letter):=0A=
-> "Append using io_uring fixed-buffer --->=0A=
-> This is flagged as not-supported at the moment. Reason being, for fixed-b=
-uffer=0A=
-> io-uring sends iov_iter of bvec type. But current append-infra in block-l=
-ayer=0A=
-> does not support such iov_iter."=0A=
-> =0A=
-> And zone-append doesn't have a problem in using bvec iter as well, so=0A=
-> thought that this may make infra more complete/future-proof?=0A=
-=0A=
-As long as there is no possible user for this change, I do not see the poin=
-t in=0A=
-adding it.=0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Amlogic uses a proprietary lossless image compression protocol and format
+for their hardware video codec accelerators, either video decoders or
+video input encoders.
+
+It considerably reduces memory bandwidth while writing and reading
+frames in memory.
+
+The underlying storage is considered to be 3 components, 8bit or 10-bit
+per component, YCbCr 420, single plane :
+- DRM_FORMAT_YUV420_8BIT
+- DRM_FORMAT_YUV420_10BIT
+
+This modifier will be notably added to DMA-BUF frames imported from the V4L2
+Amlogic VDEC decoder.
+
+This introduces the basic layout composed of:
+- a body content organized in 64x32 superblocks with 4096 bytes per
+  superblock in default mode.
+- a 32 bytes per 128x64 header block
+
+This layout is tranferrable between Amlogic SoCs supporting this modifier.
+
+The Memory Saving option exist changing the layout superblock size to save memory when
+using 8bit components pixels size.
+
+Finally is also adds the Scatter Memory layout, meaning the header contains IOMMU
+references to the compressed frames content to optimize memory access
+and layout.
+
+In this mode, only the header memory address is needed, thus the content
+memory organization is tied to the current producer execution and cannot
+be saved/dumped neither transferrable between Amlogic SoCs supporting this
+modifier.
+
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+---
+ include/uapi/drm/drm_fourcc.h | 81 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index 993c1b342315..cbf92fdf2712 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -331,6 +331,7 @@ extern "C" {
+ #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
+ #define DRM_FORMAT_MOD_VENDOR_ARM     0x08
+ #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
++#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
+ 
+ /* add more to the end as needed */
+ 
+@@ -950,6 +951,86 @@ drm_fourcc_canonicalize_nvidia_format_mod(__u64 modifier)
+  */
+ #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
+ 
++/*
++ * Amlogic Video Framebuffer Compression modifiers
++ *
++ * Amlogic uses a proprietary lossless image compression protocol and format
++ * for their hardware video codec accelerators, either video decoders or
++ * video input encoders.
++ *
++ * It considerably reduces memory bandwidth while writing and reading
++ * frames in memory.
++ *
++ * The underlying storage is considered to be 3 components, 8bit or 10-bit
++ * per component YCbCr 420, single plane :
++ * - DRM_FORMAT_YUV420_8BIT
++ * - DRM_FORMAT_YUV420_10BIT
++ *
++ * The first 8 bits of the mode defines the layout, then the following 8 bits
++ * defines the options changing the layout.
++ *
++ * Not all combinations are valid, and different SoCs may support different
++ * combinations of layout and options.
++ */
++#define __fourcc_mod_amlogic_layout_mask 0xf
++#define __fourcc_mod_amlogic_options_shift 8
++#define __fourcc_mod_amlogic_options_mask 0xf
++
++#define DRM_FORMAT_MOD_AMLOGIC_FBC(__layout, __options) \
++	fourcc_mod_code(AMLOGIC, \
++			((__layout) & __fourcc_mod_amlogic_layout_mask) | \
++			((__options) & __fourcc_mod_amlogic_options_mask \
++			 << __fourcc_mod_amlogic_options_shift))
++
++/* Amlogic FBC Layouts */
++
++/*
++ * Amlogic FBC Basic Layout
++ *
++ * The basic layout is composed of:
++ * - a body content organized in 64x32 superblocks with 4096 bytes per
++ *   superblock in default mode.
++ * - a 32 bytes per 128x64 header block
++ *
++ * This layout is transferrable between Amlogic SoCs supporting this modifier.
++ */
++#define AMLOGIC_FBC_LAYOUT_BASIC		(1ULL)
++
++/*
++ * Amlogic FBC Scatter Memory layout
++ *
++ * Indicates the header contains IOMMU references to the compressed
++ * frames content to optimize memory access and layout.
++ *
++ * In this mode, only the header memory address is needed, thus the
++ * content memory organization is tied to the current producer
++ * execution and cannot be saved/dumped neither transferrable between
++ * Amlogic SoCs supporting this modifier.
++ *
++ * Due to the nature of the layout, these buffers are not expected to
++ * be accessible by the user-space clients, but only accessible by the
++ * hardware producers and consumers.
++ *
++ * The user-space clients should expect a failure while trying to mmap
++ * the DMA-BUF handle returned by the producer.
++ */
++#define AMLOGIC_FBC_LAYOUT_SCATTER		(2ULL)
++
++/* Amlogic FBC Layout Options Bit Mask */
++
++/*
++ * Amlogic FBC Memory Saving mode
++ *
++ * Indicates the storage is packed when pixel size is multiple of word
++ * boudaries, i.e. 8bit should be stored in this mode to save allocation
++ * memory.
++ *
++ * This mode reduces body layout to 3072 bytes per 64x32 superblock with
++ * the basic layout and 3200 bytes per 64x32 superblock combined with
++ * the scatter layout.
++ */
++#define AMLOGIC_FBC_OPTION_MEM_SAVING		(1ULL << 0)
++
+ #if defined(__cplusplus)
+ }
+ #endif
+-- 
+2.22.0
+
