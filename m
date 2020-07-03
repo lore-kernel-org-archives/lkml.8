@@ -2,130 +2,121 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD40920748
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943F8207D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJjrrEkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgGCAnQ (ORCPT
+        id S1726418AbgGCApT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:43:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44080 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgGCAnQ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:43:16 -0400
-IronPort-SDR: nbIl1QTTtlJIsUzwnP8Gu+eJKM43RF7TdGqA3/NJBPf6GexnUL5Kp13c9V1l8pN8e5nYKNizBu
- gTl4vbD7Aesw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165119489"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="165119489"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 17:43:15 -0700
-IronPort-SDR: +3BATNlpnb2LhdaxdKRXQ83hMGdtC/P2mVh6XB5Up5u23Hh6dO5qDqdPK/s72/zJvMJyE5gAJA
- qXkHLfcIJ1vQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="356619200"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by orsmga001.jf.intel.com with ESMTP; 02 Jul 2020 17:43:13 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, irogers@google.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf evsel: Don't set sample_regs_intr/sample_regs_user for dummy event
-Date:   Fri,  3 Jul 2020 08:42:15 +0800
-Message-Id: <20200703004215.24418-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 Jul 2020 20:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgGCApS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 20:45:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A368C08C5C1;
+        Thu,  2 Jul 2020 17:45:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cv18so6738519pjb.1;
+        Thu, 02 Jul 2020 17:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xxCISvRtfhl8oL/cHz8IcSytvLoDXt2VBe6qFVBHxUE=;
+        b=nJjrrEkUAQCGFmGDNhnb5PVExZ3pDaEIWh7BZWYbQZD2UR9o86pnVnUTyuKaTuTJDW
+         Jpv6HrHW6Wd96BITv2uK8OH5weHw4hI8kcRDXFq3O1XzNvOlUrd+DUkufbneM1Hsi6JO
+         v3E0y8rkNX6xX9HKg44GveDw1iZsMMTNN8nogn4UObvseMisxlDOj+eeiCbfVr/pr/0m
+         JVMZVayOQCVBgveyiz63ZuW/T6mj4yECIx+Ui3dqVTXvj4WHXz2SXPuuaVC4XL8uWQvP
+         o8ct/VHBaCQkVA3WFDpmBrAzUREPYlYXnmBY40tobsjxomCu7nyheU/mGfpxUiCtZ5Fz
+         uPag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xxCISvRtfhl8oL/cHz8IcSytvLoDXt2VBe6qFVBHxUE=;
+        b=eKUpemZ8+x+FBdCqiH1eJGSJmZAnnrzKXgXRansfe/SNLmlIad3NilrcaOhK0zGH98
+         jj+NZufn8HJWjCR0Us6OAYCPZ8CXFm88tIE8unbomcfaPitCN31NQ8Uu/DFMYXR2tJp9
+         oOYiC3er2gJAmSUSM3BLEwcfnqlu0DfIuA4emtNYnKuu2ZiBnxXoUqWYPSZGHUfhSxP8
+         AA6MY6zbpsT5/Tu1/y2+279qEZHRK7ABgyct5OJiUoeoMfvBT+Ot/x4DnNmAAZY11jv+
+         T9EJ6N+klwYNLf3xyrP15u0GjLT6onEZ1/2SG5B59goF+RUxvknbAnrydVyU7L819QpA
+         mJ4g==
+X-Gm-Message-State: AOAM530OIiyzeaf6A7xxHA4Xf7wcMXBmKH/sJ2UiHnphUyVbJiv9m7LJ
+        c2H9FpawIfRWfH422DGiqzZm4huXj9o=
+X-Google-Smtp-Source: ABdhPJz+qnIK30TK5zKdKNpuN2jPEhIs1H8VMPfoPIeYzhAgJgFZjY/TlqevmnyCB1cDQRYUNKAH3A==
+X-Received: by 2002:a17:902:369:: with SMTP id 96mr6833712pld.214.1593737117645;
+        Thu, 02 Jul 2020 17:45:17 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 125sm9302049pff.130.2020.07.02.17.45.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Jul 2020 17:45:17 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 17:45:16 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     rentao.bupt@gmail.com
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        openbmc@lists.ozlabs.org,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>, taoren@fb.com
+Subject: Re: [PATCH] hwmon: (pmbus) fix a typo in Kconfig SENSORS_IR35221
+ option
+Message-ID: <20200703004516.GA100326@roeck-us.net>
+References: <20200702221349.18139-1-rentao.bupt@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702221349.18139-1-rentao.bupt@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis"),
-a dummy event is added to capture mmaps.
+On Thu, Jul 02, 2020 at 03:13:49PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Fix a typo in SENSORS_IR35221 option: module name should be "ir35221"
+> instead of "ir35521".
+> 
+> Fixes: 8991ebd9c9a6 ("hwmon: (pmbus) Add client driver for IR35221")
+> 
+> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-But if we run perf-record as,
+Applied.
 
- # perf record -e cycles:p -IXMM0 -a -- sleep 1
- Error:
- dummy:HG: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+Thanks,
+Guenter
 
-The issue is, if we enable the extended regs (-IXMM0), but the
-pmu->capabilities is not set with PERF_PMU_CAP_EXTENDED_REGS, the kernel
-will return -EOPNOTSUPP error.
-
-See following code pieces.
-
-/* in kernel/events/core.c */
-static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
-
-{
-	....
-	if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
-	    has_extended_regs(event))
-		ret = -EOPNOTSUPP;
-	....
-}
-
-For software dummy event, the PMU should be not set with
-PERF_PMU_CAP_EXTENDED_REGS. But unfortunately in current code, the dummy
-event has possibility to be set with PERF_REG_EXTENDED_MASK bit.
-
-In evsel__config, /* tools/perf/util/evsel.c */
-
-if (opts->sample_intr_regs) {
-	attr->sample_regs_intr = opts->sample_intr_regs;
-}
-
-If we use -IXMM0, the attr>sample_regs_intr will be set with
-PERF_REG_EXTENDED_MASK bit.
-
-It doesn't make sense to set attr->sample_regs_intr for a
-software dummy event.
-
-This patch adds dummy event checking before setting
-attr->sample_regs_intr.
-
-After:
-  # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
-
-Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/util/evsel.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 96e5171dce41..df3315543e86 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1020,12 +1020,12 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (callchain && callchain->enabled && !evsel->no_aux_samples)
- 		evsel__config_callchain(evsel, opts, callchain);
- 
--	if (opts->sample_intr_regs) {
-+	if (opts->sample_intr_regs && !is_dummy_event(evsel)) {
- 		attr->sample_regs_intr = opts->sample_intr_regs;
- 		evsel__set_sample_bit(evsel, REGS_INTR);
- 	}
- 
--	if (opts->sample_user_regs) {
-+	if (opts->sample_user_regs && !is_dummy_event(evsel)) {
- 		attr->sample_regs_user |= opts->sample_user_regs;
- 		evsel__set_sample_bit(evsel, REGS_USER);
- 	}
--- 
-2.17.1
-
+> ---
+>  drivers/hwmon/pmbus/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index 3ad97fd5ce03..e35db489b76f 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -71,7 +71,7 @@ config SENSORS_IR35221
+>  	  Infineon IR35221 controller.
+>  
+>  	  This driver can also be built as a module. If so, the module will
+> -	  be called ir35521.
+> +	  be called ir35221.
+>  
+>  config SENSORS_IR38064
+>  	tristate "Infineon IR38064"
