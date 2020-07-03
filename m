@@ -2,431 +2,186 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377C5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F229520723
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DA72073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I0/kSCr8"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="pwoywm1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgGCKCQ (ORCPT
+        id S1726048AbgGCKGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgGCKCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:02:15 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5400C08C5DF
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 03:02:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so32026243wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 03:02:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KSglCuKZom7N+uFfS3MmTsdhQ4Air/dzCpchXZq06HQ=;
-        b=I0/kSCr8TJuxfeN61ggBpJlUvwnP7D3K9zIM5ce+d+JTCskkn5iytO+JUt2nqH2kL+
-         666p1+rvfjW5XOa+0hWR4QuLm5BWGKR+mKdQvvcML8WM/ir3E13OHu/TFwcgTlrwvvnl
-         G4DBZkWY+MR2VNnYky5umq60AxUvLtxu92mYwvK/+IoE7rRH69wgPy57N2WoeLPWndel
-         IM3c9fDl5R0Nd+4PRJeZY3UKQNFb9nA+ruwiMQsFzOU0QcG06xNBHthf5B7auVCsoaL8
-         9c4to1jBoZlBcGS2x3HlTjzpY/kRYLNviG8fktKCljj1QRmc8efBtYQI3Ptah/JoYj1P
-         Dtpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KSglCuKZom7N+uFfS3MmTsdhQ4Air/dzCpchXZq06HQ=;
-        b=suYgSOhx3kG32ebU+Lwvjk8WwwmITK4SFNnMmWXoirM9MTi40suymrhAGPYA4jSLh2
-         AMWA3KEfRvuU95CFH4SdiTPwCuiJswY2ASwpvS7abtp5qrX4dktfCg/68VxahFZAbhte
-         ZB7Y5Cp5RGTtOXbz5B9Oly3hMzfcJvq5KRqkwfUbzGqDku/yGThpOf/X4jOtbi0meMpa
-         AuQypDyks8XVdYFvKZgYpuYPxJzbwQQSx9azEluaHfX8CP0nuBaeLQMDdtBWDFcI9t6P
-         5W9z1Mpb7xaxtbQwqjVTtVEpgWsPDrP5WJsUWTuFg7Tcvngnr+7XU+blkpbmJsp/fPLQ
-         ZIAA==
-X-Gm-Message-State: AOAM531VUiMgXaQ0xmjoMDnyrsIdpm25diIBjGODMkvvmKIgJgSwcTaR
-        WZ5/E0r2z8IHtkpZC6/XkYxhww==
-X-Google-Smtp-Source: ABdhPJzsgwRcT3xBH66gI81yE8LHzMiSna8htFBB3M4scc6NMnqnJ+bmBrnO6oI26eGWF2Sg7p3yAA==
-X-Received: by 2002:adf:8524:: with SMTP id 33mr35644482wrh.366.1593770533180;
-        Fri, 03 Jul 2020 03:02:13 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:7019:4e9b:2970:f860? ([2a01:e34:ed2f:f020:7019:4e9b:2970:f860])
-        by smtp.googlemail.com with ESMTPSA id z10sm8372213wrm.21.2020.07.03.03.02.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 03:02:12 -0700 (PDT)
-Subject: Re: [PATCH v6 3/6] thermal: Add generic power domain warming device
- driver.
-To:     Thara Gopinath <thara.gopinath@linaro.org>, rui.zhang@intel.com,
-        ulf.hansson@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh@kernel.org
-Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lukasz Luba <Lukasz.Luba@arm.com>
-References: <20200604015317.31389-1-thara.gopinath@linaro.org>
- <20200604015317.31389-4-thara.gopinath@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <733d118d-45a3-b981-4820-5d841e921a8d@linaro.org>
-Date:   Fri, 3 Jul 2020 12:02:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 3 Jul 2020 06:06:09 -0400
+Received: from mail.nic.cz ([217.31.204.67]:51698 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgGCKGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 06:06:08 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTPSA id D4A0E14078D;
+        Fri,  3 Jul 2020 12:06:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1593770762; bh=kV4j8O4Cdf60Mymne/xK8E9dxp4Yx5R0Zj2sfcDUqYY=;
+        h=Date:From:To;
+        b=pwoywm1MWjdIqRQvClsSnxw5czhMCeyDm/cJkvitVhOHOK7T8mdUx8NcW3RnKtY7d
+         CYl4K0Wm8ZN9Q8VOKZz+RumyVvt4BC/MQ9alz84VXEAmdmzkq57RpfuatvlRBdL7Cb
+         7bb20LzWCpEfofCh6aTyx6Put4Pii8Ue1LTzJPGw=
+Date:   Fri, 3 Jul 2020 12:06:02 +0200
+From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org (open list:LED SUBSYSTEM)
+Subject: Re: [PATCH RFC] leds: Add support for per-LED device triggers
+Message-ID: <20200703120602.457cff1a@dellmb.labs.office.nic.cz>
+In-Reply-To: <20200702144712.1994685-1-megous@megous.com>
+References: <20200702144712.1994685-1-megous@megous.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200604015317.31389-4-thara.gopinath@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu,  2 Jul 2020 16:47:11 +0200
+Ondrej Jirman <megous@megous.com> wrote:
 
-Hi Thara,
-
-sorry for the delay.
-
-Added Lukasz.
-
-On 04/06/2020 03:53, Thara Gopinath wrote:
-> Resources modeled as power domains in linux kernel can  be used to warm the
-> SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
-> generic power domain warming device driver that can be plugged into the
-> thermal framework (The thermal framework itself requires further
-> modifiction to support a warming device in place of a cooling device.
-> Those extensions are not introduced in this patch series).
-
-The patch itself looks fine but I'm not very convinced about using a
-specific driver as a warming device.
-
-It is all about changing the performance state of a device and the power
-domain is a way to access the associated callback.
-
-It could be used as a cooling device as well.
-
-The cpufreq cooling device could be used as a warming device and the way
-we access the performance state is the freq qos.
-
-We end up with different ways to do the same thing : change the
-performance state.
-
-On the other side, the energy model is being moved to the struct device,
-so we will have gpu and cpu using it to retrieve a performance state
-given a power value.
-
-My opinion is instead of multiplying the ways to do the same think, we
-should find a way to unify all the passive cooling devices into a single
-generic performance state based mitigation device.
-
-It does not imply to make all the passive cooling device changes but
-provide a generic one first.
-
-The ideal would be to register a struct device as a performance state
-capable device and use the energy model stored in it.
-
-In the meantime, the energy model should embed a couple of callbacks
-get_power / set_power to set the performance state.
-
-That implies a bit of more work, but IMHO it is worth to do.
-
-Does it make sense ?
-
-
+> Some LED controllers may come with an internal HW triggering mechanism
+> for the LED and an ability to switch between user control of the LED,
+> or the internal control. One such example is AXP20X PMIC, that allows
+> wither for user control of the LED, or for internal control based on
+> the state of the battery charger.
+> 
+> Add support for registering per-LED device trigger.
+> 
+> Names of private triggers need to be globally unique, but may clash
+> with other private triggers. This is enforced during trigger
+> registration. Developers can register private triggers just like
+> the normal triggers, by setting private_led to a classdev
+> of the LED the trigger is associated with.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
+>  drivers/leds/led-triggers.c | 12 +++++++++---
+>  include/linux/leds.h        |  3 +++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
 > 
-> v3->v4:
-> 	- Removed late_init hook pd_warming_device_ops.
-> 	- Use of_genpd_add_device instead of pm_genpd_add_device to attach
-> 	  device to the generic power domain.
-> 	- Use thermal_of_cooling_device_parent_register to register the
-> 	  cooling device so that the device with genpd attached can be
-> 	  made parent of the cooling device.
-> 	- With above changes, remove reference to generic_pm_domain in
-> 	  pd_warming_device.
-> 
-> v4->v5:
-> 	- All the below changes are as per Ulf's review comments.
-> 	- Renamed pwr_domain_warming.c and pwr_domain_warming.h to
-> 	  pd_warming.c and pd_warming.h.
-> 	- Renamed pwr_domain_warming_register API to 
-> 	  of_pd_warming_register.
-> 	- Dropped in-param pd_name to of_pd_warming_register.
-> 	- Introduced ID allocator to uniquely identify each power domain
-> 	  warming device.
-> 	- Introduced pd_warming_release to handle device kfree for
-> 	  pd_warming_device.
-> 	- Introduced pm_genpd_remove_device in the error exit path
-> 	  of of_pd_warming_register.
-> v5->v6:
-> 	- Fixed issues with ->release() and kfree(dev) as pointed
-> 	  out by Ulf.
-> 
->  drivers/thermal/Kconfig      |  10 +++
->  drivers/thermal/Makefile     |   4 +
->  drivers/thermal/pd_warming.c | 169 +++++++++++++++++++++++++++++++++++
->  include/linux/pd_warming.h   |  29 ++++++
->  4 files changed, 212 insertions(+)
->  create mode 100644 drivers/thermal/pd_warming.c
->  create mode 100644 include/linux/pd_warming.h
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index e53314ea9e25..3a0bcf3e8bd9 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -206,6 +206,16 @@ config DEVFREQ_THERMAL
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 79e30d2cb7a5..3011e2658404 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -50,7 +50,8 @@ ssize_t led_trigger_write(struct file *filp, struct
+> kobject *kobj, 
+>  	down_read(&triggers_list_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (sysfs_streq(buf, trig->name)) {
+> +		if (sysfs_streq(buf, trig->name) &&
+> +		    (!trig->private_led || trig->private_led ==
+> led_cdev)) { down_write(&led_cdev->trigger_lock);
+>  			led_trigger_set(led_cdev, trig);
+>  			up_write(&led_cdev->trigger_lock);
+> @@ -96,6 +97,9 @@ static int led_trigger_format(char *buf, size_t
+> size, bool hit = led_cdev->trigger &&
+>  			!strcmp(led_cdev->trigger->name, trig->name);
 >  
->  	  If you want this support, you should say Y here.
->  
-> +config PWR_DOMAIN_WARMING_THERMAL
-> +	bool "Power Domain based warming device"
-> +	depends on PM_GENERIC_DOMAINS_OF
-> +	help
-> +	  This implements the generic power domain based warming
-> +	  mechanism through increasing the performance state of
-> +	  a power domain.
+> +		if (trig->private_led && trig->private_led !=
+> led_cdev)
+> +			continue;
 > +
-> +	  If you want this support, you should say Y here.
+>  		len += led_trigger_snprintf(buf + len, size - len,
+>  					    " %s%s%s", hit ? "[" :
+> "", trig->name, hit ? "]" : "");
+> @@ -243,7 +247,8 @@ void led_trigger_set_default(struct led_classdev
+> *led_cdev) down_read(&triggers_list_lock);
+>  	down_write(&led_cdev->trigger_lock);
+>  	list_for_each_entry(trig, &trigger_list, next_trig) {
+> -		if (!strcmp(led_cdev->default_trigger, trig->name)) {
+> +		if (!strcmp(led_cdev->default_trigger, trig->name) &&
+> +		    (!trig->private_led || trig->private_led ==
+> led_cdev)) { led_cdev->flags |= LED_INIT_DEFAULT_TRIGGER;
+>  			led_trigger_set(led_cdev, trig);
+>  			break;
+> @@ -280,7 +285,8 @@ int led_trigger_register(struct led_trigger *trig)
+>  	down_write(&triggers_list_lock);
+>  	/* Make sure the trigger's name isn't already in use */
+>  	list_for_each_entry(_trig, &trigger_list, next_trig) {
+> -		if (!strcmp(_trig->name, trig->name)) {
+> +		if (!strcmp(_trig->name, trig->name) &&
+> +		    (!_trig->private_led || _trig->private_led ==
+> trig->private_led)) { up_write(&triggers_list_lock);
+>  			return -EEXIST;
+>  		}
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 2451962d1ec5..0d7577c752ad 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -345,6 +345,9 @@ struct led_trigger {
+>  	int		(*activate)(struct led_classdev
+> *led_cdev); void		(*deactivate)(struct led_classdev
+> *led_cdev); 
+> +	/* LED-private triggers have the LED device set here. */
+> +	struct led_classdev *private_led;
 > +
->  config THERMAL_EMULATION
->  	bool "Thermal emulation mode support"
->  	help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 86c506410cc0..14fa696a08bd 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -28,7 +28,11 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->  
-> +#pwr domain warming
-> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)	+= pd_warming.o
-> +
->  obj-$(CONFIG_K3_THERMAL)	+= k3_bandgap.o
-> +
->  # platform thermal drivers
->  obj-y				+= broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-> diff --git a/drivers/thermal/pd_warming.c b/drivers/thermal/pd_warming.c
-> new file mode 100644
-> index 000000000000..1ea93481c79b
-> --- /dev/null
-> +++ b/drivers/thermal/pd_warming.c
-> @@ -0,0 +1,169 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd
-> + */
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/pd_warming.h>
-> +
-> +struct pd_warming_device {
-> +	struct thermal_cooling_device *cdev;
-> +	struct device dev;
-> +	int id;
-> +	int max_state;
-> +	int cur_state;
-> +	bool runtime_resumed;
-> +};
-> +
-> +static DEFINE_IDA(pd_ida);
-> +
-> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> +				 unsigned long *state)
-> +{
-> +	struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +	*state = pd_wdev->max_state;
-> +	return 0;
-> +}
-> +
-> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> +				 unsigned long *state)
-> +{
-> +	struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +	*state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> +				 unsigned long state)
-> +{
-> +	struct pd_warming_device *pd_wdev = cdev->devdata;
-> +	struct device *dev = &pd_wdev->dev;
-> +	int ret;
-> +
-> +	ret = dev_pm_genpd_set_performance_state(dev, state);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (state && !pd_wdev->runtime_resumed) {
-> +		ret = pm_runtime_get_sync(dev);
-> +		pd_wdev->runtime_resumed = true;
-> +	} else if (!state && pd_wdev->runtime_resumed) {
-> +		ret = pm_runtime_put(dev);
-> +		pd_wdev->runtime_resumed = false;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> +	.get_max_state	= pd_wdev_get_max_state,
-> +	.get_cur_state	= pd_wdev_get_cur_state,
-> +	.set_cur_state	= pd_wdev_set_cur_state,
-> +};
-> +
-> +static void pd_warming_release(struct device *dev)
-> +{
-> +	struct pd_warming_device *pd_wdev;
-> +
-> +	pd_wdev = container_of(dev, struct pd_warming_device, dev);
-> +	kfree(pd_wdev);
-> +}
-> +
-> +struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id)
-> +{
-> +	struct pd_warming_device *pd_wdev;
-> +	struct of_phandle_args pd_args;
-> +	char cdev_name[THERMAL_NAME_LENGTH];
-> +	int ret;
-> +
-> +	pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
-> +	if (!pd_wdev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
-> +		     dev_name(parent), pd_id);
-> +	pd_wdev->dev.parent = parent;
-> +	pd_wdev->dev.release = pd_warming_release;
-> +
-> +	ret = device_register(&pd_wdev->dev);
-> +	if (ret) {
-> +		put_device(&pd_wdev->dev);
-> +		goto out;
-> +	}
-> +
-> +	ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
-> +	if (ret < 0)
-> +		goto unregister_device;
-> +
-> +	pd_wdev->id = ret;
-> +
-> +	pd_args.np = parent->of_node;
-> +	pd_args.args[0] = pd_id;
-> +	pd_args.args_count = 1;
-> +
-> +	ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
-> +
-> +	if (ret)
-> +		goto remove_ida;
-> +
-> +	ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
-> +	if (ret < 0)
-> +		goto out_genpd;
-> +
-> +	pd_wdev->max_state = ret - 1;
-> +	pm_runtime_enable(&pd_wdev->dev);
-> +	pd_wdev->runtime_resumed = false;
-> +
-> +	snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
-> +	pd_wdev->cdev = thermal_of_cooling_device_register
-> +					(NULL, cdev_name, pd_wdev,
-> +					 &pd_warming_device_ops);
-> +	if (IS_ERR(pd_wdev->cdev)) {
-> +		pr_err("unable to register %s cooling device\n", cdev_name);
-> +		ret = PTR_ERR(pd_wdev->cdev);
-> +		goto out_runtime_disable;
-> +	}
-> +
-> +	return pd_wdev->cdev;
-> +
-> +out_runtime_disable:
-> +	pm_runtime_disable(&pd_wdev->dev);
-> +out_genpd:
-> +	pm_genpd_remove_device(&pd_wdev->dev);
-> +remove_ida:
-> +	ida_simple_remove(&pd_ida, pd_wdev->id);
-> +unregister_device:
-> +	device_unregister(&pd_wdev->dev);
-> +out:
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
-> +
-> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
-> +{
-> +	struct pd_warming_device *pd_wdev = cdev->devdata;
-> +	struct device *dev = &pd_wdev->dev;
-> +
-> +	if (pd_wdev->runtime_resumed) {
-> +		dev_pm_genpd_set_performance_state(dev, 0);
-> +		pm_runtime_put(dev);
-> +		pd_wdev->runtime_resumed = false;
-> +	}
-> +	pm_runtime_disable(dev);
-> +	pm_genpd_remove_device(dev);
-> +	ida_simple_remove(&pd_ida, pd_wdev->id);
-> +	thermal_cooling_device_unregister(cdev);
-> +	device_unregister(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
-> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
-> new file mode 100644
-> index 000000000000..550a5683b56d
-> --- /dev/null
-> +++ b/include/linux/pd_warming.h
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd.
-> + */
-> +#ifndef __PWR_DOMAIN_WARMING_H__
-> +#define __PWR_DOMAIN_WARMING_H__
-> +
-> +#include <linux/pm_domain.h>
-> +#include <linux/thermal.h>
-> +
-> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
-> +struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id);
-> +
-> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
-> +
-> +#else
-> +static inline struct thermal_cooling_device *
-> +of_pd_warming_register(struct device *parent, int pd_id)
-> +{
-> +	return ERR_PTR(-ENOSYS);
-> +}
-> +
-> +static inline void
-> +pd_warming_unregister(struct thermal_cooling_device *cdev)
-> +{
-> +}
-> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
-> +#endif /* __PWR_DOMAIN_WARMING_H__ */
-> 
+>  	/* LEDs under control by this trigger (for simple triggers)
+> */ rwlock_t	  leddev_list_lock;
+>  	struct list_head  led_cdevs;
 
+Hi Ondrej,
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Some criticism to this approach to HW triggers:
+- every hw trigger for each LED has to be registered via current trigger
+  API. This will grow code size and memory footprint once this API is
+  widely used
+- one HW trigger can only master one LED device (via private_led
+  member). So if I have, for example an ethernet switch with 8 ports,
+  and each port has 2 LEDs, and each LED has 10 possible HW triggering
+  mechanisms, with your proposed API one would need to register 8*2*10
+  = 160 triggers
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I too have been thinking about an API for HW LED triggers, and I
+tinkered with it a little. Some time ago I sent some emails, with
+subjects:
+  "RFC: LED hw triggering API"
+  "about my trigger-sources work"
+
+My current thoughts about how HW LED triggers could work nicely is as
+such:
+  - these members (maybe with different names) shall be added to struct
+    led_classdev:
+      available_hw_triggers()
+        - shall return a NULL terminated list of HW trigger names
+          available for this LED
+      set_hw_trigger()
+        - sets HW trigger for this LED. The LED triggering API shall
+          call this method after previous LED trigger is unset. If
+          called with NULL parameter, unsets HW trigger
+      current_hw_trigger
+        - name of the currently set HW LED trigger for this LED
+  - the driver registering the LED cdev informs abouth the LED being
+    capable of HW triggering - members available_hw_triggers and
+    set_hw_trigger must be set
+  - SW LED trigger and HW LED trigger are mutualy exclusive on one LED
+  - the trigger file in sysfs (/sys/class/leds/LED/trigger) shall first
+    list the available SW triggers, and then available hw triggers for
+    this LED, prefixed with "hw:"
+    When written, if the written trigger name starts with "hw:",
+    instead of setting SW trigger, a HW trigger is set via
+    set_hw_trigger() method
+
+This could also nicely work with trigger-source DTS property - when the
+driver registers a LED, it can determine what other device is
+triggering the LED (for example a netdevice), and correspondingly set
+the correct name for the LED. Code for that could be shared between HW
+and SW triggering API.
+
+Marek
