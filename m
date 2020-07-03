@@ -2,141 +2,105 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0CC62073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749422073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgGCKJA (ORCPT
+        id S1726074AbgGCKN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:09:00 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39116 "EHLO gloria.sntech.de"
+        Fri, 3 Jul 2020 06:13:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:45732 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgGCKJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:09:00 -0400
-Received: from p5b127e6f.dip0.t-ipconnect.de ([91.18.126.111] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jrIco-0005Z1-B5; Fri, 03 Jul 2020 12:08:54 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     John Keeping <john@metanate.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: rk3x: support master_xfer_atomic
-Date:   Fri, 03 Jul 2020 12:08:53 +0200
-Message-ID: <2391901.EFyQHPvyDf@phil>
-In-Reply-To: <20200623120646.2175569-1-john@metanate.com>
-References: <20200623120646.2175569-1-john@metanate.com>
+        id S1725891AbgGCKNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 06:13:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338962F;
+        Fri,  3 Jul 2020 03:13:25 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFD9F3F68F;
+        Fri,  3 Jul 2020 03:13:23 -0700 (PDT)
+Subject: Re: [RFC][PATCH] sched: Better document ttwu()
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, vincent.guittot@linaro.org,
+        mgorman@suse.de, Oleg Nesterov <oleg@redhat.com>,
+        david@fromorbit.com
+References: <20200702125211.GQ4800@hirez.programming.kicks-ass.net>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <8490f760-44ed-fbae-b91e-671590bdb8d6@arm.com>
+Date:   Fri, 3 Jul 2020 12:12:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200702125211.GQ4800@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 23. Juni 2020, 14:06:46 CEST schrieb John Keeping:
-> Enable i2c transactions in irq disabled contexts like poweroff where the
-> PMIC is connected via i2c.
+On 02/07/2020 14:52, Peter Zijlstra wrote:
 > 
-> Signed-off-by: John Keeping <john@metanate.com>
-
-on a rk3288:
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-> ---
->  drivers/i2c/busses/i2c-rk3x.c | 39 +++++++++++++++++++++++++++++++----
->  1 file changed, 35 insertions(+), 4 deletions(-)
+> Dave hit the problem fixed by commit:
 > 
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 15324bfbc6cb..8e3cc85d1921 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
->  #include <linux/errno.h>
->  #include <linux/err.h>
->  #include <linux/platform_device.h>
-> @@ -1040,8 +1041,21 @@ static int rk3x_i2c_setup(struct rk3x_i2c *i2c, struct i2c_msg *msgs, int num)
->  	return ret;
->  }
->  
-> -static int rk3x_i2c_xfer(struct i2c_adapter *adap,
-> -			 struct i2c_msg *msgs, int num)
-> +static int rk3x_i2c_wait_xfer_poll(struct rk3x_i2c *i2c)
-> +{
-> +	ktime_t timeout = ktime_add_ms(ktime_get(), WAIT_TIMEOUT);
-> +
-> +	while (READ_ONCE(i2c->busy) &&
-> +	       ktime_compare(ktime_get(), timeout) < 0) {
-> +		udelay(5);
-> +		rk3x_i2c_irq(0, i2c);
-> +	}
-> +
-> +	return !i2c->busy;
-> +}
-> +
-> +static int rk3x_i2c_xfer_common(struct i2c_adapter *adap,
-> +				struct i2c_msg *msgs, int num, bool polling)
->  {
->  	struct rk3x_i2c *i2c = (struct rk3x_i2c *)adap->algo_data;
->  	unsigned long timeout, flags;
-> @@ -1075,8 +1089,12 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
->  
->  		rk3x_i2c_start(i2c);
->  
-> -		timeout = wait_event_timeout(i2c->wait, !i2c->busy,
-> -					     msecs_to_jiffies(WAIT_TIMEOUT));
-> +		if (!polling) {
-> +			timeout = wait_event_timeout(i2c->wait, !i2c->busy,
-> +						     msecs_to_jiffies(WAIT_TIMEOUT));
-> +		} else {
-> +			timeout = rk3x_i2c_wait_xfer_poll(i2c);
-> +		}
->  
->  		spin_lock_irqsave(&i2c->lock, flags);
->  
-> @@ -1110,6 +1128,18 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
->  	return ret < 0 ? ret : num;
->  }
->  
-> +static int rk3x_i2c_xfer(struct i2c_adapter *adap,
-> +			 struct i2c_msg *msgs, int num)
-> +{
-> +	return rk3x_i2c_xfer_common(adap, msgs, num, false);
-> +}
-> +
-> +static int rk3x_i2c_xfer_polling(struct i2c_adapter *adap,
-> +				 struct i2c_msg *msgs, int num)
-> +{
-> +	return rk3x_i2c_xfer_common(adap, msgs, num, true);
-> +}
-> +
->  static __maybe_unused int rk3x_i2c_resume(struct device *dev)
->  {
->  	struct rk3x_i2c *i2c = dev_get_drvdata(dev);
-> @@ -1126,6 +1156,7 @@ static u32 rk3x_i2c_func(struct i2c_adapter *adap)
->  
->  static const struct i2c_algorithm rk3x_i2c_algorithm = {
->  	.master_xfer		= rk3x_i2c_xfer,
-> +	.master_xfer_atomic	= rk3x_i2c_xfer_polling,
->  	.functionality		= rk3x_i2c_func,
->  };
->  
+>   b6e13e85829f ("sched/core: Fix ttwu() race")
 > 
+> and failed to understand much of the code involved. Per his request a
+> few comments to (hopefully) clarify things.
+> 
+> Requested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
+LGTM. Just a couple of nitpicks below.
 
+[...]
 
+> + * Special state:
+> + *
+> + * System-calls and anything external will use task_rq_lock() which acquires
+> + * both p->lock and rq->lock. As a consequence the state they change is stable
 
+s/p->lock/p->pi_lock ?
+
+> + * while holding either lock:
+> + *
+> + *  - sched_setaffinity():	p->cpus_ptr
+> + *  - set_user_nice():		p->se.load, p->static_prio
+
+Doesn't set_user_nice() also change p->prio and p->normal_prio, so
+p->*prio ?
+
+> + *  - __sched_setscheduler():	p->sched_class, p->policy, p->*prio, p->se.load,
+> + *				p->dl.dl_{runtime, deadline, period, flags, bw, density}
+
+p->rt_priority ?
+
+> + *  - sched_setnuma():		p->numa_preferred_nid
+> + *  - sched_move_task()/
+> + *    cpu_cgroup_fork():	p->sched_task_group
+
+maybe also: set_cpus_allowed_ptr() -> __set_cpus_allowed_ptr() (like
+sched_setaffinity()) ?
+
+[...]
+
+> @@ -3134,8 +3274,12 @@ static inline void prepare_task(struct task_struct *next)
+>  	/*
+>  	 * Claim the task as running, we do this before switching to it
+>  	 * such that any running task will have this set.
+> +	 *
+> +	 * __schedule()'s rq->lock and smp_mb__after_spin_lock() orders this
+> +	 * store against prior state change of @next, also see
+> +	 * try_to_wake_up(), specifically smp_load_acquire(&p->on_cpu).
+
+s/smp_load_acquire/smp_cond_load_acquire ?
+
+[...]
