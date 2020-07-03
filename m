@@ -2,188 +2,129 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF74C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D942073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75F720748
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeKlZYd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgGCA5t (ORCPT
+        id S1726474AbgGCA6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:57:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6810 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbgGCA5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:57:49 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 47FF14F5A181F759A3EC;
-        Fri,  3 Jul 2020 08:57:46 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.220) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Jul 2020
- 08:57:36 +0800
-Subject: Re: [PATCH v9 5/5] kdump: update Documentation about crashkernel on
- arm64
-To:     Dave Young <dyoung@redhat.com>
-References: <20200628083458.40066-1-chenzhou10@huawei.com>
- <20200628083458.40066-6-chenzhou10@huawei.com>
- <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bhe@redhat.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
-        <nsaenzjulienne@suse.de>, <corbet@lwn.net>, <bhsharma@redhat.com>,
-        <horms@verge.net.au>, <xiexiuqi@huawei.com>,
-        <linux-doc@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>, <linux-arm-kernel@lists.infradead.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <e7a76906-303e-9c38-1001-cb56eb3fd2e1@huawei.com>
-Date:   Fri, 3 Jul 2020 08:57:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 2 Jul 2020 20:58:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24847 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbgGCA6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 20:58:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593737926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5zlrXGxKm/JoU8AA+dwl+T//yIRszGny2ohMnMEEFxY=;
+        b=WeKlZYd3kCEHbMpMc5VhRjr8h8onzGDiAOqD4Hqq/YXHT6tTVU81ECDtG20qpsmuhtIjpx
+        5EroAiN9SbQ0Cb9QiyuSjALS5LsMtB+3iQ3aXsTzo1ZPzcD7FU13a1kc4pSEHO3vUFjYAX
+        wB37xE/LAnCeBvrk2OajsUsW79PtYTI=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-djBtNSjPNC-mZWSzJtXbhg-1; Thu, 02 Jul 2020 20:58:42 -0400
+X-MC-Unique: djBtNSjPNC-mZWSzJtXbhg-1
+Received: by mail-qk1-f197.google.com with SMTP id p126so4470340qkf.15
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:58:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5zlrXGxKm/JoU8AA+dwl+T//yIRszGny2ohMnMEEFxY=;
+        b=FaOe2SfbgEXHjPTKy7H3YJTH7OaFIjAi5MwLGrTChaHxEPLdGbrF12z3oXeIZYV9dw
+         L2TxEvhSk4lQweHlP5H+Qr3H8sPYSNlhieeZZc0VSiRho7794X1hAw0Av+iAKOA9GB9E
+         t2uS8aCoR85OqNrHbLvCEq3/iavDwbM3NFGIXWf2TA5fHJ3U4N2ZV0qYSC8Nh3LPpKEk
+         Cr+EMVfev34/4T7pKGvzJjy0NH5Nu0PyNplKze3SepLMIydgGjFuDXCfoPptVxWO6Y/K
+         T54KYBmt1ptZ6dzLzKDqWInMfeAwyU6H5DUQfmb1eycaxhx/GR0RZZtey5cKkyWl64Ez
+         lIMQ==
+X-Gm-Message-State: AOAM533+I1fjS2qDYEEit44zlViHOHa+oOdMUTXMhYjNJHjnyij94kUQ
+        poqmky0+oGAsd+yo0q1r7Y+6kkmvUS9SSrTgAyhA0FX636jh4EJKVySNfKx9E9DhRBQz0DXPgnb
+        Vrq6aa9BqUiDm3ytW1Az92k0E
+X-Received: by 2002:ac8:3438:: with SMTP id u53mr34763423qtb.102.1593737922459;
+        Thu, 02 Jul 2020 17:58:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyHJ/zoCeCWJlKioO070m7F5IMC5C0GNbb4MH/uExBKdX0suFgKub7q+wMx1ISV5PGpH5FKpQ==
+X-Received: by 2002:ac8:3438:: with SMTP id u53mr34763408qtb.102.1593737921981;
+        Thu, 02 Jul 2020 17:58:41 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id y40sm10502896qtc.29.2020.07.02.17.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 17:58:41 -0700 (PDT)
+Date:   Thu, 2 Jul 2020 20:58:40 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse:
+ struct kvm_vcpu Documentation Kbuild Makefile crypto include sound usr
+ <asn:3> kvm_get_running_vcpus( ... )
+Message-ID: <20200703005840.GC6677@xz-x1>
+References: <202007021746.jJj16Pl8%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.220]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202007021746.jJj16Pl8%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Thu, Jul 02, 2020 at 05:18:48PM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   cd77006e01b3198c75fb7819b3d0ff89709539bb
+> commit: 7495e22bb165e7030bae4d9c6e84addb5ea17b29 KVM: Move running VCPU from ARM to common code
+> date:   5 months ago
+> config: x86_64-randconfig-s031-20200701 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-3-gfa153962-dirty
+>         git checkout 7495e22bb165e7030bae4d9c6e84addb5ea17b29
+>         # save the attached .config to linux build tree
+>         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse: sparse: cast removes address space '<asn:1>' of expression
+>    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct compat_sigset_t const [noderef] [usertype] <asn:1> *compat @@     got void * @@
+>    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse:     expected struct compat_sigset_t const [noderef] [usertype] <asn:1> *compat
+>    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse:     got void *
+>    arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse: sparse: symbol 'kvm_get_running_vcpus' redeclared with different type (different address spaces):
+> >> arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse:    struct kvm_vcpu *[noderef] <asn:3> *extern [addressable] [toplevel] kvm_get_running_vcpus( ... )
+>    include/linux/kvm_host.h:1339:26: sparse: note: previously declared as:
+>    include/linux/kvm_host.h:1339:26: sparse:    struct kvm_vcpu [noderef] <asn:3> **extern [addressable] [toplevel] kvm_get_running_vcpus( ... )
+> 
+> vim +4326 arch/x86/kvm/../../../virt/kvm/kvm_main.c
+> 
+>   4322	
+>   4323	/**
+>   4324	 * kvm_get_running_vcpus - get the per-CPU array of currently running vcpus.
+>   4325	 */
+> > 4326	struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
+>   4327	{
+>   4328	        return &kvm_running_vcpu;
+>   4329	}
+>   4330	
 
+Not the first time got confused with this report - this seems to have been
+fixed by fcd07f9adc7d ("KVM: let declaration of kvm_get_running_vcpus match
+implementation", 2020-02-28) already...
 
-On 2020/7/2 10:59, Dave Young wrote:
-> Hi Chen,
-> On 06/28/20 at 04:34pm, Chen Zhou wrote:
->> Now we support crashkernel=X,[low] on arm64, update the Documentation.
->> We could use parameters "crashkernel=X crashkernel=Y,low" to reserve
->> memory above 4G.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
->> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
->> ---
->>  Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
->>  Documentation/admin-guide/kernel-parameters.txt | 17 +++++++++++++++--
->>  2 files changed, 26 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
->> index 2da65fef2a1c..6ba294d425c9 100644
->> --- a/Documentation/admin-guide/kdump/kdump.rst
->> +++ b/Documentation/admin-guide/kdump/kdump.rst
->> @@ -299,7 +299,13 @@ Boot into System Kernel
->>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->>  
->> -   On x86 and x86_64, use "crashkernel=64M@16M".
->> +   On x86 use "crashkernel=64M@16M".
->> +
->> +   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
->> +   fall back to reserve region above 4G when '@offset' hasn't been specified.
-> Actually crashkernel=Y without the offset works well, I do not see why
-> we need the offset, it should be some legacy thing.  So it should be
-> better just use the Y without offset here, and just leave a note
-> somewhere people can use [@X] offset when they really have to.
->
->> +   We can also use "crashkernel=X,high" to select a region above 4G, which
->> +   also tries to allocate at least 256M below 4G automatically and
->> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
->>  
->>     On ppc64, use "crashkernel=128M@32M".
->>  
->> @@ -316,8 +322,11 @@ Boot into System Kernel
->>     kernel will automatically locate the crash kernel image within the
->>     first 512MB of RAM if X is not given.
->>  
->> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
->> +   On arm64, use "crashkernel=Y[@X]". Note that the start address of
->>     the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
->> +   If crashkernel=Z,low is specified simultaneously, reserve spcified size
->> +   low memory for crash kdump kernel devices firstly and then reserve memory
-> "devices" seems not very accurate, maybe just drop the "for crash kdump
-> kernel devices" since it is clear based on the context.
->
->> +   above 4G.
->>  
->>  Load the Dump-capture Kernel
->>  ============================
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index fb95fad81c79..335431a351c0 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -722,6 +722,9 @@
->>  			[KNL, x86_64] select a region under 4G first, and
->>  			fall back to reserve region above 4G when '@offset'
->>  			hasn't been specified.
->> +			[KNL, arm64] If crashkernel=X,low is specified, reserve
->> +			spcified size low memory for crash kdump kernel devices
-> Ditto.
->
->> +			firstly, and then reserve memory above 4G.
->>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
->>  
->>  	crashkernel=range1:size1[,range2:size2,...][@offset]
->> @@ -746,13 +749,23 @@
->>  			requires at least 64M+32K low memory, also enough extra
->>  			low memory is needed to make sure DMA buffers for 32-bit
->>  			devices won't run out. Kernel would try to allocate at
->> -			at least 256M below 4G automatically.
->> +			least 256M below 4G automatically.
->>  			This one let user to specify own low range under 4G
->>  			for second kernel instead.
->>  			0: to disable low allocation.
->>  			It will be ignored when crashkernel=X,high is not used
->>  			or memory reserved is below 4G.
->> -
->> +			[KNL, arm64] range under 4G.
->> +			This one let user to specify own low range under 4G
->> +			for crash dump kernel instead.
->> +			Different with x86_64, kernel allocates specified size
-> sounds better:
-> s/Different with/Be different from
->
-> s/allocates/reserves
->
->> +			physical memory region only when this parameter is specified
->> +			instead of trying to allocate at least 256M below 4G
-> s/allocate/reserve
->
->> +			automatically.
->> +			This parameter is used along with crashkernel=X when we
-> Could change the passive sentence to below:
-> "Use this parameter along with"
-Thanks for your review and suggestions. I will update these in next version.
-
-Thanks,
-Chen Zhou
->> +			want to reserve crashkernel above 4G. If there are devices
->> +			need to use ZONE_DMA in crash dump kernel, it is also
->> +			a good choice.
->>  	cryptomgr.notests
->>  			[KNL] Disable crypto self-tests
->>  
->> -- 
->> 2.20.1
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
-> Thanks
-> Dave
->
->
-> .
->
-
+-- 
+Peter Xu
 
