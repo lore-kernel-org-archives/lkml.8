@@ -2,89 +2,105 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02455C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71336C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA98820772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F5A20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGCFIi (ORCPT
+        id S1726382AbgGCFMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:08:38 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:45210 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbgGCFIi (ORCPT
+        Fri, 3 Jul 2020 01:12:06 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:49266 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgGCFMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:08:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U1Y4LGX_1593752912;
-Received: from alexshi-test.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U1Y4LGX_1593752912)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jul 2020 13:08:34 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Subject: [PATCH v14 02/20] mm/page_idle: no unlikely double check for idle page counting
-Date:   Fri,  3 Jul 2020 13:07:35 +0800
-Message-Id: <1593752873-4493-3-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1593752873-4493-1-git-send-email-alex.shi@linux.alibaba.com>
+        Fri, 3 Jul 2020 01:12:06 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7FE7C80615;
+        Fri,  3 Jul 2020 07:11:57 +0200 (CEST)
+Date:   Fri, 3 Jul 2020 07:11:55 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        devicetree@vger.kernel.org, Bhushan Shah <bshah@kde.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-sunxi@googlegroups.com, Luca Weiss <luca@z3ntu.xyz>,
+        Martijn Braam <martijn@brixit.nl>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v7 02/13] dt-bindings: panel: Convert rocktech,
+ jh057n00900 to yaml
+Message-ID: <20200703051155.GA1685118@ravnborg.org>
+References: <20200701162928.1638874-1-megous@megous.com>
+ <20200701162928.1638874-3-megous@megous.com>
+ <20200702205143.GA1670522@bogus>
+ <20200702210354.562wkzpdmyrlwojx@core.my.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702210354.562wkzpdmyrlwojx@core.my.home>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=voM4FWlXAAAA:8 a=YG64nluAAAAA:20
+        a=b3wYd58VKnsUGY093mYA:9 a=CjuIK1q_8ugA:10 a=IC2XNlieTeVoXbcui8wp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As func comments mentioned, few isolated page missing be tolerated.
-So why not do further to drop the unlikely double check. That won't
-cause more idle pages, but reduce a lock contention.
+Hi Ondrej.
 
-This is also a preparation for later new page isolation feature.
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> > 
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: '#address-cells', '#size-cells', 'port@0' do not match any of the regexes: 'pinctrl-[0-9]+'
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'vcc-supply' is a required property
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'iovcc-supply' is a required property
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: panel@0: 'reset-gpios' is a required property
+> 
+> Paths look bogus ^^^^
+> 
+> It should be .../rocktech,jh057n00900.yaml: ...
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/page_idle.c | 8 --------
- 1 file changed, 8 deletions(-)
+The example in nwl-dsi.yaml contains:
+	compatible = "rocktech,jh057n00900";
 
-diff --git a/mm/page_idle.c b/mm/page_idle.c
-index 057c61df12db..5fdd753e151a 100644
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -32,19 +32,11 @@
- static struct page *page_idle_get_page(unsigned long pfn)
- {
- 	struct page *page = pfn_to_online_page(pfn);
--	pg_data_t *pgdat;
- 
- 	if (!page || !PageLRU(page) ||
- 	    !get_page_unless_zero(page))
- 		return NULL;
- 
--	pgdat = page_pgdat(page);
--	spin_lock_irq(&pgdat->lru_lock);
--	if (unlikely(!PageLRU(page))) {
--		put_page(page);
--		page = NULL;
--	}
--	spin_unlock_irq(&pgdat->lru_lock);
- 	return page;
- }
- 
--- 
-1.8.3.1
+So the example is checked against your updated binding.
+And the binding check fails because the example is no longer valid.
 
+This needs to be fixed as we do not wat to introduce new errors.
+Either the example or the binding needs the fix.
+
+	Sam
+
+
+> 
+> regards,
+> 	o.
+> 
+> > 
+> > See https://patchwork.ozlabs.org/patch/1320690
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> > 
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > 
+> > Please check and re-submit.
+> > 
