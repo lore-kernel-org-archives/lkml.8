@@ -2,119 +2,143 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AACEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C73C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E9220708
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2081120782
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OcfvNsQ1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfAZokO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgGCRU3 (ORCPT
+        id S1726792AbgGCRVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:20:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30500 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbgGCRU3 (ORCPT
+        Fri, 3 Jul 2020 13:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgGCRVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:20:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593796828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GIrvmUybK9vIMsIuhctNNg5TFcmK5sb/DzyUMikX9ag=;
-        b=OcfvNsQ1JkTWx1my8Shq1xCvxhSyNb9O5NVloyY4Ky09fed4Q1Aqmf9Ju2R2Y76XBJYzNI
-        ULF+Abrfc7VEvPA739x5S9xs/zSKihNV4iD2cXu9AsG98V0d0aZreZjcrAYLRmo3wXtRJt
-        aiBdZ9cRsTuMKHzlfTVbFxxDtE2tbLI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-AN0LAMTJNc62Tw5O5BHtaQ-1; Fri, 03 Jul 2020 13:20:26 -0400
-X-MC-Unique: AN0LAMTJNc62Tw5O5BHtaQ-1
-Received: by mail-wr1-f72.google.com with SMTP id j3so12723098wrq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:20:26 -0700 (PDT)
+        Fri, 3 Jul 2020 13:21:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB13BC061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:21:52 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q15so32705677wmj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8ete6I4ixSjbonl8sGfOuxL0bZF6e3pE/Fs8ioQCGKQ=;
+        b=mfAZokO+WjGIsaCnXXptSbe05uvi4l7PSLIxYAaKNw444xSdOO4zv8QucMewmHfitM
+         5wtOXBgXg8fP6E3JyQpl0HAr/fpB4sDFRKlFPefdk9+fczavZ4UjuXpLp/YicK4Rcr3U
+         TFqIhhRhx4yRK5PU6DBK9SZSfTLEwLBDt7i/4T0rHDzniT/pmRbJoTmH0njqmkoF/1fg
+         1PEyklputJfe5lw27QjiN7iIRVBhd1t6HO1xZxtMWugVAXqAALUNQIZZjwVkSVpE9TtJ
+         w9UwaCMAYOd4oQR6x2l5T+DQqjUMgOCxsBSLifHex5Lfl2Tpa9vLAtwfG7WYAS8/yBuf
+         3OWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GIrvmUybK9vIMsIuhctNNg5TFcmK5sb/DzyUMikX9ag=;
-        b=mgSSL6LRdMXAcxjeyxfngb1Zui9G3wGcygdwLvi3g63a0tZbbYbCRUGFrKOitno4Mg
-         00ygFCFfs3wjG6Xzm27IXK1a1KOmWo2lkaOFHUhA9ti2umz/j3/ZjuT3l0FzJmCpZi+o
-         PYhG1gYBtNLDRJNV79gTAF4iQnQkCfmxF/OT2746YkfgUGZAij2wSpTq+oXywpaJG270
-         uqmiGY6uk1I/AOhd/UiV6U09q30Qfoa7YSLYr18a+UP/SwPtaf1PrZsXyWSwNHFDqGz5
-         PcPJwMDdaHeBAHH5Bzy+PJmLAaX1cfW8B0S3majfoJz4VESpO0aYxi34a5p8/14s9Sd1
-         AQjw==
-X-Gm-Message-State: AOAM531r0ow21Gb7PqB3TdDvd4P+Grciw4YX21OlitczwfGsQliDr8CB
-        xHZ1PAIJuWVUQ+LRsZxR4QzvYAODIfaO5yegROD2ZiWkmNKIjp47YxCs8axWHChZ10HjsnoRnDS
-        UPlOhhqas8q9VP6cRelEc1XBs
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr36751680wrv.162.1593796825661;
-        Fri, 03 Jul 2020 10:20:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxEj4nYzQT8PtT0A7YMDIG3zf3Bw2nrpkhBVtgp3w6WYZI5o/bOZlfO5uPgLCBwZoNy5PQGQA==
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr36751657wrv.162.1593796825426;
-        Fri, 03 Jul 2020 10:20:25 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:5cf9:fc14:deb7:51fc? ([2001:b07:6468:f312:5cf9:fc14:deb7:51fc])
-        by smtp.gmail.com with ESMTPSA id z10sm9510926wrm.21.2020.07.03.10.20.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jul 2020 10:20:24 -0700 (PDT)
-Subject: Re: [PATCH 0/6] KVM: x86/mmu: Files and sp helper cleanups
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200622202034.15093-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c28ce09b-b5a4-eb0d-0b01-6c1e413fe796@redhat.com>
-Date:   Fri, 3 Jul 2020 19:20:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8ete6I4ixSjbonl8sGfOuxL0bZF6e3pE/Fs8ioQCGKQ=;
+        b=k2Ze/FyU2hZjYkBUp7AC46hWwKBc2gGGtH7TmMrKzOVz/nsSCnMVrtlCmR98RCb37I
+         BP62TKbRg69jzMekCG1zZ6vj6M2LCpUj8vg+XEMsB0uRMlrNAORfinO62Q6qofXrkbQe
+         05MOr/6Emjlt9Yn4vnliVLCxErO4y2clGlfwh8epuuaJkRnfdEKqrUfVA+BCxvTJGGV6
+         2m1mX15anCjbm00BNTq1qqXOJ02W8MmS2wAGveFMNQZQ12wGujssrnjMqRZOtOaB/fCD
+         xOckasRV/260ktyOhuvrdZB9B+sSMyTDKLJon8Qc36aT3MhBQHXG2Zb3typnI6XiGmX9
+         dHng==
+X-Gm-Message-State: AOAM531EeNpdrvTjT9sOVaWcUk3QzIT6eOnG4s0Vkk62UZ1k5Kmi5fTM
+        A9zF4dzpdMqA/HcMVH1ArZDstw==
+X-Google-Smtp-Source: ABdhPJwgqFiZK7yvPBmX2Ha7Poc2II8t97vwg4ExlUBs3GokKuV9Cz8COt1NQZk47tn4YMKaSWa/0A==
+X-Received: by 2002:a1c:80c8:: with SMTP id b191mr35735658wmd.37.1593796911630;
+        Fri, 03 Jul 2020 10:21:51 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id x18sm14464840wrq.13.2020.07.03.10.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 10:21:50 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 18:21:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 00/30] Fix a bunch of W=1 issues in USB
+Message-ID: <20200703172148.GD2743379@dell>
+References: <20200702144625.2533530-1-lee.jones@linaro.org>
+ <20200703073725.GA2370189@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622202034.15093-1-sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200703073725.GA2370189@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/06/20 22:20, Sean Christopherson wrote:
-> Move more files to the mmu/ directory, and an mmu_internal.h to share
-> stuff amongst the mmu/ files, and clean up the helpers for retrieving a
-> shadow page from a sptep and/or hpa.
-> 
-> Sean Christopherson (6):
->   KVM: x86/mmu: Move mmu_audit.c and mmutrace.h into the mmu/
->     sub-directory
->   KVM: x86/mmu: Move kvm_mmu_available_pages() into mmu.c
->   KVM: x86/mmu: Add MMU-internal header
->   KVM: x86/mmu: Make kvm_mmu_page definition and accessor internal-only
->   KVM: x86/mmu: Add sptep_to_sp() helper to wrap shadow page lookup
->   KVM: x86/mmu: Rename page_header() to to_shadow_page()
-> 
->  arch/x86/include/asm/kvm_host.h    | 46 +---------------------
->  arch/x86/kvm/mmu.h                 | 13 ------
->  arch/x86/kvm/mmu/mmu.c             | 58 +++++++++++++++------------
->  arch/x86/kvm/{ => mmu}/mmu_audit.c | 12 +++---
->  arch/x86/kvm/mmu/mmu_internal.h    | 63 ++++++++++++++++++++++++++++++
->  arch/x86/kvm/{ => mmu}/mmutrace.h  |  2 +-
->  arch/x86/kvm/mmu/page_track.c      |  2 +-
->  arch/x86/kvm/mmu/paging_tmpl.h     |  4 +-
->  8 files changed, 108 insertions(+), 92 deletions(-)
->  rename arch/x86/kvm/{ => mmu}/mmu_audit.c (96%)
->  create mode 100644 arch/x86/kvm/mmu/mmu_internal.h
->  rename arch/x86/kvm/{ => mmu}/mmutrace.h (99%)
-> 
+On Fri, 03 Jul 2020, Greg KH wrote:
 
-Queued, thanks.
+> On Thu, Jul 02, 2020 at 03:45:55PM +0100, Lee Jones wrote:
+> > This set is part of a larger effort attempting to clean-up W=1
+> > kernel builds, which are currently overwhelmingly riddled with
+> > niggly little warnings.
+> > 
+> > Lee Jones (30):
+> >   usb: phy: phy: Fix-up a whole bunch of formatting issues
+> >   usb: host: pci-quirks: Demote function header from kerneldoc to
+> >     comment block
+> >   usb: common: debug: Demote comment blocks which are obviously not
+> >     kerneldoc
+> >   usb: common: usb-conn-gpio: Demote comment block which is clearly not
+> >     kerneldoc
+> >   usb: dwc3: drd: File headers are not doc headers
+> >   usb: dwc3: ulpi: File headers are not doc headers
+> >   usb: common: ulpi: Fix a few kerneldoc related issues
+> >   usb: dwc3: dwc3-omap: Do not read DMA status
+> >   usb: dwc2: gadget: Do not read GINTMSK2
+> >   usb: dwc2: gadget: Remove assigned but never used 'maxsize'
+> >   usb: dwc2: gadget: Avoid pointless read of EP control register
+> >   usb: host: ehci-omap: Provide documentation for
+> >     ehci_hcd_omap_probe()'s arg 'pdev'
+> >   usb: cdns3: core: Fix incorrect formatting and misspelled function arg
+> >     docs
+> >   usb: cdns3: ep0: Fix a bunch of kerneldoc issues
+> >   usb: dwc3: dwc3-haps: Function headers are not suitable for kerneldoc
+> >   usb: mtu3: mtu3_trace: Function headers are not suitable for kerneldoc
+> >   usb: cdns3: gadget: Fix a bunch of kernel doc issues
+> >   usb: dwc3: dwc3-of-simple: Function headers are not good candidates
+> >     for kerneldoc
+> >   usb: host: isp1362: Mark the many unused ISP1362_REG entries as
+> >     __maybe_unused
+> >   usb: host: ohci-at91: Demote kerneldoc headers down to basic comment
+> >     blocks
+> >   usb: host: ohci: Mark cc_to_error as __maybe_unused
+> >   usb: cdns3: ep0: Move 'zlp' description to appropriate function header
+> >   usb: host: oxu210hp-hcd: Move declaration of 'qtd' into 'ifdef
+> >     OXU_URB_TRACE'
+> >   usb: mtu3: mtu3_trace: Supply missing mtu3_debug.h include file
+> >   usb: mtu3: mtu3_core: Demote obvious misuse of kerneldoc to standard
+> >     comment block
+> >   usb: c67x00: c67x00-ll-hpi: Demote obvious misuse of kerneldoc to
+> >     standard comment blocks
+> >   usb: class: cdc-wdm: Provide description for usb_cdc_wdm_register()'s
+> >     manage_power arg
+> >   usb: c67x00: c67x00-hcd: Demote obvious misuse of kerneldoc to
+> >     standard comment blocks
+> >   usb: class: usbtmc: File headers are not good candidates for kerneldoc
+> >   usb: c67x00: c67x00-sched: Demote obvious misuse of kerneldoc to
+> >     standard comment blocks
+> 
+> I've applied 25 of these, if you could rebase and resend the remaining
+> ones, after fixing up the review comments made on them, that would be
+> wonderful.
 
-Paolo
+Will do.  Thanks Greg.
 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
