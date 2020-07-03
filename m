@@ -2,122 +2,101 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD57DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3232FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894712145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089A12145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Aiyn4tkw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rADDYge1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgGCWvE (ORCPT
+        id S1726661AbgGCWyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 18:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        Fri, 3 Jul 2020 18:54:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGCWvD (ORCPT
+        with ESMTP id S1726379AbgGCWyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 18:51:03 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F231C061794;
-        Fri,  3 Jul 2020 15:51:03 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so22417379edz.12;
-        Fri, 03 Jul 2020 15:51:03 -0700 (PDT)
+        Fri, 3 Jul 2020 18:54:18 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AD0C061794
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 15:54:18 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z3so5191393pfn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 15:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HoJnjAdizKBcZS/TwdGFdcCHABPJEEKDcGriqvJQXl8=;
-        b=Aiyn4tkw+Jk2iDxJZDgHIBFvm9nZgBHvWtXlIUf9vqGwapr6RkAV3nJJskM7upei6H
-         V5qqqpyT33351Iiuer3bl4rf1DwooFpyugOWE8idDf5lgT8JqUUh0gaU0voAiFM6BJs5
-         Nxgyl6jmvNUejqWCQ2gYSWLQBfPR0AatS5MhiyhXA+tHVoNztHf31QL2Njn+TeW0zM6n
-         noHEoDYP266+Ds2VpCDzJiAnf/p/mKwoz1q4mzR0ZV26P0O7uDdYJrwHUARVKap0UZwk
-         zxxQExzAGCVKv56hc7Jbxx7AT4Al4J9HfvMg4eNadGN6Sk6Jyt/gdaebsu/lrh/9OXlA
-         6jng==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oTkXaid7GNQFlYsfEdaKgaeUOuBmaSvEjnjEuHkyUUU=;
+        b=rADDYge1q8I0zarVOuiCP1n2dmRmYyBGsy/hzGn98BWsvhF+fO8UEnYF/uYevcnz9W
+         nhrP4oB+QqHV1nMJQTc1184IqisHW25ctgVTsb+JHzofrZyC11+C15Ll30Ah09WMEYIp
+         DwnIhEKb3aCFGX97TKlx3fhoKhL2RFZv3DzxdW4PQX1/PH02RtgRU70uLjhE3H89rPmV
+         rvAPF/2FhpR35IR22Pn1jZ8fbAh5HxEvh87QKNbFxY3ZKqZrNVBAIUe+Zl4w2BKU/Yb0
+         0DtcJRDKdjITgVWxDxZ1KNglRN59Gs5W+MJ+C2j2LfupwzOq3EFblegWmxzI+QFz0Tvs
+         69Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HoJnjAdizKBcZS/TwdGFdcCHABPJEEKDcGriqvJQXl8=;
-        b=j0u5W56Br2Ey5btpQRCvcAHoaKqAHIoGSDYWSQZ2STNA4W2na5N6Aq0S66H7pNVvJu
-         rPW5BWZdqY/iupKQgEZ6DLZ/aJuzpmZWK1ZPJF7kLioyIAJxwDH3SitwaZPFqiAZasws
-         0RBIFsxd0Sipy6zRN4dgW1GQe+xBA6eCuirwPO+Tz4R/2iJleViuWAEROCaIx6sOCy9E
-         OAoIejxxA2ISSxPhSOICM4eS5kV1ZES2tdTdC5QNIfIX2zpMhi/0gpDxtu7nQk7SlRSk
-         OxT76n3W+osXAV49SomAmqQfDBxZOvX/osJz7uQ04OvycDFsUrCq6yTCJnT6LmHF6Qd/
-         687Q==
-X-Gm-Message-State: AOAM530AliTeFH9LfLboLeddmAGT2AvePcInC6eQYmWCte3H4RSYW4j5
-        cPqhz6uYQXptrN9vtUuDiD8AbMqW
-X-Google-Smtp-Source: ABdhPJwzOg7dxuPJBFeLCeyTj/hsz8BnW4Iwx8qroFdpbIfmXqPMr62Dvp/Am75GDKR2JIvVscEi+Q==
-X-Received: by 2002:aa7:d3ca:: with SMTP id o10mr44560137edr.138.1593816661803;
-        Fri, 03 Jul 2020 15:51:01 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1372b7a00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:372b:7a00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q25sm10440839ejz.97.2020.07.03.15.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 15:51:00 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     hminas@synopsys.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH for-5.8 v2] usb: dwc2: Add missing cleanups when usb_add_gadget_udc() fails
-Date:   Sat,  4 Jul 2020 00:50:43 +0200
-Message-Id: <20200703225043.387769-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oTkXaid7GNQFlYsfEdaKgaeUOuBmaSvEjnjEuHkyUUU=;
+        b=JuNlWjCmUqI7t0b3LM4aRjkQW4FUOzxfVpG1YpNAHwp/EwVkvzST7ap+FazSv3NVlS
+         arQxCgqY8QOtln9w/mRwBsibLnPBgT/ChDbKLnjoh7oQD5qCt30HApsggl81UNmvlnmM
+         by8U8k6kW5GW9g4Hf52jv9yjMfeVXnBaDL2ujbIs5QoBd4JFSiMT5PFHehUIqgR5Lqy5
+         gkimx72IKGCjN60sM1gUVK9BiJRr2C2AryBni+KI7RB5JGjsAwTVRJZE/y0d20vrOEVe
+         B6HEO898R1yaz2NHgpOpojSct3EtyTvEyGDL89Y580tZRKkSKR5Iq3qTF7Xfb3wcpuQ4
+         zLGw==
+X-Gm-Message-State: AOAM5327x95gFtwKjoXTZowRA5ZHoNiixpAle+KcdxqGLO6RS2Ct5aYQ
+        HesONVbWxIJT1rJ1T1EEETY=
+X-Google-Smtp-Source: ABdhPJzPGC57mpfLFULngr/NnF0Fhw5PfT+pcnDnv2cckFMj9UhDHYp/0lgx64qalRF9BLeG1Dnvhw==
+X-Received: by 2002:a65:6447:: with SMTP id s7mr31250183pgv.320.1593816858307;
+        Fri, 03 Jul 2020 15:54:18 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id v8sm5633794pjf.46.2020.07.03.15.54.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jul 2020 15:54:17 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 15:54:09 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     tiwai@suse.com, festevam@gmail.com, lgirdwood@gmail.com,
+        Xiubo.Lee@gmail.com, timur@kernel.org, perex@perex.cz,
+        alsa-devel@alsa-project.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: fsl_asrc: Add an option to select internal
+ ratio mode
+Message-ID: <20200703225408.GA16494@Asurada-Nvidia>
+References: <1593506876-14599-1-git-send-email-shengjiu.wang@nxp.com>
+ <159379581381.55795.16716505708033817338.b4-ty@kernel.org>
+ <20200703224656.GA16467@Asurada-Nvidia>
+ <20200703225020.GB29047@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703225020.GB29047@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call dwc2_debugfs_exit() and dwc2_hcd_remove() (if the HCD was enabled
-earlier) when usb_add_gadget_udc() has failed. This ensures that the
-debugfs entries created by dwc2_debugfs_init() as well as the HCD are
-cleaned up in the error path.
+On Fri, Jul 03, 2020 at 11:50:20PM +0100, Mark Brown wrote:
+> On Fri, Jul 03, 2020 at 03:46:58PM -0700, Nicolin Chen wrote:
+> 
+> > > [1/1] ASoC: fsl_asrc: Add an option to select internal ratio mode
+> > >       commit: d0250cf4f2abfbea64ed247230f08f5ae23979f0
+> 
+> > You already applied v3 of this change:
+> > https://mailman.alsa-project.org/pipermail/alsa-devel/2020-July/169976.html
+> 
+> > And it's already in linux-next also. Not sure what's happening...
+> 
+> The script can't always tell the difference between versions - it looks
+> like it's notified for v2 based on seeing v3 in git.
 
-Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the udc class driver")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-Changes since v1 at [0]
-- also cleanup the HCD as suggested by Minas (thank you!)
-- updated the subject accordingly
+OK..as long as no revert nor re-applying happens, we can ignore :)
 
-
-[0] https://patchwork.kernel.org/patch/11631381/
-
-
- drivers/usb/dwc2/platform.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index c347d93eae64..9febae441069 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -582,12 +582,16 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
- 		if (retval) {
- 			dwc2_hsotg_remove(hsotg);
--			goto error_init;
-+			goto error_debugfs;
- 		}
- 	}
- #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
- 	return 0;
- 
-+error_debugfs:
-+	dwc2_debugfs_exit(hsotg);
-+	if (hsotg->hcd_enabled)
-+		dwc2_hcd_remove(hsotg);
- error_init:
- 	if (hsotg->params.activate_stm_id_vb_detection)
- 		regulator_disable(hsotg->usb33d);
--- 
-2.27.0
-
+Thanks
