@@ -2,94 +2,109 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59334C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2999720936
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593779481;
-	bh=N+88KXkdXu2AI8+cxc3J2ClOAH5XH0tNjF0Q0pSB0Rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j62V0whiztelTYgBozbpa2wQjHH3B3AbdEpCy8KT2ylwIqwUq5r5SNtY6ppFKXVqT
-	 i2gnt5dWAKGWH8OKy67IZXjuyJqGlbBJdLG2IAMhcaGcetwqPtmmIVjCjqfMS+OXqs
-	 MBdWMZjmIerEpi0fQoIomovPzl/ZV9DvC/EIxYck=
+	by mail.kernel.org (Postfix) with ESMTP id 5B11D20936
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:33:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYoe86Aq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGCMbU (ORCPT
+        id S1726427AbgGCMdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgGCMbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:31:19 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D326207DA;
-        Fri,  3 Jul 2020 12:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593779478;
-        bh=N+88KXkdXu2AI8+cxc3J2ClOAH5XH0tNjF0Q0pSB0Rs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0AMgQHFdWyrgwYBQ/qyzsEDjd9IPep67gAbkJPE4THTOIWiIVHEQR8aTGT6DlKSS4
-         ZbFp7OSwQJ+pHcCXOMDnBsutSRcBsPKBJHgdVtULZlblRJckmtBSrMXQJE63tLLDbW
-         Ci23Ev5vktLSWCMgh/qWd2QlLa6iir6APHEi090k=
-Date:   Fri, 3 Jul 2020 13:31:14 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 0/8] arm64: dts: qcom: smmu/USB nodes and
- HDK855/HDK865 dts
-Message-ID: <20200703123113.GA18953@willie-the-truck>
-References: <20200609194030.17756-1-jonathan@marek.ca>
+        Fri, 3 Jul 2020 08:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgGCMdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:33:49 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CC4C08C5C1;
+        Fri,  3 Jul 2020 05:33:49 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so29474174wrw.1;
+        Fri, 03 Jul 2020 05:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YWChRI8U5bql1vd+LjhcuGDJidA2Y+nrVW69k/TqKfM=;
+        b=eYoe86Aq3092+g8H38oZiqt99elOVS4MoiOjphvAWqqYBA/PQlpSx1orjs/kxGvdHH
+         S6Rfw6c7V1AXmEmDQRSvGRgQk6poNEE4iUDwyHOYJdILTvBwtej70+stDofMtxR1T+NH
+         M7IMHFtBRWbzhk7wfGMp/JVtx9jlG91ZptUclVdfND0jcjXPkkaqKJHgTKQuJK4Udgt5
+         hE0fDw2vI9yP014m9M4wL3h15ciKQzo12fVdIWj0+IdXoRWhHkXKwjfGdC0LddutzTCF
+         /yBvvPFMBhd15wV4caEZllD25LZCgWf4qO3F142/83sK1ODiG9xQuq6FonSNFHEdzZoG
+         KNzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YWChRI8U5bql1vd+LjhcuGDJidA2Y+nrVW69k/TqKfM=;
+        b=ti5Y5wMS4VpQhJuY/Wx2jLg+vXoOz9KfFnG0SGzdv5iNqwc/ho9qYaccyUtQrv0zq0
+         rwS/uO9ABQiCtFY9OwW7SgZq1ibaydPACtk5WbPd19zlK82HnzoWSgUz2JIbKe7osTPW
+         N68nU58BQSF1m/NxwBKNs00fOobENStgFbmUtpMGgM4juCsdkpcKKL1n51J7B3kx5Prq
+         7rx5Bh/7aneaeDC+Oa9RUGQzRFT/fVh11cA/yIVYr0GI/znI0cCWnDb31/PWQn/PBTut
+         SxNCpRU9+T8F2YwWWZgIhOBCWkb7SFuNm+bt7d874Pl2/WFZcy4d89aK/9TmaQuIAGLQ
+         hEhA==
+X-Gm-Message-State: AOAM5316YnteKMj3Eb40iZ+LD5W5gENMVANFNVCeC4eLoriA78HcNzLk
+        cNGZ5kLxi/qTt/Xn3ahAjJc=
+X-Google-Smtp-Source: ABdhPJwId5pwOgLxvZeA3ibhyN3Y+1w1NlrODeEKmyNzl20XnLaQ2ZKRszG8w9ZVwtoqDjhX2uPt7Q==
+X-Received: by 2002:a5d:5642:: with SMTP id j2mr36401397wrw.19.1593779627773;
+        Fri, 03 Jul 2020 05:33:47 -0700 (PDT)
+Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
+        by smtp.gmail.com with ESMTPSA id f12sm14292219wrw.53.2020.07.03.05.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 05:33:47 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 14:33:46 +0200
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     lukasz.luba@arm.com, k.konieczny@samsung.com, krzk@kernel.org,
+        kgene@kernel.org, s.nawrocki@samsung.com, b.zolnierkie@samsung.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 0/2] PM / devfreq: Add delayed timer for polling
+Message-ID: <20200703123346.6fy6i33ks6nox46a@macmini.local>
+References: <CGME20200703061508epcas1p171aa3c0ab832b77e5837d8bd1e563742@epcas1p1.samsung.com>
+ <20200703062622.11773-1-cw00.choi@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609194030.17756-1-jonathan@marek.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200703062622.11773-1-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:40:18PM -0400, Jonathan Marek wrote:
-> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
-> 
-> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-> few changes. Notably, the HDK865 dts has regulator config changed a bit based
-> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
-> 
-> V2 changes:
-> * Added two patches for sm8150 and sm8250 iommu compatibles
-> * Changed apps_smmu node patches to use new compatibles
-> * Updated commit messages for apps_smmu patches to be more correct
-> * Updated HDK dts patches based on Bjorn's comments
-> 
-> Jonathan Marek (8):
->   dt-bindings: arm-smmu: Add sm8150 and sm8250 compatible strings
->   iommu: arm-smmu-impl: Use qcom impl for sm8150 and sm8250 compatibles
->   arm64: dts: qcom: sm8150: add apps_smmu node
->   arm64: dts: qcom: sm8250: add apps_smmu node
->   arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
->   arm64: dts: qcom: sm8250: Add USB and PHY device nodes
->   arm64: dts: qcom: add sm8150 hdk dts
->   arm64: dts: qcom: add sm8250 hdk dts
+Hi Chanwoo,
 
-What's your plan for merging this? I can take the first two patches
-via arm-smmu, if you like. Please just let me know.
+I think it doesn't help on the benchmark I suggested that is doing only memory
+accesses. With both timer, I have the same timing.
 
-Will
+To test the benchmark with these new patches about timer:
+
+git clone https://github.com/wwilly/benchmark.git \
+  && cd benchmark \
+  && source env.sh \
+  && ./bench_build.sh \
+  && bash source/scripts/test_dvfs_mem_patched.sh
+
+The benchmark is set by default to run for 1s, but you can increase this by
+tweaking the script as:
+
+taskset 8 ./bench_install/bin/microbe_cache 33554431 0 9722222 <TIME in sec> ${little_freq}
+
+
+Also, as I reported the issue, would it be possible to add a
+Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com> ?
+Many thanks in advance.
+
+
+Best Regards,
+Willy
