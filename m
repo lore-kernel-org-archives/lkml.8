@@ -2,113 +2,88 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C847C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F37A207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B8F20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 10:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8omVD//"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Plr1MP36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgGCKxI (ORCPT
+        id S1726291AbgGCKxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 06:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGCKxG (ORCPT
+        Fri, 3 Jul 2020 06:53:20 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:56839 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgGCKxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 06:53:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B439CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 03:53:05 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so12523604plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 03:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OGpuzxy+MIp1rENc9jMCC/mFYHbkQY9vYIT5QTgbmWY=;
-        b=Y8omVD//GCbGlXcKzoFyVJ3TZNxqpcQrcXvYGjk7s8ZSMiLHmndCYMhy5FFzSfehLp
-         +mqnAq6R85+kF02ylNBK0KRxaiJ7WkJCk74+Fr7X9dsfhjbsO6jCzLXrvaeAgccJXtiV
-         khACNA2bp67N58fQGUDb9MZ8tKy2vSmU4NrEL9a870Y135yTSJCz/iFzbH8A0/02/UDx
-         vUtppSY4IwBNT5TcFm6Jqy8MS464JomSUzShRLYXbS8UMBrvMeq6E6DStDBhLvADvPae
-         VLwfnjVVSFN/Ja1M0zMOxyxpKSBNam0bRKJSyMjebYT75vleYgFhjKfOJ8nnBshSQYiO
-         vTXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OGpuzxy+MIp1rENc9jMCC/mFYHbkQY9vYIT5QTgbmWY=;
-        b=WAUE6G2iYui2yvYuHuVLIjtfjmDbA1ukAsV5e7rVCNvxG7vLsij0t6T7GFjcZXhjFK
-         pFUXfkWbFFJ4lQmZqMlqts9r38TaOtO+T1KduJOqC7QFdcLMwKQ71hbgFJMDrV0SKkLu
-         vf1SU3FRNf3e4a2RxDusyyHgQy1qNApYhXsoTSZhzNdKgqId9OlAx9caUVIAh6Qd7fNy
-         mk1IvQqD6L+Sps9mn0jQlFcWbZJFc+cOcB2RuscQ/+UKNLBhFF/G4oKlX4liTxIhSMjg
-         9tOG2lVbFgkx8E/aDzIQ+vpnkFpfvihk2TbiI9D6RKFyzCzCI2yX9TPU38eENBbG/yEY
-         nqnw==
-X-Gm-Message-State: AOAM531zFtoN53MDjzENpFlrRgfhRQHy8Af+7q0JhrlCanBob7p9vA4p
-        Q+LdPLnwbgDWxf1bW+KkiDR0L28+
-X-Google-Smtp-Source: ABdhPJyLQAQGnk4XRz3gN+ixe6a2o3AdtA5zjeR+MJs2FiKIZLMplBB5KZldIizrcPDWU61tm/ALAw==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr6673988pjx.169.1593773584539;
-        Fri, 03 Jul 2020 03:53:04 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id x10sm528364pfp.144.2020.07.03.03.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 03:53:03 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Fri, 3 Jul 2020 19:53:02 +0900
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Raul Rangel <rrangel@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: UART/TTY console deadlock
-Message-ID: <20200703105302.GC182102@jagdpanzerIV.localdomain>
-References: <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
- <20200630035816.GA21591@jagdpanzerIV.localdomain>
- <20200630102141.GA11587@alley>
- <20200630105512.GA530@jagdpanzerIV.localdomain>
- <20200630122239.GD6173@alley>
- <20200630130534.GB145027@jagdpanzerIV.localdomain>
- <20200630180255.GD37466@atomide.com>
- <20200702051213.GB3450@jagdpanzerIV.localdomain>
- <20200702054033.GC3450@jagdpanzerIV.localdomain>
- <20200702082008.GE3703480@smile.fi.intel.com>
+        Fri, 3 Jul 2020 06:53:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593773597; x=1625309597;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=W1fkCAJHahqWde9HjKMvjQEIsPzCIxPwk7BE7fAwW9w=;
+  b=Plr1MP36esP3/at0rCMRtb++hJD7Z8LU367Ub0Tr/wMXieNObV4AEpAl
+   aXr+dnEXNMtsCX0EvKjKve/ffihHjS7hJeQAffgsJnjxKOFFTouwi6mRU
+   0LbWqZlLoE8t4UObILAIyhDvv3C9A8VcB3yTc9xp/q3OBRx57+rQjo+Ee
+   DXKqhCN9rqi24Q6eYjp1t3kqGxNXhuuNP/1sV/vA2HhDZYJ7itQKAGzy8
+   kK4uZHv7RIsFjk0IG6u/5lPPP/GLsnA/XmRLaVHyYeQIZ3+qb0UnmRKrY
+   q22y7AieFU2MM3Ts0bhx6A7HsUuGj8l5lD8604mWKapXdlISCKSJdetFr
+   A==;
+IronPort-SDR: S9K8W58IuUR00ZYHbtq8tBOxScvw+HVqKFbmensstoW5mI9sU/nwLfXtXmqFrAnh046mIpN7rr
+ SngmwHNwua7i922785Jeh8jEGv901z/Byqc0ocPeU1MvZrnbYnq1NpASvM+BvsPrNSyV2cB6bi
+ nsZYSy7G/XzdJ5KHiwQeLH2GRH9e1rJd9vjg6kiMGNn1M6S/xXVZcd7gu8z57K3HyxxeeMX16Q
+ 1ARMhE74yartfwNRJzoLD/KolH2GZcFdyE3jdXdOpGxTVDxS6gfvGRR4pkPO4MUtfsuJrQEPuc
+ PVE=
+X-IronPort-AV: E=Sophos;i="5.75,308,1589266800"; 
+   d="scan'208";a="78683795"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jul 2020 03:53:17 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 3 Jul 2020 03:53:17 -0700
+Received: from atudor-ThinkPad-T470p.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 3 Jul 2020 03:52:55 -0700
+From:   Tudor Ambarus <tudor.ambarus@microchip.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mtd: spi-nor: Add support for Macronix MX25R1635F
+Date:   Fri, 3 Jul 2020 13:53:07 +0300
+Message-ID: <159377160989.144291.3836509687644676512.b4-ty@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702140523.6811-1-frieder.schrempf@kontron.de>
+References: <20200702140523.6811-1-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702082008.GE3703480@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/07/02 11:20), Andy Shevchenko wrote:
+On Thu, 2 Jul 2020 14:05:50 +0000, Schrempf Frieder wrote:
+> The MX25R1635F is the smaller sibling of the MX25R3235F that is
+> already supported. It's only half the size (16Mb).
 > 
-> I didn't look into this deeply, but my understanding that this is something for
-> special case when you have several UART ports sharing the IRQ (multi-port card)
-> and IRQ even maybe undesirable b/c it will confuse real IRQ handler. I don't
-> remember details, but AFAIR IRQ handler does a busyloop to service as much as
-> possible and in between it may release the lock (again, multi-port UART cards),
-> that's why we better avoid IRQ event in the first place.
-> But it's my pure speculation.
+> It was tested on the Kontron Electronics i.MX8MM SoM (N8010)
+> using raw read and write from and to the mtd device and
+> the 'flash_erase' command.
 
-Hmm. Would different IRQ handlers use different UART port structures? ->irq
-might be the only thing they share. Even if they use the same port, we
-keep IRQs disabled on local CPU, and UART port locked. To unlock the UART
-port during IRQ, the handler (on another CPU) first needs to acquire the
-port->lock, which is locked by serial8250_do_startup().
+Applied to spi-nor/next, thanks!
 
-	-ss
+[1/1] mtd: spi-nor: macronix: Add support for MX25R1635F
+      https://git.kernel.org/mtd/c/482dcb2a04
+
+Best regards,
+-- 
+Tudor Ambarus <tudor.ambarus@microchip.com>
