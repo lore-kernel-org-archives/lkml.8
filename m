@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB18C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A62C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E4420772
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7233620772
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 05:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593754804;
-	bh=kNleJkAWKZvx+iwUJt4yKWIGyM7h176BHp1WjJbIc+c=;
+	s=default; t=1593754810;
+	bh=ocskdSa0KVruh+R4uOpgC7Tiw8alBDbBAnXQd6V/rgo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JSzJTMB80a7Kv9D9ZV7hS4ygF1KD1SO+Nu1o1hlFRtVtAt4kH+VNh2vTscGcP0GpG
-	 w0BbS8tF+3M+ahVHSEkcQgiJfpsV6RkyzoBFRMAEVs7Fa6dTyucQHmGeQInhBu/n51
-	 LgBryq8Z9r0gqLSAm5ns1kA7SMeESUkUvPViWC8g=
+	b=kSG2nubYvSmFurZcu0wwRJIi5jtqUZMhx1DeDmNmMjXRKoxhd53ltfQbDkOeWDfQm
+	 SArJPeI9fZUrFhrLaOy/6V+87/JJlyeehplRvBh65uRp98AoQAkljELg5pAukpl779
+	 YTb/1Oc1w9Ue2YGzbePOFcloTvIOMyWYSHXhwxF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgGCFkC (ORCPT
+        id S1726228AbgGCFkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 01:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 01:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCFkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 01:40:02 -0400
-Subject: Re: [GIT PULL] nfsd bugfixes for 5.8
+        id S1725779AbgGCFkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 01:40:08 -0400
+Subject: Re: [GIT PULL] Kunit fixes update for Linux 5.8-rc4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593754801;
-        bh=kNleJkAWKZvx+iwUJt4yKWIGyM7h176BHp1WjJbIc+c=;
+        s=default; t=1593754808;
+        bh=ocskdSa0KVruh+R4uOpgC7Tiw8alBDbBAnXQd6V/rgo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WAtSYguye5SVxrjo49NlzbjbIu1qTJpOrWsJrzXpia3Ki9qXMFuxod9ngPqU201n3
-         CBLGzhTCyr3l2a/A7bOaTpvklgH5Htcu9x9mVqSvHQNyMXRGqZ2SQmZPm7KOZWkssh
-         jnQfJKHaSoRA976xLCO51ssZ6eDVMY3f0OYjlJ+Y=
+        b=aLlOd09mgW6cNmxHE46hmJFdD1v51zC0bh8qFch1cg48R2Ablw0OJ/EAB1YaVuIG+
+         62Egl+ck/HGUpYhbKbjCrmUbth84VjD6qxuK4xarH7I3yj8Ls6luivFQt86M0LDAGM
+         Pop6aXruZ5uLlppr5b+56k2cv6pchjRHm34ryx4E=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200702151039.GC6904@fieldses.org>
-References: <20200702151039.GC6904@fieldses.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200702151039.GC6904@fieldses.org>
-X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-1
-X-PR-Tracked-Commit-Id: becd2014923ff259b8155df58199f605dd50cb8f
+In-Reply-To: <39219b27-98db-609c-d77b-3db2eb64345a@linuxfoundation.org>
+References: <39219b27-98db-609c-d77b-3db2eb64345a@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <39219b27-98db-609c-d77b-3db2eb64345a@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+ tags/linux-kselftest-kunit-fixes-5.8-rc4
+X-PR-Tracked-Commit-Id: c63d2dd7e134ebddce4745c51f9572b3f0d92b26
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 083176c86ffae8c9b467358eca5ba05a54a27898
-Message-Id: <159375480186.400.10690168272088373129.pr-tracker-bot@kernel.org>
-Date:   Fri, 03 Jul 2020 05:40:01 +0000
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>
+X-PR-Merge-Commit-Id: 55844741a1e74bd41b4cea57502c2efedc99bf47
+Message-Id: <159375480808.400.11761356366202390858.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 Jul 2020 05:40:08 +0000
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     torvalds@linux-foundation.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>, skhan@linuxfoundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 2 Jul 2020 11:10:39 -0400:
+The pull request you sent on Thu, 2 Jul 2020 09:23:55 -0600:
 
-> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux-kselftest-kunit-fixes-5.8-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/083176c86ffae8c9b467358eca5ba05a54a27898
+https://git.kernel.org/torvalds/c/55844741a1e74bd41b4cea57502c2efedc99bf47
 
 Thank you!
 
