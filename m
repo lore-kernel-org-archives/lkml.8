@@ -2,92 +2,100 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6895C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11149C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A61A208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF23920A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pz8std7z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/jJSrmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgGCDS1 (ORCPT
+        id S1726142AbgGCDSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
+        Thu, 2 Jul 2020 23:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgGCDS0 (ORCPT
+        with ESMTP id S1726108AbgGCDSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:18:26 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAB9C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 20:18:26 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b25so31451684ljp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 20:18:26 -0700 (PDT)
+        Thu, 2 Jul 2020 23:18:46 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7128C08C5C1;
+        Thu,  2 Jul 2020 20:18:46 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id i25so31207512iog.0;
+        Thu, 02 Jul 2020 20:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SnMOmiMqg2WYRkuEFv442IXE+//Cr5LIjZGsSifmgGU=;
-        b=pz8std7zGDPAzQbBHwIU8GQ9PYnki3vnQg1S+g8xcStJyQGOf7h9K2tjws4NQYZGVn
-         KG+gviz7YmCOqXx/N7MmeNy+aFleVzwoqH2WbDjnomfwn6gePzftQrM62+nmZa2FtTgN
-         3RPWN0kwjqNMvGYLXzy2bON6GrITj44PHfVeO+Rv4wkKVyU6mdbNZsnmfbmyyQSXwF+S
-         eReoo3Tzt2k9gGnEUktUPKb20MqyGVaZ+vFpFro4FZBP+VqMYFMMluPQF82pBjnSBJ8e
-         V1dvRqOAUpJHUYQR/LbT6oy8TKpsbqnkwACdXO6k/jzAm1YCry5i5JBmdwVekF+KP9xP
-         G+DQ==
+         :cc:content-transfer-encoding;
+        bh=U9YC5H2y22Q5M5VCA+FjTxvf6edeH10IvXxu6UDAN64=;
+        b=a/jJSrmHkjCwYVfUkiJ6wv0sa8zPKB6xO9+QMR426qTU1gNrvJdSPYnF+hoYEOW9WD
+         VkSt22lFsNd9iHlbOk/Y0nJtfBkqOMi/RRV7fRMTBWRgFQmv+S6YRbgmZW/W/qTYDuaJ
+         83fZAOlUDnhN9PyNGvReL0mYUUWxtZrH1vG3klkjzKrx/kxoxQvisopdZIaZZAIfCcYO
+         oiCVbgaxiM/E2WMOP9f8Se9xsLESaZmvtb76fEQRqaMOxm1XLgNBezus8WdSf2qNeTca
+         ygPmbILz365ppAnmd6G3goyAZTk6dz6JKBowhdArUzVnCJPGen8Is7ErQo2/6osYU4Iw
+         WVhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SnMOmiMqg2WYRkuEFv442IXE+//Cr5LIjZGsSifmgGU=;
-        b=UPRZMYWHbYBFshxSyGGR95jOWOipCbGXI2GNkW8yn69a+MUNgF0wesOLUBdl+bQVow
-         Ks5QApRGwMf7YSsWhTjgrw9gtLV4F7igKKQKC5Nwhffrdduac7Bi5AzcoHJ9RlgntCfJ
-         aJIvR4GjKYE/wYq0VzGRT6OBRNt/m6UpYEsJ/vRVSM4X3El+5dDr1/ewcFeTbOUR7ZGl
-         IWyWRsdGaM+2LrkkzpLy+ax5JVIjAPqcRZE7KfBOTtareTokAvhv7kBCD1hy5v5nr7i7
-         Z1rH9kep/us278/ReLlwIZfxG3IJR9ignyLoCKSZAfP1IxSawLqYCVPNIxvqLwd6Ete0
-         Qdjg==
-X-Gm-Message-State: AOAM530gquvqLqV09NS+eFt6BMTIAdiuz60gW9c77AmPEmSTg3vt7a1O
-        SJr1UNuvxrZDUpYuWfTR6bVMe4sSaW/0ph91VD8aqwCkowH9
-X-Google-Smtp-Source: ABdhPJwPFU+9EQTP5K1YXtpLPRAQ3J3q2LA6wf+jGVOsBO3Wr5BMBI8imsYtPUbefbuQhAsWeMrSO92HOLH3cKIYsqw=
-X-Received: by 2002:a2e:4b12:: with SMTP id y18mr16378986lja.117.1593746304544;
- Thu, 02 Jul 2020 20:18:24 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=U9YC5H2y22Q5M5VCA+FjTxvf6edeH10IvXxu6UDAN64=;
+        b=OD7Su5m257Tn4NcL4mdF/Y1qEJ95G8EecU6GWYsrnFUb1yEGcScb3qMzB7wwF1vJZk
+         mKY4vcKsF3NSUPDDENMF2/a1aCF7upog8TMqM3W42iWqRHAjx2sdmuclIh5NDuxGGFrh
+         aPf/2+KTMtvrVEje6vVK++OrocZBQ6k043PH8oSWk3RLCM2lxvgDhgLEvx0V2bNJhEIa
+         gewaM473/5xUUVWtcQAP11ABHBJnT4VEhEShP9LhU5EEdARgJahT2V+V+mZ2ZYvlTqOU
+         PTRST/0eMbUFfKdibXlSlxZpzaBLGcOkvWf8Ffa524xgKB0ZYdysGFXa0NwL7nAjPUL/
+         aMEw==
+X-Gm-Message-State: AOAM530ieN/YD2lDSoA2R7PqRxhV8jY8q2P8TQI+mh0lbAqrNy6CBYI+
+        UBbFxtBdbSjD4ate8nC0o/wEDRuwF3M/0jo9/JY=
+X-Google-Smtp-Source: ABdhPJyfDnVvEywAmUiCTEEJgoyLdhnj95M0/d5L30vIG/ouwtnmL8lSc/0hvfUEGrL7hUtpT5jCFubvgSmhcHOYlgQ=
+X-Received: by 2002:a6b:7106:: with SMTP id q6mr10448992iog.122.1593746324189;
+ Thu, 02 Jul 2020 20:18:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200702221237.2517080-1-abhishekbh@google.com> <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
-In-Reply-To: <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
-From:   Anthony Steinhauser <asteinhauser@google.com>
-Date:   Thu, 2 Jul 2020 21:17:39 -0600
-Message-ID: <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
- cache flush mode
-To:     Abhishek Bhardwaj <abhishekbh@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        x86 <x86@kernel.org>
+References: <1593698893-6371-1-git-send-email-chey84736@gmail.com> <20200702174346.GB25523@casper.infradead.org>
+In-Reply-To: <20200702174346.GB25523@casper.infradead.org>
+From:   yang che <chey84736@gmail.com>
+Date:   Fri, 3 Jul 2020 11:18:28 +0800
+Message-ID: <CAN_w4MWMfoDGfpON-bYHrU=KuJG2vpFj01ZbN4r-iwM4AyyuGw@mail.gmail.com>
+Subject: Re: [RFC] hung_task:add detecting task in D state milliseconds timeout
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     mcgrof@kernel.org, Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, this probably requires an explanation why the change is necessary
-or useful. Without that it is difficult to give some meaningful
-feedback.
+  my understanding, KernelShark can't trigger panic, hung_task can
+trigger. According to my use,
+sometimes need to trigger panic to grab ramdump to analyze lock and
+memory problems.
+So I want to increase this millisecond support.
+
+
+Matthew Wilcox <willy@infradead.org> =E4=BA=8E2020=E5=B9=B47=E6=9C=883=E6=
+=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:43=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Thu, Jul 02, 2020 at 10:08:13PM +0800, yang che wrote:
+> > current hung_task_check_interval_secs and hung_task_timeout_secs
+> > only supports seconds.in some cases,the TASK_UNINTERRUPTIBLE state
+> > takes less than 1 second.The task of the graphical interface,
+> > the unterruptible state lasts for hundreds of milliseconds
+> > will cause the interface to freeze
+>
+> The primary problem I see with this patch is that writing to the
+> millisecond file silently overrides the setting in the seconds file.
+> If you end up redoing this patch, there needs to be one variable which
+> is scaled when reading/writing the seconds file.
+>
+> Taking a step back though, I think this is the wrong tool for the job.
+> I'm pretty sure KernelShark will do what you want without any kernel
+> modifications.
+>
