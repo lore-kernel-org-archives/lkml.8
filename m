@@ -2,129 +2,117 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF74C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E75F720748
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6A82070C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 01:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeKlZYd3"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="kx3IekKb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BU5zMkut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgGCA6s (ORCPT
+        id S1726340AbgGCBA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:58:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24847 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgGCA6s (ORCPT
+        Thu, 2 Jul 2020 21:00:26 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:40199 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726017AbgGCBAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:58:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593737926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5zlrXGxKm/JoU8AA+dwl+T//yIRszGny2ohMnMEEFxY=;
-        b=WeKlZYd3kCEHbMpMc5VhRjr8h8onzGDiAOqD4Hqq/YXHT6tTVU81ECDtG20qpsmuhtIjpx
-        5EroAiN9SbQ0Cb9QiyuSjALS5LsMtB+3iQ3aXsTzo1ZPzcD7FU13a1kc4pSEHO3vUFjYAX
-        wB37xE/LAnCeBvrk2OajsUsW79PtYTI=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-djBtNSjPNC-mZWSzJtXbhg-1; Thu, 02 Jul 2020 20:58:42 -0400
-X-MC-Unique: djBtNSjPNC-mZWSzJtXbhg-1
-Received: by mail-qk1-f197.google.com with SMTP id p126so4470340qkf.15
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:58:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5zlrXGxKm/JoU8AA+dwl+T//yIRszGny2ohMnMEEFxY=;
-        b=FaOe2SfbgEXHjPTKy7H3YJTH7OaFIjAi5MwLGrTChaHxEPLdGbrF12z3oXeIZYV9dw
-         L2TxEvhSk4lQweHlP5H+Qr3H8sPYSNlhieeZZc0VSiRho7794X1hAw0Av+iAKOA9GB9E
-         t2uS8aCoR85OqNrHbLvCEq3/iavDwbM3NFGIXWf2TA5fHJ3U4N2ZV0qYSC8Nh3LPpKEk
-         Cr+EMVfev34/4T7pKGvzJjy0NH5Nu0PyNplKze3SepLMIydgGjFuDXCfoPptVxWO6Y/K
-         T54KYBmt1ptZ6dzLzKDqWInMfeAwyU6H5DUQfmb1eycaxhx/GR0RZZtey5cKkyWl64Ez
-         lIMQ==
-X-Gm-Message-State: AOAM533+I1fjS2qDYEEit44zlViHOHa+oOdMUTXMhYjNJHjnyij94kUQ
-        poqmky0+oGAsd+yo0q1r7Y+6kkmvUS9SSrTgAyhA0FX636jh4EJKVySNfKx9E9DhRBQz0DXPgnb
-        Vrq6aa9BqUiDm3ytW1Az92k0E
-X-Received: by 2002:ac8:3438:: with SMTP id u53mr34763423qtb.102.1593737922459;
-        Thu, 02 Jul 2020 17:58:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyHJ/zoCeCWJlKioO070m7F5IMC5C0GNbb4MH/uExBKdX0suFgKub7q+wMx1ISV5PGpH5FKpQ==
-X-Received: by 2002:ac8:3438:: with SMTP id u53mr34763408qtb.102.1593737921981;
-        Thu, 02 Jul 2020 17:58:41 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id y40sm10502896qtc.29.2020.07.02.17.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 17:58:41 -0700 (PDT)
-Date:   Thu, 2 Jul 2020 20:58:40 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse:
- struct kvm_vcpu Documentation Kbuild Makefile crypto include sound usr
- <asn:3> kvm_get_running_vcpus( ... )
-Message-ID: <20200703005840.GC6677@xz-x1>
-References: <202007021746.jJj16Pl8%lkp@intel.com>
+        Thu, 2 Jul 2020 21:00:25 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8BD135C0194;
+        Thu,  2 Jul 2020 21:00:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 02 Jul 2020 21:00:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=mq9RgoRCE9wTH
+        brhBmftiU2UbhFxdZX3j8GQgZzYBpQ=; b=kx3IekKb88Ei2lpN8Iq9x+jond/Gn
+        1tcRJTyDPkFGJAxuWJCJTjO2kS/O42BEvrCiTBNUqsAYMEA5itwfnUZl3goWQL5t
+        Fi87OUuM+wXlACurK50AUf6I7n/oIAJq8Dd8jyh/QSoXYnFJCmzEhDRLZulrS5/j
+        gU8PD7YGU82PUo/mEPi0SCIYYVF+X83v0FHfesZinB1wOuRTBvqpVeJ4pJ7WGrYn
+        o7bdE7HQI2OdcZwLbPWGPkGbHOOXJsSn6dAwzc10o34hWHjjEG86F0G6qyRQk+le
+        i3FuHwi0qirO1k0vg1kDHKkaBda5DBuveM89Xvs6ouVXf1aG8ZtTjCdzg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=mq9RgoRCE9wTHbrhBmftiU2UbhFxdZX3j8GQgZzYBpQ=; b=BU5zMkut
+        7SS7BDm0SFqhj7tGVLSaTZLkTbZNV2r2U73NOxeOnBANQcMcHsjNHvqYcZx9qT+M
+        hik5I3ZyLvyg1xMDF0FUqtcMf+XjfomPVR7zjgEJ+9GgvNj8+qHvlY157WMgBbqz
+        zdgOhArat44+kZABgjX4AzaNgnWZ7biZu1dBuKZ2i4U3E7/HXWb6OvXNaFL/1vlm
+        Icsphs2ZIh5fiTw5WTJfZbfgORoJSc0qUf/gS6vsdIQR9QqOWIkI72JsWzAPoXhX
+        EwgyUELQbqkCQ4qWS3pSCuxQ05QhTzHXrJHCL28EhJ/l4DGpspw5QcP1EmSkLnUu
+        J6pPBPpGj5OvFw==
+X-ME-Sender: <xms:KIP-XqZWyorwo4VI90KX4YNGQWlptatzkrJEMMrkfMZbnwym4r8oPw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgdegtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhnhicu
+    nfhinhcuoegurghnnhihsehkughrrghgtdhnrdguvghvqeenucggtffrrghtthgvrhhnpe
+    etgffhheetueeggfeuveeiuddtudehteehgefhveejleevhffgteeludehudeuudenucfk
+    phepjeefrddvvdehrdegrddufeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepuggrnhhnhieskhgurhgrghdtnhdruggvvh
+X-ME-Proxy: <xmx:KIP-XtYk_v6rj47vBfjd4QrlEUSyu9NmVt7uP5TLLlErBOSVQ5t2-A>
+    <xmx:KIP-Xk9L9mdCPAncCU6efz-Eh6MEFzQ9_WmJ2qje9boBfGfjGpwxJg>
+    <xmx:KIP-Xsp2Pr99dZdXbLwgnrY480VICvwAQ7uGFEX1jhBQJ9hkr3dyMQ>
+    <xmx:KIP-XsV4xyEUBULrTRpp_hfV-Bq_1Ckrc4xHdq9xdkyN2oPjTHU8Iw>
+Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 091863280059;
+        Thu,  2 Jul 2020 21:00:22 -0400 (EDT)
+From:   Danny Lin <danny@kdrag0n.dev>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Danny Lin <danny@kdrag0n.dev>
+Subject: Re: [PATCH] cpufreq: Record stats when fast switching is enabled
+Date:   Thu,  2 Jul 2020 18:00:09 -0700
+Message-Id: <20200703010009.220363-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <3268787.3OZuCagV1k@aspire.rjw.lan>
+References: <3268787.3OZuCagV1k@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007021746.jJj16Pl8%lkp@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 05:18:48PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   cd77006e01b3198c75fb7819b3d0ff89709539bb
-> commit: 7495e22bb165e7030bae4d9c6e84addb5ea17b29 KVM: Move running VCPU from ARM to common code
-> date:   5 months ago
-> config: x86_64-randconfig-s031-20200701 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.2-3-gfa153962-dirty
->         git checkout 7495e22bb165e7030bae4d9c6e84addb5ea17b29
->         # save the attached .config to linux build tree
->         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=x86_64 
+On Thu, Jan 31, 2019 at 2:14 AM, Rafael J. Wysocki wrote:
+> On Thu, Jan 31, 2019 at 11:07 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 31-01-19, 11:03, Rafael J. Wysocki wrote:
+> > > On Thu, Jan 31, 2019 at 9:30 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > The only problem that I can think of (or recall) is that this routine
+> > > > also gets called when time_in_state sysfs file is read and that can
+> > > > end up taking lock which the scheduler's hotpath will wait for.
+> > >
+> > > What about the extra locking overhead in the scheduler context?
+> >
+> > What about using READ_ONCE/WRITE_ONCE here ? Not sure if we really
+> > need locking in this particular case.
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
->    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse: sparse: cast removes address space '<asn:1>' of expression
->    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct compat_sigset_t const [noderef] [usertype] <asn:1> *compat @@     got void * @@
->    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse:     expected struct compat_sigset_t const [noderef] [usertype] <asn:1> *compat
->    arch/x86/kvm/../../../virt/kvm/kvm_main.c:3023:57: sparse:     got void *
->    arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse: sparse: symbol 'kvm_get_running_vcpus' redeclared with different type (different address spaces):
-> >> arch/x86/kvm/../../../virt/kvm/kvm_main.c:4326:17: sparse:    struct kvm_vcpu *[noderef] <asn:3> *extern [addressable] [toplevel] kvm_get_running_vcpus( ... )
->    include/linux/kvm_host.h:1339:26: sparse: note: previously declared as:
->    include/linux/kvm_host.h:1339:26: sparse:    struct kvm_vcpu [noderef] <asn:3> **extern [addressable] [toplevel] kvm_get_running_vcpus( ... )
-> 
-> vim +4326 arch/x86/kvm/../../../virt/kvm/kvm_main.c
-> 
->   4322	
->   4323	/**
->   4324	 * kvm_get_running_vcpus - get the per-CPU array of currently running vcpus.
->   4325	 */
-> > 4326	struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
->   4327	{
->   4328	        return &kvm_running_vcpu;
->   4329	}
->   4330	
+> If that works, then fine, but ISTR some synchronization issues related to that.
 
-Not the first time got confused with this report - this seems to have been
-fixed by fcd07f9adc7d ("KVM: let declaration of kvm_get_running_vcpus match
-implementation", 2020-02-28) already...
+Maybe using READ/WRITE_ONCE for time_in_state is problematic, but is
+there any reason why atomics wouldn't work for this? As far as I can
+tell, atomics are necessary to protect time_in_state due to its
+multi-step add operation, and READ/WRITE_ONCE can be used for last_time
+because all operations on it are single-op sets/gets.
 
--- 
-Peter Xu
+I've been using the setup described above on a downstream arm64 4.14
+kernel for nearly a year with no issues. I haven't noticed any
+significant anomalies in the stats so far. The system in question has 8
+CPUs split into 3 cpufreq policies and fast switch is used with the
+schedutil governor, so it should be exercising the stats update path
+enough.
+
+Sorry for bumping an old thread.
 
