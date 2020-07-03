@@ -2,118 +2,78 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86493C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB64C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C3320BED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593780563;
-	bh=+/21p5rQ6k7dd6nmGPMmmCDHBK6ejZw314j+mhRM2/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wM8D3hK08d1wgW0hbw5uzz7Q5iExAhuDmpB53jF7EIXKEgkbLFD3vDBGLUdsNk7F1
-	 IVNIkjCQCM3VwZlhfJhsI9e1QNAK/c2lU7tp4b+n5/XMBZEQRQBDJNP4z8EtDKPLbH
-	 LhOoPQJQ6yZ9Jhg1S2PeS/8KZlP8Pn4y3pbvommk=
+	by mail.kernel.org (Postfix) with ESMTP id 5513620899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qXX0f0LO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgGCMtV (ORCPT
+        id S1726317AbgGCMts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgGCMtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:49:21 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8D520899;
-        Fri,  3 Jul 2020 12:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593780560;
-        bh=+/21p5rQ6k7dd6nmGPMmmCDHBK6ejZw314j+mhRM2/A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z0x5onKcdtJbw5KpysufxQzolTSYRNWscUBkmrJIyVgHOUpN4EpEYuX8M/6MlvrEB
-         pLC3Brtgq8rq8cNtRHsAW6nCIbTIxSoeeAEKEWkuMh8GhEggrx4G7bcxJgzjNMxq7D
-         aLKqoFJhW8+9+7Yxoqi6EMs7/8vbQn0K+zONJh2Q=
-Date:   Fri, 3 Jul 2020 18:19:12 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Will Deacon <will@kernel.org>, John Stultz <john.stultz@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20200703124912.GM273932@vkoul-mobl>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-6-john.stultz@linaro.org>
- <0be86735238a0f8b0c25934e2ed39eee@kernel.org>
- <CALAqxLUZBdiLBRcp1GW9rGxt1KhgNVQ86MuPXZcXdx2wFLZk6w@mail.gmail.com>
- <20200703122343.GB18652@willie-the-truck>
+        Fri, 3 Jul 2020 08:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgGCMtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:49:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F92EC08C5C1;
+        Fri,  3 Jul 2020 05:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VMSzCqiPU0UwJ1IxHxA0ouN7RVM3z3sQz/cKALPThE8=; b=qXX0f0LOoxo/HMlK+xkEsj19uj
+        ZBGcv1f03nhihT/+45lxEYy7mXw1jsKBmMf8bqC9GDB4wrVcvD4A05WeZUC6zTZ4v04wNki5LiZt3
+        suIpPJaVUQmgcS3dfP9yvXrw4WEX6/jeegsNlN47b20YG3XXFexSGoeQoa1rabELibqOJww9vsOZN
+        AyMmFfWkp8oVs8QlyyJvXLTC9254GjtlmeboD1IgK/upsCAC834Qd1Q40AmsmFLklWNwpQfmfz/OC
+        xdAvnpEvW9crxlRulpYs87eJW2qcP9iggcQStDMa9VbNh87SGEIlk+SwC0GenNn4yVk/29oq8B3mN
+        QszlCi4A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jrL8N-0002iY-H2; Fri, 03 Jul 2020 12:49:39 +0000
+Date:   Fri, 3 Jul 2020 13:49:39 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Danny Lin <danny@kdrag0n.dev>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] editorconfig: Add automatic editor configuration file
+Message-ID: <20200703124939.GG25523@casper.infradead.org>
+References: <16043769.gqpzGLO8mG@pinwheel>
+ <20200703073143.423557-1-danny@kdrag0n.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703122343.GB18652@willie-the-truck>
+In-Reply-To: <20200703073143.423557-1-danny@kdrag0n.dev>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-07-20, 13:23, Will Deacon wrote:
-> On Tue, Jun 16, 2020 at 01:52:32PM -0700, John Stultz wrote:
-> > On Tue, Jun 16, 2020 at 12:55 AM Marc Zyngier <maz@kernel.org> wrote:
-> > > On 2020-06-16 07:13, John Stultz wrote:
-> > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > > > index b510f67dfa49..714893535dd2 100644
-> > > > --- a/drivers/iommu/Kconfig
-> > > > +++ b/drivers/iommu/Kconfig
-> > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
-> > > >  config ARM_SMMU
-> > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) &&
-> > > > MMU
-> > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > >
-> > > This looks a bit ugly. Could you explain why we need this at the SMMU
-> > > level? I'd have expected the dependency to flow the other way around...
-> > 
-> > Yea, so the arm-smmu-qcom.c file calls directly into the qcom-scm code
-> > via qcom_scm_qsmmu500_wait_safe_toggle()
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/arm-smmu-qcom.c?h=v5.8-rc1#n44
-> > 
-> > So if ARM_SMMU=y and QCOM_SCM=m we get:
-> > drivers/iommu/arm-smmu-qcom.o: In function `qcom_smmu500_reset':
-> > arm-smmu-qcom.c:(.text+0xb4): undefined reference to
-> > `qcom_scm_qsmmu500_wait_safe_toggle'
-> > 
-> > Do you have a suggestion for an alternative approach?
-> 
-> Can you use symbol_get() or something like that? How are module dependencies
-> handled by other drivers?
+On Fri, Jul 03, 2020 at 12:31:43AM -0700, Danny Lin wrote:
+> +# This avoids introducing too many unnecessary changes in trivial commits
+> +trim_trailing_whitespace = false
 
-So drivers deal with this by making rules in Kconfig which will prohibit
-this case. QCOM_SCM depends on ARM_SMMU with the caveat that if ARM_SMMU
-is a module, QCOM_SCM cant be inbuilt.
+I think we prefer trailing whitespace to be trimmed, even for trivial commits.
 
-This can be done by adding below line in Kconfig for QCOM_SCM:
+> +# General 4-space files
+> +[*.{pl,pm,py,tc,json,tc}]
+> +indent_style = space
+> +indent_size = 4
+> +
+> +# General 2-space files
+> +[*.{rb,rst,yaml,cocci,xsl,svg,bconf,clang-format}]
+> +indent_style = space
+> +indent_size = 2
 
-        depends on ARM_SMMU || !ARM_SMMU
+The rst files I've seen either use tabs or three spaces for indent.
+Where did this 2 come from?
 
-This is quite prevalent is drivers to ensure dependency like this
-
-Thanks
--- 
-~Vinod
