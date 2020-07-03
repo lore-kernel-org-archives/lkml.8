@@ -2,42 +2,42 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C589EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35F220885
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9C120885
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 22:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PQLd5Om7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LV2jdmlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGCWl3 (ORCPT
+        id S1726823AbgGCWlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 18:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
+        Fri, 3 Jul 2020 18:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgGCWl2 (ORCPT
+        with ESMTP id S1726427AbgGCWla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 18:41:28 -0400
+        Fri, 3 Jul 2020 18:41:30 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBDCC08C5DD;
-        Fri,  3 Jul 2020 15:41:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07537C061794;
+        Fri,  3 Jul 2020 15:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=xpaMHC1vD6dAuT3tv6oAvD/0zO3jL2xtR09updKR6To=; b=PQLd5Om79sruyolWkHmqhI7TL1
-        D1PiUM3oe0ut/1blqmvdx1SKCHGvM5uqFb3o4NRrCWuoOxF9P0mYFiodGAU2dLflKvJMLR1Bn+AhY
-        1nzU2PbTj0wH8BBJ+HG5lmrX09hQk4O1qVlIXh1bx1MX8wQtEn8vPVocdCNiFFcJfI69tLboUCuVj
-        hEQNpbk4FO9P1JQdvsopsQ8VX/eUfndnS/ckGrwGPa8PEixWMHOyIkD82MuXdzvezFMAVWfdoyuP9
-        rD8LTjCVZY7p0L4nwqW3+FqYcpHrW/j0vME0Cph4diQWz2m9gZbZYpAvSH+3FlRSlu2Cewj/6fwzf
-        a4GrF+dQ==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=obxLkjmOHvOTOOWRKqfpoCcGv9pmbak2DrPOtPfRpHw=; b=LV2jdmlBNzyxevIX4+rynpCF5f
+        9mOjTXckkG3GZLdBMHk1hCU0/moqQnaTbsKGd+B9unOfRtMoKglpLRljZnKwk0eQZrrMjukq61oUc
+        HIpPNxvq3OqAkzeLQaw7W/ahdo28waYqRWt0Kt2kO03ZqtjCewaB6JJTXgU6NpiGU4ayT/eGD01lr
+        ASEeogln6n1WqhaVsXqC0pVIPbo6NVdh0zPRotyWT5cnzkLjYPn7rWZFjVe8zlXAH7naXgJKgMrof
+        pvrEYbb3NCb/BD+pA2jw01H0E4np5bKTPNcA/hF2m6DasDlhEIyUfpFjdZk3XaLbixfxxtglK/zEe
+        DiFQYYow==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrUMy-0000A4-Bx; Fri, 03 Jul 2020 22:41:21 +0000
+        id 1jrUN6-0000A4-0L; Fri, 03 Jul 2020 22:41:28 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
@@ -52,10 +52,12 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         David Howells <dhowells@redhat.com>,
         linux-afs@lists.infradead.org
-Subject: [PATCH 0/7] Documentation: networking: eliminate doubled words
-Date:   Fri,  3 Jul 2020 15:41:08 -0700
-Message-Id: <20200703224115.29769-1-rdunlap@infradead.org>
+Subject: [PATCH 2/7] Documentation: networking: ax25: drop doubled word
+Date:   Fri,  3 Jul 2020 15:41:10 -0700
+Message-Id: <20200703224115.29769-3-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200703224115.29769-1-rdunlap@infradead.org>
+References: <20200703224115.29769-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,8 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop all duplicated words in Documentation/networking/ files.
+Drop the doubled word "and".
 
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>
@@ -72,21 +75,18 @@ Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: netdev@vger.kernel.org
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: linux-hams@vger.kernel.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Vivien Didelot <vivien.didelot@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: linux-afs@lists.infradead.org
+---
+ Documentation/networking/ax25.rst |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
- Documentation/networking/arcnet.rst            |    2 +-
- Documentation/networking/ax25.rst              |    2 +-
- Documentation/networking/can_ucan_protocol.rst |    4 ++--
- Documentation/networking/dsa/dsa.rst           |    2 +-
- Documentation/networking/ip-sysctl.rst         |    2 +-
- Documentation/networking/ipvs-sysctl.rst       |    2 +-
- Documentation/networking/rxrpc.rst             |    2 +-
- 7 files changed, 8 insertions(+), 8 deletions(-)
+--- linux-next-20200701.orig/Documentation/networking/ax25.rst
++++ linux-next-20200701/Documentation/networking/ax25.rst
+@@ -6,7 +6,7 @@ AX.25
+ 
+ To use the amateur radio protocols within Linux you will need to get a
+ suitable copy of the AX.25 Utilities. More detailed information about
+-AX.25, NET/ROM and ROSE, associated programs and and utilities can be
++AX.25, NET/ROM and ROSE, associated programs and utilities can be
+ found on http://www.linux-ax25.org.
+ 
+ There is an active mailing list for discussing Linux amateur radio matters
