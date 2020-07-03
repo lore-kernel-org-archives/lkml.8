@@ -2,91 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D844C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E823A221E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593791073;
-	bh=cPfzhzo/Hz8MPemSNhXCJzqXELqB4+AkCWomN/ytEDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gqMj6fifejLFuEHzZ3hyZhZ7KHK69kKs61nMRE0HF8GweGuSG9CGJ384hNVPCwaxg
-	 EYmL2yF0+delANg4/9Xw7sjK+T5cPjbmqvcbo99t5Gciy1/QiK+e5k2i1/1vSmBCpe
-	 5FpEpXKTeRI4D6AjGZVblqyM/jOdMEv/CWzYdrhA=
+	by mail.kernel.org (Postfix) with ESMTP id DB55F20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=danweeks.net header.i=@danweeks.net header.b="FMXGToUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGCPob (ORCPT
+        id S1726573AbgGCPpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGCPob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:44:31 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 3 Jul 2020 11:45:23 -0400
+Received: from p-impout008aa.msg.pkvw.co.charter.net ([47.43.26.139]:49659
+        "EHLO p-impout001.msg.pkvw.co.charter.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726035AbgGCPpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:45:22 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Jul 2020 11:45:22 EDT
+Received: from opius.danweeks.net ([74.70.107.6])
+        by cmsmtp with ESMTP
+        id rNlVjtwY2rzR3rNlWj41C8; Fri, 03 Jul 2020 15:38:14 +0000
+X-Authority-Analysis: v=2.3 cv=Ne6YKFL4 c=1 sm=1 tr=0
+ a=h7kw2a+/6g3zdzmQNwjrbw==:117 a=h7kw2a+/6g3zdzmQNwjrbw==:17
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=7kYe3NcsAAAA:8
+ a=noYv9r6eKZTnZH2xmfQA:9 a=CjuIK1q_8ugA:10 a=4VldaCG94jXMVy0yUZtu:22
+Received: from dev.danweeks.net (dev.danweeks.net [IPv6:2001:470:1f07:699::91])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14AD1221E6;
-        Fri,  3 Jul 2020 15:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593791071;
-        bh=cPfzhzo/Hz8MPemSNhXCJzqXELqB4+AkCWomN/ytEDQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v07gbwihtl5CN4DnMO7gLoEvCltFpuYSTUtmTFU+VnCsiCZ/f9f2AICd9wdmzphWj
-         rfeyeFC0Qzh/+iOaMXhaTT2ZKrBikWX8xOMltitLsywf4VntSfCyH1RGEC1DY3HsZO
-         QdkLUBbJQEStZMSsvx+/ykTQOQxLVX23Dn0TyoWU=
-Date:   Fri, 3 Jul 2020 16:44:27 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Keno Fischer <keno@juliacomputing.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: ptrace: seccomp: Return value when the call was already invalid
-Message-ID: <20200703154426.GA19406@willie-the-truck>
-References: <CABV8kRxA9mXPZwtYrjbAfOfFewhABHddipccgk-LQJO+ZYu4Xg@mail.gmail.com>
- <20200703083914.GA18516@willie-the-truck>
- <202007030815.744AAB35D@keescook>
+        by opius.danweeks.net (Postfix) with ESMTPSA id 083624410F;
+        Fri,  3 Jul 2020 11:37:54 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=danweeks.net;
+        s=opius.danweeks.net; t=1593790693;
+        bh=V2T+2N4lCCiebjUmaYDIhM8VGLdRvfUsoZG/BWe/uvY=;
+        h=Date:From:To:Cc:Subject;
+        b=FMXGToUTze8pdU99NXtup5gP8ln27pg5Sze2mTtacMLbZ18QtO0Phj15tOpE4y3oq
+         xD8YuO7vdX8OnBr+a9WJ144W146v83avFJ4MPqlGdy1GFVP7D4F+/dBP5vhjK0JOiA
+         4IChXZNY90RU7oZCCbzOXBBOE2Xg0ysNk4T1tgGQ=
+Date:   Fri, 3 Jul 2020 11:37:48 -0400
+From:   "Daniel M. Weeks" <dan@danweeks.net>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: hwmon: Correct vendor for mcp980x
+Message-ID: <20200703153748.GA16156@dev.danweeks.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202007030815.744AAB35D@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Envelope: MS4wfD9asncUoSFNcBiXAB2gHJXmvbabag/zMKGlIzoo9k3WTWdB0wpT8dB8m7/cIaBridhqyOJZ4vaRLy/C4qfX3QFpRPGowuxWj5I1BcAQO4kRZLaju3oZ
+ s2pEKcPfIGD+DzLSSI+y950AXz+OfXrXYbnwlAepaXRcFrIriGTLcsmF+C7kq9xHiY0UG5MNDHDmrLCVMHj3rdw8CJ81b7fRbOsKdrOaiG94JUBwzdgVOB5V
+ 8bzhWh4CvZFMAPuU880e1DCBS0UlARlw9Elg6bDN5k5cBD1pn5l397hKb2F5Bfj/7czbFi+xHejDqdDJEVVtSR+sU7dQDguMDwb0rqhXB/IJ9CydMic1jcYJ
+ dPJrwtux
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 08:17:19AM -0700, Kees Cook wrote:
-> On Fri, Jul 03, 2020 at 09:39:14AM +0100, Will Deacon wrote:
-> > diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> > index 5f5b868292f5..a13661f44818 100644
-> > --- a/arch/arm64/kernel/syscall.c
-> > +++ b/arch/arm64/kernel/syscall.c
-> > @@ -121,12 +121,10 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
-> >  	user_exit();
-> >  
-> >  	if (has_syscall_work(flags)) {
-> > -		/* set default errno for user-issued syscall(-1) */
-> > -		if (scno == NO_SYSCALL)
-> > -			regs->regs[0] = -ENOSYS;
-> > -		scno = syscall_trace_enter(regs);
-> > -		if (scno == NO_SYSCALL)
-> > +		if (syscall_trace_enter(regs))
-> >  			goto trace_exit;
-> > +
-> > +		scno = regs->syscallno;
-> >  	}
-> >  
-> >  	invoke_syscall(regs, scno, sc_nr, syscall_table);
-> 
-> What effect do either of these patches have on the existing seccomp
-> selftests: tools/testing/selftests/seccomp/seccomp_bpf ?
+Signed-off-by: Daniel M. Weeks <dan@danweeks.net>
+---
+ Documentation/devicetree/bindings/hwmon/lm75.txt | 2 +-
+ drivers/hwmon/lm75.c                             | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Tests! Thanks, I'll have a look.
-
-Will
+diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+index 273616702c51..e5bb554cd2c3 100644
+--- a/Documentation/devicetree/bindings/hwmon/lm75.txt
++++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+@@ -14,10 +14,10 @@ Required properties:
+ 		"maxim,max6626",
+ 		"maxim,max31725",
+ 		"maxim,max31726",
+-		"maxim,mcp980x",
+ 		"nxp,pct2075",
+ 		"st,stds75",
+ 		"st,stlm75",
++		"microchip,mcp980x",
+ 		"microchip,tcn75",
+ 		"ti,tmp100",
+ 		"ti,tmp101",
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index ba0be48aeadd..a8cfc7e4a685 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -690,10 +690,6 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+ 		.compatible = "maxim,max31726",
+ 		.data = (void *)max31725
+ 	},
+-	{
+-		.compatible = "maxim,mcp980x",
+-		.data = (void *)mcp980x
+-	},
+ 	{
+ 		.compatible = "nxp,pct2075",
+ 		.data = (void *)pct2075
+@@ -706,6 +702,10 @@ static const struct of_device_id __maybe_unused lm75_of_match[] = {
+ 		.compatible = "st,stlm75",
+ 		.data = (void *)stlm75
+ 	},
++	{
++		.compatible = "microchip,mcp980x",
++		.data = (void *)mcp980x
++	},
+ 	{
+ 		.compatible = "microchip,tcn75",
+ 		.data = (void *)tcn75
+-- 
+Daniel M. Weeks
