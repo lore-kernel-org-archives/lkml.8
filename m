@@ -2,121 +2,122 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A136C2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDF72073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 09:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgGCJiC (ORCPT
+        id S1726140AbgGCJis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 05:38:02 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:38927 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbgGCJiC (ORCPT
+        Fri, 3 Jul 2020 05:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgGCJis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 05:38:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U1ZX3m._1593769072;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U1ZX3m._1593769072)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 03 Jul 2020 17:37:53 +0800
-Reply-To: xlpang@linux.alibaba.com
-Subject: Re: [PATCH 1/2] mm/slub: Introduce two counters for the partial
- objects
-To:     Pekka Enberg <penberg@gmail.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1593678728-128358-1-git-send-email-xlpang@linux.alibaba.com>
- <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com>
-From:   xunlei <xlpang@linux.alibaba.com>
-Message-ID: <7374a9fd-460b-1a51-1ab4-25170337e5f2@linux.alibaba.com>
-Date:   Fri, 3 Jul 2020 17:37:52 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Fri, 3 Jul 2020 05:38:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB2EC08C5C1;
+        Fri,  3 Jul 2020 02:38:48 -0700 (PDT)
+Received: from [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f] (unknown [IPv6:2a01:e35:2fb5:1510:1d94:e6f1:f819:f29f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aferraris)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9571D2A066E;
+        Fri,  3 Jul 2020 10:38:46 +0100 (BST)
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>, kernel@collabora.com,
+        Fabio Estevam <festevam@gmail.com>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+From:   Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Autocrypt: addr=arnaud.ferraris@collabora.com; keydata=
+ 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
+ xZQG6fKWuIur3RI=
+Message-ID: <3f39a0bb-a766-f646-28b3-a51cf9983c6b@collabora.com>
+Date:   Fri, 3 Jul 2020 11:38:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAOJsxLErUqY=eBEaj0G3iRAY-YuyyLnxOnBLTP6SkCjhq1On2g@mail.gmail.com>
+In-Reply-To: <20200702184226.GA23935@Asurada-Nvidia>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/2 PM 7:59, Pekka Enberg wrote:
-> On Thu, Jul 2, 2020 at 11:32 AM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
->> The node list_lock in count_partial() spend long time iterating
->> in case of large amount of partial page lists, which can cause
->> thunder herd effect to the list_lock contention, e.g. it cause
->> business response-time jitters when accessing "/proc/slabinfo"
->> in our production environments.
+Hi Nic,
+
+Le 02/07/2020 à 20:42, Nicolin Chen a écrit :
+> Hi Arnaud,
 > 
-> Would you have any numbers to share to quantify this jitter? I have no
-
-We have HSF RT(High-speed Service Framework Response-Time) monitors, the
-RT figures fluctuated randomly, then we deployed a tool detecting "irq
-off" and "preempt off" to dump the culprit's calltrace, capturing the
-list_lock cost up to 100ms with irq off issued by "ss", this also caused
-network timeouts.
-
-> objections to this approach, but I think the original design
-> deliberately made reading "/proc/slabinfo" more expensive to avoid
-> atomic operations in the allocation/deallocation paths. It would be
-> good to understand what is the gain of this approach before we switch
-> to it. Maybe even run some slab-related benchmark (not sure if there's
-> something better than hackbench these days) to see if the overhead of
-> this approach shows up.
-
-I thought that before, but most atomic operations are serialized by the
-list_lock. Another possible way is to hold list_lock in __slab_free(),
-then these two counters can be changed from atomic to long.
-
-I also have no idea what's the standard SLUB benchmark for the
-regression test, any specific suggestion?
-
+> On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+>> The current ASRC driver hardcodes the input and output clocks used for
+>> sample rate conversions. In order to allow greater flexibility and to
+>> cover more use cases, it would be preferable to select the clocks using
+>> device-tree properties.
 > 
->> This patch introduces two counters to maintain the actual number
->> of partial objects dynamically instead of iterating the partial
->> page lists with list_lock held.
->>
->> New counters of kmem_cache_node are: pfree_objects, ptotal_objects.
->> The main operations are under list_lock in slow path, its performance
->> impact is minimal.
->>
->> Co-developed-by: Wen Yang <wenyang@linux.alibaba.com>
->> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
->> ---
->>  mm/slab.h |  2 ++
->>  mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 39 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/slab.h b/mm/slab.h
->> index 7e94700..5935749 100644
->> --- a/mm/slab.h
->> +++ b/mm/slab.h
->> @@ -616,6 +616,8 @@ struct kmem_cache_node {
->>  #ifdef CONFIG_SLUB
->>         unsigned long nr_partial;
->>         struct list_head partial;
->> +       atomic_long_t pfree_objects; /* partial free objects */
->> +       atomic_long_t ptotal_objects; /* partial total objects */
-> 
-> You could rename these to "nr_partial_free_objs" and
-> "nr_partial_total_objs" for readability.
+> We recent just merged a new change that auto-selecting internal
+> clocks based on sample rates as the first option -- ideal ratio
+> mode is the fallback mode now. Please refer to:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
 
-Sounds good.
+That looks interesting, thanks for pointing this out!
+I'll rebase and see how it works for my use-case, will keep you informed.
 
-Thanks!
-
-> 
-> - Pekka
-> 
+Regards,
+Arnaud
