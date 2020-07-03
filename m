@@ -2,102 +2,84 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33182C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 206E0208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001B2208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593761578;
-	bh=YLzvaa1bLydJ+dj5X1a+vb6tk/OO1AZ6fTqSIeEFiRw=;
+	s=default; t=1593761641;
+	bh=4X8EptKuVmIRHczWnGAk4f5jxz5Jmp/CxW9Qyr7SLlY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THODmA7NYH/k+sVss7TUavUTJGRI+yfnNZVGEteNo8h6UBWvTtKh9RwiCqDO8eabU
-	 luCEnURZKHtc/4QTFWm8AUNbgVy467OarxReBiJKoS7sW0lE95+cPz3dok5lc9ksFa
-	 iTCjcGrsSTH4bJX5NLqHMfQPMW3gzFggrr/eAkls=
+	b=To5CVYRAG+dqVvut98iK6n1Ck5ba9+HbU3T4R+wJf1zCrxqlGNydccMtqVbk2SZiq
+	 52Ait7xujfiMh0pVaHKe1iNPegndiYndi5KAFOL94kvTAv8WJPaR6HtB8Y+cStt2nb
+	 sNVIzsMqd0tAPIo78DnN4fkIgcUDhlYsug2N3amI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgGCHc4 (ORCPT
+        id S1726281AbgGCHd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:32:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
+        Fri, 3 Jul 2020 03:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725648AbgGCHc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:32:56 -0400
+        id S1725779AbgGCHd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:33:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF2320890;
-        Fri,  3 Jul 2020 07:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEC4C20890;
+        Fri,  3 Jul 2020 07:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593761575;
-        bh=YLzvaa1bLydJ+dj5X1a+vb6tk/OO1AZ6fTqSIeEFiRw=;
+        s=default; t=1593761638;
+        bh=4X8EptKuVmIRHczWnGAk4f5jxz5Jmp/CxW9Qyr7SLlY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1e8LJIpiz+8KVyLRfSjDXioQMMpKWYIuR5wNf/uzr0CYSI1UKVVV3G5by0usGGe7S
-         HwY+dBk5yCP8VJ5DJFZtj3b53OfjXKCmimssiC58i6fXHkK0VlIIXpfxIlRawYJJ02
-         BXzU7Xm0ye8DvrUyPvPA6dpx6cqHVZuKM1UlUeNM=
-Date:   Fri, 3 Jul 2020 09:32:59 +0200
+        b=xP29TgNt/OYLTmQo4oRy8S8lE2ZUB06r1jDPmGiiEtKUFwINtTBM6t81FaTmkRTna
+         nV00EPBneiU/XK5Wb3wHVip36XEc45M/PDr2kZtuGUs1wao1Sb4zJtQtOnMh+1rFqw
+         1wv7QzdDVlHsueI0F4hJsDqJecy8t439djzKwkzw=
+Date:   Fri, 3 Jul 2020 09:34:02 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH 27/30] usb: class: cdc-wdm: Provide description for
- usb_cdc_wdm_register()'s manage_power arg
-Message-ID: <20200703073259.GA2335445@kroah.com>
+        linux-usb@vger.kernel.org, Peter Korsgaard <jacmet@sunsite.dk>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH 28/30] usb: c67x00: c67x00-hcd: Demote obvious misuse of
+ kerneldoc to standard comment blocks
+Message-ID: <20200703073402.GA2336858@kroah.com>
 References: <20200702144625.2533530-1-lee.jones@linaro.org>
- <20200702144625.2533530-28-lee.jones@linaro.org>
+ <20200702144625.2533530-29-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200702144625.2533530-28-lee.jones@linaro.org>
+In-Reply-To: <20200702144625.2533530-29-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:46:22PM +0100, Lee Jones wrote:
-> A good attempt was made to document everything else.
+On Thu, Jul 02, 2020 at 03:46:23PM +0100, Lee Jones wrote:
+> No attempt has been made to document any of the functions here.
 > 
 > Fixes the following W=1 kernel build warning(s):
 > 
->  drivers/usb/class/cdc-wdm.c:961: warning: Function parameter or member 'manage_power' not described in 'usb_cdc_wdm_register'
+>  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'sie' not described in 'c67x00_hcd_irq'
+>  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'int_status' not described in 'c67x00_hcd_irq'
+>  drivers/usb/c67x00/c67x00-hcd.c:237: warning: Function parameter or member 'msg' not described in 'c67x00_hcd_irq'
+>  drivers/usb/c67x00/c67x00-hcd.c:267: warning: Function parameter or member 'hcd' not described in 'c67x00_hcd_start'
+>  drivers/usb/c67x00/c67x00-hcd.c:279: warning: Function parameter or member 'hcd' not described in 'c67x00_hcd_stop'
 > 
+> Cc: Peter Korsgaard <jacmet@sunsite.dk>
 > Cc: Oliver Neukum <oneukum@suse.com>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  drivers/usb/class/cdc-wdm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
-> index e3db6fbeadef8..4dceaeca46e73 100644
-> --- a/drivers/usb/class/cdc-wdm.c
-> +++ b/drivers/usb/class/cdc-wdm.c
-> @@ -940,7 +940,8 @@ static int wdm_probe(struct usb_interface *intf, const struct usb_device_id *id)
->   * @intf: usb interface the subdriver will associate with
->   * @ep: interrupt endpoint to monitor for notifications
->   * @bufsize: maximum message size to support for read/write
-> - *
-> + * @manage_power: call-back invoked during open and release to
-> + *                manage the device's power 
->   * Create WDM usb class character device and associate it with intf
->   * without binding, allowing another driver to manage the interface.
->   *
+>  drivers/usb/c67x00/c67x00-hcd.c | 6 +++---
+>  drivers/usb/class/cdc-wdm.c     | 2 +-
 
-You just added a coding style warning :(
+You also tried to fix up the cdc-wdm.c whitespace error in this patch :(
 
-Hint, set your editor to flag trailing whitespace with a BIG RED COLOR
-so that you don't do that.  If you use vim, that can be done with:
-	highlight WhitespaceEOL ctermbg=red guibg=red
-	match WhitespaceEOL /\s\+$/
-in your .vimrc
-
-For other sane editors, I'm sure there are ways to do it as well.
-
-Please fix this patch up and send it in a new series, I've dropped it
-from this one.
+I've dropped this one from the queue as well.
 
 thanks,
 
