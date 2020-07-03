@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB505C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A689EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4EEB208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CBD21531
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 19:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="CMPMnHsp"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="fGv0KXNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgGCTsu (ORCPT
+        id S1726831AbgGCTss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 15:48:50 -0400
-Received: from vps.xff.cz ([195.181.215.36]:47770 "EHLO vps.xff.cz"
+        Fri, 3 Jul 2020 15:48:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:47752 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgGCTsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726406AbgGCTsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Jul 2020 15:48:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593805725; bh=bIYOaQy4bpcqZdipw5TvtipwYQ+4P11t0efNzRjRNdM=;
+        t=1593805725; bh=DNJd01/b0whNwirtAYo5GM95YcqeAD7uQXrSuwhX34o=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=CMPMnHspiUrG3aWVb9q7MdiQ8iekRSnBLoJC8rI3I41ZAO3NDq7J+HO85aRF0T9N5
-         J3klpwi0mNW42koI23eFm+7XxGvMbTjlVgxLskUfmcBQ6a6hoSpR+VGBCLXrC/6kCS
-         rXlrHSe+bWyXCVIJGT90nqsoQ2xydooqlbpbe4zc=
+        b=fGv0KXNOSoUial8t7V/PcuVYJsfb0YL8uCFOFiXEwprmCszcEy1ivghdmxqTfkCo7
+         z70P7iEKXH8l0negWDCqmjAFMKgs4ebHEBQUQkzIGDfqkAz+ozzOkHgFZ8pcn983Cp
+         QUl21epOlErJYrW8eNZyLtK+FuPRT8AwR+he+t+Y=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -39,9 +39,9 @@ Cc:     Ondrej Jirman <megous@megous.com>,
         Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
-Date:   Fri,  3 Jul 2020 21:48:42 +0200
-Message-Id: <20200703194842.111845-4-megous@megous.com>
+Subject: [PATCH 2/3] arm64: dts: allwinner: Add support for PinePhone revision 1.2
+Date:   Fri,  3 Jul 2020 21:48:41 +0200
+Message-Id: <20200703194842.111845-3-megous@megous.com>
 In-Reply-To: <20200703194842.111845-1-megous@megous.com>
 References: <20200703194842.111845-1-megous@megous.com>
 MIME-Version: 1.0
@@ -51,39 +51,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
-which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
-connected to is overdriven, and the whole PL port's voltage rises
-somewhat. This results in changing voltage on the R_PWM pin (PL10),
-which is the cause for backlight flickering very noticeably when typing
-on a Bluetooth keyboard, because backlight intensity is highly sensitive
-to the voltage of the R_PWM pin.
+Revision 1.2 should be the final production version of the PinePhone.
+It has most of the known HW quirks fixed.
 
-Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
-the PL port pins via BT and WiFi IO port signals. WiFi and BT
-functionality is unaffected by this change.
+Interrupt to the magnetometer is routed correctly, in this revision.
 
-This completely stops the backlight flicker when using bluetooth.
+The bulk of the changes are in how modem and the USB-C HDMI bridge
+chip is powered and where the signals from the modem are connected.
 
-Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
+Also backlight intensity seemingly behaves differently, than on the
+1.1 and 1.0 boards, and the PWM duty cycle where backlight starts
+to work is 10% (as tested on 2 1.2 PinePhones I have access to).
+
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../allwinner/sun50i-a64-pinephone-1.2.dts    | 40 +++++++++++++++++++
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  2 +-
+ 3 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
 
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e4d3cd0ac5bb..916d10d5b87c 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.0.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+new file mode 100644
+index 000000000000..a9f5b670c9b8
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
++
++/dts-v1/;
++
++#include "sun50i-a64-pinephone.dtsi"
++
++/ {
++	model = "Pine64 PinePhone (1.2)";
++	compatible = "pine64,pinephone-1.2", "allwinner,sun50i-a64";
++};
++
++&backlight {
++	power-supply = <&reg_ldo_io0>;
++	/*
++	 * PWM backlight circuit on this PinePhone revision was changed since 1.0,
++	 * and the lowest PWM duty cycle that doesn't lead to backlight being off
++	 * is around 10%. Duty cycle for the lowest brightness level also varries
++	 * quite a bit between individual boards, so the lowest value here was
++	 * chosen as a safe default.
++	 */
++	brightness-levels = <
++		5000 5248 5506 5858 6345
++		6987 7805 8823 10062 11543
++		13287 15317 17654 20319 23336
++		26724 30505 34702 39335 44427
++		50000
++	>;
++	num-interpolated-steps = <50>;
++	default-brightness-level = <500>;
++};
++
++&lis3mdl {
++	/*
++	 * Board revision 1.2 fixed routing of the interrupt to DRDY pin,
++	 * enable interrupts.
++	 */
++	interrupt-parent = <&pio>;
++	interrupts = <1 1 IRQ_TYPE_EDGE_RISING>; /* PB1 */
++};
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index 904122711a89..25150aba749d 100644
+index a3b400ff972b..904122711a89 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -329,7 +329,7 @@ &reg_dldo3 {
+@@ -142,7 +142,7 @@ &i2c1 {
+ 	status = "okay";
  
- &reg_dldo4 {
- 	regulator-min-microvolt = <1800000>;
--	regulator-max-microvolt = <3300000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vcc-wifi-io";
- };
- 
+ 	/* Magnetometer */
+-	lis3mdl@1e {
++	lis3mdl: lis3mdl@1e {
+ 		compatible = "st,lis3mdl-magn";
+ 		reg = <0x1e>;
+ 		vdd-supply = <&reg_dldo1>;
 -- 
 2.27.0
 
