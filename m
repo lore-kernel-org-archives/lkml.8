@@ -2,97 +2,164 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778D22084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593776403;
-	bh=j9mk/zoE6UAYWQVw6K+UZFeokVdeFIAtsouE3NU5+I8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=id1RnYer+Lrdqu68XRMnNEZRF39Am57mRVFPIMiEow1LDAfSsPJOqa3JiCS4W6gRB
-	 yf2sXncCJWkKdE/jGm9bdL3L8hePwJkRy94g/gqwtk6sqT6jKn1e0nBQMdKK6Zl4AS
-	 QeCB98rdgJhAkfG472sywHIj9ERNHa813Q/LQNmA=
+	by mail.kernel.org (Postfix) with ESMTP id 16A962084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="SZxBPUEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgGCLkC (ORCPT
+        id S1726347AbgGCLkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGCLkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:40:02 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ECE420772;
-        Fri,  3 Jul 2020 11:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593776401;
-        bh=j9mk/zoE6UAYWQVw6K+UZFeokVdeFIAtsouE3NU5+I8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ngZqbyRcGttY2/0Iru9ipEL+a2cl0bzK5HnkxkGDVJwf54PXu89DJ/hAvRLTQBCtA
-         WGYq0ct4mAMiRYQZPdgiRagjOgwglmr2dCfMGQSFTqOfIJSTwBOT4vraEABxOezMDc
-         ESUtFe8drgUulk7elcY/CEzCrCYZyMB+AVakfmlA=
-Date:   Fri, 3 Jul 2020 07:40:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 119/131] tracing: Fix event trigger to accept
- redundant spaces
-Message-ID: <20200703114000.GG2722994@sasha-vm>
-References: <20200629153502.2494656-1-sashal@kernel.org>
- <20200629153502.2494656-120-sashal@kernel.org>
- <20200702211728.GD5787@amd>
+        Fri, 3 Jul 2020 07:40:06 -0400
+Received: from o1.b.az.sendgrid.net ([208.117.55.133]:19322 "EHLO
+        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbgGCLkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 07:40:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
+        content-transfer-encoding;
+        s=001; bh=wsZs8l2jsZpG5p2pmDzzBj240/dRHkP1AbxbABY0TAg=;
+        b=SZxBPUErkbng44f9FOzJPKJsy3s+NKlFRpxShe3lFQb5/PdAq0SUEDOozciH4i0wE5Vu
+        wZLk+5bH3DNfu4cJ4bE9CNbuxHUDrfOGyxVKYekTUxetJL6/cYS9HYkj4tOc/0Ym6PKvRn
+        3dyfrlL20lTZayCv2ZVeMiDEjDGILFxuM=
+Received: by filterdrecv-p3iad2-5b55dcd864-9xqm9 with SMTP id filterdrecv-p3iad2-5b55dcd864-9xqm9-19-5EFF1913-7D
+        2020-07-03 11:40:03.915577276 +0000 UTC m=+585042.874662400
+Received: from [10.13.72.108] (unknown)
+        by ismtpd0002p1lon1.sendgrid.net (SG) with ESMTP
+        id QFsYjQUNReGTJlkvFINDvw
+        Fri, 03 Jul 2020 11:40:03.570 +0000 (UTC)
+Subject: Re: [PATCH 7/9] media: rkvdec: h264: Use bytesperline and buffer
+ height to calculate stride
+References: <20200701215616.30874-1-jonas@kwiboo.se>
+ <20200701215616.30874-8-jonas@kwiboo.se>
+ <d34520b6799ddf84d9bd6de1cc6352f28c665c9a.camel@collabora.com>
+From:   Jonas Karlman <jonas@kwiboo.se>
+Message-ID: <957479f7-6427-1cc6-700c-b3efe0cb6ff1@kwiboo.se>
+Date:   Fri, 03 Jul 2020 11:40:04 +0000 (UTC)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200702211728.GD5787@amd>
+In-Reply-To: <d34520b6799ddf84d9bd6de1cc6352f28c665c9a.camel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hyX2muiWjmuL9K719?=
+ =?us-ascii?Q?h1plRDgy9Akh4eiapuPAt3js9=2F7sjca2qqnDVs0?=
+ =?us-ascii?Q?vRzrrSZeUcvcHhLZTaYTIjJwaQ4PFReksGm3h0m?=
+ =?us-ascii?Q?rXoSsCiYfxlxvoHUv5jgFduu+azBZQFmcMcHjGi?=
+ =?us-ascii?Q?8tOlUKc4C+QtC590k0unTpAS6pYc+krwFnH1eRb?=
+ =?us-ascii?Q?mIwXaXjeEiVj1KdS5rhRg=3D=3D?=
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Language: sv
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 11:17:28PM +0200, Pavel Machek wrote:
->Hi!
->
->> commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+On 2020-07-03 05:21, Ezequiel Garcia wrote:
+> Hi Jonas,
+> 
+> On Wed, 2020-07-01 at 21:56 +0000, Jonas Karlman wrote:
+>> Use bytesperline and buffer height to calculate the strides configured.
 >>
->> Fix the event trigger to accept redundant spaces in
->> the trigger input.
+>> This does not really change anything other than ensuring the bytesperline
+>> that is signaled to userspace matches was is configured in HW.
 >>
->> For example, these return -EINVAL
->>
->> echo " traceon" > events/ftrace/print/trigger
->> echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
->> echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
->>
->> But these are hard to find what is wrong.
->>
->> To fix this issue, use skip_spaces() to remove spaces
->> in front of actual tokens, and set NULL if there is no
->> token.
->
->For the record, I'm not fan of this one. It is ABI change, not a
->bugfix.
->
->Yes, it makes kernel interface "easier to use". It also changes
->interface in the middle of stable series, and if people start relying
->on new interface and start putting extra spaces, they'll get nasty
->surprise when they move code to the older kernel.
+> 
+> Are you seeing any issue due to this?
 
-We promise users that they can upgrade their kernels and we won't be
-breaking any of their usecases no matter what. However, if they choose
-to downgrade their kernels then all bets are off.
+Not seeing any issue, I just feelt more confident when both the driver and
+application use the same value to configure the stride and when used for
+drm framebuffer pitch.
 
--- 
-Thanks,
-Sasha
+> 
+>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>> ---
+>>  drivers/staging/media/rkvdec/rkvdec-h264.c | 27 +++++++++++++---------
+>>  1 file changed, 16 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+>> index 9c8e49642cd9..1cb6af590138 100644
+>> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
+>> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+>> @@ -891,10 +891,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
+>>  	dma_addr_t rlc_addr;
+>>  	dma_addr_t refer_addr;
+>>  	u32 rlc_len;
+>> -	u32 hor_virstride = 0;
+>> -	u32 ver_virstride = 0;
+>> -	u32 y_virstride = 0;
+>> -	u32 yuv_virstride = 0;
+>> +	u32 hor_virstride;
+>> +	u32 ver_virstride;
+>> +	u32 y_virstride;
+>> +	u32 uv_virstride;
+>> +	u32 yuv_virstride;
+>>  	u32 offset;
+>>  	dma_addr_t dst_addr;
+>>  	u32 reg, i;
+>> @@ -904,16 +905,20 @@ static void config_registers(struct rkvdec_ctx *ctx,
+>>  
+>>  	f = &ctx->decoded_fmt;
+>>  	dst_fmt = &f->fmt.pix_mp;
+>> -	hor_virstride = (sps->bit_depth_luma_minus8 + 8) * dst_fmt->width / 8;
+>> -	ver_virstride = round_up(dst_fmt->height, 16);
+>> +	hor_virstride = dst_fmt->plane_fmt[0].bytesperline;
+>> +	ver_virstride = dst_fmt->height;
+>>  	y_virstride = hor_virstride * ver_virstride;
+>>  
+> 
+> So far so good.
+> 
+>> -	if (sps->chroma_format_idc == 0)
+>> -		yuv_virstride = y_virstride;
+>> -	else if (sps->chroma_format_idc == 1)
+>> -		yuv_virstride += y_virstride + y_virstride / 2;
+>> +	if (sps->chroma_format_idc == 1)
+>> +		uv_virstride = y_virstride / 2;
+>>  	else if (sps->chroma_format_idc == 2)
+>> -		yuv_virstride += 2 * y_virstride;
+>> +		uv_virstride = y_virstride;
+>> +	else if (sps->chroma_format_idc == 3)
+>> +		uv_virstride = 2 * y_virstride;
+>> +	else
+>> +		uv_virstride = 0;
+>> +
+>> +	yuv_virstride = y_virstride + uv_virstride;
+>>  
+> 
+> Is the chunk above related to the patch, or mostly
+> cleaning/improving the code?
+
+You are correct it is mostly cleaning/improving the code,
+this should probably be moved to a separate patch or skipped altogether.
+
+Initial 10-bit implementation was made for HEVC so I just backported the code
+I ended up with for HEVC back to H.264. Will skip this cleaning/improving in
+this series and possible include it as part of a future HEVC series.
+
+Regards,
+Jonas
+
+> 
+> Thanks,
+> Ezequiel
+> 
+>>  	reg = RKVDEC_Y_HOR_VIRSTRIDE(hor_virstride / 16) |
+>>  	      RKVDEC_UV_HOR_VIRSTRIDE(hor_virstride / 16) |
+> 
+> 
