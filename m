@@ -2,171 +2,295 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D55FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA91206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F7VHtQgi";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LKN2/wCt"
+	by mail.kernel.org (Postfix) with ESMTP id D1958206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgGCHi2 (ORCPT
+        id S1726285AbgGCHin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:38:28 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:53056 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725779AbgGCHi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:38:28 -0400
-Received: from mailhost.synopsys.com (badc-mailhost3.synopsys.com [10.192.0.81])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 99401C050E;
-        Fri,  3 Jul 2020 07:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1593761906; bh=XLiYaREvI3lDBozFEBAnsKfX3EfamUVss/t365tvKIY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=F7VHtQgiDy2jXYCN7USZiJzevDJ2sz3Wq2/8heIQgOXQp95MKKBlZ04vcBlM/VuyT
-         kczNeyAMaU53cJoGSmye2GM+CANRgxijWL2ua4CXSBGwPZIwzEHQSrUBy/YyQg7lXn
-         8JJGxuV8uxV/zj2sq9jPXVCJ+LC3EF1oqRDxBkCmDfJbpVMOwFl5ljjqchzCg/sCU3
-         Tio4w0O4jFJmZYI6f4vcGSODPsW1ckd/h/6CMvg1n0SWBKnC3A9WoRhSy1V2+eW7qU
-         kGs8FW5Yc2eQKnt880KGMdvKjbSXXNuo7irn+cuczuC7YKEOn1SE+QYIyKk3eg6JCn
-         OqBvKkFHmJ4BA==
-Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9EE5AA0068;
-        Fri,  3 Jul 2020 07:38:20 +0000 (UTC)
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 46D6A401AB;
-        Fri,  3 Jul 2020 07:38:17 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=hminas@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="LKN2/wCt";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=odzQMgKD21+Fhn1ImGlqPCOySrAv/ZN/7JfVYoZnq8VaPm2J1gPxTXAY5AoD3nLwqtilfZSXuy12T3PRWNmsUP4iK0tJ2VuCfRT6mHskfrK3ABav9M5iuA9ioRi5+tdRbl3w9ggYSwKqv2KoeYDpSRk+GulMW4m/JcA9x3J0gYhNtXb196MnPxgZXi84WgpVvc1vfms/XmULMqNSBRrnJ6WV6PWY0Xieia20BdPWaEt3ES/yxsM1dBbi36VUwNOXSlogJuS4guqeYDNuUp2rfXdEPGF+YoX9vXB5YETELSTfDQh++4xgxZCGK7RSVinbxAzFqAaapMvDbriZ+nX8wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XLiYaREvI3lDBozFEBAnsKfX3EfamUVss/t365tvKIY=;
- b=cYW3dvtvQc90e+mYjBxSh582bn2kAzrpRNiLG226cHtSdBsqmE4VG6KAztcyLAiOPO0bhDs16qI5ytc1aXem10885czuQDBNf1Gm/M591T7VyDjFsyFI7rYS+bilwy/UmxznQhgWtrNrWWlU0YAohm7oCwwqaARXzIpyLgd5quke8Jj+hS7YCDGyAH38jCeEYhBr00PRiJAxwG1yqRlApLL/coEYsQ8El9mGyXNJ+PZmeP4ELW7RduZPyvifKto9UnK3Z0cXnFn6GfVkG3r4C8E3jBpD5Rx/XpyTtnPVFRx8X5sgqEZ5EBeygljaOfi6k4B2l6UQZAp7TK1MuroTsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XLiYaREvI3lDBozFEBAnsKfX3EfamUVss/t365tvKIY=;
- b=LKN2/wCtrOeGxgJVwTkEJPjY79+rG+VjB2Wo8qXb/YZVxBnEnhJFquyGb/txkCxziGPlCvpbphna9w8g9h/heRp2hdQqQ3ahK3+X6SqAowJvqjOItNCaNYky5aeRGRrsDn+HPQO0PVwMSiQlmr3ZEKS9+qa2aPQSgWRBIuDF4Q8=
-Received: from CY4PR12MB1432.namprd12.prod.outlook.com (2603:10b6:903:44::11)
- by CY4PR12MB1432.namprd12.prod.outlook.com (2603:10b6:903:44::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.20; Fri, 3 Jul
- 2020 07:38:16 +0000
-Received: from CY4PR12MB1432.namprd12.prod.outlook.com
- ([fe80::3cb9:e2f2:a4ff:14bd]) by CY4PR12MB1432.namprd12.prod.outlook.com
- ([fe80::3cb9:e2f2:a4ff:14bd%10]) with mapi id 15.20.3153.023; Fri, 3 Jul 2020
- 07:38:16 +0000
-X-SNPS-Relay: synopsys.com
-From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Ben Dooks <ben@simtec.co.uk>
-Subject: Re: [PATCH 11/30] usb: dwc2: gadget: Avoid pointless read of EP
- control register
-Thread-Topic: [PATCH 11/30] usb: dwc2: gadget: Avoid pointless read of EP
- control register
-Thread-Index: AQHWUH+fyhb4/oSmxUieC1VUnpCQeqj1dlwAgAACd4A=
-Date:   Fri, 3 Jul 2020 07:38:16 +0000
-Message-ID: <e88abd64-4acf-31f6-f76a-5a333df3d46a@synopsys.com>
-References: <20200702144625.2533530-1-lee.jones@linaro.org>
- <20200702144625.2533530-12-lee.jones@linaro.org>
- <20200703072926.GA2322133@kroah.com>
-In-Reply-To: <20200703072926.GA2322133@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Fri, 3 Jul 2020 03:38:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16574 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGCHin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:38:43 -0400
+IronPort-SDR: TmCt8/qdbXhrQE7kAh9YKEQyQvk4v0XfmTQAoDh/rr9yXgXQFKj9+EYU1UbuGA9wdyCJJduUiK
+ Yrq8QKHE1mgA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="165175971"
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="165175971"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:38:26 -0700
+IronPort-SDR: vmsmTtMR+r5+DUypUAXSD/2US0FQ3EGHXNQTEIjIlruBddiga+edBju0Eqw3Dy0VZXpqENe1X4
+ NNbN1Btn9+1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
+   d="scan'208";a="313257163"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 03 Jul 2020 00:38:26 -0700
+Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
+        by linux.intel.com (Postfix) with ESMTP id 10D95580784;
+        Fri,  3 Jul 2020 00:38:23 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v9 00/15] perf: support enable and disable commands in stat
+ and record modes
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Organization: Intel Corp.
+Message-ID: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
+Date:   Fri, 3 Jul 2020 10:38:22 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=synopsys.com;
-x-originating-ip: [37.252.92.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a8f91135-891e-4a87-43eb-08d81f240cb9
-x-ms-traffictypediagnostic: CY4PR12MB1432:
-x-microsoft-antispam-prvs: <CY4PR12MB14320C34FC162E4D99C57CADA76A0@CY4PR12MB1432.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kskGDLzRnT1dSmc41i74hzdtUGDO5kHZRreLTtdR3z20mNAj227FLXJBNgRR4x7bBrH8UY01emmLDwoWQOPeNaS4c86GLOy1LQdLGQ+qrFsYHbOOp020v+KyqRPUa8TTQGUgv0oo34pG41cPc3LzBMjFEEvT7+l6aKtlCLZ408EixD1PBK+dbgaXY6muXiQX8zC1I7PNOKmRxV//pIUooaPA5FrB3fvKvT+PtlFmiTXFPYCvNvi5xWF7jWKjqB8+e2vcC05VCIKzZnP3aQyl0x2hEGND17OodzY8KGsJeh2Xmw7ngVnnscCMm5zzLje4hioojNxAiYRodM7rehtQdVgFyij/xMvUNYjEpNSxwefHSE+hcUIh7dTH2Z7cfde2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1432.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(136003)(376002)(39860400002)(396003)(6486002)(54906003)(5660300002)(110136005)(316002)(2906002)(66446008)(66556008)(66476007)(86362001)(6506007)(53546011)(64756008)(66946007)(76116006)(478600001)(91956017)(31686004)(71200400001)(8676002)(31696002)(36756003)(186003)(83380400001)(26005)(6512007)(4326008)(8936002)(2616005)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: O5DRw1Hm4Wm2YjMWIdlQ8MY0QljBaBOOkNqhVXEFX9fr5nP5lGsyg8lWH9RskK3MV/sTgqu3Vs4WDXrTQD+yRI0NauLxdTzx/5wlqmAmCrmvJ7x5d/7Lp0MurltmizBy/+hBZEZzS5cjd16ByjH9rcXPY3i2dNhXDktuBYM5xzj1f93Cvf8tN2mTctKdotvdKJdtViDh8jLrwze6DFF++37g3C2kf1GGNq46RkDraNXMvyXRZNvptOD//BTbC5tHsl4RUDQoFgSuuUMIeRlzx+xyl1qYPvXIf0y6ROZ0Ts7VuCKWQ7zsX/ybKH0GCTeEzo5uDDm4rXm6Hp5xPUSxJSInbY3I0RBLX7wxJL5MuqoegVj10rp5WGql3llM/517QPq+vEuthTYofjfPv1Atadq/B/+5NY4YlzcFsoPocJr6g5B0u0/ImpuxcDY7aaoirVX57yfEnHsvDS9dtDxYJbHTjZUJa8hRtKXza0uXhjA=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FF145144D11FC14F94CB183CA20CCD1E@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR12MB1432.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8f91135-891e-4a87-43eb-08d81f240cb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 07:38:16.3947
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qRNrmf5KGECXCXiOkTtiI5U7uUsSABp1Vf8aQswR4rrBFxnHJDrdEgYgf6e7zjA6wKuxBNa2xDh18WUwvtuUhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1432
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIDcvMy8yMDIwIDExOjI5IEFNLCBHcmVnIEtIIHdyb3RlOg0KPiBPbiBUaHUsIEp1
-bCAwMiwgMjAyMCBhdCAwMzo0NjowNlBNICswMTAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+PiBDb21t
-aXQgZWMxZjlkOWYwMTM4NCAoInVzYjogZHdjMjogZ2FkZ2V0OiBwYXJpdHkgZml4IGluIGlzb2No
-cm9ub3VzIG1vZGUiKSBtb3ZlZA0KPj4gdGhlc2UgY2hlY2tzIHRvIGR3YzJfaHNvdGdfY2hhbmdl
-X2VwX2lzb19wYXJpdHkoKSBiYWNrIGluIDIwMTUuICBUaGUgYXNzaWduZWQNCj4+IHZhbHVlIGhh
-c24ndCBiZWVuIHJlYWQgYmFjayBzaW5jZS4gIExldCdzIHJlbW92ZSB0aGUgdW5uZWNlc3Nhcnkg
-SC9XIHJlYWQuDQo+Pg0KPj4gRml4ZXMgdGhlIGZvbGxvd2luZyBXPTEgd2FybmluZzoNCj4+DQo+
-PiAgIGRyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmM6IEluIGZ1bmN0aW9uIOKAmGR3YzJfaHNvdGdf
-ZXBpbnTigJk6DQo+PiAgIGRyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmM6Mjk4MTo2OiB3YXJuaW5n
-OiB2YXJpYWJsZSDigJhjdHJs4oCZIHNldCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWJ1dC1zZXQt
-dmFyaWFibGVdDQo+PiAgIDI5ODEgfCB1MzIgY3RybDsNCj4+ICAgfCBefn5+DQo+Pg0KPj4gQ2M6
-IE1pbmFzIEhhcnV0eXVueWFuIDxobWluYXNAc3lub3BzeXMuY29tPg0KPj4gQ2M6IEJlbiBEb29r
-cyA8YmVuQHNpbXRlYy5jby51az4NCj4+IFNpZ25lZC1vZmYtYnk6IExlZSBKb25lcyA8bGVlLmpv
-bmVzQGxpbmFyby5vcmc+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYyB8
-IDIgLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmMgYi9kcml2ZXJzL3VzYi9kd2MyL2dhZGdl
-dC5jDQo+PiBpbmRleCAxMTZlNjE3NWM3YTQ4Li5mYTA3ZTNmY2I4ODQxIDEwMDY0NA0KPj4gLS0t
-IGEvZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYw0KPj4gKysrIGIvZHJpdmVycy91c2IvZHdjMi9n
-YWRnZXQuYw0KPj4gQEAgLTI5NzUsMTAgKzI5NzUsOCBAQCBzdGF0aWMgdm9pZCBkd2MyX2hzb3Rn
-X2VwaW50KHN0cnVjdCBkd2MyX2hzb3RnICpoc290ZywgdW5zaWduZWQgaW50IGlkeCwNCj4+ICAg
-CXUzMiBlcGN0bF9yZWcgPSBkaXJfaW4gPyBESUVQQ1RMKGlkeCkgOiBET0VQQ1RMKGlkeCk7DQo+
-PiAgIAl1MzIgZXBzaXpfcmVnID0gZGlyX2luID8gRElFUFRTSVooaWR4KSA6IERPRVBUU0laKGlk
-eCk7DQo+PiAgIAl1MzIgaW50czsNCj4+IC0JdTMyIGN0cmw7DQo+PiAgIA0KPj4gICAJaW50cyA9
-IGR3YzJfZ2FkZ2V0X3JlYWRfZXBfaW50ZXJydXB0cyhoc290ZywgaWR4LCBkaXJfaW4pOw0KPj4g
-LQljdHJsID0gZHdjMl9yZWFkbChoc290ZywgZXBjdGxfcmVnKTsNCj4gDQo+IEFzIHlvdSBrbm93
-LCBsb3RzIG9mIGhhcmR3YXJlIHJlcXVpcmVzIHJlYWRzIHRvIGhhcHBlbiB0byBkbyB0aGluZ3Ms
-IHNvDQo+IGFyZSB5b3Ugc3VyZSBpdCBpcyBzYWZlIHRvIHJlbW92ZSB0aGlzIHJlYWQgY2FsbD8N
-Cj4gDQoNCkdyZWcsIHllcywgaXQncyBPayB0byByZW1vdmUgdGhpcyB1bm5lY2Vzc2FyeSByZWFk
-IHdoaWNoIHJlbWFpbmVkIGZyb20gDQpwcmV2aW91cyBpbXBsZW1lbnRhdGlvbnMuDQoNCkxlZSwg
-cGxlYXNlIGFkZCAiRml4ZXM6IiB0YWcgYW5kIHJlc3VibWl0IHYyLg0KDQpUaGFua3MsDQpNaW5h
-cw0KDQoNCj4gdGhhbmtzLA0KPiANCj4gZ3JlZyBrLWgNCj4gDQo=
+
+Changes in v9:
+- avoided screwing of fds by fdarray__filter() to fix staleness of pos returned by fdarray__add()
+- implemented notion of properties for fds kept by fdarray object and introduced nonfilterable
+  property for control fd
+- avoided counting of nonfilterable fds by fdarray__filter()
+- replaced strlen() with sizeof(str)-1 for CMD_TAGS
+- avoided mixing timeout and interval processing in one function
+- renamed child to child_exited variable
+- processed time_to_sleep < time_diff condition
+- placed evlist__ctlfd_process() call after evlist__poll() and evlist__filter_pollfd()
+  calls in record mode
+
+v8: https://lore.kernel.org/lkml/0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com/
+
+Changes in v8:
+- avoided moving of fds at fdarray__filter() call
+- skipped counting of fds with zeroed revents at fdarray__filter() call
+- converted explicit --ctl-fd[-ack] into --control fd:ctl-fd[,ack-fd option 
+- updated docs to accommodate --control fd:ctl-fd[,ack-fd] option
+
+v7: https://lore.kernel.org/lkml/5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com/
+
+Changes in v7:
+- added missing perf-record.txt changes 
+- adjusted docs wording for --ctl-fd,ctl-fd-ack options 
+  to additionally mention --delay=-1 effect
+
+v6: https://lore.kernel.org/lkml/f8e3a714-d9b1-4647-e1d2-9981cbaa83ec@linux.intel.com/
+
+Changes in v6:
+- split re-factoring of events handling loops for stat mode
+  into smaller incremental parts
+- added parts missing at v5
+- corrected v5 runtime issues
+
+v5: https://lore.kernel.org/lkml/e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com/
+
+Changes in v5:
+- split re-factoring of events handling loops for stat mode
+  into smaller incremental parts
+
+v4: https://lore.kernel.org/lkml/653fe5f3-c986-a841-1ed8-0a7d2fa24c00@linux.intel.com/
+
+Changes in v4:
+- made checking of ctlfd state unconditional in record trace streaming loop
+- introduced static poll fds to keep evlist__filter_pollfd() unaffected
+- handled ret code of evlist__initialize_ctlfd() where need
+- renamed and structured handle_events() function
+- applied anonymous structs where needed
+
+v3: https://lore.kernel.org/lkml/eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com/
+
+Changes in v3:
+- renamed functions and types from perf_evlist_ to evlist_ to avoid
+  clash with libperf code;
+- extended commands to be strings of variable length consisting of
+  command name and also possibly including command specific data;
+- merged docs update with the code changes;
+- updated docs for -D,--delay=-1 option for stat and record modes;
+
+v2: https://lore.kernel.org/lkml/d582cc3d-2302-c7e2-70d3-bc7ab6f628c3@linux.intel.com/
+
+Changes in v2:
+- renamed resume and pause commands to enable and disable ones, renamed
+  CTL_CMD_RESUME and CTL_CMD_PAUSE to CTL_CMD_ENABLE and CTL_CMD_DISABLE
+  to fit to the appropriate ioctls and avoid mixing up with PAUSE_OUTPUT
+  ioctl;
+- factored out event handling loop into a handle_events() for stat mode;
+- separated -D,--delay=-1 into separate patches for stat and record modes;
+
+v1: https://lore.kernel.org/lkml/825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com/
+
+repo: tip of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+
+The patch set implements handling of 'start disabled', 'enable' and 'disable'
+external control commands which can be provided for stat and record modes
+of the tool from an external controlling process. 'start disabled' command
+can be used to postpone enabling of events in the beginning of a monitoring
+session. 'enable' and 'disable' commands can be used to enable and disable
+events correspondingly any time after the start of the session.
+
+The 'start disabled', 'enable' and 'disable' external control commands can be
+used to focus measurement on specially selected time intervals of workload
+execution. Focused measurement reduces tool intrusion and influence on
+workload behavior, reduces distortion and amount of collected and stored
+data, mitigates data accuracy loss because measurement and data capturing
+happen only during intervals of interest.
+
+A controlling process can be a bash shell script [1], native executable or
+any other language program that can directly work with file descriptors,
+e.g. pipes [2], and spawn a process, specially the tool one.
+
+-D,--delay <val> option is extended with -1 value to skip events enabling
+in the beginning of a monitoring session ('start disabled' command).
+--control fd:ctl-fd[,ack-fd] command line option is introduced to provide the
+tool with a pair of file descriptors to listen to control commands and reply
+to the controlling process on the completion of received commands.
+
+The tool reads control command message from ctl-fd descriptor, handles the
+command and optionally replies acknowledgement message to ack-fd descriptor,
+if it is specified on the command line. 'enable' command is recognized as
+'enable' string message and 'disable' command is recognized as 'disable'
+string message both received from ctl-fd descriptor. Completion message is
+'ack\n' and sent to ack-fd descriptor.
+
+Example bash script demonstrating simple use case follows:
+
+#!/bin/bash
+
+ctl_dir=/tmp/
+
+ctl_fifo=${ctl_dir}perf_ctl.fifo
+test -p ${ctl_fifo} && unlink ${ctl_fifo}
+mkfifo ${ctl_fifo} && exec {ctl_fd}<>${ctl_fifo}
+
+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
+mkfifo ${ctl_ack_fifo} && exec {ctl_fd_ack}<>${ctl_ack_fifo}
+
+perf stat -D -1 -e cpu-cycles -a -I 1000       \
+          --control fd:${ctl_fd},${ctl_fd_ack} \
+          -- sleep 40 &
+perf_pid=$!
+
+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e2 && echo "enabled(${e2})"
+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d2 && echo "disabled(${d2})"
+
+exec {ctl_fd_ack}>&- && unlink ${ctl_ack_fifo}
+exec {ctl_fd}>&- && unlink ${ctl_fifo}
+
+wait -n ${perf_pid}
+exit $?
+
+
+Script output:
+
+[root@host dir] example
+Events disabled
+#           time             counts unit events
+     1.001101062      <not counted>      cpu-cycles                                                  
+     2.002994944      <not counted>      cpu-cycles                                                  
+     3.004864340      <not counted>      cpu-cycles                                                  
+     4.006727177      <not counted>      cpu-cycles                                                  
+Events enabled
+enabled(ack)
+     4.993808464          3,124,246      cpu-cycles                                                  
+     5.008597004          3,325,624      cpu-cycles                                                  
+     6.010387483         83,472,992      cpu-cycles                                                  
+     7.012266598         55,877,621      cpu-cycles                                                  
+     8.014175695         97,892,729      cpu-cycles                                                  
+     9.016056093         68,461,242      cpu-cycles                                                  
+    10.017937507         55,449,643      cpu-cycles                                                  
+    11.019830154         68,938,167      cpu-cycles                                                  
+    12.021719952         55,164,101      cpu-cycles                                                  
+    13.023627550         70,535,720      cpu-cycles                                                  
+    14.025580995         53,240,125      cpu-cycles                                                  
+disabled(ack)
+    14.997518260         53,558,068      cpu-cycles                                                  
+Events disabled
+    15.027216416      <not counted>      cpu-cycles                                                  
+    16.029052729      <not counted>      cpu-cycles                                                  
+    17.030904762      <not counted>      cpu-cycles                                                  
+    18.032073424      <not counted>      cpu-cycles                                                  
+    19.033805074      <not counted>      cpu-cycles                                                  
+Events enabled
+enabled(ack)
+    20.001279097          3,021,022      cpu-cycles                                                  
+    20.035044381          6,434,367      cpu-cycles                                                  
+    21.036923813         89,358,251      cpu-cycles                                                  
+    22.038825169         72,516,351      cpu-cycles                                                  
+#           time             counts unit events
+    23.040715596         55,046,157      cpu-cycles                                                  
+    24.042643757         78,128,649      cpu-cycles                                                  
+    25.044558535         61,052,428      cpu-cycles                                                  
+    26.046452785         62,142,806      cpu-cycles                                                  
+    27.048353021         74,477,971      cpu-cycles                                                  
+    28.050241286         61,001,623      cpu-cycles                                                  
+    29.052149961         61,653,502      cpu-cycles                                                  
+disabled(ack)
+    30.004980264         82,729,640      cpu-cycles                                                  
+Events disabled
+    30.053516176      <not counted>      cpu-cycles                                                  
+    31.055348366      <not counted>      cpu-cycles                                                  
+    32.057202097      <not counted>      cpu-cycles                                                  
+    33.059040702      <not counted>      cpu-cycles                                                  
+    34.060843288      <not counted>      cpu-cycles                                                  
+    35.000888624      <not counted>      cpu-cycles                                                  
+[root@host dir]# 
+
+[1] http://man7.org/linux/man-pages/man1/bash.1.html
+[2] http://man7.org/linux/man-pages/man2/pipe.2.html
+
+---
+Alexey Budankov (15):
+  tools/libperf: avoid fds moving by fdarray__filter()
+  tools/libperf: add properties to struct pollfd *entries objects
+  tools/libperf: don't count nonfilterable fds by fdarray__filter()
+  perf evlist: introduce control file descriptors
+  perf evlist: implement control command handling functions
+  perf stat: factor out body of event handling loop for system wide
+  perf stat: move target check to loop control statement
+  perf stat: factor out body of event handling loop for fork case
+  perf stat: factor out event handling loop into dispatch_events()
+  perf stat: extend -D,--delay option with -1 value
+  perf stat: implement control commands handling
+  perf stat: introduce --control fd:ctl-fd[,ack-fd] options
+  perf record: extend -D,--delay option with -1 value
+  perf record: implement control commands handling
+  perf record: introduce --control fd:ctl-fd[,ack-fd] options
+
+ tools/lib/api/fd/array.c                 |  31 ++--
+ tools/lib/api/fd/array.h                 |  18 ++-
+ tools/lib/perf/evlist.c                  |  10 +-
+ tools/lib/perf/include/internal/evlist.h |   2 +-
+ tools/perf/Documentation/perf-record.txt |  44 +++++-
+ tools/perf/Documentation/perf-stat.txt   |  44 +++++-
+ tools/perf/builtin-record.c              |  65 ++++++++-
+ tools/perf/builtin-stat.c                | 174 ++++++++++++++++++-----
+ tools/perf/builtin-trace.c               |   2 +-
+ tools/perf/tests/fdarray.c               |  22 +--
+ tools/perf/util/evlist.c                 | 139 +++++++++++++++++-
+ tools/perf/util/evlist.h                 |  25 ++++
+ tools/perf/util/record.h                 |   4 +-
+ tools/perf/util/stat.h                   |   4 +-
+ 14 files changed, 489 insertions(+), 95 deletions(-)
+
+-- 
+2.24.1
