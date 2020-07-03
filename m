@@ -2,81 +2,211 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D280EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC85C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2A9208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DD9208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j6shZpyy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WGRsolbX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgGCQ4e (ORCPT
+        id S1726661AbgGCQ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGCQ4e (ORCPT
+        Fri, 3 Jul 2020 12:56:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42412 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726505AbgGCQ4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:56:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11E3C061794
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 09:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ABg7NPFpv6+3fRjIjwbJfH0UuoJwtQBPMUCkpYS7fPM=; b=j6shZpyy1OUE9JhmDPF76zXks7
-        cAIx5QavH4ZH0UFFz7ycfhvbHvVrpLAOkgaOzu7sN0GRQE0GlyaDjP7Wli6wr/Gn7v59kwDWZQsfW
-        5JUbVXEwGUOL2V/XVmDJ/fm6dkBCQXAV4ZljaqS0btPsispu4YwKjF8v32Z4riyP5/y4uNWQ/Eohm
-        OG3YtJ17U+WnFN/QtYgWnAVKJ+GJZY6lse0CSgqHCzfL80vhnyNqtv/SPiNdEVDVR47I5nBwQcQCF
-        ChUqQYm5CB865YzTERIusgrKxcWQSzaLHSbFpvmTfWJMJPXgeETEZQZDUaCHodFI/ceVHeYVujItC
-        A6TOTdfw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrOzD-0004Bq-Oa; Fri, 03 Jul 2020 16:56:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 37F4C301124;
-        Fri,  3 Jul 2020 18:56:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1AE4920A9E7A6; Fri,  3 Jul 2020 18:56:27 +0200 (CEST)
-Date:   Fri, 3 Jul 2020 18:56:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        GregKroah-Hartmangregkh@linuxfoundation.org
-Subject: Re: nr_cpu_ids vs AMD 3970x(32 physical CPUs)
-Message-ID: <20200703165627.GG4781@hirez.programming.kicks-ass.net>
-References: <20200703155749.GA6255@pc636>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703155749.GA6255@pc636>
+        Fri, 3 Jul 2020 12:56:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593795412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=A17YU0TJdMJJbx+XyJzyM20ucRgGb0iLLQw+LKi/Iwk=;
+        b=WGRsolbXnK60u85Ixg/WdzcfJGT2+u04gQ+O0w8cxCHpGp9pGisIE8KfkGi215Vhlu4Y9w
+        yxuo93cflo/bPznYYhDpZxh0hqnSUbLI+Nv4tZwyXaT+atxvQGn+DedObmbhLy9Y1cV6Xy
+        NIolLY9l04wAa6HkInsOT5SOE55NEd4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-_RIuiWmDMA-qU_6Iq1eapA-1; Fri, 03 Jul 2020 12:56:48 -0400
+X-MC-Unique: _RIuiWmDMA-qU_6Iq1eapA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AAF656B9B;
+        Fri,  3 Jul 2020 16:56:47 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C05310013D9;
+        Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, eparis@parisplace.org,
+        john.johansen@canonical.com, Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak96 v3] audit: issue CWD record to accompany LSM_AUDIT_DATA_* records
+Date:   Fri,  3 Jul 2020 12:56:19 -0400
+Message-Id: <878ac79163e31142963f1cd4f743599c35b6754a.1593691408.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 05:57:49PM +0200, Uladzislau Rezki wrote:
-> Hello, folk.
-> 
-> I have a system based on AMD 3970x CPUs. It has 32 physical cores
-> and 64 threads. It seems that "nr_cpu_ids" variable is not correctly
-> set on latest 5.8-rc3 kernel. Please have a look below on dmesg output:
-> 
-> <snip>
-> urezki@pc638:~$ sudo dmesg | grep 128
-> [    0.000000] IOAPIC[0]: apic_id 128, version 33, address 0xfec00000, GSI 0-23
-> [    0.000000] smpboot: Allowing 128 CPUs, 64 hotplug CPUs
+The LSM_AUDIT_DATA_* records for PATH, FILE, IOCTL_OP, DENTRY and INODE
+are incomplete without the task context of the AUDIT Current Working
+Directory record.  Add it.
 
-This is your BIOS saying it needs 128 ids, 64 of which are 'empty'.
+This record addition can't use audit_dummy_context to determine whether
+or not to store the record information since the LSM_AUDIT_DATA_*
+records are initiated by various LSMs independent of any audit rules.
+context->in_syscall is used to determine if it was called in user
+context like audit_getname.
 
-I have a box like that as well, if it bothers you boot with:
-"possible_cpus=64" or something.
+Please see the upstream issue
+https://github.com/linux-audit/audit-kernel/issues/96
+
+Adapted from Vladis Dronov's v2 patch.
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+Passes audit-testsuite.
+
+Changelog:
+v3
+- adapt and refactor__audit_getname, don't key on dummy
+
+v2
+2020-04-02 vdronov https://www.redhat.com/archives/linux-audit/2020-April/msg00004.html
+- convert to standalone CWD record
+
+v1:
+2020-03-24 vdronov https://github.com/nefigtut/audit-kernel/commit/df0b55b7ab84e1c9faa588b08e547e604bf25c87
+- add cwd= field to LSM record
+
+ include/linux/audit.h |  9 ++++++++-
+ kernel/auditsc.c      | 17 +++++++++++++++--
+ security/lsm_audit.c  |  5 +++++
+ 3 files changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/audit.h b/include/linux/audit.h
+index 03c4035a532b..bb850d588e1c 100644
+--- a/include/linux/audit.h
++++ b/include/linux/audit.h
+@@ -292,7 +292,7 @@ extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
+ extern void __audit_syscall_exit(int ret_success, long ret_value);
+ extern struct filename *__audit_reusename(const __user char *uptr);
+ extern void __audit_getname(struct filename *name);
+-
++extern void __audit_getcwd(void);
+ extern void __audit_inode(struct filename *name, const struct dentry *dentry,
+ 				unsigned int flags);
+ extern void __audit_file(const struct file *);
+@@ -351,6 +351,11 @@ static inline void audit_getname(struct filename *name)
+ 	if (unlikely(!audit_dummy_context()))
+ 		__audit_getname(name);
+ }
++static inline void audit_getcwd(void)
++{
++	if (unlikely(audit_context()))
++		__audit_getcwd();
++}
+ static inline void audit_inode(struct filename *name,
+ 				const struct dentry *dentry,
+ 				unsigned int aflags) {
+@@ -579,6 +584,8 @@ static inline struct filename *audit_reusename(const __user char *name)
+ }
+ static inline void audit_getname(struct filename *name)
+ { }
++static inline void audit_getcwd(void)
++{ }
+ static inline void audit_inode(struct filename *name,
+ 				const struct dentry *dentry,
+ 				unsigned int aflags)
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 3a9100e95fda..934ab5b8c1c5 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1891,6 +1891,20 @@ struct filename *
+ 	return NULL;
+ }
+ 
++inline void _audit_getcwd(struct audit_context *context)
++{
++	if (!context->pwd.dentry)
++		get_fs_pwd(current->fs, &context->pwd);
++}
++
++void __audit_getcwd(void)
++{
++	struct audit_context *context = audit_context();
++
++	if (context->in_syscall)
++		_audit_getcwd(context);
++}
++
+ /**
+  * __audit_getname - add a name to the list
+  * @name: name to add
+@@ -1915,8 +1929,7 @@ void __audit_getname(struct filename *name)
+ 	name->aname = n;
+ 	name->refcnt++;
+ 
+-	if (!context->pwd.dentry)
+-		get_fs_pwd(current->fs, &context->pwd);
++	_audit_getcwd(context);
+ }
+ 
+ static inline int audit_copy_fcaps(struct audit_names *name,
+diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+index 2d2bf49016f4..7c555621c2bd 100644
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -241,6 +241,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 			audit_log_format(ab, " ino=%lu", inode->i_ino);
+ 		}
++		audit_getcwd();
+ 		break;
+ 	}
+ 	case LSM_AUDIT_DATA_FILE: {
+@@ -254,6 +255,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 			audit_log_format(ab, " ino=%lu", inode->i_ino);
+ 		}
++		audit_getcwd();
+ 		break;
+ 	}
+ 	case LSM_AUDIT_DATA_IOCTL_OP: {
+@@ -269,6 +271,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 		}
+ 
+ 		audit_log_format(ab, " ioctlcmd=0x%hx", a->u.op->cmd);
++		audit_getcwd();
+ 		break;
+ 	}
+ 	case LSM_AUDIT_DATA_DENTRY: {
+@@ -283,6 +286,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 			audit_log_format(ab, " ino=%lu", inode->i_ino);
+ 		}
++		audit_getcwd();
+ 		break;
+ 	}
+ 	case LSM_AUDIT_DATA_INODE: {
+@@ -300,6 +304,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 		audit_log_format(ab, " dev=");
+ 		audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 		audit_log_format(ab, " ino=%lu", inode->i_ino);
++		audit_getcwd();
+ 		break;
+ 	}
+ 	case LSM_AUDIT_DATA_TASK: {
+-- 
+1.8.3.1
+
