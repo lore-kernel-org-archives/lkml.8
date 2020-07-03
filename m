@@ -2,173 +2,162 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED65C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8DB7206BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="X4zSbtnO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BcZNo9Jl"
+	by mail.kernel.org (Postfix) with ESMTP id 8CC0E20885
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgGCOPh (ORCPT
+        id S1726501AbgGCOPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:15:37 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:37865 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726035AbgGCOPh (ORCPT
+        Fri, 3 Jul 2020 10:15:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726035AbgGCOPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:15:37 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0955B5803F1;
-        Fri,  3 Jul 2020 10:15:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 03 Jul 2020 10:15:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=z
-        KWBYny3iDOXqfEov6mNFlQwdTq6pPlOUJ3jHU1Ut0o=; b=X4zSbtnOChdOfdwj4
-        ZsHpWEPgI/P4NvAlL45g+qH4wxO/o8Ld1NZmdnj9cFAfq+J8hKUxCToDyxmPztt9
-        AASsj2Po/V6y+BqZZkCiD74IdhlVHm37lKLznTwxVgBcVwHJthAX0ASQtI0Ch960
-        9J3N+Xe/DibLRGpYHuYHYR0GR3ehGVK03cCyKhkqk9O1pLKYb1my36LVwUIm4uvx
-        Wu4qkRgAmOFjzhsTCZWl7pourJ+0PQW3KTuM5S8XaMdHH5Na8BSmkbjpOmQfKa93
-        iGXF2NK1QHLaOE77wjcqea0JWr0q+OVCuA6MYZr3+g8LCFEh+9uMFSgwZLeSyHoJ
-        ciP6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=zKWBYny3iDOXqfEov6mNFlQwdTq6pPlOUJ3jHU1Ut
-        0o=; b=BcZNo9JlcfpZeWiB7hF613yGVEH8R2lVktXE743yxza6iUxP0gRC1PRIA
-        ITPN6kR+aLTJcAJSPK26W5DkkOxvxO/fuzqOo7zh6E3yyDZeiKljrNap83yiIX56
-        Dl1+3Wx2L6bLFg0k4iJGGQQKyqu9W9YBp7o2DgOGWQn/DhfclsTLHBPopS/r3eAl
-        IvFZbfjj8nUUxdHhmyxWHFuMTfutcL4crBC6FJKQK5d/oIpBoHyXruwVWCxlW6ac
-        KVoA3mQ9yeb6o+EeNsaqmEO5vCg7yeq/ho4TaFnwVQPX2nMlv8C1AYvgo1vJ8b3c
-        aGF5nQmg4pBcRsvhmi4WcrJhz/lMQ==
-X-ME-Sender: <xms:hj3_Xgd15l6i8u60POAo9lPUt9JoboitO7gjz_g8FfoPWXYdQA--JQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdeigdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevtdeile
-    euteeggefgueefhfevgfdttefgtefgtddvgeejheeiuddvtdekffehffenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:hj3_XiM6rrFxfFy3o52UMRun9Kel2Se49FZb6Nt86w3yx4Z4t2Txfw>
-    <xmx:hj3_XhiLDhkLLUyFzJ8l_uv1YkNyyaLkpMerDR9pP7wx5A8HtvGVrw>
-    <xmx:hj3_Xl81LAuYy5RGopuh-7y-iebfknPPDOYVjMSDOJGlp0-3H0jcpw>
-    <xmx:iD3_XtnyJedGjxeQsK7bra1krYBGsnzUMCi1KLafmTPTaDV3g0QxWg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B62FD3060061;
-        Fri,  3 Jul 2020 10:15:33 -0400 (EDT)
-Date:   Fri, 3 Jul 2020 16:15:38 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Niklas Cassel <niklas.cassel@wdc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] block: add max_active_zones to blk-sysfs
-Message-ID: <20200703141538.GB2953162@kroah.com>
-References: <20200702181922.24190-1-niklas.cassel@wdc.com>
- <20200702181922.24190-3-niklas.cassel@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Fri, 3 Jul 2020 10:15:50 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063E2DsI145405;
+        Fri, 3 Jul 2020 10:15:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322144rw0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 10:15:39 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063E2FJd145553;
+        Fri, 3 Jul 2020 10:15:39 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322144rvyd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 10:15:39 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063E6ksY001304;
+        Fri, 3 Jul 2020 14:15:36 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 31wwcguf0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 14:15:36 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063EFYpJ52232204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jul 2020 14:15:34 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0303B11C04C;
+        Fri,  3 Jul 2020 14:15:34 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBA3511C050;
+        Fri,  3 Jul 2020 14:15:32 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.174.143])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Jul 2020 14:15:32 +0000 (GMT)
+Message-ID: <1593785732.23056.16.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
+ conditional into ima_validate_rule()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Fri, 03 Jul 2020 10:15:32 -0400
+In-Reply-To: <20200702221656.GH4694@sequoia>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+         <20200626223900.253615-10-tyhicks@linux.microsoft.com>
+         <1593558449.5057.12.camel@linux.ibm.com> <20200702221656.GH4694@sequoia>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200702181922.24190-3-niklas.cassel@wdc.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_09:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 cotscore=-2147483648
+ suspectscore=0 adultscore=0 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 08:19:22PM +0200, Niklas Cassel wrote:
-> Add a new max_active zones definition in the sysfs documentation.
-> This definition will be common for all devices utilizing the zoned block
-> device support in the kernel.
+On Thu, 2020-07-02 at 17:16 -0500, Tyler Hicks wrote:
+> On 2020-06-30 19:07:29, Mimi Zohar wrote:
+> > On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
+> > > Use ima_validate_rule() to ensure that the combination of a hook
+> > > function and the keyrings conditional is valid and that the keyrings
+> > > conditional is not specified without an explicit KEY_CHECK func
+> > > conditional. This is a code cleanup and has no user-facing change.
+> > > 
+> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > > ---
+> > > 
+> > > * v2
+> > >   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
+> > >     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
+> > >     present in the rule entry flags for non-buffer hook functions.
+> > > 
+> > >  security/integrity/ima/ima_policy.c | 13 +++++++++++--
+> > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > > index 8cdca2399d59..43d49ad958fb 100644
+> > > --- a/security/integrity/ima/ima_policy.c
+> > > +++ b/security/integrity/ima/ima_policy.c
+> > > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> > >  		case KEXEC_KERNEL_CHECK:
+> > >  		case KEXEC_INITRAMFS_CHECK:
+> > >  		case POLICY_CHECK:
+> > > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> > > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> > > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> > > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
+> > > +					     IMA_PERMIT_DIRECTIO |
+> > > +					     IMA_MODSIG_ALLOWED |
+> > > +					     IMA_CHECK_BLACKLIST))
+> > 
+> > Other than KEYRINGS, this patch should continue to behave the same.
+> >  However, this list gives the impressions that all of these flags are
+> > permitted on all of the above flags, which isn't true.
+> > 
+> > For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
+> > to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
 > 
-> Export max_active_zones according to this new definition for NVMe Zoned
-> Namespace devices, ZAC ATA devices (which are treated as SCSI devices by
-> the kernel), and ZBC SCSI devices.
+> Just to clarify, are both IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST
+> limited to KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK, and MODULE_CHECK?
+> That's what ima_hook_supports_modsig() suggests.
+
+Theoretically that is true, but I have no idea how you would append a
+signature to the kexec boot command line.  The only users of appended
+signatures are currently kernel modules and the kexec'ed kernel image.
+
 > 
-> Add the new max_active_zones member to struct request_queue, rather
-> than as a queue limit, since this property cannot be split across stacking
-> drivers.
+> >  Both should only be allowed on APPRAISE action rules.
 > 
-> For SCSI devices, even though max active zones is not part of the ZBC/ZAC
-> spec, export max_active_zones as 0, signifying "no limit".
+> For completeness, it looks like DONT_APPRAISE should not be allowed.
+
+Good point.  
+
 > 
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-> Reviewed-by: Javier Gonz�lez <javier@javigon.com>
-> ---
->  Documentation/block/queue-sysfs.rst |  7 +++++++
->  block/blk-sysfs.c                   | 14 +++++++++++++-
->  drivers/nvme/host/zns.c             |  1 +
->  drivers/scsi/sd_zbc.c               |  1 +
->  include/linux/blkdev.h              | 16 ++++++++++++++++
->  5 files changed, 38 insertions(+), 1 deletion(-)
+> > IMA_PCR should be limited to MEASURE action rules.
 > 
-> diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/queue-sysfs.rst
-> index f01cf8530ae4..f261a5c84170 100644
-> --- a/Documentation/block/queue-sysfs.rst
-> +++ b/Documentation/block/queue-sysfs.rst
-> @@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather list with integrity
->  data that will be submitted by the block layer core to the associated
->  block driver.
->  
-> +max_active_zones (RO)
-> +---------------------
-> +For zoned block devices (zoned attribute indicating "host-managed" or
-> +"host-aware"), the sum of zones belonging to any of the zone states:
-> +EXPLICIT OPEN, IMPLICIT OPEN or CLOSED, is limited by this value.
-> +If this value is 0, there is no limit.
+> It looks like DONT_MEASURE should not be allowed.
 
-Shouldn't this all be in Documentation/ABI/ to describe the sysfs files?
-All other kernel subsystems use that format, why is block special?
+The TPM PCR isn't a file attribute.
 
+> 
+> > IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
+> 
+> It looks like DONT_APPRAISE should not be allowed.
 
-> +
->  max_open_zones (RO)
->  -------------------
->  For zoned block devices (zoned attribute indicating "host-managed" or
-> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> index fa42961e9678..624bb4d85fc7 100644
-> --- a/block/blk-sysfs.c
-> +++ b/block/blk-sysfs.c
-> @@ -310,6 +310,11 @@ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
->  	return queue_var_show(queue_max_open_zones(q), page);
->  }
->  
-> +static ssize_t queue_max_active_zones_show(struct request_queue *q, char *page)
-> +{
-> +	return queue_var_show(queue_max_active_zones(q), page);
-> +}
-> +
->  static ssize_t queue_nomerges_show(struct request_queue *q, char *page)
->  {
->  	return queue_var_show((blk_queue_nomerges(q) << 1) |
-> @@ -677,6 +682,11 @@ static struct queue_sysfs_entry queue_max_open_zones_entry = {
->  	.show = queue_max_open_zones_show,
->  };
->  
-> +static struct queue_sysfs_entry queue_max_active_zones_entry = {
-> +	.attr = {.name = "max_active_zones", .mode = 0444 },
-> +	.show = queue_max_active_zones_show,
-> +};
+Right, in all of these cases the DONT_XXXX isn't applicable.
 
-__ATTR_RO()?
-
-thanks,
-
-greg k-h
+Mimi
