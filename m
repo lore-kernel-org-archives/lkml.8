@@ -2,88 +2,143 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4DE2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XocJJ6PE"
+	by mail.kernel.org (Postfix) with ESMTP id C4BB02084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 11:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGCLlO (ORCPT
+        id S1726451AbgGCLlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 07:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgGCLlM (ORCPT
+        Fri, 3 Jul 2020 07:41:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24128 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgGCLll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 07:41:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1292DC08C5C1;
-        Fri,  3 Jul 2020 04:41:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=brKPBqGkq9UpOiE2pzCiAvP7F0wRaBf/lffdYdZP/rY=; b=XocJJ6PESJAwgCpUXDyHtQLyEY
-        ImvwQMMgXfNfl/2vJRzeoMsFHOQbc6U3VvRGZALaGzCRdcq4/Py/xEghTVrPLnzQCwkwKIaAXICoz
-        Kg+2CbynrhQfNNo33tS8nq3CUUujct0ek/qAb5kNGsAU5zis0gLisiajUb5NHL+N+yondC6UIpCgk
-        iwJIX+U6eRrE6Iez6yUgNwYxpKrIGUzffzSf8NqCKeVftBWuOLbFtBdAggk+5DAxT+6hGVM/dmVeY
-        sznKaHOF8crWlVtyREAfZ26xGBqikJF0sdqoDeVS3v6yyIvKl1ecLCyjzwY1rcKwAy0WFkVrFWEU/
-        sHa/Plxw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrK45-0000Gn-0o; Fri, 03 Jul 2020 11:41:09 +0000
-Date:   Fri, 3 Jul 2020 12:41:08 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2 1/2] fs: Add IOCB_NOIO flag for generic_file_read_iter
-Message-ID: <20200703114108.GE25523@casper.infradead.org>
-References: <20200703095325.1491832-1-agruenba@redhat.com>
- <20200703095325.1491832-2-agruenba@redhat.com>
+        Fri, 3 Jul 2020 07:41:41 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063BUv1Y000696;
+        Fri, 3 Jul 2020 07:40:46 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmq5k82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 07:40:46 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063BWGpg004464;
+        Fri, 3 Jul 2020 07:40:45 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320wmq5k77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 07:40:45 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063BaVop023875;
+        Fri, 3 Jul 2020 11:40:43 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 31wwch6rqn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 11:40:43 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063BefcM63570196
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jul 2020 11:40:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E3B9A405B;
+        Fri,  3 Jul 2020 11:40:41 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FCE2A405C;
+        Fri,  3 Jul 2020 11:40:39 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.204.195])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 Jul 2020 11:40:39 +0000 (GMT)
+Date:   Fri, 3 Jul 2020 14:40:37 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Abhishek Bhardwaj <abhishekbh@google.com>
+Cc:     Anthony Steinhauser <asteinhauser@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        x86 <x86@kernel.org>, Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH v3] x86/speculation/l1tf: Add KConfig for setting the L1D
+ cache flush mode
+Message-ID: <20200703114037.GD2999146@linux.ibm.com>
+References: <20200702221237.2517080-1-abhishekbh@google.com>
+ <e7bc00fc-fe53-800e-8439-f1fbdca5dd26@redhat.com>
+ <CAN_oZf2t+gUqXe19Yo1mTzAgk2xNhssE-9p58EvH-gw5jpuvzA@mail.gmail.com>
+ <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200703095325.1491832-2-agruenba@redhat.com>
+In-Reply-To: <CA+noqoj6u9n_KKohZw+QCpD-Qj0EgoCXaPEsryD7ABZ7QpqQfg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_03:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 adultscore=0 cotscore=-2147483648 suspectscore=1
+ phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007030078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 03, 2020 at 11:53:24AM +0200, Andreas Gruenbacher wrote:
-> Add an IOCB_NOIO flag that indicates to generic_file_read_iter that it
-> shouldn't trigger any filesystem I/O for the actual request or for
-> readahead.  This allows to do tentative reads out of the page cache as
-> some filesystems allow, and to take the appropriate locks and retry the
-> reads only if the requested pages are not cached.
+On Thu, Jul 02, 2020 at 11:43:47PM -0700, Abhishek Bhardwaj wrote:
+> We have tried to steer away from kernel command line args for a few reasons.
 > 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> I am paraphrasing my colleague Doug's argument here (CC'ed him as well) -
+> 
+> - The command line args are getting unwieldy. Kernel command line
+> parameters are not a scalable way to set kernel config. It's intended
+> as a super limited way for the bootloader to pass info to the kernel
+> and also as a way for end users who are not compiling the kernel
+> themselves to tweak kernel behavior.
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Why cannot you simply add this option to CONFIG_CMDLINE at your kernel build
+scripts?
+ 
+> - Also, we know we want this setting from the start. This is a
+> definite smell that it deserves to be a compile time thing rather than
+> adding extra code + whatever miniscule time at runtime to pass an
+> extra arg.
 
-> @@ -2249,9 +2253,18 @@ EXPORT_SYMBOL_GPL(generic_file_buffered_read);
->   *
->   * This is the "read_iter()" routine for all filesystems
->   * that can use the page cache directly.
-> + *
-> + * The IOCB_NOWAIT flag in iocb->ki_flags indicates that -EAGAIN shall
-> + * be returned when no data can be read without waiting for I/O requests
-> + * to complete; it doesn't prevent readahead.
-> + *
-> + * The IOCB_NOIO flag in iocb->ki_flags indicates that -EAGAIN shall be
-> + * returned when no data can be read without issuing new I/O requests,
-> + * and 0 shall be returned when readhead would have been triggered.
+This might be a compile time thing in your environment, but not
+necessarily it must be the same in others. For instance, what option
+should distro kernels select?
 
-s/shall/may/ -- if we read a previous page then hit a readahead page,
-we'll return a positive value.  If the first page we hit is a readahead
-page, then yes, we'll return zero.
+> I think this was what CONFIGS were intended for. I'm happy to add all
+> this to the commit message once it's approved in spirit by the
+> maintainers.
+> 
+> On Thu, Jul 2, 2020 at 8:18 PM Anthony Steinhauser
+> <asteinhauser@google.com> wrote:
+> >
+> > Yes, this probably requires an explanation why the change is necessary
+> > or useful. Without that it is difficult to give some meaningful
+> > feedback.
+> 
+> 
+> 
+> -- 
+> Abhishek
 
-Again, I'm happy for the patch to go in as-is without this nitpick.
-
+-- 
+Sincerely yours,
+Mike.
