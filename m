@@ -2,323 +2,212 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F63C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1A3208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MNpH087T"
+	by mail.kernel.org (Postfix) with ESMTP id 1EA2420A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593756135;
+	bh=HIbJqRSFMbUgRkZxtvG3aCNp0wd5skVeN76Mqr6ZKlI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v53JGYW9WBZwnVpdgyDyhZeFOfu6Q6WZx7E18b1AmlZDQvBgJK3a96eGt0CpzYXNJ
+	 yfst8/8JZxkUWg3IX7Wejt7+tqqnbjY3rTeYSsjCDvs0urp9zAG/6EwxCOnVz3pFIb
+	 0hbXbd2ILw7lgKzAFLVdG/w5w9cP1v6s7C8HC4Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgGCGBw (ORCPT
+        id S1726245AbgGCGCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:01:52 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10873 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgGCGBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:01:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efec99c0000>; Thu, 02 Jul 2020 23:01:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 Jul 2020 23:01:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 Jul 2020 23:01:51 -0700
-Received: from [172.20.40.54] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jul
- 2020 06:01:51 +0000
-Subject: Re: [git pull] drm for 5.8-rc1
-From:   James Jones <jajones@nvidia.com>
-To:     Daniel Stone <daniel@fooishbar.org>
-CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
- <20200630230808.wj2xlt44vrszqfzx@box>
- <ef7816b4-72ee-9e0e-8cac-4d80d8343f9f@nvidia.com>
- <20200701075719.p7h5zypdtlhqxtgv@box> <20200701075902.hhmaskxtjsm4bcx7@box>
- <77e744b9-b5e2-9e9b-44c1-98584d2ae2f3@nvidia.com>
- <CAPj87rOrUHBZZR3cw+iqUMtZL1ZQyjd=RoM2yHt5oUeRO5uDTA@mail.gmail.com>
- <5ffa32db-4383-80f6-c0cf-a9bb12e729aa@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a3d331e9-d17e-9135-68c7-8e3e10df184d@nvidia.com>
-Date:   Thu, 2 Jul 2020 23:01:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 3 Jul 2020 02:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgGCGCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 02:02:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E82F220771;
+        Fri,  3 Jul 2020 06:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593756130;
+        bh=HIbJqRSFMbUgRkZxtvG3aCNp0wd5skVeN76Mqr6ZKlI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ks5iQI9moJ0UD4VvJm9ozWnH28lwPOVOnLsnopJbPFPBQsEaiok8uVnUYwa7UR9Em
+         zT/zdo82iWrWjIV6wKofQC1UNdIGd6arNQdcSpV/VEzGzCyBuTWsW+bcVIydzXWYF+
+         qweWZjyKubece8hBub0Wh9BvVjYTG8pxDay2iy7Q=
+Date:   Fri, 3 Jul 2020 08:02:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dominik Czarnota <dominik.czarnota@trailofbits.com>,
+        stable@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] module: Refactor section attr into bin attribute
+Message-ID: <20200703060207.GA6344@kroah.com>
+References: <20200702232638.2946421-1-keescook@chromium.org>
+ <20200702232638.2946421-3-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <5ffa32db-4383-80f6-c0cf-a9bb12e729aa@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593756060; bh=oey+lAcqjyvtPJCijFnrSu5cD1hCcZdlv0Qpemv2n5g=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MNpH087ToCVSf2E1woo+gOhwKNnLwwmyP5dNaRXSCmmnzsRwSS9I9Iaex2v+2Alh+
-         dztiqsiU+4thD0DK8NPqqihMwtXAntz1bnQRG85WZq/vlbn78KZ+iRXwDhhjJx69xw
-         MGrlm1z5T8IKwdV5BJxExHAdCklx66RgwMV5KARhUSkuRNcw+dASGzoBTU7SiNFKZi
-         zU6ZQ0O3W+EYoeDztWzbS17i/M+9hsv6EChdDx85FiAf9tvoKiTrVwZadUzAA7rrHp
-         nZbeTMF7dCDsBf4rkqmRqP7Bmh5HRgUDE/FvRZNsUTeBUr02EdBaMO5yi53IyZzx65
-         U8RT9QToM7UHQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702232638.2946421-3-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/20 2:14 PM, James Jones wrote:
-> On 7/2/20 1:22 AM, Daniel Stone wrote:
->> Hi,
->>
->> On Wed, 1 Jul 2020 at 20:45, James Jones <jajones@nvidia.com> wrote:
->>> OK, I think I see what's going on.=C2=A0 In the Xorg modesetting driver=
-, the
->>> logic is basically:
->>>
->>> if (gbm_has_modifiers && DRM_CAP_ADDFB2_MODIFIERS !=3D 0) {
->>> =C2=A0=C2=A0=C2=A0 drmModeAddFB2WithModifiers(..., gbm_bo_get_modifier(=
-bo->gbm));
->>> } else {
->>> =C2=A0=C2=A0=C2=A0 drmModeAddFB(...);
->>> }
->>
->> I read this thread expecting to explain the correct behaviour we
->> implement in Weston and how modesetting needs to be fixed, but ...
->> that seems OK to me? As long as `gbm_has_modifiers` is a proxy for 'we
->> used gbm_(bo|surface)_create_with_modifiers to allocate the buffer'.
->=20
-> Yes, the hazards of reporting findings before verifying.=C2=A0 I now see=
-=20
-> modesetting does query the DRM-KMS modifiers and attempt to allocate=20
-> with them if it found any.=C2=A0 However, I still see a lot of ways thing=
-s=20
-> can go wrong, but I'm not going to share my speculation again until I've=
-=20
-> actually verified it, which is taking a frustratingly long time.=C2=A0 Th=
-e=20
-> modesetting driver is not my friend right now.
+On Thu, Jul 02, 2020 at 04:26:35PM -0700, Kees Cook wrote:
+> In order to gain access to the open file's f_cred for kallsym visibility
+> permission checks, refactor the module section attributes to use the
+> bin_attribute instead of attribute interface. Additionally removes the
+> redundant "name" struct member.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  kernel/module.c | 45 ++++++++++++++++++++++++---------------------
+>  1 file changed, 24 insertions(+), 21 deletions(-)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index a5022ae84e50..9e2954519259 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -1510,8 +1510,7 @@ static inline bool sect_empty(const Elf_Shdr *sect)
+>  }
+>  
+>  struct module_sect_attr {
+> -	struct module_attribute mattr;
+> -	char *name;
+> +	struct bin_attribute battr;
+>  	unsigned long address;
+>  };
+>  
+> @@ -1521,11 +1520,16 @@ struct module_sect_attrs {
+>  	struct module_sect_attr attrs[];
+>  };
+>  
+> -static ssize_t module_sect_show(struct module_attribute *mattr,
+> -				struct module_kobject *mk, char *buf)
+> +static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
+> +				struct bin_attribute *battr,
+> +				char *buf, loff_t pos, size_t count)
+>  {
+>  	struct module_sect_attr *sattr =
+> -		container_of(mattr, struct module_sect_attr, mattr);
+> +		container_of(battr, struct module_sect_attr, battr);
+> +
+> +	if (pos != 0)
+> +		return -EINVAL;
+> +
+>  	return sprintf(buf, "0x%px\n", kptr_restrict < 2 ?
+>  		       (void *)sattr->address : NULL);
+>  }
+> @@ -1535,7 +1539,7 @@ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+>  	unsigned int section;
+>  
+>  	for (section = 0; section < sect_attrs->nsections; section++)
+> -		kfree(sect_attrs->attrs[section].name);
+> +		kfree(sect_attrs->attrs[section].battr.attr.name);
+>  	kfree(sect_attrs);
+>  }
+>  
+> @@ -1544,42 +1548,41 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
+>  	unsigned int nloaded = 0, i, size[2];
+>  	struct module_sect_attrs *sect_attrs;
+>  	struct module_sect_attr *sattr;
+> -	struct attribute **gattr;
+> +	struct bin_attribute **gattr;
+>  
+>  	/* Count loaded sections and allocate structures */
+>  	for (i = 0; i < info->hdr->e_shnum; i++)
+>  		if (!sect_empty(&info->sechdrs[i]))
+>  			nloaded++;
+>  	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
+> -			sizeof(sect_attrs->grp.attrs[0]));
+> -	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
+> +			sizeof(sect_attrs->grp.bin_attrs[0]));
+> +	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
+>  	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
+>  	if (sect_attrs == NULL)
+>  		return;
+>  
+>  	/* Setup section attributes. */
+>  	sect_attrs->grp.name = "sections";
+> -	sect_attrs->grp.attrs = (void *)sect_attrs + size[0];
+> +	sect_attrs->grp.bin_attrs = (void *)sect_attrs + size[0];
+>  
+>  	sect_attrs->nsections = 0;
+>  	sattr = &sect_attrs->attrs[0];
+> -	gattr = &sect_attrs->grp.attrs[0];
+> +	gattr = &sect_attrs->grp.bin_attrs[0];
+>  	for (i = 0; i < info->hdr->e_shnum; i++) {
+>  		Elf_Shdr *sec = &info->sechdrs[i];
+>  		if (sect_empty(sec))
+>  			continue;
+> +		sysfs_bin_attr_init(&sattr->battr);
+>  		sattr->address = sec->sh_addr;
+> -		sattr->name = kstrdup(info->secstrings + sec->sh_name,
+> -					GFP_KERNEL);
+> -		if (sattr->name == NULL)
+> +		sattr->battr.attr.name =
+> +			kstrdup(info->secstrings + sec->sh_name, GFP_KERNEL);
+> +		if (sattr->battr.attr.name == NULL)
+>  			goto out;
+>  		sect_attrs->nsections++;
+> -		sysfs_attr_init(&sattr->mattr.attr);
+> -		sattr->mattr.show = module_sect_show;
+> -		sattr->mattr.store = NULL;
+> -		sattr->mattr.attr.name = sattr->name;
+> -		sattr->mattr.attr.mode = S_IRUSR;
+> -		*(gattr++) = &(sattr++)->mattr.attr;
+> +		sattr->battr.read = module_sect_read;
+> +		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
+> +		sattr->battr.attr.mode = 0400;
+> +		*(gattr++) = &(sattr++)->battr;
+>  	}
+>  	*gattr = NULL;
+>  
+> @@ -1669,7 +1672,7 @@ static void add_notes_attrs(struct module *mod, const struct load_info *info)
+>  			continue;
+>  		if (info->sechdrs[i].sh_type == SHT_NOTE) {
+>  			sysfs_bin_attr_init(nattr);
+> -			nattr->attr.name = mod->sect_attrs->attrs[loaded].name;
+> +			nattr->attr.name = mod->sect_attrs->attrs[loaded].battr.attr.name;
+>  			nattr->attr.mode = S_IRUGO;
+>  			nattr->size = info->sechdrs[i].sh_size;
+>  			nattr->private = (void *) info->sechdrs[i].sh_addr;
+> -- 
+> 2.25.1
+> 
 
-OK, several hours of dumb build+config mistakes later, I was actually=20
-able to reproduce the failure and walk through things.  There is a=20
-trivial fix for the issues in the X modesetting driver, working off=20
-Daniel Stone's claim that gbm_bo_get_modifier() should only be called=20
-when the allocation was made with gbm_bo_create_with_modifiers().=20
-modeset doesn't respect that requirement now in the case that the atomic=20
-modesetting path is disabled, which is always the case currently because=20
-that path is broken.  Respecting that requirement is a half-liner and=20
-allows X to start properly.
+They get a correct "size" value now, nice!
 
-If I force modeset to use the atomic path, X still fails to start with=20
-the above fix, validating the second theory I'd had:
-
--Current Mesa nouveau code basically ignores the modifier list passed in=20
-unless it is a single modifier requesting linear layout, and goes about=20
-allocating whatever layout it sees fit, and succeeds the allocation=20
-despite being passed a list of modifiers it knows nothing about.  Not=20
-great, fixed in my pending patches, obviously doesn't help existing=20
-deployed userspace.
-
--Current Mesa nouveau code, when asked what modifier it used for the=20
-above allocation, returns one of the "legacy" modifiers nouveau DRM-KMS=20
-knows nothing about.
-
--When the modeset driver tries to create an FB for that BO with the=20
-returned modifier, the nouveau kernel driver of course refuses.
-
-I think it's probably worth fixing the modesetting driver for the=20
-reasons Daniel Vetter mentioned.  Then if I get my Mesa patches in=20
-before a new modesetting driver with working Atomic support is released,=20
-there'll be no need for long-term workarounds in the kernel.
-
-Down to the real question of what to do in the kernel to support current=20
-userspace code: I still think the best fix is to accept the old=20
-modifiers but not advertise them.  However, Daniel Stone and others, if=20
-you think this will actually break userspace in other ways (Could you=20
-describe in a bit more detail or point me to test cases if so?), I=20
-suppose the only option would be to advertise & accept the old modifiers=20
-for now, and I suppose at a config option at some point to phase the old=20
-ones out, eventually drop them entirely.  This would be unfortunate,=20
-because as I mentioned, it could sometimes result in situations where=20
-apps think they can share a buffer between two devices but will get=20
-garbled data in practice.
-
-I've included an initial version of the kernel patch inline below.=20
-Needs more testing, but I wanted to share it in case anyone has feedback=20
-on the idea, wants to see the general workflow, or wants to help test.
-
->>> There's no attempt to verify the DRM-KMS device supports the modifier,
->>> but then, why would there be?=C2=A0 GBM presumably chose a supported mo=
-difier
->>> at buffer creation time, and we don't know which plane the FB is going
->>> to be used with yet.=C2=A0 GBM doesn't actually ask the kernel which
->>> modifiers it supports here either though.
->>
->> Right, it doesn't ask, because userspace tells it which modifiers to
->> use. The correct behaviour is to take the list from the KMS
->> `IN_FORMATS` property and then pass that to
->> `gbm_(bo|surface)_create_with_modifiers`; GBM must then select from
->> that list and only that list. If that call does not succeed and Xorg
->> falls back to `gbm_surface_create`, then it must not call
->> `gbm_bo_get_modifier` - so that would be a modesetting bug. If that
->> call does succeed and `gbm_bo_get_modifier` subsequently reports a
->> modifier which was not in the list, that's a Mesa driver bug.
->>
->>> It just goes into Mesa via
->>> DRI and reports the modifier (unpatched) Mesa chose on its own.=C2=A0 M=
-esa
->>> just hard-codes the modifiers in its driver backends since its thinking
->>> in terms of a device's 3D engine, not display.=C2=A0 In theory, Mesa's =
-DRI
->>> drivers could query KMS for supported modifiers if allocating from GBM
->>> using the non-modifiers path and the SCANOUT flag is set (perhaps some
->>> drivers do this or its equivalent?=C2=A0 Haven't checked.), but that se=
-ems
->>> pretty gnarly and doesn't fix the modifier-based GBM allocation path
->>> AFAIK.=C2=A0 Bit of a mess.
->>
->> Two options for GBM users:
->> * call gbm_*_create_with_modifiers, it succeeds, call
->> gbm_bo_get_modifier, pass modifier into AddFB
->> * call gbm_*_create (without modifiers), it succeeds, do not call
->> gbm_bo_get_modifier, do not pass a modifier into AddFB
->>
->> Anything else is a bug in the user. Note that falling back from 1 to 2
->> is fine: if `gbm_*_create_with_modifiers()` fails, you can fall back
->> to the non-modifier path, provided you don't later try to get a
->> modifier back out.
->>
->>> For a quick userspace fix that could probably be pushed out everywhere
->>> (Only affects Xorg server 1.20+ AFAIK), just retrying
->>> drmModeAddFB2WithModifiers() without the DRM_MODE_FB_MODIFIERS flag on
->>> failure should be sufficient.
->>
->> This would break other drivers.
->=20
-> I think this could be done in a way that wouldn't, though it wouldn't be=
-=20
-> quite as simple.=C2=A0 Let's see what the true root cause is first though=
-.
->=20
->>> Still need to verify as I'm having
->>> trouble wrangling my Xorg build at the moment and I'm pressed for time.
->>> A more complete fix would be quite involved, as modesetting isn't reall=
-y
->>> properly plumbed to validate GBM's modifiers against KMS planes, and it
->>> doesn't seem like GBM/Mesa/DRI should be responsible for this as noted
->>> above given the general modifier workflow/design.
->>>
->>> Most importantly, options I've considered for fixing from the kernel=20
->>> side:
->>>
->>> -Accept "legacy" modifiers in nouveau in addition to the new modifiers,
->>> though avoid reporting them to userspace as supported to avoid further
->>> proliferation.=C2=A0 This is pretty straightforward.=C2=A0 I'll need to=
- modify
->>> both the AddFB2 handler (nouveau_validate_decode_mod) and the mode set
->>> plane validation logic (nv50_plane_format_mod_supported), but it should
->>> end up just being a few lines of code.
->>
->> I do think that they should also be reported to userspace if they are
->> accepted. Other users can and do look at the modifier list to see if
->> the buffer is acceptable for a given plane, so the consistency is good
->> here. Of course, in Mesa you would want to prioritise the new
->> modifiers over the legacy ones, and not allocate or return the legacy
->> ones unless that was all you were asked for. This would involve
->> tracking the used modifier explicitly through Mesa, rather than
->> throwing it away at alloc time and then later divining it from the
->> tiling mode.
->=20
-> Reporting them as supported is equivalent to reporting support for a=20
-> memory layout the chips don't actually support (It corresponds to a=20
-> valid layout on Tegra chips, but not on discrete NV chips).=C2=A0 This is=
-=20
-> what the new modifiers are trying to avoid in the first place: Implying=20
-> buffers can be shared between these Tegra chips and discrete NV GPUs.
->=20
-> Thanks,
-> -James
->=20
->> Cheers,
->> Daniel
->>
-
-nouveau: Accept 'legacy' format modifiers
-
-Accept the DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK()
-family of modifiers to handle broken userspace
-Xorg modesetting and Mesa drivers.
----
-  drivers/gpu/drm/nouveau/nouveau_display.c | 26 +++++++++++++++++++++--
-  1 file changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c=20
-b/drivers/gpu/drm/nouveau/nouveau_display.c
-index 496c4621cc78..31543086254b 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-@@ -191,8 +191,14 @@ nouveau_decode_mod(struct nouveau_drm *drm,
-  		   uint32_t *tile_mode,
-  		   uint8_t *kind)
-  {
-+	struct nouveau_display *disp =3D nouveau_display(drm->dev);
-  	BUG_ON(!tile_mode || !kind);
-
-+	if ((modifier & (0xffull << 12)) =3D=3D 0ull) {
-+		/* Legacy modifier.  Translate to this device's 'kind.' */
-+		modifier |=3D disp->format_modifiers[0] & (0xffull << 12);
-+	}
-+
-  	if (modifier =3D=3D DRM_FORMAT_MOD_LINEAR) {
-  		/* tile_mode will not be used in this case */
-  		*tile_mode =3D 0;
-@@ -227,6 +233,16 @@ nouveau_framebuffer_get_layout(struct=20
-drm_framebuffer *fb,
-  	}
-  }
-
-+static const u64 legacy_modifiers[] =3D {
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(0),
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(1),
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(2),
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(3),
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(4),
-+	DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(5),
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
-  static int
-  nouveau_validate_decode_mod(struct nouveau_drm *drm,
-  			    uint64_t modifier,
-@@ -247,8 +263,14 @@ nouveau_validate_decode_mod(struct nouveau_drm *drm,
-  	     (disp->format_modifiers[mod] !=3D modifier);
-  	     mod++);
-
--	if (disp->format_modifiers[mod] =3D=3D DRM_FORMAT_MOD_INVALID)
--		return -EINVAL;
-+	if (disp->format_modifiers[mod] =3D=3D DRM_FORMAT_MOD_INVALID) {
-+		for (mod =3D 0;
-+		     (legacy_modifiers[mod] !=3D DRM_FORMAT_MOD_INVALID) &&
-+		     (legacy_modifiers[mod] !=3D modifier);
-+		     mod++);
-+		if (legacy_modifiers[mod] =3D=3D DRM_FORMAT_MOD_INVALID)
-+			return -EINVAL;
-+	}
-
-  	nouveau_decode_mod(drm, modifier, tile_mode, kind);
-
---=20
-2.17.1
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
