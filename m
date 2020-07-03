@@ -2,119 +2,118 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E45C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86493C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 162BE2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C3320BED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 12:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593780563;
+	bh=+/21p5rQ6k7dd6nmGPMmmCDHBK6ejZw314j+mhRM2/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wM8D3hK08d1wgW0hbw5uzz7Q5iExAhuDmpB53jF7EIXKEgkbLFD3vDBGLUdsNk7F1
+	 IVNIkjCQCM3VwZlhfJhsI9e1QNAK/c2lU7tp4b+n5/XMBZEQRQBDJNP4z8EtDKPLbH
+	 LhOoPQJQ6yZ9Jhg1S2PeS/8KZlP8Pn4y3pbvommk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgGCMrN (ORCPT
+        id S1726283AbgGCMtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 08:47:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50080 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgGCMrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 08:47:11 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063CVpfd179346;
-        Fri, 3 Jul 2020 08:46:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 321yqvhde5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 08:46:48 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063CVqgQ179534;
-        Fri, 3 Jul 2020 08:46:47 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 321yqvhddm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 08:46:47 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063CkAxU009024;
-        Fri, 3 Jul 2020 12:46:46 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 31wwr8be7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 12:46:46 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063CkhEa63635488
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 12:46:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03D674C050;
-        Fri,  3 Jul 2020 12:46:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E1824C040;
-        Fri,  3 Jul 2020 12:46:41 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.102.88])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jul 2020 12:46:40 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, benh@kernel.crashing.org,
-        paulus@samba.org, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        psampat@linux.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH 1/2] powerpc/powernv/idle: Exclude mfspr on HID1,4,5 on P9 and above
-Date:   Fri,  3 Jul 2020 18:16:39 +0530
-Message-Id: <20200703124640.42820-1-psampat@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Fri, 3 Jul 2020 08:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgGCMtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 08:49:21 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE8D520899;
+        Fri,  3 Jul 2020 12:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593780560;
+        bh=+/21p5rQ6k7dd6nmGPMmmCDHBK6ejZw314j+mhRM2/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z0x5onKcdtJbw5KpysufxQzolTSYRNWscUBkmrJIyVgHOUpN4EpEYuX8M/6MlvrEB
+         pLC3Brtgq8rq8cNtRHsAW6nCIbTIxSoeeAEKEWkuMh8GhEggrx4G7bcxJgzjNMxq7D
+         aLKqoFJhW8+9+7Yxoqi6EMs7/8vbQn0K+zONJh2Q=
+Date:   Fri, 3 Jul 2020 18:19:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Will Deacon <will@kernel.org>, John Stultz <john.stultz@linaro.org>
+Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Subject: Re: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+Message-ID: <20200703124912.GM273932@vkoul-mobl>
+References: <20200616061338.109499-1-john.stultz@linaro.org>
+ <20200616061338.109499-6-john.stultz@linaro.org>
+ <0be86735238a0f8b0c25934e2ed39eee@kernel.org>
+ <CALAqxLUZBdiLBRcp1GW9rGxt1KhgNVQ86MuPXZcXdx2wFLZk6w@mail.gmail.com>
+ <20200703122343.GB18652@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_06:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0
- suspectscore=0 cotscore=-2147483648 lowpriorityscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007030086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703122343.GB18652@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POWER9 onwards the support for the registers HID1, HID4, HID5 has been
-receded.
-Although mfspr on the above registers worked in Power9, In Power10
-simulator is unrecognized. Moving their assignment under the
-check for machines lower than Power9
+On 03-07-20, 13:23, Will Deacon wrote:
+> On Tue, Jun 16, 2020 at 01:52:32PM -0700, John Stultz wrote:
+> > On Tue, Jun 16, 2020 at 12:55 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > On 2020-06-16 07:13, John Stultz wrote:
+> > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > > index b510f67dfa49..714893535dd2 100644
+> > > > --- a/drivers/iommu/Kconfig
+> > > > +++ b/drivers/iommu/Kconfig
+> > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
+> > > >  config ARM_SMMU
+> > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
+> > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) &&
+> > > > MMU
+> > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> > >
+> > > This looks a bit ugly. Could you explain why we need this at the SMMU
+> > > level? I'd have expected the dependency to flow the other way around...
+> > 
+> > Yea, so the arm-smmu-qcom.c file calls directly into the qcom-scm code
+> > via qcom_scm_qsmmu500_wait_safe_toggle()
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/arm-smmu-qcom.c?h=v5.8-rc1#n44
+> > 
+> > So if ARM_SMMU=y and QCOM_SCM=m we get:
+> > drivers/iommu/arm-smmu-qcom.o: In function `qcom_smmu500_reset':
+> > arm-smmu-qcom.c:(.text+0xb4): undefined reference to
+> > `qcom_scm_qsmmu500_wait_safe_toggle'
+> > 
+> > Do you have a suggestion for an alternative approach?
+> 
+> Can you use symbol_get() or something like that? How are module dependencies
+> handled by other drivers?
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/idle.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+So drivers deal with this by making rules in Kconfig which will prohibit
+this case. QCOM_SCM depends on ARM_SMMU with the caveat that if ARM_SMMU
+is a module, QCOM_SCM cant be inbuilt.
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 2dd467383a88..19d94d021357 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -73,9 +73,6 @@ static int pnv_save_sprs_for_deep_states(void)
- 	 */
- 	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
- 	uint64_t hid0_val	= mfspr(SPRN_HID0);
--	uint64_t hid1_val	= mfspr(SPRN_HID1);
--	uint64_t hid4_val	= mfspr(SPRN_HID4);
--	uint64_t hid5_val	= mfspr(SPRN_HID5);
- 	uint64_t hmeer_val	= mfspr(SPRN_HMEER);
- 	uint64_t msr_val = MSR_IDLE;
- 	uint64_t psscr_val = pnv_deepest_stop_psscr_val;
-@@ -117,6 +114,9 @@ static int pnv_save_sprs_for_deep_states(void)
- 
- 			/* Only p8 needs to set extra HID regiters */
- 			if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
-+				uint64_t hid1_val = mfspr(SPRN_HID1);
-+				uint64_t hid4_val = mfspr(SPRN_HID4);
-+				uint64_t hid5_val = mfspr(SPRN_HID5);
- 
- 				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
- 				if (rc != 0)
+This can be done by adding below line in Kconfig for QCOM_SCM:
+
+        depends on ARM_SMMU || !ARM_SMMU
+
+This is quite prevalent is drivers to ensure dependency like this
+
+Thanks
 -- 
-2.25.4
-
+~Vinod
