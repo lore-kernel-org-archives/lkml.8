@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077F3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B27C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBAA7207E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380DA20A8B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 03:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgGCD2d (ORCPT
+        id S1726309AbgGCD2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 23:28:33 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:33613 "EHLO
+        Thu, 2 Jul 2020 23:28:31 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:33631 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726147AbgGCD2Y (ORCPT
+        with ESMTP id S1726151AbgGCD2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 23:28:24 -0400
+        Thu, 2 Jul 2020 23:28:21 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 3 Jul 2020 06:28:15 +0300
+        with SMTP; 3 Jul 2020 06:28:16 +0300
 Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.234.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 0633SFXG006792;
-        Fri, 3 Jul 2020 06:28:15 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 0633SGM9006803;
+        Fri, 3 Jul 2020 06:28:16 +0300
 Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 0633SFZT006663;
-        Fri, 3 Jul 2020 06:28:15 +0300
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 0633SG5b006669;
+        Fri, 3 Jul 2020 06:28:16 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 0633SF6c006662;
-        Fri, 3 Jul 2020 06:28:15 +0300
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 0633SGC2006668;
+        Fri, 3 Jul 2020 06:28:16 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-Subject: [PATCH net-next v2 4/7] devlink: Implement devlink health reporters on per-port basis
-Date:   Fri,  3 Jul 2020 06:27:35 +0300
-Message-Id: <1593746858-6548-5-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next v2 7/7] net/mlx5e: Move devlink-health rx and tx reporters to devlink port
+Date:   Fri,  3 Jul 2020 06:27:38 +0300
+Message-Id: <1593746858-6548-8-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1593746858-6548-1-git-send-email-moshe@mellanox.com>
 References: <1593746858-6548-1-git-send-email-moshe@mellanox.com>
@@ -50,267 +50,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
 
-Add devlink-health reporter support on per-port basis.
-The main difference existing devlink-health is that port reporters are
-stored in per-devlink_port lists. Upon creation of such health reporter the
-reference to a port it belongs to is stored in reporter struct.
-
-Fill the port index attribute in devlink-health response to
-allow devlink userspace utility to distinguish between device and port
-reporters.
+Utilize new devlink-health port reporters API to move rx and tx
+reporters from device to port.
 
 Signed-off-by: Vladyslav Tarasiuk <vladyslavt@mellanox.com>
 Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
 Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 ---
- include/net/devlink.h |  2 ++
- net/core/devlink.c    | 94 +++++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 79 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c |  9 +++------
+ drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c | 13 ++++---------
+ 2 files changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/include/net/devlink.h b/include/net/devlink.h
-index 428f55f..d3ac152 100644
---- a/include/net/devlink.h
-+++ b/include/net/devlink.h
-@@ -91,6 +91,8 @@ struct devlink_port {
- 	void *type_dev;
- 	struct devlink_port_attrs attrs;
- 	struct delayed_work type_warn_dw;
-+	struct list_head reporter_list;
-+	struct mutex reporters_lock; /* Protects reporter_list */
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
+index c209579..35df79d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
+@@ -565,13 +565,10 @@ void mlx5e_reporter_icosq_cqe_err(struct mlx5e_icosq *icosq)
  
- struct devlink_sb_pool_info {
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 98e6911..8aedd20 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -386,19 +386,21 @@ struct devlink_snapshot {
- 	return NULL;
- }
- 
--#define DEVLINK_NL_FLAG_NEED_DEVLINK	BIT(0)
--#define DEVLINK_NL_FLAG_NEED_PORT	BIT(1)
--#define DEVLINK_NL_FLAG_NEED_SB		BIT(2)
-+#define DEVLINK_NL_FLAG_NEED_DEVLINK		BIT(0)
-+#define DEVLINK_NL_FLAG_NEED_PORT		BIT(1)
-+#define DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT	BIT(2)
-+#define DEVLINK_NL_FLAG_NEED_SB			BIT(3)
- 
- /* The per devlink instance lock is taken by default in the pre-doit
-  * operation, yet several commands do not require this. The global
-  * devlink lock is taken and protects from disruption by user-calls.
-  */
--#define DEVLINK_NL_FLAG_NO_LOCK		BIT(3)
-+#define DEVLINK_NL_FLAG_NO_LOCK			BIT(4)
- 
- static int devlink_nl_pre_doit(const struct genl_ops *ops,
- 			       struct sk_buff *skb, struct genl_info *info)
+ int mlx5e_reporter_rx_create(struct mlx5e_priv *priv)
  {
-+	struct devlink_port *devlink_port;
- 	struct devlink *devlink;
- 	int err;
+-	struct devlink *devlink = priv_to_devlink(priv->mdev);
+ 	struct devlink_health_reporter *reporter;
  
-@@ -413,14 +415,17 @@ static int devlink_nl_pre_doit(const struct genl_ops *ops,
- 	if (ops->internal_flags & DEVLINK_NL_FLAG_NEED_DEVLINK) {
- 		info->user_ptr[0] = devlink;
- 	} else if (ops->internal_flags & DEVLINK_NL_FLAG_NEED_PORT) {
--		struct devlink_port *devlink_port;
+-	reporter = devlink_health_reporter_create(devlink,
+-						  &mlx5_rx_reporter_ops,
+-						  MLX5E_REPORTER_RX_GRACEFUL_PERIOD,
+-						  priv);
++	reporter = devlink_port_health_reporter_create(&priv->dl_port, &mlx5_rx_reporter_ops,
++						       MLX5E_REPORTER_RX_GRACEFUL_PERIOD, priv);
+ 	if (IS_ERR(reporter)) {
+ 		netdev_warn(priv->netdev, "Failed to create rx reporter, err = %ld\n",
+ 			    PTR_ERR(reporter));
+@@ -586,5 +583,5 @@ void mlx5e_reporter_rx_destroy(struct mlx5e_priv *priv)
+ 	if (!priv->rx_reporter)
+ 		return;
+ 
+-	devlink_health_reporter_destroy(priv->rx_reporter);
++	devlink_port_health_reporter_destroy(priv->rx_reporter);
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
+index 9805fc0..917aef9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
+@@ -409,14 +409,9 @@ int mlx5e_reporter_tx_timeout(struct mlx5e_txqsq *sq)
+ int mlx5e_reporter_tx_create(struct mlx5e_priv *priv)
+ {
+ 	struct devlink_health_reporter *reporter;
+-	struct mlx5_core_dev *mdev = priv->mdev;
+-	struct devlink *devlink;
 -
- 		devlink_port = devlink_port_get_from_info(devlink, info);
- 		if (IS_ERR(devlink_port)) {
- 			err = PTR_ERR(devlink_port);
- 			goto unlock;
- 		}
- 		info->user_ptr[0] = devlink_port;
-+	} else if (ops->internal_flags & DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT) {
-+		info->user_ptr[0] = devlink;
-+		devlink_port = devlink_port_get_from_info(devlink, info);
-+		if (!IS_ERR(devlink_port))
-+			info->user_ptr[1] = devlink_port;
- 	}
- 	if (ops->internal_flags & DEVLINK_NL_FLAG_NEED_SB) {
- 		struct devlink_sb *devlink_sb;
-@@ -5261,6 +5266,7 @@ struct devlink_health_reporter {
- 	void *priv;
- 	const struct devlink_health_reporter_ops *ops;
- 	struct devlink *devlink;
-+	struct devlink_port *devlink_port;
- 	struct devlink_fmsg *dump_fmsg;
- 	struct mutex dump_lock; /* lock parallel read/write from dump buffers */
- 	u64 graceful_period;
-@@ -5306,6 +5312,15 @@ struct devlink_health_reporter {
+-	devlink = priv_to_devlink(mdev);
+-	reporter =
+-		devlink_health_reporter_create(devlink, &mlx5_tx_reporter_ops,
+-					       MLX5_REPORTER_TX_GRACEFUL_PERIOD,
+-					       priv);
++
++	reporter = devlink_port_health_reporter_create(&priv->dl_port, &mlx5_tx_reporter_ops,
++						       MLX5_REPORTER_TX_GRACEFUL_PERIOD, priv);
+ 	if (IS_ERR(reporter)) {
+ 		netdev_warn(priv->netdev,
+ 			    "Failed to create tx reporter, err = %ld\n",
+@@ -432,5 +427,5 @@ void mlx5e_reporter_tx_destroy(struct mlx5e_priv *priv)
+ 	if (!priv->tx_reporter)
+ 		return;
+ 
+-	devlink_health_reporter_destroy(priv->tx_reporter);
++	devlink_port_health_reporter_destroy(priv->tx_reporter);
  }
- 
- static struct devlink_health_reporter *
-+devlink_port_health_reporter_find_by_name(struct devlink_port *devlink_port,
-+					  const char *reporter_name)
-+{
-+	return __devlink_health_reporter_find_by_name(&devlink_port->reporter_list,
-+						      &devlink_port->reporters_lock,
-+						      reporter_name);
-+}
-+
-+static struct devlink_health_reporter *
- __devlink_health_reporter_create(struct devlink *devlink,
- 				 const struct devlink_health_reporter_ops *ops,
- 				 u64 graceful_period, void *priv)
-@@ -5417,6 +5432,10 @@ struct devlink_health_reporter *
- 	if (devlink_nl_put_handle(msg, devlink))
- 		goto genlmsg_cancel;
- 
-+	if (reporter->devlink_port) {
-+		if (nla_put_u32(msg, DEVLINK_ATTR_PORT_INDEX, reporter->devlink_port->index))
-+			goto genlmsg_cancel;
-+	}
- 	reporter_attr = nla_nest_start_noflag(msg,
- 					      DEVLINK_ATTR_HEALTH_REPORTER);
- 	if (!reporter_attr)
-@@ -5624,17 +5643,28 @@ int devlink_health_report(struct devlink_health_reporter *reporter,
- 				       struct nlattr **attrs)
- {
- 	struct devlink_health_reporter *reporter;
-+	struct devlink_port *devlink_port;
- 	char *reporter_name;
- 
- 	if (!attrs[DEVLINK_ATTR_HEALTH_REPORTER_NAME])
- 		return NULL;
- 
- 	reporter_name = nla_data(attrs[DEVLINK_ATTR_HEALTH_REPORTER_NAME]);
--	mutex_lock(&devlink->reporters_lock);
--	reporter = devlink_health_reporter_find_by_name(devlink, reporter_name);
--	if (reporter)
--		refcount_inc(&reporter->refcount);
--	mutex_unlock(&devlink->reporters_lock);
-+	devlink_port = devlink_port_get_from_attrs(devlink, attrs);
-+	if (IS_ERR(devlink_port)) {
-+		mutex_lock(&devlink->reporters_lock);
-+		reporter = devlink_health_reporter_find_by_name(devlink, reporter_name);
-+		if (reporter)
-+			refcount_inc(&reporter->refcount);
-+		mutex_unlock(&devlink->reporters_lock);
-+	} else {
-+		mutex_lock(&devlink_port->reporters_lock);
-+		reporter = devlink_port_health_reporter_find_by_name(devlink_port, reporter_name);
-+		if (reporter)
-+			refcount_inc(&reporter->refcount);
-+		mutex_unlock(&devlink_port->reporters_lock);
-+	}
-+
- 	return reporter;
- }
- 
-@@ -5722,6 +5752,7 @@ static int devlink_nl_cmd_health_reporter_get_doit(struct sk_buff *skb,
- 					  struct netlink_callback *cb)
- {
- 	struct devlink_health_reporter *reporter;
-+	struct devlink_port *port;
- 	struct devlink *devlink;
- 	int start = cb->args[0];
- 	int idx = 0;
-@@ -5752,6 +5783,31 @@ static int devlink_nl_cmd_health_reporter_get_doit(struct sk_buff *skb,
- 		}
- 		mutex_unlock(&devlink->reporters_lock);
- 	}
-+
-+	list_for_each_entry(devlink, &devlink_list, list) {
-+		if (!net_eq(devlink_net(devlink), sock_net(msg->sk)))
-+			continue;
-+		list_for_each_entry(port, &devlink->port_list, list) {
-+			mutex_lock(&port->reporters_lock);
-+			list_for_each_entry(reporter, &port->reporter_list, list) {
-+				if (idx < start) {
-+					idx++;
-+					continue;
-+				}
-+				err = devlink_nl_health_reporter_fill(msg, devlink, reporter,
-+								      DEVLINK_CMD_HEALTH_REPORTER_GET,
-+								      NETLINK_CB(cb->skb).portid,
-+								      cb->nlh->nlmsg_seq,
-+								      NLM_F_MULTI);
-+				if (err) {
-+					mutex_unlock(&port->reporters_lock);
-+					goto out;
-+				}
-+				idx++;
-+			}
-+			mutex_unlock(&port->reporters_lock);
-+		}
-+	}
- out:
- 	mutex_unlock(&devlink_mutex);
- 
-@@ -7131,7 +7187,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = devlink_nl_cmd_health_reporter_get_doit,
- 		.dumpit = devlink_nl_cmd_health_reporter_get_dumpit,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 		/* can be retrieved by unprivileged users */
- 	},
-@@ -7140,7 +7196,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = devlink_nl_cmd_health_reporter_set_doit,
- 		.flags = GENL_ADMIN_PERM,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 	},
- 	{
-@@ -7148,7 +7204,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = devlink_nl_cmd_health_reporter_recover_doit,
- 		.flags = GENL_ADMIN_PERM,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 	},
- 	{
-@@ -7156,7 +7212,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = devlink_nl_cmd_health_reporter_diagnose_doit,
- 		.flags = GENL_ADMIN_PERM,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 	},
- 	{
-@@ -7165,7 +7221,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 			    GENL_DONT_VALIDATE_DUMP_STRICT,
- 		.dumpit = devlink_nl_cmd_health_reporter_dump_get_dumpit,
- 		.flags = GENL_ADMIN_PERM,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 	},
- 	{
-@@ -7173,7 +7229,7 @@ static int devlink_nl_cmd_trap_policer_set_doit(struct sk_buff *skb,
- 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
- 		.doit = devlink_nl_cmd_health_reporter_dump_clear_doit,
- 		.flags = GENL_ADMIN_PERM,
--		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK |
-+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT |
- 				  DEVLINK_NL_FLAG_NO_LOCK,
- 	},
- 	{
-@@ -7433,6 +7489,8 @@ int devlink_port_register(struct devlink *devlink,
- 	list_add_tail(&devlink_port->list, &devlink->port_list);
- 	INIT_LIST_HEAD(&devlink_port->param_list);
- 	mutex_unlock(&devlink->lock);
-+	INIT_LIST_HEAD(&devlink_port->reporter_list);
-+	mutex_init(&devlink_port->reporters_lock);
- 	INIT_DELAYED_WORK(&devlink_port->type_warn_dw, &devlink_port_type_warn);
- 	devlink_port_type_warn_schedule(devlink_port);
- 	devlink_port_notify(devlink_port, DEVLINK_CMD_PORT_NEW);
-@@ -7449,6 +7507,8 @@ void devlink_port_unregister(struct devlink_port *devlink_port)
- {
- 	struct devlink *devlink = devlink_port->devlink;
- 
-+	WARN_ON(!list_empty(&devlink_port->reporter_list));
-+	mutex_destroy(&devlink_port->reporters_lock);
- 	devlink_port_type_warn_cancel(devlink_port);
- 	devlink_port_notify(devlink_port, DEVLINK_CMD_PORT_DEL);
- 	mutex_lock(&devlink->lock);
 -- 
 1.8.3.1
 
