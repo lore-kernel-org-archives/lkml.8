@@ -2,272 +2,182 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF283C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A28BD20771
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2467C204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 06:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DuLrf10h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dr0uDiyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgGCGSU (ORCPT
+        id S1726353AbgGCGT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 02:18:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53542 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgGCGST (ORCPT
+        Fri, 3 Jul 2020 02:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgGCGT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:18:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0636I5RQ038190;
-        Fri, 3 Jul 2020 01:18:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593757085;
-        bh=s4klUDGcTWMMsrpvyz765ijFqipLqcgpGqgz49/FpbA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DuLrf10hkGjZISECc5T7HIVgnm4U89Mj6ifWSDNkGDgipo56ypn+F/WH3UiyrR2Qq
-         pcqz3q3IS45hLzWfKBMI5mQrDXs00iG7YCL8kEEx+XKnilEoKBI0vggRVw381o9FTX
-         Ou5uEBciKHj1OwQP/nyIfGaDV2VlaHT+Mca+xuPk=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0636I453100383;
-        Fri, 3 Jul 2020 01:18:05 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 3 Jul
- 2020 01:18:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 3 Jul 2020 01:18:04 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0636Hv4i079350;
-        Fri, 3 Jul 2020 01:17:58 -0500
-Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
- communication
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>, <linux-pci@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, Alan Mikhak <alanmikhak@gmail.com>,
-        <haotian.wang@duke.edu>
-References: <20200702082143.25259-1-kishon@ti.com>
- <20200702055026-mutt-send-email-mst@kernel.org>
- <CANLsYky4ZrgYGZUyg4iVwbM3TQk5dvOSBwPFER8qofixjn4vyA@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9e4703f9-cf02-7aa1-1785-8cbd6ca4b26d@ti.com>
-Date:   Fri, 3 Jul 2020 11:47:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 02:19:59 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B297C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 23:19:59 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 145so25447521qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 23:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0ipG8Wvdoswo12xcPBeUZhRuWbO2g2i+40JGa2nl6B0=;
+        b=dr0uDiygWjBbqnu1Q53uV+f3xqqdHMU7fWR29zw5TUvYu9L3hTUvm52ivGyLliRbjY
+         menDanhKwPclJjCTwO1SQfLZsO2U9+/r3YCw0G76UjKat7SOO/vGW4Ds9fu3blFdnY3b
+         tCCyES/xV6tx/yknpAZ/Tb7Z6xWjBzg4AQZJWmfxKGi6Fr6Q31zqQlBEYbOBfvU/vLr1
+         wmY7nWWU4fkaBAJDDZREtHd/z2cctYDmH3G/u78v6JV8hKxOsF92tJzoiv89Qb+998HE
+         4Nr+GlLBZsIb7fJg1vupXxu7sAaKumkZhLaUFfkiO2CJXIznOmxh9a1vjPDd6ae+K63i
+         LbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0ipG8Wvdoswo12xcPBeUZhRuWbO2g2i+40JGa2nl6B0=;
+        b=Yg+d0RNG7E+PhPuz3MueJYUFGRkxb2GijTjIgrTks0dpNKV8XFLBUUDoSRgp5Dy6C3
+         7QSuPND7dhHtDH1r2HWyzifJwth11qfjWCsPMGvfTcahJxGvdF8RzhtXSY5mlSKnfcS1
+         05IYJhhz5jEdB4XQ9gewuEJy8WQnGe84hIZRIb4aTYAtr+zWVgA0kFTsZ4VcxKDQ+Rrk
+         xppdaR/kr67jUgtjOdw8xa/yayDhazT2Tg4WLqpUleOzPWnC3EWgse4jhWftODPVfd4C
+         4XD5a99uAdA6XEhlr1ms5WsqLOAIJApoPHPyv+aghV1t8So0jDz9fRe47p5f7PKozlKI
+         /s9A==
+X-Gm-Message-State: AOAM5316kH7qEqqiPeS5ZF+YYhB3zTxEh7GjdUqfs2DU4UfKE7oX52pb
+        KrZIaP+t5ButUCtNAQhdJRg=
+X-Google-Smtp-Source: ABdhPJyXAUaE61WsZ85TdM9+F6OZdXjlQqx8bfvPxxKNw0pG0HD5OBhQ3LXRob57n0NFmyqIuBR9uA==
+X-Received: by 2002:a37:a753:: with SMTP id q80mr21736050qke.461.1593757198278;
+        Thu, 02 Jul 2020 23:19:58 -0700 (PDT)
+Received: from LeoBras.ibmuc.com (200-236-245-17.dynamic.desktop.com.br. [200.236.245.17])
+        by smtp.gmail.com with ESMTPSA id n28sm11165288qtf.8.2020.07.02.23.19.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 23:19:57 -0700 (PDT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] Remove default DMA window before creating DDW
+Date:   Fri,  3 Jul 2020 03:18:38 -0300
+Message-Id: <20200703061844.111865-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <CANLsYky4ZrgYGZUyg4iVwbM3TQk5dvOSBwPFER8qofixjn4vyA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Alan, Haotian
+There are some devices in which a hypervisor may only allow 1 DMA window
+to exist at a time, and in those cases, a DDW is never created to them,
+since the default DMA window keeps using this resource.
 
-On 7/2/2020 11:01 PM, Mathieu Poirier wrote:
-> On Thu, 2 Jul 2020 at 03:51, Michael S. Tsirkin <mst@redhat.com> wrote:
->>
->> On Thu, Jul 02, 2020 at 01:51:21PM +0530, Kishon Vijay Abraham I wrote:
->>> This series enhances Linux Vhost support to enable SoC-to-SoC
->>> communication over MMIO. This series enables rpmsg communication between
->>> two SoCs using both PCIe RC<->EP and HOST1-NTB-HOST2
->>>
->>> 1) Modify vhost to use standard Linux driver model
->>> 2) Add support in vring to access virtqueue over MMIO
->>> 3) Add vhost client driver for rpmsg
->>> 4) Add PCIe RC driver (uses virtio) and PCIe EP driver (uses vhost) for
->>>    rpmsg communication between two SoCs connected to each other
->>> 5) Add NTB Virtio driver and NTB Vhost driver for rpmsg communication
->>>    between two SoCs connected via NTB
->>> 6) Add configfs to configure the components
->>>
->>> UseCase1 :
->>>
->>>  VHOST RPMSG                     VIRTIO RPMSG
->>>       +                               +
->>>       |                               |
->>>       |                               |
->>>       |                               |
->>>       |                               |
->>> +-----v------+                 +------v-------+
->>> |   Linux    |                 |     Linux    |
->>> |  Endpoint  |                 | Root Complex |
->>> |            <----------------->              |
->>> |            |                 |              |
->>> |    SOC1    |                 |     SOC2     |
->>> +------------+                 +--------------+
->>>
->>> UseCase 2:
->>>
->>>      VHOST RPMSG                                      VIRTIO RPMSG
->>>           +                                                 +
->>>           |                                                 |
->>>           |                                                 |
->>>           |                                                 |
->>>           |                                                 |
->>>    +------v------+                                   +------v------+
->>>    |             |                                   |             |
->>>    |    HOST1    |                                   |    HOST2    |
->>>    |             |                                   |             |
->>>    +------^------+                                   +------^------+
->>>           |                                                 |
->>>           |                                                 |
->>> +---------------------------------------------------------------------+
->>> |  +------v------+                                   +------v------+  |
->>> |  |             |                                   |             |  |
->>> |  |     EP      |                                   |     EP      |  |
->>> |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
->>> |  |             <----------------------------------->             |  |
->>> |  |             |                                   |             |  |
->>> |  |             |                                   |             |  |
->>> |  |             |  SoC With Multiple EP Instances   |             |  |
->>> |  |             |  (Configured using NTB Function)  |             |  |
->>> |  +-------------+                                   +-------------+  |
->>> +---------------------------------------------------------------------+
->>>
->>> Software Layering:
->>>
->>> The high-level SW layering should look something like below. This series
->>> adds support only for RPMSG VHOST, however something similar should be
->>> done for net and scsi. With that any vhost device (PCI, NTB, Platform
->>> device, user) can use any of the vhost client driver.
->>>
->>>
->>>     +----------------+  +-----------+  +------------+  +----------+
->>>     |  RPMSG VHOST   |  | NET VHOST |  | SCSI VHOST |  |    X     |
->>>     +-------^--------+  +-----^-----+  +-----^------+  +----^-----+
->>>             |                 |              |              |
->>>             |                 |              |              |
->>>             |                 |              |              |
->>> +-----------v-----------------v--------------v--------------v----------+
->>> |                            VHOST CORE                                |
->>> +--------^---------------^--------------------^------------------^-----+
->>>          |               |                    |                  |
->>>          |               |                    |                  |
->>>          |               |                    |                  |
->>> +--------v-------+  +----v------+  +----------v----------+  +----v-----+
->>> |  PCI EPF VHOST |  | NTB VHOST |  |PLATFORM DEVICE VHOST|  |    X     |
->>> +----------------+  +-----------+  +---------------------+  +----------+
->>>
->>> This was initially proposed here [1]
->>>
->>> [1] -> https://lore.kernel.org/r/2cf00ec4-1ed6-f66e-6897-006d1a5b6390@ti.com
->>
->>
->> I find this very interesting. A huge patchset so will take a bit
->> to review, but I certainly plan to do that. Thanks!
-> 
-> Same here - it will take time.  This patchset is sizable and sits
-> behind a few others that are equally big.
-> 
->>
->>>
->>> Kishon Vijay Abraham I (22):
->>>   vhost: Make _feature_ bits a property of vhost device
->>>   vhost: Introduce standard Linux driver model in VHOST
->>>   vhost: Add ops for the VHOST driver to configure VHOST device
->>>   vringh: Add helpers to access vring in MMIO
->>>   vhost: Add MMIO helpers for operations on vhost virtqueue
->>>   vhost: Introduce configfs entry for configuring VHOST
->>>   virtio_pci: Use request_threaded_irq() instead of request_irq()
->>>   rpmsg: virtio_rpmsg_bus: Disable receive virtqueue callback when
->>>     reading messages
->>>   rpmsg: Introduce configfs entry for configuring rpmsg
->>>   rpmsg: virtio_rpmsg_bus: Add Address Service Notification support
->>>   rpmsg: virtio_rpmsg_bus: Move generic rpmsg structure to
->>>     rpmsg_internal.h
->>>   virtio: Add ops to allocate and free buffer
->>>   rpmsg: virtio_rpmsg_bus: Use virtio_alloc_buffer() and
->>>     virtio_free_buffer()
->>>   rpmsg: Add VHOST based remote processor messaging bus
->>>   samples/rpmsg: Setup delayed work to send message
->>>   samples/rpmsg: Wait for address to be bound to rpdev for sending
->>>     message
->>>   rpmsg.txt: Add Documentation to configure rpmsg using configfs
->>>   virtio_pci: Add VIRTIO driver for VHOST on Configurable PCIe Endpoint
->>>     device
->>>   PCI: endpoint: Add EP function driver to provide VHOST interface
->>>   NTB: Add a new NTB client driver to implement VIRTIO functionality
->>>   NTB: Add a new NTB client driver to implement VHOST functionality
->>>   NTB: Describe the ntb_virtio and ntb_vhost client in the documentation
->>>
->>>  Documentation/driver-api/ntb.rst              |   11 +
->>>  Documentation/rpmsg.txt                       |   56 +
->>>  drivers/ntb/Kconfig                           |   18 +
->>>  drivers/ntb/Makefile                          |    2 +
->>>  drivers/ntb/ntb_vhost.c                       |  776 +++++++++++
->>>  drivers/ntb/ntb_virtio.c                      |  853 ++++++++++++
->>>  drivers/ntb/ntb_virtio.h                      |   56 +
->>>  drivers/pci/endpoint/functions/Kconfig        |   11 +
->>>  drivers/pci/endpoint/functions/Makefile       |    1 +
->>>  .../pci/endpoint/functions/pci-epf-vhost.c    | 1144 ++++++++++++++++
->>>  drivers/rpmsg/Kconfig                         |   10 +
->>>  drivers/rpmsg/Makefile                        |    3 +-
->>>  drivers/rpmsg/rpmsg_cfs.c                     |  394 ++++++
->>>  drivers/rpmsg/rpmsg_core.c                    |    7 +
->>>  drivers/rpmsg/rpmsg_internal.h                |  136 ++
->>>  drivers/rpmsg/vhost_rpmsg_bus.c               | 1151 +++++++++++++++++
->>>  drivers/rpmsg/virtio_rpmsg_bus.c              |  184 ++-
->>>  drivers/vhost/Kconfig                         |    1 +
->>>  drivers/vhost/Makefile                        |    2 +-
->>>  drivers/vhost/net.c                           |   10 +-
->>>  drivers/vhost/scsi.c                          |   24 +-
->>>  drivers/vhost/test.c                          |   17 +-
->>>  drivers/vhost/vdpa.c                          |    2 +-
->>>  drivers/vhost/vhost.c                         |  730 ++++++++++-
->>>  drivers/vhost/vhost_cfs.c                     |  341 +++++
->>>  drivers/vhost/vringh.c                        |  332 +++++
->>>  drivers/vhost/vsock.c                         |   20 +-
->>>  drivers/virtio/Kconfig                        |    9 +
->>>  drivers/virtio/Makefile                       |    1 +
->>>  drivers/virtio/virtio_pci_common.c            |   25 +-
->>>  drivers/virtio/virtio_pci_epf.c               |  670 ++++++++++
->>>  include/linux/mod_devicetable.h               |    6 +
->>>  include/linux/rpmsg.h                         |    6 +
->>>  {drivers/vhost => include/linux}/vhost.h      |  132 +-
->>>  include/linux/virtio.h                        |    3 +
->>>  include/linux/virtio_config.h                 |   42 +
->>>  include/linux/vringh.h                        |   46 +
->>>  samples/rpmsg/rpmsg_client_sample.c           |   32 +-
->>>  tools/virtio/virtio_test.c                    |    2 +-
->>>  39 files changed, 7083 insertions(+), 183 deletions(-)
->>>  create mode 100644 drivers/ntb/ntb_vhost.c
->>>  create mode 100644 drivers/ntb/ntb_virtio.c
->>>  create mode 100644 drivers/ntb/ntb_virtio.h
->>>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vhost.c
->>>  create mode 100644 drivers/rpmsg/rpmsg_cfs.c
->>>  create mode 100644 drivers/rpmsg/vhost_rpmsg_bus.c
->>>  create mode 100644 drivers/vhost/vhost_cfs.c
->>>  create mode 100644 drivers/virtio/virtio_pci_epf.c
->>>  rename {drivers/vhost => include/linux}/vhost.h (66%)
->>>
->>> --
->>> 2.17.1
->>>
->>
+LoPAR recommends this procedure:
+1. Remove the default DMA window,
+2. Query for which configs the DDW can be created,
+3. Create a DDW.
+
+Patch #1:
+Create defines for outputs of ibm,ddw-applicable, so it's easier to
+identify them.
+
+Patch #2:
+- After LoPAR level 2.8, there is an extension that can make
+  ibm,query-pe-dma-windows to have 6 outputs instead of 5. This changes the
+  order of the outputs, and that can cause some trouble. 
+- query_ddw() was updated to check how many outputs the 
+  ibm,query-pe-dma-windows is supposed to have, update the rtas_call() and
+  deal correctly with the outputs in both cases.
+- This patch looks somehow unrelated to the series, but it can avoid future
+  problems on DDW creation.
+
+Patch #3 moves the window-removing code from remove_ddw() to
+remove_dma_window(), creating a way to delete any DMA window, so it can be
+used to delete the default DMA window.
+
+Patch #4 makes use of the remove_dma_window() from patch #3 to remove the
+default DMA window before query_ddw(). It also implements a new rtas call
+to recover the default DMA window, in case anything fails after it was
+removed, and a DDW couldn't be created.
+
+Patch #5:
+Instead of destroying the created DDW if it doesn't map the whole
+partition, make use of it instead of the default DMA window as it improves
+performance.
+
+Patch #6:
+Does some renaming of 'direct window' to 'dma window', given the DDW
+created can now be also used in indirect mapping if direct mapping is not
+available.
+
+All patches were tested into an LPAR with an Ethernet VF:
+4005:01:00.0 Ethernet controller: Mellanox Technologies MT27700 Family
+[ConnectX-4 Virtual Function]
+
+Patch #5 It was tested with a 64GB DDW which did not map the whole
+partition (128G). Performance improvement noticed by using the DDW instead
+of the default DMA window:
+
+64 thread write throughput: +203.0%
+64 thread read throughput: +17.5%
+1 thread write throughput: +20.5%
+1 thread read throughput: +3.43%
+Average write latency: -23.0%
+Average read latency:  -2.26%
+
+---
+Changes since v2:
+- Change the way ibm,ddw-extensions is accessed, using a proper function
+  instead of doing this inline everytime it's used.
+- Remove previous patch #6, as it doesn't look like it would be useful.
+- Add new patch, for changing names from direct* to dma*, as indirect 
+  mapping can be used from now on.
+- Fix some typos, corrects some define usage.
+- v2 link: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=185433&state=%2A&archive=both
+
+Changes since v1:
+- Add defines for ibm,ddw-applicable and ibm,ddw-extensions outputs
+- Merge aux function query_ddw_out_sz() into query_ddw()
+- Merge reset_dma_window() patch (prev. #2) into remove default DMA
+  window patch (#4).
+- Keep device_node *np name instead of using pdn in remove_*()
+- Rename 'device_node *pdn' into 'parent' in new functions
+- Rename dfl_win to default_win
+- Only remove the default DMA window if there is no window available
+  in first query.
+- Check if default DMA window can be restored before removing it.
+- Fix 'unitialized use' (found by travis mpe:ci-test)
+- New patches #5 and #6
+- v1 link: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=184420&state=%2A&archive=both
+
+Special thanks for Alexey Kardashevskiy and Oliver O'Halloran for
+the feedback provided!
+
+Leonardo Bras (6):
+  powerpc/pseries/iommu: Create defines for operations in
+    ibm,ddw-applicable
+  powerpc/pseries/iommu: Update call to ibm,query-pe-dma-windows
+  powerpc/pseries/iommu: Move window-removing part of remove_ddw into
+    remove_dma_window
+  powerpc/pseries/iommu: Remove default DMA window before creating DDW
+  powerpc/pseries/iommu: Make use of DDW even if it does not map the
+    partition
+  powerpc/pseries/iommu: Rename "direct window" to "dma window"
+
+ arch/powerpc/platforms/pseries/iommu.c | 379 ++++++++++++++++++-------
+ 1 file changed, 269 insertions(+), 110 deletions(-)
+
+-- 
+2.25.4
+
