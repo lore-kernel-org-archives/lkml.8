@@ -2,107 +2,143 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_BRKN_WORDNUMS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D39321531
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:49:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTyBfb6M"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB9C207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgGCHtw (ORCPT
+        id S1726048AbgGCHvz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGCHtv (ORCPT
+        Fri, 3 Jul 2020 03:51:55 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:59954 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgGCHvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:49:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B117C08C5C1;
-        Fri,  3 Jul 2020 00:49:51 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e8so1589426ljb.0;
-        Fri, 03 Jul 2020 00:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jPH2st2Pqe2VTT1oPxnRHqMVaOG4iEFkIyKYIfsbc+U=;
-        b=NTyBfb6MC/K5Sd6KyVNZKzEbpAik9J+b6aw3s41DDaJeWEtVid9Gy9Mulpo9CQT/qk
-         WlfNGgGBRtzo6y86l+XsTPfiDRqYrrlJPY6Fn86X41UWfKF/6fhmH1iUikQ3qVctS/8Y
-         Y3qNr2/REEG9OU5BtskvsuhN50jOTU9dsU4xwTth1z6rjwPpTO1QEiRA9tUgfH41FaC2
-         YBXVDlMFkmochv4W7tg2yOy2YABH2d8Pcv4d6jQrbIVCkNn3u6VgMk3Mb4K+Tf83fHxV
-         bhTeIJqut0rRowIe2OO7ZtRqKsFPZysWZ6lubgc8v86cR0t9DFk3ABf3eBEob8xso9+4
-         kF/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jPH2st2Pqe2VTT1oPxnRHqMVaOG4iEFkIyKYIfsbc+U=;
-        b=mBZdU1vdb9JAF+8AFVd4TK8eeFPw3lrWM+HgPf9IWCX9ZlOERbE40fsEvH5pme3I2z
-         K1ZGlQEaAHR59UxjeOMzfqzwmdUMgsCrLAh4tWJj3gN047GH36aW9N4aDjhEIMts3JCX
-         ZhYPQLta2RxlTpCYGzzeCzse4xf0ny3GdYwBt7Xow+8SMtFPuUhuDY2ykmw57wcc7XSI
-         CULdYAGixQnJWiAZJQU6bDuD/2ljud9EBER8RdebVGc2jD80gHZ4Wj0oO+RgYThscjci
-         B61JPWL9AodO2ZJzjwamP0L37gsXaC/uFfxsVYrgPO/cYvajS4+5FD02XQ2KJGVnKWqh
-         NbjA==
-X-Gm-Message-State: AOAM530VB7qV3yqB4Ugz8PJpKn75okmYgrg3RwE/Spi33iQhRXT4yfOX
-        c8B0bPHHej9YEcS1zZmdphvSlf/SVfoWpR++Klszmcpn9M4=
-X-Google-Smtp-Source: ABdhPJyaP/rrmSPjy3RcimVB0S5EWbzspouE7IaasobfxWfTADJFI9jmKIiPw6kf4/ctQru1yOUTfnH56mocespH/JE=
-X-Received: by 2002:a2e:b167:: with SMTP id a7mr9779767ljm.83.1593762589556;
- Fri, 03 Jul 2020 00:49:49 -0700 (PDT)
+        Fri, 3 Jul 2020 03:51:54 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0637pe993017804, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0637pe993017804
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 3 Jul 2020 15:51:40 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 3 Jul 2020 15:51:39 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 3 Jul 2020 15:51:39 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
+ RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
+ 15.01.1779.005; Fri, 3 Jul 2020 15:51:39 +0800
+From:   Kailang <kailang@realtek.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>
+Subject: RE: [PATCH v2 1/3] ALSA: hda/realtek - Enable audio jacks of Acer vCopperbox with ALC269VC
+Thread-Topic: [PATCH v2 1/3] ALSA: hda/realtek - Enable audio jacks of Acer
+ vCopperbox with ALC269VC
+Thread-Index: AQHWUQ050FyI+tJN2U+7kMSQrGQS26j1elRg
+Date:   Fri, 3 Jul 2020 07:51:39 +0000
+Message-ID: <aa62a43d4f1f458fb11794c26d373528@realtek.com>
+References: <20200703073753.185147-1-jian-hong@endlessm.com>
+In-Reply-To: <20200703073753.185147-1-jian-hong@endlessm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.102.211]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200703001212.207565-1-danny@kdrag0n.dev> <CANiq72k2rrByxzj1c4azAVJq-V7BqQcmBwtm3XM9T8r3r3-ysQ@mail.gmail.com>
- <16043769.gqpzGLO8mG@pinwheel>
-In-Reply-To: <16043769.gqpzGLO8mG@pinwheel>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 3 Jul 2020 09:49:37 +0200
-Message-ID: <CANiq72k_DrinWLNUVdc_DoOQu5wB8uD5Yns=Jw7PMDC_TbEETw@mail.gmail.com>
-Subject: Re: [PATCH] editorconfig: Add automatic editor configuration file
-To:     Danny Lin <danny@kdrag0n.dev>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 9:31 AM Danny Lin <danny@kdrag0n.dev> wrote:
->
-> Most of the other exceptions can be accomodated for with more specific
-> rules below the base [*] section. I just went through most of the
-> kernel's files and added rules for the vast majority of the exceptinos
-> to the 8-column tab indent style, though there are still some that
-> haven't been covered.
+Hi,
 
-Very good! That looks much better.
+Please modify ALC269_FIXUP_HEADSET_MODE to ALC269_FIXUP_HEADSET_MIC for 3 patches.
+ALC269_FIXUP_HEADSET_MODE was used for Jack detect codec.
 
-Are there too many file types that use tabs? If not, then I think it
-is best to add a section for "General tab" files like for the others,
-in order to be explicit and to have the list around.
+Kailang.
 
-> It looks like some types of files lack consistent indentation, e.g.
-> arch/mips/*/Platform and some shell scripts in scripts/ tools/testing/
-> selftests/ftrace/test.d/kprobe/*.tc. There are also some files that were
-> highly inconsistent even within themselves (e.g. drivers/gpu/drm/amd/
-> amdkfd/cwsr_trap_handler_gfx*.asm), so setting indentation settings to
-> something sane by default doesn't make them any worse. After all, no
-> automated code style tooling is perfect and there will be edge cases
-> where it breaks down.
+> -----Original Message-----
+> From: Jian-Hong Pan <jian-hong@endlessm.com>
+> Sent: Friday, July 3, 2020 3:38 PM
+> To: Takashi Iwai <tiwai@suse.com>
+> Cc: Kailang <kailang@realtek.com>; alsa-devel@alsa-project.org;
+> linux-kernel@vger.kernel.org; linux@endlessm.com; Jian-Hong Pan
+> <jian-hong@endlessm.com>; Chris Chiu <chiu@endlessm.com>
+> Subject: [PATCH v2 1/3] ALSA: hda/realtek - Enable audio jacks of Acer
+> vCopperbox with ALC269VC
+> 
+> The Acer desktop vCopperbox with ALC269VC cannot detect the MIC of
+> headset, the line out and internal speaker until
+> ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS quirk applied.
+> 
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>  sound/pci/hda/patch_realtek.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index 737ef82a75fd..dfb4bca07d3f 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -6149,6 +6149,7 @@ enum {
+>  	ALC236_FIXUP_HP_MUTE_LED,
+>  	ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET,
+>  	ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+> +	ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS,
+>  };
+> 
+>  static const struct hda_fixup alc269_fixups[] = { @@ -7327,6 +7328,17 @@
+> static const struct hda_fixup alc269_fixups[] = {
+>  		.chained = true,
+>  		.chain_id = ALC269_FIXUP_HEADSET_MODE
+>  	},
+> +	[ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS] = {
+> +		.type = HDA_FIXUP_PINS,
+> +		.v.pins = (const struct hda_pintbl[]) {
+> +			{ 0x14, 0x90100120 }, /* use as internal speaker */
+> +			{ 0x18, 0x02a111f0 }, /* use as headset mic, without its own
+> jack detect */
+> +			{ 0x1a, 0x01011020 }, /* use as line out */
+> +			{ },
+> +		},
+> +		.chained = true,
+> +		.chain_id = ALC269_FIXUP_HEADSET_MODE
+> +	},
+>  };
+> 
+>  static const struct snd_pci_quirk alc269_fixup_tbl[] = { @@ -7346,6 +7358,7
+> @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x1025, 0x1099, "Acer Aspire E5-523G",
+> ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+>  	SND_PCI_QUIRK(0x1025, 0x110e, "Acer Aspire ES1-432",
+> ALC255_FIXUP_ACER_MIC_NO_PRESENCE),
+>  	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500",
+> ALC299_FIXUP_PREDATOR_SPK),
+> +	SND_PCI_QUIRK(0x1025, 0x1247, "Acer vCopperbox",
+> +ALC269VC_FIXUP_ACER_VCOPPERBOX_PINS),
+>  	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G",
+> ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G",
+> ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+>  	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G",
+> ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+> --
+> 2.27.0
 
-Yeah, do not worry about inconsistencies. For `.clang-format`, I
-picked the options based on 1) whether there was an official code
-style guideline and 2) if not, the one that minimizes the number of
-changes, i.e. the most popular one across files.
-
-Cheers,
-Miguel
