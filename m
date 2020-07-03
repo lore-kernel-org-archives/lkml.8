@@ -2,153 +2,112 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5125DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9832C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313F22064B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D4A2064B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yyklb0++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgGCHqV (ORCPT
+        id S1726676AbgGCHqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:46:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2292 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCHqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:46:20 -0400
-IronPort-SDR: 8cGbqs2XFj6IfoeqPJ9AU8ky3wsZmyLxSfooB2LtKgCyWVWAu1qXVPUvwUt3uRxRlhS5zAB4pO
- uByQGlpa8Ctg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="134568478"
+        Fri, 3 Jul 2020 03:46:42 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:51125 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgGCHqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:46:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593762401; x=1625298401;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qe3AsKz/1NWtVp1Lygpm/UXyvvks8ItOId5LZbRDzSE=;
+  b=yyklb0++eQ5MbSXtAogkfn1kylatS8DUgSxNSgDV0yHMGg8pdw84mb4t
+   hcpei09jp/DvHab2M+W1BNssXTnHjfOWQXqPcCtyL+Q1ffF3qEyX6s1t1
+   9DocxPzIeS2pXSNU9EiEM2pi7xlwxUEn8CLYwH8LyumUKPOXyfeAL1FBw
+   4xUiIttu3duCo7XbHBA5adEkw3WjaKMk7xhnzWGoEdhLYaMp4TdLuWxAW
+   eInrrgL6DbRuhKcmP6qZfYELuiihSdr/iSfNr67t3cLZHuWxI4wUP/Da7
+   8M4yN9BD/kTmZsNIEa3s2q0X0tU18zGptAmfU111dQ5FmQ0wrC6PWViHi
+   w==;
+IronPort-SDR: AfTzNOcXbRjSM3KS+KI3U/gtKHXSrMqBkFwBiCYJNjQMzDG0zc1q7RvSLo6ksFiDlZnyMJvVAC
+ 5ouKWWhV+IbsIlil6Zu4QdH8vX6OW2GXIUE7saiPq75jeSHXTUlTyvAUvnuqjFnvP7578tYV85
+ RNV1vgd5Fib+L0KA1hzxgBS6lOtAKhaJkmrjEaZU93MZsfAnjrewxIna1tCi4Vswi4jPhI3902
+ BNAYFHeJsKiUcQJokCf/WGfDy9b10yRUJ3i92kgOh+gxh3oasQHhV82U2QDy9e2iiS/mOrYjOD
+ LWw=
 X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="134568478"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2020 00:46:20 -0700
-IronPort-SDR: gKkmDHpbpUqOLFeLsfdUKfUHV7hwEQ+pMuYmdgnYHV4hnpVYka7+SEbAwnMrzptEOm9KkIB4GZ
- yPCOAIGxS7gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,307,1589266800"; 
-   d="scan'208";a="455813534"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jul 2020 00:46:20 -0700
-Received: from [10.249.231.67] (abudanko-mobl.ccr.corp.intel.com [10.249.231.67])
-        by linux.intel.com (Postfix) with ESMTP id 5CEDD580781;
-        Fri,  3 Jul 2020 00:46:17 -0700 (PDT)
-Subject: [PATCH v9 09/15] perf stat: factor out event handling loop into
- dispatch_events()
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <e4ccb3e9-5f5e-36bf-4a87-dd9d7098d83b@linux.intel.com>
-Date:   Fri, 3 Jul 2020 10:46:15 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="80602013"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jul 2020 00:46:41 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 3 Jul 2020 00:46:39 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 3 Jul 2020 00:46:14 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <mchehab@kernel.org>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v2 0/4] media: introduce microchip csi2dc driver
+Date:   Fri, 3 Jul 2020 10:44:12 +0300
+Message-ID: <20200703074416.55272-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a4d5db4a-f25c-38dc-1c41-321a886cb122@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Consolidate event dispatching loops for fork, attach and system
-wide monitoring use cases into common dispatch_events() function.
+This series adds support for the Microchip csi2dc csi-2 demux controller.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-stat.c | 42 +++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+I was not fully sure where is the best place for such a helper chip, thus
+I added the driver in a separate 'misc' menu under the media menu.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3e11f854ffc8..723f1fe27d63 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -550,6 +550,30 @@ static bool is_target_alive(struct target *_target,
- 	return false;
- }
- 
-+static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
-+{
-+	bool stop = false;
-+	int child_exited = 0, status = 0;
-+
-+	while (1) {
-+		if (forks)
-+			child_exited = waitpid(child_pid, &status, WNOHANG);
-+		else
-+			child_exited = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
-+
-+		if (done || stop || child_exited)
-+			break;
-+
-+		nanosleep(ts, NULL);
-+		if (timeout)
-+			stop = true;
-+		else
-+			stop = handle_interval(interval, times);
-+	}
-+
-+	return status;
-+}
-+
- enum counter_recovery {
- 	COUNTER_SKIP,
- 	COUNTER_RETRY,
-@@ -621,7 +645,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	struct affinity affinity;
- 	int i, cpu;
- 	bool second_pass = false;
--	bool stop = false;
- 
- 	if (interval) {
- 		ts.tv_sec  = interval / USEC_PER_MSEC;
-@@ -790,14 +813,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		perf_evlist__start_workload(evsel_list);
- 		enable_counters();
- 
--		if (interval || timeout) {
--			while (!stop && !waitpid(child_pid, &status, WNOHANG)) {
--				nanosleep(&ts, NULL);
--				if (timeout)
--					break;
--				stop = handle_interval(interval, &times);
--			}
--		}
-+		if (interval || timeout)
-+			status = dispatch_events(forks, timeout, interval, &times, &ts);
- 		if (child_pid != -1) {
- 			if (timeout)
- 				kill(child_pid, SIGTERM);
-@@ -814,12 +831,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			psignal(WTERMSIG(status), argv[0]);
- 	} else {
- 		enable_counters();
--		while (!done && !stop && is_target_alive(&target, evsel_list->core.threads)) {
--			nanosleep(&ts, NULL);
--			if (timeout)
--				break;
--			stop = handle_interval(interval, &times);
--		}
-+		status = dispatch_events(forks, timeout, interval, &times, &ts);
- 	}
- 
- 	disable_counters();
+There are references in the binding driver to the Synopsys IDI interface,
+which is not yet in kernel mainline, as per the patch series at [1].
+
+As this driver is still new, it still can get plenty of improvement, so,
+waiting for feedback.
+
+Thanks everyone for reviewing !
+
+Changes in v2:
+- fixed warnings for binding yaml check
+
+[1] https://lwn.net/Articles/790917/
+
+Eugen Hristev (4):
+  dt-bindings: media: csi2dc: add bindings for microchip csi2dc
+  media: misc: introduce miscellaneous menu for helper chips
+  media: misc: introduce microchip_csi2dc driver
+  MAINTAINERS: add microchip csi2dc
+
+ .../bindings/media/microchip,csi2dc.yaml      | 185 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/media/Kconfig                         |   1 +
+ drivers/media/Makefile                        |   2 +-
+ drivers/media/misc/Kconfig                    |  22 +
+ drivers/media/misc/Makefile                   |   2 +
+ drivers/media/misc/microchip_csi2dc.c         | 705 ++++++++++++++++++
+ 7 files changed, 923 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+ create mode 100644 drivers/media/misc/Kconfig
+ create mode 100644 drivers/media/misc/Makefile
+ create mode 100644 drivers/media/misc/microchip_csi2dc.c
+
 -- 
-2.24.1
-
+2.25.1
 
