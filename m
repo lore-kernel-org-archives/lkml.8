@@ -2,283 +2,141 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0840420899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCD220737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXTOyAOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgGCP7k (ORCPT
+        id S1726291AbgGCQEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:59:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbgGCP7i (ORCPT
+        Fri, 3 Jul 2020 12:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgGCQEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:59:38 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063FWGE2031673;
-        Fri, 3 Jul 2020 11:59:22 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 322144uhhh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 11:59:22 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063FuYVw002499;
-        Fri, 3 Jul 2020 15:59:19 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 31wwr7uj21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 15:59:19 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063FxG9224772696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 15:59:17 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D77FA42042;
-        Fri,  3 Jul 2020 15:59:16 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 726D842045;
-        Fri,  3 Jul 2020 15:59:16 +0000 (GMT)
-Received: from pomme.tlslab.ibm.com (unknown [9.145.68.59])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jul 2020 15:59:16 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, paulus@samba.org
-Cc:     bharata@linux.ibm.com, bauerman@linux.ibm.com,
-        sukadev@linux.ibm.com, sathnaga@linux.vnet.ibm.com,
-        Ram Pai <linuxram@us.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 1/2] KVM: PPC: Book3S HV: move kvmppc_svm_page_out up
-Date:   Fri,  3 Jul 2020 17:59:13 +0200
-Message-Id: <20200703155914.40262-2-ldufour@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200703155914.40262-1-ldufour@linux.ibm.com>
-References: <20200703155914.40262-1-ldufour@linux.ibm.com>
+        Fri, 3 Jul 2020 12:04:21 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7ADC061794;
+        Fri,  3 Jul 2020 09:04:21 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a8so27005514edy.1;
+        Fri, 03 Jul 2020 09:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X/kUxjEepXtiPp+5nrjETtriBB7vp52saJU42L3Q0Ek=;
+        b=NXTOyAOQ4GoupnlWcTajW/yNVeDnYrfHcp4BtrD8hDhof+ZevAzYJm3TxuAGYtrvIX
+         rXs7IFYPAFaAYkPSaGYVPBBgx6wUXpVU7Tf2ZSfU3HSQNZuIfqmfnlHdR+0A3wooDual
+         nww+ROO2dUWuJ2ti+hBkqVqEvZ4/hV0oUVxIg0fkD2qdrTqnRvFxJTPvp4CItzB1qJ33
+         WDZPCtPVHuafx+0x1a3uAUjL2W/abTWpcNOi1zYqkyWNo9TnJ1r8zsPjqs3p1NNLj7+e
+         BcY9+L3RcT/CUwC72p1r8dLp4ozaSzFkg9YeIqLuX1w6Y0NorfG4CmhwiljG3gO09s6G
+         0jOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X/kUxjEepXtiPp+5nrjETtriBB7vp52saJU42L3Q0Ek=;
+        b=S/pCxciyGt6f046/XruNxusNMHnULFpGjhegCjy0jPaJ9dmigjcfKSc5Uf/kc0c4Jk
+         qDgD3jiC44Sb2UBW1LTjW4nv+OftaiQ7bA3qcZeJ95wmYNiSpB5X6UZ1I5sy3NA8B0hR
+         /ABq3mXWvYj8LK072KvIh8eEhUX4zQP3P17BRwel5qQJfcGafml+KhDkrZks9mpWyUyj
+         SOWpcgL99JNn04zV+DpvVxSTgTHqjOWGYwOzBfUdxoeNApNgfO1V51RIiUHJGogss3kW
+         CLaHG07UlltiaFtXdDUstJbNW+3p5P64VcTN3OKXO7WTQvqrrnERJm9FQlL+Q5Ezi6z+
+         osNg==
+X-Gm-Message-State: AOAM531To2qTPpiVcY6txR/Y1jd6hivmqAaBDUgLlMkSbNsaO1o5QFvW
+        4ZdxgCh0olP3zWd10o/S/t/0JJGAhLBQ8Pdb5dk=
+X-Google-Smtp-Source: ABdhPJwY+TDU+zLAlj3AXwzh91hebM+nK4d4Q98sJyCJl1eumLSurp18Wh0DJ0XCpOtgEb4A9pmtUBcHSW9aUnmJcXw=
+X-Received: by 2002:aa7:c656:: with SMTP id z22mr28236616edr.101.1593792259297;
+ Fri, 03 Jul 2020 09:04:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_10:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 cotscore=-2147483648
- suspectscore=2 adultscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007030103
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+ <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
+ <20200703133732.GD18953@willie-the-truck> <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
+In-Reply-To: <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 3 Jul 2020 09:04:49 -0700
+Message-ID: <CAF6AEGsCROVTsi2R7_aUkmH9Luoc_guMR0w0KUJc2cEgpfj79w@mail.gmail.com>
+Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system cache(LLC)
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvmppc_svm_page_out() will need to be called by kvmppc_uvmem_drop_pages()
-so move it upper in this file.
+On Fri, Jul 3, 2020 at 7:53 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Will,
+>
+> On 2020-07-03 19:07, Will Deacon wrote:
+> > On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
+> >> diff --git a/drivers/gpu/drm/msm/msm_iommu.c
+> >> b/drivers/gpu/drm/msm/msm_iommu.c
+> >> index f455c597f76d..bd1d58229cc2 100644
+> >> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> >> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> >> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu,
+> >> uint64_t iova,
+> >>              iova |= GENMASK_ULL(63, 49);
+> >>
+> >>
+> >> +    if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
+> >> +            prot |= IOMMU_SYS_CACHE_ONLY;
+> >
+> > Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then
+> > it
+> > looks like it should actually be a property on the domain because we
+> > never
+> > need to configure it on a per-mapping basis within a domain, and
+> > therefore
+> > it shouldn't be exposed by the IOMMU API as a prot flag.
+> >
+> > Do you agree?
+> >
+>
+> GPU being the only user is for now, but there are other clients which
+> can use this.
+> Plus how do we set the memory attributes if we do not expose this as
+> prot flag?
 
-Furthermore it will be interesting to call this function when already
-holding the kvm->arch.uvmem_lock, so prefix the original function with __
-and remove the locking in it, and introduce a wrapper which call that
-function with the lock held.
+It does appear that the downstream kgsl driver sets this for basically
+all mappings.. well there is some conditional stuff around
+DOMAIN_ATTR_USE_LLC_NWA but it seems based on the property of the
+domain.  (Jordan may know more about what that is about.)  But looks
+like there are a lot of different paths into iommu_map in kgsl so I
+might have missed something.
 
-There is no functional change.
+Assuming there isn't some case where we specifically don't want to use
+the system cache for some mapping, I think it could be a domain
+attribute that sets an io_pgtable_cfg::quirks flag
 
-Cc: Ram Pai <linuxram@us.ibm.com>
-Cc: Bharata B Rao <bharata@linux.ibm.com>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv_uvmem.c | 166 ++++++++++++++++-------------
- 1 file changed, 90 insertions(+), 76 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
-index 778a6ea86991..852cc9ae6a0b 100644
---- a/arch/powerpc/kvm/book3s_hv_uvmem.c
-+++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
-@@ -435,6 +435,96 @@ unsigned long kvmppc_h_svm_init_done(struct kvm *kvm)
- 	return ret;
- }
- 
-+/*
-+ * Provision a new page on HV side and copy over the contents
-+ * from secure memory using UV_PAGE_OUT uvcall.
-+ * Caller must held kvm->arch.uvmem_lock.
-+ */
-+static int __kvmppc_svm_page_out(struct vm_area_struct *vma,
-+		unsigned long start,
-+		unsigned long end, unsigned long page_shift,
-+		struct kvm *kvm, unsigned long gpa)
-+{
-+	unsigned long src_pfn, dst_pfn = 0;
-+	struct migrate_vma mig;
-+	struct page *dpage, *spage;
-+	struct kvmppc_uvmem_page_pvt *pvt;
-+	unsigned long pfn;
-+	int ret = U_SUCCESS;
-+
-+	memset(&mig, 0, sizeof(mig));
-+	mig.vma = vma;
-+	mig.start = start;
-+	mig.end = end;
-+	mig.src = &src_pfn;
-+	mig.dst = &dst_pfn;
-+	mig.src_owner = &kvmppc_uvmem_pgmap;
-+
-+	/* The requested page is already paged-out, nothing to do */
-+	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
-+		return ret;
-+
-+	ret = migrate_vma_setup(&mig);
-+	if (ret)
-+		return -1;
-+
-+	spage = migrate_pfn_to_page(*mig.src);
-+	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
-+		goto out_finalize;
-+
-+	if (!is_zone_device_page(spage))
-+		goto out_finalize;
-+
-+	dpage = alloc_page_vma(GFP_HIGHUSER, vma, start);
-+	if (!dpage) {
-+		ret = -1;
-+		goto out_finalize;
-+	}
-+
-+	lock_page(dpage);
-+	pvt = spage->zone_device_data;
-+	pfn = page_to_pfn(dpage);
-+
-+	/*
-+	 * This function is used in two cases:
-+	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
-+	 * - When a secure page is converted to shared page, we *get*
-+	 *   the page to essentially unmap the device page. In this
-+	 *   case we skip page-out.
-+	 */
-+	if (!pvt->skip_page_out)
-+		ret = uv_page_out(kvm->arch.lpid, pfn << page_shift,
-+				  gpa, 0, page_shift);
-+
-+	if (ret == U_SUCCESS)
-+		*mig.dst = migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
-+	else {
-+		unlock_page(dpage);
-+		__free_page(dpage);
-+		goto out_finalize;
-+	}
-+
-+	migrate_vma_pages(&mig);
-+
-+out_finalize:
-+	migrate_vma_finalize(&mig);
-+	return ret;
-+}
-+
-+static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
-+				      unsigned long start, unsigned long end,
-+				      unsigned long page_shift,
-+				      struct kvm *kvm, unsigned long gpa)
-+{
-+	int ret;
-+
-+	mutex_lock(&kvm->arch.uvmem_lock);
-+	ret = __kvmppc_svm_page_out(vma, start, end, page_shift, kvm, gpa);
-+	mutex_unlock(&kvm->arch.uvmem_lock);
-+
-+	return ret;
-+}
-+
- /*
-  * Drop device pages that we maintain for the secure guest
-  *
-@@ -801,82 +891,6 @@ unsigned long kvmppc_h_svm_page_in(struct kvm *kvm, unsigned long gpa,
- 	return ret;
- }
- 
--/*
-- * Provision a new page on HV side and copy over the contents
-- * from secure memory using UV_PAGE_OUT uvcall.
-- */
--static int kvmppc_svm_page_out(struct vm_area_struct *vma,
--		unsigned long start,
--		unsigned long end, unsigned long page_shift,
--		struct kvm *kvm, unsigned long gpa)
--{
--	unsigned long src_pfn, dst_pfn = 0;
--	struct migrate_vma mig;
--	struct page *dpage, *spage;
--	struct kvmppc_uvmem_page_pvt *pvt;
--	unsigned long pfn;
--	int ret = U_SUCCESS;
--
--	memset(&mig, 0, sizeof(mig));
--	mig.vma = vma;
--	mig.start = start;
--	mig.end = end;
--	mig.src = &src_pfn;
--	mig.dst = &dst_pfn;
--	mig.src_owner = &kvmppc_uvmem_pgmap;
--
--	mutex_lock(&kvm->arch.uvmem_lock);
--	/* The requested page is already paged-out, nothing to do */
--	if (!kvmppc_gfn_is_uvmem_pfn(gpa >> page_shift, kvm, NULL))
--		goto out;
--
--	ret = migrate_vma_setup(&mig);
--	if (ret)
--		goto out;
--
--	spage = migrate_pfn_to_page(*mig.src);
--	if (!spage || !(*mig.src & MIGRATE_PFN_MIGRATE))
--		goto out_finalize;
--
--	if (!is_zone_device_page(spage))
--		goto out_finalize;
--
--	dpage = alloc_page_vma(GFP_HIGHUSER, vma, start);
--	if (!dpage) {
--		ret = -1;
--		goto out_finalize;
--	}
--
--	lock_page(dpage);
--	pvt = spage->zone_device_data;
--	pfn = page_to_pfn(dpage);
--
--	/*
--	 * This function is used in two cases:
--	 * - When HV touches a secure page, for which we do UV_PAGE_OUT
--	 * - When a secure page is converted to shared page, we *get*
--	 *   the page to essentially unmap the device page. In this
--	 *   case we skip page-out.
--	 */
--	if (!pvt->skip_page_out)
--		ret = uv_page_out(kvm->arch.lpid, pfn << page_shift,
--				  gpa, 0, page_shift);
--
--	if (ret == U_SUCCESS)
--		*mig.dst = migrate_pfn(pfn) | MIGRATE_PFN_LOCKED;
--	else {
--		unlock_page(dpage);
--		__free_page(dpage);
--		goto out_finalize;
--	}
--
--	migrate_vma_pages(&mig);
--out_finalize:
--	migrate_vma_finalize(&mig);
--out:
--	mutex_unlock(&kvm->arch.uvmem_lock);
--	return ret;
--}
- 
- /*
-  * Fault handler callback that gets called when HV touches any page that
--- 
-2.27.0
-
+BR,
+-R
