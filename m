@@ -2,252 +2,106 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42174C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65376C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186FF2145D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A89C21883
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgGCQHr (ORCPT
+        id S1726707AbgGCQI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:07:47 -0400
-Received: from muru.com ([72.249.23.125]:60624 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726035AbgGCQHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:07:46 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 7F553807E;
-        Fri,  3 Jul 2020 16:08:37 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 2/3] ARM: OMAP2+: Drop legacy platform data for am3 and am4 rtc
-Date:   Fri,  3 Jul 2020 09:07:30 -0700
-Message-Id: <20200703160731.53698-3-tony@atomide.com>
+        Fri, 3 Jul 2020 12:08:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbgGCQI1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:08:27 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063G53N1062422;
+        Fri, 3 Jul 2020 12:08:15 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3224f162f3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 12:08:15 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063Fsr7e028220;
+        Fri, 3 Jul 2020 15:59:19 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 31wwr83gt6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Jul 2020 15:59:19 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063FxGSv55771310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Jul 2020 15:59:16 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65FD04203F;
+        Fri,  3 Jul 2020 15:59:16 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05CEA42042;
+        Fri,  3 Jul 2020 15:59:16 +0000 (GMT)
+Received: from pomme.tlslab.ibm.com (unknown [9.145.68.59])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Jul 2020 15:59:15 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, paulus@samba.org
+Cc:     bharata@linux.ibm.com, bauerman@linux.ibm.com,
+        sukadev@linux.ibm.com, sathnaga@linux.vnet.ibm.com
+Subject: [PATCH 0/2] Rework secure memslot dropping
+Date:   Fri,  3 Jul 2020 17:59:12 +0200
+Message-Id: <20200703155914.40262-1-ldufour@linux.ibm.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200703160731.53698-1-tony@atomide.com>
-References: <20200703160731.53698-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-03_13:2020-07-02,2020-07-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 mlxlogscore=409 suspectscore=0 phishscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0
+ cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2007030110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now probe devices with ti-sysc interconnect driver and dts
-data. Let's drop the related platform data and custom ti,hwmods
-dts property.
+When doing memory hotplug on a secure VM, the secure pages are not well
+cleaned from the secure device when dropping the memslot.  This silent
+error, is then preventing the SVM to reboot properly after the following
+sequence of commands are run in the Qemu monitor:
 
-As we're just dropping data, and the early platform data init
-is based on the custom ti,hwmods property, we want to drop both
-the platform data and ti,hwmods property in a single patch.
+device_add pc-dimm,id=dimm1,memdev=mem1
+device_del dimm1
+device_add pc-dimm,id=dimm1,memdev=mem1
 
-Note that we also must tag rtc as disabled on am43x-epos-evm as
-it's not accessible according to commit 4321dc8dff35 ("ARM: AM43XX:
-hwmod: Add rtc hwmod"). And we must keep RTC enabled for rtcwake
-to work now that we've removed the custom platfor code for
-re-enabling the RTC on suspend.
+At reboot time, when the kernel is booting again and switching to the
+secure mode, the page_in is failing for the pages in the memslot because
+the cleanup was not done properly, because the memslot is flagged as
+invalid during the hot unplug and thus the page fault mechanism is not
+triggered.
 
-Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/am33xx-l4.dtsi              |  1 -
- arch/arm/boot/dts/am437x-l4.dtsi              |  3 +-
- arch/arm/boot/dts/am43x-epos-evm.dts          |  4 ++
- .../omap_hwmod_33xx_43xx_common_data.h        |  2 -
- .../omap_hwmod_33xx_43xx_interconnect_data.c  |  8 ----
- .../omap_hwmod_33xx_43xx_ipblock_data.c       | 37 -------------------
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  1 -
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  8 ----
- 8 files changed, 5 insertions(+), 59 deletions(-)
+To prevent that during the memslot dropping, instead of belonging on the
+page fault mechanism to trigger the page out of the secured pages, it seems
+simpler to directly call the function doing the page out. This way the
+state of the memslot is not interfering on the page out process.
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -413,7 +413,6 @@ target-module@39000 {			/* 0x44e39000, ap 33 02.0 */
- 
- 		target-module@3e000 {			/* 0x44e3e000, ap 35 60.0 */
- 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
--			ti,hwmods = "rtc";
- 			reg = <0x3e074 0x4>,
- 			      <0x3e078 0x4>;
- 			reg-names = "rev", "sysc";
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -409,9 +409,8 @@ target-module@39000 {			/* 0x44e39000, ap 32 02.0 */
- 			ranges = <0x0 0x39000 0x1000>;
- 		};
- 
--		target-module@3e000 {			/* 0x44e3e000, ap 34 60.0 */
-+		rtc_target: target-module@3e000 {	/* 0x44e3e000, ap 34 60.0 */
- 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
--			ti,hwmods = "rtc";
- 			reg = <0x3e074 0x4>,
- 			      <0x3e078 0x4>;
- 			reg-names = "rev", "sysc";
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -833,6 +833,10 @@ &epwmss0 {
- 	status = "okay";
- };
- 
-+&rtc_target {
-+	status = "disabled";
-+};
-+
- &tscadc {
- 	status = "okay";
- 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
-@@ -26,7 +26,6 @@ extern struct omap_hwmod_ocp_if am33xx_mpu__prcm;
- extern struct omap_hwmod_ocp_if am33xx_l3_s__l3_main;
- extern struct omap_hwmod_ocp_if am33xx_gfx__l3_main;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__gfx;
--extern struct omap_hwmod_ocp_if am33xx_l4_wkup__rtc;
- extern struct omap_hwmod_ocp_if am33xx_l3_s__gpmc;
- extern struct omap_hwmod_ocp_if am33xx_l4_ls__timer2;
- extern struct omap_hwmod_ocp_if am33xx_l3_main__ocmc;
-@@ -43,7 +42,6 @@ extern struct omap_hwmod am33xx_ocmcram_hwmod;
- extern struct omap_hwmod am33xx_smartreflex0_hwmod;
- extern struct omap_hwmod am33xx_smartreflex1_hwmod;
- extern struct omap_hwmod am33xx_gpmc_hwmod;
--extern struct omap_hwmod am33xx_rtc_hwmod;
- 
- extern struct omap_hwmod_class am33xx_emif_hwmod_class;
- extern struct omap_hwmod_class am33xx_l4_hwmod_class;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
-@@ -90,14 +90,6 @@ struct omap_hwmod_ocp_if am33xx_l3_main__gfx = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* l4 wkup -> rtc */
--struct omap_hwmod_ocp_if am33xx_l4_wkup__rtc = {
--	.master		= &am33xx_l4_wkup_hwmod,
--	.slave		= &am33xx_rtc_hwmod,
--	.clk		= "clkdiv32k_ick",
--	.user		= OCP_USER_MPU,
--};
--
- /* l3s cfg -> gpmc */
- struct omap_hwmod_ocp_if am33xx_l3_s__gpmc = {
- 	.master		= &am33xx_l3_s_hwmod,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -26,7 +26,6 @@
- #define CLKCTRL(oh, clkctrl) ((oh).prcm.omap4.clkctrl_offs = (clkctrl))
- #define RSTCTRL(oh, rstctrl) ((oh).prcm.omap4.rstctrl_offs = (rstctrl))
- #define RSTST(oh, rstst) ((oh).prcm.omap4.rstst_offs = (rstst))
--#define PRCM_FLAGS(oh, flag) ((oh).prcm.omap4.flags = (flag))
- 
- /*
-  * 'l3' class
-@@ -274,47 +273,12 @@ struct omap_hwmod am33xx_gpmc_hwmod = {
- 	},
- };
- 
--
--/*
-- * 'rtc' class
-- * rtc subsystem
-- */
--static struct omap_hwmod_class_sysconfig am33xx_rtc_sysc = {
--	.rev_offs	= 0x0074,
--	.sysc_offs	= 0x0078,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE,
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO |
--			  SIDLE_SMART | SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type3,
--};
--
--static struct omap_hwmod_class am33xx_rtc_hwmod_class = {
--	.name		= "rtc",
--	.sysc		= &am33xx_rtc_sysc,
--	.unlock		= &omap_hwmod_rtc_unlock,
--	.lock		= &omap_hwmod_rtc_lock,
--};
--
--struct omap_hwmod am33xx_rtc_hwmod = {
--	.name		= "rtc",
--	.class		= &am33xx_rtc_hwmod_class,
--	.clkdm_name	= "l4_rtc_clkdm",
--	.main_clk	= "clk_32768_ck",
--	.prcm		= {
--		.omap4	= {
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
- static void omap_hwmod_am33xx_clkctrl(void)
- {
- 	CLKCTRL(am33xx_smartreflex0_hwmod,
- 		AM33XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
- 		AM33XX_CM_WKUP_SMARTREFLEX1_CLKCTRL_OFFSET);
--	CLKCTRL(am33xx_rtc_hwmod, AM33XX_CM_RTC_RTC_CLKCTRL_OFFSET);
--	PRCM_FLAGS(am33xx_rtc_hwmod, HWMOD_OMAP4_ZERO_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_gpmc_hwmod, AM33XX_CM_PER_GPMC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_l4_ls_hwmod, AM33XX_CM_PER_L4LS_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_l4_wkup_hwmod, AM33XX_CM_WKUP_L4WKUP_CLKCTRL_OFFSET);
-@@ -343,7 +307,6 @@ static void omap_hwmod_am43xx_clkctrl(void)
- 		AM43XX_CM_WKUP_SMARTREFLEX0_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_smartreflex1_hwmod,
- 		AM43XX_CM_WKUP_SMARTREFLEX1_CLKCTRL_OFFSET);
--	CLKCTRL(am33xx_rtc_hwmod, AM43XX_CM_RTC_RTC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_gpmc_hwmod, AM43XX_CM_PER_GPMC_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_l4_ls_hwmod, AM43XX_CM_PER_L4LS_CLKCTRL_OFFSET);
- 	CLKCTRL(am33xx_l4_wkup_hwmod, AM43XX_CM_WKUP_L4WKUP_CLKCTRL_OFFSET);
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -283,7 +283,6 @@ static struct omap_hwmod_ocp_if *am33xx_hwmod_ocp_ifs[] __initdata = {
- 	&am33xx_l4_wkup__control,
- 	&am33xx_l4_wkup__smartreflex0,
- 	&am33xx_l4_wkup__smartreflex1,
--	&am33xx_l4_wkup__rtc,
- 	&am33xx_l3_s__gpmc,
- 	&am33xx_l3_main__ocmc,
- 	NULL,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -216,11 +216,6 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	NULL,
- };
- 
--static struct omap_hwmod_ocp_if *am43xx_rtc_hwmod_ocp_ifs[] __initdata = {
--	&am33xx_l4_wkup__rtc,
--	NULL,
--};
--
- int __init am43xx_hwmod_init(void)
- {
- 	int ret;
-@@ -229,8 +224,5 @@ int __init am43xx_hwmod_init(void)
- 	omap_hwmod_init();
- 	ret = omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
- 
--	if (!ret && of_machine_is_compatible("ti,am4372"))
--		ret = omap_hwmod_register_links(am43xx_rtc_hwmod_ocp_ifs);
--
- 	return ret;
- }
+This series applies on top of the Ram's one titled:
+"PATCH v3 0/4] Migrate non-migrated pages of a SVM."
+https://lore.kernel.org/linuxppc-dev/1592606622-29884-1-git-send-email-linuxram@us.ibm.com/#r
+
+Laurent Dufour (2):
+  KVM: PPC: Book3S HV: move kvmppc_svm_page_out up
+  KVM: PPC: Book3S HV: rework secure mem slot dropping
+
+ arch/powerpc/kvm/book3s_hv_uvmem.c | 220 +++++++++++++++++------------
+ 1 file changed, 127 insertions(+), 93 deletions(-)
+
 -- 
 2.27.0
+
