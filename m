@@ -2,107 +2,80 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C4FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7DA20899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQRFBHaR"
+	by mail.kernel.org (Postfix) with ESMTP id 4B9E5208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 15:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgGCPyF (ORCPT
+        id S1726474AbgGCPzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 11:54:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23269 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726108AbgGCPyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 11:54:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593791643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=4qID0ZJaeTJxhzFANYqylxfwR8yL+lxsbh+RcCg6IxA=;
-        b=NQRFBHaRA68IsYYD8pL0IuXS0DJj8YbqBlJAZvtevyBUnCYrUuCCEZ2jHC2HStLmZIiFAz
-        5FKEWdFdcVEiue4maqsn552km6YXBx74FnIIPYpW0eqxrWnz9T7zSm99GWkvfKuenEMQBn
-        yRhSe3Tt1hyUaT/AXRirPuWrn1ezMew=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-rvJCKjdLNMmBaB3kUdm81Q-1; Fri, 03 Jul 2020 11:54:00 -0400
-X-MC-Unique: rvJCKjdLNMmBaB3kUdm81Q-1
-Received: by mail-qk1-f197.google.com with SMTP id i3so15685462qkf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 08:54:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4qID0ZJaeTJxhzFANYqylxfwR8yL+lxsbh+RcCg6IxA=;
-        b=pwR8ItrTJEpZNM9KnU37oZ8DLYedifgd1en7IRviX9N4tMiYe2xefOwghRmli9cF7d
-         jio4nqH33wB3hrB07bL8zz02vA7IC8EJZ6p4wBsB4kNNlzpZVVLd5YCeh7q43pGuo/U0
-         L+4LMJjupbmMiMSQS9m08izPSo7VLGLlAyLeVxw41fKPjk88ZTmNsZCIlCsWnlYeb3sB
-         gU0tfOL3JJmbbjKRvjDtGDU1umvK9FkwFwyTdPiI7ylMlmmK+i/mdesmG2E80ggm4t93
-         ms9Xm9ez6FcEoD53eo4nKRXATQJYdogcVMcCIoftEhBQ9iMVgGMQroX8VNmCK5pH0zjh
-         JZqA==
-X-Gm-Message-State: AOAM533mGxkyzLLzVYz9YuvJYs5llysgAz8SzFq6cJv/AcMWn3CSNt7g
-        yQMJR3+ugU8pKvAN/nNEKbFYtK26pU8E4e/kniiGETczYuQSEvQt1VAmkLLnfBvH9jKrBehgFTT
-        X0gJ1MIGTSLaHbyjUy5Th+5Z7
-X-Received: by 2002:a37:a8c7:: with SMTP id r190mr33031728qke.156.1593791639758;
-        Fri, 03 Jul 2020 08:53:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwmqMKz6gFD5FSIJ931PXe575jCMsLI6vSuRwnTbWTzh9iHJVIjOidlyvioj0mAqjG9kDRNpw==
-X-Received: by 2002:a37:a8c7:: with SMTP id r190mr33031721qke.156.1593791639569;
-        Fri, 03 Jul 2020 08:53:59 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id s8sm11553622qtc.17.2020.07.03.08.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 08:53:58 -0700 (PDT)
-From:   trix@redhat.com
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH v2] mm: initialize return of vm_insert_pages
-Date:   Fri,  3 Jul 2020 08:53:54 -0700
-Message-Id: <20200703155354.29132-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Fri, 3 Jul 2020 11:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgGCPzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 11:55:07 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EE4420899;
+        Fri,  3 Jul 2020 15:55:05 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH V5 (RESEND) 0/4] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1, ID_MMFR5 and other changes
+Date:   Fri,  3 Jul 2020 16:55:03 +0100
+Message-Id: <159379155800.20268.8910088727326709928.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1593748297-1965-1-git-send-email-anshuman.khandual@arm.com>
+References: <1593748297-1965-1-git-send-email-anshuman.khandual@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Fri, 3 Jul 2020 09:21:33 +0530, Anshuman Khandual wrote:
+> These are remaining patches from V4 series which had some pending reviews
+> from Suzuki (https://patchwork.kernel.org/cover/11557333/). Also dropped
+> [PATCH 15/17] as that will need some more investigation and rework.
+> 
+> This series applies on 5.8-rc3.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: kvmarm@lists.cs.columbia.edu
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> [...]
 
-clang static analysis reports a garbage return
+Applied to arm64 (for-next/cpufeature), thanks!
 
-In file included from mm/memory.c:84:
-mm/memory.c:1612:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
-        return err;
-        ^~~~~~~~~~
+[1/4] arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR0 register
+      https://git.kernel.org/arm64/c/bc67f10ad1d7
+[2/4] arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR1 register
+      https://git.kernel.org/arm64/c/853772ba8023
+[3/4] arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR2 register
+      https://git.kernel.org/arm64/c/356fdfbe8761
+[4/4] arm64/cpufeature: Replace all open bits shift encodings with macros
+      https://git.kernel.org/arm64/c/8d3154afc10d
 
-The setting of err depends on a loop executing.
-So initialize err.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
-v1 change err intializer to -EINVAL
-
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 17a3df0f3994..76a00f414777 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1601,7 +1601,7 @@ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
- 	return insert_pages(vma, addr, pages, num, vma->vm_page_prot);
- #else
- 	unsigned long idx = 0, pgcount = *num;
--	int err;
-+	int err = -EINVAL;
- 
- 	for (; idx < pgcount; ++idx) {
- 		err = vm_insert_page(vma, addr + (PAGE_SIZE * idx), pages[idx]);
 -- 
-2.18.1
+Catalin
 
