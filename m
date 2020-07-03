@@ -2,156 +2,113 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27452C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05123C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A54C2084C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mof6JfwP"
+	by mail.kernel.org (Postfix) with ESMTP id D190D20899
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593801903;
+	bh=E5ODK+zPYcUI/xkNuYY2iPmP/64zi/oLkCo3IcDM4rY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rwLZGmVTonlZR9dwYcJ5xGhhY78fkQfXsMJmWiJioL/AVtgz56VY+b+Pk459bc8tM
+	 jLhXmuLigQF+C9Yg2SaUalx62gzrkdLNRkOoHjl4YZRAZcSLQP63VJAuTPGopNz1Do
+	 ONn4Nf/pEEGMaFZpMhAih2gjdMWcxTL2BWO/lL78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgGCSnb (ORCPT
+        id S1726741AbgGCSpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:43:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgGCSnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:43:31 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44267C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 11:43:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h22so14319923pjf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 11:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=mPYr8lr3dKUW6vXJxZwhdaycJnvZSFeoH2v61Uj7UJE=;
-        b=mof6JfwP8HZHKdXOSnM0KGvAbs+aaGUl0ZRYqOy7DKbsrF/bsIBrdbBzKrZbUpKiMm
-         JDbUMsX26Or6vL/H/UMsIDo0B7NsONf7q+ErPdZeT38sPBCXXOu/rBZ3n5HxrlqbvG1X
-         I+U1/5ChNQAZvIVSMsUoSwM4Z1Cqd1NqwgqV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=mPYr8lr3dKUW6vXJxZwhdaycJnvZSFeoH2v61Uj7UJE=;
-        b=fYgSn/ao0zjQRE+9fVNbOY3mEMnS59TW34gKRqDnNLZX62XYQFhXHCsJ3XVnxm/tjc
-         cxBldvzPYSC3cyMeRZIP5fA57XxhHWX59htFDUtYnu1W8CUkbmhsfqFn42epB+fRVx++
-         QP+KpWOznB042l6a5IKgvAXCD/QA+CC4DTBooX9MJmhsici8nq5Fy3pl21M8PgteMgKb
-         NKc/qJ4O3F/l147ZlW1ApYDOtFJu1N2PZnpcO1FhSMc4/j2VCnU3SDG5tVvJZ4QTsoAu
-         DFFwwYxE3ihFby67KYYXY91luSiefOl0eV28bMK19r65+FOwP/1M83XLWkQHfG3xBOsf
-         +2AA==
-X-Gm-Message-State: AOAM532d7N407RMgxxHOfjQ73X7n5YjeHSOLNAY8+/P0RCHkXE6rt/te
-        2Fy+rXBv8pSKUWtQtX3XajCokw==
-X-Google-Smtp-Source: ABdhPJyq6m8Qlb4zZJvG3Y12jlIiEeZ9iY6G937YP3me7No2ZXYqR9ki1WHJLdnN9BcRmfa7w8PCbw==
-X-Received: by 2002:a17:90a:764c:: with SMTP id s12mr25055306pjl.201.1593801810720;
-        Fri, 03 Jul 2020 11:43:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j36sm12672948pgj.39.2020.07.03.11.43.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 11:43:29 -0700 (PDT)
-Date:   Fri, 3 Jul 2020 11:43:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dominik Czarnota <dominik.czarnota@trailofbits.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: kmod: Add module address visibility test
-Message-ID: <202007031141.6AC2173@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 3 Jul 2020 14:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgGCSpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 14:45:02 -0400
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D24F2084C;
+        Fri,  3 Jul 2020 18:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593801902;
+        bh=E5ODK+zPYcUI/xkNuYY2iPmP/64zi/oLkCo3IcDM4rY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nfp4bInTESWHj3zeVVnzenA8XTMNSHun3Hg0QxpYgU39DB01VWLdwSMTksIoTnwOO
+         YMSYSq6lMIlvz6BCKaVEzdeszASYrLdN7qerDBVyEA4cxU6nbSJfZTnv4gkQBfNAP1
+         1PERMbcQYpqsPLQmEOZyxSTcL3rzIcqrJ8fVpAQA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH v3 1/3] ARM: dts: exynos: Define fixed regulators in root node for consistency in Origen
+Date:   Fri,  3 Jul 2020 20:44:49 +0200
+Message-Id: <20200703184451.19535-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure we don't regress the CAP_SYSLOG behavior of the module address
-visibility via /proc/modules nor /sys/module/*/sections/*.
+Remove the regulators node and define fixed regulators directly under
+the root node.  This makes Exynos4412 Origen board consistent with other
+Exynos boards.
 
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
 ---
-I forgot to include this patch in my kallsyms_show_value() f_cred series:
-https://lore.kernel.org/lkml/20200702232638.2946421-1-keescook@chromium.org/
-Since this depends on the changes, I'd like to include this in the
-series with acks/review, etc. :)
+
+Changes since v2:
+1. Remove also "reg" property
+
+Changes since v1:
+1. New patch
 ---
- tools/testing/selftests/kmod/kmod.sh | 36 ++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/exynos4412-origen.dts | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 3702dbcc90a7..c82aa77958e5 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -63,6 +63,8 @@ ALL_TESTS="$ALL_TESTS 0008:150:1"
- ALL_TESTS="$ALL_TESTS 0009:150:1"
- ALL_TESTS="$ALL_TESTS 0010:1:1"
- ALL_TESTS="$ALL_TESTS 0011:1:1"
-+ALL_TESTS="$ALL_TESTS 0012:1:1"
-+ALL_TESTS="$ALL_TESTS 0013:1:1"
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index dc865be40751..8b11ad391252 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -33,20 +33,13 @@
+ 		reg = <0x0203F000 0x1000>;
+ 	};
  
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
-@@ -470,6 +472,38 @@ kmod_test_0011()
- 	echo "$MODPROBE" > /proc/sys/kernel/modprobe
- }
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		mmc_reg: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "VMEM_VDD_2.8V";
+-			regulator-min-microvolt = <2800000>;
+-			regulator-max-microvolt = <2800000>;
+-			gpio = <&gpx1 1 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	mmc_reg: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "VMEM_VDD_2.8V";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		gpio = <&gpx1 1 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
  
-+kmod_check_visibility()
-+{
-+	local name="$1"
-+	local cmd="$2"
-+
-+	modprobe $DEFAULT_KMOD_DRIVER
-+
-+	local priv=$(eval $cmd)
-+	local unpriv=$(capsh --drop=CAP_SYSLOG -- -c "$cmd")
-+
-+	if [ "$priv" = "$unpriv" ] || \
-+	   [ "${priv:0:3}" = "0x0" ] || \
-+	   [ "${unpriv:0:3}" != "0x0" ] ; then
-+		echo "${FUNCNAME[0]}: FAIL, $name visible to unpriv: '$priv' vs '$unpriv'" >&2
-+		exit 1
-+	else
-+		echo "${FUNCNAME[0]}: OK!"
-+	fi
-+}
-+
-+kmod_test_0012()
-+{
-+	kmod_check_visibility /proc/modules \
-+		"grep '^${DEFAULT_KMOD_DRIVER}\b' /proc/modules | awk '{print \$NF}'"
-+}
-+
-+kmod_test_0013()
-+{
-+	kmod_check_visibility '/sys/module/*/sections/*' \
-+		"cat /sys/module/${DEFAULT_KMOD_DRIVER}/sections/.*text | head -n1"
-+}
-+
- list_tests()
- {
- 	echo "Test ID list:"
-@@ -489,6 +523,8 @@ list_tests()
- 	echo "0009 x $(get_test_count 0009) - multithreaded - push kmod_concurrent over max_modprobes for get_fs_type()"
- 	echo "0010 x $(get_test_count 0010) - test nonexistent modprobe path"
- 	echo "0011 x $(get_test_count 0011) - test completely disabling module autoloading"
-+	echo "0012 x $(get_test_count 0012) - test /proc/modules address visibility under CAP_SYSLOG"
-+	echo "0013 x $(get_test_count 0013) - test /sys/module/*/sections/* visibility under CAP_SYSLOG"
- }
- 
- usage()
+ 	display-timings {
 -- 
-2.25.1
+2.17.1
 
-
--- 
-Kees Cook
