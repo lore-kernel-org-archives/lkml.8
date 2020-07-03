@@ -2,122 +2,222 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F190C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783B0206BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:53:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ITdUT3mq"
+	by mail.kernel.org (Postfix) with ESMTP id 93391206A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgGCOxM (ORCPT
+        id S1726771AbgGCOxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:53:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:60331 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgGCOxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:53:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593787991; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qnO8dgt8kPgCd7OkCwm5OGmXgYl4ROSS5lJBIbWqa6I=;
- b=ITdUT3mqTJcjd1G2V9lGPUYw2Dl5mwrdCCsTJISx0DA+XxgYH0mSt4NaLCcW+hppv3lRKXcH
- xoDW8j3HAIG7FuQY24LVYzmgvixBsJvCVWJaZzk5BzR9eISpkejAwNr1NAOV0RfcYjzh8eq/
- 7uQhKSBvqcHf8RYaeVih95y0fO4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5eff4656c76a4e7a2a430098 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 14:53:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8C3E0C433AD; Fri,  3 Jul 2020 14:53:08 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 99A3BC433C8;
-        Fri,  3 Jul 2020 14:53:07 +0000 (UTC)
+        Fri, 3 Jul 2020 10:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgGCOxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:53:18 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA7EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 07:53:18 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jrN3y-0002on-6T; Fri, 03 Jul 2020 16:53:14 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jrN3x-0000mO-Fp; Fri, 03 Jul 2020 16:53:13 +0200
+Date:   Fri, 3 Jul 2020 16:53:13 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jul 2020 20:23:07 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system
- cache(LLC)
-In-Reply-To: <20200703133732.GD18953@willie-the-truck>
-References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
- <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
- <20200703133732.GD18953@willie-the-truck>
-Message-ID: <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qpoybkluvtfa4wj6"
+Content-Disposition: inline
+In-Reply-To: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
 
-On 2020-07-03 19:07, Will Deacon wrote:
-> On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
->> diff --git a/drivers/gpu/drm/msm/msm_iommu.c 
->> b/drivers/gpu/drm/msm/msm_iommu.c
->> index f455c597f76d..bd1d58229cc2 100644
->> --- a/drivers/gpu/drm/msm/msm_iommu.c
->> +++ b/drivers/gpu/drm/msm/msm_iommu.c
->> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu, 
->> uint64_t iova,
->>  		iova |= GENMASK_ULL(63, 49);
->> 
->> 
->> +	if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
->> +		prot |= IOMMU_SYS_CACHE_ONLY;
-> 
-> Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then 
-> it
-> looks like it should actually be a property on the domain because we 
-> never
-> need to configure it on a per-mapping basis within a domain, and 
-> therefore
-> it shouldn't be exposed by the IOMMU API as a prot flag.
-> 
-> Do you agree?
-> 
+--qpoybkluvtfa4wj6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-GPU being the only user is for now, but there are other clients which 
-can use this.
-Plus how do we set the memory attributes if we do not expose this as 
-prot flag?
+Hello Miquel,
 
-Thanks,
-Sai
+On Sun, May 03, 2020 at 12:54:53PM +0200, Miquel Raynal wrote:
+> +static u8 max7313_pwm_get_intensity(struct pca953x_chip *pca_chip,
+> +				    unsigned int idx)
+> +{
+> +	struct device *dev =3D &pca_chip->client->dev;
+> +	unsigned int reg, shift, val, output;
+> +	u8 intensity;
+> +	bool phase;
+> +	int ret;
+> +
+> +	/* Retrieve the intensity */
+> +	reg =3D MAX7313_INTENSITY + (idx / PWM_PER_REG);
+> +	shift =3D (idx % PWM_PER_REG) ? PWM_BITS_PER_REG : 0;
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+I would find
+
+	shift =3D (idx % PWM_PER_REG) * PWM_BITS_PER_REG
+
+more natural here as your formula only works for PWM_PER_REG =3D 2.
+
+> +	mutex_lock(&pca_chip->i2c_lock);
+> +	ret =3D regmap_read(pca_chip->regmap, reg, &val);
+> +	mutex_unlock(&pca_chip->i2c_lock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Cannot retrieve PWM intensity (%d)\n", ret);
+
+Please use %pe for error codes.
+
+> +		return 0;
+> +	}
+> +
+> +	val >>=3D shift;
+> +	val &=3D PWM_INTENSITY_MASK;
+> +
+> +	/* Retrieve the phase */
+> +	reg =3D pca953x_recalc_addr(pca_chip, pca_chip->regs->output, idx, 0, 0=
+);
+> +
+> +	mutex_lock(&pca_chip->i2c_lock);
+> +	ret =3D regmap_read(pca_chip->regmap, reg, &output);
+> +	mutex_unlock(&pca_chip->i2c_lock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Cannot retrieve PWM phase (%d)\n", ret);
+> +		return 0;
+> +	}
+> +
+> +	phase =3D output & BIT(idx % BANK_SZ);
+
+Would it make sense to cache the phase value to reduce register access
+and locking here?
+
+> [...]
+> +static int max7313_pwm_apply(struct pwm_chip *chip,
+> +			     struct pwm_device *pwm,
+> +			     const struct pwm_state *state)
+> +{
+> +	struct max7313_pwm *max_pwm =3D to_max7313_pwm(chip);
+> +	struct pca953x_chip *pca_chip =3D to_pca953x(max_pwm);
+> +	unsigned int intensity, active;
+> +	int ret =3D 0;
+> +
+> +	if (!state->enabled ||
+> +	    state->period < PWM_PERIOD_NS ||
+> +	    state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+
+You could simulate state->enabled =3D false using duty_cycle =3D 0.
+
+> +	/* Convert the duty-cycle to be in the [0;16] range */
+> +	intensity =3D max7313_pwm_duty_to_intensity(state->duty_cycle);
+
+This might return a value > 16 if state->duty_cycle > PWM_PERIOD_NS.
+I suggest to do
+
+	duty_cycle =3D min(state->duty_cycle, PWM_PERIOD_NS);
+
+and use that value instead of state->duty_cycle.
+
+> +	/*
+> +	 * The hardware is supposedly glitch-free when changing the intensity,
+> +	 * unless we need to flip the blink phase to reach an extremity or the
+> +	 * other of the spectrum (0/16 from phase 1, 16/16 from phase 0).
+
+s/other of/other end of/. I don't understand the difference between
+extremity and "other end of the spectrum".
+
+> +	 */
+> +	return max7313_pwm_set_state(pca_chip, pwm, intensity);
+> +}
+> +
+> +static void max7313_pwm_get_state(struct pwm_chip *chip,
+> +				  struct pwm_device *pwm,
+> +				  struct pwm_state *state)
+> +{
+> +	struct max7313_pwm *max_pwm =3D to_max7313_pwm(chip);
+> +	struct pca953x_chip *pca_chip =3D to_pca953x(max_pwm);
+> +	u8 intensity;
+> +
+> +	state->enabled =3D true;
+> +	state->period =3D PWM_PERIOD_NS;
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +
+> +	intensity =3D max7313_pwm_get_intensity(pca_chip, pwm->hwpwm);
+> +	state->duty_cycle =3D max7313_pwm_intensity_to_duty(intensity);
+
+Please round up the division in max7313_pwm_intensity_to_duty().
+
+(The reasoning is: with rounding down the following can happen:
+
+	/* this configures for 15/16 */
+	pwm_apply_state(pwm, { .duty_cycle =3D 31249, .period =3D 31250 });
+
+	/* assume this called your .get_state callback */
+	pwm_get_state(pwm, &state);
+
+	/*
+	 * we now have
+	 *	state.duty_cycle =3D 29296;
+	 *	state.period =3D 31250;
+	 * right?
+	 */
+=09
+	/* this configures for 14/16 because 29296 * 16 / 31250 < 15 */
+	pwm_apply_state(pwm, &state);
+
+But I want this to be idempotent, i.e. pwm_get_state has to round up and
+then return .duty_cycle =3D 29297 in the above example which is enough to
+let .apply_state() configure 15/16 again. Enabling PWM_DEBUG should
+catch this.)
+
+> +};
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qpoybkluvtfa4wj6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7/RlUACgkQwfwUeK3K
+7AnMFgf/ZWd0QN8FR23Bf9LgdIj/yRJX1ZfTwH8YSVGQYd0Y6uB5u9gaTVlE3zEU
+CwnSstJbOPSu9/roLxUFiGSi1O04tx7FjASPhtr4P31F8kLe7HhQfftgPw1TMzl/
+r3RT+8k4x+qUcP/wUrdM0wPUctD9Bk7y/Qk3OQ9YB8sHLOKVKAz0oGGjPsN2gf5i
+vCEH0nxTHjE16hLViVIpJh9Be9iG+03ajvI+1zkI0gXy02zoPg3v7v4lwnmhpLUH
+pdCgFxWrOgU5ZQKwWX6DvyUPq5TcOTVspRo252mIjiH3guOP/N8W9h6wslOoYiql
+NpN1gu54TLt5bRLvSFlosx7mMbGz5g==
+=e8Kb
+-----END PGP SIGNATURE-----
+
+--qpoybkluvtfa4wj6--
