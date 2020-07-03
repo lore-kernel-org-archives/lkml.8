@@ -5,105 +5,112 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC49EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DBE20899
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D327E2084C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 17:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e0AkldCM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FIagus93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgGCRnQ (ORCPT
+        id S1727097AbgGCRnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 13:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44652 "EHLO
+        Fri, 3 Jul 2020 13:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727062AbgGCRnD (ORCPT
+        with ESMTP id S1727021AbgGCRm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 13:43:03 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B924C08C5DD
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:43:03 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 22so32763389wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:43:02 -0700 (PDT)
+        Fri, 3 Jul 2020 13:42:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F349C08C5DE
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 10:42:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f2so5599858wrp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 10:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8mQF2FZ0jrrVdFBW6SrV/K5PDC372enpc401EmGJ4RU=;
-        b=e0AkldCMprpPWh+rbnVgZVxtLG2y6OltUwnk8439ZxDnC/6jYt0uqjTtRQx/Zfn+tZ
-         nZwYhZtVgJfVHRbI+zDxMYK30uzPBABrlnWYCO5TBFx8Ja+jSCZxw+jYI87lsm2y3xy9
-         QxNGqinBdVqBcWPtpWsTduPgpEaxe4O9LOEpO7wvmc9DsueDiifOLfghcb/KulrhUqxf
-         wqW3D4u1FpOkgd+198fconKRrhY2PlpFbZ7tRgjc+8sbucSyMdhhLxMddDMHSRsTiSrH
-         pW1rKrPD0pEqCqMth1P2WdyD9ox3TMqkEkXTBSCnyAtV9BTy92b2xKgq3yRK+wVYMwCQ
-         inCQ==
+        bh=SYWwkgSPDIgouMfzyNf8caHaLbWDeyv2rcH01GGvlwk=;
+        b=FIagus93ZBIMXIzVrgZHDBEEUg/b5rSvyh4Hjl1apX65iTrYxfN7M6m0U1se57NfwG
+         AMAnabxTOjXzH+qeXftOTmXkt6iVi+tFloOT1b75k5tBrPL4F3Pz6ByWaNMda2fUKvBQ
+         Nfsvnq9vuXjPog2ODt9TYrvxJcIRCbWYQYwc0PBNoUrXDPhB44nPxdeBnvVmzqSzxgTD
+         LJV4eItrfpTRuqhRhIkWVigXqwyl+VrP/HaPOwOJ7p2s3AXAkJUopVPwmD8gGCG4RfJr
+         TMTV7FTl1+RO7WMt+3zzPXGZ11hrR3JJ4e0srVy5hAsMi1qcO0shJjmlXn4otHv5LVZZ
+         JC7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8mQF2FZ0jrrVdFBW6SrV/K5PDC372enpc401EmGJ4RU=;
-        b=elhN/zg5ddsG7b0rCozG0SdAKdprfrMijkDQpKzvC0JIIl/XrHog9f6jSvMAzv7jQB
-         AxiIkJylOvmUujaQDTBNBDcpRK1FbrZqtujQvbtiYmMD9/FZUu/P5MEaiKuNwGL9hAL6
-         edeBeiUe9c930LpI1hzNuOmeq6odBA1UwWbzoXEgpMjHu4Hfx919Fm/DHUXS1kflzzhr
-         fkHgE4N7N11LsWQLIsmbNK5HJi0jJrqYLHXRHRL4iWvEkLWtgL8j+1OFCbTxPVkjTxAR
-         2AfAaUXNUCujPH/8+2Ui/ehhwITsJcQklWGj8GuRaUfrc1q+eAnFJBjYzmOCFizjueRd
-         C4Kg==
-X-Gm-Message-State: AOAM532+51b2NF0CNwR8AMhK4Jp4DuIH8g4pQPjANbMXstQugLrzvtdU
-        A3EveyQieQzj0btI6xyUbMKOpw==
-X-Google-Smtp-Source: ABdhPJymDh7yO/0xPFzXc6z8/96jHurwQBojFV24c+PsUXFn1Um5Euz/ljx89ZFYhzbITSni3XCkHw==
-X-Received: by 2002:a1c:f007:: with SMTP id a7mr37726297wmb.103.1593798181776;
-        Fri, 03 Jul 2020 10:43:01 -0700 (PDT)
+        bh=SYWwkgSPDIgouMfzyNf8caHaLbWDeyv2rcH01GGvlwk=;
+        b=jEtxSi/FSSPm5xU1mfaPfBJ8rIzNgKjeE0lspvHtOIQn1EYhbaUgNyIsFjQwTmV4YQ
+         abYIaTqvmalY2etI9sETwTeDYxd0hP/E4wffSsCqfOgrbnJ52AC/KUHGeNhcYLEYR4NR
+         4mQIEmf0vuK43S9OIELp9q51sZgeDcOrWBI5+CnLF184vPD5l6J2o6hJJIxM/HZzi+Ig
+         I8zpwO++QH0fPTmhyBsD480XXG8s6SLvmFCVj7VZZt62z6EejXo324CZCeQLw9fJRgV8
+         7iBB1kCz2g+oQDErBdk9AsRL5WX1GjGuDEhkAjQQt1RieQPkBWjFqc0+PuCCPTrrO+Vk
+         xCOQ==
+X-Gm-Message-State: AOAM5339jcbvi0RxtqNCF8/K2RUas2BWad4DfbMUrwr0cwagXsakJq6w
+        DMTv8VMPCdnSdifpuW8Kz0CPaisFKas=
+X-Google-Smtp-Source: ABdhPJx0xhAIeeMVJ7701j/QMOLoGiJ8xgSFIS82zFsNrKSO5MmnhpfCqseg2k0p0otT85xs0+B7GA==
+X-Received: by 2002:a05:6000:1008:: with SMTP id a8mr39019528wrx.416.1593798176240;
+        Fri, 03 Jul 2020 10:42:56 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.43.00
+        by smtp.gmail.com with ESMTPSA id x11sm13625799wmc.26.2020.07.03.10.42.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 10:43:01 -0700 (PDT)
+        Fri, 03 Jul 2020 10:42:55 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 29/30] usb: gadget: usbstring: Repair misspelled function argument 'langid'
-Date:   Fri,  3 Jul 2020 18:41:47 +0100
-Message-Id: <20200703174148.2749969-30-lee.jones@linaro.org>
+        Felipe Balbi <balbi@kernel.org>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Al Borchers <alborchers@steinerpoint.com>,
+        Peter Berger <pberger@brimson.com>
+Subject: [PATCH 26/30] usb: gadget: function: u_serial: Repair misdocumented function argument
+Date:   Fri,  3 Jul 2020 18:41:44 +0100
+Message-Id: <20200703174148.2749969-27-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200703174148.2749969-1-lee.jones@linaro.org>
 References: <20200703174148.2749969-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An attempt was made to document the functions in 'usbstring',
-but a simple spelling mistake was made.
+Looks as though this has been an issue since the driver's
+inception back in 2014.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/usb/gadget/usbstring.c:76: warning: Function parameter or member 'langid' not described in 'usb_validate_langid'
- drivers/usb/gadget/usbstring.c:76: warning: Excess function parameter 'lang' description in 'usb_validate_langid'
+ drivers/usb/gadget/function/u_serial.c:538: warning: Function parameter or member 'port' not described in 'gs_start_io'
+ drivers/usb/gadget/function/u_serial.c:538: warning: Excess function parameter 'dev' description in 'gs_start_io'
 
 Cc: Felipe Balbi <balbi@kernel.org>
+Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
+Cc: Al Borchers <alborchers@steinerpoint.com>
+Cc: Peter Berger <pberger@brimson.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/usb/gadget/usbstring.c | 2 +-
+ drivers/usb/gadget/function/u_serial.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/usbstring.c b/drivers/usb/gadget/usbstring.c
-index 58a4d33250902..119505fac7776 100644
---- a/drivers/usb/gadget/usbstring.c
-+++ b/drivers/usb/gadget/usbstring.c
-@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(usb_gadget_get_string);
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 3cfc6e2eba71a..c295defe7ecd3 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -527,7 +527,7 @@ static int gs_alloc_requests(struct usb_ep *ep, struct list_head *head,
  
  /**
-  * usb_validate_langid - validate usb language identifiers
-- * @lang: usb language identifier
-+ * @langid: usb language identifier
+  * gs_start_io - start USB I/O streams
+- * @dev: encapsulates endpoints to use
++ * @port: port to use
+  * Context: holding port_lock; port_tty and port_usb are non-null
   *
-  * Returns true for valid language identifier, otherwise false.
-  */
+  * We only start I/O when something is connected to both sides of
 -- 
 2.25.1
 
