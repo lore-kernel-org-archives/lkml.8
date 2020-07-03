@@ -2,127 +2,186 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6ADC20890
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40B6208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 07:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="TR7n4591";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fsGfWB7g"
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="IiQ+r46F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IhZ0UIQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgGCHbF (ORCPT
+        id S1726142AbgGCHbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 03:31:05 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:45823 "EHLO
+        Fri, 3 Jul 2020 03:31:53 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:58353 "EHLO
         wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725648AbgGCHbE (ORCPT
+        by vger.kernel.org with ESMTP id S1726033AbgGCHbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:31:04 -0400
+        Fri, 3 Jul 2020 03:31:53 -0400
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 77DA6A86;
-        Fri,  3 Jul 2020 03:31:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 03 Jul 2020 03:31:03 -0400
+        by mailout.west.internal (Postfix) with ESMTP id 1F97CA01;
+        Fri,  3 Jul 2020 03:31:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 03 Jul 2020 03:31:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding:content-type; s=fm1; bh=
-        JySkV+jaMaBi53EvsBaH0nrrvi4RjY5RL+Gc+Q1kKYU=; b=TR7n4591CtsMVBC3
-        0u4ZuGMFp/+YByjzIk84qhQn9zUzTZMc6kPZkUwg9psQlPXV6ttr1412SK1TFIQl
-        IvhWDCbGUrQu8bMmS2X/RxGn/m/rcMk+F3SX0R6hC3tyP63l2dw2yJR30qTlrXXJ
-        /EfVi4Y7k2xEM/Prndb8YdDxdRU91QLHBt7bd77HIfcA9gkHc3YyyuXVMpqDOmIl
-        aEESaJxv7X8zZKxCw85fZf8DE4dNrULTQIhhuIWADPd10Lm4ccPtBZ/svnvr0BVO
-        97lkYnpkc7Hu3lfWfnkp/AeR+I93hD7ewCqL78T1VewbXcteJhw0LplGPaxNiJwt
-        97wIgg==
+        :mime-version:content-transfer-encoding; s=fm1; bh=X6Y8xHa3Pibzg
+        GUt6oP1ChxLqKHRNC1m6ymqp41msqo=; b=IiQ+r46FntV2KCZKvH0ornfYpVP0q
+        GKpmzfS1DeWBEhohuvO2hvUSd1s3TqxUKXhpRMttrZv0ZKwpbph4e8lk0zHsTsGs
+        +2rk+Dx+qQob+Y0/Vq2bXfFg6y8Y+W8rypQWQwJceARkRl408BBpdTbNpj8DRjKb
+        1HoVGwCYkkKxQ78T26OrflHAnABp85a4GDMn2tWmwjFSqms5HBhThvT/PZx9HzkX
+        HqDamFp/i9iDbrkcWy61PcBjsZgpdeGy619k2pOLl5y/cNXK8vOfeW1VeaLYwBo2
+        RAlFnSZZEPgK5liFdTBzt6M+R+MEigOfL+yKA94iAEwga9EuIxTG1+IQQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=JySkV+jaMaBi53EvsBaH0nrrvi4RjY5RL+Gc+Q1kK
-        YU=; b=fsGfWB7g1K3lv7XMDpRAu9T7HwdIRDW0S9VF/gszCcXrqgz3FhztCReJG
-        Xyhp2RaL3HiVI7SrhZ7q+Rq8st4NNxFLLmgiRfxKwZWgAMybFNHrOvGv9MBLtfDX
-        fVX67lyHZ4FKMOQiWWKbTywiDs0bS+nIwh3qlKoTG+REjtWkHrPa2v2YyYmkx7SB
-        TNuCSqnx8cbAAx5OJOHob5m8ie4f3fIB0t46X9tFK15FHH27ZAJoGS97cAdOvlP4
-        GgB0rL5YYjM/3MnVoDUxfiP4/5Yt9OmbW/xLFKDoikXEJsFQmOSlZXK1FGO1hXYB
-        FKRnbwHJwVXueyRL8ii2am/U/CpGg==
-X-ME-Sender: <xms:tt7-XpVvQnOQuiF-zyTBzry_Vz1AvILz3B91I3Smmh9SkQCMrSGJlg>
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=X6Y8xHa3PibzgGUt6oP1ChxLqKHRNC1m6ymqp41msqo=; b=IhZ0UIQw
+        q41hlqzw2n3TiwWLhyXUEwYp9TLWGQ7D27YRetO87RGBK/TF7/yvkD21Cn6hxwlx
+        1TVRG7+lAkhl669zszKH3yua5SC7FZ+c/IOAwkWASwm5sEPxUq2pzi2VE61avI0A
+        G+gwgJ26nCLlnpE8vLzzuwkBCl7QslivSuj6C0+kQHE25yGmuimqys9iyNZagc+S
+        wkCjfKvgRY9tVS30FwOcEPrskw1SgoWaIngIew6bodnghGsUyIWJDTxdX5+I9g/r
+        EBOkcS3a2pXovPq91qaTcq5+4KoQkpPwWn21eY63Ra2TmdhTHn4UZCYzBS4LWTeN
+        mzU2sDAWnbBdrQ==
+X-ME-Sender: <xms:597-XhSXil-szFO3GADxAamc156VmpMbTaH9fQaQ63w7qzprDkOmqg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtdehgdduudelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkfgjfhgggfgtsehtufertddttddvnecuhfhrohhmpeffrghnnhih
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnnhih
     ucfnihhnuceouggrnhhnhieskhgurhgrghdtnhdruggvvheqnecuggftrfgrthhtvghrnh
-    epheeujeffgfdvieduvdeltedvteelueegheegleeggeegveefieevfeeitdfhledvnecu
-    kfhppeejfedrvddvhedrgedrudefkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegurghnnhihsehkughrrghgtdhnrdguvghv
-X-ME-Proxy: <xmx:tt7-Xpl82x6iX208VrAhJOb-xGUwwh_pDfhKyNDRHTqTJoV3A-eE_g>
-    <xmx:tt7-Xlbb0df6jY24HhDf7-ZS3BOxLZukyOulI_QTShcHgr-A8GBVyg>
-    <xmx:tt7-XsUTlXtkhXlQBqmPC8yIXp6ltCY8xN0QhPNOX0Lo2G1pg4mvCw>
-    <xmx:t97-Xhi1G-39w_olYBWcDwfQ1fpp1CUYpGZiazZrKCo6du2uBS618Q>
-Received: from pinwheel.localnet (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E239E3060066;
-        Fri,  3 Jul 2020 03:31:01 -0400 (EDT)
+    ephfduudegudfffeetvdekgeeutdelffejhfduueekteejieegiedvjeeifeevleehnecu
+    ffhomhgrihhnpegvughithhorhgtohhnfhhighdrohhrghenucfkphepjeefrddvvdehrd
+    egrddufeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepuggrnhhnhieskhgurhgrghdtnhdruggvvh
+X-ME-Proxy: <xmx:597-XqxnJBiOYoT2S2L8TgxcQSPfp6SH2-dVF82Ghb2IeSKpZwPf1Q>
+    <xmx:597-Xm0Ela4TRC2xk_xkQCzPBzMa36kJYE_PupmvmBeCY6s3X9XSOg>
+    <xmx:597-XpA8zBZc8gzz7_I6Et5GG_RAi4bG98F4xcHrwbtF2-u6pqelPA>
+    <xmx:597-XrsjOHcGTjIZpZpkYf-1ez5H2_Xj6SPowALnmRUG1Oqn8bfqXg>
+Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5A542328005E;
+        Fri,  3 Jul 2020 03:31:50 -0400 (EDT)
 From:   Danny Lin <danny@kdrag0n.dev>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] editorconfig: Add automatic editor configuration file
-Date:   Fri, 03 Jul 2020 00:31:00 -0700
-Message-ID: <16043769.gqpzGLO8mG@pinwheel>
-In-Reply-To: <CANiq72k2rrByxzj1c4azAVJq-V7BqQcmBwtm3XM9T8r3r3-ysQ@mail.gmail.com>
-References: <20200703001212.207565-1-danny@kdrag0n.dev> <CANiq72k2rrByxzj1c4azAVJq-V7BqQcmBwtm3XM9T8r3r3-ysQ@mail.gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Danny Lin <danny@kdrag0n.dev>
+Subject: [PATCH v2] editorconfig: Add automatic editor configuration file
+Date:   Fri,  3 Jul 2020 00:31:43 -0700
+Message-Id: <20200703073143.423557-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <16043769.gqpzGLO8mG@pinwheel>
+References: <16043769.gqpzGLO8mG@pinwheel>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 2, 2020 at 10:38 PM, Miguel Ojeda wrote:
-> Hi Danny,
-> 
-> On Fri, Jul 3, 2020 at 2:16 AM Danny Lin <danny@kdrag0n.dev> wrote:
-> > +[*]
-> > +charset = utf-8
-> > +end_of_line = lf
-> 
-> While UTF-8 and LF are probably OK for all files, I am not 100% sure 
-about:
-> > +insert_final_newline = true
-> > +indent_style = tab
-> > +indent_size = 8
-> 
-> for other languages and non-code files we may have around. Perhaps it
-> is best to avoid `[*]` unless we are sure?
+EditorConfig is a standard for defining basic editor configuration in
+projects. There is support available for 47 code editors as of writing,
+including both built-in and extension support. Many notable projects
+have adopted the standard already, including zsh, htop, and qemu.
 
-Most of the other exceptions can be accomodated for with more specific 
-rules below the base [*] section. I just went through most of the 
-kernel's files and added rules for the vast majority of the exceptinos 
-to the 8-column tab indent style, though there are still some that 
-haven't been covered.
+While this isn't a full-fledged C code style specifier, it does set some
+basic ground rules that make it more convenient for contributors to use
+any editor of their choice and not have to worry about indentation, line
+endings, encoding, final newlines, etc. This should make it
+significantly easier to conform to the kernel's general code style when
+used in combination with clang-format.
 
-It looks like some types of files lack consistent indentation, e.g. 
-arch/mips/*/Platform and some shell scripts in scripts/ tools/testing/
-selftests/ftrace/test.d/kprobe/*.tc. There are also some files that were 
-highly inconsistent even within themselves (e.g. drivers/gpu/drm/amd/
-amdkfd/cwsr_trap_handler_gfx*.asm), so setting indentation settings to 
-something sane by default doesn't make them any worse. After all, no 
-automated code style tooling is perfect and there will be edge cases 
-where it breaks down.
+For more information, check the official EditorConfig website:
+https://editorconfig.org/
 
-That being said, I think most of the exceptions should be taken care of 
-now; please feel free to suggest a better way to deal with these.
+Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+---
+v2:
+  - Added rules for most exceptions to the 8-column tab indent style
 
-> 
-> Cheers,
-> Miguel
+ .editorconfig                      | 37 ++++++++++++++++++++++++++++++
+ .gitignore                         |  1 +
+ Documentation/process/4.Coding.rst |  6 +++++
+ 3 files changed, 44 insertions(+)
+ create mode 100644 .editorconfig
 
+diff --git a/.editorconfig b/.editorconfig
+new file mode 100644
+index 000000000000..ab886ff0f66e
+--- /dev/null
++++ b/.editorconfig
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: GPL-2.0
++# Linux kernel EditorConfig file (https://editorconfig.org/)
++
++# Located at the project root
++root = true
++
++# Base settings for most files
++[*]
++charset = utf-8
++end_of_line = lf
++insert_final_newline = true
++
++indent_style = tab
++indent_size = 8
++
++# This avoids introducing too many unnecessary changes in trivial commits
++trim_trailing_whitespace = false
++
++# General 4-space files
++[*.{pl,pm,py,tc,json,tc}]
++indent_style = space
++indent_size = 4
++
++# General 2-space files
++[*.{rb,rst,yaml,cocci,xsl,svg,bconf,clang-format}]
++indent_style = space
++indent_size = 2
++
++# Perf script wrappers
++[tools/perf/scripts/*/bin/*]
++indent_style = space
++indent_size = 4
++
++# Man pages
++[*.{1,2,3,4,5,6,7,8}]
++indent_style = space
++indent_size = 2
+diff --git a/.gitignore b/.gitignore
+index 87b9dd8a163b..956bcc3c9d76 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -89,6 +89,7 @@ modules.order
+ #
+ !.clang-format
+ !.cocciconfig
++!.editorconfig
+ !.get_maintainer.ignore
+ !.gitattributes
+ !.gitignore
+diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
+index 13dd893c9f88..25b39dc8751d 100644
+--- a/Documentation/process/4.Coding.rst
++++ b/Documentation/process/4.Coding.rst
+@@ -66,6 +66,12 @@ for aligning variables/macros, for reflowing text and other similar tasks.
+ See the file :ref:`Documentation/process/clang-format.rst <clangformat>`
+ for more details.
+ 
++Some basic editor settings, such as indentation and line endings, will be
++set automatically if you are using an editor that is compatible with
++EditorConfig. See the official EditorConfig website for more information:
++
++https://editorconfig.org/
++
+ 
+ Abstraction layers
+ ******************
+-- 
+2.27.0
 
