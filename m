@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ADCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5451D20B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB72207CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 02:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgGCCg6 (ORCPT
+        id S1726836AbgGCChN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 22:36:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3198 "EHLO mga09.intel.com"
+        Thu, 2 Jul 2020 22:37:13 -0400
+Received: from mga05.intel.com ([192.55.52.43]:33754 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbgGCCgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:36:13 -0400
-IronPort-SDR: 19juRkF0zOA/tayQa5bs6yallRua+SLn4jb6cVsIduM4wqlTW3Kjxo8tTlaLEJT0wM/zEuIkzS
- kLt0R4rFdVyA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="148599916"
+        id S1726283AbgGCCgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Jul 2020 22:36:12 -0400
+IronPort-SDR: KwljBXzyFdfysrvl/vjJMHl0Tw4DuSrBsdJ20uONn0Ae5vwMwgQGiXuhN7LATtsQ7aUgJaDkVG
+ 1r4sCoDgx7QA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="231938503"
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="148599916"
+   d="scan'208";a="231938503"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:06 -0700
-IronPort-SDR: PFslKE7FImhgbkhI1kag4qP27HpXp33Wl+BVDjfY4qg20UNFz+mjVTnpk7iL3nyjg1hf0g2jlp
- 3C6M1DYUpGiQ==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:36:06 -0700
+IronPort-SDR: QGbjKkt+bOJe+qHbBpZ9whObSpvMd7Xamga0DRoq9+25x4ZtCSY5isivjtlyYDjcc8+1CT5yqM
+ 8vZpoJuYjv6w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="278295773"
+   d="scan'208";a="278295789"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga003.jf.intel.com with ESMTP; 02 Jul 2020 19:36:06 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -55,9 +55,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Peter Shier <pshier@google.com>,
         Junaid Shahid <junaids@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v3 16/21] KVM: arm64: Drop @max param from mmu_topup_memory_cache()
-Date:   Thu,  2 Jul 2020 19:35:40 -0700
-Message-Id: <20200703023545.8771-17-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 20/21] KVM: MIPS: Account pages used for GPA page tables
+Date:   Thu,  2 Jul 2020 19:35:44 -0700
+Message-Id: <20200703023545.8771-21-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200703023545.8771-1-sean.j.christopherson@intel.com>
 References: <20200703023545.8771-1-sean.j.christopherson@intel.com>
@@ -68,61 +68,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the @max param in mmu_topup_memory_cache() and instead use
-ARRAY_SIZE() to terminate the loop to fill the cache.  This removes a
-BUG_ON() and sets the stage for moving arm64 to the common memory cache
-implementation.
+Use GFP_KERNEL_ACCOUNT instead of GFP_KERNEL when allocating pages for
+the the GPA page tables.  The primary motivation for accounting the
+allocations is to align with the common KVM memory cache helpers in
+preparation for moving to the common implementation in a future patch.
+The actual accounting is a bonus side effect.
 
-No functional change intended.
-
-Tested-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/arm64/kvm/mmu.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ arch/mips/kvm/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 8c0035cab6b6..f78aa3e269e9 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -124,15 +124,13 @@ static void stage2_dissolve_pud(struct kvm *kvm, phys_addr_t addr, pud_t *pudp)
- 	put_page(virt_to_page(pudp));
- }
- 
--static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
--				  int min, int max)
-+static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
- {
- 	void *page;
- 
--	BUG_ON(max > KVM_NR_MEM_OBJS);
+diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+index d1f148db2449..9d3c8c025624 100644
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -32,7 +32,7 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
  	if (cache->nobjs >= min)
  		return 0;
--	while (cache->nobjs < max) {
-+	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
- 		page = (void *)__get_free_page(GFP_PGTABLE_USER);
+ 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
+-		page = (void *)__get_free_page(GFP_KERNEL);
++		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
  		if (!page)
  			return -ENOMEM;
-@@ -1481,8 +1479,7 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
- 			pte = kvm_s2pte_mkwrite(pte);
- 
- 		ret = mmu_topup_memory_cache(&cache,
--					     kvm_mmu_cache_min_pages(kvm),
--					     KVM_NR_MEM_OBJS);
-+					     kvm_mmu_cache_min_pages(kvm));
- 		if (ret)
- 			goto out;
- 		spin_lock(&kvm->mmu_lock);
-@@ -1882,8 +1879,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	mmap_read_unlock(current->mm);
- 
- 	/* We need minimum second+third level pages */
--	ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm),
--				     KVM_NR_MEM_OBJS);
-+	ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm));
- 	if (ret)
- 		return ret;
- 
+ 		cache->objects[cache->nobjs++] = page;
 -- 
 2.26.0
 
