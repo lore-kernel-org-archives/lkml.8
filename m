@@ -2,138 +2,106 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7FE921D79
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QH2gaCCo"
+	by mail.kernel.org (Postfix) with ESMTP id C830B21D79
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 18:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593799284;
+	bh=LtCAW4mki0pzhEa/wPXfHnMIujRWqxzjL5W2fPw6Lt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C1HaHDncaJ144wVZnhVwWTSZq4QmqKaKhTrHeyl/j9AKr4lEp8dLPY0FEycT4wnoP
+	 Nf2l0L8W+qUsD0tSTA1RsjSInBTyxC3rC0WQ6ZqFz5xRpEW6bTNerpbdzGwE2rRGD7
+	 r9Yu7Cwxq+51XE+PHaRUgS9G07Ufxm8i6YlgHps8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgGCSA5 (ORCPT
+        id S1726610AbgGCSBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 14:00:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41907 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726035AbgGCSA5 (ORCPT
+        Fri, 3 Jul 2020 14:01:23 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:39845 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgGCSBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 14:00:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593799256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=W7hX68Id9MrI9Dp1ohSoP6+dFWqqds4yeexuPF5eVaQ=;
-        b=QH2gaCCo1xaJCNGzM8DQT0kZJyvYuq/KddyB50un/cH8lEPZM/seqzJmq4TGbLQgyEW86Z
-        jYihaT6DjXmOJLRTEtBL0JVOkQa5p8gMZUj+HRnETSAKLWexPAwmd/qD2W7zPqw5VCQGqI
-        VDNCLkZ+Uq6VaEWUsQhvlqOGad3ebFE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-F_NqQgogODmQd7163_VhmA-1; Fri, 03 Jul 2020 14:00:54 -0400
-X-MC-Unique: F_NqQgogODmQd7163_VhmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F415B800C64;
-        Fri,  3 Jul 2020 18:00:52 +0000 (UTC)
-Received: from localhost (ovpn-116-12.gru2.redhat.com [10.97.116.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C28C19D9E;
-        Fri,  3 Jul 2020 18:00:52 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
-        Bruno Meneguele <bmeneg@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH v4] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
-Date:   Fri,  3 Jul 2020 15:00:49 -0300
-Message-Id: <20200703180049.15608-1-bmeneg@redhat.com>
+        Fri, 3 Jul 2020 14:01:23 -0400
+Received: by mail-ej1-f67.google.com with SMTP id w6so35163334ejq.6;
+        Fri, 03 Jul 2020 11:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YageHdHnDETUH0WwG8/ZR5delr/Q4EUevxKHi51xHZM=;
+        b=Oj45A+o5SLrXa1sAWh00l6N0XEQK49KYP/UymvnhaXbXjSOVjQmPusO4vHEwshJKc6
+         CHpvnQ5SoiRADtyFusMHD+Iy3ep5UA9DafB9dtVoVMJ4QFD0jj+uIm03tvEiLZBF8qN3
+         2gdpoaeA5Uq8ToUHhXfxl7p2ZAFeDk0z1TGbXAe5R7tKA+iL950kv4k8ecyEC5vLJ/65
+         J1VueQc/pxI0Rjn0qGZN8GcphI74u31i83VsibbgHx17lKYIEOAhZm3dwWAahmvHZu06
+         UGtOYQgGL5Qx6l+dp9bpmpxpp7hZ0lK7VLOAUPdTRwBq6Z2GDr9OJTfHczbYKTXT14lZ
+         PyUw==
+X-Gm-Message-State: AOAM53335MaH52GFvF70iT5J0VFgL97wE3cESdoXAdisjyZnYLI0XPEA
+        Gb8CiKfqn43S5s2ieXiX2gQ=
+X-Google-Smtp-Source: ABdhPJwyz/pyBEbw295xSe8DvR03m0H2mpqxsylPLSbujJ36/MYAlzcJjyg7zpwwv//h3eWK2oJrNQ==
+X-Received: by 2002:a17:906:5657:: with SMTP id v23mr34429394ejr.196.1593799280892;
+        Fri, 03 Jul 2020 11:01:20 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id y7sm9779927ejd.73.2020.07.03.11.01.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Jul 2020 11:01:20 -0700 (PDT)
+Date:   Fri, 3 Jul 2020 20:01:17 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 3/8] arm64: dts: exynos: Remove generic
+ arm,armv8-pmuv3 compatible
+Message-ID: <20200703180117.GA1241@kozik-lap>
+References: <20200702155149.12854-1-krzk@kernel.org>
+ <20200702155149.12854-3-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200702155149.12854-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY in compile
-time, enforcing the appraisal whenever the kernel had the arch policy option
-enabled.
+On Thu, Jul 02, 2020 at 05:51:44PM +0200, Krzysztof Kozlowski wrote:
+> The ARM PMU node is described enough with first compatible so remove the
+> arm,armv8-pmuv3 to fix dtschema warnings like:
+> 
+>     arm-pmu: compatible: Additional items are not allowed ('arm,armv8-pmuv3' was unexpected)
+>     arm-pmu: compatible: ['arm,cortex-a57-pmu', 'arm,armv8-pmuv3'] is too long
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. None
+> 
+> Not tested although no effect expected.
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 4 ++--
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi    | 2 +-
 
-However it breaks systems where the option is set but the system wasn't
-booted in a "secure boot" platform. In this scenario, anytime an appraisal
-policy (i.e. ima_policy=appraisal_tcb) is used it will be forced, giving no
-chance to the user set the 'fix' state (ima_appraise=fix) to actually
-measure system's files.
+Applied.
 
-Considering the ARCH_POLICY is only effective when secure boot is actually
-enabled this patch remove the compile time dependency and move it to a
-runtime decision, based on the secure boot state of that platform.
-
-Cc: stable@vger.kernel.org
-Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
-Changelog:
-	v4:
-	  - instead of change arch_policy loading code, check secure boot state
-		at "ima_appraise=" parameter handler (Mimi)
-	v3:
-	  - extend secure boot arch checker to also consider trusted boot
-	  - enforce IMA appraisal when secure boot is effectively enabled (Nayna)
-	  - fix ima_appraise flag assignment by or'ing it (Mimi)
-	v2:
-	  - pr_info() message prefix correction
-
- security/integrity/ima/Kconfig        |  2 +-
- security/integrity/ima/ima_appraise.c | 18 ++++++++++--------
- 2 files changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index edde88dbe576..62dc11a5af01 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
- 
- config IMA_APPRAISE_BOOTPARAM
- 	bool "ima_appraise boot parameter"
--	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
-+	depends on IMA_APPRAISE
- 	default y
- 	help
- 	  This option enables the different "ima_appraise=" modes
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index a9649b04b9f1..4fc83b3fbd5c 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -18,14 +18,16 @@
- 
- static int __init default_appraise_setup(char *str)
- {
--#ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
--	if (strncmp(str, "off", 3) == 0)
--		ima_appraise = 0;
--	else if (strncmp(str, "log", 3) == 0)
--		ima_appraise = IMA_APPRAISE_LOG;
--	else if (strncmp(str, "fix", 3) == 0)
--		ima_appraise = IMA_APPRAISE_FIX;
--#endif
-+	if (IS_ENABLED(CONFIG_IMA_APPRAISE_BOOTPARAM) &&
-+	    !arch_ima_get_secureboot()) {
-+		if (strncmp(str, "off", 3) == 0)
-+			ima_appraise = 0;
-+		else if (strncmp(str, "log", 3) == 0)
-+			ima_appraise = IMA_APPRAISE_LOG;
-+		else if (strncmp(str, "fix", 3) == 0)
-+			ima_appraise = IMA_APPRAISE_FIX;
-+	}
-+
- 	return 1;
- }
- 
--- 
-2.26.2
+Best regards,
+Krzysztof
 
