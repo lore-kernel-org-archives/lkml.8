@@ -2,211 +2,147 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC85C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DD9208C7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1911B208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WGRsolbX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fDmiVC3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgGCQ44 (ORCPT
+        id S1726675AbgGCQ7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:56:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42412 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726505AbgGCQ4y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:56:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593795412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=A17YU0TJdMJJbx+XyJzyM20ucRgGb0iLLQw+LKi/Iwk=;
-        b=WGRsolbXnK60u85Ixg/WdzcfJGT2+u04gQ+O0w8cxCHpGp9pGisIE8KfkGi215Vhlu4Y9w
-        yxuo93cflo/bPznYYhDpZxh0hqnSUbLI+Nv4tZwyXaT+atxvQGn+DedObmbhLy9Y1cV6Xy
-        NIolLY9l04wAa6HkInsOT5SOE55NEd4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-_RIuiWmDMA-qU_6Iq1eapA-1; Fri, 03 Jul 2020 12:56:48 -0400
-X-MC-Unique: _RIuiWmDMA-qU_6Iq1eapA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 3 Jul 2020 12:59:20 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22184 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgGCQ7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:59:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593795559; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+gnWJZLQFOi3Y3xgbq+Jj83g8jf7HMQgZHy7FN5ldrA=;
+ b=fDmiVC3/UUDh81x2fPLdbadyxJH4jm5fhdKF2HrnItzWXJY8XBT/Ox7Y7x+ggbt4KMtzRE6P
+ pHfnmM8MegU/7n+BxWqEJBhkf2K8SfULnDHzyQ4zgSLw/DK+ABSYaCPL35oT1uQehqPrZqSH
+ S0c/d1A8odRb5I4O+O31CZbeTVA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5eff63e7356bcc26abeb13a4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 16:59:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 93A4CC433B1; Fri,  3 Jul 2020 16:59:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AAF656B9B;
-        Fri,  3 Jul 2020 16:56:47 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C05310013D9;
-        Fri,  3 Jul 2020 16:56:44 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>
-Cc:     Paul Moore <paul@paul-moore.com>, eparis@parisplace.org,
-        john.johansen@canonical.com, Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak96 v3] audit: issue CWD record to accompany LSM_AUDIT_DATA_* records
-Date:   Fri,  3 Jul 2020 12:56:19 -0400
-Message-Id: <878ac79163e31142963f1cd4f743599c35b6754a.1593691408.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6CB36C433C6;
+        Fri,  3 Jul 2020 16:59:16 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Jul 2020 22:29:16 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS , Joerg Roedel <joro@8bytes.org>," 
+        <iommu@lists.linux-foundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system
+ cache(LLC)
+In-Reply-To: <CAF6AEGsCROVTsi2R7_aUkmH9Luoc_guMR0w0KUJc2cEgpfj79w@mail.gmail.com>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+ <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
+ <20200703133732.GD18953@willie-the-truck>
+ <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
+ <CAF6AEGsCROVTsi2R7_aUkmH9Luoc_guMR0w0KUJc2cEgpfj79w@mail.gmail.com>
+Message-ID: <c925406446bb2f6c7aead8e047672cae@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LSM_AUDIT_DATA_* records for PATH, FILE, IOCTL_OP, DENTRY and INODE
-are incomplete without the task context of the AUDIT Current Working
-Directory record.  Add it.
+On 2020-07-03 21:34, Rob Clark wrote:
+> On Fri, Jul 3, 2020 at 7:53 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi Will,
+>> 
+>> On 2020-07-03 19:07, Will Deacon wrote:
+>> > On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
+>> >> diff --git a/drivers/gpu/drm/msm/msm_iommu.c
+>> >> b/drivers/gpu/drm/msm/msm_iommu.c
+>> >> index f455c597f76d..bd1d58229cc2 100644
+>> >> --- a/drivers/gpu/drm/msm/msm_iommu.c
+>> >> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+>> >> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu,
+>> >> uint64_t iova,
+>> >>              iova |= GENMASK_ULL(63, 49);
+>> >>
+>> >>
+>> >> +    if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
+>> >> +            prot |= IOMMU_SYS_CACHE_ONLY;
+>> >
+>> > Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then
+>> > it
+>> > looks like it should actually be a property on the domain because we
+>> > never
+>> > need to configure it on a per-mapping basis within a domain, and
+>> > therefore
+>> > it shouldn't be exposed by the IOMMU API as a prot flag.
+>> >
+>> > Do you agree?
+>> >
+>> 
+>> GPU being the only user is for now, but there are other clients which
+>> can use this.
+>> Plus how do we set the memory attributes if we do not expose this as
+>> prot flag?
+> 
+> It does appear that the downstream kgsl driver sets this for basically
+> all mappings.. well there is some conditional stuff around
+> DOMAIN_ATTR_USE_LLC_NWA but it seems based on the property of the
+> domain.  (Jordan may know more about what that is about.)  But looks
+> like there are a lot of different paths into iommu_map in kgsl so I
+> might have missed something.
+> 
+> Assuming there isn't some case where we specifically don't want to use
+> the system cache for some mapping, I think it could be a domain
+> attribute that sets an io_pgtable_cfg::quirks flag
+> 
 
-This record addition can't use audit_dummy_context to determine whether
-or not to store the record information since the LSM_AUDIT_DATA_*
-records are initiated by various LSMs independent of any audit rules.
-context->in_syscall is used to determine if it was called in user
-context like audit_getname.
+Ok then we are good to remove unused sys cache prot flag which Will has 
+posted.
 
-Please see the upstream issue
-https://github.com/linux-audit/audit-kernel/issues/96
+Thanks,
+Sai
 
-Adapted from Vladis Dronov's v2 patch.
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
-Passes audit-testsuite.
-
-Changelog:
-v3
-- adapt and refactor__audit_getname, don't key on dummy
-
-v2
-2020-04-02 vdronov https://www.redhat.com/archives/linux-audit/2020-April/msg00004.html
-- convert to standalone CWD record
-
-v1:
-2020-03-24 vdronov https://github.com/nefigtut/audit-kernel/commit/df0b55b7ab84e1c9faa588b08e547e604bf25c87
-- add cwd= field to LSM record
-
- include/linux/audit.h |  9 ++++++++-
- kernel/auditsc.c      | 17 +++++++++++++++--
- security/lsm_audit.c  |  5 +++++
- 3 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 03c4035a532b..bb850d588e1c 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -292,7 +292,7 @@ extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
- extern void __audit_syscall_exit(int ret_success, long ret_value);
- extern struct filename *__audit_reusename(const __user char *uptr);
- extern void __audit_getname(struct filename *name);
--
-+extern void __audit_getcwd(void);
- extern void __audit_inode(struct filename *name, const struct dentry *dentry,
- 				unsigned int flags);
- extern void __audit_file(const struct file *);
-@@ -351,6 +351,11 @@ static inline void audit_getname(struct filename *name)
- 	if (unlikely(!audit_dummy_context()))
- 		__audit_getname(name);
- }
-+static inline void audit_getcwd(void)
-+{
-+	if (unlikely(audit_context()))
-+		__audit_getcwd();
-+}
- static inline void audit_inode(struct filename *name,
- 				const struct dentry *dentry,
- 				unsigned int aflags) {
-@@ -579,6 +584,8 @@ static inline struct filename *audit_reusename(const __user char *name)
- }
- static inline void audit_getname(struct filename *name)
- { }
-+static inline void audit_getcwd(void)
-+{ }
- static inline void audit_inode(struct filename *name,
- 				const struct dentry *dentry,
- 				unsigned int aflags)
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 3a9100e95fda..934ab5b8c1c5 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1891,6 +1891,20 @@ struct filename *
- 	return NULL;
- }
- 
-+inline void _audit_getcwd(struct audit_context *context)
-+{
-+	if (!context->pwd.dentry)
-+		get_fs_pwd(current->fs, &context->pwd);
-+}
-+
-+void __audit_getcwd(void)
-+{
-+	struct audit_context *context = audit_context();
-+
-+	if (context->in_syscall)
-+		_audit_getcwd(context);
-+}
-+
- /**
-  * __audit_getname - add a name to the list
-  * @name: name to add
-@@ -1915,8 +1929,7 @@ void __audit_getname(struct filename *name)
- 	name->aname = n;
- 	name->refcnt++;
- 
--	if (!context->pwd.dentry)
--		get_fs_pwd(current->fs, &context->pwd);
-+	_audit_getcwd(context);
- }
- 
- static inline int audit_copy_fcaps(struct audit_names *name,
-diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-index 2d2bf49016f4..7c555621c2bd 100644
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -241,6 +241,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
- 			audit_log_format(ab, " ino=%lu", inode->i_ino);
- 		}
-+		audit_getcwd();
- 		break;
- 	}
- 	case LSM_AUDIT_DATA_FILE: {
-@@ -254,6 +255,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
- 			audit_log_format(ab, " ino=%lu", inode->i_ino);
- 		}
-+		audit_getcwd();
- 		break;
- 	}
- 	case LSM_AUDIT_DATA_IOCTL_OP: {
-@@ -269,6 +271,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 		}
- 
- 		audit_log_format(ab, " ioctlcmd=0x%hx", a->u.op->cmd);
-+		audit_getcwd();
- 		break;
- 	}
- 	case LSM_AUDIT_DATA_DENTRY: {
-@@ -283,6 +286,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 			audit_log_untrustedstring(ab, inode->i_sb->s_id);
- 			audit_log_format(ab, " ino=%lu", inode->i_ino);
- 		}
-+		audit_getcwd();
- 		break;
- 	}
- 	case LSM_AUDIT_DATA_INODE: {
-@@ -300,6 +304,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 		audit_log_format(ab, " dev=");
- 		audit_log_untrustedstring(ab, inode->i_sb->s_id);
- 		audit_log_format(ab, " ino=%lu", inode->i_ino);
-+		audit_getcwd();
- 		break;
- 	}
- 	case LSM_AUDIT_DATA_TASK: {
 -- 
-1.8.3.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
