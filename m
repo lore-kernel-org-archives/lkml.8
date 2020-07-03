@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD05C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A92C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE7620747
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFEC20747
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 23:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TxNXNsy1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3kcrbYo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgGCXzx (ORCPT
+        id S1726948AbgGCX4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 19:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
+        Fri, 3 Jul 2020 19:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgGCXzv (ORCPT
+        with ESMTP id S1726912AbgGCXz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 19:55:51 -0400
+        Fri, 3 Jul 2020 19:55:56 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D673FC061794;
-        Fri,  3 Jul 2020 16:55:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F7CC061794;
+        Fri,  3 Jul 2020 16:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=1fQd92ew+IWLvkr0rRhrWawGLOzUR/lh62pUtOg+q1c=; b=TxNXNsy1aiE0Wn/MjQENoNKScR
-        TlG2lqPAauXMIodVdBi1OTbE56+aA1hIqclczJYRfK8griSGAmZbEzQrzH2MtkWRmms+KVUgnAg1e
-        E04lg275OdaSaqA9/yYaLBweAv8mrbnYEeemNqjiHGOAxaqtNKVfHPW0pWZGjsUNvRRC9eg79SWcU
-        +AMj75LXqNN/RhVc6Zdz22EQIGiBgTX8mxbJF9HVfL/+HNBhr31/tmG/Gn5k2kPb0s0P8qNgrR2vx
-        OQcv7PEBnlL9ucb4VrUGm2nIcnfkPAwpllIIMk4Js9agR+lttVFWU9x5Y0MBd+2+Kn6L3GgkbROVP
-        CXNyRDAQ==;
+        bh=5JgPLYhidepVsUvfsvPeR7vaaCRxGv4auJRjV9RJFZY=; b=3kcrbYo59z7B381JN+rsnt1SJq
+        G4+2arvwiBb1HNgBYMFSocrsuebkB9sXw/IPD9IGRRWAVYdS7FrdpSSfwfqQb6nqSbHFoz5l7emNq
+        gvKnwFs62QnfOHG2nbcEDDnFbRDfb6mPtOGOzXv+sv3vUXjV3+n5M2P4XhiYv3XXPorJ2/Yf5YyKm
+        yQIy0Qaymu1Pe9qlrg2qlm7DF7FmVcXJyhENBGIAC4Zdi5sOyufkgQkgYqAhg+oPB6KLilLH7XMGF
+        ovReyDp5pDo6PcC9HSvzkJJyTFKiW3cytCO9xbS4ysNEVt5BTUnXiqGympm99R1VBRujQmm2dhczq
+        hlsfJjag==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jrVX2-0005uW-Hc; Fri, 03 Jul 2020 23:55:49 +0000
+        id 1jrVX7-0005uW-FB; Fri, 03 Jul 2020 23:55:54 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org
-Subject: [PATCH 03/11] Documentation: userspace-api/media: dvb/demux: drop doubled word
-Date:   Fri,  3 Jul 2020 16:55:28 -0700
-Message-Id: <20200703235536.30416-4-rdunlap@infradead.org>
+Subject: [PATCH 05/11] Documentation: userspace-api/media: dvb/net: drop doubled word
+Date:   Fri,  3 Jul 2020 16:55:30 -0700
+Message-Id: <20200703235536.30416-6-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200703235536.30416-1-rdunlap@infradead.org>
 References: <20200703235536.30416-1-rdunlap@infradead.org>
@@ -66,17 +65,17 @@ Cc: linux-doc@vger.kernel.org
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: linux-media@vger.kernel.org
 ---
- Documentation/userspace-api/media/dvb/demux.rst |    2 +-
+ Documentation/userspace-api/media/dvb/net.rst |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200701.orig/Documentation/userspace-api/media/dvb/demux.rst
-+++ linux-next-20200701/Documentation/userspace-api/media/dvb/demux.rst
-@@ -18,7 +18,7 @@ digital TV. If the driver and hardware s
- implemented at the hardware. Otherwise, the Kernel provides a software
- emulation.
+--- linux-next-20200701.orig/Documentation/userspace-api/media/dvb/net.rst
++++ linux-next-20200701/Documentation/userspace-api/media/dvb/net.rst
+@@ -30,7 +30,7 @@ types that are present on the transport
+ virtual ``dvb?_?`` network interfaces, and will be controlled/routed via
+ the standard ip tools (like ip, route, netstat, ifconfig, etc).
  
--It can be accessed through ``/dev/adapter?/demux?``. Data types and and
-+It can be accessed through ``/dev/adapter?/demux?``. Data types and
- ioctl definitions can be accessed by including ``linux/dvb/dmx.h`` in
- your application.
+-Data types and and ioctl definitions are defined via ``linux/dvb/net.h``
++Data types and ioctl definitions are defined via ``linux/dvb/net.h``
+ header.
+ 
  
