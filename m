@@ -2,212 +2,101 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C64C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D38C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0610420884
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653702145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 00:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tiv0Wo8V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwQaxRGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgGCAsA (ORCPT
+        id S1726357AbgGCAvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Jul 2020 20:48:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
+        Thu, 2 Jul 2020 20:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgGCAr7 (ORCPT
+        with ESMTP id S1726028AbgGCAvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:47:59 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB4BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Jul 2020 17:47:59 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id p7so13597342qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Jul 2020 17:47:59 -0700 (PDT)
+        Thu, 2 Jul 2020 20:51:11 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6F8C08C5C1;
+        Thu,  2 Jul 2020 17:51:11 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 12so18698141oir.4;
+        Thu, 02 Jul 2020 17:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QubtygT6CHPqxIkPsZey+WL7TuPuIYxqs13CLNXIeHw=;
-        b=Tiv0Wo8V7BGJ98NUyieGZaCTDAHig6wZyVeaeiVFIhMeO7PL64VLLJBKgiGnmMAWOb
-         lIqVjjiMrLzx6Bq8hBzWRDDQN07NPH6sC6vkNbqGv4Q3vLWGezl/uVoGQqE3hiApBORw
-         BByd9gH5KUFCjtxCAGSwM1yN8t+O+LK3sJqVf/84Sg11eSAdQJ3/R+iapUrOTzX1SmrK
-         Jgegw6uQzJNoHzVgfPNpl+730XkD8fClhCTriVjZG5k2alnF5LFTDfaLx/rMMpNcTj1i
-         ic8IQ+h9FAVX8PG81NiOqwqSgN/NG0iGI2Nx6ugBbSxoCFaqCYDazWouLUL3fZM7YTly
-         35IQ==
+         :cc;
+        bh=cLLLMZUR/6NcDoIAUKZCfeEO4cTwXIXp/IGipSTCgM8=;
+        b=GwQaxRGCbnasx8DWiHFhDlrwzmWBOHcGheJtKYUqjVVyFtfbKusmoontyMuHgAOfaP
+         o4SV+UDvZzHnj+lJN4NppeSVXutG3t51HIceKc4RT9lcnI4udody5Pdk8jPRFfY9htJ8
+         iY5qtSY+20XTzfWAb5w30z7Yq2RdmZAD6otOFQo6rWPri9NZ9CnCZZ7KZ26bgJyzoyoO
+         I+DlI561Wa27wG4kEgWb4CHc7ey71nz/0YdBhp1xhHrbsq4Otlr+RU9ZyCyJDHN7F277
+         NMXH1Z3a6FbofPm8MKnb+5g02JfKfk2X0XLY/fdTR4Yq+zniOu1q/qe6R+YNx8TAHVcp
+         ckWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QubtygT6CHPqxIkPsZey+WL7TuPuIYxqs13CLNXIeHw=;
-        b=ZOLsN3skqJCqQazm5/MhVkuJfsK1AE1xcnAcGTvTKpb01SUhLOWi94JxXeGHKEPXqQ
-         dt+ayP+ZVBwIgyQCP9pUgfFCgs0YWztWEwPhDNhD66FeLrQvcC4IwyrAgkQQvVTKA+rD
-         IpOm+oBfxfWQ9wZbLw117lMSJ9fs3ZNE9dmAGL442N10Q8WqfXEarByCl4PFeNiy6vMA
-         0wwLwtu/iiMwIYY+qSeT0UbEh4gHfGS33k7Lc4T3CnedU5ZpzDwlFgYQoGjNeSWFitVv
-         qndLb8hbQzAqe6lHX5/TZ4crjpqQh4XaKeh/JzTJbpraApg/7Ms2NvFgSUBW546EpuLI
-         H2mQ==
-X-Gm-Message-State: AOAM533y66DgllmeDovtAfv1GNPLfxLxdjjsk7rJMv/iqQSoyxZ2b11B
-        GbdfKnTlSa2mdtExKn3aOJ7ogJYykdQGfWtx0zs=
-X-Google-Smtp-Source: ABdhPJz809WyueVeEH9q/ZinGqq/wkDF6ZSpVhBPgriKUE1wN1KSOm4Ffh2VFu7uGvVVyrWeg1m0pqs1z6kQw7zzoNs=
-X-Received: by 2002:a0c:99c5:: with SMTP id y5mr9684766qve.66.1593737278471;
- Thu, 02 Jul 2020 17:47:58 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=cLLLMZUR/6NcDoIAUKZCfeEO4cTwXIXp/IGipSTCgM8=;
+        b=X7R5SoBTb/urthC3iAWWFWylIr3iyrvwhpJZ1sO6L71y8KS4ZUZkOo4xytJFi3E/58
+         yQOPbyfcRvD5irorFkaTbgqhA4M4kg51iwM7cRY8GrsXosh7JjfoR2prz6Y3nC9Gczq+
+         NlRiEprVGTe3g0ctnPsOTcdDI4EP53S0DDGG+N7z7dUYcq8/GZFO2AslkVCbhXkU8zj0
+         N6JQOBUCyRhZeVcu/VM2YUfH60PGv1SCN90XBIbs9adtr8f2H+r0IzmBJQmuecV0oHBB
+         a8CG9LzevkxKrhgyy7tgmJL5sd0aaO3G2ZPIjcAwwURaa91tMP9N8yguHW1t747lqLN9
+         aF4g==
+X-Gm-Message-State: AOAM533o4rgntvvuHdyJYcpOaCrRhhMMyjsAr8h7n/LiVfOVrv0iAdny
+        4knX/cF4njX7BN82U+Sc5no4bOQeZTAxcgVHQyU=
+X-Google-Smtp-Source: ABdhPJy61q3Idfrag2OeVEA2neP+3T4xxQKco9bEs1E0DjbYJOa8bO6QRIyg9Ssc31gOmEgKy1boa6OKXkw8U9LJzIk=
+X-Received: by 2002:aca:b205:: with SMTP id b5mr27298242oif.103.1593737470608;
+ Thu, 02 Jul 2020 17:51:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592371583-30672-3-git-send-email-iamjoonsoo.kim@lge.com> <4591b38d-fdd0-e2e6-bf11-6e5669575736@suse.cz>
-In-Reply-To: <4591b38d-fdd0-e2e6-bf11-6e5669575736@suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 3 Jul 2020 09:47:47 +0900
-Message-ID: <CAAmzW4M3O_tpg9OdNeagQStVu5nhz_-gFiHnkqdeF6mOn8tqNg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] mm/vmscan: protect the workingset on anonymous LRU
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200702175352.19223-1-TheSven73@gmail.com> <20200702175352.19223-3-TheSven73@gmail.com>
+ <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+In-Reply-To: <CAOMZO5DxUeXH8ZYxmKynA7xO3uF6SP_Kt-g=8MPgsF7tqkRvAA@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 2 Jul 2020 20:50:59 -0400
+Message-ID: <CAGngYiUEx98QUAHrzFNWzMr5+oPS4-7Nqq91JzhtzGUG7=kagQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: imx6plus: optionally enable internal routing
+ of clk_enet_ref
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 2=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 3:02, Vl=
-astimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+Hi Fabio,
+
+On Thu, Jul 2, 2020 at 6:29 PM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> On 6/17/20 7:26 AM, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> With the device tree approach, I think that a better place to touch
+> GPR5 would be inside the fec driver.
 >
-> Hi, how about a more descriptive subject, such as
 
-Hello,
+Cool idea. I notice that the latest FEC driver (v5.8-rc3) accesses individual
+bits inside the gpr (via fsl,stop-mode). So perhaps I can do the same here,
+and populate that gpr node in imx6qp.dtsi - because it doesn't exist on other
+SoCs.
 
-> mm/vmscan: add new anonymous pages to inactive LRU list
+> For the property name, what about fsl,txclk-from-pll?
 
-This patch does two things to implement workingset protection.
-
-- add new anonymous pages to inactive LRU list
-- check two reference to activate
-
-So, I think that the current subject is more descriptive for this patch.
-
-> > In current implementation, newly created or swap-in anonymous page
-> > is started on active list. Growing active list results in rebalancing
-> > active/inactive list so old pages on active list are demoted to inactiv=
-e
-> > list. Hence, the page on active list isn't protected at all.
-> >
-> > Following is an example of this situation.
-> >
-> > Assume that 50 hot pages on active list. Numbers denote the number of
-> > pages on active/inactive list (active | inactive).
-> >
-> > 1. 50 hot pages on active list
-> > 50(h) | 0
-> >
-> > 2. workload: 50 newly created (used-once) pages
-> > 50(uo) | 50(h)
-> >
-> > 3. workload: another 50 newly created (used-once) pages
-> > 50(uo) | 50(uo), swap-out 50(h)
-> >
-> > This patch tries to fix this issue.
-> > Like as file LRU, newly created or swap-in anonymous pages will be
-> > inserted to the inactive list. They are promoted to active list if
-> > enough reference happens. This simple modification changes the above
-> > example as following.
-> >
-> > 1. 50 hot pages on active list
-> > 50(h) | 0
-> >
-> > 2. workload: 50 newly created (used-once) pages
-> > 50(h) | 50(uo)
-> >
-> > 3. workload: another 50 newly created (used-once) pages
-> > 50(h) | 50(uo), swap-out 50(uo)
-> >
-> > As you can see, hot pages on active list would be protected.
-> >
-> > Note that, this implementation has a drawback that the page cannot
-> > be promoted and will be swapped-out if re-access interval is greater th=
-an
-> > the size of inactive list but less than the size of total(active+inacti=
-ve).
-> > To solve this potential issue, following patch will apply workingset
-> > detection that is applied to file LRU some day before.
->
-> detection similar to the one that's already applied to file LRU.
-
-Will change!
-
-> > v6: Before this patch, all anon pages (inactive + active) are considere=
-d
-> > as workingset. However, with this patch, only active pages are consider=
-ed
-> > as workingset. So, file refault formula which uses the number of all
-> > anon pages is changed to use only the number of active anon pages.
->
-> a "v6" note is more suitable for a diffstat area than commit log, but it'=
-s good
-> to mention this so drop the 'v6:'?
-
-Okay.
-
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks!
-
-> One more nit below.
->
-> > --- a/mm/swap.c
-> > +++ b/mm/swap.c
-> > @@ -476,23 +476,24 @@ void lru_cache_add(struct page *page)
-> >  EXPORT_SYMBOL(lru_cache_add);
-> >
-> >  /**
-> > - * lru_cache_add_active_or_unevictable
-> > + * lru_cache_add_inactive_or_unevictable
-> >   * @page:  the page to be added to LRU
-> >   * @vma:   vma in which page is mapped for determining reclaimability
-> >   *
-> > - * Place @page on the active or unevictable LRU list, depending on its
-> > + * Place @page on the inactive or unevictable LRU list, depending on i=
-ts
-> >   * evictability.  Note that if the page is not evictable, it goes
-> >   * directly back onto it's zone's unevictable list, it does NOT use a
-> >   * per cpu pagevec.
-> >   */
-> > -void lru_cache_add_active_or_unevictable(struct page *page,
-> > +void lru_cache_add_inactive_or_unevictable(struct page *page,
-> >                                        struct vm_area_struct *vma)
-> >  {
-> > +     bool unevictable;
-> > +
-> >       VM_BUG_ON_PAGE(PageLRU(page), page);
-> >
-> > -     if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) !=3D VM_LOC=
-KED))
-> > -             SetPageActive(page);
-> > -     else if (!TestSetPageMlocked(page)) {
-> > +     unevictable =3D (vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) =3D=3D=
- VM_LOCKED;
-> > +     if (unevictable && !TestSetPageMlocked(page)) {
->
-> I guess this could be "if (unlikely(unevictable) && ..." to match the pre=
-vious
-> if (likely(evictable)) else ...
-
-I will fix it, too.
-
-Thanks.
+Sounds good. Does anyone have more suggestions?
