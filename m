@@ -2,141 +2,84 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92346C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCD220737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXTOyAOQ"
+	by mail.kernel.org (Postfix) with ESMTP id 69C2920737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 16:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593792299;
+	bh=c67lgcr6W0rJufCTOEq2LHdlNbpMkL0Nj0X3N2/dCSQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0GfGAFk52Ywk8bpaMBEMudC3WhTfuaoclG+8u/lHHAYUOClG5dbwcLWyR/PVTruA5
+	 51UBLVsR1Q9pKrlO9BwEK2insvW7007Sx5wsILKoA2x9qFYcYu7zfnU3JDLhCrFOEH
+	 aerSOd+gesB804d356vtra9kf5z7XOxQ3Ijue3V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgGCQEW (ORCPT
+        id S1726345AbgGCQE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 12:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgGCQEV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 12:04:21 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7ADC061794;
-        Fri,  3 Jul 2020 09:04:21 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a8so27005514edy.1;
-        Fri, 03 Jul 2020 09:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X/kUxjEepXtiPp+5nrjETtriBB7vp52saJU42L3Q0Ek=;
-        b=NXTOyAOQ4GoupnlWcTajW/yNVeDnYrfHcp4BtrD8hDhof+ZevAzYJm3TxuAGYtrvIX
-         rXs7IFYPAFaAYkPSaGYVPBBgx6wUXpVU7Tf2ZSfU3HSQNZuIfqmfnlHdR+0A3wooDual
-         nww+ROO2dUWuJ2ti+hBkqVqEvZ4/hV0oUVxIg0fkD2qdrTqnRvFxJTPvp4CItzB1qJ33
-         WDZPCtPVHuafx+0x1a3uAUjL2W/abTWpcNOi1zYqkyWNo9TnJ1r8zsPjqs3p1NNLj7+e
-         BcY9+L3RcT/CUwC72p1r8dLp4ozaSzFkg9YeIqLuX1w6Y0NorfG4CmhwiljG3gO09s6G
-         0jOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X/kUxjEepXtiPp+5nrjETtriBB7vp52saJU42L3Q0Ek=;
-        b=S/pCxciyGt6f046/XruNxusNMHnULFpGjhegCjy0jPaJ9dmigjcfKSc5Uf/kc0c4Jk
-         qDgD3jiC44Sb2UBW1LTjW4nv+OftaiQ7bA3qcZeJ95wmYNiSpB5X6UZ1I5sy3NA8B0hR
-         /ABq3mXWvYj8LK072KvIh8eEhUX4zQP3P17BRwel5qQJfcGafml+KhDkrZks9mpWyUyj
-         SOWpcgL99JNn04zV+DpvVxSTgTHqjOWGYwOzBfUdxoeNApNgfO1V51RIiUHJGogss3kW
-         CLaHG07UlltiaFtXdDUstJbNW+3p5P64VcTN3OKXO7WTQvqrrnERJm9FQlL+Q5Ezi6z+
-         osNg==
-X-Gm-Message-State: AOAM531To2qTPpiVcY6txR/Y1jd6hivmqAaBDUgLlMkSbNsaO1o5QFvW
-        4ZdxgCh0olP3zWd10o/S/t/0JJGAhLBQ8Pdb5dk=
-X-Google-Smtp-Source: ABdhPJwY+TDU+zLAlj3AXwzh91hebM+nK4d4Q98sJyCJl1eumLSurp18Wh0DJ0XCpOtgEb4A9pmtUBcHSW9aUnmJcXw=
-X-Received: by 2002:aa7:c656:: with SMTP id z22mr28236616edr.101.1593792259297;
- Fri, 03 Jul 2020 09:04:19 -0700 (PDT)
+        Fri, 3 Jul 2020 12:04:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgGCQE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 12:04:57 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D562070B;
+        Fri,  3 Jul 2020 16:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593792297;
+        bh=c67lgcr6W0rJufCTOEq2LHdlNbpMkL0Nj0X3N2/dCSQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zNPd6yOaND5Pk31qJuH+TacHc1JzakAEje7UybMhj8v6woYdb90194BQWanQ4nZBO
+         q46SVN/DNbrP/N9UUkJSxJfXWz40oSR86cDui6xVwYnAcYQETrQdNMug9d12t5hbmZ
+         5+4u0iuKIqH+orCqVMfX0GUCyRjatXADO7vXFh4A=
+Date:   Fri, 3 Jul 2020 11:04:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Subject: [GIT PULL] PCI fixes for v5.8
+Message-ID: <20200703160455.GA3899841@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
- <449a6544b10f0035d191ac52283198343187c153.1593344120.git.saiprakash.ranjan@codeaurora.org>
- <20200703133732.GD18953@willie-the-truck> <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
-In-Reply-To: <ecfda7ca80f6d7b4ff3d89b8758f4dc9@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 3 Jul 2020 09:04:49 -0700
-Message-ID: <CAF6AEGsCROVTsi2R7_aUkmH9Luoc_guMR0w0KUJc2cEgpfj79w@mail.gmail.com>
-Subject: Re: [PATCHv3 7/7] drm/msm/a6xx: Add support for using system cache(LLC)
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 7:53 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Will,
->
-> On 2020-07-03 19:07, Will Deacon wrote:
-> > On Mon, Jun 29, 2020 at 09:22:50PM +0530, Sai Prakash Ranjan wrote:
-> >> diff --git a/drivers/gpu/drm/msm/msm_iommu.c
-> >> b/drivers/gpu/drm/msm/msm_iommu.c
-> >> index f455c597f76d..bd1d58229cc2 100644
-> >> --- a/drivers/gpu/drm/msm/msm_iommu.c
-> >> +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> >> @@ -218,6 +218,9 @@ static int msm_iommu_map(struct msm_mmu *mmu,
-> >> uint64_t iova,
-> >>              iova |= GENMASK_ULL(63, 49);
-> >>
-> >>
-> >> +    if (mmu->features & MMU_FEATURE_USE_SYSTEM_CACHE)
-> >> +            prot |= IOMMU_SYS_CACHE_ONLY;
-> >
-> > Given that I think this is the only user of IOMMU_SYS_CACHE_ONLY, then
-> > it
-> > looks like it should actually be a property on the domain because we
-> > never
-> > need to configure it on a per-mapping basis within a domain, and
-> > therefore
-> > it shouldn't be exposed by the IOMMU API as a prot flag.
-> >
-> > Do you agree?
-> >
->
-> GPU being the only user is for now, but there are other clients which
-> can use this.
-> Plus how do we set the memory attributes if we do not expose this as
-> prot flag?
+PCI fixes:
 
-It does appear that the downstream kgsl driver sets this for basically
-all mappings.. well there is some conditional stuff around
-DOMAIN_ATTR_USE_LLC_NWA but it seems based on the property of the
-domain.  (Jordan may know more about what that is about.)  But looks
-like there are a lot of different paths into iommu_map in kgsl so I
-might have missed something.
+  - Fix a pcie_find_root_port() simplification that broke power management
+    because it didn't handle the edge case of finding the Root Port of a
+    Root Port itself (Mika Westerberg)
 
-Assuming there isn't some case where we specifically don't want to use
-the system cache for some mapping, I think it could be a domain
-attribute that sets an io_pgtable_cfg::quirks flag
 
-BR,
--R
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.8-fixes-1
+
+for you to fetch changes up to 5396956cc7c6874180c9bfc1ceceb02b739a6a87:
+
+  PCI: Make pcie_find_root_port() work for Root Ports (2020-06-30 16:58:27 -0500)
+
+----------------------------------------------------------------
+pci-v5.8-fixes-1
+
+----------------------------------------------------------------
+Mika Westerberg (1):
+      PCI: Make pcie_find_root_port() work for Root Ports
+
+ include/linux/pci.h | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
