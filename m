@@ -2,269 +2,178 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05410C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D33C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2857207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF644207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 08:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="uqKM0qgk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="s0Mz/Wdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgGCIGU (ORCPT
+        id S1726283AbgGCIHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 04:06:20 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:46349 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725891AbgGCIGT (ORCPT
+        Fri, 3 Jul 2020 04:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbgGCIHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 04:06:19 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id rGi2j86C1mVFqrGi5j7GWZ; Fri, 03 Jul 2020 10:06:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593763575; bh=b4jvdZMiRl+wQlE8aK7iGvK92VjV3a/6aX4pFQUlAY4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=uqKM0qgkfVWerqlbG6o3xBiv6+lkwTSdn60vng7VtUX2pCKAfz2b12dNbn4UJ5vsi
-         /B3ivaZOlPPDlw+I9/SyuEsyK9WRAdLWaQ+O/4mfNSw49CA0uoFERSqBRcpNXwADUU
-         s2DYzRfN8c1z9hSRV8JWH8szoCVvgtfCFZy0lsDDaQyYSbb2dOQZvHYY4F6HRnA2fm
-         p/knxlfOEA3ND2IsaeHeX87zsidWl/1CprmWYbzWMu5NCm+X+gspdYYjA+/lIH6ipM
-         F2J4TffZHGM6u99C2dz41Z6HQADENLofvftmn1nACb499MaCVYEomW1emX8Y/7ExNv
-         QMNhQ80petZlw==
-Subject: Re: [RFC PATCH v2 12/18] media: tegra-video: Add support for
- selection ioctl ops
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-13-git-send-email-skomatineni@nvidia.com>
- <efc84cff-76d5-78a2-e84e-0342459d3756@xs4all.nl>
- <c82a000a-7766-c933-fd69-24eb4885fc14@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a95717b6-e2ee-78df-5145-de265805b3d4@xs4all.nl>
-Date:   Fri, 3 Jul 2020 10:06:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 3 Jul 2020 04:07:39 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ED8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Jul 2020 01:07:38 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a6so31683506wrm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Jul 2020 01:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c1TNzycKuUCG/Lpw8LCZ7YtLXjAvDFp2TFsGPUACq2s=;
+        b=s0Mz/Wdq8iqu3dPfohf7u7IAcdckwYBi+DxKcwrRE4abFYeLQqdL+pBXBr4ow5g9cq
+         3n8fkCLWPAbRJ/wTcif1Iv8lrF2TD7HwYVov6GvAh3CNLk39Sme8m26ckcqGhUnkn6Bn
+         VZF4v5m3IpLhAUmGAoBdpDq2DdhnkWO5x2+R/s4xz68MmnHXJ1yDy2Jb9U+wKO+SX+7g
+         SXMozQhnUH5lOON2n3f2IlmKZNCC16CkEW7qxClyJ6/zaUmnUJ/yBIM2fXaUru47gjyV
+         vwSuqsxqUeNitO+JKHdCp2N2h8vZ292KsnBh+XdsYxhz4KSX//OyJzLvbOzJMAGHP8mq
+         Oc+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c1TNzycKuUCG/Lpw8LCZ7YtLXjAvDFp2TFsGPUACq2s=;
+        b=jZRhPFSRcrlQP+915Pql6rWkrp8YdDRgt26DFoEAiWAvpyApkGWTCtSe3SdXl3arMq
+         I2o2t42djBloIFzATupxsb9W1Ol1EMOWRL041cytoQy3YhHZdql9amczPdst1E0vqaVG
+         14QFfyY/HVeMhpbnXH6YqcLW5kjIXaT17BMrVBnzg0KhtnQtKmMKnMgqhBaVVaUEjx0/
+         TL9g6pNm5SDPVZXhFVdQmT0VNWutXrmge4fmkjxQymJ6DRNLTF/yqmlZBS726lBlVJ8r
+         8EnPKpoBxhnB2E0ObO4Tjhr7aLnTSNVLHCNVC5vRbTJZRzsWuP4lYdZkvxpiSi9LzCCp
+         lWYw==
+X-Gm-Message-State: AOAM532rviXOfLg+o+F0mdgIMWfJMYG8ASHazkUVmUZAcj1cLUGfsFPU
+        jkn6z4PMhQbBSS1ONA+EzIxlUg==
+X-Google-Smtp-Source: ABdhPJyg7KEBrWbXbNhkwuxhamaT+87wYHYXZdWBW6ZFOSDlt0fJRgbFVLhpqyvx5pqYzjUvi5GUlQ==
+X-Received: by 2002:adf:e40e:: with SMTP id g14mr38512820wrm.271.1593763657349;
+        Fri, 03 Jul 2020 01:07:37 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:6959:e617:6562:cabf])
+        by smtp.gmail.com with ESMTPSA id 1sm12682403wmf.0.2020.07.03.01.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 01:07:36 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     jianxin.pan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/6] drm/meson: add support for Amlogic Video FBC
+Date:   Fri,  3 Jul 2020 10:07:22 +0200
+Message-Id: <20200703080728.25207-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <c82a000a-7766-c933-fd69-24eb4885fc14@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJibOq/j4tqoc36sc4WrtRfP/A0osTMUl1TNKLANrgu56/SySM9PwU8/7zlFaI92I2Zm+b7yAimCBtoVhEq0JGdG/Qu6rWHiZR2VRfdU8v3TAesoYmCf
- 12+lmuLHRoPvH8otC/RKqgD6o2UUMxNGygKPVInnM34BF/htxuI8rRF6jG8IbW+Y05Ebu5IdKMwEu/FtgiAnQCvhSLMvGxIVTMF01lScqwjNQ/P/elK9XYLK
- DCsRPHwA+4jMO4dF+3QmpcHeAsKsAdN3bjqSYSho3E6zHZYEP9a7V4HEjL2J66sJ/IYpfJD8zVYapSUiU9Si6ArWPuN1OkLmpmzy+07A1MybGJJf5TrZuz4/
- mvSK/CItcwqWHuLoxQDh2IbdL7+Hp52d7L6QTMFWZQoXBXQujIRJckCIgnZDvueyk+AyhjMt8ZGAViX6dB01sBUyIzznC1nEweu7Rw5EkEJmj2UFrhJJfHUN
- 5HtqnX3wzLVieIf0NHPwb0Fdj1ddMehpgkMmA4w0PzD1DLe4Ideui72Y7suyfaEy7GXK0/WwkTTu1C7/wlrLvMwUrQEVIMcxMyc080Eyo6CeFoje9z4iuiHy
- USmgj20dEE+T9RxO/0IEl8dU61xTek0qZACAwgVjimcDDrD4JCV+RfscsZjN3urSkOLgUPAQlyOySgTitx1SJKDV
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/2020 23:20, Sowjanya Komatineni wrote:
-> 
-> On 7/2/20 6:54 AM, Hans Verkuil wrote:
->> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
->>> This patch adds selection v4l2 ioctl operations to allow configuring
->>> a selection rectangle in the sensor through the Tegra video device
->>> node.
->>>
->>> Some sensor drivers supporting crop uses try_crop rectangle from
->>> v4l2_subdev_pad_config during try format for computing binning.
->>>
->>> So with selection ops support, this patch also updates try format
->>> to use try crop rectangle either from subdev frame size enumeration
->>> or from subdev crop boundary.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
->>>   1 file changed, 106 insertions(+)
->>>
->>> diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
->>> index 506c263..f9eb96b 100644
->>> --- a/drivers/staging/media/tegra-video/vi.c
->>> +++ b/drivers/staging/media/tegra-video/vi.c
->>> @@ -427,6 +427,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
->>>   	struct v4l2_subdev *subdev;
->>>   	struct v4l2_subdev_format fmt;
->>>   	struct v4l2_subdev_pad_config *pad_cfg;
->>> +	struct v4l2_subdev_frame_size_enum fse = {
->>> +		.which = V4L2_SUBDEV_FORMAT_TRY,
->>> +	};
->>> +	struct v4l2_subdev_selection sdsel = {
->>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->>> +		.target = V4L2_SEL_TGT_CROP_BOUNDS,
->>> +	};
->>>   	int ret;
->>>   
->>>   	subdev = tegra_channel_get_remote_subdev(chan, true);
->>> @@ -449,6 +456,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
->>>   	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
->>>   	fmt.pad = 0;
->>>   	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
->>> +
->>> +	/*
->>> +	 * Attempt to obtain the format size from subdev.
->>> +	 * If not available, try to get crop boundary from subdev.
->>> +	 */
->>> +	fse.code = fmtinfo->code;
->>> +	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
->>> +	if (ret) {
->>> +		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
->>> +		if (ret)
->>> +			return -EINVAL;
->>> +		pad_cfg->try_crop.width = sdsel.r.width;
->>> +		pad_cfg->try_crop.height = sdsel.r.height;
->>> +	} else {
->>> +		pad_cfg->try_crop.width = fse.max_width;
->>> +		pad_cfg->try_crop.height = fse.max_height;
->>> +	}
->>> +
->>>   	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
->>>   	if (ret < 0)
->>>   		return ret;
->>> @@ -540,6 +565,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
->>>   	return 0;
->>>   }
->>>   
->>> +static int tegra_channel_g_selection(struct file *file, void *priv,
->>> +				     struct v4l2_selection *sel)
->>> +{
->>> +	struct tegra_vi_channel *chan = video_drvdata(file);
->>> +	struct v4l2_subdev *subdev;
->>> +	struct v4l2_subdev_format fmt = {
->>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->>> +	};
->>> +	struct v4l2_subdev_selection sdsel = {
->>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->>> +		.target = sel->target,
->>> +	};
->>> +	int ret;
->>> +
->>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
->>> +		return -ENOTTY;
->>> +
->>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->>> +		return -EINVAL;
->>> +	/*
->>> +	 * Try the get selection operation and fallback to get format if not
->>> +	 * implemented.
->>> +	 */
->>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
->>> +	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
->>> +	if (!ret)
->>> +		sel->r = sdsel.r;
->>> +	if (ret != -ENOIOCTLCMD)
->>> +		return ret;
->>> +
->>> +	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
->>> +	if (ret < 0)
->>> +		return ret;
->>> +
->>> +	sel->r.left = 0;
->>> +	sel->r.top = 0;
->>> +	sel->r.width = fmt.format.width;
->>> +	sel->r.height = fmt.format.height;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int tegra_channel_s_selection(struct file *file, void *fh,
->>> +				     struct v4l2_selection *sel)
->>> +{
->>> +	struct tegra_vi_channel *chan = video_drvdata(file);
->>> +	struct v4l2_subdev *subdev;
->>> +	int ret;
->>> +	struct v4l2_subdev_selection sdsel = {
->>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->>> +		.target = sel->target,
->>> +		.flags = sel->flags,
->>> +		.r = sel->r,
->>> +	};
->>> +
->> This function doesn't check if the subdev actually supports set_selection.
->> The imx219 is one such driver: it supports get_selection, but not set_selection.
->>
->> So this code should add these lines to fix the v4l2-compliance fail:
->>
->>         subdev = tegra_channel_get_remote_subdev(chan, true);
->>
->>         if (!v4l2_subdev_has_op(subdev, pad, set_selection))
->>                 return -ENOTTY;
->>
-> v4l2_subdev_call() does that check and returns -ENOIOCTLCMD when 
-> specified subdev ops does not exist.
+Amlogic uses a proprietary lossless image compression protocol and format
+for their hardware video codec accelerators, either video decoders or
+video input encoders.
 
-But that test happens too late. In the v4l2-compliance test it fails in the
-sel->type test below, so it returns EINVAL instead of ENOTTY.
+It considerably reduces memory bandwidth while writing and reading
+frames in memory.
 
->>> +	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
->>> +		return -ENOTTY;
+The underlying storage is considered to be 3 components, 8bit or 10-bit
+per component, YCbCr 420, single plane :
+- DRM_FORMAT_YUV420_8BIT
+- DRM_FORMAT_YUV420_10BIT
 
-I think this test should come before the v4l2_subdev_has_op test since there
-is probably no subdev if the TPG is enabled. So:
+This modifier will be notably added to DMA-BUF frames imported from the V4L2
+Amlogic VDEC decoder.
 
-	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-		return -ENOTTY;
+At least two layout are supported :
+- Basic: composed of a body and a header
+- Scatter: the buffer is filled with a IOMMU scatter table referring
+  to the encoder current memory layout. This mode if more efficient in terms
+  of memory allocation but frames are not dumpable and only valid during until
+  the buffer is freed and back in control of the encoder
 
-        subdev = tegra_channel_get_remote_subdev(chan, true);
-        if (!v4l2_subdev_has_op(subdev, pad, set_selection))
-                return -ENOTTY;
+At least two options are supported :
+- Memory saving: when the pixel bpp is 8b, the size of the superblock can
+  be reduced, thus saving memory.
 
+This serie adds the missing register, updated the FBC decoder registers
+content to be committed by the crtc code.
 
-Regards,
+The Amlogic FBC has been tested with compressed content from the Amlogic
+HW VP9 decoder on S905X (GXL), S905D2 (G12A) and S905X3 (SM1) in 8bit
+(Scatter+Mem Saving on G12A/SM1, Mem Saving on GXL) and 10bit
+(Scatter on G12A/SM1, default on GXL).
 
-	Hans
+It's expected to work as-is on GXM and G12B SoCs.
 
->>> +
->>> +	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->>> +		return -EINVAL;
->>> +
->>> +	if (vb2_is_busy(&chan->queue))
->>> +		return -EBUSY;
->>> +
->>> +	subdev = tegra_channel_get_remote_subdev(chan, true);
->> And this line can be dropped.
->>
->> Regards,
->>
->> 	Hans
->>
->>> +	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
->>> +	if (!ret) {
->>> +		sel->r = sdsel.r;
->>> +		/*
->>> +		 * Subdev active format resolution may have changed during
->>> +		 * set selection operation. So, update channel format to
->>> +		 * the sub-device active format.
->>> +		 */
->>> +		return tegra_channel_set_subdev_active_fmt(chan);
->>> +	}
->>> +
->>> +	return ret;
->>> +}
->>> +
->>>   static int tegra_channel_enum_input(struct file *file, void *fh,
->>>   				    struct v4l2_input *inp)
->>>   {
->>> @@ -597,6 +701,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
->>>   	.vidioc_streamoff		= vb2_ioctl_streamoff,
->>>   	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
->>>   	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
->>> +	.vidioc_g_selection		= tegra_channel_g_selection,
->>> +	.vidioc_s_selection		= tegra_channel_s_selection,
->>>   };
->>>   
->>>   /*
->>>
+Changes since v8 at [8]:
+- added clarification of scatter mmap behavior as suggested by daniel
+- added ack and review tags
+
+Changes since v7 at [7]:
+- rebased on drm-misc-next
+- removed spurious DEBUG in drivers/gpu/drm/meson/meson_overlay.c
+
+Changes since v6 at [6]:
+- rebased on drm-misc-next (after drm-misc-next-2020-05-14)
+- updated patch 1 commit log for completion
+
+Changes since v5 at [5]:
+- merged all fourcc patches in 1
+- fixed fourcc definition to have only a single DRM_MOD_
+- fixed 2 checkpatch issues
+
+Changes since v4 at [4]:
+- added layout and options mask
+- cosmetic changes in fourcc.h
+- fixed mod check using the masks
+- fixed plane apply using the masks
+
+Changes since v3 at [3]:
+- added dropped fourcc patch for scatter
+- fixed build of last patch
+
+Changes since v2 at [2]:
+- Added "BASIC" layout and moved the SCATTER mode as layout, making
+  BASIC and SCATTER layout exclusives
+- Moved the Memory Saving at bit 8 for options fields
+- Split fourcc and overlay patch to introduce basic, mem saving and then
+  scatter in separate patches
+- Added comment about "transferability" of the buffers
+
+Changes since v1 at [1]:
+- s/VD1_AXI_SEL_AFB/VD1_AXI_SEL_AFBC/ into meson_registers.h
+
+[1] https://patchwork.freedesktop.org/series/73722/#rev1
+[2] https://patchwork.freedesktop.org/series/73722/#rev2
+[3] https://patchwork.freedesktop.org/series/73722/#rev3
+[4] https://patchwork.freedesktop.org/series/73722/#rev4
+[5] https://patchwork.freedesktop.org/series/73722/#rev5
+[6] https://patchwork.freedesktop.org/series/73722/#rev6
+[7] https://patchwork.freedesktop.org/series/73722/#rev7
+[7] https://patchwork.freedesktop.org/series/73722/#rev8
+
+Neil Armstrong (6):
+  drm/fourcc: Add modifier definitions for describing Amlogic Video
+    Framebuffer Compression
+  drm/meson: add Amlogic Video FBC registers
+  drm/meson: overlay: setup overlay for Amlogic FBC
+  drm/meson: overlay: setup overlay for Amlogic FBC Memory Saving mode
+  drm/meson: overlay: setup overlay for Amlogic FBC Scatter Memory
+    layout
+  drm/meson: crtc: handle commit of Amlogic FBC frames
+
+ drivers/gpu/drm/meson/meson_crtc.c      | 118 +++++++---
+ drivers/gpu/drm/meson/meson_drv.h       |  16 ++
+ drivers/gpu/drm/meson/meson_overlay.c   | 289 +++++++++++++++++++++++-
+ drivers/gpu/drm/meson/meson_registers.h |  22 ++
+ include/uapi/drm/drm_fourcc.h           |  81 +++++++
+ 5 files changed, 488 insertions(+), 38 deletions(-)
+
+-- 
+2.22.0
 
