@@ -2,162 +2,144 @@ Return-Path: <SRS0=gItQ=AO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED65C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC0E20885
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0293D206BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Jul 2020 14:17:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Aux0VBi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGCOPw (ORCPT
+        id S1726318AbgGCORo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Jul 2020 10:15:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41344 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726035AbgGCOPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Jul 2020 10:15:50 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063E2DsI145405;
-        Fri, 3 Jul 2020 10:15:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 322144rw0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 10:15:39 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 063E2FJd145553;
-        Fri, 3 Jul 2020 10:15:39 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 322144rvyd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 10:15:39 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063E6ksY001304;
-        Fri, 3 Jul 2020 14:15:36 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 31wwcguf0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 14:15:36 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063EFYpJ52232204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 14:15:34 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0303B11C04C;
-        Fri,  3 Jul 2020 14:15:34 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBA3511C050;
-        Fri,  3 Jul 2020 14:15:32 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.174.143])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Jul 2020 14:15:32 +0000 (GMT)
-Message-ID: <1593785732.23056.16.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
- conditional into ima_validate_rule()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Date:   Fri, 03 Jul 2020 10:15:32 -0400
-In-Reply-To: <20200702221656.GH4694@sequoia>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
-         <20200626223900.253615-10-tyhicks@linux.microsoft.com>
-         <1593558449.5057.12.camel@linux.ibm.com> <20200702221656.GH4694@sequoia>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_09:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 cotscore=-2147483648
- suspectscore=0 adultscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007030095
+        Fri, 3 Jul 2020 10:17:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:19072 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbgGCORo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Jul 2020 10:17:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593785863; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=BhNeirievu7ABUQ2mRSmIu+sWUN4ihC6bWjNuJCyjvc=; b=Aux0VBi+/00i4v5koV+p8fC4XCX198bWO9OTkNbdjh5aeLzGsoZDIDopI8RaRA1ED5D/Nh48
+ Ql+PdC0CnftPneLphYnpCdNBBpv91CVZlTrioULLBu+4rp9Pe677fPH/Zqhp3r6ICF8QghKc
+ ZsOwOqwAR7pN4FBPpdG2Jrshf00=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5eff3dff0206ad41d103726e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 03 Jul 2020 14:17:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 55E9BC433C6; Fri,  3 Jul 2020 14:17:34 +0000 (UTC)
+Received: from vjitta-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A908C433C8;
+        Fri,  3 Jul 2020 14:17:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A908C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+From:   vjitta@codeaurora.org
+To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
+        vjitta@codeaurora.org
+Subject: [PATCH 1/2] iommu/iova: Retry from last rb tree node if iova search fails
+Date:   Fri,  3 Jul 2020 19:47:14 +0530
+Message-Id: <1593785835-27250-1-git-send-email-vjitta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-02 at 17:16 -0500, Tyler Hicks wrote:
-> On 2020-06-30 19:07:29, Mimi Zohar wrote:
-> > On Fri, 2020-06-26 at 17:38 -0500, Tyler Hicks wrote:
-> > > Use ima_validate_rule() to ensure that the combination of a hook
-> > > function and the keyrings conditional is valid and that the keyrings
-> > > conditional is not specified without an explicit KEY_CHECK func
-> > > conditional. This is a code cleanup and has no user-facing change.
-> > > 
-> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > > ---
-> > > 
-> > > * v2
-> > >   - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
-> > >     IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
-> > >     present in the rule entry flags for non-buffer hook functions.
-> > > 
-> > >  security/integrity/ima/ima_policy.c | 13 +++++++++++--
-> > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > > index 8cdca2399d59..43d49ad958fb 100644
-> > > --- a/security/integrity/ima/ima_policy.c
-> > > +++ b/security/integrity/ima/ima_policy.c
-> > > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> > >  		case KEXEC_KERNEL_CHECK:
-> > >  		case KEXEC_INITRAMFS_CHECK:
-> > >  		case POLICY_CHECK:
-> > > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
-> > > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
-> > > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
-> > > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
-> > > +					     IMA_PERMIT_DIRECTIO |
-> > > +					     IMA_MODSIG_ALLOWED |
-> > > +					     IMA_CHECK_BLACKLIST))
-> > 
-> > Other than KEYRINGS, this patch should continue to behave the same.
-> >  However, this list gives the impressions that all of these flags are
-> > permitted on all of the above flags, which isn't true.
-> > 
-> > For example, both IMA_MODSIG_ALLOWED & IMA_CHECK_BLACKLIST are limited
-> > to appended signatures, meaning KERNEL_CHECK and KEXEC_KERNEL_CHECK.
-> 
-> Just to clarify, are both IMA_MODSIG_ALLOWED and IMA_CHECK_BLACKLIST
-> limited to KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK, and MODULE_CHECK?
-> That's what ima_hook_supports_modsig() suggests.
+From: Vijayanand Jitta <vjitta@codeaurora.org>
 
-Theoretically that is true, but I have no idea how you would append a
-signature to the kexec boot command line.  The only users of appended
-signatures are currently kernel modules and the kexec'ed kernel image.
+When ever a new iova alloc request comes iova is always searched
+from the cached node and the nodes which are previous to cached
+node. So, even if there is free iova space available in the nodes
+which are next to the cached node iova allocation can still fail
+because of this approach.
 
-> 
-> >  Both should only be allowed on APPRAISE action rules.
-> 
-> For completeness, it looks like DONT_APPRAISE should not be allowed.
+Consider the following sequence of iova alloc and frees on
+1GB of iova space
 
-Good point.  
+1) alloc - 500MB
+2) alloc - 12MB
+3) alloc - 499MB
+4) free -  12MB which was allocated in step 2
+5) alloc - 13MB
 
-> 
-> > IMA_PCR should be limited to MEASURE action rules.
-> 
-> It looks like DONT_MEASURE should not be allowed.
+After the above sequence we will have 12MB of free iova space and
+cached node will be pointing to the iova pfn of last alloc of 13MB
+which will be the lowest iova pfn of that iova space. Now if we get an
+alloc request of 2MB we just search from cached node and then look
+for lower iova pfn's for free iova and as they aren't any, iova alloc
+fails though there is 12MB of free iova space.
 
-The TPM PCR isn't a file attribute.
+To avoid such iova search failures do a retry from the last rb tree node
+when iova search fails, this will search the entire tree and get an iova
+if its available.
 
-> 
-> > IMA_DIGSIG_REQUIRED should be limited to APPRAISE action rules.
-> 
-> It looks like DONT_APPRAISE should not be allowed.
+Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+---
+ drivers/iommu/iova.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-Right, in all of these cases the DONT_XXXX isn't applicable.
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 49fc01f..4e77116 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -184,8 +184,9 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
+ 	struct rb_node *curr, *prev;
+ 	struct iova *curr_iova;
+ 	unsigned long flags;
+-	unsigned long new_pfn;
++	unsigned long new_pfn, low_pfn_new;
+ 	unsigned long align_mask = ~0UL;
++	unsigned long high_pfn = limit_pfn, low_pfn = iovad->start_pfn;
+ 
+ 	if (size_aligned)
+ 		align_mask <<= fls_long(size - 1);
+@@ -198,15 +199,25 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
+ 
+ 	curr = __get_cached_rbnode(iovad, limit_pfn);
+ 	curr_iova = rb_entry(curr, struct iova, node);
++	low_pfn_new = curr_iova->pfn_hi + 1;
++
++retry:
+ 	do {
+-		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
+-		new_pfn = (limit_pfn - size) & align_mask;
++		high_pfn = min(high_pfn, curr_iova->pfn_lo);
++		new_pfn = (high_pfn - size) & align_mask;
+ 		prev = curr;
+ 		curr = rb_prev(curr);
+ 		curr_iova = rb_entry(curr, struct iova, node);
+-	} while (curr && new_pfn <= curr_iova->pfn_hi);
+-
+-	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
++	} while (curr && new_pfn <= curr_iova->pfn_hi && new_pfn >= low_pfn);
++
++	if (high_pfn < size || new_pfn < low_pfn) {
++		if (low_pfn == iovad->start_pfn && low_pfn_new < limit_pfn) {
++			high_pfn = limit_pfn;
++			low_pfn = low_pfn_new;
++			curr = &iovad->anchor.node;
++			curr_iova = rb_entry(curr, struct iova, node);
++			goto retry;
++		}
+ 		iovad->max32_alloc_size = size;
+ 		goto iova32_full;
+ 	}
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
 
-Mimi
